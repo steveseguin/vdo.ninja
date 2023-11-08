@@ -92,7 +92,7 @@
 		
 		<script type="text/javascript" crossorigin="anonymous"  src="./thirdparty/CodecsHandler.js?ver=6"></script>
 		<script type="text/javascript" crossorigin="anonymous" src="./thirdparty/aes.js"></script>
-		<script type="text/javascript" crossorigin="anonymous" src="./webrtc.js?ver=706"></script>
+		<script type="text/javascript" crossorigin="anonymous" src="./webrtc.js?ver=733"></script>
 		<input id="zoomSlider" type="range" style="display: none;" />
 		<span id="electronDragZone" style="pointer-events: none; z-index:-10; position:absolute;top:0;left:0;width:100%;height:2%;-webkit-app-region: drag;min-height:20px;"></span>
 		<div id="header">
@@ -182,7 +182,7 @@
                         <i id="chattoggle" class="toggleSize las la-comment-alt"></i>
                         <div id="chatNotification"></div>
                     </div>
-                    <div id="mutespeakerbutton" onmousedown="event.preventDefault(); event.stopPropagation();" alt="Toggle the speaker output." aria-label="Mute Speaker output" title="Mute the Speaker" onclick="toggleSpeakerMute()"  tabindex="2" role="button" aria-pressed="false" onkeyup="enterPressedClick(event,this);"  class="hidden float" style="cursor: pointer;" >
+                    <div id="mutespeakerbutton" onmousedown="event.preventDefault(); event.stopPropagation();" alt="Toggle the speaker output." aria-label="Mute Speaker output" title="Mute the Speaker (ALT + A)" onclick="toggleSpeakerMute()"  tabindex="2" role="button" aria-pressed="false" onkeyup="enterPressedClick(event,this);"  class="hidden float" style="cursor: pointer;" >
                         <i id="mutespeakertoggle" class="toggleSize las la-volume-up" style="position: relative; top: 0.5px;"></i>
                     </div>
                     <div id="mutebutton" onmousedown="toggleMute(false, event);event.preventDefault(); event.stopPropagation();" data-translate="mute-the-mic" title="Mute the Mic (CTRL/⌘ + M)" alt="Mute the Mic" aria-label="Mute Microphone" ontouchstart="toggleMute(false, event);event.preventDefault(); event.stopPropagation();" tabindex="2" role="button" aria-pressed="false" onkeyup="enterPressedClick(event,this);"  class="hidden float" style="cursor: pointer;">
@@ -2163,6 +2163,13 @@
 				<input id="trbSettingInput" type="range" min="0" max="4000" value="500" onchange="getById('trbSettingInputManual').value=this.value;changeTRB(this);" oninput="getById('trbSettingInputFeedback').innerHTML = this.value;" style="width:calc(100% - 60px);display:inline-block;" />
 				<input id="trbSettingInputManual" min="0" value="500" onchange="getById('trbSettingInput').value=this.value;changeTRB(this);" oninput="getById('trbSettingInputFeedback').innerHTML = this.value;" style="width:42px;display:inline-block;text-align: center;" />
 				
+				<span id='limittotalbitrate_director' class="hidden">
+					<label title="Sets YOUR max total allowed upload bandwidth; across all connections" for="ltbSettingInput" data-translate="limit-total-bitrate-quality">Your max allowed total video upload bandwidth:</label>
+					<span style="margin-left: 6px;" id="ltbSettingInputFeedback"></span>-kbps
+					<input id="ltbSettingInput" type="range" min="1" max="10000" onchange="getById('ltbSettingInputManual').value=this.value;changeLTB(this);" oninput="getById('ltbSettingInputFeedback').innerHTML = this.value;" style="width:calc(100% - 60px);display:inline-block;" />
+					<input id="ltbSettingInputManual" min="1" value="10000" onchange="getById('ltbSettingInput').value=this.value;changeLTB(this);" oninput="getById('ltbSettingInputFeedback').innerHTML = this.value;" style="width:42px;display:inline-block;text-align: center;" />
+				</span>
+				
 				<span style="margin: 20px 0 0 0;display:block" id='highlightDirectorSpan' title="Only the director's video will be visible to guests and within group scenes. (Hold CTRL/CMD to just make video larger)">
 					<input id="highlightDirector" style="width: 15px; height: 15px; margin:10px;" name="highlightDirector"  data-action-type="solo-video" type="checkbox" onchange="requestInfocus(this, event);" />
 					<label for="highlightDirector" data-translate="highlight-director-only-video-guests-will-see">Highlight Director (only video guests will see)</label> 
@@ -2519,12 +2526,14 @@
 			} else if (window.location.hostname.indexOf("www.vdo.ninja") == 0) {
 				window.location = window.location.href.replace("www.vdo.ninja","vdo.ninja"); // the session.salt is domain specific; let's consolidate www as a result.
 			} else if (("isSecureContext" in window) && (window.isSecureContext===false)){
-				console.error("This site must be run in a secure context; please ensure all links, iframes, and parent windows are using SSL");
+				console.error(" * Warning *\n\n - This site should be run in a secure context (https).\n - Please ensure all links, iframes, and parent windows are using SSL.\n - The webcam and other media devices may not be accessible while insecure.\n - WHEP playback and some other features might still function.");
 			}
+			
+			console.log("->> Note: Do not paste code into this console unless from a trusted source <<--")
 
 		
 			var session = WebRTC.Media; // session is a required global variable if configuring manually. Run before loading main.js but after webrtc.js.
-			session.version = "24.1b";
+			session.version = "24.2b";
 			session.streamID = session.generateStreamID(); // randomly generates a streamID for this session. You can set your own programmatically if needed
 			
 			session.defaultPassword = "someEncryptionKey123"; // Change this password if self-deploying for added security/privacy
@@ -2535,7 +2544,7 @@
 			///////////////  ------  Custom basic TURN SETUP SECTION STARTS Here --------
 			// session.configuration = {         // uncomment to disable the default usage of the vdo.ninja turn servers.
 			//	iceServers: session.stunServers,
-			//	sdpSemantics: 'unified-plan'
+			//	sdpSemantics: session.sdpSemantics
 			// };
 			// var turn = {}; // Just an example entry for a basic TURN server 
 			// turn.username = "steve";
@@ -2565,7 +2574,7 @@
 							// return;
 						// }
 						// session.configuration = {};
-						// session.configuration.sdpSemantics = "unified-plan";
+						// session.configuration.sdpSemantics = session.sdpSemantics;
 						// session.configuration.iceServers = [];
 						//  // session.configuration.iceServers = session.stunServers; // Uncomment to use the hard-coded Google STUN servers, if we don't provide our own STUN
 
@@ -2638,11 +2647,11 @@
 			// session.record = false; // uncomment to block users from being able to record via vdo.ninja's built in recording function
 			// session.whipServerURL = "wss://whip.vdo.ninja"; // If you deploy your own whip websocket service
 		</script>
-		<script type="text/javascript" crossorigin="anonymous" id="lib-js" src="./lib.js?ver=939"></script>
+		<script type="text/javascript" crossorigin="anonymous" id="lib-js" src="./lib.js?ver=1032"></script>
 		<!-- 
 		// If you wish to change branding, blank offers a good clean start.
 		<script type="text/javascript" id="main-js" src="./main.js" data-translation="blank"></script>
 		-->
-		<script type="text/javascript" crossorigin="anonymous" id="main-js" src="./main.js?ver=751"></script>
+		<script type="text/javascript" crossorigin="anonymous" id="main-js" src="./main.js?ver=768"></script>
 	</body>
 </html>

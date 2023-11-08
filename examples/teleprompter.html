@@ -317,6 +317,7 @@
 		</div>
 <script>
 
+
 var domain = "./";
 var urlParams = new URLSearchParams(window.location.search);
 var iframe = document.createElement("iframe");
@@ -342,16 +343,38 @@ if (localStorage.getItem('sourceType')){
 }
 
 if (localStorage.getItem('iframeURL') || urlParams.has("link")){
-	document.querySelector("#iframeURL").value = decodeURIComponent(urlParams.get("link") || "") || localStorage.getItem('iframeURL') || "";
+	try 
+		document.querySelector("#iframeURL").value = decodeURIComponent(urlParams.get("link") || "") || localStorage.getItem('iframeURL') || "";
+	} catch(e){
+		document.querySelector("#iframeURL").value = urlParams.get("link") || localStorage.getItem('iframeURL') || "";
+	}
 }
 if (localStorage.getItem('iframeURL_twitch') || urlParams.has("twitch")){
-	document.querySelector("#iframeURL_twitch").value = decodeURIComponent(urlParams.get("twitch") || "") || localStorage.getItem('iframeURL_twitch') || "";
+	try 
+		document.querySelector("#iframeURL_twitch").value = decodeURIComponent(urlParams.get("twitch") || "") || localStorage.getItem('iframeURL_twitch') || "";
+	}  catch(e){
+		document.querySelector("#iframeURL_twitch").value = urlParams.get("twitch") || localStorage.getItem('iframeURL_twitch') || "";
+	}
 }
 if (localStorage.getItem('iframeURL_youtube') || urlParams.has("youtube")){
-	document.querySelector("#iframeURL").value = decodeURIComponent(urlParams.get("youtube") || "") || localStorage.getItem('iframeURL_youtube') || "";
+	try 
+		document.querySelector("#iframeURL").value = decodeURIComponent(urlParams.get("youtube") || "") || localStorage.getItem('iframeURL_youtube') || "";
+	} catch(e){
+		document.querySelector("#iframeURL").value = urlParams.get("youtube") || localStorage.getItem('iframeURL_youtube') || "";
+	}
 }
+
 var menuOffset = "70px";
+
+if ( urlParams.has("hidemenu") || urlParams.has("hide") ||  urlParams.has("hidebar")){
+	container.classList.add("hidden");
+	menuOffset = "0px";
+}
+
+
 loadPage();
+
+
 
 function hidebar(){
 	container.classList.add("hidden");

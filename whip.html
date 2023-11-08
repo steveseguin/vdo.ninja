@@ -3,6 +3,10 @@
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
 	<link rel="stylesheet" href="./lineawesome/css/line-awesome.min.css" />
+	<link rel="shortcut icon" href="data:image/x-icon;," type="image/x-icon" />
+	<link id="favicon1" rel="icon" type="image/png" sizes="32x32" href="./media/favicon-32x32.png" />
+	<link id="favicon2" rel="icon" type="image/png" sizes="16x16" href="./media/favicon-16x16.png" />
+	<link id="favicon3" rel="icon" href="./media/favicon.ico" />
 	<style>
 	html {
 		border:0;
@@ -37,6 +41,17 @@
 		overflow-x: hidden;
 	}
 
+	#moreinfo {
+		flex-direction: row;
+		flex-wrap: nowrap;
+		justify-content: center;
+		margin: 2em;
+		color:white;
+		transform:scale(120%);
+	}
+	a {
+		color:white;
+	}
 	button.glyphicon-button:focus,
 	button.glyphicon-button:active:focus,
 	button.glyphicon-button.active:focus,
@@ -338,7 +353,7 @@
 							</select >
 							<select style="border-radius:10px;margin-right:5px;width:unset!important;" class="changeText"  id="codecGroupFlag" onchange="updateSVC();" title="Which video codec would you prefer to be used if available?" >
 								<option value="default" selected>🎦OpenH264</option>
-								<option value="av1">🎦AV1</option>
+								<option id="av1codec" value="av1">🎦AV1</option>
 								<option value="vp9">🎦VP9</option>
 								<option value="vp8">🎦VP8</option>
 								<option value="h264">🎦H264</option>
@@ -346,13 +361,14 @@
 							<select style="border-radius:10px;margin-right:5px;width:unset!important;" class="changeText" id="svcGroupFlag" title="Which scalable video coding do you want to use?" >
 								<option value="0" selected>🎦 SVC Off</option>
 							</select >
-							
+							<select style="border-radius:10px;margin-right:5px;width:unset!important;" class="changeText" id="e2eeGroupFlag1" title="E2EE uses insertable streams; not everthing supports this" >
+								<option value="0" selected>🔑 E2EE Off</option>
+								<option value="1">🔑 E2EE On</option>
+							</select >
 						</div>
-						
-						
 					</div>	
 				</div>
-				
+				<br />
 				<div id="urlInput1a" class="urlInput" title="Put the link you want to load here">
 					
 					<h3>Publish a video from VDO.Ninja to your Twitch channel</h3>
@@ -361,11 +377,17 @@
 						<label for="changeText">
 							<i class="las la-upload"></i>
 						</label>
-						<input type="password" id="changeText1t" class="inputfield changeText" placeholder="Enter your Twitch stream token here" />
+						<input type="password" id="changeText1t" autocomplete="changeText1twitcha"  class="inputfield changeText" placeholder="Enter your Twitch stream token here" />
 						<button  onclick="gohere1t();" class="gobutton" id="gobutton1t">GO</button>
 					</div>
+					<div class="hidden">
+						<div class="inputCombo" style="margin: 10px 0px 10px 10px;" autocomplete="changeText1twitchb"  title="If you want to have viewers of this VDO.Ninja link auto-load your Twitch stream">
+							<input type="text" class="inputfield changeText" placeholder="Twitch user name (optional)" />
+							<div class="details">📻</div>
+						</div>
+					</div>
 				</div>
-				
+				<br /><br /><br />
 				<div id="urlInput2"  class="urlInput"title="Put the WHIP token you want to listen for">
 					
 					<h3>Setup VDO.Ninja to be a WHIP-ingestion end-point (ie: OBS -> VDO)</h3>
@@ -387,23 +409,55 @@
 					<div  class="inputCombo" id="inputCombo3">
 						<label for="changeText">
 						<i class="las la-play"></i>
-					</label>
+						</label>
 						<input type="text" id="changeText3" class="inputfield changeText"  placeholder="WHEP Play URL" />
 						<button  onclick="gohere3();"  class="gobutton" id="gobutton3">GO</button>
 					</div>
+					<div class="inputCombo" style="margin: 10px 0px 10px 10px;">
+						<input type="password" id="changeText3a" class="inputfield changeText" placeholder="🗝️ Authentication Bearer Token (optional)" />
+						<div class="details">⚙️</div>
+					</div>
+					<div class="inputCombo" id="advancedwhep" style="margin: 10px 0px 10px 10px;">
+						<select style="border-radius:10px;margin-right:5px;width:unset!important;" class="changeText" id="whepbuffer"  title="Adding a playback buffer can help reduce frame loss or jitter" >
+							<option value="0" selected>⌛No added playback buffer</option>
+							<option value="500">⌛500-ms added</option>
+							<option value="1000">⌛1000-ms added</option>
+							<option value="2000">⌛2000-ms added</option>
+							<option value="3000">⌛3000-ms added</option>
+						</select >
+						<select style="border-radius:10px;margin-right:5px;width:unset!important;" class="changeText" id="whepicewait"  title="Adding a playback buffer can help reduce frame loss or jitter" >
+							<option value="0">⌛Do not wait for ICE candidates</option>
+							<option value="500">⌛Wait 500-ms for ICE candidates</option>
+							<option value="1000">⌛Wait 1000-ms for ICE candidates</option>
+							<option value="2000" selected>⌛Wait 2000-ms for ICE candidates</option>
+							<option value="5000">⌛Wait 5000-ms for ICE candidates</option>
+						</select >
+						<select style="border-radius:10px;margin-right:5px;width:unset!important;" class="changeText" id="e2eeGroupFlag2" title="E2EE uses insertable streams; not everthing supports this" >
+							<option value="0" selected>🔑 E2EE Off</option>
+							<option value="1">🔑 E2EE On</option>
+						</select >
+					</div>
+					<div class="inputCombo" id="advanced3" style="margin: 10px 0px 10px 10px;">
+						<select style="border-radius:10px;margin-right:5px;width:unset!important;" class="changeText" id="stereowhep"  title="Stereo is available only if auto-gain and noise-reduction is off." >
+							<option value="1" selected>🎙️Stereo</option>
+							<option value="0">🎙️Mono</option>
+						</select>
+					</div>
 				</div>
-				
-				<div id="urlInput4" class="urlInput" title="Put the link you want to load here">
+				<br /><br />
+				<div id="urlInput4" class="urlInput" title="Start a VDO.Ninja stream, and then after, access it remotely via WHEP">
 					
-					<h3>Host a stream as a WHEP source  🚧</h3>
+					<h3>Host a VDO.Ninja stream as a WHEP source</h3>
 					
 					<div  class="inputCombo" id="inputCombo4">
-					<label for="changeText">
-						<i class="las la-broadcast-tower"></i>
-					</label>
-						<input type="text" id="changeText4" class="inputfield changeText"  placeholder="WHEP Enabled Publishing Link" />
-						<button  onclick="gohere4();"  class="gobutton" id="gobutton4">GO</button>
+						<label for="changeText">
+							<i class="las la-broadcast-tower"></i>
+						</label>
+						<input type="text" id="changeText4" class="inputfield changeText"  oninput="change4()" onchange="change4()" placeholder="The WHEP Token you wish to use goes here" />
+						<button  onclick="gohere4();"  class="gobutton" id="gobutton4"  onclick="gohere4();" >GO</button>
+						
 					</div>
+					<h3 style="text-align: center;color:#ccc;"><i>The WHEP endpoint for this is <a href='' id="whepoutsrc" target="_blank">https://whep.vdo.ninja/<span id='whepoutid'>WHEP_TOKEN_HERE</span></a></i></h3>
 				</div>
 				
 				<div id="history" title="History of past links used. You can clear this history using the button to the left">
@@ -412,6 +466,14 @@
 						<i class="las la-history"></i>
 					</label>
 				</div>
+				<br />
+				<div id="moreinfo">
+					<h3 style='cursor:pointer;'>More information and options</h3>
+					For more WHIP/WHEP options, tools, services, and documentation, please see: <a href='https://docs.vdo.ninja/steves-helper-apps/whip-and-whep-tooling' target="_blank"><br /><br />
+					<b>https://docs.vdo.ninja/steves-helper-apps/whip-and-whep-tooling</b></a>
+				</div>
+				<br /><br /><br /><br />
+				
 		</div>
 <script>
 
@@ -421,7 +483,56 @@ document.querySelector("#changeText1").value = localStorage.getItem('changeText1
 document.querySelector("#changeText1t").value = localStorage.getItem('changeText1t') || "";
 document.querySelector("#changeText1a").value = localStorage.getItem('changeText1a') || "";
 document.querySelector("#changeText2").value = localStorage.getItem('changeText2') || "";
-document.querySelector("#changeText3").value = localStorage.getItem('changeText3') || "";
+
+
+if (localStorage.getItem('changeText3')!==null){
+	document.getElementById('changeText3').value = localStorage.getItem('changeText3');
+}
+if (localStorage.getItem('changeText3a')!==null){
+	document.getElementById('changeText3a').value = localStorage.getItem('changeText3a');
+}
+
+if (localStorage.getItem('whepbuffer')!==null){
+	document.getElementById('whepbuffer').value = localStorage.getItem('whepbuffer');
+}
+if (localStorage.getItem('whepicewait')!==null){
+	document.getElementById('whepicewait').value = localStorage.getItem('whepicewait');
+}
+if (localStorage.getItem('bitrateGroupFlag')!==null){
+	document.getElementById('bitrateGroupFlag').value = localStorage.getItem('bitrateGroupFlag');
+}
+if (localStorage.getItem('codecGroupFlag')!==null){
+	document.getElementById('codecGroupFlag').value = localStorage.getItem('codecGroupFlag');
+}
+if (localStorage.getItem('svcGroupFlag')!==null){
+	document.getElementById('svcGroupFlag').value = localStorage.getItem('svcGroupFlag');
+}
+if (localStorage.getItem('whipoutaudiobitrate')!==null){
+	document.getElementById('whipoutaudiobitrate').value = localStorage.getItem('whipoutaudiobitrate');
+}
+if (localStorage.getItem('vbrcbr')!==null){
+	document.getElementById('vbrcbr').value = localStorage.getItem('vbrcbr');
+}
+if (localStorage.getItem('autogain')!==null){
+	document.getElementById('autogain').value = localStorage.getItem('autogain');
+}
+if (localStorage.getItem('stereo')!==null){
+	document.getElementById('stereo').value = localStorage.getItem('stereo');
+}
+if (localStorage.getItem('denoise')!==null){
+	document.getElementById('denoise').value = localStorage.getItem('denoise');
+}
+
+if (localStorage.getItem('e2eeGroupFlag1')!==null){
+	document.getElementById('e2eeGroupFlag1').value = localStorage.getItem('e2eeGroupFlag1');
+}
+if (localStorage.getItem('e2eeGroupFlag2')!==null){
+	document.getElementById('e2eeGroupFlag2').value = localStorage.getItem('e2eeGroupFlag2');
+}
+
+if (localStorage.getItem('stereowhep')!==null){
+	document.getElementById('stereowhep').value = localStorage.getItem('stereowhep');
+}
 
 const scalabilityModes = [
 	'L1T1',
@@ -457,6 +568,11 @@ const scalabilityModes = [
 
 function gohere1(){
 	if (document.getElementById('changeText1').value){
+	
+		if (document.getElementById('changeText1').value.startsWith("http://")){
+			document.getElementById('changeText1').value = document.getElementById('changeText1').value.replace("http://","https://");
+		}
+		
 		localStorage.setItem('changeText1', document.getElementById('changeText1').value);
 		localStorage.setItem('changeText1a', document.getElementById('changeText1a').value || "");
 		
@@ -470,6 +586,7 @@ function gohere1(){
 		localStorage.setItem('stereo', document.getElementById('stereo').value);
 		localStorage.setItem('denoise', document.getElementById('denoise').value);
 		
+		localStorage.setItem('e2eeGroupFlag1', document.getElementById('e2eeGroupFlag1').value);
 		
 		var whipoutaudiobitrate = "";
 		if (parseInt(document.getElementById('whipoutaudiobitrate').value)){
@@ -478,7 +595,9 @@ function gohere1(){
 		
 		var vbrcbr = "&"+document.getElementById('vbrcbr').value;
 		var autogain = "&autogain="+document.getElementById('autogain').value;
+		
 		var stereo = "&stereo="+document.getElementById('stereo').value;
+		
 		var denoise = "&denoise="+document.getElementById('denoise').value;
 		
 		
@@ -495,10 +614,15 @@ function gohere1(){
 			svc = "&svc="+document.getElementById('svcGroupFlag').value;
 		}
 		
+		var e2ee = "";
+		if (document.getElementById('e2eeGroupFlag1').value!=="0"){
+			e2ee = "&e2ee&password";
+		}
+		
 		if (document.getElementById('changeText1a').value){
-			window.location = domain + "?push&whippush=" + encodeURIComponent(document.getElementById('changeText1').value) + "&whippushtoken=" + document.getElementById('changeText1a').value + codec + bitrate+whipoutaudiobitrate+vbrcbr+autogain+stereo+denoise+svc;
+			window.location = domain + "?push&whippush=" + encodeURIComponent(document.getElementById('changeText1').value) + "&whippushtoken=" + document.getElementById('changeText1a').value + codec + bitrate+whipoutaudiobitrate+vbrcbr+autogain+stereo+denoise+svc+e2ee;
 		} else {
-			window.location = domain + "?push&whippush=" + encodeURIComponent(document.getElementById('changeText1').value) + codec + bitrate+whipoutaudiobitrate+vbrcbr+autogain+stereo+denoise+svc;;
+			window.location = domain + "?push&whippush=" + encodeURIComponent(document.getElementById('changeText1').value) + codec + bitrate+whipoutaudiobitrate+vbrcbr+autogain+stereo+denoise+svc+e2ee;
 		}
 	}
 }
@@ -559,13 +683,58 @@ function gohere2(){
 
 function gohere3(){
 	if (document.getElementById('changeText3').value){
+	
+		if (document.getElementById('changeText3').value.startsWith("http://vdo.ninja/")){
+			document.getElementById('changeText3').value = document.getElementById('changeText3').value.replace("http://vdo.ninja/","http://insecure.vdo.ninja/"); // a special exception for WHEP developers
+		}
+	
 		localStorage.setItem('changeText3', document.getElementById('changeText3').value);
-		window.location = domain + "?&hidemenu&whepplay=" + encodeURIComponent(document.getElementById('changeText3').value);
+		localStorage.setItem('changeText3a', document.getElementById('changeText3a').value);
+		localStorage.setItem('whepbuffer', document.getElementById('whepbuffer').value);
+		localStorage.setItem('whepicewait', document.getElementById('whepicewait').value);
+		localStorage.setItem('e2eeGroupFlag2', document.getElementById('e2eeGroupFlag2').value);
+		localStorage.setItem('stereowhep', document.getElementById('stereowhep').value);
+		
+		
+		var addedon = "";
+		if (parseInt(document.getElementById('whepbuffer').value)){
+			addedon += "&buffer="+document.getElementById('whepbuffer').value;
+		}
+		
+		if (parseInt(document.getElementById('e2eeGroupFlag2').value)){
+			addedon += "&e2ee&password";
+		}
+		if (parseInt(document.getElementById('stereowhep').value)){
+			addedon += "&stereo=2";  // viewer side only; stereo=1 will do both ways
+		} else {
+			addedon += "&mono";
+		}
+		
+		if (document.getElementById('changeText3a').value){
+			addedon += "&whepplaytoken="+document.getElementById('changeText3a').value;
+		}
+		
+		addedon += "&whepwait="+document.getElementById('whepicewait').value;
+		
+		window.location = domain + "?&hidemenu&whepplay=" + encodeURIComponent(document.getElementById('changeText3').value)+addedon;
 	}
 }
 
+function change4(){
+	document.getElementById('whepoutid').innerText = document.getElementById('changeText4').value;
+	document.getElementById('whepoutsrc').href = "https://whep.vdo.ninja/"+document.getElementById('changeText4').value;
+	
+	
+}
+
 function gohere4(){
-	// nothing yet
+	if (document.getElementById('changeText4').value){  // document.getElementById('changeText4').value
+		localStorage.setItem('changeText4', document.getElementById('changeText4').value);
+		document.getElementById('whepoutid').innerText = document.getElementById('changeText4').value;
+		document.getElementById('whepoutsrc').href = "https://whep.vdo.ninja/"+document.getElementById('changeText4').value;
+		var addedon = "";
+		window.location = domain + "?push=" + encodeURIComponent(document.getElementById('changeText4').value)+"&whepout=" + encodeURIComponent(document.getElementById('changeText4').value)+addedon;
+	}
 }
 
 function resetHistory(){
@@ -645,45 +814,63 @@ function getCommonValues(obj) {
 
 async function processCodecs(){
 	await codecs.forEach(async codec => {
-		var codecName = codec.mimeType.replace("video/","").toLowerCase();
-		if (['video/red', 'video/ulpfec', 'video/rtx'].includes(codec.mimeType)) {
-			return;
-		} else if (svcLUT[codecName]){ // already done
-			return;
-		}
-		
-		svcLUT[codecName] = [];
-		var capabilityPromises = [];
-		for (const mode of scalabilityModes) {
-			capabilityPromises.push(navigator.mediaCapabilities.encodingInfo({
-				type: capabilityType,
-				video: {
-					contentType: codec.mimeType,
-					width: 1920,
-					height: 1080,
-					bitrate: 10000,
-					framerate: 29.97,
-					scalabilityMode: mode
-				}
-			}));
-		}
-		var capabilityResults = await Promise.all(capabilityPromises);
-		for (var i = 0;i<capabilityResults.length;i++){
-			if (capabilityResults[i].supported){
-				svcLUT[codecName].push(scalabilityModes[i]);
+		try {
+			var codecName = codec.mimeType.replace("video/","").toLowerCase();
+			if (['video/red', 'video/ulpfec', 'video/rtx'].includes(codec.mimeType)) {
+				return;
+			} else if (svcLUT[codecName]){ // already done
+				return;
 			}
+			
+			svcLUT[codecName] = [];
+			var capabilityPromises = [];
+			for (const mode of scalabilityModes) {
+				capabilityPromises.push(navigator.mediaCapabilities.encodingInfo({
+					type: capabilityType,
+					video: {
+						contentType: codec.mimeType,
+						width: 1920,
+						height: 1080,
+						bitrate: 10000,
+						framerate: 29.97,
+						scalabilityMode: mode
+					}
+				}));
+			}
+			var capabilityResults = await Promise.all(capabilityPromises);
+			for (var i = 0;i<capabilityResults.length;i++){
+				if (capabilityResults[i].supported){
+					svcLUT[codecName].push(scalabilityModes[i]);
+				}
+			}
+			
+			svcLUT['default'] = getCommonValues(svcLUT);
+			updateSVC();
+		} catch(e){
+			console.error(e);
 		}
-		
-		svcLUT['default'] = getCommonValues(svcLUT);
-		updateSVC();
 	});
 	console.log("available codecs");
 	console.log(svcLUT);
 
 	
 }
-
-processCodecs();
+if (codecs){
+	var av1found = false;
+	codecs.forEach(c =>{
+		if (c.mimeType.toLowerCase().includes("av1")){
+			av1found = true;
+		}
+	})
+	if (!av1found){
+		document.getElementById("av1codec").disabled = true;
+		document.getElementById("av1codec").title = "Not found on your system";
+	} else if (localStorage.getItem('codecGroupFlag')===null){
+		document.getElementById('codecGroupFlag').value = "av1";
+	}
+	processCodecs();
+	
+}
 
 </script>
 </body>

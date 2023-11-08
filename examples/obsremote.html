@@ -1,0 +1,412 @@
+<html>
+<head>
+<title>
+	Remote control interface using VDO.Ninja's iframe API
+</title>
+<style>
+#debugRemoteOBSControl{
+	font-size:50%;
+}
+button {
+    margin: 10px;
+    padding: 20px;
+}
+a {
+    display: inline-block;
+}
+</style>
+</head>
+<body>
+<div id="remoteOBSControl" class="customModelPopup" >
+
+	<h3 data-translate="remote-control-obs-menu">Remote Controller for OBS Studio</h3><br />
+	<div id="obsControlHelp" class="hidden" style="margin: 10px 0;display:block" >
+		No remote controllable instances of OBS Studio were found
+	</div>
+	<div id="obsControlButtons" style="margin: 10px 0;display:block" >
+	</div>
+	<div id="obsSceneNames" style="margin: 10px 0;display:block">
+	</div>
+	<div id="obsRemotePassword" class="hidden" style="margin: 10px 0;display:block;" >
+		<span style="font-size:117%"><i class="las la-key" style="margin: 10px;"></i>Remote OBS passcode:</span>
+		<input id="obsRemotePasswordinput" style="margin:0 10px;display:inline-block;padding: 8px 10px 6px 10px;" onchange="changeremote()" oninput="changeremote()" placeholder="Enter the remote OBS password here" />
+	</div>
+	
+	Put the following link into OBS with permissions set to allow for scene changes: <a href="" id="putintoOBSlink" style="margin: 10px 0;" target="_blank"></a>
+	
+	<small style="margin: 20px 0 0 0;display:block;" >
+		See the <a href="https://docs.vdo.ninja/advanced-settings/upcoming-parameters/and-obs" style="cursor:pointer;" target="_blank">documentation</a> for the built-in OBS control options inside VDO.Ninja
+	</small>
+	<div id="debugRemoteOBSControl" class="hidden">
+	</div>
+	
+</div>
+<script>
+
+var sessionID = '';
+var characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+var charactersLength = characters.length;
+for (var i = 0; i < 12; i++) {
+	sessionID += characters.charAt(Math.floor(Math.random() * charactersLength));
+}
+	
+
+var iframe = document.createElement("iframe");
+var iframeContainer = document.createElement("div");
+iframe.allow = "autoplay;camera;microphone;fullscreen;picture-in-picture;display-capture;";
+
+
+function changeremote(){
+	var ele = document.getElementById("obsRemotePasswordinput");
+	var val = ele.value.replace(/[^0-9a-zA-Z]/g, '');
+	ele.value = val;
+
+	if (val){
+		document.getElementById("putintoOBSlink").innerText = "https://vdo.ninja/alpha/?view="+sessionID+"&dataonly&remote="+val;
+		document.getElementById("putintoOBSlink").href = "https://vdo.ninja/alpha/?view="+sessionID+"&dataonly&remote="+val;
+	} else {
+		document.getElementById("putintoOBSlink").innerText = "https://vdo.ninja/alpha/?view="+sessionID+"&dataonly&remote";
+		document.getElementById("putintoOBSlink").href = "https://vdo.ninja/alpha/?view="+sessionID+"&dataonly&remote";
+	}
+}
+changeremote();
+
+iframe.src = "https://vdo.ninja/alpha/?push="+sessionID+"&remote&dataonly";  ///// change this
+iframeContainer.appendChild(iframe);
+iframeContainer.style.width = "300px";
+iframeContainer.style.height = "20px";
+iframeContainer.style.overflow = "hidden";
+document.body.appendChild(iframeContainer);
+
+	 
+////////////  LISTEN FOR EVENTS
+
+var eventMethod = window.addEventListener ? "addEventListener" : "attachEvent";
+var eventer = window[eventMethod];
+var messageEvent = eventMethod === "attachEvent" ? "onmessage" : "message";
+
+eventer(messageEvent, function (e) {
+	if (e.source != iframe.contentWindow){return} // reject messages send from other iframes
+	if (typeof e.data !== "object"){errorlog(e);return;}
+	warnlog(e.data);
+	if ("action" in e.data){
+		if (e.data.value && (e.data.action  === "obs-state")){
+			manageSceneState({obsState: e.data.value}, e.data.UUID)
+		} else if (e.data.action == "new-push-connection"){
+			if (e.data.UUID){
+				if (!e.data.value){
+					delete session.pcs[e.data.UUID];
+					document.querySelectorAll("[data-system='"+e.data.UUID+"']").forEach(ele=>{
+						ele.remove();
+					});
+					
+				}
+			}
+		}
+	}
+});
+	
+var session = {};
+session.pcs = {}
+
+function errorlog(e,l=null){
+	console.error(e,l);
+}
+function warnlog(e,l=null){
+	console.warn(e,l);
+}
+function log(e,l=null){
+	console.log(e,l);
+}
+function getById(ele){
+	return document.getElementById(ele) || document.createElement("span");
+}
+
+function sendMessage(msg){
+	if (iframe){
+		iframe.contentWindow.postMessage(msg, '*');
+	}
+}
+
+function manageSceneState(data, UUID){ // incoming obs details
+	var processNeeded = false
+	
+	if (!(UUID in session.pcs)){ // re-using vdo.ninja state structures, to make code functions available as simply copy/paste
+		session.pcs[UUID] = {};
+		session.pcs[UUID].obsState = {};
+	}
+	
+	try{
+		if (data.obsState){
+			if ("sourceActive" in data.obsState){  
+				processNeeded=true;
+				session.pcs[UUID].obsState.sourceActive = data.obsState.sourceActive;
+			}
+			if ("visibility" in data.obsState){
+				processNeeded=true;
+				session.pcs[UUID].obsState.visibility = data.obsState.visibility;
+			}
+			if ("details" in data.obsState){   
+				processNeeded=true;
+				session.pcs[UUID].obsState.details = data.obsState.details;
+			}
+			if ("streaming" in data.obsState){  
+				processNeeded=true;
+				session.pcs[UUID].obsState.streaming = data.obsState.streaming;
+			}
+			if ("recording" in data.obsState){  
+				processNeeded=true;
+				session.pcs[UUID].obsState.recording = data.obsState.recording;
+			}
+			if ("virtualcam" in data.obsState){  
+				processNeeded=true;
+				session.pcs[UUID].obsState.virtualcam = data.obsState.virtualcam;
+			}
+		}
+	} catch(e){
+		errorlog(e);
+	}
+	
+	if (!processNeeded){
+		return;
+	}
+	
+	try {
+		var control = 0;
+		if (session.pcs[UUID].obsState && session.pcs[UUID].obsState.details){
+			control =  parseInt(session.pcs[UUID].obsState.details.controlLevel) || 0; //0 for NONE, 1 for READ_OBS (OBS data), 2 for READ_USER (User data), 3 for BASIC, 4 for ADVANCED and 5 for ALL
+		}
+		
+		var multi = false;
+		getById("obsControlButtons").querySelectorAll("[data-system]").forEach(ele=>{
+			if (ele.dataset.system in session.pcs){
+				if (ele.dataset.system !==UUID){
+					multi = true;
+				}
+			} else { // delete, since no longer active.
+				ele.remove();
+			}
+		});
+		
+		getById("obsSceneNames").querySelectorAll("[data-system]").forEach(ele=>{
+			if (ele.dataset.system in session.pcs){
+				if (ele.dataset.system !==UUID){
+					multi = true;
+				}
+			} else { // delete, since no longer active.
+				ele.remove();
+			}
+		});
+		
+		if (control==0){
+			var obsControlButtonsBox = getById("obsControlButtons").querySelector("[data-system='"+UUID+"']");
+			if (obsControlButtonsBox){
+				obsControlButtonsBox.remove();
+			}
+			var obsSceneNamesBox = getById("obsSceneNames").querySelector("[data-system='"+UUID+"']"); // this hides if less than 2, so hide it now.
+			if (obsSceneNamesBox){
+				obsSceneNamesBox.remove();
+			}
+			if (!multi){
+				getById("obsControlHelp").classList.remove("hidden");
+			}
+			return;
+		}
+		
+		getById("obsControlHelp").classList.add("hidden");
+		
+		var obsControlButtonsBox = getById("obsControlButtons").querySelector("[data-system='"+UUID+"']");
+		if (!obsControlButtonsBox){
+			obsControlButtonsBox = document.createElement("div");
+			obsControlButtonsBox.dataset.system = UUID;
+			getById("obsControlButtons").appendChild(obsControlButtonsBox);
+		} else {
+			obsControlButtonsBox.innerHTML = "";
+		}
+		
+		if (multi){
+			var h3 = document.createElement("h3");
+			h3.innerText = "OBS instance: " + (session.pcs[UUID].label || session.pcs[UUID].scene || UUID);
+			obsControlButtonsBox.appendChild(h3);
+		}
+		
+		if (session.pcs[UUID].obsState && ("streaming" in session.pcs[UUID].obsState)){
+			
+			var controlButton = document.createElement("button");
+			controlButton.dataset.UUID = UUID;
+			
+			if (session.pcs[UUID].obsState.streaming){
+				controlButton.classList.add("pressed");
+				controlButton.ariaPressed = "true";
+				controlButton.dataset.obsAction = "stopStreaming";
+				controlButton.innerText = "📡 stop streaming";
+			} else {
+				controlButton.dataset.obsAction = "startStreaming";
+				controlButton.innerText = "📡 start streaming";
+			}
+
+			if (control<5){
+				controlButton.disabled = true;
+				controlButton.style.cursor = "not-allowed";
+				controlButton.title = "Source is lacking required permissions.";
+			} else {
+				controlButton.onclick = async function(){
+					var msg = {};
+					msg.obsCommand = {}
+					msg.obsCommand.action = this.dataset.obsAction;
+					msg.UUID = this.dataset.UUID;
+					if (document.querySelector("#obsRemotePassword>input") && document.querySelector("#obsRemotePassword>input").value){
+						msg.remote = document.querySelector("#obsRemotePassword>input").value;
+					} else {
+						msg.remote = getById("obsRemotePassword").value || false;
+					}
+					
+					sendMessage(msg);
+					log("action request: "+this.dataset.obsAction);
+				}
+			}
+			obsControlButtonsBox.appendChild(controlButton);
+		}
+		if (session.pcs[UUID].obsState && ("recording" in session.pcs[UUID].obsState)){
+			
+			var controlButton = document.createElement("button");
+			controlButton.dataset.UUID = UUID;
+			
+			if (session.pcs[UUID].obsState.recording){
+				controlButton.classList.add("pressed");
+				controlButton.ariaPressed = "true";
+				controlButton.dataset.obsAction = "stopRecording";
+				controlButton.innerText = "📽 stop recording";
+			} else {
+				controlButton.dataset.obsAction = "startRecording";
+				controlButton.innerText = "📽 start recording";
+			}
+
+			if (control<5){
+				controlButton.disabled = true;
+				controlButton.style.cursor = "not-allowed";
+				controlButton.title = "Source is lacking required permissions.";
+			} else {
+				controlButton.onclick = async function(){
+					var msg = {};
+					msg.obsCommand = {};
+					msg.obsCommand.action = this.dataset.obsAction;
+					msg.UUID = this.dataset.UUID;
+					if (document.querySelector("#obsRemotePassword>input").value){
+						msg.remote = document.querySelector("#obsRemotePassword>input").value;
+					} else {
+						msg.remote = getById("obsRemotePassword").value || false;
+					}
+					
+					sendMessage(msg);
+					log("action request: "+this.dataset.obsAction);
+				}
+			}
+			obsControlButtonsBox.appendChild(controlButton);
+		}
+		if (session.pcs[UUID].obsState && ("virtualcam" in session.pcs[UUID].obsState)){
+			
+			var controlButton = document.createElement("button");
+			
+			controlButton.dataset.UUID = UUID;
+			
+			if (session.pcs[UUID].obsState.virtualcam){
+				controlButton.classList.add("pressed");
+				controlButton.ariaPressed = "true";
+				controlButton.dataset.obsAction = "stopVirtualcam";
+				controlButton.innerText = "💻 stop virtualcam";
+			} else {
+				controlButton.dataset.obsAction = "startVirtualcam";
+				controlButton.innerText = "💻 start virtualcam";
+			}
+			
+			if (control<5){
+				controlButton.disabled = true;
+				controlButton.style.cursor = "not-allowed";
+				controlButton.title = "Source is lacking required permissions.";
+			} else {
+				controlButton.onclick = async function(){
+					var msg = {};
+					msg.obsCommand = {}
+					msg.obsCommand.action = this.dataset.obsAction;
+					msg.UUID = this.dataset.UUID;
+					if (document.querySelector("#obsRemotePassword>input").value){
+						msg.remote = document.querySelector("#obsRemotePassword>input").value;
+					} else {
+						msg.remote = getById("obsRemotePassword").value || false;
+					}
+					
+					sendMessage(msg);
+					log("action request: "+this.dataset.obsAction);
+				}
+			}
+			obsControlButtonsBox.appendChild(controlButton);
+		}
+	} catch(e){errorlog(e);} // just in case the client has disconnected.
+	
+	
+	if (control<2){
+		var obsSceneNamesBox = getById("obsSceneNames").querySelector("[data-system='"+UUID+"']");
+		if (obsSceneNamesBox){
+			obsSceneNamesBox.remove();
+		}
+		return;
+	}
+	
+	var obsSceneNamesBox = getById("obsSceneNames").querySelectorAll("div[data-system='"+UUID+"']");
+	if (!obsSceneNamesBox.length){
+		obsSceneNamesBox = document.createElement("div");
+		obsSceneNamesBox.dataset.system = UUID;
+		getById("obsSceneNames").appendChild(obsSceneNamesBox);
+	} else {
+		obsSceneNamesBox = obsSceneNamesBox[0];
+		obsSceneNamesBox.innerHTML = "";
+	}
+	
+	if (multi){
+		var h3 = document.createElement("h3");
+		h3.innerText = "OBS instance: " + (session.pcs[UUID].label || session.pcs[UUID].scene || UUID);
+		obsSceneNamesBox.appendChild(h3);
+	}
+	
+	if (session.pcs[UUID].obsState.details){
+		var details = session.pcs[UUID].obsState.details;
+		if (details.scenes){
+			details.scenes.forEach(scene=>{
+				
+				var sceneButton = document.createElement("button");
+				sceneButton.dataset.obsScene = scene;
+				sceneButton.dataset.UUID = UUID;
+				sceneButton.innerText = scene;
+				if (details.currentScene && details.currentScene.name && (details.currentScene.name === scene)){
+					sceneButton.classList.add("pressed");
+					sceneButton.ariaPressed = "true";
+				}
+				obsSceneNamesBox.appendChild(sceneButton);
+				if (control<4){
+					sceneButton.disabled = true;
+					sceneButton.style.cursor = "not-allowed";
+					sceneButton.title = "Source is lacking required permissions.";
+				} else {
+					sceneButton.onclick = async function(){
+						var msg = {};
+						msg.obsCommand = {action: "setCurrentScene", value: this.dataset.obsScene};
+						msg.UUID = this.dataset.UUID;
+						if (document.querySelector("#obsRemotePassword>input").value){
+							msg.remote = document.querySelector("#obsRemotePassword>input").value;
+						} else {
+							msg.remote = getById("obsRemotePassword").value || false;
+						}
+						
+						sendMessage(msg);
+						log("scene change request: "+this.dataset.obsScene);
+					};
+				}
+			});
+		}
+	}
+	getById("debugRemoteOBSControl").innerText = JSON.stringify(session.pcs[UUID].obsState);
+}
+</script>
+</body>
+</html>

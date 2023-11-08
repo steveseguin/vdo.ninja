@@ -1,0 +1,59 @@
+<html>
+<head>
+	<style>
+		* {font-size:6vw;}
+	</style>
+</head>
+<body>
+<script>
+const stunServers = [
+  'stun:stun.l.google.com:19302',
+  'stun:stun1.l.google.com:19302',
+  'stun:stun.cloudflare.com:3478',
+];
+
+async function checkConnectionModes() {
+  let hostMode = false;
+  let srflxMode = false;
+
+  for (const stunServer of stunServers) {
+   try {
+      const iceConfig = { iceServers: [{ urls: stunServer }] };
+      const rtcPeerConnection = new RTCPeerConnection(iceConfig);
+
+      rtcPeerConnection.createDataChannel(''); // Create a dummy data channel
+      const offer = await rtcPeerConnection.createOffer();
+
+      rtcPeerConnection.onicecandidate = (event) => {
+        if (event.candidate) {
+          // Check the ICE candidate type
+          if (event.candidate.candidate.includes('srflx')) {
+			if (!srflxMode){
+				srflxMode= true;
+				document.body.innerHTML += ('SRFLX');
+				document.body.innerHTML += ('<br />');
+			}
+          } else if (event.candidate.candidate.includes('host')) {
+			if (!hostMode){
+				hostMode = true;
+				document.body.innerHTML += ('Host');
+				document.body.innerHTML += ('<br />');
+			}
+          }
+        } else {
+          // All candidates have been gathered
+          rtcPeerConnection.onicecandidate = null; // Remove the event handler
+        }
+      };
+      rtcPeerConnection.setLocalDescription(offer);
+    } catch (error) {
+      srflxMode = true;
+    }
+  }
+}
+
+checkConnectionModes()
+
+</script>
+</body>
+</html>

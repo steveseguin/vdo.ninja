@@ -106,10 +106,10 @@
 		<h1>Generate Cloudflare Auth for VDO.Ninja</h1>
 		<form id="postForm">
 			<label for="userId">Cloudflare Account ID:</label>
-			<input type="text" id="userId" name="userId" required>
+			<input type="text" id="userId" name="userId" autocomplete="userId" required>
 			<br><br>
 			<label for="accessToken">Cloudflare Stream Access Token:</label>
-			<input type="password" id="accessToken" name="accessToken" required>
+			<input type="password" id="accessToken" autocomplete="accessToken" name="accessToken" required>
 			<br><br>
 			<label for="expiration">Hours until expiration</label>
 			<input min="0" type="number" id="expiration" name="expiration" placeholder="optional">
@@ -138,7 +138,7 @@
 			<p>Lots input and output options, although if you're here, you're probably interested in the WHIP/WHEP mainly.</p>
 			<p>VDO.Ninja is compatible with WHEP and WHIP!</p>
 			<h3>Very competitive pricing</h3>
-			<p>There's a free tier, which is more than enough for testing.</p>
+			<p>There's a $5 entry tier, which is more than enough for testing.</p>
 			<p>Or pay $1 per 1000 minutes of streaming.</p>
 		</div>
 	</div>
@@ -163,7 +163,7 @@
 				<li>Go to <a href='https://dash.cloudflare.com/profile/api-tokens' target="_blank">https://dash.cloudflare.com/profile/api-tokens</a></li>
 				<li>Click to Create Token (API Tokens)</li>
 				<li>Click Get started with the Create Custom Token option</li>
-				<li>Provide a token name, and for the permissions select Account -> Stream -> Edit</li>
+				<li>Provide a token name, and for the permissions select Account -> Stream -> <b>Edit</b> (not Read)</li>
 				<li>You can define a time-to-live (TTL), if you wish for the token to auto-expire.</li>
 			</ul>
 			You should now have access to both access token and account ID.
@@ -256,7 +256,7 @@
 				setStorage("userId", userId);
 				setStorage("expiration", expiration);
 
-				document.getElementById("response").value = "&cftoken="+responseData;
+				document.getElementById("response").value = "&cftoken="+encodeURIComponent(responseData);
             } catch (error) {
                 console.error("Error:", error);
                 document.getElementById("response").value = "An error occurred.";

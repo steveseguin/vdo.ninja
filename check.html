@@ -270,6 +270,52 @@
 			function logData(data) {
 				logged.push(data);
 			}
+			
+			const stunServers = [
+			  'stun:stun.l.google.com:19302',
+			  'stun:stun1.l.google.com:19302',
+			  'stun:stun.cloudflare.com:3478',
+			];
+
+			async function checkConnectionModes() {
+			  let hostMode = false;
+			  let srflxMode = false;
+
+			  const iceConfig = { iceServers: [{ urls: stunServers }] };
+			  const rtcPeerConnection = new RTCPeerConnection(iceConfig);
+
+			  rtcPeerConnection.createDataChannel(''); // Create a dummy data channel
+			  const offer = await rtcPeerConnection.createOffer();
+
+			  rtcPeerConnection.onicecandidate = (event) => {
+				if (event.candidate) {
+				  if (event.candidate.candidate.includes('srflx')) {
+					if (!srflxMode){
+						srflxMode= true;
+						if (hostMode){
+							logged.push({hostMode,srflxMode});
+						}
+					}
+				  } else if (event.candidate.candidate.includes('host')) {
+					if (!hostMode){
+						hostMode = true;
+						if (srflxMode){
+							logged.push({hostMode,srflxMode});
+						}
+					}
+				  }
+				} else {
+				  rtcPeerConnection.onicecandidate = null;
+				  if (!hostMode || !hostMode){
+					logged.push({hostMode,srflxMode});
+				  }
+				}
+			  };
+			  rtcPeerConnection.setLocalDescription(offer);
+			}
+			try {
+				checkConnectionModes();
+			} catch(e){}
 		
 			function reloadTurn(){
 				console.log("Reloading to change TURN servers");

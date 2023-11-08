@@ -117,13 +117,15 @@
 
 
 	.xbutton{
-		float: right;
 		cursor: pointer;
 		user-select: none;
 		color: white;
 		font-size: 150%;
 		font-family: Verdana;
 		line-height: 14px;
+		position: absolute;
+		right: 5px;
+		top: 5px;
 	}
 	#sceneSettings{
 		font-size: 80%;
@@ -891,12 +893,12 @@
 	</div>
 	<div id="chatModuleButton" class="hidden" onclick="toggleChat();" style="user-select: none;position: fixed;top: 10px;right: 10px;cursor: pointer;" title="Show the chat window">💬</div>
 	<div id="chatModule" class="hidden">
-		<div class="xbutton" onclick="toggleChat();" title="Hide the chat window">x</div>
 		<div id="chatBody" class="message"> 
 			<div class="inMessage" data-translate='welcome-to-vdo-ninja-chat'>
 				Welcome to VDO.Ninja! You can send text messages directly to connected peers from here.
 			</div>
 		</div>
+		<div class="xbutton" onclick="toggleChat();" title="Hide the chat window">x</div>
 		<div id="chatSendBar">
 			<input id="chatInput" placeholder="Enter chat message to send here" onkeypress="EnterButtonChat(event)" />
 			<button onclick="sendChatMessage()" id='sendChat'>Send</button>
@@ -2360,9 +2362,9 @@
 	
 		if (showDirector){
 			additional2+="&showdirector";
-		}
+		} 
 		
-		var iframesrc = "./index.html?ltb=350&transparent&hideheader&hidetranslate&cleandirector&chatbutton=0&director="+roomname+additional+additional2+"&b64css="+injectCSS;
+		var iframesrc = "./index.html?ltb=1500&transparent&hideheader&hidetranslate&cleandirector&chatbutton=0&director="+roomname+additional+additional2+"&b64css="+injectCSS;
 		
 		var params = window.location.search || "";
 		

@@ -1,5 +1,5 @@
 <html>
-<head><title>Twitch + Video</title>
+<head><title>Kick + Video</title>
 <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0,user-scalable=no" />
 <meta content="text/html;charset=utf-8" http-equiv="Content-Type" />
 <style>
@@ -138,17 +138,22 @@ button {
 		<button id="hangup">Hangup</button>
 	</div>
 	<div id="clean">
-		<h1>Use VDO.Ninja and Twitch chat at the same time</h1>
+		<h1>Use VDO.Ninja and Kick chat at the same time</h1>
+		
+		
+		
+		
 		VDO.Ninja Stream ID or URL:
 		<input placeholder="Enter a VDON stream ID or VDON URL" id="viewlink" type="text" />
-		Twitch Username or URL:
-		<input placeholder="Enter the Twitch channel name" id="twitch" type="text" />
+		Kick Username or URL:
+		<input placeholder="Enter the Kick channel name" id="kick" type="text" />
 		<button onclick="loadIframes()" style="background-color: #d1fed1;; padding:10px;margin:10px;">START</button>
 		<button onclick="clearInput()" style="background-color: #f4cccc;margin:10px 0px 10px 10vh;padding:10px;">CLEAR</button>
 		<br /><br /><br />
 		<p>
-			This app lets you publish video/audio via VDO.Ninja at the same time as viewing your Twitch chat.<br /><br />If you have feature requests or suggestions, please report them at https://discord.vdo.ninja in the #feature-request channel.
+			This app lets you publish video/audio via VDO.Ninja at the same time as viewing your Kick chat.<br /><br />If you have feature requests or suggestions, please report them at https://discord.vdo.ninja in the #feature-request channel.
 		</p>
+		<h2>If on mobile, enter "desktop site" mode within your browser's settings</h2>
 	</div>
 <script>
 
@@ -190,19 +195,19 @@ function getStorage(cname) {
 	}
 	return item.value;
 }
-if (getStorage("twitchChatLink")){
-	document.getElementById("twitch").value = getStorage("twitchChatLink");
+if (getStorage("kickChatLink")){
+	document.getElementById("kick").value = getStorage("kickChatLink");
 }
-if (getStorage("vdoNinjaTwitchURL")){
-	document.getElementById("viewlink").value = getStorage("vdoNinjaTwitchURL");
+if (getStorage("vdoNinjaKickURL")){
+	document.getElementById("viewlink").value = getStorage("vdoNinjaKickURL");
 }
 function clearInput(){
 	var confirmit = confirm("Are you sure you want to clear the input fields and local storage?");
 	if (confirmit){
-		removeStorage("twitchChatLink");
-		removeStorage("vdoNinjaTwitchURL");
+		removeStorage("kickChatLink");
+		removeStorage("vdoNinjaKickURL");
 		document.getElementById("viewlink").value  = "";
-		document.getElementById("twitch").value = "";
+		document.getElementById("kick").value = "";
 	}
 }
 
@@ -222,7 +227,7 @@ injectCSS = encodeURIComponent(btoa(injectCSS));
 function loadIframes(url=false){ 
 
 	var roomname = document.getElementById("viewlink").value;
-	var twitch = document.getElementById("twitch").value;
+	var kick = document.getElementById("kick").value;
 	
 	document.getElementById("clean").parentNode.removeChild(document.getElementById("clean"));
 	document.getElementById("container1").style.display="inline-block";
@@ -238,7 +243,7 @@ function loadIframes(url=false){
 		var room1 = "https://"+path+"/?push="+roomname+"&webcam&autostart&vd=front&ad=1&transparent&noheader&fullscreen&cleanish&b64css="+injectCSS;
 	}
 	
-	var room2 = twitch.startsWith("https://") ? twitch : `https://www.twitch.tv/embed/${twitch}/chat?darkpopout&parent=${location.hostname}`;
+	var room2 = kick.startsWith("https://") ? kick : `https://kick.com/${kick}/chatroom`;
 
 	iframe = document.createElement("iframe");
 	iframe.allow = "autoplay;camera;microphone;fullscreen;picture-in-picture;";
@@ -281,9 +286,9 @@ function loadIframes(url=false){
 	});
 	
 	
-	setStorage("twitchChatLink", room2);
+	setStorage("kickChatLink", room2);
 
-	setStorage("vdoNinjaTwitchURL", room1);
+	setStorage("vdoNinjaKickURL", room1);
 	
 	
 	setTimeout(function(){

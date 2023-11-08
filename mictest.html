@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<title>Microphone Test Online – Free Mic Level Checker Tool</title>
+	<meta name="description" content="Use our free online microphone testing tool to check your mic levels and ensure it's working properly. Quick, easy, and no installation required.">
+	<meta name="keywords" content="microphone test, mic check, microphone level, test microphone, check mic, audio test, mic tester online, free mic test, microphone testing tool">
+	<meta property="og:title" content="Microphone Test Online – Free Mic Level Checker Tool"/>
+	<meta property="og:description" content="Check your microphone's levels and functionality with our easy-to-use online tool. No installation needed – test your mic for free now!"/>
+	<meta property="og:image" content="URL_to_an_image_of_your_tool"/>
+	<meta property="og:url" content="https://vdo.ninja/mictest.html"/>
+	<meta name="twitter:card" content="summary_large_image"/>
+	<meta charset="UTF-8">
+	<link id="favicon1" rel="icon" type="image/png" sizes="32x32" href="./media/favicon-32x32.png" />
+	<link id="favicon2" rel="icon" type="image/png" sizes="16x16" href="./media/favicon-16x16.png" />
+	<link id="favicon3" rel="icon" href="./media/favicon.ico" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mic testing tool</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    margin: 0;
+    background-color: #f3f4f6;
+    color: #333;
+    padding: 10px;
+  }
+  h2 {
+    text-align: center;
+    margin: 0 0 20px;
+    font-size: 1.5em;
+  }
+  #micSelect, #startButton, canvas {
+    width: 100%;
+    max-width: 640px;
+    box-sizing: border-box;
+  }
+  #micSelect {
+    margin-bottom: 20px;
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid #ddd;
+    background-color: white;
+    color: black;
+  }
+  #startButton {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    background-color: #5cb85c;
+    color: white;
+    cursor: pointer;
+    font-size: 1em;
+	opacity: 1;
+	visibility: visible;
+	overflow: hidden;
+	max-height: 50px;
+	transition: max-height 0.5s ease-out, opacity 0.5s ease-out, padding 0.5s ease-out;
+  }
+  canvas {
+    border: 1px solid #333;
+    margin-top: 20px;
+    height: auto;
+	min-height: 20vh;
+	max-height: 640px!important;
+  }
+  @media screen and (max-width: 640px) {
+    body {
+      padding: 5px;
+    }
+    h2 {
+      font-size: 1.2em;
+    }
+    #micSelect, #startButton {
+      padding: 8px 10px;
+    }
+    canvas {
+      margin-top: 15px;
+    }
+  }
+  @media (prefers-color-scheme: dark) {
+    body {
+      background-color: #121212;
+      color: #e0e0e0;
+    }
+    #micSelect {
+      background-color: #2c2c2c;
+      border: 1px solid #444;
+      color: #e0e0e0;
+    }
+    #startButton {
+      background-color: #198754;
+    }
+    canvas {
+      border-color: #e0e0e0;
+    }
+  }
+</style>
+</head>
+<body>
+<h2>Microphone Loudness Visualizer</h2>
+<select id="micSelect">
+</select>
+<button id="startButton">Start Mic</button>
+<canvas id="visualizer" width="640" height="100"></canvas>
+<script>
+function hideStartButtonSmoothly() {
+  startButton.style.opacity = '0';
+  startButton.style.maxHeight = '0';
+  startButton.style.padding = '0 20px';
+  setTimeout(() => {
+    startButton.remove();
+  }, 500);
+}
+document.addEventListener('DOMContentLoaded', () => {
+    const micSelect = document.getElementById('micSelect');
+    const startButton = document.getElementById('startButton');
+    const canvas = document.getElementById('visualizer');
+    const canvasCtx = canvas.getContext('2d');
+    let audioContext;
+    let analyzer;
+    let microphone;
+    function isDarkMode() {
+        return window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+    }
+    function setCanvasStyle() {
+        if (isDarkMode()) {
+            canvasCtx.fillStyle = 'rgb(18, 18, 18)';
+            canvasCtx.strokeStyle = 'rgb(0, 173, 181)';
+        } else {
+            canvasCtx.fillStyle = 'rgb(255, 255, 255)';
+            canvasCtx.strokeStyle = 'rgb(0, 123, 255)';
+        }
+    }
+    async function checkMicPermissions() {
+		try {
+			const permissions = await navigator.permissions.query({
+				name: 'microphone'
+			});
+			if (permissions.state === 'granted') {
+				hideStartButtonSmoothly();
+			} else {
+				startButton.style.display = 'block';
+			}
+		}catch(e){}
+    }
+    async function startMic() {
+		checkMicPermissions();
+        await getMicrophones();
+        const micId = micSelect.value;
+        try {
+            if (audioContext) {
+                audioContext.close();
+            }
+            audioContext = new AudioContext();
+            analyzer = audioContext.createAnalyser();
+            const stream = await navigator.mediaDevices.getUserMedia({
+                audio: {
+                    deviceId: micId ? {
+                        exact: micId
+                    } : undefined
+                }
+            });
+            microphone = audioContext.createMediaStreamSource(stream);
+            microphone.connect(analyzer);
+            analyzer.fftSize = 256;
+            const bufferLength = analyzer.frequencyBinCount;
+            const dataArray = new Uint8Array(bufferLength);
+            const draw = () => {
+                requestAnimationFrame(draw);
+                analyzer.getByteFrequencyData(dataArray);
+                canvasCtx.fillRect(0, 0, canvas.width, canvas.height);
+                canvasCtx.beginPath();
+                const sliceWidth = canvas.width * 1.0 / bufferLength;
+                let x = 0;
+                for (let i = 0; i < bufferLength; i++) {
+                    const v = dataArray[i] / 128.0;
+                    const y = canvas.height - v * canvas.height / 2;
+                    if (i === 0) {
+                        canvasCtx.moveTo(x, y);
+                    } else {
+                        canvasCtx.lineTo(x, y);
+                    }
+                    x += sliceWidth;
+                }
+                canvasCtx.lineTo(canvas.width, canvas.height / 2);
+                canvasCtx.stroke();
+            };
+            draw();
+        } catch (e) {
+            console.error('Error starting the microphone', e);
+        }
+    }
+    startButton.addEventListener('click', startMic);
+	micSelect.addEventListener('change', async () => {
+	  updatingDevices = true;
+	  await startMic();
+	  updatingDevices = false;
+	});
+    setCanvasStyle();
+    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', setCanvasStyle);
+   let updatingDevices = false;
+	async function getMicrophones() {
+	  if (updatingDevices) return;
+	  try {
+		await navigator.mediaDevices.getUserMedia({ audio: true });
+		const devices = await navigator.mediaDevices.enumerateDevices();
+		const microphones = devices.filter(device => device.kind === 'audioinput');
+		micSelect.innerHTML = microphones.map(mic =>  `<option value="${mic.deviceId}">${mic.label || 'Microphone'}</option>`).join('');
+	  } catch (e) {
+		console.error('Error getting microphones', e);
+	  }
+	}
+	(async () => {
+	  await getMicrophones();
+	})();
+    navigator.mediaDevices.addEventListener('devicechange', () => {
+	  if (!updatingDevices) getMicrophones();
+	});
+});
+</script>
+</body>
+</html>
