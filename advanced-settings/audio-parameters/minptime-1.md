@@ -26,7 +26,9 @@ Example: `&audiocodec=opus`
 
 #### red
 
-`&audiocodec=red` is pretty much sending two opus streams, with one as a backup in case of packet loss; support in Chromium 97 and up, but the only way I can so far tell that it is working is to check if the audio bitrate has doubled.
+`&audiocodec=red` is pretty much like sending two opus streams, with one as a backup in case of packet loss; support in Chromium 97 and up, but the only way I can so far tell that it is working is to check if the audio bitrate has doubled.
+
+When using \&proaudio, \&stereo, or higher than \&audiobitrate=220 with this, the resulting bitrate may not actually double.  I don't quite understand what's going on here, but you might want to lower the audio bitrate to around 200-kbps or less as a result to ensure its working correctly.
 
 #### pcm
 
