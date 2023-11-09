@@ -7,6 +7,10 @@ description: Does a few things when it detects motion in a video
 Viewer-Side Option! ([`&scene`](../view-parameters/scene.md), [`&room`](../../general-settings/room.md))\
 \***ALPHA-ONLY** - Only available at [https://vdo.ninja/alpha/](https://vdo.ninja/alpha/)
 
+## Aliases
+
+* `&motionswitch`
+
 ## Options
 
 Example: `&motiondetection=40`

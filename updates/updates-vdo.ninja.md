@@ -268,15 +268,12 @@ If you want the VDO.Ninja self-preview to not be mini-sized in broadcast mode, w
 
 #### September 20 <a href="#august-31" id="august-31"></a>
 
-* Added `&forceviewerlandscape` to VDO.Ninja, which keeps all **incoming** videos oriented (rotated) so that the aspect ratio is always above 1, so effectively, forces landscape mode.\
+* Added [`&forceviewerlandscape`](../advanced-settings/mixer-scene-parameters/and-forceviewerlandscape-alpha.md) to VDO.Ninja, which keeps all **incoming** videos oriented (rotated) so that the aspect ratio is always above 1, so effectively, forces landscape mode.\
+  \-- ie: [https://vdo.ninja/alpha/?forceviewerlandscape\&view=xxx](https://vdo.ninja/alpha/?forceviewerlandscape\&view=xxx)\
+  \-- This normally shouldn't be needed, as the sender side should control the orientation, but the native app seems to auto rotate back to portrait when the phone is locked. Until that is fixed, this can work around the issue I think, by rotating the video when it detects its been rotated.\
+  \-- The parameter can take a value, the default is `270`, which is how much the video is rotated. You might want to also use `90`, or in the case you want it to be locked upside down, you can technically pass `180` I guess?\
   \
-  ie: [https://vdo.ninja/alpha/?forceviewerlandscape\&view=xxx](https://vdo.ninja/alpha/?forceviewerlandscape\&view=xxx)\
-  \
-  This normally shouldn't be needed, as the sender side should control the orientation, but the native app seems to auto rotate back to portrait when the phone is locked. Until that is fixed, this can work around the issue I think, by rotating the video when it detects its been rotated.\
-  \
-  The parameter can take a value, the default is `270`, which is how much the video is rotated. You might want to also use `90`, or in the case you want it to be locked upside down, you can technically pass `180` I guess?\
-  \
-  This is on alpha for testing
+  \*\* This is on alpha for testing
 
 #### September 15 <a href="#august-31" id="august-31"></a>
 
@@ -313,15 +310,15 @@ So it's not super obvious how to do this currently, so I think the next goal wil
 #### September 8 <a href="#august-31" id="august-31"></a>
 
 * Version 23 of VDO.Ninja (currently what's on production), has been archived to [https://vdo.ninja/v23/](https://vdo.ninja/v23/), as a fixed version. Version 24 of VDO.Ninja (what's on alpha) will go live at some point soon, so if concerned about bugs, you can lock into v23 now.
-* `&rotatewindow=90` (`&rotatepage`) will rotate the contents of the VDO.Ninja window. It doesn't target any specific video, and can be used on the viewer-side, not just the sender.\
+* [`&rotatewindow=90`](../advanced-settings/design-parameters/and-rotatewindow.md) (`&rotatepage`) will rotate the contents of the VDO.Ninja window. It doesn't target any specific video, and can be used on the viewer-side, not just the sender.\
   \-- This will be overridden by [`&forcelandscape`](../advanced-settings/mobile-parameters/and-forcelandscape.md) mode, if that is used also.\
-  \-- You can pass `90`, `180`, or `270` as a value to the parameter, to rotate accordingly. The default is 90 though, if used without any value.\
+  \-- You can pass `90`, `180`, or `270` as a value to the parameter, to rotate accordingly. The default is `90` though, if used without any value.\
   \-- You might still want to use OBS to rotate instead, but if not using OBS and find the teleprompter app too cumbersome, this is a good option.
 
 \*\* this specific change is on production and alpha.\
 ![](<../.gitbook/assets/image (182).png>)
 
-* Added `&motiondetection=15`, which does a few things when it detects motion in a video (viewer-side).\
+* Added [`&motiondetection=15`](../advanced-settings/mixer-scene-parameters/and-motiondetection-alpha.md), which does a few things when it detects motion in a video (viewer-side).\
   \-- It will feature highlight the specific video where movement is detected, if more than one video is included in the mix. Using a custom [`&layout`](../advanced-settings/mixer-scene-parameters/and-layout.md) will disable this feature though, and use the layout instead.\
   \-- It will also trigger an IFrame API event, which might be useful if you want to use VDO.Ninja as a security camera; you could script things to auto-record the video or log data events.\
   \-- It will also switch to itself in OBS as a scene, which might be how this will be mainly used. (you need to have the OBS browser source's page permission set to high to allow this to actually work)\
@@ -363,8 +360,8 @@ Fixed a few bugs and pushed to alpha (vdo.ninja/alpha). Thank you for reporting 
 
 #### August 27 <a href="#august-31" id="august-31"></a>
 
-* `&clock24` added to VDO.Ninja; this is the same as the existing [`&clock`](../advanced-settings/settings-parameters/and-clock.md) option, (which shows a clock) except it uses 24-hour time for the display (vs am/pm)\
-  \-- if the director uses `&clock24` on their URL, and then enables the room clock, it will be 24-hour time for all guests, matching the director's settings.\
+* [`&clock24`](../advanced-settings/settings-parameters/and-clock24-alpha.md) added to VDO.Ninja; this is the same as the existing [`&clock`](../advanced-settings/settings-parameters/and-clock.md) option, (which shows a clock) except it uses 24-hour time for the display (vs am/pm).\
+  \-- if the director uses [`&clock24`](../advanced-settings/settings-parameters/and-clock24-alpha.md) on their URL, and then enables the room clock, it will be 24-hour time for all guests, matching the director's settings.\
   ![](<../.gitbook/assets/image (3) (1) (1) (1) (1) (1).png>)
 
 \*\* at [vdo.ninja/alpha/?clock24](https://vdo.ninja/alpha/?clock24)

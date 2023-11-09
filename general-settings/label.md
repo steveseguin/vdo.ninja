@@ -14,10 +14,11 @@ General Option! ([`&push`](../source-settings/push.md), [`&room`](room.md), [`&v
 
 Example: `&label=Steve`
 
-| Value            | Description                                        |
-| ---------------- | -------------------------------------------------- |
-| (no value given) | It will prompt the user for a Display Name on load |
-| (string)         | Sets the label for the guest/browser tab           |
+| Value                         | Description                                        |
+| ----------------------------- | -------------------------------------------------- |
+| (no value given)              | It will prompt the user for a Display Name on load |
+| (string)                      | Sets the label for the guest/browser tab           |
+| `TITLEn\SUBTITLE` \[on alpha] | [Multiple lines](label.md#multiple-lines-on-alpha) |
 
 ## Details
 
@@ -31,6 +32,29 @@ Example: `&label=Steve`
 * If left blank, it will prompt the user for a Display Name on load.\
   ![](<../.gitbook/assets/image (75) (1).png>)
 * You can use [`&showlabels`](../advanced-settings/design-parameters/showlabels.md) to show the labels in the video sources.
+
+### Multiple lines (on alpha)
+
+Until I figure out a better way of doing this, I've enabled a way to have a display name be on multiple-lines in VDO.Ninja.
+
+`&label=DisplayNameHere\nSubtitleHere` Note the use of as a line break ie:
+
+```
+https://vdo.ninja/alpha/?label=Steve_Seguin\n(he/him)\nhttps://twitch.tv/vdoninja&push=JaAiVEH
+https://vdo.ninja/alpha/?view=JaAiVEH&showlabels
+```
+
+So it's not super obvious how to do this currently, so I think the next goal will be to add the option to let a guest enter their own sub-title, etc, when joining, using dedicated input fields. But until then, I hope this still helps. You can stylize the sub-label within OBS's CSS section, targeting the following CSS, but please note I'll probably be tweaking the CSS/HTML as well in the future:
+
+```
+.video-label>span:nth-child(2) {
+    font-size: 50%;
+    display: block;
+    text-align: center;
+}
+```
+
+![](<../.gitbook/assets/image (2) (1) (1) (1) (1) (1) (1) (1).png>)
 
 ## Related
 
