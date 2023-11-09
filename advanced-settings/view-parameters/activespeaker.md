@@ -25,3 +25,9 @@ Example: `&activespeaker=1`
 | `4`                     | the same as `2`, but it will not switch to show audio-only sources (just video only)    |
 
 In all four cases, if someone else is talking/active, your local preview will become a [mini-preview](../../source-settings/and-minipreview.md) in the top right.
+
+## Related
+
+{% content-ref url="../mixer-scene-parameters/and-motiondetection-alpha.md" %}
+[and-motiondetection-alpha.md](../mixer-scene-parameters/and-motiondetection-alpha.md)
+{% endcontent-ref %}

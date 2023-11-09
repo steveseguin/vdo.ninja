@@ -10,7 +10,7 @@ Sender-Side Option! ([`&push`](../../source-settings/push.md))
 
 Example: `&rotate=180`
 
-<table><thead><tr><th width="212">Value</th><th>Description</th></tr></thead><tbody><tr><td>(no value given)</td><td>90 degree</td></tr><tr><td>(degree)</td><td>Rotates the camera in the specified value in degree</td></tr></tbody></table>
+<table><thead><tr><th width="212">Value</th><th>Description</th></tr></thead><tbody><tr><td>(no value given) | <code>90</code></td><td>90 degree</td></tr><tr><td>(degree)</td><td>Rotates the camera in the specified value in degree</td></tr></tbody></table>
 
 ## Details
 
@@ -33,8 +33,6 @@ Effects however may increase CPU/GPU usage, and could cause frame rate instabili
 
 There's also the [`&flip`](and-flip.md) and [`&mirror`](and-mirror.md) options, which use CSS, but are generally viewer-side only.
 
-
-
 ### Dedicated teleprompter tool that works for most sites
 
 There's a dedicated tool for mirror, flipping, and rotating websites as part of VDO.Ninja as well:
@@ -55,4 +53,8 @@ In case the built-in options to mirror or flip don't work, the teleprompter app 
 
 {% content-ref url="and-mirror.md" %}
 [and-mirror.md](and-mirror.md)
+{% endcontent-ref %}
+
+{% content-ref url="and-rotatewindow.md" %}
+[and-rotatewindow.md](and-rotatewindow.md)
 {% endcontent-ref %}
