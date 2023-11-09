@@ -28,13 +28,23 @@ Example: `&audiocodec=opus`
 
 `&audiocodec=red` is pretty much like sending two opus streams, with one as a backup in case of packet loss; support in Chromium 97 and up, but the only way I can so far tell that it is working is to check if the audio bitrate has doubled.
 
-When using \&proaudio, \&stereo, or higher than \&audiobitrate=220 with this, the resulting bitrate may not actually double.  I don't quite understand what's going on here, but you might want to lower the audio bitrate to around 200-kbps or less as a result to ensure its working correctly.
+When using \&proaudio, \&stereo, or higher than \&audiobitrate=216 with this, the resulting bitrate may not actually double.  I don't quite understand what's going on here, if its still working or not, so to be safe when using \&proaudio or \&stereo, along with \&audiocodec=red, I set the bitrate to 216 by default, which will then result in a sending bitrate of around 440-kbps.
+
+I've tried to enable RED-mode to work with PCM audio, but so far it will only work with OPUS audio.
 
 #### pcm
 
 `&audiocodec=pcm` now will support 48khz and 44.1khz mono playback (48khz default), and if [`&stereo`](../../general-settings/stereo.md) is used, it changes to two-channel stereo 32khz.
 
-The existing [`&samplerate=44100`](../view-parameters/and-samplerate.md) option can lower the sample rate of this pcm mode (down to 8khz even), and hence the resulting audio bitrate. Since pcm is raw, [`&audiobitrate`](../view-parameters/audiobitrate.md) won't work, so expect 550 to 1200-kbps in just audio bitrates per viewer.
+The existing [`&samplerate=44100`](../view-parameters/and-samplerate.md) option can lower the sample rate of this pcm mode (down to 8khz even), and hence the resulting audio bitrate. Since PCM is raw, [`&audiobitrate`](../view-parameters/audiobitrate.md) won't work, so expect 550 to 1200-kbps in just audio bitrates per viewer.
+
+There may be clicking when using PCM mode (L16) if you are on a bad connection, as PCM doesn't have much in the way of error correction.  You'll need to address this yourself probably with post-processing if any issue.
+
+#### Future options
+
+In the near future you'll be able to send PCM audio via \&chunked mode, which will guarantees delivery of all packets sent, however there may be buffering issues if your connection can't keep up with bandwidth requirements.\
+\
+Currently \&chunked mode does work with OPUS-audio though; please provide feedback and requests if you use it. Chunked mode does not support WHIP/WHEP or Meshcast.
 
 ## Related
 
