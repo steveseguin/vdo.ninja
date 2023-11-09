@@ -12,7 +12,7 @@ General Option! ([`&push`](../../source-settings/push.md), [`&room`](../../gener
 
 It will have the label/border/margins align relative to the 16:9 holder element, rather than video itself.
 
-Also related, you can also specify the background color independent of the border color with `&color`. If using [`&border`](and-border.md), it will not set the background color, so you may need to use both `&border` and `&color`.
+Also related, you can also specify the background color independent of the border color with [`&color`](and-color.md). If using [`&border`](and-border.md), it will not set the background color, so you may need to use both `&border` and `&color`.
 
 May not yet work with [`&forcedlandscape`](../mobile-parameters/and-forcelandscape.md) or [`&rotate`](and-rotate.md).
 

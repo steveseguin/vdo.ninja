@@ -4,8 +4,8 @@ description: When data is lost or delayed during transfer between peers
 
 # Packet Loss
 
-Packet loss can cause low quality video, audio distortion, clicking, and is the cause for numerous other video problems. \
-\
+Packet loss can cause low quality video, audio distortion, clicking, and is the cause for numerous other video problems.
+
 WiFi is often the main contributor to packet loss, but it's not the only cause. Still, eliminate WiFi as a possible culprit by removing it from your setup and from the guest's setup.
 
 An Ethernet connection is highly recommended over WiFi.
@@ -21,7 +21,7 @@ An Ethernet connection is highly recommended over WiFi.
 ### If the issue isn't WiFi related
 
 * Try to have the guest use a different browser. For example, if using Firefox, use Chrome, and vice versa. Some browsers are optimized for privacy over performance, and that may hinder video quality, and even Chrome can sometime be configured in a way that hinders VDO.Ninja from working well.
-* Disable any Anti-virus software or any security software that may disable webRTC IP leaking.
+* Disable any Anti-virus software or any security software that may disable WebRTC IP leaking.
 * Advanced network firewalls, like _pfsense_, may block UDP packets or force traffic through a TURN relay server. VDO.Ninja uses mainly UDP packets in the high port range.
 * If your connection with a guest is going thru a TURN relay server, such as perhaps due to a security or privacy setting, resolving that may fix issues. VDO.Ninja offers publicly accessible and free TURN servers as part of its service, but these may introduce packet loss. You can always host your own TURN servers instead, but avoiding them if not needed is usually the best option.
 * Restart your Internet router; sometimes a router or network equipment just needs a good reset or update.
@@ -41,19 +41,19 @@ Sometimes two peers just can't get a good connection, while with other peers the
 
 #### More generic options to try
 
-* Using [\&chunked](../newly-added-parameters/and-chunked.md) mode on the sender's side can enable an alternative way of sending video data, but this option is only supported by Chrome and other Chromium-based browsers. It also is fairly CPU intensive and may require some tweaking of bitrates and buffers to have it work well for you situation
-* Try using [\&codec=av1](../advanced-settings/view-parameters/codec.md) on the viewer side; this won't solve packet loss issues, but the AV1 codec is more efficient than the default codecs, and so it may offer better video quality despite the packet loss.
-* Try adding [\&buffer=500](../advanced-settings/view-parameters/buffer.md) to the viewer link, as this might allow for more time for lost packets to arrive.
+* Using [`&chunked`](../newly-added-parameters/and-chunked.md) mode on the sender's side can enable an alternative way of sending video data, but this option is only supported by Chrome and other Chromium-based browsers. It also is fairly CPU intensive and may require some tweaking of bitrates and buffers to have it work well for you situation
+* Try using [`&codec=av1`](../advanced-settings/view-parameters/codec.md#av1) on the viewer side; this won't solve packet loss issues, but the AV1 codec is more efficient than the default codecs, and so it may offer better video quality despite the packet loss.
+* Try adding [`&buffer=500`](../advanced-settings/view-parameters/buffer.md) to the viewer link, as this might allow for more time for lost packets to arrive.
 * Reduce the bitrate of your video streams. If your connection can only handle 30-mbps in and 10-mbps out, trying to push it to do more will cause network thrashing and packet loss. In this case, try to ensure that your connection's up and download links are not saturated by more than 80% of their tested max capacity. Leaving some headroom will reduce latency and packet loss, ultimately leading to better quality.
 * Consider using Meshcast or a WHIP/WHEP server-based SFU provider, and use that with VDO.Ninja instead of a direct peer-to-peer connection. I have a [guide for setting up Cloudflare ](https://cloudflare.vdo.ninja/)to be used in this regard, but any WHIP+WHEP SFU can work. This can provide more advanced buffering and SVC options not available with direct browser to browser options.
-* Use Raspberry.Ninja or OBS Studio's WHIP output as a video source, instead of the browser. Raspberry.Ninja in particular supports double redundant video streams for added error correction, and while it uses more bandwidth, it can tolerate heavy packet loss and force a specified video quality. While packet loss will still exist, you might find the outcome is more to your liking
-* If screen sharing, you can use [\&contenthint=detail](../advanced-settings/video-parameters/and-contenthint.md), which can tell the system to prioritize frame resolution, than frame rate. While this isn't suitable for gaming, it might be a good option for screen shares, where packet loss might otherwise might text unreadable.
+* Use [Raspberry.Ninja](../steves-helper-apps/raspberry.ninja/) or OBS Studio's WHIP output as a video source, instead of the browser. Raspberry.Ninja in particular supports double redundant video streams for added error correction, and while it uses more bandwidth, it can tolerate heavy packet loss and force a specified video quality. While packet loss will still exist, you might find the outcome is more to your liking.
+* If screen sharing, you can use [`&contenthint=detail`](../advanced-settings/video-parameters/and-contenthint.md), which can tell the system to prioritize frame resolution, than frame rate. While this isn't suitable for gaming, it might be a good option for screen shares, where packet loss might otherwise might text unreadable.
 
 ### Audio issues due to packet loss
 
 * Turning down the audio bitrate ([`&audiobitrate=128`](../advanced-settings/view-parameters/audiobitrate.md)) will be less prone to clicking issues vs something high, like 256-kbps. The default is 32-kbps.
 * You can add [`&enhance`](../advanced-settings/view-parameters/enhance.md) on the viewer side to try to prioritize the audio over the video. This might help with audio clicking issues.
-* Using [\&audiocodec=red](../advanced-settings/audio-parameters/minptime-1.md) on the viewer side can increase the amount of error correction data being sent, reducing packet loss. This will double the audio bandwidth, but that shoulnd't be an issue for most modern connections.
+* Using [`&audiocodec=red`](../advanced-settings/audio-parameters/minptime-1.md#red) on the viewer side can increase the amount of error correction data being sent, reducing packet loss. This will double the audio bandwidth, but that shoulnd't be an issue for most modern connections.
 
 ### Youtube Video guide on packet loss + VDO.Ninja
 
@@ -61,10 +61,10 @@ I have a video talking about packet loss, with details on how to setup Speedify 
 
 ## Connection testing tools and statistics
 
-There is a speedtest that the local user can try out to give them feedback on their packet loss. This is a special speedtest, different than normal tests, as it does not test for available bandwidth, but network quality and packet loss: [https://vdo.ninja/speedtest](https://vdo.ninja/speedtest)\
-\
-If you'd like to remotely test a guest's connection, you can also have them perform the VDO.Ninja pre-check test. This is a comprehensive system and network test, which allows you to review the results of the guest remotely: [https://vdo.ninja/check](https://vdo.ninja/check)\
-\
+There is a speedtest that the local user can try out to give them feedback on their packet loss. This is a special speedtest, different than normal tests, as it does not test for available bandwidth, but network quality and packet loss: [https://vdo.ninja/speedtest](https://vdo.ninja/speedtest)
+
+If you'd like to remotely test a guest's connection, you can also have them perform the VDO.Ninja pre-check test. This is a comprehensive system and network test, which allows you to review the results of the guest remotely: [https://vdo.ninja/check](https://vdo.ninja/check)
+
 You can also do a peer-to-peer test by just making a VDO.Ninja connection with the guest. If you hold down CTRL (cmd) and click on their video, you'll see the stats. Packet loss is a listed stat, as well as the candidate type. If a guest is connecting to you via RELAY candidate type, that implies there is a firewall or security setting blocking a direct peer to peer connection. Addressing this will likely resolve your issues.
 
 When doing a pre-check or speed test, make sure to test during the hours of the day you intend to go live. Mornings will often have less packet loss than evenings, with around 7pm to 10pm being especially bad.

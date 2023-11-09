@@ -1,5 +1,11 @@
 # Updates - VDO.Ninja
 
+#### November 9 <a href="#august-31" id="august-31"></a>
+
+* The [director](../viewers-settings/director.md), when setup as a guest, now has the audio/video buttons available to them in the same place it would be for guests. It opens up the side pane though, but hopefully this makes things more intuitive when using.\
+  ![](<../.gitbook/assets/image (213).png>)\
+  \*\* on alpha
+
 #### November 8 <a href="#august-31" id="august-31"></a>
 
 *   Loading up the camera should be faster in most cases now, especially on mobile browsers when selecting the non-default camera.

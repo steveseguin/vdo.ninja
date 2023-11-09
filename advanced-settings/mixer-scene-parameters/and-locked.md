@@ -21,15 +21,13 @@ Example: `&locked=portrait`
 
 You'll get black bars (or whatever the background color is) as padding on the sides to force the inner video elements into the desired aspect ratio
 
-When using `&locked`, the default aspect ratio is 16:9, but you can pass a floating point value for different aspect ratios, or use `landscape` (instead of 1.77777) / `portrait` / `square` as presets if needed.
+When using `&locked`, the default aspect ratio is 16:9, but you can pass a floating point value for different aspect ratios, or use `landscape` (instead of `1.77777`) / `portrait` / `square` as presets if needed.
 
 Padding is centered, so the rendered video will be in the center of the screen. (tho using [`&widget`](../settings-parameters/and-widget.md) mode might break things though).
 
-This `&locked` option is added to the Mixer App's WHIP/**Twitch publishing output option**, so regardless of window size, you'll get a 16:9 video render.
+This `&locked` option is added to the [Mixer App](../../steves-helper-apps/mixer-app.md)'s WHIP/**Twitch publishing output option**, so regardless of window size, you'll get a 16:9 video render.
 
 ## Related
-
-
 
 {% content-ref url="../design-parameters/and-structure.md" %}
 [and-structure.md](../design-parameters/and-structure.md)
