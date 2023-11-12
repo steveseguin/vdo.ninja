@@ -4,7 +4,7 @@ description: A basic guest queuing and approving system
 
 # \&queue
 
-Director and/or Sender Option! ([`&director`](../viewers-settings/director.md), [`&push`](../source-settings/push.md), [`&room`](room.md))
+Director and/or Sender Option! ([`&director`](../../../viewers-settings/director.md), [`&push`](../../../source-settings/push.md), [`&room`](../../../general-settings/room.md))
 
 ## Details
 
@@ -14,7 +14,7 @@ The option can be used in one of two ways; either as a powerful screening room o
 
 <div align="left">
 
-<figure><img src="../.gitbook/assets/image (10) (4).png" alt=""><figcaption></figcaption></figure>
+<figure><img src="../../../.gitbook/assets/image (10) (4).png" alt=""><figcaption></figcaption></figure>
 
 </div>
 
@@ -66,11 +66,11 @@ This approach to just adding `&queue` to the guest invite links, and not putting
 
 Since it's possible for a user to just remove `&queue` from their URL when joining, bypassing the need for activation, this method is considered less secure versus the use of the screening room where users are transferred to the main room instead.
 
-<figure><img src="../.gitbook/assets/image (184).png" alt=""><figcaption></figcaption></figure>
+<figure><img src="../../../.gitbook/assets/image (184).png" alt=""><figcaption></figcaption></figure>
 
 ### Exempt certain connections from the queue automatically
 
-As a director, you can use [`&view`](../advanced-settings/view-parameters/view.md) in the URL to specify stream IDs that you wish to connect normally, bypassing the queue.
+As a director, you can use [`&view`](../../view-parameters/view.md) in the URL to specify stream IDs that you wish to connect normally, bypassing the queue.
 
 For example:\
 [`https://vdo.ninja/?director=MyRoom123&codirector&queue&push=mainDirector123&view=coDirectorStreamID123`](https://vdo.ninja/?director=MyRoom123\&codirector\&queue\&push=mainDirector123\&view=coDirectorStreamID123)
@@ -83,6 +83,18 @@ The above links allows a co-director join the room, despite the main director an
 
 ## Related
 
-{% content-ref url="../advanced-settings/settings-parameters/and-queuetransfer.md" %}
-[and-queuetransfer.md](../advanced-settings/settings-parameters/and-queuetransfer.md)
+{% content-ref url="and-screen-alpha.md" %}
+[and-screen-alpha.md](and-screen-alpha.md)
+{% endcontent-ref %}
+
+{% content-ref url="and-hold-alpha.md" %}
+[and-hold-alpha.md](and-hold-alpha.md)
+{% endcontent-ref %}
+
+{% content-ref url="and-holdwithvideo-alpha.md" %}
+[and-holdwithvideo-alpha.md](and-holdwithvideo-alpha.md)
+{% endcontent-ref %}
+
+{% content-ref url="../../settings-parameters/and-queuetransfer.md" %}
+[and-queuetransfer.md](../../settings-parameters/and-queuetransfer.md)
 {% endcontent-ref %}
