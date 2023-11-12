@@ -14,13 +14,14 @@ Director Option! ([`&director`](../../viewers-settings/director.md))
 
 ## Options
 
-Example: `&totalroombitrate=4000`
+Example: `&totalroombitrate=4000` or `&totalroombitrate=2000,1000`
 
 | Value           | Description                                    |
 | --------------- | ---------------------------------------------- |
 | (integer value) | set this to be the total combined room bitrate |
+| `1000,500`      | Desktop bitrate, Smartphone bitrate            |
 
-## Description
+## Details
 
 The total bitrate a guest in a room can view video streams with; their combined bitrate total of all inbound video streams.
 
@@ -32,9 +33,10 @@ Split between the number of streams that guest is viewing.
 
 So for example, with 6-guests in a room, the default of 500-kbps will have each guest requesting 100-kbps from each other. 5 streams x 100-kbps.
 
-There is a toggle in the director's room which adds `&trb=2000` to the guest's invite link.
+### Two values
 
-![](<../../.gitbook/assets/image (94) (1).png>)
+`&totalroombitrate` can take two values; the second of which gets used if the device is a 'mobile' device, while the first gets used otherwise. ie: `&totalroombitrate=1000,500`\
+Useful if you don't know if the guest is going to join via Desktop or via Smartphone, and you wish to avoid overloading a mobile device.
 
 {% hint style="info" %}
 Please note the difference between `&totalroombitrate` and [`&totalscenebitrate`](and-totalscenebitrate.md). `&totalroombitrate`controls what the total bitrate for guests in a room is limited to. [`&totalscenebitrate`](and-totalscenebitrate.md), on the other hand, is what you will want if you want to do the same for a view-link, added to OBS, for example.
@@ -57,6 +59,10 @@ If the director joins the room, they automatically set the default total room bi
 The director can also dynamically change their total room bitrate value using a slider that appears when pressing the room-settings button in the lower control bar. This will instantly change the total room bitrate value for all guests.
 
 ![The director can change the room's default TRB value dynamically](<../../.gitbook/assets/image (28) (1).png>)
+
+There is a toggle in the director's room which adds `&trb=2000` to the guest's invite link.
+
+![](<../../.gitbook/assets/image (94) (1).png>)
 
 ## Related
 
