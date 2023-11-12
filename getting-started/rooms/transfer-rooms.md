@@ -16,7 +16,7 @@ Only the main director can transfer users; anyone can be the director of a room 
 
 When a guest is transferred to a new room, they do not know which room they are transferred to. This allows for privacy and secrecy, allowing for the main landing room to act like a screening room.
 
-The [`&queue`](../../advanced-settings/guest-queuing-parameters/and-queue.md) command can be used in conjunction with rooms and transfer rooms. When you transfer a user from a queue, they will no longer be in any queue once transferred. When in queue, the guest will not be able to see anyone, but the director will be able to see them. When transferred out of the queue, they will be able to see everyone in the room.
+The [`&queue`](../../general-settings/queue.md) command can be used in conjunction with rooms and transfer rooms. When you transfer a user from a queue, they will no longer be in any queue once transferred. When in queue, the guest will not be able to see anyone, but the director will be able to see them. When transferred out of the queue, they will be able to see everyone in the room.
 
 If you transfer someone to a room, the passwords for both rooms need to match. This may change in the future.
 

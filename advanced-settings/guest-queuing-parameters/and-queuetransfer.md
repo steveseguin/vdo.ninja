@@ -1,6 +1,6 @@
 ---
 description: >-
-  Will transfer a guest from one room into another, but one transferred, the
+  Will transfer a guest from one room into another, but once transferred, the
   guest will be in Queue mode
 ---
 
@@ -18,6 +18,6 @@ Sender-Side Option! ([`&push`](../../source-settings/push.md), [`&room`](../../g
 
 ## Related
 
-{% content-ref url="../guest-queuing-parameters/and-queue.md" %}
-[and-queue.md](../guest-queuing-parameters/and-queue.md)
+{% content-ref url="../../general-settings/queue.md" %}
+[queue.md](../../general-settings/queue.md)
 {% endcontent-ref %}
