@@ -4,7 +4,7 @@ description: A basic guest queuing and approving system
 
 # \&queue
 
-Director and/or Sender Option! ([`&director`](../viewers-settings/director.md), [`&push`](../source-settings/push.md), [`&room`](room.md))
+Director and/or Sender Option! ([`&director`](../../viewers-settings/director.md), [`&push`](../../source-settings/push.md), [`&room`](../../general-settings/room.md))
 
 ## Details
 
@@ -14,14 +14,14 @@ The option can be used in one of two ways; either as a powerful screening room o
 
 <div align="left">
 
-<figure><img src="../.gitbook/assets/image (10) (4).png" alt=""><figcaption></figcaption></figure>
+<figure><img src="../../.gitbook/assets/image (10) (4).png" alt=""><figcaption></figcaption></figure>
 
 </div>
 
 {% embed url="https://www.youtube.com/embed/DDJrhhdNX_c" %}
 
 {% hint style="info" %}
-`&queue` was changed in v24 to not allow the guest to see the director's video, until the director activates the guest with their pink activate-guest button. Otherwise, it's the same as before. Use [`&screen`](../advanced-settings/director-parameters/and-queue/and-screen-alpha.md) for the old version.
+`&queue` was changed in v24 to not allow the guest to see the director's video, until the director activates the guest with their pink activate-guest button. Otherwise, it's the same as before. Use [`&screen`](and-screen-alpha.md) for the old version.
 {% endhint %}
 
 If used on the director's URL, as well as the guest's URL, guests are added to a queue as they join, and the director can connect to those guests with a button in their lower control bar. This feature prevents the director's computer from being overwhelmed with connections.
@@ -70,11 +70,11 @@ This approach to just adding `&queue` to the guest invite links, and not putting
 
 Since it's possible for a user to just remove `&queue` from their URL when joining, bypassing the need for activation, this method is considered less secure versus the use of the screening room where users are transferred to the main room instead.
 
-<figure><img src="../.gitbook/assets/image (184).png" alt=""><figcaption></figcaption></figure>
+<figure><img src="../../.gitbook/assets/image (184).png" alt=""><figcaption></figcaption></figure>
 
 ### Exempt certain connections from the queue automatically
 
-As a director, you can use [`&view`](../advanced-settings/view-parameters/view.md) in the URL to specify stream IDs that you wish to connect normally, bypassing the queue.
+As a director, you can use [`&view`](../view-parameters/view.md) in the URL to specify stream IDs that you wish to connect normally, bypassing the queue.
 
 For example:\
 [`https://vdo.ninja/?director=MyRoom123&codirector&queue&push=mainDirector123&view=coDirectorStreamID123`](https://vdo.ninja/?director=MyRoom123\&codirector\&queue\&push=mainDirector123\&view=coDirectorStreamID123)
@@ -91,26 +91,26 @@ The "queue" mode, when applied only to the guest-link, has been extended with ne
 
 These options might be appealing for screening guests when either you don't want to use a transfer room or don't expect too many guests to be in queue.
 
-[and-screen-alpha.md](../advanced-settings/director-parameters/and-queue/and-screen-alpha.md "mention")
+[and-screen-alpha.md](and-screen-alpha.md "mention")
 
-[and-hold-alpha.md](../advanced-settings/director-parameters/and-queue/and-hold-alpha.md "mention")
+[and-hold-alpha.md](and-hold-alpha.md "mention")
 
-[and-holdwithvideo-alpha.md](../advanced-settings/director-parameters/and-queue/and-holdwithvideo-alpha.md "mention")
+[and-holdwithvideo-alpha.md](and-holdwithvideo-alpha.md "mention")
 
 ## Related
 
-{% content-ref url="../advanced-settings/director-parameters/and-queue/and-screen-alpha.md" %}
-[and-screen-alpha.md](../advanced-settings/director-parameters/and-queue/and-screen-alpha.md)
+{% content-ref url="and-screen-alpha.md" %}
+[and-screen-alpha.md](and-screen-alpha.md)
 {% endcontent-ref %}
 
-{% content-ref url="../advanced-settings/director-parameters/and-queue/and-hold-alpha.md" %}
-[and-hold-alpha.md](../advanced-settings/director-parameters/and-queue/and-hold-alpha.md)
+{% content-ref url="and-hold-alpha.md" %}
+[and-hold-alpha.md](and-hold-alpha.md)
 {% endcontent-ref %}
 
-{% content-ref url="../advanced-settings/director-parameters/and-queue/and-holdwithvideo-alpha.md" %}
-[and-holdwithvideo-alpha.md](../advanced-settings/director-parameters/and-queue/and-holdwithvideo-alpha.md)
+{% content-ref url="and-holdwithvideo-alpha.md" %}
+[and-holdwithvideo-alpha.md](and-holdwithvideo-alpha.md)
 {% endcontent-ref %}
 
-{% content-ref url="../advanced-settings/settings-parameters/and-queuetransfer.md" %}
-[and-queuetransfer.md](../advanced-settings/settings-parameters/and-queuetransfer.md)
+{% content-ref url="../settings-parameters/and-queuetransfer.md" %}
+[and-queuetransfer.md](../settings-parameters/and-queuetransfer.md)
 {% endcontent-ref %}

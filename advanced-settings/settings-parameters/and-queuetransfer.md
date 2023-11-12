@@ -18,6 +18,6 @@ Sender-Side Option! ([`&push`](../../source-settings/push.md), [`&room`](../../g
 
 ## Related
 
-{% content-ref url="../../general-settings/queue.md" %}
-[queue.md](../../general-settings/queue.md)
+{% content-ref url="../guest-queuing-parameters/and-queue.md" %}
+[and-queue.md](../guest-queuing-parameters/and-queue.md)
 {% endcontent-ref %}
