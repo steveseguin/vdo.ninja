@@ -111,6 +111,6 @@ These options might be appealing for screening guests when either you don't want
 [and-holdwithvideo-alpha.md](../advanced-settings/guest-queuing-parameters/and-holdwithvideo-alpha.md)
 {% endcontent-ref %}
 
-{% content-ref url="../advanced-settings/guest-queuing-parameters/and-queuetransfer.md" %}
-[and-queuetransfer.md](../advanced-settings/guest-queuing-parameters/and-queuetransfer.md)
+{% content-ref url="../advanced-settings/settings-parameters/and-queuetransfer.md" %}
+[and-queuetransfer.md](../advanced-settings/settings-parameters/and-queuetransfer.md)
 {% endcontent-ref %}

@@ -690,7 +690,7 @@ https://vdo.ninja/alpha/?view=YbFmisR&poster=./media/bg_sample.webp&hideplaybutt
 
 #### June 19 <a href="#august-31" id="august-31"></a>
 
-* Created [`&queuetransfer`](../advanced-settings/guest-queuing-parameters/and-queuetransfer.md) (`&qt`), which will transfer a guest from one room into another, but one transferred, the guest will be in Queue mode. So they won't share their video with anyone by the director.
+* Created [`&queuetransfer`](../advanced-settings/settings-parameters/and-queuetransfer.md) (`&qt`), which will transfer a guest from one room into another, but one transferred, the guest will be in Queue mode. So they won't share their video with anyone by the director.
 *   Added an 'activate guest' button to the director's controls, so that when a guest connects in queue mode, (yet the director isn't also in queue mode, as is typical for a queue mode setup), the director can take any select user out of queue mode.
 
     \--- This has the result of guests joining a room in queue mode, and only being able to see the main director by default.\
