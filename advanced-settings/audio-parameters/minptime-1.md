@@ -10,15 +10,15 @@ Viewer-Side Option! ([`&view`](../view-parameters/view.md), [`&scene`](../view-p
 
 Example: `&audiocodec=opus`
 
-| Value  | Description                       |
-| ------ | --------------------------------- |
-| `opus` | default; selects audio codec opus |
-| `red`  | selects audio codec red\*         |
-| `pcmu` | selects audio codec pcmu          |
-| `pcma` | selects audio codec pcma          |
-| `isac` | selects audio codec isac          |
-| `g722` | selects audio codec g722          |
-| `pcm`  | selects audio codec pcm\*         |
+| Value  | Description                                  |
+| ------ | -------------------------------------------- |
+| `opus` | default; selects audio codec opus            |
+| `red`  | selects audio codec [red](minptime-1.md#red) |
+| `pcmu` | selects audio codec pcmu                     |
+| `pcma` | selects audio codec pcma                     |
+| `isac` | selects audio codec isac                     |
+| `g722` | selects audio codec g722                     |
+| `pcm`  | selects audio codec [pcm](minptime-1.md#pcm) |
 
 ## Details
 
