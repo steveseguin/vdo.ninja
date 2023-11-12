@@ -389,7 +389,7 @@
     * [\&hidecodirectors](advanced-settings/director-parameters/and-hidecodirectors.md)
     * [\&minidirector](newly-added-parameters/and-minidirector.md)
     * [\&orderby](newly-added-parameters/and-orderby.md)
-    * [\&queue](advanced-settings/director-parameters/and-queue/README.md)
+    * [\&queue](general-settings/queue.md)
       * [\&screen (alpha)](advanced-settings/director-parameters/and-queue/and-screen-alpha.md)
       * [\&hold (alpha)](advanced-settings/director-parameters/and-queue/and-hold-alpha.md)
       * [\&holdwithvideo (alpha)](advanced-settings/director-parameters/and-queue/and-holdwithvideo-alpha.md)

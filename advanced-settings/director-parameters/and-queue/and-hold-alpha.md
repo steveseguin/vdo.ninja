@@ -15,16 +15,16 @@ Director and/or Sender Option! ([`&director`](../../../viewers-settings/director
 
 ## Details
 
-`&hold` added, with the alias `&queue3`, which is like [`&queue`](./), except the guest gets a message telling them they need to wait until approved by the director. They don't see the director until activated, and the director doesn't see the guest's video/audio either - just their control box with any label. Once activated, the director will see the guest's video/audio, and vice versa.
+`&hold` added, with the alias `&queue3`, which is like [`&queue`](../../../general-settings/queue.md), except the guest gets a message telling them they need to wait until approved by the director. They don't see the director until activated, and the director doesn't see the guest's video/audio either - just their control box with any label. Once activated, the director will see the guest's video/audio, and vice versa.
 
-This mode do not apply when you have [`&queue`](./) also on the director's link, however, rather just when added to the guest-invite link only.
+This mode do not apply when you have [`&queue`](../../../general-settings/queue.md) also on the director's link, however, rather just when added to the guest-invite link only.
 
 Transferring the guest to another room will also automatically activate the guest. You don't need to press the pink 'activate' button if you just intend to transfer them and don't want to talk to the guest you are screening.
 
 ## Related
 
-{% content-ref url="./" %}
-[.](./)
+{% content-ref url="../../../general-settings/queue.md" %}
+[queue.md](../../../general-settings/queue.md)
 {% endcontent-ref %}
 
 {% content-ref url="and-holdwithvideo-alpha.md" %}
