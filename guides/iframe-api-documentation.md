@@ -35,7 +35,10 @@ A sandbox of options is available at this page, too: [https://vdo.ninja/iframe](
 [https://github.com/steveseguin/vdoninja/blob/master/iframe.html](https://github.com/steveseguin/vdoninja/blob/master/iframe.html)
 
 I also have an example of how you can transfer virtually any data (JSON, text, small images) via the IFRAME API with just a few lines of code here:\
-[https://gist.github.com/steveseguin/15bba03d1993c88d0bd849f7749ea625](https://gist.github.com/steveseguin/15bba03d1993c88d0bd849f7749ea625) It's a pretty awesome example of how you can securely communicate peer to peer online with virtually zero effort and with no cost.
+[https://gist.github.com/steveseguin/15bba03d1993c88d0bd849f7749ea625](https://gist.github.com/steveseguin/15bba03d1993c88d0bd849f7749ea625) It's a pretty awesome example of how you can securely communicate peer to peer online with virtually zero effort and with no cost.\
+
+
+There's dozens of other examples of how the IFRAME API can be used to communicate via p2p, easily with any website, such as controlling PowerPoint remotely, but here's an example of how to use it to control OBS Studio remotely. [https://github.com/steveseguin/sample-p2p-tunnel](https://github.com/steveseguin/sample-p2p-tunnel)
 
 Please note that since VDO.Ninja requires SSL to be strictly enabled site wide, any website you embed a VDO.Ninja iframe into also will require SSL enabled site wide. Using a service like Cloudflare can provide SSL-enabled caching for websites to make this fairly easy to do.
 
