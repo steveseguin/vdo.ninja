@@ -53,7 +53,7 @@ All of the available parameters can be seperated in five categories. You find th
 * **Meshcast Option** ([`&meshcast`](newly-added-parameters/and-meshcast.md))\
   These parameters can only be used in combination with `&meshcast`. You can find them in [Meshcast Parameters](advanced-settings/meshcast-parameters/). These parameters are always Sender-Side Option, so you will find `&push` in the URL, too.
 * **WHIP Option** ([WHIP and WHEP tooling](steves-helper-apps/whip-and-whep-tooling.md))\
-  **WHIP Parameters** are specific to WHIP and WHEP. You can find them in [WHIP Parameters](advanced-settings/whip-parameters/).
+  WHIP Parameters are specific to WHIP and WHEP. You can find them in [WHIP Parameters](advanced-settings/whip-parameters/).
 
 ## Navigating the available setting options
 
