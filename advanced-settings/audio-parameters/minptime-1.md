@@ -28,7 +28,7 @@ Example: `&audiocodec=opus`
 
 `&audiocodec=red` is pretty much like sending two opus streams, with one as a backup in case of packet loss; support in Chromium 97 and up, but the only way I can so far tell that it is working is to check if the audio bitrate has doubled.
 
-When using \&proaudio, \&stereo, or higher than \&audiobitrate=216 with this, the resulting bitrate may not actually double.  I don't quite understand what's going on here, if its still working or not, so to be safe when using \&proaudio or \&stereo, along with \&audiocodec=red, I set the bitrate to 216 by default, which will then result in a sending bitrate of around 440-kbps.
+When using [`&proaudio`](and-proaudio.md), [`&stereo`](../../general-settings/stereo.md), or higher than [`&audiobitrate=216`](../view-parameters/audiobitrate.md) with this, the resulting bitrate may not actually double. I don't quite understand what's going on here, if its still working or not, so to be safe when using [`&proaudio`](and-proaudio.md) or [`&stereo`](../../general-settings/stereo.md), along with `&audiocodec=red`, I set the bitrate to 216 by default, which will then result in a sending bitrate of around 440-kbps.
 
 I've tried to enable RED-mode to work with PCM audio, but so far it will only work with OPUS audio.
 
@@ -42,9 +42,9 @@ There may be clicking when using PCM mode (L16) if you are on a bad connection, 
 
 #### Future options
 
-In the near future you'll be able to send PCM audio via \&chunked mode, which will guarantees delivery of all packets sent, however there may be buffering issues if your connection can't keep up with bandwidth requirements.\
-\
-Currently \&chunked mode does work with OPUS-audio though; please provide feedback and requests if you use it. Chunked mode does not support WHIP/WHEP or Meshcast.
+In the near future you'll be able to send PCM audio via [`&chunked`](../../newly-added-parameters/and-chunked.md) mode, which will guarantees delivery of all packets sent, however there may be buffering issues if your connection can't keep up with bandwidth requirements.
+
+Currently [`&chunked`](../../newly-added-parameters/and-chunked.md) mode does work with OPUS-audio though; please provide feedback and requests if you use it. Chunked mode does not support [WHIP/WHEP](../../steves-helper-apps/whip-and-whep-tooling.md) or [Meshcast](../../newly-added-parameters/and-meshcast.md).
 
 ## Related
 
