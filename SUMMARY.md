@@ -529,6 +529,7 @@
   * [Updates - Speed Test](updates/updates-speed-test.md)
   * [Updates - Comms](updates/updates-comms.md)
   * [Updates - Miscellaneous](updates/updates-miscellaneous.md)
+  * [Updates - Social Stream Standalone App](updates/updates-social-stream-standalone-app.md)
 * [Development Progress](https://updates.vdo.ninja/)
 * [Help!](help/README.md)
   * [Fail safes and Backups](help/fail-safes-and-backups.md)
