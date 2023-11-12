@@ -1,7 +1,7 @@
 # Updates - Social Stream & Chat Overlay
 
-[social-stream.md](../steves-helper-apps/social-stream.md "mention")\
-[chat-overlay.md](../steves-helper-apps/chat-overlay.md "mention")
+[social-stream.md](../../steves-helper-apps/social-stream.md "mention")\
+[chat-overlay.md](../../steves-helper-apps/chat-overlay.md "mention")
 
 #### **November 12**
 
@@ -22,20 +22,20 @@
 
     <div align="left">
 
-    <figure><img src="../.gitbook/assets/image (2).png" alt=""><figcaption></figcaption></figure>
+    <figure><img src="../../.gitbook/assets/image (3).png" alt=""><figcaption></figcaption></figure>
 
     </div>
 * For Tiktok, I added 'subscriber', 'moderator', and 'rank' colors to user names. I welcome feedback.\
-  ![](<../.gitbook/assets/image (3).png>)
+  ![](<../../.gitbook/assets/image (4).png>)
 * Also updated the Social Stream standalone app; [https://github.com/steveseguin/social\_stream/releases/tag/0.1.4](https://github.com/steveseguin/social\_stream/releases/tag/0.1.4) (mac/win64)
   * It's still very much in 'just a preview test" mode, though I've trying to work thru all the issues. Please bare with me if you have issues with it.
 * Also added an option to have emotes from members-only show up on the emotes wall.\
-  ![](<../.gitbook/assets/image (4).png>)
+  ![](<../../.gitbook/assets/image (5).png>)
 
 #### **November 9**
 
 * Twitter live video chat supported by Social Stream now. No avatar support, but that's coming eventually.\
-  ![](../.gitbook/assets/image.png)![](<../.gitbook/assets/image (1).png>)
+  ![](<../../.gitbook/assets/image (1).png>)![](<../../.gitbook/assets/image (2).png>)
 
 #### **November 5**
 
@@ -51,25 +51,25 @@
 
     <div align="left">
 
-    <figure><img src="../.gitbook/assets/image (5) (1).png" alt="" width="375"><figcaption></figcaption></figure>
+    <figure><img src="../../.gitbook/assets/image (5) (1).png" alt="" width="375"><figcaption></figcaption></figure>
 
     </div>
 
 #### **October 29**
 
 * Added flag support to Social Stream\
-  ![](<../.gitbook/assets/image (1) (1) (1) (1) (1).png>)
+  ![](<../../.gitbook/assets/image (1) (1) (1) (1) (1).png>)
 
 #### **October 28**
 
 * Added an option to hide messages based on custom start words; takes comma separated values\
-  ![](<../.gitbook/assets/image (206).png>)
+  ![](<../../.gitbook/assets/image (206).png>)
 
 #### **October 27**
 
 * Added support for Ko-Fi's donations to Social Stream; works via WebHook\
   Details here: [https://github.com/steveseguin/social\_stream/blob/main/README.md#ko-fi-webhook-donation-support](https://github.com/steveseguin/social\_stream/blob/main/README.md#ko-fi-webhook-donation-support)\
-  ![](<../.gitbook/assets/image (205).png>)
+  ![](<../../.gitbook/assets/image (205).png>)
 
 #### **October 26**
 
@@ -86,9 +86,9 @@
 **Social Stream updates**
 
 * I warn the user in the dock when their messages are longer than 200-characters now (YouTube's chat limit length).\
-  ![](<../.gitbook/assets/image (203).png>)
+  ![](<../../.gitbook/assets/image (203).png>)
 * I have an option to trim messages down in length that are sent to third party sites to be shorter when longer than a specified length.\
-  ![](<../.gitbook/assets/image (204).png>)
+  ![](<../../.gitbook/assets/image (204).png>)
 * Fixed an issue with duplicate messages and cozy.tv.
 
 #### **October 22**
@@ -103,7 +103,7 @@
 
 <div align="left">
 
-<figure><img src="../.gitbook/assets/image (201).png" alt=""><figcaption></figcaption></figure>
+<figure><img src="../../.gitbook/assets/image (201).png" alt=""><figcaption></figcaption></figure>
 
 </div>
 
@@ -116,13 +116,13 @@
 #### **October 9**
 
 * The emotes-wall in Social Stream now has an option to have the emotes float up, rather than just bounce around.\
-  ![](<../.gitbook/assets/image (187).png>)
+  ![](<../../.gitbook/assets/image (187).png>)
 * YouTube chat from channel members can have all their chat be considered as "membership chat" now, rather than just their monthly highlighted messages. This can be enabled via the general mechanics option.
 
 #### **October 8**
 
 * The wait list overlay option in Social Stream now has a "random user draw" option added, which lets you select a random user who entered. A few buttons and options were added to the extension to customize the behavior and to select winners and clear/reset the entries as needed.\
-  ![](<../.gitbook/assets/image (186).png>)
+  ![](<../../.gitbook/assets/image (186).png>)
 
 #### **October 7**
 
@@ -145,13 +145,13 @@
   \-- The sampleapi.html page has some test buttons to trigger (as shown in second screen shot)\
   \-- You'll need to enable the remote http/wss API in the general extension settings to enable this remote API\
   \-- The API can be triggered via HTTP, so you can use it with a streamdeck; ie: `https://api.vdo.ninja/SESSIONIDHERE/highlightwaitlist/0`\
-  ![](<../.gitbook/assets/image (1) (1) (1) (1) (1) (1) (1) (1) (1).png>)![](<../.gitbook/assets/image (2) (1) (1) (1) (1) (1) (1).png>)
+  ![](<../../.gitbook/assets/image (1) (1) (1) (1) (1) (1) (1) (1) (1).png>)![](<../../.gitbook/assets/image (2) (1) (1) (1) (1) (1) (1).png>)
 
 #### **September 26**
 
 * steamcommunity.com live chat added to Social Stream. ie: `https://steamcommunity.com/broadcast/chatonly/XXXXXXX`
 * MS Teams now is opt-in for Social Stream\
-  ![](<../.gitbook/assets/image (1) (1) (1) (1) (1) (1) (1) (1).png>)
+  ![](<../../.gitbook/assets/image (1) (1) (1) (1) (1) (1) (1) (1).png>)
 
 #### **September 25**
 
@@ -167,7 +167,7 @@
 * Right-to-left read language forced support added to message text; it's set to automatic detection by default however.
 * The featured chat messages can "stack" on top of each other now, although this is a work in progress.
 
-![](<../.gitbook/assets/image (3) (1) (1) (1) (1).png>)![](<../.gitbook/assets/image (4) (1) (1).png>)
+![](<../../.gitbook/assets/image (3) (1) (1) (1) (1).png>)![](<../../.gitbook/assets/image (4) (1) (1).png>)
 
 #### **September 12**
 
@@ -175,7 +175,7 @@
 * Facebook sticker support added to Social Stream
 * Added an option to filter for 'members' to the dock's menu
 
-![](<../.gitbook/assets/image (2) (1) (1) (1) (1) (1) (1) (1).png>)
+![](<../../.gitbook/assets/image (2) (1) (1) (1) (1) (1) (1) (1).png>)
 
 #### **September 8**
 
@@ -188,18 +188,18 @@
 #### **August 29**
 
 * Since a popular Twitch auto-collect channel-points extension became adware earlier today, I've now added my own twitch automatic points-collection feature to Social Stream.\
-  ![](<../.gitbook/assets/image (7) (1).png>)
+  ![](<../../.gitbook/assets/image (7) (1).png>)
 * With Twitter being renamed X, I've updated the twitter icon used by Social Stream. I however added an option to re-twitter the branding, using the twitter icon in Social Stream if desired instead.\
-  ![](<../.gitbook/assets/image (8) (1).png>)\
+  ![](<../../.gitbook/assets/image (8) (1).png>)\
   \-- Just for some added fun, I update the branding on the Twitter website itself, back to to Twitter, when this option is enabled.\
-  ![](<../.gitbook/assets/image (9) (1).png>)
+  ![](<../../.gitbook/assets/image (9) (1).png>)
 
 #### **August 28**
 
 * I've expanded the number of translation text fragments for Social Stream to over 330, so if you're bored, feel free to contribute your language.\
   \-- A page is up on how to contribute translations (simple enough): [https://github.com/steveseguin/social\_stream/tree/main/translations](https://github.com/steveseguin/social\_stream/tree/main/translations)\
   \-- We've already had a few sentences in German contributed by our resident Paddy Lu.\
-  ![](<../.gitbook/assets/image (4) (1) (1) (1).png>)
+  ![](<../../.gitbook/assets/image (4) (1) (1) (1).png>)
 
 #### **August 25**
 
@@ -209,7 +209,7 @@
   \-- Actual translations for other languages still need to be actually added. (difficulty level: 3/10)\
   \-- (German was added\*)
 
-![](<../.gitbook/assets/image (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1).png>)
+![](<../../.gitbook/assets/image (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1).png>)
 
 #### **August 24**
 
@@ -217,7 +217,7 @@
 * Added the option to use a custom title message for he wait list page
 * Clarified the language/style to make it a bit clearer that you have to enable the page for it to work
 
-![](<../.gitbook/assets/image (3) (1) (1) (1) (1) (1).png>)
+![](<../../.gitbook/assets/image (3) (1) (1) (1) (1) (1).png>)
 
 #### **August 20**
 
@@ -227,13 +227,13 @@ On Social Stream now:
 * If you right click on a message, you'll have an option to block a user now. It will propagate to other open docks automatically, however, these blocks will reset after a page reload unless you have the `Hide and block specified users` toggle enabled. Users blocked via right-clicking will be added to that block list, but you'll need to toggle it on for it to persist on each page load.
 * Adding a user to the `Hide and block specified users` will have it retroactively delete all messages from that user from all open docks.
 
-![](<../.gitbook/assets/image (9) (1) (1).png>)
+![](<../../.gitbook/assets/image (9) (1) (1).png>)
 
 #### **August 18**
 
 * There's a new stream event option added, where events can be set to 'fade up and away', to avoid competing with the actual chat messages.\
   \-- This idea is based on what TikTok is doing with events, although I like to think my version of it is nicer.\
-  ![](<../.gitbook/assets/image (6) (1) (1).png>)![](<../.gitbook/assets/image (7) (1) (1).png>)![](<../.gitbook/assets/image (8) (1) (1).png>)
+  ![](<../../.gitbook/assets/image (6) (1) (1) (1).png>)![](<../../.gitbook/assets/image (7) (1) (1).png>)![](<../../.gitbook/assets/image (8) (1) (1).png>)
 * MS Teams "enterprise" chat now working; not just the personal version. -- update Social Stream to access
 
 #### **August 17**
@@ -243,13 +243,13 @@ On Social Stream now:
   \-- Ordered based on the time line of the user entering the !queue command; duplicate entries ignored.\
   \-- The list can be reset or turned off/on via the extension menu.\
   \-- This feature was by request, I suppose to allow users to raise their hand to join in some event. It will evolve based on feedback.\
-  ![](<../.gitbook/assets/image (3) (1) (1) (1) (1) (1) (1) (1).png>)![](<../.gitbook/assets/image (4) (1) (1) (1) (1).png>)
+  ![](<../../.gitbook/assets/image (3) (1) (1) (1) (1) (1) (1) (1).png>)![](<../../.gitbook/assets/image (4) (1) (1) (1) (1).png>)
 
 #### **August 16**
 
 * Due to many users having their docks set as narrow overlays, I've modified the default style to collapse into multi-lines when the width is less than 660px in OBS (or 330px in Chrome). You can get something similar with `&compact`, but some users were having trouble discovering that flag.\
   \-- Hopefully this makes it easier to use, without breaking any existing user setups. let me know though if having problems.\
-  ![](<../.gitbook/assets/image (2) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1).png>)
+  ![](<../../.gitbook/assets/image (2) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1).png>)
 
 #### **August 15**
 
@@ -269,7 +269,7 @@ On Social Stream now:
   \-- the more engaged your viewers are with the chat, the higher the score. Might encourage more chatting.\
   \-- this is a new dedicated overlay page\
   \-- basic styling options included, such as align left/right, disabling outlining, scale, etc\
-  ![](<../.gitbook/assets/image (11).png>)![](<../.gitbook/assets/image (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1).png>)
+  ![](<../../.gitbook/assets/image (11).png>)![](<../../.gitbook/assets/image (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1).png>)
 
 #### **August 12**
 
@@ -278,14 +278,14 @@ On Social Stream now:
 #### **August 10**
 
 * In Social Stream, added the option to have de-selected messages become unhighlighted again, rather than stay green. (`&unhighlight`)\
-  ![](<../.gitbook/assets/image (10) (1) (1).png>)
+  ![](<../../.gitbook/assets/image (10) (1) (1).png>)
 
 #### **August 7**
 
 * Added an option to change the font-family type in social stream via a drop down setting, and also via `&font=xxxx`\
-  ![](<../.gitbook/assets/image (2) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1).png>)
+  ![](<../../.gitbook/assets/image (2) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1).png>)
 * made the "test message" button more accessible in the extension (pinned at the top now)\
-  ![](<../.gitbook/assets/image (28).png>)
+  ![](<../../.gitbook/assets/image (28).png>)
 * `&compact` mode as a toggle is more accessible and clearly defined as to what it does in the menu list
 * Updated the HTML/XSS input sanitizing logic for all the social chat integrations
 
@@ -294,41 +294,41 @@ On Social Stream now:
 * The dock in Social Stream can now be configured to send its commands (fake chat or open chat pop out windows) via server instead of p2p.\
   \-- The dock could be configured already to accept messages via WebSockets, but now you can have it also reply to messages.\
   \-- This is mainly in the case you can't get WebRTC working\
-  ![](<../.gitbook/assets/image (3) (1) (1) (1) (1) (1) (1) (1) (1).png>)
+  ![](<../../.gitbook/assets/image (3) (1) (1) (1) (1) (1) (1) (1) (1).png>)
 *   Added support for Stripe payments to Social Stream, so you can have successful payments made using Stripe show up as messages in Social Stream.
 
     \-- Name, Message, and donation amount are support currently\
     \-- Use a Stripe payment link (as a donation page if needed), point it to the SocialStream webhook API , and make a few setting changes\
     \-- And you're good to go\
     \-- Details/Guide: [https://github.com/steveseguin/social\_stream/blob/main/README.md#stripe-webhook-donation-support](https://github.com/steveseguin/social\_stream/blob/main/README.md#stripe-webhook-donation-support)\
-    ![](<../.gitbook/assets/image (4) (1) (1) (1) (1) (1).png>)
+    ![](<../../.gitbook/assets/image (4) (1) (1) (1) (1) (1).png>)
 
 #### **July 31**
 
 * Option to hide specific events in socialstream added. Takes comma,separated,values, and if any of those match a word in the event message, it will be blocked.
 * `&filterevents` can be used on the dock page, or there is a toggle and text-input in the extension that will apply globally.\
-  ![](<../.gitbook/assets/image (2) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1).png>)
+  ![](<../../.gitbook/assets/image (2) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1).png>)
 
 #### **July 30**
 
 * Support for `vstream.com` and `live.space` added to Social Stream\
-  ![](<../.gitbook/assets/image (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1).png>)
+  ![](<../../.gitbook/assets/image (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1).png>)
 
 #### **July 25**
 
 * OpenAI's chat page added as a supported site to Social Stream, which opens up some interesting bot actions I guess.\
   [`https://chat.openai.com/chat`](https://chat.openai.com/chat)\
-  ![](<../.gitbook/assets/image (14).png>)
+  ![](<../../.gitbook/assets/image (14).png>)
 * Added 6 more custom chat auto-start options to Social Stream; up from 3. This was by request. Hopefully that's enough?\
-  ![](<../.gitbook/assets/image (15).png>)
+  ![](<../../.gitbook/assets/image (15).png>)
 * Updated Social Stream with new relay options:
   * Added the option to **relay all incoming messages** from one chat site to all other active chats on other sites\
     \-- I try to ignore duplicates, and I've added a 1 second timeout, to avoid too much spamming.\
     \-- image-based emojis and images won't be relayed; just text and maybe some normal text-emojis supported.\
-    ![](<../.gitbook/assets/image (5) (3).png>)
+    ![](<../../.gitbook/assets/image (5) (3).png>)
   * Added the option to relay just donations from sites to all other sites; stated as a thank you.
   * Fixed an issue where the auto-hi option was saying hit to all sites, not just the site that the hi came from.\
-    ![](<../.gitbook/assets/image (1) (2).png>)![](<../.gitbook/assets/image (2) (1) (2).png>)
+    ![](<../../.gitbook/assets/image (1) (2).png>)![](<../../.gitbook/assets/image (2) (1) (2).png>)
 
 #### **July 19**
 
@@ -341,7 +341,7 @@ On Social Stream now:
 
 * floatplane.com added to Social Stream
 * Few minor fixes to Social Stream, mainly to TikTok\
-  ![](<../.gitbook/assets/image (4) (1) (4).png>)
+  ![](<../../.gitbook/assets/image (4) (1) (4).png>)
 
 #### **July 10**
 
@@ -349,7 +349,7 @@ On Social Stream now:
   this service seems to allow you to train your own custom high quality speech models? anyways, it's available now.
 * Google premium TTS and elevenlabs TTS added have support now in the dock.html page (not just in the index.html). TTS messages will queue automatically and will be cleared with the TTS is stopped/paused.
 * Added Threads.net support to Social Stream (little button appears under each post to let you select).\
-  ![](<../.gitbook/assets/image (2) (1) (8).png>)
+  ![](<../../.gitbook/assets/image (2) (1) (8).png>)
 
 #### **July 9**
 
@@ -357,7 +357,7 @@ On Social Stream now:
 * bandlab.com added to Social Stream
 * `&largecontent` added as a toggle to Social Stream; this will make the content-images (like giphy images, twitter/IG posts, larger in the dock)
 * The giphy support has an option for #somekeyword now. related images from giphy will be used. You can concat hashtags for mulitword search. eg:`#Hello#kitty`\
-  ![](<../.gitbook/assets/image (4) (10).png>)
+  ![](<../../.gitbook/assets/image (4) (10).png>)
 
 #### **July 6**
 
@@ -374,7 +374,7 @@ On Social Stream now:
     \-- The GIF image selected will be based on the words in the chat message; top closest match.\
     \-- I'll probably change this feature as time goes on, to improve it, but let me know what you think.\
     \-- How can it be better?\
-    ![](<../.gitbook/assets/image (25).png>)![](<../.gitbook/assets/image (15) (3).png>)
+    ![](<../../.gitbook/assets/image (25).png>)![](<../../.gitbook/assets/image (15) (3).png>)
 
 #### **June 29**
 
@@ -391,7 +391,7 @@ On Social Stream now:
 
     \
     You need to activate it in the top-right corner of YouTube to have the buttons appear next to each comment you wish to push to Social Stream. To activate, press the small SS button when SocialStream is enabled to have the "Send to Social Stream" buttons appear.\
-    ![](<../.gitbook/assets/image (4) (3).png>)
+    ![](<../../.gitbook/assets/image (4) (3).png>)
 *   You can now make a file called `badwords.txt` in Social Stream, with a line by line list of bad words to filter out from chat.
 
     \-- There's already a default blacklist of common bad words to filter out, but making your own badwords.txt will override that default list.\
@@ -418,7 +418,7 @@ On Social Stream now:
 #### **May 10**
 
 * afreecatv.com support added to Social Stream. Update the extension and pop out chat to use.\
-  ![](<../.gitbook/assets/image (6) (6).png>)![](<../.gitbook/assets/image (5) (2) (2).png>)
+  ![](<../../.gitbook/assets/image (6) (6).png>)![](<../../.gitbook/assets/image (5) (2) (2).png>)
 
 #### **May 9**
 
@@ -436,12 +436,12 @@ On Social Stream now:
   \-- This was added to allow a host to put people into their own team by setting the name to a limited set of colors.\
   \-- You can have color options (teams) ranging from 1 to several thousand.\
   \-- You can also change the randomization seed so you can put people into different teams on the fly.\
-  ![](<../.gitbook/assets/image (4) (9) (1) (1).png>)
+  ![](<../../.gitbook/assets/image (4) (9) (1) (1).png>)
 
 #### **April 18**
 
 * Added the option to filter Social Stream messages by the source destination. You'll need to enable the alt filter mode in the filter search bar, and then use `source:SOURCENAME`, so ie: `source:twitch` or `source:youtube`.\
-  ![](<../.gitbook/assets/image (4) (1) (5).png>)
+  ![](<../../.gitbook/assets/image (4) (1) (5).png>)
 
 #### **April 17**
 
@@ -450,7 +450,7 @@ On Social Stream now:
 #### **April 12**
 
 * Added a bad word black list option to Social Stream. This option replaces matched words with \*\*\*. Currently the bad word list is hard-coded in, but it can be changed/expanded based on feedback.\
-  ![](<../.gitbook/assets/image (11) (3).png>)
+  ![](<../../.gitbook/assets/image (11) (3).png>)
 * Added a URL option called `&passttl` to the dock page of Social Stream. When enabled, when someone types in `!pass` into chat, it cancels the current text to speech queue.\
 
 * Added an option to save a list of all unique names seen in chat to disk, as a simple text list. (Social Stream)\
@@ -458,7 +458,7 @@ On Social Stream now:
   \-- It only saves each name once, without timestamp or additional meta data.\
   \-- You can open the file while its still recording, to see the current sate of number of unique chatters, etc.\
   \-- Start/stop support works, which will also start a new list once started again.\
-  ![](<../.gitbook/assets/image (1) (2) (7).png>)
+  ![](<../../.gitbook/assets/image (1) (2) (7).png>)
 
 #### **April 11**
 
@@ -493,7 +493,7 @@ Social stream updates:
 
 * Fixed an issue with 7TV v3 and usernames not being coloured
 * Fixed an issue where Pinned messages in YouTube chat would be duplicated in the dock; attempted to fix some other duplication issues.
-*   Updated [**Electron Capture**](../steves-helper-apps/electron-capture.md) so that you can toggle the "click thru and pin on top" with a global keyboard shortcut. (`CTRL + SHIFT + X`)\
+*   Updated [**Electron Capture**](../../steves-helper-apps/electron-capture.md) so that you can toggle the "click thru and pin on top" with a global keyboard shortcut. (`CTRL + SHIFT + X`)\
     \-- This Electron Capture update relates to Social Stream because you can use it to overlay the dock chat on your display (such as while gaming?) without it getting in the way of what you're doing. (see photo for example)\
 
 
@@ -503,7 +503,7 @@ Social stream updates:
 
     \
     [https://github.com/steveseguin/electroncapture/releases/tag/2.17.1.1](https://github.com/steveseguin/electroncapture/releases/tag/2.17.1.1) <= Test version of Electron Capture with this new feature; windows build\
-    ![](<../.gitbook/assets/image (3) (2) (4).png>)
+    ![](<../../.gitbook/assets/image (3) (2) (4).png>)
 
 #### **March 22**
 
@@ -517,7 +517,7 @@ Social stream updates:
 * IRC support added to Social Stream via [https://webchat.quakenet.org/](https://webchat.quakenet.org/).
 * tellonym.me support added to Social Stream.
 * Initial guest avatar image support added to kick.com on Social Stream.\
-  ![](<../.gitbook/assets/image (2) (16).png>)
+  ![](<../../.gitbook/assets/image (2) (16).png>)
 
 #### **March 17**
 
@@ -526,7 +526,7 @@ Social Stream update:
 * `&helpermode` added to Social Stream, which lets a synced dock user set pins/queues, but not control the featured chat requests. Helpful if you need someone to manage your messages for you while live.
 * Twitter "start overlay" button when using Social Stream won't show if the extension is disabled
 * Added the option to send messages from extension -> dock via the websocket server, rather than p2p\
-  ![](<../.gitbook/assets/image (177).png>)
+  ![](<../../.gitbook/assets/image (177).png>)
 
 #### **March 13**
 
@@ -540,7 +540,7 @@ Social Stream update:
 Social Stream update:
 
 * Opt out of YouTube / Twitch capture added, along with the ability to specify a single Twitch channel to only capture from.\
-  ![](<../.gitbook/assets/image (18).png>)
+  ![](<../../.gitbook/assets/image (18).png>)
 
 #### **March 8**
 
@@ -553,17 +553,17 @@ Social Stream update:
 * Fixed a bugs with the remote http API feature in the extension now always turning on/off as expected
 * Added the option to send messages to a specific social site via the API. ie: `https://api.vdo.ninja/XXXXXX/sendEncodedChat/twitch/!socials`. (note that the target is not null in this case, but 'Twitch') You can use this to perhaps trigger a command that's Twitch specific or send custom messages based on the site.
 * I updated the sample API page `https://socialstream.ninja/sampleapi.html` with the option to customize the input values of faked messages.\
-  ![](<../.gitbook/assets/image (4) (8).png>)
+  ![](<../../.gitbook/assets/image (4) (8).png>)
 
 #### **March 3**
 
 * Zoom's Q\&A should now work with Social Stream. Questions from the Q\&A will be pushed to the dock automatically, and colored blue.\
-  ![](<../.gitbook/assets/image (2) (15).png>)
+  ![](<../../.gitbook/assets/image (2) (15).png>)
 
 #### **February 28**
 
 * Twitter post support added to Social Stream; you will need to manually select the tweet you want to push to the dock though. (I'll play with this a bit more based on feedback.)\
-  ![](<../.gitbook/assets/image (2) (3).png>):
+  ![](<../../.gitbook/assets/image (2) (3).png>):
 
 #### **February 25**
 
@@ -577,7 +577,7 @@ Social Stream updates for today:
 
 * Social Stream has had the "open chat automatically" functionality improved a lot the last couple days. @River played a large part in that.
 * Added to Social Stream the option to map a chat command to some webhook API. Just an easy way to get started with making bot-actions, such as turning on a light. Happy to evolve this based on feedback.\
-  ![](<../.gitbook/assets/image (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1).png>)
+  ![](<../../.gitbook/assets/image (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1).png>)
 
 #### **February 22**
 
@@ -590,29 +590,29 @@ Social Stream updates for today:
 * Social Stream had some fixes: locals.com fix, hide-emoji/beep function fix
 * Added a section to specify and auto-open the chat-windows with a single click via the extension. This was developed in part with @River&#x20;
 * `&openchat` can be added to the dock to auto open all the saved chat locations on dock load/refresh\
-  ![](<../.gitbook/assets/image (10) (1) (3).png>)
+  ![](<../../.gitbook/assets/image (10) (1) (3).png>)
 
 #### **February 19**
 
 * With Social Stream, you can use `&fixed` on the dock page now, which places messages in the same place (overlapping the last one). When combined with `&limit=1`, you can get a neat one-message bar auto-featured chat effect.\
   ie: `https://socialstream.ninja/dock.html?bubble&color&hidemenu&hideshadow&largeavatar&nobadges&nooutline&notime&limit=1&fadeout&fixed&alignbottom&session=XXXXXXXX`\
-  ![](<../.gitbook/assets/image (1) (3).png>)
+  ![](<../../.gitbook/assets/image (1) (3).png>)
 * `&chartime=60` added as a dock option; this will specify the time per character that a message will show on screen when using the auto-show feature. 60ms is the default; longer messages will show for longer.
 
 #### **February 15**
 
 * `&largeavatar` and `&bubble` added to Social Stream styling options; when combined, you can see what they look like in the attached images.\
-  ![](<../.gitbook/assets/image (1) (2) (1).png>)![](<../.gitbook/assets/image (2) (13).png>)
+  ![](<../../.gitbook/assets/image (1) (2) (1).png>)![](<../../.gitbook/assets/image (2) (13).png>)
 * sli.do support added to Social Stream; works with the Q\&A section via the participant link
 
 #### **February 10**
 
 * Added an **emotes-wall** function to Social Stream (emojis from chat will bounce around the window).\
-  ![](<../.gitbook/assets/image (4) (1) (2).png>)\
+  ![](<../../.gitbook/assets/image (4) (1) (2).png>)\
   \-- This was added by a user's request; it works with all sites Social Stream supports; not just Twitch. BTTV and animated emojis are supported as well.\
   \-- Please report any issues with freezing/CPU issues. I've designed it to be low on CPU, but who knows.\
   \-- To use, `https://socialstream.ninja/emotes.html?session=XXXXXXXXXX&showtime=5000` or update the extension.\
-  ![](<../.gitbook/assets/image (10) (1) (2).png>)
+  ![](<../../.gitbook/assets/image (10) (1) (2).png>)
 
 #### **February 9**
 
@@ -630,7 +630,7 @@ Social Stream updates for today:
 #### **January 31**
 
 * Social Stream has a new menu-bar design; our Discord member @💎╲⎝⧹River⧸⎠╱💎 helped with the new icons, updated much of the UI, compressed the images files down, and improved many aspects of the menu's UX. A fantastic job really; thank you. (I should also mention @Sunadmiral on Discord, as she contributed some menu bar / icon concepts and designs as well, which influenced the redesign).\
-  ![](<../.gitbook/assets/image (2) (12).png>)
+  ![](<../../.gitbook/assets/image (2) (12).png>)
 * Some of the new tweaks made to the UX includes the option to immediately "stop" voice-to-speak, if you accidentally enable it. You can also right-click a message to enable TTS on it, and none others. If you need the old version of the dock.html page still, it's available at `socialstream.ninja/dock2.html`
 * Telegram.com/z/ for Social Stream also patched a bit; now if you specify a host-name in the menu, it will use that as your telegram name (rather than not know it)
 * Submitted an application to gain access to the YouTube chat API; wrote some code into VDO.Ninja / Social Stream to support it. I'm trying to see if I can offer a secondary way to access YouTube/Twitch chat data streams without an extra window open.
@@ -644,7 +644,7 @@ Social Stream updates for today:
 * Fixed support for kick.com and nimo live
 * Added `&lang=xxxx` (`&language`/`&ln`), which you can use instead of `&speech=xxx`. When using `&lang`, it will not enable it by default. (Social Stream)
 * Option added to right-click and trigger text to speech on a message (Social Stream dock)\
-  ![](<../.gitbook/assets/image (1) (2) (1) (1).png>)
+  ![](<../../.gitbook/assets/image (1) (2) (1) (1).png>)
 
 #### **January 19**
 
@@ -663,7 +663,7 @@ Social Stream updates for today:
 #### **January 6**
 
 * Google Meet support added to Social Stream. (you'll need to toggle it on explicitly to use, for privacy reasons)\
-  ![](<../.gitbook/assets/image (17) (1).png>)
+  ![](<../../.gitbook/assets/image (17) (1).png>)
 
 ### 2022
 
@@ -679,12 +679,12 @@ Social Stream updates for today:
 #### **December 22**
 
 * Added an option to randomize the color of names in Social Stream if no name color is already provided.\
-  ![](<../.gitbook/assets/image (3) (2) (1) (1).png>)![](<../.gitbook/assets/image (174).png>)
+  ![](<../../.gitbook/assets/image (3) (2) (1) (1).png>)![](<../../.gitbook/assets/image (174).png>)
 
 #### **December 21**
 
 * Social Stream's dock page now shows the Twitch avatars in the chat stream; it's not just limited to the featured-chat overlay.\
-  ![](<../.gitbook/assets/image (2) (9).png>)
+  ![](<../../.gitbook/assets/image (2) (9).png>)
 
 #### **December 18**
 
@@ -699,7 +699,7 @@ Social Stream updates for today:
 #### **December 9**
 
 * Export / import of settings added to Social Stream. Might need to testing to confirm working with all settings tho.\
-  ![](<../.gitbook/assets/image (2) (4).png>)
+  ![](<../../.gitbook/assets/image (2) (4).png>)
 * chatroll.com added to Social Stream. I think it works on most websites given its an embedded IFrame, but let me know if there's a deployment its not working with.
 
 #### **December 8**
@@ -709,10 +709,10 @@ Social Stream updates for today:
 #### **December 7**
 
 * Added support for NIMO.tv to Social Stream\
-  ![](<../.gitbook/assets/image (2) (3) (1) (2).png>)
+  ![](<../../.gitbook/assets/image (2) (3) (1) (2).png>)
 * Fixed WhatsApp support for Social Stream
 * Added Instagram post (non-live) comments to Social Stream. You will need to enable this via the menu, since this is a pretty non-obvious integration for Social Stream.\
-  ![](<../.gitbook/assets/image (4) (5).png>)![](<../.gitbook/assets/image (5) (1) (3).png>)
+  ![](<../../.gitbook/assets/image (4) (5).png>)![](<../../.gitbook/assets/image (5) (1) (3).png>)
 * Support for locals.com added to Social Stream
 
 #### **December 5**
@@ -763,9 +763,9 @@ Social Stream updates for today:
 #### **October 2**
 
 * Updated Socialstream to support custom themes/templates. I've provided an example theme that you can use or base your own themes on. see: [https://github.com/steveseguin/social\_stream/tree/main/themes](https://github.com/steveseguin/social\_stream/tree/main/themes) for more.\
-  ![](<../.gitbook/assets/image (7) (1) (2).png>)
+  ![](<../../.gitbook/assets/image (7) (1) (2).png>)
 * Added more animated style options for how messages appear into the chat stream, such as slide in, fade in, and drop in.\
-  ![](<../.gitbook/assets/image (8) (1) (1) (3).png>)
+  ![](<../../.gitbook/assets/image (8) (1) (1) (3).png>)
 
 #### **October 1**
 
@@ -779,14 +779,14 @@ Social Stream updates for today:
 #### **September 18**
 
 * The WSS/HTTPS APi for Socialstream has have had a few new commands added: next-in-queue, clear-featured-overlay, and an event that alerts the user to the size of the queue.\
-  ![](<../.gitbook/assets/image (3) (6) (1).png>)
+  ![](<../../.gitbook/assets/image (3) (6) (1).png>)
 * Added an option to save incoming chat messages to an excel-file within SocialStream's menu (by request)\
-  ![](<../.gitbook/assets/image (1) (1) (5).png>)
+  ![](<../../.gitbook/assets/image (1) (1) (5).png>)
 
 #### **September 17**
 
 * Added the option to show "only" the queued messages in the dock\
-  ![](<../.gitbook/assets/image (1) (8) (1).png>)
+  ![](<../../.gitbook/assets/image (1) (8) (1).png>)
 * Fixed an issue where queued messages would become hidden once it hit the visual limit
 * Fixed a discord not-working issue
 * Fixed a twitch doubling up message issue
@@ -795,12 +795,12 @@ Social Stream updates for today:
 #### **September 15**
 
 * `&random` added to SocialStream; it can be used with the dock to randomize where messages appear on screen.\
-  ![](<../.gitbook/assets/image (13) (2) (1).png>)
+  ![](<../../.gitbook/assets/image (13) (2) (1).png>)
 
 #### **September 10**
 
 * Using `&beep` or the bell icon will trigger audio 'beeps' when new messages appear in the Socialstream dock. Requires user-interaction with the page in chrome for the audio to work.\
-  ![](<../.gitbook/assets/image (8) (1) (1) (2).png>)
+  ![](<../../.gitbook/assets/image (8) (1) (1) (2).png>)
 * Support for @mention added to Mixcloud for Socialstream+touch, by means of providing the username that scripts can respond to (by user request).
 * `&alignbottom` added to the Socialstream dock; this aligns the message stream to the bottom by default, rather than top.
 * Added `&transparent` (versus the new `&hideshadow`), which can be useful for loading Socialstream into non-OBS studios.
@@ -812,9 +812,9 @@ Social Stream updates for today:
 #### **August 31**
 
 * New MIDI control feature for Social Stream: - the option to select a file containing text-strings for use with the MIDI-command option is available - sample file is included in the extension folder; edit it and select it from the extension menu (JSON format) - you shouldn't have to reload the file each time you open the browser; just when you reload the extension or when you want to update the commands with a newer file.\
-  ![](<../.gitbook/assets/image (10) (1) (2) (1) (1).png>)
+  ![](<../../.gitbook/assets/image (10) (1) (2) (1) (1).png>)
 * Social Stream has had it's pop-out menu UI updated, courtesy of the one and only [@jcalado](https://github.com/jcalado) (there's dark-mode support now, also) #pretty\
-  ![](<../.gitbook/assets/image (1) (1) (1) (2).png>)
+  ![](<../../.gitbook/assets/image (1) (1) (1) (2).png>)
 * Added workplace.com support to Social Stream
 * The queue-order of messages now is visible with little numbers on the left-side of the message. Changes to the queue are synced across docks when using `&sync`
 * slido.com support added to chat.overlay.ninja
@@ -878,7 +878,7 @@ Social Stream updates for today:
 #### July 3
 
 * socialstream.ninja was updated to support horizontal scrolling for the dock page (`&horizontal`) and extra-large emojis (`&emoji`)\
-  ![](<../.gitbook/assets/image (9) (4) (1).png>)
+  ![](<../../.gitbook/assets/image (9) (4) (1).png>)
 
 #### June 28
 

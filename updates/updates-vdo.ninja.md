@@ -355,7 +355,7 @@ Fixed a few bugs and pushed to alpha (vdo.ninja/alpha). Thank you for reporting 
 #### August 28 <a href="#august-31" id="august-31"></a>
 
 * When a user changes an advanced audio or video option (white balance, frame rate, main gain, etc), it will now announce that over the IFrame API.\
-  ![](<../.gitbook/assets/image (5) (1) (1) (1).png>)![](<../.gitbook/assets/image (6) (1).png>)
+  ![](<../.gitbook/assets/image (5) (1) (1) (1).png>)![](<../.gitbook/assets/image (6) (1) (1).png>)
 * [vdo.ninja/alpha/](https://vdo.ninja/alpha/) updated with this change, and _**Github**_ has also had all recent changes pushed to it.
 
 #### August 27 <a href="#august-31" id="august-31"></a>
@@ -1283,7 +1283,7 @@ https://vdo.ninja/alpha/?view=YbFmisR&poster=./media/bg_sample.webp&hideplaybutt
   ![](<../.gitbook/assets/image (2) (1) (1) (3).png>)\
   \-- This was designed for Twitch / YouTube / Social Stream chat, but could in theory work with any CORS-friendly site, such as a third-party web tool.\
   \-- If the director uses [`&widget`](../advanced-settings/settings-parameters/and-widget.md), it will auto sync that with all guests as they connect. I'll try to find ways to make it easier to resize/minimize in the future.\
-  ![](<../.gitbook/assets/image (6) (1) (1) (1) (1).png>)\
+  ![](<../.gitbook/assets/image (6) (1) (1) (1) (1) (1).png>)\
   \
   \*\*changes on alpha at vdo.ninja/alpha/
 

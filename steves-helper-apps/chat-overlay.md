@@ -40,6 +40,6 @@ Get support on the Discord if you have any problems: [💬│chat․overlay-supp
 
 ## Updates
 
-{% content-ref url="../updates/updates-social-stream-and-chat-overlay.md" %}
-[updates-social-stream-and-chat-overlay.md](../updates/updates-social-stream-and-chat-overlay.md)
+{% content-ref url="../updates/updates-social-stream-and-chat-overlay/" %}
+[updates-social-stream-and-chat-overlay](../updates/updates-social-stream-and-chat-overlay/)
 {% endcontent-ref %}

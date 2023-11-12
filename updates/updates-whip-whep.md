@@ -12,7 +12,7 @@
 *   If you open a VDO.Ninja WHEP URL in the browser, it will assume you want to play it, and give you the correct WHEP URL for playback.
 
     ie: `https://whep.vdo.ninja/XXXXX` -> `https://vdo.ninja/alpha/?whep=XXXXX`\
-    ![](<../.gitbook/assets/image (6).png>)\
+    ![](<../.gitbook/assets/image (6) (1).png>)\
     \*\* changes on alpha
 
 #### November 1 <a href="#august-31" id="august-31"></a>

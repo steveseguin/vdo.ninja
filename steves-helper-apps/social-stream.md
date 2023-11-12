@@ -18,8 +18,26 @@ Get support on the Discord if you have any problems: [💬│chat․overlay-supp
 
 ![](<../.gitbook/assets/image (98) (1) (1) (1).png>)
 
+## Standalone App
+
+I'm putting out a "still-in-development preview" version of the **Social Stream Standalone App**
+
+[**https://github.com/steveseguin/social\_stream/releases**](https://github.com/steveseguin/social\_stream/releases)\
+\
+I've been poking at this project for the past year, and due to frequent requests for it I'm making it available as a preview-build.
+
+I'd say 90% of the features available in the extension work in this standalone version, with the interface about 50% done.
+
+Available as an installer for Windows x64 and MacOS.
+
+<figure><img src="../.gitbook/assets/image.png" alt=""><figcaption></figcaption></figure>
+
 ## Updates
 
-{% content-ref url="../updates/updates-social-stream-and-chat-overlay.md" %}
-[updates-social-stream-and-chat-overlay.md](../updates/updates-social-stream-and-chat-overlay.md)
+{% content-ref url="../updates/updates-social-stream-and-chat-overlay/" %}
+[updates-social-stream-and-chat-overlay](../updates/updates-social-stream-and-chat-overlay/)
+{% endcontent-ref %}
+
+{% content-ref url="../updates/updates-social-stream-and-chat-overlay/updates-social-stream-standalone-app.md" %}
+[updates-social-stream-standalone-app.md](../updates/updates-social-stream-and-chat-overlay/updates-social-stream-standalone-app.md)
 {% endcontent-ref %}

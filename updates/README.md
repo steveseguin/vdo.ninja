@@ -5,7 +5,7 @@ description: What is new
 # Updates
 
 * [updates-vdo.ninja.md](updates-vdo.ninja.md "mention")
-* [updates-social-stream-and-chat-overlay.md](updates-social-stream-and-chat-overlay.md "mention")
+* [updates-social-stream-and-chat-overlay](updates-social-stream-and-chat-overlay/ "mention")
 * [updates-electron-capture-app.md](updates-electron-capture-app.md "mention")
 * [updates-raspberry.ninja.md](updates-raspberry.ninja.md "mention")
 * [updates-versus.cam.md](updates-versus.cam.md "mention")

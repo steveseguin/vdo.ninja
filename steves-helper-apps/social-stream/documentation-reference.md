@@ -8,8 +8,8 @@ For the newest and most up-to-date copy of the Social Stream documentation, plea
 
 Chronologically Updates are here:
 
-{% content-ref url="../../updates/updates-social-stream-and-chat-overlay.md" %}
-[updates-social-stream-and-chat-overlay.md](../../updates/updates-social-stream-and-chat-overlay.md)
+{% content-ref url="../../updates/updates-social-stream-and-chat-overlay/" %}
+[updates-social-stream-and-chat-overlay](../../updates/updates-social-stream-and-chat-overlay/)
 {% endcontent-ref %}
 
 ## Social Stream

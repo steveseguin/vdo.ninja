@@ -18,7 +18,7 @@ Example: `&clock24=5`
 ## Details
 
 `&clock24` is the same as the existing [`&clock`](and-clock.md) option, (which shows a clock) except it uses 24-hour time for the display (vs. am/pm).\
-![](<../../.gitbook/assets/image (5).png>)
+![](<../../.gitbook/assets/image (6).png>)
 
 If the director uses `&clock24` on their URL, and then enables the room clock, it will be 24-hour time for all guests, matching the director's settings.
 
