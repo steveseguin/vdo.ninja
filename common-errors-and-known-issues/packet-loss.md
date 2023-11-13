@@ -17,6 +17,7 @@ An Ethernet connection is highly recommended over WiFi.
 * If the guest can use the 4G LTE instead of WiFi (tethered via USB), that will often be much better than WiFi.
 * The guest can also Tether their 4G LTE /w their WiFi using bonding apps like Speedify or with hardware from Peplink; these services can give you more control over network settings.
 * If using a smartphone, consider using a USB to Ethernet adapter instead. I have a video demonstrating how to do this here: [https://www.youtube.com/watch?v=abCuANblE5w](https://www.youtube.com/watch?v=abCuANblE5w)
+* Some users have mentioned that reducing their network's MTU size, or the size of their packets, has helped reduce packet loss over bad WiFi. You'll need to experiment with this, but 800 to 1000 might be in the range you can try in this case.
 
 ### If the issue isn't WiFi related
 
@@ -25,6 +26,7 @@ An Ethernet connection is highly recommended over WiFi.
 * Advanced network firewalls, like _pfsense_, may block UDP packets or force traffic through a TURN relay server. VDO.Ninja uses mainly UDP packets in the high port range.
 * If your connection with a guest is going thru a TURN relay server, such as perhaps due to a security or privacy setting, resolving that may fix issues. VDO.Ninja offers publicly accessible and free TURN servers as part of its service, but these may introduce packet loss. You can always host your own TURN servers instead, but avoiding them if not needed is usually the best option.
 * Restart your Internet router; sometimes a router or network equipment just needs a good reset or update.
+* If your router is double-natted, such as if you have a router plugged into another router at home, it can cause VDO.Ninja to send video via relay servers instead of the preferred direct peer to peer. Commonly, to address this, either set the second router as an AP access point instead, or configure the first router to be in bridge mode.
 
 #### Routing issues
 
