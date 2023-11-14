@@ -32,11 +32,26 @@ Check out the alpha version here: [https://vdo.ninja/alpha/whip](https://vdo.nin
 
 ### WHIP ingest from OBS Studio or other
 
-While VDO.Ninja can act as a host for incoming WHIP requests (published to `https://whip.vdo.ninja/YOURTOKENHERE`), many such publishing clients do not support NAT traversal or STUN server support.
+While VDO.Ninja can act as a host for incoming WHIP requests (published to `https://whip.vdo.ninja/YOURTOKENHERE`), many such publishing clients do not support NAT traversal or STUN server support yet.&#x20;
 
-I hope more do support NAT traversal in the future, but until then, you might find this WHIP ingest feature only works when on the same Local Area Network as the publisher, if hosting VDO.Ninja on a cloud server with public IP address available, or if your local IP address is set to the DMZ mode target within your router's network settings.
+OBS Studio v30 does not, for example, so it may not work if publishing to someone who is behind a firewall. Still, even in those cases, the WHIP ingest feature will still work when:
 
-I welcome support and engagement from other developers to work through these issues, so plese reach out if you'd like to speak.
+* on the same Local Area Network as the publisher,&#x20;
+* if hosting VDO.Ninja on a cloud server with public IP address available,&#x20;
+* if your UDP ports are being forwarded (UDP ports 4096-65535)
+* or if your local IP address is set to the DMZ mode target within your router's network settings.
+
+For WHIP publishing clients that do support NAT traversal, such as Gstreamer's whip element, VDO.Ninja will already work with them.
+
+I welcome support and engagement from other developers to work through these issues, so please reach out if you'd like to speak.
+
+In terms of ideal settings for OBS v30's WHIP output into VDO.Ninja, below you can find a link to some recommended encoder options, to ensure smoothest playback
+
+{% content-ref url="../guides/obs-whip-output-settings.md" %}
+[obs-whip-output-settings.md](../guides/obs-whip-output-settings.md)
+{% endcontent-ref %}
+
+For more help, join the Discord
 
 {% embed url="https://discord.vdo.ninja" %}
 Contact me on Discord
