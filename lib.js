@@ -54,6 +54,7 @@ var FirefoxEnumerated = false;
 
 var Callbacks = [];
 var CtrlPressed = false; // global
+var MousePressed = false; // global
 var AltPressed = false;
 var KeyPressedTimeout = 0;
 var PPTKeyPressed = false;
@@ -8531,7 +8532,7 @@ function setupSenderTransform(sender) {
 	 insertableStreamWorker =  new Worker('./insertableStreamWorker.js', {name: 'Insertable Stream worker'});
 	 insertableStreamWorker.onmessage = (event) => {
 		if (event.data === 'insertableStreamWorkerLoaded') {	
-			if (session.e2ee){
+			if (session.encodedInsertableStreams == "e2ee"){
 				if (session.password){
 					insertableStreamWorker.postMessage({ cryptoPhrase: session.password+session.salt+"aDdedSaLt123" }); //  salt ⚔️ rainbow
 				} else {
@@ -8546,8 +8547,14 @@ function setupSenderTransform(sender) {
 	try {
 		const senderStreams = sender.createEncodedStreams();
 		const {readable, writable} = senderStreams;
+		let operation = "pass";
+		if (session.encodedInsertableStreams == "e2ee"){
+			operation = "encode";
+		} else if (session.encodedInsertableStreams == "red"){
+			operation = "redencode";
+		}
 		insertableStreamWorker.postMessage({
-			operation: 'encode',
+			operation: operation,
 			readable,
 			writable,
 		}, [readable, writable]);
@@ -8555,12 +8562,12 @@ function setupSenderTransform(sender) {
 		errorlog(e);
 	}
 }
-function setupReceiverTransform(receiver) {
+function setupReceiverTransform(receiver) { // treating audio and video both the same currently
 	if (!insertableStreamWorker){
 		insertableStreamWorker =  new Worker('./insertableStreamWorker.js', {name: 'Insertable Stream worker'});
 		insertableStreamWorker.onmessage = (event) => {
 			if (event.data === 'insertableStreamWorkerLoaded') {
-				if (session.e2ee){
+				if (session.encodedInsertableStreams == "e2ee"){
 					if (session.password){
 						insertableStreamWorker.postMessage({ cryptoPhrase: session.password+session.salt+"aDdedSaLt123" }); // salt ⚔️ rainbow
 					} else {
@@ -8573,10 +8580,16 @@ function setupReceiverTransform(receiver) {
 		};
 	}
 	try {
+		let operation = "pass";
+		if (session.encodedInsertableStreams == "e2ee"){
+			operation = "decode";
+		} else if (session.encodedInsertableStreams == "red"){
+			operation = "reddecode";
+		}
 		const receiverStreams = receiver.createEncodedStreams();
 		const {readable, writable} = receiverStreams;
 		insertableStreamWorker.postMessage({
-			operation: 'decode',
+			operation: operation,
 			readable,
 			writable,
 		}, [readable, writable]);
@@ -9711,13 +9724,19 @@ function processStats(UUID){
 									}
 								}
 								
+								
 								if (session.rpcs[UUID].stats[session.rpcs[UUID].stats._audioCodecIdTrackId]){
 								} else {
 									session.rpcs[UUID].stats[session.rpcs[UUID].stats._audioCodecIdTrackId] = {};
 								}
 								session.rpcs[UUID].stats[session.rpcs[UUID].stats._audioCodecIdTrackId].codec = addOnDescription;
-								session.rpcs[UUID].stats[session.rpcs[UUID].stats._audioCodecIdTrackId]
 								
+								if (stat.clockRate){
+									session.rpcs[UUID].stats[session.rpcs[UUID].stats._audioCodecIdTrackId].clockRate = stat.clockRate;
+									if (stat.channels){
+										session.rpcs[UUID].stats[session.rpcs[UUID].stats._audioCodecIdTrackId].clockRate += " / "+stat.channels
+									}
+								}
 							}
 						} else if (Firefox){
 							if ("frameWidth" in stat){
@@ -9731,6 +9750,14 @@ function processStats(UUID){
 									session.rpcs[UUID].stats.video_codec = stat.mimeType.split("video/")[1];
 								} else if (stat.mimeType.includes("audio")){
 									session.rpcs[UUID].stats.audio_codec = stat.mimeType.split("audio/")[1];
+									if (stat.clockRate){
+										session.rpcs[UUID].stats.audio_clockRate = stat.clockRate;
+										if (stat.channels){
+											session.rpcs[UUID].stats.audio_clockRate += " / "+stat.channels
+										}
+									} else if (stat.sdpFmtpLine){
+										session.rpcs[UUID].stats.fmtp = stat.sdpFmtpLine;
+									}
 								} 
 							}
 							/* if ("jitter" in stat){
@@ -9765,18 +9792,18 @@ function processStats(UUID){
 					if (nominatedCandidate.localCandidateId && session.rpcs[UUID].stats['Peer-to-Peer_Connection']._local_ice_id  && (session.rpcs[UUID].stats['Peer-to-Peer_Connection']._local_ice_id !== nominatedCandidate.localCandidateId)){
 						if ("candidateType" in nominatedCandidate){
 							try {
-								session.rpcs[UUID].stats['Peer-to-Peer_Connection'].local_candidateType = null;
-								session.rpcs[UUID].stats['Peer-to-Peer_Connection'].local_relay_IP = null;
-								session.rpcs[UUID].stats['Peer-to-Peer_Connection'].local_relay_protocol = null;
+								delete session.rpcs[UUID].stats['Peer-to-Peer_Connection'].candidateType_local;
+								delete session.rpcs[UUID].stats['Peer-to-Peer_Connection'].local_relay_IP;
+								delete session.rpcs[UUID].stats['Peer-to-Peer_Connection'].local_relay_protocol;
 							} catch(e){}
 						}
 					}
 					if (nominatedCandidate.remoteCandidateId && session.rpcs[UUID].stats['Peer-to-Peer_Connection']._remote_ice_id  && (session.rpcs[UUID].stats['Peer-to-Peer_Connection']._remote_ice_id !== nominatedCandidate.remoteCandidateId)){
 						if ("candidateType" in nominatedCandidate){
 							try {
-								session.rpcs[UUID].stats['Peer-to-Peer_Connection'].remote_candidateType = null;
-								session.rpcs[UUID].stats['Peer-to-Peer_Connection'].remote_relay_IP = null;
-								session.rpcs[UUID].stats['Peer-to-Peer_Connection'].remote_relay_protocol = null;
+								delete session.rpcs[UUID].stats['Peer-to-Peer_Connection'].candidateType_remote;
+								delete session.rpcs[UUID].stats['Peer-to-Peer_Connection'].remote_relay_IP;
+								delete session.rpcs[UUID].stats['Peer-to-Peer_Connection'].remote_relay_protocol;
 							} catch(e){}
 						}
 					}
@@ -9791,105 +9818,29 @@ function processStats(UUID){
 					}
 				}
 				
-				if (nominatedCandidate && nominatedCandidate.remoteCandidateId){
-					if (candidates[nominatedCandidate.remoteCandidateId]){
-						var candidate = candidates[nominatedCandidate.remoteCandidateId];
-						if ("candidateType" in candidate) {
-							session.rpcs[UUID].stats.remote_candidateType = candidate.candidateType;
-							if (candidate.candidateType === "relay"){
-								if ("ip" in candidate) {
-									session.rpcs[UUID].stats.remote_relay_IP = candidate.ip;
-								}
-								if ("relayProtocol" in candidate) {
-									session.rpcs[UUID].stats.remote_relay_protocol = candidate.relayProtocol;								
-								}
-								
-								session.rpcs[UUID].stats.remote_ip_blocking = !ipleakingAllowedRemote;
-								
-							} else {
-								try {
-									delete session.rpcs[UUID].stats.remote_relay_IP;
-									delete session.rpcs[UUID].stats.remote_relay_protocol;
-									delete session.rpcs[UUID].stats.remote_ip_blocking;
-								} catch(e){}
-							}
-						}
-					}
-				}
-				if (nominatedCandidate && nominatedCandidate.localCandidateId){
-					if (candidates[nominatedCandidate.localCandidateId]){
-						var candidate = candidates[nominatedCandidate.localCandidateId];
-						if ("candidateType" in candidate) {
-							session.rpcs[UUID].stats.local_candidateType = candidate.candidateType;
-							
-							if (candidate.candidateType === "relay"){
-								if ("ip" in candidate) {
-									session.rpcs[UUID].stats.local_relay_IP = candidate.ip;
-								}
-								if ("relayProtocol" in candidate) {
-									session.rpcs[UUID].stats.local_relay_protocol = candidate.relayProtocol;								
-								}
-								
-								session.rpcs[UUID].stats.local_ip_blocking = !ipleakingAllowedLocal;
-							} else {
-								try {
-									delete session.rpcs[UUID].stats.local_relay_IP;
-									delete session.rpcs[UUID].stats.local_relay_protocol;
-									delete session.rpcs[UUID].stats.local_ip_blocking;
-								} catch(e){}
-							}
-							
-						}
-					}
-				}
 				
-				///////////
-				if (nominatedCandidate && nominatedCandidate.remoteCandidateId){
-					if (candidates[nominatedCandidate.remoteCandidateId]){
-						var candidate = candidates[nominatedCandidate.remoteCandidateId];
-						if ("candidateType" in candidate){
-							session.rpcs[UUID].stats['Peer-to-Peer_Connection'].remote_candidateType = candidate.candidateType;
-							if (candidate.candidateType === "relay"){
-								if ("relayProtocol" in candidate){
-									session.rpcs[UUID].stats['Peer-to-Peer_Connection'].remote_relay_protocol = candidate.relayProtocol;
-								} else {
-									session.rpcs[UUID].stats['Peer-to-Peer_Connection'].remote_relay_protocol = null;
-								}
-								if ("ip" in candidate){session.rpcs[UUID].stats['Peer-to-Peer_Connection'].remote_relay_IP = candidate.ip;}
-								else {session.rpcs[UUID].stats['Peer-to-Peer_Connection'].remote_relay_IP = null;}
-							} else {
-								try {
-									session.rpcs[UUID].stats['Peer-to-Peer_Connection'].local_relay_IP = null;
-									session.rpcs[UUID].stats['Peer-to-Peer_Connection'].local_relay_protocol = null;
-								} catch(e){}
-							}
-						}
-						
-						if ("networkType" in candidate){
-							session.rpcs[UUID].stats['Peer-to-Peer_Connection'].remote_networkType = candidate.networkType;
-						}
-					}
-				}
-							
-							
 				if (nominatedCandidate && nominatedCandidate.localCandidateId){
 					if (candidates[nominatedCandidate.localCandidateId]){
 						var candidate = candidates[nominatedCandidate.localCandidateId];
 						
 						if ("candidateType" in candidate){
-							session.rpcs[UUID].stats['Peer-to-Peer_Connection'].local_candidateType = candidate.candidateType;
+							session.rpcs[UUID].stats['Peer-to-Peer_Connection'].candidateType_local = candidate.candidateType;
+							
 							if (candidate.candidateType === "relay"){
 								if ("relayProtocol" in candidate){
 									session.rpcs[UUID].stats['Peer-to-Peer_Connection'].local_relay_protocol = candidate.relayProtocol;
 								} else {
-									session.rpcs[UUID].stats['Peer-to-Peer_Connection'].local_relay_protocol = null;
+									delete session.rpcs[UUID].stats['Peer-to-Peer_Connection'].local_relay_protocol;
 								}
 								if ("ip" in candidate){session.rpcs[UUID].stats['Peer-to-Peer_Connection'].local_relay_IP = candidate.ip;}
-								else {session.rpcs[UUID].stats['Peer-to-Peer_Connection'].local_relay_IP = null;}
+								else {delete session.rpcs[UUID].stats['Peer-to-Peer_Connection'].local_relay_IP;}
+								
+								session.rpcs[UUID].stats['Peer-to-Peer_Connection'].local_ip_blocking = !ipleakingAllowedLocal;
 							} else {
 								try {
-									session.rpcs[UUID].stats['Peer-to-Peer_Connection'].local_relay_IP = null;
-									session.rpcs[UUID].stats['Peer-to-Peer_Connection'].local_relay_protocol = null;
+									delete session.rpcs[UUID].stats['Peer-to-Peer_Connection'].local_relay_IP;
+									delete session.rpcs[UUID].stats['Peer-to-Peer_Connection'].local_relay_protocol;
+									delete session.rpcs[UUID].stats['Peer-to-Peer_Connection'].local_ip_blocking;
 								} catch(e){}
 							}
 						}
@@ -9899,8 +9850,41 @@ function processStats(UUID){
 						}
 					}
 				}
-				
-					//////////////
+				if (nominatedCandidate && nominatedCandidate.remoteCandidateId){
+					if (candidates[nominatedCandidate.remoteCandidateId]){
+						var candidate = candidates[nominatedCandidate.remoteCandidateId];
+						if ("candidateType" in candidate){
+							session.rpcs[UUID].stats['Peer-to-Peer_Connection'].candidateType_remote = candidate.candidateType;
+							
+							if (candidate.candidateType === "relay"){
+								if ("ip" in candidate){
+									session.rpcs[UUID].stats['Peer-to-Peer_Connection'].remote_relay_IP = candidate.ip;
+								} else {
+									delete session.rpcs[UUID].stats['Peer-to-Peer_Connection'].remote_relay_IP;
+								}
+								
+								if ("relayProtocol" in candidate){
+									session.rpcs[UUID].stats['Peer-to-Peer_Connection'].remote_relay_protocol = candidate.relayProtocol;
+								} else {
+									delete session.rpcs[UUID].stats['Peer-to-Peer_Connection'].remote_relay_protocol;
+								}
+								
+								session.rpcs[UUID].stats['Peer-to-Peer_Connection'].remote_ip_blocking = !ipleakingAllowedRemote;
+							} else {
+								try {
+									delete session.rpcs[UUID].stats['Peer-to-Peer_Connection'].remote_relay_IP;
+									delete session.rpcs[UUID].stats['Peer-to-Peer_Connection'].remote_relay_protocol;
+									delete session.rpcs[UUID].stats['Peer-to-Peer_Connection'].remote_ip_blocking;
+								} catch(e){}
+							}
+							
+						}
+						
+						if ("networkType" in candidate){
+							session.rpcs[UUID].stats['Peer-to-Peer_Connection'].remote_networkType = candidate.networkType;
+						}
+					}
+				}
 				
 				playoutdelay(UUID);
 				
@@ -10113,15 +10097,26 @@ function plotDataSimple(canvas, bitrate, nacks=0) {
 	context.clearRect(width - 1, 0, 1, height);
 }
 
-function printValues(obj) { // see: printViewStats
+function printValues(obj,sort=false) { // see: printViewStats
 	var out = "";
-	for (var key in obj) {
+	
+	var keys = Object.keys(obj);
+		
+	if (sort){
+		keys.sort();
+	}
+	
+	keys.forEach(key=>{
 		if (typeof obj[key] === "object") {
 			if (obj[key] != null) {
 				var tmp = key;
 				tmp = sanitizeChat((tmp));
 				out += "<li><h2 title='" + tmp + "'>" + tmp + "</h2></li>"
-				out += printValues(obj[key]);
+				if (key == "info"){
+					out += printValues(obj[key]);
+				} else {
+					out += printValues(obj[key],true);
+				}
 			}
 		} else {
 			if (key.startsWith("_")) {
@@ -10133,6 +10128,9 @@ function printValues(obj) { // see: printViewStats
 					var value = obj[key];
 
 					var stat = sanitizeChat(key);
+					
+					
+					stat = stat.charAt(0).toUpperCase() + stat.slice(1);
 					
 					var hint = "";
 
@@ -10177,15 +10175,6 @@ function printValues(obj) { // see: printViewStats
 					else if (key == 'remote_relay_IP') {
 						value = "<a href='https://whatismyipaddress.com/ip/" + value + "' target='_blank'>" + value + "</a>";
 					}
-					else if ((key == 'local_candidateType') &&  (value == "relay")){
-						value = "💸 relay server";
-						hint = 'no direct p2p connection made; using the TURN relay servers.';
-					}
-					else if ((key == 'remote_candidateType') && (value == "relay")) {
-						value = "💸 relay server"
-						hint = 'no direct p2p connection made; using the TURN relay servers.';
-					}
-					
 					else if ((key == 'local_ip_blocking') &&  value){
 						value = "⚠️ You're blocking";
 						hint = 'no direct p2p connection made because of YOUR browser or system setting';
@@ -10195,32 +10184,45 @@ function printValues(obj) { // see: printViewStats
 						value = "⚠️ They're blocking"
 						hint = 'no direct p2p connection made because of THEIR browser or system setting';
 					}
-					
-					else if ((key == 'local_candidateType') &&  (value == "host")){
+					else if ((key == 'candidateType_local') &&  (value == "relay")){
+						value = "💸 relay server";
+						hint = 'no direct p2p connection made; using the TURN relay servers.';
+						stat = "Candidate type - Local";
+					}
+					else if ((key == 'candidateType_remote') && (value == "relay")) {
+						value = "💸 relay server"
+						hint = 'no direct p2p connection made; using the TURN relay servers.';
+						stat = "Candidate type - Remote";
+					}
+					else if ((key == 'candidateType_local') &&  (value == "host")){
 						hint = 'No NAT firewall, typical of LAN to LAN';
+						stat = "Candidate type - Local";
 					}
-					else if ((key == 'remote_candidateType') && (value == "host")) {
+					else if ((key == 'candidateType_remote') && (value == "host")) {
 						hint = 'No NAT firewall, typical of LAN to LAN';
+						stat = "Candidate type - Remote";
 					}
-					else if ((key == 'local_candidateType') &&  (value == "srflx")){
+					else if ((key == 'candidateType_local') &&  (value == "srflx")){
 						hint = 'direct p2p, but NAT firewall likely';
+						stat = "Candidate type - Local";
 					}
-					else if ((key == 'remote_candidateType') && (value == "srflx")) {
+					else if ((key == 'candidateType_remote') && (value == "srflx")) {
 						hint = 'direct p2p, but NAT firewall likely';
+						stat = "Candidate type - Remote";
 					}
 					else if (key == 'height_url') {
 						if (value == false) {
-							continue;
+							return;;
 						}
 					}
 					else if (key == 'width_url') {
 						if (value == false) {
-							continue;
+							return;;
 						}
 					}
 					else if (key == 'height_url') {
 						if (value == false) {
-							continue;
+							return;;
 						}
 					}
 					else if (key == 'version') {
@@ -10276,10 +10278,10 @@ function printValues(obj) { // see: printViewStats
 						}
 					}
 					else if (value === false) {
-						continue
+						return;
 					} 
 					else if (value === "false") {
-						continue
+						return;
 					}
 					
 					stat = stat.replaceAll("_", " ");
@@ -10295,7 +10297,7 @@ function printValues(obj) { // see: printViewStats
 				}
 			}
 		}
-	}
+	});
 	return out;
 }
 
@@ -10543,6 +10545,14 @@ function processMeshcastStats(UUID){
 							session.rpcs[UUID].stats.video_codec = stat.mimeType.split("video/")[1];
 						} else if (stat.mimeType.includes("audio")){
 							session.rpcs[UUID].stats.audio_codec = stat.mimeType.split("audio/")[1];
+							if (stat.clockRate){
+								session.rpcs[UUID].stats.audio_clockRate = stat.clockRate;
+								if (stat.channels){
+									session.rpcs[UUID].stats.audio_clockRate += " / "+stat.channels
+								}
+							} else if (stat.sdpFmtpLine){
+								session.rpcs[UUID].stats.fmtp = stat.sdpFmtpLine;
+							}
 						} 
 					}
 				
@@ -10582,7 +10592,7 @@ function processMeshcastStats(UUID){
 				if (candidates[nominatedCandidate.remoteCandidateId]){
 					var candidate = candidates[nominatedCandidate.remoteCandidateId];
 					if ("candidateType" in candidate){
-						session.rpcs[UUID].stats['WHEP_Connection'].remote_candidateType = candidate.candidateType;
+						session.rpcs[UUID].stats['WHEP_Connection'].candidateType_remote = candidate.candidateType;
 						if (candidate.candidateType === "relay"){
 							if ("relayProtocol" in candidate){
 								session.rpcs[UUID].stats['WHEP_Connection'].remote_relay_protocol = candidate.relayProtocol;
@@ -10604,7 +10614,7 @@ function processMeshcastStats(UUID){
 				if (candidates[nominatedCandidate.localCandidateId]){
 					var candidate = candidates[nominatedCandidate.localCandidateId];
 					if ("candidateType" in candidate){
-						session.rpcs[UUID].stats['WHEP_Connection'].local_candidateType = candidate.candidateType;
+						session.rpcs[UUID].stats['WHEP_Connection'].candidateType_local = candidate.candidateType;
 						if (candidate.candidateType === "relay"){
 							if ("relayProtocol" in candidate){
 								session.rpcs[UUID].stats['WHEP_Connection'].local_relay_protocol = candidate.relayProtocol;
@@ -10709,6 +10719,8 @@ function printMyStats(menu, screenshare=false) { // see: setupStatsMenu
 		
 		var keys = Object.keys(obj);
 		
+		keys.sort();
+		
 		keys.forEach(key=>{
 			if (typeof obj[key] === "object") {
 				try{
@@ -10728,8 +10740,6 @@ function printMyStats(menu, screenshare=false) { // see: setupStatsMenu
 			menu.innerHTML += "<button onclick='session.pcs[\""+UUID+"\"].restartIce();' title='This will trigger an ICE Restart, which may or may not help with some connection issues'>Restart connection</button>";
 		}
 		
-		
-		
 		keys.forEach(key=>{
 			if (typeof obj[key] !== "object") {
 				if (key.startsWith("_")){return;}
@@ -10738,6 +10748,9 @@ function printMyStats(menu, screenshare=false) { // see: setupStatsMenu
 				let hint = "";
 				
 				var stat = sanitizeChat(key);
+				
+				stat = stat.charAt(0).toUpperCase() + stat.slice(1);
+				
 				var value = obj[key];
 				if (typeof value == "string") {
 					value = sanitizeChat((value));
@@ -10758,22 +10771,28 @@ function printMyStats(menu, screenshare=false) { // see: setupStatsMenu
 				if (key == 'watch_URL') {
 					value = "<a title='The standalone Meshcast.io view link for this stream' href='" + value + "' target='_blank'>" + value + "</a>";
 				}
-				if ((key == 'local_candidateType') &&  (value == "relay")){
+				if ((key == 'candidateType_local') &&  (value == "relay")){
+					stat = "Candidate type - Local";
 					value = "💸 <p style='cursor:help;' title='no direct p2p connection made; using the TURN relay servers.'>relay server</p>";
 				}
-				else if ((key == 'remote_candidateType') && (value == "relay")) {
+				else if ((key == 'candidateType_remote') && (value == "relay")) {
+					stat = "Candidate type - Remote";
 					value = "💸 <p style='cursor:help;' title='no direct p2p connection made; using the TURN relay servers.'>relay server</p>";
 				}
-				else if ((key == 'local_candidateType') &&  (value == "host")){
+				else if ((key == 'candidateType_local') &&  (value == "host")){
+					stat = "Candidate type - Local";
 					value = "<p style='cursor:help;' title='No NAT firewall, typical of LAN to LAN'>host</p>";
 				}
-				else if ((key == 'remote_candidateType') && (value == "host")) {
+				else if ((key == 'candidateType_remote') && (value == "host")) {
+					stat = "Candidate type - Remote";
 					value = "<p style='cursor:help;' title='No NAT firewall, typical of LAN to LAN'>host</p>";
 				}
-				else if ((key == 'local_candidateType') &&  (value == "srflx")){
+				else if ((key == 'candidateType_local') &&  (value == "srflx")){
+					stat = "Candidate type - Local";
 					value = "<p style='cursor:help;' title='direct p2p, but NAT firewall likely'>srflx</p>";
 				}
-				else if ((key == 'remote_candidateType') && (value == "srflx")) {
+				else if ((key == 'candidateType_remote') && (value == "srflx")) {
+					stat = "Candidate type - Remote";
 					value = "<p style='cursor:help;' title='direct p2p, but NAT firewall likely'>srflx</p>";
 				} 
 				else if ((key == 'local_ip_blocking') &&  value){
@@ -10785,12 +10804,14 @@ function printMyStats(menu, screenshare=false) { // see: setupStatsMenu
 					hint = 'no direct p2p connection made because of THEIR browser or system setting';
 				}
 				
+				stat = stat.replaceAll("_", " ");
+				
 				if (hint){
 					menu.innerHTML += "<li style='cursor:help;' title='"+hint+"'><span>" + stat + "</span><span>" + value + unit + "</span></li>";
 				} else {
 					menu.innerHTML += "<li><span>" + stat + "</span><span>" + value + unit + "</span></li>";
 				}
-			}
+			} 
 		});
 		
 		if (UUID && session.pcs[UUID]){
@@ -10901,14 +10922,6 @@ function updateLocalStats(){
 				totalStreams += 1;
 			}
 			
-			//if ("local_candidateType" in session.pcs[uuid].stats){
-			//	if (session.pcs[uuid].stats.local_candidateType == "relay"){
-			//		if (session.pcs[uuid].startTime  && (Date.now() - session.pcs[uuid].startTime > 30000)){
-			//			relayUsed=true;
-			//		}
-			//	}
-			//} 
-		
 			
 			setTimeout(function(data){
 				if (!data){return;}
@@ -11083,11 +11096,19 @@ function updateLocalStats(){
 							} else if (nominatedCandidate.priority < stat.priority){
 								nominatedCandidate = stat;
 							}
-						} else if (Firefox && ("mimeType" in stat) && ("type" in stat) && (stat.type=="codec")) {
+						} else if (("mimeType" in stat) && ("type" in stat) && (stat.type=="codec")) {
 							if (stat.mimeType.includes("video")){
 								data.stats.video_codec = stat.mimeType.split("video/")[1];
 							} else if (stat.mimeType.includes("audio")){
 								data.stats.audio_codec = stat.mimeType.split("audio/")[1];
+								if (stat.clockRate){
+									data.stats.audio_clockRate = stat.clockRate;
+									if (stat.channels){
+										data.stats.audio_clockRate += " / "+stat.channels
+									}
+								} else if (stat.sdpFmtpLine){
+									data.stats.fmtp = stat.sdpFmtpLine;
+								}
 							}
 						}
 						return;
@@ -11110,7 +11131,7 @@ function updateLocalStats(){
 						if (candidates[nominatedCandidate.remoteCandidateId]){
 							var candidate = candidates[nominatedCandidate.remoteCandidateId];
 							if ("candidateType" in candidate) {
-								data.stats.remote_candidateType = candidate.candidateType;
+								data.stats.candidateType_remote = candidate.candidateType;
 								if (candidate.candidateType === "relay"){
 									if ("ip" in candidate) {
 										data.stats.remote_relay_IP = candidate.ip;
@@ -11134,7 +11155,7 @@ function updateLocalStats(){
 						if (candidates[nominatedCandidate.localCandidateId]){
 							var candidate = candidates[nominatedCandidate.localCandidateId];
 							if ("candidateType" in candidate) {
-								data.stats.local_candidateType = candidate.candidateType;
+								data.stats.candidateType_local = candidate.candidateType;
 								
 								if (candidate.candidateType === "relay"){
 									if ("ip" in candidate) {
@@ -11204,14 +11225,6 @@ function updateLocalStats(){
 			nackRate += session.pcs[uuid].stats.nacks_per_second;
 			totalStreams += 1;
 		}
-		
-		//if ("local_candidateType" in session.pcs[uuid].stats){
-		//	if (session.pcs[uuid].stats.local_candidateType == "relay"){
-		//		if (session.pcs[uuid].startTime  && (Date.now() - session.pcs[uuid].startTime > 30000)){
-		//		relayUsed=true;
-		//		}
-		//	}
-		//}
 		
 		if (uuid in session.rpcs){
 			if (session.pcs[uuid].stats.label){
@@ -11449,11 +11462,19 @@ function updateLocalStats(){
 						} else if (nominatedCandidate.priority < stat.priority){
 							nominatedCandidate = stat;
 						}
-					} else if (Firefox && ("mimeType" in stat) && ("type" in stat) && (stat.type=="codec")) {
+					} else if (("mimeType" in stat) && ("type" in stat) && (stat.type=="codec")) {
 						if (stat.mimeType.includes("video")){
 							session.pcs[UUID].stats.video_codec = stat.mimeType.split("video/")[1];
 						} else if (stat.mimeType.includes("audio")){
 							session.pcs[UUID].stats.audio_codec = stat.mimeType.split("audio/")[1];
+							if (stat.clockRate){
+								session.pcs[UUID].stats.audio_clockRate = stat.clockRate;
+								if (stat.channels){
+									session.pcs[UUID].stats.audio_clockRate += " / "+stat.channels
+								}
+							} else if (stat.sdpFmtpLine){
+								session.pcs[UUID].stats.fmtp = stat.sdpFmtpLine;
+							}
 						}
 					}
 					return;
@@ -11476,7 +11497,7 @@ function updateLocalStats(){
 					if (candidates[nominatedCandidate.remoteCandidateId]){
 						var candidate = candidates[nominatedCandidate.remoteCandidateId];
 						if ("candidateType" in candidate) {
-							session.pcs[UUID].stats.remote_candidateType = candidate.candidateType;
+							session.pcs[UUID].stats.candidateType_remote = candidate.candidateType;
 							if (candidate.candidateType === "relay"){
 								if ("ip" in candidate) {
 									session.pcs[UUID].stats.remote_relay_IP = candidate.ip;
@@ -11500,7 +11521,7 @@ function updateLocalStats(){
 					if (candidates[nominatedCandidate.localCandidateId]){
 						var candidate = candidates[nominatedCandidate.localCandidateId];
 						if ("candidateType" in candidate) {
-							session.pcs[UUID].stats.local_candidateType = candidate.candidateType;
+							session.pcs[UUID].stats.candidateType_local = candidate.candidateType;
 							
 							if (candidate.candidateType === "relay"){
 								if ("ip" in candidate) {
@@ -19062,62 +19083,431 @@ function loadSettings(){
 }
 
 function gotDevices(deviceInfos, miconly=false) {
-
-	log("got devices!1");
-	log(deviceInfos);
 	try {
+		log("got devices!1");
+		log(deviceInfos);
 		
 		if (Firefox && !FirefoxEnumerated){
 			if (session.streamSrc && session.streamSrc.getTracks().length){
 				FirefoxEnumerated=true;
 			}
 		}
-
-		var option = document.createElement('input');
-		option.type = "checkbox";
-		option.value = "ZZZ";
-		option.name = "multiselect1";
-		option.id = "multiselect1";
-		option.style.display = "none";
-		option.checked = true;
-
-
-		var label = document.createElement('label');
-		label.for = option.name;
-		label.innerHTML = '<span data-translate="no-audio"> No Audio</span>';
-
-		var listele = document.createElement('li');
-		listele.appendChild(option);
-		listele.appendChild(label);
 		
-		const audioInputSelect = document.getElementById('audioSource') || document.getElementById('audioSource3');
-		audioInputSelect.innerHTML = "";
-		audioInputSelect.appendChild(listele);
-		
-		const audioOutputSelect = document.getElementById('outputSource') || document.getElementById('outputSource3');
-		audioOutputSelect.innerHTML = "";
-
-		option.onchange = function(event) { // make sure to clear 'no audio option' if anything else is selected
-			if (!(getById("multiselect1").checked)){
-				getById("multiselect1").checked = true;
-			} else {
-				var list = audioInputSelect.querySelectorAll("li>input");
-				for (var i = 0; i < list.length; i++) {
-					if (list[i].id !== "multiselect1") {
-						list[i].checked = false;
+		var audioInputs = [];
+		var audioOutputs = [];
+		var videoInputs = [];
+		deviceInfos.forEach(function(deviceInfo) {
+			if (deviceInfo.kind === 'audioinput') {
+			  audioInputs.push(deviceInfo);
+			} else if (deviceInfo.kind === 'audiooutput') {
+			  audioOutputs.push(deviceInfo);
+			} else if (deviceInfo.kind === 'videoinput') {
+			  videoInputs.push(deviceInfo);
+			}
+		});
+		if (typeof session.audioDevice == "object") {
+			var matched = [];
+			audioInputs.forEach(deviceInfo => {
+				if (session.audioDevice.includes(deviceInfo.deviceId)) {
+					matched.push(deviceInfo);
+				} else {
+					for (var j=0;j<session.audioDevice.length;j++){
+						if (deviceInfo.label.replace(/[\W]+/g, "_").toLowerCase().includes(session.audioDevice[j])) {
+							matched.push(deviceInfo);
+							log("A DEVICE FOUND = " + deviceInfo.label);
+							break;
+						}
 					}
 				}
+			});
+			audioInputs = matched;
+		} else if (session.store && session.store.SelectedAudioInputDevices){
+			var matched = [];
+			var notmatch = [];
+			audioInputs.forEach(deviceInfo => {
+				if (session.store.SelectedAudioInputDevices.includes(deviceInfo.deviceId)){
+					matched.push(deviceInfo);
+					log("EXACT A DEVICE FOUND -- from saved session");
+				} else {
+					notmatch.push(deviceInfo);
+				}
+			});
+			audioInputs = matched.concat(notmatch);
+		}
+		
+		if (document.getElementById('audioMenuChev')){
+			document.getElementById('audioMenuChev').onclick=function(){
+				getById('chevarrow1').classList.toggle('bottom');
+				getById('audioSource').classList.toggle('expanded');
+				event.preventDefault();
+				event.stopPropagation();
+				
+				if (getById('audioSource').classList.contains("expanded")){
+					//console.log(getById('audioSource').options.length);
+					getById('audioSource').size=getById('audioSource').options.length;
+				} else {
+					//console.log(getById('audioSource').selectedOptions.length);
+					getById('audioSource').size=getById('audioSource').selectedOptions.length;
+				}
 			}
-			SelectedAudioInputDevices = [event.currentTarget.value];
-			saveSettings();
-		};
+		}
+		var audioInputSelect = document.getElementById('audioSource') || document.getElementById('audioSource3');
+		//audioInputSelect.innerHTML = "";
+		
+		if (session.mobile){
+			audioInputSelect.classList.add('expanded');
+			getById('chevarrow1').classList.remove('bottom');
+			getById('chevarrow1').classList.add("hidden");
+			
+			audioInputSelect.onchange = function() {
+				log("change: "+this.selectedOptions.length);
+				event.preventDefault();
+				event.stopPropagation();
+				
+				if (this.selectedOptions.length === 0) {
+					this.options[0].selected = true;
+				} else if (this.selectedOptions.length>1) {
+					if (this.options[0].selected){
+						this.options[0].selected = false;
+					} 
+				}
+				SelectedAudioInputDevices = Array.from(audioInputSelect.selectedOptions).map(option => option.value);
+				
+				saveSettings();
+				if (document.getElementById("gowebcam")) {
+					document.getElementById("gowebcam").disabled = true;
+					document.getElementById("gowebcam").dataset.audioready = "false";
+					document.getElementById("gowebcam").style.fontWeight = "normal";
+					document.getElementById("gowebcam").innerHTML = "Waiting for mic to load";
+					miniTranslate(document.getElementById("gowebcam"), "waiting-for-mic-to-load");
+				}
+				
+				activatedPreview = false; ////////////
+				grabAudio();
+				
+				return false;
+			};
+			
+			
+		} else {
+			audioInputSelect.multiple = true;
+		
+			audioInputSelect.onfocus = function(){
+				this.classList.add('expanded');
+				getById('chevarrow1').classList.remove('bottom');
+				getById('audioSource').size=getById('audioSource').options.length;
+				
+			};
+			audioInputSelect.onblur = function(event){
+				if (!CtrlPressed) {
+					this.classList.remove('expanded');
+					getById('chevarrow1').classList.add('bottom');
+					getById('audioSource').size=getById('audioSource').selectedOptions.length;
+					// this.scrollIntoView({ block: 'nearest' });
+				}
+			};
+			
+			audioInputSelect.onmousedown = function(event) {
+				console.log("mouse down");
+				if (!this.classList.contains("expanded")){
+					event.preventDefault();
+					this.classList.add('expanded');
+					getById('chevarrow1').classList.remove('bottom');
+					getById('audioSource').size=getById('audioSource').options.length;
+					audioInputSelect.init = 1;
+					console.log("utSelect.init true");
+				}
+			};
+			
+			audioInputSelect.onmouseup = function(event) {
+				console.log("mouse up");
+				if (CtrlPressed || audioInputSelect.init) {
+					this.focus();
+					event.preventDefault();
+					event.stopPropagation();
+				} else {
+					this.blur();
+				}
+			};
 
-		const multiselectTrigger = document.getElementById('multiselect-trigger') || document.getElementById('multiselect-trigger3');
-		multiselectTrigger.dataset.state = '0';
-		multiselectTrigger.classList.add('closed');
-		multiselectTrigger.classList.remove('open');
-		getById('chevarrow1').classList.add('bottom');
+			audioInputSelect.onclick = function(event) {
+				
+			  log("click");
+			  //event.preventDefault();
+			  //event.stopPropagation();
+			  //audioInputSelect.init = null;
+			  
+			  if (!event.ctrlKey ) {
+					const clickedOption = event.target;
+					audioInputSelect.CtrlPressed = false;
+					if (clickedOption.tagName == "SELECT"){
+					//
+				} else {
+					const isSelected = clickedOption.selected;
+					
+					var morethan1 = this.selectedOptions.length;
+					
+					if (morethan1>1){
+						Array.from(this.options).forEach(opt => opt.selected = false);
+						clickedOption.selected = isSelected;
+					} else if (morethan1){
+						//this.options[0].selected = true;
+					} else {
+						clickedOption.selected = isSelected;
+					}
+				}
+			  } else {
+				  this.classList.add('expanded');
+				  getById('chevarrow1').classList.remove('bottom');
+				  getById('audioSource').size=getById('audioSource').options.length;
+			  }
+			  
+			  //SelectedAudioInputDevices = Array.from(audioInputSelect.selectedOptions).map(option => option.value);
+			  
+			  //saveSettings();
+			  event.preventDefault();
+			  event.stopPropagation();
+				
+			  if (!audioInputSelect.init){
+				  console.log("utSelect.init iS : "+ audioInputSelect.init);
+					event1 = new Event('change', {
+						'bubbles': true, // This ensures the event bubbles up through the DOM
+						'cancelable': true // This allows the event to be cancelable
+					});
+					event.target.dispatchEvent(event1); 
+					
+			  }
+			  audioInputSelect.init = null;
+			  console.log("utSelect.init false");
+			};
+		
+			audioInputSelect.onchange = function() {
+				log("change: "+this.selectedOptions.length);
+				event.preventDefault();
+				event.stopPropagation();
+				
+				if (this.selectedOptions.length === 0) {
+					this.options[0].selected = true;
+				} else if (this.selectedOptions.length>1) {
+					if (this.options[0].selected){
+						this.options[0].selected = false;
+					} 
+				}
+				SelectedAudioInputDevices = Array.from(audioInputSelect.selectedOptions).map(option => option.value);
+				
+				saveSettings();
+				if (document.getElementById("gowebcam")) {
+					document.getElementById("gowebcam").disabled = true;
+					document.getElementById("gowebcam").dataset.audioready = "false";
+					document.getElementById("gowebcam").style.fontWeight = "normal";
+					document.getElementById("gowebcam").innerHTML = "Waiting for mic to load";
+					miniTranslate(document.getElementById("gowebcam"), "waiting-for-mic-to-load");
+				}
+				
+				if (!CtrlPressed) {
+					this.classList.remove('expanded');
+					getById('chevarrow1').classList.add('bottom');
+					getById('audioSource').size=getById('audioSource').selectedOptions.length;
+					audioInputSelect.CtrlPressed = false;
+					// this.scrollIntoView({ block: 'nearest' });
+				}
+				
+				activatedPreview = false; ////////////
+				grabAudio();
+				
+				
+				return false;
+			};
+		}
+		if (session.audioDevice && (typeof session.audioDevice == "object")){
+			var adMatch = [...session.audioDevice];
+		} else if (session.store && session.store.SelectedAudioInputDevices && session.store.SelectedAudioInputDevices.length){
+			var adMatch = [...session.store.SelectedAudioInputDevices];
+		} else {
+			var adMatch = [...SelectedAudioInputDevices];
+		}
+		if (session.store && session.store.SelectedAudioInputDevices){
+			delete session.store.SelectedAudioInputDevices;
+		}
+		
+		if (audioInputSelect && audioInputSelect.options && !audioInputSelect.options.length){
+			var option = document.createElement('option');
+			option.innerHTML = '<span data-translate="no-audio"> No Audio</span>'
+			option.value = "ZZZ";
+			option.selected = true;
+			option.id = "multiselect1";
+			audioInputSelect.appendChild(option); // NO AUDIO OPTION
+			
+			option.onmouseover = function(){
+				if (MousePressed && !CtrlPressed && !audioInputSelect.init && !audioInputSelect.CtrlPressed){
+					console.log("MousePressed 2:"+MousePressed);
+					//Array.from(audioInputSelect.options).forEach(opt => opt.selected = false);
+					//this.selected = true;
+					if (audioInputSelect.init==2){
+						audioInputSelect.init = false;
+					} else if (audioInputSelect.init){
+						audioInputSelect.init = 2;
+					}
+				}
+				audioInputSelect.CtrlPressed = audioInputSelect.CtrlPressed || CtrlPressed;
+			}
+		}
+		
+		audioInputs.forEach(function(deviceInfo) {
+			var option = null;
+			for (let i = 0; i < audioInputSelect.options.length; i++) {
+				if (audioInputSelect.options[i].value === deviceInfo.deviceId) {
+					option = audioInputSelect.options[i];
+					break
+				} 
+			}
+			if (!option){
+				option = document.createElement('option');
+				option.value = deviceInfo.deviceId;
+				option.textContent = deviceInfo.label || `microphone ${counter++}`;
+				audioInputSelect.appendChild(option);
+				option.onmouseover = function(){
+					if (MousePressed && !CtrlPressed && !audioInputSelect.CtrlPressed){
+						console.log("MousePressed 1:"+MousePressed);
+						//Array.from(audioInputSelect.options).forEach(opt => opt.selected = false);
+						//this.selected = true;
+						if (audioInputSelect.init==2){
+							audioInputSelect.init = false;
+						} else if (audioInputSelect.init){
+							audioInputSelect.init = 2;
+						}
+						console.log("utSelect.init false");
+					}
+					audioInputSelect.CtrlPressed = audioInputSelect.CtrlPressed || CtrlPressed;
+				}
+			}
+			
+			for (var j = 0;j<adMatch.length;j++){
+				if (!adMatch[j]){
+					// skip, already matched
+				} else if (adMatch[j] == deviceInfo.deviceId){
+					option.selected = true;
+					//option.style.display = "none"; 
+					getById("multiselect1").selected = false;
+					
+					adMatch[j] = null;
+					break;
+				} else if (deviceInfo.label.replace(/[\W]+/g, "_").toLowerCase().includes(adMatch[j])){
+					option.selected = true;
+					//option.style.display = "none"; 
+					getById("multiselect1").selected = false;
+					
+					adMatch[j] = null;
+					break;
+				}
+			}
+		});
+		
+		if (audioInputSelect.selectedOptions.length === 0) {
+			audioInputSelect.options[0].selected = true;
+		}
+		
+		if (getById('audioSource').classList.contains("expanded")){
+			//console.log(getById('audioSource').options.length);
+			getById('audioSource').size=getById('audioSource').options.length;
+		} else {
+			//console.log(getById('audioSource').selectedOptions.length);
+			getById('audioSource').size=getById('audioSource').selectedOptions.length;
+		}
+		
+		
+			/* option.onchange = function(event) { // make sure to clear 'no audio option' if anything else is selected
+				getById("multiselect1").checked = false;
+				log("UNCHECKED");
+				if (!CtrlPressed) {
+					SelectedAudioInputDevices = [];
+					audioInputSelect.querySelectorAll("input[type='checkbox']").forEach(function(item) {
+						if (event.currentTarget.id !== item.id) {
+							item.checked = false;
+						} else {
+							item.checked = true;
+							SelectedAudioInputDevices = [event.currentTarget.value];
+						}
+					});
+				} else {
+					if (event.currentTarget.checked){
+						if (!SelectedAudioInputDevices){
+							SelectedAudioInputDevices = [event.currentTarget.value];
+						} else if (!SelectedAudioInputDevices.includes(event.currentTarget.value)){
+							SelectedAudioInputDevices.push(event.currentTarget.value);
+						}
+					} else if (event.currentTarget.value){
+						while (SelectedAudioInputDevices.includes(event.currentTarget.value)) {
+							SelectedAudioInputDevices.splice(SelectedAudioInputDevices.indexOf(event.currentTarget.value), 1);
+						}
+					}
+				}
+				if (session.mobile && (!(iOS || iPad)) && (event.currentTarget.label === "USB audio") && !session.cleanOutput){
+					warnUser("Notice: USB audio devices may not work on all mobile devices.\n\nConsider using FireFox mobile instead, as it tends to work with USB audio devices more often.");
+				}
+				saveSettings();
+			}; */
+			
+			/* if (deviceInfo.label.includes("Yeti ")) {
+				if (!session.cleanOutput){
+					//getById("audioTipContext1").innerHTML = getTranslation("blue-yeti-tip");
+					miniTranslate(getById("audioTipContext1"),"blue-yeti-tip");
+					getById("audioTip1").classList.remove("hidden");
+				}
+			} */
+		///
+		
+		
+		
+		
+		////// AUDIO OUTPUT START
+		if (session.sink || SelectedAudioOutputDevices) { // this sorts according to users's manual selection
+			var matched = [];
+			var notmatch = [];
+			audioOutputs.forEach(deviceInfo=>{
+				if ((deviceInfo.kind === 'audiooutput') && (deviceInfo.deviceId === session.sink)){
+					matched.push(deviceInfo);
+				} else if (!session.sink && (deviceInfo.kind === 'audiooutput') && (deviceInfo.deviceId === SelectedAudioOutputDevices)){
+					matched.push(deviceInfo);
+				} else {
+					notmatch.push(deviceInfo);
+				}
+			});
+			audioOutputs = matched.concat(notmatch);
+		}
+		const audioOutputSelect = document.getElementById('outputSource') || document.getElementById('outputSource3');
+		audioOutputSelect.innerHTML = "";
+		audioOutputs.forEach(deviceInfo=>{
+			var option = document.createElement('option');
+			if (audioOutputSelect.length === 0) {
+				option.dataset.default = true;
+			} else {
+				option.dataset.default = false;
+			}
+			option.value = deviceInfo.deviceId || "default";
+			if (option.value == session.sink) {
+				option.selected = "true";
+			} else if (!session.sink && SelectedAudioOutputDevices && (SelectedAudioOutputDevices == option.value)){
+				option.selected = "true";
+			}
+			option.text = deviceInfo.label || `Speaker ${audioOutputSelect.length + 1}`;
+			audioOutputSelect.appendChild(option);
+		});
+		if (Firefox && !session.mobile){
+			var option = document.createElement('option');
+			option.value = "others";
+			option.text = "Show more options";
+			audioOutputSelect.appendChild(option);
+		}
+		if (audioOutputSelect.childNodes.length == 0) {
+			option = document.createElement('option');
+			option.value = "default";
+			option.text = "System Default";
+			audioOutputSelect.appendChild(option);
+		}
 
+		
+		////// VIDEO INPUT START
 		const videoSelect = document.getElementById('videoSourceSelect') || document.getElementById('videoSource3');
 		const selectors = [videoSelect];
 
@@ -19127,105 +19517,25 @@ function gotDevices(deviceInfos, miconly=false) {
 				select.removeChild(select.firstChild);
 			}
 		});
+		videoInputs.sort((a, b) => { // This is to hide NDI from default device. NDI Tools fucks up stuff
+		  const aLabel = a.label.toLowerCase();
+		  const bLabel = b.label.toLowerCase();
+		  const aIsNdiOrNewtek = aLabel.startsWith("ndi") || aLabel.startsWith("newtek");
+		  const bIsNdiOrNewtek = bLabel.startsWith("ndi") || bLabel.startsWith("newtek");
 
-
-		function comp(a, b) {
-			if (a.kind === 'audioinput') {
-				return 0;
-			} else if (a.kind === 'audiooutput') {
-				return 0;
-			}
-			const labelA = a.label.toUpperCase();
-			const labelB = b.label.toUpperCase();
-			if (labelA > labelB) {
-				return 1;
-			} else if (labelA < labelB) {
-				return -1;
-			}
-			return 0;
-		}
-		//deviceInfos.sort(comp); // I like this idea, but it messes with the defaults.  I just don't know what it will do.
-		var deviceInfo;
-		
-		// This is to hide NDI from default device. NDI Tools fucks up.
-		var tmp = [];
-		for (let i = 0; i !== deviceInfos.length; ++i) {
-			deviceInfo = deviceInfos[i];
-			if (!((deviceInfo.kind === 'videoinput') && (deviceInfo.label.toLowerCase().startsWith("ndi") || deviceInfo.label.toLowerCase().startsWith("newtek")))) {
-				tmp.push(deviceInfo);
-			}
-		}
-
-		for (let i = 0; i !== deviceInfos.length; ++i) {
-			deviceInfo = deviceInfos[i];
-			if ((deviceInfo.kind === 'videoinput') && (deviceInfo.label.toLowerCase().startsWith("ndi") || deviceInfo.label.toLowerCase().startsWith("newtek"))) {
-				tmp.push(deviceInfo);
-				log("V DEVICE FOUND = " + deviceInfo.label.replace(/[\W]+/g, "_").toLowerCase());
-			}
-		}
-		deviceInfos = tmp;
-
-		if (typeof session.audioDevice == "object") { // this sorts according to users's manual selection
-			var matched = [];
-			var notmatched = [];
-			for (let i = 0; i !== deviceInfos.length; ++i) {
-				if (deviceInfos[i].kind === 'audioinput'){
-					if (session.audioDevice.includes(deviceInfos[i].deviceId)) {
-						matched.push(deviceInfos[i]);
-					} else {
-						for (var j=0;j<session.audioDevice.length;j++){
-							if (deviceInfos[i].label.replace(/[\W]+/g, "_").toLowerCase().includes(session.audioDevice[j])) {
-								matched.push(deviceInfos[i]);
-								log("A DEVICE FOUND = " + deviceInfos[i].label);
-								break;
-							}
-						}
-					}
-				} else {
-					notmatched.push(deviceInfos[i]);
-				}
-			}
-			deviceInfos = matched.concat(notmatched);
-		} else if (session.store && session.store.SelectedAudioInputDevices){
-			var matched = [];
-			var notmatch = [];
-			for (let i = 0; i < deviceInfos.length; ++i) {
-				deviceInfo = deviceInfos[i];
-				if (session.store.SelectedAudioInputDevices.includes(deviceInfo.deviceId)){
-					matched.push(deviceInfo);
-					log("EXACT A DEVICE FOUND -- from saved session");
-				} else {
-					notmatch.push(deviceInfo);
-				}
-			}
-			deviceInfos = matched.concat(notmatch);
-		}
-		
-		
-		if (session.sink || SelectedAudioOutputDevices) { // this sorts according to users's manual selection
-			var matched = [];
-			var notmatch = [];
-			for (let i = 0; i !== deviceInfos.length; ++i) {
-				deviceInfo = deviceInfos[i];
-				if ((deviceInfo.kind === 'audiooutput') && (deviceInfo.deviceId === session.sink)){
-					matched.push(deviceInfo);
-				} else if (!session.sink && (deviceInfo.kind === 'audiooutput') && (deviceInfo.deviceId === SelectedAudioOutputDevices)){
-					matched.push(deviceInfo);
-				} else {
-					notmatch.push(deviceInfo);
-				}
-			}
-			deviceInfos = matched.concat(notmatch);
-		}
-		
+		  if (aIsNdiOrNewtek && !bIsNdiOrNewtek) {
+			return 1;
+		  } else if (!aIsNdiOrNewtek && bIsNdiOrNewtek) {
+			return -1;
+		  }
+		  return 0;
+		});
 		if (session.videoDevice && (session.videoDevice !== 1)){ // this sorts according to users's manual selection
 			var tmp = [];
 			var tmp2 = [];
 			var tmp3 = [];
 			
-			
-			for (let i = 0; i !== deviceInfos.length; ++i) {
-				deviceInfo = deviceInfos[i];
+			videoInputs.forEach(deviceInfo=>{
 				if ((deviceInfo.kind === 'videoinput') && (deviceInfo.label.replace(/[\W]+/g, "_").toLowerCase().startsWith(session.videoDevice))) {
 					tmp.push(deviceInfo);
 					log("Starts With V DEVICE FOUND");
@@ -19238,8 +19548,7 @@ function gotDevices(deviceInfos, miconly=false) {
 				} else {
 					tmp3.push(deviceInfo);
 				}
-			}
-			
+			});
 			if (tmp2.length){
 				tmp = tmp.concat(tmp2);
 			}
@@ -19247,223 +19556,71 @@ function gotDevices(deviceInfos, miconly=false) {
 				tmp = tmp.concat(tmp3);
 			}
 			
-			deviceInfos = tmp;
+			videoInputs = tmp;
 			log("VDECICE:" + session.videoDevice);
-			log(deviceInfos);
+			log(videoInputs);
 		} else if ((session.videoDevice===false) && session.facingMode){
 			var tmp = [];
 			if (session.facingMode=="environment"){
-				for (let i = 0; i !== deviceInfos.length; ++i) {
-					deviceInfo = deviceInfos[i];
-					if ((deviceInfo.kind === 'videoinput') && (deviceInfo.label.replace(/[\W]+/g, "_").toLowerCase().includes("back"))) {
+				videoInputs.forEach(deviceInfo=>{
+					if (deviceInfo.label.replace(/[\W]+/g, "_").toLowerCase().includes("back")) {
 						tmp.push(deviceInfo);
 						log("V DEVICE FOUND = " + deviceInfo.label.replace(/[\W]+/g, "_").toLowerCase());
 					} else if ((deviceInfo.kind === 'videoinput') && (deviceInfo.label.replace(/[\W]+/g, "_").toLowerCase().includes("rear"))) {
 						tmp.push(deviceInfo);
 						log("V DEVICE FOUND = " + deviceInfo.label.replace(/[\W]+/g, "_").toLowerCase());
 					}
-				}
+				});
 			} else if (session.facingMode=="user"){
-				for (let i = 0; i !== deviceInfos.length; ++i) {
-					deviceInfo = deviceInfos[i];
-					if ((deviceInfo.kind === 'videoinput') && (deviceInfo.label.replace(/[\W]+/g, "_").toLowerCase().includes("front"))) {
+				videoInputs.forEach(deviceInfo=>{
+					if (deviceInfo.label.replace(/[\W]+/g, "_").toLowerCase().includes("front")) {
 						tmp.push(deviceInfo);
 						log("V DEVICE FOUND = " + deviceInfo.label.replace(/[\W]+/g, "_").toLowerCase());
 					}
-				}
+				});
 			}
-			for (let i = 0; i !== deviceInfos.length; ++i) {
-				deviceInfo = deviceInfos[i];
-				if (!((deviceInfo.kind === 'videoinput') && (deviceInfo.label.replace(/[\W]+/g, "_").toLowerCase().includes(session.videoDevice)))) {
+			videoInputs.forEach(deviceInfo=>{
+				if (!deviceInfo.label.replace(/[\W]+/g, "_").toLowerCase().includes(session.videoDevice)) {
 					if (deviceInfo.deviceId !== session.videoDevice){
 						tmp.push(deviceInfo);
 					}
 				}
-			}
-			deviceInfos = tmp;
+			});
+			videoInputs = tmp;
 			log("VDECICE:" + session.videoDevice);
-			log(deviceInfos);
+			log(videoInputs);
 		} else if (session.store && session.store.SelectedVideoInputDevices && (session.videoDevice===false)){
 			var matched = [];
 			var notmatch = [];
-			for (let i = 0; i !== deviceInfos.length; ++i) {
-				deviceInfo = deviceInfos[i];
+			videoInputs.forEach(deviceInfo=>{
 				if (session.store.SelectedVideoInputDevices.includes(deviceInfo.deviceId)){
 					matched.push(deviceInfo);
 					log("EXACT V DEVICE FOUND -- from saved session");
 				} else {
 					notmatch.push(deviceInfo);
 				}
-			}
-			deviceInfos = matched.concat(notmatch);
+			});
+			videoInputs = matched.concat(notmatch);
 			delete session.store.SelectedVideoInputDevices;
 		}
-		
-		if (session.audioDevice && (typeof session.audioDevice == "object")){
-			var adMatch = [...session.audioDevice];
-		} else if (session.store && session.store.SelectedAudioInputDevices && session.store.SelectedAudioInputDevices.length){
-			var adMatch = [...session.store.SelectedAudioInputDevices];
-		} else {
-			var adMatch = false;
-		}
-		
-		if (session.store && session.store.SelectedAudioInputDevices){
-			delete session.store.SelectedAudioInputDevices;
-		}
-		
-		var counter = 1;
-		for (let i = 0; i !== deviceInfos.length; ++i) {
-			var deviceInfo = deviceInfos[i];
+		videoInputs.forEach(deviceInfo=>{
 			if (deviceInfo == null) {
-				continue;
+				return;
 			}
-
-			if (deviceInfo.kind === 'audioinput') {
-				option = document.createElement('input');
-				option.type = "checkbox";
-				counter++;
-				listele = document.createElement('li');
-				listele.style.display = "none";
-				
-				if (typeof adMatch == "object"){
-					for (var j = 0;j<adMatch.length;j++){
-						if (!adMatch[j]){
-							// skip, already matched
-						} else if (adMatch[j] == deviceInfo.deviceId){
-							option.checked = true;
-							listele.style.display = "block";
-							option.style.display = "none"; 
-							getById("multiselect1").checked = false;
-							try{
-								getById("multiselect1").parentNode.style.display = "none";
-							} catch(e){}
-							adMatch[j] = null;
-							break;
-						} else if (deviceInfo.label.replace(/[\W]+/g, "_").toLowerCase().includes(adMatch[j])){
-							option.checked = true;
-							listele.style.display = "block";
-							option.style.display = "none"; 
-							getById("multiselect1").checked = false;
-							try{
-								getById("multiselect1").parentNode.style.display = "none";
-							} catch(e){}
-							adMatch[j] = null;
-							break;
-						}
-					}
-				}
-				
-				if ((typeof adMatch !== "object") && (counter == 2)){
-					option.checked = true;
-					listele.style.display = "block";
-					option.style.display = "none"; 
-					getById("multiselect1").checked = false;
-					try{
-						getById("multiselect1").parentNode.style.display = "none";
-					} catch(e){}
-				} 
-				
-				option.value = deviceInfo.deviceId || "default";
-				option.name = "multiselect" + counter;
-				option.id = "multiselect" + counter;
-				option.label = deviceInfo.label;
-				
-				label = document.createElement('label');
-				label.for = option.name;
-
-				label.innerHTML = " " + (deviceInfo.label || ("microphone " + ((audioInputSelect.length || 0) + 1)));
-
-				listele.appendChild(option);
-				listele.appendChild(label);
-				audioInputSelect.appendChild(listele);
-
-				option.onchange = function(event) { // make sure to clear 'no audio option' if anything else is selected
-					getById("multiselect1").checked = false;
-					log("UNCHECKED");
-					if (!CtrlPressed) {
-						SelectedAudioInputDevices = [];
-						audioInputSelect.querySelectorAll("input[type='checkbox']").forEach(function(item) {
-							if (event.currentTarget.id !== item.id) {
-								item.checked = false;
-							} else {
-								item.checked = true;
-								SelectedAudioInputDevices = [event.currentTarget.value];
-							}
-						});
-					} else {
-						if (event.currentTarget.checked){
-							if (!SelectedAudioInputDevices){
-								SelectedAudioInputDevices = [event.currentTarget.value];
-							} else if (!SelectedAudioInputDevices.includes(event.currentTarget.value)){
-								SelectedAudioInputDevices.push(event.currentTarget.value);
-							}
-						} else if (event.currentTarget.value){
-							while (SelectedAudioInputDevices.includes(event.currentTarget.value)) {
-								SelectedAudioInputDevices.splice(SelectedAudioInputDevices.indexOf(event.currentTarget.value), 1);
-							}
-						}
-					}
-					if (session.mobile && (!(iOS || iPad)) && (event.currentTarget.label === "USB audio") && !session.cleanOutput){
-						warnUser("Notice: USB audio devices may not work on all mobile devices.\n\nConsider using FireFox mobile instead, as it tends to work with USB audio devices more often.");
-					}
-					saveSettings();
-				};
-				
-				if (deviceInfo.label.includes("Yeti ")) {
-					if (!session.cleanOutput){
-						//getById("audioTipContext1").innerHTML = getTranslation("blue-yeti-tip");
-						miniTranslate(getById("audioTipContext1"),"blue-yeti-tip");
-						getById("audioTip1").classList.remove("hidden");
-					}
-				}
-
-			} else if (deviceInfo.kind === 'videoinput') {
-				option = document.createElement('option');
-				option.value = deviceInfo.deviceId || "default";
-				option.text = deviceInfo.label || `camera ${videoSelect.length + 1}`;
-				videoSelect.appendChild(option);
-			} else if (deviceInfo.kind === 'audiooutput') {
-				option = document.createElement('option');
-				if (audioOutputSelect.length === 0) {
-					option.dataset.default = true;
-				} else {
-					option.dataset.default = false;
-				}
-				option.value = deviceInfo.deviceId || "default";
-				if (option.value == session.sink) {
-					option.selected = "true";
-				} else if (!session.sink && SelectedAudioOutputDevices && (SelectedAudioOutputDevices == option.value)){
-					option.selected = "true";
-				}
-				option.text = deviceInfo.label || `Speaker ${audioOutputSelect.length + 1}`;
-				audioOutputSelect.appendChild(option);
-			} else {
-				log('Some other kind of source/device: ', deviceInfo);
-			}
-		}
-		
-		if (Firefox && !session.mobile){
 			var option = document.createElement('option');
-			option.value = "others";
-			option.text = "Show more options";
-			audioOutputSelect.appendChild(option);
-		}
-
-		if (audioOutputSelect.childNodes.length == 0) {
-			option = document.createElement('option');
-			option.value = "default";
-			option.text = "System Default";
-			audioOutputSelect.appendChild(option);
-		}
-
-		option = document.createElement('option');
+			option.value = deviceInfo.deviceId || "default";
+			option.text = deviceInfo.label || `camera ${videoSelect.length + 1}`;
+			videoSelect.appendChild(option);
+		});
+		var option = document.createElement('option');
 		option.text = "Disable Video";
 		option.value = "ZZZ";
 		videoSelect.appendChild(option); // NO AUDIO OPTION
-		
 		if (miconly){
 			option.selected = "true";
 		}
+		
+		
 
 		selectors.forEach((select, selectorIndex) => {
 			if (Array.prototype.slice.call(select.childNodes).some(n => n.value === values[selectorIndex])) {
@@ -20495,7 +20652,7 @@ function showNotification(title, body="") {
 }
 
 async function getAudioOnly(selector, trackid = null, override = false) {
-	var audioSelect = document.querySelector(selector).querySelectorAll("input");
+	var audioSelect = document.querySelector(selector).querySelectorAll("input,option");
 	var audioList = [];
 	var streams = [];
 	log("getAudioOnly()");
@@ -20507,6 +20664,9 @@ async function getAudioOnly(selector, trackid = null, override = false) {
 		} else if ("screen" == audioSelect[i].dataset.type) { // skip already excluded ---------- !!!!!!  DOES THIS MAKE SENSE? TODO: CHECK
 			continue;
 		} else if (audioSelect[i].checked) {
+			log(audioSelect[i]);
+			audioList.push(audioSelect[i]);
+		} else if (audioSelect[i].selected) {
 			log(audioSelect[i]);
 			audioList.push(audioSelect[i]);
 		}
@@ -23381,7 +23541,6 @@ function pushOutVideoTrack(track){
 
 async function grabAudio(selector = "#audioSource", trackid = null, override = false, callbackUUID = false, callback = false) { // trackid is the excluded track , callback is UUID
 
-	
 	if (activatedPreview == true) {
 		log("activated preview return 2");
 		return;
@@ -23395,17 +23554,33 @@ async function grabAudio(selector = "#audioSource", trackid = null, override = f
 			errorlog("No audio source menu");
 			return;
 		}
-		var audioSelect = baseTest.querySelectorAll("input");
-		var audioExcludeList = [];
-		for (var i = 0; i < audioSelect.length; i++) {
-			try {
-				if ("screen" == audioSelect[i].dataset.type) { // skip already excluded ---------- !!!!!!  DOES THIS MAKE SENSE? TODO: CHECK
-					if (audioSelect[i].checked) {
-						audioExcludeList.push(audioSelect[i]);
+		if (baseTest && (baseTest.tagName== "INPUT")){
+			var audioSelect = baseTest.querySelectorAll("input");
+			var audioExcludeList = [];
+			for (var i = 0; i < audioSelect.length; i++) {
+				try {
+					if ("screen" == audioSelect[i].dataset.type) { // skip already excluded ---------- !!!!!!  DOES THIS MAKE SENSE? TODO: CHECK
+						if (audioSelect[i].checked) {
+							audioExcludeList.push(audioSelect[i]);
+						}
 					}
+				} catch (e) {
+					errorlog(e);
 				}
-			} catch (e) {
-				errorlog(e);
+			}
+		} else if (baseTest && (baseTest.tagName== "SELECT")){
+			var audioExcludeList = [];
+			var audioSelect = baseTest.options;
+			for (var i = 0; i < audioSelect.length; i++) {
+				try {
+					if ("screen" == audioSelect[i].dataset.type) { // skip already excluded ---------- !!!!!!  DOES THIS MAKE SENSE? TODO: CHECK
+						if (audioSelect[i].selected) {
+							audioExcludeList.push(audioSelect[i]);
+						}
+					}
+				} catch (e) {
+					errorlog(e);
+				}
 			}
 		}
 	} catch (e) {
@@ -23520,6 +23695,7 @@ async function grabAudio(selector = "#audioSource", trackid = null, override = f
 	if (callback){
 		callback();
 	}
+	 
 	senderAudioUpdate(callbackUUID);
 }
 
@@ -24153,6 +24329,7 @@ function senderAudioUpdate(callback=false, tracks=false){
 	} catch (e) {
 		errorlog(e);
 	}
+	
 	if (document.getElementById("gowebcam")) {
 		document.getElementById("gowebcam").dataset.audioready = true;
 		if (document.getElementById("gowebcam").dataset.ready && (document.getElementById("gowebcam").dataset.ready=="true")){
@@ -28429,7 +28606,7 @@ function listAudioSettings() {
 					} else if (i === "sampleSize") {
 						//continue;
 					} else if (i === "channelCount") {
-						if (!session.stereo){
+						if (!(session.stereo && (session.stereo!=3))){ // not stereo
 							continue;
 						}
 					} else if (!session.disableWebAudio && (i === "volume")){
@@ -28447,8 +28624,6 @@ function listAudioSettings() {
 					input.max = session.audioConstraints[i].max;
 					
 					input.dataset.deviceid = track0.id;
-
-					
 					
 					if (getById("popupSelector_constraints_audio").style.display == "none") {
 						getById("advancedOptionsAudio").style.display = "inline-flex";
@@ -28475,7 +28650,9 @@ function listAudioSettings() {
 						input.title = "Hold CTRL (or cmd) to lock width and height together when changing them";
 						input.min = 16;
 					}
-					
+					else if (i=="sampleRate"){
+						label.title = "Audio typically gets resampled to 48-kHz";
+					}
 					
 					input.type = "range";
 					input.dataset.keyname = i;
@@ -28496,9 +28673,6 @@ function listAudioSettings() {
 					
 					manualInput.value = parseFloat(session.currentAudioConstraints[i]);
 					
-					if (i=="channelCount"){
-						input.style.display = "none";
-					}
 					
 					manualInput.onchange = function(e) {
 						try {
@@ -29927,27 +30101,65 @@ async function updateCameraConstraints(constraint, value = null, ctrl=false, UUI
 }
 
 function toggleAudioUser(ele){
-	ele.classList.toggle('highlight');
-	toggle(getById('popupSelector_constraints_audio'),false,false); 
+	
+	if (!ele){
+		ele = ele || getById("advancedOptionsAudio");
+		ele.style.display = "inline-flex";
+		if (getById('popupSelector_constraints_audio').style.display == "block"){
+			toggleSettings();
+		} else {
+			getById('popupSelector_constraints_audio').style.display = "block";
+			ele.classList.add('highlight');
+			if (!toggleSettingsState){
+				toggleSettings();
+			}
+		}
+	} else {
+		ele = ele || getById("advancedOptionsAudio");
+		toggle(getById('popupSelector_constraints_audio'),false,false); 
+		ele.classList.toggle('highlight');
+	}
+	
 	getById('popupSelector_constraints_loading').style.visibility='visible';
 	getById('popupSelector_constraints_video').style.display = "none";
 	getById('popupSelector_user_settings').style.display = "none";
 }
 function toggleVideoUser(ele){
-	ele.classList.toggle('highlight');
-	toggle(getById('popupSelector_constraints_video'),false,false); 
+	
+	if (!ele){
+		ele = ele || getById("advancedOptionsCamera");
+		ele.style.display = "inline-flex";
+		if (getById('popupSelector_constraints_video').style.display == "block"){
+			toggleSettings();
+		} else {
+			getById('popupSelector_constraints_video').style.display = "block";
+			ele.classList.add('highlight');
+			if (!toggleSettingsState){
+				toggleSettings();
+			}
+		}
+	} else {
+		ele = ele || getById("advancedOptionsCamera");
+		toggle(getById('popupSelector_constraints_video'),false,false); 
+		ele.classList.toggle('highlight');
+	}
+	
 	getById('popupSelector_constraints_loading').style.visibility='visible';
-	getById('popupSelector_user_settings').style.display = "none";
 	getById('popupSelector_constraints_audio').style.display = "none";
+	getById('popupSelector_user_settings').style.display = "none";
+	
 }
 function toggleUserUser(ele){
+	ele = ele || getById("advancedOptionsGeneral");
+	if (!toggleSettingsState){
+		toggleSettings();
+	}
 	ele.classList.toggle('highlight');
 	toggle(getById('popupSelector_user_settings'),false,false); 
 	getById('popupSelector_user_settings').style.visibility='visible';
 	getById('popupSelector_constraints_video').style.display = "none";
 	getById('popupSelector_constraints_audio').style.display = "none";
 }
-
 
 async function requestBasicPermissions(constraint = {video: true, audio: true}, callback=setupWebcamSelection, miconly=false) {
 	if (session.taintedSession === null) {
@@ -30184,11 +30396,11 @@ function setupWebcamSelection(miconly=false) {
 				session.maxframeRate_q2 = false;
 			}
 
-			var audioSelect =  getById('audioSource');
+			//var audioSelect =  getById('audioSource');
 			var videoSelect =  getById('videoSourceSelect');
 			var outputSelect = getById('outputSource'); 
 			
-			audioSelect.onchange = function() {
+			/* audioSelect.onchange = function() {
 
 				if (document.getElementById("gowebcam")) {
 					document.getElementById("gowebcam").disabled = true;
@@ -30200,7 +30412,7 @@ function setupWebcamSelection(miconly=false) {
 				}
 				activatedPreview = false;
 				grabAudio();
-			};
+			}; */
 			videoSelect.onchange = function() {
 
 				if (document.getElementById("gowebcam")) {
@@ -33229,7 +33441,7 @@ async function recordVideo(target, event = null, videoKbps = false) { // event.c
 			if ((audioKbps>0) && (audioKbps>=128)){
 				session.requestAudioRateLimit(128,UUID); // no point going higher
 			} else if (audioKbps==0){
-				session.requestAudioRateLimit(256,UUID); // PCM
+				session.requestAudioRateLimit(session.audiobitratePRO,UUID); // PCM
 			} else {
 				session.requestAudioRateLimit(parseInt(audioKbps),UUID); // exact? sure. why not.
 			}
@@ -33243,7 +33455,7 @@ async function recordVideo(target, event = null, videoKbps = false) { // event.c
 		if (videoKbps>4000){
 			if (session.audiobitrate===false){
 				if (session.pcm){
-					session.requestAudioRateLimit(256,UUID);
+					session.requestAudioRateLimit(session.audiobitratePRO,UUID);
 				} else {
 					session.requestAudioRateLimit(128,UUID);
 				}
@@ -33251,7 +33463,7 @@ async function recordVideo(target, event = null, videoKbps = false) { // event.c
 		} else if (videoKbps>2500){
 			if (session.audiobitrate===false){
 				if (session.pcm){
-					session.requestAudioRateLimit(256,UUID);
+					session.requestAudioRateLimit(session.audiobitratePRO,UUID);
 				} else {
 					session.requestAudioRateLimit(80,UUID);
 				}
@@ -33350,47 +33562,46 @@ async function recordVideo(target, event = null, videoKbps = false) { // event.c
 	let options = {};
 
 	if (videoKbps) {
-		
-		var tryCodec = false;
-		if (session.recordingVideoCodec){
-			tryCodec = session.recordingVideoCodec;
-		}
-		if (tryCodec && MediaRecorder.isTypeSupported('video/webm;codecs='+tryCodec)) {
+		var tryCodec = session.recordingVideoCodec || '';  // Simplified condition to assign tryCodec
+
+		if (tryCodec && MediaRecorder.isTypeSupported('video/webm;codecs=' + tryCodec)) {
 			if (!session.cleanOutput){
-				warnUser("The browser 'says' it supports "+tryCodec);
+				console.log("👍 The browser 'says' it supports " + tryCodec);
 			}
-			options.mimeType = 'video/webm;codecs='+tryCodec;
-			if (session.pcm){
-				if (MediaRecorder.isTypeSupported('video/webm;codecs="'+tryCodec+', pcm"')){
-					options.mimeType = 'video/webm;codecs="'+tryCodec+', pcm"';
+			options.mimeType = 'video/webm;codecs=' + tryCodec;
+
+			if (session.pcm) {
+				// Fixed the format of the MIME type string
+				var mimeTypeWithPCM = 'video/webm;codecs=' + tryCodec + ',pcm';
+				if (MediaRecorder.isTypeSupported(mimeTypeWithPCM)){
+					options.mimeType = mimeTypeWithPCM;
 				} else {
 					options.mimeType = "video/webm;codecs=pcm";
 				}
 			}
 		} else {
-			if (session.pcm){
-				if (MediaRecorder.isTypeSupported("video/webm;codecs=pcm")) {
-					options.mimeType = "video/webm;codecs=pcm";
-				} else {
-					options.mimeType = "video/webm";
-				}
-			} else {
-				options.mimeType = "video/webm";
+			// Simplified conditions for PCM support
+			if (tryCodec){
+				warnlog('video/webm;codecs=' + tryCodec +" - is not supported");
 			}
+			options.mimeType = session.pcm && MediaRecorder.isTypeSupported("video/webm;codecs=pcm") 
+							   ? "video/webm;codecs=pcm" 
+							   : "video/webm";
 		}
-		
+
+		// Simplified bitrate settings
+		options.videoBitsPerSecond = parseInt(videoKbps * 1024);
 		if (videoKbps < 1000) {
-			options.videoBitsPerSecond = parseInt(videoKbps * 1024); // 100 kbps audio
-			options.audioBitsPerSecond = parseInt(100*1024);
+			options.audioBitsPerSecond = parseInt(100 * 1024);
 		} else if (videoKbps < 6000) {
-			options.videoBitsPerSecond = parseInt(videoKbps * 1024); // 100 kbps audio
-			options.audioBitsPerSecond = parseInt(130*1024);
+			options.audioBitsPerSecond = parseInt(130 * 1024);
 		} else if (videoKbps < 20000) {
-			options.videoBitsPerSecond = parseInt(videoKbps * 1024); // 100 to 132 kbps audio
-			options.audioBitsPerSecond = parseInt(256*1024)
+			options.audioBitsPerSecond = parseInt(256 * 1024);
 		} else {
-			options.bitsPerSecond = parseInt(videoKbps * 1024); // 100 to 132 kbps audio
+			// If videoKbps is >= 20000, use bitsPerSecond for total bitrate
+			options.bitsPerSecond = parseInt(videoKbps * 1024);
 		}
+
 		video.recorder.mediaRecorder = new MediaRecorder(video.srcObject, options);
 		
 		//if (session.dbx){
@@ -33717,6 +33928,143 @@ function setupSensorData(pollrate = 30) {
 	}, parseInt(1000 / pollrate));
 }
 
+//// PCM 16 SAVING LOGIC 
+function PCM16(stream){
+	
+	if (!stream || !stream.getAudioTracks().length){
+		errorlog("no audio track found");
+		return null;
+	}
+	
+	var PCM = stream.getAudioTracks()[0].getSettings();
+	
+	function audioBufferToWav(buffer, options = {}) {
+	  const numChannels = buffer.numberOfChannels;
+	  const sampleRate = buffer.sampleRate;
+	  const format = options.float32 ? 3 : 1;
+	  const bitDepth = format === 3 ? 32 : 16;
+
+	  let samples;
+	  if (numChannels === 2) {
+		samples = interleave(buffer.getChannelData(0), buffer.getChannelData(1));
+	  } else {
+		samples = buffer.getChannelData(0);
+	  }
+
+	  return encodeWAV(samples, format, sampleRate, numChannels, bitDepth);
+	}
+	
+	function encodeWAV(samples, format, sampleRate, numChannels, bitDepth) { 
+	  const bytesPerSample = bitDepth / 8;
+	  const blockAlign = numChannels * bytesPerSample;
+	  const bufferLength = 44 + samples.length * bytesPerSample;
+	  const buffer = new ArrayBuffer(bufferLength);
+	  const dataView = new DataView(buffer);
+	
+	// referenced from: https://github.com/steveseguin/audiobuffer-to-wav (by Jam3 - MIT lic) 
+	  writeString(dataView, 0, 'RIFF');
+	  dataView.setUint32(4, 36 + samples.length * bytesPerSample, true);
+	  writeString(dataView, 8, 'WAVE');
+	  writeString(dataView, 12, 'fmt ');
+	  dataView.setUint32(16, 16, true);
+	  dataView.setUint16(20, format, true);
+	  dataView.setUint16(22, numChannels, true);
+	  dataView.setUint32(24, sampleRate, true);
+	  dataView.setUint32(28, sampleRate * blockAlign, true);
+	  dataView.setUint16(32, blockAlign, true);
+	  dataView.setUint16(34, bitDepth, true);
+	  writeString(dataView, 36, 'data');
+	  dataView.setUint32(40, samples.length * bytesPerSample, true);
+
+	  if (format === 1) {
+		floatTo16BitPCM(dataView, 44, samples);
+	  } else {
+		writeFloat32(dataView, 44, samples);
+	  }
+
+	  return buffer;
+	}
+	function interleave(inputL, inputR) {
+	  const length = inputL.length + inputR.length;
+	  const result = new Float32Array(length);
+
+	  for (let index = 0, inputIndex = 0; index < length; index += 2, inputIndex++) {
+		result[index] = inputL[inputIndex];
+		result[index + 1] = inputR[inputIndex];
+	  }
+
+	  return result;
+	}
+	function floatTo16BitPCM(output, offset, input) {
+	  for (let i = 0; i < input.length; i++, offset += 2) {
+		const s = Math.max(-1, Math.min(1, input[i]));
+		output.setInt16(offset, s < 0 ? s * 0x8000 : s * 0x7FFF, true);
+	  }
+	}
+	function writeFloat32(output, offset, input) {
+	  for (let i = 0; i < input.length; i++, offset += 4) {
+		output.setFloat32(offset, input[i], true);
+	  }
+	}
+	function writeString(dataView, offset, string) {
+	  for (let i = 0; i < string.length; i++) {
+		dataView.setUint8(offset + i, string.charCodeAt(i));
+	  }
+	}
+	// end reference
+	
+	PCM.audioContext = new AudioContext({ sampleRate: PCM.sampleRate });
+	PCM.source = PCM.audioContext.createMediaStreamSource(stream);
+	PCM.numberOfChannels = PCM.source.channelCount;
+	PCM.scriptNode = PCM.audioContext.createScriptProcessor(4096, PCM.numberOfChannels, PCM.numberOfChannels); // buffer size, input channels, output channels
+
+	PCM.recording = false;
+	PCM.audioData = [];
+	for (let i = 0; i < PCM.numberOfChannels; i++) {
+	  PCM.audioData.push([]);
+	}
+	PCM.scriptNode.onaudioprocess = (audioProcessingEvent) => {
+	  if (!PCM.recording) return;
+	  for (let channel = 0; channel < PCM.numberOfChannels; channel++) {
+		const inputData = audioProcessingEvent.inputBuffer.getChannelData(channel);
+		PCM.audioData[channel].push(new Float32Array(inputData));
+	  }
+	};
+	PCM.source.connect(PCM.scriptNode);
+	PCM.scriptNode.connect(PCM.audioContext.destination);
+	
+	PCM.startRecording = function () {
+	  PCM.audioData = [];
+	  for (let i = 0; i < PCM.numberOfChannels; i++) {
+		  PCM.audioData.push([]);
+		}
+	  PCM.recording = true;
+	}
+	PCM.stopRecording = function (filename="filename") {
+	  PCM.recording = false;
+
+	  const bufferLength = PCM.audioData[0].length * 4096;
+	  const audioBuffer = PCM.audioContext.createBuffer(PCM.numberOfChannels, bufferLength, PCM.audioContext.sampleRate);
+
+	  for (let channel = 0; channel < PCM.numberOfChannels; channel++) {
+		const channelData = audioBuffer.getChannelData(channel);
+		PCM.audioData[channel].forEach((chunk, index) => {
+		  channelData.set(chunk, index * 4096);
+		});
+	  }
+	  const wavArrayBuffer = audioBufferToWav(audioBuffer);
+	  const blob = new Blob([wavArrayBuffer], { type: 'audio/wav' });
+	  const url = URL.createObjectURL(blob);
+	  const anchor = document.createElement('a');
+	  anchor.href = url;
+	  anchor.download = filename+'.wav';
+	  anchor.click();
+	  URL.revokeObjectURL(url);
+	}
+	
+	return PCM;
+}
+//// END OF PCM 16 SAVING CODE 
 
 async function recordLocalVideo(action = null, videoKbps = false, remote=false, altUUID=false) { // event.currentTarget,this.parentNode.parentNode.dataset.UUID
 	
@@ -33996,51 +34344,54 @@ async function recordLocalVideo(action = null, videoKbps = false, remote=false, 
 	let options = {};
 	
 	if (videoKbps) {
-		var tryCodec = false;
-		if (session.recordingVideoCodec){
-			tryCodec = session.recordingVideoCodec;
-		}
-		if (tryCodec && MediaRecorder.isTypeSupported('video/webm;codecs='+tryCodec)) {
+		var tryCodec = session.recordingVideoCodec || '';  // Simplified condition to assign tryCodec
+
+		if (tryCodec && MediaRecorder.isTypeSupported('video/webm;codecs=' + tryCodec)) {
 			if (!session.cleanOutput){
-				warnUser("The browser 'says' it supports "+tryCodec);
+				console.log("👍 The browser 'says' it supports " + tryCodec);
 			}
-			options.mimeType = 'video/webm;codecs='+tryCodec;
-			if (session.pcm){
-				if (MediaRecorder.isTypeSupported('video/webm;codecs="'+tryCodec+', pcm"')){
-					options.mimeType = 'video/webm;codecs="'+tryCodec+', pcm"';
+			options.mimeType = 'video/webm;codecs=' + tryCodec;
+
+			if (session.pcm) {
+				// Fixed the format of the MIME type string
+				var mimeTypeWithPCM = 'video/x-matroska;codecs=' + tryCodec + ',pcm';
+				if (MediaRecorder.isTypeSupported(mimeTypeWithPCM)){
+					options.mimeType = mimeTypeWithPCM;
 				} else {
 					options.mimeType = "video/webm;codecs=pcm";
 				}
 			}
 		} else {
-			if (session.pcm){
-				if (MediaRecorder.isTypeSupported("video/webm;codecs=pcm")) {
-					options.mimeType = "video/webm;codecs=pcm";
-				} else {
-					options.mimeType = "video/webm";
-				}
-			} else {
-				options.mimeType = "video/webm";
+			// Simplified conditions for PCM support
+			if (tryCodec){
+				warnlog('video/webm;codecs=' + tryCodec +" - is not supported");
 			}
+			options.mimeType = session.pcm && MediaRecorder.isTypeSupported("video/webm;codecs=pcm") 
+							   ? "video/webm;codecs=pcm" 
+							   : "video/webm";
 		}
+
+		// Simplified bitrate settings
+		options.videoBitsPerSecond = parseInt(videoKbps * 1024);
 		if (videoKbps < 1000) {
-			options.videoBitsPerSecond = parseInt(videoKbps * 1024); // 100 kbps audio
-			options.audioBitsPerSecond = parseInt(100*1024);
+			options.audioBitsPerSecond = parseInt(100 * 1024);
 		} else if (videoKbps < 6000) {
-			options.videoBitsPerSecond = parseInt(videoKbps * 1024); // 100 kbps audio
-			options.audioBitsPerSecond = parseInt(130*1024);
+			options.audioBitsPerSecond = parseInt(130 * 1024);
 		} else if (videoKbps < 20000) {
-			options.videoBitsPerSecond = parseInt(videoKbps * 1024); // 100 to 132 kbps audio
-			options.audioBitsPerSecond = parseInt(256*1024)
+			options.audioBitsPerSecond = parseInt(256 * 1024);
 		} else {
-			options.bitsPerSecond = parseInt(videoKbps * 1024); // 100 to 132 kbps audio
+			// If videoKbps is >= 20000, use bitsPerSecond for total bitrate
+			options.bitsPerSecond = parseInt(videoKbps * 1024);
 		}
+
+		video.recorder.mediaRecorder = new MediaRecorder(video.srcObject, options);
 		try {
 			console.log(options);
 			video.recorder.mediaRecorder = new MediaRecorder(video.srcObject, options);
 		} catch(e){
 			warnlog(e);
 			try {
+				errorlog("options failed");
 				video.recorder.mediaRecorder = new MediaRecorder(video.srcObject);
 			} catch(e){
 				errorlog(e);
@@ -34118,11 +34469,12 @@ async function recordLocalVideo(action = null, videoKbps = false, remote=false, 
 			} catch(e){
 				warnlog(e);
 				try {
+					errorlog("options failed. failing safe..");
 					video.recorder.mediaRecorder = new MediaRecorder(stream);
 				} catch(e){
 					
 					errorlog(e);
-					errorlog("Failing the recording");
+					errorlog("Fail safe failed; closing the recording");
 					try {
 						video.recorder.writer.close();
 					} catch(e){}
@@ -36737,7 +37089,7 @@ function configureWhipOutSDP(description){ // THIS IS FOR WHIP-OUTPUT; it has
 	
 	if (session.screenShareState && (typeof session.whipOutScreenShareCodec === "object")){
 		session.whipOutScreenShareCodec.reverse().forEach(codec=>{
-			description.sdp = CodecsHandler.preferCodec(description.sdp, codec);
+			description.sdp = CodecsHandler.preferCodec(description.sdp, codec, session.videoErrorCorrection);
 			
 			if (session.whipOutScreenShareBitrate || session.whipOutVideoBitrate){
 				description.sdp = CodecsHandler.setVideoBitrates(description.sdp , {
@@ -36747,7 +37099,7 @@ function configureWhipOutSDP(description){ // THIS IS FOR WHIP-OUTPUT; it has
 			}
 		});
 	} else if (session.screenShareState && session.whipOutScreenShareCodec){
-		description.sdp = CodecsHandler.preferCodec(description.sdp, session.whipOutScreenShareCodec);
+		description.sdp = CodecsHandler.preferCodec(description.sdp, session.whipOutScreenShareCodec, session.videoErrorCorrection);
 		
 		if (session.whipOutScreenShareBitrate || session.whipOutVideoBitrate){
 			description.sdp  = CodecsHandler.setVideoBitrates(description.sdp , {
@@ -36757,7 +37109,7 @@ function configureWhipOutSDP(description){ // THIS IS FOR WHIP-OUTPUT; it has
 		}
 	} else if (typeof session.whipOutCodec === "object"){
 		session.whipOutCodec.reverse().forEach(codec=>{
-			description.sdp = CodecsHandler.preferCodec(description.sdp, codec);
+			description.sdp = CodecsHandler.preferCodec(description.sdp, codec, session.videoErrorCorrection);
 			
 			if (session.whipOutVideoBitrate){
 				description.sdp = CodecsHandler.setVideoBitrates(description.sdp , {
@@ -36767,7 +37119,7 @@ function configureWhipOutSDP(description){ // THIS IS FOR WHIP-OUTPUT; it has
 			}
 		});
 	} else if (session.whipOutCodec){
-		description.sdp = CodecsHandler.preferCodec(description.sdp, session.whipOutCodec);
+		description.sdp = CodecsHandler.preferCodec(description.sdp, session.whipOutCodec, session.videoErrorCorrection);
 		if (session.whipOutVideoBitrate){
 			description.sdp  = CodecsHandler.setVideoBitrates(description.sdp , {
 				min: parseInt(session.whipOutVideoBitrate/10) || 1,
@@ -36784,7 +37136,7 @@ function configureWhipOutSDP(description){ // THIS IS FOR WHIP-OUTPUT; it has
 			jsep.sdp = jsep.sdp.replace(/42a00b/gi,"42e01f");  // external encoder
 			jsep.sdp = jsep.sdp.replace(/640c1f/gi,"42e01f"); // will not work
 		} else {
-			description.sdp = CodecsHandler.preferCodec(description.sdp,"h264"); // default
+			description.sdp = CodecsHandler.preferCodec(description.sdp,"h264", session.videoErrorCorrection); // default
 			description.sdp = description.sdp.replace(/42001f/gi,"42e01f"); // openh264 set as default.
 			description.sdp = description.sdp.replace(/420029/gi,"42e01f"); 
 		}
@@ -38953,26 +39305,7 @@ addEventToAll(".column", 'animationend', function(e, ele) {
 		getById("lightbox-animations").sheet.deleteRule(0);
 	}
 });
-addEventToAll("#audioSource", 'mousedown touchend focusin focusout', function(e, ele) {
-	var state = getById('multiselect-trigger').dataset.state || 0; // Does this return TRU instead??. GAH. #TODO: 
-	if (state == 0) {
-		getById('multiselect-trigger').dataset.state = 1;
-		getById('multiselect-trigger').classList.add('open');
-		getById('multiselect-trigger').classList.remove('closed');
-		mapToAll('.chevron', function(ele) {
-			ele.classList.remove('bottom');
-		}, parentElement = getById('multiselect-trigger'));
-		mapToAll('.multiselect-contents', function(ele) {
-			ele.style.display = "block";
-			mapToAll('input[type="checkbox"]', function(ele2) {
-				ele2.parentNode.style.display = "block";
-				ele2.style.display = "inline-block";
-			}, ele);
-		}, parentElement = getById('multiselect-trigger').parentNode);
-	}
-	e.stopPropagation();
-	//e.preventDefault();
-});
+
 addEventToAll("#audioSource3", 'mousedown touchend focusin focusout', function(e, ele) {
 	var state = getById('multiselect-trigger3').dataset.state || 0; // Does this return TRU instead??. GAH. #TODO: 
 	if (state == 0) {
@@ -38994,43 +39327,6 @@ addEventToAll("#audioSource3", 'mousedown touchend focusin focusout', function(e
 	}
 	e.stopPropagation();
 	//e.preventDefault();
-});
-addEventToAll("#multiselect-trigger", 'mousedown touchend focusin focusout', function(e, ele) {
-	var state = ele.dataset.state || 0; //  Does this return TRU instead??. GAH. #TODO: 
-	if (state == 0) { // open the dropdown
-		ele.dataset.state = 1;
-		ele.classList.add('open');
-		ele.classList.remove('closed');
-		mapToAll(".chevron", function(target) {
-			target.classList.remove('bottom');
-		}, getById('multiselect-trigger'));
-		mapToAll(".multiselect-contents", function(target) {
-			target.style.display = "block";
-		}, ele.parentNode);
-		mapToAll(".multiselect-contents", function(target) {
-			mapToAll('input[type="checkbox"]', function(target2) {
-				target2.style.display = "inline-block";
-				target2.parentNode.style.display = "block";
-			}, target);
-		}, ele.parentNode);
-	} else { // close the dropdown
-		ele.dataset.state = 0;
-		ele.classList.add('closed');
-		ele.classList.remove('open');
-		mapToAll(".chevron", function(target) {
-			target.classList.add('bottom');
-		}, ele);
-		mapToAll(".multiselect-contents", function(target) {
-			mapToAll('input[type="checkbox"]', function(target2) {
-				target2.style.display = "none";
-				if (!target2.checked) {
-					target2.parentNode.style.display = "none";
-				}
-			}, target);
-		}, ele.parentNode);
-	}
-	e.preventDefault();
-	e.stopPropagation();
 });
 addEventToAll("#multiselect-trigger3", 'mousedown touchend focusin focusout', function(e, ele) {
 	var state = ele.dataset.state || 0;  // Does this return TRU instead??. GAH. #TODO: 

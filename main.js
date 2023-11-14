@@ -3046,6 +3046,14 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 	if (urlParams.has('screensharecontenthint') || urlParams.has('sscontenthint')  || urlParams.has('screensharecontenttype') || urlParams.has('sscontent') || urlParams.has('sshint')) {
 		session.screenshareContentHint = urlParams.get('screensharecontenthint') || urlParams.get('sscontenthint') || urlParams.get('screensharecontenttype') || urlParams.get('sscontent') || urlParams.get('sshint') || "detail";
 	}
+	
+	if (urlParams.has('vred')){
+		session.videoErrorCorrection = true;
+	}
+	if (urlParams.has('pvred')){
+		session.preferredVideoErrorCorrection = true;
+	}
+	
 
 	if (urlParams.has('codec') || urlParams.has('codecs') || urlParams.has('videocodec')) {
 		log("codecs CHANGED");
@@ -3073,12 +3081,28 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 	
 	
 	
+	if (urlParams.has('redaudio')) { // just for experimenting
+		session.redAudio = true;
+	}
+	if (urlParams.has('fecaudio')) { //
+		session.fecAudio = true;
+	}
+	if (urlParams.has('predaudio')) { //
+		session.predAudio = true;
+	}
+	if (urlParams.has('pfecaudio')) { //
+		session.pfecAudio = true;
+	}
+	
 	if (urlParams.has('audiocodec')) {
 		log("CODEC CHANGED");
 		session.audioCodec = urlParams.get('audiocodec') || false;
 		if (session.audioCodec){
 			session.audioCodec = session.audioCodec.toLowerCase();
 		}
+	}
+	if (session.audioCodec && (session.audioCodec=="red")){
+		session.audiobitratePRO = 216; // higher than this seems to break the RED mode. default 256.
 	}
 	
 	if (urlParams.has('scenelinkcodec')){ // this is mainly for a niche iframe API use
@@ -3986,12 +4010,11 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		// }
 	// }
 	
-	if (urlParams.has("insertablestreams")){
-		session.encodedInsertableStreams = true;	
-	}
-	if (urlParams.has("e2ee")){
-		session.encodedInsertableStreams = true;
-		session.e2ee = urlParams.get("e2ee") || true; // not sure I know what I will do with the user passed e2ee value yet.
+	
+	if (urlParams.has('e2ee')){
+		session.encodedInsertableStreams = "e2ee";
+	} else if (urlParams.has('insertablestreams') || urlParams.has('is')){
+		session.encodedInsertableStreams = urlParams.get('insertablestreams') || urlParams.get("is") || true;	
 	}
 	
 
@@ -5701,7 +5724,7 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 										session.pcs[UUID].stats.remote_relayProtocol = stat.relayProtocol;
 									}
 									if ("candidateType" in stat) {
-										session.pcs[UUID].stats.remote_candidateType = stat.candidateType;
+										session.pcs[UUID].stats.candidateType_remote = stat.candidateType;
 									}
 								} else if (stat.type == "local-candidate") {
 									if ("relayProtocol" in stat) {
@@ -5711,7 +5734,7 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 										session.pcs[UUID].stats.local_relayProtocol = stat.relayProtocol;
 									}
 									if ("candidateType" in stat) {
-										session.pcs[UUID].stats.local_candidateType = stat.candidateType;
+										session.pcs[UUID].stats.candidateType_local = stat.candidateType;
 									}
 								} else if ((stat.type == "candidate-pair" ) && (stat.nominated)) {
 									
@@ -6595,6 +6618,14 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 			}
 		}
 	}
+	
+	document.addEventListener("mouseup", event => {
+		MousePressed = false;
+	});
+	
+	document.addEventListener("mousedown", event => {
+		MousePressed = true;
+	});
 
 	document.addEventListener("keyup", event => {
 		

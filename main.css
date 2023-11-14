@@ -178,6 +178,27 @@ table {
 	position: unset;
 	position: static;
 }
+
+#audioSource {
+  max-height: 80px; /* Initial height */
+  overflow-y: auto; /* Enable scrolling */
+  transition: max-height 0.3s ease; /* Smooth transition for expanding and collapsing */
+}
+
+
+#audioSource.expanded {
+	max-height: none;
+}
+#audioSource.expanded option {
+    display: block;
+}
+#audioSource option:checked {
+    display: block;
+}
+#audioSource option {
+    display: none;
+}
+
 .paused {
 	cursor: pointer;
 }
@@ -2171,6 +2192,7 @@ div#chatBody a {
 	margin-top: 7px;
 	padding:2px 0;
 	min-height: 24px;
+	width:100%;
 }
 /* #audioSourceScreenshare {
 	display:block;
@@ -2447,6 +2469,7 @@ span[data-action-type="stats-graphs-details-container"]>span{
 	overflow: scroll;
 	margin: 4px 0 4px 4px;
 	padding: 1px 4px;
+	color:black;
 }
 
 #add_screen {
@@ -5148,6 +5171,33 @@ select {
 	border: 1px solid var(--discord-grey-8);
 	color: var(--discord-text);*/
 }
+
+#audioSource{
+	width:100%;
+	margin-top: 7px;
+    padding: 3px 4px;
+    min-height: 24px; 
+	user-select: none;
+}
+
+#audioSource option:hover {
+    background-color: #8dbdd4!important;
+    color: black;
+}
+#audioSource option:checked {
+    background-color: #1967D2!important;
+    color: white;
+}
+
+#audioSource[size='1'] option {
+    background-color: var(--lighttheme-1)!important;
+	color:black;
+}
+.darktheme #audioSource[size='1'] option {
+    background-color: var(--light-grey)!important;
+	color:black;
+}
+
 ul {
 	/*	 background-color: var(--lighttheme-1);
 	border: 1px solid var(--lighttheme-6);

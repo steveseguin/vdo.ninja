@@ -58,7 +58,7 @@
 		<meta property="twitter:image" content="./media/vdoNinja_logo_full.png" />
 		<meta name="msapplication-TileColor" content="#da532c" />
 		<meta name="theme-color" content="#0f131d" />
-		<link rel="stylesheet" href="./main.css?ver=368" />
+		<link rel="stylesheet" href="./main.css?ver=369" />
 		<script type="text/javascript" crossorigin="anonymous" src="./thirdparty/adapter.js"></script>
 		<style id="lightbox-animations" type="text/css"></style>
 		
@@ -90,7 +90,7 @@
 			<link itemprop="url" href="./media/vdoNinja_logo_full.png" />
 		</span>
 		
-		<script type="text/javascript" crossorigin="anonymous"  src="./thirdparty/CodecsHandler.js?ver=6"></script>
+		<script type="text/javascript" crossorigin="anonymous"  src="./thirdparty/CodecsHandler.js?ver=9"></script>
 		<script type="text/javascript" crossorigin="anonymous" src="./thirdparty/aes.js"></script>
 		<script type="text/javascript" crossorigin="anonymous" src="./webrtc.js?ver=733"></script>
 		<input id="zoomSlider" type="range" style="display: none;" />
@@ -482,25 +482,19 @@
 							</form>
 						</div>
 					</center>
-					<div id="audioMenu" class="form-group multiselect" alt="tip: Hold CTRL (command) to select Multiple" title="tip: Hold CTRL (command) to select Multiple" aria-hidden="true">
+					<div id="audioMenu" alt="tip: Hold CTRL (command) to select Multiple" title="tip: Hold CTRL (command) to select Multiple" aria-hidden="true">
 						<span class='gear_microphone hidden'>
 							<input type="checkbox" id='micStereoMonoInput' alt="Mono microphone audio"  onchange="toggleMonoStereoMic(this);">Mono
 						</span>
-						<a id="multiselect-trigger" class="form-control multiselect-trigger" >
-							<div  class="title">
-								<i class="las la-microphone-alt"></i><span data-translate="select-audio-source"> Audio Source(s) </span>
-								<i id='chevarrow1' class="chevron bottom" aria-hidden="true"></i>
-								<div class="meter" id="meter1"></div><div class="meter2" id="meter2"></div>
-							</div>
+						
+						<a class="title" id="audioMenuChev" style="cursor:pointer;" >
+							<i class="las la-microphone-alt"></i><span data-translate="select-audio-source"> Audio Source(s) </span>
+							<i id="chevarrow1" class="chevron bottom" aria-hidden="true"></i>
+							<div class="meter" id="meter1"></div><div class="meter2" id="meter2"></div>
 						</a>
-						<ul id="audioSource" class="multiselect-contents" >
-							<li>
-								<input type="checkbox" id="multiselect1" name="multiselect1" style="display: none;" checked value="ZZZ" />
-								<label for="multiselect1">
-									<span data-translate="no-audio"> No Audio</span>
-								</label>
-							</li>
-						</ul>
+						
+						<select id="audioSource" tabindex="1" title="Microphone list">
+						</select>
 						<div id="audioTip1" class="cameraTip hidden">
 							<i class="las la-info-circle"></i>
 							<p><span id="audioTipContext1"></span></p>
@@ -1789,6 +1783,19 @@
 						<i class="las la-plus"></i>
 					</button>
 				</span>
+				<div class="row two"> 
+                    <!-- Further Audio/Video Settings -->
+                    <div class="row two settingsWrapper" data-cluster="3">
+                        <button data-action-type="advanced-audio-settings" data-active="false" title="Remote Audio Settings" onclick="toggleAudioUser();event.preventDefault();event.stopPropagation();return false;">
+                            <i class="las la-sliders-h"></i>
+                            <span data-translate="advanced-audio-settings">Audio settings</span>
+                        </button>
+                        <button class="mainonly" data-action-type="advanced-camera-settings" data-active="false" title="Advanced Video Settings" onclick="toggleVideoUser();event.preventDefault();event.stopPropagation();return false;">
+                            <i class="las la-sliders-h"></i>
+                            <span data-translate="advanced-camera-settings">Video settings</span>
+                        </button>
+                    </div>
+				</div>
 			</div>	
 		</div>
 		
@@ -2285,19 +2292,19 @@
 							<option value="128">🎙️128-kbps</option>
 							<option value="256">🎙️256-kbps</option>
 						</select >
-						<select id="whipoutvbrcbr" title="Which audio bitrate target would you prefer?" >
+						<select id="whipoutvbrcbr" title="Constant audio bitrate or variable audio bitrate" >
 							<option value="cbr" selected>🎙️CBR</option>
 							<option value="vbr">🎙️VBR</option>
 						</select >
-						<select id="whipoutdenoise" title="Which audio bitrate target would you prefer?" >
+						<select id="whipoutdenoise" title="Remove background noise, but may limit audio quality" >
 							<option value="1" selected>🎙️Denoise On</option>
 							<option value="0">🎙️Denoise Off</option>
 						</select >
-						<select id="whipoutautogain" title="Which audio bitrate target would you prefer?" >
+						<select id="whipoutautogain" title="Let the browser control the mic's gain automatically" >
 							<option value="1" selected>🎙️Auto Gain On</option>
 							<option value="0">🎙️Auto Gain Off</option>
 						</select >
-						<select id="whipoutstereo" title="Which audio bitrate target would you prefer?" >
+						<select id="whipoutstereo" title="Stereo audio or mono; must have denoise off for this to work." >
 							<option value="1" selected>🎙️Stereo</option>
 							<option value="0">🎙️Mono</option>
 						</select >
@@ -2647,11 +2654,11 @@
 			// session.record = false; // uncomment to block users from being able to record via vdo.ninja's built in recording function
 			// session.whipServerURL = "wss://whip.vdo.ninja"; // If you deploy your own whip websocket service
 		</script>
-		<script type="text/javascript" crossorigin="anonymous" id="lib-js" src="./lib.js?ver=1032"></script>
+		<script type="text/javascript" crossorigin="anonymous" id="lib-js" src="./lib.js?ver=1038"></script>
 		<!-- 
 		// If you wish to change branding, blank offers a good clean start.
 		<script type="text/javascript" id="main-js" src="./main.js" data-translation="blank"></script>
 		-->
-		<script type="text/javascript" crossorigin="anonymous" id="main-js" src="./main.js?ver=768"></script>
+		<script type="text/javascript" crossorigin="anonymous" id="main-js" src="./main.js?ver=770"></script>
 	</body>
 </html>
