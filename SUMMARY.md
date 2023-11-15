@@ -79,7 +79,7 @@
   * [How to control PowerPoint remotely with VDO.Ninja](guides/how-to-control-powerpoint-remotely-with-vdo.ninja.md)
   * [How to improve quality of the native app](guides/improving-quality-of-the-native-app.md)
   * [How to stream transparent video](guides/how-to-stream-transparent-video.md)
-  * [OBS WHIP output settings](guides/obs-whip-output-settings.md)
+  * [How to set up OBS WHIP output settings](guides/how-to-set-up-obs-whip-output-settings.md)
 * [Advanced Options (URL Parameters)](advanced-settings.md)
   * [Most common Parameters](advanced-settings/cheat-sheet-of-basic-parameters/README.md)
     * [\&push](https://docs.vdo.ninja/advanced-settings/source-parameters/push)

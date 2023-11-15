@@ -36,14 +36,13 @@ The IFRAME API is the most powerful option, but it requires some basic coding on
 [iframe-api-documentation.md](iframe-api-documentation.md)
 {% endcontent-ref %}
 
-\
-Below is an example of how to remotely control OBS anywhere online using the VDO.Ninja IFRAME API; the code is just an example of how to use the IFRAME API with OBS in this case, and it not intended to be used in production as is. The core concept lets you relay data messages from one website page to another, peer to peer, with just a few lines of code!
+Below is an example of how to remotely control OBS anywhere online using the VDO.Ninja IFrame API; the code is just an example of how to use the IFrame API with OBS in this case, and it not intended to be used in production as is. The core concept lets you relay data messages from one website page to another, peer to peer, with just a few lines of code!
 
 {% embed url="https://github.com/steveseguin/sample-p2p-tunnel" %}
 
 ## WebHID
 
-There is also webHID support, but it's not fully implemented at this time. User requests are welcomed though and there's a demo here: [https://vdo.ninja/webhid](https://vdo.ninja/webhid)\
+There is also WebHID support, but it's not fully implemented at this time. User requests are welcomed though and there's a demo here: [https://vdo.ninja/webhid](https://vdo.ninja/webhid)\
 It should be improved upon in the future, assuming the feature does not get depreciated by the browser first.
 
 ## Feature requests and feedback

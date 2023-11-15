@@ -26,13 +26,13 @@ While this code snippet doesn't actually use the `&datamode` parameter, as it wa
 
 #### Another p2p data sending example - remotely control OBS Studio
 
-[https://github.com/steveseguin/sample-p2p-tunnel](https://github.com/steveseguin/sample-p2p-tunnel)\
-\
+[https://github.com/steveseguin/sample-p2p-tunnel](https://github.com/steveseguin/sample-p2p-tunnel)
+
 A remote control page, that works anywhere online, and another page to forward those remote commands into local websocket commands for OBS Studio's websocket API. You can use this to also return the video output of OBS, if you wanted to add that integration as well; the code is free to use as you see fit.
 
 #### Social Stream Ninja
 
-Social Stream is used by thousands of users as a free way to send text messages and image data using VDO.Ninja's p2p data function. The p2p nature of this setup keeps latency and internet usage low when the two connections are on the same LAN, but also provides a NAT firewall bypass for sending messages across the Internet, without the need for websocket servers.
+[Social Stream](../steves-helper-apps/social-stream.md) is used by thousands of users as a free way to send text messages and image data using VDO.Ninja's p2p data function. The p2p nature of this setup keeps latency and internet usage low when the two connections are on the same LAN, but also provides a NAT firewall bypass for sending messages across the Internet, without the need for websocket servers.
 
 {% embed url="https://socialstream.ninja" %}
 

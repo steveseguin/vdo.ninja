@@ -47,8 +47,8 @@ I welcome support and engagement from other developers to work through these iss
 
 In terms of ideal settings for OBS v30's WHIP output into VDO.Ninja, below you can find a link to some recommended encoder options, to ensure smoothest playback
 
-{% content-ref url="../guides/obs-whip-output-settings.md" %}
-[obs-whip-output-settings.md](../guides/obs-whip-output-settings.md)
+{% content-ref url="../guides/how-to-set-up-obs-whip-output-settings.md" %}
+[how-to-set-up-obs-whip-output-settings.md](../guides/how-to-set-up-obs-whip-output-settings.md)
 {% endcontent-ref %}
 
 For more help, join the Discord
@@ -95,12 +95,16 @@ If you want low-level controls over AV1 codec encoding and other facets of WHIP 
 
 ## Related
 
-{% content-ref url="../advanced-settings/whip-parameters/and-whip.md" %}
-[and-whip.md](../advanced-settings/whip-parameters/and-whip.md)
-{% endcontent-ref %}
-
 {% content-ref url="../advanced-settings/whip-parameters/" %}
 [whip-parameters](../advanced-settings/whip-parameters/)
+{% endcontent-ref %}
+
+{% content-ref url="../guides/how-to-set-up-obs-whip-output-settings.md" %}
+[how-to-set-up-obs-whip-output-settings.md](../guides/how-to-set-up-obs-whip-output-settings.md)
+{% endcontent-ref %}
+
+{% content-ref url="../advanced-settings/whip-parameters/and-whip.md" %}
+[and-whip.md](../advanced-settings/whip-parameters/and-whip.md)
 {% endcontent-ref %}
 
 ## Updates
