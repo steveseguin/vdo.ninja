@@ -4,6 +4,15 @@
 
 #### [https://github.com/steveseguin/social\_stream/releases](https://github.com/steveseguin/social\_stream/releases)
 
+#### November 15
+
+**v0.1.5**\
+[https://github.com/steveseguin/social\_stream/releases/tag/0.1.5](https://github.com/steveseguin/social\_stream/releases/tag/0.1.5) (Mac and Pc)
+
+* Sites like peertube, that use self-hosted domains, are supported now.
+* Chat responses will now work with more than just the first site opened.
+* It's still a preview test version; bugs and broken features are to be expected.
+
 #### November 10
 
 **v0.1.4**\
