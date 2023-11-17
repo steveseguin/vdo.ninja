@@ -3,6 +3,11 @@
 [social-stream.md](../../steves-helper-apps/social-stream.md "mention")\
 [chat-overlay.md](../../steves-helper-apps/chat-overlay.md "mention")
 
+#### **November 17**
+
+* Pushed an update for Firefox and the Social Stream extension; it brings back basic Firefox support to the extension.
+  * You'll need to installed it via the `about:debugging#/runtime/this-firefox` page as a temporary extension I guess? Or self-sign it.
+
 #### **November 12**
 
 * The hide/only Twitch option for Social Stream added to the index.html page also now.
