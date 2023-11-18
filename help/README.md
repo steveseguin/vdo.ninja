@@ -1,7 +1,7 @@
 # Help!
 
 * [fail-safes-and-backups.md](fail-safes-and-backups.md "mention")
-* [privacy-and-security-details.md](privacy-and-security-details.md "mention")
+* [privacy-and-security-details](privacy-and-security-details/ "mention")
 * [project-contact-info.md](project-contact-info.md "mention")
 * [report-a-bug.md](report-a-bug.md "mention")
 * [where-can-i-get-support.md](where-can-i-get-support.md "mention")

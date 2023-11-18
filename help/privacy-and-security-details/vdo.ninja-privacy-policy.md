@@ -1,0 +1,44 @@
+---
+description: We strive to protect your privacy, but you use VDO.Ninja at your own risk
+---
+
+# VDO.Ninja Privacy Policy
+
+**Effective Date:** November 18, 2023
+
+Welcome to VDO.Ninja, a peer-to-peer networking service designed to facilitate seamless video and audio communication. This Privacy Policy outlines our practices regarding the collection, use, and protection of your information.
+
+**1. Data Collection and Use**
+
+* **IP Addresses:** VDO.Ninja operates as a peer-to-peer network, which may share your IP address and basic system information with remote guests you connect with. We recommend using VPNs, TURN servers, or enabling IP-leak protection for enhanced privacy.
+* **Personal Information:** We do not store personal information longer than necessary. This may include data for TURN relay servers, error reporting, rate-limiting, speed-test results, and anti-flooding measures.
+* **Cookies and Local Storage:** VDO.Ninja does not use tracking cookies. Local browser storage may be used for storing user preferences and settings, not for tracking purposes.
+* **Third-Party Services:** When using third-party services like Discord or YouTube, their respective privacy policies apply.
+
+**2. Data Security and Responsibility**
+
+* **Media Data:** Media data transferred via TURN servers is encrypted per the WebRTC standard. Media sent via Meshcast or other SFU services will not be end-to-end encrypted by default, and so may technically allow for server-side recording. Any viewer of a stream can record the stream without notice to others. Built-in recording options are offered, including the option to upload direct to cloud services. External recording tools, like OBS Studio, can also be used to record.
+* **Debug Information:** Basic debug and statistical information may be transmitted between peers, including browser, basic hardware specifications, IP address, display name, and operating system details.
+* **User Auth Credentials:** Credentials may be cached in local browser storage and are subject to expiration.
+
+**3. Third-Party Services and Cloudflare**
+
+* **Cloudflare:** We use Cloudflare for web server caching, DNS, STUN, TURN geo-routing, security services, and probably more. Cloudflare's use of data is GDPR-compliant.
+* **Meshcast.io:** This third-party service, when used with VDO.Ninja, operates independently of our privacy practices.
+* **Invite.cam:** May retain details of social-sign-in credentials within a database for purposes of authenticating users and store VDO.Ninja related settings.
+* **Google:** We may use Google for STUN services and host the core servers on Google Cloud.
+
+**4. User Responsibility**
+
+* **Stream ID and Room Names:** Treat these as sensitive information and choose secure values that cannot be guessed. We provide options for additional client-side encryption for added security, but the system may choose to fail-safe rather than to fail-securely in some cases.
+* **Handshake Server:** The initial connection is managed by a server, but subsequent data transfers are peer-to-peer when possible. While connected to the handshake server new peer connections can potentially be established.&#x20;
+* **Self-Hosting:** Unless specified, self-hosting VDO.Ninja will still result in the the system still using the official handshake servers and other such services by default. You must configure your VDO.Ninja deployment to use your own such services if desired. Any self-hosted handshake server code provided is intended for private personal use; it's not secured for public use.
+
+**5. Legal Disclaimer**
+
+* **No Guarantee of Privacy or Security:** While we strive to protect your information, we cannot guarantee absolute privacy or security. Use of VDO.Ninja in any capacity is at your own risk.
+* **Contact Information:** For privacy-related inquiries, contact [steve@seguin.email](mailto:steve@seguin.email).
+
+**6. Amendments**
+
+* This policy may be updated periodically. We encourage users to review it regularly.
