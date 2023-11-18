@@ -22,7 +22,7 @@ Deploying the VDO.Ninja website code yourself will still reveal your IP address 
 
 The option to host your own STUN, TURN and WSS servers exists, allowing for fully isolated hosting, but limited support is available for users choosing this route. Please see the VDO.Ninja GitHub repo for information on deploying server-side software, where links to code and detailed instructions are provided.
 
-Some third-party services used by VDO.Ninja, such as [Meshcast.io](https://meshcast.io/), may be used with VDO.Ninja by means of IFRAMES or the [`&meshcast`](../../newly-added-parameters/and-meshcast.md) parameter, but these third-party services are out of the scope of this privacy document. Briefly worth nothing though, being SFU server-based, Meshcast does not offer full end-to-end video encryption like VDO.Ninja alone currently offers. Meshcast does not create recordings, does not access personal streams without permission, and does not store personal data beyond what the user explicitly allows or what is technically required to offer the service.
+Some third-party services used by VDO.Ninja, such as [Meshcast.io](https://meshcast.io/), may be used with VDO.Ninja by means of IFRAMES or the [`&meshcast`](../newly-added-parameters/and-meshcast.md) parameter, but these third-party services are out of the scope of this privacy document. Briefly worth nothing though, being SFU server-based, Meshcast does not offer full end-to-end video encryption like VDO.Ninja alone currently offers. Meshcast does not create recordings, does not access personal streams without permission, and does not store personal data beyond what the user explicitly allows or what is technically required to offer the service.
 
 Please also note that Meshcast hosted streams are accessible by users outside of a VDO.Ninja group room, without a password, so long as they have the Meshcast stream ID. The stream ID is accessible to anyone viewing the Meshcast stream, which they can then leak to others outside of the room. This is a typical security concern of server-based streaming services of course, so if this is a concern, do not use Meshcast in conjunction with VDO.Ninja.
 
@@ -38,7 +38,7 @@ While nearly all data transfer is peer to peer based, the initial handshake betw
 
 Once a user disconnects from the handshake-server, any cached information about their connection is promptly cleared from memory. Such cached information is a technical requirement to offer public service at scale.
 
-Future and auxiliary services that use VDO.Ninja as a component, such as [SocialStream](../../steves-helper-apps/social-stream.md), Invite.cam, or [Versus.cam](../../steves-helper-apps/versus.cam.md), may have their own data-privacy or user-storage policies.
+Future and auxiliary services that use VDO.Ninja as a component, such as [SocialStream](../steves-helper-apps/social-stream.md), Invite.cam, or [Versus.cam](../steves-helper-apps/versus.cam.md), may have their own data-privacy or user-storage policies.
 
 Backup handshake servers are hosted to ensure reliability, such as with [https://backup.vdo.ninja](https://backup.vdo.ninja), and managed third-party handshake servers are supported, such as piesocket.com.
 
