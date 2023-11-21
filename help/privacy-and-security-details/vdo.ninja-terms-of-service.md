@@ -58,7 +58,7 @@ Welcome to VDO.Ninja! By using our service, you agree to be bound by the followi
 
 **13. Governing Law**
 
-* These Terms shall be governed by and interpreted in accordance with the laws of \[Your Country/State], without regard to its conflict of law provisions.
+* These Terms shall be governed by and interpreted in accordance with the laws of Canada, without regard to its conflict of law provisions.
 
 **14. Contact Information**
 
