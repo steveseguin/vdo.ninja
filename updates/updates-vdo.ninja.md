@@ -1,5 +1,13 @@
 # Updates - VDO.Ninja
 
+#### November 20 <a href="#august-31" id="august-31"></a>
+
+* Added `&forcecontrols` as a URL option to VDO.Ninja.
+  * It's experimental, but it will try to keep the video controls visible, even if your mouse isn't hovering over the video.
+  * The VDO.Ninja tab/window still needs to be 'active' however, for this to work; changing focus to another tab will stop it.
+  * Only works really for chrome/chromium on desktop; not Firefox, etc.
+  * On [https://vdo.ninja/alpha/](https://vdo.ninja/alpha/)
+
 #### November 9 <a href="#august-31" id="august-31"></a>
 
 * The [director](../viewers-settings/director.md), when setup as a guest, now has the audio/video buttons available to them in the same place it would be for guests. It opens up the side pane though, but hopefully this makes things more intuitive when using.\
