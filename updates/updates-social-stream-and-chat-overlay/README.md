@@ -3,6 +3,40 @@
 [social-stream.md](../../steves-helper-apps/social-stream.md "mention")\
 [chat-overlay.md](../../steves-helper-apps/chat-overlay.md "mention")
 
+#### **November 23**
+
+* The Extension version of Social Stream also has had some bug fixes pushed; an error related to user blocking caused some bot action to fail.
+
+#### **November 21**
+
+* Added dozens of new advanced transition in/out effects for the dock.html page.
+  * [Video](https://discord.com/channels/698324796546482177/701232125831151697/1176622368853086268) of the transitions effects mentioned above
+  * Added a "none" option to the transition options\
+    ![](<../../.gitbook/assets/image (218).png>)
+*   You can specify a Google font in Social Stream now; works for the dock or the featured chat page.
+
+    * [https://fonts.google.com/](https://fonts.google.com/) fonts for reference are here; you just need to enter the name
+
+    <figure><img src="../../.gitbook/assets/image (217).png" alt=""><figcaption></figcaption></figure>
+* `&padding=5` added as an option to the dock page now; you can also enable it via the menu. this adds vertical spacing to the lines.
+  * In this case , it's padding=5, but that's 5px x 2 = 10px pixels total. 5 is the default for `&padding`, but you can specify your own amount
+  * I also modified the default vertical padding, even if not using \&padding; there's now a small bit of extra padding to make things a bit more readable
+* Fixed an issues where the session IDs still were not saving in some cases. Hopefully that's fixed now, after updating the extension.
+
+#### **November 20**
+
+*   For those so inclined to make their own overlays for **Social Stream** from scratch, I've created a basic and bare HTML template for reference.
+
+    * [https://socialstream.ninja/sampleoverlay](https://socialstream.ninja/sampleoverlay)
+    * No functions like TTS or customization via URL parameters; it's just a simple fixed overlay with minimal code.
+    * It can be used as a featured overlay or as a dock-alternative, with all messages. see the code for reference.
+
+    <div align="left">
+
+    <figure><img src="../../.gitbook/assets/image (216).png" alt="" width="213"><figcaption></figcaption></figure>
+
+    </div>
+
 #### **November 17**
 
 * Pushed an update for Firefox and the Social Stream extension; it brings back basic Firefox support to the extension.

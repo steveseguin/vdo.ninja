@@ -52,6 +52,7 @@ description: All useful links you might take a look at
 | Use VDO.Ninja and Kick chat at the same time                                    | [https://vdo.ninja/kick](https://vdo.ninja/kick)                                                                                                       |
 | Teleprompter                                                                    | [https://vdo.ninja/teleprompter](https://vdo.ninja/teleprompter)                                                                                       |
 | Mic Test                                                                        | [https://vdo.ninja/mictest](https://vdo.ninja/mictest)                                                                                                 |
+| Social Stream Sample Overlay                                                    | [https://socialstream.ninja/sampleoverlay](https://socialstream.ninja/sampleoverlay)                                                                   |
 
 ### [Sponsor ❤](getting-started/sponsor.md)
 

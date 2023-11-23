@@ -2,6 +2,11 @@
 
 [raspberry.ninja](../steves-helper-apps/raspberry.ninja/ "mention")
 
+#### November 23
+
+* Raspberry.ninja now can output stereo audio; just pull the newest code
+  * New parameter, as seen here: `python publish.py --test --stereo`
+
 #### November 4
 
 * Pushed a patch for Raspberry.Ninja, where audio-only streams were having issues with Chrome. (issue was in the GST library being used; not Raspberry.Ninja itself)

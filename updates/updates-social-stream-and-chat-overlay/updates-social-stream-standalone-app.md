@@ -4,6 +4,22 @@
 
 #### [https://github.com/steveseguin/social\_stream/releases](https://github.com/steveseguin/social\_stream/releases)
 
+#### November 23
+
+**v0.1.9**\
+[https://github.com/steveseguin/social\_stream/releases/tag/0.1.9](https://github.com/steveseguin/social\_stream/releases/tag/0.1.9)
+
+* Fixing an issue with Mac and I think improving YouTube chat auto open support some more.
+* Please report bugs with it, however please also note it's still not fully cooked and is just for testing/previewing.
+
+#### November 22
+
+**v0.1.8**\
+[https://github.com/steveseguin/social\_stream/releases/tag/0.1.8](https://github.com/steveseguin/social\_stream/releases/tag/0.1.8)
+
+* YouTube chat discovery for UK/EU users I hope works better now
+* The TikTok websocket option should work now; at least in read-only mode.
+
 #### November 15
 
 **v0.1.5**\
