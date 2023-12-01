@@ -12,16 +12,23 @@ Welcome to VDO.Ninja, a peer-to-peer networking service designed to facilitate s
 
 * **IP Addresses:** VDO.Ninja operates as a peer-to-peer network, which may share your IP address and basic system information with remote guests you connect with. We recommend using VPNs, TURN servers, or enabling IP-leak protection for enhanced privacy.
 * **Personal Information:** We do not store personal information longer than necessary. This may include data for TURN relay servers, error reporting, rate-limiting, speed-test results, and anti-flooding measures.
-* **Cookies and Local Storage:** VDO.Ninja does not use tracking cookies. Local browser storage may be used for storing user preferences and settings, not for tracking purposes.
+* **Cookies and Local Storage:** VDO.Ninja does not use tracking cookies. Local browser storage may be used for storing user preferences and settings; not for tracking purposes.
 * **Third-Party Services:** When using third-party services like Discord or YouTube, their respective privacy policies apply.
 
-**2. Data Security and Responsibility**
+**2. Data Deletion Policy**
+
+* VDO.Ninja does not create or offer user accounts to begin with, in either the web or mobile app versions, so there is no mechanism offered to delete user accounts. Other products or services related to VDO.Ninja may have their own privacy policies and data settings however.
+* In the web version of VDO.Ninja, an option is provided under the user settings menu to clear all local browser storage, which will delete local preference data, such as camera configuration settings.
+* Data obtained during the optional pre-check performance test, and debug report option, consists of anonymous data that self-deletes after a short period, typically 7 days. Data is generally not kept longer than technically required for the service to work as expected.
+* The native mobile app versions of VDO.Ninja may store locally stream ID, room name, and other user preferences or settings. These values are deleted when the app is deleted, but may also be manually cleared or overridden by the user as desired, if wishing to be removed.
+
+**3. Data Security and Responsibility**
 
 * **Media Data:** Media data transferred via TURN servers is encrypted per the WebRTC standard. Media sent via Meshcast or other SFU services will not be end-to-end encrypted by default, and so may technically allow for server-side recording. Any viewer of a stream can record the stream without notice to others. Built-in recording options are offered, including the option to upload direct to cloud services. External recording tools, like OBS Studio, can also be used to record.
 * **System Information:** Basic debug and system statistical information may be transmitted between peers, including browser user agent, basic hardware specifications, IP address, display name, and operating system details. Performing the optional pre-check system test may also store such test result information for a limited period of time on a server, only as technically required to offer the service.
 * **User Auth Credentials:** Credentials may be cached in local browser storage and are subject to expiration.
 
-**3. Third-Party Services and Cloudflare**
+**4. Third-Party Services and Cloudflare**
 
 * **Cloudflare:** We use Cloudflare for web server caching, DNS, STUN, TURN geo-routing, security services, bandwidth testing, and probably more. Cloudflare's use of data is GDPR-compliant.
 * **Meshcast.io:** This third-party service, when used with VDO.Ninja, operates independently of our privacy practices.
@@ -29,17 +36,17 @@ Welcome to VDO.Ninja, a peer-to-peer networking service designed to facilitate s
 * **Google:** We may use Google for STUN services and host the core servers on Google Cloud.
 * **SSO:** We may offer Social Sign In (SSO) options for additional functionality using services such as Dropbox, Google Drive, Discord, and YouTube chat.
 
-**4. User Responsibility**
+**5. User Responsibility**
 
 * **Stream ID and Room Names:** Treat these as sensitive information and choose secure values that cannot be guessed. We provide options for additional client-side encryption for added security, but the system may choose to fail-safe rather than to fail-securely in some cases.
 * **Handshake Server:** The initial connection is managed by a server, but subsequent data transfers are peer-to-peer when possible. While connected to the handshake server new peer connections can potentially be established.&#x20;
 * **Self-Hosting:** Unless specified, self-hosting VDO.Ninja will still result in the the system still using the official handshake servers and other such services by default. You must configure your VDO.Ninja deployment to use your own such services if desired. Any self-hosted handshake server code provided is intended for private personal use; it's not secured for public use or access.
 
-**5. Legal Disclaimer**
+**6. Legal Disclaimer**
 
 * **No Guarantee of Privacy or Security:** While we strive to protect your information, we cannot guarantee absolute privacy or security. Use of VDO.Ninja in any capacity is at your own risk.
 * **Contact Information:** For privacy-related inquiries, contact [steve@seguin.email](mailto:steve@seguin.email).
 
-**6. Amendments**
+**7. Amendments**
 
 * This policy may be updated periodically. We encourage users to review it regularly.
