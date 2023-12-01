@@ -10,7 +10,7 @@ Welcome to VDO.Ninja, a peer-to-peer networking service designed to facilitate s
 
 **1. Data Collection and Use**
 
-* **IP Addresses:** VDO.Ninja operates as a peer-to-peer network, which may share your IP address and basic system information with remote guests you connect with. We recommend using VPNs, TURN servers, or enabling IP-leak protection for enhanced privacy.
+* **IP Addresses:** VDO.Ninja operates as a peer-to-peer network, which may share your IP address and basic system information with remote guests you connect with. Using VPNs, TURN servers, or enabling IP-leak protection will offer enhanced privacy, however doing so could be detrimental to the performance of the service.
 * **Personal Information:** We do not store personal information longer than necessary. This may include data for TURN relay servers, error reporting, rate-limiting, speed-test results, and anti-flooding measures.
 * **Cookies and Local Storage:** VDO.Ninja does not use tracking cookies. Local browser storage may be used for storing user preferences and settings; not for tracking purposes.
 * **Third-Party Services:** When using third-party services like Discord or YouTube, their respective privacy policies apply.
