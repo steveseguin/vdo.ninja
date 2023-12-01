@@ -17,10 +17,10 @@ Welcome to VDO.Ninja, a peer-to-peer networking service designed to facilitate s
 
 **2. Data Deletion Policy**
 
-* VDO.Ninja does not create or offer user accounts to begin with, in either the web or mobile app versions, so there is no mechanism offered to delete user accounts. Other products or services related to VDO.Ninja may have their own privacy policies and data settings however.
-* In the web version of VDO.Ninja, an option is provided under the user settings menu to clear all local browser storage, which will delete local preference data, such as camera configuration settings.
-* Data obtained during the optional pre-check performance test self-deletes after a short period, typically 7 days. Personal data is generally is not kept longer than technically required for the service to work as expected.
-* The native mobile app versions of VDO.Ninja may store locally stream ID, room name, and other user settings. These values are deleted when the app is deleted, but may also be manually cleared or overridden by the user as desired, if wishing to be removed.
+* **No User Accounts:** VDO.Ninja does not create user accounts in its web or mobile app versions, thus eliminating the need for a mechanism to delete user accounts. However, related products or services may have their own privacy policies and data management procedures.
+* **Web Version:** In the web version of VDO.Ninja, users can delete any local preference data, such as camera configuration settings.  An option to do so is provided in the user settings menu, or it may be done using their browser's built-in clear local storage options.
+* **Mobile App:** The native mobile app versions of VDO.Ninja may store stream IDs, room names, and user settings locally. This data can be manually cleared or overridden by the user at any time. Additionally, all such local data is deleted when the app is uninstalled.
+* **Data Retention:** Data collected during optional pre-check performance tests is automatically deleted after a period of typically 7 days. Any personal data in general is not retained longer than necessary for the technical functioning of the service.
 
 **3. Data Security and Responsibility**
 
