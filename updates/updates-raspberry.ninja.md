@@ -2,6 +2,11 @@
 
 [raspberry.ninja](../steves-helper-apps/raspberry.ninja/ "mention")
 
+#### November 28
+
+* Updated Raspberry.Ninja with enhancements for improved automatic color format mode support; useful for the the HDMI to CSI adapter boards
+* Lots of little fixes here and there the last few days
+
 #### November 23
 
 * Raspberry.ninja now can output stereo audio; just pull the newest code

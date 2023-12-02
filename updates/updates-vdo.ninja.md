@@ -1,5 +1,12 @@
 # Updates - VDO.Ninja
 
+#### December 2 <a href="#august-31" id="august-31"></a>
+
+* Made some improvements for iOS video recording in **VDO.Ninja** - shouldn't crash after 15-minutes anymore, assuming on iOS +16.\
+  \*\* on alpha (more improvements coming for it tho)
+* Updated the self-hosted VDO.Ninja handshakeserver code for VDO.Ninja with some minor optimizations
+* Completed a couple nights of dev ops systems maintenance work
+
 #### November 20 <a href="#august-31" id="august-31"></a>
 
 * Added `&forcecontrols` as a URL option to VDO.Ninja.
@@ -269,7 +276,7 @@ If you want the VDO.Ninja self-preview to not be mini-sized in broadcast mode, w
 
 * Updated [`&structure`](../advanced-settings/design-parameters/and-structure.md) to work with [`&cover`](../advanced-settings/view-parameters/cover.md), allowing for some more flexibility with controlling fixed aspect-ratios from the viewer/scene side.\
   ie: `https://vdo.ninja/alpha/?room=XXXXX&scene&cover&structure&square&fakeguests=10`\
-  ![](<../.gitbook/assets/image (3) (1) (1) (1).png>)![](<../.gitbook/assets/image (1) (1) (1) (1) (1) (1) (1) (1) (1) (1).png>)
+  ![](<../.gitbook/assets/image (3) (1) (1) (1).png>)![](<../.gitbook/assets/image (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1).png>)
 * Fixed a couple bugs, such as the local screen share preview not re-appearing after full-windowing another guest's video while screen sharing.
 
 \*\* on alpha
@@ -435,7 +442,7 @@ meshcastcodec == whipoutcodec, woc
 Option for a custom hang-up message added to VDO.Ninja.\
 \-- [`&hangupmessage`](../advanced-settings/setup-parameters/and-hangupmessage-alpha.md) (or `&hum`) , which take a URL encoded string. So it can be just "bye", or it can be some HTML, as shown in the link\
 \-- eg: [https://vdo.ninja/alpha/?hum=bye%3Cimg%20src%3D%22.%2Fmedia%2Flogo\_cropped.png%22%3E\&push=ZimFGxM](https://vdo.ninja/alpha/?hum=bye%3Cimg%20src%3D%22.%2Fmedia%2Flogo\_cropped.png%22%3E\&push=ZimFGxM)\
-![](<../.gitbook/assets/image (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1).png>)\
+![](<../.gitbook/assets/image (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1).png>)\
 \
 \* on alpha
 
@@ -498,7 +505,7 @@ Option for a custom hang-up message added to VDO.Ninja.\
   These flags in theory I think should help try to force a bitrate or resolution, regardless of network conditions, but in practice they still seem to just smash your frame rate. I haven't really been able to find a good use for them yet, but let me know.
 * Fixed an issue where when you hung up on an iPhone, it would still stay the camera/mic was in use at the goodbye/reload page.
 * Added the "test" audio output button to the in-call settings menu (as seen in image).\
-  ![](<../.gitbook/assets/image (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1).png>)
+  ![](<../.gitbook/assets/image (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1).png>)
 * Fixed an issue with Firefox mobile's camera rotation being wrong in the local preview. (let me know tho if the issues continues tho)
 * Firefox mobile should not go to sleep any more when idle.
 

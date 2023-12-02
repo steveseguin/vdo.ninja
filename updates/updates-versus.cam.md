@@ -2,6 +2,12 @@
 
 [versus.cam.md](../steves-helper-apps/versus.cam.md "mention")
 
+#### November 29
+
+* Fixed an issue where Versus.cam failed to load previews on recent versions of Chrome.
+
+### 2022
+
 #### November 18
 
 * The Versus.cam app now points to the production version of VDO.Ninja, rather than beta or alpha.
