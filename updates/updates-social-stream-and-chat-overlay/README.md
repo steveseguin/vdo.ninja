@@ -9,7 +9,7 @@
 
 #### **December 2**
 
-* Live.space fix out for S**ocial Stream**, along with an opt-in channel feature, to avoid picking up chat from other channels
+* Live.space fix out for Social Stream, along with an opt-in channel feature, to avoid picking up chat from other channels
 * Fixed some CSS issues, such as bubble-mode not including the name in the bubble when there was no message content\
   ![](../../.gitbook/assets/image.png)
 
