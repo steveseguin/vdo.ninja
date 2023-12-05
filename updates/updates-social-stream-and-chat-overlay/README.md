@@ -3,6 +3,10 @@
 [social-stream.md](../../steves-helper-apps/social-stream.md "mention")\
 [chat-overlay.md](../../steves-helper-apps/chat-overlay.md "mention")
 
+#### **December 4**
+
+* shareplay.tv added to Social Stream
+
 #### **December 2**
 
 * Live.space fix out for S**ocial Stream**, along with an opt-in channel feature, to avoid picking up chat from other channels

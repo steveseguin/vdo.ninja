@@ -1,5 +1,24 @@
 # Updates - VDO.Ninja
 
+#### December 4 <a href="#august-31" id="august-31"></a>
+
+* Added Server-Side-Events support to the VDO.Ninja API
+  * You can listen for push-notifications essentially, without needing to use Websockets.
+  * It's listen-only, but its easy to use, versus Websockets, which already can do all of this, but with more code.
+  * Background: VDO.Ninja clients send some basic events out when using the [`&api`](../general-settings/api.md) option, including connection and stream ID details, allowing a developer to write their own application layers to know when someone has joined a link, etc.
+  * More info: [https://github.com/steveseguin/Companion-Ninja/tree/main#server-side-events](https://github.com/steveseguin/Companion-Ninja/tree/main#server-side-events)
+
+#### December 3 <a href="#august-31" id="august-31"></a>
+
+* `&ptt=ctrl+alt+m` added as an option to set the push-to-talk hotkey.
+  * The ctrl/meta/alt keys need to be specified first, then a normal key.
+  * The default is `CTRL + ALT + M` if just `&ptt` is set, but no value passed.
+* `api.vdo.ninja/xxxx/tallylight/1` set the tally light; 0,1,2, or 3 , depending on off, live, standby, and active.
+  * Uses the same style for the tally light as the OBS state tally light system.
+  * Until initially triggered, the existing tally light will use the OBS state for the tally; [`&obsoff`](../advanced-settings/design-parameters/and-obsoff.md) I think can disable that tho.
+
+\*\* changes on alpha
+
 #### December 2 <a href="#august-31" id="august-31"></a>
 
 * Made some improvements for iOS video recording in **VDO.Ninja** - shouldn't crash after 15-minutes anymore, assuming on iOS +16.\
