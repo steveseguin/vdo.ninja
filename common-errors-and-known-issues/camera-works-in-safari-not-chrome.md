@@ -8,8 +8,8 @@ description: >-
 
 ### Check if its VDO.Ninja specific or browser-wide
 
-Often the camera will not just fail ot load in VDO.Ninja, but fail to load with any web app in Chrome or browser.\
-\
+Often the camera will not just fail ot load in VDO.Ninja, but fail to load with any web app in Chrome or browser.
+
 You can confirm its not VDO.Ninja specific by going to the following page and seeing if the camera works with this simple camera app: [https://webrtc.github.io/samples/src/content/devices/input-output/](https://webrtc.github.io/samples/src/content/devices/input-output/)
 
 If it fails only within VDO.Ninja, make sure you've enabled the Camera and Microphone permissions for VDO.Ninja.
@@ -22,7 +22,7 @@ Sometimes another app is using the camera, and closing all other apps or restart
 
 ### Force close the camera app
 
-You can try running the following from your Terminal in macOS:
+You can try running the following from your Terminal in MacOS:
 
 ```
 sudo killall appleh13camerad
@@ -30,7 +30,7 @@ sudo killall VDCAssistant
 sudo killall AppleCameraAssistant
 ```
 
-You can also close the camera app in macOS via&#x20;
+You can also close the camera app in MacOS via&#x20;
 
 ```
 Apple Logo > Force Quit > Select All Apps > (find 'Camera process') -> Force Quit.  
@@ -42,7 +42,7 @@ In Chrome, you can turn off "Use hardware acceeleration when available" in the `
 
 ### Make sure Chrome has access to your microphone and camera
 
-Go to your Security & Privacy page in your macOS settings, select the privacy tab, and make sure Google Chrome has access to your camera and microphone.
+Go to your Security & Privacy page in your MacOS settings, select the privacy tab, and make sure Google Chrome has access to your camera and microphone.
 
 ### Reinstall Chrome
 
