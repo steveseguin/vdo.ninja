@@ -11,7 +11,7 @@
 
 * Live.space fix out for Social Stream, along with an opt-in channel feature, to avoid picking up chat from other channels
 * Fixed some CSS issues, such as bubble-mode not including the name in the bubble when there was no message content\
-  ![](../../.gitbook/assets/image.png)
+  ![](<../../.gitbook/assets/image (1).png>)
 
 #### **November 28**
 
@@ -93,7 +93,7 @@
 #### **November 9**
 
 * Twitter live video chat supported by Social Stream now. No avatar support, but that's coming eventually.\
-  ![](<../../.gitbook/assets/image (1) (1).png>)![](<../../.gitbook/assets/image (2).png>)
+  ![](<../../.gitbook/assets/image (1) (1) (1).png>)![](<../../.gitbook/assets/image (2).png>)
 
 #### **November 5**
 
@@ -116,7 +116,7 @@
 #### **October 29**
 
 * Added flag support to Social Stream\
-  ![](<../../.gitbook/assets/image (1) (1) (1) (1) (1) (1).png>)
+  ![](<../../.gitbook/assets/image (1) (1) (1) (1) (1) (1) (1).png>)
 
 #### **October 28**
 
@@ -203,13 +203,13 @@
   \-- The sampleapi.html page has some test buttons to trigger (as shown in second screen shot)\
   \-- You'll need to enable the remote http/wss API in the general extension settings to enable this remote API\
   \-- The API can be triggered via HTTP, so you can use it with a streamdeck; ie: `https://api.vdo.ninja/SESSIONIDHERE/highlightwaitlist/0`\
-  ![](<../../.gitbook/assets/image (1) (1) (1) (1) (1) (1) (1) (1) (1) (1).png>)![](<../../.gitbook/assets/image (2) (1) (1) (1) (1) (1) (1).png>)
+  ![](<../../.gitbook/assets/image (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1).png>)![](<../../.gitbook/assets/image (2) (1) (1) (1) (1) (1) (1).png>)
 
 #### **September 26**
 
 * steamcommunity.com live chat added to Social Stream. ie: `https://steamcommunity.com/broadcast/chatonly/XXXXXXX`
 * MS Teams now is opt-in for Social Stream\
-  ![](<../../.gitbook/assets/image (1) (1) (1) (1) (1) (1) (1) (1) (1).png>)
+  ![](<../../.gitbook/assets/image (1) (1) (1) (1) (1) (1) (1) (1) (1) (1).png>)
 
 #### **September 25**
 
@@ -267,7 +267,7 @@
   \-- Actual translations for other languages still need to be actually added. (difficulty level: 3/10)\
   \-- (German was added\*)
 
-![](<../../.gitbook/assets/image (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1).png>)
+![](<../../.gitbook/assets/image (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1).png>)
 
 #### **August 24**
 
@@ -327,7 +327,7 @@ On Social Stream now:
   \-- the more engaged your viewers are with the chat, the higher the score. Might encourage more chatting.\
   \-- this is a new dedicated overlay page\
   \-- basic styling options included, such as align left/right, disabling outlining, scale, etc\
-  ![](<../../.gitbook/assets/image (11).png>)![](<../../.gitbook/assets/image (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1).png>)
+  ![](<../../.gitbook/assets/image (11).png>)![](<../../.gitbook/assets/image (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1).png>)
 
 #### **August 12**
 
@@ -370,7 +370,7 @@ On Social Stream now:
 #### **July 30**
 
 * Support for `vstream.com` and `live.space` added to Social Stream\
-  ![](<../../.gitbook/assets/image (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1).png>)
+  ![](<../../.gitbook/assets/image (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1).png>)
 
 #### **July 25**
 
@@ -635,7 +635,7 @@ Social Stream updates for today:
 
 * Social Stream has had the "open chat automatically" functionality improved a lot the last couple days. @River played a large part in that.
 * Added to Social Stream the option to map a chat command to some webhook API. Just an easy way to get started with making bot-actions, such as turning on a light. Happy to evolve this based on feedback.\
-  ![](<../../.gitbook/assets/image (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1).png>)
+  ![](<../../.gitbook/assets/image (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1).png>)
 
 #### **February 22**
 

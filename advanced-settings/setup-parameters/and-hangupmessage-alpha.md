@@ -23,7 +23,7 @@ Option for a custom hang-up message. `&hangupmessage` takes a URL encoded string
 
 eg:\
 [https://vdo.ninja/alpha/?hum=bye%3Cimg%20src%3D%22.%2Fmedia%2Flogo\_cropped.png%22%3E\&push=ZimFGxM](https://vdo.ninja/alpha/?hum=bye%3Cimg%20src%3D%22.%2Fmedia%2Flogo\_cropped.png%22%3E\&push=ZimFGxM)\
-![](<../../.gitbook/assets/image (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1).png>)
+![](<../../.gitbook/assets/image (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1).png>)
 
 ## Related
 
