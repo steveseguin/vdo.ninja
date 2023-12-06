@@ -1,5 +1,12 @@
 # Updates - VDO.Ninja
 
+#### December 6 <a href="#august-31" id="august-31"></a>
+
+* If using `&ptt` alone, without a value, it will prompt the user for a hotkey on load\
+  ![](<../.gitbook/assets/image (220).png>)
+  * on alpha at - `https://vdo.ninja/alpha/?ptt`\
+
+
 #### December 4 <a href="#august-31" id="august-31"></a>
 
 * Added Server-Side-Events support to the VDO.Ninja API
