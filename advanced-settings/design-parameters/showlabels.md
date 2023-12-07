@@ -17,7 +17,7 @@ There are some preset style options, which can be passed to the parameter as a v
 
 Example: `&showlabels=ninjablue`
 
-<table><thead><tr><th width="210.9699570815451">Value</th><th>Description</th></tr></thead><tbody><tr><td>(no value given)</td><td>Generic styled display names</td></tr><tr><td><code>fire</code></td><td>Fire looking display names</td></tr><tr><td><code>ninjablue</code></td><td>VDO.Ninja styled display names</td></tr><tr><td><code>skype</code></td><td>Skype styled display names</td></tr><tr><td><code>teams</code></td><td>Microsoft Teams styled display names</td></tr><tr><td><code>toprounded</code></td><td>Rounded display names</td></tr><tr><td><code>zoom</code></td><td>Zoom styled display names</td></tr></tbody></table>
+<table><thead><tr><th width="210.9699570815451">Value</th><th>Description</th></tr></thead><tbody><tr><td>(no value given)</td><td>Generic styled display names</td></tr><tr><td><code>fire</code></td><td>Fire looking display names</td></tr><tr><td><code>ninjablue</code></td><td>VDO.Ninja styled display names</td></tr><tr><td><code>skype</code></td><td>Skype styled display names</td></tr><tr><td><code>teams</code></td><td>Microsoft Teams styled display names</td></tr><tr><td><code>toprounded</code></td><td>Top-center rounded display names</td></tr><tr><td><code>zoom</code></td><td>Zoom styled display names</td></tr><tr><td><code>rounded</code></td><td>Rounded lower-right names; bold</td></tr></tbody></table>
 
 ## Details
 
