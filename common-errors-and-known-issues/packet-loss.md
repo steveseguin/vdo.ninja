@@ -18,6 +18,7 @@ An Ethernet connection is highly recommended over WiFi.
 * The guest can also Tether their 4G LTE /w their WiFi using bonding apps like Speedify or with hardware from Peplink; these services can give you more control over network settings.
 * If using a smartphone, consider using a USB to Ethernet adapter instead. I have a video demonstrating how to do this here: [https://www.youtube.com/watch?v=abCuANblE5w](https://www.youtube.com/watch?v=abCuANblE5w)
 * Some users have mentioned that reducing their network's MTU size, or the size of their packets, has helped reduce packet loss over bad WiFi. You'll need to experiment with this, but 800 to 1000 might be in the range you can try in this case.
+* Improving the Wi-Fi network, such as switching network bands (5hz / 2.4ghz), buying a mesh-based multi-node access point setup for larger homes, changing network channels to account for frequency interference, updating to Wifi-6 or newer technologies, and moving the closer to the access point.
 
 ### If the issue isn't WiFi related
 
