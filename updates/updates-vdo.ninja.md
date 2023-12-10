@@ -1,5 +1,15 @@
 # Updates - VDO.Ninja
 
+#### December 9 <a href="#august-31" id="august-31"></a>
+
+* The '?i=' parameter used by VDO.Ninja can support URL encoded or non-URL encoded strings
+  * Added a sample to the index.html on how to preset such as a hard-coded value for self-deployments.
+  * [`&style=1`](../advanced-settings/design-parameters/style.md) will now apply to your own preview video also; so if using `&style`, muting your video will see it become hidden.
+  * If Meshcast fails to publish to a specific server, it will now try the next closest server, and repeat if needed. When all servers fail, it will show a message stating that Meshcast isn't available, with an option to switch to p2p mode.\
+    ![](<../.gitbook/assets/image (221).png>)
+
+\*\* changes on alpha at vdo.ninja/alpha
+
 #### December 6 <a href="#august-31" id="august-31"></a>
 
 * If using `&ptt` alone, without a value, it will prompt the user for a hotkey on load\

@@ -3,6 +3,25 @@
 [social-stream.md](../../steves-helper-apps/social-stream.md "mention")\
 [chat-overlay.md](../../steves-helper-apps/chat-overlay.md "mention")
 
+#### **December 10**
+
+*   Added a "Clear All" button, which will clear the dock of all messages (excluding pinned), stop TTS, clear any queue, and clear the current featured chat.
+
+    * Useful if you need an emergency clear button, in case someone spams the chat with something offensive or you are going live and want to clear your test messages
+    * A sample on how to use this clear via an API is provided in the sampleapi.html page; ie: `https://api.overlay.ninja/SESSIONIDHERE/clear`
+
+    <figure><img src="../../.gitbook/assets/image (222).png" alt=""><figcaption></figcaption></figure>
+* `&excludefiltered` can be added to the dock.html page in Social Stream to prevent filtered messages from auto-featuring, when auto feature is on.
+
+#### **December 9**
+
+* Fixed an issue with the emoji wall and not all icons being the same size.
+* Twitch chat pop out will not forward to the new chat site on stream end; it will stay on the original chat site despite a raid.
+* Some trival Twitch events can be optionally highlighted in the dock; twitch events like a viewers first time speaking in chat.
+* I've added code that tries to disable messages from being picked up still after the pop up has been forwarded to a new chat stream during a raid. You'll need to refresh the chat in this case to get it working again. This should help prevent chat messages from someone else's channel accidentally being picked up.
+* Fixed an issue with discord avatars not working anymore in social stream; plus an issue re: name/message blocking not working with Discord.
+* Improved support for YouNow.
+
 #### **December 4**
 
 * shareplay.tv added to Social Stream
