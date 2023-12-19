@@ -58,7 +58,7 @@
 		<meta property="twitter:image" content="./media/vdoNinja_logo_full.png" />
 		<meta name="msapplication-TileColor" content="#da532c" />
 		<meta name="theme-color" content="#0f131d" />
-		<link rel="stylesheet" href="./main.css?ver=375" />
+		<link rel="stylesheet" href="./main.css?ver=368" />
 		<script type="text/javascript" crossorigin="anonymous" src="./thirdparty/adapter.js"></script>
 		<style id="lightbox-animations" type="text/css"></style>
 		
@@ -90,9 +90,9 @@
 			<link itemprop="url" href="./media/vdoNinja_logo_full.png" />
 		</span>
 		
-		<script type="text/javascript" crossorigin="anonymous"  src="./thirdparty/CodecsHandler.js?ver=9"></script>
+		<script type="text/javascript" crossorigin="anonymous"  src="./thirdparty/CodecsHandler.js?ver=6"></script>
 		<script type="text/javascript" crossorigin="anonymous" src="./thirdparty/aes.js"></script>
-		<script type="text/javascript" crossorigin="anonymous" src="./webrtc.js?ver=738"></script>
+		<script type="text/javascript" crossorigin="anonymous" src="./webrtc.js?ver=732"></script>
 		<input id="zoomSlider" type="range" style="display: none;" />
 		<span id="electronDragZone" style="pointer-events: none; z-index:-10; position:absolute;top:0;left:0;width:100%;height:2%;-webkit-app-region: drag;min-height:20px;"></span>
 		<div id="header">
@@ -145,9 +145,9 @@
 			<div id="head7" class="hidden" data-translate="director-muted-you">The director has muted you.</div>
 			<div id="head8" class="hidden" data-translate="director-video-muted-you">The director has disabled your camera temporarily.</div>
 		</div>
-		 <div id="obsState" class="hidden" >ACTIVE</div>
 		<div id="controlButtons" class="hidden">
             <div class="controlPositioning">
+                <div id="obsState" class="hidden" >ACTIVE</div>
                 <div id="chatModule" class="hidden">
                     <a target="popup" id="popOutChat" onclick="createPopoutChat();"><i class="las la-external-link-alt"></i></a>
                     <div id="chatBody"> 
@@ -321,7 +321,7 @@
 									</b>
 								</div>
 								<input type="text" autocorrect="off" autocapitalize="none"  id="videoname1" placeholder="Enter a room name here" onkeydown="checkStrengthRoom(event, 'securityLevelRoom');" onchange="checkStrengthRoom(event, 'securityLevelRoom');" onkeyup="enterPressed(event, createRoom);" maxlength="30" style="max-width: 431px;width: 100%;font-size: 110%; padding: 5px;" />
-								<button ontouchstart="getById('videoname1').value = session.generateRandomString();getById('securityLevelRoom').style.display='none';" onmousedown="getById('videoname1').value = session.generateRandomString();getById('securityLevelRoom').style.display='none';" title="Generate a random room name" class="randomRoomName"><i class="las la-random"></i></button>
+								<button onclick="getById('videoname1').value = session.generateRandomString();getById('securityLevelRoom').style.display='none';" title="Generate a random room name" class="randomRoomName"><i class="las la-random"></i></button>
 								<div id="securityLevelRoom" style="display:none;margin-top:3px;position:relative;top:3px;font-size:0.8em;"></div>
 							</th>
 							
@@ -506,6 +506,7 @@
 							<p><span id="audioTipContext1"></span></p>
 						</div>
 					</div>
+					
 					<br style="line-height: 0;" />
 					<div id="headphonesDiv" class="audioMenu" aria-hidden="true">
 						<div class="title">
@@ -587,7 +588,7 @@
 					
 					<div id="oldiOSWarning" class="startupWarning hidden" title="Please update your version of iOS for best performance">
 						<i class="las la-exclamation-circle"></i>
-						<p><span data-translate="update-your-device">We've detected that you are using an old version of Apple iOS.<br /><br />Please consider updating if facing issues.</span></p>
+						<p><span data-translate="update-your-device">We've detected that you are using an old version of Apple iOS, which is known to have many issues.<br /><br />Please consider updating.</span></p>
 					</div>
 					
 				</div>
@@ -1623,10 +1624,6 @@
 							<i class="las la-compact-disc"></i>
 							<span data-translate="record-remote"> Record Remote</span>
 						</button>
-						<button data-action-type="recorder-google-drive-remote" title="The Remote Guest will record their local stream to their local drive. *experimental*" onclick="requestGoogleDriveRecord(this)">
-							<i class="las la-compact-disc"></i>
-							<span data-translate="google-drive-record"> Google Drive</span>
-						</button>
 						<button  class="mainonly" data-action-type="change-params" style="display:none" title="Change user parameters" onclick="promptUser('transferSettingsTemplate', this.dataset.UUID);">
 							<i class="las la-cog"></i>
 							<span data-translate="change-params">URL Params</span>
@@ -1792,19 +1789,6 @@
 						<i class="las la-plus"></i>
 					</button>
 				</span>
-				<div class="row two"> 
-                    <!-- Further Audio/Video Settings -->
-                    <div class="row two settingsWrapper" data-cluster="3">
-                        <button data-action-type="advanced-audio-settings" data-active="false" title="Remote Audio Settings" onclick="toggleAudioUser();event.preventDefault();event.stopPropagation();return false;">
-                            <i class="las la-sliders-h"></i>
-                            <span data-translate="advanced-audio-settings">Audio settings</span>
-                        </button>
-                        <button class="mainonly" data-action-type="advanced-camera-settings" data-active="false" title="Advanced Video Settings" onclick="toggleVideoUser();event.preventDefault();event.stopPropagation();return false;">
-                            <i class="las la-sliders-h"></i>
-                            <span data-translate="advanced-camera-settings">Video settings</span>
-                        </button>
-                    </div>
-				</div>
 			</div>	
 		</div>
 		
@@ -2301,19 +2285,19 @@
 							<option value="128">🎙️128-kbps</option>
 							<option value="256">🎙️256-kbps</option>
 						</select >
-						<select id="whipoutvbrcbr" title="Constant audio bitrate or variable audio bitrate" >
+						<select id="whipoutvbrcbr" title="Which audio bitrate target would you prefer?" >
 							<option value="cbr" selected>🎙️CBR</option>
 							<option value="vbr">🎙️VBR</option>
 						</select >
-						<select id="whipoutdenoise" title="Remove background noise, but may limit audio quality" >
+						<select id="whipoutdenoise" title="Which audio bitrate target would you prefer?" >
 							<option value="1" selected>🎙️Denoise On</option>
 							<option value="0">🎙️Denoise Off</option>
 						</select >
-						<select id="whipoutautogain" title="Let the browser control the mic's gain automatically" >
+						<select id="whipoutautogain" title="Which audio bitrate target would you prefer?" >
 							<option value="1" selected>🎙️Auto Gain On</option>
 							<option value="0">🎙️Auto Gain Off</option>
 						</select >
-						<select id="whipoutstereo" title="Stereo audio or mono; must have denoise off for this to work." >
+						<select id="whipoutstereo" title="Which audio bitrate target would you prefer?" >
 							<option value="1" selected>🎙️Stereo</option>
 							<option value="0">🎙️Mono</option>
 						</select >
@@ -2433,11 +2417,6 @@
 			</div>
 		</div>
 		
-		
-		<div id="progressContainer" class="hidden">
-			<div id="progressBar"></div>
-		</div>
-		
 		<div id="signalMeterTemplate" class="signal-meter hidden" data-cpu="0" data-level="0">
 			<i class="las la-signal"></i>
 			<i class="las la-fire-alt"></i>
@@ -2552,19 +2531,9 @@
 			
 			console.log("->> Note: Do not paste code into this console unless from a trusted source <<--")
 
-			
-			////   Are you wanting general site password protection for your self-deployment?
-			////   * You can also use HTTP Basic Authorization within your Web Server for more security
-			////   * You can also check out Cloudflare's Zero Trust gateway for Oauth/SSO protection
-			////   * Or if you want to add low-effort password to the site, you can uncomment the following code:
-			// var pass = prompt("Enter your password");
-			// if (pass!=="mypassword"){
-			//   document.body.innerHTML = "";
-			// }
-			//// End of low-effort password code
-			
+		
 			var session = WebRTC.Media; // session is a required global variable if configuring manually. Run before loading main.js but after webrtc.js.
-			session.version = "24.4";
+			session.version = "24.2b";
 			session.streamID = session.generateStreamID(); // randomly generates a streamID for this session. You can set your own programmatically if needed
 			
 			session.defaultPassword = "someEncryptionKey123"; // Change this password if self-deploying for added security/privacy
@@ -2678,14 +2647,30 @@
 			// session.record = false; // uncomment to block users from being able to record via vdo.ninja's built in recording function
 			// session.whipServerURL = "wss://whip.vdo.ninja"; // If you deploy your own whip websocket service
 			
-			// session.decrypted = session.decodeInvite("U2FsdGVkX1+d58DFIHoO3EQZSuX86ch4PqW2ouztnJ0="); // get a code from invite.cam
+			/////// ----- Example code for custom landing page, which asks for room and pass
+			// session.screenshare = true; // screen share mode
+			// var roomName = document.createElement("input");
+			// roomName.type = "text";
+			// roomName.placeholder = "Room name";
+			// getById("screenshare").replaceWith(roomName);
+			// var password = document.createElement("input");
+			// password.type = "text";
+			// password.placeholder = "Password";
+			// roomName.parentNode.appendChild(password);
+			// password.onchange = function(e){
+			//   session.password = e.target.value || session.defaultPassword;
+			// }
+			// roomName.onchange = function(e){
+			//   session.roomid = e.target.value;
+			// }
+			////////////// ---- end of custom landing page
 			
 		</script>
-		<script type="text/javascript" crossorigin="anonymous" id="lib-js" src="./lib.js?ver=1059"></script>
+		<script type="text/javascript" crossorigin="anonymous" id="lib-js" src="./lib.js?ver=1030"></script>
 		<!-- 
 		// If you wish to change branding, blank offers a good clean start.
 		<script type="text/javascript" id="main-js" src="./main.js" data-translation="blank"></script>
 		-->
-		<script type="text/javascript" crossorigin="anonymous" id="main-js" src="./main.js?ver=784"></script>
+		<script type="text/javascript" crossorigin="anonymous" id="main-js" src="./main.js?ver=767"></script>
 	</body>
 </html>

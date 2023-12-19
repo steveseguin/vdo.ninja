@@ -1,5 +1,7 @@
 <html>
-<head><title>Video with sensor overlayed data</title>
+<head>
+<title>Video with sensor overlayed data</title>
+<meta charset="UTF-8">
 <style>
 body{
 	padding:0;
@@ -11,6 +13,9 @@ iframe {
 	margin:0;
 	padding:0;
 	display:block;
+}
+
+#vdoninja {
 	width:100%;
 	height:100%;
 }
@@ -62,6 +67,19 @@ iframe {
 	<div id="overlay"></div>
 	<canvas id="canvas"></canvas>
 	<div id="container"></div>
+		<div id="map-container" style="position: relative;">
+		<iframe 
+			id="mapFrame" 
+			src="your_map_url" 
+			width="600" 
+			height="450" 
+			style="position: absolute; top: 0; left: 0; border: 0; width: 600px; height: 450px; display:none;">
+		</iframe>
+		<div style="position: absolute; top: 0; left: 0; width: 600px; height: 450px; z-index: 10; cursor: default;">
+		</div>
+		<span id="marker" style="position: absolute; top: 50px; left: 50%; transform: translate(-50%, calc(-50% - 15px)); font-size: 30px;display:none;">📍</span>
+		</div>
+	</div>
 <script>
 function getColor(value) {
   var hue = (Math.abs(value*100+50)).toString(10);
@@ -77,13 +95,6 @@ var canvasNew = true
 
 function plotData(speed, accel) { 
 
-
-	if (isNaN(speed)) {
-		speed = 0;
-	}
-	if (isNaN(accel)) {
-		accel = 0;
-	}
 
 	canvas.history_accel.push(accel);
 	canvas.history_speed.push(speed);
@@ -194,6 +205,7 @@ function loadIframe(url=false){
 	}
 	
 	iframe.src = iframesrc;
+	iframe.id = "vdoninja";
 	
 	document.getElementById("container").appendChild(iframe);
 	var outputWindow = document.getElementById("overlay");
@@ -206,6 +218,81 @@ function loadIframe(url=false){
 	var eventer = window[eventMethod];
 	var messageEvent = eventMethod === "attachEvent" ? "onmessage" : "message";
 
+	var mapBounds = null;
+	
+	function calculateBBox(lat, lon) {
+		// Calculate bounding box (bbox) based on the new latitude and longitude
+		// This requires some geographic calculations to ensure the map is centered
+		// and zoomed appropriately around the new marker position.
+		var delta = 0.05; // Determines the zoom level. Smaller delta = higher zoom
+		
+		mapBounds = {};
+		mapBounds.left = lon - delta;
+		mapBounds.bottom = lat - delta;
+		mapBounds.right = lon + delta;
+		mapBounds.top = lat + delta;
+		
+		return `${mapBounds.left},${mapBounds.bottom},${mapBounds.right},${mapBounds.top},`;
+	}
+	
+	function isMarkerOutsideMapBounds(markerLat, markerLon) {
+		if (!mapBounds){return true;}
+		return (
+			markerLon < mapBounds.left ||
+			markerLon > mapBounds.right ||
+			markerLat < mapBounds.bottom ||
+			markerLat > mapBounds.top
+		);
+	}
+	
+	function convertLatLngToPixel(lat, lon, mapBounds, mapWidth, mapHeight) {
+		// Calculate the range of the map in both dimensions
+		var lonRange = mapBounds.right - mapBounds.left;
+		var latRange = mapBounds.top - mapBounds.bottom;
+
+		// Calculate the position of the latitude and longitude relative to the map bounds
+		var relativeX = (lon - mapBounds.left) / lonRange;
+		var relativeY = (mapBounds.top - lat) / latRange; // Invert latitude because screen coordinates go top to bottom
+
+		// Convert these relative positions into pixel values
+		var x = relativeX * mapWidth;
+		var y = relativeY * mapHeight;
+
+		return { x: x, y: y };
+	}
+	
+	function updateMap(lat, lon) {
+		var iframemap = document.getElementById('mapFrame');
+		iframemap.style = "filter: invert(90%)";
+		var src = 'https://www.openstreetmap.org/export/embed.html?bbox='  + calculateBBox(lat, lon) + '&layer=mapnik';
+		iframemap.src = src;
+		iframemap.onload = function(){
+			iframemap.style.display = "block";
+			document.getElementById("marker").style.display = "block";
+		}
+	}
+	
+	function updateMarkerPosition(lat, lon) {
+	
+		if (isMarkerOutsideMapBounds(lat,lon)) {
+			updateMap(lat, lon); // Function to load a new map image
+		}
+		
+		// Convert lat, lon to pixel coordinates
+		var mapWidth = 600; // Width of your map in pixels
+		var mapHeight = 450; // Height of your map in pixels
+
+		var pixelCoords = convertLatLngToPixel(lat, lon, mapBounds, mapWidth, mapHeight);
+
+		// Update marker position
+		var marker = document.getElementById("marker");
+		marker.style.left = pixelCoords.x + 'px';
+		marker.style.top = pixelCoords.y + 'px';
+
+		// Check if marker is outside the current map bounds
+		
+	}
+
 	eventer(messageEvent, function (e) {
 		if (e.source != iframe.contentWindow){return} // reject messages send from other iframes
 		
@@ -213,10 +300,19 @@ function loadIframe(url=false){
 			//console.log(e.data.sensors);
 			
 			var speed = 0;
+			var lat = null;
+			var lon = null;
 			if (e.data.sensors.pos){
 				speed = e.data.sensors.pos.speed;
+				lat = e.data.sensors.pos.lat || null;
+				lon = e.data.sensors.pos.lon || null;
 				// e.data.sensors.pos.alt
 				// e.data.sensors.pos.t
+			}
+			
+			
+			if (isNaN(speed)) {
+				speed = 0;
 			}
 			
 			var accel = 0;
@@ -241,7 +337,12 @@ function loadIframe(url=false){
 			outputWindow.innerHTML += "speed: "+speed+"m/s<br />";          
 		
 			accel = parseInt(accel*100)/100;
-			outputWindow.innerHTML += "acceleration: " + accel + "m/s^2<br />";         
+			outputWindow.innerHTML += "acceleration: " + accel + "m/s^2<br />";        
+
+			if ((lat!==null) && (lon!==null)){
+				updateMarkerPosition(lat, lon);
+			}
+			
 			
 			//for (var key in e.data.sensors.lin) {
 			//	outputWindow.innerHTML += key + " lin: " +  e.data.sensors.lin[key] + "<br />";           

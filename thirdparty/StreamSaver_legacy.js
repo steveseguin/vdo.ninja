@@ -17,7 +17,8 @@ function streamSaverFunction(){
   //console.log(ponyfill);
   //console.log(isSecureContext);
   
-  let useBlobFallback = false; // we do not want to use blob recording because it can crash the browser.
+  // TODO: Must come up with a real detection test (#69)
+  let useBlobFallback = /constructor/i.test(global.HTMLElement) || !!global.safari || !!global.WebKitPoint;
   
   //console.log(useBlobFallback);
   
@@ -213,7 +214,7 @@ function streamSaverFunction(){
     WritableStream: global.WritableStream || ponyfill.WritableStream,
     supported: true,
     version: { full: '2.0.7', major: 2, minor: 0, dot: 7 },
-    mitm: './thirdparty/mitm.html?v=3'
+    mitm: './thirdparty/mitm.html?v=2'
   }
   
   //console.log(streamSaver);

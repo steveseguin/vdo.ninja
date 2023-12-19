@@ -4,34 +4,72 @@
 <script>
 
 function getSupportedMimeTypes(media, types, codecs) {
-  const isSupported = MediaRecorder.isTypeSupported;
   const supported = [];
   types.forEach((type) => {
     const mimeType = `${media}/${type}`;
-	acodecs.forEach((codec2) => {
-		codecs.forEach((codec) => [
-			mimeType+';codecs="'+codec+', '+codec2+'"',
-			mimeType+';codecs:"'+codec+', '+codec2+'"',
-			mimeType+';codecs="'+codec.toUpperCase()+', '+codec2.toUpperCase()+'"',
-			mimeType+';codecs:"'+codec.toUpperCase()+', '+codec2.toUpperCase()+'"'
-		  ].forEach(variation => {
-			if (isSupported(variation)){
-				try {
-					options.mimeType = variation;
-					new MediaRecorder(stream, options);
+	codecs.forEach((codec2) => { // video/webm;codecs=pcm
+		console.log(codec2);
+		codecs.forEach((codec) => {
+		try {
+			if (codec && codec2){
+				if (codec ==codec2){return;}
+				var x = [
+
+					mimeType+';codecs='+codec.toLowerCase()+', '+codec2.toLowerCase()+''//,
+					//mimeType+';codecs:'+codec.toLowerCase()+', '+codec2.toLowerCase()+'',
 					
-					mediaSource.addSourceBuffer(variation);
+				  ];
+				  for (var i=0;i<x.length;i++){
+					let variation = x[i];
+					if (MediaRecorder.isTypeSupported(variation)){
+						try {
+							//options.mimeType = variation;
+							//new MediaRecorder(stream, options);
+							
+							//mediaSource.addSourceBuffer(variation);
+							supported.push(variation);
+							break;
+							//console.log(options);
+						} catch(e){
+							//console.warn(options, e);
+							console.error(e);
+						}
+					}
+				}
+			} else if (codec){
+				
+				var x = [
+					mimeType+';codecs='+codec.toLowerCase()//,
+					//mimeType+';codecs:'+codec.toLowerCase()
 					
-					supported.push(variation);
-				} catch(e){
-					console.error(e);
+				  ];
+				  for (var i=0;i<x.length;i++){
+					let variation = x[i];
+					if (MediaRecorder.isTypeSupported(variation)){
+						try {
+							//options.mimeType = variation;
+							//console.log(options);
+							//new MediaRecorder(stream, options);
+							
+							//mediaSource.addSourceBuffer(variation);
+							
+							supported.push(variation);
+							break;
+							//console.log(options);
+						} catch(e){
+							//console.warn(options);
+							console.error(e);
+						}
+					}
 				}
 			}
-		}));
+			} catch(e){console.error(e);}
+		});
+		
 	});
-    if (isSupported(mimeType))
+    if (MediaRecorder.isTypeSupported(mimeType))
       supported.push(mimeType);
-  });
+    });
   return supported;
 };
 
@@ -39,15 +77,15 @@ function getSupportedMimeTypes(media, types, codecs) {
 var options = {};
 options.videoBitsPerSecond = parseInt(2500 * 1024);
 
-const videoTypes = ["webm", "ogg", "mp4", "x-matroska"];
-const audioTypes = ["webm", "ogg", "mp3", "x-matroska"];
-const codecs = ["vp9", "vp9.0", "vp8", "vp8.0", "avc1", "av1", "h265", "h.265", "h264", "h.264"] 
-const acodecs = ["opus", "pcm", "aac", "mpeg", "mp4a", "mp3", "vorbis"];
+const videoTypes = ["webm", "mpeg", "mp4", "x-matroska"];
+const audioTypes = ["webm", "mpeg",  "ogg", "x-matroska"];
+const codecs = ["vp9", "vp9.0", "vp8", "vp8.0", "avc1", "av1x", "av1", "h265", "h.265", "h264", "h.264", "av01.0.04M.08", "vp09.00.10.08", "avc1.42001E", ""] 
+const acodecs = ["opus", "pcm", "mp4a.40.2", "aac", "mpeg", "mp4a", "mp3", "vorbis", "L16", "wav", ""]; 
 
 document.getElementById("output").innerHTML= "";
 var supportedVideos = null;
 var supportedAudios = null;
-// Usage ------------------
+
 var stream = null;
 var mediaSource = new MediaSource();
 
@@ -58,18 +96,30 @@ video.setAttribute("playsinline","");
 video.src = URL.createObjectURL(mediaSource);
 
 mediaSource.addEventListener('sourceopen', sourceOpen);
-console.log("1");
+
 function sourceOpen(e) {
 	console.log("2");
 	navigator.mediaDevices.getUserMedia({audio:true,video:true}).then(function(s) {
 		stream = s;
-		
-		supportedVideos = getSupportedMimeTypes("video", videoTypes, codecs);
-		supportedAudios = getSupportedMimeTypes("audio", audioTypes, codecs);
+		console.log("START");
+		supportedAudios = getSupportedMimeTypes("audio", audioTypes, acodecs);
+		console.log("DONE AUDIO");
+		supportedVideos = getSupportedMimeTypes("video", videoTypes, [...codecs, ...acodecs]); // video/webm;codecs=pcm
 		
 		for (var i=0;i<supportedVideos.length;i++){
 			document.getElementById("output").innerHTML += supportedVideos[i]+"<br/>";
 		}
+		for (var i=0;i<supportedAudios.length;i++){
+			document.getElementById("output").innerHTML += supportedAudios[i]+"<br/>";
+		}
+		console.log("DONE");
+		stream.getTracks(x=>{
+			stream.removeTrack(x);
+			x.stop();
+			x =null;
+		});
+		stream=null;
+		s = null;
 	}).catch(function(err) {
 	  /* handle the error */
 	});

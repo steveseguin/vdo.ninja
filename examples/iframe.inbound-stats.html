@@ -1,0 +1,129 @@
+<html>
+<head><title>Basic IFRAME Inbound Stats sample</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+<meta content="text/html;charset=utf-8" http-equiv="Content-Type" />
+<style>
+body{
+	padding:0;
+	margin:0;
+	background-color:#003;
+	width:100%;
+	height:100%;
+	color:white;
+}
+
+iframe {
+	width:60%;
+	height:60%;
+	border:0;
+	margin:0;
+	padding:0;
+	display:block;
+}
+
+
+input{
+	padding:10px;
+	width:80%;
+	font-size:1.2em;
+	z-index: 1000;
+	margin:10%;
+}
+
+#startButton{
+	margin: 10px;
+    padding: 20px
+	display: block;
+	border-radius: 50px;
+	font-size:1.5em;
+	cursor: pointer;
+}
+
+#toggleMute{
+	margin: 10px;
+    padding: 30px 0;
+    border-radius: 50px;
+	font-size:1.5em;
+	display: block;
+    position: fixed;
+    bottom: 0;
+	width:200px;
+    left: calc(50% - 100px);
+}
+
+.pressed {
+	background-color: red;
+}
+
+button {
+	margin:10px;
+	padding:10px;
+}
+
+</style>
+</head>
+<body>
+    <div id="clean">
+        <center>
+			Create a simple vdo.ninja/?push=XXX link in a different tab, enter the stream ID below to view it and view the IFRAME API stats.  Stats will be printed to screen and console.<hr>
+            <input placeholder="Enter a VDON stream ID here" id="viewlink" type="text" />
+            <button id="startButton" onclick="loadIframes()" style="display:block;padding:10px;margin:10px;">START</button>
+        </center>
+    </div>
+	<div id="output"></div>
+    <script>
+        var iframe;
+
+        function sendSelfCommand(action, value = null) {
+            if (iframe && iframe.contentWindow) {
+                iframe.contentWindow.postMessage({ [action]: true}, '*');
+            }
+        }
+
+        function loadIframes() {
+            var streamID = document.getElementById("viewlink").value;
+            var path = "vdo.ninja";
+            var streamSrc = "https://" + path + "/?view=" + streamID;
+
+            document.getElementById("clean").style.display = "none";
+
+			var button = document.createElement("button");
+            button.id = "getDetailedState";
+            button.innerHTML = "Get Detailed State";
+            document.body.appendChild(button);
+
+            button.onclick = function () {
+                sendSelfCommand("getDetailedState", true);
+            };
+			
+			
+			var button2 = document.createElement("button");
+            button2.id = "getStats";
+            button2.innerHTML = "Get Full Connection Stats";
+            document.body.appendChild(button2);
+
+            button2.onclick = function () {
+                sendSelfCommand("getStats", true);
+            };
+
+            iframe = document.createElement("iframe");
+            iframe.allow = "autoplay;camera;microphone;fullscreen;picture-in-picture;";
+            iframe.src = streamSrc;
+            iframe.style.width = "100%";
+            iframe.style.height = "400px"; // Adjust the size as needed
+            document.body.appendChild(iframe);
+
+            window.addEventListener("message", function (e) {
+			    if (e.source === iframe.contentWindow) {
+					console.log(e.data);
+					if (e.data.action && (e.data.action == "view-stats-updated")){return;} // annoying stat.
+					document.getElementById("output").innerText += JSON.stringify(e.data);
+					document.getElementById("output").innerHTML += "<br />";
+				}
+            }, false);
+
+           
+        }
+    </script>
+</body>
+</html>

@@ -140,6 +140,7 @@
 
 			if ("action" in e.data && e.data.action !== "loudness") {
 				logOutput("child-page-action: "+e.data.action+"<br />")
+				console.log(e.data);
 			}
 
 			if ("streamIDs" in e.data){

@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Color Space Converter</title>
+	<style>
+	div{
+		display:inline-block;
+		}
+	</style>
+</head>
+<body>
+    <h1>Color Space Converter</h1>
+    
+	  <!-- Input to select an image -->
+    <input type="file" id="imageInput" accept="image/*">
+    <div>
+        <label for="colorSpaceSelect">Select Color Space:</label>
+        <select id="colorSpaceSelect">
+            <option value="rgb">RGB</option>
+            <option value="yuv2bgr">YUV2RGB</option>
+			<option value="yuv">YUV</option>
+			<option value="hsl">HSL</option>
+			<option value="hsv">HSV</option>
+            <option value="bgr">BGR</option>
+			<option value="lab">LAB</option>
+			<option value="hue1">HUE1</option>
+			<option value="hue2">HUE2</option>
+			<option value="hue3">HUE3</option>
+			<option value="hue4">HUE4</option>
+			<option value="hue5">HUE5</option>
+			<option value="hue6">HUE6</option>
+			
+            <!-- Add more color spaces as needed -->
+        </select>
+    </div>
+		<br />
+	 <!-- Canvas to display the original image -->
+	<div>
+		original
+		<canvas id="originalCanvas" width="400" height="400"></canvas>
+	</div>
+    
+    <!-- Canvas to display the converted image -->
+	<div>
+		converted
+		<canvas id="convertedCanvas" width="400" height="400"></canvas>
+	</div>
+    <script>
+	
+		function convertRGBtoYUV(imageData) {
+			const data = imageData.data;
+			const width = imageData.width;
+			const height = imageData.height;
+
+			for (let i = 0; i < data.length; i += 4) {
+				const r = data[i];
+				const g = data[i + 1];
+				const b = data[i + 2];
+
+				const y = 0.299 * r + 0.587 * g + 0.114 * b;
+				const u = -0.14713 * r - 0.288862 * g + 0.436 * b;
+				const v = 0.615 * r - 0.51498 * g - 0.10001 * b;
+
+				data[i] = y;
+				data[i + 1] = u + 128;
+				data[i + 2] = v + 128;
+			}
+
+			return imageData;
+		}
+		
+		function convertRGBtoXYZ(imageData) {
+			const data = imageData.data;
+
+			for (let i = 0; i < data.length; i += 4) {
+				const r = data[i] / 255;
+				const g = data[i + 1] / 255;
+				const b = data[i + 2] / 255;
+
+				const gamma = 2.4;
+				const rGamma = Math.pow(r, gamma);
+				const gGamma = Math.pow(g, gamma);
+				const bGamma = Math.pow(b, gamma);
+
+				const x = rGamma * 0.4124564 + gGamma * 0.3575761 + bGamma * 0.1804375;
+				const y = rGamma * 0.2126729 + gGamma * 0.7151522 + bGamma * 0.0721750;
+				const z = rGamma * 0.0193339 + gGamma * 0.1191920 + bGamma * 0.9503041;
+
+				data[i] = x * 100;
+				data[i + 1] = y * 100;
+				data[i + 2] = z * 100;
+			}
+
+			return imageData;
+		}
+
+		function convertRGBtoHSL(imageData) {
+			const data = imageData.data;
+
+			for (let i = 0; i < data.length; i += 4) {
+				const r = data[i] / 255;
+				const g = data[i + 1] / 255;
+				const b = data[i + 2] / 255;
+
+				const max = Math.max(r, g, b);
+				const min = Math.min(r, g, b);
+
+				let h, s, l = (max + min) / 2;
+
+				if (max === min) {
+					h = s = 0; // achromatic
+				} else {
+					const d = max - min;
+					s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+					switch (max) {
+						case r: h = (g - b) / d + (g < b ? 6 : 0); break;
+						case g: h = (b - r) / d + 2; break;
+						case b: h = (r - g) / d + 4; break;
+					}
+					h /= 6;
+				}
+
+				data[i] = h * 360;
+				data[i + 1] = s * 100;
+				data[i + 2] = l * 100;
+			}
+
+			return imageData;
+		}
+
+		function convertRGBtoBGR(imageData) {
+			const data = imageData.data;
+
+			for (let i = 0; i < data.length; i += 4) {
+				const r = data[i];
+				const g = data[i + 1];
+				const b = data[i + 2];
+
+				data[i] = b;
+				data[i + 1] = g;
+				data[i + 2] = r;
+			}
+
+			return imageData;
+		}
+		function convertRGBtoHSV(imageData) {
+			const data = imageData.data;
+
+			for (let i = 0; i < data.length; i += 4) {
+				const r = data[i] / 255;
+				const g = data[i + 1] / 255;
+				const b = data[i + 2] / 255;
+
+				const max = Math.max(r, g, b);
+				const min = Math.min(r, g, b);
+				let h, s, v = max;
+
+				const d = max - min;
+				s = max === 0 ? 0 : d / max;
+
+				if (max === min) {
+					h = 0; // achromatic
+				} else {
+					switch (max) {
+						case r: h = (g - b) / d + (g < b ? 6 : 0); break;
+						case g: h = (b - r) / d + 2; break;
+						case b: h = (r - g) / d + 4; break;
+					}
+					h /= 6;
+				}
+
+				data[i] = h * 360;
+				data[i + 1] = s * 100;
+				data[i + 2] = v * 100;
+			}
+
+			return imageData;
+		}
+		
+		function convertRGBtoLAB(imageData) {
+			const data = imageData.data;
+
+			for (let i = 0; i < data.length; i += 4) {
+				const r = data[i] / 255;
+				const g = data[i + 1] / 255;
+				const b = data[i + 2] / 255;
+
+				// Apply gamma correction (assumes gamma = 2.2)
+				const gamma = 2.2;
+				const rGamma = Math.pow(r, gamma);
+				const gGamma = Math.pow(g, gamma);
+				const bGamma = Math.pow(b, gamma);
+
+				// Convert RGB to XYZ
+				const x = rGamma * 0.4124564 + gGamma * 0.3575761 + bGamma * 0.1804375;
+				const y = rGamma * 0.2126729 + gGamma * 0.7151522 + bGamma * 0.0721750;
+				const z = rGamma * 0.0193339 + gGamma * 0.1191920 + bGamma * 0.9503041;
+
+				// Normalize XYZ to LAB
+				const epsilon = 0.008856;
+				const kappa = 903.3;
+
+				const xNorm = x / 0.950456;
+				const yNorm = y / 1.000000;
+				const zNorm = z / 1.088754;
+
+				const fx = xNorm > epsilon ? Math.pow(xNorm, 1 / 3) : (kappa * xNorm + 16) / 116;
+				const fy = yNorm > epsilon ? Math.pow(yNorm, 1 / 3) : (kappa * yNorm + 16) / 116;
+				const fz = zNorm > epsilon ? Math.pow(zNorm, 1 / 3) : (kappa * zNorm + 16) / 116;
+
+				const L = (116 * fy) - 16;
+				const A = (fx - fy) * 500;
+				const B = (fy - fz) * 200;
+
+				// Update image data with LAB values
+				data[i] = L;
+				data[i + 1] = A;
+				data[i + 2] = B;
+			}
+
+			return imageData;
+		}
+		
+		function adjustHue(imageData, shiftAmount) {
+			const data = imageData.data;
+			const shiftRadians = (shiftAmount / 180) * Math.PI; // Convert degrees to radians
+
+			for (let i = 0; i < data.length; i += 4) {
+				const r = data[i];
+				const g = data[i + 1];
+				const b = data[i + 2];
+
+				// Convert RGB to HSL
+				const max = Math.max(r, g, b);
+				const min = Math.min(r, g, b);
+				let h, s, l = (max + min) / 2;
+
+				if (max === min) {
+					h = s = 0; // achromatic
+				} else {
+					const d = max - min;
+					s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+					switch (max) {
+						case r: h = (g - b) / d + (g < b ? 6 : 0); break;
+						case g: h = (b - r) / d + 2; break;
+						case b: h = (r - g) / d + 4; break;
+					}
+					h /= 6;
+				}
+
+				// Shift the hue
+				h = (h + (shiftRadians / (2 * Math.PI))) % 1;
+				if (h < 0) {
+					h += 1;
+				}
+
+				// Convert HSL back to RGB
+				let rNew, gNew, bNew;
+				if (s === 0) {
+					rNew = gNew = bNew = l; // Achromatic
+				} else {
+					const hue2rgb = (p, q, t) => {
+						if (t < 0) t += 1;
+						if (t > 1) t -= 1;
+						if (t < 1 / 6) return p + (q - p) * 6 * t;
+						if (t < 1 / 2) return q;
+						if (t < 2 / 3) return p + (q - p) * (2 / 3 - t) * 6;
+						return p;
+					};
+					const q = l < 0.5 ? l * (1 + s) : l + s - l * s;
+					const p = 2 * l - q;
+					rNew = hue2rgb(p, q, h + 1 / 3);
+					gNew = hue2rgb(p, q, h);
+					bNew = hue2rgb(p, q, h - 1 / 3);
+				}
+
+				data[i] = rNew;
+				data[i + 1] = gNew;
+				data[i + 2] = bNew;
+			}
+
+			return imageData;
+		}
+		
+		function convertYUVImageToRGB(yuvImageData) {
+			const yuvData = yuvImageData.data;
+			const rgbData = new Uint8ClampedArray(yuvData.length);
+
+			for (let i = 0; i < yuvData.length; i += 4) {
+				const y = yuvData[i];
+				const u = yuvData[i + 1] - 128;
+				const v = yuvData[i + 2] - 128;
+
+				// Convert YUV to RGB
+				const r = Math.max(0, Math.min(255, (298 * y + 409 * v + 128) >> 8));
+				const g = Math.max(0, Math.min(255, (298 * y - 100 * u - 208 * v + 128) >> 8));
+				const b = Math.max(0, Math.min(255, (298 * y + 516 * u + 128) >> 8));
+
+				// Store RGB values in the new array
+				rgbData[i] = r;
+				rgbData[i + 1] = g;
+				rgbData[i + 2] = b;
+				rgbData[i + 3] = 255; // Alpha channel (fully opaque)
+			}
+
+			// Create a new RGB image data object
+			const rgbImageData = new ImageData(rgbData, yuvImageData.width, yuvImageData.height);
+
+			return rgbImageData;
+		}
+
+        // Function to handle image selection and conversion
+        function handleImage() {
+            const imageInput = document.getElementById("imageInput");
+            const originalCanvas = document.getElementById("originalCanvas");
+            const convertedCanvas = document.getElementById("convertedCanvas");
+            const colorSpaceSelect = document.getElementById("colorSpaceSelect");
+
+            const ctxOriginal = originalCanvas.getContext("2d");
+            const ctxConverted = convertedCanvas.getContext("2d");
+
+            const image = new Image();
+            image.src = URL.createObjectURL(imageInput.files[0]);
+
+            image.onload = function () {
+                // Display the original image
+                ctxOriginal.drawImage(image, 0, 0, originalCanvas.width, originalCanvas.height);
+
+                // Convert the image based on the selected color space
+                const colorSpace = colorSpaceSelect.value;
+                if (colorSpace === "rgb") {
+                    // No conversion needed for RGB
+                    ctxConverted.drawImage(image, 0, 0, convertedCanvas.width, convertedCanvas.height);
+                } else if (colorSpace === "yuv") {
+                    const imageData = ctxOriginal.getImageData(0, 0, originalCanvas.width, originalCanvas.height);
+					const convertedImageData = convertRGBtoYUV(imageData);
+					ctxConverted.putImageData(convertedImageData, 0, 0);
+				} else if (colorSpace === "yuv2bgr") {
+                    const imageData = ctxOriginal.getImageData(0, 0, originalCanvas.width, originalCanvas.height);
+					const convertedImageData = convertYUVImageToRGB(imageData);
+					ctxConverted.putImageData(convertedImageData, 0, 0);
+                } else if (colorSpace === "bgr") {
+					const imageData = ctxOriginal.getImageData(0, 0, originalCanvas.width, originalCanvas.height);
+					const convertedImageData = convertRGBtoBGR(imageData);
+					ctxConverted.putImageData(convertedImageData, 0, 0);
+                } else if (colorSpace === "lab") {
+					// Perform LAB conversion
+					const imageData = ctxOriginal.getImageData(0, 0, originalCanvas.width, originalCanvas.height);
+					const convertedImageData = convertRGBtoLAB(imageData);
+					ctxConverted.putImageData(convertedImageData, 0, 0);
+				} else if (colorSpace === "hsl") {
+					// Perform HSL conversion
+					const imageData = ctxOriginal.getImageData(0, 0, originalCanvas.width, originalCanvas.height);
+					const convertedImageData = convertRGBtoHSL(imageData);
+					ctxConverted.putImageData(convertedImageData, 0, 0);
+				} else if (colorSpace === "hsv") {
+					// Perform HSV conversion
+					const imageData = ctxOriginal.getImageData(0, 0, originalCanvas.width, originalCanvas.height);
+					const convertedImageData = convertRGBtoHSV(imageData);
+					ctxConverted.putImageData(convertedImageData, 0, 0);
+				} else if (colorSpace === "xyz") {
+					// Perform XYZ conversion
+					const imageData = ctxOriginal.getImageData(0, 0, originalCanvas.width, originalCanvas.height);
+					const convertedImageData = convertRGBtoXYZ(imageData);
+					ctxConverted.putImageData(convertedImageData, 0, 0);
+				} else if (colorSpace === "hue1") {
+					// Perform XYZ conversion
+					const imageData = ctxOriginal.getImageData(0, 0, originalCanvas.width, originalCanvas.height);
+					const adjustedImageData = adjustHue(imageData, 45);
+					ctxConverted.putImageData(adjustedImageData, 0, 0);
+				} else if (colorSpace === "hue2") {
+					// Perform XYZ conversion
+					const imageData = ctxOriginal.getImageData(0, 0, originalCanvas.width, originalCanvas.height);
+					const adjustedImageData = adjustHue(imageData, 30);
+					ctxConverted.putImageData(adjustedImageData, 0, 0);
+				} else if (colorSpace === "hue3") {
+					// Perform XYZ conversion
+					const imageData = ctxOriginal.getImageData(0, 0, originalCanvas.width, originalCanvas.height);
+					const adjustedImageData = adjustHue(imageData, -30);
+					ctxConverted.putImageData(adjustedImageData, 0, 0);
+				} else if (colorSpace === "hue4") {
+					// Perform XYZ conversion
+					const imageData = ctxOriginal.getImageData(0, 0, originalCanvas.width, originalCanvas.height);
+					const adjustedImageData = adjustHue(imageData, -45);
+					ctxConverted.putImageData(adjustedImageData, 0, 0);
+				} else if (colorSpace === "hue5") {
+					// Perform XYZ conversion
+					const imageData = ctxOriginal.getImageData(0, 0, originalCanvas.width, originalCanvas.height);
+					const adjustedImageData = adjustHue(imageData, 90);
+					ctxConverted.putImageData(adjustedImageData, 0, 0);
+				}  else if (colorSpace === "hue6") {
+					// Perform XYZ conversion
+					const imageData = ctxOriginal.getImageData(0, 0, originalCanvas.width, originalCanvas.height);
+					const adjustedImageData = adjustHue(imageData, 180);
+					ctxConverted.putImageData(adjustedImageData, 0, 0);
+				}
+            };
+        }
+
+        // Attach the handleImage function to the input change event
+        const imageInput = document.getElementById("imageInput");
+        imageInput.addEventListener("change", handleImage);
+		
+		const colorSpaceSelect = document.getElementById("colorSpaceSelect");
+		colorSpaceSelect.addEventListener("change", handleImage);
+    </script>
+</body>
+</html>

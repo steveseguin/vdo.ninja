@@ -3,6 +3,8 @@
 var cryptoKey = false; // 'aabbccddeeff00112233445566778899';
 const IV_LENGTH = 16; // AES-CBC requires a 16-byte IV
 
+var lyraCodecModule = false;
+
 var EncryptionFailedMessage = null;
 async function encodeFunction(encodedFrame, controller) {
 	if (cryptoKey){
@@ -81,6 +83,44 @@ async function decryptAES(encryptedData, key, iv) {
 	);
 }
 
+function lyraEncodeFunction(encodedFrame, controller) { // Snippet is Apache 2.0 licenced. Source: https://github.com/Flash-Meeting/lyra-webrtc
+	const inputDataArray = new Uint8Array(encodedFrame.data);
+
+	const inputBufferPtr = lyraCodecModule._malloc(encodedFrame.data.byteLength);
+	const encodedBufferPtr = lyraCodecModule._malloc(1024);
+
+	lyraCodecModule.HEAPU8.set(inputDataArray, inputBufferPtr);
+	const length = lyraCodecModule.encode(inputBufferPtr, inputDataArray.length, 16000, encodedBufferPtr);
+
+	const newData = new ArrayBuffer(length);
+	if (length > 0){
+		const newDataArray = new Uint8Array(newData);
+		newDataArray.set(lyraCodecModule.HEAPU8.subarray(encodedBufferPtr, encodedBufferPtr + length));
+	}
+	lyraCodecModule._free(inputBufferPtr);
+	lyraCodecModule._free(encodedBufferPtr);
+	encodedFrame.data = newData;
+	controller.enqueue(encodedFrame);
+}
+function lyraDecodeFunction(encodedFrame, controller) { // Apache 2.0 licenced. Source: https://github.com/Flash-Meeting/lyra-webrtc
+	const newData = new ArrayBuffer(16000 * 0.02 * 2);
+	if (encodedFrame.data.byteLength > 0) {
+		const inputDataArray = new Uint8Array(encodedFrame.data);
+		const inputBufferPtr = lyraCodecModule._malloc(encodedFrame.data.byteLength);
+		const outputBufferPtr = lyraCodecModule._malloc(2048);
+		lyraCodecModule.HEAPU8.set(inputDataArray, inputBufferPtr);
+		const length = lyraCodecModule.decode(inputBufferPtr,
+			inputDataArray.length, 16000,
+			outputBufferPtr);
+		const newDataArray = new Uint8Array(newData);
+		newDataArray.set(lyraCodecModule.HEAPU8.subarray(outputBufferPtr, outputBufferPtr + length));
+		lyraCodecModule._free(inputBufferPtr);
+		lyraCodecModule._free(outputBufferPtr);
+	}
+	encodedFrame.data = newData;
+	controller.enqueue(encodedFrame);
+}
+
 function handleTransform(operation, readable, writable) {
 	if (operation === 'encode') {
 		const transformStream = new TransformStream({
@@ -92,7 +132,54 @@ function handleTransform(operation, readable, writable) {
 			transform: decodeFunction,
 		});
 		readable.pipeThrough(transformStream).pipeTo(writable);
-	}
+		
+	} else if (operation === 'lyradecode') {
+		const transformStream = new TransformStream({
+			transform: lyraDecodeFunction,
+		});
+		readable.pipeThrough(transformStream).pipeTo(writable);	
+	} else if (operation === 'lyraencode') {
+		const transformStream = new TransformStream({
+			transform: lyraEncodeFunction,
+		});
+		readable.pipeThrough(transformStream).pipeTo(writable);	
+	} else if (operation === 'redencode') {
+        const transformStream = new TransformStream({
+            transform: (chunk, controller) => {
+				controller.enqueue(chunk);
+				/* const clonedChunk = new EncodedAudioChunk({
+				  type: chunk.type,
+				  timestamp: chunk.timestamp,
+				  // .. i need a way to clone the binary data here
+				  data: cloneChunkData(chunk)
+				});
+				controller.enqueue(clonedChunk); */
+            },
+        });
+        readable.pipeThrough(transformStream).pipeTo(writable);
+    } else if (operation === 'reddecode') {
+        const receivedChunks = new Set();
+        const transformStream = new TransformStream({
+            transform: (chunk, controller) => {
+                const chunkId = chunk.timestamp;
+                if (receivedChunks.has(chunkId)) {
+                    // If it's a duplicate, ignore it
+                    return;
+                }
+                receivedChunks.add(chunkId);
+                controller.enqueue(chunk);
+            },
+        });
+        readable.pipeThrough(transformStream).pipeTo(writable);
+		
+    } else if (operation === 'pass') {
+        const transformStream = new TransformStream({
+            transform: (chunk, controller) => {
+                controller.enqueue(chunk);
+            },
+        });
+        readable.pipeThrough(transformStream).pipeTo(writable);
+    } 
 }
 
 if (self.RTCTransformEvent) {
@@ -101,7 +188,6 @@ if (self.RTCTransformEvent) {
 		handleTransform(transformer.options.operation, transformer.readable, transformer.writable);
 	};
 }
-
 onmessage = async (event) => {
 	if (event.data.cryptoKey) {
 		cryptoKey = event.data.cryptoKey;
@@ -126,8 +212,10 @@ onmessage = async (event) => {
 		} else {
 			self.postMessage('WARNING: crypto key could Not be generated');
 		}
+	} else if (event.data.lyraCodecModule) {
+		lyraCodecModule = event.data.lyraCodecModule;
 	}
-	if (event.data.operation === 'encode' || event.data.operation === 'decode') {
+	if (event.data.operation) {
 		return handleTransform(event.data.operation, event.data.readable, event.data.writable);
 	}
 };

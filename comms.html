@@ -3,7 +3,7 @@
 	<title>Comms app</title>
 	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
 	<meta content="text/html;charset=utf-8" http-equiv="Content-Type" />
-	<script src="./thirdparty/jquery/jquery-3.6.0.js?asdf"></script>
+	<script src="./thirdparty/jquery/jquery-3.6.0.js?v=2"></script>
     <script src="./thirdparty/jquery/jquery-ui.js"></script>
 	<link rel="stylesheet" href="./thirdparty/jquery/jquery-ui.css">
 	<link rel="shortcut icon" href="data:image/x-icon;," type="image/x-icon" />
@@ -1134,6 +1134,8 @@
 	}
 	
 	
+	
+	
 	function randomRoomName(){
 		document.getElementById("roomname").value = generateString(8);
 	}
@@ -1826,6 +1828,14 @@
 		
 		iframe.onload = function(){
 			iframe.contentWindow.postMessage({ groups: savedSession.activeGroups ,  groupView: savedSession.activeViewGroups }, "*"); 
+		}
+		
+		var params = window.location.search || "";
+		if (params.startsWith("?")){
+			params = params.slice(1);
+			iframesrc = iframesrc + "&" + params
+		} else {
+			iframesrc = iframesrc + params
 		}
 		
 		iframe.src = iframesrc;

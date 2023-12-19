@@ -137,6 +137,21 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 			session.showControls = false;
 		}
 	}
+	if (urlParams.has('forcecontrols')){
+		session.showControls = 2;
+		function keepControls () {
+		  var tmp = document.activeElement;
+		  document.querySelectorAll("video").forEach(ele=>{
+			  ele.focus();
+			  ele.removeAttribute('controls');
+			  ele.setAttribute('controls', '');
+		  });
+		  tmp.focus();
+		}
+		getById("main").classList.add("forcecontrols");
+		setInterval(function(){keepControls();},100);
+		
+	}
 	if (urlParams.has('nocontrols')) {
 		session.showControls = false; // show the video control bar
 	}
@@ -498,8 +513,8 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		session.audioEffects = false; // disable audio inbound effects also.
 		session.audioMeterGuest = false;
 	} else if (iOS || iPad) {
-		if (SafariVersion && SafariVersion<16){
-			getById("oldiOSWarning").classList.remove('hidden');
+		if (SafariVersion && SafariVersion<17){
+			getById("oldiOSWarning").classList.remove('hidden'); // update this to 17 at some point.
 		}
 		session.mobile = true;
 		session.audioEffects = false; // disable audio inbound effects also.
@@ -640,10 +655,11 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 	//	getById("hideusers").classList.add("hidden");
 	//}
 	
-	if (urlParams.has('meshcast')) {
+	if (urlParams.has('meshcast') && !urlParams.has('meshcastfailed')) {
 		session.meshcast = urlParams.get('meshcast') || "any";
 		meshcast(true);
 	}
+	
 	if (urlParams.has('meshcastcode') || urlParams.has('mccode')) {
 		session.meshcastCode = urlParams.get('meshcastcode') ||  urlParams.get('mccode')  || false
 	}
@@ -962,8 +978,14 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 	if (urlParams.has('mididevice')){
 		session.midiDevice =  parseInt(urlParams.get('mididevice')) || false;
 	}
-	if (session.midiDevice){
-		session.midiDevice = parseInt(session.midiDevice);
+	
+	
+	if (urlParams.has('ptt')){
+		if (urlParams.get('ptt')){
+			setHotKeyAuto(urlParams.get('ptt'));
+		} else {
+			promptAlt("Select a hotkey", true, false, getById("pptHotKey").value, false, false, true);
+		}
 	}
 	
 	if (directorLanding) { 
@@ -1314,6 +1336,8 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 			} else if (SafariVersion){
 				if (macOS){
 					warnUser("It is recommended to use Chrome instead of Safari if doing local media recordings.");
+				} else if (SafariVersion<=15){
+					warnUser("Please update your device.\n\nOlder versions of Safari may crash after recording for a few minutes.");
 				} else {
 					warnUser("Local media recordings are an experimental feature on Apple devices.\n\nPlease at least test it out a few times first.");
 				}
@@ -1624,22 +1648,26 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 	}
 	
 	if (urlParams.has('js')){  // ie: &js=https%3A%2F%2Fvdo.ninja%2Fexamples%2Ftestjs.js
-		console.warn("Third-party Javascript has been injected into the code. Security cannot be ensured.");
-		var jsURL = urlParams.get('js');
-		jsURL = decodeURI(jsURL);
-		log(jsURL);
-		// type="text/javascript" crossorigin="anonymous"
-		var externalJavaascript = document.createElement('script');
-		externalJavaascript.type = 'text/javascript';
-		externalJavaascript.crossorigin = 'anonymous';
-		externalJavaascript.src = jsURL;
-		externalJavaascript.onerror = function() {
-			warnlog("Third-party Javascript failed to load");
-		};
-		externalJavaascript.onload = function() {
-			log("Third-party Javascript loaded");
-		};
-		document.head.appendChild(externalJavaascript);
+		if ((window !== window.top) || !(window.location.hostname.endsWith('vdo.ninja') || window.location.hostname.endsWith('rtc.ninja') || window.location.hostname.endsWith('versus.cam') || window.location.hostname.endsWith('invite.cam'))){
+			console.warn("Third-party Javascript has been injected into the code. Security cannot be ensured.");
+			var jsURL = urlParams.get('js');
+			jsURL = decodeURI(jsURL);
+			log(jsURL);
+			// type="text/javascript" crossorigin="anonymous"
+			var externalJavaascript = document.createElement('script');
+			externalJavaascript.type = 'text/javascript';
+			externalJavaascript.crossorigin = 'anonymous';
+			externalJavaascript.src = jsURL;
+			externalJavaascript.onerror = function() {
+				warnlog("Third-party Javascript failed to load");
+			};
+			externalJavaascript.onload = function() {
+				log("Third-party Javascript loaded");
+			};
+			document.head.appendChild(externalJavaascript);
+		} else {
+			console.error("For security/privacy purposes, Javascript injection is now only allowed on self-hosted instances or if VDO.Ninja is hosted within an IFRAME"); // I won't have control in those cases anyways.
+		}
 	}
 	
 	if (urlParams.has("base64js") || urlParams.has("b64js") || urlParams.has("jsbase64") || urlParams.has("jsb64")) {
@@ -2626,7 +2654,6 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		}, session.forceRetry*1000);
 	}
 	
-	session.dbx = false;
 	if (urlParams.get('dropbox')){
 		loadScript("https://cdnjs.cloudflare.com/ajax/libs/dropbox.js/10.34.0/Dropbox-sdk.min.js", ()=>{
 			log("Loaded dropbox SDK");
@@ -2636,6 +2663,9 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 				resumeDropbox();
 			} catch(e){errorlog(e);}
 		});
+	}
+	if (urlParams.has('gdrive')){
+		session.gdrive = {};
 	}
 	
 	try {
@@ -2704,15 +2734,20 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		
 		if (!urlParams.has('vdo')){
 			getById("videoMenu").style.display = "none";
+			getById("videoMenu").classList.add("hidden");
+			// getById("videoMenu2").style.display = "none";
+			// getById("videoMenu2").classList.add("hidden");
+			// getById("videoMenu3").style.display = "none";
+			// getById("videoMenu3").classList.add("hidden");
 		}
 		log("session.videoDevice:" + session.videoDevice);
 	}
 	
 	
 	// audioDevice
-	if (urlParams.has('audiodevice') || urlParams.has('adevice') || urlParams.has('ad') || urlParams.has('device') || urlParams.has('d')) {
+	if (urlParams.has('audiodevice') || urlParams.has('adevice') || urlParams.has('ad') || urlParams.has('device') || urlParams.has('d') || urlParams.has('ado')) {
 
-		session.audioDevice = urlParams.get("audiodevice") || urlParams.get("adevice") || urlParams.get("ad") || urlParams.get("device") || urlParams.get("d");
+		session.audioDevice = urlParams.get("audiodevice") || urlParams.get("adevice") || urlParams.get("ad") || urlParams.get("device") || urlParams.get("d") || urlParams.get("ado");
 
 		if (session.audioDevice === null) {
 			session.audioDevice = "1";
@@ -2739,12 +2774,16 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		} else {
 			session.audioDevice = session.audioDevice.split(",");
 		}
+		
+		
 		getById("headphonesDiv").style.display = "none";
 		getById("headphonesDiv2").style.display = "none";
-		
-		if (typeof session.audioDevice !== "object"){
+	
+		if ((typeof session.audioDevice !== "object") && !urlParams.has('ado')){
 			getById("audioMenu").style.display = "none";	
 			getById("audioScreenShare1").style.display = "none";
+			getById("audioMenu").classList.add("hidden");
+			getById("audioScreenShare1").classList.add("hidden");
 		}
 		
 		if (session.audioDevice){ // 0 or false, do not triger
@@ -2944,6 +2983,7 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		session.chunked = parseInt(urlParams.get('chunked')) || 2500; // sender side; enables to allows.
 		// session.alpha = true;
 	}
+	
 	if (urlParams.has('nochunk') || urlParams.has('nochunked')) { // viewer side
 		session.nochunk = true;
 	}
@@ -2973,8 +3013,15 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 	}
 	
 	if (urlParams.has('debug')){
-		session.debug=true;
-		debugStart();
+		DebugLog=true;
+		if (!errorReport){
+			errorReport = [];
+		}
+		if (urlParams.get('debug')=="1"){
+			debugStart();
+		} else if (urlParams.get('debug')){
+			debugStart(urlParams.get('debug'));
+		}
 	}
 	
 	if (urlParams.has('group') || urlParams.has('groups')) {
@@ -3046,6 +3093,14 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 	if (urlParams.has('screensharecontenthint') || urlParams.has('sscontenthint')  || urlParams.has('screensharecontenttype') || urlParams.has('sscontent') || urlParams.has('sshint')) {
 		session.screenshareContentHint = urlParams.get('screensharecontenthint') || urlParams.get('sscontenthint') || urlParams.get('screensharecontenttype') || urlParams.get('sscontent') || urlParams.get('sshint') || "detail";
 	}
+	
+	if (urlParams.has('vred')){
+		session.videoErrorCorrection = true;
+	}
+	if (urlParams.has('pvred')){
+		session.preferredVideoErrorCorrection = true;
+	}
+	
 
 	if (urlParams.has('codec') || urlParams.has('codecs') || urlParams.has('videocodec')) {
 		log("codecs CHANGED");
@@ -3073,12 +3128,28 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 	
 	
 	
+	if (urlParams.has('redaudio')) { // just for experimenting
+		session.redAudio = true;
+	}
+	if (urlParams.has('fecaudio')) { //
+		session.fecAudio = true;
+	}
+	if (urlParams.has('predaudio')) { //
+		session.predAudio = true;
+	}
+	if (urlParams.has('pfecaudio')) { //
+		session.pfecAudio = true;
+	}
+	
 	if (urlParams.has('audiocodec')) {
 		log("CODEC CHANGED");
 		session.audioCodec = urlParams.get('audiocodec') || false;
 		if (session.audioCodec){
 			session.audioCodec = session.audioCodec.toLowerCase();
 		}
+	}
+	if (session.audioCodec && (session.audioCodec=="red")){
+		session.audiobitratePRO = 216; // higher than this seems to break the RED mode. default 256.
 	}
 	
 	if (urlParams.has('scenelinkcodec')){ // this is mainly for a niche iframe API use
@@ -3535,6 +3606,7 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 	if (urlParams.has('hideheader') || urlParams.has('noheader') || urlParams.has('hh')) { // needs to happen the room and permaid applications
 		getById("header").style.display = "none";
 		getById("header").style.opacity = 0;
+		getById("obsState").classList.add("noheader");
 	} else if (urlParams.has('showheader')) { // needs to happen the room and permaid applications
 		getById("header").style.display = "inherit";
 		getById("header").style.opacity = 1;
@@ -3965,33 +4037,32 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 	
 	
 	
-	// if (session.audioCodec === "lyra"){ // WIP.  does not work
-		// try {
-			// var { default: Module } = await import('./thirdparty/lyra/webassembly_codec_wrapper.js');
-			// await Module().then((module) => {
-			  // console.log("Initialized codec's wasmModule.");
-			  // session.lyraCodecModule = module;
-			// }).catch(e => {
-			  // console.log(`Module() error: ${e.name} message: ${e.message}`);
-			// });
-		// } catch(e){
-			// errorlog(e);
-		// }
-		// if (session.lyraCodecModule){
-			// console.log("Lyra module loaded");
-			// session.micSampleRate = 16000;
-			// session.encodedInsertableStreams = true;
-		// } else {
-			// console.log("Lyra module failed to load");
-		// }
-	// }
-	
-	if (urlParams.has("insertablestreams")){
-		session.encodedInsertableStreams = true;	
+	if (session.audioCodec === "lyra"){ // WIP.  does not work
+		try {
+			var { default: Module } = await import('./thirdparty/lyra/webassembly_codec_wrapper.js');
+			await Module().then((module) => {
+			  console.log("Initialized codec's wasmModule.");
+			  session.lyraCodecModule = module;
+			}).catch(e => {
+			  console.log(`Module() error: ${e.name} message: ${e.message}`);
+			});
+		} catch(e){
+			errorlog(e);
+		}
+		if (session.lyraCodecModule){
+			console.log("Lyra module loaded");
+			session.micSampleRate = 16000;
+			session.encodedInsertableStreams = "lyra";
+		} else {
+			console.log("Lyra module failed to load");
+		}
 	}
-	if (urlParams.has("e2ee")){
-		session.encodedInsertableStreams = true;
-		session.e2ee = urlParams.get("e2ee") || true; // not sure I know what I will do with the user passed e2ee value yet.
+	
+	
+	if (urlParams.has('e2ee')){
+		session.encodedInsertableStreams = "e2ee";
+	} else if (urlParams.has('insertablestreams') || urlParams.has('is')){
+		session.encodedInsertableStreams = urlParams.get('insertablestreams') || urlParams.get("is") || true;	
 	}
 	
 
@@ -5663,7 +5734,7 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 			}
 		}
 
-		if (("getStats" in e.data)){
+		if (("getFreshStats" in e.data)){ // takes a second to query.
 			var stats = {};
 			try {
 				stats.inbound_stats = {};
@@ -5701,7 +5772,7 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 										session.pcs[UUID].stats.remote_relayProtocol = stat.relayProtocol;
 									}
 									if ("candidateType" in stat) {
-										session.pcs[UUID].stats.remote_candidateType = stat.candidateType;
+										session.pcs[UUID].stats.candidateType_remote = stat.candidateType;
 									}
 								} else if (stat.type == "local-candidate") {
 									if ("relayProtocol" in stat) {
@@ -5711,7 +5782,7 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 										session.pcs[UUID].stats.local_relayProtocol = stat.relayProtocol;
 									}
 									if ("candidateType" in stat) {
-										session.pcs[UUID].stats.local_candidateType = stat.candidateType;
+										session.pcs[UUID].stats.candidateType_local = stat.candidateType;
 									}
 								} else if ((stat.type == "candidate-pair" ) && (stat.nominated)) {
 									
@@ -5745,6 +5816,18 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 					"stats": stats
 				}, session.iframetarget);
 			}, 1000);
+		}
+		
+		if (("getStats" in e.data)){
+			if (e.data.streamID){
+				parent.postMessage({
+					"stats": getQuickStats(e.data.streamID)
+				}, session.iframetarget);
+			} else {
+				parent.postMessage({
+					"stats": getQuickStats()
+				}, session.iframetarget);
+			}
 		}
 		
 		if ("getRemoteStats" in e.data) {
@@ -6595,6 +6678,14 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 			}
 		}
 	}
+	
+	document.addEventListener("mouseup", event => {
+		MousePressed = false;
+	});
+	
+	document.addEventListener("mousedown", event => {
+		MousePressed = true;
+	});
 
 	document.addEventListener("keyup", event => {
 		
@@ -6637,6 +6728,22 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		}
 	});
 	
+	try {
+		navigator.serviceWorker.getRegistrations().then(registrations => { // getting rid of old service workers.
+			try {
+				log(registrations);
+				for(let registration of registrations) {
+					//if (registration.scope != "https://"+window.location.hostname+window.location.pathname+"thirdparty/"){
+					registration.unregister();
+					if (registration.scope){
+						console.warn("unregistering: " +registration.scope);
+					}
+					//}
+				}
+			} catch(e){}
+		}).catch(errorlog);
+	} catch(e){}
+	
 	setTimeout(function(){ // lets lazy load the following..
 		window.addEventListener("beforeunload", confirmUnload); // This just keeps people from killing the live stream accidentally. Also give me a headsup that the stream is ending
 		window.addEventListener("unload", function(e) {
@@ -6662,25 +6769,16 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 			}
 		});
 		
-		try {
-			navigator.serviceWorker.getRegistrations().then(registrations => { // getting rid of old service workers.
-				try {
-					log(registrations);
-					for(let registration of registrations) {
-						if (registration.scope != "https://"+window.location.hostname+window.location.pathname+"thirdparty/"){
-							registration.unregister();
-						}
-					}
-				} catch(e){}
-			}).catch(errorlog);
-		} catch(e){}
-
 		var script = document.createElement('script');
 		document.head.appendChild(script);
 		script.onload = function() { 
 			var script = document.createElement('script');
 			document.head.appendChild(script);
-			script.src = "./thirdparty/StreamSaver.js?v=19"; // dynamically load this only if its needed. Keeps loading time down.
+			if (SafariVersion && (SafariVersion<=15)){ // blob mode not needed since iOS 15.6 
+				script.src = "./thirdparty/StreamSaver_legacy.js?v=2"; // blob mode for Safari 
+			} else {
+				script.src = "./thirdparty/StreamSaver.js?v=24"; // do not use blob mode
+			}
 		};
 		script.src = "./thirdparty/polyfill.min.js"; // dynamically load this only if its needed. Keeps loading time down.
 	},100);

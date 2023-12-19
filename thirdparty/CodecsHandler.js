@@ -26,221 +26,122 @@ Copyright (c) 2012-2020 [Muaz Khan](https://github.com/muaz-khan)
 // *FILE HAS BEEN HEAVILY MODIFIED BY STEVE SEGUIN. ALL RIGHTS RESERVED WHERE APPLICABLE *
 
 var CodecsHandler = (function() {
-    function preferCodec(sdp, codecName) {
-		
-		if (codecName){
-			codecName = codecName.toLowerCase();
+    function preferCodec(sdp, codec, useRed=false, useUlpfec=false) {
+		if (codec){
+			codec = codec.toLowerCase();
 		}
-		
-        var info = splitLines(sdp);
-        if (!info.videoCodecNumbers) {
-            return sdp;
-        } else if (codecName === 'vp8' && info.vp8LineNumber === info.videoCodecNumbers[0]) {
-            return sdp;
-        } else if (codecName === 'vp9' && info.vp9LineNumber === info.videoCodecNumbers[0]) {
-            return sdp;
-        } else if (codecName === 'h264' && info.h264LineNumber === info.videoCodecNumbers[0]) {
-            return sdp;
-		} else if (codecName === 'h265' && info.h265LineNumber === info.videoCodecNumbers[0]) {
-            return sdp;
-        } else if (codecName === 'av1' && info.av1LineNumber === info.videoCodecNumbers[0]) {
-            return sdp;
-		}
-		//} else if (codecName === 'red' && info.redLineNumber === info.videoCodecNumbers[0]) {
-        //    return sdp;
-		//} else if (codecName === 'fec' && info.fecLineNumber === info.videoCodecNumbers[0]) {
-        //    return sdp;
-        //}
-
-        sdp = preferCodecHelper(sdp, codecName, info);
-
-        return sdp;
-    }
-	
-	
-	function preferAudioCodec(sdp, codecName) {
-		if (codecName){
-			codecName = codecName.toLowerCase();
-		}
-        var info = splitAudioLines(sdp);
-        if (!info.audioCodecNumbers) {
-            return sdp;
-		} else if (codecName === 'opus' && info.opusLineNumber === info.audioCodecNumbers[0]) {
-            return sdp;
-		} else if (codecName === 'isac' && info.isacLineNumber === info.audioCodecNumbers[0]) {
-            return sdp;
-		} else if (codecName === 'g722' && info.g722LineNumber === info.audioCodecNumbers[0]) {
-            return sdp;
-		} else if (codecName === 'pcmu' && info.pcmuLineNumber === info.audioCodecNumbers[0]) {
-            return sdp;
-		} else if (codecName === 'pcma' && info.pcmaLineNumber === info.audioCodecNumbers[0]) {
-            return sdp;
-		} else if (codecName === 'red' && info.redLineNumber === info.audioCodecNumbers[0]) {
-            return sdp;
-        }
-
-        sdp = preferAudioCodecHelper(sdp, codecName, info);
-        return sdp;
-    }
-
-    function preferCodecHelper(sdp, codec, info) {
-        var preferCodecNumber = '';
-
-        if (codec === 'vp8') {
-            if (!info.vp8LineNumber) {
-                return sdp;
-            }
-            preferCodecNumber = info.vp8LineNumber;
-			
-        } else if (codec === 'vp9') {
-            if (!info.vp9LineNumber) {
-                return sdp;
-            }
-            preferCodecNumber = info.vp9LineNumber;
-			
-        } else if (codec === 'h264') {
-            if (!info.h264LineNumber) {
-                return sdp;
-            }
-            preferCodecNumber = info.h264LineNumber;
-		} else if (codec === 'h265') {
-            if (!info.h265LineNumber) {
-                return sdp;
-            }
-            preferCodecNumber = info.h265LineNumber;	
-        } else if (codec === 'av1') {
-            if (!info.av1LineNumber) {
-                return sdp;
-            }
-            preferCodecNumber = info.av1LineNumber;
-		} else {
+		var info = splitLines(sdp);
+		if (!info.videoCodecNumbers) {
 			return sdp;
 		}
-		//} else if (codec === 'red') {
-      //      if (!info.redLineNumber) {
-      //          return sdp;
-      //      }
-       //     preferCodecNumber = info.redLineNumber;
-			
-		//} else if (codec === 'fec') {
-      //      if (!info.fecLineNumber) {
-       //         return sdp;
-       //     }
-       //     preferCodecNumber = info.fecLineNumber;
-      //  }
-
-        var newLine = info.videoCodecNumbersOriginal.split('SAVPF')[0] + 'SAVPF ';
-
-        var newOrder = [preferCodecNumber];
-		
-        info.videoCodecNumbers.forEach(function(codecNumber) {
-            if (codecNumber === preferCodecNumber) return;
-            newOrder.push(codecNumber);
-        });
-
-        newLine += newOrder.join(' ');
-
-        sdp = sdp.replace(info.videoCodecNumbersOriginal, newLine);
-        return sdp;
-    }
-	
-	function preferAudioCodecHelper(sdp, codec, info) {
-        var preferCodecNumber = '';
-
-        if (codec === 'opus') {
-            if (!info.opusLineNumber) {
-                return sdp;
-            }
-            preferCodecNumber = info.opusLineNumber;
-        } else if (codec === 'isac') {
-            if (!info.isacLineNumber) {
-                return sdp;
-            }
-            preferCodecNumber = info.isacLineNumber;
-		} else if (codec === 'g722') {
-            if (!info.g722LineNumber) {
-                return sdp;
-            }
-            preferCodecNumber = info.g722LineNumber;	
-        } else if (codec === 'pcmu') {
-            if (!info.pcmuLineNumber) {
-                return sdp;
-            }
-            preferCodecNumber = info.pcmuLineNumber;
-		 } else if (codec === 'pcma') {
-            if (!info.pcmaLineNumber) {
-                return sdp;
-            }
-            preferCodecNumber = info.pcmaLineNumber;	
-		} else if (codec === 'red') {
-            if (!info.redLineNumber) {
-                return sdp;
-            }
-            preferCodecNumber = info.redLineNumber;
+		var preferCodecNumber = '';
+		var preferErrorCorrectionNumbers = [];
+		if (codec === 'vp8') {
+			preferCodecNumber = info.vp8LineNumber || '';
+		} else if (codec === 'vp9') {
+			preferCodecNumber = info.vp9LineNumber || '';
+		} else if (codec === 'h264') {
+			preferCodecNumber = info.h264LineNumber || '';
+		} else if (codec === 'h265') {
+			preferCodecNumber = info.h265LineNumber || '';
+		} else if (codec === 'av1') {
+			preferCodecNumber = info.av1LineNumber || '';
+		} else if (codec === 'red') { // you can treat red as a codec
+			preferCodecNumber = info.redLineNumber || '';
+		} else if (codec === 'fec') {
+			preferCodecNumber = info.ulpfecLineNumber || '';
 		}
-        var newLine = info.audioCodecNumbersOriginal.split('SAVPF')[0] + 'SAVPF ';
-
-        var newOrder = [preferCodecNumber];
-
-        info.audioCodecNumbers.forEach(function(codecNumber) {
-            if (codecNumber === preferCodecNumber) return;
-            newOrder.push(codecNumber);
-        });
-
-        newLine += newOrder.join(' ');
-
-        sdp = sdp.replace(info.audioCodecNumbersOriginal, newLine);
-        return sdp;
-    }
-
-    function splitLines(sdp) {
-        var info = {};
-        sdp.split('\n').forEach(function(line) {
-            if (line.indexOf('m=video') === 0) {
-                info.videoCodecNumbers = [];
-                line.split('SAVPF')[1].split(' ').forEach(function(codecNumber) {
-                    codecNumber = codecNumber.trim();
-                    if (!codecNumber || !codecNumber.length) return;
-                    info.videoCodecNumbers.push(codecNumber);
-                    info.videoCodecNumbersOriginal = line;
-                });
-            }
-			
+		if (useRed && info.redLineNumber) { // or as a setting
+			preferErrorCorrectionNumbers.push(info.redLineNumber);
+		}
+		if (useUlpfec && info.ulpfecLineNumber) {
+			preferErrorCorrectionNumbers.push(info.ulpfecLineNumber);
+		}
+		if (preferCodecNumber === '') {
+			return sdp;
+		}
+		var newOrder = [preferCodecNumber].concat(preferErrorCorrectionNumbers);
+		info.videoCodecNumbers.forEach(function(codecNumber) {
+			if (!newOrder.includes(codecNumber)) {
+				newOrder.push(codecNumber);
+			}
+		});
+		var newLine = info.videoCodecNumbersOriginal.split('SAVPF')[0] + 'SAVPF ' + newOrder.join(' ');
+		sdp = sdp.replace(info.videoCodecNumbersOriginal, newLine);
+		return sdp;
+	}
+	function splitLines(sdp) {
+		var info = {};
+		sdp.split('\n').forEach(function(line) {
+			if (line.indexOf('m=video') === 0) {
+				info.videoCodecNumbers = [];
+				line.split('SAVPF')[1].split(' ').forEach(function(codecNumber) {
+					codecNumber = codecNumber.trim();
+					if (!codecNumber || !codecNumber.length) return;
+					info.videoCodecNumbers.push(codecNumber);
+					info.videoCodecNumbersOriginal = line;
+				});
+			}
 			var LINE = line.toUpperCase();
-
-            if (LINE.indexOf('VP8/90000') !== -1 && !info.vp8LineNumber) {
-                info.vp8LineNumber = line.replace('a=rtpmap:', '').split(' ')[0];
-            }
-
-            if (LINE.indexOf('VP9/90000') !== -1 && !info.vp9LineNumber) {
-                info.vp9LineNumber = line.replace('a=rtpmap:', '').split(' ')[0];
-            }
-
-            if (LINE.indexOf('H264/90000') !== -1 && !info.h264LineNumber) {
-                info.h264LineNumber = line.replace('a=rtpmap:', '').split(' ')[0];
-            }
-			
+			if (LINE.indexOf('VP8/90000') !== -1 && !info.vp8LineNumber) {
+				info.vp8LineNumber = line.replace('a=rtpmap:', '').split(' ')[0];
+			}
+			if (LINE.indexOf('VP9/90000') !== -1 && !info.vp9LineNumber) {
+				info.vp9LineNumber = line.replace('a=rtpmap:', '').split(' ')[0];
+			}
+			if (LINE.indexOf('H264/90000') !== -1 && !info.h264LineNumber) {
+				info.h264LineNumber = line.replace('a=rtpmap:', '').split(' ')[0];
+			}
 			if (LINE.indexOf('H265/90000') !== -1 && !info.h265LineNumber) {
-                info.h265LineNumber = line.replace('a=rtpmap:', '').split(' ')[0];
-            }
-			
-            if (LINE.indexOf('AV1X/90000') !== -1 && !info.av1LineNumber) {
-                info.av1LineNumber = line.replace('a=rtpmap:', '').split(' ')[0];
-            } else if (LINE.indexOf('AV1/90000') !== -1 && !info.av1LineNumber) {
-                info.av1LineNumber = line.replace('a=rtpmap:', '').split(' ')[0];
-            }
-			
-			//if (LINE.indexOf('RED/90000') !== -1 && !info.redLineNumber) {
-          //      info.redLineNumber = line.replace('a=rtpmap:', '').split(' ')[0];
-         //   }
-			
-		//	if (LINE.indexOf('FEC/90000') !== -1 && !info.fecLineNumber) {
-         //       info.fecLineNumber = line.replace('a=rtpmap:', '').split(' ')[0];
-          //  }
-        });
-
-        return info;
-    }
+				info.h265LineNumber = line.replace('a=rtpmap:', '').split(' ')[0];
+			}
+			if (LINE.indexOf('AV1X/90000') !== -1 && !info.av1LineNumber) {
+				info.av1LineNumber = line.replace('a=rtpmap:', '').split(' ')[0];
+			} else if (LINE.indexOf('AV1/90000') !== -1 && !info.av1LineNumber) {
+				info.av1LineNumber = line.replace('a=rtpmap:', '').split(' ')[0];
+			}
+			if (LINE.indexOf('RED/90000') !== -1 && !info.redLineNumber) {
+			    info.redLineNumber = line.replace('a=rtpmap:', '').split(' ')[0];
+			}
+			if (LINE.indexOf('ULPFEC/90000') !== -1 && !info.ulpfecLineNumber) {
+			    info.ulpfecLineNumber = line.replace('a=rtpmap:', '').split(' ')[0];
+			}
+		});
+		return info;
+	}
+	
+	function preferAudioCodec(sdp, codec, useRed=false, useUlpfec=false) {
+		if (codec) {
+			codec = codec.toLowerCase();
+		}
+		var info = splitAudioLines(sdp);
+		if (!info.audioCodecNumbers) {
+			return sdp;
+		}
+		var preferCodecNumber = '';
+		var errorCorrectionNumbers = [];
+		if (codec && info[codec + 'LineNumber']) {
+			preferCodecNumber = info[codec + 'LineNumber'];
+		}
+		if (useRed && info.redPcmLineNumber) {
+			errorCorrectionNumbers.push(info.redPcmLineNumber);
+		}
+		if (useRed && info.redLineNumber && !info.redPcmLineNumber) {
+			errorCorrectionNumbers.push(info.redLineNumber);
+		}
+		if (useUlpfec && info.ulpfecLineNumber) {
+			errorCorrectionNumbers.push(info.ulpfecLineNumber);
+		}
+		var newOrder = [preferCodecNumber].concat(errorCorrectionNumbers);
+		info.audioCodecNumbers.forEach(function(codecNumber) {
+			if (!newOrder.includes(codecNumber)) {
+				newOrder.push(codecNumber);
+			}
+		});
+		var newLine = info.audioCodecNumbersOriginal.split('SAVPF')[0] + 'SAVPF ' + newOrder.join(' ');
+		sdp = sdp.replace(info.audioCodecNumbersOriginal, newLine);
+		return sdp;
+	}
 	
 	function splitAudioLines(sdp) {
         var info = {};
@@ -254,37 +155,48 @@ var CodecsHandler = (function() {
                     info.audioCodecNumbersOriginal = line;
                 });
             }
-			
 			var LINE = line.toLowerCase();
-
             if (LINE.indexOf('opus/48000') !== -1 && !info.opusLineNumber) {
                 info.opusLineNumber = line.replace('a=rtpmap:', '').split(' ')[0];
             }
-
             if (LINE.indexOf('isac/32000') !== -1 && !info.isacLineNumber) {
                 info.isacLineNumber = line.replace('a=rtpmap:', '').split(' ')[0];
             }
-
             if (LINE.indexOf('g722/8000') !== -1 && !info.g722LineNumber) {
                 info.g722LineNumber = line.replace('a=rtpmap:', '').split(' ')[0];
             }
-			
 			if (LINE.indexOf('pcmu/8000') !== -1 && !info.pcmuLineNumber) {
                 info.pcmuLineNumber = line.replace('a=rtpmap:', '').split(' ')[0];
             }
-			
 			if (LINE.indexOf('pcma/8000') !== -1 && !info.pcmaLineNumber) {
                 info.pcmaLineNumber = line.replace('a=rtpmap:', '').split(' ')[0];
             }
-			
 			if (LINE.indexOf('red/48000') !== -1 && !info.redLineNumber) {
                 info.redLineNumber = line.replace('a=rtpmap:', '').split(' ')[0];
             }
-			
+			if (LINE.indexOf('ulpfec/48000') !== -1 && !info.ulpfecLineNumber) {
+				info.ulpfecLineNumber = line.replace('a=rtpmap:', '').split(' ')[0];
+			}
+			if (line.indexOf('red/8000') !== -1 && !info.redPcmLineNumber) {
+				info.redPcmLineNumber = line.replace('a=rtpmap:', '').split(' ')[0];
+			}
+			if (line.indexOf('ulpfec/8000') !== -1 && !info.ulpfecLineNumber) {
+				info.ulpfecLineNumber = line.replace('a=rtpmap:', '').split(' ')[0];
+			}
         });
-
         return info;
     }
+	
+	function addRedForPcmToSdp(sdp, info, redPcmLine) {
+		// Ensure RED for PCM is not already the first codec
+		if (!info.audioCodecNumbers.includes(redPcmLine)) {
+			var newOrder = info.audioCodecNumbers.filter(codecNumber => codecNumber !== redPcmLine);
+			newOrder.unshift(redPcmLine); // Add RED for PCM at the start
+			var newLine = info.audioCodecNumbersOriginal.split('SAVPF')[0] + 'SAVPF ' + newOrder.join(' ');
+			sdp = sdp.replace(info.audioCodecNumbersOriginal, newLine);
+		}
+		return sdp;
+	}
     
     function extractSdp(sdpLine, pattern) {
         var result = sdpLine.match(pattern);
