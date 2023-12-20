@@ -26,6 +26,6 @@ Sample link: [`https://vdo.ninja/?headertitle=LINDENKRON4TW&favicon=https%3A%2F%
 
 ## Related
 
-{% content-ref url="and-favicon.md" %}
-[and-favicon.md](and-favicon.md)
+{% content-ref url="and-favicon-alpha.md" %}
+[and-favicon-alpha.md](and-favicon-alpha.md)
 {% endcontent-ref %}

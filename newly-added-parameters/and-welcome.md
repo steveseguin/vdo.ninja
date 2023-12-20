@@ -31,14 +31,14 @@ You can also activate the welcome message as a director via a new toggle option.
 
 ## Related
 
-{% content-ref url="../advanced-settings/setup-parameters/and-welcomeb64.md" %}
-[and-welcomeb64.md](../advanced-settings/setup-parameters/and-welcomeb64.md)
+{% content-ref url="../advanced-settings/setup-parameters/and-welcomeb64-alpha.md" %}
+[and-welcomeb64-alpha.md](../advanced-settings/setup-parameters/and-welcomeb64-alpha.md)
 {% endcontent-ref %}
 
 {% content-ref url="../advanced-settings/setup-parameters/and-welcomeimage.md" %}
 [and-welcomeimage.md](../advanced-settings/setup-parameters/and-welcomeimage.md)
 {% endcontent-ref %}
 
-{% content-ref url="../advanced-settings/setup-parameters/and-hangupmessage.md" %}
-[and-hangupmessage.md](../advanced-settings/setup-parameters/and-hangupmessage.md)
+{% content-ref url="../advanced-settings/setup-parameters/and-hangupmessage-alpha.md" %}
+[and-hangupmessage-alpha.md](../advanced-settings/setup-parameters/and-hangupmessage-alpha.md)
 {% endcontent-ref %}

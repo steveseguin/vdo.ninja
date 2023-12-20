@@ -14,7 +14,7 @@ Sender-Side Option! ([`&push`](../../source-settings/push.md), [`&room`](../../g
 
 ## Details
 
-`&holdwithvideo` added, with the alias `&queue4`, which is just like [`&hold`](and-hold.md), except the director does see the guest's video and audio before the guest is activated. The guest can't see the director until activated, but does get a message telling them they are waiting to be activated.
+`&holdwithvideo` added, with the alias `&queue4`, which is just like [`&hold`](and-hold-alpha.md), except the director does see the guest's video and audio before the guest is activated. The guest can't see the director until activated, but does get a message telling them they are waiting to be activated.
 
 This mode do not apply when you have [`&queue`](../../general-settings/queue.md) also on the director's link, however, rather just when added to the guest-invite link only.
 
@@ -26,10 +26,10 @@ Transferring the guest to another room will also automatically activate the gues
 [queue.md](../../general-settings/queue.md)
 {% endcontent-ref %}
 
-{% content-ref url="and-hold.md" %}
-[and-hold.md](and-hold.md)
+{% content-ref url="and-hold-alpha.md" %}
+[and-hold-alpha.md](and-hold-alpha.md)
 {% endcontent-ref %}
 
-{% content-ref url="and-screen.md" %}
-[and-screen.md](and-screen.md)
+{% content-ref url="and-screen-alpha.md" %}
+[and-screen-alpha.md](and-screen-alpha.md)
 {% endcontent-ref %}

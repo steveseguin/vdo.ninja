@@ -32,6 +32,6 @@ Update: Doesn't break the site if browser does not supported.
 [and-pip.md](and-pip.md)
 {% endcontent-ref %}
 
-{% content-ref url="and-pipme.md" %}
-[and-pipme.md](and-pipme.md)
+{% content-ref url="and-pipme-alpha.md" %}
+[and-pipme-alpha.md](and-pipme-alpha.md)
 {% endcontent-ref %}

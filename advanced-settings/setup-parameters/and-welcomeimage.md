@@ -31,6 +31,6 @@ Example:\
 [and-welcome.md](../../newly-added-parameters/and-welcome.md)
 {% endcontent-ref %}
 
-{% content-ref url="and-hangupmessage.md" %}
-[and-hangupmessage.md](and-hangupmessage.md)
+{% content-ref url="and-hangupmessage-alpha.md" %}
+[and-hangupmessage-alpha.md](and-hangupmessage-alpha.md)
 {% endcontent-ref %}

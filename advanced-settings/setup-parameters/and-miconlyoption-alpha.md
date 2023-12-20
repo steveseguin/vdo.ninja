@@ -2,7 +2,7 @@
 description: A mic only button shows if a guest joining a room
 ---
 
-# \&miconlyoption (alpha)
+# \&miconlyoption
 
 Sender-Side Option! ([`&push`](../../source-settings/push.md), [`&room`](../../general-settings/room.md))
 

@@ -32,8 +32,8 @@ The director will see the clock also; it will just be a bit smaller on screen.
 
 ## Related
 
-{% content-ref url="and-clock24.md" %}
-[and-clock24.md](and-clock24.md)
+{% content-ref url="and-clock24-alpha.md" %}
+[and-clock24-alpha.md](and-clock24-alpha.md)
 {% endcontent-ref %}
 
 {% content-ref url="and-timer.md" %}

@@ -333,10 +333,10 @@ If you want the VDO.Ninja self-preview to not be mini-sized in broadcast mode, w
     \
     These options might be appealing for screening guests when either you don't want to use a transfer room or don't expect too many guests to be in queue.\
     \-- I changed [`&queue`](../general-settings/queue.md) to not allow the guest to see the director's video, until the director activates the guest with their pink activate-guest button. Otherwise, it's the same as before.\
-    \-- [`&screen`](../advanced-settings/guest-queuing-parameters/and-screen.md) now replaces the way [`&queue`](../general-settings/queue.md) worked before, where the guest can see/hear the director, but not other guests, until activated.\
-    \-- [`&screen`](../advanced-settings/guest-queuing-parameters/and-screen.md) is given the alias `&queue2`, intending to imply you can use this mode to screen incoming guests by talking to them, before approving them.\
-    \-- [`&hold`](../advanced-settings/guest-queuing-parameters/and-hold.md) added, with the alias `&queue3`, which is like [`&queue`](../general-settings/queue.md), except the guest gets a message telling them they need to wait until approved by the director. They don't see the director until activated, and the director doesn't see the guest's video/audio either - just their control box with any label. Once activated, the director will see the guest's video/audio, and vice versa.\
-    \-- [`&holdwithvideo`](../advanced-settings/guest-queuing-parameters/and-holdwithvideo.md) added, with the alias `&queue4`, which is just like [`&hold`](../advanced-settings/guest-queuing-parameters/and-hold.md), except the director does see the guest's video and audio before the guest is activated. The guest can't see the director until activated, but does get a message telling them they are waiting to be activated.\
+    \-- [`&screen`](../advanced-settings/guest-queuing-parameters/and-screen-alpha.md) now replaces the way [`&queue`](../general-settings/queue.md) worked before, where the guest can see/hear the director, but not other guests, until activated.\
+    \-- [`&screen`](../advanced-settings/guest-queuing-parameters/and-screen-alpha.md) is given the alias `&queue2`, intending to imply you can use this mode to screen incoming guests by talking to them, before approving them.\
+    \-- [`&hold`](../advanced-settings/guest-queuing-parameters/and-hold-alpha.md) added, with the alias `&queue3`, which is like [`&queue`](../general-settings/queue.md), except the guest gets a message telling them they need to wait until approved by the director. They don't see the director until activated, and the director doesn't see the guest's video/audio either - just their control box with any label. Once activated, the director will see the guest's video/audio, and vice versa.\
+    \-- [`&holdwithvideo`](../advanced-settings/guest-queuing-parameters/and-holdwithvideo-alpha.md) added, with the alias `&queue4`, which is just like [`&hold`](../advanced-settings/guest-queuing-parameters/and-hold-alpha.md), except the director does see the guest's video and audio before the guest is activated. The guest can't see the director until activated, but does get a message telling them they are waiting to be activated.\
     \-- In any of the cases mentioned above, transferring the guest to another room will also automatically activate the guest. You don't need to press the pink 'activate' button if you just intend to transfer them and don't want to talk to the guest you are screening.
 
 \*\* on alpha at [https://vdo.ninja/alpha/](https://vdo.ninja/alpha/)
@@ -402,7 +402,7 @@ So it's not super obvious how to do this currently, so I think the next goal wil
 \*\* this specific change is on production and alpha.\
 ![](<../.gitbook/assets/image (182).png>)
 
-* Added [`&motiondetection=15`](../advanced-settings/mixer-scene-parameters/and-motiondetection.md), which does a few things when it detects motion in a video (viewer-side).\
+* Added [`&motiondetection=15`](../advanced-settings/mixer-scene-parameters/and-motiondetection-alpha.md), which does a few things when it detects motion in a video (viewer-side).\
   \-- It will feature highlight the specific video where movement is detected, if more than one video is included in the mix. Using a custom [`&layout`](../advanced-settings/mixer-scene-parameters/and-layout.md) will disable this feature though, and use the layout instead.\
   \-- It will also trigger an IFrame API event, which might be useful if you want to use VDO.Ninja as a security camera; you could script things to auto-record the video or log data events.\
   \-- It will also switch to itself in OBS as a scene, which might be how this will be mainly used. (you need to have the OBS browser source's page permission set to high to allow this to actually work)\
@@ -444,8 +444,8 @@ Fixed a few bugs and pushed to alpha (vdo.ninja/alpha). Thank you for reporting 
 
 #### August 27 <a href="#august-31" id="august-31"></a>
 
-* [`&clock24`](../advanced-settings/settings-parameters/and-clock24.md) added to VDO.Ninja; this is the same as the existing [`&clock`](../advanced-settings/settings-parameters/and-clock.md) option, (which shows a clock) except it uses 24-hour time for the display (vs am/pm).\
-  \-- if the director uses [`&clock24`](../advanced-settings/settings-parameters/and-clock24.md) on their URL, and then enables the room clock, it will be 24-hour time for all guests, matching the director's settings.\
+* [`&clock24`](../advanced-settings/settings-parameters/and-clock24-alpha.md) added to VDO.Ninja; this is the same as the existing [`&clock`](../advanced-settings/settings-parameters/and-clock.md) option, (which shows a clock) except it uses 24-hour time for the display (vs am/pm).\
+  \-- if the director uses [`&clock24`](../advanced-settings/settings-parameters/and-clock24-alpha.md) on their URL, and then enables the room clock, it will be 24-hour time for all guests, matching the director's settings.\
   ![](<../.gitbook/assets/image (3) (1) (1) (1) (1) (1) (1).png>)
 
 \*\* at [vdo.ninja/alpha/?clock24](https://vdo.ninja/alpha/?clock24)
@@ -476,7 +476,7 @@ meshcastcodec == whipoutcodec, woc
 * To make using Cloudflare easier though, I've also created the WHIP end point `cloudflare.vdo.ninja`, which takes a Cloudflare API token, instead of a stream token.\
   \-- This special end point will auto-create a unique WHEP URL. The official cloudflare.com whip endpoint can only be used by one sender at a time, but this API special endpoint and token approach can be used by many senders at a time. It automatically generates unique WHIP/WHEP when used, in the same way Meshcast does, so no need for unique invite urls per guest.\
   \-- I've created a page to generate the required special api token; the page also provides further information on this all: [https://vdo.ninja/alpha/cloudflare](https://vdo.ninja/alpha/cloudflare)\
-  \-- [`&cftoken`](../advanced-settings/whip-parameters/and-cftoken.md) (`&cft`) is also now added to vdo.ninja/alpha/; this parameter accepts the special token without needing to specify the cloudflare.vdo.ninja part if using [`&whipout`](../advanced-settings/whip-parameters/and-whipout.md) instead.
+  \-- [`&cftoken`](../advanced-settings/whip-parameters/and-cftoken-alpha.md) (`&cft`) is also now added to vdo.ninja/alpha/; this parameter accepts the special token without needing to specify the cloudflare.vdo.ninja part if using [`&whipout`](../advanced-settings/whip-parameters/and-whipout.md) instead.
 
 \*\* on vdo.ninja/alpha/
 
@@ -499,7 +499,7 @@ meshcastcodec == whipoutcodec, woc
 
 #### August 13 <a href="#august-31" id="august-31"></a>
 
-* [`&humb64`](../advanced-settings/setup-parameters/and-humb64.md) and [`&welcomeb64`](../advanced-settings/setup-parameters/and-welcomeb64.md) added. These are the same as [`&hangupmessage`](../advanced-settings/setup-parameters/and-hangupmessage.md) and [`&welcome`](../newly-added-parameters/and-welcome.md), which already exist, except these new options take an input as a base64 encoded string. VDO.Ninja will decode the base64 on load.\
+* [`&humb64`](../advanced-settings/setup-parameters/and-humb64-alpha.md) and [`&welcomeb64`](../advanced-settings/setup-parameters/and-welcomeb64-alpha.md) added. These are the same as [`&hangupmessage`](../advanced-settings/setup-parameters/and-hangupmessage-alpha.md) and [`&welcome`](../newly-added-parameters/and-welcome.md), which already exist, except these new options take an input as a base64 encoded string. VDO.Ninja will decode the base64 on load.\
   \-- Base64 values are less likely to get parsed by apps like Slack incorrectly, so safer to share. If feeling lazy, you can also just use [invite.cam](https://invite.cam/), and encode the entire link itself; has a similar effect.
 * When using [`&cutscene`](../advanced-settings/settings-parameters/and-cutscene.md) or [`&bitratecutoff`](../advanced-settings/parameters-only-on-beta/and-bitratecutoff.md) on a room scene, it won't trigger due to a director being in the room with no video, unless they are using [`&showdirector`](../viewers-settings/and-showdirector.md).\
   \-- [`&cutscene`](../advanced-settings/settings-parameters/and-cutscene.md) wasn't intended really for a group scene; just a solo link or view link, but this fix makes it at more usable with a group scene.
@@ -509,7 +509,7 @@ meshcastcodec == whipoutcodec, woc
 #### August 11 <a href="#august-31" id="august-31"></a>
 
 Option for a custom hang-up message added to VDO.Ninja.\
-\-- [`&hangupmessage`](../advanced-settings/setup-parameters/and-hangupmessage.md) (or `&hum`) , which take a URL encoded string. So it can be just "bye", or it can be some HTML, as shown in the link\
+\-- [`&hangupmessage`](../advanced-settings/setup-parameters/and-hangupmessage-alpha.md) (or `&hum`) , which take a URL encoded string. So it can be just "bye", or it can be some HTML, as shown in the link\
 \-- eg: [https://vdo.ninja/alpha/?hum=bye%3Cimg%20src%3D%22.%2Fmedia%2Flogo\_cropped.png%22%3E\&push=ZimFGxM](https://vdo.ninja/alpha/?hum=bye%3Cimg%20src%3D%22.%2Fmedia%2Flogo\_cropped.png%22%3E\&push=ZimFGxM)\
 ![](<../.gitbook/assets/image (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1).png>)\
 \
@@ -527,12 +527,12 @@ Option for a custom hang-up message added to VDO.Ninja.\
 
 #### August 9 <a href="#august-31" id="august-31"></a>
 
-* Added [`&nomirror`](../advanced-settings/design-parameters/and-nomirror.md) to VDO.Ninja, which unlike [`&mirror=0`](../advanced-settings/design-parameters/and-mirror.md), disables the default mirror state of the video preview for a guest. Previews are often mirrored by default... [`&mirror`](../advanced-settings/design-parameters/and-mirror.md) can be applied on top of that state, to mirror things back for everyone if needed.\
+* Added [`&nomirror`](../advanced-settings/design-parameters/and-nomirror-alpha.md) to VDO.Ninja, which unlike [`&mirror=0`](../advanced-settings/design-parameters/and-mirror.md), disables the default mirror state of the video preview for a guest. Previews are often mirrored by default... [`&mirror`](../advanced-settings/design-parameters/and-mirror.md) can be applied on top of that state, to mirror things back for everyone if needed.\
   On alpha at [`https://vdo.ninja/alpha/?nomirror`](https://vdo.ninja/alpha/?nomirror)
 
 #### August 6 <a href="#august-31" id="august-31"></a>
 
-* [`&pipme`](../advanced-settings/design-parameters/and-pipme.md) (aka `&mypip` or `&pip3`) will cause your self-video preview window to pop out into its own picture in picture (floating/draggable) on load.\
+* [`&pipme`](../advanced-settings/design-parameters/and-pipme-alpha.md) (aka `&mypip` or `&pip3`) will cause your self-video preview window to pop out into its own picture in picture (floating/draggable) on load.\
   \-- this is not compatible with [`&autostart`](../source-settings/and-autostart.md)\
   \-- works with director or guest; not tested on mobile.
 * `CTRL + ALT + P` will also toggle the picture in picture, without needing any URL parameters. (`cmd + ALT + P` on Mac)
@@ -544,7 +544,7 @@ Option for a custom hang-up message added to VDO.Ninja.\
 
 * A few minor fixes:\
   \-- Rainbow puke button in [darkmode](../advanced-settings/design-parameters/darkmode.md) is correct now\
-  \-- New [`&pipall`](../advanced-settings/design-parameters/and-pipall.md) feature doesn't break the site if browser does not supported\
+  \-- New [`&pipall`](../advanced-settings/design-parameters/and-pipall-alpha.md) feature doesn't break the site if browser does not supported\
   \-- Added a new experimental background blur effect; [`&effects=13`](../source-settings/effects.md) I think, but it's not supported by most browsers/systems and its in origin trial, but it it works for you, let me know\
   \-- The startRoomTimer remote API command now works with specific guests (as well as for everyone still)\
   \*\* changes on alpha
@@ -552,7 +552,7 @@ Option for a custom hang-up message added to VDO.Ninja.\
 #### August 3 <a href="#august-31" id="august-31"></a>
 
 * Added a new floating picture in picture mode, so you can pop out the entire video mix as a pinned window overlay\
-  \-- [`&pipall`](../advanced-settings/design-parameters/and-pipall.md) (aka `&pip2`) will add a dedicated button for this mode\
+  \-- [`&pipall`](../advanced-settings/design-parameters/and-pipall-alpha.md) (aka `&pip2`) will add a dedicated button for this mode\
   ![](<../.gitbook/assets/image (7) (1) (1) (1).png>)\
   \-- Or just right-click any video and select "Picture in picture all" from the context menu. This is available without any URL option\
   \-- This requires Chrome v115 right now; it might vanish in v116 due to it being in a `chrome field trial`, and so you might need to enable it via `chrome:flags` if it stops working.\
@@ -1070,7 +1070,7 @@ https://vdo.ninja/alpha/?view=YbFmisR&poster=./media/bg_sample.webp&hideplaybutt
 #### April 7 <a href="#august-31" id="august-31"></a>
 
 * Based on user feedback, I'm testing the concept of a "join with mic-only" button.\
-  \-- You can enable it with [`&miconlyoption`](../advanced-settings/setup-parameters/and-miconlyoption.md) (or `&moo`).\
+  \-- You can enable it with [`&miconlyoption`](../advanced-settings/setup-parameters/and-miconlyoption-alpha.md) (or `&moo`).\
   \-- It's exactly the same as join with video, except the video device is not selected by default.\
   \-- When used, a mic only button shows if a guest joining a room, and if [`&audiodevice=0`](../source-settings/audiodevice.md) is not present.\
   \-- Hoping this will give more users courage to click the join button, but if it causes issues, I may revert.\
@@ -1089,11 +1089,11 @@ https://vdo.ninja/alpha/?view=YbFmisR&poster=./media/bg_sample.webp&hideplaybutt
 * If a VDO.Ninja guest has [`&chunked`](../newly-added-parameters/and-chunked.md) added, the viewer or another guest can now use [`&nochunked`](../advanced-settings/settings-parameters/and-nochunked.md) to ignore the chunked version, and use the low-latency version. In this way, guests in a room can still use the low latency streams to chat, but publish chunked video to OBS for (delayed) high quality video.
 * [`&noaudio`](../advanced-settings/view-parameters/noaudio.md) and [`&novideo`](../advanced-settings/video-parameters/novideo-1.md) works with [`&chunked`](../newly-added-parameters/and-chunked.md) mode sources now also, so you can have audio or video only chunked mode if needed.\
   \*\* on alpha
-* [invite.cam](https://invite.cam/) updated to support the recent [`&headertitle`](../advanced-settings/design-parameters/and-headertitle.md) and [`&favicon`](../advanced-settings/design-parameters/and-favicon.md) feature. (use via the encoded input URL, such as VDO.Ninja; not the invite.cam URL)
+* [invite.cam](https://invite.cam/) updated to support the recent [`&headertitle`](../advanced-settings/design-parameters/and-headertitle.md) and [`&favicon`](../advanced-settings/design-parameters/and-favicon-alpha.md) feature. (use via the encoded input URL, such as VDO.Ninja; not the invite.cam URL)
 
 #### April 3 <a href="#august-31" id="august-31"></a>
 
-* Adding [`&headertitle`](../advanced-settings/design-parameters/and-headertitle.md) and [`&favicon`](../advanced-settings/design-parameters/and-favicon.md) as options. These will change the browser's page title and favicon image, respectively.\
+* Adding [`&headertitle`](../advanced-settings/design-parameters/and-headertitle.md) and [`&favicon`](../advanced-settings/design-parameters/and-favicon-alpha.md) as options. These will change the browser's page title and favicon image, respectively.\
   \-- Passed values should be URL encoded (Google URL encoding if needed).\
   \-- Since this is Javascript based, the values only update once the page loads. Meta-page-previews will likely not reflect the values.\
   \

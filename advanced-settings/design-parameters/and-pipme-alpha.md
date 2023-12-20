@@ -27,6 +27,6 @@ This is not compatible with [`&autostart`](../../source-settings/and-autostart.m
 [and-pip.md](and-pip.md)
 {% endcontent-ref %}
 
-{% content-ref url="and-pipall.md" %}
-[and-pipall.md](and-pipall.md)
+{% content-ref url="and-pipall-alpha.md" %}
+[and-pipall-alpha.md](and-pipall-alpha.md)
 {% endcontent-ref %}

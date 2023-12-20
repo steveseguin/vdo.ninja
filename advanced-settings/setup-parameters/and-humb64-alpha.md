@@ -16,7 +16,7 @@ Example: `&humb64=YnllJTNDaW1nJTIwc3JjJTNEJTIyLiUyRm1lZGlhJTJGbG9nb19jcm9wcGVkLn
 
 ## Details
 
-`&humb64` is the same as [`&hangupmessage`](and-hangupmessage.md), except this new option takes an input as a base64 encoded string. VDO.Ninja will decode the base64 on load.
+`&humb64` is the same as [`&hangupmessage`](and-hangupmessage-alpha.md), except this new option takes an input as a base64 encoded string. VDO.Ninja will decode the base64 on load.
 
 Base64 values are less likely to get parsed by apps like Slack incorrectly, so safer to share. If feeling lazy, you can also just use [invite.cam](https://invite.cam/), and encode the entire link itself; has a similar effect.
 
@@ -25,6 +25,6 @@ eg:\
 
 ## Related
 
-{% content-ref url="and-hangupmessage.md" %}
-[and-hangupmessage.md](and-hangupmessage.md)
+{% content-ref url="and-hangupmessage-alpha.md" %}
+[and-hangupmessage-alpha.md](and-hangupmessage-alpha.md)
 {% endcontent-ref %}

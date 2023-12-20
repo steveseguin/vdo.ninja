@@ -26,8 +26,8 @@ eg:\
 
 ## Related
 
-{% content-ref url="and-humb64.md" %}
-[and-humb64.md](and-humb64.md)
+{% content-ref url="and-humb64-alpha.md" %}
+[and-humb64-alpha.md](and-humb64-alpha.md)
 {% endcontent-ref %}
 
 {% content-ref url="../../newly-added-parameters/and-welcome.md" %}

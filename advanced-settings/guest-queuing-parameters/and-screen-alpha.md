@@ -30,10 +30,10 @@ Transferring the guest to another room will also automatically activate the gues
 [queue.md](../../general-settings/queue.md)
 {% endcontent-ref %}
 
-{% content-ref url="and-hold.md" %}
-[and-hold.md](and-hold.md)
+{% content-ref url="and-hold-alpha.md" %}
+[and-hold-alpha.md](and-hold-alpha.md)
 {% endcontent-ref %}
 
-{% content-ref url="and-holdwithvideo.md" %}
-[and-holdwithvideo.md](and-holdwithvideo.md)
+{% content-ref url="and-holdwithvideo-alpha.md" %}
+[and-holdwithvideo-alpha.md](and-holdwithvideo-alpha.md)
 {% endcontent-ref %}
