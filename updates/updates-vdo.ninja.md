@@ -314,7 +314,7 @@ If you want the VDO.Ninja self-preview to not be mini-sized in broadcast mode, w
 
 #### October 7 <a href="#august-31" id="august-31"></a>
 
-* `&nocclabels` added to VDO.Ninja. This disables showing the names when using the [`&closedcaptions`](../advanced-settings/settings-parameters/and-closedcaptions.md) feature, as you might want to only show labels on the video themselves, and not in the transcription text.\
+* [`&nocaptionlabels`](../advanced-settings/settings-parameters/and-nocaptionlabels.md) added to VDO.Ninja. This disables showing the names when using the [`&closedcaptions`](../advanced-settings/settings-parameters/and-closedcaptions.md) feature, as you might want to only show labels on the video themselves, and not in the transcription text.\
   \*\*available for testing at vdo.ninja/alpha/
 
 #### October 6 <a href="#august-31" id="august-31"></a>
