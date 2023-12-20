@@ -3,6 +3,24 @@
 [social-stream.md](../../steves-helper-apps/social-stream.md "mention")\
 [chat-overlay.md](../../steves-helper-apps/chat-overlay.md "mention")
 
+#### **December 18**
+
+*   Fixed the threads.net support on Social Stream. (the star button manually adds the post to the dock)
+
+    * Also added an insta-hide and -block button to threads; cause why not.
+    * Canadian users aren't blocked from linking out.
+
+    <div align="left">
+
+    <figure><img src="../../.gitbook/assets/image (226).png" alt=""><figcaption></figcaption></figure>
+
+    </div>
+
+#### **December 17**
+
+* In Social Stream, you can now disable the ability for someone with a dock link to respond to chat.
+  * This toggle option is in the general-mechanics section.
+
 #### **December 10**
 
 *   Added a "Clear All" button, which will clear the dock of all messages (excluding pinned), stop TTS, clear any queue, and clear the current featured chat.

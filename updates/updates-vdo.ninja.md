@@ -1,5 +1,39 @@
 # Updates - VDO.Ninja
 
+#### December 19 <a href="#august-31" id="august-31"></a>
+
+* VDO.Ninja on GitHub updated [https://github.com/steveseguin/vdo.ninja](https://github.com/steveseguin/vdo.ninja)
+  * Expect a release to production shortly, pending some last minute changes. It's quiet this week, so seems like a good time. to update to v24.
+* Well, **VDO.Ninja is updated with v24.4 now**. So it's in sync with alpha. If you have any problems, please use [https://vdo.ninja/v23/](https://vdo.ninja/v23/) instead, which is the previous version that was available for the last few months.
+* Happy Holidays everyone. Let me know if you have any issues and I'll work on fixing them asap.
+
+#### December 17 <a href="#august-31" id="august-31"></a>
+
+* If you add `&debug` as a URL parameter, you'll see a verbose log output in the browser's console log.
+  * As well, when you hang up or end the page with \&debug appended, it will try to save the log output to disk automatically. This may not work with OBS, but should work with Chrome in most cases. If the system totally crashes of course, the log probably will be lost.
+* You can also do `&debug=somewebsocketserver.com` however also , and the system will then also stream in real-time the log output to the specified basic websocket endpoint. You need to host your own websocket server in this case.
+
+\*\* on alpha
+
+#### December 15 <a href="#august-31" id="august-31"></a>
+
+* Updated the sensoroverlay.html example to include a live map with user positioning, using the lon/lat data if available/allowed.\
+  [https://vdo.ninja/alpha/examples/sensoroverlay?view=XXXXXXXXX](https://vdo.ninja/alpha/examples/sensoroverlay?view=XXXXXXXXX)\
+  ![](<../.gitbook/assets/image (225).png>)
+* Mainly just been fixing bugs/issues from the backlog this week, in both OBS and Social Stream, but mainly trying to get v24 of OBS ready for production launch.
+  * Please **start testing vdo.ninja/alpha/** for any newly introduced bugs/issues, as I'd like to get it out by years end.
+* Improved the tally-light sign further; no longer will I show "active" now also, unless \&tally is used explicitly
+* Updated the zero-commission swag options at [zero.vdo.ninja](https://www.redbubble.com/shop/ap/88897940). Removed the masks, add mouse pad/tote bag. I welcome swag suggestions/designs.
+* The [`&js`](../advanced-settings/design-parameters/and-js.md)URL parameter will now only be accepted if loaded via an IFrame or third-party hosted domain; to improve user-trust.
+* Added a new IFRAME / HTTP API action: '{getStats:true} or `https://api.vdo.ninja/XXXXXX/getStats`; it returns the current p2p stats, including bitrate.
+* Made yet another demo of the IFrame API, this time a very simple incoming-events listener for viewing videos: [https://vdo.ninja/alpha/examples/iframe.inbound-stats.html](https://vdo.ninja/alpha/examples/iframe.inbound-stats.html)
+* If location sharing is permitted, enabled and active, the user will get a warning message now, just letting them know if they forgot they enabled it before. The message is not blocking though and will self-dismiss eventually.\
+  ![](<../.gitbook/assets/image (223).png>)
+* Added a little world map to the viewer-side stat, to see where a video is coming from. This requires the sender to have [`&sensor`](../source-settings/sensor.md) added to their URL, along with accepting the pop up browser Location permissions.\
+  ![](<../.gitbook/assets/image (224).png>)
+
+\*\* these new VDO.Ninja changes are on alpha at [https://vdo.ninja/alpha/](https://vdo.ninja/alpha/)
+
 #### December 9 <a href="#august-31" id="august-31"></a>
 
 * The '?i=' parameter used by VDO.Ninja can support URL encoded or non-URL encoded strings
