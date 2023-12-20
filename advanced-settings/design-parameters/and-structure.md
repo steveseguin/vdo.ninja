@@ -19,7 +19,7 @@ May not yet work with [`&forcedlandscape`](../mobile-parameters/and-forcelandsca
 <figure><img src="../../.gitbook/assets/image (14) (2).png" alt=""><figcaption></figcaption></figure>
 
 Updated `&structure` to work with [`&cover`](../view-parameters/cover.md), allowing for some more flexibility with controlling fixed aspect-ratios from the viewer/scene side.\
-ie: `https://vdo.ninja/alpha/?room=XXXXX&scene&cover&structure&square&fakeguests=10`\
+ie: `https://vdo.ninja/?room=XXXXX&scene&cover&structure&square&fakeguests=10`\
 ![](<../../.gitbook/assets/image (3) (1) (1) (1).png>)![](<../../.gitbook/assets/image (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1).png>)
 
 ## Related
