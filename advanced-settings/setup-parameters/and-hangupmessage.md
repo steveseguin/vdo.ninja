@@ -2,10 +2,9 @@
 description: Option for a custom hang-up message
 ---
 
-# \&hangupmessage (alpha)
+# \&hangupmessage
 
-Sender-Side Option! ([`&push`](../../source-settings/push.md))\
-\***ALPHA-ONLY** - Only available at [https://vdo.ninja/alpha/](https://vdo.ninja/alpha/)
+Sender-Side Option! ([`&push`](../../source-settings/push.md))
 
 ## Aliases
 
@@ -22,13 +21,13 @@ Example: `&hangupmessage=bye<img%20src%3D".%2Fmedia%2Flogo_cropped.png">`
 Option for a custom hang-up message. `&hangupmessage` takes a URL encoded string. So it can be just "bye", or it can be some HTML, as shown in the link.
 
 eg:\
-[https://vdo.ninja/alpha/?hum=bye%3Cimg%20src%3D%22.%2Fmedia%2Flogo\_cropped.png%22%3E\&push=ZimFGxM](https://vdo.ninja/alpha/?hum=bye%3Cimg%20src%3D%22.%2Fmedia%2Flogo\_cropped.png%22%3E\&push=ZimFGxM)\
+[https://vdo.ninja/?hum=bye%3Cimg%20src%3D%22.%2Fmedia%2Flogo\_cropped.png%22%3E\&push=ZimFGxM](https://vdo.ninja/?hum=bye%3Cimg%20src%3D%22.%2Fmedia%2Flogo\_cropped.png%22%3E\&push=ZimFGxM)\
 ![](<../../.gitbook/assets/image (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1).png>)
 
 ## Related
 
-{% content-ref url="and-humb64-alpha.md" %}
-[and-humb64-alpha.md](and-humb64-alpha.md)
+{% content-ref url="and-humb64.md" %}
+[and-humb64.md](and-humb64.md)
 {% endcontent-ref %}
 
 {% content-ref url="../../newly-added-parameters/and-welcome.md" %}

@@ -2,10 +2,9 @@
 description: The same as &welcome, except this takes an input as a base64 encoded string
 ---
 
-# \&welcomeb64 (alpha)
+# \&welcomeb64
 
-Sender-Side Option! ([`&push`](../../source-settings/push.md))\
-\***ALPHA-ONLY** - Only available at [https://vdo.ninja/alpha/](https://vdo.ninja/alpha/)
+Sender-Side Option! ([`&push`](../../source-settings/push.md))
 
 ## Options
 
@@ -20,7 +19,7 @@ Example: `&welcome64=SGVsbG8=`
 Base64 values are less likely to get parsed by apps like Slack incorrectly, so safer to share. If feeling lazy, you can also just use [invite.cam](https://invite.cam/), and encode the entire link itself; has a similar effect.
 
 eg:\
-[https://vdo.ninja/alpha/?push=khnCsjS\&wc\&welcomeb64=SGVsbG8](https://vdo.ninja/alpha/?push=khnCsjS\&wc\&welcomeb64=SGVsbG8)
+[https://vdo.ninja/?push=khnCsjS\&wc\&welcomeb64=SGVsbG8](https://vdo.ninja/?push=khnCsjS\&wc\&welcomeb64=SGVsbG8)
 
 ## Related
 

@@ -4,10 +4,9 @@ description: >-
   picture
 ---
 
-# \&pipme (alpha)
+# \&pipme
 
-General Option! ([`&push`](../../source-settings/push.md), [`&room`](../../general-settings/room.md), [`&view`](../view-parameters/view.md), [`&scene`](../view-parameters/scene.md))\
-\***ALPHA-ONLY** - Only available at [https://vdo.ninja/alpha/](https://vdo.ninja/alpha/)
+General Option! ([`&push`](../../source-settings/push.md), [`&room`](../../general-settings/room.md), [`&view`](../view-parameters/view.md), [`&scene`](../view-parameters/scene.md))
 
 ## Aliases
 
@@ -28,6 +27,6 @@ This is not compatible with [`&autostart`](../../source-settings/and-autostart.m
 [and-pip.md](and-pip.md)
 {% endcontent-ref %}
 
-{% content-ref url="and-pipall-alpha.md" %}
-[and-pipall-alpha.md](and-pipall-alpha.md)
+{% content-ref url="and-pipall.md" %}
+[and-pipall.md](and-pipall.md)
 {% endcontent-ref %}

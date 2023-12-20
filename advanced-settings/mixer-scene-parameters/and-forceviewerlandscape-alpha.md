@@ -6,8 +6,7 @@ description: >-
 
 # \&forceviewerlandscape (alpha)
 
-Viewer-Side Option! ([`&scene`](../view-parameters/scene.md), [`&room`](../../general-settings/room.md))\
-\***ALPHA-ONLY** - Only available at [https://vdo.ninja/alpha/](https://vdo.ninja/alpha/)
+Viewer-Side Option! ([`&scene`](../view-parameters/scene.md), [`&room`](../../general-settings/room.md))
 
 ## Options
 
@@ -19,7 +18,7 @@ Example: `&forceviewerlandscape=90`
 
 `&forceviewerlandscape` keeps all **incoming** videos oriented (rotated) so that the [aspect ratio](../video-parameters/and-aspectratio.md) is always above 1, so effectively, forces landscape mode.
 
-ie: [https://vdo.ninja/alpha/?forceviewerlandscape\&view=xxx](https://vdo.ninja/alpha/?forceviewerlandscape\&view=xxx)
+ie: [https://vdo.ninja/?forceviewerlandscape\&view=xxx](https://vdo.ninja/?forceviewerlandscape\&view=xxx)
 
 This normally shouldn't be needed, as the sender side should control the orientation, but the native app seems to auto rotate back to portrait when the phone is locked. Until that is fixed, this can work around the issue I think, by rotating the video when it detects its been rotated.
 

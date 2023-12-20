@@ -4,10 +4,9 @@ description: >-
   until approved by the director
 ---
 
-# \&hold (alpha)
+# \&hold
 
-Sender-Side Option! ([`&push`](../../source-settings/push.md), [`&room`](../../general-settings/room.md))\
-\***ALPHA-ONLY** - Only available at [https://vdo.ninja/alpha/](https://vdo.ninja/alpha/)
+Sender-Side Option! ([`&push`](../../source-settings/push.md), [`&room`](../../general-settings/room.md))
 
 ## Aliases
 
@@ -27,10 +26,10 @@ Transferring the guest to another room will also automatically activate the gues
 [queue.md](../../general-settings/queue.md)
 {% endcontent-ref %}
 
-{% content-ref url="and-holdwithvideo-alpha.md" %}
-[and-holdwithvideo-alpha.md](and-holdwithvideo-alpha.md)
+{% content-ref url="and-holdwithvideo.md" %}
+[and-holdwithvideo.md](and-holdwithvideo.md)
 {% endcontent-ref %}
 
-{% content-ref url="and-screen-alpha.md" %}
-[and-screen-alpha.md](and-screen-alpha.md)
+{% content-ref url="and-screen.md" %}
+[and-screen.md](and-screen.md)
 {% endcontent-ref %}

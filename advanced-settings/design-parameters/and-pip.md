@@ -14,10 +14,10 @@ Adding this to a guest's link in a room, it forces the system-based PIP to trigg
 
 ## Related
 
-{% content-ref url="and-pipall-alpha.md" %}
-[and-pipall-alpha.md](and-pipall-alpha.md)
+{% content-ref url="and-pipall.md" %}
+[and-pipall.md](and-pipall.md)
 {% endcontent-ref %}
 
-{% content-ref url="and-pipme-alpha.md" %}
-[and-pipme-alpha.md](and-pipme-alpha.md)
+{% content-ref url="and-pipme.md" %}
+[and-pipme.md](and-pipme.md)
 {% endcontent-ref %}

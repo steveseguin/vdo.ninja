@@ -2,10 +2,9 @@
 description: Scales down the WHIP video output via the URL
 ---
 
-# \&whipoutscale (alpha)
+# \&whipoutscale
 
-[WHIP Option](../../steves-helper-apps/whip-and-whep-tooling.md) / Sender-Side Option! ([`&push`](../../source-settings/push.md))\
-\***ALPHA-ONLY** - Only available at [https://vdo.ninja/alpha/](https://vdo.ninja/alpha/)
+[WHIP Option](../../steves-helper-apps/whip-and-whep-tooling.md) / Sender-Side Option! ([`&push`](../../source-settings/push.md))
 
 ## Aliases
 

@@ -28,6 +28,6 @@ In all four cases, if someone else is talking/active, your local preview will be
 
 ## Related
 
-{% content-ref url="../mixer-scene-parameters/and-motiondetection-alpha.md" %}
-[and-motiondetection-alpha.md](../mixer-scene-parameters/and-motiondetection-alpha.md)
+{% content-ref url="../mixer-scene-parameters/and-motiondetection.md" %}
+[and-motiondetection.md](../mixer-scene-parameters/and-motiondetection.md)
 {% endcontent-ref %}
