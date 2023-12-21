@@ -12417,7 +12417,9 @@ function toggleVideoMute(apply = false) { // TODO: I need to have this be MUTE, 
 	}
 	
 	if (session.style && (session.style==1)){
-		updateMixer();
+		if (!session.videoElement || (session.videoElement.id !== "previewWebcam")){
+			updateMixer();
+		}
 	}
 	
 }
