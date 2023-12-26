@@ -33,3 +33,7 @@ Use [`&broadcast`](../view-parameters/broadcast.md) or [`&showonly`](novideo.md)
 {% content-ref url="novideo.md" %}
 [novideo.md](novideo.md)
 {% endcontent-ref %}
+
+{% content-ref url="and-nodirectorvideo.md" %}
+[and-nodirectorvideo.md](and-nodirectorvideo.md)
+{% endcontent-ref %}

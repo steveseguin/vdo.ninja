@@ -8,7 +8,7 @@ Viewer-Side Option! ([`&view`](../view-parameters/view.md), [`&scene`](../view-p
 
 ## Aliases
 
-* [`&novideo`](novideo-1.md)
+* [`&novideo`](and-novideo.md)
 * `&nv`
 * `&hidevideo`
 
@@ -25,7 +25,7 @@ Example: `&showonly=streamID1,streamID2`
 * Useful for a large group room where you want everyone in the room to see only the OBS Virtualcam output.
 * Consider using [`&broadcast`](../view-parameters/broadcast.md) option instead of this flag as it is better suited for presenting a single feed to a group than using `&showonly` alone.
 
-This is actually just an alias of [`&novideo`](novideo-1.md).
+This is actually just an alias of [`&novideo`](and-novideo.md).
 
 ## Related
 
@@ -33,6 +33,6 @@ This is actually just an alias of [`&novideo`](novideo-1.md).
 [broadcast.md](../view-parameters/broadcast.md)
 {% endcontent-ref %}
 
-{% content-ref url="novideo-1.md" %}
-[novideo-1.md](novideo-1.md)
+{% content-ref url="and-novideo.md" %}
+[and-novideo.md](and-novideo.md)
 {% endcontent-ref %}

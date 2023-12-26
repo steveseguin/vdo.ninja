@@ -159,7 +159,7 @@ If you intend to have more than a 6 virtual audio cables, you can try VAC instea
 
 You can also use some advanced URL parameters to output the audio to specific channels. The following link links the parameters and the outcome, based on device/software used: [https://docs.google.com/spreadsheets/d/1R-y7xZ2BCn-GzTlwqq63H8lorXecO02DU9Hu4twuhuA/edit?usp=sharing](https://docs.google.com/spreadsheets/d/1R-y7xZ2BCn-GzTlwqq63H8lorXecO02DU9Hu4twuhuA/edit?usp=sharing)
 
-You can still capture audio via OBS Browser source, appending [`&novideo`](../../advanced-settings/video-parameters/novideo-1.md) to the URL to disable video. Appending [`&noaudio`](../../advanced-settings/view-parameters/noaudio.md) to the Electron Capture URL would conversely disable audio there, allowing you to capture audio with OBS browser source and video with Electron Capture. The audio/video sync might be slightly off in this setup, but not noticible in most cases.
+You can still capture audio via OBS Browser source, appending [`&novideo`](../../advanced-settings/video-parameters/and-novideo.md) to the URL to disable video. Appending [`&noaudio`](../../advanced-settings/view-parameters/noaudio.md) to the Electron Capture URL would conversely disable audio there, allowing you to capture audio with OBS browser source and video with Electron Capture. The audio/video sync might be slightly off in this setup, but not noticible in most cases.
 
 More recently, with newer versions of OBS, you can capture an application's audio using OBS natively, but with older versions you can use the following OBS plugin to also do it: [https://github.com/bozbez/win-capture-audio](https://github.com/bozbez/win-capture-audio)&#x20;
 

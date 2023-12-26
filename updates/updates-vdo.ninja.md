@@ -294,14 +294,14 @@ This feature is just for fun at the moment. It's does not do automatic p2p2p bro
     <figure><img src="../.gitbook/assets/image (188).png" alt="" width="331"><figcaption></figcaption></figure>
 
     </div>
-* Added `&nodirectorvideo` and `&nodirectoraudio` to VDO.Ninja; these are just like [`&novideo`](../advanced-settings/video-parameters/novideo-1.md) and [`&noaudio`](../advanced-settings/view-parameters/noaudio.md), except they only apply to incoming connections from room directors. So, if your are using the [Mixer App](../steves-helper-apps/mixer-app.md) with OBS, but you want to exclude the audio of yourself from the OBS, this potentially could be an easy way to do that.
+* Added [`&nodirectorvideo`](../advanced-settings/video-parameters/and-nodirectorvideo.md) and [`&nodirectoraudio`](../advanced-settings/audio-parameters/and-nodirectoraudio.md) to VDO.Ninja; these are just like [`&novideo`](../advanced-settings/video-parameters/and-novideo.md) and [`&noaudio`](../advanced-settings/view-parameters/noaudio.md), except they only apply to incoming connections from room directors. So, if your are using the [Mixer App](../steves-helper-apps/mixer-app.md) with OBS, but you want to exclude the audio of yourself from the OBS, this potentially could be an easy way to do that.
 
 \*\* on alpha at vdo.ninja/alpha/
 
 #### October 13 <a href="#august-31" id="august-31"></a>
 
 * I re-wrote the canvas drawing logic (the digital effects code) to make it more performant when a tab is not visible. Some browsers will throttle hidden tabs, and it was causing low frame rates when doing green screen or digital zoom while multitasking. I'd love some testing of it from others, to ensure no bugs slipped in, and also to let me know if it actually helped.
-* added some logic to the green screen / virtual background code that tries to lower quality of the effect a bit when low frames are detected, to try to allow slow devices or mobile devices to maintain a better frame rate. If its an issue on mobile, [`&flagship`](../advanced-settings/upcoming-parameters/and-flagship.md) can disable that code.
+* Added some logic to the green screen / virtual background code that tries to lower quality of the effect a bit when low frames are detected, to try to allow slow devices or mobile devices to maintain a better frame rate. If its an issue on mobile, [`&flagship`](../advanced-settings/upcoming-parameters/and-flagship.md) can disable that code.
 
 \*\* change on alpha ([https://vdo.ninja/alpha/](https://vdo.ninja/alpha/))
 
@@ -1095,7 +1095,7 @@ https://vdo.ninja/alpha/?view=YbFmisR&poster=./media/bg_sample.webp&hideplaybutt
 #### April 5 <a href="#august-31" id="august-31"></a>
 
 * If a VDO.Ninja guest has [`&chunked`](../newly-added-parameters/and-chunked.md) added, the viewer or another guest can now use [`&nochunked`](../advanced-settings/settings-parameters/and-nochunked.md) to ignore the chunked version, and use the low-latency version. In this way, guests in a room can still use the low latency streams to chat, but publish chunked video to OBS for (delayed) high quality video.
-* [`&noaudio`](../advanced-settings/view-parameters/noaudio.md) and [`&novideo`](../advanced-settings/video-parameters/novideo-1.md) works with [`&chunked`](../newly-added-parameters/and-chunked.md) mode sources now also, so you can have audio or video only chunked mode if needed.\
+* [`&noaudio`](../advanced-settings/view-parameters/noaudio.md) and [`&novideo`](../advanced-settings/video-parameters/and-novideo.md) works with [`&chunked`](../newly-added-parameters/and-chunked.md) mode sources now also, so you can have audio or video only chunked mode if needed.\
   \*\* on alpha
 * [invite.cam](https://invite.cam/) updated to support the recent [`&headertitle`](../advanced-settings/design-parameters/and-headertitle.md) and [`&favicon`](../advanced-settings/design-parameters/and-favicon-alpha.md) feature. (use via the encoded input URL, such as VDO.Ninja; not the invite.cam URL)
 
@@ -1530,7 +1530,7 @@ https://vdo.ninja/alpha/?view=YbFmisR&poster=./media/bg_sample.webp&hideplaybutt
 * The recently added [`&audiocodec=pcm`](../advanced-settings/audio-parameters/minptime-1.md) option no longer needs `&insertablestreams` to be used on the sender's side; works with just a viewer-side flag now and works with video.
 * [`&audiocodec=pcm`](../advanced-settings/audio-parameters/minptime-1.md) now will support 48khz and 44.1khz mono playback (48khz default), and if [`&stereo`](../general-settings/stereo.md) is used, it changes to two-channel stereo 32khz.
 * The existing [`&samplerate=44100`](../advanced-settings/view-parameters/and-samplerate.md) option can lower the sample rate of this pcm mode (down to 8khz even), and hence the resulting audio bitrate. Since pcm is raw, [`&audiobitrate`](../advanced-settings/view-parameters/audiobitrate.md) won't work, so expect 550 to 1200-kbps in just audio bitrates per viewer.
-* Fixed a bug with the video-settings sliders in the director room, where changing a setting didn't visually always update the correct feedback input field - fixed a bug where using [`&view=xxx`](../advanced-settings/view-parameters/view.md)[`&novideo`](../advanced-settings/video-parameters/novideo-1.md) didn't display a press-to-play button in the browser.
+* Fixed a bug with the video-settings sliders in the director room, where changing a setting didn't visually always update the correct feedback input field - fixed a bug where using [`&view=xxx`](../advanced-settings/view-parameters/view.md)[`&novideo`](../advanced-settings/video-parameters/and-novideo.md) didn't display a press-to-play button in the browser.
 * Fixed a bug where the self-preview video didn't have the right height when using [`&layouts`](../advanced-settings/director-parameters/and-layouts.md).
 * Fixed a bug where if a guest muted their video, and unmuted, it didn't always resize correctly afterwards.
 * Fixed a bug where if a guest muted their video, the audio-only spacer box that remained would resize smaller, rather than just staying the same size.\
@@ -1563,7 +1563,7 @@ https://vdo.ninja/alpha/?view=YbFmisR&poster=./media/bg_sample.webp&hideplaybutt
   \-- [`&audiocodec`](../advanced-settings/audio-parameters/minptime-1.md) on the viewer side can let you specify the audio codec; `opus` (default), `pcmu`, `pcma`, `isac`, `g722` and `red`\
   \-- [`&audiocodec`](../advanced-settings/audio-parameters/minptime-1.md)`=red` is pretty much sending two opus streams, with one as a backup in case of packet loss; support in Chromium 97 and up, but the only way I can so far tell that it is working is to check if the audio bitrate has doubled\
   \-- [`&dtx`](../advanced-settings/audio-parameters/minptime-2.md) (aka, `&usedtx`), is also now functional (viewer side). Using this flag will turn off the audio encoder automatically when no little to no sound is detected. The VDO.Ninja default uses a dynamic audio bitrate mode ([`&vbr`](../advanced-settings/view-parameters/vbr.md)), but using [`&dtx`](../advanced-settings/audio-parameters/minptime-2.md) takes things to the next level. It might be useful as a very mild noise-gate I suppose?\
-  \-- Also fixed a couple minor bugs, such as no play button appearing when using [`&view=StreamID`](../advanced-settings/view-parameters/view.md)[`&novideo`](../advanced-settings/video-parameters/novideo-1.md)\
+  \-- Also fixed a couple minor bugs, such as no play button appearing when using [`&view=StreamID`](../advanced-settings/view-parameters/view.md)[`&novideo`](../advanced-settings/video-parameters/and-novideo.md)\
   \
   \*\* changes on alpha at [https://vdo.ninja/alpha/](https://vdo.ninja/alpha/)
 

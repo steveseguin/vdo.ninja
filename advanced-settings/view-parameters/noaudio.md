@@ -21,6 +21,10 @@ If you want to be able to unmute the speaker button during production, use [`&mu
 
 ## Related
 
+{% content-ref url="../audio-parameters/and-nodirectoraudio.md" %}
+[and-nodirectoraudio.md](../audio-parameters/and-nodirectoraudio.md)
+{% endcontent-ref %}
+
 {% content-ref url="../../source-settings/and-mutespeaker.md" %}
 [and-mutespeaker.md](../../source-settings/and-mutespeaker.md)
 {% endcontent-ref %}
@@ -29,6 +33,6 @@ If you want to be able to unmute the speaker button during production, use [`&mu
 [deafen.md](../../general-settings/deafen.md)
 {% endcontent-ref %}
 
-{% content-ref url="../video-parameters/novideo-1.md" %}
-[novideo-1.md](../video-parameters/novideo-1.md)
+{% content-ref url="../video-parameters/and-novideo.md" %}
+[and-novideo.md](../video-parameters/and-novideo.md)
 {% endcontent-ref %}
