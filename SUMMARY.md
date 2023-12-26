@@ -303,6 +303,7 @@
     * [\&maxconnections](source-settings/and-maxconnections.md)
     * [\&maxviewers](source-settings/and-maxviewers.md)
     * [\&chunked](newly-added-parameters/and-chunked.md)
+    * [\&retransmit](advanced-settings/settings-parameters/and-retransmit.md)
     * [\&rampuptime](newly-added-parameters/and-rampuptime.md)
     * [\&sensor](source-settings/sensor.md)
     * [\&sensorfilter](advanced-settings/settings-parameters/and-sensorfilter.md)

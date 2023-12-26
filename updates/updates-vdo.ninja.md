@@ -265,10 +265,10 @@ Feedback and bug reports welcomed \*\* Available for testing on alpha at [https:
 
 #### October 16 <a href="#august-31" id="august-31"></a>
 
-* Added a new experimental option called `&retransmit`; it will relay the incoming '[chunked](../newly-added-parameters/and-chunked.md)' media stream to others connected to you, without transcoding. In a way, this enables a form of peer to peer to peer broadcasting.\
+* Added a new experimental option called [`&retransmit`](../advanced-settings/settings-parameters/and-retransmit.md); it will relay the incoming '[chunked](../newly-added-parameters/and-chunked.md)' media stream to others connected to you, without transcoding. In a way, this enables a form of peer to peer to peer broadcasting.\
   \
   \-- It only works with incoming [`&chunked`](../newly-added-parameters/and-chunked.md) data streams, however trying to forward more than one chunked stream will break things currently.\
-  \-- It will disable your own mic/camera from being streamed; when `&retransmit` is used it configures itself as a viewer in a sense.\
+  \-- It will disable your own mic/camera from being streamed; when [`&retransmit`](../advanced-settings/settings-parameters/and-retransmit.md) is used it configures itself as a viewer in a sense.\
   \-- Chunked mode has a default play out buffer delay of about 1-second still, but that buffer time does not get passed down to the relayed viewer. There is still some transmission delay that gets introduced though, but it can be very low latency on a series of good computers/network. example p2p2p setup:
 
 ```

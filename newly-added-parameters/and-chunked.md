@@ -51,3 +51,7 @@ The default and normal WebRTC video and audio sending modes used by VDO.Ninja ar
 {% content-ref url="../advanced-settings/settings-parameters/and-nochunked.md" %}
 [and-nochunked.md](../advanced-settings/settings-parameters/and-nochunked.md)
 {% endcontent-ref %}
+
+{% content-ref url="../advanced-settings/settings-parameters/and-retransmit.md" %}
+[and-retransmit.md](../advanced-settings/settings-parameters/and-retransmit.md)
+{% endcontent-ref %}
