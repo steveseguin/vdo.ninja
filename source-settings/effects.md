@@ -44,11 +44,15 @@ Please do enable Webassembly-SIMD support under `chrome://flags/` if you'd like 
 My hope is that this feature will eventually be enabled by default within Chromium, as loading a large ML model to do face detection otherwise is a bit heavy; you may need to enable this within the OBS CLI if wishing to use it there?
 {% endhint %}
 
-## `&effects=8`
+### `&effects=8`
 
 Added `&effects=8`, which might be useful if using a Camlink or simple HDMI capture device and [`&record`](../advanced-settings/recording-parameters/and-record.md) mode. The current `&record` mode doesn't seem to always scale down the video before recording (browser issue it seems), so local file recordings might be 4K in size, despite the target resolution being set much lower. `&effects=8` will use a canvas to first resize the video though, and then recordings will be based on that, making smaller recording sizes possible. (You could also use `&effects=7`, which then provides digital zooming controls and is otherwise the same thing).
 
 This `&effects=8` mode might also be helpful in solving issues with cameras disconnecting or having their frame rate change while recording, causing issues with the recording. The canvas acts as a reliable middle man between the camera and output video stream, so if the camera's input stream fails, the recording stream will not be impacted, other than perhaps skipping some frames. The canvas is sensitive to CPU load or browser throttling though, so frame rates may fluctuate more often when using it, so I can't suggest using it unless the guest/user is known to have a problematic camera.
+
+### `&effects=7` (Zoom)
+
+[`&effectvalue=1.2`](../newly-added-parameters/and-effectvalue.md) will now work with `&zoom` (`&effects=7`), so you can trigger the camera to digitally zoom in on load.
 
 ## Related
 

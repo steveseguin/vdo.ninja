@@ -30,6 +30,8 @@ If not using `&effectvalue` you can change it dynamically via the settings menu.
 It's best to keep the value under 10 and using this flag disables the option to use the slider.
 {% endhint %}
 
+`&effectvalue=1.2` will now work with `&zoom` ([`&effects=7`](../source-settings/effects.md#options)), so you can trigger the camera to digitally zoom in on load.
+
 ## Related
 
 {% content-ref url="../source-settings/effects.md" %}
