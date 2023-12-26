@@ -316,7 +316,7 @@ This feature is just for fun at the moment. It's does not do automatic p2p2p bro
 
 #### October 9 <a href="#august-31" id="august-31"></a>
 
-If you want the VDO.Ninja self-preview to not be mini-sized in broadcast mode, which might be the case on mobile, you can try using [`&minipreview=0`](../source-settings/and-minipreview.md) or `&largepreview`. These flags will disable the mini-preview functionality, keeping the preview the same size as other videos.
+If you want the VDO.Ninja self-preview to not be mini-sized in broadcast mode, which might be the case on mobile, you can try using [`&minipreview=0`](../source-settings/and-minipreview.md) or [`&largepreview`](../advanced-settings/video-parameters/and-largepreview.md). These flags will disable the mini-preview functionality, keeping the preview the same size as other videos.
 
 \*\* on production (hot patch) and alpha
 

@@ -87,3 +87,7 @@ An older video, but it gets some basics across still about \&broadcast mode
 {% content-ref url="../video-parameters/novideo.md" %}
 [novideo.md](../video-parameters/novideo.md)
 {% endcontent-ref %}
+
+{% content-ref url="../video-parameters/and-largepreview.md" %}
+[and-largepreview.md](../video-parameters/and-largepreview.md)
+{% endcontent-ref %}

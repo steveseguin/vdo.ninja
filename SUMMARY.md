@@ -159,6 +159,7 @@
     * [\&showpreview](source-settings/and-preview.md)
     * [\&minipreview](source-settings/and-minipreview.md)
     * [\&minipreviewoffset](advanced-settings/video-parameters/and-minipreview-1.md)
+    * [\&largepreview](advanced-settings/video-parameters/and-largepreview.md)
     * [\&nopreview](source-settings/and-nopreview.md)
     * [\&hideguest](newly-added-parameters/and-hideguest.md)
     * [\&videomute](source-settings/and-videomute.md)
