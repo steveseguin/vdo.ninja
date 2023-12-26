@@ -1,5 +1,11 @@
 # Updates - VDO.Ninja
 
+#### December 22 <a href="#august-31" id="august-31"></a>
+
+* `showChatMessage` and `showChatOverlay` added as API options (ie: [https://api.vdo.ninja/xxxx/sendChatMessage](https://api.vdo.ninja/xxxx/sendChatMessage)), which will show a message in that user's chat feed, or as a more visible message overlay.
+  * Might be useful if you want to send messages to a host, without having a director connected
+  * Available on alpha at vdo.ninja/alpha/
+
 #### December 19 <a href="#august-31" id="august-31"></a>
 
 * VDO.Ninja on GitHub updated [https://github.com/steveseguin/vdo.ninja](https://github.com/steveseguin/vdo.ninja)
