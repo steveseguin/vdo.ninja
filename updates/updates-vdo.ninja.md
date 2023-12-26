@@ -6,6 +6,8 @@
   * Might be useful if you want to send messages to a host, without having a director connected
   * Available on alpha at vdo.ninja/alpha/
 
+## [Version 24 Release](../releases/v24.md)
+
 #### December 19 <a href="#august-31" id="august-31"></a>
 
 * VDO.Ninja on GitHub updated [https://github.com/steveseguin/vdo.ninja](https://github.com/steveseguin/vdo.ninja)
