@@ -1,5 +1,11 @@
 # Updates - VDO.Ninja
 
+#### December 29 <a href="#august-31" id="august-31"></a>
+
+* Removed the 'submit bug' and 'help' buttons in the lower-right; they weren't being used enough to justify the annoyance they added.
+* Fixed an issue where the [`&chunked`](../newly-added-parameters/and-chunked.md) mode didn't work with custom [`&layouts`](../advanced-settings/director-parameters/and-layouts.md) ([Mixer App](../steves-helper-apps/mixer-app.md)).
+* Fixed an issue where switching from WiFi to Cellular with an iPhone didn't always reconnect.
+
 #### December 22 <a href="#august-31" id="august-31"></a>
 
 * `showChatMessage` and `showChatOverlay` added as API options (ie: [https://api.vdo.ninja/xxxx/sendChatMessage](https://api.vdo.ninja/xxxx/sendChatMessage)), which will show a message in that user's chat feed, or as a more visible message overlay.

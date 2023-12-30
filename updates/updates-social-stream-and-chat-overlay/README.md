@@ -3,6 +3,10 @@
 [social-stream.md](../../steves-helper-apps/social-stream.md "mention")\
 [chat-overlay.md](../../steves-helper-apps/chat-overlay.md "mention")
 
+#### **December 29**
+
+* Updated Social Stream so it supports Vimm's WebSockets mode
+
 #### **December 18**
 
 *   Fixed the threads.net support on Social Stream. (the star button manually adds the post to the dock)
