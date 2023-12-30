@@ -6,7 +6,7 @@
 
 #### December 29
 
-v0.1.10\
+**v0.1.10**\
 [https://github.com/steveseguin/social\_stream/releases/tag/0.1.10](https://github.com/steveseguin/social\_stream/releases/tag/0.1.10)
 
 * Updated with recent security patches + Vimm WSS support
