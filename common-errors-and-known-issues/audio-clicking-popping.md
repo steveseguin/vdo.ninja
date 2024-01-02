@@ -10,7 +10,7 @@ Having the playback audio device and the microphone capture device set to 48000h
 \
 Restarting OBS or addressing heavy CPU load may also help prevent buffer underruns, which sometimes appear in the OBS logs as a max buffer reached error.  Make sure the computer isn't running near 100% load to ensure it's not just overloaded. &#x20;
 
-As well, starting OBS Studio in admin mode can also fix issues with audio as well, as the system might be otherwise running OBS in some form of low-powered efficiency mode. \
+As well, starting OBS Studio in admin mode can also fix issues with audio as well, although I'm not entirely sure why this works sometimes.\
 \
 Some surround sound headphones, like those by Logitech, can also cause audio problems; robotic noises, distortion, etc. Disabling surround sound mode often fixes such issues.
 
