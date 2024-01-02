@@ -29,6 +29,10 @@ Another option, one that I haven't tested yet myself personally, is to use an An
 One such option is this Yolobox production, which I think you can install Chrome onto?. While I haven't tried it, if you can select the HDMI input within Chrome on that device, you might be able to stream to VDO.Ninja with an HDMI device in this way.\
 [https://www.amazon.ca/YoloBox-Band-Facebook-YouTube-Encoder/dp/B07PP6KHHV](https://www.amazon.ca/YoloBox-Band-Facebook-YouTube-Encoder/dp/B07PP6KHHV)
 
+#### iPad via USB
+
+Some iPads seem to support USB camera support, so using an HDMI to USB adapter with an iPad may allow for connecting a GoPro to VDO.Ninja on the iPad.
+
 #### Screen-sharing the GoPro video preview on Android
 
 Next year, I'll have some mobile apps out that support HDMI input into a mobile phone, with VDO.Ninja as an output, but at present I haven't had the time to do that.&#x20;
@@ -41,9 +45,27 @@ One option is to use a Raspberry Pi, which can ingest the HDMI video of the GoPr
 \
 The code for this project is here: [https://github.com/steveseguin/raspberry\_ninja](https://github.com/steveseguin/raspberry\_ninja) \
 \
-it's still a young project, and while things are functional, it's still mainly for those who are interested in tinkering. For production purposes, it might be a bit finicky, but quickly improving.&#x20;
+it's still a young project, and while things are functional, it's still mainly for those who are interested in tinkering.
 
-If building your own, you might find that it can be built so small that you might be able to use it on its own as a wireless camera, and not need a GoPro at all.\
+If building your own, you might find that it can be built so small that you might be able to use it on its own as a wireless camera, and not need a GoPro at all.
+
+#### RTMP to WHEP
+
+Open-source projects that can be self hosted can convert RTMP into WHEP, which is compatible with VDO.NInja. https://vdo.ninja/whep contains a WHEP player, and more and more companies are beginning to offer WHEP natively.\
+\
+In the future, GoPro may support WHIP output, which would be an alternative to RTMP, and would be compatible with VDO.Ninja directly
+
+#### Alternatives to VDO.Ninja
+
+Companies like StageTen.tv offer RTMP and WHIP ingest, and while it's not obvious, they can offer a clean output per guest feed for use in VDO.Ninja or OBS Studio.
+
+Restream.io and many open-source projects offer RTMP ingestion, with a way to pull RTMP into OBS Studio, and while there would be a delay, it is an option. Some users will even publish to Twitch, and pull the Twitch stream into OBS Studio, removing ads and overlays using Twitch Turbo and CSS.
+
+In the future, VDO.NInja may support RTMP to VDO.Ninja directly, via its free Meshcast.io service, however this is still in the works and not official
+
+####
+
+\
 
 
 ![](<../.gitbook/assets/image (127) (1).png>)
