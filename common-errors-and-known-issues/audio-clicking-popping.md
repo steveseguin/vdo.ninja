@@ -8,7 +8,9 @@ If using any virtual audio cables or pro audio gear, try to increase the audio b
 
 Having the playback audio device and the microphone capture device set to 48000hz, and no more than 24-bit, is recommended. You can adjust these settings in the Windows audio settings. Devices like a FiiO DAC can sometimes have the audio sample rate be very high, and that can cause buffer underruns and clicking problems.\
 \
-Restarting OBS or addressing heavy CPU load may also help prevent buffer underruns, which sometimes appear in the OBS logs as a max buffer reached error. \
+Restarting OBS or addressing heavy CPU load may also help prevent buffer underruns, which sometimes appear in the OBS logs as a max buffer reached error.  Make sure the computer isn't running near 100% load to ensure it's not just overloaded. &#x20;
+
+As well, starting OBS Studio in admin mode can also fix issues with audio as well, as the system might be otherwise running OBS in some form of low-powered efficiency mode. \
 \
 Some surround sound headphones, like those by Logitech, can also cause audio problems; robotic noises, distortion, etc. Disabling surround sound mode often fixes such issues.
 
