@@ -49,6 +49,8 @@ it's still a young project, and while things are functional, it's still mainly f
 
 If building your own, you might find that it can be built so small that you might be able to use it on its own as a wireless camera, and not need a GoPro at all.
 
+![](<../.gitbook/assets/image (127) (1).png>)
+
 #### RTMP to WHEP
 
 Open-source projects that can be self hosted can convert RTMP into WHEP, which is compatible with VDO.NInja. https://vdo.ninja/whep contains a WHEP player, and more and more companies are beginning to offer WHEP natively.\
@@ -63,11 +65,6 @@ Restream.io and many open-source projects offer RTMP ingestion, with a way to pu
 
 In the future, VDO.NInja may support RTMP to VDO.Ninja directly, via its free Meshcast.io service, however this is still in the works and not official
 
-####
 
-\
-
-
-![](<../.gitbook/assets/image (127) (1).png>)
 
 _Stay tuned for more options._
