@@ -22,23 +22,23 @@ The AV1 video codec is now also supported with modern iOS versions and works qui
 
 ### Microphones and Audio
 
-Some external microphones are supported by Safari on iOS, however iOS devices are very finicky as to which microphones are supported. Just because your device is listed, doesn't mean it will work or stay selected.
+Some external microphones are supported by Safari on iOS, however iOS devices are very finicky as to which microphones are supported. Just because your device is listed, doesn't mean it will work or stay selected.\
+\
+Users with an **iPhone 15 Pro or iPad, which have with USB 3.x support**, have reported success usually with external USB-based microphones, where as devices with Lightning or USB 2.0 ports have had poor success. Given this fact, I'd recommend getting an iPhone 15 Pro (rather than an iPhone 15 or iPhone 14), or perhaps a newer iPad, if wanting to stay in the Apple ecosystem.
 
-While there may be a drop down option for "external microphone", often iOS devices will auto-select and manage the microphone on its own once connected. Typically microphones that register as headsets, or some certified TRRS adapters, seem to work, but not all will still.
+That all said, I did find that some certified Lightning-based TRRS microphone adapters, which register as headsets, sometime seem to work better than other devices. Using an XLR to 3.5mm adapter, I've been able to connect professional microphones to an older iPhone 11 for example.
 
-One TRRS adapter that I have tested for myself that does seem to work is this one: [https://www.amazon.ca/gp/product/B07Q49SVYR](https://www.amazon.ca/gp/product/B07Q49SVYR)
+One Lightning-based TRRS adapter that I have tested for myself that seems to usually work is this one: [https://www.amazon.ca/gp/product/B07Q49SVYR](https://www.amazon.ca/gp/product/B07Q49SVYR)
 
-Airpods seem to work also, and some users report that USB devices on iPadOS 17 work, but this is not yet confirmed by me. It is hoped that this issue will be resolved in future versions of IOS, or perhaps one day I'll have support added to the native iOS app.
+Many of those cheap Amazon wireless Lightning-based lavalier microphones do not seem to work though, and while they may work with specific applications, they are not well supported by Safari. In testing I can't get them to work, however it's perhaps possible they will in future iOS updates.
 
-Firefox mobile on Android supports USB microphones reliably, if that is a potential solution.
-
-**AirPods** can create clicking or distortion if used as a microphone; please ensure they are fully-charged if you intend to use them in a live production. If they are on low-power, they will create audible problems.
+AirPods do seem to also often work, if needing something wireless though. **AirPods** can however create clicking or distortion if used as a microphone; please ensure that they are fully-charged if you intend to use them in a live production. If they are on low-power, they will create audible problems.
 
 Audio quality from an iOS generally is pretty low quality. Disabling audio enhancements can sometimes help improve the clarity. It is recommended that the user be wearing headphones though to avoid any feedback issues.
 
 iOS does not work with the volume visualizer meter; it causes clicking noises when used, so it has been disabled.
 
-If willing to use Android, some users have noted that Firefox for Android often works with USB microphones.
+If willing to use Android, some users have noted that Firefox for Android often works with USB microphones. Firefox mobile on Android supports USB microphones reliably, if that is a potential solution.
 
 ### Random issues
 
