@@ -404,10 +404,7 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		if (session.whepWait<0){
 			session.whepWait = 0;
 		}
-	} 
-	
-	
-	
+	}
 	
 	if (urlParams.has('whippush') || urlParams.has('whipout') || urlParams.has('pushwhip')) { // URL or data:base64 image. Becomes local to this viewer only.  This is like &avatar, but slightly different. Just CSS in this case
 		session.whipOutput = urlParams.get('whippush') || urlParams.get('whipout') || urlParams.get('pushwhip') || null;
@@ -5737,11 +5734,11 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		if (("getFreshStats" in e.data)){ // takes a second to query.
 			var stats = {};
 			try {
-				stats.inbound_stats = {};
+				stats.inbound = {};
 				stats.total_outbound_connections = Object.keys(session.pcs).length;
 				stats.total_inbound_connections = Object.keys(session.rpcs).length;
 				for (var i in session.rpcs) {
-					stats.inbound_stats[session.rpcs[i].streamID] = session.rpcs[i].stats;
+					stats.inbound[session.rpcs[i].streamID] = session.rpcs[i].stats;
 				}
 				for (var uuid in session.pcs) {
 					setTimeout(function(UUID) {

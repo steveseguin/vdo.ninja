@@ -167,9 +167,9 @@ function loadIframe(url=false){  // this is pretty important if you want to avoi
 			var out = "<br />total_inbound_connections:"+e.data.stats.total_inbound_connections;
 			out += "<br />total_outbound_connections:"+e.data.stats.total_outbound_connections;
 			
-			for (var streamID in e.data.stats.inbound_stats){
+			for (var streamID in e.data.stats.inbound){
 				out += "<br /><br /><b>streamID:</b> "+streamID+"<br />";
-				out += printValues(e.data.stats.inbound_stats[streamID]);
+				out += printValues(e.data.stats.inbound[streamID]);
 			}
 			
 			outputWindow.innerHTML = out;

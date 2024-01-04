@@ -1,0 +1,107 @@
+<html>
+<body>
+<input type='text' id="inputbar" style="position:absolute;bottom:40px;width:88%"/>
+<input type='text'  id="inputbar2" style="color:red;position:absolute;bottom:10px;width:88%"/>
+<script>
+var debugSocket = null;
+
+var connecting = false;
+var failedCount = 0;
+
+function getCurrentTimeFormatted() {
+    const now = new Date();
+
+    const hours = String(now.getHours()).padStart(2, '0');
+    const minutes = String(now.getMinutes()).padStart(2, '0');
+    const seconds = String(now.getSeconds()).padStart(2, '0');
+    const milliseconds = String(now.getMilliseconds()).padStart(3, '0');
+
+    return `${hours}:${minutes}:${seconds}.${milliseconds}`;
+}
+var lastTime = 0;
+function connect(){
+	clearTimeout(connecting);
+	if (debugSocket){
+		if (debugSocket.readyState === debugSocket.OPEN){return;}
+		try{
+			debugSocket.close();
+		} catch(e){}
+	}
+	debugSocket = new WebSocket("wss://debug.vdo.ninja:443");
+	
+	debugSocket.onclose = function (){
+		clearTimeout(connecting);
+		connecting = setTimeout(function(){connect();},100);
+	};
+	
+	debugSocket.addEventListener('message', function (event) {
+		
+		var msg = JSON.parse(event.data);
+		var delta = false;
+		if (msg.time){
+			delta = msg.time - lastTime;
+			lastTime = msg.time;
+		}
+		if (msg.type){
+			if (msg.log){
+				console.log(getCurrentTimeFormatted()+" " + delta + ": ", msg.log);
+			} else if (msg.warn){
+				console.warn(getCurrentTimeFormatted()+" " + delta + ": ", msg.warn);
+			} else if (msg.error){
+				console.error(getCurrentTimeFormatted()+" " + delta + ": ", msg.error);
+			} else if (msg.type=="log"){
+				console.log(getCurrentTimeFormatted()+" " + delta + ": ", msg.msg);
+			} else if (msg.type=="warn"){
+				console.warn(getCurrentTimeFormatted()+" " + delta + ": ", msg.msg);
+			} else if (msg.error=="error"){
+				console.error(getCurrentTimeFormatted()+" " + delta + ": ", msg.msg);
+			} else {
+				console.log(msg);
+			}
+		} else {
+			console.error(msg);
+		}
+		if (msg.line){
+			console.log(msg.line);
+		}
+	});
+}
+
+connect();
+
+function send(cmd){
+	debugSocket.send(JSON.stringify({cmd:cmd}));
+}
+function log(cmd){
+	debugSocket.send(JSON.stringify({err:cmd}));
+}
+
+var input = document.getElementById("inputbar");
+
+// Execute a function when the user presses a key on the keyboard
+input.addEventListener("keypress", function(event) {
+  // If the user presses the "Enter" key on the keyboard
+  if (event.key === "Enter") {
+    // Cancel the default action, if needed
+    event.preventDefault();
+    // Trigger the button element with a click
+    send(event.target.value);
+  }
+});
+
+var input2 = document.getElementById("inputbar2");
+
+// Execute a function when the user presses a key on the keyboard
+input2.addEventListener("keypress", function(event) {
+  // If the user presses the "Enter" key on the keyboard
+  if (event.key === "Enter") {
+    // Cancel the default action, if needed
+    event.preventDefault();
+    // Trigger the button element with a click
+    log(event.target.value);
+  }
+});
+
+</script>
+</body>
+</html>

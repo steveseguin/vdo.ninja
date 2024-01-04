@@ -425,68 +425,66 @@
 				if ("stats" in e.data) {
 					var out = "";
 					
-					for (var someValue in e.data.stats.inbound_stats) {
-						out += printValues(e.data.stats.inbound_stats[someValue]);
-						if (e.data.stats.inbound_stats[someValue] && e.data.stats.inbound_stats[someValue].info){
+					
+					for (var someValue in e.data.stats.inbound) {
+						out += printValues(e.data.stats.inbound[someValue]);
+						if (e.data.stats.inbound[someValue] && e.data.stats.inbound[someValue].info){
 							if (!statsSent){
-								statsSent = e.data.stats.inbound_stats[someValue];
+								statsSent = e.data.stats.inbound[someValue];
 							}
 						}
 					}
 					
-					for (var someValue in e.data.stats.outbound_stats) {
-						if (e.data.stats.outbound_stats[someValue].quality_limitation_reason){
-							if (quality_reason != e.data.stats.outbound_stats[someValue].quality_limitation_reason) {
-								quality_reason = e.data.stats.outbound_stats[someValue].quality_limitation_reason;
+					for (var someValue in e.data.stats.outbound) {
+						if (e.data.stats.outbound[someValue].quality_limitation_reason){
+							if (quality_reason != e.data.stats.outbound[someValue].quality_limitation_reason) {
+								quality_reason = e.data.stats.outbound[someValue].quality_limitation_reason;
 								logData({"QLR": quality_reason});
 							}
 						}
 						
-						if (e.data.stats.outbound_stats[someValue].encoder){
-							if (encoder != e.data.stats.outbound_stats[someValue].encoder) {
-								encoder = e.data.stats.outbound_stats[someValue].encoder;
+						if (e.data.stats.outbound[someValue].encoder){
+							if (encoder != e.data.stats.outbound[someValue].encoder) {
+								encoder = e.data.stats.outbound[someValue].encoder;
 								logData({"encoder":encoder});
 							}
-						} else if (e.data.stats.outbound_stats[someValue].video_codec){
-							if (encoder != e.data.stats.outbound_stats[someValue].video_codec) {
-								encoder = e.data.stats.outbound_stats[someValue].video_codec;
+						} else if (e.data.stats.outbound[someValue].video_codec){
+							if (encoder != e.data.stats.outbound[someValue].video_codec) {
+								encoder = e.data.stats.outbound[someValue].video_codec;
 								logData({"encoder":encoder});
 							}
 						}
 					}
 
-					for (var key in e.data.stats.inbound_stats[streamID]){
-						if (typeof e.data.stats.inbound_stats[streamID][key] == "object"){
-							if ("Bitrate_in_kbps" in e.data.stats.inbound_stats[streamID][key]){
-								var bitrate = e.data.stats.inbound_stats[streamID][key]["Bitrate_in_kbps"];
+					for (var key in e.data.stats.inbound[streamID]){
+						if (typeof e.data.stats.inbound[streamID][key] == "object"){
+							if ("Bitrate_in_kbps" in e.data.stats.inbound[streamID][key]){
+								var bitrate = e.data.stats.inbound[streamID][key]["Bitrate_in_kbps"];
 								updateData("bitrate", bitrate);
 							}
 							
-							
-							
-							
-							if ("Jitter_Buffer_ms" in e.data.stats.inbound_stats[streamID][key]){
-								var buffer = e.data.stats.inbound_stats[streamID][key]["Jitter_Buffer_ms"];
+							if ("Jitter_Buffer_ms" in e.data.stats.inbound[streamID][key]){
+								var buffer = e.data.stats.inbound[streamID][key]["Jitter_Buffer_ms"];
 								updateData("buffer", buffer);
-							} else if ("Buffer_Delay_in_ms" in e.data.stats.inbound_stats[streamID][key]){
-								var buffer = e.data.stats.inbound_stats[streamID][key]["Buffer_Delay_in_ms"];
+							} else if ("Buffer_Delay_in_ms" in e.data.stats.inbound[streamID][key]){
+								var buffer = e.data.stats.inbound[streamID][key]["Buffer_Delay_in_ms"];
 								updateData("buffer", buffer);
-							} else if ("Added_Buffer_Delay_ms" in e.data.stats.inbound_stats[streamID][key]){
+							} else if ("Added_Buffer_Delay_ms" in e.data.stats.inbound[streamID][key]){
 								console.log("Added_Buffer_Delay_ms");
-								var buffer = e.data.stats.inbound_stats[streamID][key]["Added_Buffer_Delay_ms"];
+								var buffer = e.data.stats.inbound[streamID][key]["Added_Buffer_Delay_ms"];
 								updateData("buffer", buffer);
 							}
 							
-							if ("packetLoss_in_percentage" in e.data.stats.inbound_stats[streamID][key]){
-								var packetloss = e.data.stats.inbound_stats[streamID][key]["packetLoss_in_percentage"];
+							if ("packetLoss_in_percentage" in e.data.stats.inbound[streamID][key]){
+								var packetloss = e.data.stats.inbound[streamID][key]["packetLoss_in_percentage"];
 								if (packetloss != undefined) {
 									packetloss = packetloss.toFixed(2);
 									updateData("packetloss", packetloss);
 								}
 							}
 
-							if ("Resolution" in e.data.stats.inbound_stats[streamID][key]){
-								var resolution = e.data.stats.inbound_stats[streamID][key]["Resolution"];
+							if ("Resolution" in e.data.stats.inbound[streamID][key]){
+								var resolution = e.data.stats.inbound[streamID][key]["Resolution"];
 
 								if (previousResolution != resolution) {
 									previousResolution = resolution;
