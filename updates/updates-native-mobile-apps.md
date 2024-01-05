@@ -2,6 +2,13 @@
 
 [native-mobile-app-versions.md](../steves-helper-apps/native-mobile-app-versions.md "mention")
 
+#### January 5
+
+* I've built a test version of the VDO.Ninja Android native app, which now should support passwords. I've yet to do proper testing of it, but if you want to give it a shot, I welcome feedback as to whether it worked or not for you:
+  * [https://drive.google.com/file/d/1M0kv5nWLtcfl2JOnsAGiG1zUmkeIVLyZ/view?usp=drive\_link](https://drive.google.com/file/d/1M0kv5nWLtcfl2JOnsAGiG1zUmkeIVLyZ/view?usp=drive\_link)
+
+### 2023
+
 #### September 13
 
 * A new version of VDO.Ninja for iOS has finally been published to the Apple App Store\
@@ -9,11 +16,11 @@
   \-- Also has forced-landscape mode support (I had to wait until iOS 17 launched to be able to release it)\
   [https://apps.apple.com/app/vdo-ninja/id1607609685?platform=iphone](https://apps.apple.com/app/vdo-ninja/id1607609685?platform=iphone)
 
-![](<../.gitbook/assets/image (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1).png>)
+![](<../.gitbook/assets/image (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1).png>)
 
 #### September 10
 
-* Zoom-in/out support added to the native vdo.ninja app, however this change still needs to be rolled out. Available on Google Play; the App Store update may be a couple weeks however. (once iOS 17 launches)\
+* Zoom-in/out support added to the native VDO.Ninja app, however this change still needs to be rolled out. Available on Google Play; the App Store update may be a couple weeks however. (once iOS 17 launches)\
   \-- Zoom is controlled with up/down swipe gestures; similar to how it is with the web app, but maybe a bit more stable.
 
 #### August 30
