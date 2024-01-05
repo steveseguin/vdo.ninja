@@ -6,12 +6,12 @@ Bluetooth microphones can cause clicking/popping.
 
 If using any virtual audio cables or pro audio gear, try to increase the audio buffer packet sizes, as buffer-under issues can cause audio distortion. Too small an audio buffer on some mic preamps or virtual audio cables can lead to clicking or distortion.
 
-Having the playback audio device and the microphone capture device set to 48000hz, and no more than 24-bit, is recommended. You can adjust these settings in the Windows audio settings. Devices like a FiiO DAC can sometimes have the audio sample rate be very high, and that can cause buffer underruns and clicking problems.\
-\
-Restarting OBS or addressing heavy CPU load may also help prevent buffer underruns, which sometimes appear in the OBS logs as a max buffer reached error.  Make sure the computer isn't running near 100% load to ensure it's not just overloaded. &#x20;
+Having the playback audio device and the microphone capture device set to 48000hz, and no more than 24-bit, is recommended. You can adjust these settings in the Windows audio settings. Devices like a FiiO DAC can sometimes have the audio sample rate be very high, and that can cause buffer underruns and clicking problems.
 
-As well, starting OBS Studio in admin mode can also fix issues with audio as well, although I'm not entirely sure why this works sometimes.\
-\
+Restarting OBS or addressing heavy CPU load may also help prevent buffer underruns, which sometimes appear in the OBS logs as a max buffer reached error. Make sure the computer isn't running near 100% load to ensure it's not just overloaded.
+
+As well, starting OBS Studio in admin mode can also fix issues with audio as well, although I'm not entirely sure why this works sometimes.
+
 Some surround sound headphones, like those by Logitech, can also cause audio problems; robotic noises, distortion, etc. Disabling surround sound mode often fixes such issues.
 
 If using a MacOS system, ensure your computer is plugged into the power outlet and not on battery power. Systems running on batteries can sometimes have issues.
@@ -22,10 +22,7 @@ Do not use Wi-Fi if streaming high-quality music; packet loss can cause clipping
 
 For either the sender or viewer of a stream, make sure you are not using up more than \~80% of your total upload bandwidth. Using 100% of your bandwidth will cause packets to stall and possibly be skipped, leading to missed frames and audio clicking.
 
-\
 If dealing with audio distortion or robotic voices, sample rates of the system
-
-
 
 You can also try adding some URL parameters to the viewer and sender linkes to see if it helps. A few parameters to try that might help are the following:\
 [`&noaudioprocessing`](../general-settings/noaudioprocessing.md)\
