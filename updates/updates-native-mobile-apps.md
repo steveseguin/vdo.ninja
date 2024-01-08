@@ -16,7 +16,7 @@
   \-- Also has forced-landscape mode support (I had to wait until iOS 17 launched to be able to release it)\
   [https://apps.apple.com/app/vdo-ninja/id1607609685?platform=iphone](https://apps.apple.com/app/vdo-ninja/id1607609685?platform=iphone)
 
-![](<../.gitbook/assets/image (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1).png>)
+![](<../.gitbook/assets/image (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1).png>)
 
 #### September 10
 
@@ -124,7 +124,7 @@
 #### November 14
 
 * I updated the native Android app for VDO.Ninja to include support for publishing into a VDO.Ninja room, and fixed a couple UI bugs, along with improved 1080p toggle support.\
-  \-- Note: If using a room, you will need to still add [`&password=false`](../general-settings/password.md) (`&p=0`) to all the guests/scenes, as I haven't added password support to the native app yet.\
+  \-- Note: If using a room, you will need to still add [`&password=false`](../advanced-settings/setup-parameters/and-password.md) (`&p=0`) to all the guests/scenes, as I haven't added password support to the native app yet.\
   \-- You can download it directly here: [https://drive.google.com/file/d/1M0kv5nWLtcfl2JOnsAGiG1zUmkeIVLyZ/view?usp=share\_link](https://drive.google.com/file/d/1M0kv5nWLtcfl2JOnsAGiG1zUmkeIVLyZ/view?usp=share\_link)\
   or in the Google Play Store:\
   [https://play.google.com/store/apps/details?id=flutter.vdo.ninja\&hl=gsw\&gl=US\&pli=1](https://play.google.com/store/apps/details?id=flutter.vdo.ninja\&hl=gsw\&gl=US\&pli=1)\

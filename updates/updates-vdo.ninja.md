@@ -219,7 +219,7 @@ Feedback and bug reports welcomed \*\* Available for testing on alpha at [https:
 
 #### October 25 <a href="#august-31" id="august-31"></a>
 
-* Added support for something called "end to end encryption" using "insertable streams" to VDO.Ninja. To use, add `&e2ee` to both the viewer and sender side links. Can be used in conjunction with [`&password`](../general-settings/password.md) to specify a cipher.\
+* Added support for something called "end to end encryption" using "insertable streams" to VDO.Ninja. To use, add [`&e2ee`](../advanced-settings/setup-parameters/and-e2ee.md) to both the viewer and sender side links. Can be used in conjunction with [`&password`](../advanced-settings/setup-parameters/and-password.md) to specify a cipher.\
   \
   More technical details about it:\
   \-- VDO.Ninja is already end to end encrypted by default (in peer to peer mode), so this isn't anything of much value to most users.\
@@ -227,7 +227,7 @@ Feedback and bug reports welcomed \*\* Available for testing on alpha at [https:
   \-- Uses the browser's built-in AES algo, but there is dedicated js file for the encryption logic, so you can custom-code to use your own encryption I guess\
   \-- Does NOT work with [Meshcast](../newly-added-parameters/and-meshcast.md), as I don't have insertable streams working server-side there yet, so there is no E2EE with Meshcast still\
   \-- It can be used with compatible WHIP/WHEP services, but most WHIP/WHEP services won't support insertable streams. Still, some do, and that's probably the main reason why I bothered to add this all in.\
-  \-- The default crypto key used will be hard coded, public, and not secure, but if you provide a [`&password`](../general-settings/password.md) it will use that as the secure cipher phrase instead.\
+  \-- The default crypto key used will be hard coded, public, and not secure, but if you provide a [`&password`](../advanced-settings/setup-parameters/and-password.md) it will use that as the secure cipher phrase instead.\
   \-- The encoder and decoder algo will fail-safely, rather than fail-securely; I can change this if needed, but it allows for broader peer compatibility and user friendliness. I have more work to do on visually indicating the state of this all, and to allow for more customization, but I'll wait on that until there is more feedback I guess.\
   \-- Not all browsers support this, so in those cases, it may fail safely, if possible; otherwise it will just fail completely.
 
@@ -260,13 +260,13 @@ Feedback and bug reports welcomed \*\* Available for testing on alpha at [https:
 * Fixed an issue with the WHEP player stats not showing correctly.
 * Fixed an issue where [`&buffer`](../advanced-settings/view-parameters/buffer.md) wasn't working with the WHEP player.
 * Made it a bit easier to setup the WHEP player as a basic viewer page; hiding menus that probably aren't commonly needed.
-* `&svc` is a new option, which is useful for publishing to WHIP broadcast servers that support scalable video modes. -- Takes an SVC value, with `L1T3` being the most universal option, but other options exist. You'll get an error when publishing if you use an invalid one.\
+* [`&svc`](../advanced-settings/whip-parameters/and-svc.md) is a new option, which is useful for publishing to WHIP broadcast servers that support scalable video modes. Takes an SVC value, with `L1T3` being the most universal option, but other options exist. You'll get an error when publishing if you use an invalid one.\
   ![](<../.gitbook/assets/image (194).png>)
 * Improved the [`vdo.ninja/alpha/whip`](https://vdo.ninja/alpha/whip) page and added SVC scalable options to the WHIP output option there, making it easy to select a compatible SVC mode if desired.
 
 #### October 19 <a href="#august-31" id="august-31"></a>
 
-* Added `&recordmotion` as an option, which takes a video snapshot and saves it to disk as a PNG file whenever there is motion detected in a video.\
+* Added [`&recordmotion`](../advanced-settings/recording-parameters/and-recordmotion.md) as an option, which takes a video snapshot and saves it to disk as a PNG file whenever there is motion detected in a video.\
   \-- Auto saves (to download folder) one photo per second, max.\
   \-- It can take values, such as `&recordmotion=15`, which will control the sensitivity of the motion capture\
   \-- It's primarily designed for the sender-side, but I think it should work if a viewer also\
@@ -366,7 +366,7 @@ If you want the VDO.Ninja self-preview to not be mini-sized in broadcast mode, w
 
 * Updated [`&structure`](../advanced-settings/design-parameters/and-structure.md) to work with [`&cover`](../advanced-settings/view-parameters/cover.md), allowing for some more flexibility with controlling fixed aspect-ratios from the viewer/scene side.\
   ie: `https://vdo.ninja/alpha/?room=XXXXX&scene&cover&structure&square&fakeguests=10`\
-  ![](<../.gitbook/assets/image (3) (1) (1) (1).png>)![](<../.gitbook/assets/image (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1).png>)
+  ![](<../.gitbook/assets/image (3) (1) (1) (1).png>)![](<../.gitbook/assets/image (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1).png>)
 * Fixed a couple bugs, such as the local screen share preview not re-appearing after full-windowing another guest's video while screen sharing.
 
 \*\* on alpha
@@ -532,7 +532,7 @@ meshcastcodec == whipoutcodec, woc
 Option for a custom hang-up message added to VDO.Ninja.\
 \-- [`&hangupmessage`](../advanced-settings/setup-parameters/and-hangupmessage-alpha.md) (or `&hum`) , which take a URL encoded string. So it can be just "bye", or it can be some HTML, as shown in the link\
 \-- eg: [https://vdo.ninja/alpha/?hum=bye%3Cimg%20src%3D%22.%2Fmedia%2Flogo\_cropped.png%22%3E\&push=ZimFGxM](https://vdo.ninja/alpha/?hum=bye%3Cimg%20src%3D%22.%2Fmedia%2Flogo\_cropped.png%22%3E\&push=ZimFGxM)\
-![](<../.gitbook/assets/image (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1).png>)\
+![](<../.gitbook/assets/image (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1).png>)\
 \
 \* on alpha
 
@@ -595,7 +595,7 @@ Option for a custom hang-up message added to VDO.Ninja.\
   These flags in theory I think should help try to force a bitrate or resolution, regardless of network conditions, but in practice they still seem to just smash your frame rate. I haven't really been able to find a good use for them yet, but let me know.
 * Fixed an issue where when you hung up on an iPhone, it would still stay the camera/mic was in use at the goodbye/reload page.
 * Added the "test" audio output button to the in-call settings menu (as seen in image).\
-  ![](<../.gitbook/assets/image (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1).png>)
+  ![](<../.gitbook/assets/image (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1).png>)
 * Fixed an issue with Firefox mobile's camera rotation being wrong in the local preview. (let me know tho if the issues continues tho)
 * Firefox mobile should not go to sleep any more when idle.
 
@@ -664,7 +664,7 @@ for eg: `https://vdo.ninja/alpha/?director=countrytownc&api=test123456` test dir
 
 #### July 17 <a href="#august-31" id="august-31"></a>
 
-* If the director uses [`&password=false`](../general-settings/password.md) in the URL or creates a room with password set to `false` or `0`, that will be reflected now on the invite/scene links.
+* If the director uses [`&password=false`](../advanced-settings/setup-parameters/and-password.md) in the URL or creates a room with password set to `false` or `0`, that will be reflected now on the invite/scene links.
 * Fixed an issue where Firefox Mobile on Android would sometimes have the camera crash if changing changes.
 
 \*changes on alpha at vdo.ninja/alpha/

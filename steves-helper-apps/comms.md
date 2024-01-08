@@ -12,7 +12,7 @@ description: Multi-group audio chat
 * You can select which "group" you want to be a part of via the top bar, where those in your group can hear you and vice versa.
 * If you aren't in a group, you hear everyone.
 * Compatible with [`&groups`](../general-settings/and-group.md) with VDO.Ninja as normal; it's just a custom layout stylized/tweaked for audio-only production comms.
-* There's a few URL parameters you can set, including [`&push`](../source-settings/push.md), [`&label`](../general-settings/label.md), [`&room`](../general-settings/room.md), [`&password`](../general-settings/password.md), and [`&groups`](../general-settings/and-group.md).
+* There's a few URL parameters you can set, including [`&push`](../source-settings/push.md), [`&label`](../general-settings/label.md), [`&room`](../general-settings/room.md), [`&password`](../advanced-settings/setup-parameters/and-password.md), and [`&groups`](../general-settings/and-group.md).
 * If you use `&groups=group1,groupb,etc`, new group buttons will appear.
 * By default, groups 1 to 6 are there.
 * If you use `&groups=1,2,3` , you'll auto-join groups 1, 2 and 3.

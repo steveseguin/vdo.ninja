@@ -24,6 +24,9 @@ You can use this tool to encode the URL you want to link to\
 
 Link to a remotely hosted CSS style sheet via the URL. You can stylize VDO.Ninja without needing to host anything more than a CSS file. The page elements are not visible until the remote style sheet has been loaded.
 
+I've made the `&css` parameter within VDO.Ninja more tolerant to invalid forms of input, so if you don't know what URL or Base64 encoding is, you might be able to get away without using any now.\
+[`https://vdo.ninja/?css=body{background-color:blue!important}`](https://vdo.ninja/?css=body{background-color:blue!important})
+
 ### base64css
 
 You can pass CSS as a base64-encoded string using the [`&base64css`](and-base64css.md) parameter. This needs to be URLComponent encoded first, and then converted to base 64.&#x20;

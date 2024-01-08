@@ -25,8 +25,8 @@ In the future, I can add this control to the director, rather than just the send
 
 ## Related
 
-{% content-ref url="../../general-settings/password.md" %}
-[password.md](../../general-settings/password.md)
+{% content-ref url="../setup-parameters/and-password.md" %}
+[and-password.md](../setup-parameters/and-password.md)
 {% endcontent-ref %}
 
 {% content-ref url="../../newly-added-parameters/and-hash.md" %}

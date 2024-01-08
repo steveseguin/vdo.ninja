@@ -52,7 +52,7 @@ If using an application like OBS or vMix, during playback of the stream you can 
 
 This option is pretty standard, and since it streams actual video instead of motion images, you can reduce CPU load, network bandwidth usage, maintain high frame rates, and achieve higher resolutions. There might be some green fringing on the final result, but there are ways to reduce that effect.\
 \
-<img src="../.gitbook/assets/image (1) (1) (1) (1) (1) (1).png" alt="" data-size="original">![](<../.gitbook/assets/image (2) (1) (1).png>)
+<img src="../.gitbook/assets/image (1) (1) (1) (1) (1) (1) (1).png" alt="" data-size="original">![](<../.gitbook/assets/image (2) (1) (1).png>)
 
 Another benefit of green screening is you can use an actual physical green screen as well. And this would work without needing AI effects and it would work on anything; not just a person.
 

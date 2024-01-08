@@ -33,8 +33,8 @@ I may change or revoke this feature, depending on how testing goes this week, as
 
 ## Related
 
-{% content-ref url="../../general-settings/password.md" %}
-[password.md](../../general-settings/password.md)
+{% content-ref url="../setup-parameters/and-password.md" %}
+[and-password.md](../setup-parameters/and-password.md)
 {% endcontent-ref %}
 
 {% content-ref url="../../director-settings/codirector.md" %}

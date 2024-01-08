@@ -36,7 +36,7 @@
 
 #### June 30
 
-* Mixer App has been updated to use [`&hash`](../newly-added-parameters/and-hash.md) instead of [`&password`](../general-settings/password.md) for guest invites.
+* Mixer App has been updated to use [`&hash`](../newly-added-parameters/and-hash.md) instead of [`&password`](../advanced-settings/setup-parameters/and-password.md) for guest invites.
 * Mixer also now has built-in support for the option to obfuscate links with invite.cam.
 * The option to add custom URL parameters to the invite link also added to the Mixer App.
 * An issue with how the [`&broadcast`](../advanced-settings/view-parameters/broadcast.md) toggle was being saved to local storage was fixed in the Mixer App.

@@ -21,7 +21,7 @@ Example: `&hash=99e5`
 
 ## Details
 
-You can add `&hash=STRING` this to a guest's URL instead of [`&password`](../general-settings/password.md) if you want to check the password. That means the password turns into another string.
+You can add `&hash=STRING` this to a guest's URL instead of [`&password`](../advanced-settings/setup-parameters/and-password.md) if you want to check the password. That means the password turns into another string.
 
 If you added a password to your room, the guests' invitations in the director room get 'hashed' automatically:\
 ![](<../.gitbook/assets/image (1) (4) (1) (1).png>)
@@ -37,8 +37,8 @@ For example:\
 
 ## Related
 
-{% content-ref url="../general-settings/password.md" %}
-[password.md](../general-settings/password.md)
+{% content-ref url="../advanced-settings/setup-parameters/and-password.md" %}
+[and-password.md](../advanced-settings/setup-parameters/and-password.md)
 {% endcontent-ref %}
 
 {% content-ref url="../advanced-settings/settings-parameters/and-prompt.md" %}

@@ -36,7 +36,7 @@
 * Fixed an issue with the WHEP player stats not showing correctly.
 * Fixed an issue where [`&buffer`](../advanced-settings/view-parameters/buffer.md) wasn't working with the WHEP player.
 * Made it a bit easier to setup the WHEP player as a basic viewer page; hiding menus that probably aren't commonly needed.
-* `&svc` is a new option, which is useful for publishing to WHIP broadcast servers that support scalable video modes. -- Takes an SVC value, with `L1T3` being the most universal option, but other options exist. You'll get an error when publishing if you use an invalid one.\
+* [`&svc`](../advanced-settings/whip-parameters/and-svc.md) is a new option, which is useful for publishing to WHIP broadcast servers that support scalable video modes. Takes an SVC value, with `L1T3` being the most universal option, but other options exist. You'll get an error when publishing if you use an invalid one.\
   ![](<../.gitbook/assets/image (194).png>)
 * Improved the [`vdo.ninja/alpha/whip`](https://vdo.ninja/alpha/whip) page and added SVC scalable options to the WHIP output option there, making it easy to select a compatible SVC mode if desired.
 

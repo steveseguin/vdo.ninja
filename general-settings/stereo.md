@@ -17,7 +17,7 @@ General Option! ([`&push`](../source-settings/push.md), [`&room`](room.md), [`&v
 
 Example: `&stereo=1`
 
-<table><thead><tr><th width="191">Value</th><th>Description</th></tr></thead><tbody><tr><td>(no value given)</td><td>It behaves like 3 or 1, depending on if you are a guest or not</td></tr><tr><td><code>0</code></td><td>will try to down-mix your mic to mono. Does not enable any pro-audio settings</td></tr><tr><td><code>1</code></td><td>enables it for both push and view (if used on both links)</td></tr><tr><td><code>2</code></td><td>enables it just for viewing requests and not publishing requests</td></tr><tr><td><code>3</code></td><td>enables it for just publishing requests and not viewing requests</td></tr><tr><td><code>4</code></td><td>enables 5.1-multichannel audio support (Experimental and may require a Chrome flag to be set)</td></tr><tr><td><code>5</code></td><td>This is the default if nothing is set. It behaves like 3 or 1, depending on if you are a guest or not</td></tr><tr><td><code>6</code></td><td>solely just enables stereo for both in/out</td></tr></tbody></table>
+<table><thead><tr><th width="191">Value</th><th>Description</th></tr></thead><tbody><tr><td>(no value given)</td><td>It behaves like 3 or 1, depending on if you are a guest or not</td></tr><tr><td><code>0</code></td><td>will try to down-mix your mic to mono. Does not enable any pro-audio settings</td></tr><tr><td><code>1</code></td><td>enables it for both push and view (if used on both links)</td></tr><tr><td><code>2</code></td><td>enables it just for viewing requests and not publishing requests</td></tr><tr><td><code>3</code></td><td>enables it for just publishing requests and not viewing requests</td></tr><tr><td><code>4</code></td><td>enables 5.1-multichannel audio support (Experimental and may require a Chrome flag to be set)</td></tr><tr><td><code>5</code></td><td>This is the default if nothing is set. It behaves like 3 or 1, depending on if you are a guest or not</td></tr><tr><td><code>6</code></td><td>solely just enables stereo for both in/out</td></tr><tr><td><code>8</code></td><td>7.1 surround sound audio <a data-mention href="stereo.md#and-stereo-8">#and-stereo-8</a></td></tr></tbody></table>
 
 ## Details
 
@@ -79,6 +79,10 @@ Just for reference, the audio codec used by VDO.Ninja is OPUS (48khz), which can
 ### WHIP
 
 `&stereo` now works with the WHIP output, so if enabled, you'll publish stereo 2.0 with a default audio bitrate of around 80 to 100-kbps; otherwise the default is mono at around 60kbps. These defaults bitrates might be changed own the road.
+
+### \&stereo=8
+
+7.1 surround sound audio is being supported now, in a technical sense, although really only if the source is a server stream. To use, add `&stereo=8` on the viewer end. (5.1 multi channel was around supported with `&stereo=4` I think)
 
 ## Related
 

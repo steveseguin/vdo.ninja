@@ -43,7 +43,7 @@ There is no server-side support for chunked mode at the moment, but I will conti
 
 ### Recording via WHIP/WHEP service
 
-On the upcoming version of [VDO.Ninja](https://vdo.ninja/), you can use a WHIP/WHEP services to relay video via a server. In this case, the server itself can make a copy of the stream; the same stream everyone else in the room will see. There's also SVC scalability support, so if your server supports that, you can push high-bitrates. ([https://vdo.ninja/alpha/whip](https://vdo.ninja/alpha/whip) for some common tooling)
+On the upcoming version of [VDO.Ninja](https://vdo.ninja/), you can use a WHIP/WHEP services to relay video via a server. In this case, the server itself can make a copy of the stream; the same stream everyone else in the room will see. There's also [SVC scalability support](../advanced-settings/whip-parameters/and-svc.md), so if your server supports that, you can push high-bitrates. ([https://vdo.ninja/alpha/whip](https://vdo.ninja/alpha/whip) for some common tooling)
 
 To demo this concept, you can try out using Cloudflare's Stream service, as it has a free tier and I've done the heavily lifting to make it easy to use. Instructions and tool to setup Cloudflare with VDO.Ninja are here: [vdo.ninja/alpha/cloudflare](https://vdo.ninja/alpha/cloudflare). Cloudflare should technically be saving each stream to disk automatically, but I haven't actually tried downloading their videos recordings to see if they work well.
 
