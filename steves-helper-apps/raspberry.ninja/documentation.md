@@ -321,7 +321,7 @@ Some notes about the 360-player and support:
 * As the sender, you can use an OBS Virtual Camera as a source, when sending, or use a camera with a Equirectangular output
   * In terms of supported cameras, I have a Theta V 360 camera for example, which can output via USB to OBS Studio.
     * It requires a plugin to work, but it handles converting to Equirectangular format. From there, you can add the virtual camera output containing the equirectangular output to VDO.Ninja
-    * More on the Theta V camera and its use with OBS Studiohere; [https://www.youtube.com/watch?v=qUzciWQ5HiM](https://www.youtube.com/watch?v=qUzciWQ5HiM)
+    * More on the Theta V camera and its use with OBS Studio here; [https://www.youtube.com/watch?v=qUzciWQ5HiM](https://www.youtube.com/watch?v=qUzciWQ5HiM)
 
 #### HDMI Input options
 
