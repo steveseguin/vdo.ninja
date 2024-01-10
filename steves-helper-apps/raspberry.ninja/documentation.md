@@ -307,7 +307,21 @@ You can buy IR Filters, or you can buy lenses that come with IR filters, if need
 
 Support for the Theta 4k 360 USB camera has been added. Has been tested with the Jetson. It is likely too slow to use with a Raspberry Pi though.
 
-Install script and brief usage example found here: [https://github.com/steveseguin/raspberry\_ninja/blob/main/nvidia\_jetson/theta\_z1\_install.sh](https://github.com/steveseguin/raspberry\_ninja/blob/main/nvidia\_jetson/theta\_z1\_install.sh)
+Install script and brief usage example found here: [https://github.com/steveseguin/raspberry\_ninja/blob/main/nvidia\_jetson/theta\_z1\_install.sh](https://github.com/steveseguin/raspberry\_ninja/blob/main/nvidia\_jetson/theta\_z1\_install.sh)\
+\
+To view equirectangular 360-degree video with VDO.Ninja, you can refer the the https://vdo.ninja/360 simple 360-degree player offered. Usage is like: \
+\
+[https://vdo.ninja/360?view=the360StreamIDHere](https://vdo.ninja/360?view=the360StreamIDHere), with the \&password being an optional parameter. Just change out `the360StreamIDHere` with your own stream ID, and publish a equirectangular video stream at high resolution to it.\
+\
+Some notes about the 360-player and support:
+
+* The player only supports Chrome/Chromium browsers currently
+* It only can one stream at a time; whatever value you specify in the `&view` parameter
+* Each viewer of the stream can interact, with each having their control to look around in 360-space.
+* As the sender, you can use an OBS Virtual Camera as a source, when sending, or use a camera with a Equirectangular output
+  * In terms of supported cameras, I have a Theta V 360 camera for example, which can output via USB to OBS Studio.
+    * It requires a plugin to work, but it handles converting to Equirectangular format. From there, you can add the virtual camera output containing the equirectangular output to VDO.Ninja
+    * More on the Theta V camera and its use with OBS Studiohere; [https://www.youtube.com/watch?v=qUzciWQ5HiM](https://www.youtube.com/watch?v=qUzciWQ5HiM)
 
 #### HDMI Input options
 
