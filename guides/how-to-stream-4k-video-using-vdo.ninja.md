@@ -49,11 +49,11 @@ To set a target bitrate add [`&videobitrate=20000`](../advanced-settings/video-b
 
 ## Scaling
 
-You may need to add \&scale=100 to the view link to have the video stream at 4K, if the playback window is smaller than 4K.  VDO.Ninja by default resizes incoming videos to fit the playback area, and \&scale=100 overrides that, requesting 100% of the available resolution; so unscaled if possible.
+You may need to add [`&scale=100`](../advanced-settings/view-parameters/scale.md) to the view link to have the video stream at 4K, if the playback window is smaller than 4K. VDO.Ninja by default resizes incoming videos to fit the playback area, and [`&scale=100`](../advanced-settings/view-parameters/scale.md) overrides that, requesting 100% of the available resolution; so unscaled if possible.
 
 ### Codec
 
-A bit like bitrate and scaling, changing the video codec can sometimes help with achiving 4K video. \&codec=av1 can help if the bandwidth is limited, as it is more efficient than other codecs. \&codec=vp8 is universal, while \&codec=h264 can often trigger the hardware encoder to be used. Using a hardware encoder can help reduce CPU load, allowing for 4K if the system would otherwise be CPU-bottlenecked.
+A bit like bitrate and scaling, changing the video codec can sometimes help with achieving 4K video. [`&codec=av1`](../advanced-settings/view-parameters/codec.md#av1) can help if the bandwidth is limited, as it is more efficient than other codecs. [`&codec=vp8`](../advanced-settings/view-parameters/codec.md#vp8) is universal, while [`&codec=h264`](../advanced-settings/view-parameters/codec.md#h264) can often trigger the hardware encoder to be used. Using a hardware encoder can help reduce CPU load, allowing for 4K if the system would otherwise be CPU-bottlenecked.
 
 Normally you shouldn't need to change codecs, but sometimes it does make a difference.
 
@@ -61,6 +61,6 @@ Normally you shouldn't need to change codecs, but sometimes it does make a diffe
 
 As a result, to successfully stream 4K video, you generally need a computer system with 8 real CPU cores or more, running at 3.6ghz or higher. A modern AMD 3900X-series CPU or Intel 9900K CPU are ideal for this task, but a quad-core laptop will not be. You might be able to get away with lesser bitrates and lesser CPU requirements if just screen-sharing text, but it still is not for the faint of heart.
 
-Lastly, macOS users may find that 4K is simply not possible or very difficult. If you do manage to get it working, it might only operate at 5-fps or so. I don’t quite know why this is, but if you intend on sharing 4K video, you might be better off using a Windows PC. It seems to perform better.
+Lastly, MacOS users may find that 4K is simply not possible or very difficult. If you do manage to get it working, it might only operate at 5-fps or so. I don’t quite know why this is, but if you intend on sharing 4K video, you might be better off using a Windows PC. It seems to perform better.
 
-We've successfully streamed 4K50 over 5G cellular Internet at 65-mbps using a Macbook Air M1 and VDO.Ninja.
+We've successfully streamed 4K50 over 5G cellular Internet at 65-mbps using a MacBook Air M1 and VDO.Ninja.
