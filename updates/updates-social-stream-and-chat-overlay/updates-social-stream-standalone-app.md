@@ -4,6 +4,20 @@
 
 #### [https://github.com/steveseguin/social\_stream/releases](https://github.com/steveseguin/social\_stream/releases)
 
+#### January 12
+
+v0.1.12\
+[https://github.com/steveseguin/social\_stream/releases/tag/0.1.12](https://github.com/steveseguin/social\_stream/releases/tag/0.1.12)
+
+* You can specify the Social Stream injection source code that you wish to use in this version.
+  * ie: `socialstream.exe --filesource C:\Users\steve\Code\social_stream\`
+  * In this case, we are specifying the local folder, and the popup/background/source files will be used.
+  * So an example use case: If you made your own private integration for Social Stream, and wish to use the standalone app, you can just point to your local folder for Social Stream code and it will use that.
+* Also in this version, if using a self-hosted chat site of a supported chat product, like Owncast, you will be now offered a chance to manually select the type of chat source your domain is. So as seen below, when you put in a URL that doesn't auto match to a specific source, you'll be offered the chance to select which source it actually is. See the attached image.\
+  ![](<../../.gitbook/assets/image (10).png>)
+
+### 2023
+
 #### December 29
 
 **v0.1.10**\

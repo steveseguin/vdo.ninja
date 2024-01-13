@@ -43,7 +43,7 @@ If the OBS Virtual Camera is not appearing in Chrome or your browser after insta
 2.  Click Privacy & Security and then Screen Recording.\
 
 
-    <figure><img src="../.gitbook/assets/image (12) (2).png" alt=""><figcaption></figcaption></figure>
+    <figure><img src="../.gitbook/assets/image (12) (2) (2).png" alt=""><figcaption></figcaption></figure>
 3. For OBS, enable the permission.\
    \
    _If OBS isn't listed, click the + button, enter your system's password, and navigate to OBS in the Application settings. Select it and enable._\

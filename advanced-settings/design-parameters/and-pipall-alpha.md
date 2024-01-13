@@ -17,7 +17,7 @@ General Option! ([`&push`](../../source-settings/push.md), [`&room`](../../gener
 Added a new floating picture in picture mode, so you can pop out the entire video mix as a pinned window overlay.
 
 `&pipall` will add a dedicated button for this mode.\
-![](<../../.gitbook/assets/image (7) (1) (1) (1).png>)
+![](<../../.gitbook/assets/image (7) (1) (1) (1) (1).png>)
 
 Or just right-click any video and select "Picture in picture all" from the context menu. This is available without any URL option.\
 ![](<../../.gitbook/assets/image (208).png>)

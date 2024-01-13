@@ -30,7 +30,7 @@ I'd say 90% of the features available in the extension work in this standalone v
 
 Available as an installer for Windows x64 and MacOS.
 
-<figure><img src="../.gitbook/assets/image (1) (1) (1) (1).png" alt=""><figcaption></figcaption></figure>
+<figure><img src="../.gitbook/assets/image (1) (1) (1) (1) (1).png" alt=""><figcaption></figcaption></figure>
 
 ## Updates
 

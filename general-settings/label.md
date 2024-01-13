@@ -54,7 +54,7 @@ So it's not super obvious how to do this currently, so I think the next goal wil
 }
 ```
 
-![](<../.gitbook/assets/image (2) (1) (1) (1) (1) (1) (1) (1) (1).png>)
+![](<../.gitbook/assets/image (2) (1) (1) (1) (1) (1) (1) (1) (1) (1).png>)
 
 ## Related
 

@@ -24,7 +24,7 @@ Example: `&svc=L1T3`
 
 <div align="left">
 
-<figure><img src="../../.gitbook/assets/image.png" alt="" width="375"><figcaption></figcaption></figure>
+<figure><img src="../../.gitbook/assets/image (12).png" alt="" width="375"><figcaption></figcaption></figure>
 
 </div>
 

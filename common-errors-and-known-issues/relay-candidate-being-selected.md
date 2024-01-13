@@ -55,7 +55,7 @@ These issues can be hard to judge, especially if they are issues on the remote g
 
 In the following example diagram. we see a Main Router, a travel router, smartphone, production laptop, and a gaming desktop.&#x20;
 
-<figure><img src="../.gitbook/assets/image (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1).png" alt="" width="333"><figcaption><p>An example diagram, for reference</p></figcaption></figure>
+<figure><img src="../.gitbook/assets/image (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1).png" alt="" width="333"><figcaption><p>An example diagram, for reference</p></figcaption></figure>
 
 The smartphone and the production laptop will be able to make a direct peer to peer connection, obtaining HOST candidates, since they are connected to the same router.
 

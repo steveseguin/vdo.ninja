@@ -2,6 +2,15 @@
 
 [native-mobile-app-versions.md](../steves-helper-apps/native-mobile-app-versions.md "mention")
 
+#### January 8
+
+* Released the native Android version of VDO.Ninja to the Google Play store. (It's rolling out slowly; 20% roll out completed, with the rest expected in the next 24hr)
+  * Also includes password support, as mentioned above for iOS
+  * Also includes some screen share fixes, but more might still exist.
+* Also updated the Google Drive hosted APK for those looking to sideload instead
+* Also the GitHub repo for the code is updated (vdon\_flutter), for those looking to contribute or self-build
+* I pushed an update for the iOS VDO.Ninja native app to the Apple app store. It was approved, so should be available. If you have problems with it, let me know. The main change is the option to use passwords now, but I made some minor fixes to the screen sharing workflow also. I'm hoping it fixes some screensharing issues as well, but that might be too hopefully.
+
 #### January 5
 
 * I've built a test version of the VDO.Ninja Android native app, which now should support passwords. I've yet to do proper testing of it, but if you want to give it a shot, I welcome feedback as to whether it worked or not for you:
@@ -16,7 +25,7 @@
   \-- Also has forced-landscape mode support (I had to wait until iOS 17 launched to be able to release it)\
   [https://apps.apple.com/app/vdo-ninja/id1607609685?platform=iphone](https://apps.apple.com/app/vdo-ninja/id1607609685?platform=iphone)
 
-![](<../.gitbook/assets/image (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1).png>)
+![](<../.gitbook/assets/image (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1).png>)
 
 #### September 10
 
@@ -26,7 +35,7 @@
 #### August 30
 
 * Updated the Android app with a "[force landscape](../advanced-settings/mobile-parameters/and-forcelandscape.md)" option\
-  ![](<../.gitbook/assets/image (10) (1).png>)\
+  ![](<../.gitbook/assets/image (10) (1) (1).png>)\
   [https://drive.google.com/file/d/1M0kv5nWLtcfl2JOnsAGiG1zUmkeIVLyZ/view](https://drive.google.com/file/d/1M0kv5nWLtcfl2JOnsAGiG1zUmkeIVLyZ/view)\
   \-- I'll submit it to the Google play store in a little bit. The iOS version might be a while tho.
 

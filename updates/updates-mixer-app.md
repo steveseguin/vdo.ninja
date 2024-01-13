@@ -2,6 +2,31 @@
 
 [mixer-app.md](../steves-helper-apps/mixer-app.md "mention")
 
+#### January 10
+
+* Added a little color picker\
+  ![](<../.gitbook/assets/image (9).png>)
+
+#### January 9
+
+* An option to generate the random password is available\
+  ![](<../.gitbook/assets/image (1).png>)
+* The background Image URL field now is accompanied by a carousel gallery of AI-generated background images to use\
+  ![](../.gitbook/assets/image.png)
+* You can host your own images at Imgur or such still, but to make life easier, I'm offer hosted options. Let me know if you want more added
+* The room name is listed now in the top-right of the Mixer App
+* If the room has a password set, there is a button to copy-to-clipboard the password\
+  ![](<../.gitbook/assets/image (2).png>)
+
+\*\* on production and alpha
+
+*   Just for example of what you can fairly easily do with the Mixer:\
+
+
+    <figure><img src="../.gitbook/assets/image (3).png" alt=""><figcaption></figcaption></figure>
+
+### 2023
+
 #### November 4
 
 * When using the [Mixer App](../steves-helper-apps/mixer-app.md) (vdo.ninja/alpha/mixer), the [`&limittotalbitrate`](../advanced-settings/video-bitrate-parameters/limittotalbitrate.md) value was set to 350-kbps before, but now I have it set to 1500-kbps. Guests in the Mixer App should as a result now see the director's broadcast output in 3x higher quality now, for better or worse.
@@ -10,7 +35,7 @@
 
 <div align="left">
 
-<figure><img src="../.gitbook/assets/image (9).png" alt="" width="375"><figcaption></figcaption></figure>
+<figure><img src="../.gitbook/assets/image (9) (1).png" alt="" width="375"><figcaption></figcaption></figure>
 
 </div>
 
@@ -23,7 +48,7 @@
 * Fixed a minor issue with invite links on the Mixer App
 * Fixed a minor issue (I hope), where the videos might vertically stack when it should preferably horizontally stack (1-pixel difference).
 
-![](<../.gitbook/assets/image (12).png>)![](<../.gitbook/assets/image (13).png>)
+![](<../.gitbook/assets/image (12) (2).png>)![](<../.gitbook/assets/image (13).png>)
 
 \*\* on alpha, with the Mixer updated at [https://vdo.ninja/alpha/](https://vdo.ninja/alpha/)
 
