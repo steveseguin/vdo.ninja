@@ -215,14 +215,14 @@
 * Fixed a bug where if the director used the remote-record option on a guest's screen-share, it would instead record the guest's camera; not the screen share.
 * Improved the messaging of the two record options (local/remote); should be easier to understand what each does and the advantages.
 * Added some URL parameters to VDO.Ninja that let you manually pre-set some basic camera settings:\
-  \- `&whitebalance` (`&wb`)\
-  \- `&exposure`\
-  \- `&saturation`\
-  \- `&sharpness`\
-  \- `&contrast`\
-  \- `&brightness`\
+  \- [`&whitebalance`](../advanced-settings/camera-parameters/and-whitebalance.md) (`&wb`)\
+  \- [`&exposure`](../advanced-settings/camera-parameters/and-exposure.md)\
+  \- [`&saturation`](../advanced-settings/camera-parameters/and-saturation.md)\
+  \- [`&sharpness`](../advanced-settings/camera-parameters/and-sharpness.md)\
+  \- [`&contrast`](../advanced-settings/camera-parameters/and-contrast.md)\
+  \- [`&brightness`](../advanced-settings/camera-parameters/and-brightness.md)\
   \
-  \-- `&whitebalance` is in Kelvin I think, so `5000` or `6500` are typical values it will take.\
+  \-- [`&whitebalance`](../advanced-settings/camera-parameters/and-whitebalance.md) is in Kelvin I think, so `5000` or `6500` are typical values it will take.\
   \-- The rest normally will take an integer value in the range of `1` to `255`, at least for a Logitech webcam.\
   \-- I already currently auto-save camera settings for android devices that support video settings, but for desktop browsers, I am not. Using these new values though you can manually set things to auto-configure as you want.\
   \-- These settings will apply to ALL video devices though, not just a specific one.\
