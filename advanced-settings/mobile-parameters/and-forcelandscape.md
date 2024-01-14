@@ -25,6 +25,6 @@ You add this flag to the sender's side, and it applies to the sender and the vie
 [and-forceportrait.md](and-forceportrait.md)
 {% endcontent-ref %}
 
-{% content-ref url="../mixer-scene-parameters/and-forceviewerlandscape-alpha.md" %}
-[and-forceviewerlandscape-alpha.md](../mixer-scene-parameters/and-forceviewerlandscape-alpha.md)
+{% content-ref url="../mixer-scene-parameters/and-forceviewerlandscape.md" %}
+[and-forceviewerlandscape.md](../mixer-scene-parameters/and-forceviewerlandscape.md)
 {% endcontent-ref %}
