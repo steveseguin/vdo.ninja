@@ -55,6 +55,8 @@ Screen sharing at 60-fps is the default, but sometimes this does not always work
 
 You can try forcing 60-fps by adding [`&fps=60`](../advanced-settings/video-parameters/and-fps.md) to the source (sender-side link). If you get an error, you can try using [`&maxframerate=60`](../source-settings/and-maxframerate.md) instead.
 
+Try disabling variable refresh rates, such as those offered by Freesync or G-Sync.
+
 {% hint style="warning" %}
 You may not achieve 60 FPS depending on your hardware, the browser or the type of screen share you use or the viewer uses.\
 \
