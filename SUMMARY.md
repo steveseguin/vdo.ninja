@@ -348,6 +348,7 @@
     * [\&hands](source-settings/and-hands.md)
     * [\&videocontrols](advanced-settings/newly-added-parameters/and-videocontrols.md)
     * [\&nocontrols](advanced-settings/settings-parameters/and-nocontrols.md)
+    * [\&forcecontrols](advanced-settings/buttons-and-control-bar-parameters/and-hands-1.md)
   * [Design Parameters](advanced-settings/design-parameters/README.md)
     * [\&label](https://docs.vdo.ninja/advanced-settings/general-parameters/label)
     * [\&showlabels](advanced-settings/design-parameters/showlabels.md)

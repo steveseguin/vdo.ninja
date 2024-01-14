@@ -124,7 +124,7 @@
 
 #### November 20 <a href="#august-31" id="august-31"></a>
 
-* Added `&forcecontrols` as a URL option to VDO.Ninja.
+* Added [`&forcecontrols`](../advanced-settings/buttons-and-control-bar-parameters/and-hands-1.md) as a URL option to VDO.Ninja.
   * It's experimental, but it will try to keep the video controls visible, even if your mouse isn't hovering over the video.
   * The VDO.Ninja tab/window still needs to be 'active' however, for this to work; changing focus to another tab will stop it.
   * Only works really for chrome/chromium on desktop; not Firefox, etc.

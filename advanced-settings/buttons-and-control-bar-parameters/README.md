@@ -32,4 +32,6 @@ The above is a base64 encoded version of the following CSS, which positions the 
 
 </div>
 
-<table><thead><tr><th width="267">Parameter</th><th>Explanation</th></tr></thead><tbody><tr><td><a href="../newly-added-parameters/and-videocontrols.md"><code>&#x26;videocontrols</code></a></td><td>Shows the video control bar</td></tr><tr><td><a href="../settings-parameters/and-nocontrols.md"><code>&#x26;nocontrols</code></a></td><td>Will force hide the video control bar</td></tr></tbody></table>
+<table><thead><tr><th width="267">Parameter</th><th>Explanation</th></tr></thead><tbody><tr><td><a href="../newly-added-parameters/and-videocontrols.md"><code>&#x26;videocontrols</code></a></td><td>Shows the video control bar</td></tr><tr><td><a href="../settings-parameters/and-nocontrols.md"><code>&#x26;nocontrols</code></a></td><td>Will force hide the video control bar</td></tr><tr><td><a href="and-hands-1.md"><code>&#x26;forcecontrols</code></a>*</td><td>Will try to keep the video controls visible, even if your mouse isn't hovering over the video</td></tr></tbody></table>
+
+\*NEW IN [VERSION 24](../../releases/v24.md)

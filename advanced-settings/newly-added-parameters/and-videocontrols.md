@@ -31,6 +31,10 @@ This is not the same control bar as the user control bar. Also, be sure to not a
 
 ## Related
 
+{% content-ref url="../buttons-and-control-bar-parameters/and-hands-1.md" %}
+[and-hands-1.md](../buttons-and-control-bar-parameters/and-hands-1.md)
+{% endcontent-ref %}
+
 {% content-ref url="../settings-parameters/and-nocontrols.md" %}
 [and-nocontrols.md](../settings-parameters/and-nocontrols.md)
 {% endcontent-ref %}
