@@ -1,5 +1,5 @@
 ---
-description: Parameters to change the camera settings
+description: Options to pre-set the camera settings
 ---
 
 # Camera Parameters

@@ -57,10 +57,11 @@ All of the available parameters can be seperated in five categories. You find th
 
 ## Navigating the available setting options
 
-We've broken down the available URL parameters into 21 categories:
+We've broken down the available URL parameters into 22 categories:
 
 * [cheat-sheet-of-basic-parameters](advanced-settings/cheat-sheet-of-basic-parameters/ "mention") (the basic and most common parameters)
 * [setup-parameters](advanced-settings/setup-parameters/ "mention") (stream ID, create a room, password, labels, groups, devices, auto-start, welcoming guests, sharing a website/file)
+* [camera-parameters](advanced-settings/camera-parameters/ "mention") (options to pre-set the camera settings)
 * [video-parameters](advanced-settings/video-parameters/ "mention") (resolution, FPS, effects, self preview, mute video, PTZ, codec, buffer, broadcasting, scale)
 * [video-bitrate-parameters](advanced-settings/video-bitrate-parameters/ "mention") (changing the bitrate of the outgoing and incoming video and for rooms)
 * [audio-parameters](advanced-settings/audio-parameters/ "mention") (filters, adding delay, bitrate, channels, mono/stereo, muting guests, etc.)
