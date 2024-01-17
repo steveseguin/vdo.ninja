@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script src="./thirdparty/aframe.min.js"></script>
+    <script>
+		// This snippet of AFRAME code was taken from an AFRAME 360 video sample
+		// AFRAME code is MIT licenced - fork of lic here:  https://github.com/steveseguin/aframe/tree/master#MIT-1-ov-file
+		//		source code ref - https://github.com/steveseguin/aframe/blob/master/examples/js/hide-on-play.js
+		//		source code ref - https://github.com/steveseguin/aframe/blob/master/examples/js/play-on-click.js
+		AFRAME.registerComponent('play-on-click', {
+		  init: function () {
+			this.onClick = this.onClick.bind(this);
+		  },
+		  play: function () {
+			window.addEventListener('click', this.onClick);
+		  },
+		  pause: function () {
+			window.removeEventListener('click', this.onClick);
+		  },
+		  onClick: function (evt) {
+			var videoEl = this.el.getAttribute('material').src;
+			if (!videoEl) { return; }
+			this.el.object3D.visible = true;
+			videoEl.play();
+		  }
+		});
+		AFRAME.registerComponent('hide-on-play', {
+		  schema: {type: 'selector'},
+		  init: function () {
+			this.onPlaying = this.onPlaying.bind(this);
+			this.onPause = this.onPause.bind(this);
+			this.el.object3D.visible = !this.data.playing;
+		  },
+		  play: function () {
+			if (this.data) {
+			  this.data.addEventListener('playing', this.onPlaying);
+			  this.data.addEventListener('pause', this.onPause);
+			}
+		  },
+		  pause: function () {
+			if (this.data) {
+			  this.data.removeEventListener('playing', this.onPlaying);
+			  this.data.removeEventListener('pause', this.onPause);
+			}
+		  },
+		  onPlaying: function (evt) {
+			this.el.object3D.visible = false;
+		  },
+		  onPause: function (evt) {
+			this.el.object3D.visible = true;
+		  }
+		});
+	</script>
+</head>
+<body>
+    <a-scene>
+      <a-assets>
+        <video id="video"
+               loop
+               crossorigin="anonymous"
+               playsinline webkit-playsinline>
+        </video>
+      </a-assets>
+      <a-videosphere
+        rotation="0 -90 0" src="#video" play-on-click>
+      </a-videosphere>
+
+      <a-camera>
+        <a-entity
+          position="0 0 -1.5"
+          text="align:center;
+                width:6;
+                wrapCount:100;
+                color: white;
+                value: Click or tap to start video"
+          hide-on-play="#video">
+        </a-entity>
+      </a-camera>
+    </a-scene>
+	
+	<iframe id="iframe" allow="cross-origin-isolated;autoplay;camera;microphone;fullscreen;picture-in-picture;display-capture;"></iframe>
+
+    <script>
+		// the following code is VDO.Ninja's code.  
+		var urlEdited = window.location.search.replace(/\?\?/g, "?");
+		urlEdited = urlEdited.replace(/\?/g, "&");
+		urlEdited = urlEdited.replace(/\&/, "?");
+
+		if (urlEdited !== window.location.search){
+			warnlog(window.location.search + " changed to " + urlEdited);
+			window.history.pushState({path: urlEdited.toString()}, '', urlEdited.toString());
+		}
+		var urlParams = new URLSearchParams(urlEdited);
+		
+		var view = false;
+		if (urlParams.has("view") || urlParams.has("v")){
+			view = urlParams.get("view") || urlParams.get("v") || false;
+		}
+		
+		var password = false;
+		if (urlParams.has("password") || urlParams.has("pw") || urlParams.has("p")){
+			password = urlParams.get("password") || urlParams.get("pw") || urlParams.get("p") || false;
+			if (password===false){
+				password = prompt("Please enter a password") || false;
+			}
+		}
+		if (password){
+			document.getElementById("iframe").src = "./?speakermuted&sendframes&manual&scale=100&ltb=80&bitrate=12000&cleanoutput&label=360_viewer&view="+view+"&password="+password;
+		} else {
+			document.getElementById("iframe").src = "./?speakermuted&sendframes&manual&scale=100&ltb=80&bitrate=12000&cleanoutput&label=360_viewer&view="+view
+		}
+		
+		
+        // Your existing JavaScript code for handling video frames
+        var media = {
+            tracks: {},
+            streams: {}
+        };
+
+        window.addEventListener('message', function (e) {
+            if (e.data.frame) {
+                if (!media.tracks[e.data.trackID]){
+					console.log("NEW");
+					media.tracks[e.data.trackID] = {};
+					media.tracks[e.data.trackID].generator = new MediaStreamTrackGenerator({kind:e.data.kind});
+					media.tracks[e.data.trackID].stream = new MediaStream([media.tracks[e.data.trackID].generator]);
+					media.tracks[e.data.trackID].frameWriter = media.tracks[e.data.trackID].generator.writable.getWriter();
+					
+					media.tracks[e.data.trackID].frameWriter.write(e.data.frame);
+					
+					if (!media.streams[e.data.streamID]){
+						media.streams[e.data.streamID] = document.getElementById("video");
+						media.streams[e.data.streamID].srcObject = media.tracks[e.data.trackID].stream;
+					} else {
+						if (e.data.kind=="video"){
+							media.streams[e.data.streamID].srcObject.getVideoTracks().forEach(trk=>{
+								media.streams[e.data.streamID].srcObject.removeTrack(trk);
+							});
+						} else if (e.data.kind=="audio"){
+							media.streams[e.data.streamID].srcObject.getAudioTracks().forEach(trk=>{
+								media.streams[e.data.streamID].srcObject.removeTrack(trk);
+							});
+						} 
+						media.tracks[e.data.trackID].stream.getTracks().forEach(trk=>{
+							media.streams[e.data.streamID].srcObject.addTrack(trk);
+						});
+					}
+					
+				} else {
+					media.tracks[e.data.trackID].frameWriter.write(e.data.frame);
+				}
+            }
+        }, false);
+    </script>
+</body>
+</html>

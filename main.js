@@ -892,7 +892,10 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 			document.documentElement.style.setProperty('--full-screen-button', 'none');
 			getById("fullscreenPage").classList.remove("hidden");
 		}
+	} else if (urlParams.has('nofullscreenbutton') || urlParams.has('nofsb')){ // just an alternative; might be compoundable
+		session.nofullwindowbutton = true;
 	}
+	
 	
 	if (urlParams.has('pip2') || urlParams.has('pipall')){ // just an alternative; might be compoundable
 		if (typeof documentPictureInPicture !== "undefined"){
@@ -1124,7 +1127,10 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 	}
 	
 	if (urlParams.has('layout')) {
-		session.accept_layouts = true;
+		
+		if (!urlParams.get('layout')){
+			session.accept_layouts = true;
+		}
 		try {
 			session.layout = JSON.parse(decodeURIComponent(urlParams.get('layout'))) || JSON.parse(urlParams.get('layout')) || {};
 		} catch(e){
@@ -3908,6 +3914,10 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 			//session.audioMeterGuest = true;
 			setInterval(function(){activeSpeaker(false);},100);
 		}
+	}
+	if (urlParams.has('activespeakerdelay') || urlParams.has('speakerviewdelay')  || urlParams.has('sasdelay')){
+		session.activeSpeakerTimeout = urlParams.get('activespeakerdelay') || urlParams.get('speakerviewdelay')  || urlParams.get('sasdelay') || 0;
+		session.activeSpeakerTimeout = parseInt(session.activeSpeakerTimeout);
 	}
 	
 	if (urlParams.has('noisegatesettings')){

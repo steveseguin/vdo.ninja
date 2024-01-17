@@ -649,13 +649,14 @@ button.hint {
 	cursor:pointer;
 }
 .overlayCloseBtn{
-	padding: 0;
-	margin: 10px;
-	width: 16px;
-	height: 16px;
-	position: relative;
-	bottom: 10px;
-	background-color: #DDDD;
+    padding: 0;
+    width: 16px;
+    height: 16px;
+    position: relative;
+    bottom: 7px;
+    padding: 18px 18px 20px 18px;
+    font-size: 22px;
+	margin-left: 20px;
 }
 
 #overlayMsgs{
