@@ -63,6 +63,16 @@ On an iPhone, it's a bit more complicated:\
 
 If the issue persists, fully close Safari and try again. Sometimes updating your version of iOS and restarting can help solve issues with camera permissions as well.
 
+### IFrame permissions not provided
+
+If embedding VDO.Ninja into a site as an IFrame, you'll not be allowed access to camera or microphones unless that IFRAME-element has allowed said permissions.\
+\
+See the documentation for more details
+
+{% content-ref url="../guides/iframe-api-documentation.md" %}
+[iframe-api-documentation.md](../guides/iframe-api-documentation.md)
+{% endcontent-ref %}
+
 ### Try safe mode
 
 Adding [`&safemode`](../newly-added-parameters/and-safemode.md) or [`&videodevice=0`](../source-settings/videodevice.md)[`&audiodevice=0`](../source-settings/audiodevice.md) to the [https://vdo.ninja/](https://vdo.ninja/) link can either try the camera in safe mode or disable the camera/microphone completely.
