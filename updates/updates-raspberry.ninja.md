@@ -2,6 +2,15 @@
 
 [raspberry.ninja](../steves-helper-apps/raspberry.ninja/ "mention")
 
+#### January 17
+
+* Added a guide for installing Raspberry.Ninja onto Mac OS X.
+  * [https://github.com/steveseguin/raspberry\_ninja/tree/main/mac](https://github.com/steveseguin/raspberry\_ninja/tree/main/mac) (let me know if you run into issues; loosely tested on an M1 so far).
+  * I'm still getting the code itself updated to support the MacOS hardware encoder, but some basic functions should work regardless.
+  * The goal of this task is to allow for 4K video streaming on Mac from certain devices that otherwise would be limited to 1080p.
+
+### 2023
+
 #### November 28
 
 * Updated Raspberry.Ninja with enhancements for improved automatic color format mode support; useful for the the HDMI to CSI adapter boards

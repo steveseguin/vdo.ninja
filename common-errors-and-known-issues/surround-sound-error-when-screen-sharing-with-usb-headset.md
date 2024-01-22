@@ -20,7 +20,7 @@ For Logitech surround headphones specifically, the following old Reddit post men
 
 Another possible fault is that the audio quality in Windows is too high; 384-khz or 32-bit audio may cause issues, for example. You might also have issues with ASIO-based drivers, DSD systems, and multi-channel audio systems. In these cases, set the audio output and microphone input in Windows to at most 24-bit at 48-khz stereo; VDO.Ninja doesn't typically offer better audio quality than this anyways.
 
-<figure><img src="../.gitbook/assets/image (2) (1) (1) (1) (1) (1) (1).png" alt="" width="391"><figcaption></figcaption></figure>
+<figure><img src="../.gitbook/assets/image (2) (1) (1) (1) (1) (1) (1) (1).png" alt="" width="391"><figcaption></figcaption></figure>
 
 Looking at the code, this error message is triggered when "NotReadableError" is reported by the browser, I think when screen sharing with audio. So, I suppose you can also screen-share without audio maybe, and then perhaps select a virtual audio device for the audio after the fact instead if you still need a window's audio. However, this is cumbersome to do.
 

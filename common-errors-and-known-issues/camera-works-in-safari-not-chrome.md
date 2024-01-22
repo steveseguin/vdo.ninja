@@ -14,7 +14,7 @@ You can confirm its not VDO.Ninja specific by going to the following page and se
 
 If it fails only within VDO.Ninja, make sure you've enabled the Camera and Microphone permissions for VDO.Ninja.
 
-<figure><img src="../.gitbook/assets/image (1) (1) (1) (1) (1).png" alt=""><figcaption><p>Make sure VDO.Ninja has access to the camera and microphone</p></figcaption></figure>
+<figure><img src="../.gitbook/assets/image (1) (1) (1) (1) (1) (1).png" alt=""><figcaption><p>Make sure VDO.Ninja has access to the camera and microphone</p></figcaption></figure>
 
 ### Close other apps or restart the computer
 
