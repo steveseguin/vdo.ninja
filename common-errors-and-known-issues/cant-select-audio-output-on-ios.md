@@ -10,7 +10,7 @@ You can access such experimental option via Settings -> Safari ->Advanced -> All
 
 There is no guarantee this will work, and maybe it will be enabled by default in the future.
 
-<figure><img src="../.gitbook/assets/image (2) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1).png" alt="" width="297"><figcaption></figcaption></figure>
+<figure><img src="../.gitbook/assets/image (2) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1).png" alt="" width="297"><figcaption></figcaption></figure>
 
 There are some other experimental options as well that you can enable on iOS, such as AV1 and H265 codec support, and perhaps in the future Screen Capture will work, too. iPadOS tends to have more functionality available, such as external USB video device support (as of iPadOS 17), as least compared to the iOS 16 at time of writing.
 
