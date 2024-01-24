@@ -1,6 +1,20 @@
 <html lang='en'>
 	<head>
-		<script type="text/javascript" id="main-js" src="./main.js" data-translation="blank"></script>
+		<script type="text/javascript">
+			//  MS Internet Explorer must not be given a chance to fail before I can give the user an error message.
+			try {
+				var msie = window.navigator.userAgent.indexOf("MSIE ");
+				if (msie>0 || !!navigator.userAgent.match(/Trident.*rv\:11\./)){ // If MSIE or IE 11
+					alert("Internet Explorer is not supported.\n\nPlease consider using Microsoft Edge or Google Chrome instead\n\nYou will be forwarded to the download page for MS Edge now.");
+					console.error("INTERNET EXPLORER IS EVIL");
+					document.write("Internet Explorer is not supported");
+					window.location = "https://www.microsoft.com/edge";
+				}
+			} catch(e){
+				console.error(e);
+			}
+		
+		</script>
 		<style>
 			html {
 				background-color: #0000;
@@ -876,7 +890,12 @@
 				<h2><span data-translate="run-a-speed-test">Run a Speed Test</span></h2>
 				<i style="margin-top:30px;font-size:600%;overflow:hidden;" class="largeDarkIcon las la-tachometer-alt"></i>
 			</div>
-						
+			
+			<div id="container-8" class="column columnfade pointer rounded card hidden" style="overflow: hidden;" onclick="window.location = './mixer.html';">
+				<h2><span data-translate="try-the-mixer-out">Custom Mixed Layouts</span></h2>
+				<i style="margin-top:30px;font-size:600%;overflow:hidden;" class="largeDarkIcon las la-blender"></i>
+			</div>
+			
 			<div id="container-14" class="column columnfade pointer rounded card hidden" style="overflow: hidden;" onclick="window.location = 'https://versus.cam';">
 				<h2><span data-translate="try-out-versus-cam">Multi-Stream Monitor</span></h2>
 				<i style="margin-top:30px;font-size:600%;overflow:hidden;" class="largeDarkIcon las la-gamepad"></i>
