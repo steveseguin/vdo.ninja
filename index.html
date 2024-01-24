@@ -103,8 +103,8 @@
 				</span>
 			</a>
 			<div id="head1">
-				<input type="text" autocorrect="off" autocapitalize="none" id="joinroomID" name="joinroomID" tabindex="1" size="22" placeholder="Join by Room Name here" alt="Enter a room name to join" title="Enter a room name to quick join" onkeyup="jumptoroom(event)"/>
-				<button onclick="jumptoroom();" id='jumptoroomButton' role="button" aria-pressed="false" tabindex="1" alt="Join room" title="Join room" >GO</button>
+				<input type="text" autocorrect="off" autocapitalize="none" id="joinroomID" name="joinroomID" tabindex="1" size="22" placeholder="Entrer le nom de la réunion" alt="Enter a room name to join" title="Enter a room name to quick join" onkeyup="jumptoroom(event)"/>
+				<button onclick="jumptoroom();" id='jumptoroomButton' role="button" aria-pressed="false" tabindex="1" alt="Join room" title="Join room" >Valider</button>
 			</div>
 			<div id="head1a" class="hidden">
 				<input type="text" autocorrect="off" autocapitalize="none" id="joinbyURL" name="joinbyURL" size="22" placeholder="Load a website URL" alt="Enter the URL to load" title="Enter the URL to load"/>
@@ -970,50 +970,6 @@
 			<div id="unexpectedPushLink" class='hidden' style="width:100%;color: white;display:block;font-size:130%;">
 				<h2>If this page is unexpected, double check your links.</h2>
 				<b>?push=xxx</b> links are for sending video, while <b>?view=xxx</b> links are for viewing.
-			</div>
-			
-			<div id="info" class="fullcolumn columnfade">
-				<center>
-					<div class="infoblob" align="left">
-						<span data-translate="info-blob">
-							<h2>What is VDO.Ninja</h2>
-							<br />
-							<li>100% <b>free</b>; no downloads; no personal data collection; no sign-in</li>
-							<li>Bring live video from your smartphone, remote computer, or friends directly into OBS or other studio software.</li>
-							<li>We use cutting edge Peer-to-Peer forwarding technology that offers privacy and ultra-low latency</li>
-							<br />
-							<li>Youtube video 
-								<i class="lab la-youtube"></i>
-								<a title="Open a YouTube video demoing the basics of VDO.Ninja" href="https://www.youtube.com/watch?v=QaA_6aOP9z8&list=PLWodc2tCfAH1l_LDvEyxEqFf42hOBKqQM&index=1" alt="Youtube video demoing VDO.Ninja">Demoing it here</a>
-							</li>
-							
-							<br />
-							<i>
-								<a href="https://docs.vdo.ninja/common-errors-and-known-issues/known-issues" title="For a list of common or known issues, click here" target="_blank"><span style="color: red;">Known issues:</span></a>
-							</i>
-							<br />
-							<li>
-								If the video fails to load in OBS Studio, where the browser source remains blank, try disabling hardware-acceleration or 
-								<a href='https://docs.vdo.ninja/common-errors-and-known-issues/obs.ninja-doesnt-show-up-in-obs-or-is-choppy' title="Click to link out to the VDO.Ninja help guide for common OBS Studio problems" target="_blank">refer to this help guide</a> for more.
-							</li>
-							<li>
-								Samsung smartphones (A-series) may fail to publish video with some mobile browsers; try using Firefox Mobile or the native <a href='https://docs.vdo.ninja/getting-started/native-mobile-app-versions#android-download-link' title="Info on the native app versions of VDO.Ninja">Android app</a> in these cases.
-							</li>
-							<br />
-							<h4>
-								<span style="color:#daad09;">Welcome to VDO Ninja! We've rebranded!  Nothing else is changing and we're staying 100% free.</span>
-							</h4>
-							<br />
-							⛄ Site last updated on December 19th.  You can also still access the previous version, which <a href="https://vdo.ninja/v23/">is hosted here</a>. Development <a target="_blank" title="Open a page with recent VDO.Ninja development and feature updates" href="https://updates.vdo.ninja/">updates are here.</a>
-							<br />
-							<br />
-							<h3>
-							   🛠 For support, join the <a href="https://discord.gg/T4xpQVv" target="_blank">Discord <i class="lab la-discord"></i></a> or see the <a href="https://www.reddit.com/r/VDONinja/" target="_blank">sub-reddit <i class="lab la-reddit-alien"></i></a>. The <a href="https://docs.vdo.ninja/" target="_blank">documentation is here</a> and my personal email is <i>steve@seguin.email</i>
-							</h3> 
-								
-						</span>
-					</div>
-				</center>
 			</div>
 			<form method="post" onsubmit="setFormSubmitting()" style="display: none;" aria-hidden="true">
 				<input type="submit" />
