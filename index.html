@@ -92,7 +92,7 @@
 		
 		<script type="text/javascript" crossorigin="anonymous"  src="./thirdparty/CodecsHandler.js?ver=9"></script>
 		<script type="text/javascript" crossorigin="anonymous" src="./thirdparty/aes.js"></script>
-		<script type="text/javascript" crossorigin="anonymous" src="./webrtc.js?ver=761"></script>
+		<script type="text/javascript" crossorigin="anonymous" src="./webrtc.js?ver=765"></script>
 		<input id="zoomSlider" type="range" style="display: none;" />
 		<span id="electronDragZone" style="pointer-events: none; z-index:-10; position:absolute;top:0;left:0;width:100%;height:2%;-webkit-app-region: drag;min-height:20px;"></span>
 		<div id="header">
@@ -431,7 +431,7 @@
 						<span data-translate="ask-for-permissions">Allow Access to Camera/Microphone</span>
 					</button>
 					<span style="display:block;">
-						<button onclick="publishWebcam(this)" title="start streaming" aria-label="Start streaming" role="button" aria-pressed="false" tabindex="1" id="gowebcam" class="gowebcam" alt="Start Streaming" disabled data-audioready="false" data-ready="false" >
+						<button onclick="publishWebcam(this)" title="Start streaming (Alt + s)" aria-label="Start streaming (Alt + s)" role="button" aria-pressed="false" tabindex="1" id="gowebcam" class="gowebcam" alt="Start Streaming  (Alt + s)" disabled data-audioready="false" data-ready="false" >
 							<span data-translate="waiting-for-camera">Waiting for Camera to Load</span>
 						</button>
 					</span>
@@ -577,6 +577,13 @@
                             <i class="las la-key"></i><span data-translate="add-a-password"> Add a Password</span>
                         </div>
                         <input type="text" id="passwordBasicInput" title="Enter an optional password here" placeholder="optional"/>
+                    </div>
+					
+					<br style="line-height: 0;" />
+					<div id="rememberStreamID" class="hidden" style="display:inline-block;" title="Remember and reuse the provided stream ID on each visit">
+						<br />
+						<br style="line-height: 0;" />
+                        Remember Stream ID: <input type="checkbox" id="rememberStreamIDcheck" checked="true" />
                     </div>
 					
 					<div id="SafariWarning" class="startupWarning hidden" aria-hidden="true" title="Consider using Chrome instead of Safari">
@@ -1828,7 +1835,7 @@
 						<form id="webcamquality3">
 							<input type="radio" id="fullhd3" name="resolution" value="0" />
 							<label for="fullhd3">
-								<span data-translate="max-resolution">Max Resolution</span>
+								<span data-translate="max-resolution">High Resolution</span>
 							</label> |
 							
 							<input type="radio" checked id="halfhd3" name="resolution" value="1" />
@@ -2684,11 +2691,11 @@
 			// session.decrypted = session.decodeInvite("U2FsdGVkX1+d58DFIHoO3EQZSuX86ch4PqW2ouztnJ0="); // get a code from invite.cam
 			
 		</script>
-		<script type="text/javascript" crossorigin="anonymous" id="lib-js" src="./lib.js?ver=1073"></script>
+		<script type="text/javascript" crossorigin="anonymous" id="lib-js" src="./lib.js?ver=1087"></script>
 		<!-- 
 		// If you wish to change branding, blank offers a good clean start.
 		<script type="text/javascript" id="main-js" src="./main.js" data-translation="blank"></script>
 		-->
-		<script type="text/javascript" crossorigin="anonymous" id="main-js" src="./main.js?ver=793"></script>
+		<script type="text/javascript" crossorigin="anonymous" id="main-js" src="./main.js?ver=798"></script>
 	</body>
 </html>

@@ -780,11 +780,14 @@ body.darktheme .credits>a:visited {
 }
 
 .advancedAudioSettings .settingsLabel, .advancedVideoSettings .settingsLabel {
-	padding: 5px;
 	display: block;
-	color: white;
-	font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-	font-size: 12px;
+    color: #fff;
+    font-family: system-ui,-apple-system,BlinkMacSystemFont,segoe ui,Roboto,Oxygen,Ubuntu,Cantarell,open sans,helvetica neue,sans-serif;
+    font-size: 12px;
+    margin-top: 15px;
+    border-top: 3px solid #4f4c4c;
+    width: calc(100% - 4px);
+    padding: 5px 0;
 }
 
 .advancedVideoSettings div:nth-child(2) {

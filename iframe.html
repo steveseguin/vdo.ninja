@@ -25,7 +25,7 @@
 		}
 		var container = document.getElementById("container");
 		var iframe = newElement("iframe", {
-			allow: "document-domain;encrypted-media;sync-xhr;usb;web-share;cross-origin-isolated;accelerometer;midi;geolocation;autoplay;camera;microphone;fullscreen;picture-in-picture;display-capture;",
+			allow: "document-domain;encrypted-media;sync-xhr;usb;web-share;cross-origin-isolated;accelerometer;midi;geolocation;autoplay;camera;microphone;fullscreen;picture-in-picture;display-capture;gyroscope;",
 			src: addUrlParams(iframesrc, ["cleanoutput", "transparent", "hidemenu"])
 		});
 		var iframeExample = newElement("div", { id: exampleId, classList: "iframe-example" });
