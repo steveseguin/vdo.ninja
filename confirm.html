@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Confirm Navigation</title>
+	
+	    <style>
+			html {
+				background-color: #0000;
+			}
+			body {
+				font-family: Arial, sans-serif;
+				background-color: #333;
+				color: #fff;
+				text-align: center;
+				padding: 20px 0;
+				border: 10px dashed rgb(64 65 62);
+			}
+
+			h2 {
+				color: #f0f0f0;
+			}
+
+			p {
+				margin: 20px 0;
+				color: #d9d9d9;
+			}
+
+			#url {
+				word-wrap: break-word;
+				margin: 10px auto;
+				padding: 10px;
+				background-color: #444;
+				border: 1px solid #555;
+				border-radius: 4px;
+				width: 80%;
+				max-width: 600px;
+			}
+
+			button {
+				background-color: #555;
+				color: #fff;
+				border: none;
+				padding: 10px 20px;
+				margin: 10px;
+				border-radius: 4px;
+				cursor: pointer;
+				transition: background-color 0.3s;
+			}
+
+			button:hover {
+				background-color: #666;
+			}
+
+			button:active {
+				background-color: #777;
+			}
+		</style>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+		<meta content="text/html;charset=utf-8" http-equiv="Content-Type" />
+		<meta content="utf-8" http-equiv="encoding" />
+		<meta name="copyright" content="&copy; 2023 Steve Seguin" />
+		<meta name="license" content="https://github.com/steveseguin/vdo.ninja/LICENSE.md" />
+		<meta name="sourcecode" content="https://github.com/steveseguin/vdo.ninja" />
+		<meta name="stance-on-war" content="Steve Seguin condemns Russia's brutal invasion of Ukraine 💙💛." />
+		
+		<link rel="shortcut icon" href="data:image/x-icon;," type="image/x-icon" />
+		<link id="favicon1" rel="icon" type="image/png" sizes="32x32" href="./media/favicon-32x32.png" />
+		<link id="favicon2" rel="icon" type="image/png" sizes="16x16" href="./media/favicon-16x16.png" />
+		<link id="favicon3" rel="icon" href="./media/favicon.ico" />
+		<link id="thumbnailUrl" itemprop="thumbnailUrl" href="./media/vdoNinja_logo_full.png" />
+		<!-- Primary Meta Tags -->
+		<title>VDO.Ninja</title>
+		<meta id="metaTitle" name="title" content="VDO.Ninja" />
+		<meta name="description" content="Bring live video from your smartphone, computer, or friends directly into your Studio. 100% free." />
+		<meta name="author" content="Steve Seguin" />
+		
+</head>
+<body>
+    <h2>Confirm External Page</h2>
+    <p>You are about to load to the following URL:</p>
+    <p id="url"></p>
+	<p>Loading untrusted links may reveal your IP address, location, or attempt to trick you</p>
+	<p>Do you wish to continue loading it?</p>
+    <button id="confirmBtn">Confirm</button>
+    <button id="cancelBtn">Cancel</button>
+
+   <script>
+   
+		function hideURLPath(url) {
+			try {
+				var urlObject = new URL(url);
+				// Count the number of characters in pathname and search
+				var hiddenPartLength = urlObject.pathname.length + urlObject.search.length;
+				hiddenPartLength = Math.min(hiddenPartLength,25) - 1;
+				hiddenPartLength = Math.max(hiddenPartLength,0);
+				// Generate a string of asterisks of the same length
+				var hiddenPart = '*'.repeat(hiddenPartLength) || '****'; // Ensure there's at least four asterisks
+				return urlObject.origin + "/"+ hiddenPart;
+			} catch (e) {
+				return 'Invalid URL';
+			}
+		}
+
+		// Function to get URL parameters
+		function getParameterByName(name, url = window.location.href) {
+			name = name.replace(/[\[\]]/g, '\\$&');
+			var regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)'),
+				results = regex.exec(url);
+			if (!results) return null;
+			if (!results[2]) return '';
+			return decodeURIComponent(results[2].replace(/\+/g, ' '));
+		}
+
+		// Function to validate and sanitize the URL
+		function validateAndSanitizeURL(url) {
+			// Check if the URL starts with http:// or https://
+			if (/^(https?:\/\/)/.test(url)) {
+				return url;
+			} else {
+				return null; // Invalid URL
+			}
+		}
+
+		// Get the URL parameter
+		var url = getParameterByName('url');
+		
+		var clean = getParameterByName('clean');
+		
+
+		// Validate and sanitize the URL
+		var sanitizedUrl = validateAndSanitizeURL(url);
+
+		// Set the URL in the paragraph
+		if (sanitizedUrl) {
+			if (clean!==null){
+				try {
+					document.getElementById('url').textContent = hideURLPath(sanitizedUrl);
+				} catch(e){
+					document.getElementById('url').textContent = sanitizedUrl;
+				}
+			} else {
+				document.getElementById('url').textContent = sanitizedUrl;
+			}
+		} else {
+			document.getElementById('url').textContent = 'Invalid URL';
+		}
+
+		// Confirm button event
+		document.getElementById('confirmBtn').addEventListener('click', function() {
+			if (sanitizedUrl) {
+				window.location.href = sanitizedUrl;
+			}
+		});
+
+		// Cancel button event
+		document.getElementById('cancelBtn').addEventListener('click', function() {
+			// Redirect to a safe page or simply do nothing
+			window.location.href = 'about:blank';
+		});
+	</script>
+</body>
+</html>

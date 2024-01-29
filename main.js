@@ -2829,8 +2829,6 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		session.AndroidFix = true;
 	}
 	
-	
-	
 	if (urlParams.has('consent')){
 		session.consent = true;
 		getById("consentWarning").classList.remove("hidden");
@@ -3731,6 +3729,9 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 	if (urlParams.has('requireencryption')) {
 		session.requireencryption = true;
 	}
+	if (urlParams.has('unsafe')) {
+		session.unsafe = true;
+	}
 
 	if (urlParams.has('random') || urlParams.has('randomize')) {
 		session.randomize = true;
@@ -3859,8 +3860,12 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		log("ICE FILTER ENABLED");
 		session.icefilter = urlParams.get('icefilter');
 	}
-	
-	
+	if (urlParams.has('lanonly')) {
+		session.localNetworkOnly = true;
+		session.configuration = {
+			sdpSemantics: session.sdpSemantics // future-proofing
+		};
+	}
 	
 	//if (!(ChromiumVersion>=57)){
 	//	getById("effectSelector").disabled=true;
@@ -4483,6 +4488,15 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 	
 	if ((session.permaid===false) && (session.roomid===false) && (session.view===false) && (session.effect===false) && (session.director===false)){
 		session.effect = null;
+	}
+	
+	if (session.mobile && (session.permaid===false) && !session.roomid){
+		getById("rememberStreamID").classList.remove("hidden");
+		
+		let rememberStreamIDmobile = getStorage("rememberStreamIDmobile");
+		if (rememberStreamIDmobile === "false"){
+			getById("rememberStreamIDcheck").checked = false;
+		}
 	}
 	
 	if (urlParams.has("hostwhep") || urlParams.has("whepout")){
@@ -6682,6 +6696,10 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 				event.preventDefault(); 
 				event.stopPropagation();
 				return;
+			} else if (event.key === 's'){
+				if (document.getElementById("gowebcam") && (document.getElementById("gowebcam").dataset.ready =="true")){
+					publishWebcam(document.getElementById("gowebcam"));
+				}
 			}
 		}
 	}

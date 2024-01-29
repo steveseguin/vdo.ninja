@@ -20,8 +20,16 @@ function toHexString(byteArray){
 var password = prompt("Please enter the password");
 password = password.trim();
 password = encodeURIComponent(password);
-	
-generateHash(password + location.hostname, 4).then(function(hash) { // million to one error. 
+
+var salt = location.hostname;
+
+if (location.hostname == "steveseguin.github.io"){ // allows github to be a backup ; passwords will still work
+	salt = "vdo.ninja";
+} else if (["vdo.ninja","rtc.ninja","versus.cam","socialstream.ninja"].includes(location.hostname.split(".").slice(-2).join("."))){ 
+	salt = location.hostname.split(".").slice(-2).join("."); // official sub-domains will retain their passwords
+}
+
+generateHash(password + salt, 4).then(function(hash) { // million to one error. 
 	alert("hash value: "+hash)
 });
 </script></body></html>
