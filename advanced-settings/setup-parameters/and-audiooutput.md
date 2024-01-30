@@ -43,6 +43,14 @@ You can change the audio output device dynamically via the settings menu.\
 In Version 22 of VDO.Ninja you can change the audio output device of each video feed individually via `Right-Click -> Audio Destination` on the video feed.\
 ![](<../../.gitbook/assets/image (147).png>)
 
+### Electron Capture
+
+You can specify an audio output device via the Electron Capture app's command line using this URL parameter  (when used in conjunction with VDO.Ninja).\
+\
+Example: \
+\
+`electron.exe --url="https://vdo.ninja/?view=guest1&outputdevice=mixer_usb"`
+
 ## Related
 
 {% content-ref url="../view-parameters/and-sink.md" %}
