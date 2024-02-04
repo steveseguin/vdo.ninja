@@ -2,6 +2,13 @@
 
 [native-mobile-app-versions.md](../steves-helper-apps/native-mobile-app-versions.md "mention")
 
+#### January 26
+
+* Updated the Android native app and iOS native app, which finalizes the password support
+  * Available on the Play Store and App Store
+  * This includes the addition of client-side encryption for handshake messaging
+  * Passwords will work with just the VDO.Ninja hosted site at the moment, unless you adjust your salt in your self-hosted index.html to match
+
 #### January 8
 
 * Released the native Android version of VDO.Ninja to the Google Play store. (It's rolling out slowly; 20% roll out completed, with the rest expected in the next 24hr)

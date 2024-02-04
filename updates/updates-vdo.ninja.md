@@ -1,5 +1,43 @@
 # Updates - VDO.Ninja
 
+#### February 4 <a href="#august-31" id="august-31"></a>
+
+* I've updated the volume slider for the [director](../viewers-settings/director.md) to act logarithmically now, with a higher max gain allowed
+  * This means instead of the slider going `0 -> 50 -> 100 -> 150 -> 200`, it now goes `0 -> 20 -> 100 -> 200 -> 800`
+  * If you have a quiet guest, you can get them a lot louder now in other words, with \~800% loudness being the max
+  * Steps between incremental values can be as big as 20 now, rather than always one
+* Minor improvements to [`&chunked`](../newly-added-parameters/and-chunked.md) mode
+  * You can change the camera source now without it cutting out
+  * Doesn't lag as much or at all if changing tabs/visibility
+  * Better control over the buffer latency
+
+\*\* changes on alpha at vdo.ninja/alpha/ for testing
+
+#### January 26 <a href="#august-31" id="august-31"></a>
+
+* If using [`&noaudio`](../advanced-settings/view-parameters/noaudio.md), embedded YouTube videos loaded via other guests/directors will play muted by default
+  * This only works with YouTube links at the moment; other websites loaded might trigger audio still
+* If using `&privacy` on the URL (using TURN server), with the intent being to hide your IP address, a page will prompt you if an iframe tries to load, asking if you wish to continue\
+  ![](<../.gitbook/assets/image (232).png>)
+  * Using [`&relay`](../general-settings/and-relay.md) will not do this behavior, despite using the turn server none-the-less; so `&privacy` is evolving to be a bit more strict than [`&relay`](../general-settings/and-relay.md) alone
+  * It will even show if loaded into OBS, as privacy trumps there. (IFrames can steal IP address, etc.)
+  * You can also just use [`&nowebsite`](../source-settings/nowebsite.md), to disable IFrames from loading at all (always existed as an option)
+  * Certain known sites are excepted; YouTube, Twitch, Vimeo, etc. will not ask for confirmation
+
+\*\* updates to vdo.ninja/alpha/
+
+#### January 24 <a href="#august-31" id="august-31"></a>
+
+* Added `&lanonly` as a new URL parameter
+  * This _tries_ to block all p2p connections that are not on the same LAN as you
+  * It tries to filter public IPs for both incoming and outgoing p2p connections, along with blocking turn/stun.
+  * This still requires the Internet, as the handshake server / website still need to be accessed.
+  * Failed connections will just keep retrying every several seconds, but won't actually establish a p2p connection.
+  * It isn't tested to work with WHEP/WHIP, but likely will only allow for local WHIP/WHEP services also
+  * I doubt it's hacker proof, given the limited testing so far, but it passed a few basic tests.
+
+\*\* on alpha for testing at [vdo.ninja/alpha/?lanonly](https://vdo.ninja/alpha/?lanonly)
+
 #### January 23 <a href="#august-31" id="august-31"></a>
 
 *   Added a check-box option to VDO.Ninja that allows a smartphone-user to auto-remember their stream ID. (At the bottom of the add your camera page)

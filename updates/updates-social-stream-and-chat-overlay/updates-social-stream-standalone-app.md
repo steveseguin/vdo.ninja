@@ -4,6 +4,10 @@
 
 #### [https://github.com/steveseguin/social\_stream/releases](https://github.com/steveseguin/social\_stream/releases)
 
+#### January 31
+
+* 'always on top' option fixed; Mac and PC
+
 #### January 12
 
 v0.1.12\

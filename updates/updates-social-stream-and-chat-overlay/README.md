@@ -3,6 +3,48 @@
 [social-stream.md](../../steves-helper-apps/social-stream.md "mention")\
 [chat-overlay.md](../../steves-helper-apps/chat-overlay.md "mention")
 
+#### February 4
+
+* Emotes wall works with `&server` mode now (rather than p2p)
+* Messages deleted on twitch or YouTube should auto delete in Social Stream also now (fixed some bugs on Twitch, improved extension support, YouTube support is new)
+* Option added to specify a default avatar image for guests without one\
+  ![](<../../.gitbook/assets/image (235).png>)
+
+#### January 31
+
+* Initial support for megaphonetv.com has been added to Social Stream
+* The text to speech language drop down menu for Social Stream now will set `&voice` filter parameter, along with the `&lang` parameter
+  * So it selects now not just the language, but also the voice, (Google vs. Microsoft vs. gendered voices; not just "`en-us`")
+*   Added an option to Social Stream that let guests in chat auto-queue their own message.
+
+    * In the extension menu you can set the command or you can just add `&selfqueue=!queue` to the dock.html page, with the string you want to be the command
+
+    ![Image](https://media.discordapp.net/attachments/701232125831151697/1202178691409387520/image.png?ex=65cc8327\&is=65ba0e27\&hm=30a0476684f6c4ff1a082041d4090dac1d20cee491e58ccd8a0b40ae62054791&=\&format=webp\&quality=lossless\&width=409\&height=175)![Image](https://media.discordapp.net/attachments/701232125831151697/1202178691644526602/image.png?ex=65cc8327\&is=65ba0e27\&hm=839296d58c9be49bdcafbc11f5a603c18a74aa900e4eaf6976f68a8a3d9b7567&=\&format=webp\&quality=lossless\&width=409\&height=267)
+* Fixed a bug that prevented Social Stream from sending messages to Twitter live chat or Instagram live chat
+
+#### January 30
+
+* truffle.tv support added to Social Stream
+* Added support for BTTV to YouTube (Social Stream)
+  * This doesn't show the BTTV chat emojis in the YouTube chat itself, but rather adds the BTTV emotes in the Social Stream dock page.
+  * The hope is to add more sites and 7tv, plus others over time, but this is a start
+  * This should technically allow me to get BTTV/7TV working within the [standalone app](updates-social-stream-standalone-app.md), but also could work with all chat platforms\
+    ![](<../../.gitbook/assets/image (234).png>)
+
+#### **January 26**
+
+* mixlr.com support added to Social Stream
+
+#### **January 24**
+
+* Social Stream can make use of this new `&lanonly` mode also.
+  * The dock.html, index.html, and the extension itself have toggles you can enable
+  * You'll want to enable all three `&lanonly` toggles ideally, to ensure full coverage
+  * This allows you to use Social Stream within a corporate network or on a single computer, without as much worry of it getting hacked due to a leaked session ID
+  * If using `&server` mode, that will bypass this feature of course, as server mode isn't p2p
+
+![Image](https://media.discordapp.net/attachments/701232125831151697/1199592525846032414/image.png?ex=65cc5519\&is=65b9e019\&hm=5f64a73ba7e9572d31cffbd912efc0ae2a8689ca84e12e0b5f68ee7ba144c673&=\&format=webp\&quality=lossless\&width=583\&height=114)
+
 #### **January 20**
 
 * You can now merge multiple Social Stream extension sources into a single dock, so for example, two different computers capturing chat with two different extensions installed can combine their results into a single dock.html page.

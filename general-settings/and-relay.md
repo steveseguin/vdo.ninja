@@ -38,6 +38,20 @@ Ports that a TURN server may use include 443, 3478, and potentially others.
 More information on what TURN is [here](https://en.wikipedia.org/wiki/Traversal\_Using\_Relays\_around\_NAT)
 {% endhint %}
 
+### Difference between `&relay` and `&privacy`
+
+If using `&privacy` on the URL (using TURN server), with the intent being to hide your IP address, a page will prompt you if an IFrame tries to load, asking if you wish to continue.
+
+<figure><img src="../.gitbook/assets/image (233).png" alt=""><figcaption></figcaption></figure>
+
+Using `&relay` will not do this behavior, despite using the turn server none-the-less; so `&privacy` is evolving to be a bit more strict than `&relay` alone.
+
+It will even show if loaded into OBS, as privacy trumps there. (IFrames can steal IP address, etc.).
+
+You can also just use [`&nowebsite`](../source-settings/nowebsite.md), to disable IFrames from loading at all (always existed as an option).
+
+Certain known sites are excepted; YouTube, Twitch, Vimeo, etc. will not ask for confirmation.
+
 ## Related
 
 {% content-ref url="turn.md" %}

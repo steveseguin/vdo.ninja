@@ -2,6 +2,14 @@
 
 [electron-capture.md](../steves-helper-apps/electron-capture.md "mention")
 
+#### January 27
+
+* The **Electron Capture App** has been updated
+  * Mac and PC versions: [https://github.com/steveseguin/electroncapture/releases/tag/2.17.11](https://github.com/steveseguin/electroncapture/releases/tag/2.17.11)
+  * Just security fixes and general core engine updates, along with a new MacOS icon (rounded card style)
+
+### 2023
+
 #### October 23
 
 * Fixed an issue in Electron Capture so that if editing the URL; the window size won't change afterwards now. (window build for it published)
