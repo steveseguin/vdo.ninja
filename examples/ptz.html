@@ -45,6 +45,7 @@ button{
 	border:0;
 	margin-top:min(10px, 1vh);
 	padding:min(10px, 1vh);
+	cursor:pointer;
 }
 
 span {
@@ -89,12 +90,12 @@ var iframe;
 function panleft(){
 	if (iframe){
 	console.log("PAN 1");
-		iframe.contentWindow.postMessage({"sendRequest":{pan:1}}, '*');
+		iframe.contentWindow.postMessage({"sendRequest":{pan:-1}}, '*');
 	}
 }
 function panright(){
 	if (iframe){
-		iframe.contentWindow.postMessage({"sendRequest":{pan:-1}}, '*');
+		iframe.contentWindow.postMessage({"sendRequest":{pan:1}}, '*');
 	}
 }
 function tiltup(){
