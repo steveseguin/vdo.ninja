@@ -4152,6 +4152,7 @@ function updateMixer(e=false){
 
 function updateMixerRun(e=false){  // this is the main auto-mixing code.  It's a giant function that runs when there are changes to screensize, video track statuses, etc.
 	try { 
+	
 		
 		if (session.switchMode){}
 		else if (session.director){return;}
@@ -7105,6 +7106,7 @@ session.remoteZoom = function(zoom){
 		track0 = track0[0];
 		if (track0.getCapabilities){
 			var capabilities = track0.getCapabilities();
+			
 			if (!capabilities.zoom){
 				warnlog("No zoom supported on this device");
 				return;
@@ -7112,8 +7114,8 @@ session.remoteZoom = function(zoom){
 			if (("min" in capabilities.zoom) && ("max" in capabilities.zoom)){
 				if (capabilities.zoom.max === capabilities.zoom.min){
 					warnlog("zoom only has one fixed setting");
+					return;
 				}
-				return;
 			}
 			
 			if (session.zoom==false){
@@ -7160,12 +7162,96 @@ session.remoteFocus = async function(focusDistance){
 			}
 			//updateCameraConstraints("zoom", session.zoom); // TODO: I should align the remote zoom and focus with the local one.
 			await track0.applyConstraints({advanced: [ {focusMode: "manual", focusDistance: session.focusDistance} ]});
+		} else if (Firefox){
+			warnlog("firefox sucks. that's why");
 		}
 	} catch(e){
 		errorlog(e);
 	}
 };
-
+session.remotePan = function(pan){
+	try {
+		var track0 = session.streamSrc.getVideoTracks();
+		track0 = track0[0];
+		if (track0.getCapabilities){
+			var capabilities = track0.getCapabilities();
+			
+			if (!capabilities.pan){
+				warnlog("No pan supported on this device");
+				return;
+			}
+			
+			if (("min" in capabilities.pan) && ("max" in capabilities.pan)){
+				if (capabilities.pan.max === capabilities.pan.min){
+					warnlog("pan only has one fixed setting");
+					return;
+				}
+			}
+			if (session.pan==false){
+				session.pan = (capabilities.pan.min+capabilities.pan.max)/2;
+			}
+			if (capabilities.pan.step){
+				pan*=capabilities.pan.step;
+			}
+			if (!session.pan){session.pan=0;}
+			session.pan+=pan;
+			if (session.pan>capabilities.pan.max){
+				session.pan = capabilities.pan.max;
+			} else if (session.pan<capabilities.pan.min){
+				session.pan = capabilities.pan.min;
+			}
+			//updateCameraConstraints("pan", session.pan); // TODO: I should align the remote zoom and focus with the local one.
+			track0.applyConstraints({advanced: [ {pan: session.pan} ]});
+		} else if (Firefox){
+			warnlog("firefox sucks. that's why");
+		}
+	} catch(e){
+		errorlog(e);
+	}
+};
+session.remoteTilt = function(tilt){
+	try {
+		var track0 = session.streamSrc.getVideoTracks();
+		track0 = track0[0];
+		if (track0.getCapabilities){
+			var capabilities = track0.getCapabilities();
+			
+			if (!capabilities.tilt){
+				warnlog("No zoom supported on this device");
+				return;
+			}
+			if (("min" in capabilities.tilt) && ("max" in capabilities.tilt)){
+				if (capabilities.tilt.max === capabilities.tilt.min){
+					warnlog("zoom only has one fixed setting");
+					return;
+				}
+			}
+			if (capabilities.tilt.step){
+				tilt*=capabilities.tilt.step;
+			}
+			if (!session.tilt){session.tilt=0;}
+			if (session.tilt==false){
+				session.tilt = (capabilities.tilt.min+capabilities.tilt.max)/2;
+			}
+			session.tilt+=tilt;
+			if (session.tilt>capabilities.tilt.max){
+				session.tilt = capabilities.tilt.max;
+			} else if (session.zoom<capabilities.tilt.min){
+				session.tilt = capabilities.tilt.min;
+			}
+			//updateCameraConstraints("tilt", session.tilt); // TODO: I should align the remote zoom and focus with the local one.
+			track0.applyConstraints({advanced: [ {tilt: session.tilt} ]});
+		} else if (Firefox){
+			warnlog("firefox sucks. that's why");
+		}
+	} catch(e){
+		errorlog(e);
+	}
+};
+//function updateRemotePTZControls(videoOptions, UUID){
+//	console.log(videoOptions);
+//	console.log(UUID);
+//}
 
 
 function uploadImageSnapshot(PostURL){
@@ -12014,7 +12100,6 @@ function toggleMute(apply = false, event=false) { // TODO: I need to have this b
 	}
 	//try{var ptt = getById("press2talk");} catch(e){var ptt=false;}
 	
-
 	
 	if (session.muted == false) {
 		session.muted = true;
@@ -12059,11 +12144,17 @@ function toggleMute(apply = false, event=false) { // TODO: I need to have this b
 				track.enabled = true;
 			});
 		}
-		if ((iOS || iPad) && session.videoElement && session.videoElement.srcObject) {
-			session.videoElement.srcObject.getAudioTracks().forEach((track) => {
-				track.enabled = true;
-			});
-		}
+		if (iOS || iPad){
+			if (session.videoElement && session.videoElement.srcObject) {
+				session.videoElement.srcObject.getAudioTracks().forEach((track) => {
+					track.enabled = true;
+				});
+			}
+			refreshMicrophoneDevice(); // to address an issue with iOS/iPad devices losing audio when an inbound audio souce hits.
+		} 
+		
+		// toggleMute(false, event)
+		
 		//if (ptt){
 		//	ptt.innerHTML = "<span data-translate='Push-to-Mute'>🔴 Push to Mute</span>";
 		//}
@@ -14372,14 +14463,81 @@ function checkMuteState(UUID){ // this is the mute state of PLAYBACK audio; not 
 	return muteOutcome;
 }
 
+var volumeLUT = [0,1,2,2.4,2.7,3,3.4,3.7,4,4.5,4.8,5,5.6,6,6.4,6.8,7,7.7,8,8.6,9,9.5,10,10.4,10.9,11,12,12.5,13,13.6,14,14.7,15,15.6,16,17,17.7,18,19,19.7,20,21,21.8,22,23,24,24.7,25,26,27,28,28.5,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,45,46,47,48,49,51,52,53,55,56,58,59,61,62,64,65,67,68,70,72,74,75,77,79,81,83,85,87,89,91,93,95,97,100,102,104,107,109,112,114,117,119,122,125,128,131,134,137,140,143,146,149,152,156,159,163,166,170,174,177,181,185,189,193,198,202,206,211,215,220,225,230,234,240,245,250,255,261,266,272,278,284,290,296,302,308,315,322,328,335,342,350,357,364,372,380,388,396,404,413,421,430,439,448,458,467,477,487,497,507,518,528,539,551,562,574,586,598,610,623,635,649,662,676,690,704,718,733,748,764,779,795,812,828];
+
+function initAudioButtons(audioGain, UUID){
+	
+	if (audioGain===0){
+		var ele = document.querySelector('[data-action-type="mute-guest"][data--u-u-i-d="'+UUID+'"]');
+		if (ele){
+			ele.value = 1;
+			ele.classList.add("pressed"); ele.ariaPressed = "true";
+			miniTranslate(ele.children[1],"unmute");
+			session.rpcs[UUID].directorMutedState = 1;
+		}
+		pokeIframeAPI("director-mute-state", true, UUID);
+	} else {
+		var ele = document.querySelector('[data-action-type="volume"][data--u-u-i-d="'+UUID+'"]');
+		if (ele){
+			if (audioGain==100){
+				ele.value = audioGain;
+			} else {
+				audioGain = parseInt(audioGain) || 0
+				ele.value = 200;
+				for (var i = 1;i<=200;i++){
+					if (volumeLUT[i]>=audioGain){
+						ele.value = i;
+						break;
+					}
+				}
+			}
+			session.rpcs[UUID].directorVolumeState = audioGain;
+			remoteVolumeUI(ele);
+		}
+	}
+}
 function remoteVolumeUI(ele){
-	ele.nextElementSibling.innerHTML = ele.value + "%";
+	
+	var value = ele.value;
+	value = volumeLUT[parseInt(value)];
+	
+	ele.nextElementSibling.innerHTML = value + "%";
 	if (Date.now() - remoteSliderTimeout > 100){
 		remoteSliderTimeout = Date.now();
 		remoteVolume(ele);
 	}
 	//setVolumeColor(ele);
-	return ele.value;
+	return value;
+}
+
+function remoteVolume(ele) { // A directing room only is controlled by the Director, with the exception of MUTE.
+	log("volume: "+session.rpcs[ele.dataset.UUID].directorMutedState);
+	var msg = {};
+	var muted = session.rpcs[ele.dataset.UUID].directorMutedState;
+	
+	var value = ele.value;
+	value = volumeLUT[parseInt(value)];
+	
+	//log(ele);
+	if (muted == true) { // 1 is a string, not an int, so == and not ===. this happens in a few places :/  
+		session.rpcs[ele.dataset.UUID].directorVolumeState = value;
+	} else {
+		session.rpcs[ele.dataset.UUID].directorVolumeState = value;
+		msg.volume = value;
+		msg.UUID = ele.dataset.UUID;
+		session.sendRequest(msg, ele.dataset.UUID);
+	}
+	
+	//const minLog = Math.log10(0.01); // Log10 of minimum gain
+	// const maxLog = Math.log10(10);   // Log10 of maximum gain
+	// const normalizedValue = (msg.volume / 75) * (maxLog - minLog) + minLog;
+	// const gainValue = Math.pow(10, normalizedValue);
+	//console.log(gainValue*100);
+	
+	pokeIframeAPI("director-volume-state", value, ele.dataset.UUID);
+	
+	syncDirectorState(ele);
+	return value;
 }
 
 /* function setVolumeColor(ele){
@@ -14387,27 +14545,6 @@ function remoteVolumeUI(ele){
 	if (vol1<0){vol1=0};
 	ele.style.backgroundColor = "hsl("+vol1+", 100%, 50%)";
 } */
-
-function remoteVolume(ele) { // A directing room only is controlled by the Director, with the exception of MUTE.
-	log("volume: "+session.rpcs[ele.dataset.UUID].directorMutedState);
-	var msg = {};
-	var muted = session.rpcs[ele.dataset.UUID].directorMutedState;
-	// 
-	//log(ele);
-	if (muted == true) { // 1 is a string, not an int, so == and not ===. this happens in a few places :/  
-		session.rpcs[ele.dataset.UUID].directorVolumeState = ele.value;
-	} else {
-		session.rpcs[ele.dataset.UUID].directorVolumeState = ele.value;
-		msg.volume = ele.value;
-		msg.UUID = ele.dataset.UUID;
-		session.sendRequest(msg, ele.dataset.UUID);
-	}
-	
-	pokeIframeAPI("director-volume-state", ele.value, ele.dataset.UUID);
-	
-	syncDirectorState(ele);
-	return ele.value;
-}
 
 function clearDirectorSettings(){ // make sure to wipe the director's room settings if creating a new room.
 	removeStorage("directorCustomize");
@@ -21367,6 +21504,15 @@ function refreshVideoDevice(){
 	activatedPreview = false;
 	grabVideo(session.quality, "videosource", "select#videoSource3");
 }
+function refreshMicrophoneDevice(){
+	if (session.screenShareState) {
+		log("can't refresh a screenshare");
+		return;
+	}
+	log("refreshing microphone..");
+	grabAudio("#audioSource3");
+}
+
 
 function gotDevicesRemote(deviceInfos, UUID) { 
 	
@@ -25618,6 +25764,8 @@ session.publishStream = function(v){ //  stream is used to generated an SDP
 			if (!session.view || (session.view==="")){
 				if (session.fullscreen){
 					session.windowed = false;
+				} else if (session.minipreview){
+					session.windowed = false;
 				} else {
 					v.className = "myVideo"; //"myVideo task"; TODO: get working
 					session.windowed = true;
@@ -25658,6 +25806,8 @@ session.publishStream = function(v){ //  stream is used to generated an SDP
 	} else {
 		
 		if (session.fullscreen){
+			session.windowed = false;
+		} else if (session.minipreview){
 			session.windowed = false;
 		} else {
 			v.className = "myVideo"; //"myVideo task"; TODO: get working
@@ -26904,6 +27054,8 @@ session.publishFile = function(ele, event){ // webcam stream is used to generate
 				if (!session.view || (session.view==="")){
 					if (session.fullscreen){
 						session.windowed = false;
+					} else if (session.minipreview){
+						session.windowed = false;
 					} else {
 						v.className = "myVideo clean fileshare";
 						container.classList.add("vidcon");
@@ -26928,6 +27080,8 @@ session.publishFile = function(ele, event){ // webcam stream is used to generate
 			applyMirror(session.mirrorExclude);
 		} else {
 			if (session.fullscreen){
+				session.windowed = false;
+			} else if (session.minipreview){
 				session.windowed = false;
 			} else {
 				v.className = "myVideo clean fileshare";
@@ -35416,10 +35570,16 @@ function setupSensorData(pollrate = 30) {
 				session.sensors.data[sensorKey] = {};
 				let sensor = new window[SensorType]({ frequency: pollrate });
 				sensor.addEventListener('reading', () => {
-					session.sensors.data[sensorKey].x = sensor.x !== null ? parseFloat(sensor.x.toFixed(5)) : null;
-					session.sensors.data[sensorKey].y = sensor.y !== null ? parseFloat(sensor.y.toFixed(5)) : null;
-					session.sensors.data[sensorKey].z = sensor.z !== null ? parseFloat(sensor.z.toFixed(5)) : null;
-					session.sensors.data[sensorKey].t = parseInt(Math.round(sensor.timeStamp || 0)) || Date.now()
+					try {
+						session.sensors.data[sensorKey].x = sensor.x !== null ? parseFloat(sensor.x.toFixed(5)) : null;
+						session.sensors.data[sensorKey].y = sensor.y !== null ? parseFloat(sensor.y.toFixed(5)) : null;
+						session.sensors.data[sensorKey].z = sensor.z !== null ? parseFloat(sensor.z.toFixed(5)) : null;
+					} catch(e){}
+					try {
+						session.sensors.data[sensorKey].t = parseInt(Math.round(sensor.timeStamp || 0)) || Date.now()
+					} catch(e){
+						errorlog(e);
+					}
 				});
 				sensor.start();
 				session.sensors[sensorKey] = sensor;
@@ -37017,25 +37177,7 @@ function initRecordingImpossible(UUID){
 	}
 }
 
-function initAudioButtons(audioGain, UUID){
-	if (audioGain===0){
-		var ele = document.querySelector('[data-action-type="mute-guest"][data--u-u-i-d="'+UUID+'"]');
-		if (ele){
-			ele.value = 1;
-			ele.classList.add("pressed"); ele.ariaPressed = "true";
-			miniTranslate(ele.children[1],"unmute");
-			session.rpcs[UUID].directorMutedState = 1;
-		}
-		pokeIframeAPI("director-mute-state", true, UUID);
-	} else {
-		var ele = document.querySelector('[data-action-type="volume"][data--u-u-i-d="'+UUID+'"]');
-		if (ele){
-			ele.value = audioGain;
-			session.rpcs[UUID].directorVolumeState = audioGain;
-			remoteVolumeUI(ele);
-		}
-	}
-}
+
 
 function initGroupButtons(UUID){
 	var elements = document.querySelectorAll('[data-action-type="toggle-group"][data--u-u-i-d="'+UUID+'"]');
@@ -40892,7 +41034,17 @@ function midiHotkeysCommand(command, value){
 		} else if ((value => 27)) { 
 			var ele = getRightOrderedElement('[data-action-type="volume"][data--u-u-i-d]', guestslot);
 			if (ele) {
-				ele.value = parseInt(value-27);
+				
+				var audioGain = parseInt(value-27) || 0
+				if (audioGain<0){audioGain=0;}
+				
+				ele.value = 200;
+				for (var i = 1;i<=200;i++){
+					if (volumeLUT[i]>=audioGain){
+						ele.value = i;
+						break;
+					}
+				}
 				remoteVolume(ele);
 			}
 		}

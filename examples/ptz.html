@@ -1,0 +1,174 @@
+<html>
+<head><title>PTZ Remote Controller</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+<meta content="text/html;charset=utf-8" http-equiv="Content-Type" />
+<style>
+body{
+	padding:0;
+	margin:0;
+	background-color:#003;
+	width:100%;
+	height:100%;
+	color:white;
+	font-family: tahoma, arial;
+}
+
+a {
+	color:white
+}
+
+iframe {
+	width:100%;
+	height:100%;
+	border:0;
+	margin:0;
+	padding:0;
+	display:block;
+}
+
+
+input{
+	padding:10px;
+	width:80%;
+	font-size:1.2em;
+	z-index: 1000;
+}
+
+div{
+	border:0;
+	margin:0;
+	padding:0;
+	text-align: center;
+}
+
+button{
+	border:0;
+	margin-top:min(10px, 1vh);
+	padding:min(10px, 1vh);
+}
+
+span {
+    margin: 0 10px;
+}
+</style>
+</head>
+<body>
+
+
+
+<div id="container1" style="width:100%;height:89%;display:none;"></div>
+<div id="container2" style="width:100%;height:10%;display:none;">
+	<span>
+		🍳
+		<button onclick="panleft()" style='background-color:red'>Pan LEFT ⬅️</button>
+		<button onclick="panright()" style='background-color:green'>Pan RIGHT ➡️</button>
+	</span>
+	<span>
+		⏸️
+		<button onclick="tiltup()" style='background-color:red'>Tilt UP ⬆️</button>
+		<button onclick="tildown()" style='background-color:green'>Tilt DOWN ⬇️</button>
+	</span>
+	<span>
+		🔍
+		<button onclick="zoomout()" style='background-color:red'>Zoom OUT ➖</button>
+		<button onclick="zoomin()" style='background-color:green'>Zoom IN ➕</button>
+	</span>
+</div>
+<div>
+	<h2>PTZ Remote Control interface</h2>
+	<input placeholder="Enter a view link. ie) https://vdo.ninja/?view=abc123" id="viewlink" type="text" onchange="loadIframes()" /><br>
+	<br>
+	This app is a custom remote client for VDO.Ninja's PTZ remote control feature.
+	<br>
+	<br>
+	notes: Make sure the remote sender adds <b>&ptz</b> and <b>&remote</b> to their URL, otherwise PTZ remote control will not be allowed.
+</div>
+<script>
+var iframe;
+
+function panleft(){
+	if (iframe){
+	console.log("PAN 1");
+		iframe.contentWindow.postMessage({"sendRequest":{pan:1}}, '*');
+	}
+}
+function panright(){
+	if (iframe){
+		iframe.contentWindow.postMessage({"sendRequest":{pan:-1}}, '*');
+	}
+}
+function tiltup(){
+	if (iframe){
+		iframe.contentWindow.postMessage({"sendRequest":{tilt:1}}, '*');
+	}
+}
+function tildown(){
+	if (iframe){
+		iframe.contentWindow.postMessage({"sendRequest":{tilt:-1}}, '*');
+	}
+}
+function zoomout(){
+	if (iframe){
+		iframe.contentWindow.postMessage({"sendRequest":{zoom:-1}}, '*');
+	}
+}
+function zoomin(){
+	if (iframe){
+		iframe.contentWindow.postMessage({"sendRequest":{zoom:1}}, '*');
+	}
+}
+
+
+var urlEdited = window.location.search.replace(/\?\?/g, "?");
+urlEdited = urlEdited.replace(/\?/g, "&");
+urlEdited = urlEdited.replace(/\&/, "?");
+
+if (urlEdited !== window.location.search){
+	warnlog(window.location.search + " changed to " + urlEdited);
+	window.history.pushState({path: urlEdited.toString()}, '', urlEdited.toString());
+}
+var urlParams = new URLSearchParams(urlEdited);
+
+
+if (urlParams.has("view") || urlParams.has("v")){
+	if (window.location.host){
+		var path = window.location.host+window.location.pathname.replace("/examples/","/").split("/").slice(0,-1).join("/");
+	} else {
+		var path = "vdo.ninja";
+	}
+	document.getElementById("viewlink").value = "https://"+path+"/";
+	loadIframes();
+}
+
+
+function loadIframes(){ 
+
+	var iframesrc = document.getElementById("viewlink").value;
+	
+	document.getElementById("viewlink").parentNode.parentNode.removeChild(document.getElementById("viewlink").parentNode);
+	document.getElementById("container1").style.display="inline-block";
+	document.getElementById("container2").style.display="inline-block";
+	
+	//
+	
+	
+	var params = window.location.search || "";
+		
+	if (iframesrc.includes("?")){
+		params = params.slice(1);
+		iframesrc = iframesrc + "&" + params
+	} else {
+		iframesrc = iframesrc + params
+	}
+	
+	console.log(iframesrc);
+	
+	iframe = document.createElement("iframe");
+	iframe.allow = "encrypted-media;sync-xhr;usb;web-share;cross-origin-isolated;accelerometer;midi;geolocation;autoplay;camera;microphone;fullscreen;picture-in-picture;display-capture;gyroscope;";
+	iframe.src = iframesrc;
+	document.getElementById("container1").appendChild(iframe);
+}
+
+</script>
+</body>
+</html>

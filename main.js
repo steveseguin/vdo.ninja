@@ -1258,10 +1258,6 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		}
 	}
 
-	if (urlParams.has('manual')) {
-		session.manual = true;
-	}
-
 	if (urlParams.has('hands') || urlParams.has('hand')) {
 		session.raisehands = true;
 	}
@@ -2303,9 +2299,6 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 			session.nopreview = false;
 			session.minipreview = 3; //
 		}
-	} else if ((urlParams.has('preview')) || (urlParams.has('showpreview'))) {
-		log("preview ON");
-		session.nopreview = false;
 	} else if ((urlParams.has('minipreview')) || (urlParams.has('mini'))) {
 		
 		var mini = urlParams.get('minipreview') || urlParams.get('mini'); // 2 is a valid option. (3 is for iPhone with a hidden preview)
@@ -2317,13 +2310,24 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		} else {
 			mini = 1;
 		}
-		
 		log("preview ON");
 		session.nopreview = false;
 		session.minipreview = mini;
+		if (session.manual===null){
+			session.manual = false;
+		}
 	} else if ((urlParams.has('largepreview'))) {
 		session.nopreview = false;
 		session.minipreview = false;
+		if (session.manual===null){
+			session.manual = false;
+		}
+	} else if ((urlParams.has('preview')) || (urlParams.has('showpreview'))) {
+		log("preview ON");
+		if (session.manual===null){
+			session.manual = false;
+		}
+		session.nopreview = false;
 	}
 	
 	if (urlParams.has('minipreviewoffset') || urlParams.has('mpo')){ // 40 would be centered
@@ -2439,6 +2443,10 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 	}
 	if (urlParams.has('pip3') || urlParams.has('mypip') || urlParams.has('pipme')){
 		session.pip3 = true;
+	}
+	
+	if (urlParams.has('manual')) {
+		session.manual = true;
 	}
 	
 	if (urlParams.has('keyframeinterval') || urlParams.has('keyframerate') || urlParams.has('keyframe') || urlParams.has('fki')) {
@@ -5718,7 +5726,7 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		}
 
 		if ("sendRequest" in e.data) { // webrtc send to publishers
-			session.sendRequest(e.data);
+			session.sendRequest(e.data.sendRequest);
 		}
 		
 		if ("sendRawMIDI" in e.data) { // webrtc send to publishers
