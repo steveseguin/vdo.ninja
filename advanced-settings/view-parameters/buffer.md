@@ -46,7 +46,7 @@ You can refer to the [`&sync`](sync.md) command if you wish to delay the audio, 
 
 ## Chunked mode
 
-When using \&buffer with a stream that is being sent using chunked-mode ([\&chunked](../../newly-added-parameters/and-chunked.md)), the method of buffering will be different.&#x20;
+When using \&buffer with a stream that is being sent using chunked-mode ([\&chunked](../../newly-added-parameters/and-chunked.md)), the method of buffering will be different as it doesn't rely on the built-in system playout webRTC buffer delay function.
 
 The practical benefit of using \&chunked mode with \&buffer is that you can have buffers that are minutes long, up to whatever your system's resources can handle.
 
@@ -57,8 +57,6 @@ The default buffer is around 1-second actually when using \&chunked mode, as it 
 Please refer to \&chunked mode for more details, but it could be an option for you if your goal is to improve the quality of streams when facing high-packet loss. It's only compatible with Chromium-based browsers; not Firefox or Safari as of yet.
 
 ## Update in [v23](../../releases/v23.md)
-
-
 
 The option to right click a remote video and add/adjust the [`&buffer`](buffer.md) delay for that specific video dynamically.\
 ![](<../../.gitbook/assets/image (173).png>)
