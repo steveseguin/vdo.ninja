@@ -314,11 +314,13 @@ There's some users who wish to have an SDK instead of an IFrame API. While an SD
 
 If you wish to use your own video mixer logic for example, you can disable the existing auto-mixer logic that currently exists using the [`&manual`](../advanced-settings/view-parameters/manual.md) flag. You can then access the `srcObject` of each of the video elements in VDO.Ninja and pull those streams into the parent frame to manipulate or to connect to the parent DOM.&#x20;
 
-If you aren't self-hosting the code, you may run into cross origin permission issues. This concept works with different subdomains though, and if you ask, the option to directly reference the VDO.Ninja servers with your own DNS servers is available. Self-hosting the code in a sub-domain of your own works too.
+If you aren't self-hosting the code, you may run into cross origin permission issues or limitations on cross-origin permissions with certain features. You can get around these issues usually by hosting VDO.Ninja as a subdomains though, in certain cases at least, along with the correct web hosting settings set.
 
 [https://javascript.info/cross-window-communication#windows-on-subdomains-document-domain](https://javascript.info/cross-window-communication#windows-on-subdomains-document-domain)
 
-See the video below for an advanced demo of the IFRAME API and how videos hosted within VDO.Ninja can be accessed and manipulated by the parent window. Video works well in this fashion; pulling audio from the IFRAME is a bit trickier however.
+See the video below for an advanced demo of the IFRAME API and how videos hosted within VDO.Ninja can be accessed and manipulated by the parent window. Video works well in this fashion; pulling audio from the IFRAME is a bit trickier however. \
+\
+\[update:  document.domain or such is a bit depreciated now, and while it is possible to use a sub-domain still, you'll need to specify certain headers and permissions with your webserver to allow for it.  https://versus.cam for example uses vdo.ninja as a subdomain to access frames across the IFRAME API]
 
 {% embed url="https://www.youtube.com/watch?v=SqbufszHKi4&feature=youtu.be" %}
 
