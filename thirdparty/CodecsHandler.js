@@ -138,8 +138,9 @@ var CodecsHandler = (function() {
 				newOrder.push(codecNumber);
 			}
 		});
-		var newLine = info.audioCodecNumbersOriginal.split('SAVPF')[0] + 'SAVPF ' + newOrder.join(' ');
+		var newLine = info.audioCodecNumbersOriginal.split('SAVPF')[0] + 'SAVPF ' + newOrder.join(' ').trim();
 		sdp = sdp.replace(info.audioCodecNumbersOriginal, newLine);
+		
 		return sdp;
 	}
 	
