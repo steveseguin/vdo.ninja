@@ -4,6 +4,14 @@
 
 #### [https://github.com/steveseguin/social\_stream/releases](https://github.com/steveseguin/social\_stream/releases)
 
+#### February 13
+
+v0.1.16\
+[https://github.com/steveseguin/social\_stream/releases/tag/0.1.16](https://github.com/steveseguin/social\_stream/releases/tag/0.1.16)
+
+* Instagram live support was fixed (update required)
+  * Also tweaks for rumble and a fix for a lack of scroll added
+
 #### January 31
 
 * 'always on top' option fixed; Mac and PC

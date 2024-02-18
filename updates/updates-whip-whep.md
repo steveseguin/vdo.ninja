@@ -2,6 +2,22 @@
 
 #### [whip-and-whep-tooling.md](../steves-helper-apps/whip-and-whep-tooling.md "mention") <a href="#august-31" id="august-31"></a>
 
+#### February 9 <a href="#august-31" id="august-31"></a>
+
+* Improved the vdo.ninja/alpha/whip page, so that it handles non-SSL enabled WHEP sources better
+* Added more clarification and a pop-up link to the non-SSL enabled version of VDO.Ninja when a non-SSL whep source is provided to VDO.Ninja
+* Improved WHIP-output support, making it more compatible with some media servers.
+* added `&whepsharetoken` as a new parameter, for when specifying the playback whep bearer token that you intend to use in place of your webcam
+  * `&whepshare` already exists, to specify the URL, and so is required when using the `&whepsharetoken` option, which is optional
+* Modified an easy-to-hack MIT-licenced WHIP/WHEP server to add support "Meshcast"-like functionality to it
+  * I'm hosting a GitHub as a modified fork of the project, which includes an easy-to-duplicate technical explanation of what I did, along with a demo of how to use it as a Meshcast-like alternative with VDO.Ninja
+  * [https://github.com/steveseguin/broadcast-box-with-vdon-support](https://github.com/steveseguin/broadcast-box-with-vdon-support) (you'll need to self-deploy and install if you want to go this path)
+  * If you don't want to host your own box, as a reminder, I've already added Cloudflare hosted whip/whep support to VDO.Ninja ([https://cloudflare.vdo.ninja/](https://cloudflare.vdo.ninja/)), with more options coming eventually
+
+\*\* these changes and updates are on alpha for testing @ vdo.ninja/alpha/
+
+### 2023 <a href="#august-31" id="august-31"></a>
+
 #### November 3 <a href="#august-31" id="august-31"></a>
 
 * Finished my first working version of the VDO.Ninja video -> WHEP video output option
@@ -64,7 +80,7 @@
       \-- This should let you make your own Meshcast service with minimal work; the open-source WHIP API code I released the other day further makes it pretty easy.
     * If using a cloudflare.com WHIP URL on the sender side, I'll guess at the WHEP link - seems to be working so far. (built this logic into VDO.Ninja directly and works automatically). This of course still implies a unique whip URL per guest.
 
-    ![](<../.gitbook/assets/image (2) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1).png>)
+    ![](<../.gitbook/assets/image (2) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1).png>)
 
     * To make using Cloudflare easier though, I've also created the WHIP end point `cloudflare.vdo.ninja`, which takes a Cloudflare API token, instead of a stream token.\
       \-- This special end point will auto-create a unique WHEP URL. The official cloudflare.com whip endpoint can only be used by one sender at a time, but this API special endpoint and token approach can be used by many senders at a time. It automatically generates unique WHIP/WHEP when used, in the same way Meshcast does, so no need for unique invite urls per guest.\

@@ -2,6 +2,10 @@
 
 [native-mobile-app-versions.md](../steves-helper-apps/native-mobile-app-versions.md "mention")
 
+#### February 5
+
+* Published an update; fixes a room issue. On Apple and Google App stores
+
 #### January 26
 
 * Updated the Android native app and iOS native app, which finalizes the password support
@@ -32,7 +36,7 @@
   \-- Also has forced-landscape mode support (I had to wait until iOS 17 launched to be able to release it)\
   [https://apps.apple.com/app/vdo-ninja/id1607609685?platform=iphone](https://apps.apple.com/app/vdo-ninja/id1607609685?platform=iphone)
 
-![](<../.gitbook/assets/image (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1).png>)
+![](<../.gitbook/assets/image (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1).png>)
 
 #### September 10
 

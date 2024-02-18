@@ -1,5 +1,46 @@
 # Updates - VDO.Ninja
 
+#### February 16 <a href="#august-31" id="august-31"></a>
+
+* Added the option `&preferaudiocodec` to VDO.Ninja. It's a sending side option, which lets the sender choose which codec they prefer get used. ie: `opus`, `red`, `g722`.
+  * Not intended to be used really other than for debugging or for WHIP publishing
+
+#### February 12 <a href="#august-31" id="august-31"></a>
+
+* Added more accessibility aria-labels to each video container in vdo.ninja. \*\* on alpha (vdo.ninja/alpha/)\
+  ![](<../.gitbook/assets/image (2).png>)
+
+#### February 10 <a href="#august-31" id="august-31"></a>
+
+* A green screen error was fixed on iOS (pushed a hotpatch to production for it)
+* `&focus` was added as an option to vdo.ninja/alpha/
+  * it lets you set the manual focus of a web camera of smartphone camera (if supported) to some specific focal distance value. ie: `&focus=100`
+
+#### February 9 <a href="#august-31" id="august-31"></a>
+
+* Added an option called `&outboundsamplerate` (`&obsr`) to VDO.Ninja, which accepts a value; `48000` for example. (sender side)
+  * Background: new in v24 of VDO.Ninja, the output from your microphone gets re-sampled to 48000hz, for the purposes of the web-audio nodes pipelining, but this command lets you override and specify it yourself if needed
+  * The audio from your microphone gets encoded to 48000hz anyways, due to OPUS audio, so the main reason to change this is for debugging / testing purposes
+  * Mobile / Firefox / Safari don't get re-sampled by default, so using this will force-enable the resampling if possible in those cases also
+  * Pass no value or `0`, and you'll disable the re-sampling, which might be useful for chrome/chromium users who are facing any new audio issues in v24. You can also just use \&noap to disable the web audio pipeline entirely
+  * A high sample rate in the web audio pipeline will cause it to crash, so that's why the audio gets re-sampled to `48000` in v24, so I'd avoid a high resample rate as well when using `&obsr`
+
+\*\* for testing on vdo.ninja/alpha/
+
+#### February 8 <a href="#august-31" id="august-31"></a>
+
+* When unmuting their microphone, an iPhone/iPad user's microphone will reload now as well. This is to address an issue where sometimes the audio track is killed due to background system notifications, but VDO.Ninja isn't always made aware of the issue; reloading the audio source can sometimes fix it. @Yong
+* Fixed a rare mobile rendering issue where the top button was half visible
+* vdo.ninja/v24/ exists now, though it's not 'frozen' yet, yet it may be in the next couple weeks
+* Added options to remotely control the pan tilt of a camera when using the \&remote option as a viewer
+  * You already could control the zoom remotely, as a viewer, so this just enables full PTZ control now
+  * The pan / tilt functionality is available as a sample IFrame (API) wrapper; not via a built-in menu -- > [`https://vdo.ninja/alpha/examples/ptz.html`](https://vdo.ninja/alpha/examples/ptz.html)
+  * You can set options via URL, like so: [`https://vdo.ninja/alpha/examples/ptz?view=ABC123`](https://vdo.ninja/alpha/examples/ptz?view=ABC123) and [`https://vdo.ninja/alpha/?push=ABC123&remote&ptz`](https://vdo.ninja/alpha/?push=ABC123\&remote\&ptz)
+  * Do note that you probably need to add [`&ptz`](../source-settings/ptz.md) and [`&remote`](../general-settings/remote.md) to the sender to allow for remote ptz control\
+    ![](../.gitbook/assets/image.png)
+
+\*\* All of this is on alpha for testing at vdo.ninja/alpha/ and also on GitHub
+
 #### February 4 <a href="#august-31" id="august-31"></a>
 
 * I've updated the volume slider for the [director](../viewers-settings/director.md) to act logarithmically now, with a higher max gain allowed
@@ -49,12 +90,12 @@
     * The option does not show if joining a room or screen sharing, etc - just sharing your camera, as that is the workflow that some users are having issues with.
 
     \*\* on alpha for testing at [https://vdo.ninja/alpha/](https://vdo.ninja/alpha/)\
-    ![](<../.gitbook/assets/image (1).png>)
+    ![](<../.gitbook/assets/image (1) (1).png>)
 
 #### January 22 <a href="#august-31" id="august-31"></a>
 
 * When you're on this page, you can now **press ALT+S on your keyboard to START**, without needing to use a mouse or tabbing to the start button. (on production)\
-  ![](../.gitbook/assets/image.png)
+  ![](<../.gitbook/assets/image (3).png>)
 
 #### January 20 <a href="#august-31" id="august-31"></a>
 
@@ -72,7 +113,7 @@
 
 * The [`&welcome`](../newly-added-parameters/and-welcome.md) message on VDO.Ninja will auto hide after 30-seconds now, and the close button is also big and red, to be more obvious.
   * on alpha for testing ([vdo.ninja/alpha/?welcome=hello](https://vdo.ninja/alpha/?welcome=hello))\
-    ![](<../.gitbook/assets/image (1) (1).png>)
+    ![](<../.gitbook/assets/image (1) (1) (1).png>)
 
 #### January 10 <a href="#august-31" id="august-31"></a>
 
@@ -312,7 +353,7 @@ Feedback and bug reports welcomed \*\* Available for testing on alpha at [https:
     * If blocking p2p, it will still work, but via the relay server. This is far from ideal in most cases.
     * Just changing the browser can often fix this issue if detected
 
-    ![](<../.gitbook/assets/image (4) (1) (1).png>)![](<../.gitbook/assets/image (3) (1) (1) (1).png>)
+    ![](<../.gitbook/assets/image (4) (1) (1).png>)![](<../.gitbook/assets/image (3) (1) (1) (1) (1).png>)
 
 \*\* on alpha
 
@@ -465,7 +506,7 @@ If you want the VDO.Ninja self-preview to not be mini-sized in broadcast mode, w
 
 * Updated [`&structure`](../advanced-settings/design-parameters/and-structure.md) to work with [`&cover`](../advanced-settings/view-parameters/cover.md), allowing for some more flexibility with controlling fixed aspect-ratios from the viewer/scene side.\
   ie: `https://vdo.ninja/alpha/?room=XXXXX&scene&cover&structure&square&fakeguests=10`\
-  ![](<../.gitbook/assets/image (3) (1) (1) (1) (1).png>)![](<../.gitbook/assets/image (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1).png>)
+  ![](<../.gitbook/assets/image (3) (1) (1) (1) (1) (1).png>)![](<../.gitbook/assets/image (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1).png>)
 * Fixed a couple bugs, such as the local screen share preview not re-appearing after full-windowing another guest's video while screen sharing.
 
 \*\* on alpha
@@ -500,7 +541,7 @@ So it's not super obvious how to do this currently, so I think the next goal wil
 }
 ```
 
-![](<../.gitbook/assets/image (2) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1).png>)
+![](<../.gitbook/assets/image (2) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1).png>)
 
 \*\* this change is on alpha at [https://vdo.ninja/alpha](https://vdo.ninja/alpha/)
 
@@ -566,7 +607,7 @@ Fixed a few bugs and pushed to alpha (vdo.ninja/alpha). Thank you for reporting 
 
 * [`&clock24`](../advanced-settings/settings-parameters/and-clock24-alpha.md) added to VDO.Ninja; this is the same as the existing [`&clock`](../advanced-settings/settings-parameters/and-clock.md) option, (which shows a clock) except it uses 24-hour time for the display (vs am/pm).\
   \-- if the director uses [`&clock24`](../advanced-settings/settings-parameters/and-clock24-alpha.md) on their URL, and then enables the room clock, it will be 24-hour time for all guests, matching the director's settings.\
-  ![](<../.gitbook/assets/image (3) (1) (1) (1) (1) (1) (1) (1).png>)
+  ![](<../.gitbook/assets/image (3) (1) (1) (1) (1) (1) (1) (1) (1).png>)
 
 \*\* at [vdo.ninja/alpha/?clock24](https://vdo.ninja/alpha/?clock24)
 
@@ -591,7 +632,7 @@ meshcastcodec == whipoutcodec, woc
   \-- This should let you make your own Meshcast service with minimal work; the open-source WHIP API code I released the other day further makes it pretty easy.
 * If using a cloudflare.com WHIP URL on the sender side, I'll guess at the WHEP link - seems to be working so far. (built this logic into VDO.Ninja directly and works automatically). This of course still implies a unique whip URL per guest.
 
-![](<../.gitbook/assets/image (2) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1).png>)
+![](<../.gitbook/assets/image (2) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1).png>)
 
 * To make using Cloudflare easier though, I've also created the WHIP end point `cloudflare.vdo.ninja`, which takes a Cloudflare API token, instead of a stream token.\
   \-- This special end point will auto-create a unique WHEP URL. The official cloudflare.com whip endpoint can only be used by one sender at a time, but this API special endpoint and token approach can be used by many senders at a time. It automatically generates unique WHIP/WHEP when used, in the same way Meshcast does, so no need for unique invite urls per guest.\
@@ -631,7 +672,7 @@ meshcastcodec == whipoutcodec, woc
 Option for a custom hang-up message added to VDO.Ninja.\
 \-- [`&hangupmessage`](../advanced-settings/setup-parameters/and-hangupmessage-alpha.md) (or `&hum`) , which take a URL encoded string. So it can be just "bye", or it can be some HTML, as shown in the link\
 \-- eg: [https://vdo.ninja/alpha/?hum=bye%3Cimg%20src%3D%22.%2Fmedia%2Flogo\_cropped.png%22%3E\&push=ZimFGxM](https://vdo.ninja/alpha/?hum=bye%3Cimg%20src%3D%22.%2Fmedia%2Flogo\_cropped.png%22%3E\&push=ZimFGxM)\
-![](<../.gitbook/assets/image (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1).png>)\
+![](<../.gitbook/assets/image (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1).png>)\
 \
 \* on alpha
 
@@ -694,7 +735,7 @@ Option for a custom hang-up message added to VDO.Ninja.\
   These flags in theory I think should help try to force a bitrate or resolution, regardless of network conditions, but in practice they still seem to just smash your frame rate. I haven't really been able to find a good use for them yet, but let me know.
 * Fixed an issue where when you hung up on an iPhone, it would still stay the camera/mic was in use at the goodbye/reload page.
 * Added the "test" audio output button to the in-call settings menu (as seen in image).\
-  ![](<../.gitbook/assets/image (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1).png>)
+  ![](<../.gitbook/assets/image (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1).png>)
 * Fixed an issue with Firefox mobile's camera rotation being wrong in the local preview. (let me know tho if the issues continues tho)
 * Firefox mobile should not go to sleep any more when idle.
 
@@ -1891,7 +1932,7 @@ https://vdo.ninja/alpha/?view=YbFmisR&poster=./media/bg_sample.webp&hideplaybutt
 
 * When using [`&waitimage`](../advanced-settings/newly-added-parameters/and-waitimage.md), the specified 'waiting to connect' image will appear after all connections end. This is a bit different than the default behaviour of the spinner, which doesn't re-appear, but I assume if you're advanced enough to use the `&waitimage` option, you're okay with this.
 *   Added the option to "draw on the screen", which might be a useful tool for niche use cases where you might need to take notes, etc. It doesn't affix to videos themselves, but rather it's just a full-window transparent canvas overlay, You can start/stop/clear and select a couple style-types with this feature, via the settings -> User menu. You can also do `CTRL + ALT + D` to toggle this as needed.\
-    ![](<../.gitbook/assets/image (2) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1).png>)\
+    ![](<../.gitbook/assets/image (2) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1).png>)\
 
 
     \*\* on alpha at vdo.ninja/alpha

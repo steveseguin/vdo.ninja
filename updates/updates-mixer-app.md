@@ -10,20 +10,20 @@
 #### January 9
 
 * An option to generate the random password is available\
-  ![](<../.gitbook/assets/image (1) (1) (1) (1) (1).png>)
+  ![](<../.gitbook/assets/image (1) (1) (1) (1) (1) (1).png>)
 * The background Image URL field now is accompanied by a carousel gallery of AI-generated background images to use\
-  ![](<../.gitbook/assets/image (1) (1) (1) (1).png>)
+  ![](<../.gitbook/assets/image (1) (1) (1) (1) (1).png>)
 * You can host your own images at Imgur or such still, but to make life easier, I'm offer hosted options. Let me know if you want more added
 * The room name is listed now in the top-right of the Mixer App
 * If the room has a password set, there is a button to copy-to-clipboard the password\
-  ![](<../.gitbook/assets/image (2) (1) (1).png>)
+  ![](<../.gitbook/assets/image (2) (1) (1) (1).png>)
 
 \*\* on production and alpha
 
 *   Just for example of what you can fairly easily do with the Mixer:\
 
 
-    <figure><img src="../.gitbook/assets/image (3).png" alt=""><figcaption></figcaption></figure>
+    <figure><img src="../.gitbook/assets/image (3) (1).png" alt=""><figcaption></figcaption></figure>
 
 ### 2023
 
