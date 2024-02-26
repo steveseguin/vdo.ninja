@@ -2,7 +2,7 @@
 
 #### February 23 <a href="#august-31" id="august-31"></a>
 
-* Added `&splitrecording`, which allows a media recording to be split up into multiple files when recording to disk in the browser. (eg, when using \&record)
+* Added `&splitrecording`, which allows a media recording to be split up into multiple files when recording to disk in the browser. (eg, when using [`&record`](../advanced-settings/recording-parameters/and-record.md))
   * The point of this feature is to allow recordings to be saved fully to disk incrementally, avoiding the case where the computer crashes and the entire recording is lost. You can also auto-upload the video in chunks to the cloud this way, while still recording using a cloud-linked drive.
   * `&splitrecording` accepts a time value in minutes; 5 minutes is the default splitting time if not specified; this is about 30-MB at 720p.
   * The files that get saved are a single video container, just split up into different partitions. Only the first partition can load into a video player, requiring subsequent partitions to be concatenated for them to be played. (since only the first chunk has the header media info)
