@@ -4,6 +4,10 @@
 
 #### [https://github.com/steveseguin/social\_stream/releases](https://github.com/steveseguin/social\_stream/releases)
 
+#### February 19
+
+* Updated the standalone app to support selecting the chat to use based on the YouTube Video Id
+
 #### February 13
 
 v0.1.16\

@@ -2,6 +2,11 @@
 
 [raspberry.ninja](../steves-helper-apps/raspberry.ninja/ "mention")
 
+#### February 21
+
+* I've updated the Raspberry Ninja "simple installer" script, to support recent bookworm changes\
+  [https://github.com/steveseguin/raspberry\_ninja/blob/main/raspberry\_pi/simpleinstall.md](https://github.com/steveseguin/raspberry\_ninja/blob/main/raspberry\_pi/simpleinstall.md)
+
 #### January 17
 
 * Added a guide for installing Raspberry.Ninja onto Mac OS X.

@@ -9,7 +9,7 @@
     * This will help identify users ahead of time who might end up going thru a TURN relay server, when they don't need to be.
     * This won't detect if there is a corporate firewall or VPN is blocking a direct connection, rather if its due to a browser setting or privacy-focused extension.
 
-    <figure><img src="../.gitbook/assets/image (3) (1) (1) (1).png" alt=""><figcaption></figcaption></figure>
+    <figure><img src="../.gitbook/assets/image (3) (1) (1) (1) (1).png" alt=""><figcaption></figcaption></figure>
 
 #### April 21
 
