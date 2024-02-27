@@ -1927,6 +1927,14 @@ div#chatBody a {
 	width: 50px;
 	margin: unset;
 }
+#callerMenu {
+	position: absolute;
+    left: 0;
+    bottom: 200px;
+}
+#callerMenu button {
+	font-size: 300%;
+}
 
 @media only screen and (max-width: 500px) {
 	#subControlButtons {
@@ -4862,6 +4870,8 @@ input:checked + .slider:before {
 	content: "\f714"; }
 .la-hand-paper:before {
 	content: "\f256"; }
+.la-phone-slash:before {
+	content: "\f3dd;"; }
 .la-dot-circle:before {
 	content: "\f192"; }
 .la-bug:before {

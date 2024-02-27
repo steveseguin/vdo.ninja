@@ -119,6 +119,21 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 	if (urlParams.has('previewmode')){
 		session.switchMode = true;
 	}
+	try {
+		if (sessionStorage.getItem('deleteWhipOnLoad')) {
+			let deleteWhip = sessionStorage.getItem('deleteWhipOnLoad');
+			deleteWhip = JSON.parse(deleteWhip);
+			if (deleteWhip.location){
+				let xhttp = new XMLHttpRequest();
+				if (deleteWhip.whipOutputToken){ 
+					xhttp.setRequestHeader('Authorization', 'Bearer ' + deleteWhip.whipOutputToken);
+				}
+				xhttp.open("DELETE", deleteWhip.location, true);
+				xhttp.send();
+			}
+			sessionStorage.removeItem('deleteWhipOnLoad');
+		}
+	} catch(e){errorlog(e);}
 	
 	if (urlParams.has('director') || urlParams.has('dir')) {
 		session.director = urlParams.get('director') || urlParams.get('dir') || session.roomid || urlParams.get('roomid') || urlParams.get('r') || urlParams.get('room') || filename || true;
@@ -664,6 +679,30 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 	if (urlParams.has('nomeshcast')) {
 		session.noMeshcast = urlParams.get('nomeshcast') || true;
 	}
+	
+	
+	//if (urlParams.has('callin')){
+		// awaitInboundCall()();
+	//}
+	
+	if (urlParams.has('fulltalk') && (urlParams.get('fulltalk').length==6)){
+		listenWebsocket(urlParams.get('fulltalk'), false); // talk and hear all
+		
+	} else if (urlParams.has('justtalk') && (urlParams.get('justtalk').length==6)){
+		joinConference(urlParams.get('justtalk')); // just talk
+		
+		if (urlParams.has('hearptsn')){
+			listenWebsocket(uurlParams.get('justtalk')); // hear ptsn only
+		} 
+	
+	} else if (urlParams.has('hearptsn') && (urlParams.get('hearptsn').length==6)){
+		listenWebsocket(urlParams.get('hearptsn')); // hear ptsn only
+		
+		if (urlParams.has('justtalk')){
+			joinConference(urlParams.get('hearptsn'));
+		}
+	} 
+	
 	
 	
 	var filename = false;
@@ -1398,7 +1437,10 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 			}
 		}
 	}
-	
+	if (urlParams.has('splitrecording')){ // minutes
+		session.recordingInterval = urlParams.get('splitrecording') || 5; // 5 minutes
+		session.recordingInterval = parseInt(session.recordingInterval) || 1;
+	}
 	if (urlParams.has('pcm')) {
 		session.pcm = true;
 	}
@@ -1444,6 +1486,26 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 			session.scene = session.scene.replace(/[\W]+/g, "_");
 		} else {
 			session.scene = (parseInt(session.scene) || 0) + "";
+		}
+	}
+	
+	if (urlParams.has('morescenes')) {
+		let moreScenes = urlParams.get('morescenes') || 16;
+		moreScenes = parseInt(moreScenes) || 0;
+		if (moreScenes<8){
+			moreScenes = 8
+		}
+		let sceneButtonMain = document.querySelector("#controls_blank .sceneButtons button");
+		if (sceneButtonMain && moreScenes){
+			var i = 8;
+			while (i<moreScenes){
+				i++;
+				let sceneButton = sceneButtonMain.cloneNode(true);
+				sceneButton.dataset.scene = i;
+				sceneButton.title="Add to Scene "+i;
+				sceneButton.innerHTML = "<span>S"+i+"</span>";
+				document.querySelector("#controls_blank .sceneButtons").appendChild(sceneButton);
+			}
 		}
 	}
 	
@@ -2435,6 +2497,7 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		session.lowcut = parseInt(session.lowcut);
 		session.disableWebAudio = false;
 	}
+	
 
 	if (urlParams.has('pip')) {
 		session.pip = true; // togglePip
@@ -2991,6 +3054,14 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 	if (urlParams.has('chunked')) {
 		session.chunked = parseInt(urlParams.get('chunked')) || 2500; // sender side; enables to allows.
 		// session.alpha = true;
+		if (Firefox || SafariVersion){
+			if (!session.cleanOutput){
+				warnUser("Only Chromium-based browsers support chunked mode.\n\nPlease switch to Chrome or another compatible browser to use &chunked mode.");
+			}
+			session.chunked = false;
+			console.warn("Disabling chunked mode since not using a compatible browser.");
+		}
+		
 	}
 	
 	if (urlParams.has('nochunk') || urlParams.has('nochunked')) { // viewer side
@@ -3159,6 +3230,14 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 	}
 	if (session.audioCodec && (session.audioCodec=="red")){
 		session.audiobitratePRO = 216; // higher than this seems to break the RED mode. default 256.
+	}
+	
+	if (urlParams.has('preferaudiocodec')) {
+		log("PREFER CODEC CHANGED");
+		session.preferAudioCodec = urlParams.get('preferaudiocodec') || false;
+		if (session.preferAudioCodec){
+			session.preferAudioCodec = session.preferAudioCodec.toLowerCase();
+		}
 	}
 	
 	if (urlParams.has('scenelinkcodec')){ // this is mainly for a niche iframe API use
@@ -3488,6 +3567,13 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 	if (urlParams.has('quality') || urlParams.has('q')) {
 		try {
 			session.quality = urlParams.get('quality') || urlParams.get('q') || 0;
+			if (session.quality.toLowerCase() == "4k"){
+				session.quality = -2;
+			} else if (session.quality.toLowerCase() == "hd"){ // 
+				session.quality = 1;
+			} else if (session.quality.toLowerCase() == "fullhd"){
+				session.quality = 0;
+			}
 			session.quality = parseInt(session.quality);
 			getById("gear_screen").parentNode.removeChild(getById("gear_screen"));
 			getById("gear_webcam").parentNode.removeChild(getById("gear_webcam"));
@@ -4085,6 +4171,11 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		session.encodedInsertableStreams = urlParams.get('insertablestreams') || urlParams.get("is") || true;	
 	}
 	
+	if (urlParams.has('outboundsamplerate') || urlParams.has('obsr')) {
+		session.outboundSampleRate = parseInt(urlParams.get('outboundsamplerate')) || parseInt(urlParams.get('obsr')) || false; // default null
+	} else {
+		session.outboundSampleRate = null; // tmp
+	}
 
 	if (urlParams.has('micsamplerate') || urlParams.has('msr')) {
 		session.micSampleRate = parseInt(urlParams.get('micsamplerate')) || parseInt(urlParams.get('msr')) || 48000;
@@ -4536,6 +4627,9 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 	if (urlParams.get('brightness')){
 		session.brightness = urlParams.get('brightness');
 	}
+	if (urlParams.get('focus')){
+		session.focusDistance = urlParams.get('focus');
+	}
 	
 	
 	if (window.FaceDetector !== undefined){
@@ -4808,6 +4902,29 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 			errorlog(e);
 		}
 	}
+	if (urlParams.has('whepsharetoken') || urlParams.has('whepsrctoken')) {
+		if (session.whipoutSettings){
+			try {
+				session.whepSrcToken = urlParams.get('whepsharetoken') || urlParams.get('whepsrctoken') || null;
+				log("WHEP TOKEN: "+session.whepSrcToken);
+				if (session.whepSrcToken){
+					try {
+						session.whepSrcToken = decodeURIComponent(session.whepSrcToken);
+					} catch(e){
+						session.whepSrcToken = session.whepSrcToken;
+					}
+				} else {
+					session.whepSrcToken = await promptAlt("Enter the WHEP source token");
+				}
+				if (session.whepSrcToken){
+					session.whipoutSettings.token = session.whepSrcToken;
+				}
+				
+			} catch(e){
+				errorlog(e);
+			}
+		}
+	}
 	
 	if (session.roomid!==false){
 		if (!(session.cleanOutput)) {
@@ -4915,8 +5032,8 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 			}
 		} else if ((session.permaid === null) && (session.roomid == "")) {
 			if (!(session.cleanOutput)) {
-				getById("head3").classList.remove('hidden');
-				getById("head3a").classList.remove('hidden');
+			//	getById("head3").classList.remove('hidden');
+			//	getById("head3a").classList.remove('hidden');
 			}
 		} else if (window.obsstudio && (session.permaid === false) && (session.director === false) && (session.view || session.whepInput) && (session.roomid.length>0)) { // we already know roomid !== false
 			updateURL("scene", true, false); // we also know it's not a scene, but we will assume it is in this specific case.
@@ -5989,6 +6106,49 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 				"detailedState": detailedState
 			}, session.iframetarget);
 		}
+		
+		if ("getGuestList" in e.data) {
+			var guestList = getGuestList();
+			parent.postMessage({
+				"guestList": guestList
+			}, session.iframetarget);
+		}
+		
+		if ("setBufferDelay" in e.data){ // milliseconds
+			let delay = parseInt(e.data.setBufferDelay) || 0;
+			if ("UUID" in e.data){
+				if (e.data.UUID === "*"){
+					for (var uuid in session.rpcs){
+						session.rpcs[uuid].buffer = delay;
+						playoutdelay(uuid);
+						document.querySelectorAll('#bufferSettings[data--u-u-i-d="'+uuid+'"] input[data-buffer-value]').forEach(ele=>{
+							ele.value = delay;
+						});
+					}
+				} else if (session.rpcs[e.data.UUID]){
+					session.rpcs[e.data.UUID].buffer = delay;
+					playoutdelay(e.data.UUID);
+					document.querySelectorAll('#bufferSettings[data--u-u-i-d="'+e.data.UUID+'"] input[data-buffer-value]').forEach(ele=>{
+						ele.value = delay;
+					});
+				} else {
+					errorlog("The UUID specified does not exist");
+				}
+			} else if ("streamID" in e.data){
+				let UUID = Object.keys(session.rpcs).find(uuid => session.rpcs[uuid].streamID === e.data.streamID);
+				if (session.rpcs[UUID]){
+					session.rpcs[UUID].buffer = delay;
+					playoutdelay(UUID);
+				} else {
+					errorlog("The stream ID specified does not exist");
+				}
+				document.querySelectorAll('#bufferSettings[data--u-u-i-d="'+UUID+'"] input[data-buffer-value]').forEach(ele=>{
+					ele.value = delay;
+				});
+			} else {
+				session.buffer = delay; // set the default buffer delay only
+			}
+		}
 
 		if ("automixer" in e.data) {  // stop the auto mixer if you want to control the layout and bitrate yourself
 			if (e.data.automixer == true) {
@@ -6522,13 +6682,27 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 			battery.addEventListener('levelchange', function(){
 				session.batteryState = {};
 				var miniInfo = {};
-				if ("level" in battery){
-					session.batteryState.level = battery.level;
-					miniInfo.bat = battery.level;
-				}
+				console.log(session.batteryState);
 				if ("charging" in battery){
 					session.batteryState.charging = battery.charging;
 					miniInfo.chrg = battery.charging;
+				}
+				if ("level" in battery){
+					session.batteryState.level = battery.level;
+					miniInfo.bat = battery.level;
+					
+					if (!session.batteryState.charging && (battery.level==0.02)){
+						warnlog("Very Low Battery - triggering auto saves");
+						try {
+							if (session.screenShareElement && session.screenShareElement.recorder  && session.screenShareElement.recorder.setupWriter){
+								session.screenShareElement.recorder.setupWriter(session.screenShareElement);
+							}
+							if (session.videoElement && session.videoElement.recorder  && session.videoElement.recorder.setupWriter){
+								session.videoElement.recorder.setupWriter(session.videoElement);
+							}
+						} catch(e){errorlog(e);}
+						
+					}
 				}
 				if (session.batteryState == {}){
 					session.batteryState = null;

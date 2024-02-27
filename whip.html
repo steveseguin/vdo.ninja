@@ -689,6 +689,12 @@ function gohere3(){
 	
 		if (document.getElementById('changeText3').value.startsWith("http://vdo.ninja/")){
 			document.getElementById('changeText3').value = document.getElementById('changeText3').value.replace("http://vdo.ninja/","http://insecure.vdo.ninja/"); // a special exception for WHEP developers
+		} else if (document.getElementById('changeText3').value.startsWith("http://")){
+			if (window.location.protocol+window.location.hostname == "https:vdo.ninja"){
+				var tmp = window.location.pathname.split("/");
+				tmp.pop();
+				domain = "http://insecure.vdo.ninja"+tmp.join("/")+"/";
+			}
 		}
 	
 		localStorage.setItem('changeText3', document.getElementById('changeText3').value);
