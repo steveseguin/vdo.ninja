@@ -12636,6 +12636,8 @@ async function toggleSettings(forceShow = false) { // TODO: I need to have this 
 		document.getElementById('videoSettings3').style.display = "none";
 	}
 	pokeIframeAPI("settings-menu-state",toggleSettingsState);
+
+	return "toggled"
 }
 
 session.hangup = function(reload=false, estop=false){
@@ -19773,7 +19775,7 @@ function gotDevices(deviceInfos, miconly=false) {
 		}
 
 		var option = document.createElement('input');
-		option.type = "checkbox";
+		option.type = "radio";
 		option.value = "ZZZ";
 		option.name = "multiselect1";
 		option.id = "multiselect1";
@@ -20019,7 +20021,7 @@ function gotDevices(deviceInfos, miconly=false) {
 
 			if (deviceInfo.kind === 'audioinput') {
 				option = document.createElement('input');
-				option.type = "checkbox";
+				option.type = "radio";
 				counter++;
 				listele = document.createElement('li');
 				listele.style.display = "none";
@@ -20063,9 +20065,10 @@ function gotDevices(deviceInfos, miconly=false) {
 				} 
 				
 				option.value = deviceInfo.deviceId || "default";
-				option.name = "multiselect" + counter;
+				option.name = (deviceInfo.label || ("microphone " + ((audioInputSelect.length || 0) + 1))) //+ counter;
 				option.id = "multiselect" + counter;
 				option.label = deviceInfo.label;
+				
 				
 				label = document.createElement('label');
 				label.for = option.name;
@@ -20081,7 +20084,7 @@ function gotDevices(deviceInfos, miconly=false) {
 					log("UNCHECKED");
 					if (!CtrlPressed) {
 						SelectedAudioInputDevices = [];
-						audioInputSelect.querySelectorAll("input[type='checkbox']").forEach(function(item) {
+						audioInputSelect.querySelectorAll("input[type='radio']").forEach(function(item) {
 							if (event.currentTarget.id !== item.id) {
 								item.checked = false;
 							} else {
@@ -21040,7 +21043,7 @@ function addScreenDevices(device) {
 		option.onchange = function(event) { // make sure to clear 'no audio option' if anything else is selected
 			log("change 4644");
 			if (!CtrlPressed) {
-				document.querySelectorAll("#audioSource3 input[type='checkbox']").forEach(function(item) {
+				document.querySelectorAll("#audioSource3 input[type='radio']").forEach(function(item) {
 					if (!item.value){return;}
 					if (event.currentTarget.value !== item.value) { // this shoulnd't happen, but if it does.
 
@@ -21141,10 +21144,10 @@ function gotDevices2(deviceInfos) {
 
 			if (deviceInfo.kind === 'audioinput') {
 				var option = document.createElement('input');
-				option.type = "checkbox";
+				option.type = "radio";
 				counter++;
 				var listele = document.createElement('li');
-				listele.style.display = "none";
+				listele.style.display = "block";
 
 				session.streamSrc.getAudioTracks().forEach(function(track) {
 					if (deviceInfo.label == track.label) {
@@ -21153,9 +21156,9 @@ function gotDevices2(deviceInfos) {
 					}
 				});
 				
-				option.style.display = "none"
+				option.style.display = "inline-block"
 				option.value = deviceInfo.deviceId || "default";
-				option.name = "multiselecta" + counter;
+				option.name = "multiselecta1" //+ counter;
 				option.id = "multiselecta" + counter;
 				option.dataset.label = deviceInfo.label || ("microphone " + ((audioInputSelect.length || 0) + 1));
 
@@ -21171,7 +21174,7 @@ function gotDevices2(deviceInfos) {
 				option.onchange = function(event) { // make sure to clear 'no audio option' if anything else is selected
 					log("change 4768");
 					if (!(CtrlPressed)) {
-						document.querySelectorAll("#audioSource3 input[type='checkbox']").forEach(function(item) {
+						document.querySelectorAll("#audioSource3 input[type='radio']").forEach(function(item) {
 							if (event.currentTarget.value !== item.value) {
 								item.checked = false;
 								if (item.dataset.type == "screen") {
@@ -21295,7 +21298,7 @@ function gotDevices2(deviceInfos) {
 				var listele = document.createElement('li');
 				listele.style.display = "block";
 				var option = document.createElement('input');
-				option.type = "checkbox";
+				option.type = "radio";
 				option.value = track.id;
 				option.checked = true;
 				option.style.display = "none";
@@ -21312,7 +21315,7 @@ function gotDevices2(deviceInfos) {
 					var trackid = null;
 					if (!(CtrlPressed)) {
 
-						document.querySelectorAll("#audioSource3 input[type='checkbox']").forEach(function(item) {
+						document.querySelectorAll("#audioSource3 input[type='radio']").forEach(function(item) {
 							if (event.currentTarget.value !== item.value) { // this shoulnd't happen, but if it does.
 								item.checked = false;
 								if (item.dataset.type == "screen") {
@@ -21400,10 +21403,11 @@ function gotDevices2(deviceInfos) {
 		
 		
 		var option = document.createElement('input');
-		option.type = "checkbox";
+		option.type = "radio";
 		option.value = "ZZZ";
 		option.style.display = "none"
 		option.id = "audioSourceNoAudio2";
+		option.name
 
 		var label = document.createElement('label');
 		label.for = option.name;
@@ -21419,7 +21423,7 @@ function gotDevices2(deviceInfos) {
 		option.onchange = function(event) { // make sure to clear 'no audio option' if anything else is selected
 			log("change 4938");
 			if (!(CtrlPressed)) {
-				document.querySelectorAll("#audioSource3 input[type='checkbox']").forEach(function(item) {
+				document.querySelectorAll("#audioSource3 input[type='radio']").forEach(function(item) {
 					if (event.currentTarget.value !== item.value) {
 						item.checked = false;
 						if (item.dataset.type == "screen") {
@@ -21440,7 +21444,7 @@ function gotDevices2(deviceInfos) {
 					}
 				});
 			} else {
-				document.querySelectorAll("#audioSource3 input[type='checkbox']").forEach(function(item) {
+				document.querySelectorAll("#audioSource3 input[type='radio']").forEach(function(item) {
 					if (event.currentTarget.value === item.value) {
 						event.currentTarget.checked = true;
 						if (SelectedAudioInputDevices.indexOf(event.currentTarget.value) == -1){
@@ -41883,7 +41887,7 @@ addEventToAll("#audioSource", 'mousedown touchend focusin focusout', function(e,
 		}, parentElement = getById('multiselect-trigger'));
 		mapToAll('.multiselect-contents', function(ele) {
 			ele.style.display = "block";
-			mapToAll('input[type="checkbox"]', function(ele2) {
+			mapToAll('input[type="radio"]', function(ele2) {
 				ele2.parentNode.style.display = "block";
 				ele2.style.display = "inline-block";
 			}, ele);
@@ -41905,7 +41909,7 @@ addEventToAll("#audioSource3", 'mousedown touchend focusin focusout', function(e
 			target.style.display = "block";
 		}, getById('multiselect-trigger3').parentNode);
 		mapToAll(".multiselect-contents", function(target) {
-			mapToAll('input[type="checkbox"]', function(target2) {
+			mapToAll('input[type="radio"]', function(target2) {
 				target2.style.display = "inline-block";
 				target2.parentNode.style.display = "block";
 			}, target);
@@ -41927,7 +41931,7 @@ addEventToAll("#multiselect-trigger", 'mousedown touchend focusin focusout', fun
 			target.style.display = "block";
 		}, ele.parentNode);
 		mapToAll(".multiselect-contents", function(target) {
-			mapToAll('input[type="checkbox"]', function(target2) {
+			mapToAll('input[type="radio"]', function(target2) {
 				target2.style.display = "inline-block";
 				target2.parentNode.style.display = "block";
 			}, target);
@@ -41940,7 +41944,7 @@ addEventToAll("#multiselect-trigger", 'mousedown touchend focusin focusout', fun
 			target.classList.add('bottom');
 		}, ele);
 		mapToAll(".multiselect-contents", function(target) {
-			mapToAll('input[type="checkbox"]', function(target2) {
+			mapToAll('input[type="radio"]', function(target2) {
 				target2.style.display = "none";
 				if (!target2.checked) {
 					target2.parentNode.style.display = "none";
@@ -41964,7 +41968,7 @@ addEventToAll("#multiselect-trigger3", 'mousedown touchend focusin focusout', fu
 			target.style.display = "block";
 		}, ele.parentNode);
 		mapToAll(".multiselect-contents", function(target) {
-			mapToAll('input[type="checkbox"]', function(target2) {
+			mapToAll('input[type="radio"]', function(target2) {
 				target2.style.display = "inline-block";
 				target2.parentNode.style.display = "block";
 			}, target);
@@ -41977,7 +41981,7 @@ addEventToAll("#multiselect-trigger3", 'mousedown touchend focusin focusout', fu
 			target.classList.add('bottom');
 		}, ele);
 		mapToAll(".multiselect-contents", function(target) {
-			mapToAll('input[type="checkbox"]', function(target2) {
+			mapToAll('input[type="radio"]', function(target2) {
 				target2.style.display = "none";
 				if (!target2.checked) {
 					target2.parentNode.style.display = "none";
