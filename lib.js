@@ -5536,6 +5536,7 @@ function updateMixerRun(e=false){  // this is the main auto-mixing code.  It's a
 			var borderColor = session.borderColor || "#000";
 			var fadein = session.fadein || false;
 			var backgroundMedia = session.defaultMedia || false;
+			var foregroundMedia = session.defaultOverlayMedia || false;
 			var animated = session.animatedMoves || 0;
 			if (!borderOffset){
 				borderColor = "#0000";
@@ -5575,6 +5576,9 @@ function updateMixerRun(e=false){  // this is the main auto-mixing code.  It's a
 				}
 				if ("backgroundMedia" in layout[vid.dataset.sid]){
 					backgroundMedia = layout[vid.dataset.sid].backgroundMedia || false;
+				}
+				if ("foregroundMedia" in layout[vid.dataset.sid]){
+					foregroundMedia = layout[vid.dataset.sid].foregroundMedia || false;
 				}
 				if (vid.container){
 					if (!((vid.nodeName == "IFRAME") && vid.isConnected)){ // moving an iframe will break it.
@@ -5743,6 +5747,22 @@ function updateMixerRun(e=false){  // this is the main auto-mixing code.  It's a
 				container.style.backgroundRepeat = "no-repeat";
 			} else if (container.style.backgroundImage){
 				container.style.backgroundImage = "unset";
+			}
+			
+			if (foregroundMedia){
+				if (!container.foregroundMedia){
+					container.foregroundMedia = document.createElement("img");
+					container.foregroundMedia.className = "foregroundMedia";
+					container.appendChild(container.foregroundMedia);
+				}
+				container.foregroundMedia.src = foregroundMedia;
+			} else if (container.foregroundMedia){
+				try {
+					container.foregroundMedia.remove();
+					delete container.foregroundMedia;
+				} catch(e){
+					errorlog(e);
+				}
 			}
 			
 			
@@ -39760,7 +39780,7 @@ function whipOut(){
 								WHELPlaybackURL = "https://"+targetDomain[2]+"/"+targetDomain[3].slice(33,65)+"/webRTC/play";
 								session.whipOut.stats.whipHost = "Cloudflare";
 							}
-						} else if (WHELPlaybackURL && (!WHELPlaybackURL.startsWith("http://") || !WHELPlaybackURL.startsWith("https://"))){
+						} else if (WHELPlaybackURL && (!(WHELPlaybackURL.startsWith("http://") || WHELPlaybackURL.startsWith("https://")))){
 							var targetDomain = session.whipOutput.split("/");
 							if (targetDomain.length>2){
 								if (WHELPlaybackURL.startsWith("/")){

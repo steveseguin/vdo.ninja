@@ -292,8 +292,35 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		})
 	}
 	
+	if (urlParams.has('userbackgroundimage') || urlParams.has('userbgimage') || urlParams.has('ubgimg')) { // URL or data:base64 image. Becomes local to this viewer only.
+		let defaultMedia = urlParams.get('userbackgroundimage') || urlParams.get('userbgimage') || urlParams.get('ubgimg') || "./media/backgrounds/1.png"; 
+		if (defaultMedia){
+			try {
+				defaultMedia = decodeURIComponent(defaultMedia);
+			} catch(e){}
+			session.defaultMedia = defaultMedia;
+			try {
+				let fallbackImage = new Image();
+				fallbackImage.src = defaultMedia;
+			} catch(e){}
+		}
+	}
+	if (urlParams.has('userforegroundimage') || urlParams.has('overlayimage') || urlParams.has('overlayimg')) { // URL or data:base64 image. Becomes local to this viewer only.
+		let defaultMedia = urlParams.get('userforegroundimage') || urlParams.get('overlayimage') || urlParams.get('overlayimg') || "./media/avatar1.png"; 
+		if (defaultMedia){
+			try {
+				defaultMedia = decodeURIComponent(defaultMedia);
+			} catch(e){}
+			session.defaultOverlayMedia = defaultMedia;
+			try {
+				let fallbackImage = new Image();
+				fallbackImage.src = defaultMedia;
+			} catch(e){}
+		}
+	} 
+	
 	if (urlParams.has('avatarimg') || urlParams.has('bgimage') || urlParams.has('bgimg')) { // URL or data:base64 image. Becomes local to this viewer only.  This is like &avatar, but slightly different. Just CSS in this case
-		var avatarImg = urlParams.get('avatarimg') || urlParams.get('bgimage') || urlParams.get('bgimg') || "./media/avatar1.png"; 
+		let avatarImg = urlParams.get('avatarimg') || urlParams.get('bgimage') || urlParams.get('bgimg') || "./media/avatar1.png"; 
 		if (avatarImg){
 			try {
 				avatarImg = decodeURIComponent(avatarImg);
@@ -312,7 +339,7 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		}
 	} 
 	if (urlParams.has('avatarimg2') || urlParams.has('bgimage2') || urlParams.has('bgimg2')) { // URL or data:base64 image. Becomes local to this viewer only.  This is like &avatar, but slightly different. Just CSS in this case
-		var avatarImg2 = urlParams.get('avatarimg2') || urlParams.get('bgimage2') || urlParams.get('bgimg2') || "./media/avatar2.png"; 
+		let avatarImg2 = urlParams.get('avatarimg2') || urlParams.get('bgimage2') || urlParams.get('bgimg2') || "./media/avatar2.png"; 
 		if (avatarImg2){
 			try {
 				avatarImg2 = decodeURIComponent(avatarImg2);
@@ -338,7 +365,7 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 	}
 	
 	if (urlParams.has('avatarimg3') || urlParams.has('bgimage3') || urlParams.has('bgimg3')) { // URL or data:base64 image. Becomes local to this viewer only.  This is like &avatar, but slightly different. Just CSS in this case
-		var avatarImg3 = urlParams.get('avatarimg3') || urlParams.get('bgimage3') || urlParams.get('bgimg3') || "./media/avatar3.png"; 
+		let avatarImg3 = urlParams.get('avatarimg3') || urlParams.get('bgimage3') || urlParams.get('bgimg3') || "./media/avatar3.png"; 
 		if (avatarImg3){
 			try {
 				avatarImg3 = decodeURIComponent(avatarImg3);
@@ -364,7 +391,7 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 	} 
 	
 	if (urlParams.has('background') || urlParams.has('appbg')) { // URL or data:base64 image.  Use &chroma if you want to use a color instead of image.
-		var background = urlParams.get('background') || urlParams.get('appbg') || false; 
+		let background = urlParams.get('background') || urlParams.get('appbg') || false; 
 		if (background){
 			try {
 				background = decodeURIComponent(background);
@@ -378,7 +405,7 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 	}
 	
 	if (urlParams.has('poster')) { // URL or data:base64 image. Becomes local to this viewer only.  This is like &avatar, but slightly different. Just CSS in this case
-		var posterImage = urlParams.get('poster') || "./media/avatar.webp"; 
+		let posterImage = urlParams.get('poster') || "./media/avatar.webp"; 
 		if (posterImage){
 			try {
 				posterImage = decodeURIComponent(posterImage);

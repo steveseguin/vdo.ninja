@@ -1935,7 +1935,11 @@ div#chatBody a {
 #callerMenu button {
 	font-size: 300%;
 }
-
+.foregroundMedia {
+	width:100%;
+	height:100%;
+	position: relative;
+}
 @media only screen and (max-width: 500px) {
 	#subControlButtons {
 		position: unset;
