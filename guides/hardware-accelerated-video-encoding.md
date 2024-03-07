@@ -25,13 +25,21 @@ AMD systems, and some Intel systems, the default H264 hardware encoder will limi
 
 On a MacOS system, Chrome may drop frame rates suddenly when using the H264 encoder.&#x20;
 
-On iOS, the H264 encoders can only support 720p30, while the VP8 software encoder on iOS can support 1080p. (This recently changed with the iOS \~15; it can now support 1080p30 with H264, but your phone may get very hot, so I am unsure if its actually hardware-accelerated).
+On older versions of iOS, the H264 encoders can sometimes only support 720p30, while the VP8 software encoder on iOS can support 1080p. This recently changed with the iOS \~15, so newer iPhones  can now support 1080p30 with H264. Your iPhone may still get very hot, so I am unsure if its actually hardware-accelerated; newer iPhones will do better than older.\
+\
+In the past, iOS devices were limited by how many videos could be encoded using H264, often just three total, so keep that in mind. This might have changed with newer iPhones however; untested.
+
+### Android
+
+Many Android phones may not support H264 encoding in Chrome; this seems to vary based on the browser version, device chipset, and other factors. Trying to force H264 with such incompatible devices might result in no video, as the browser isn't always smart enough to know it isn't working. Chrome on Android doesn't seem to have a software-based H264 encoder.\
+\
+One user has reported that while using Chrome, Brave, and Firefox with their Samsung S23+ has poor performance with video encoding, likely due to using software encoding, Microsoft's Edge browser on Android did make use of the hardware encoding. Performance in this case was near comparable to an iPhone 14 Pro's encoding performance. Users with other devices that also use a Snapdragon GPU may wish to try MS Edge if having lackluster video encoding performance.
+
+With non-Snapdragon GPUs, such as found in entry-level and some mid-range smartphones, the hardware H264 encoder may not be available regardless of browser used. Using software-based encoders may trigger overheating or CPU throttling, especially at higher resolutions, so if you are unable to trigger hardware-encoding on a slower Android device, you may need to be content with lower resolutions and bitrates.
 
 On the Google Pixel the H264/VP8 encoder will glitch like crazy when used in Portrait mode, however it's glitch free when using the VP9 codec via software encoding.
 
-Many Android phones may not support H264 encoding in Chrome; this seems to vary based on the browser version, device chipset, and other factors. Trying to force H264 with such incompatible devices might result in no video, as the browser isn't always smart enough to know it isn't working. Chrome on Android doesn't seem to have a software-based H264 encoder.
-
-With entry-level and mid-range smartphones, the hardware H264 encoder will probably give the best results, as other software based encoders may trigger overheating or CPU throttling.
+### Nvidia
 
 If a director, choosing to publish video to your group with H264 might reduce some CPU load, but if using an Nvidia graphics card, you may end up forfeiting your ability to use NVenc encoding for RTMP or MKV file recording, since Nvidia only offers typically three encoders. You can unlock this limit, but the benefits of using NVenc with VDO.Ninja often provides no benefits it seems over a software H264 option.
 
@@ -59,7 +67,13 @@ Other Linux systems are support with the provided code, but it is up to you to e
 
 The project will hopefully keep expanding, to include more devices and operating systems.
 
-### WHIP and WHEP
+### H265 / HEVC / AV1
+
+While AV1 hardware encoders are not common at the moment, they should be supported as they are adopted by browsers and hardware manufactures. `&codec=av1`\
+\
+H265/HEVC however isn't commonly supported by browsers, although Thorium / Safari browsers may support it, it's not an officially supported option. You can give it a try however by using `&codec=h265`.
+
+### OBS WHIP and WHEP
 
 With OBS v30 supporting WHIP output, it's now possible to stream video directly from OBS to VDO.Ninja via WebRTC with hardware accelerated encoding.
 
