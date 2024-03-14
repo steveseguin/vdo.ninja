@@ -166,7 +166,10 @@ var miscTranslations = { // i can replace this list from time to time from the g
     "preview-meshcast-disabled": "You can't adjust the preview bitrate for Meshcast or WHIP-based streams",
 	"no-network": "Network connection lost 🤷‍♀️❌📶",
 	"no-network-details": "Network connection lost. 🤷‍♀️❌📶\n\nHave you lost your Internet connection?",
-	"enter-password-if-desired": "Enter a password if provided, otherwise just click Cancel"
+	"enter-password-if-desired": "Enter a password if provided, otherwise just click Cancel",
+	"your-screenshare": "Your screenshare",
+	"your-camera": "Your camera",
+	"accept-inbound-caller": "Accept the inbound telephone caller?"
 }
 
 function getTranslation(key){ // when using this, instead of miniTranslate, if the user changes the language, it might not update. Used mainly when you don't want any HTML (<span data-translate>) being including in the translation
@@ -777,7 +780,7 @@ function promptUser(eleId, UUID=null){
 		getById("modalBackdrop").remove();
 	}
 	
-	zindex = 30 + document.querySelectorAll('#promptModal').length;
+	zindex = document.querySelectorAll('#promptModal').length + document.querySelectorAll('.alertModal').length;
 	modalTemplate =
 	`<div id="promptModal" style="z-index:${zindex + 2}">	
 		<div class="promptModalInner">
@@ -821,7 +824,7 @@ async function promptAlt(inputText, block=false, asterix=false, value=false, tim
 		Prompts[promptID].resolve = resolve;
 		Prompts[promptID].reject = reject;
 		
-		var zindex = 1030 + document.querySelectorAll('.promptModal').length;
+		var zindex = 32 + document.querySelectorAll('.promptModal').length + document.querySelectorAll('.alertModal').length; 
 		
 		if (block){
 			var backdropClass = "opaqueBackdrop";
@@ -1264,7 +1267,7 @@ async function confirmAlt(inputText, block=false){
 		Prompts[promptID].resolve = resolve;
 		Prompts[promptID].reject = reject;
 	
-		var zindex = 30 + document.querySelectorAll('.promptModal').length;
+		var zindex = 33 + document.querySelectorAll('.promptModal').length + document.querySelectorAll('.alertModal').length; 
 		
 		if (block){
 			var backdropClass = "opaqueBackdrop";
@@ -1294,22 +1297,22 @@ async function confirmAlt(inputText, block=false){
 		document.getElementById("submit_"+promptID).addEventListener("click", function(event){
 			var pid = event.target.dataset.pid;
 			result = true;
-			document.getElementById("modalBackdrop_"+pid).remove();
-			document.getElementById("modal_"+pid).remove();
+			getById("modalBackdrop_"+pid).remove();
+			getById("modal_"+pid).remove();
 			Prompts[pid].resolve();
 		});
 
 		document.getElementById("cancel_"+promptID).addEventListener("click", function(event){
 			var pid = event.target.dataset.pid;
-			document.getElementById("modalBackdrop_"+pid).remove();
-			document.getElementById("modal_"+pid).remove();
+			getById("modalBackdrop_"+pid).remove();
+			getById("modal_"+pid).remove();
 			Prompts[pid].resolve();
 		});
 
 		document.getElementById("close_"+promptID).addEventListener("click", function(event){
 			var pid = event.target.dataset.pid;
-			document.getElementById("modalBackdrop_"+pid).remove();
-			document.getElementById("modal_"+pid).remove();
+			getById("modalBackdrop_"+pid).remove();
+			getById("modal_"+pid).remove();
 			Prompts[pid].resolve();
 		});
 
@@ -1337,7 +1340,7 @@ function warnUser(message, timeout=false, sanitize=true){
 		getById("modalBackdrop").remove();
 	}
 	
-	zindex = 31 + document.querySelectorAll('.alertModal').length;
+	zindex = 31 + document.querySelectorAll('.alertModal').length + document.querySelectorAll('.promptModal').length; 
 	try{
 		if (sanitize){
 			message = sanitizeChat(message,2000);
@@ -5533,6 +5536,7 @@ function updateMixerRun(e=false){  // this is the main auto-mixing code.  It's a
 			var borderColor = session.borderColor || "#000";
 			var fadein = session.fadein || false;
 			var backgroundMedia = session.defaultMedia || false;
+			var foregroundMedia = session.defaultOverlayMedia || false;
 			var animated = session.animatedMoves || 0;
 			if (!borderOffset){
 				borderColor = "#0000";
@@ -5572,6 +5576,9 @@ function updateMixerRun(e=false){  // this is the main auto-mixing code.  It's a
 				}
 				if ("backgroundMedia" in layout[vid.dataset.sid]){
 					backgroundMedia = layout[vid.dataset.sid].backgroundMedia || false;
+				}
+				if ("foregroundMedia" in layout[vid.dataset.sid]){
+					foregroundMedia = layout[vid.dataset.sid].foregroundMedia || false;
 				}
 				if (vid.container){
 					if (!((vid.nodeName == "IFRAME") && vid.isConnected)){ // moving an iframe will break it.
@@ -5740,6 +5747,22 @@ function updateMixerRun(e=false){  // this is the main auto-mixing code.  It's a
 				container.style.backgroundRepeat = "no-repeat";
 			} else if (container.style.backgroundImage){
 				container.style.backgroundImage = "unset";
+			}
+			
+			if (foregroundMedia){
+				if (!container.foregroundMedia){
+					container.foregroundMedia = document.createElement("img");
+					container.foregroundMedia.className = "foregroundMedia";
+					container.appendChild(container.foregroundMedia);
+				}
+				container.foregroundMedia.src = foregroundMedia;
+			} else if (container.foregroundMedia){
+				try {
+					container.foregroundMedia.remove();
+					delete container.foregroundMedia;
+				} catch(e){
+					errorlog(e);
+				}
 			}
 			
 			
@@ -8793,7 +8816,6 @@ function TFLiteWorker(){
 		ctxBG.width = canvasBG.width;
 		ctxBG.height = canvasBG.height;
 		
-		osc.onended = processiOS;
 		processiOS(true);
 	} else {
 		process(true);
@@ -11984,7 +12006,7 @@ function updateLocalStats(){
 	var miniInfo = {}
 	if (changed){
 		miniInfo.out = {};
-		miniInfo.out.c = session.info.out.c
+		miniInfo.out.c = session.info.out.c;
 	}
 	
 	if (session.cpuLimited!==cpuLimited){
@@ -12001,7 +12023,7 @@ function updateLocalStats(){
 	
 	if (document.getElementById("head5")){
 		try{
-			if (Object.keys(session.pcs).length){
+			if (Object.keys(session.pcs).length || meshcastActive){
 				document.getElementById("head5").classList.remove("hidden");
 			}
 		} catch(e){}
@@ -12683,8 +12705,6 @@ session.hangup = function(reload=false, estop=false){
 		session.ws.close();
 	} catch(e){}
 	
-	
-	
 	try {
 		if (session.canvasSource && session.canvasSource.srcObject){
 			session.canvasSource.srcObject.getTracks().forEach(function(track) {
@@ -12743,6 +12763,10 @@ session.hangup = function(reload=false, estop=false){
 	
 	for (var sid in session.watchTimeoutList){
 		clearTimeout(session.watchTimeoutList[sid]);
+	}
+	
+	if (session.whipOut && session.whipOut.deleteme){
+		session.whipOut.deleteme();
 	}
 	
 	if (DebugLog && errorReport){
@@ -14887,7 +14911,7 @@ async function publishScreen() {
 		if (session.screensharebutton === true) {
 			getById("controlButtons").classList.remove("hidden");
 			getById("screensharebutton").className = "float";
-		}
+		} 
 
 		if (session.hangupbutton === true){
 			getById("controlButtons").classList.remove("hidden");
@@ -15244,6 +15268,9 @@ function publishWebcam(btn = false, miconly=false) {
 						if (showReshare === hash){
 							getById("head3").classList.remove('hidden');
 							getById("head3a").classList.remove('hidden');
+						} else if (session.permaid === null){
+							getById("head3").classList.remove('hidden');
+							getById("head3a").classList.remove('hidden');						
 						}
 					}).catch(errorlog);
 				}
@@ -16241,7 +16268,14 @@ function outboundAudioPipeline(sourceStream=false){ // this function isn't letti
 			if (session.audioCtxOutbound){ // outbound implies 48000, since webrtc opus is 48000.  (pcm may be excepted)
 				// already Created
 			
-			} else if (Firefox || SafariVersion || session.mobile){ // does not support resampling or likely doesn't need to worry, so will error
+			} else if (session.outboundSampleRate){
+				try {
+					session.audioCtxOutbound = new AudioContext({sampleRate: session.outboundSampleRate});
+				} catch(e){
+					session.audioCtxOutbound = new AudioContext(); // legacy support
+					errorlog(e);
+				}
+			} else if ((session.outboundSampleRate===false) || Firefox || SafariVersion || session.mobile){ // does not support resampling or likely doesn't need to worry, so will error
 				session.audioCtxOutbound = new AudioContext();
 				
 			} else if (session.audioLatency !== false) { // session.audioLatency could be useful for fixing clicking issues?
@@ -16249,7 +16283,6 @@ function outboundAudioPipeline(sourceStream=false){ // this function isn't letti
 					latencyHint: session.audioLatency / 1000.0, // needs to be in seconds, but VDON user input is via milliseconds
 					sampleRate: 48000 // not sure this is a great idea, but might as well add this here, versus later on since it is needed anyways.
 				});
-				
 			} else {
 				try {
 					session.audioCtxOutbound = new AudioContext({sampleRate: 48000});
@@ -16398,6 +16431,8 @@ function outboundAudioPipeline(sourceStream=false){ // this function isn't letti
 				
 				let oscillator = session.audioCtxOutbound.createOscillator();
 				oscillator.frequency.value = 10;
+				
+				
 				const wave = session.audioCtxOutbound.createPeriodicWave(realCoeffs, imagCoeffs);
 				oscillator.setPeriodicWave(wave);
 				
@@ -16427,8 +16462,8 @@ function outboundAudioPipeline(sourceStream=false){ // this function isn't letti
 				mid.connect(lowEQ);
 				anonNode = lowEQ;
 			}
-
-
+			
+			
 			if (session.equalizer) { // https://webaudioapi.com/samples/frequency-response/ for a tool to help set values
 				webAudio.lowEQ = session.audioCtxOutbound.createBiquadFilter();
 				webAudio.lowEQ.type = "lowshelf";
@@ -16463,6 +16498,11 @@ function outboundAudioPipeline(sourceStream=false){ // this function isn't letti
 			if (session.micDelay!==false) {
 				webAudio.micDelay = micDelayNode(anonNode, session.audioCtxOutbound);
 				anonNode = webAudio.micDelay;
+			}
+			
+			if (session.twilio && session.twilio.element && session.twilio.element.srcObject && session.twilio.element.srcObject.getAudioTracks().length){
+				const source = session.audioCtxOutbound.createMediaStreamSource(session.twilio.element.srcObject);
+				source.connect(anonNode); // mix it in
 			}
 			
 			if (session.noisegate!==false){
@@ -18381,7 +18421,8 @@ async function createDirectorOnlyBox() {
 	var container = document.createElement("div");
 	container.className = "vidcon directorMargins";
 	container.id = "container_director"; // needed to delete on user disconnect
-	
+	container.setAttribute('aria-label', miscTranslations["your-camera"]);
+	container.setAttribute("role", "region");
 	
 	var buttons = "";
 	if (session.slotmode){
@@ -18580,7 +18621,8 @@ async function createDirectorScreenshareOnlyBox() { // sstype=3
 	var container = document.createElement("div");
 	container.className = "vidcon directorMargins";
 	container.id = "container_screen_director"; // needed to delete on user disconnect
-	
+	container.setAttribute('aria-label', miscTranslations["your-screenshare"]);
+	container.setAttribute("role", "region");
 	
 	var buttons = "";
 	if (session.slotmode){
@@ -18709,42 +18751,45 @@ async function createDirectorScreenshareOnlyBox() { // sstype=3
 		changeGroupDirectorAPI(group, false, false); // update the UI only /
 	});
 	
+	document.querySelectorAll("#container_screen_director  #label_director").forEach(elex=>{
+		elex.remove();
+	});
 	
-	var labelID = document.getElementById("label_director");
+	// var labelID = document.getElementById("label_director");
 	
-	labelID.onclick = async function(ee){
-		var oldlabel = ee.target.innerText;
-		if (session.label===false){
-			oldlabel = "";
-		}
-		window.focus();
-		var newlabel = await promptAlt(getTranslation("enter-new-display-name"), false, false, oldlabel); 
-		if (newlabel!==null){
-			newlabel = newlabel.trim();
-			if (newlabel === ""){
-				newlabel = false;
-				//ee.target.innerHTML = getTranslation("add-a-label");
-				miniTranslate(ee.target,"add-a-label");
-				ee.target.classList.add("addALabel");
-			} else {
-				ee.target.innerText = newlabel;
-				ee.target.classList.remove("addALabel");
-			}
-			session.label = newlabel;
-			var data = {};
-			data.changeLabel = true;
-			data.value = session.label;
-			session.sendMessage(data);
-		}
-	}
-	labelID.style.float = "left";
-	labelID.style.top = "2px";
-	labelID.style.marginLeft = "5px";
-	labelID.style.position  = "relative";
-	labelID.style.cursor="pointer";
-	if (session.label){
-		labelID.innerText = session.label;
-	}
+	// labelID.onclick = async function(ee){
+		// var oldlabel = ee.target.innerText;
+		// if (session.label===false){
+			// oldlabel = "";
+		// }
+		// window.focus();
+		// var newlabel = await promptAlt(getTranslation("enter-new-display-name"), false, false, oldlabel); 
+		// if (newlabel!==null){
+			// newlabel = newlabel.trim();
+			// if (newlabel === ""){
+				// newlabel = false;
+				ee.target.innerHTML = getTranslation("add-a-label");
+				// miniTranslate(ee.target,"add-a-label");
+				// ee.target.classList.add("addALabel");
+			// } else {
+				// ee.target.innerText = newlabel;
+				// ee.target.classList.remove("addALabel");
+			// }
+			// session.label = newlabel;
+			// var data = {};
+			// data.changeLabel = true;
+			// data.value = session.label;
+			// session.sendMessage(data);
+		// }
+	// }
+	// labelID.style.float = "left";
+	// labelID.style.top = "2px";
+	// labelID.style.marginLeft = "5px";
+	// labelID.style.position  = "relative";
+	// labelID.style.cursor="pointer";
+	// if (session.label){
+		// labelID.innerText = session.label;
+	// }
 	pokeIframeAPI("control-box", true, true);
 	if (session.slotmode){
 		pokeIframeAPI("slot-updated", biggestSlot, null, session.streamID+":s"); // need to support self-director
@@ -20728,8 +20773,46 @@ function gotDevicesNew(deviceInfos, miconly=false) {
 
 function getUserMediaVideoParams(resolutionFallbackLevel, isSafariBrowser) {
 	switch (resolutionFallbackLevel) {
+		
 		case -1:
 			return {};
+		case -2:
+			if (isSafariBrowser) {
+				return {
+					width: {
+						min: 360
+						, ideal: 3840
+						, max: 3840
+					}
+					, height: {
+						min: 360
+						, ideal: 2160
+						, max: 2160
+					}
+				};
+			} else if (Firefox){
+				return {
+					width: {
+						ideal: 3840
+					}
+					, height: {
+						ideal: 2160
+					}
+				};
+			} else {
+				return {
+					width: {
+						min: 720
+						, ideal: 3840
+						, max: 3840
+					}
+					, height: {
+						min: 720
+						, ideal: 2160
+						, max: 2160
+					}
+				};
+			}
 		case 0:
 			if (isSafariBrowser) {
 				return {
@@ -21698,7 +21781,7 @@ function playtone(screen = false, tonename="testtone") {
 
 	if (iOS || iPad) {
 		//	try{
-		//		session.audioContext.resume();
+		//		session.audioCtx.resume();
 		//	} catch(e){errorlog(e);}
 		var toneEle = document.getElementById(tonename);
 		if (toneEle) {
@@ -23298,7 +23381,7 @@ async function grabScreen(quality = 0, audio = true, videoOnEnd = false) {
 }
 
 function toggleBufferSettings(UUID){
-	
+	getById('bufferSettings').dataset.UUID = UUID;
 	toggle(getById('bufferSettings'));
 	if (getById('bufferSettings').style.display=="none"){
 		getById("modalBackdrop").innerHTML = ''; // Delete modal
@@ -24110,44 +24193,51 @@ async function grabVideo(quality = 0, eleName = 'previewWebcam', selector = "sel
 						}
 					} catch(e){errorlog(e);}
 					
-					if (session.whiteBalance){
+					if (session.whiteBalance!==false){
 						try {
 							await track.applyConstraints({advanced: [ {whiteBalanceMode: "manual", colorTemperature: parseInt(session.whiteBalance)} ]});
 						} catch(e){
 							errorlog(e);
 						}
 					}
-					if (session.exposure){
+					if (session.exposure!==false){
 						try {
 							await track.applyConstraints({advanced: [ {exposureMode: "manual", exposureTime: parseInt(session.exposure)} ]});
 						} catch(e){
 							errorlog(e);
 						}
 					}
-					if (session.saturation){
+					if (session.saturation!==false){
 						try {
 							await track.applyConstraints({advanced: [ {saturation: parseInt(session.saturation)} ]});
 						} catch(e){
 							errorlog(e);
 						}
 					}
-					if (session.sharpness){
+					if (session.sharpness!==false){
 						try {
 							await track.applyConstraints({advanced: [ {sharpness: parseInt(session.sharpness)} ]});
 						} catch(e){
 							errorlog(e);
 						}
 					}
-					if (session.contrast){
+					if (session.contrast!==false){
 						try {
 							await track.applyConstraints({advanced: [ {contrast: parseInt(session.contrast)} ]});
 						} catch(e){
 							errorlog(e);
 						}
 					}
-					if (session.brightness){
+					if (session.brightness!==false){
 						try {
 							await track.applyConstraints({advanced: [ {brightness: parseInt(session.brightness)} ]});
+						} catch(e){
+							errorlog(e);
+						}
+					}
+					if (session.focusDistance!==false){
+						try {
+							await track.applyConstraints({advanced: [ {focusMode:"manual", focusDistance: parseInt(session.focusDistance)} ]});
 						} catch(e){
 							errorlog(e);
 						}
@@ -24747,6 +24837,7 @@ async function grabAudio(selector = "#audioSource", trackid = null, override = f
 	if (callback){
 		callback();
 	}
+	
 	senderAudioUpdate(callbackUUID);
 }
 
@@ -25377,6 +25468,11 @@ function senderAudioUpdate(callback=false, tracks=false){
 				session.sendMessage(data, data.UUID);
 			} catch(e){}
 		}
+		
+		if (session.twilio){
+			session.twilio.updateMixer();
+		}
+		
 	} catch (e) {
 		errorlog(e);
 	}
@@ -26180,10 +26276,27 @@ async function publishScreen2(constraints, audioList=[], audio=true, overrideFra
 		 // OR, jump right in, and let user change from there
 		if (session.roomid!==false){
 			if ((session.roomid==="") && ((!session.view) || (session.view===""))){
+				if (session.manual===null){
+					session.manual = true;
+				}
+				if (!(session.cleanOutput)) {
+					var showReshare = getStorage("showReshare");
+					if (showReshare){
+						generateHash(session.streamID + session.salt + "bca321", 4).then(function(hash) { // million to one error. 
+							if (showReshare === hash){
+								getById("head3").classList.remove('hidden');
+								getById("head3a").classList.remove('hidden');
+							} else if (session.permaid === null){
+								getById("head3").classList.remove('hidden');
+								getById("head3a").classList.remove('hidden');						
+							}
+						}).catch(errorlog);
+					}
+				}
 				
 			} else {
 				getById("head3").classList.add('hidden');
-				getById("head3a").classList.add('hidden');
+				getById("head3a").classList.add('hidden'); 
 				log("ROOMID EANBLED");
 				log("Update Mixer Event on REsize SET");
 				window.onresize = updateMixer;
@@ -31554,6 +31667,264 @@ async function requestBasicPermissions(constraint = {video: true, audio: true}, 
 	return null
 }
 
+function awaitInboundCall(){
+	if (session.twilio){return;}
+	loadScript('./thirdparty/twilio.min.js?v1', async function() {
+		
+		if (!session.twilio){session.twilio = {};}
+		
+		class MyAudioProcessor {
+		  constructor(audioContext) {
+			console.log("constructor");
+			this.audioContext = session.audioCtxOutbound;
+			session.twilio.mixer = session.audioCtxOutbound.createGain(); // This serves as our mixer node
+			this.destination = session.twilio.destination = session.audioCtxOutbound.createMediaStreamDestination(); // Destination node
+			this.background = this.audioContext.createMediaElementSource(document.createElement("video"));
+		  }
+
+		  async createProcessedStream(stream) {
+			  
+			const source = this.audioContext.createMediaStreamSource(stream);
+			const gain = this.audioContext.createGain();
+			gain.gain.value = 0;
+			source.connect(gain);
+			gain.connect(session.twilio.mixer);
+			// session.twilio.micSources.push(stream);
+			
+			session.twilio.mixer.connect(this.destination);
+			return this.destination.stream;
+		  }
+
+		  async destroyProcessedStream(stream) {
+			   console.log("destroyProcessedStream called");
+			   console.log(stream);
+		  }
+		}
+
+		const response = await fetch('https://call.vdo.ninja:8443/token2');
+		session.twilio.data = await response.json();
+
+		session.twilio.device = new Twilio.Device(session.twilio.data.token);
+		
+		const audioProcessor = new MyAudioProcessor();
+		await session.twilio.device.audio.addProcessor(audioProcessor);
+		
+		session.twilio.device.register();
+		
+		warnUser("Dial in access code: "+session.twilio.data.dialInNumber);
+
+		session.twilio.device.on('registered', function() {
+			console.log('Twilio.Device is ready to receive incoming calls!');
+		});
+		
+		async function refresh(){
+			console.log("refreshing token");
+			const response = await fetch('https://call.vdo.ninja:8443/refresh');
+			session.twilio.data = await response.json();
+			session.twilio.device.updateToken(session.twilio.data.token);
+		}
+		
+		session.twilio.refreshInterval = setInterval(refresh, 50 * 60 * 1000);
+		
+		session.twilio.micSources = [];
+	
+		session.twilio.updateMixer = async function(UUID=false){
+			try {
+				console.log("update mixer");
+				session.twilio.micSources.forEach(src=>{
+					src.disconnect();
+				});
+				
+				if (session.videoElement && session.videoElement.srcObject && session.videoElement.srcObject.getAudioTracks().length){
+					var micSource = session.audioCtxOutbound.createMediaStreamSource(session.videoElement.srcObject);
+				} else if (session.streamSrc && session.streamSrc.getAudioTracks().length){
+					var micSource = session.audioCtxOutbound.createMediaStreamSource(session.streamSrc);
+				} else {
+					var micSource = false;
+				}
+				
+				for (var uuid in session.rpcs){
+					try{
+						if (session.rpcs[uuid].videoElement && session.rpcs[uuid].videoElement.srcObject){
+							var guestSource = session.audioCtxOutbound.createMediaStreamSource(session.rpcs[uuid].videoElement.srcObject);
+							if (guestSource){
+								guestSource.connect(session.twilio.mixer);
+								session.twilio.micSources.push(guestSource);
+								console.log(uuid+" added to twiliio");
+							}
+						}
+					} catch(e){errorlog(e);}
+				}
+				
+				if (micSource){
+					micSource.connect(session.twilio.mixer);
+					session.twilio.micSources.push(micSource);
+					console.log("micSource added to twiliio");
+				}
+			} catch (err) {
+				console.error('Could not get microphone audio:', err);
+			}
+		};
+
+		session.twilio.device.on('incoming', (call) => {
+			session.twilio.call = call;
+			console.log('Incoming call from: ' + session.twilio.call.parameters.From);
+			
+			session.twilio.call.on('reject', () => {console.log("rejected");});
+			session.twilio.call.on('disconnect', () => {console.log("disconnected");});
+			session.twilio.call.on('cancel', () => {console.log("cancelled");});
+			session.twilio.call.on('accept', () => {console.log("accpted");});
+			session.twilio.call.on('audio', (e) => {
+				session.twilio.element = e;
+				console.log("audio stream available");
+				outboundAudioPipeline(session.streamSrc);
+			});
+			
+			window.focus();
+			confirmAlt('Incoming call from: ' + session.twilio.call.parameters.From+"\n"+getTranslation("accept-inbound-caller")).then(res=>{
+				if (res){
+					if (session.audioCtxOutbound.state === "suspended") {
+						session.audioCtxOutbound.resume().then(() => {
+							console.log("AudioContext resumed");
+						});
+					}
+					session.twilio.updateMixer();
+					session.twilio.call.accept();
+				} else {
+					session.twilio.call.reject();
+				}
+			});
+		});
+	});
+}
+
+function joinConference(roomid, mute=true){ // not used
+	loadScript('./thirdparty/twilio.min.js', function() {
+		fetch('https://call.vdo.ninja:8443/token')
+		.then(response => response.json())
+		.then(async data => {
+			const device = new Twilio.Device(data.token);
+			call = await device.connect({params: {"To": roomid}});
+			if (mute){
+				const checkForRemoteStream = setInterval(() => {
+					if (call.getRemoteStream && call.getRemoteStream()){
+						if (call.getRemoteStream().getTracks && call.getRemoteStream().getTracks().length){
+							clearInterval(checkForRemoteStream);
+							call.getRemoteStream().getTracks()[0].enabled = false;
+							console.log("call muted");
+						}
+					};
+				}, 500);
+			}
+		})
+		.catch(error => {
+			console.error('Error fetching token: ', error);
+		});
+	});
+}
+
+function listenWebsocket(roomid){ // not used
+	var callSocket = null;
+	var connecting = false;
+	var streams = {};
+	function connectAudioInbound(){
+		clearTimeout(connecting);
+		if (callSocket){
+			if (callSocket.readyState === callSocket.OPEN){return;}
+			try{
+				callSocket.close();
+			} catch(e){}
+		}
+		callSocket = new WebSocket("wss://call.vdo.ninja:8443/"+roomid);
+		callSocket.onclose = function (){
+			clearTimeout(connecting);
+			connecting = setTimeout(function(){connectAudioInbound();},100);
+		};
+		callSocket.onopen = function (){
+			send({"join":true});
+		};
+		callSocket.addEventListener('message', function (event) {
+			var msg = JSON.parse(event.data);
+			if (msg.event && (msg.event === "media") && msg.media && msg.media.payload && msg.streamSid) {
+				playAudioChunk(msg.media.payload, msg.streamSid);
+				if (!streams[msg.streamSid]){
+					console.log("stream starting");
+					streams[msg.streamSid] = true;
+					//audioStreams.innerHTML = "";
+					//for (stream in streams){
+					//	audioStreams.innerHTML += stream+"<br />";
+					//}
+					console.log(streams);
+				}
+			} else if (msg.event && (msg.event === "stop") && msg.streamSid) {
+				console.log("stream stopping");
+				delete streams[msg.streamSid];
+				//audioStreams.innerHTML = "";
+				//for (stream in streams){
+				//	audioStreams.innerHTML += stream+"<br />";
+				//}
+				console.log(streams);
+			}// else {
+			//	console.log(msg);
+			//	console.log("stream misc");
+			//	console.log(streams);
+			//}
+		});
+	}
+	
+	function base64ToUint8Array(base64) {
+		const binaryString = window.atob(base64);
+		const len = binaryString.length;
+		const bytes = new Uint8Array(len);
+		for (let i = 0; i < len; i++) {
+			bytes[i] = binaryString.charCodeAt(i);
+		}
+		return bytes;
+	}
+	function muLawToPCM(muLawData, gainFactor = 2.0, threshold = 30000, ratio = 2.0) {
+		const pcmData = new Int16Array(muLawData.length);
+		for (let i = 0; i < muLawData.length; i++) {
+			let muLawByte = muLawData[i];
+			muLawByte = ~muLawByte;
+			let sign = (muLawByte & 0x80);
+			muLawByte &= ~(0x80);
+			let exponent = (muLawByte >> 4) & 0x07;
+			let data = muLawByte & 0x0F;
+			data |= 0x10;
+			data <<= 1;
+			data += 1;
+			data <<= exponent + 2;
+			data -= 0x84;
+			if (sign === 0) data = -data;
+			let amplifiedData = data * gainFactor;
+			if (Math.abs(amplifiedData) > threshold) {
+				const overThreshold = Math.abs(amplifiedData) - threshold;
+				const compressedData = threshold + (overThreshold / ratio);
+				amplifiedData = (amplifiedData > 0) ? compressedData : -compressedData;
+			}
+			pcmData[i] = amplifiedData;
+		}
+		return pcmData;
+	}
+	function playAudioChunk(base64Chunk, sid) {
+		const muLawData = base64ToUint8Array(base64Chunk);
+		const pcmData = muLawToPCM(muLawData);
+		const audioBuffer = session.audioCtx.createBuffer(1, pcmData.length, 8000);
+		const bufferSource = session.audioCtx.createBufferSource();
+		const channelData = audioBuffer.getChannelData(0);
+		for (let i = 0; i < pcmData.length; i++) {
+			channelData[i] = pcmData[i] / 32768.0;
+		}
+		bufferSource.buffer = audioBuffer;
+		bufferSource.connect(session.audioCtx.destination);
+		bufferSource.start();
+	}
+	function send(cmd){
+		callSocket.send(JSON.stringify(cmd));
+	}
+	connectAudioInbound();
+}
+
 function setupWebcamSelection(miconly=false) {
 	log("setupWebcamSelection();");
 	
@@ -35077,6 +35448,9 @@ async function recordVideo(target, event = null, videoKbps = false) { // event.c
 				updateLocalRecordButton(UUID, -1);
 				target.style.backgroundColor = "";
 				
+				try {
+					clearInterval(video.recorder.writer.interval);
+				} catch(e){}
 				
 				delete(video.recorder);
 				delete(video.recording);
@@ -35808,7 +36182,7 @@ async function recordLocalVideo(action = null, videoKbps = false, remote=false, 
 	} else {
 		var video = session.videoElement;
 	}
-	
+	 
 	if (!video){
 		warnlog("video not found");
 		return;
@@ -35931,6 +36305,7 @@ async function recordLocalVideo(action = null, videoKbps = false, remote=false, 
 	video.recorder.eStop = function() {
 		try {
 			video.recorder.writer.close();
+			clearInterval(video.recorder.writer.interval);					  
 		} catch(e){}
 	}
 
@@ -36009,7 +36384,12 @@ async function recordLocalVideo(action = null, videoKbps = false, remote=false, 
 		
 		setTimeout((videoKbps, altUUID, video) => {
 			try {
-				video.recorder.writer.close();
+				video.recorder.writer.close();	 				
+			} catch(e){
+				errorlog(e);
+			}
+			try {
+				clearInterval(video.recorder.writer.interval);		 				
 			} catch(e){
 				errorlog(e);
 			}
@@ -36217,7 +36597,11 @@ async function recordLocalVideo(action = null, videoKbps = false, remote=false, 
 		if (!audioTrack){
 			errorlog("Failing the recording; no audio track");
 			try {
-				video.recorder.writer.close();
+				video.recorder.writer.close();					
+			} catch(e){}
+			
+			try {
+				clearInterval(video.recorder.writer.interval);						
 			} catch(e){}
 			
 			try {
@@ -36258,6 +36642,10 @@ async function recordLocalVideo(action = null, videoKbps = false, remote=false, 
 					errorlog("Fail safe failed; closing the recording");
 					try {
 						video.recorder.writer.close();
+					} catch(e){}
+					
+					try {
+						clearInterval(video.recorder.writer.interval);
 					} catch(e){}
 					
 					try {
@@ -36309,12 +36697,39 @@ async function recordLocalVideo(action = null, videoKbps = false, remote=false, 
 			
 	}
 	log(options);
-
-	function handleDataAvailable(event) {
+	
+	var chunkQueue = [];
+	function handleDataAvailable(event, process=true) {
+		
+		while (chunkQueue.length && process){
+			ret = handleDataAvailable(chunkQueue.shift(), false);
+			if (ret===false){
+				return; // cancel.
+			}
+		}
+		
 		if (event.data && event.data.size > 0) {
 			try {
 				if (video && video.recorder && video.recorder.writer){ // video.recorder.closing
-					video.recorder.writer.write(event.data);
+					try {
+						if (video.recorder.writer._ownerWritableStream._state==="writable"){
+							video.recorder.writer.write(event.data);
+						} else {
+							throw new Error('Writer not open');
+						}
+					} catch(e){
+						if (process===true){
+							chunkQueue.push(event);
+						} else {
+							chunkQueue.unshift(event);
+							return false;
+						}
+					}
+				} else if (process===true){
+					chunkQueue.push(event);
+				} else {
+					chunkQueue.unshift(event);
+					return false;
 				}
 			} catch(e){
 				errorlog(e);
@@ -36359,15 +36774,47 @@ async function recordLocalVideo(action = null, videoKbps = false, remote=false, 
 	};
 
 	try {
-		var {readable, writable} = new TransformStream({
-			transform: (chunk, ctrl) => chunk.arrayBuffer().then(b => ctrl.enqueue(new Uint8Array(b)))
-		});
-		console.log(writable);
-		console.log(video);
-		var writer = await writable.getWriter();
-		console.log(writer);
-		readable.pipeTo(streamSaver.createWriteStream(filename.toString() + filext,  video.recorder.stop));
-		video.recorder.writer = writer;
+		video.recorder.iteration = 0;
+	
+		video.recorder.setupWriter = async function setupWriter(video){
+			if (video.recorder.writer){
+				try {
+					video.recorder.writer.close();
+					await sleep(1000);
+					// we don't cancel the interval obviously
+				} catch(e){
+					errorlog(e);
+				}
+			}
+			var {readable, writable} = new TransformStream({
+				transform: (chunk, ctrl) => chunk.arrayBuffer().then(b => ctrl.enqueue(new Uint8Array(b)))
+			});
+			var writer = await writable.getWriter();
+			var addon = "";
+			if (video.recorder.iteration != 0){
+				addon = "_"+video.recorder.iteration;
+			}
+			video.recorder.iteration += 1;
+			readable.pipeTo(streamSaver.createWriteStream(filename.toString() + filext + addon,  video.recorder.stop));
+			video.recorder.writer = writer;
+		}
+		
+		await video.recorder.setupWriter(video)
+		
+		if (session.recordingInterval){ // minutes
+			function intervalClosure(video){
+				var intervalId = setInterval(function(video){
+					try {
+						video.recorder.setupWriter(video);
+					} catch(e){
+						clearInterval(intervalId);
+					}
+				},1000*60*session.recordingInterval, video);
+				video.recorder.writer.interval = intervalId;
+			}
+			intervalClosure(video);
+		}
+		
 		
 		video.recorder.mediaRecorder.start(1000); // 100ms chunks
 		console.log("started recording");
@@ -36655,6 +37102,9 @@ session.onTrack = function(event, UUID){
 		}
 	}
 	
+	if (session.twilio && audioAdded){
+		session.twilio.updateMixer(UUID);
+	}
 	return session;
 	
 };
@@ -37040,25 +37490,27 @@ function batteryMeterInfoUpdate(UUID){
 	}
 }
 
+
 function setupGuestLabelControl(UUID){
 	var labelID = getById("label_"+UUID);
 	if (labelID){
 		labelID.classList.add("contolboxLabel");
 		labelID.dataset.UUID = UUID;
+		
 		if (session.rpcs[UUID].label){ 
 			labelID.innerText = session.rpcs[UUID].label; // Replace underscores with a Space when publishing to HTML. No Double spaces.
 			labelID.classList.remove("addALabel");
+			
 		} else if (session.directorUUID === UUID){
 			miniTranslate(labelID,"main-director");
-			//labelID.innerHTML = getTranslation("main-director");
 			labelID.classList.remove("addALabel");
+			
 		} else if (session.directorList.indexOf(UUID)>=0){
 			miniTranslate(labelID,"co-director");
-			//labelID.innerHTML = getTranslation("co-director");
 			labelID.classList.remove("addALabel");
+			
 		} else {
 			miniTranslate(labelID,"add-a-label");
-			//labelID.innerHTML = getTranslation("add-a-label"); // Replace underscores with a Space when publishing to HTML. No Double spaces.
 			labelID.classList.add("addALabel");
 		}
 		labelID.onclick = async function(ee){
@@ -37097,40 +37549,82 @@ function setupGuestLabelControl(UUID){
 			}
 		}
 	}
+	updateAriaLabel(UUID);
+}
+
+function updateAriaLabel(UUID=false){
+	if (!(UUID in session.rpcs)){
+		return;
+	}
+	
+	var element = document.getElementById("container_"+UUID);
+	if (!element){
+		return;
+	}
+	var sid = "";
+	if (session.rpcs[UUID].streamID){
+		sid = ": "+session.rpcs[UUID].streamID;
+	}
+	
+	if (session.rpcs[UUID].label){
+		element.setAttribute('aria-label', session.rpcs[UUID].label);
+		
+	} else if (session.directorUUID === UUID){
+		element.setAttribute('aria-label', (getTranslation("main-director") || "Main Director")+sid);
+		
+	} else if (session.directorList.indexOf(UUID)>=0){
+		element.setAttribute('aria-label', (getTranslation("co-director") || "Co Director") +sid);
+		
+	} else if (sid){
+		element.setAttribute('aria-label', "ID"+sid);
+		
+	} else {
+		element.setAttribute('aria-label', (getTranslation("undefined") || "Undefined"));
+	}
+	
+	element.setAttribute("role", "region");
 }
 
 function updateLabelDirectors(UUID){
 	var elements = getById("label_"+UUID);
-	if (session.rpcs[UUID].label){
-		elements.innerText = session.rpcs[UUID].label;
-		elements.classList.remove("addALabel");
-	} else if (session.directorUUID === UUID){
-		//elements.innerHTML = getTranslation("main-director");
-		miniTranslate(elements,"main-director");
-		elements.classList.remove("addALabel");
-	} else if (session.directorList.indexOf(UUID)>=0){
-		miniTranslate(elements,"co-director");
-		elements.classList.remove("addALabel");
-	} else {
-		//elements.innerHTML = getTranslation("add-a-label");
-		miniTranslate(elements,"add-a-label");
-		elements.classList.add("addALabel");
+	if (elements){
+		if (session.rpcs[UUID].label){
+			elements.innerText = session.rpcs[UUID].label;
+			elements.classList.remove("addALabel");
+			
+		} else if (session.directorUUID === UUID){
+			miniTranslate(elements,"main-director");
+			elements.classList.remove("addALabel");
+			
+		} else if (session.directorList.indexOf(UUID)>=0){
+			miniTranslate(elements,"co-director");
+			elements.classList.remove("addALabel");
+			
+		} else {
+			miniTranslate(elements,"add-a-label");
+			elements.classList.add("addALabel");
+		}
 	}
+	updateAriaLabel(UUID);
 }
+
 function updateLabelDirectors2(UUID){
 	var elements = getById("label_"+UUID);
-	if (session.directorUUID === UUID){
-		//elements.innerHTML = getTranslation("main-director");
-		miniTranslate(elements,"main-director");
-		elements.classList.remove("addALabel");
-	} else if (session.directorList.indexOf(UUID)>=0){
-		miniTranslate(elements,"co-director");
-		elements.classList.remove("addALabel");
-	} else {
-		//elements.innerHTML = getTranslation("add-a-label");
-		miniTranslate(elements,"add-a-label");
-		elements.classList.add("addALabel");
+	if (elements){
+		if (session.directorUUID === UUID){
+			miniTranslate(elements,"main-director");
+			elements.classList.remove("addALabel");
+			
+		} else if (session.directorList.indexOf(UUID)>=0){
+			miniTranslate(elements,"co-director");
+			elements.classList.remove("addALabel");
+			
+		} else {
+			miniTranslate(elements,"add-a-label");
+			elements.classList.add("addALabel");
+		}
 	}
+	updateAriaLabel(UUID);
 }
 
 function directorCoDirectorColoring(UUID){
@@ -38682,6 +39176,12 @@ function targetGuest(target, action, value=null){
 			element.value = 1;
 			return directTimer(element);
 		}
+	} else if (Commands[action]){
+		try {
+			return Commands[action](value, target);
+		} catch(e){
+			errorlog(e);
+		}
 	}
 	return false;
 }
@@ -38806,64 +39306,46 @@ function resizeWindow(width, height){
 
 function configureWhipOutSDP(description){ // THIS IS FOR WHIP-OUTPUT; it has 
 
-	var configs = false;
+	var configs = {};
 	
 	if (SafariVersion && (SafariVersion<=13) && (iOS || iPad)){
-		// skip.  Not going to try to tinker with older iOS SDPs
+		return description; // skip.  Not going to try to tinker with older iOS SDPs
 	} else if ((session.stereo==3) || (session.stereo==5) || (session.stereo==6) || (session.stereo==1)){ // stereo out
-		configs = {
-			'stereo': 1,
-			'useinbandfec': session.noFEC ? 0 : 1,
-			'maxptime': session.maxptime,
-			'minptime': session.minptime,
-			'ptime': session.ptime,
-			'dtx': session.dtx  // "usedtx", if no loud audio, stops sending audio for 400ms. default.
-		};
+		configs = {'stereo': 1}
 		log("stereo enabled");
 	} else if (iOS || iPad){ // iOS doesn't have multichannel, so why even bother
-		configs = {
-			'useinbandfec': session.noFEC ? 0 : 1,
-			'maxptime': session.maxptime,
-			'minptime': session.minptime,
-			'ptime': session.ptime,
-			'dtx': session.dtx  // "usedtx", if no loud audio, stops sending audio for 400ms. default.
-		};
-		
+		configs = {};
 	} else if (session.stereo==4){
-		configs = {
-			'stereo': 2,
-			'useinbandfec': session.noFEC ? 0 : 1,
-			'maxptime': session.maxptime,
-			'minptime': session.minptime,
-			'ptime': session.ptime,
-			'dtx': session.dtx  // "usedtx", if no loud audio, stops sending audio for 400ms. default.
-		};
+		configs = {'stereo': 2}
 		log("stereo enabled");
 	} else {
-		configs = {
-			'stereo': 0,
-			'useinbandfec': session.noFEC ? 0 : 1,
-			'maxptime': session.maxptime,
-			'minptime': session.minptime,
-			'ptime': session.ptime,
-			'dtx': session.dtx  // "usedtx", if no loud audio, stops sending audio for 400ms. default.
-		};
+		configs = {'stereo': 0};
+	}
+	
+	if (session.noFEC!==null){
+		configs.useinbandfec = session.noFEC ? 0 : 1;
+	}
+	if (session.maxptime!==false){
+		configs.maxptime = session.maxptime;
+	}
+	if (session.minptime!==false){
+		configs.minptime = session.minptime;
+	}
+	if (session.ptime!==false){
+		configs.ptime = session.ptime;
+	}
+	if (session.dtx!==false){
+		configs.dtx = session.dtx;  // "usedtx", if no loud audio, stops sending audio for 400ms. default.
 	}
 	
 	if (session.whipOutAudioBitrate){
-		if (!configs){
-			configs = {
-				'maxaveragebitrate': session.whipOutAudioBitrate  * 1024, 
-				'cbr': session.cbr
-			};
-		} else{
-			configs.maxaveragebitrate = session.whipOutAudioBitrate  * 1024;
-			configs.cbr = session.cbr;
-		}
+		configs.maxaveragebitrate = session.whipOutAudioBitrate  * 1024;
+		configs.cbr = session.cbr;
 	}
 	
-	if (configs){
+	if (Object.keys(configs).length){
 		log("Processing sdp of type: "+description.type+ " ...");
+		log(configs);
 		description.sdp = CodecsHandler.setOpusAttributes(description.sdp, configs, true);
 	}
 	
@@ -38913,19 +39395,8 @@ function configureWhipOutSDP(description){ // THIS IS FOR WHIP-OUTPUT; it has
 			}, session.whipOutCodec);
 		}
 	}  else {
-		if (iOS || iPad){
-			jsep.sdp = jsep.sdp.replace(/42e01f/gi,"42e01f");  // openH264
-			jsep.sdp = jsep.sdp.replace(/42001f/gi,"42e01f");  // external encoder
-			jsep.sdp = jsep.sdp.replace(/420029/gi,"42e01f"); // external encoder
-			jsep.sdp = jsep.sdp.replace(/42a01e/gi,"42e01f"); // external encoder
-			jsep.sdp = jsep.sdp.replace(/42a014/gi,"42e01f"); // external encoder
-			jsep.sdp = jsep.sdp.replace(/42a00b/gi,"42e01f");  // external encoder
-			jsep.sdp = jsep.sdp.replace(/640c1f/gi,"42e01f"); // will not work
-		} else {
-			description.sdp = CodecsHandler.preferCodec(description.sdp,"h264", session.videoErrorCorrection); // default
-			description.sdp = description.sdp.replace(/42001f/gi,"42e01f"); // openh264 set as default.
-			description.sdp = description.sdp.replace(/420029/gi,"42e01f"); 
-		}
+		log("preferring h264 in sdp");
+		description.sdp = CodecsHandler.preferCodec(description.sdp,"h264", session.videoErrorCorrection); // h264 default. openh264? well, this was breaking with Pion, so, meh. whatever h264
 		if (session.whipOutVideoBitrate){
 			description.sdp  = CodecsHandler.setVideoBitrates(description.sdp , {
 				min: parseInt(session.whipOutVideoBitrate/10) || 1,
@@ -38978,6 +39449,31 @@ const scalabilityModes = [
 	'L3T3_KEY'
 ];
 		
+function completeLocationURL(originalURL, locationURL) {
+  if (!originalURL){
+	  return locationURL;
+  } else if (!locationURL){
+	  return originalURL;
+  }
+  const parsedOriginalURL = new URL(originalURL);
+
+  // Check if the location URL is already absolute
+  if (locationURL.startsWith('http://') || locationURL.startsWith('https://')) {
+    return locationURL;
+  } else {
+    // Check if the original URL's pathname ends with a slash or not
+    let basePath = parsedOriginalURL.origin + parsedOriginalURL.pathname;
+    if (!basePath.endsWith('/')) {
+      // If the pathname does not end with a slash, remove the last segment
+      basePath = basePath.substring(0, basePath.lastIndexOf('/') + 1);
+    }
+
+    // Resolve "." and ".." in the relative URL against the base path
+    const fullPath = new URL(locationURL, basePath).href;
+
+    return fullPath;
+  }
+}
 
 function whipOut(){
 	log("whipOut");
@@ -38996,7 +39492,11 @@ function whipOut(){
 				session.configuration.encodedInsertableStreams = true; 
 			}
 			
+			if (session.bundlePolicy){
+				session.configuration.bundlePolicy = session.bundlePolicy;
+			}
 			var config = {...session.configuration};
+			log(config);
 			
 			// do anything whip specific here
 			
@@ -39189,7 +39689,6 @@ function whipOut(){
 		try {
 			session.whipOut.createOffer().then(function(description){
 				
-				
 				try {
 					description = configureWhipOutSDP(description);
 				} catch(e){
@@ -39257,6 +39756,17 @@ function whipOut(){
 					session.whipOut.stats.whep_URL = false
 					session.whipOut.stats.watch_URL = false; // cloudflare and meshcast have this, but meh. aec is an issue, so won't bother for now.
 					var WHELPlaybackURL = false; // we will try to determine the WHEP address, if we need to share it with other viewers.
+					
+					try {
+						if (this.getAllResponseHeaders().indexOf("location") >= 0) {
+							session.whipOut.location = this.getResponseHeader('location') || "";
+							session.whipOut.location = completeLocationURL(session.whipOutput, session.whipOut.location);
+						} else if (!session.whipOut.location && session.whipOutput){
+							session.whipOut.location = session.whipOutput;
+							session.whipOut.location = completeLocationURL(session.whipOutput, session.whipOut.location);
+						}
+					} catch(e){errorlog(e);}
+					
 					try {
 						log(this.getAllResponseHeaders());
 						if (this.getAllResponseHeaders().indexOf("whep") >= 0) {
@@ -39270,6 +39780,15 @@ function whipOut(){
 								WHELPlaybackURL = "https://"+targetDomain[2]+"/"+targetDomain[3].slice(33,65)+"/webRTC/play";
 								session.whipOut.stats.whipHost = "Cloudflare";
 							}
+						} else if (WHELPlaybackURL && (!(WHELPlaybackURL.startsWith("http://") || WHELPlaybackURL.startsWith("https://")))){
+							var targetDomain = session.whipOutput.split("/");
+							if (targetDomain.length>2){
+								if (WHELPlaybackURL.startsWith("/")){
+									WHELPlaybackURL = targetDomain[0]+"//"+targetDomain[2]+WHELPlaybackURL;
+								} else {
+									WHELPlaybackURL = targetDomain[0]+"//"+targetDomain[2]+"/"+WHELPlaybackURL;
+								}
+							}
 						}
 						log("WHELPlaybackURL: "+WHELPlaybackURL);
 						session.whipOut.stats.whep_URL = WHELPlaybackURL
@@ -39277,7 +39796,12 @@ function whipOut(){
 					} catch(e){errorlog(e);}
 					
 					if (WHELPlaybackURL){
-						session.whipoutSettings = {type:"whep", "url": WHELPlaybackURL};
+						if (WHELPlaybackURL.includes("|")){
+							var tmp = WHELPlaybackURL.split("|");
+							session.whipoutSettings = {type:"whep", "url": tmp[0].trim(), "token":tmp[1].trim()};
+						} else {
+							session.whipoutSettings = {type:"whep", "url": WHELPlaybackURL};
+						}
 					}
 					
 					if (contentType.startsWith("application/sdp") || isSDP(this.responseText)){
@@ -39286,13 +39810,37 @@ function whipOut(){
 						jsep.type = "answer";
 						
 						try {
-							jsep = configureWhipOutSDP(jsep);
+							jsep = configureWhipOutSDP(jsep); 
 						} catch(e){
 							errorlog(e);
 						}
 						
 						warnlog("Processing answer:");
 						warnlog(jsep);
+						
+						
+						
+						if (session.whipOut && session.whipOut.location){
+							
+							sessionStorage.setItem('deleteWhipOnLoad', JSON.stringify({location:session.whipOut.location, whipOutputToken:session.whipOutputToken}));
+							
+							session.whipOut.deleteme = function(){
+								let xhttp = new XMLHttpRequest();
+								if (session.whipOutputToken){ 
+									xhttp.setRequestHeader('Authorization', 'Bearer ' + session.whipOutputToken);
+								}
+								xhttp.onload = function() {
+									sessionStorage.removeItem('deleteWhipOnLoad');
+								}
+								xhttp.onerror = function() {
+									sessionStorage.removeItem('deleteWhipOnLoad');
+								}
+								xhttp.open("DELETE", session.whipOut.location, true);
+								xhttp.send();
+								
+								delete session.whipOut.deleteme;
+							}
+						}
 						
 						if (session.localNetworkOnly){
 							jsep.sdp = filterSDPLAN(jsep.sdp)
@@ -39357,7 +39905,6 @@ function whipOut(){
 							
 							}
 						});
-						
 					} else if (contentType == "application/error"){
 						if (this.responseText==432){
 							warnUser("Whip out error: 432");
@@ -40033,7 +40580,12 @@ async function whepIn(whepInput=false, whepInputToken=false, UUID=false){ // PLA
 						}
 					} else { // vdo.ninja itself is secure
 						if (location.protocol === 'https:') {
-							warnUser("WHEP playback failed.\n\nThe WHEP URL needs to be using https if from an SSL-enabled websites.");
+							if (location.hostname == "vdo.ninja"){
+								warnUser("WHEP playback failed.\n\nThe WHEP URL needs to be using https if from an SSL-enabled website.\n\nPerhaps try using <a href='http://insecure.vdo.ninja"+location.pathname
++location.search+"'>http://insecure.vdo.ninja<a> instead.", false, false);
+							} else {
+								warnUser("WHEP playback failed.\n\nThe WHEP URL needs to be using https if from an SSL-enabled website.");
+							}
 						} else if (("isSecureContext" in window) && (window.isSecureContext===false)){
 							warnUser("WHEP playback failed.\n\nThe website may have assets loaded in a secure context.");
 						} else {
@@ -40687,7 +41239,45 @@ function setupCommands(){
 	}; 
 	commands.highlight = function(value=null,value2=null){
 		return commands.soloVideo(value, value2);
-	}; 
+	};
+	
+	
+	commands.setBufferDelay = function(value=null, value2=null){
+		let delay = parseInt(value) || 0;
+		
+		if (!value2){
+			session.buffer = delay;
+		} else if (value2 === "*"){
+			for (var uuid in session.rpcs){
+				session.rpcs[uuid].buffer = delay;
+				playoutdelay(uuid);
+				document.querySelectorAll('#bufferSettings[data--u-u-i-d="'+uuid+'"] input[data-buffer-value]').forEach(ele=>{
+					ele.value = delay;
+				});
+				return true;
+			}
+		} else if (value2 in session.rpcs){
+			session.rpcs[value2].buffer = delay;
+			playoutdelay(value2);
+			document.querySelectorAll('#bufferSettings[data--u-u-i-d="'+value2+'"] input[data-buffer-value]').forEach(ele=>{
+				ele.value = delay;
+			});
+			return true;
+		} else if (value2){
+			let UUID = Object.keys(session.rpcs).find(uuid => session.rpcs[uuid].streamID === value2);
+			if (session.rpcs[UUID]){
+				session.rpcs[UUID].buffer = delay;
+				playoutdelay(UUID);
+				document.querySelectorAll('#bufferSettings[data--u-u-i-d="'+UUID+'"] input[data-buffer-value]').forEach(ele=>{
+					ele.value = delay;
+				});
+				return true;
+			} else {
+				errorlog("The stream ID specified does not exist: "+value2);
+			}
+		}
+		return false;
+	};
 	
 	commands.layout = function(value=null,value2=null){
 		try {

@@ -58,7 +58,7 @@
 		<meta property="twitter:image" content="./media/vdoNinja_logo_full.png" />
 		<meta name="msapplication-TileColor" content="#da532c" />
 		<meta name="theme-color" content="#0f131d" />
-		<link rel="stylesheet" href="./main.css?ver=376" />
+		<link rel="stylesheet" href="./main.css?ver=377" />
 		<script type="text/javascript" crossorigin="anonymous" src="./thirdparty/adapter.js"></script>
 		<style id="lightbox-animations" type="text/css"></style>
 		
@@ -92,7 +92,7 @@
 		
 		<script type="text/javascript" crossorigin="anonymous"  src="./thirdparty/CodecsHandler.js?ver=10"></script>
 		<script type="text/javascript" crossorigin="anonymous" src="./thirdparty/aes.js"></script>
-		<script type="text/javascript" crossorigin="anonymous" src="./webrtc.js?ver=768"></script>
+		<script type="text/javascript" crossorigin="anonymous" src="./webrtc.js?ver=775"></script>
 		<input id="zoomSlider" type="range" style="display: none;" />
 		<span id="electronDragZone" style="pointer-events: none; z-index:-10; position:absolute;top:0;left:0;width:100%;height:2%;-webkit-app-region: drag;min-height:20px;"></span>
 		<div id="header">
@@ -454,9 +454,16 @@
 					<center>
 						<div id="videoSettings" style="display: none;" aria-hidden="true">
 							<form id="webcamquality">
+								<span class="hidden">
+									<input type="radio" id="4kquality" alt="2160p60 video capture" name="resolution" value="-2" />
+									<label for="4kquality">
+										<span data-translate="up-to-4k">4K</span>
+									</label> |
+								</span>
+								
 								<input type="radio" id="fullhd" alt="1080p60 video capture" name="resolution" value="0" />
 								<label for="fullhd">
-									<span data-translate="max-resolution">Max Resolution</span>
+									<span data-translate="max-resolution">High Resolution</span>
 								</label> |
 								
 								<input type="radio" checked id="halfhd" alt="720p60 video capture"  name="resolution" value="1" />
@@ -1539,7 +1546,7 @@
 					</div>
 
 					<!-- Row of Scenes -->
-					<div class="row six advanced">
+					<div class="row six advanced sceneButtons">
 						<button data-action-type="addToScene" data-scene="3" title="Add to Scene 3" onclick="directEnable(this, event);">
 							<span>S3</span>
 						</button>
@@ -1818,7 +1825,7 @@
 						<form id="webcamquality3">
 							<input type="radio" id="fullhd3" name="resolution" value="0" />
 							<label for="fullhd3">
-								<span data-translate="max-resolution">High Resolution</span>
+								<span data-translate="max-resolution">High Quality</span>
 							</label> |
 							
 							<input type="radio" checked id="halfhd3" name="resolution" value="1" />
@@ -2252,8 +2259,8 @@
 				<span></span>
 				<h3 data-translate="buffer-settings">Buffer Settings</h3><br />
 				<div>
-					<span data-translate="change-playout-buffer">Buffer (ms): </span><input style='margin-left: 3px;padding: 2px;width: 60px;' type='number' min='0' max='15000' /><br />
-					<input type='range' min='0' max='15000' /><br />
+					<span data-translate="change-playout-buffer">Buffer (ms): </span><input data-buffer-value='0' style='margin-left: 3px;padding: 2px;width: 60px;' type='number' min='0' max='120000' /><br />
+					<input type='range' min='0' max='10000' data-buffer-value='0' /><br />
 				</div>
 			</div>
 		</div>
@@ -2423,6 +2430,9 @@
 			</div>
 		</div>
 		
+		<div id="callerMenu" class="hidden">
+			<button><i class="las la-phone"></i> Hang up</button>
+		</div>
 		
 		<div id="progressContainer" class="hidden">
 			<div id="progressBar"></div>
@@ -2557,7 +2567,7 @@
 			// if (!window.location.search){document.body.innerHTML = "";} // uncomment this line, if you wish to try it.
 			
 			var session = WebRTC.Media; // session is a required global variable if configuring manually. Run before loading main.js but after webrtc.js.
-			session.version = "24.7";
+			session.version = "24.8";
 			session.streamID = session.generateStreamID(); // randomly generates a streamID for this session. You can set your own programmatically if needed
 			
 			session.defaultPassword = "someEncryptionKey123"; // Change this password if self-deploying for added security/privacy
@@ -2674,11 +2684,11 @@
 			// session.decrypted = session.decodeInvite("U2FsdGVkX1+d58DFIHoO3EQZSuX86ch4PqW2ouztnJ0="); // get a code from invite.cam
 			
 		</script>
-		<script type="text/javascript" crossorigin="anonymous" id="lib-js" src="./lib.js?ver=1091"></script>
+		<script type="text/javascript" crossorigin="anonymous" id="lib-js" src="./lib.js?ver=1111"></script>
 		<!-- 
 		// If you wish to change branding, blank offers a good clean start.
 		<script type="text/javascript" id="main-js" src="./main.js" data-translation="blank"></script>
 		-->
-		<script type="text/javascript" crossorigin="anonymous" id="main-js" src="./main.js?ver=801"></script>
+		<script type="text/javascript" crossorigin="anonymous" id="main-js" src="./main.js?ver=815"></script>
 	</body>
 </html>
