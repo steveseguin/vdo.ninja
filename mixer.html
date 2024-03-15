@@ -3541,6 +3541,7 @@
 			container.animated = parseInt(object[i].animated) || 0;
 			container.borderColor = object[i].borderColor || "#0000";
 			container.backgroundMedia = object[i].backgroundMedia || "";
+			container.foregroundMedia = object[i].foregroundMedia || "";
 			container.iframeSrc = object[i].iframeSrc || "";
 			container.defaultStreamID = object[i].defaultStreamID || "";
 			container.margin = object[i].margin || 0;
@@ -3873,6 +3874,23 @@
 		var br = document.createElement("br");
 		setEle.appendChild(br);
 		var label = document.createElement("label");
+		label.innerHTML = "Overlay Image (URL)";
+		label.title = "Add an image overlay; it would make sense if its a transparent image";
+		
+		setEle.appendChild(label);
+		var input = document.createElement("input");
+		input.placeholder = "URL";
+		input.style.width = "200px";
+		input.id = "foregroundImageURL";
+		setEle.appendChild(input);
+		input.value = parent.foregroundMedia || "";
+		input.onchange = function(){
+			parent.foregroundMedia = this.value;
+		}
+		
+		var br = document.createElement("br");
+		setEle.appendChild(br);
+		var label = document.createElement("label");
 		label.innerHTML = "Default Stream ID";
 		label.title = "If the specified stream is connected, and both it and this element are unassigned, load that stream here.";
 		setEle.appendChild(label);
@@ -4100,6 +4118,7 @@
 				ele.animated = eles[i].animated || 0;
 				ele.borderColor = eles[i].borderColor || "#0000";
 				ele.backgroundMedia = eles[i].backgroundMedia || "";
+				ele.foregroundMedia = eles[i].foregroundMedia || "";
 				ele.iframeSrc = eles[i].iframeSrc || "";
 				ele.defaultStreamID = eles[i].defaultStreamID || "";
 				ele.margin = parseInt(eles[i].margin) || 0;
@@ -4167,6 +4186,7 @@
 				ele.animated = eles[i].animated || 0;
 				ele.borderColor = eles[i].borderColor || "#0000";
 				ele.backgroundMedia = eles[i].backgroundMedia || "";
+				ele.foregroundMedia = eles[i].foregroundMedia || "";
 				ele.iframeSrc = eles[i].iframeSrc || "";
 				ele.defaultStreamID = eles[i].defaultStreamID || "";
 				ele.margin = parseInt(eles[i].margin) || 0;

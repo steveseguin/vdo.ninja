@@ -1477,13 +1477,18 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 
 	if (urlParams.has('bigbutton')) {
 		session.bigmutebutton = true;
-		getById("mutebutton").style.bottom = "100px";
-		getById("mutebutton").style.padding = "100px";
-		getById("mutebutton").style.position = "fixed";
-		getById("mutetoggle").style.bottom = "20px";
-		getById("mutetoggle").style.right = "0";
-		getById("mutetoggle").style.top = "unset";
-
+		getById("mutebutton").classList.add("bigbutton");
+		if (urlParams.get('bigbutton')){
+			let bigbuttontext = document.createElement("span");
+			bigbuttontext.innerText = urlParams.get('bigbutton');
+			bigbuttontext.className = "bigbuttontext";
+			getById("mutebutton").appendChild(bigbuttontext);
+		}
+	}
+	
+	if (urlParams.get('rows')){
+		session.rows = urlParams.get('rows');
+		session.rows = session.rows.split(",");
 	}
 	
 	if (urlParams.has('nosettings')){
@@ -1636,6 +1641,10 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 	if (urlParams.has('nocclabels') || urlParams.has('nocclabel') ||  urlParams.has('nocaptionlabels') || urlParams.has('nocaptionlabel')) {
 		session.nocaptionlabels = true;
 	}
+	if (urlParams.has('cccolored') || urlParams.has('cccoloured') || urlParams.has('coloredcc') || urlParams.has('colorcc') || urlParams.has('cccolor')) {
+		session.ccColored = true;
+	}
+	
 	
 	
 	if (urlParams.has("base64css") || urlParams.has("b64css") || urlParams.has("cssbase64") || urlParams.has("cssb64")) {
@@ -2307,7 +2316,7 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 			fakeElement.loop = true;
 			fakeElement.muted = true;
 			fakeElement.src = "./media/fakesteve.webm";
-			fakeElement.id = parseInt(Math.random() * 10000000000);
+			fakeElement.dataset.sid = fakeElement.id = parseInt(Math.random() * 10000000000);
 			session.fakeFeeds.push(fakeElement);
 		}
 		if ((session.view!==false) || (session.scene!==false) || session.whepInput){
@@ -4635,6 +4644,11 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		session.effect = "7";
 	}
 	
+	if (session.effect && !session.cleanOutput){
+		if (ChromiumVersion && (ChromiumVersion===122)){
+			warnUser("⚠️ Notice: A recent update to Chrome/Edge can cause the browser to crash, especially when using &effects or &zoom.\n\nBrowser updates are rolling out to fix the issue, however avoiding the use of digital video effects for now might be prudent",30000);
+		}
+	}
 	
 	if (urlParams.get('wb') || urlParams.get('whitebalance')){
 		session.whiteBalance = urlParams.get('wb') ||  urlParams.get('whitebalance');
@@ -6142,8 +6156,35 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		}
 		
 		if ("setBufferDelay" in e.data){ // milliseconds
+			console.log(e.data);
 			let delay = parseInt(e.data.setBufferDelay) || 0;
-			if ("UUID" in e.data){
+			
+			if ("streamID" in e.data){
+				let UUID = Object.keys(session.rpcs).find(uuid => session.rpcs[uuid].streamID === e.data.streamID);
+				if (session.rpcs[UUID]){
+					session.rpcs[UUID].buffer = delay;
+					playoutdelay(UUID);
+				} else {
+					errorlog("The stream ID specified does not exist");
+				}
+				document.querySelectorAll('#bufferSettings[data--u-u-i-d="'+UUID+'"] input[data-buffer-value]').forEach(ele=>{
+					ele.value = delay;
+				});
+			} else if ("label" in e.data){
+				for (let uuid in session.rpcs){
+					if (session.rpcs[uuid].label && (session.rpcs[uuid].label === e.data.label)){
+						if (session.rpcs[uuid]){
+							session.rpcs[uuid].buffer = delay;
+							playoutdelay(uuid);
+						} else {
+							errorlog("The label specified does not exist");
+						}
+					}
+				}
+				document.querySelectorAll('#bufferSettings[data--u-u-i-d="'+UUID+'"] input[data-buffer-value]').forEach(ele=>{
+					ele.value = delay;
+				});
+			} else if ("UUID" in e.data){
 				if (e.data.UUID === "*"){
 					for (var uuid in session.rpcs){
 						session.rpcs[uuid].buffer = delay;
@@ -6161,17 +6202,6 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 				} else {
 					errorlog("The UUID specified does not exist");
 				}
-			} else if ("streamID" in e.data){
-				let UUID = Object.keys(session.rpcs).find(uuid => session.rpcs[uuid].streamID === e.data.streamID);
-				if (session.rpcs[UUID]){
-					session.rpcs[UUID].buffer = delay;
-					playoutdelay(UUID);
-				} else {
-					errorlog("The stream ID specified does not exist");
-				}
-				document.querySelectorAll('#bufferSettings[data--u-u-i-d="'+UUID+'"] input[data-buffer-value]').forEach(ele=>{
-					ele.value = delay;
-				});
 			} else {
 				session.buffer = delay; // set the default buffer delay only
 			}

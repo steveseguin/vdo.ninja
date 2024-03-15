@@ -428,6 +428,10 @@ button.hint {
 	color:#B3C7F9;
 	margin:5px;
 	cursor: pointer;
+	padding:3px;
+	background-color: black;
+    border-radius: 50%;
+	border: solid #B3C7F9 1px;
 }
 
 /* Clicked buttons overwrite */
@@ -1859,32 +1863,35 @@ input[type=range].thinSlider {
 .inMessage {
 	color: #000;
 	margin: 3px;
-	border-radius: 5px;
+	border-radius: 3px;
 	background: #FFF;
 	padding: 5px;
 	text-align: left;
 	margin: 10px 3px;
+	border: 1px solid black;
 }
 .actionMessage {
 	color: #000;
 	margin: 3px;
-	border-radius: 5px;
+	border-radius: 3px;
 	background: #FFF;
 	padding: 5px;
 	text-align: left;
 	margin: 10px 3px;
+	border: 1px solid black;
 }
 .outMessage {
 	color: #000;
-	border-radius: 5px;
-	background: #BCF;
+	border-radius: 3px;
+	background: #c5d3ff;
 	padding: 5px;
 	text-align: right;
 	margin-bottom: 5px;
+	border: 1px solid black;
 }
 #chatBody {
 	z-index: 12;
-	background-color: #0004;
+	background-color: #000A;
 	width: 100%;
 	border-radius: 5px;
 	overflow-y: scroll;
@@ -1921,7 +1928,8 @@ div#chatBody a {
 	color: #000;
 	background-color: #FFFE;
 	width: calc(100% - 160px);
-	padding: 3px;
+	padding: 1px 3px;
+	font-size: 100%;
 }
 .chatBarInputButton {
 	width: 50px;
@@ -1940,6 +1948,9 @@ div#chatBody a {
 	height:100%;
 	position: relative;
 }
+
+
+
 @media only screen and (max-width: 500px) {
 	#subControlButtons {
 		position: unset;
@@ -2633,6 +2644,65 @@ span[data-action-type="stats-graphs-details-container"]>span{
 }
 iframe {
 	z-index: 2;
+}
+
+
+#mutebutton.bigbutton {
+	bottom: 100px;
+	padding: 100px; 
+	position: fixed;
+	display: block;
+	box-sizing: unset;
+}
+.bigbutton #mutetoggle {
+	bottom: 20px;
+	right: 0;
+	top: unset;
+}
+.bigbutton .bigbuttontext {
+	border-radius: 0;
+	margin: 3px;
+	display:block;
+	font-size:200%;
+}
+
+@media only screen and (max-height: 600px) {
+	.bigbutton {
+		padding: 80px;
+	}
+}
+@media only screen and (max-width: 600px) {
+	.bigbutton {
+		padding: 80px;
+	}
+}
+@media only screen and (max-height: 500px) {
+	.bigbutton {
+		bottom: 80px;
+		padding: 70px;
+	}
+}
+@media only screen and (max-width: 500px) {
+	.bigbutton {
+		padding: 70px;
+	}
+}
+@media only screen and (max-height: 400px) {
+	.bigbutton {
+		padding: 60px;
+		bottom: 50px;
+	}
+}
+@media only screen and (max-width: 300px) {
+	.bigbutton {
+		padding: 60px;
+	}
+}
+@media only screen and (max-height: 300px) {
+	.bigbutton {
+		bottom: 40px;
+		padding: 50px;
+	}
 }
 
 @media only screen and (max-width: 390px) {
