@@ -222,8 +222,45 @@ urlEdited = urlEdited.replace(/\?/g, "&");
 urlEdited = urlEdited.replace(/\&/, "?");
 var urlParams = new URLSearchParams(urlEdited);
 
-if (urlParams.has("invite") || urlParams.has("i") || urlParams.has("code")){
+if (urlParams.has('invite') || urlParams.has('i') || urlParams.has('code')){
 	session.decodeInvite(urlParams.get("invite") || urlParams.get("i") || urlParams.get("code"));
+	
+} else if (urlParams.has('preset')){
+	let preset = urlParams.get('preset') || "1"; // default to preset 1 if none provided
+	let xhttp = new XMLHttpRequest();
+	xhttp.open("GET", "presets.json", false); // blocking
+	xhttp.setRequestHeader('Content-Type', 'application/json'); // expecting json response
+
+	try {
+		xhttp.send();
+		if (xhttp.status === 200) {
+			const response = JSON.parse(xhttp.responseText);
+			let presetString = "";
+			
+			if (Array.isArray(response)) {
+				let index = (parseInt(preset) || 1) - 1;
+				presetString = response[index];
+			} else if (typeof response === "object" && response !== null) {
+				presetString = response[preset];
+			}
+			if (!presetString.startsWith("?") || presetString.startsWith("&")){
+				presetString = "?"+presetString;
+			}
+			
+			let newURL = presetString + "&" + urlParams.toString();
+			newURL = newURL.replace(/\?/g, "&");
+			newURL = newURL.replace(/\&/, "?");
+			urlParams = new URLSearchParams(newURL);
+			
+			if (urlParams.has("invite") || urlParams.has("i") || urlParams.has("code")){
+				session.decodeInvite(urlParams.get("invite") || urlParams.get("i") || urlParams.get("code"));
+			}
+		} else {
+			errorlog(xhttp.statusTex);
+		}
+	} catch (error) {
+		errorlog(error);
+	}
 }
 
 if (session.decrypted){
