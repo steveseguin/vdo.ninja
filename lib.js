@@ -232,11 +232,9 @@ if (session.decrypted){
 	session.decrypted = session.decrypted.replace(/\&/, "?");
 	urlParams = new URLSearchParams(session.decrypted);
 	//session.decrypted = true;
-} else {
-	if (urlEdited !== window.location.search){
-		warnlog(window.location.search + " changed to " + urlEdited);
-		window.history.pushState({path: urlEdited.toString()}, '', urlEdited.toString());
-	}
+} else if (urlEdited !== window.location.search){
+	warnlog(window.location.search + " changed to " + urlEdited);
+	window.history.pushState({path: urlEdited.toString()}, '', urlEdited.toString());
 }
 delete urlEdited;
 
@@ -6783,7 +6781,7 @@ function requestKeyframeScene(ele) {
 	}
 }
 
-function pokeIframeAPI(action, value = null, UUID = null, SID=null) {
+function pokeIframeAPI(action, value = null, UUID = null, SID=null, CID=null) {
 	if (!isIFrame){return;}
 	try {
 		var data = {};
@@ -6813,6 +6811,10 @@ function pokeIframeAPI(action, value = null, UUID = null, SID=null) {
 		
 		if (SID){
 			data.streamID = SID;
+		}
+		
+		if (CID){
+			data.cib = CID;
 		}
 		
 		if (isIFrame) {
@@ -7744,7 +7746,7 @@ function motionDetection(video, threshold = 15, sensitivity=75){
 				session.motionRecordTimeout = setTimeout(function(){
 					session.motionRecordTimeout = null;
 				},1000);
-				saveVideoFrameToClipboard(video);
+				saveVideoFrameToDisk(video);
 				
 			}
 		}
@@ -17620,7 +17622,7 @@ function copyVideoFrameToClipboard(videoElement, e=false) {
 	}
 }
 
-function saveVideoFrameToClipboard(videoElement, e=false) {
+function saveVideoFrameToDisk(videoElement, e=false, filename=false) {
 	try{
 	  var canvas = document.createElement("canvas");
 
@@ -17635,7 +17637,9 @@ function saveVideoFrameToClipboard(videoElement, e=false) {
 
 	  canvas.toBlob(function(blob) {
 		var link = document.createElement("a");
-		if (e){
+		if (filename){
+			link.download = filename;
+		} else if (e){
 			link.download = (videoElement.id||"video")+"_"+parseInt(performance.now())+".png";
 		} else {
 			link.download = (videoElement.id||"video")+"_"+parseInt(Date.now())+".png";
@@ -17647,6 +17651,44 @@ function saveVideoFrameToClipboard(videoElement, e=false) {
 	  if (e){
 		popupMessage(e, "Saving current frame to disk");
 	  }
+	} catch(e){
+		errorlog(e);
+	}
+}
+
+function sendVideoFrameToIframe(videoElement, e=false, request={}) {
+	try{
+	  var canvas = document.createElement("canvas");
+
+	  canvas.width = videoElement.videoWidth;
+	  canvas.height = videoElement.videoHeight;
+
+	  var ctx = canvas.getContext("2d");
+	  ctx.drawImage(videoElement, 0, 0);
+
+	  var img = new Image();
+	  img.src = canvas.toDataURL();
+
+	  canvas.toBlob(function(blob) {
+		var response = {};
+		response.imageData = blob;
+		response.imageType = "png";
+		if (request.streamID){
+			response.streamID = request.streamID;
+		}
+		if (request.UUID){
+			response.UUID = request.UUID;
+		}
+		if (request.cib){
+			response.cib = request.cib;
+		}
+		if (videoElement.id){
+			response.videoID = videoElement.id;
+		}
+		
+		pokeIframeAPI("image-frame-capture", response)
+	  }, 'image/png');
+	  
 	} catch(e){
 		errorlog(e);
 	}
@@ -20900,6 +20942,43 @@ function getUserMediaVideoParams(resolutionFallbackLevel, isSafariBrowser) {
 						min: 720
 						, ideal: 2160
 						, max: 2160
+					}
+				};
+			}
+		case -3:
+			if (isSafariBrowser) {
+				return {
+					width: {
+						min: 360
+						, ideal: 2560
+						, max: 1440
+					}
+					, height: {
+						min: 360
+						, ideal: 1440
+						, max: 1440
+					}
+				};
+			} else if (Firefox){
+				return {
+					width: {
+						ideal: 2560
+					}
+					, height: {
+						ideal: 1440
+					}
+				};
+			} else {
+				return {
+					width: {
+						min: 720
+						, ideal: 2560
+						, max: 2560
+					}
+					, height: {
+						min: 720
+						, ideal: 1440
+						, max: 1440
 					}
 				};
 			}
@@ -26995,7 +27074,33 @@ function updateReshareLink(){
 			wss = "&wss="+session.wss;
 		}
 	}
-	
+	if (session.audience && !session.audienceToken){
+		if (document.getElementById("reshare")){
+			if (!session.cleanOutput){
+				getById("copythisurl").innerHTML = "";
+				getById("head3a").classList.remove('hidden');
+			}
+			document.getElementById("reshare").href = null;
+			document.getElementById("reshare").text = "loading public view link...";
+			document.getElementById("reshare").style.width = ((document.getElementById("reshare").text.length + 1)*1.15 * 8) + 'px';
+		}
+		return;
+	} else if (session.audience){
+		var shareLink = "https://"+location.host+location.pathname+"?view="+session.streamID+added+wss+"&audience="+session.audienceToken;
+		if (document.getElementById("reshare")){
+			if (!session.cleanOutput){
+				getById("head3").classList.remove('hidden');
+				getById("head3a").classList.remove('hidden');
+				getById("copythisurl").innerHTML = '<span data-translate="copy-audience-url">This is your public audience link</span> <i style="color: #CCC;" class="las la-long-arrow-alt-right"></i> &nbsp; ';
+				
+			}
+			document.getElementById("reshare").href = shareLink;
+			document.getElementById("reshare").text = shareLink;
+			document.getElementById("reshare").style.width = ((document.getElementById("reshare").text.length + 1)*1.15 * 8) + 'px';
+		}
+		pokeIframeAPI('share-link', shareLink);
+		return;
+	}
 	var shareLink = "https://"+location.host+location.pathname+"?view="+session.streamID+added+wss;
 	if (document.getElementById("reshare")){
 		document.getElementById("reshare").href = shareLink;
@@ -33473,7 +33578,7 @@ function pauseVideo(videoEle, update=true){
 		} else if (link.getAttribute("data-action") === "CopyFrameAsImage") {
 			copyVideoFrameToClipboard(taskItemInContext, e);
 		} else if (link.getAttribute("data-action") === "SaveFrameToDisk") {
-			saveVideoFrameToClipboard(taskItemInContext, e);
+			saveVideoFrameToDisk(taskItemInContext, e);
 		} else if (link.getAttribute("data-action") === "ChangeBuffer") { 
 			toggleBufferSettings(taskItemInContext.dataset.UUID);
 		} else if (link.getAttribute("data-action") === "Cast") {

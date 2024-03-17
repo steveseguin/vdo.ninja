@@ -10,6 +10,42 @@
 async function main(){ // main asyncronous thread; mostly initializes the user settings.
 
 	var delayedStartupFuncs = [];
+	
+	if (urlParams.has('preset')){
+		let preset = urlParams.get('preset') || "1"; // default to preset 1 if none provided
+		let xhttp = new XMLHttpRequest();
+		xhttp.open("GET", "presets.json", false); // blocking
+		xhttp.setRequestHeader('Content-Type', 'application/json'); // expecting json response
+
+		try {
+			xhttp.send();
+			if (xhttp.status === 200) {
+				const response = JSON.parse(xhttp.responseText);
+				let presetString = "";
+				
+				if (Array.isArray(response)) {
+					let index = (parseInt(preset) || 1) - 1;
+					presetString = response[index];
+				} else if (typeof response === "object" && response !== null) {
+					presetString = response[preset];
+				}
+				if (!presetString.startsWith("?") || presetString.startsWith("&")){
+					presetString = "?"+presetString;
+				}
+				
+				let newURL = presetString + "&" + urlParams.toString();
+				newURL = newURL.replace(/\?/g, "&");
+				newURL = newURL.replace(/\&/, "?");
+				urlParams = new URLSearchParams(newURL);
+			} else {
+				errorlog(xhttp.statusTex);
+			}
+		} catch (error) {
+			errorlog(error);
+		}
+	}
+	
+	
 	// translation stuff start ////
 	
 	var ConfigSettings = getById("main-js");
@@ -2057,7 +2093,6 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 			session.screenshareStereo = 5; // guests; no stereo in, no high bitrate in, but otherwise like stereo=1
 		}
 	}
-
 	
 	// Deploy your own handshake server for free; see: https://github.com/steveseguin/websocket_server
 	if (urlParams.has('pie')){ // piesocket.com support is to be deprecated after dec/19/21, since piesocket is no longer a free service.
@@ -2067,8 +2102,6 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 			session.wss = "wss://free3.piesocket.com/v3/1?api_key="+session.customWSS; // if URL param is set, it will use the API key.
 		}
 	}
-
-	
 	
 	if (Firefox && !session.stereo || (session.stereo === 3)){
 		session.mono = true; // this will set the SDP to mono if firefox
@@ -3601,18 +3634,55 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 	}
 
 	if (urlParams.has('quality') || urlParams.has('q')) {
-		try {
+		try { 
 			session.quality = urlParams.get('quality') || urlParams.get('q') || 0;
 			if (session.quality.toLowerCase() == "4k"){
 				session.quality = -2;
+			} else if (session.quality.toLowerCase() == "2160p"){
+				session.quality = -2;
+			} else if (session.quality.toLowerCase() == "2160"){
+				session.quality = -2;
+			} else if (session.quality.toLowerCase() == "2k"){
+				session.quality = -3;
+			} else if (session.quality.toLowerCase() == "1440p"){
+				session.quality = -3;
+			} else if (session.quality.toLowerCase() == "1440"){
+				session.quality = -3;
 			} else if (session.quality.toLowerCase() == "hd"){ // 
+				session.quality = 1;
+			} else if (session.quality.toLowerCase() == "720p"){ // 
+				session.quality = 1;
+			} else if (session.quality.toLowerCase() == "720"){ // 
 				session.quality = 1;
 			} else if (session.quality.toLowerCase() == "fullhd"){
 				session.quality = 0;
+			} else if (session.quality.toLowerCase() == "1080p"){
+				session.quality = 0;
+			} else if (session.quality.toLowerCase() == "1080"){
+				session.quality = 0;
+			} else if (session.quality.toLowerCase() == "high"){
+				session.quality = 0;
+			} else if (session.quality.toLowerCase() == "360p"){
+				session.quality = 2;
+			} else if (session.quality.toLowerCase() == "360"){
+				session.quality = 2;
+			} else if (session.quality.toLowerCase() == "low"){
+				session.quality = 2;
 			}
 			session.quality = parseInt(session.quality);
 			getById("gear_screen").parentNode.removeChild(getById("gear_screen"));
 			getById("gear_webcam").parentNode.removeChild(getById("gear_webcam"));
+			
+			if (session.outboundVideoBitrate===false){ // default is 2500
+				if (session.quality==-1){ // 1080p
+					session.outboundVideoBitrate = 4000;
+				} else if (session.quality==-3){ // 2k
+					session.outboundVideoBitrate = 6000;
+				}  else if (session.quality==-2){ // 4k
+					session.outboundVideoBitrate = 8000;
+				}
+				
+			}
 		} catch (e) {
 			errorlog(e);
 		}
@@ -3768,7 +3838,7 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		}
 	}
 	if (urlParams.has('postimage')){
-		var postURL = decodeURIComponent(urlParams.get('postimage')) || session.postURL; // default will post to https://temp.vdo.ninja/images/STREAMIDHERE.jpg
+		var postURL = decodeURIComponent(urlParams.get('postimage')) || session.postURL; // default will post to https://temp.vdo.ninja/images/STREAMIDHERE.jpg , at an interval. it will be cached unless using url params.
 		setInterval(function(postURL){
 			try {
 				uploadImageSnapshot(postURL);
@@ -4447,30 +4517,6 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		}
 	}
 
-	if (urlParams.has('wss')) {
-		session.customWSS = true;
-		session.wssSetViaUrl = true;
-		if (urlParams.get('wss')) {
-			session.wss = urlParams.get('wss');
-			if (!session.wss.startsWith("wss://")){
-				session.wss = "wss://" + session.wss;
-			}
-		}
-	} else if (urlParams.has('wss2')) {
-		session.wssSetViaUrl = true;
-		if (urlParams.get('wss2')) {
-			session.wss = urlParams.get('wss2');
-			if (!session.wss.startsWith("wss://")){
-				session.wss = "wss://" + session.wss;
-			}
-		}
-	}
-	
-	if (urlParams.has("bypass")){
-		session.bypass = true;
-		session.customWSS = true;
-	}
-	
 	if (urlParams.has('osc') || urlParams.has('api')) {
 		if (urlParams.get('osc') || urlParams.get('api')) {
 			session.api = urlParams.get('osc') || urlParams.get('api') || false;
@@ -4670,6 +4716,37 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 	}
 	if (urlParams.get('focus')){
 		session.focusDistance = urlParams.get('focus');
+	}
+	
+	if (urlParams.has('wss')) {
+		session.customWSS = true;
+		session.wssSetViaUrl = true;
+		if (urlParams.get('wss')) {
+			session.wss = urlParams.get('wss');
+			if (!session.wss.startsWith("wss://")){
+				session.wss = "wss://" + session.wss;
+			}
+		}
+	} else if (urlParams.has('wss2')) {
+		session.wssSetViaUrl = true;
+		if (urlParams.get('wss2')) {
+			session.wss = urlParams.get('wss2');
+			if (!session.wss.startsWith("wss://")){
+				session.wss = "wss://" + session.wss;
+			}
+		}
+	} else if (urlParams.get('audience')) {
+		session.audience = urlParams.get('audience');
+		if (urlParams.get('audience') && (session.view!==false)){
+			session.wss = "wss://audience.vdo.ninja/listen/"+session.audience;
+		} else {
+			session.wss = "wss://audience.vdo.ninja/publish/"+session.audience;
+		}
+	}
+	
+	if (urlParams.has("bypass")){
+		session.bypass = true;
+		session.customWSS = true;
 	}
 	
 	
@@ -5438,7 +5515,7 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 						session.ws.onmessage({data: e.data.value});
 					} catch(e){warnlog("handshake not yet setup");}
 				} else if (e.data.function === "eval") {
-					eval(e.data.value); // eval == evil ; feedback welcomed
+					eval(e.data.value); // eval == evil ; feedback welcomed ; 
 				}
 			}
 		} catch (err) {
@@ -5850,7 +5927,8 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 			warnlog(e.data.getDeviceList);
 			enumerateDevices().then(function(deviceInfos) {
 				parent.postMessage({
-					"deviceList": JSON.parse(JSON.stringify(deviceInfos))
+					"deviceList": JSON.parse(JSON.stringify(deviceInfos)),
+					"cib": (e.data.cib || null)
 				}, session.iframetarget);
 			});
 		}
@@ -6000,7 +6078,8 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 					}
 				} catch(e){}
 				parent.postMessage({
-					"stats": stats
+					"stats": stats,
+					"cib": (e.data.cib || null)
 				}, session.iframetarget);
 			}, 1000);
 		}
@@ -6008,11 +6087,13 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		if (("getStats" in e.data)){
 			if (e.data.streamID){
 				parent.postMessage({
-					"stats": getQuickStats(e.data.streamID)
+					"stats": getQuickStats(e.data.streamID),
+					"cib": (e.data.cib || null)
 				}, session.iframetarget);
 			} else {
 				parent.postMessage({
-					"stats": getQuickStats()
+					"stats": getQuickStats(),
+					"cib": (e.data.cib || null)
 				}, session.iframetarget);
 			}
 		}
@@ -6052,7 +6133,8 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 				}
 				
 				parent.postMessage({
-					"loudness": loudness
+					"loudness": loudness,
+					"cib": (e.data.cib || null)
 				}, session.iframetarget);
 				
 			} else {
@@ -6089,7 +6171,8 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 					streamIDs[session.rpcs[i].streamID] = session.rpcs[i].label;
 				}
 				parent.postMessage({
-					"streamIDs": streamIDs
+					"streamIDs": streamIDs,
+					"cib": (e.data.cib || null)
 				}, session.iframetarget);
 			}
 		}
@@ -6108,7 +6191,8 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 					}
 				}
 				parent.postMessage({
-					"streamInfo": UUIDS
+					"streamInfo": UUIDS,
+					"cib": (e.data.cib || null)
 				}, session.iframetarget);
 			} catch(e){
 				errorlog(e);
@@ -6144,15 +6228,115 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		if ("getDetailedState" in e.data) {
 			var detailedState = getDetailedState();
 			parent.postMessage({
-				"detailedState": detailedState
+				"detailedState": detailedState,
+				"cib": (e.data.cib || null)
 			}, session.iframetarget);
 		}
 		
 		if ("getGuestList" in e.data) {
 			var guestList = getGuestList();
 			parent.postMessage({
-				"guestList": guestList
+				"guestList": guestList,
+				"cib": (e.data.cib || null)
 			}, session.iframetarget);
+		}
+		
+		// saveVideoFrameToDisk(video);
+		
+		if ("saveVideoFrameToDisk" in e.data){
+			let filename = false;
+			if ("filename" in e.data){
+				filename = e.data.filename;
+				if (filename.split(".").length==1){
+					filename+=".png";
+				}
+			}
+			if ("streamID" in e.data){
+				let UUID = Object.keys(session.rpcs).find(uuid => session.rpcs[uuid].streamID === e.data.streamID);
+				if (session.rpcs[UUID]){
+					if (session.rpcs[UUID].videoElement){
+						saveVideoFrameToDisk(session.rpcs[UUID].videoElement, false, filename);
+					} else {
+						errorlog("The specified video does not exist");
+					}
+				} else {
+					errorlog("The stream ID specified does not exist");
+				}
+			} else if ("UUID" in e.data){
+				if (e.data.UUID === "*"){
+					for (var uuid in session.rpcs){
+						if (session.rpcs[uuid].videoElement){
+							saveVideoFrameToDisk(session.rpcs[uuid].videoElement, false, filename);
+						}
+					}
+				} else if (session.rpcs[e.data.UUID]){
+					if (session.rpcs[e.data.UUID].videoElement){
+						saveVideoFrameToDisk(session.rpcs[e.data.UUID].videoElement, false, filename);
+					} else {
+						errorlog("The specified video does not exist");
+					}
+				} else {
+					errorlog("The UUID specified does not exist");
+				}
+			} else if (session.videoElement){
+				saveVideoFrameToDisk(session.videoElement, false, filename);
+			}
+		}
+		
+		if ("getVideoFrame" in e.data){
+			if ("streamID" in e.data){
+				let UUID = Object.keys(session.rpcs).find(uuid => session.rpcs[uuid].streamID === e.data.streamID);
+				if (session.rpcs[UUID]){
+					if (session.rpcs[UUID].videoElement){
+						sendVideoFrameToIframe(session.rpcs[UUID].videoElement, false, e.data);
+					} else {
+						errorlog("The specified video does not exist");
+					}
+				} else {
+					errorlog("The stream ID specified does not exist");
+				}
+			} else if ("UUID" in e.data){
+				if (session.rpcs[e.data.UUID]){
+					if (session.rpcs[e.data.UUID].videoElement){
+						sendVideoFrameToIframe(session.rpcs[e.data.UUID].videoElement, false, e.data);
+					} else {
+						errorlog("The specified video does not exist");
+					}
+				} else {
+					errorlog("The UUID specified does not exist");
+				}
+			} else if (session.videoElement){
+				sendVideoFrameToIframe(session.videoElement, false, e.data);
+			}
+		}
+		
+		
+		
+		if ("copyVideoFrameToClipboard" in e.data){
+			if ("streamID" in e.data){
+				let UUID = Object.keys(session.rpcs).find(uuid => session.rpcs[uuid].streamID === e.data.streamID);
+				if (session.rpcs[UUID]){
+					if (session.rpcs[UUID].videoElement){
+						copyVideoFrameToClipboard(session.rpcs[UUID].videoElement, false);
+					} else {
+						errorlog("The specified video does not exist");
+					}
+				} else {
+					errorlog("The stream ID specified does not exist");
+				}
+			} else if ("UUID" in e.data){
+				if (session.rpcs[e.data.UUID]){
+					if (session.rpcs[e.data.UUID].videoElement){
+						copyVideoFrameToClipboard(session.rpcs[e.data.UUID].videoElement, false);
+					} else {
+						errorlog("The specified video does not exist");
+					}
+				} else {
+					errorlog("The UUID specified does not exist");
+				}
+			} else if (session.videoElement){
+				copyVideoFrameToClipboard(session.videoElement, false);
+			}
 		}
 		
 		if ("setBufferDelay" in e.data){ // milliseconds
@@ -6243,13 +6427,13 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		if ("previewMode" in e.data){
 			if ("layout" in e.data){
 				session.layout = e.data.layout;
-				pokeIframeAPI("layout-updated", session.layout);
+				pokeIframeAPI("layout-updated", session.layout, null, null, e.data.cib); // action, value = null, UUID = null, SID=null, CID=null) {
 			}
 			switchModes(e.data.previewMode);
 		}  else if ("layout" in e.data){
 			warnlog("changing layout request via IFRAME API");
 			session.layout = e.data.layout;
-			pokeIframeAPI("layout-updated", session.layout);
+			pokeIframeAPI("layout-updated", session.layout, null, null, e.data.cib);
 			
 			if (e.data.obsCommand){
 				issueLayoutOBS(e.data);
@@ -6353,7 +6537,7 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 			var resp = processMessage(e.data); // reuse the companion API
 			if (resp!==null){
 				log(resp);
-				parent.postMessage(resp, session.iframetarget);
+				parent.postMessage(resp, session.iframetarget, null, null, e.data.cib);
 			}
 		} else if ("target" in e.data) {
 			log(e.data);

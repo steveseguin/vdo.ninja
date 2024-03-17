@@ -142,6 +142,14 @@
 				logOutput("child-page-action: "+e.data.action+"<br />")
 				console.log(e.data);
 			}
+			
+			if (e.data.action && (e.data.action == "image-frame-capture")){
+				var imageElement = document.createElement("img");
+				var imageUrl = URL.createObjectURL(e.data.value.imageData);
+				imageElement.src = imageUrl;
+				imageElement.style.maxWidth='260px'
+				mainLog.appendChild(imageElement);
+			}
 
 			if ("streamIDs" in e.data){
 				var out = "child-page-action: streamIDs<br />"
