@@ -32,6 +32,14 @@ You can also switch it on or off via the audio settings. If you want the guests 
 
 Your browser will try to keep optimum audio levels.
 
+## Known issues with auto-gain
+
+Some microphones or devices with software-based gain controls can have problems with auto-gain. The microphone volume might go to high, causing clipping, for example, or it might interfere with the gain of other applications.
+
+If using a Chromium-based browser, like Chrome, Edge or Brave, you can either disable auto-gain or you can go into your browser's settings and disable the browser from being able to control the device's input volume. The link to this option is here: [chrome://flags/#enable-webrtc-allow-input-volume-adjustment](chrome://flags/#enable-webrtc-allow-input-volume-adjustment) (as of March 2024 at least)\
+\
+Please note that this issue seems to be a Chromium-related issue, and it is not VDO.Ninja specific. If you do disable auto-gain within VDO.Ninja, the option to manually increase your gain is still normally available also.
+
 ## Related
 
 {% content-ref url="../newly-added-parameters/and-screenshareautogain.md" %}
