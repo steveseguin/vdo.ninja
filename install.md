@@ -57,7 +57,8 @@ git clone https://github.com/steveseguin/vdo.ninja
 
 To keep things easy, Steve generally recommends using Cloudflare to provide caching and SSL, but you can google `Certbot` for another free SSL option. The below NGINX config assumes you are using Cloudflare's flexible SSL option, which is the simpliest way to get started.  You'll need to also add the VDO.Ninja code to the /var/www/html/vdo.ninja folder (or whatever you set it to) and modify the port/SSL/domain-name settings as needed.
 
-```server {
+```
+server {
         listen 80;
         listen [::]:80;
 
