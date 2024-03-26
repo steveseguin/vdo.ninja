@@ -3693,6 +3693,7 @@ div#roomnotes2 {
 .controlsGrid button[data-action-type="remote-global-record"] i,
 .controlsGrid button[data-action-type="local-global-record"] i,
 .controlsGrid button[data-action-type="recorder-local"] i,
+.controlsGrid button[data-action-type="recorder-google-drive-remote"] i,
 .controlsGrid button[data-action-type="recorder-remote"] i {
 	color: #e30000;
 }

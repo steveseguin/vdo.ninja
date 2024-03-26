@@ -1388,6 +1388,13 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		document.documentElement.style.setProperty('--myvideo-max-width', '100vw');
 		document.documentElement.style.setProperty('--myvideo-width', '100vw');
 		document.documentElement.style.setProperty('--myvideo-height', '100vh');
+		
+	} else if (urlParams.has('fit')) { // not fully implemented yet.
+		session.cover = true;
+		document.documentElement.style.setProperty('--fit-style', 'fit');
+		document.documentElement.style.setProperty('--myvideo-max-width', '100vw');
+		document.documentElement.style.setProperty('--myvideo-width', '100vw');
+		document.documentElement.style.setProperty('--myvideo-height', '100vh');
 	} 
 
 	if (urlParams.has('record')) {
@@ -1473,6 +1480,9 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 	}
 	if (urlParams.has('recordcodec') || urlParams.has('rc')) {
 		session.recordingVideoCodec = urlParams.get('recordcodec') || urlParams.get('rc') || false;
+	}
+	if (urlParams.has('recordfolder')){
+		session.GDRIVE_FOLDERNAME = urlParams.get('recordfolder') || "";
 	}
 
 	if (urlParams.has('bigbutton')) {
@@ -1612,6 +1622,8 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 	
 	if (urlParams.has('hiddenscenebitrate')) {
 		session.hiddenSceneViewBitrate = parseInt(urlParams.get('hiddenscenebitrate')) || 0;
+	} else if (urlParams.has('layout') && (session.scene!==false)){
+		session.hiddenSceneViewBitrate = false;
 	}
 	
 	if (urlParams.has('preloadbitrate')) {
@@ -1842,12 +1854,13 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 			session.defaultPassword = false;
 		}
 
-		generateHash(session.password + session.salt, 6).then(function(hash) { // million to one error. 
+		generateHash(session.password + session.salt, 6).then(function(hash) { // million to one error. I won't 
 			log("hash is " + hash);
-			if (hash.substring(0, 4) !== hash_input) { // hash crc checks are just first 4 characters.
-				generateHash(session.password + "obs.ninja", 6).then(function(hash2) { // million to one error. 
+			if (hash.substring(0, hash_input.length) !== hash_input) { // this hash crc check is usually just the first 4 characters, but i'll match based on whatever is provided;
+				// max 6 length for security. 2 could be a good option for better security but more than 6 is too big of a security concern.
+				generateHash(session.password + "obs.ninja", 6).then(function(hash2) { // million to one error; this is to support a legacy salt used. Depreciated, and will be removed eventually
 					log("hash2 is " + hash2);
-					if (hash2.substring(0, 4) !== hash_input) { // hash crc checks are just first 4 characters.
+					if (hash2.substring(0, 4) !== hash_input) { // this legacy hash crc checks is always 4 characters
 						session.taintedSession = true;
 						if (!(session.cleanOutput)) {
 							miniTranslate(getById("request_info_prompt"),"password-incorrect");
@@ -1856,7 +1869,6 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 							getById("mainmenu").style.display = "none";
 							getById("head1").style.display = "none";
 							session.cleanOutput = true;
-
 						} else {
 							getById("request_info_prompt").innerHTML = "";
 							getById("request_info_prompt").style.display = "block";
@@ -3084,8 +3096,8 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		session.alpha = true;
 	}
 	
-	if (urlParams.has('chunked')) {
-		session.chunked = parseInt(urlParams.get('chunked')) || 2500; // sender side; enables to allows.
+	if (urlParams.has('chunked') || urlParams.has('chunk')) {
+		session.chunked = parseInt(urlParams.get('chunked')) || parseInt(urlParams.get('chunk')) || 2500; // sender side; enables to allows.
 		// session.alpha = true;
 		if (Firefox || SafariVersion){
 			if (!session.cleanOutput){
@@ -7098,7 +7110,7 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 	document.addEventListener("mousedown", event => {
 		MousePressed = true;
 	});
-
+	
 	document.addEventListener("keyup", event => {
 		
 		if (PPTKeyPressed){

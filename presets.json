@@ -1,5 +1,6 @@
 {
 "green":"?chroma",
 "1": "webcam&welcome=Welcome to VDO.Ninja",
-"4k": "webcam&quality=4k&outboundbitrate=12000"
+"4k": "webcam&quality=4k&outboundbitrate=12000",
+"versus": "remote&label&quality&maxbandwidth&view&proaudio"
 }

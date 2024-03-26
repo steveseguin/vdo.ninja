@@ -1,0 +1,15 @@
+<html>
+<head>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.2/rollups/aes.js"></script>
+</head>
+<body id="body">
+<script>
+
+	
+	var parameter = prompt("Enter your VDO.Ninja URL parameters/values to obfuscate, eg: ?password=MYPASSWORD", "?password=MYPASSWORD");
+	var result = "?i="+encodeURIComponent(CryptoJS.AES.encrypt(parameter, "OBSNINJAFORLIFE").toString());
+	document.getElementById("body").innerHTML = "Add the following to you VDO.Ninja URL as the parameter string<br><br>"+result
+	
+</script>
+</body>
+</html>

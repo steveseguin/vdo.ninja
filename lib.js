@@ -226,12 +226,11 @@ if (urlParams.has('invite') || urlParams.has('i') || urlParams.has('code')){
 	session.decodeInvite(urlParams.get("invite") || urlParams.get("i") || urlParams.get("code"));
 	
 } else if (urlParams.has('preset')){
-	let preset = urlParams.get('preset') || "1"; // default to preset 1 if none provided
-	let xhttp = new XMLHttpRequest();
-	xhttp.open("GET", "presets.json", false); // blocking
-	xhttp.setRequestHeader('Content-Type', 'application/json'); // expecting json response
-
 	try {
+		let preset = urlParams.get('preset') || "1"; // default to preset 1 if none provided
+		let xhttp = new XMLHttpRequest();
+		xhttp.open("GET", "presets.json", false); // blocking
+		xhttp.setRequestHeader('Content-Type', 'application/json'); // expecting json response
 		xhttp.send();
 		if (xhttp.status === 200) {
 			const response = JSON.parse(xhttp.responseText);
@@ -1839,7 +1838,7 @@ session.getOBSOptimization = function(msg, UUID){
 		}
 	}
 	if (session.optimize!==false){
-		msg.optimizedBitrate = parseInt(session.optimize); // not setting a bitrate; just letting them know what the optimized bitrate is.
+		msg.optimizedBitrate = parseInt(session.optimize) || 0; // not setting a bitrate; just letting them know what the optimized bitrate is.
 		if (needOptimize){
 			session.rpcs[UUID].bandwidth = msg.optimizedBitrate;
 		}
@@ -11310,7 +11309,7 @@ function printMyStats(menu, screenshare=false) { // see: setupStatsMenu
 			if (session.pcs[UUID].savedBitrate){
 				menu.innerHTML += "<li><span>current bitrate target</span><span>" + session.pcs[UUID].savedBitrate + "</span></li>";
 			}
-			if (!session.room && !session.pcs[UUID].whipout && (session.meshcast!=="audio")){
+			if (!session.roomid && !session.pcs[UUID].whipout && (session.meshcast!=="audio")){
 				menu.innerHTML += "<li><span title='Only available if not in a group room'>adjust video bitrate</span><span><input class='thinSlider' title='Adjust the outbound bitrate for this stream.' type='range' value='"+(session.pcs[UUID].savedBitrate || session.pcs[UUID].setBitrate || 2500)+"' min='0' max='"+(session.pcs[UUID].setBitrate || 6000)+"' onchange='session.limitBitrate(\""+UUID+"\", parseInt(this.value));' /></span></li>";
 				
 				if (!session.hidehome ){
@@ -13089,14 +13088,14 @@ async function directMigrate(ele, event, room=false) { // everyone in the room w
 			miniTranslate(ele);
 			//ele.style.backgroundColor = null;
 			ele.classList.remove("armed");
-			return;
+			return false;
 		}
 		if (transferCancelled === true) {
 			ele.innerHTML = '<i class="las la-paper-plane"></i> <span data-translate="forward-to-room">transfer</span>';
 			miniTranslate(ele);
 			//ele.style.backgroundColor = null;
 			ele.classList.remove("armed");
-			return;
+			return false;
 		}
 		var migrateRoom = previousRoom
 	} else if ((event.ctrlKey) || (event.metaKey)) {
@@ -13109,7 +13108,7 @@ async function directMigrate(ele, event, room=false) { // everyone in the room w
 		Callbacks.push([directMigrate, ele, stillNeedRoom]);
 		stillNeedRoom = false;
 		log("Migrate queued");
-		return;
+		return true;
    // } else if (armedTransfer){
 		//migrateRoom = sanitizeRoomName(previousRoom);
 	} else {
@@ -13138,7 +13137,6 @@ async function directMigrate(ele, event, room=false) { // everyone in the room w
 			} 
 			window.focus();
 			
-			
 			var response = await promptTransfer(previousRoom, broadcastMode, updateurl, queuedMode);
 			var migrateRoom = response.roomid;
 			if (migrateRoom !== null){
@@ -13152,7 +13150,7 @@ async function directMigrate(ele, event, room=false) { // everyone in the room w
 			//ele.style.backgroundColor = null;
 			ele.classList.remove("armed");
 			transferCancelled = true;
-			return;
+			return false;
 		}
 		try {
 			migrateRoom = sanitizeRoomName(migrateRoom);
@@ -13168,6 +13166,7 @@ async function directMigrate(ele, event, room=false) { // everyone in the room w
 	if (migrateRoom) {
 		previousRoom = migrateRoom;
 		session.directMigrateIssue(migrateRoom, transferSettings, ele.dataset.UUID);
+		return true;
 	}
 }
 
@@ -17427,7 +17426,7 @@ function joinRoom(roomname) {
 							var invite = "https://"+location.host+location.pathname+"?room="+session.roomid+"&password=false"+token;
 							warnUser("You can invite others with:\n\n<a target='_blank' title='Copy this link to the clipboard' style='cursor:pointer' onclick='copyFunction(this.innerText,event);' href='"+invite+"'>"+invite+"</a>", false, false);
 						} else {
-							generateHash(session.password + session.salt, 4).then(function(hash) {
+							generateHash(session.password + session.salt, 4).then(function(hash) { // change the hash length from 4 to 3 when VDO.Ninja v24.10 or newer is in production.
 								var invite = "https://"+location.host+location.pathname+"?room="+session.roomid+"&hash="+hash+token;
 								warnUser("You can invite others with:\n\n<a target='_blank' title='Copy this link to the clipboard' style='cursor:pointer' onclick='copyFunction(this.innerText,event)' href='"+invite+"'>"+invite+"</a>", false, false);
 							});
@@ -18634,8 +18633,8 @@ async function createDirectorOnlyBox() {
 			slotName = "unset";
 		}
 		
-		buttons += "<div draggable='true' title='Drag to swap layout positions' ondragend='dragendSlot(event)' ondragstart='dragSlot(event)' ondrop='dropSlot(event)' ondragover='allowDropSlot(event)' data-sid='"+session.streamID+"' data-slot='"+biggestSlot+"' class='slotsbar'>\
-			<button ondrop='dropSlot(event)' draggable='true' ondragend='dragendSlot(event)' ondragstart='dragSlot(event)' ondragover='allowDropSlot(event)' onclick='changeSlot(event, this);'>"+slotName+"</button></div>";
+		buttons += "<div draggable='true'  title='Drag to swap layout positions' ondragend='dragendSlot(event)' ondragstart='dragSlot(event)' ondrop='dropSlot(event)' ondragover='allowDropSlot(event)' data-sid='"+session.streamID+"' data-slot='"+biggestSlot+"' class='slotsbar'>\
+			<button ondrop='dropSlot(event)' data-action-type='setslot' data-sid='"+streamID+"' data--u-u-i-d='"+UUID+"' draggable='true' ondragend='dragendSlot(event)' ondragstart='dragSlot(event)' ondragover='allowDropSlot(event)' onclick='changeSlot(event, this);'>"+slotName+"</button></div>";
 		
 	}
 	buttons += "<div title='Does not impact scene order.' class='shift'><i class='las la-angle-left' onclick='shiftPC(this,-1, true);'></i><i class='las la-angle-right' onclick='shiftPC(this,1, true)';></i></div>\
@@ -18837,7 +18836,7 @@ async function createDirectorScreenshareOnlyBox() { // sstype=3
 		
 		
 		buttons += "<div draggable='true' title='Drag to swap layout positions' ondragend='dragendSlot(event)' ondragstart='dragSlot(event)' ondrop='dropSlot(event)' ondragover='allowDropSlot(event)' data-sid='"+session.streamID+":s" +"' data-slot='"+biggestSlot+"' class='slotsbar'>\
-			<button ondrop='dropSlot(event)' draggable='true' ondragend='dragendSlot(event)' ondragstart='dragSlot(event)' ondragover='allowDropSlot(event)' onclick='changeSlot(event, this);'>"+slotName+"</button></div>";
+			<button ondrop='dropSlot(event)' data-action-type='setslot' data-sid='"+streamID+"' data--u-u-i-d='"+UUID+"' draggable='true' ondragend='dragendSlot(event)' ondragstart='dragSlot(event)' ondragover='allowDropSlot(event)' onclick='changeSlot(event, this);'>"+slotName+"</button></div>";
 		
 	}
 	buttons += "<div title='Does not impact scene order.' class='shift'><i class='las la-angle-left' onclick='shiftPC(this,-1, true);'></i><i class='las la-angle-right' onclick='shiftPC(this,1, true)';></i></div>\
@@ -19205,8 +19204,10 @@ async function changeSlot(event, ele){
 			};
 		});
 		
-		document.getElementById("alertModal").style.left = (event.pageX)+"px"; // 165px 356px
-		document.getElementById("alertModal").style.top = (event.pageY+180)+"px";
+		if (event){
+			document.getElementById("alertModal").style.left = (event.pageX)+"px"; // 165px 356px
+			document.getElementById("alertModal").style.top = (event.pageY+180)+"px";
+		}
 		
 		getById("alertModal").addEventListener("click", function(e) {
 			e.stopPropagation();
@@ -19219,32 +19220,40 @@ async function changeSlot(event, ele){
 	}
 }
 
-function setSlot(ele,slot){
+function setSlot(ele, slot){
 	log("setSlot()");
 	getById("slotPicker").classList.add("hidden");
 	if (slot!==null){
-		slot = (parseInt(slot) || 0);
-		var slots = document.querySelectorAll("div.slotsbar[data-slot]");
-		for (var i=0;i<slots.length;i++){
-			if (parseInt(slots[i].dataset.slot)==slot){
-				slots[i].dataset.slot = ele.parentNode.dataset.slot;
-				slots[i].querySelector("button").innerText = ele.innerText;
-				warnlog("Slot already existed; setting old one to 0 (unset)");
-				pokeIframeAPI("slot-updated", parseInt(slots[i].dataset.slot), null, slots[i].dataset.sid);
-				session.pastSlots[slots[i].dataset.sid] = parseInt(slots[i].dataset.slot);
-				break;
+		try {
+			slot = (parseInt(slot) || 0);
+			var slots = document.querySelectorAll("div.slotsbar[data-slot]");
+			for (var i=0;i<slots.length;i++){
+				if (parseInt(slots[i].dataset.slot)==slot){
+					slots[i].dataset.slot = ele.parentNode.dataset.slot;
+					slots[i].querySelector("button").innerText = ele.innerText;
+					warnlog("Slot already existed; setting old one to 0 (unset)");
+					pokeIframeAPI("slot-updated", parseInt(slots[i].dataset.slot), null, slots[i].dataset.sid);
+					session.pastSlots[slots[i].dataset.sid] = parseInt(slots[i].dataset.slot);
+					break;
+				}
 			}
+			ele.parentNode.dataset.slot = slot;
+			if (slot){
+				ele.innerText = 'slot: '+slot;
+			} else {
+				ele.innerText = 'unset';
+			}
+			pokeIframeAPI("slot-updated", slot, null, ele.parentNode.dataset.sid);
+			session.pastSlots[ele.parentNode.dataset.sid] = slot;
+			
+			createSlotUpdate();
+		} catch(e){
+			errorlog(e);
+			return false;
 		}
-		ele.parentNode.dataset.slot = slot;
-		if (slot){
-			ele.innerText = 'slot: '+slot;
-		} else {
-			ele.innerText = 'unset';
-		}
-		pokeIframeAPI("slot-updated", slot, null, ele.parentNode.dataset.sid);
-		session.pastSlots[ele.parentNode.dataset.sid] = slot;
-		
-		createSlotUpdate();
+		return true;
+	} else {
+		return false;
 	}
 }
 
@@ -19403,7 +19412,7 @@ function createControlBox(UUID, soloLink, streamID, slot_init=false) {
 		var biggestSlot=0;
 		var slotDefault = null;
 		
-		if (slot_init && (session.slotmode==1)){
+		if (slot_init && (session.slotmode==1)){ 
 			slotDefault = slot_init || null;
 		}
 		
@@ -19423,7 +19432,12 @@ function createControlBox(UUID, soloLink, streamID, slot_init=false) {
 				}
 			}
 			biggestSlot+=1;
+		} else if ((slotDefault!==null) && (session.slotmode==2)){
+			if (document.querySelector("div.slotsbar[data-slot='"+slotDefault+"']")){
+				slotDefault=null; // This slot is already in use, so we won't re-assign it.
+			}
 		}
+		
 		if (slotDefault!==null){ // the default slot is avialable
 			biggestSlot = slotDefault;
 		} else if (slot_init && (session.slotmode==1)){ // was manually set, so can't be something else but 0; 0 or false would still end up with 0
@@ -19443,11 +19457,11 @@ function createControlBox(UUID, soloLink, streamID, slot_init=false) {
 		
 		var slotName = "slot: "+biggestSlot;
 		if (!biggestSlot){
-			slotName = "unset";
+			slotName = "unset"; 
 		}
 		
 		buttons += "<div draggable='true' title='Drag to swap layout positions' ondragend='dragendSlot(event)' ondragstart='dragSlot(event)' ondrop='dropSlot(event)' ondragover='allowDropSlot(event)' data-slot='"+biggestSlot+"' data--u-u-i-d='"+UUID+"' data-sid='"+streamID+"' class='slotsbar'>\
-			<button ondrop='dropSlot(event)' draggable='true' ondragend='dragendSlot(event)' ondragstart='dragSlot(event)' ondragover='allowDropSlot(event)' onclick='changeSlot(event, this);'>"+slotName+"</button></div>";
+			<button ondrop='dropSlot(event)' draggable='true' data-action-type='setslot' data-sid='"+streamID+"' data--u-u-i-d='"+UUID+"' ondragend='dragendSlot(event)' ondragstart='dragSlot(event)' ondragover='allowDropSlot(event)' onclick='changeSlot(event, this);'>"+slotName+"</button></div>";
 	
 	}
 	buttons += "<div title='Does not impact scene order.' class='shift'><i class='las la-angle-left' data--u-u-i-d='"+UUID+"' onclick='shiftPC(this,-1);'></i><span onclick='lockPosition(this);' style='cursor:pointer;' data-locked='0' data--u-u-i-d='"+UUID+"' id='position_"+UUID+"'><i class='las la-lock-open'></i></span><i class='las la-angle-right' data--u-u-i-d='"+UUID+"' onclick='shiftPC(this,1);'></i></div><div class='streamID' style='user-select: none;'>ID: <span style='user-select: text;'>" + streamID + "</span>\
@@ -19580,7 +19594,7 @@ function createControlBox(UUID, soloLink, streamID, slot_init=false) {
 	});
 	
 	initSceneList(UUID);
-	syncSceneState(streamID);
+	syncSceneState(streamID); 
 	syncOtherState(streamID);
 	
 	pokeIframeAPI("control-box", true, UUID);
@@ -24404,6 +24418,12 @@ async function grabVideo(quality = 0, eleName = 'previewWebcam', selector = "sel
 							await track.applyConstraints({advanced: [ {whiteBalanceMode: "manual", colorTemperature: parseInt(session.whiteBalance)} ]});
 						} catch(e){
 							errorlog(e);
+							try {
+								await track.applyConstraints({advanced: [ {whiteBalanceMode: "manual"} ]});
+							} catch(e){
+								warnlog(e);
+							}
+							
 						}
 					}
 					if (session.exposure!==false){
@@ -24411,6 +24431,11 @@ async function grabVideo(quality = 0, eleName = 'previewWebcam', selector = "sel
 							await track.applyConstraints({advanced: [ {exposureMode: "manual", exposureTime: parseInt(session.exposure)} ]});
 						} catch(e){
 							errorlog(e);
+							try {
+								await track.applyConstraints({advanced: [ {exposureMode: "manual"} ]});
+							} catch(e){
+								warnlog(e);
+							}
 						}
 					}
 					if (session.saturation!==false){
@@ -24446,6 +24471,11 @@ async function grabVideo(quality = 0, eleName = 'previewWebcam', selector = "sel
 							await track.applyConstraints({advanced: [ {focusMode:"manual", focusDistance: parseInt(session.focusDistance)} ]});
 						} catch(e){
 							errorlog(e);
+							try {
+								await track.applyConstraints({advanced: [ {focusMode: "manual"} ]});
+							} catch(e){
+								warnlog(e);
+							}
 						}
 					}
 					
@@ -28227,6 +28257,12 @@ async function requestGoogleDriveRecord(ele, state=null, bitrate=null) {
 	filename = filename.replace(/[\W]+/g, "_");
 	filename = filename.substring(0, 55);
 	filename += "_" + Date.now().toString();
+	
+	if (SafariVersion){
+		filename += ".mp4";
+	} else {
+		filename += ".webm";
+	}
 	
 	if (!(session.gdrive && session.gdrive.accessToken)){
 		session.gdrive = setupGoogleDriveUploader();
@@ -35074,8 +35110,6 @@ function setupGoogleDriveUploader(filename=false, sessionUri=false){
 	var tokenClientGood = false;
 	var tokenChain = {};
 	
-	const CLIENT_ID = "877147493034-67tq62ds8cj54it6cr0ut24irm7t7q5g.apps.googleusercontent.com";
-	const API_KEY = 'AIzaSyAcboxS2N-39sfn1xn9jNCebvKkuHAdlNk';
 	const DISCOVERY_DOC = 'https://www.googleapis.com/discovery/v1/apis/drive/v3/rest';
 	const SCOPES = 'https://www.googleapis.com/auth/drive.file'; 
 	
@@ -35100,7 +35134,59 @@ function setupGoogleDriveUploader(filename=false, sessionUri=false){
 	
 	gdrive.startResumableUpload = async function(fname, retry=true) {
 		console.log("startResumableUpload",retry);
-		const fileMetadata = { name: fname };
+		
+		
+		const fileMetadata = { 'name': fname };
+		
+		if (session.GDRIVE_FOLDERNAME){
+			
+			let folderId = null;
+
+			const query = `name = '${session.GDRIVE_FOLDERNAME}' and mimeType = 'application/vnd.google-apps.folder' and 'root' in parents and trashed = false`;
+			const url = `https://www.googleapis.com/drive/v3/files?q=${encodeURIComponent(query)}`;
+
+			const response = await fetch(url, {
+				method: 'GET',
+				headers: {
+					'Authorization': 'Bearer ' + session.gdrive.accessToken,
+				},
+			});
+
+			const result = await response.json();
+
+			if (result.files && result.files.length > 0) {
+				// Assuming the first found folder is the one we want
+				folderId = result.files[0].id;
+			}
+			
+			if (!folderId) {
+				log("creating new folder as folder not found.")
+				try {
+					const folderMetadata = {
+						'name': session.GDRIVE_FOLDERNAME,
+						'mimeType': 'application/vnd.google-apps.folder'
+					};
+
+					const createResponse = await fetch('https://www.googleapis.com/drive/v3/files', {
+						method: 'POST',
+						headers: {
+							'Authorization': 'Bearer ' + session.gdrive.accessToken,
+							'Content-Type': 'application/json'
+						},
+						body: JSON.stringify(folderMetadata)
+					});
+
+					const createResult = await createResponse.json();
+					folderId = createResult.id;
+				} catch(e){
+					errorlog(e);
+				}
+			}
+			
+			if (folderId){
+				fileMetadata.parents = [folderId];
+			}
+		}
 		// log("STARTING UPLOADING");
 		const metadata = new Blob([JSON.stringify(fileMetadata)], { type: 'application/json' });
 		try {
@@ -35113,6 +35199,9 @@ function setupGoogleDriveUploader(filename=false, sessionUri=false){
 				body: metadata
 			});
 			if (!response.ok) {
+				if (!session.cleanOutput){
+					warnUser("⚠️ Error: Failed to configure the Google Drive upload.");
+				}
 				throw new Error('Start resumable upload failed: ' + response.statusText);
 			}
 			return response.headers.get('Location'); // This is the session URI for the resumable upload
@@ -35165,7 +35254,7 @@ function setupGoogleDriveUploader(filename=false, sessionUri=false){
 	
 	async function initializeGapiClient() {
 		console.log("initializeGapiClient");
-		await gapi.client.init({ apiKey: API_KEY, discoveryDocs: [DISCOVERY_DOC] });
+		await gapi.client.init({ apiKey: session.GDRIVE_API_KEY, discoveryDocs: [DISCOVERY_DOC] });
 		
 		if (tokenClient){
 			tokenClient.requestAccessToken({ prompt: gapi.client.getToken() ? '' : 'consent' });
@@ -35189,7 +35278,7 @@ function setupGoogleDriveUploader(filename=false, sessionUri=false){
 	async function gisLoaded() {
 		console.log("gisLoaded");
 		tokenClient = google.accounts.oauth2.initTokenClient({
-			client_id: CLIENT_ID,
+			client_id: session.GDRIVE_CLIENT_ID,
 			scope: SCOPES,
 			callback: onTokenResponse,
 			error_callback: onTokenError
@@ -39270,7 +39359,7 @@ function getGuestTargetGroup(group, id){
 	return element;
 }
 
-function targetGuest(target, action, value=null){
+async function targetGuest(target, action, value=null){
 	if (target){
 		if ((target == (parseInt(target)+"")) && target<100){
 			target -=1;
@@ -39281,10 +39370,12 @@ function targetGuest(target, action, value=null){
 	warnlog("target "+target);
 	warnlog("action "+action);
 	warnlog("value "+value);
-	if ((action == 0) || (action == "forward")) {
+	if ((action == 0) || (action == "forward") || (action == "transfer")) {
 		var element = getGuestTarget("forward", target);
 		if (element) {
-			directMigrate(element, true, value); // if value is set, it will auto transfer the guest to that room. 
+			return await directMigrate(element, true, value); // if value is set, it will auto transfer the guest to that room.
+		} else {
+			return false;
 		}
 	} else if ((action == 1) || (action == "addScene")) {
 		var scene = 1;
@@ -39489,6 +39580,13 @@ function targetGuest(target, action, value=null){
 		if (element) {
 			element.value = parseInt(value) || 0;
 			return remoteVolume(element);
+		}
+	} else if ((action == 28) || (action == "setslot")){
+		var element = getGuestTarget("setslot", target);
+		if (element) {
+			return setSlot(element, value);
+		} else {
+			return false;
 		}
 	} else if (action == "startRoomTimer"){
 		var element = getGuestTarget("create-timer", target);
@@ -41266,7 +41364,7 @@ function oscClient(){ // api.vdo.ninja api OSC (websocket / https API hotkey sup
 					}
 				}
 				
-				var resp = processMessage(data);
+				var resp = await processMessage(data);
 				if (resp!==null){
 					var ret = {};
 					data.result = resp;
@@ -41707,15 +41805,15 @@ function setupCommands(){
 var Commands = setupCommands();
 	
 
-function processMessage(data) { // api.vdo.ninja/apikey/action/value
+async function processMessage(data) { // api.vdo.ninja/apikey/action/value
 	try {
 		warnlog(data);
 		if (("target" in data) && (data.target !== "null" && data.target !== null)) {
 			if ("action" in data){
 				if ("value" in data){
-					return targetGuest(data.target, data.action, data.value);
+					return await targetGuest(data.target, data.action, data.value);
 				} else {
-					return targetGuest(data.target, data.action, null);
+					return await targetGuest(data.target, data.action, null);
 				}
 			}
 		} else if ("action" in data){
@@ -43228,7 +43326,7 @@ function createControlBoxScreenshare(UUID, soloLink, streamID) {
 		session.pastSlots[streamID] = biggestSlot;
 		
 		buttons += "<div draggable='true' title='Drag to swap layout positions' ondragend='dragendSlot(event)' ondragstart='dragSlot(event)' ondrop='dropSlot(event)' ondragover='allowDropSlot(event)' data-slot='"+biggestSlot+"' data-sid='"+streamID+"'  data--u-u-i-d='"+UUID+"' class='slotsbar'>\
-			<button ondrop='dropSlot(event)' draggable='true' ondragend='dragendSlot(event)' ondragstart='dragSlot(event)' ondragover='allowDropSlot(event)' onclick='changeSlot(event, this);'>"+slotName+"</button></div>";
+			<button ondrop='dropSlot(event)' data-action-type='setslot' data-sid='"+streamID+"' data--u-u-i-d='"+UUID+"' draggable='true' ondragend='dragendSlot(event)' ondragstart='dragSlot(event)' ondragover='allowDropSlot(event)' onclick='changeSlot(event, this);'>"+slotName+"</button></div>";
 	}
 	
 	buttons += "<div title='Does not impact scene order.' class='shift'><i class='las la-angle-left' data--u-u-i-d='"+UUID+"' onclick='shiftPC(this,-1);'></i><span onclick='lockPosition(this);' style='cursor:pointer;' data-locked='0' data--u-u-i-d='"+UUID+"' id='position_"+UUID+"'><i class='las la-lock-open'></i></span><i class='las la-angle-right' data--u-u-i-d='"+UUID+"' onclick='shiftPC(this,1);'></i></div><div class='streamID' style='user-select: none;'>ID: <span style='user-select: text;'>" + streamID + "</span>\
