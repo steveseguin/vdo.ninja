@@ -24,9 +24,13 @@ Below is a non-exhaustive short list of smartphones that appear to support more 
 * Samsung Galaxy S24 v14.0 supports 2 front, 2 rear
 * Samsung Galaxy S24 Ultra v14.0 supports 2 front, 2 rear
 * Samsung Galaxy S22 Ultra v12.0 supports 2 front, 2 rear
-* Samsung Galaxy A52 v11.0 supports 2 front, 2 rear\
+* Samsung Galaxy A52 v11.0 supports 2 front, 2 rear
 
-* Huawei P30 v9.0 (/w MS Edge) supports 1 front, 4 rear \
+
+
+* Huawei P30 v9.0 (/w MS Edge) supports 1 front, 4 rear&#x20;
+
+
 
 *   iPhone 15 Pro v17.0 and iPhone 15 Pro Max supports:
 
