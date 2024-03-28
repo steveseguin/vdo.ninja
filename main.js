@@ -1,5 +1,5 @@
 /*
-*  Copyright (c) 2022 Steve Seguin. All Rights Reserved.
+*  Copyright (c) 2024 Steve Seguin. All Rights Reserved.
 *
 *  Use of this source code is governed by the APGLv3 open-source license
 *  that can be found in the LICENSE file in the root of the source
@@ -13,7 +13,6 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 	// translation stuff start ////
 	
 	var ConfigSettings = getById("main-js");
-	var ln_template = false;
 	
 	try {
 		if (ConfigSettings) {
@@ -27,6 +26,8 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 
 		if (urlParams.has('ln') || urlParams.has('language')) {
 			ln_template = urlParams.get('ln') || urlParams.get('language') || null;
+		} else if (session.language){
+			ln_template = session.language;
 		}
 	} catch (e) {
 		errorlog(e);

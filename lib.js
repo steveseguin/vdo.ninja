@@ -1,5 +1,5 @@
 /*
-*  Copyright (c) 2022 Steve Seguin. All Rights Reserved.
+*  Copyright (c) 2024 Steve Seguin. All Rights Reserved.
 *
 *  Use of this source code is governed by the APGLv3 open-source license
 *  that can be found in the LICENSE file in the root of the source
@@ -6657,6 +6657,14 @@ function showControl(e){
 
 async function changeLg(lang) {
 	log("changeLg: "+lang);
+	var retry = false;
+	if (lang == "auto"){
+		const navlang = navigator.language || navigator.userLanguage || ""; 
+		const userLang = navlang.toLowerCase(); // Convert to lower case
+		lang = userLang.replace('_', '-'); // Replace dash with underscore if present
+		retry = true;
+	}
+	
 	await fetchWithTimeout("./translations/" + lang + '.json',2000).then(async function(response) {
 		try{
 			if (response.status !== 200) {
@@ -6718,12 +6726,30 @@ async function changeLg(lang) {
 				
 				getById("mainmenu").style.opacity = 1;
 				
+			}).catch(async function(err2) {
+				if (retry){
+					console.warn("Couldn't find the exact language file for '"+lang+"'; trying a more generic option instead");
+					lang = lang.split('-')[0];
+					if (lang && (lang!=="auto")){
+						await changeLg(lang); // won't retry I'd hope.
+					}
+				} else {
+					errorlog(err2);
+				}
 			});
 		} catch(e){
 			getById("mainmenu").style.opacity = 1;
 		}
-	}).catch(function(err) {
-		errorlog(err);
+	}).catch(async function(err) {
+		if (retry){
+			console.warn("Couldn't find exact language; trying a more generic option instead");
+			lang = lang.split('-')[0];
+			if (lang && (lang!=="auto")){
+				await changeLg(lang); // won't retry I'd hope.
+			}
+		} else {
+			errorlog(err);
+		}
 	});
 }
 
