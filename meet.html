@@ -1710,6 +1710,15 @@
 			var iframesrc = "./index.html?novice&ltb=350&minipreview&transparent&hideheader&margin&rounded&hidetranslate&cleandirector&chatbutton=0&vd=0&webcam&nvb&sstype=3&ssb&showlabel=skype&style=2&room="+roomname+additional+additional2+"&b64css="+injectCSS+streamID+label;
 		}
 		
+		var params = window.location.search || "";
+		
+		if (params.startsWith("?")){
+			params = params.slice(1);
+			iframesrc = iframesrc + "&" + params
+		} else {
+			iframesrc = iframesrc + params
+		}
+		
 		if (roomname!==false){
 			setStorage("savedRoom_comms", {roomname:roomname,password:password}, 9999);
 		}

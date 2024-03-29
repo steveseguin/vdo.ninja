@@ -1127,7 +1127,9 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 	}
 	
 	if (urlParams.has('layout')) {
-		session.accept_layouts = true;
+		if (!urlParams.get('layout')){
+			session.accept_layouts = true;
+		}
 		try {
 			session.layout = JSON.parse(decodeURIComponent(urlParams.get('layout'))) || JSON.parse(urlParams.get('layout')) || {};
 		} catch(e){
@@ -1409,13 +1411,13 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 
 	if (urlParams.has('bigbutton')) {
 		session.bigmutebutton = true;
-		getById("mutebutton").style.bottom = "100px";
-		getById("mutebutton").style.padding = "100px";
-		getById("mutebutton").style.position = "fixed";
-		getById("mutetoggle").style.bottom = "20px";
-		getById("mutetoggle").style.right = "0";
-		getById("mutetoggle").style.top = "unset";
-
+		getById("mutebutton").classList.add("bigbutton");
+		if (urlParams.get('bigbutton')){
+			let bigbuttontext = document.createElement("span");
+			bigbuttontext.innerText = urlParams.get('bigbutton');
+			bigbuttontext.className = "bigbuttontext";
+			getById("mutebutton").appendChild(bigbuttontext);
+		}
 	}
 	
 	if (urlParams.has('nosettings')){
@@ -4488,6 +4490,11 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		session.effect = "7";
 	}
 	
+	if (session.effect && !session.cleanOutput){
+		if (ChromiumVersion && (ChromiumVersion===122)){
+			setTimeout(function(){warnUser("⚠️ Notice: A recent update to Chrome/Edge can cause the browser to crash, especially when using &effects or &zoom.\n\nBrowser updates are rolling out to fix the issue, however avoiding the use of digital video effects for now might be prudent",30000);},1000)
+		}
+	}
 	
 	if (urlParams.get('wb') || urlParams.get('whitebalance')){
 		session.whiteBalance = urlParams.get('wb') ||  urlParams.get('whitebalance');
@@ -6675,6 +6682,10 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 				event.preventDefault(); 
 				event.stopPropagation();
 				return;
+			} else if (event.key === 's'){
+				if (document.getElementById("gowebcam") && (document.getElementById("gowebcam").dataset.ready =="true")){
+					publishWebcam(document.getElementById("gowebcam"));
+				}
 			}
 		}
 	}

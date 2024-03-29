@@ -8693,7 +8693,6 @@ function TFLiteWorker(){
 		ctxBG.width = canvasBG.width;
 		ctxBG.height = canvasBG.height;
 		
-		osc.onended = processiOS;
 		processiOS(true);
 	} else {
 		process(true);
@@ -12417,7 +12416,9 @@ function toggleVideoMute(apply = false) { // TODO: I need to have this be MUTE, 
 	}
 	
 	if (session.style && (session.style==1)){
-		updateMixer();
+		if (!session.videoElement || (session.videoElement.id !== "previewWebcam")){
+			updateMixer();
+		}
 	}
 	
 }

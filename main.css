@@ -4581,6 +4581,64 @@ input:checked + .slider:before {
 	padding: 2px 0 0 0;
 }
 
+#mutebutton.bigbutton {
+	bottom: 100px;
+	padding: 100px; 
+	position: fixed;
+	display: block;
+	box-sizing: unset;
+}
+.bigbutton #mutetoggle {
+	bottom: 20px;
+	right: 0;
+	top: unset;
+}
+.bigbutton .bigbuttontext {
+	border-radius: 0;
+	margin: 3px;
+	display:block;
+	font-size:200%;
+}
+
+@media only screen and (max-height: 600px) {
+	.bigbutton {
+		padding: 80px;
+	}
+}
+@media only screen and (max-width: 600px) {
+	.bigbutton {
+		padding: 80px;
+	}
+}
+@media only screen and (max-height: 500px) {
+	.bigbutton {
+		bottom: 80px;
+		padding: 70px;
+	}
+}
+@media only screen and (max-width: 500px) {
+	.bigbutton {
+		padding: 70px;
+	}
+}
+@media only screen and (max-height: 400px) {
+	.bigbutton {
+		padding: 60px;
+		bottom: 50px;
+	}
+}
+@media only screen and (max-width: 300px) {
+	.bigbutton {
+		padding: 60px;
+	}
+}
+@media only screen and (max-height: 300px) {
+	.bigbutton {
+		bottom: 40px;
+		padding: 50px;
+	}
+}
+
 #consentWarning{
 	margin: 0 auto 20px auto;
 }
