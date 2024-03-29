@@ -13,7 +13,9 @@ VDO.Ninja is designed to allow content creators to produce real-time live shows 
 VDO.Ninja is freely available to use as a managed service over at https://vdo.ninja.  There's also native app versions available on the App and Play stores, however these native apps are quite simple in comparison to the web-version.
 
 For live support, please join our discord at https://discord.vdo.ninja
-Please see the sub-reddit added info: https://reddit.com/r/vdoninja  
+
+Please see the sub-reddit added info: https://reddit.com/r/vdoninja
+
 Also check out the user documentation at: https://docs.vdo.ninja
 
 <img src="https://user-images.githubusercontent.com/2575698/120865595-56de3b80-c55c-11eb-8b98-60c59ae0f904.png" height="300" />
