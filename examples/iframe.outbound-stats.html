@@ -127,7 +127,7 @@
 
             if ("stats" in e.data) {
                 var now = new Date(); //Used for "Added" column and to remove stale viewers
-                for (var viewer in e.data.stats.outbound_stats) {
+                for (var viewer in e.data.stats.outbound) {
                     //Check to see if a row exists for this viewier, if not then its a new viewer and we should create a row
                     if ($("#vdon_viewer_" + viewer).length == 0) {
                         var h = now.getHours();
@@ -137,26 +137,26 @@
                     }
                     //Insert/update stats
                     //Initially objects can be available but without any attributes, check they exist and ignore till the basics are available
-                    if (e.data.stats.outbound_stats[viewer] == undefined) continue;
-                    if (e.data.stats.outbound_stats[viewer].info == undefined) continue;
+                    if (e.data.stats.outbound[viewer] == undefined) continue;
+                    if (e.data.stats.outbound[viewer].info == undefined) continue;
                     //Checking these exist as not all attributes are available straight away when stats are created
-                    if (e.data.stats.outbound_stats[viewer].info.label != undefined) {
-                        $("#vdon_viewer_" + viewer).find('.vdon_viewer_label').text(e.data.stats.outbound_stats[viewer].info.label);
+                    if (e.data.stats.outbound[viewer].info.label != undefined) {
+                        $("#vdon_viewer_" + viewer).find('.vdon_viewer_label').text(e.data.stats.outbound[viewer].info.label);
                     }
-                    if (e.data.stats.outbound_stats[viewer].quality_Limitation_Reason != undefined) {
-                        $("#vdon_viewer_" + viewer).find('.vdon_viewer_qlr').text(e.data.stats.outbound_stats[viewer].quality_Limitation_Reason);
+                    if (e.data.stats.outbound[viewer].quality_Limitation_Reason != undefined) {
+                        $("#vdon_viewer_" + viewer).find('.vdon_viewer_qlr').text(e.data.stats.outbound[viewer].quality_Limitation_Reason);
                     }
-                    if (e.data.stats.outbound_stats[viewer].resolution != undefined) {
-                        $("#vdon_viewer_" + viewer).find('.vdon_viewer_resolution').text(e.data.stats.outbound_stats[viewer].resolution);
+                    if (e.data.stats.outbound[viewer].resolution != undefined) {
+                        $("#vdon_viewer_" + viewer).find('.vdon_viewer_resolution').text(e.data.stats.outbound[viewer].resolution);
                     }
-                    if (e.data.stats.outbound_stats[viewer].info.platform != undefined) {
-                        $("#vdon_viewer_" + viewer).find('.vdon_viewer_platform').text(e.data.stats.outbound_stats[viewer].info.platform);
+                    if (e.data.stats.outbound[viewer].info.platform != undefined) {
+                        $("#vdon_viewer_" + viewer).find('.vdon_viewer_platform').text(e.data.stats.outbound[viewer].info.platform);
                     }
-                    if (e.data.stats.outbound_stats[viewer].encoder != undefined) {
-                        $("#vdon_viewer_" + viewer).find('.vdon_viewer_encoder').text(e.data.stats.outbound_stats[viewer].encoder);
+                    if (e.data.stats.outbound[viewer].encoder != undefined) {
+                        $("#vdon_viewer_" + viewer).find('.vdon_viewer_encoder').text(e.data.stats.outbound[viewer].encoder);
                     }
-                    if (e.data.stats.outbound_stats[viewer].info.useragent != undefined) {
-                        $("#vdon_viewer_" + viewer).find('.vdon_viewer_useragent').text(e.data.stats.outbound_stats[viewer].info.useragent);
+                    if (e.data.stats.outbound[viewer].info.useragent != undefined) {
+                        $("#vdon_viewer_" + viewer).find('.vdon_viewer_useragent').text(e.data.stats.outbound[viewer].info.useragent);
                     }
                     $("#vdon_viewer_" + viewer).data('last', now.getTime()); //Used below to remove old viewers
                 }

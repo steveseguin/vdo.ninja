@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dynamic Iframe Addition</title>
+<style>
+  /* Grid layout for iframes */
+  .iframe-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); /* Adjust based on desired width */
+    gap: 10px; /* Spacing between iframes */
+  }
+  iframe {
+    width: 100%;
+    height: 200px; /* Adjust based on desired height */
+    border: 1px solid #ccc;
+  }
+</style>
+</head>
+<body>
+
+<h2>Add a URL as Iframe</h2>
+<input type="text" id="urlInput" value="https://vdo.ninja/" placeholder="Enter URL here">
+<button onclick="addIframe()">Add Iframe</button>
+
+<div class="iframe-container" id="iframeContainer"></div>
+
+<script>
+  function addIframe() {
+    var url = document.getElementById('urlInput').value;
+    if (url) { // Check if the URL is not empty
+      var iframe = document.createElement('iframe');
+      iframe.src = url;
+	  iframe.allow = "document-domain;encrypted-media;sync-xhr;usb;web-share;cross-origin-isolated;accelerometer;midi;geolocation;autoplay;camera;microphone;fullscreen;picture-in-picture;display-capture;gyroscope;";
+      document.getElementById('iframeContainer').appendChild(iframe);
+      //document.getElementById('urlInput').value = ''; // Clear input field
+    } else {
+      alert("Please enter a URL.");
+    }
+  }
+</script>
+
+</body>
+</html>
