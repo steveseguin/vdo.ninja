@@ -18776,7 +18776,6 @@ async function createDirectorOnlyBox() {
 	if (session.slotmode){
 		pokeIframeAPI("slot-updated", biggestSlot, null, session.streamID); // need to support self-director
 		session.pastSlots[session.streamID] = biggestSlot;
-		
 		createSlotUpdate();
 	}
 }
@@ -18988,7 +18987,6 @@ async function createDirectorScreenshareOnlyBox() { // sstype=3
 	if (session.slotmode){
 		pokeIframeAPI("slot-updated", biggestSlot, null, session.streamID+":s"); // need to support self-director
 		session.pastSlots[session.streamID+":s"] = biggestSlot;
-		
 		createSlotUpdate();
 	}
 }
@@ -19807,7 +19805,7 @@ async function enumerateDevices() {
 				errorlog(e);
 				if (!session.cleanOutput){
 					if (location.protocol !== 'https:') {
-						warnUser("Error listing the media devices.\n\nThe website needs to be loaded via https (ssl) to access media devices.");
+						warnUser("Error listing the media devices.\n\nThe website needs to be loaded via https (ssl) to access media devices.\n\nPossible solutions include switching to HTTPS, accessing the site from localhost, using the `unsafely-treat-insecure-origin-as-secure` browser switch, or using the Electron Capture desktop app instead.");
 					} else if (("isSecureContext" in window) && (window.isSecureContext===false)){
 						warnUser("Error listing the media devices.\n\nThe website may have assets loaded in an insecure context.");
 					} else {
@@ -22066,6 +22064,54 @@ function playtone(screen = false, tonename="testtone") {
 		}
 	}
 }
+
+function updateAudioSource(newUrl) {
+	var audioElement = document.getElementById('testtone');
+	var sources = audioElement.getElementsByTagName('source');
+	var extension = newUrl.split('.').pop().toLowerCase();
+	var mimeType;
+
+	switch (extension) {
+		case 'mp3':
+			mimeType = 'audio/mpeg';
+			break;
+		case 'wav':
+			mimeType = 'audio/wav';
+			break;
+		case 'ogg':
+			mimeType = 'audio/ogg';
+			break;
+		case 'aac':
+		case 'm4a':
+			mimeType = 'audio/aac';
+			break;
+		case 'opus':
+			mimeType = 'audio/opus';
+			break;
+		case 'flac':
+			mimeType = 'audio/flac';
+			break;
+		case 'webm':
+			mimeType = 'audio/webm';
+			break;
+		default:
+			console.error('Unsupported file type:', extension);
+			return;
+	}
+	if (sources.length === 1) {
+		sources[0].src = newUrl;
+		sources[0].type = mimeType;
+	} else {
+		audioElement.innerHTML = '';
+		var newSource = document.createElement('source');
+		newSource.src = newUrl;
+		newSource.type = mimeType;
+		audioElement.appendChild(newSource);
+	}
+	audioElement.load();
+}
+
+	
 
 function showNotification(title, body="") {
 	if (!Notification){return;}
@@ -40402,7 +40448,19 @@ function whipOut(){
 			
 			xhttp.onerror = function(e) {
 				errorlog(e);
-				warnUser("Whip out failed.");
+				
+				if ((window.location.protocol=="https:") && session.whipOutput.startsWith("http://") && !session.whipOutput.startsWith("http://localhost")){
+					console.warn("Mixed HTTP and HTTPS content; this may not work. There are some options, like using localhost, disabling web security in your browser, or using SSL entirely");
+					if (!session.cleanOutput){
+						if (window.location.hostname === "vdo.ninja"){
+							warnUser("Error: You cannot publish to an HTTP WHIP endpoint from an HTTPS-enabled website.\n\nThere are some possible exceptions and solutions, such as deploying an SSL certificate, hosting from localhost, trying from http://insecure.vdo.ninja, and/or using the Electron Capture app.");
+						} else {
+							warnUser("Error: You cannot publish to an HTTP WHIP endpoint from an HTTPS-enabled website.");
+						}
+					}
+				} else if (!session.cleanOutput){
+					warnUser("WHIP out failed.\n\nCheck the developer console for possible details.");
+				} 
 			};
 			xhttp.send(data);
 			

@@ -271,11 +271,20 @@
 		background-color: #182031;
 	}
 
-	.inputCombo {
+	.inputComboGrid,.inputCombo {
 		display: flex;
 		flex-direction: row;
 		flex-wrap: nowrap;
 		flex-grow: 1;
+	}
+	@media only screen and (max-width: 699px) {
+		.inputComboGrid {
+			display: grid;
+			padding: 0px 5px;
+		}
+		.inputComboGrid > * {
+			margin: 2px 0;
+		}
 	}
 	#version{
 		margin: 0 auto;
@@ -318,7 +327,7 @@
 							<div class="details">⚙️</div>
 						</div>
 						
-						<div class="inputCombo" id="advanced" style="margin: 10px 0px 10px 10px;">
+						<div class="inputComboGrid" id="advanced" style="margin: 10px 0px 10px 10px;">
 							<select style="border-radius:10px;margin-right:5px;width:unset!important;" class="changeText" id="whipoutaudiobitrate"  title="Which audio bitrate target would you prefer? 128-kbps is fine for music." >
 								<option value="0" selected>🎙️Default Audio Bitrate</option>
 								<option value="32">🎙️32-kbps</option>
@@ -343,7 +352,7 @@
 								<option value="0">🎙️Mono</option>
 							</select >
 						</div>
-						<div class="inputCombo" id="advanced2" style="margin: 10px 0px 10px 10px;">
+						<div class="inputComboGrid" id="advanced2" style="margin: 10px 0px 10px 10px;">
 							<select style="border-radius:10px;margin-right:5px;width:unset!important;" class="changeText" id="bitrateGroupFlag" title="Which video bitrate target would you prefer?" >
 								<option value="0" selected>🎦Default Video Bitrate</option>
 								<option value="500">🎦500-kbps</option>
@@ -417,7 +426,7 @@
 						<input type="password" id="changeText3a" class="inputfield changeText" placeholder="🗝️ Authentication Bearer Token (optional)" />
 						<div class="details">⚙️</div>
 					</div>
-					<div class="inputCombo" id="advancedwhep" style="margin: 10px 0px 10px 10px;">
+					<div class="inputComboGrid" id="advancedwhep" style="margin: 10px 0px 10px 10px;">
 						<select style="border-radius:10px;margin-right:5px;width:unset!important;" class="changeText" id="whepbuffer"  title="Adding a playback buffer can help reduce frame loss or jitter" >
 							<option value="0" selected>⌛No added playback buffer</option>
 							<option value="500">⌛500-ms added</option>
@@ -437,7 +446,7 @@
 							<option value="1">🔑 E2EE On</option>
 						</select >
 					</div>
-					<div class="inputCombo" id="advanced3" style="margin: 10px 0px 10px 10px;">
+					<div class="inputComboGrid" id="advanced3" style="margin: 10px 0px 10px 10px;">
 						<select style="border-radius:10px;margin-right:5px;width:unset!important;" class="changeText" id="stereowhep"  title="Stereo is available only if auto-gain and noise-reduction is off." >
 							<option value="1" selected>🎙️Stereo</option>
 							<option value="0">🎙️Mono</option>
@@ -571,10 +580,6 @@ const scalabilityModes = [
 
 function gohere1(){
 	if (document.getElementById('changeText1').value){
-	
-		if (document.getElementById('changeText1').value.startsWith("http://")){
-			document.getElementById('changeText1').value = document.getElementById('changeText1').value.replace("http://","https://");
-		}
 		
 		localStorage.setItem('changeText1', document.getElementById('changeText1').value);
 		localStorage.setItem('changeText1a', document.getElementById('changeText1a').value || "");

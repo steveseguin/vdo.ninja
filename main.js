@@ -612,7 +612,6 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		}
 	}
 	
-	
 	if (urlParams.has('broadcasttransfer') || urlParams.has('bct')) {
 		log("Broadcast transfer flag set");
 		session.broadcastTransfer = urlParams.get('broadcasttransfer') || urlParams.get('bct') || null;
@@ -1193,7 +1192,11 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		session.videoMutedFlag = true;
 	}
 	
-	if (urlParams.has('layout')) {
+	if (urlParams.get('viewslot')){
+		session.viewslot = parseInt(urlParams.get('viewslot')) || false;
+		session.accept_layouts = true;
+		session.layout = {};
+	} else if (urlParams.has('layout')) {
 		
 		if (!urlParams.get('layout')){
 			session.accept_layouts = true;
@@ -1622,8 +1625,10 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 	//}
 	
 	if (urlParams.has('hiddenscenebitrate')) {
-		session.hiddenSceneViewBitrate = parseInt(urlParams.get('hiddenscenebitrate')) || 0;
-	} else if (urlParams.has('layout') && (session.scene!==false)){
+		session.hiddenSceneViewBitrate = parseInt(urlParams.get('hiddenscenebitrate')) || 0; 
+	} else if (urlParams.has('layout') && (session.scene!==false) && !session.viewslot){
+		session.hiddenSceneViewBitrate = false;
+	} else if (urlParams.has('nohiddensceneoptimization')) {
 		session.hiddenSceneViewBitrate = false;
 	}
 	
@@ -3393,7 +3398,6 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		} else if (Notification.permission !== 'granted') {
 			Notification.requestPermission();
 		}
-		
 	}
 	if (urlParams.has('r2d2')) {
 		/* var addtone = createAudioElement();
@@ -3407,6 +3411,20 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		getById("testtone").innerHTML = "";
 		getById("testtone").src = "./media/robot.mp3";
 		session.beepToNotify = true;
+	}
+	
+	if (urlParams.get("custombeep")){
+		updateAudioSource(urlParams.get("custombeep"));
+	}
+	
+	if (urlParams.has("beepvolume")){
+		try { // jointone
+			document.getElementById('testtone').volume = parseInt(urlParams.get("beepvolume"))/100 || 0;
+			document.getElementById('jointone').volume = parseInt(urlParams.get("beepvolume"))/100 || 0;
+			document.getElementById('leavetone').volume = parseInt(urlParams.get("beepvolume"))/100 || 0;
+		} catch(e){
+			console.error(e);
+		}
 	}
 	
 	if (urlParams.has('easyexit') || urlParams.has('ee')) {
