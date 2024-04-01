@@ -169,7 +169,10 @@ var miscTranslations = { // i can replace this list from time to time from the g
 	"enter-password-if-desired": "Enter a password if provided, otherwise just click Cancel",
 	"your-screenshare": "Your screenshare",
 	"your-camera": "Your camera",
-	"accept-inbound-caller": "Accept the inbound telephone caller?"
+	"accept-inbound-caller": "Accept the inbound telephone caller?",
+	"disable-video": "Disable Video",
+	"show-more-options": "Show more options",
+	"system-default": "System Default"
 }
 
 function getTranslation(key){ // when using this, instead of miniTranslate, if the user changes the language, it might not update. Used mainly when you don't want any HTML (<span data-translate>) being including in the translation
@@ -20371,19 +20374,19 @@ function gotDevices(deviceInfos, miconly=false) {
 		if (Firefox && !session.mobile){
 			var option = document.createElement('option');
 			option.value = "others";
-			option.text = "Show more options";
+			option.text = getTranslation("show-more-options");
 			audioOutputSelect.appendChild(option);
 		}
 
 		if (audioOutputSelect.childNodes.length == 0) {
 			option = document.createElement('option');
 			option.value = "default";
-			option.text = "System Default";
+			option.text = getTranslation("system-default");
 			audioOutputSelect.appendChild(option);
 		}
 
 		option = document.createElement('option');
-		option.text = "Disable Video";
+		option.text = getTranslation("disable-video");
 		option.value = "ZZZ";
 		videoSelect.appendChild(option); // NO AUDIO OPTION
 		
@@ -20840,13 +20843,13 @@ function gotDevicesNew(deviceInfos, miconly=false) {
 		if (Firefox && !session.mobile){
 			var option = document.createElement('option');
 			option.value = "others";
-			option.text = "Show more options";
+			option.text = getTranslation("show-more-options");
 			audioOutputSelect.appendChild(option);
 		}
 		if (audioOutputSelect.childNodes.length == 0) {
 			option = document.createElement('option');
 			option.value = "default";
-			option.text = "System Default";
+			option.text = getTranslation("system-default");
 			audioOutputSelect.appendChild(option);
 		}
 
@@ -20957,7 +20960,7 @@ function gotDevicesNew(deviceInfos, miconly=false) {
 			videoSelect.appendChild(option);
 		});
 		var option = document.createElement('option');
-		option.text = "Disable Video";
+		option.text = getTranslation("disable-video");
 		option.value = "ZZZ";
 		videoSelect.appendChild(option); // NO AUDIO OPTION
 		if (miconly){
@@ -21520,15 +21523,14 @@ function gotDevices2(deviceInfos) {
 		if (Firefox && !session.mobile){
 			var option = document.createElement('option');
 			option.value = "others";
-			option.text = "Show more options";
+			option.text = getTranslation("show-more-options");
 			audioOutputSelect.appendChild(option);
 		}
-		
 
 		if (audioOutputSelect.childNodes.length == 0) {
 			var option = document.createElement('option');
 			option.value = "default";
-			option.text = "System Default";
+			option.text = getTranslation("system-default");
 			audioOutputSelect.appendChild(option);
 		}
 		
@@ -21612,7 +21614,7 @@ function gotDevices2(deviceInfos) {
 		}
 
 		var option = document.createElement('option'); // no video
-		option.text = "Disable Video";
+		option.text = getTranslation("disable-video");
 		option.value = "ZZZ";
 		videoSelect.appendChild(option);
 		
