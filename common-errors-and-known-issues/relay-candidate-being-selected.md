@@ -29,6 +29,7 @@ A common cause is a browser setting or extension that is causing the issue.
 * Allow IP leaking in your browser settings or extension
 * Ensure WebRTC is not disabled in your browser
 * De-Googled browsers or highly secured/privacy focused browsers can cause issues
+* You are using Safari and rejected microphone permissions
 
 ### Other common causes with potential solution
 
@@ -42,6 +43,9 @@ These issues can be hard to judge, especially if they are issues on the remote g
   * Modify your firewall settings to allow those two options.
 * Symmetrical firewalls, such as with some fiber internet services, may cause issues.
   * Contact your ISP if this is the case.
+* You are using Safari and you have rejected the microphone permissions
+  * Safari, such as on iPhone, will require microphone permissions to allow private IP address sharing. Rejecting that will force the TURN servers into use.
+  * To avoid this, provide VDO.Ninja permissions to the microphone always, via the Safari settings.
 * Strict security software installed
   * Try from a different computer on the same network to see if its a local software issue
 * If using WHIP / WHEP, some third party applications may not support NAT traversal, lacking STUN server support, as it can be a lot of adding coding work. In these cases, VDO.Ninja might use a TURN server to assist things along, but it's far from ideal.
