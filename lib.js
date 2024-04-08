@@ -5045,7 +5045,50 @@ function updateMixerRun(e=false){  // this is the main auto-mixing code.  It's a
 				}
 			}
 			mediaPool.sort(compare_vids);
-		}
+		} else if (session.exclusiveLayoutAudio){
+			
+			[...mediaPool].forEach(ele=>{
+				if (ele.dataset.sid){
+					if (session.layout[ele.dataset.sid]){
+						return;
+					} else if (session.layout[""]){
+						let matched = false;
+						session.layout[""].forEach(i=>{
+							if (i.defaultStreamID && (i.defaultStreamID == ele.dataset.sid)){
+								matched = true;
+							}
+						});
+						if (matched){
+							return;
+						}
+					}
+					const index = mediaPool.indexOf(ele);
+					if (index > -1) {
+						mediaPool.splice(index, 1); // 2nd parameter means remove one item only
+					}
+				}
+			});
+			if (RPCSkeys){
+				for (var keyIndex = 0; keyIndex<RPCSkeys.length; keyIndex++){
+					i = RPCSkeys[keyIndex];
+					if (session.rpcs[i]===null){continue;}
+					if (session.rpcs[i].streamID){
+						let matched = false;
+						mediaPool.forEach(ele=>{
+							if (ele.dataset.sid ==session.rpcs[i].streamID){
+								matched=true;
+							}
+						});
+						if (!matched){
+							if (session.rpcs[i].mutedStateMixer===false){
+								session.rpcs[i].mutedStateMixer = true;
+								applyMuteState(i); 
+							}
+						}
+					}
+				}
+			}
+		};
 		
 		
 		if (session.fakeFeeds && session.fakeFeeds.length && (mediaPool.length < session.fakeFeeds.length)){
@@ -7839,8 +7882,7 @@ function setupOscillator(callbackFunction, frameRate = 30, timeOne = null, thisO
 	if (!thisOscillatorId){
 		thisOscillatorId = ++currentOscillatorId;
 	} else if (currentOscillatorId !== thisOscillatorId) {
-		// no longer valid
-		return;
+		return false;
 	}
 
     if (session.canvasOscillator) {
@@ -7893,10 +7935,17 @@ function setupOscillator(callbackFunction, frameRate = 30, timeOne = null, thisO
     oscillator.start(timeOne);
     oscillator.stop(timeOne + (1 / frameRate));
 	
-	return function(){
+	return function(check=false){
+		if (check && (currentOscillatorId !== thisOscillatorId)){
+			clearOscillator();
+			return true;
+		} else if (check){
+			return false;
+		}
 		if (currentOscillatorId === thisOscillatorId) {
 			clearOscillator(); // clear only if needs to be cleared
 		}
+		return false;
 	}
 }
 
@@ -7973,7 +8022,7 @@ function applyEffects(track) { // video only please. do not touch audio.  Run up
 		session.canvas.width = 2 * parseInt(session.canvasSource.width / 2);
 		
 		digitalZoom(true);
-	} else if (session.effect == "8") { // manual zoom
+	} else if (["8","overlay"].includes(session.effect)) { // manual zoom
 		setupCanvas();
 		session.canvasSource.srcObject.addTrack(track);
 		
@@ -9286,6 +9335,15 @@ function drawFace() {
 				} catch(e){
 					timers.timeoutDraw = setupOscillator(draw,40); // setTimeout(function(){draw();},33);
 				}
+			} else {
+				var res = timers.timeoutDraw("check");
+				if (res){
+					try {
+						timers.timeoutDraw = setupOscillator(draw, session.canvasSource.srcObject.getVideoTracks()[0].getSettings().frameRate || 30);
+					} catch(e){
+						timers.timeoutDraw = setupOscillator(draw,40); // setTimeout(function(){draw();},33);
+					}
+				}
 			}
 			timers.activelyProcessingDraw = false;
 		}
@@ -9363,7 +9421,10 @@ async function getFaces(){
 
 var simpleDrawMain=false;
 function simpleDraw(reinit=false) {
-	if (session.effect !== "8"){return;}
+	let supported = ["8","overlay"];
+	if (!supported.includes(session.effect)){
+		errorlog("not a valid effeect?");
+		return;}
 	if (simpleDrawMain){
 		simpleDrawMain(reinit); 
 		return;
@@ -9374,20 +9435,21 @@ function simpleDraw(reinit=false) {
 	
 	var timers = {};
 	timers.activelyProcessingDraw = false;
-
-	var ctx = session.canvasCtx;
 	
 	function fde1(){
 		try{
-			warnlog("LOADED simpleDraw()");
+			console.log("LOADED simpleDraw()");
 			
 			session.canvas.height = 2 * parseInt(session.canvasSource.height / 2);
 			session.canvas.width = 2 * parseInt(session.canvasSource.width / 2);
 			
 			function draw() {
-				if (timers.activelyProcessingDraw){return;}
+				
+				if (timers.activelyProcessingDraw){
+					return;
+				}
 				timers.activelyProcessingDraw = true;
-				if (session.effect !== "8"){
+				if (!supported.includes(session.effect)){
 					if (timers.timeoutDraw){
 						timers.timeoutDraw();
 						timers.timeoutDraw = null;
@@ -9398,13 +9460,17 @@ function simpleDraw(reinit=false) {
 				try {
 					if (!session.canvasSource.width){
 						timers.activelyProcessingDraw = false;
-						return
+						return;
 					}
 					
 					session.canvas.height = 2 * parseInt(session.canvasSource.height / 2);
 					session.canvas.width = 2 * parseInt(session.canvasSource.width / 2);
 					
-					ctx.drawImage(session.canvasSource, 0, 0, session.canvasSource.width, session.canvasSource.height, 0,0,session.canvasSource.width, session.canvasSource.height);
+					session.canvasCtx.drawImage(session.canvasSource, 0, 0, session.canvasSource.width, session.canvasSource.height, 0,0,session.canvasSource.width, session.canvasSource.height);
+					
+					if ((session.effect ==="overlay") && session.foregroundImg && session.foregroundImg.complete){
+						session.canvasCtx.drawImage(session.foregroundImg, 0, 0, session.canvas.width, session.canvas.height);
+					}
 					
 				} catch(e){errorlog(e);}
 
@@ -9414,8 +9480,18 @@ function simpleDraw(reinit=false) {
 					} catch(e){
 						timers.timeoutDraw = setupOscillator(draw,40); // setTimeout(function(){draw();},33);
 					}
+				} else {
+					var res = timers.timeoutDraw("check");
+					if (res){
+						try {
+							timers.timeoutDraw = setupOscillator(draw, session.canvasSource.srcObject.getVideoTracks()[0].getSettings().frameRate || 30);
+						} catch(e){
+							timers.timeoutDraw = setupOscillator(draw,40); // setTimeout(function(){draw();},33);
+						}
+					}
 				}
 				timers.activelyProcessingDraw = false;
+				
 			}
 		} catch(e){
 			errorlog(e);
@@ -9443,7 +9519,7 @@ function simpleDraw(reinit=false) {
 //////
 
 var digitalZoomMain=false;
-function digitalZoom(resetZoom=false) {
+function digitalZoom(resetZoom=false) { 
 	if (session.effect !== "7"){return;}
 	if (digitalZoomMain){
 		digitalZoomMain(resetZoom); 
@@ -10578,9 +10654,8 @@ function printValues(obj,sort=false) { // see: printViewStats
 	keys.forEach(key=>{
 		if (typeof obj[key] === "object") {
 			if (obj[key] != null) {
-				var tmp = key;
-				tmp = sanitizeChat((tmp));
-				out += "<li><h2 title='" + tmp + "'>" + tmp + "</h2></li>"
+				let tmp = sanitizeChat(key);
+				out += `<li><h2 title='${tmp}'>${tmp}</h2></li>`;
 				if (key == "info"){
 					out += printValues(obj[key]);
 				} else {
@@ -11160,6 +11235,14 @@ function processMeshcastStats(UUID){
 	} catch (e){errorlog(e);}
 }
 		
+function safeAppendToMenu(menu, text) {
+	const li = document.createElement('li');
+	const h2 = document.createElement('h2');
+	h2.title = text;
+	h2.textContent = text; // Safely assigns text content, avoiding HTML parsing
+	li.appendChild(h2);
+	menu.appendChild(li);
+}
 
 function printMyStats(menu, screenshare=false) { // see: setupStatsMenu
 
@@ -11216,6 +11299,8 @@ function printMyStats(menu, screenshare=false) { // see: setupStatsMenu
 			});
 		}
 	} catch(e){errorlog(e);}
+	
+	
 
 	function printViewValues(obj, UUID=false) {
 		
@@ -11223,21 +11308,22 @@ function printMyStats(menu, screenshare=false) { // see: setupStatsMenu
 			return;
 		}
 		
-		var keys = Object.keys(obj);
-		
-		keys.sort();
+		var keys = Object.keys(obj).sort();
 		
 		keys.forEach(key=>{
 			if (typeof obj[key] === "object") {
 				try{
-					var tmp = key;
-					tmp = sanitizeChat((tmp));
+					let tmp = sanitizeChat(key);
 					if (tmp === "info"){
 						tmp = "Remote Peer Info";
 					}
-					menu.innerHTML += "<li><h2 title='" + tmp + "'>" + tmp + "</h2></li>"
-				} catch(e){}
-				printViewValues(obj[key]);
+					safeAppendToMenu(menu, sanitizedKey);
+				} catch(e){errorlog(e);}
+				
+				try{
+					printViewValues(obj[key]);
+				} catch(e){errorlog(e);}
+				
 				menu.innerHTML += "<hr />";
 			}
 		});
@@ -34330,11 +34416,18 @@ function disableQualityDirector(UUID){ // lets revert back to the director's qua
 	} catch(e){errorlog(e);}
 }
 
-function applyQualityDirector() { // lets revert back to the director's quality settings after viewing the scene
-	var eles = document.querySelectorAll('#guestFeeds button.pressed[data-action-type="change-quality1"],#guestFeeds button.pressed[data-action-type="change-quality2"],#guestFeeds button.pressed[data-action-type="change-quality3"]');
-	eles.forEach(ele =>{
-		ele.click();
-	});
+function applyQualityDirector(uuid=false) { // lets revert back to the director's quality settings after viewing the scene
+	if (uuid){
+		var eles = document.querySelectorAll('#guestFeeds button.pressed[data-action-type="change-quality1"][data--u-u-i-d="'+uuid+'"],#guestFeeds button.pressed[data-action-type="change-quality2"][data--u-u-i-d="'+uuid+'"],#guestFeeds button.pressed[data-action-type="change-quality3"][data--u-u-i-d="'+uuid+'"]');
+		eles.forEach(ele =>{
+			ele.click();
+		});
+	} else {
+		var eles = document.querySelectorAll('#guestFeeds button.pressed[data-action-type="change-quality1"],#guestFeeds button.pressed[data-action-type="change-quality2"],#guestFeeds button.pressed[data-action-type="change-quality3"]');
+		eles.forEach(ele =>{
+			ele.click();
+		});
+	}
 }
 
 function toggleQualityDirector(bitrate, UUID, ele) { // ele is specific to the button in the director's room
@@ -38937,6 +39030,8 @@ function effectsDynamicallyUpdate(event, ele){
 	
 	getById("selectImageTFLITE").style.display = "none";
 	getById("selectImageTFLITE3").style.display = "none";
+	getById("selectImageOverlay").style.display = "none";
+	getById("selectImageOverlay3").style.display = "none";
 	getById("selectEffectAmount").style.display = "none";
 	getById("selectEffectAmount3").style.display = "none";
 	
@@ -38968,7 +39063,10 @@ function effectsDynamicallyUpdate(event, ele){
 		return;
 	}
 	
-	if (session.effect === "8"){ // like zoom but none
+	if (["8", "overlay"].includes(session.effect)){ // like zoom but none
+		if (session.effect === "overlay"){
+			loadOverlayImages();
+		}
 		updateRenderOutpipe();
 		return;
 	}
@@ -39076,6 +39174,66 @@ function loadTFLITEImages(){
 		document.getElementById("selectImageTFLITE3").style.display = "block";
 		document.getElementById("selectImageTFLITE3").appendChild(session.selectImageTFLITE_contents);
 		session.selectImageTFLITE_contents.classList.remove("hidden");
+	}
+}
+
+async function changeOverlayImage(ev, ele){
+	if (ele.files && ele.files[0]) {
+		if (session.foregroundImg){
+			session.foregroundImg.classList.remove("selectedTFImage");
+		}
+		session.foregroundImg = document.createElement("img"); 
+		session.foregroundImg.style="max-width:130px;max-height:73.5px;display:inline-block;margin:10px;cursor:pointer;";
+		session.foregroundImg.onclick=function(event){changeTFLiteImage(event, this);};
+		ele.parentNode.parentNode.insertBefore(session.foregroundImg, ele.parentNode);
+		session.foregroundImg.onload = () => {
+			URL.revokeObjectURL(session.foregroundImg.src);  // no longer needed, free memory
+		}
+		session.foregroundImg.src = URL.createObjectURL(ele.files[0]); // set src to blob url
+		session.foregroundImg.classList.add("selectedTFImage");
+		
+	} else if (ele.tagName.toLowerCase() == "img"){
+		if (session.foregroundImg){
+			session.foregroundImg.classList.remove("selectedTFImage");
+		}
+		session.foregroundImg = ele
+		session.foregroundImg.classList.add("selectedTFImage");
+	}
+}
+function loadOverlayImages(){
+	if (session.defaultForegroundImages){
+		try {
+			session.defaultForegroundImages.reverse();
+		}catch(e){
+			errorlog("Could not process image list");
+			session.defaultForegroundImages = false;
+			session.selectImageOverlay_contents = getById("selectImageOverlay_contents");
+			return;
+		}
+		session.defaultForegroundImages.forEach(imgSrc=>{
+			try {
+				var img = document.createElement("img");
+				img.onerror = function(){this.style.display="none";}; // hide images that fail to load
+				img.crossOrigin = "Anonymous";
+				img.src = imgSrc;
+				img.style="max-width:130px;max-height:73.5px;display:inline-block;margin:10px;cursor:pointer;";
+				img.onclick=function(event){changeOverlayImage(event, this);}; 
+				getById("selectImageOverlay_contents").prepend(img);
+			} catch(e){};
+		});
+		session.defaultForegroundImages = false;
+		session.selectImageOverlay_contents = getById("selectImageOverlay_contents");
+	} else if (!session.selectImageOverlay_contents){
+		session.selectImageOverlay_contents = getById("selectImageOverlay_contents");
+	}
+	if (document.getElementById("selectImageOverlay")){
+		document.getElementById("selectImageOverlay").style.display = "block";
+		document.getElementById("selectImageOverlay").appendChild(session.selectImageOverlay_contents);
+		session.selectImageOverlay_contents.classList.remove("hidden");
+	} else if (document.getElementById("selectImageOverlay3")){
+		document.getElementById("selectImageOverlay3").style.display = "block";
+		document.getElementById("selectImageOverlay3").appendChild(session.selectImageOverlay_contents);
+		session.selectImageOverlay_contents.classList.remove("hidden");
 	}
 }
 
@@ -39356,11 +39514,15 @@ async function changeTFLiteImage(ev, ele){
 		session.tfliteModule.img.classList.add("selectedTFImage");
 		
 	} else if (ele.tagName.toLowerCase() == "img"){
-		session.tfliteModule.img.classList.remove("selectedTFImage");
+		if (session.tfliteModule.img){
+			session.tfliteModule.img.classList.remove("selectedTFImage");
+		}
 		session.tfliteModule.img = ele
 		session.tfliteModule.img.classList.add("selectedTFImage");
 	}
 }
+
+
 async function changeEffectAmount(ev, ele){
 	session.effectValue = ele.value;
 	if (ele.id === "selectEffectAmountInput"){

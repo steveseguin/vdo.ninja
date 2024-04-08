@@ -236,6 +236,7 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 	if (navigator.userAgent.toLowerCase().indexOf(' electron/') > -1) {
 		try {
 			//getById("electronDragZone").style.cursor="grab";
+			//getById("header").style.height = "max(calc(2% + 20px), 40px)";
 			if (!ipcRenderer){
 				ipcRenderer = require('electron').ipcRenderer;
 			}
@@ -703,14 +704,20 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		session.meshcastCode = urlParams.get('meshcastcode') ||  urlParams.get('mccode')  || false
 	}
 	
-	if (urlParams.has('nomeshcast')) {
-		session.noMeshcast = urlParams.get('nomeshcast') || true;
+	if (urlParams.has('nomeshcast') || urlParams.has('nowhep')) {
+		session.noMeshcast = urlParams.get('nomeshcast') || urlParams.has('nowhep') ||  true;
 	}
 	
-	
+	if (urlParams.has('chunkcast')) {
+		session.chunkcast = true;
+	}
 	//if (urlParams.has('callin')){
 		// awaitInboundCall()();
 	//}
+	
+	if (urlParams.has('relaywss')) {
+		session.relaywss = true;
+	}
 	
 	if (urlParams.has('fulltalk') && (urlParams.get('fulltalk').length==6)){
 		listenWebsocket(urlParams.get('fulltalk'), false); // talk and hear all
@@ -852,8 +859,16 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		session.motionRecord = parseInt(urlParams.get('motionrecord')) || parseInt(urlParams.get('recordmotion')) || 15; // threshold of motion needed to trigger
 	}
 	
-	
-
+	if (urlParams.has('pausepreview') || urlParams.has('dpp')) {
+		try {
+			session.directorViewBitrate = 0;
+			document.querySelector('#controls_blank button[data-action-type="change-quality1"]').classList.add("pressed");
+			document.querySelector('#controls_blank button[data-action-type="change-quality2"]').classList.remove("pressed");
+			document.querySelector('#controls_blank button[data-action-type="change-quality3"]').classList.remove("pressed");
+		} catch(e){
+			errorlog(e);
+		}
+	}
 	if (urlParams.has('locked')) {
 		session.locked = urlParams.get('locked');
 
@@ -1196,6 +1211,7 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		session.viewslot = parseInt(urlParams.get('viewslot')) || false;
 		session.accept_layouts = true;
 		session.layout = {};
+		session.exclusiveLayoutAudio = true;
 	} else if (urlParams.has('layout')) {
 		
 		if (!urlParams.get('layout')){
@@ -1211,6 +1227,12 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 			}
 		}
 		console.warn("Warning: If using &layout with &broadcast, only the director's video will appear in the custom layout, which is likely not intended.");
+	}
+	
+	if (urlParams.get('exclusivelayoutaudio')){
+		session.exclusiveLayoutAudio = true;
+	} else if (urlParams.get('inlusivelayoutaudio')){
+		session.exclusiveLayoutAudio = false;
 	}
 	
 	if (urlParams.has('layouts')) { // an ordered array of layouts, which can be used to switch between using the API layouts action.
@@ -5449,7 +5471,9 @@ async function main(){ // main asyncronous thread; mostly initializes the user s
 		} catch(e){}
 	} else {
 		try {
-			navigator.mediaDevices.ondevicechange = reconnectDevices;
+			if (navigator && navigator.mediaDevices && navigator.mediaDevices.ondevicechange){
+					navigator.mediaDevices.ondevicechange = reconnectDevices;
+			}
 		} catch (e) {
 			errorlog(e);
 		}

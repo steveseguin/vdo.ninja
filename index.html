@@ -58,7 +58,7 @@
 		<meta property="twitter:image" content="./media/vdoNinja_logo_full.png" />
 		<meta name="msapplication-TileColor" content="#da532c" />
 		<meta name="theme-color" content="#0f131d" />
-		<link rel="stylesheet" href="./main.css?ver=379" />
+		<link rel="stylesheet" href="./main.css?ver=381" />
 		<script type="text/javascript" crossorigin="anonymous" src="./thirdparty/adapter.js"></script>
 		<style id="lightbox-animations" type="text/css"></style>
 		
@@ -551,13 +551,14 @@
 							<i class="las la-robot"></i><span data-translate="select-digital-effect"> Digital Video Effects </span>
 						</div>
 						<select id="effectSelector" alt="Digital video effect options"  onchange="effectsDynamicallyUpdate(event, this);">
-							<option value="0" data-translate="no-effects-applied">No effects applied</option>	track.getCapabilities().backgroundBlur
+							<option value="0" data-translate="no-effects-applied">No effects applied</option>
 							<option value="3" data-translate="blurred-background">Blurred background</option>
 							<option value="13" class="hidden" disabled data-translate="blurred-background-2">Blurred background 2 🧪</option>
 							<option value="4" data-translate="digital-greenscreen">Digital greenscreen</option>	
 							<option value="5" data-translate="virtual-background">Virtual background</option>
 							<option value="6" data-translate="face-mesh" title="experimental">Face mesh (slow load) 👨‍🔬</option>
 							<option value="7" data-translate="digital-zoom">Digital zoom</option>
+							<option value="overlay" data-translate="overlay-image">Overlay image</option>
 							<option value="anon" data-translate="anonymous-mask" title="experimental">Anonymous mask 👨‍🔬</option>
 							<option value="dog" data-translate="dog-face" title="experimental">Dog ears and nose 👨‍🔬</option>
 							<option value="1" disabled title='Enable the Chrome experimental features flag to use: chrome://flags/#enable-experimental-web-platform-features' class='facetracker' data-translate="face-tracker">Face Tracker</option>
@@ -570,6 +571,9 @@
 						</span>
 						
 						<div id="selectImageTFLITE" style="display:none;margin-top:10px;">
+							
+						</div>
+						<div id="selectImageOverlay" style="display:none;margin-top:10px;">
 							
 						</div>
 						<div id="selectEffectAmount" style="display:none;margin-top:10px;">
@@ -1917,6 +1921,7 @@
 						<option value="5" data-translate="virtual-background">Virtual background</option>
 						<option value="6" data-translate="face-mesh" title="experimental">Face mesh (slow load) 👨‍🔬</option>
 						<option value="7" data-translate="digital-zoom">Digital zoom</option>
+						<option value="overlay" data-translate="overlay-image">Overlay image</option>
 						<option value="anon" data-translate="anonymous-mask" title="experimental">Anonymous mask 👨‍🔬</option>
 						<option value="dog" data-translate="dog-face" title="experimental">Dog ears and nose 👨‍🔬</option>
 						<option value="1" disabled title='Face Detection API not detected; you may be able to enable it here: chrome://flags/#enable-experimental-web-platform-features' class='facetracker' data-translate="face-tracker">Face tracker</option>
@@ -1925,6 +1930,9 @@
 						<i class="las la-info-circle"></i>
 					</span>
 					<div id="selectImageTFLITE3" style="display:none;margin-top:10px;">
+						
+					</div>
+					<div id="selectImageOverlay3" style="display:none;margin-top:10px;">
 						
 					</div>
 					<div id="selectEffectAmount3" style="display:none;margin-top:10px;">
@@ -2497,6 +2505,15 @@
 				<input type="file"  accept="image/*" onchange="changeTFLiteImage(event, this)" style="position: fixed; top: -100em; margin-left:10px; border:1px solid #555;"> 
 			</label>
 		</div>
+		<div id="selectImageOverlay_contents" style="display:flex;overflow-x:auto;" class="hidden">
+			<label style="min-width:100px;display:inline-block;margin:0px 1px; text-align:center; cursor:pointer;">
+				<i class="las la-hdd" style="font-size: 3em;"></i><br /><span data-translate="select-local-image">Select Local Image</span>
+				<input type="file"  accept="image/*" onchange="changeOverlayImage(event, this)" style="position: fixed; top: -100em; margin-left:10px; border:1px solid #555;"> 
+			</label>
+			<label style="min-width:100px;display:inline-block;margin:0px 1px; text-align:center; cursor:pointer;" onclick="if (session.foregroundImg){session.foregroundImg.classList.remove('selectedTFImage');session.foregroundImg=null;}">
+				<i class="las la-minus-circle" style="font-size: 3em;"></i><br /><span data-translate="clear-local-image">Clear Image</span>
+			</label>
+		</div>
 		<div id="gridlayout"></div>
 		<audio id="testtone" style="display:none;" preload="none">
 			<source src="./media/tone.mp3" type="audio/mpeg"> 
@@ -2515,7 +2532,7 @@
 			</div>
 		</div>
 		<div id="messagePopup" class="popup-message"></div>
-		<div id="languages" style="right: 20px; bottom: 30px; display:none;" class="popup-message" style="display: none;">
+		<div id="languages" style="right: 20px; bottom: 30px; display:none;" class="popup-message">
 			<b data-translate='available-languages'>Available Languages:</b>
 			<br />
 			<ul id="languagesList" style="list-style-type: none; margin: 0;">
@@ -2584,7 +2601,7 @@
 			// if (!window.location.search){document.body.innerHTML = "";} // uncomment this line, if you wish to try it.
 			
 			var session = WebRTC.Media; // session is a required global variable if configuring manually. Run before loading main.js but after webrtc.js.
-			session.version = "25.0";
+			session.version = "25.1";
 			session.streamID = session.generateStreamID(); // randomly generates a streamID for this session. You can set your own programmatically if needed
 			
 			session.defaultPassword = "someEncryptionKey123"; // Change this password if self-deploying for added security/privacy
@@ -2705,7 +2722,7 @@
 			// session.decrypted = session.decodeInvite("U2FsdGVkX1+d58DFIHoO3EQZSuX86ch4PqW2ouztnJ0="); // get a code from invite.cam
 			
 		</script>
-		<script type="text/javascript" crossorigin="anonymous" id="lib-js" src="./lib.js?ver=1141"></script>
-		<script type="text/javascript" crossorigin="anonymous" id="main-js" src="./main.js?ver=849"></script>
+		<script type="text/javascript" crossorigin="anonymous" id="lib-js" src="./lib.js?ver=1143"></script>
+		<script type="text/javascript" crossorigin="anonymous" id="main-js" src="./main.js?ver=852"></script>
 	</body>
 </html>

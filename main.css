@@ -489,6 +489,9 @@ button.hint {
 	position: relative;
 	-webkit-app-region: no-drag;
 }
+#head4{
+	-webkit-app-region: no-drag;
+}
 #head5 {
 	-webkit-app-region: no-drag;
 	display: inline-block;
@@ -1095,7 +1098,7 @@ hr {
 	border: 1px solid black;
 	outline: 6px solid #444;
 }
-#slotPicker > [data-slot]{
+#slotPicker [data-slot]{
 	margin: 2px;
 	width: 50px;
 	height: 34px;
@@ -1103,6 +1106,11 @@ hr {
 	display: inline-block;
 	cursor: pointer;
 	font-size:12px;
+}
+#alertModalMessage [data-slot]{
+	margin: 2px;
+	cursor: pointer;
+	text-shadow: 0px 0px 10px white;
 }
 .rem-con-count{
 	position: absolute;
