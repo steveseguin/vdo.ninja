@@ -1956,8 +1956,14 @@ div#chatBody a {
 	height:100%;
 	position: relative;
 }
-
-
+.section {
+    display: block;
+    padding: 20px 5px;
+    margin: 20px auto;
+    border-radius: 20px;
+    border: 2px solid #6e6e6e;
+    max-width: 680px;
+}
 
 @media only screen and (max-width: 500px) {
 	#subControlButtons {

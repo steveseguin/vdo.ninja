@@ -4022,7 +4022,7 @@ function hideHomeCheck(){
 		getById("container-4").classList.add("permahide");
 		getById("dropButton").classList.add("permahide");
 		getById("head1").classList.add("permahide");
-		if ((session.permaid === false) && (session.roomid == false)){
+		if ((session.permaid === false) && (session.roomid == false) && !session.webcamonly && !session.screenshare){
 			getById("mainmenu").classList.add("permahide");
 		} else {
 			getById("mainmenu").classList.remove("permahide");
@@ -4052,6 +4052,28 @@ function hideHomeCheck(){
 		getById("favicon2").href = favicon;
 		getById("favicon3").href = favicon;
 		
+	}
+}
+
+function stashRoomSession(broadcastFlag=null){
+	try {
+		let settings = {};
+		
+		settings.roomid = session.roomid;
+		settings.password = session.password;
+		settings.label = session.label;
+		settings.trb = session.totalRoomBitrate;
+		settings.widget = session.widget;
+		settings.codecGroupFlag = session.codecGroupFlag;
+		settings.showDirector = session.showDirector;
+		
+		if (broadcastFlag!==null){
+			settings.broadcast = broadcastFlag;
+		}
+		
+		setStorage("directorOtherSettings", settings);
+	} catch(e){
+		errorlog(e);
 	}
 }
 
@@ -5135,7 +5157,7 @@ function updateMixerRun(e=false){  // this is the main auto-mixing code.  It's a
 						//if (mediaPool[NW-1].tagName == "VIDEO"){
 						if (mediaPool[NW-1].dataset.UUID){
 							if (mediaPool[NW-1].dataset.UUID in session.rpcs){
-								if (session.rpcs[mediaPool[NW-1].dataset.UUID].screenShareState){
+								if (session.rpcs[mediaPool[NW-1].dataset.UUID].screenShareState && !session.rpcs[mediaPool[NW-1].dataset.UUID].smallScreen){
 									sscount+=1;
 									sssid = mediaPool[NW-1].dataset.sid;
 								}
@@ -9648,36 +9670,54 @@ function toggleSceneStats(button){
 		button.value = 0;
 		button.classList.remove("pressed");
 		button.ariaPressed = "false";
-		session.rpcs[UUID].allowGraphs = false;
+		if (UUID){
+			session.rpcs[UUID].allowGraphs = false;
+		} else {
+			session.allowDirectorGraph = false;
+		}
 	} else {
 		button.value = 1;
 		button.classList.add("pressed");
 		button.ariaPressed = "true";
-		session.rpcs[UUID].allowGraphs = true;
+		if (UUID){
+			session.rpcs[UUID].allowGraphs = true;
+		} else {
+			session.allowDirectorGraph = true;
+		}
+	}
+	
+	if (UUID){
+		var controls = getById("container_" + UUID);
+	} else {
+		var controls = getById("container_director")
 	}
 	
 	if (button.value==1){
-		getById("container_" + UUID).querySelectorAll('[data-no-scenes]').forEach(ele=>{
+		controls.querySelectorAll('[data-no-scenes]').forEach(ele=>{
 			ele.classList.remove("hidden");
 			if (ele.dataset.message){
 				ele.innerHTML = "Requesting data ..";
 			}
 		});
 		
-		if (getById("container_" + UUID).querySelector('[data-action-type="stats-graphs-bitrate"]')){
-			getById("container_" + UUID).querySelector('[data-action-type="stats-graphs-bitrate"]').classList.remove("hidden");
+		if (controls.querySelector('[data-action-type="stats-graphs-bitrate"]')){
+			controls.querySelector('[data-action-type="stats-graphs-bitrate"]').classList.remove("hidden");
 		}
-		if (getById("container_" + UUID).querySelector('[data-action-type="stats-graphs-details"]')){
-			getById("container_" + UUID).querySelector('[data-action-type="stats-graphs-details"]').classList.remove("hidden");
+		if (controls.querySelector('[data-action-type="stats-graphs-details"]')){
+			controls.querySelector('[data-action-type="stats-graphs-details"]').classList.remove("hidden");
 		}
-		session.sendRequest({'requestStatsContinuous':true, }, UUID);
+		if (UUID){
+			session.sendRequest({'requestStatsContinuous':true, }, UUID);
+		}
 	} else {
-		session.sendRequest({'requestStatsContinuous':false, }, UUID);
-		if (getById("container_" + UUID).querySelector('[data-action-type="stats-graphs-bitrate"]')){
-			getById("container_" + UUID).querySelector('[data-action-type="stats-graphs-bitrate"]').classList.add("hidden");
+		if (UUID){
+			session.sendRequest({'requestStatsContinuous':false, }, UUID);
 		}
-		if (getById("container_" + UUID).querySelector('[data-action-type="stats-graphs-details"]')){
-			getById("container_" + UUID).querySelector('[data-action-type="stats-graphs-details"]').classList.add("hidden");
+		if (controls.querySelector('[data-action-type="stats-graphs-bitrate"]')){
+			controls.querySelector('[data-action-type="stats-graphs-bitrate"]').classList.add("hidden");
+		}
+		if (controls.querySelector('[data-action-type="stats-graphs-details"]')){
+			controls.querySelector('[data-action-type="stats-graphs-details"]').classList.add("hidden");
 		}
 	}	
 }
@@ -9851,6 +9891,91 @@ function selfDestructElement(UUID, uid){
 			ele.remove();
 		}, 10000, ele);
 	});
+}
+
+function directorGraphStats(){ 
+	
+	if (!(session.allowDirectorGraph || session.allowGraphs)){return;}
+	
+	if (session.director){
+		var UUID = "director";
+		var maincon = getById("container_director");
+		
+		var sceneStats = {};
+		for (var uuid in session.pcs){
+			if (session.pcs[uuid].scene!==false){
+				sceneStats[uuid] = {};
+				sceneStats[uuid].label = session.pcs[uuid].label;
+				sceneStats[uuid].scene = session.pcs[uuid].scene;
+				sceneStats[uuid].resolution = session.pcs[uuid].stats.resolution;
+				sceneStats[uuid].video_bitrate_kbps = session.pcs[uuid].stats.video_bitrate_kbps;
+				sceneStats[uuid].video_encoder = session.pcs[uuid].stats.video_encoder;
+			}
+		}
+		if (!Object.keys(sceneStats).length){
+			maincon.querySelectorAll('[data-no-scenes]').forEach(ele=>{
+				ele.classList.remove("hidden"); 
+				if (ele.dataset.message){
+					ele.innerHTML = "No scenes active";
+				}
+			});
+			
+			log("zero size");
+			return;
+		}
+		maincon.querySelectorAll('[data-no-scenes]').forEach(ele=>{
+			ele.classList.add("hidden");
+		});
+		
+		for (var uuid in sceneStats){
+			var container = maincon.querySelector('[data-action-type="stats-graphs-details-container"][data-uid="'+uuid+'"]');
+			if (!container){
+				container = maincon.querySelector('[data-action-type="stats-graphs-details-container"]').cloneNode(true);
+				container.dataset.uid = uuid;
+				container.classList.remove("hidden");
+				maincon.querySelector('[data-action-type="stats-graphs-details"]').appendChild(container);
+			}
+			plotData(sceneStats[uuid], UUID, uuid);
+			if (("video_bitrate_kbps" in sceneStats[uuid]) && (sceneStats[uuid].video_bitrate_kbps!=="video_bitrate_kbps")){
+				var span = container.querySelector('[data-bitrate]');
+				if (span){
+					span.classList.remove("hidden");
+					span.innerHTML = "video bitrate: "+parseInt(sceneStats[uuid].video_bitrate_kbps) + " (kbps)";
+				}
+			}
+			var span = container.querySelector('[data-scene-name]');
+			if (span && ("label" in sceneStats[uuid]) && sceneStats[uuid].label){
+				span.classList.remove("hidden");
+				span.innerHTML = "stats for viewer: " + sceneStats[uuid].label;
+			} else if (span && ("scene" in sceneStats[uuid]) && (sceneStats[uuid].scene !==false)){
+				span.classList.remove("hidden");
+				span.innerHTML = "stats for scene: " + sceneStats[uuid].scene;
+			} else if (uuid==="meshcast"){
+				span.classList.remove("hidden");
+				span.innerHTML = "stats for meshcast ingest";
+				span.title = "You can use &label=xxxx to give your view links a unique label";
+			} else {
+				span.classList.remove("hidden");
+				span.innerHTML = "stats for some viewer";
+				span.title = "You can use &label=xxxx to give your view links a unique label";
+			}
+			if ("resolution" in sceneStats[uuid]){
+				var span = container.querySelector('[data-resolution]');
+				if (span){
+					span.classList.remove("hidden");
+					span.innerHTML = sceneStats[uuid].resolution;
+				}
+			}
+			
+			if ("video_encoder" in sceneStats[uuid]){
+				var span = container.querySelector('[data-video-codec]');
+				if (span){
+					span.classList.remove("hidden");
+					span.innerHTML = "video codec: "+sceneStats[uuid].video_encoder;
+				}
+			}
+		}
+	};
 }
 
 function remoteStats(msg, UUID){
@@ -12240,6 +12365,8 @@ function updateLocalStats(){
 		//if (relayUsed){
 		//	headerStats += " <span title='A relay-server is being used, which can limit this connection's quality.'>💸</span>";
 		//}
+		
+		directorGraphStats();
 	}
 	
 	var miniInfo = {}
@@ -14810,11 +14937,13 @@ function remoteVolume(ele) { // A directing room only is controlled by the Direc
 } */
 
 function clearDirectorSettings(){ // make sure to wipe the director's room settings if creating a new room.
+	//console.warn("Clearing");
 	removeStorage("directorCustomize");
 	removeStorage("directorWebsiteShare");
 }
 
 function saveDirectorSettings(){
+	//console.warn("Saving");
 	var settings = {};
 	
 	if (getById("customizeLinks").classList.contains("hidden")){
@@ -14848,8 +14977,8 @@ function saveDirectorSettings(){
 }
 
 function loadDirectorSettings(){
+	//console.warn("LOAD DIRECTOR SETTING");
 	var settings = getStorage("directorCustomize");
-	log("LOAD DIRECTOR SETTING");
 	if (settings.customizeLinks){
 		try{
 			hideDirectorinvites(getById("directorLinksButton"), false);
@@ -14860,7 +14989,7 @@ function loadDirectorSettings(){
 		var customizeLinks1 = getById("customizeLinks1");
 		Object.keys(settings.customizeLinks1).forEach((key, index) => {
 			try {
-				if (customizeLinks1.querySelector('[data-param="'+key+'"]').checked != settings.customizeLinks1[key]){
+				if (settings.customizeLinks1[key]){
 					customizeLinks1.querySelector('[data-param="'+key+'"]').checked = settings.customizeLinks1[key];
 					customizeLinks1.querySelector('[data-param="'+key+'"]').onchange();
 				}
@@ -14872,7 +15001,7 @@ function loadDirectorSettings(){
 		var customizeLinks3 = getById("customizeLinks3");
 		Object.keys(settings.customizeLinks3).forEach((key, index) => {
 			try {
-				if (customizeLinks3.querySelector('[data-param="'+key+'"]').checked == settings.customizeLinks3[key]){
+				if (settings.customizeLinks3[key]){
 					customizeLinks3.querySelector('[data-param="'+key+'"]').checked = settings.customizeLinks3[key];
 					customizeLinks3.querySelector('[data-param="'+key+'"]').onchange();
 				}
@@ -14884,7 +15013,7 @@ function loadDirectorSettings(){
 		var directorLinks1 = getById("directorLinks1");
 		Object.keys(settings.directorLinks1).forEach((key, index) => {
 			try {
-				if (directorLinks1.querySelector('[data-param="'+key+'"]').checked == settings.directorLinks1[key]){
+				if (key in settings.directorLinks1){
 					directorLinks1.querySelector('[data-param="'+key+'"]').checked = settings.directorLinks1[key];
 					directorLinks1.querySelector('[data-param="'+key+'"]').onchange();
 				}
@@ -14899,7 +15028,7 @@ function loadDirectorSettings(){
 		var directorLinks2 = getById("directorLinks2");
 		Object.keys(settings.directorLinks2).forEach((key, index) => {
 			try {
-				if (directorLinks2.querySelector('[data-param="'+key+'"]').checked == settings.directorLinks2[key]){
+				if (key in settings.directorLinks2){
 					directorLinks2.querySelector('[data-param="'+key+'"]').checked = settings.directorLinks2[key];
 					directorLinks2.querySelector('[data-param="'+key+'"]').onchange();
 				}
@@ -17228,7 +17357,7 @@ function activeSpeaker(border=false) {
 	var lastActiveSpeaker = null;
 	
 	var someoneElseIfSpeaking = false;
-	var anyoneIsSpeaking = false;
+	var anyoneIsSpeaking = 0;
 	var defaultSpeaker = false;
 	
 	for (var UUID in session.rpcs) {
@@ -17282,12 +17411,14 @@ function activeSpeaker(border=false) {
 			someoneElseIfSpeaking = true;
 		}
 		if (session.rpcs[UUID].activelySpeaking){
-			anyoneIsSpeaking=true;
+			anyoneIsSpeaking+=1;
 		}
 		if (session.rpcs[UUID].defaultSpeaker===true){
 			defaultSpeaker=true;
 		}
 	}
+	
+
 	
 	var loudest=null;
 	var loudestActive=null;
@@ -17316,7 +17447,7 @@ function activeSpeaker(border=false) {
 							changed=true;
 							log(UUID + " is speaker now");
 						}
-						session.rpcs[UUID].defaultSpeaker=true;
+						session.rpcs[UUID].defaultSpeaker=true; 
 						
 						break
 					}
@@ -17368,7 +17499,10 @@ function activeSpeaker(border=false) {
 								changed=true
 								log(loudestActive + " is loudest but not speaker anymore");
 							} else {
-								session.rpcs[loudestActive].defaultSpeaker = setTimeout(function(uuid){session.rpcs[uuid].defaultSpeaker = false;updateMixer();},session.activeSpeakerTimeout,loudestActive);
+								session.rpcs[loudestActive].defaultSpeaker = setTimeout(function(uuid){
+									session.rpcs[uuid].defaultSpeaker = false;
+									updateMixer();
+									}, session.activeSpeakerTimeout, loudestActive);
 							}
 						}
 						loudestActive = UUID; 
@@ -17393,13 +17527,26 @@ function activeSpeaker(border=false) {
 					
 				}
 			}
+			
+			
 			if (loudestActive && (session.rpcs[loudestActive].defaultSpeaker!==true)){
 				if (session.rpcs[loudestActive].defaultSpeaker){
 					clearTimeout(session.rpcs[loudestActive].defaultSpeaker);
 				} else {
 					changed = true;
-					log(UUID + " is loudestActive now");
 				}
+				for (let UUID in session.rpcs) {
+					if (loudestActive!==UUID){
+						if (session.rpcs[UUID].defaultSpeaker===true){
+							session.rpcs[UUID].defaultSpeaker = false; // Reset immediately before any new logic
+							changed = true;
+						} else if (session.rpcs[UUID].defaultSpeaker){
+							clearTimeout(session.rpcs[UUID].defaultSpeaker);
+							session.rpcs[UUID].defaultSpeaker = false;
+						}
+					}
+				}
+			
 				session.rpcs[loudestActive].defaultSpeaker = true;
 			}
 		}
@@ -17644,42 +17791,79 @@ function joinRoom(roomname) {
 	}
 }
 
-async function createRoom(roomname = false) {
 
-	if (roomname == false) {
-		roomname = getById("videoname1").value;
-		roomname = sanitizeRoomName(roomname);
+async function createRoom(roomname = false, reload=false) {
+
+	if (reload===true){
+		let oldDirectorSettings = getStorage("directorOtherSettings");
+		var passwordRoom = oldDirectorSettings.password;
+		if (passwordRoom === session.defaultPassword){
+			passwordRoom = "";
+		} else if (passwordRoom === false){
+			passwordRoom = "";
+			session.password = false;
+		}
+		roomname = oldDirectorSettings.roomid;
+		if (!roomname){
+			warnUser("Couldn't load previous session");
+			return;
+		}
+		if (urlParams.has('dir')){
+			updateURL("dir=" + roomname, true, false); // make the link reloadable.
+		} else {
+			updateURL("director=" + roomname, true, false); // make the link reloadable.
+		}
 		
-		clearDirectorSettings(); 
+		session.codecGroupFlag = session.codecGroupFlag || oldDirectorSettings.codecGroupFlag || session.codecGroupFlag;
 		
-		if (roomname.length != 0) {
-			if (urlParams.has('dir')){
-				updateURL("dir=" + roomname, true, false); // make the link reloadable.
-			} else {
-				updateURL("director=" + roomname, true, false); // make the link reloadable.
+		session.label = session.label || oldDirectorSettings.label || session.label;
+		session.codecGroupFlag = session.codecGroupFlag || oldDirectorSettings.codecGroupFlag || session.codecGroupFlag;
+		session.showDirector = session.showDirector || oldDirectorSettings.showDirector || session.showDirector;
+		
+		if (oldDirectorSettings.broadcast){
+			getById("broadcastFlag").checked = true;
+		}
+		if (session.showDirector){
+			getById("showdirectorFlag").checked = true;
+		}
+		
+	} else {
+		if (roomname == false) {
+			roomname = getById("videoname1").value;
+			roomname = sanitizeRoomName(roomname);
+			
+			clearDirectorSettings(); 
+			
+			if (roomname.length != 0) {
+				if (urlParams.has('dir')){
+					updateURL("dir=" + roomname, true, false); // make the link reloadable.
+				} else {
+					updateURL("director=" + roomname, true, false); // make the link reloadable.
+				}
 			}
 		}
+		if (roomname.length == 0) {
+			//if (!(session.cleanOutput)) {
+			//	warnUser("Please enter a room name before continuing");
+			//}
+			 
+			getById("videoname1").focus();
+			getById("videoname1").classList.remove("shake");
+			setTimeout(function(){getById("videoname1").classList.add("shake");},10);
+		
+			return;
+		}
+		log(roomname);
+		
+		var passwordRoom = getById("passwordRoom").value;
+		passwordRoom = sanitizePassword(passwordRoom);
 	}
-	if (roomname.length == 0) {
-		//if (!(session.cleanOutput)) {
-		//	warnUser("Please enter a room name before continuing");
-		//}
-		 
-		getById("videoname1").focus();
-		getById("videoname1").classList.remove("shake");
-		setTimeout(function(){getById("videoname1").classList.add("shake");},10);
 	
-		return;
-	}
-	log(roomname);
 	session.roomid = roomname;
-	
 	getById("dirroomid").innerHTML = decodeURIComponent(session.roomid);
 	getById("roomid").innerHTML = session.roomid;
 
-	var passwordRoom = getById("passwordRoom").value;
-	passwordRoom = sanitizePassword(passwordRoom);
-	
+
 	var passAdd = "";
 	var passAdd2 = "";
 	
@@ -17739,15 +17923,6 @@ async function createRoom(roomname = false) {
 	} else {
 		await createRoomCallback(passAdd, passAdd2);
 	}
-	
-	
-	if (session.meshcast){
-		if (!session.cleanOutput && !session.cleanDirector){
-			document.getElementById("meshcastMenu").classList.remove("hidden");
-		}
-	}
-	
-	pokeIframeAPI("create-room", roomname);
 }
 
 function copyVideoFrameToClipboard(videoElement, e=false) {
@@ -18146,6 +18321,12 @@ async function toggleWidgetURL(ele){
 
 async function createRoomCallback(passAdd, passAdd2) {
 
+	if (session.meshcast){
+		if (!session.cleanOutput && !session.cleanDirector){
+			document.getElementById("meshcastMenu").classList.remove("hidden");
+		}
+	}
+	
 	if (!session.switchMode){
 		getById("directorlayout").classList.remove("hidden");
 		getById("gridlayout").classList.add("hidden");
@@ -18166,6 +18347,8 @@ async function createRoomCallback(passAdd, passAdd2) {
 	if (broadcastFlag) {
 		broadcastString = "&broadcast";
 		getById("broadcastSlider").checked = true;
+		//customizeLinks1
+		//saveDirectorSettings 
 	}
 	
 	var wss = "";
@@ -18205,34 +18388,39 @@ async function createRoomCallback(passAdd, passAdd2) {
 
 	var codecGroupFlag = getById("codecGroupFlag");
 
-	if (codecGroupFlag.value) {
-		if (codecGroupFlag.value === "vp9") {
-			codecGroupFlag = "&codec=vp9";
-			getById("codech264toggle").disabled=true;
-		} else if (codecGroupFlag.value === "h264") {
-			codecGroupFlag = "&codec=h264";
-			getById("codech264toggle").checked=true;
-		} else if (codecGroupFlag.value === "vp8") {
-			codecGroupFlag = "&codec=vp8";
-			getById("codech264toggle").disabled=true;
-		} else if (codecGroupFlag.value === "av1") {
-			codecGroupFlag = "&codec=av1";
-			getById("codech264toggle").disabled=true;
+	
+	if (session.codecGroupFlag){
+		codecGroupFlag = session.codecGroupFlag || "";
+	} else if (codecGroupFlag) {
+		
+		if (codecGroupFlag.value) {
+			if (codecGroupFlag.value === "vp9") {
+				codecGroupFlag = "&codec=vp9";
+				getById("codech264toggle").disabled=true;
+			} else if (codecGroupFlag.value === "h264") {
+				codecGroupFlag = "&codec=h264";
+				getById("codech264toggle").checked=true;
+			} else if (codecGroupFlag.value === "vp8") {
+				codecGroupFlag = "&codec=vp8";
+				getById("codech264toggle").disabled=true;
+			} else if (codecGroupFlag.value === "av1") {
+				codecGroupFlag = "&codec=av1";
+				getById("codech264toggle").disabled=true;
+			} else {
+				codecGroupFlag = "";
+			}
 		} else {
 			codecGroupFlag = "";
 		}
-	} else {
-		codecGroupFlag = "";
+		
+		session.codecGroupFlag = session.codecGroupFlag || codecGroupFlag || session.codecGroupFlag;
 	}
-	if (codecGroupFlag) {
-		session.codecGroupFlag = codecGroupFlag;
-	}
-	
 	if (session.bitrateGroupFlag){
 		codecGroupFlag += session.bitrateGroupFlag;
 	}
 	
-	
+	stashRoomSession(broadcastFlag);
+
 	formSubmitting = false;
 	try {
 		var m = getById("mainmenu");
@@ -18331,6 +18519,14 @@ async function createRoomCallback(passAdd, passAdd2) {
 		token+="&token="+session.token;
 	}
 
+	getById("director_block_1").dataset.raw = "https://" + location.host + location.pathname + "?room=" + session.roomid + broadcastString + passAdd + wss + queue + token;
+	getById("director_block_1").href = "https://" + location.host + location.pathname + "?room=" + session.roomid + broadcastString + passAdd + wss + queue + token;
+	getById("director_block_1").innerText = "https://" + location.host + location.pathname + "?room=" + session.roomid + broadcastString + passAdd + wss + queue + token;
+
+	getById("director_block_3").dataset.raw = "https://" + location.host + location.pathname + "?scene&room=" + session.roomid + codecGroupFlag + passAdd2 + wss + token; 
+	getById("director_block_3").href = "https://" + location.host + location.pathname + "?scene&room=" + session.roomid + codecGroupFlag + passAdd2 + wss + token;
+	getById("director_block_3").innerText = "https://" + location.host + location.pathname + "?scene&room=" + session.roomid + codecGroupFlag + passAdd2 + wss + token;
+
 	if (session.cleanDirector == false && session.cleanOutput==false) {
 
 		getById("roomHeader").style.display = "";
@@ -18338,21 +18534,11 @@ async function createRoomCallback(passAdd, passAdd2) {
 		getById("directorLinks1").style.display = "inline-block";
 		getById("directorLinks2").style.display = "inline-block";
 		
-
-		getById("director_block_1").dataset.raw = "https://" + location.host + location.pathname + "?room=" + session.roomid + broadcastString + passAdd + wss + queue + token;
-		getById("director_block_1").href = "https://" + location.host + location.pathname + "?room=" + session.roomid + broadcastString + passAdd + wss + queue + token;
-		getById("director_block_1").innerText = "https://" + location.host + location.pathname + "?room=" + session.roomid + broadcastString + passAdd + wss + queue + token;
-
-
-		getById("director_block_3").dataset.raw = "https://" + location.host + location.pathname + "?scene&room=" + session.roomid + codecGroupFlag + passAdd2 + wss + token; 
-		getById("director_block_3").href = "https://" + location.host + location.pathname + "?scene&room=" + session.roomid + codecGroupFlag + passAdd2 + wss + token;
-		getById("director_block_3").innerText = "https://" + location.host + location.pathname + "?scene&room=" + session.roomid + codecGroupFlag + passAdd2 + wss + token;
-		
 		getById("calendarButton").style.display = "inline-block";
-
 	} else {
 		getById("guestFeeds").innerHTML = '';
 	}
+
 	getById("guestFeeds").style.display = "";
 
 	if (!(session.cleanOutput)) {
@@ -18447,9 +18633,16 @@ async function createRoomCallback(passAdd, passAdd2) {
 		getById("highlightDirector").dataset.sid = session.streamID;
 	}
 	
-	setTimeout(function(){loadDirectorSettings();},100); 
+	setTimeout(()=>{
+		loadDirectorSettings();
+		if (broadcastFlag){
+			saveDirectorSettings();
+		}
+	},100); 
 	
 	joinRoom(session.roomid); 
+	
+	pokeIframeAPI("create-room", session.roomid);
 	
 	try {
 		if (!gotDevices2AlreadyRan && (iOS || iPad)){
@@ -18748,8 +18941,8 @@ async function createDirectorOnlyBox() {
 			slotName = "unset";
 		}
 		
-		buttons += "<div draggable='true'  title='Drag to swap layout positions' ondragend='dragendSlot(event)' ondragstart='dragSlot(event)' ondrop='dropSlot(event)' ondragover='allowDropSlot(event)' data-sid='"+session.streamID+"' data-slot='"+biggestSlot+"' class='slotsbar'>\
-			<button ondrop='dropSlot(event)' data-action-type='setslot' data-sid='"+streamID+"' data--u-u-i-d='"+UUID+"' draggable='true' ondragend='dragendSlot(event)' ondragstart='dragSlot(event)' ondragover='allowDropSlot(event)' onclick='changeSlot(event, this);'>"+slotName+"</button></div>";
+		buttons += "<div draggable='true' title='Drag to swap layout positions' ondragend='dragendSlot(event)' ondragstart='dragSlot(event)' ondrop='dropSlot(event)' ondragover='allowDropSlot(event)' data-sid='"+session.streamID+"' data-slot='"+biggestSlot+"' class='slotsbar'>\
+			<button ondrop='dropSlot(event)' data-action-type='setslot' draggable='true' ondragend='dragendSlot(event)' ondragstart='dragSlot(event)' ondragover='allowDropSlot(event)' onclick='changeSlot(event, this);'>"+slotName+"</button></div>";
 		
 	}
 	buttons += "<div title='Does not impact scene order.' class='shift'><i class='las la-angle-left' onclick='shiftPC(this,-1, true);'></i><i class='las la-angle-right' onclick='shiftPC(this,1, true)';></i></div>\
@@ -18851,6 +19044,7 @@ async function createDirectorOnlyBox() {
 			data.changeLabel = true;
 			data.value = session.label;
 			session.sendMessage(data);
+			stashRoomSession();
 		}
 	}
 	labelID.style.float = "left";
@@ -18872,7 +19066,7 @@ async function createDirectorOnlyBox() {
 function createSlotUpdate(UUID=false){
 	try {
 		var newSlots = {};
-		document.querySelectorAll("[data--u-u-i-d][data-slot]").forEach(ele=>{
+		document.querySelectorAll("[data-sid][data-slot]").forEach(ele=>{
 			newSlots[ele.dataset.slot] = ele.dataset.sid;
 		});
 		if (!UUID){
@@ -18950,7 +19144,7 @@ async function createDirectorScreenshareOnlyBox() { // sstype=3
 		
 		
 		buttons += "<div draggable='true' title='Drag to swap layout positions' ondragend='dragendSlot(event)' ondragstart='dragSlot(event)' ondrop='dropSlot(event)' ondragover='allowDropSlot(event)' data-sid='"+session.streamID+":s" +"' data-slot='"+biggestSlot+"' class='slotsbar'>\
-			<button ondrop='dropSlot(event)' data-action-type='setslot' data-sid='"+streamID+"' data--u-u-i-d='"+UUID+"' draggable='true' ondragend='dragendSlot(event)' ondragstart='dragSlot(event)' ondragover='allowDropSlot(event)' onclick='changeSlot(event, this);'>"+slotName+"</button></div>";
+			<button ondrop='dropSlot(event)' data-action-type='setslot' draggable='true' ondragend='dragendSlot(event)' ondragstart='dragSlot(event)' ondragover='allowDropSlot(event)' onclick='changeSlot(event, this);'>"+slotName+"</button></div>";
 		
 	}
 	buttons += "<div title='Does not impact scene order.' class='shift'><i class='las la-angle-left' onclick='shiftPC(this,-1, true);'></i><i class='las la-angle-right' onclick='shiftPC(this,1, true)';></i></div>\
@@ -19050,7 +19244,7 @@ async function createDirectorScreenshareOnlyBox() { // sstype=3
 			// newlabel = newlabel.trim();
 			// if (newlabel === ""){
 				// newlabel = false;
-				ee.target.innerHTML = getTranslation("add-a-label");
+				// ee.target.innerHTML = getTranslation("add-a-label");
 				// miniTranslate(ee.target,"add-a-label");
 				// ee.target.classList.add("addALabel");
 			// } else {
@@ -19203,16 +19397,16 @@ function dragSlot(event) {
 	log("drag");
 	
 	var ele = event.target;
-	if (!ele.dataset.UUID && ele.parentNode.dataset.UUID){
+	if (!ele.dataset.sid && ele.parentNode.dataset.sid){
 		ele = ele.parentNode;
 	}
 	
 	event.dataTransfer.setDragImage( getById('dragImage'), 24, 24);
-	event.dataTransfer.setData("text", ele.dataset.UUID);
+	event.dataTransfer.setData("text", ele.dataset.sid);
 	
 	var eles = document.querySelectorAll(".slotsbar");
 	for (var i=0;i<eles.length;i++){
-		if (eles[i].dataset.UUID == ele.dataset.UUID){continue;}
+		if (eles[i].dataset.sid == ele.dataset.sid){continue;}
 		eles[i].style.boxShadow = "0px 0px 8px 2px #FFF";
 	}
 }
@@ -19229,39 +19423,29 @@ function dropSlot(event) {
 	log("drop");
 	event.preventDefault();
 	event.stopPropagation();
-	var UUID = event.dataTransfer.getData("text");
-	var origThing = document.querySelector("[data--u-u-i-d='"+UUID+"'][data-slot]");
 	
-	if (origThing && ("slot" in event.target.dataset)){
-		log(event.target);
-		
-		var tmp = event.target.dataset.UUID;
-		event.target.dataset.UUID = origThing.dataset.UUID;
-		origThing.dataset.UUID = tmp;
-		
-		swapNodes(event.target, origThing);
-		
-		pokeIframeAPI("slot-updated", parseInt(event.target.dataset.slot), null, event.target.dataset.sid ); // need to support self-director
-		pokeIframeAPI("slot-updated", parseInt(origThing.dataset.slot), null, origThing.dataset.sid); // need to support self-director
-		
-		
-		session.pastSlots[event.target.dataset.sid] = parseInt(event.target.dataset.slot);
-		session.pastSlots[origThing.dataset.sid] = parseInt(origThing.dataset.slot);
-	} else if (origThing && ("slot" in event.target.parentNode.dataset)){
-		log(event.target.parentNode);
-		
-		var tmp = event.target.parentNode.dataset.UUID;
-		event.target.parentNode.dataset.UUID = origThing.dataset.UUID;
-		origThing.dataset.UUID = tmp;
-		
-		swapNodes(event.target.parentNode, origThing);
-		
-		pokeIframeAPI("slot-updated", parseInt(event.target.parentNode.dataset.slot), null, event.target.parentNode.dataset.sid); // need to support self-director
-		pokeIframeAPI("slot-updated", parseInt(origThing.dataset.slot), null, origThing.dataset.sid); // need to support self-director
-		
-		session.pastSlots[event.target.parentNode.dataset.sid] = parseInt(event.target.parentNode.dataset.slot);
-		session.pastSlots[origThing.dataset.sid] = parseInt(origThing.dataset.slot);
-	}
+	var SID = event.dataTransfer.getData("text");
+	if (!SID){return;}
+	var origThing = document.querySelector("[data-sid='"+SID+"'][data-slot]");
+	if (!origThing){return;}
+	
+	var targetSID = event.target.dataset.sid || event.target.parentNode.dataset.sid;
+	if (!targetSID){return;}
+	var targetThing = document.querySelector("[data-sid='"+targetSID+"'][data-slot]");
+	if (!targetThing){return;}
+	
+	targetThing.dataset.sid = SID;
+	origThing.dataset.sid = targetSID;
+	
+	
+	swapNodes(targetThing, origThing);
+	
+	pokeIframeAPI("slot-updated", parseInt(targetThing.dataset.slot), null, targetThing.dataset.sid ); // need to support self-director
+	pokeIframeAPI("slot-updated", parseInt(origThing.dataset.slot), null, origThing.dataset.sid); // need to support self-director
+	
+	
+	session.pastSlots[targetThing.dataset.sid] = parseInt(targetThing.dataset.slot);
+	session.pastSlots[origThing.dataset.sid] = parseInt(origThing.dataset.slot);
 	
 	createSlotUpdate();
 	
@@ -19573,8 +19757,8 @@ function createControlBox(UUID, soloLink, streamID, slot_init=false) {
 			slotName = "unset"; 
 		}
 		
-		buttons += "<div draggable='true' title='Drag to swap layout positions' ondragend='dragendSlot(event)' ondragstart='dragSlot(event)' ondrop='dropSlot(event)' ondragover='allowDropSlot(event)' data-slot='"+biggestSlot+"' data--u-u-i-d='"+UUID+"' data-sid='"+streamID+"' class='slotsbar'>\
-			<button ondrop='dropSlot(event)' draggable='true' data-action-type='setslot' data-sid='"+streamID+"' data--u-u-i-d='"+UUID+"' ondragend='dragendSlot(event)' ondragstart='dragSlot(event)' ondragover='allowDropSlot(event)' onclick='changeSlot(event, this);'>"+slotName+"</button></div>";
+		buttons += "<div draggable='true' title='Drag to swap layout positions' ondragend='dragendSlot(event)' ondragstart='dragSlot(event)' ondrop='dropSlot(event)' ondragover='allowDropSlot(event)' data-slot='"+biggestSlot+"' data-sid='"+streamID+"' class='slotsbar'>\
+			<button ondrop='dropSlot(event)' draggable='true' data-action-type='setslot' ondragend='dragendSlot(event)' ondragstart='dragSlot(event)' ondragover='allowDropSlot(event)' onclick='changeSlot(event, this);'>"+slotName+"</button></div>";
 	
 	}
 	buttons += "<div title='Does not impact scene order.' class='shift'><i class='las la-angle-left' data--u-u-i-d='"+UUID+"' onclick='shiftPC(this,-1);'></i><span onclick='lockPosition(this);' style='cursor:pointer;' data-locked='0' data--u-u-i-d='"+UUID+"' id='position_"+UUID+"'><i class='las la-lock-open'></i></span><i class='las la-angle-right' data--u-u-i-d='"+UUID+"' onclick='shiftPC(this,1);'></i></div><div class='streamID' style='user-select: none;'>ID: <span style='user-select: text;'>" + streamID + "</span>\
@@ -31753,8 +31937,8 @@ async function updateCameraConstraints(constraint, value = null, ctrl=false, UUI
 	
 	log("20788");
 	log(constraints);
-	console.warn(constraints);
-	console.warn(constraint + " : " +value);
+	///console.warn(constraints);
+	//console.warn(constraint + " : " +value);
 	
 	await track0.applyConstraints({ 
 		advanced: [constraints]
@@ -33120,8 +33304,7 @@ function updateLinkWebP(arg, input) {
 
 var soloLinkAppended = "";
 function updateLink(arg, input, solo=false) {
-	log("updateLink");
-	log(input.dataset.param);
+	log("updateLink: "+input.dataset.param);
 	if (input.checked) {
 
 		getById("director_block_" + arg).dataset.raw += input.dataset.param;
@@ -33223,7 +33406,7 @@ function updateLinkInverse(arg, input) {
 
 function updateLinkScene(arg, input) {
 	log("updateLinkScene");
-	var string = getById("director_block_" + arg).dataset.raw;
+	var string = getById("director_block_" + arg).dataset.raw || ""; 
 
 	if (input.checked) {
 		string = changeParam(string, "scene", "0");
@@ -43573,8 +43756,8 @@ function createControlBoxScreenshare(UUID, soloLink, streamID) {
 		} 
 		session.pastSlots[streamID] = biggestSlot;
 		
-		buttons += "<div draggable='true' title='Drag to swap layout positions' ondragend='dragendSlot(event)' ondragstart='dragSlot(event)' ondrop='dropSlot(event)' ondragover='allowDropSlot(event)' data-slot='"+biggestSlot+"' data-sid='"+streamID+"'  data--u-u-i-d='"+UUID+"' class='slotsbar'>\
-			<button ondrop='dropSlot(event)' data-action-type='setslot' data-sid='"+streamID+"' data--u-u-i-d='"+UUID+"' draggable='true' ondragend='dragendSlot(event)' ondragstart='dragSlot(event)' ondragover='allowDropSlot(event)' onclick='changeSlot(event, this);'>"+slotName+"</button></div>";
+		buttons += "<div draggable='true' title='Drag to swap layout positions' ondragend='dragendSlot(event)' ondragstart='dragSlot(event)' ondrop='dropSlot(event)' ondragover='allowDropSlot(event)' data-slot='"+biggestSlot+"' data-sid='"+streamID+"' class='slotsbar'>\
+			<button ondrop='dropSlot(event)' data-action-type='setslot' draggable='true' ondragend='dragendSlot(event)' ondragstart='dragSlot(event)' ondragover='allowDropSlot(event)' onclick='changeSlot(event, this);'>"+slotName+"</button></div>";
 	}
 	
 	buttons += "<div title='Does not impact scene order.' class='shift'><i class='las la-angle-left' data--u-u-i-d='"+UUID+"' onclick='shiftPC(this,-1);'></i><span onclick='lockPosition(this);' style='cursor:pointer;' data-locked='0' data--u-u-i-d='"+UUID+"' id='position_"+UUID+"'><i class='las la-lock-open'></i></span><i class='las la-angle-right' data--u-u-i-d='"+UUID+"' onclick='shiftPC(this,1);'></i></div><div class='streamID' style='user-select: none;'>ID: <span style='user-select: text;'>" + streamID + "</span>\
