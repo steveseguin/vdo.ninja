@@ -38,7 +38,7 @@ When using the [Mixer App](../../steves-helper-apps/mixer-app.md) ([vdo.ninja/al
 
 The slider doesn't appear if not using the `&limittotalbitrate` value in the URL (or if not using the Mixer App). It's just too confusing to explain to include it by default.
 
-<figure><img src="../../.gitbook/assets/image (1) (1) (1) (1) (1).png" alt=""><figcaption></figcaption></figure>
+<figure><img src="../../.gitbook/assets/image (1) (1) (1) (1) (1) (1).png" alt=""><figcaption></figcaption></figure>
 
 ## Related
 

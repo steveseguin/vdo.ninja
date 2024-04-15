@@ -4,7 +4,13 @@ description: Several possible causes of audio not working in Windows are listed
 
 # Audio over VDO.Ninja isn't working
 
+### OBS isn't set to capture audio
+
 If using OBS for audio playback, be sure that you select "Control Audio via OBS" in the browser source to capture the audio. You won't be able to hear the audio by default this way, but OBS should show the audio level meters moving, signifying the audio is being captured.
+
+<figure><img src="../.gitbook/assets/image (1).png" alt=""><figcaption></figcaption></figure>
+
+### Sample rates or invalid audio settings
 
 If however you are testing VDO.Ninja and audio isn't working at all, from browser to browser, yet you see your mic-level loudness green indicator moving in VDO.Ninja as you speak, double check your Windows audio settings. In particular, high sample rates, like 384-khz sample rates, 32-bit depth audio playback, or other professional audio device settings in Windows may cause problems with audio playback.
 
@@ -17,3 +23,24 @@ Surround sound or multi-channel audio, for both the microphone and audio playbac
 If using a remote virtual desktop, such as a server-hosted version of Windows, be sure the Windows audio service is enabled; you might be able to turn this on via `services.msc` , accessible via the `Windows Key + R` run prompt.
 
 Also check that the default audio device in Windows is as expected and that any select audio output device in VDO.Ninja is pointed to the right location. Bluetooth devices may sometimes be problematic, especially on mobile, so try to avoid Bluetooth if possible.
+
+### Echo cancellation
+
+Sometimes if there is background audio being captured, the system will remove that audio thinking it is an echo of feedback. If this background audio contains your microphone audio, your microphone audio may be removed. You can disable echo cancellation in this case, or resolve the core issue.
+
+{% content-ref url="echo-or-feedback-issues.md" %}
+[echo-or-feedback-issues.md](echo-or-feedback-issues.md)
+{% endcontent-ref %}
+
+### External USB / Lightning audio
+
+If using an external audio device on mobile, like via USB, it's suggested to use a TRRS audio input adapter, with the your microphone connected to that.
+
+[https://www.youtube.com/watch?v=BBus\_S8iJUE](https://www.youtube.com/watch?v=BBus\_S8iJUE\&feature=youtu.be)\
+\
+If on Android, using Firefox might work well without the need of TRRS however.
+
+### If using the native mobile app
+
+If using the native VDO.Ninja mobile app, please note that screen sharing might only contain microphone-sourced audio -- the system audio won't be detected at the moment. This will hopefully change soon, but there is no timeline as to when it will be working.
+
