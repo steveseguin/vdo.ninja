@@ -10,6 +10,14 @@ If using OBS for audio playback, be sure that you select "Control Audio via OBS"
 
 <figure><img src="../.gitbook/assets/image (1).png" alt=""><figcaption></figcaption></figure>
 
+### OBS may be having a max buffer issue
+
+Restarting the computer or OBS can sometimes resolve issues where OBS stops capturing audio via browser sources or sometimes other audio soures.
+
+Some users report that the audio may sound distorted or out of sync as well, but often there may be no audio at all.\
+\
+Starting OBS in adminstirator mode, if using Windows, may help. Reducing the CPU load on your computer may also also help.
+
 ### Sample rates or invalid audio settings
 
 If however you are testing VDO.Ninja and audio isn't working at all, from browser to browser, yet you see your mic-level loudness green indicator moving in VDO.Ninja as you speak, double check your Windows audio settings. In particular, high sample rates, like 384-khz sample rates, 32-bit depth audio playback, or other professional audio device settings in Windows may cause problems with audio playback.
