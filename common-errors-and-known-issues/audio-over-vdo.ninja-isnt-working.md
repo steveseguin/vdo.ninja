@@ -32,6 +32,12 @@ If using a remote virtual desktop, such as a server-hosted version of Windows, b
 
 Also check that the default audio device in Windows is as expected and that any select audio output device in VDO.Ninja is pointed to the right location. Bluetooth devices may sometimes be problematic, especially on mobile, so try to avoid Bluetooth if possible.
 
+In some cases, adding `&noap` to the URL for the sender or/and reciever of the audio may help, as this will disable web-audio node processing in VDO.Ninja, which may fail when using invalid sample rates of an overly stressed CPU.
+
+### Not all playback devices support audio
+
+Some media devices, like the Magewell Director Mini, may not support audio via VDO.Ninja, and only video. Please also ensure the video is playing, as some devices may pause a media track until there is a user-gesture, which woudl prevent audio from playing in cases.
+
 ### Echo cancellation
 
 Sometimes if there is background audio being captured, the system will remove that audio thinking it is an echo of feedback. If this background audio contains your microphone audio, your microphone audio may be removed. You can disable echo cancellation in this case, or resolve the core issue.
