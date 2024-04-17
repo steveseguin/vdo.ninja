@@ -3929,6 +3929,7 @@ function createRichVideoElement(UUID){ // this function is used to check and gen
 		
 		if (session.rpcs[UUID].rotate !== false){
 			session.rpcs[UUID].videoElement.rotated = session.rpcs[UUID].rotate;
+			session.rpcs[UUID].videoElement.dataset.rotated = session.rpcs[UUID].rotate;
 		}
 		
 		session.rpcs[UUID].videoElement.addEventListener("playing", (e)=>{
@@ -4468,6 +4469,12 @@ function updateMixerRun(e=false){  // this is the main auto-mixing code.  It's a
 			}
 		}
 		
+		var delayedRequestList = {};
+		
+		function delayedRequestRate(bandwidth, UUID, optimizeAudio=false, lock=null){
+			delayedRequestList[UUID] = [bandwidth,UUID,optimizeAudio,lock];
+		}
+		
 
 		if (soloVideo && (soloVideo in session.rpcs)){ // remote guest being full screened; infocus == UUID
 			mediaPool = []; // remove myself from fullscreen
@@ -4494,15 +4501,15 @@ function updateMixerRun(e=false){  // this is the main auto-mixing code.  It's a
 							if (document.pictureInPictureElement && document.pictureInPictureElement.id && (document.pictureInPictureElement.id == session.rpcs[j].videoElement.id)){
 								var bitratePIP = parseInt(session.zoomedBitrate/4);
 								//warnUser("GOOD");
-								session.requestRateLimit(bitratePIP, j);
+								delayedRequestRate(bitratePIP, j);
 							} else {
-								session.requestRateLimit(0, j); // disable the video of non-fullscreen videos
+								delayedRequestRate(0, j); // disable the video of non-fullscreen videos
 							}
 							if (session.rpcs[j].videoElement.srcObject && session.rpcs[j].videoElement.srcObject.getAudioTracks().length){
 							//	mediaPool_invisible.push(session.rpcs[j].videoElement);
 							}
 						} else if (session.rpcs[j].videoElement){
-							session.requestRateLimit(0, j, true); // disable the video of non-fullscreen videos
+							delayedRequestRate(0, j, true); // disable the video of non-fullscreen videos
 						}
 					} catch(e){errorlog(e);}
 				} else {  // remote guest is in-focus video
@@ -4512,7 +4519,7 @@ function updateMixerRun(e=false){  // this is the main auto-mixing code.  It's a
 							if (session.rpcs[j].videoElement && (session.rpcs[j].videoElement.srcObject.getAudioTracks().length)){
 								//mediaPool_invisible.push(session.rpcs[j].videoElement);
 							}
-							session.requestRateLimit(0, j);
+							delayedRequestRate(0, j);
 							mediaPool.push(session.rpcs[j].iframeEle);
 							continue;
 						} else if (session.rpcs[j].videoElement){
@@ -4525,7 +4532,7 @@ function updateMixerRun(e=false){  // this is the main auto-mixing code.  It's a
 							///////////
 							//if (session.activeSpeaker && (!session.rpcs[j].defaultSpeaker)){ // not the active speaker
 								//mediaPool_invisible.push(session.rpcs[j].videoElement);
-							//	session.requestRateLimit(0, j); // keep audio good, but disable video
+							//	delayedRequestRate(0, j); // keep audio good, but disable video
 							//} else {
 								
 								var totalRoomBitrate = session.totalRoomBitrate;
@@ -4540,7 +4547,7 @@ function updateMixerRun(e=false){  // this is the main auto-mixing code.  It's a
 								mediaPool.push(session.rpcs[j].videoElement); // active speaker
 								session.rpcs[j].videoElement.style.visibility = "visible";
 								//if ((session.rpcs[j].targetBandwidth!==-1) && (session.rpcs[j].targetBandwidth<targetBitrate)){
-								session.requestRateLimit(targetBitrate, j); // 1.2mbps is decent, no? in-focus, so higher bitrate
+								delayedRequestRate(targetBitrate, j); // 1.2mbps is decent, no? in-focus, so higher bitrate
 								//	errorlog(targetBitrate);
 								//}
 							//}
@@ -4562,14 +4569,14 @@ function updateMixerRun(e=false){  // this is the main auto-mixing code.  It's a
 					if (session.rpcs[j].videoElement && (session.rpcs[j].videoElement.style.display!=="none")){  // Add it if not hidden
 						if (document.pictureInPictureElement && document.pictureInPictureElement.id && (document.pictureInPictureElement.id == session.rpcs[j].videoElement.id)){
 							var bitratePIP = parseInt(session.zoomedBitrate/4);
-							session.requestRateLimit(bitratePIP, j);
+							delayedRequestRate(bitratePIP, j);
 							//warnUser("GOOD");
 						} else {
-							session.requestRateLimit(0, j); // disable the video of non-fullscreen videos
+							delayedRequestRate(0, j); // disable the video of non-fullscreen videos
 						}
 					//	mediaPool_invisible.push(session.rpcs[j].videoElement);
 					} else if (session.rpcs[j].videoElement){
-						session.requestRateLimit(0, j, true); // other videos are disabled when previewing yourself, but audio retained
+						delayedRequestRate(0, j, true); // other videos are disabled when previewing yourself, but audio retained
 					}
 				} catch(e){errorlog(e);}
 			}
@@ -4723,9 +4730,9 @@ function updateMixerRun(e=false){  // this is the main auto-mixing code.  It's a
 						if (!(groups.some(item => session.rpcs[i].group.includes(item)))){
 							if (session.scene!==false){
 								if (session.groupAudio){
-									session.requestRateLimit(session.hiddenSceneViewBitrate, i, false);
+									delayedRequestRate(session.hiddenSceneViewBitrate, i, false);
 								} else {
-									session.requestRateLimit(session.hiddenSceneViewBitrate, i, true);  // hidden. I dont want it to be super low, for video quality reasons.
+									delayedRequestRate(session.hiddenSceneViewBitrate, i, true);  // hidden. I dont want it to be super low, for video quality reasons.
 									session.rpcs[i].mutedStateMixer = true;
 								}
 								if (!session.hiddenSceneViewBitrate){ 
@@ -4733,9 +4740,9 @@ function updateMixerRun(e=false){  // this is the main auto-mixing code.  It's a
 								} 
 							} else {
 								if (session.groupAudio){
-									session.requestRateLimit(0, i, false);
+									delayedRequestRate(0, i, false);
 								} else {
-									session.requestRateLimit(0, i, true); // w/e   This is not in OBS, so we just set it as low as possible.  Shoudln't exist really unless loading?
+									delayedRequestRate(0, i, true); // w/e   This is not in OBS, so we just set it as low as possible.  Shoudln't exist really unless loading?
 									session.rpcs[i].mutedStateMixer = true;
 								}
 							}
@@ -4933,23 +4940,25 @@ function updateMixerRun(e=false){  // this is the main auto-mixing code.  It's a
 					
 					if (session.rpcs[i].videoElement.style.display=="none"){  // Video is disabled; run at lowest 
 						if (session.scene!==false){
-							session.requestRateLimit(session.hiddenSceneViewBitrate, i, true);  // hidden. I dont want it to be super low, for video quality reasons.
+							delayedRequestRate(session.hiddenSceneViewBitrate, i, true);  // hidden. I dont want it to be super low, for video quality reasons.
 							if (!session.hiddenSceneViewBitrate){ 
 								session.rpcs[i].videoElement.nogb = 2;
 							}
 						} else {
-							session.requestRateLimit(0, i, true); // w/e   This is not in OBS, so we just set it as low as possible.  Shoudln't exist really unless loading?
+							delayedRequestRate(0, i, true); // w/e   This is not in OBS, so we just set it as low as possible.  Shoudln't exist really unless loading?
 						}
 					} else if (session.scene!==false){  // max
+					
+						// 
+					
 						if (sceneBitrate!==false){
 							if ((screenShareBitrate!==false) && session.rpcs[i].screenShareState){
-								session.requestRateLimit(screenShareBitrate, i); // well, screw that. Setting it to room quality.
+								delayedRequestRate(screenShareBitrate, i); // well, screw that. Setting it to room quality.
 							} else {
-								session.requestRateLimit(sceneBitrate, i); // well, screw that. Setting it to room quality.
+								delayedRequestRate(sceneBitrate, i); // well, screw that. Setting it to room quality.
 							}
 						} else {
-							
-							session.requestRateLimit(-1, i);  // unlock.
+							delayedRequestRate(-1, i);  // unlock.
 						}
 						if (session.rpcs[i].order!==false){
 							session.rpcs[i].videoElement.order=session.rpcs[i].order;
@@ -4982,12 +4991,12 @@ function updateMixerRun(e=false){  // this is the main auto-mixing code.  It's a
 						}
 						if ((session.roomid==="") && (session.bitrate)){
 							// we will let the URL specified bitrate hold, since this isn't a real room.
-							session.requestRateLimit(-1, i);
+							delayedRequestRate(-1, i);
 						} else {
 							if ((screenShareBitrate!==false) && session.rpcs[i].screenShareState){
-								session.requestRateLimit(screenShareBitrate, i); // well, screw that. Setting it to room quality.
+								delayedRequestRate(screenShareBitrate, i); // well, screw that. Setting it to room quality.
 							} else {
-								session.requestRateLimit(roomBitrate, i); // well, screw that. Setting it to room quality.
+								delayedRequestRate(roomBitrate, i); // well, screw that. Setting it to room quality.
 							}
 						}
 					} else {  // view=xx,yy  or whatever.  This should be highest quality.
@@ -5006,11 +5015,11 @@ function updateMixerRun(e=false){  // this is the main auto-mixing code.  It's a
 							mediaPool.push(session.rpcs[i].videoElement);
 						}
 						if (sceneBitrate){
-							session.requestRateLimit(sceneBitrate, i);
+							delayedRequestRate(sceneBitrate, i);
 						} else if ((session.screenShareBitrate!==false) && session.rpcs[i].screenShareState){ // session.screenShareBitrate is non-room
-								session.requestRateLimit(session.screenShareBitrate, i); // well, screw that. Setting it to room quality.
+								delayedRequestRate(session.screenShareBitrate, i); // well, screw that. Setting it to room quality.
 						} else {
-							session.requestRateLimit(-1, i);
+							delayedRequestRate(-1, i);
 						}
 					}
 					if (session.rpcs[i].videoElement.nogb==2){
@@ -5037,7 +5046,7 @@ function updateMixerRun(e=false){  // this is the main auto-mixing code.  It's a
 					for (var i=0;i<mediaPool.length;i++){ // if its your local camera, it shouldn't be a problem, so we can focus on remote cameras only
 						if (mediaPool[i].id !== document.fullscreenElement.id){ // if its selected camera, we want to exclude it
 							if (mediaPool[i].dataset && mediaPool[i].dataset.UUID && mediaPool[i].tagName && mediaPool[i].tagName == "VIDEO"){
-								session.requestRateLimit(session.hiddenSceneViewBitrate, mediaPool[i].dataset.UUID, null); // null implies don't change the current audio setting
+								delayedRequestRate(session.hiddenSceneViewBitrate, mediaPool[i].dataset.UUID, null); // null implies don't change the current audio setting
 								mediaPool_invisible.push(mediaPool[i]); // move visible elements to the invisible list, since something is full screen
 								mediaPool.splice(i,1);
 							}
@@ -5086,7 +5095,12 @@ function updateMixerRun(e=false){  // this is the main auto-mixing code.  It's a
 					}
 					const index = mediaPool.indexOf(ele);
 					if (index > -1) {
-						mediaPool.splice(index, 1); // 2nd parameter means remove one item only
+						
+						if (ele.dataset.UUID && (session.scene!==false)){
+							delayedRequestRate(session.hiddenSceneViewBitrate, ele.dataset.UUID, false); // it's added already, so we know it needs sound.  But lets d
+						}
+						
+						mediaPool.splice(index, 1); // 2nd parameter means remove one item only  
 					}
 				}
 			});
@@ -5691,7 +5705,7 @@ function updateMixerRun(e=false){  // this is the main auto-mixing code.  It's a
 						vid.container.style.display = "none";
 					}
 					if (vid.dataset.UUID){
-						session.requestRateLimit(session.hiddenSceneViewBitrate, vid.dataset.UUID, false); // it's added already, so we know it needs sound.  But lets d
+						delayedRequestRate(session.hiddenSceneViewBitrate, vid.dataset.UUID, false); // it's added already, so we know it needs sound.  But lets d
 					}
 					return;
 				}
@@ -6589,6 +6603,9 @@ function updateMixerRun(e=false){  // this is the main auto-mixing code.  It's a
 			i+=1;
 		} catch(err){errorlog(err);}
 	});
+	for (var uid in delayedRequestList){
+		session.requestRateLimit(...delayedRequestList[uid])
+	}
 	updateUserList()
 }
 
@@ -6733,10 +6750,17 @@ async function changeLg(lang) {
 		retry = true;
 	}
 	
-	await fetchWithTimeout("./translations/" + lang + '.json',2000).then(async function(response) {
+	await fetchWithTimeout("./translations/" + lang + '.json',2000).then(async (response)=>{
 		try{
 			if (response.status !== 200) {
 				getById("mainmenu").style.opacity = 1;
+				if (retry) {
+					console.warn("Couldn't find the exact language file for '" + lang + "'; trying a more generic option instead");
+					lang = lang.split('-')[0];
+					if (lang && (lang !== "auto")) {
+						await changeLg(lang); // Retry with a more generic language code.
+					}
+				}
 				return;
 			}
 			await response.json().then(async function(data) {
@@ -6748,7 +6772,6 @@ async function changeLg(lang) {
 					});
 				}
 				translation.miscellaneous = miscTranslations;
-				
 				
 				var allItems = document.querySelectorAll('[data-translate]');
 				allItems.forEach(function(ele) {
@@ -6794,7 +6817,7 @@ async function changeLg(lang) {
 				
 				getById("mainmenu").style.opacity = 1;
 				
-			}).catch(async function(err2) {
+			}).catch(async (err2)=>{
 				if (retry){
 					console.warn("Couldn't find the exact language file for '"+lang+"'; trying a more generic option instead");
 					lang = lang.split('-')[0];
@@ -6808,7 +6831,7 @@ async function changeLg(lang) {
 		} catch(e){
 			getById("mainmenu").style.opacity = 1;
 		}
-	}).catch(async function(err) {
+	}).catch(async (err)=>{
 		if (retry){
 			console.warn("Couldn't find exact language; trying a more generic option instead");
 			lang = lang.split('-')[0];
@@ -6865,6 +6888,23 @@ eventer(messageEvent, function(e) { // this listens for child IFRAMES.
 	} catch(e){errorlog(e);}
 });
 
+function requestRotateGuest(ele){
+	var UUID = ele.dataset.UUID;
+	var data = {};
+	//data.mirrorGuestTarget = UUID;
+	//session.sendPeers(data, false, UUID);
+	
+	ele.classList.add("pressed"); ele.ariaPressed = "true";
+		
+	data.rotate = true;
+	session.sendRequest(data, UUID);
+	
+	setTimeout(function(el){
+		el.value = 0;
+		el.classList.remove("pressed");
+		el.ariaPressed = "false";
+	}, 500, ele)
+}
 
 function requestMirrorGuest(ele){
 	var UUID = ele.dataset.UUID;
@@ -15408,12 +15448,15 @@ function updateForceRotate(skipLastBit=false){
 						}
 					}
 					
-				} catch(e){}
+				} catch(e){
+					errorlog(e);
+				}
 			} else {
 				return;
 			}
 			
 			var msg = {};
+			msg.rotate_video = 0;
 			if (session.forceRotate!==false){
 				if (session.rotate){
 					msg.rotate_video = session.forceRotate + parseInt(session.rotate); 
@@ -15421,22 +15464,22 @@ function updateForceRotate(skipLastBit=false){
 					msg.rotate_video = session.forceRotate;
 				}
 			} else {
-				msg.rotate_video = session.rotate;
+				msg.rotate_video = parseInt(session.rotate) || 0;
 			}
 			
 			if (msg.rotate_video && (msg.rotate_video>=360)){
 				msg.rotate_video-=360;
 			}
 			
-			var msgEncoded = JSON.stringify(msg);
 			for (var UUID in session.pcs){
 				try{
 					if (session.pcs[UUID].rotation != msg.rotate_video){ //  0 == false will skip I think
-						session.pcs[UUID].sendChannel.send(msgEncoded);
 						session.pcs[UUID].rotation = msg.rotate_video;
+						session.sendMessage(msg, UUID);
 						//log("sending updated rotation info");
 					}
 				} catch(e){
+					errorlog(e);
 					if (session.pcs[UUID].startTime + 100000 < Date.now()){
 						warnlog("RTC Connection seems to be dead or not yet open? 8");
 					} else {
@@ -15483,6 +15526,7 @@ function updateForceRotate(skipLastBit=false){
 			}
 			
 			var msg = {};
+			msg.rotate_video = 0;
 			if (session.forceRotate!==false){
 				if (session.rotate){
 					msg.rotate_video = session.forceRotate + parseInt(session.rotate); 
@@ -15492,27 +15536,67 @@ function updateForceRotate(skipLastBit=false){
 				if (msg.rotate_video && (msg.rotate_video>=360)){
 					msg.rotate_video-=360;
 				}
-				warnlog("FIREFOX MOBILE ONLY ROTATE: "+msg.rotate_video);
+				//warnlog("FIREFOX MOBILE ONLY ROTATE: "+msg.rotate_video);
 				//session.sendMessage(msg);
+			} else {
+				msg.rotate_video = parseInt(session.rotate) || 0;
 				
-				var msgEncoded = JSON.stringify(msg);
-				for (var UUID in session.pcs){
-					try{
-						if (session.pcs[UUID].rotation != msg.rotate_video){
-							session.pcs[UUID].sendChannel.send(msgEncoded);
-							session.pcs[UUID].rotation = msg.rotate_video;
-							//log("sending updated rotation info");
-						}
-					} catch(e){
-						if (session.pcs[UUID].startTime + 100000 < Date.now()){
-							warnlog("RTC Connection seems to be dead or not yet open? 8");
-						} else {
-							log("RTC Connection seems to be dead or not yet open? 8");
-						}
+				if (msg.rotate_video && (msg.rotate_video>=360)){
+					msg.rotate_video-=360;
+				}
+				//warnlog("FIREFOX MOBILE ONLY ROTATE: "+msg.rotate_video);
+			}
+			for (var UUID in session.pcs){
+				try{
+					if (session.pcs[UUID].rotation != msg.rotate_video){
+						session.pcs[UUID].rotation = msg.rotate_video;
+						session.sendMessage(msg, UUID);
+						//log("sending updated rotation info");
+					}
+				} catch(e){
+					errorlog(e);
+					if (session.pcs[UUID].startTime + 100000 < Date.now()){
+						warnlog("RTC Connection seems to be dead or not yet open? 8");
+					} else {
+						log("RTC Connection seems to be dead or not yet open? 8");
 					}
 				}
 			}
-		} catch(e){}
+					
+		} catch(e){errorlog(e);}
+	} else {
+		var msg = {};
+		msg.rotate_video = 0;
+		if (session.forceRotate!==false){
+			if (session.rotate){
+				msg.rotate_video = session.forceRotate + parseInt(session.rotate); 
+			} else {
+				msg.rotate_video = session.forceRotate;
+			}
+		} else {
+			msg.rotate_video = parseInt(session.rotate) || 0;
+		}
+		
+		if (msg.rotate_video && (msg.rotate_video>=360)){
+			msg.rotate_video-=360;
+		}
+		
+		for (var UUID in session.pcs){
+			try{
+				if (session.pcs[UUID].rotation != msg.rotate_video){
+					session.pcs[UUID].rotation = msg.rotate_video;
+					session.sendMessage(msg, UUID);
+					//log("sending updated rotation info");
+				}
+			} catch(e){
+				errorlog(e);
+				if (session.pcs[UUID].startTime + 100000 < Date.now()){
+					warnlog("RTC Connection seems to be dead or not yet open? 8");
+				} else {
+					log("RTC Connection seems to be dead or not yet open? 8");
+				}
+			}
+		}
 	}
 	if (!skipLastBit){
 		applyMirror(session.mirrorExclude);
@@ -22608,6 +22692,7 @@ function applyMirror(mirror) { // true unmirrors as its already mirrored
 		}
 		
 		session.videoElement.rotated = rotate;
+		session.videoElement.dataset.rotated = rotate;
 		
 		if (document.getElementById("previewWebcam") || document.getElementById('videosource')){
 			var eleName = document.getElementById("previewWebcam") || document.getElementById('videosource');

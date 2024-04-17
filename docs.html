@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VDO.Ninja | The Swiss Army knife of low-latency live streaming</title>
+    <meta name="description" content="VDO.Ninja is the Swiss Army knife of low-latency live streaming.">
+    <meta name="keywords" content="vdo ninja, streaming, OBS overlay, webrtc, av1, performer, browser source, guest, video, low latency, rtmp, content creators, live streaming tools">
+    <meta name="author" content="VDO.Ninja">
+    <link rel="icon" type="image/x-icon" href="https://vdo.ninja/icons/favicon.ico">
+    <link rel="stylesheet" href="styles.css">
+    <script async defer src="https://buttons.github.io/buttons.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/12.0.1/lib/marked.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/marked-gfm-heading-id/3.1.3/index.umd.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/marked-base-url/1.1.3/index.umd.min.js"></script>
+	
+	
+	<meta name="sourcecode" content="https://github.com/steveseguin/vdo.ninja" />
+	<meta name="stance-on-war" content="Steve Seguin condemns Russia's brutal invasion of Ukraine 💙💛." />
+	
+	<link rel="shortcut icon" href="data:image/x-icon;," type="image/x-icon" />
+	<link id="favicon1" rel="icon" type="image/png" sizes="32x32" href="https://vdo.ninja/media/favicon-32x32.png" />
+	<link id="favicon2" rel="icon" type="image/png" sizes="16x16" href="https://vdo.ninja/media/favicon-16x16.png" />
+	<link id="favicon3" rel="icon" href="https://vdo.ninja/media/favicon.ico" />
+	
+    <meta property="og:title" content="VDO.Ninja | Enhance Your Live Streaming">
+    <meta property="og:description" content="The Swiss Army knife of low-latency live streaming">
+    <meta property="og:url" content="https://vdo.ninja">
+    <meta property="og:type" content="website">
+    <meta name="twitter:title" content="VDO.Ninja | Tools for Live Streamers">
+    <meta name="twitter:description" content="VDO.Ninja, a powerful free tool for low-latency live streaming. Discover more at VDO.Ninja.">
+    <style>
+		
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap');
+
+body, html {
+    margin: 0;
+    padding: 0;
+    font-family: 'Poppins', sans-serif;
+    color: #333;
+    background-color: #e5e5e5;
+	padding-bottom: 40px;
+	line-height: 1.6;
+	overflow-x: hidden;
+}
+
+header {
+    background: #1a1a1a; /* Darker shade for a rich appearance */
+    color: #fff;
+    padding: 20px;
+    text-align: center;
+	margin-left: 270px;
+}
+
+h1 {
+    margin: 0;
+    font-size: 2.4em;
+}
+
+p {
+    margin: 10px 0 0;
+    font-size: 1.2em;
+}
+
+#downloads {
+    text-align: center;
+    padding: 20px;
+}
+
+.download-btn {
+    background-color: #007bff; /* Brighter shade of blue */
+    color: white;
+    border: none;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    cursor: pointer;
+    border-radius: 5px;
+    transition: background-color 0.3s;
+}
+
+.download-btn:hover {
+    background-color: #0056b3; /* Darker blue on hover */
+	color: white;
+}
+
+#video {
+    width: 100%;
+    text-align: center;
+    padding: 20px;
+	max-width: calc(100% - 40px);
+}
+
+iframe {
+    max-width: 100%;
+    border: none; /* Remove border for cleaner look */
+}
+
+.section {
+    padding: 20px 20px 40px 20px;
+    background-color: #fff;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+	margin: 20px;
+    border-radius: 10px;
+}
+
+.faq-item h3 {
+    margin: 10px 0;
+    color: #333;
+}
+
+.faq-item p {
+    font-size: 1em;
+    color: #666;
+}
+
+footer {
+    background-color: #000e;
+    color: white;
+    text-align: center;
+    padding: 7px;
+    position: fixed;
+    bottom: 0;
+    width: 100vw;
+}
+footer p {
+	margin: 0;
+}
+
+a {
+    color: #007bff; /* Links color to match buttons */
+    text-decoration: none;
+}
+
+a:hover {
+    color: #0056b3; /* Darker blue on hover */
+    text-decoration: underline; /* Underline on hover for better visibility */
+}
+
+.github-btn {
+    background-color: #cecece;
+    color: black;
+    border: none;
+    padding: 12px 20px;
+    font-size: 16px;
+    border-radius: 5px;
+    text-decoration: none;
+    display: inline-block;
+    transition: background-color 0.3s;
+    margin-top: 12px;
+}
+
+.github-btn:hover {
+    background-color: #b0aeae; 
+}
+
+#github-buttons {
+    text-align: center; 
+    margin: 20px 0 10px 0; 
+}
+.logo{
+	max-height: 1em;
+	position:relative;
+	top:0.1em;
+}
+
+#content {
+    background-color: #f8f8f8;
+    padding: 20px;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+}
+
+#content h1, #content h2, #content h3 {
+    color: #333;
+}
+
+#content pre, #content code {
+    background-color: #eee;
+    border-radius: 5px;
+    padding: 5px;
+    font-family: 'Courier New', Courier, monospace;
+}
+
+#content a {
+    color: #007BFF;
+    text-decoration: none;
+}
+
+img {
+	max-width: 100%;
+}
+
+.sidebar {
+    width: 250px;
+    position: fixed;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    background-color: #f4f4f4;
+    overflow-y: auto;
+    padding: 20px;
+    box-shadow: 2px 0 5px rgba(0,0,0,0.1);
+}
+
+.section {
+    margin-left: 270px;  /* Adjusted to make room for sidebar */
+    padding: 20px;
+}
+
+#sidebar  {
+    list-style: none;
+    padding: 0;
+}
+#sidebar h1 {
+	font-size:1.4em;
+	margin: auto auto;
+    text-align: center;
+}
+
+#sidebar  li a {
+    display: block;
+    padding: 10px;
+    text-decoration: none;
+    color: #333;
+    border-bottom: 1px solid #ddd;
+}
+
+#sidebar li a:hover {
+    background-color: #ddd;
+}
+
+.nested {
+    display: none;
+    list-style-type: none; /* Removes bullet points for nested lists */
+    padding-left: 20px; /* Indent nested lists */
+}
+
+#sidebar  li a {
+    display: block;
+    padding: 8px;
+    text-decoration: none;
+    color: #333;
+    cursor: pointer;
+}
+
+#sidebar  li a:hover {
+    background-color: #ddd;
+}
+
+.header-link {
+    color: inherit; /* Makes the link color the same as the text color */
+    text-decoration: none; /* No underline */
+}
+
+.header-link:hover {
+    text-decoration: underline; /* Optional: underline on hover */
+}
+
+.fancy-button, {
+    border: 1px solid black;
+    margin: 2px 10px;
+    padding: 2px 20px;
+    border-radius: 10px;
+    background-color: #eee;
+}
+
+.oddembed {
+    margin: 2px 5px;
+    padding: 2px 10px;
+	</style>
+</head>
+<body>
+    <header id="header">
+        <h1>VDO.Ninja <img class="logo" src="https://vdo.ninja/media/old_icon.png"></h1>
+        <p>The Swiss Army knife of low-latency live streaming</p>
+		<div id="github-buttons">
+			<a class="github-button" href="https://github.com/steveseguin/vdo.ninja" data-size="large">
+                <svg viewBox="0 0 16 16" width="16" height="16" class="octicon octicon-mark-github" aria-hidden="true"><path d="M8 0c4.42 0 8 3.58 8 8a8.013 8.013 0 0 1-5.45 7.59c-.4.08-.55-.17-.55-.38 0-.27.01-1.13.01-2.2 0-.75-.25-1.23-.54-1.48 1.78-.2 3.65-.88 3.65-3.95 0-.88-.31-1.59-.82-2.15.08-.2.36-1.02-.08-2.12 0 0-.67-.22-2.2.82-.64-.18-1.32-.27-2-.27-.68 0-1.36.09-2 .27-1.53-1.03-2.2-.82-2.2-.82-.44 1.1-.16 1.92-.08 2.12-.51.56-.82 1.28-.82 2.15 0 3.06 1.86 3.75 3.64 3.95-.23.2-.44.55-.51 1.07-.46.21-1.61.55-2.33-.66-.15-.24-.6-.83-1.23-.82-.67.01-.27.38.01.53.34.19.73.9.82 1.13.16.45.68 1.31 2.69.94 0 .67.01 1.3.01 1.49 0 .21-.15.45-.55.38A7.995 7.995 0 0 1 0 8c0-4.42 3.58-8 8-8Z"></path></svg>
+				<span class="d-none d-sm-inline"> View on GitHub </span>
+             </a>
+			<a class="github-button" href="https://github.com/steveseguin/vdo.ninja" data-icon="octicon-star" data-size="large" data-show-count="true" aria-label="Star steveseguin/vdo.ninja on GitHub">Star</a>
+			<a class="github-button" href="https://github.com/steveseguin/vdo.ninja/fork" data-icon="octicon-repo-forked" data-size="large" data-show-count="true" aria-label="Fork steveseguin/vdo.ninja on GitHub">Fork</a>
+			<a class="github-button" href="https://github.com/steveseguin/vdo.ninja/subscription" data-icon="octicon-eye" data-size="large" data-show-count="true" aria-label="Watch steveseguin/vdo.ninja on GitHub">Watch</a>
+			
+			<a class="github-button" href="https://github.com/sponsors/steveseguin" data-icon="octicon-heart" data-size="large" aria-label="Sponsor @steveseguin on GitHub">Sponsor</a>
+			
+		</div>
+    </header>
+	<div id="sidebar" class="sidebar"></div>
+	<section id="markdown" class="section">
+		
+	</section>
+    <footer>
+        <p>Join our community for free support on <a href="https://discord.vdo.ninja" target="_blank">Discord</a>.</p>
+    </footer>
+	<script>
+		function smoothScroll(target) {
+			  const element = document.getElementById(target);
+			  if (element) {
+				window.scrollTo({
+				  top: element.offsetTop,
+				  behavior: 'smooth'
+				});
+			  }
+			}
+			
+		function replaceGitbookTemplates(text) {
+			const embedPattern = /{% embed url="([^"]+)" %}([^{%]+){% endembed %}/g;
+			const contentRefPattern = /{% content-ref url="([^"]+)" %}([^{%]+){% endcontent-ref %}/g;
+			const hintRefPattern = /{% hint style="([^"]+)" %}([^{%]+){% endhint %}/g;
+
+			// Replace embeds
+			text = text.replace(embedPattern, (match, url, description) => {
+				let src;
+				const urlObj = new URL(url);
+				const videoId = new URLSearchParams(urlObj.search).get('v');
+
+				// Check if it's a YouTube URL and use the video ID if available
+				if (urlObj.hostname.includes('youtube.com') && videoId) {
+					src = `https://www.youtube.com/embed/${videoId}`;
+					var iframeHtml = ` <iframe width="560" height="315" src="${src}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe> `;
+					description = marked.parse(description);
+				} else if (urlObj.hostname.includes('youtu.be')) {
+					src = `https://www.youtube.com/embed/${urlObj.pathname.slice(1)}`;
+					var iframeHtml = ` <iframe width="560" height="315" src="${src}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe> `;
+					description = marked.parse(description);
+				} else {
+					src = url;  // Use the full URL for other types of embeds
+					//description = marked.parse(description);
+					return ` <a class='oddembed' href="${src}">${description.trim()}</a> `;
+				}
+				
+				return `<div>${iframeHtml}<br><small><i>${description.trim()}</i></small></div>`;
+			});
+
+			// Replace content references
+			text = text.replace(contentRefPattern, (match, url, text) => {
+				return `<span class="fancy-button">${text.trim()}</span>`;
+			});
+			
+			// Replace content references
+			text = text.replace(hintRefPattern, (match, url, text) => {
+				return `<small class="`+url+`"><i>${text.trim()}</i></small>`;
+			});
+
+			return text;
+		}
+		
+		const githubBaseURL = 'https://raw.githubusercontent.com/steveseguin/vdo.ninja/gitbook/';
+		
+		function updateURL(path) {
+			if (history.pushState) {
+				const currentHash = window.location.hash;  // Store current hash
+				const newurl = `${window.location.protocol}//${window.location.host}${window.location.pathname}?file=${encodeURIComponent(path)}${currentHash}`;
+				window.history.pushState({path: newurl}, '', newurl);
+			}
+		}
+		
+		function makeHeaderLinks() {
+			document.getElementById('markdown').querySelectorAll('h1[id], h2[id], h3[id], h4[id]').forEach(header => {
+				if (!header.parentNode.matches('a')) {  // Check if the header is not already inside a link
+					const id = header.getAttribute('id');
+					header.innerHTML = `<a href="#${id}" class="header-link">${header.innerHTML}</a>`;
+				}
+			});
+			if (window.location.hash) {
+				document.getElementById(window.location.hash.substring(1)).scrollIntoView();
+			}
+		}
+		
+		function loadMarkdownFromURL() {
+		
+			(function(w) {
+				w.URLSearchParams = w.URLSearchParams || function(searchString) {
+					var self = this;
+					searchString = searchString.replace("??", "?");
+					self.searchString = searchString;
+					self.get = function(name) {
+						var results = new RegExp('[\?&]' + name + '=([^&#]*)').exec(self.searchString);
+						if (results == null) {
+							return null;
+						} else {
+							return decodeURI(results[1]) || 0;
+						}
+					};
+				};
+
+			})(window);
+
+			var urlEdited = window.location.search.replace(/\?\?/g, "?");
+			urlEdited = urlEdited.replace(/\?/g, "&");
+			urlEdited = urlEdited.replace(/\&/, "?");
+			var urlParams = new URLSearchParams(urlEdited);
+		
+			const file = urlParams.get('file');
+			if (file) {
+				const filePath = decodeURIComponent(file);
+				fetchMarkdown(githubBaseURL + filePath);
+				return true;
+			}
+			return false
+		}
+
+		function fetchMarkdown(href, e=false) {
+			if (href.endsWith('.md') || (href.startsWith(githubBaseURL) && href.endsWith("/"))) {
+				if (e){
+					document.getElementById('header').style.display = "none";
+					window.location.hash = "";
+					e.preventDefault();
+				}
+				if (!href.endsWith(".md") && href.endsWith("/")){
+					href += "README.md";
+				}
+				if (href.startsWith('http')) {
+					let x = href.split("/");
+					x.pop();
+					x = x.join("/")+"/";
+					marked.use(markedBaseUrl.baseUrl(x));
+					updateURL((href).replace(githubBaseURL, ''));
+					fetch(href) 
+						.then(response => response.text())
+						.then(text => {
+							let html = replaceGitbookTemplates(text);
+							html = marked.parse(html);
+							document.getElementById('markdown').innerHTML = html;
+							makeHeaderLinks();
+						})
+						.catch(error => console.error('Error loading the markdown file:', error));
+				} else {
+					
+					let x = href.split("/");
+					x.pop();
+					x = x.join("/")+"/";
+					marked.use(markedBaseUrl.baseUrl(githubBaseURL+x));
+					updateURL((githubBaseURL + href).replace(githubBaseURL, ''));
+					fetch(githubBaseURL + href) // Fetch the markdown file from GitHub
+						.then(response => response.text())
+						.then(text => {
+							let html = replaceGitbookTemplates(text);
+							html = marked.parse(html);
+							document.getElementById('markdown').innerHTML = html;
+							makeHeaderLinks();
+						})
+						.catch(error => console.error('Error loading the markdown file:', error));
+				}
+				
+			} else if (href.startsWith('http')) {
+				// This is an absolute URL, let the browser handle it normally
+				window.open(href, '_blank');
+				if (e){
+					e.preventDefault();
+				}
+			}
+		}
+		
+		document.addEventListener("DOMContentLoaded", function() {
+		
+			marked.use(markedGfmHeadingId.gfmHeadingId({})); // fml
+			
+		    fetch(githubBaseURL+'SUMMARY.md')
+				.then(response => response.text())
+				.then(text => {
+					const html = marked.parse(text);
+					document.getElementById('sidebar').innerHTML = html;  // Insert converted HTML to the DOM
+					
+					const subMenus = document.querySelectorAll('#sidebar li ul');
+					subMenus.forEach(menu => {
+						menu.classList.add('nested');
+					});
+					
+					const sidebarMenu = document.querySelector('#sidebar');
+					sidebarMenu.addEventListener('click', function(e) {
+						if (e.target && e.target.nodeName === "A") {
+							const nextUl = e.target.nextElementSibling;
+							if (nextUl && nextUl.tagName === 'UL') {
+								// Prevent default if there's a nested UL to toggle
+								e.preventDefault();
+								nextUl.style.display = (nextUl.style.display === 'none' || !nextUl.style.display) ? 'block' : 'none';
+							}
+						}
+					});
+					
+					document.body.addEventListener('click', function(e) {
+						if (e.target && e.target.nodeName === "A") {
+							const href = e.target.getAttribute('href');
+							fetchMarkdown(href,e);
+						}
+					});
+					
+					var saved = loadMarkdownFromURL();
+					if (!saved){
+						fetch(githubBaseURL+'README.md')
+							.then(response => response.text())
+							.then(text => {
+								let html = replaceGitbookTemplates(text);
+								html = marked.parse(html);
+								document.getElementById('markdown').innerHTML = html;
+								
+							})
+							.catch(error => console.error('Error loading the README:', error));	
+					}
+					
+				})
+				.catch(error => console.error('Error loading the SUMMARY:', error));
+		});
+	
+	</script>
+</body>
+</html>

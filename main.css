@@ -2447,7 +2447,8 @@ label {
 .graphSection > span {
 	display: block;
 	font-size: 10px;
-	height: 50px;
+	max-height: 50px;
+	min-height: 20px;
 }
 .graphSection>span:last-child{
 	margin-bottom: 0px;
@@ -2613,6 +2614,20 @@ span[data-action-type="stats-graphs-details-container"]>span{
 	transform: rotate(135deg);
 	position: relative;
 	top: 1px;
+}
+
+.controlVideoBox video[data-rotated='90']{
+	transform: rotate(90deg) translate(9px,-80px)  !important;
+	height: 260px;
+	width:80px;
+}
+.controlVideoBox video[data-rotated='180']{
+	transform: rotate(180deg) !important;
+}
+.controlVideoBox video[data-rotated='270']{
+	transform: rotate(270deg) translate(-9px,80px) !important;
+	height: 260px;
+	width:80px;
 }
 
 #previewWebcam.rotate{
