@@ -249,6 +249,8 @@ if (urlParams.has('invite') || urlParams.has('i') || urlParams.has('code')){
 				presetString = "?"+presetString;
 			}
 			
+			session.preset =  presetString;
+			
 			let newURL = presetString + "&" + urlParams.toString();
 			newURL = newURL.replace(/\?/g, "&");
 			newURL = newURL.replace(/\&/, "?");
@@ -383,7 +385,15 @@ function updateURL(param, force = false, cleanUrl = false) {
 	if (session.sticky) {
 		setStorage("settings", encodeURI(window.location.href), 999);
 	}
+	
 	urlParams = new URLSearchParams(window.location.search);
+	
+	if (session.preset){
+		let newURL = session.preset + "&" + urlParams.toString();
+		newURL = newURL.replace(/\?/g, "&");
+		newURL = newURL.replace(/\&/, "?");
+		urlParams = new URLSearchParams(newURL);
+	}
 }
 
 /* function changeGuestSettings(ele){
@@ -19601,7 +19611,7 @@ async function changeSlot(event, ele){
 	}
 }
 
-function setSlot(ele, slot){
+function setSlot(ele, slot){ 
 	log("setSlot()");
 	getById("slotPicker").classList.add("hidden");
 	if (slot!==null){
@@ -39835,9 +39845,9 @@ function smdInfo(){
 }
 
 function getGuestTarget(type, id){
-	var element = document.querySelectorAll('[data-action-type="'+type+'"][data-sid="'+id+'"]'); // data-sid="P5MQpia"
+	var element = document.querySelectorAll('[data-sid="'+id+'"] > [data-action-type="'+type+'"]'); // data-sid="P5MQpia"
 	if (!element.length){
-		return element = getRightOrderedElement('[data-action-type="'+type+'"][data--u-u-i-d]', id);
+		return element = getRightOrderedElement('[data--u-u-i-d] [data-action-type="'+type+'"]', id);
 	} else {
 		element = element[0];
 	}
