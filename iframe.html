@@ -28,6 +28,7 @@
 			allow: "document-domain;encrypted-media;sync-xhr;usb;web-share;cross-origin-isolated;accelerometer;midi;geolocation;autoplay;camera;microphone;fullscreen;picture-in-picture;display-capture;gyroscope;",
 			src: addUrlParams(iframesrc, ["cleanoutput", "transparent", "hidemenu"])
 		});
+		iframe.setAttribute("allowtransparency", "true");
 		var iframeExample = newElement("div", { id: exampleId, classList: "iframe-example" });
 		var exampleHeader = newElement("div", { classList: "example-header", innerHTML: iframesrc });
 		var exampleBody = newElement("div", { classList: "example-body" });
