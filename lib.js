@@ -5007,6 +5007,7 @@ function updateMixerRun(e = false) {
 						widget = document.createElement("iframe");
 						widget.allow = "autoplay;camera;microphone;fullscreen;picture-in-picture;display-capture;midi;"; // do not allow location
 						widget.id = "widget";
+						widget.setAttribute("allowtransparency", "true");
 						widget.src = parseURL4Iframe(session.widget);
 						log(widget.src);
 						document.body.appendChild(widget);
@@ -5043,6 +5044,7 @@ function updateMixerRun(e = false) {
 						widget = document.createElement("iframe");
 						widget.allow = "autoplay;camera;microphone;fullscreen;picture-in-picture;display-capture;midi;"; // do not allow location
 						widget.id = "widget";
+						widget.setAttribute("allowtransparency", "true");
 						widget.src = parseURL4Iframe(session.widget);
 						log(widget.src);
 						document.body.appendChild(widget);
@@ -13470,7 +13472,7 @@ function toggleMute(apply = false, event = false) {
 				track.enabled = false;
 			});
 		}
-		if ((iOS || iPad) && session.videoElement && session.videoElement.srcObject) {
+		if (session.mobile && session.videoElement && session.videoElement.srcObject) {
 			session.videoElement.srcObject.getAudioTracks().forEach(track => {
 				track.enabled = false;
 			});
@@ -13492,14 +13494,14 @@ function toggleMute(apply = false, event = false) {
 				track.enabled = true;
 			});
 		}
-		if (iOS || iPad) {
+		//if (session.mobile) {
 			if (session.videoElement && session.videoElement.srcObject) {
 				session.videoElement.srcObject.getAudioTracks().forEach(track => {
 					track.enabled = true;
 				});
 			}
 			refreshMicrophoneDevice(); // to address an issue with iOS/iPad devices losing audio when an inbound audio souce hits.
-		}
+		//}
 
 		// toggleMute(false, event)
 
@@ -17491,6 +17493,7 @@ session.publishIFrame = function (iframeURL) {
 	iframe.allow = "autoplay;camera;microphone;fullscreen;picture-in-picture;display-capture;midi;"; // do not allow location
 	iframe.src = session.iframeSrc;
 	iframe.id = "iframe_source";
+	iframe.setAttribute("allowtransparency", "true");
 	iframe.loadedYoutubeListen = false;
 	session.iframeEle = iframe;
 
@@ -19550,6 +19553,7 @@ async function toggleWidgetURL(ele) {
 				widget = document.createElement("iframe");
 				widget.allow = "autoplay;camera;microphone;fullscreen;picture-in-picture;display-capture;midi;"; // do not allow location
 				widget.id = "widget";
+				widget.setAttribute("allowtransparency", "true");
 				widget.src = parseURL4Iframe(session.widget);
 				log(widget.src);
 				document.body.appendChild(widget);
@@ -29763,6 +29767,7 @@ function previewIframe(iframeSrc) {
 	iframe.style.width = "100%";
 	iframe.style.height = "100%";
 	iframe.style.border = "10px dashed rgb(64 65 62)";
+	iframe.setAttribute("allowtransparency", "true");
 
 	iframeSrc = parseURL4Iframe(iframeSrc);
 
@@ -29788,6 +29793,7 @@ function loadIframe(iframesrc, UUID) {
 
 	var iframe = document.createElement("iframe");
 	iframe.allow = "autoplay;camera;microphone;fullscreen;picture-in-picture;display-capture;midi;"; // do not allow location
+	iframe.setAttribute("allowtransparency", "true");
 	iframe.style.width = "100%";
 	iframe.style.height = "100%";
 	iframe.style.border = "10px dashed rgb(64 65 62)";
@@ -34666,6 +34672,7 @@ async function shareWebsite(autostart = false, evt = false) {
 		iframe.allow = "autoplay;camera;microphone;fullscreen;picture-in-picture;display-capture;midi;"; // do not allow location
 		iframe.src = session.iframeSrc;
 		iframe.id = "iframe_source";
+		iframe.setAttribute("allowtransparency", "true");
 		iframe.loadedYoutubeListen = false;
 		session.iframeEle = iframe;
 
@@ -34862,7 +34869,7 @@ function createIframePopup() {
 	var iframe = document.createElement("iframe");
 	iframe.allow = "autoplay;camera;microphone;fullscreen;picture-in-picture;display-capture;midi;"; // do not allow location
 	iframe.src = "./" + createScreenShareURL();
-
+	iframe.setAttribute("allowtransparency", "true");
 	iframe.style.width = "100%";
 	iframe.style.height = "100%";
 	iframe.style.overflow = "hidden";
