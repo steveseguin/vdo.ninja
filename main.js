@@ -737,9 +737,9 @@ async function main() {
 	// awaitInboundCall()();
 	//}
 
-	if (urlParams.has("relaywss")) {
-		session.relaywss = true; // do not use; this is not completed yet and mainly for debugging at this point.
-	}
+	//if (urlParams.has("relaywss")) {
+	//	session.relaywss = true;
+	//}
 
 	if (urlParams.has("fulltalk") && urlParams.get("fulltalk").length == 6) {
 		listenWebsocket(urlParams.get("fulltalk"), false); // talk and hear all
@@ -1825,7 +1825,7 @@ async function main() {
 
 	if (urlParams.has("js")) {
 		// ie: &js=https%3A%2F%2Fvdo.ninja%2Fexamples%2Ftestjs.js
-		if (window !== window.top || !(window.location.hostname.endsWith("vdo.ninja") || window.location.hostname.endsWith("rtc.ninja") || window.location.hostname.endsWith("versus.cam") || window.location.hostname.endsWith("invite.cam"))) {
+		//if (window !== window.top || !(window.location.hostname.endsWith("vdo.ninja") || window.location.hostname.endsWith("rtc.ninja") || window.location.hostname.endsWith("versus.cam") || window.location.hostname.endsWith("invite.cam"))) {
 			console.warn("Third-party Javascript has been injected into the code. Security cannot be ensured.");
 			var jsURL = urlParams.get("js");
 			jsURL = decodeURI(jsURL);
@@ -1842,34 +1842,39 @@ async function main() {
 				log("Third-party Javascript loaded");
 			};
 			document.head.appendChild(externalJavaascript);
-		} else {
-			console.error("For security/privacy purposes, Javascript injection is now only allowed on self-hosted instances or if VDO.Ninja is hosted within an IFRAME"); // I won't have control in those cases anyways.
-		}
+	//	} else {
+	//		console.error("For security/privacy purposes, Javascript injection is now only allowed on self-hosted instances or if VDO.Ninja is hosted within an IFRAME"); // I won't have control in those cases anyways.
+	//	}
 	}
 
 	if (urlParams.has("base64js") || urlParams.has("b64js") || urlParams.has("jsbase64") || urlParams.has("jsb64")) {
 		try {
-			var base64js = urlParams.get("base64js") || urlParams.get("b64js") || urlParams.get("jsbase64") || urlParams.get("jsb64");
-			base64js = decodeURIComponent(atob(base64js)); // window.btoa(encodeURIComponent("alert('hi')"));  // ?jsb64=YWxlcnQoJ2hpJyk7
-			var externalJavaascript = document.createElement("script");
-			externalJavaascript.type = "text/javascript";
-			externalJavaascript.crossorigin = "anonymous";
-			externalJavaascript.innerHTML = base64js;
-			externalJavaascript.onerror = function () {
-				errorlog("Third-party Javascript failed to load");
-			};
-			externalJavaascript.onload = function () {
-				log("Third-party Javascript loaded");
-			};
-			document.head.appendChild(externalJavaascript);
+		//	if (window !== window.top || !(window.location.hostname.endsWith("vdo.ninja") || window.location.hostname.endsWith("rtc.ninja") || window.location.hostname.endsWith("versus.cam") || window.location.hostname.endsWith("invite.cam"))) {
+				console.warn("Third-party Javascript has been injected into the code. Security cannot be ensured.");
+				var base64js = urlParams.get("base64js") || urlParams.get("b64js") || urlParams.get("jsbase64") || urlParams.get("jsb64");
+				base64js = decodeURIComponent(atob(base64js)); // window.btoa(encodeURIComponent("alert('hi')"));  // ?jsb64=YWxlcnQoJ2hpJyk7
+				var externalJavaascript = document.createElement("script");
+				externalJavaascript.type = "text/javascript";
+				externalJavaascript.crossorigin = "anonymous";
+				externalJavaascript.innerHTML = base64js;
+				externalJavaascript.onerror = function () {
+					errorlog("Third-party Javascript failed to load");
+				};
+				externalJavaascript.onload = function () {
+					log("Third-party Javascript loaded");
+				};
+				document.head.appendChild(externalJavaascript);
+		//	} else {
+		//		console.error("For security/privacy purposes, Javascript injection is now only allowed on self-hosted instances or if VDO.Ninja is hosted within an IFRAME"); // I won't have control in those cases anyways.
+		//	}
 		} catch (e) {
 			console.error(e);
 		}
 	}
 
 	session.sitePassword = session.defaultPassword;
-	if (urlParams.has("password") || urlParams.has("pass") || urlParams.has("pw") || urlParams.has("p")) {
-		session.password = urlParams.get("password") || urlParams.get("pass") || urlParams.get("pw") || urlParams.get("p");
+	if (urlParams.has("password") || urlParams.has("pass") || urlParams.has("pw") || urlParams.has("p") || (session.password===null)) {
+		session.password = urlParams.get("password") || urlParams.get("pass") || urlParams.get("pw") || urlParams.get("p") || null;
 
 		if (!session.password) {
 			window.focus();
