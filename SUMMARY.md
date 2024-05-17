@@ -614,6 +614,7 @@
   * [Relay candidate being selected](common-errors-and-known-issues/relay-candidate-being-selected.md)
   * [Camera works in Safari; not Chrome](common-errors-and-known-issues/camera-works-in-safari-not-chrome.md)
   * [Robotic audio](common-errors-and-known-issues/robotic-audio.md)
+  * [Can't load camera from non-SSL host](common-errors-and-known-issues/cant-load-camera-from-non-ssl-host.md)
 * [Platform specific issues](platform-specific-issues/README.md)
   * [Android](platform-specific-issues/android.md)
   * [macOS](platform-specific-issues/macos.md)
