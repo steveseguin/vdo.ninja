@@ -4,7 +4,7 @@ description: You can host a VDO.Ninja media stream on a website, via the IFRAME 
 
 # How to use VDO.Ninja on a website
 
-### Basic embeddeding
+### Basic embedding
 
 Embedding VDO.NInja into a website should be pretty simple; we're just using the IFRAME element and setting the source to the VDO.Ninja URL we wish to load
 
@@ -24,6 +24,8 @@ Embedding VDO.NInja into a website should be pretty simple; we're just using the
 </body>
 </html>
 ```
+
+You may want to add or remove certain permissions, such as geolocation. Please note that while enabling auto-play is an IFRAME option, unless the parent window has already had a user-gesture interaction, the video inside VDO.Ninja will not autoplay; at least not with audio. Auto-playing of audio is controlled by the browser to limit annoying ads from auto-playing also; overriding this isn't really feasible.
 
 ### Adding some security for public deployments
 
