@@ -616,6 +616,7 @@
   * [Camera works in Safari; not Chrome](common-errors-and-known-issues/camera-works-in-safari-not-chrome.md)
   * [Robotic audio](common-errors-and-known-issues/robotic-audio.md)
   * [Can't load camera from non-SSL host](common-errors-and-known-issues/cant-load-camera-from-non-ssl-host.md)
+  * [Camera on macOS doesn't show?](common-errors-and-known-issues/camera-on-macos-doesnt-show.md)
 * [Platform specific issues](platform-specific-issues/README.md)
   * [Android](platform-specific-issues/android.md)
   * [macOS](platform-specific-issues/macos.md)
