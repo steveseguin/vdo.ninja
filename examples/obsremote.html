@@ -14,6 +14,9 @@ button {
 a {
     display: inline-block;
 }
+.pressed{
+	border: solid 3px black;
+}
 </style>
 </head>
 <body>
@@ -32,7 +35,7 @@ a {
 		<input id="obsRemotePasswordinput" style="margin:0 10px;display:inline-block;padding: 8px 10px 6px 10px;" onchange="changeremote()" oninput="changeremote()" placeholder="Enter the remote OBS password here" />
 	</div>
 	
-	Put the following link into OBS with permissions set to allow for scene changes: <a href="" id="putintoOBSlink" style="margin: 10px 0;" target="_blank"></a>
+	Put the following link into OBS with permissions set to allow for scene changes:<br ><a href="" id="putintoOBSlink" style="margin: 10px 0;" target="_blank"></a>
 	
 	<small style="margin: 20px 0 0 0;display:block;" >
 		See the <a href="https://docs.vdo.ninja/advanced-settings/upcoming-parameters/and-obs" style="cursor:pointer;" target="_blank">documentation</a> for the built-in OBS control options inside VDO.Ninja
@@ -50,6 +53,31 @@ for (var i = 0; i < 12; i++) {
 	sessionID += characters.charAt(Math.floor(Math.random() * charactersLength));
 }
 	
+(function(w) {
+	w.URLSearchParams = w.URLSearchParams || function(searchString) {
+		var self = this;
+		searchString = searchString.replace("??", "?");
+		self.searchString = searchString;
+		self.get = function(name) {
+			var results = new RegExp('[\?&]' + name + '=([^&#]*)').exec(self.searchString);
+			if (results == null) {
+				return null;
+			} else {
+				return decodeURI(results[1]) || 0;
+			}
+		};
+	};
+
+})(window);
+
+var urlEdited = window.location.search.replace(/\?\?/g, "?");
+urlEdited = urlEdited.replace(/\?/g, "&");
+urlEdited = urlEdited.replace(/\&/, "?");
+var urlParams = new URLSearchParams(urlEdited);
+
+if (urlParams.has("id") || urlParams.has("push") || urlParams.has("streamid") || urlParams.has("session")){
+	sessionID = urlParams.get("id") || urlParams.get("push") || urlParams.get("streamid") || urlParams.get("session") || sessionID;
+}
 
 var iframe = document.createElement("iframe");
 var iframeContainer = document.createElement("div");
@@ -62,16 +90,16 @@ function changeremote(){
 	ele.value = val;
 
 	if (val){
-		document.getElementById("putintoOBSlink").innerText = "https://vdo.ninja/alpha/?view="+sessionID+"&dataonly&remote="+val;
-		document.getElementById("putintoOBSlink").href = "https://vdo.ninja/alpha/?view="+sessionID+"&dataonly&remote="+val;
+		document.getElementById("putintoOBSlink").innerText = "https://vdo.ninja/?view="+sessionID+"&dataonly&remote="+val;
+		document.getElementById("putintoOBSlink").href = "https://vdo.ninja/?view="+sessionID+"&dataonly&remote="+val;
 	} else {
-		document.getElementById("putintoOBSlink").innerText = "https://vdo.ninja/alpha/?view="+sessionID+"&dataonly&remote";
-		document.getElementById("putintoOBSlink").href = "https://vdo.ninja/alpha/?view="+sessionID+"&dataonly&remote";
+		document.getElementById("putintoOBSlink").innerText = "https://vdo.ninja/?view="+sessionID+"&dataonly&remote";
+		document.getElementById("putintoOBSlink").href = "https://vdo.ninja/?view="+sessionID+"&dataonly&remote";
 	}
 }
 changeremote();
 
-iframe.src = "https://vdo.ninja/alpha/?push="+sessionID+"&remote&dataonly";  ///// change this
+iframe.src = "https://vdo.ninja/?push="+sessionID+"&remote&dataonly";  ///// change this
 iframeContainer.appendChild(iframe);
 iframeContainer.style.width = "300px";
 iframeContainer.style.height = "20px";

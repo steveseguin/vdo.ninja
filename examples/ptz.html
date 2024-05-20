@@ -60,19 +60,22 @@ span {
 <div id="container1" style="width:100%;height:89%;display:none;"></div>
 <div id="container2" style="width:100%;height:10%;display:none;">
 	<span>
-		🍳
-		<button onclick="panleft()" style='background-color:red'>Pan LEFT ⬅️</button>
-		<button onclick="panright()" style='background-color:green'>Pan RIGHT ➡️</button>
+		<button onclick="pan(-10)" style='background-color:red'>⬅️⬅️</button>
+		<button onclick="pan(-1)" style='background-color:red'>Pan LEFT ⬅️</button>
+		<button onclick="pan(1)" style='background-color:green'>Pan RIGHT ➡️</button>
+		<button onclick="pan(10)" style='background-color:green'>➡️➡️️</button>
 	</span>
 	<span>
-		⏸️
-		<button onclick="tiltup()" style='background-color:red'>Tilt UP ⬆️</button>
-		<button onclick="tildown()" style='background-color:green'>Tilt DOWN ⬇️</button>
+		<button onclick="tilt(-10)" style='background-color:red'>⬆️⬆️</button>
+		<button onclick="tilt(-1)" style='background-color:red'>Tilt UP ⬆️</button>
+		<button onclick="tilt(1)" style='background-color:green'>Tilt DOWN ⬇️</button>
+		<button onclick="tilt(10)" style='background-color:green'>⬇️⬇️</button>
 	</span>
 	<span>
-		🔍
-		<button onclick="zoomout()" style='background-color:red'>Zoom OUT ➖</button>
-		<button onclick="zoomin()" style='background-color:green'>Zoom IN ➕</button>
+		<button onclick="zoom(-10)" style='background-color:red'>➖➖</button>
+		<button onclick="zoom(-1)" style='background-color:red'>Zoom OUT ➖</button>
+		<button onclick="zoom(1)" style='background-color:green'>Zoom IN ➕</button>
+		<button onclick="zoom(10)" style='background-color:green'>➕➕</button>
 	</span>
 </div>
 <div>
@@ -87,35 +90,20 @@ span {
 <script>
 var iframe;
 
-function panleft(){
+function pan(delta){
 	if (iframe){
-	console.log("PAN 1");
-		iframe.contentWindow.postMessage({"sendRequest":{pan:-1}}, '*');
+	console.log("PAN "+delta);
+		iframe.contentWindow.postMessage({"sendRequest":{pan:delta}}, '*');
 	}
 }
-function panright(){
+function tilt(delta){
 	if (iframe){
-		iframe.contentWindow.postMessage({"sendRequest":{pan:1}}, '*');
+		iframe.contentWindow.postMessage({"sendRequest":{tilt:delta}}, '*');
 	}
 }
-function tiltup(){
+function zoom(delta){
 	if (iframe){
-		iframe.contentWindow.postMessage({"sendRequest":{tilt:1}}, '*');
-	}
-}
-function tildown(){
-	if (iframe){
-		iframe.contentWindow.postMessage({"sendRequest":{tilt:-1}}, '*');
-	}
-}
-function zoomout(){
-	if (iframe){
-		iframe.contentWindow.postMessage({"sendRequest":{zoom:-1}}, '*');
-	}
-}
-function zoomin(){
-	if (iframe){
-		iframe.contentWindow.postMessage({"sendRequest":{zoom:1}}, '*');
+		iframe.contentWindow.postMessage({"sendRequest":{zoom:delta}}, '*');
 	}
 }
 

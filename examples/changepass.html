@@ -13,10 +13,10 @@ var generateHash = function (str, length=false){
 	);
 };
 function toHexString(byteArray){
-		return Array.prototype.map.call(byteArray, function(byte){
-			return ('0' + (byte & 0xFF).toString(16)).slice(-2);
-		}).join('');
-	}
+	return Array.prototype.map.call(byteArray, function(byte){
+		return ('0' + (byte & 0xFF).toString(16)).slice(-2);
+	}).join('');
+}
 var password = prompt("Please enter the password");
 password = password.trim();
 password = encodeURIComponent(password);
@@ -29,7 +29,9 @@ if (location.hostname == "steveseguin.github.io"){ // allows github to be a back
 	salt = location.hostname.split(".").slice(-2).join("."); // official sub-domains will retain their passwords
 }
 
-generateHash(password + salt, 4).then(function(hash) { // million to one error. 
+// Million to one error with a hash length of 4, and still decent security if using a long randomized password.
+// For more security, you can use a hash length of just 2 rather than 4; VDO.Ninja v27.10 and newer supports 1,2,3,4,5, or 6 hash lengths.
+generateHash(password + salt, 4).then(function(hash) { 
 	alert("hash value: "+hash)
 });
 </script></body></html>

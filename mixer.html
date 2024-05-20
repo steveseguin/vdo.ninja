@@ -1105,8 +1105,11 @@
 	function warnlog(msg){
 		console.warn(msg);
 	}
-	function log(msg){
-		console.log(msg);
+	function log(msg) {
+		const stack = new Error().stack;
+		const callerLine = stack.split("\n")[2]; // Get the second line of the stack trace
+		const lineNumber = callerLine.match(/:(\d+):\d+\)?$/)[1]; // Extract the line number
+		console.log(msg, "Line: "+ lineNumber);
 	}
 	
 	function getById(id){
@@ -2685,7 +2688,6 @@
 					changeAspectRatio(aspectRatio,false);
 				}
 				
-				
 				if (e.data.action === "slot-updated"){
 					for (var i in guestPositions){
 						if (guestPositions[i] === e.data.streamID){
@@ -2699,12 +2701,13 @@
 				}
 			
 				if (e.data.action === "layout-updated"){
-					console.log(e.data);
+					log(e.data);
 				}
 			
 				if (e.data.action === "layout-index"){
+					log(e.data);
 					if ("value" in e.data){
-						console.log(e.data);
+						
 						var idx = parseInt(e.data.value) || 0;
 						if (!idx){
 							var ele = document.getElementById("automix");
@@ -2717,9 +2720,18 @@
 							layoutButtons[i].classList.remove("pressed");
 						}
 						if (ele){
-							ele.classList.add("pressed");
-							ele.classList.add("shake");
-							setTimeout(function(ele){ele.classList.remove("shake");},500,ele);
+							try {
+								let lll = ele.querySelector("canvas").layout || null;
+								console.warn(lll);
+								remoteActivate(false, lll, true);
+								ele.classList.add("pressed");
+								ele.classList.add("shake");
+								setTimeout(function(ele){ele.classList.remove("shake");},500,ele);
+							} catch(e){
+								errorlog(e);
+							}
+						} else {
+							errorlog("No ele found");
 						}
 						
 					}
@@ -3743,9 +3755,9 @@
 		return combined;
 	}
    
-   function remoteActivate(event=null, layout=null){
+   function remoteActivate(event=null, layout=null, fake=false){
    
-		if (event.target && event.target.layout && layout===null){
+		if (event && event.target && ("layout" in event.target) && layout===null){
 			layout = event.target.layout;
 			var layoutButtons = document.querySelectorAll(".pressed");
 			for (var i = 0;i<layoutButtons.length;i++){
@@ -3754,7 +3766,7 @@
 			event.target.parentNode.classList.add("pressed");
 		}
 		
-		
+		log(layout);
 		lastLayoutRaw = layout;
 		
 		var combined = false;
@@ -3765,6 +3777,8 @@
 		
 		currentLayout = combined; // global current state
 		lastLayout = {"scene":"0", "layout":combined};
+		
+		if (fake){return;}
 		
 		if (event.target && event.target.obsSceneName && syncOBS){
 			var obsCommand = {"action": "setCurrentScene", "value": event.target.obsSceneName};

@@ -1,0 +1,112 @@
+<html>
+<head>
+<title>Video with sensor overlayed data</title>
+<meta charset="UTF-8">
+<style>
+body{
+	padding:0;
+	margin:0;
+	background-color: #0000;
+	overflow: hidden;
+}
+
+#vdoninja {
+	border:0;
+	margin:0;
+	padding:0;
+	display:block;
+	opacity:0;
+}
+
+
+#start {
+	margin:auto auto;
+	padding:10%;
+	font-size:200%;
+	position:absolute;
+	top:0;
+	left:0;
+	width:100%;
+	height:100%;
+	cursor:pointer;
+}
+
+#label {
+    left: 0;
+    top: 0;
+	font-size: 4vw;
+    position: absolute;
+	font-family:Tahoma;
+	text-shadow: 0 0 1vw white;
+}
+
+</style>
+</head>
+<body id="main">
+	<div class="aspect-ratio-container">
+		<iframe id="vdoninja"></iframe>
+		<div id="overlay">
+			<div id="label"></div>
+		</div>
+		<div id="start" onclick="start();" >
+			Join with this sample guest link: <a id="invite" href='https://vdo.ninja/?push=testoverlay123&autostart&webcam&label' target="_blank">https://vdo.ninja/?push=testoverlay123&autostart&webcam&label</a><br /><br />
+			Click anywhere to start playback in this window.
+		</div>
+	</div>
+<script>
+
+var overlay = document.getElementById("overlay");
+var iframe = document.getElementById("vdoninja");
+var label = document.getElementById("label");
+
+
+const urlParams = new URLSearchParams(window.location.search);
+const streamID = urlParams.get('view') || "testoverlay123";
+document.getElementById("invite").href = "https://vdo.ninja/?autostart&webcam&label&push="+streamID;
+document.getElementById("invite").innerText = "https://vdo.ninja/?autostart&webcam&label&push="+streamID
+
+function loadIframe(url){ 
+	
+	iframe.allow = "autoplay;camera;microphone;fullscreen;picture-in-picture;";
+
+	if (url==""){
+		url="./";
+	}
+	
+	iframe.src = url;
+	
+	var eventMethod = window.addEventListener ? "addEventListener" : "attachEvent";
+	var eventer = window[eventMethod];
+	var messageEvent = eventMethod === "attachEvent" ? "onmessage" : "message";
+
+	eventer(messageEvent, function (e) {
+		if (e.source != iframe.contentWindow){return} // reject messages send from other iframes
+		console.log(e.data);
+		if (!e.data.action || !("value" in e.data)){return;}
+		
+		if (e.data.action=="view-connection-info"){
+			if (e.data.value.label){
+				label.innerText = e.data.value.label.replace("_"," ");
+			} else {
+				label.innerText = "";
+			}
+		} else if (e.data.action=="view-connection"){
+			if (e.data.value){
+			} else {
+				label.innerText = "";
+			}
+		}
+	});
+}
+
+function start(){
+	document.querySelector("#start").remove();
+	loadIframe("https://vdo.ninja/?transparent&cleanoutput&novideo&noaudio&novideo&dataonly&view="+streamID); // vdo.ninja/?push=testoverlay123&label=Test_Label&autostart&webcam
+}
+if (window.obsstudio){
+	start();
+}
+
+</script>
+</body>
+</html>

@@ -488,6 +488,8 @@ async function main() {
 				getById("publishOutToken").classList.remove("hidden");
 			}
 		}
+		
+		getById("startPublishingButton").classList.remove("hidden");
 	}
 
 	if (urlParams.has("svc") || urlParams.has("scalabilitymode")) {
@@ -1582,6 +1584,41 @@ async function main() {
 	if (urlParams.has("publish")) {
 		session.publish = true;
 		getById("publishSettings").style.display = "block";
+		
+		if (session.recordLocal !== false){
+			getById("startRecordingButton").classList.remove("hidden");
+			//session.autorecord = true;
+			//getById("startPublishingButton").classList.add("hidden");
+		}
+	}
+	
+	if (urlParams.has("obscontrols") || urlParams.has("remoteobs") || urlParams.has("obsremote") || urlParams.has("obs") || urlParams.has("controlobs")) {
+		session.obsControls = urlParams.get("obscontrols") || urlParams.get("remoteobs") || urlParams.get("obsremote") || urlParams.get("obs") || urlParams.get("controlobs");
+		if (session.obsControls) {
+			// whether to show the button or not; that's it.
+			session.obsControls = session.obsControls.toLowerCase();
+		}
+		if (session.obsControls == "false") {
+			session.obsControls = false;
+		} else if (session.obsControls == "0") {
+			session.obsControls = false;
+		} else if (session.obsControls == "no") {
+			session.obsControls = false;
+		} else if (session.obsControls == "off") {
+			session.obsControls = false;
+		} else if (session.obsControls == "full") {
+			try {
+				session.dataMode = true;
+				session.obsControls = true;
+				//session.doNotSeed = true;
+				getById("main").classList.add("fullscreenOBSControl");
+				toggleOBSControls();
+			} catch(e){errorlog(e);}
+		} else if (session.obsControls) {
+			session.obsControls = session.obsControls.toLowerCase();
+		} else {
+			session.obsControls = true;
+		}
 	}
 
 	if (urlParams.has("nopush") || urlParams.has("noseed") || urlParams.has("viewonly") || urlParams.has("viewmode")) {
@@ -1611,6 +1648,7 @@ async function main() {
 		if (moreScenes < 8) {
 			moreScenes = 8;
 		}
+		session.maxScene = moreScenes;
 		let sceneButtonMain = document.querySelector("#controls_blank .sceneButtons button");
 		if (sceneButtonMain && moreScenes) {
 			var i = 8;
@@ -1729,6 +1767,7 @@ async function main() {
 	if (urlParams.has("cccolored") || urlParams.has("cccoloured") || urlParams.has("coloredcc") || urlParams.has("colorcc") || urlParams.has("cccolor")) {
 		session.ccColored = true;
 	}
+	
 
 	if (urlParams.has("base64css") || urlParams.has("b64css") || urlParams.has("cssbase64") || urlParams.has("cssb64")) {
 		try {
@@ -1739,6 +1778,21 @@ async function main() {
 			try {
 				base64Css = decodeURIComponent(base64Css); // window.btoa(encodeURIComponent("#mainmenu{background-color: pink; ❤" ));
 			} catch (e) {}
+			
+			try {
+				if (["invite.cam","invitecamera.com"].includes(getParentHostname())){
+					session.iFramesAllowed = false;
+					console.warn("For security and privacy purposes, please note that you will not be allowed to use CSS injection together with IFRAMES.");
+				} else if ((window !== window.top) || window.obsstudio) {
+					// allowed
+				} else {
+					console.warn("For security and privacy purposes, please note that you will not be allowed to use CSS injection together with IFRAMES.");
+					session.iFramesAllowed = false;
+				}
+			} catch(e){
+				warnlog(e);
+			}
+			
 			var cssStyleSheet = document.createElement("style");
 			cssStyleSheet.innerText = base64Css;
 			document.querySelector("head").appendChild(cssStyleSheet);
@@ -1751,29 +1805,75 @@ async function main() {
 		var cssURL = urlParams.get("css");
 		try {
 			cssURL = decodeURI(cssURL);
-		} catch (e) {}
-		if (cssURL.startsWith("http")) {
-			var cssStylesheet = document.createElement("link");
-			cssStylesheet.rel = "stylesheet";
-			cssStylesheet.type = "text/css";
-			cssStylesheet.media = "screen";
-			cssStylesheet.href = cssURL;
-			document.getElementsByTagName("head")[0].appendChild(cssStylesheet);
+		} catch(e){
+			warnlog(e);
+		}
+		log(cssURL);
+		
+		let validURL = false;
+		try {
+			cssUrlObj = new URL(cssURL);
+			validURL = true;
+		} catch(e){
+		}
+		try {
+			if (validURL){
+				const cssDomain = cssUrlObj.hostname;
+			
+				try {
+					if (["invite.cam","invitecamera.com"].includes(getParentHostname())){
+						session.iFramesAllowed = false;
+						console.warn("For security and privacy purposes, please note that you will not be allowed to use CSS injection together with IFRAMES.");
+					} else if ((window.location.hostname === cssDomain) || window.location.hostname.endsWith("."+cssDomain) || (window !== window.top) || window.obsstudio) {
+						if (window.location.hostname !== cssDomain){
+							console.warn("Third-party CSS has been injected into the site. Security cannot be ensured.");
+						}
+					} else {
+						console.warn("For security and privacy purposes, please note that you will not be allowed to use CSS injection together with IFRAMES.");
+						session.iFramesAllowed = false;
+					}
+				} catch(e){
+					warnlog(e);
+				}
+			
+				var cssStylesheet = document.createElement("link");
+				cssStylesheet.rel = "stylesheet";
+				cssStylesheet.type = "text/css";
+				cssStylesheet.media = "screen";
+				cssStylesheet.href = cssURL;
+				document.getElementsByTagName("head")[0].appendChild(cssStylesheet);
 
-			cssStylesheet.onload = function () {
-				getById("main").classList.remove("hidden");
-				log("loaded remote style sheet");
-			};
+				cssStylesheet.onload = function () {
+					getById("main").classList.remove("hidden");
+					log("loaded remote style sheet");
+				};
 
-			cssStylesheet.onerror = function () {
+				cssStylesheet.onerror = function () {
+					getById("main").classList.remove("hidden");
+					errorlog("REMOTE STYLE SHEET HAD ERROR");
+				};
+			} else {
+				try {
+					if (["invite.cam","invitecamera.com"].includes(getParentHostname())){
+						console.warn("For security and privacy purposes, please note that you will not be allowed to use CSS injection together with IFRAMES.");
+						session.iFramesAllowed = false;
+					} else if ((window !== window.top) || window.obsstudio) {
+						// allowed
+					} else {
+						console.warn("For security and privacy purposes, please note that you will not be allowed to use CSS injection together with IFRAMES.");
+						session.iFramesAllowed = false;
+					}
+				} catch(e){
+					warnlog(e);
+				}
+				var cssStylesheet = document.createElement("style");
+				cssStylesheet.innerHTML = cssURL;
+				document.getElementsByTagName("head")[0].appendChild(cssStylesheet);
 				getById("main").classList.remove("hidden");
-				errorlog("REMOTE STYLE SHEET HAD ERROR");
-			};
-		} else {
-			var cssStylesheet = document.createElement("style");
-			cssStylesheet.innerHTML = cssURL;
-			document.getElementsByTagName("head")[0].appendChild(cssStylesheet);
-			getById("main").classList.remove("hidden");
+			}
+			
+		} catch(e){
+			warnlog(e);
 		}
 	} else {
 		getById("main").classList.remove("hidden");
@@ -1825,32 +1925,83 @@ async function main() {
 
 	if (urlParams.has("js")) {
 		// ie: &js=https%3A%2F%2Fvdo.ninja%2Fexamples%2Ftestjs.js
-		//if (window !== window.top || !(window.location.hostname.endsWith("vdo.ninja") || window.location.hostname.endsWith("rtc.ninja") || window.location.hostname.endsWith("versus.cam") || window.location.hostname.endsWith("invite.cam"))) {
-			console.warn("Third-party Javascript has been injected into the code. Security cannot be ensured.");
+		try {
 			var jsURL = urlParams.get("js");
-			jsURL = decodeURI(jsURL);
+			try {
+				jsURL = decodeURI(jsURL);
+			} catch(e){
+				warnlog(e);
+			}
 			log(jsURL);
-			// type="text/javascript" crossorigin="anonymous"
-			var externalJavaascript = document.createElement("script");
-			externalJavaascript.type = "text/javascript";
-			externalJavaascript.crossorigin = "anonymous";
-			externalJavaascript.src = jsURL;
-			externalJavaascript.onerror = function () {
-				warnlog("Third-party Javascript failed to load");
-			};
-			externalJavaascript.onload = function () {
-				log("Third-party Javascript loaded");
-			};
-			document.head.appendChild(externalJavaascript);
-	//	} else {
-	//		console.error("For security/privacy purposes, Javascript injection is now only allowed on self-hosted instances or if VDO.Ninja is hosted within an IFRAME"); // I won't have control in those cases anyways.
-	//	}
+			
+			const jsUrlObj = new URL(jsURL);
+			const jsDomain = jsUrlObj.hostname;
+			let allow = false;
+			try {
+				if (["invite.cam","invitecamera.com"].includes(getParentHostname())){
+					console.error("For security and privacy purposes, Javascript injection using Invite Cam must be consented to.");
+					if (!session.cleanOutput){
+						allow = await confirmAlt("This link wishes to inject third-party Javascript ⚠️\n\nIf you trust the link, click OK. Otherwise, click Cancel.", true);
+					}
+				} else if ((window.location.hostname === jsDomain) || window.location.hostname.endsWith("."+jsDomain) || (window !== window.top) || window.obsstudio) {
+					// same domains, iframes, or OBS can run javascript.
+					allow = true;
+					if (window.location.hostname !== jsDomain){
+						console.warn("Third-party Javascript has been injected into the code. Security cannot be ensured.");
+					}
+				} else if (!session.cleanOutput){
+					// to allow flexibility, we will allow it if the user consents
+					allow = await confirmAlt("This link wishes to inject third-party Javascript ⚠️\n\nIf you trust the link, click OK. Otherwise, click cancel.", true);
+				}
+			} catch(e){
+				allow = true;
+				warnlog(e);
+			}
+			
+			if (allow){
+				// type="text/javascript" crossorigin="anonymous"
+				let externalJavaascript = document.createElement("script");
+				externalJavaascript.type = "text/javascript";
+				externalJavaascript.crossorigin = "anonymous";
+				externalJavaascript.src = jsURL;
+				externalJavaascript.onerror = function () {
+					warnlog("Third-party Javascript failed to load");
+				};
+				externalJavaascript.onload = function () {
+					log("Third-party Javascript loaded");
+				};
+				document.head.appendChild(externalJavaascript);
+			} else {
+				console.error("For security/privacy purposes, Javascript injection is now only allowed if used within an IFRAME or if the JS file is hosted on the same domain.");
+			}
+		} catch(e){
+			errorlog(e);
+		}
 	}
 
 	if (urlParams.has("base64js") || urlParams.has("b64js") || urlParams.has("jsbase64") || urlParams.has("jsb64")) {
 		try {
-		//	if (window !== window.top || !(window.location.hostname.endsWith("vdo.ninja") || window.location.hostname.endsWith("rtc.ninja") || window.location.hostname.endsWith("versus.cam") || window.location.hostname.endsWith("invite.cam"))) {
-				console.warn("Third-party Javascript has been injected into the code. Security cannot be ensured.");
+			let allow = false;
+			try {
+				if (["invite.cam","invitecamera.com"].includes(getParentHostname())){
+					console.error("For security and privacy purposes, Javascript injection using Invite Cam must be consented to.");
+					if (!session.cleanOutput){
+						allow = await confirmAlt("This link wishes to inject third-party Javascript ⚠️\n\nIf you trust the link, click OK. Otherwise, click Cancel.", true);
+					}
+				} else if ((window !== window.top) || window.obsstudio) {
+					// iframes or OBS can run javascript.
+					allow = true;
+					console.warn("Third-party Javascript has been injected into the code. Security cannot be ensured.");
+				}  else if (!session.cleanOutput){
+					// to allow flexibility, we will allow it if the user consents
+					allow = await confirmAlt("This link wishes to inject third-party Javascript ⚠️\n\nIf you trust the link, click OK. Otherwise, click Cancel.", true);
+				}
+			} catch(e){
+				warnlog(e);
+				allow = true;
+			}
+			
+			if (allow){
 				var base64js = urlParams.get("base64js") || urlParams.get("b64js") || urlParams.get("jsbase64") || urlParams.get("jsb64");
 				base64js = decodeURIComponent(atob(base64js)); // window.btoa(encodeURIComponent("alert('hi')"));  // ?jsb64=YWxlcnQoJ2hpJyk7
 				var externalJavaascript = document.createElement("script");
@@ -1864,9 +2015,9 @@ async function main() {
 					log("Third-party Javascript loaded");
 				};
 				document.head.appendChild(externalJavaascript);
-		//	} else {
-		//		console.error("For security/privacy purposes, Javascript injection is now only allowed on self-hosted instances or if VDO.Ninja is hosted within an IFRAME"); // I won't have control in those cases anyways.
-		//	}
+			} else {
+				console.error("For security/privacy purposes, Javascript B64 injection is now only allowed if used within an IFRAME.");
+			}
 		} catch (e) {
 			console.error(e);
 		}
@@ -2664,27 +2815,6 @@ async function main() {
 
 	if (urlParams.has("pptcontrols") || urlParams.has("slides") || urlParams.has("ppt") || urlParams.has("powerpoint")) {
 		session.pptControls = true; // shows powerpoint controls to remotely control a powerpoint slide. Requires additional remote setup.
-	}
-
-	if (urlParams.has("obscontrols") || urlParams.has("remoteobs") || urlParams.has("obsremote") || urlParams.has("obs") || urlParams.has("controlobs")) {
-		session.obsControls = urlParams.get("obscontrols") || urlParams.get("remoteobs") || urlParams.get("obsremote") || urlParams.get("obs") || urlParams.get("controlobs");
-		if (session.obsControls) {
-			// whether to show the button or not; that's it.
-			session.obsControls = session.obsControls.toLowerCase();
-		}
-		if (session.obsControls == "false") {
-			session.obsControls = false;
-		} else if (session.obsControls == "0") {
-			session.obsControls = false;
-		} else if (session.obsControls == "no") {
-			session.obsControls = false;
-		} else if (session.obsControls == "off") {
-			session.obsControls = false;
-		} else if (session.obsControls) {
-			session.obsControls = session.obsControls.toLowerCase();
-		} else {
-			session.obsControls = true;
-		}
 	}
 
 	if (urlParams.has("allowedscenes")) {
@@ -5626,12 +5756,13 @@ async function main() {
 
 	if (location.protocol !== "https:") {
 		try {
-			if (!session.cleanOutput) {
-				if (window.location.host.split(".")[0] !== "insecure") {
-					// insecure.vdo.ninja; so if you have to have it, specifiy the link as insecure in the hostname
-					warnUser("SSL (https) is not enabled. This site will not work without it!<br /><br /><a href='https://" + window.location.host + window.location.pathname + window.location.search + "'>Try accessing the site from here instead.</a>", false, false);
-				}
+			//if (!session.cleanOutput) {
+			if (["127.0.0.1", "localhost"].includes(window.location.hostname)){
+				// these are allowed I believe. I do change the salt however to the default one though.
+			} else if (window.location.host.split(".")[0] !== "insecure") {
+				console.warn("⚠️ SSL (https) is not enabled. This site will not fully work without it!<br /><br /><a href='https://" + window.location.host + window.location.pathname + window.location.search + "'>Try accessing the site from here instead.</a>", false, false);
 			}
+			//}
 		} catch (e) {}
 	} else {
 		try {

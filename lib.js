@@ -4999,7 +4999,7 @@ function updateMixerRun(e = false) {
 			var hi = header.offsetHeight;
 			var w = document.body.clientHeight;
 
-			if (session.widget) {
+			if (session.widget && session.iFramesAllowed) {
 				w *= 0.75;
 				try {
 					let widget = document.getElementById("widget");
@@ -5036,7 +5036,7 @@ function updateMixerRun(e = false) {
 			var hi = header.offsetHeight;
 			var w = window.innerWidth;
 
-			if (session.widget) {
+			if (session.widget && session.iFramesAllowed) {
 				w *= 0.75;
 				try {
 					let widget = document.getElementById("widget");
@@ -16948,7 +16948,7 @@ function publishWebcam(btn = false, miconly = false) {
 }
 
 function createYoutubeLink(vidid) {
-	return "https://www.youtube.com/embed/" + vidid + "?modestbranding=1&playsinline=1&enablejsapi=1";
+	return "https://www.youtube.com/embed/" + vidid + "?modestbranding=1&playsinline=1&enablejsapi=1&autoplay=1";
 }
 function parseURL4Iframe(iframeURL) {
 	if (iframeURL == "") {
@@ -17488,6 +17488,8 @@ session.publishIFrame = function (iframeURL) {
 	}
 
 	session.iframeSrc = parseURL4Iframe(iframeURL);
+	
+	if (!session.iFramesAllowed){errorlog("Can't create iFRAME - security is tainted due to possible CSS injection");warnUser("Can't create iFRAME - security is tainted due to possible CSS injection");return;}
 
 	var iframe = document.createElement("iframe");
 	iframe.allow = "autoplay;camera;microphone;fullscreen;picture-in-picture;display-capture;midi;"; // do not allow location
@@ -19499,6 +19501,15 @@ async function toggleCoDirector(ele) {
 	getById("codirectorSettings").style.display = "block";
 }
 
+function getParentHostname() {
+  const parentUrl = document.referrer;
+  if (parentUrl) {
+    const url = new URL(parentUrl);
+    return url.hostname;
+  }
+  return null;
+}
+
 async function toggleWidgetURL(ele) {
 	if (ele.id === "widgetURL") {
 		ele = getById("widgetURCheck");
@@ -19549,7 +19560,7 @@ async function toggleWidgetURL(ele) {
 	if (session.director) {
 		let widget = document.getElementById("widget");
 		if (!widget) {
-			if (session.widget) {
+			if (session.widget && session.iFramesAllowed) {
 				widget = document.createElement("iframe");
 				widget.allow = "autoplay;camera;microphone;fullscreen;picture-in-picture;display-capture;midi;"; // do not allow location
 				widget.id = "widget";
@@ -20919,6 +20930,7 @@ function createControlBox(UUID, soloLink, streamID, slot_init = false) {
 	container.id = "container_" + UUID; // needed to delete on user disconnect
 	container.UUID = UUID;
 	container.dataset.UUID = UUID;
+	container.dataset.sid = streamID;
 
 	if (session.orderby) {
 		try {
@@ -21434,7 +21446,7 @@ async function enumerateDevices() {
 				errorlog(e);
 				if (!session.cleanOutput) {
 					if (location.protocol !== "https:") {
-						warnUser("Error listing the media devices.\n\nThe website needs to be loaded via https (ssl) to access media devices.\n\nPossible solutions include switching to HTTPS, accessing the site from localhost, using the `unsafely-treat-insecure-origin-as-secure` browser switch, or using the Electron Capture desktop app instead.");
+						warnUser("Error listing the media devices.\n\nYour browser will not allow access to media devices without SSL enabled.\n\nPossible solutions include switching to https, accessing the site from http://localhost, or enabling the `unsafely-treat-insecure-origin-as-secure` browser switch.");
 					} else if ("isSecureContext" in window && window.isSecureContext === false) {
 						warnUser("Error listing the media devices.\n\nThe website may have assets loaded in an insecure context.");
 					} else {
@@ -29761,12 +29773,17 @@ function dragElement(elmnt) {
 
 function previewIframe(iframeSrc) {
 	// this is pretty important if you want to avoid camera permission popup problems.  You can also call it automatically via: <body onload=>loadIframe();"> , but don't call it before the page loads.
-
+	if (!session.iFramesAllowed){
+		warnUser("Can't create iFRAME - security is tainted due to possible CSS injection");
+		errorlog("Can't create iFRAME - security is tainted due to possible CSS injection");
+		return;
+	}
 	var iframe = document.createElement("iframe");
 	iframe.allow = "autoplay;camera;microphone;fullscreen;picture-in-picture;display-capture;midi;"; // do not allow location
 	iframe.style.width = "100%";
 	iframe.style.height = "100%";
 	iframe.style.border = "10px dashed rgb(64 65 62)";
+	iframe.classList.add("insecure");
 	iframe.setAttribute("allowtransparency", "true");
 
 	iframeSrc = parseURL4Iframe(iframeSrc);
@@ -29789,14 +29806,20 @@ function loadIframe(iframesrc, UUID) {
 		var m = getById("mainmenu");
 		m.remove();
 	} */
+	
+	if (!session.iFramesAllowed){
+		return;
+	}
+	
 	var iframeID = "iframe_" + UUID;
-
+	
 	var iframe = document.createElement("iframe");
 	iframe.allow = "autoplay;camera;microphone;fullscreen;picture-in-picture;display-capture;midi;"; // do not allow location
 	iframe.setAttribute("allowtransparency", "true");
 	iframe.style.width = "100%";
 	iframe.style.height = "100%";
 	iframe.style.border = "10px dashed rgb(64 65 62)";
+	iframe.classList.add("insecure");
 	iframe.id = iframeID;
 	iframe.dataset.UUID = UUID;
 	iframe.loadedYoutubeListen = false;
@@ -29828,15 +29851,22 @@ function loadIframe(iframesrc, UUID) {
 
 	if (iframesrc.startsWith("https://vdo.ninja/")) {
 		iframe.style.border = "0";
+		iframe.classList.remove("insecure");
+		ipsafe = false;
 	} else if (iframesrc.startsWith("https://obs.ninja/")) {
 		iframe.style.border = "0";
-	} else if (iframesrc.startsWith("https://vmix.ninja/")) {
-		iframe.style.border = "0";
+		iframe.classList.remove("insecure");
+		ipsafe = false;
 	} else if (iframesrc.startsWith("https://backup.vdo.ninja/")) {
 		iframe.style.border = "0";
+		iframe.classList.remove("insecure");
+		ipsafe = false;
 	} else if (iframesrc.startsWith("https://backup.obs.ninja/")) {
 		iframe.style.border = "0";
+		iframe.classList.remove("insecure");
+		ipsafe = false;
 	} else if (iframesrc.startsWith("https://www.youtube.com/") || iframesrc.startsWith("https://youtube.com/")) {
+		iframe.classList.remove("insecure");
 		iframe.style.border = "0";
 		setTimeout(
 			function (iframe_id) {
@@ -29854,21 +29884,27 @@ function loadIframe(iframesrc, UUID) {
 		}
 		ipsafe = true;
 	} else if (iframesrc.startsWith("https://player.twitch.tv/")) {
+		iframe.classList.remove("insecure");
 		iframe.style.border = "0";
 		ipsafe = true;
 	} else if (iframesrc.startsWith("https://twitch.tv/")) {
+		iframe.classList.remove("insecure");
 		iframe.style.border = "0";
 		ipsafe = true;
 	} else if (iframesrc.startsWith("https://www.twitch.tv/")) {
+		iframe.classList.remove("insecure");
 		iframe.style.border = "0";
 		ipsafe = true;
 	} else if (iframesrc.startsWith("https://vimeo.com/")) {
+		iframe.classList.remove("insecure");
 		iframe.style.border = "0";
 		ipsafe = true;
 	} else if (iframesrc.startsWith("https://player.vimeo.com/")) {
+		iframe.classList.remove("insecure");
 		iframe.style.border = "0";
 		ipsafe = true;
 	} else if (iframesrc.startsWith("https://meshcast.io/")) {
+		iframe.classList.remove("insecure");
 		//iframesrc = iframesrc.replace("//meshcast.io/", "//meshcast.vdo.ninja/");
 		iframe.style.border = "0";
 		// iframe.dataset.meshcast = true; // TODO: this was a bit of a fail
@@ -29881,9 +29917,17 @@ function loadIframe(iframesrc, UUID) {
 		}
 		ipsafe = true;
 	} else if (iframesrc.startsWith("https://app.stageten.tv/")) {
+		iframe.classList.remove("insecure");
 		iframe.style.border = "0";
 		ipsafe = true;
+	} else if (iframesrc.startsWith("https://socialstream.ninja/")) {
+		iframe.classList.remove("insecure");
+		iframe.style.border = "0";
+		ipsafe = false;
+	} else if (session.cleanOutput && window.obsstudio){
+		iframe.classList.remove("insecure");
 	}
+	
 
 	if (!ipsafe && (urlParams.has("privacy") || urlParams.has("private"))) {
 		if (session.cleanOutput || window.obsstudio) {
@@ -34667,7 +34711,8 @@ async function shareWebsite(autostart = false, evt = false) {
 				iframe.id
 			);
 		}
-	} else {
+	} else if (session.iFramesAllowed){
+		
 		var iframe = document.createElement("iframe");
 		iframe.allow = "autoplay;camera;microphone;fullscreen;picture-in-picture;display-capture;midi;"; // do not allow location
 		iframe.src = session.iframeSrc;
@@ -34866,6 +34911,7 @@ function createIframePopup() {
 		return;
 	} // can't secondary-screen share if in a queue.
 
+	if (!session.iFramesAllowed){errorlog("Can't create iFRAME - security is tainted due to possible CSS injection");return;}
 	var iframe = document.createElement("iframe");
 	iframe.allow = "autoplay;camera;microphone;fullscreen;picture-in-picture;display-capture;midi;"; // do not allow location
 	iframe.src = "./" + createScreenShareURL();
@@ -35497,7 +35543,7 @@ function updateSceneList(scene) {
 	}
 
 	if (parseInt(scene) + "" === scene) {
-		if (parseInt(scene) >= 0 && parseInt(scene) <= 8) {
+		if (parseInt(scene) >= 0 && parseInt(scene) <= session.maxScene) {
 			return;
 		}
 	}
@@ -35947,7 +35993,15 @@ function pauseVideo(videoEle, update = true) {
 			var win = window.open(URL, "targetWindow", "toolbar=no,location=no,status=no,scaling=no,menubar=no,scrollbars=no,resizable=no,width=1280,height=720");
 			win.focus();
 			win.resizeTo(1280, 720);
+		} else if (link.getAttribute("data-action") === "RecordWindow") {
+			var URL = taskItemInContext.href;
+			URL += "&clean&chroma=000&ssar=landscape&nosettings&prefercurrenttab&selfbrowsersurface=include&displaysurface=browser&np&nopush&publish&autorecordlocal";
+			var win = window.open(URL, "targetWindow", "toolbar=no,location=no,status=no,scaling=no,menubar=no,scrollbars=no,resizable=no,width=1280,height=720");
+			win.focus();
+			win.resizeTo(1280, 720);
 		}
+			
+		
 
 		if (inputElement === false) {
 			log("Task ID - " + taskItemInContext + ", Task action - " + link.getAttribute("data-action"));
@@ -36075,6 +36129,12 @@ function pauseVideo(videoEle, update = true) {
 					items[i].parentNode.classList.remove("hidden");
 				}
 			} else if (items[i].getAttribute("data-action") === "Publish") {
+				if (taskItemInContext.classList.contains("publish")) {
+					items[i].parentNode.classList.remove("hidden");
+				} else {
+					items[i].parentNode.classList.add("hidden");
+				}
+			} else if (items[i].getAttribute("data-action") === "RecordWindow") {
 				if (taskItemInContext.classList.contains("publish")) {
 					items[i].parentNode.classList.remove("hidden");
 				} else {
@@ -41818,37 +41878,31 @@ function smdInfo() {
 }
 
 function getGuestTarget(type, id) {
-	var element = document.querySelectorAll('[data-sid="' + id + '"] > [data-action-type="' + type + '"]'); // data-sid="P5MQpia"
-	if (!element.length) {
-		return (element = getRightOrderedElement('[data--u-u-i-d] [data-action-type="' + type + '"]', id));
-	} else {
-		element = element[0];
+	var element = document.querySelector('[data-sid="' + id + '"][data-action-type="' + type + '"], [data-sid="' + id + '"] [data-action-type="' + type + '"]'); // data-sid="P5MQpia"
+	if (!element) {
+		return getRightOrderedElement('[data--u-u-i-d] [data-action-type="' + type + '"]', id);
 	}
 	return element;
 }
 
 function getGuestTargetScene(scene, id) {
-	var element = document.querySelectorAll('[data-action-type="addToScene"][data-scene="' + scene + '"][data-sid="' + id + '"]'); // data-sid="P5MQpia"
-	if (!element.length) {
-		return (element = getRightOrderedElement('[data-action-type="addToScene"][data-scene="' + scene + '"][data--u-u-i-d]', id));
-	} else {
-		element = element[0];
+	var element = document.querySelector('[data-action-type="addToScene"][data-scene="' + scene + '"][data-sid="' + id + '"], [data-sid="' + id + '"] [data-action-type="addToScene"][data-scene="' + scene + '"]'); // data-sid="P5MQpia"
+	if (!element) {
+		return getRightOrderedElement('[data-action-type="addToScene"][data-scene="' + scene + '"][data--u-u-i-d]', id);
 	}
 	return element;
 }
 function getGuestTargetGroup(group, id) {
-	var element = document.querySelectorAll('[data-action-type="toggle-group"][data-group="' + group + '"][data-sid="' + id + '"]'); // data-sid="P5MQpia"
-	if (!element.length) {
+	var element = document.querySelector('[data-action-type="toggle-group"][data-group="' + group + '"][data-sid="' + id + '"], [data-sid="' + id + '"] [data-action-type="toggle-group"][data-group="' + group + '"]'); // data-sid="P5MQpia"
+	if (!element) {
 		return getRightOrderedElement('[data-action-type="toggle-group"][data-group="' + group + '"][data--u-u-i-d]', id);
-	} else {
-		element = element[0];
 	}
 	return element;
 }
 
 async function targetGuest(target, action, value = null) {
 	if (target) {
-		if (target == parseInt(target) + "" && target < 100) {
+		if ((target == (parseInt(target) + "")) && (target < 100)) {
 			target -= 1;
 		}
 	} else {
@@ -41857,14 +41911,14 @@ async function targetGuest(target, action, value = null) {
 	warnlog("target " + target);
 	warnlog("action " + action);
 	warnlog("value " + value);
-	if (action == 0 || action == "forward" || action == "transfer") {
+	if ((action == 0) || (action == "forward") || (action == "transfer")){
 		var element = getGuestTarget("forward", target);
 		if (element) {
 			return await directMigrate(element, true, value); // if value is set, it will auto transfer the guest to that room.
 		} else {
 			return false;
 		}
-	} else if (action == 1 || action == "addScene") {
+	} else if ((action == 1) || (action == "addScene")) {
 		var scene = 1;
 		if (value == "null" || value == null || value == "toggle") {
 			scene = 1;
@@ -42067,7 +42121,7 @@ async function targetGuest(target, action, value = null) {
 			element.value = parseInt(value) || 0;
 			return remoteVolume(element);
 		}
-	} else if (action == 28 || action == "setslot") {
+	} else if ((action == 28) || (action == "setslot")){
 		var element = getGuestTarget("setslot", target);
 		if (element) {
 			return setSlot(element, value);
@@ -42166,6 +42220,19 @@ async function startPublishing() {
 		getById("publishSettings").classList.add("hidden");
 		resizeWindow(1280, 720);
 		document.title = "PUBLISHING🔴" + document.title;
+	} else {
+		getById("publishSettings").classList.remove("hidden");
+	}
+}
+
+async function startRecording() {
+	session.recordLocal = session.recordLocal || 6000;
+
+	var ret = await publishScreen();
+	if (ret) {
+		getById("publishSettings").classList.add("hidden");
+		resizeWindow(1280, 720);
+		document.title = "RECORDING🔴" + document.title;
 	} else {
 		getById("publishSettings").classList.remove("hidden");
 	}
@@ -45991,6 +46058,7 @@ function createControlBoxScreenshare(UUID, soloLink, streamID) {
 	container.id = "container_" + UUID; // needed to delete on user disconnect
 	container.UUID = UUID;
 	container.dataset.UUID = UUID;
+	container.dataset.sid = streamID;
 
 	if (session.orderby) {
 		try {

@@ -1093,6 +1093,11 @@
 		mobile = true;
 	}
 	
+	var videoMode = false;
+	if (urlParams.has('video')){
+		videoMode = true;
+	}
+	
 	if (screen.height && screen.width && (screen.height*screen.width<400000)){
 		mobile = true;
 	}
@@ -1805,10 +1810,15 @@
 		var chatmsg = "Welcome to the Comms app. Select a group to participate in.";
 		chatmsg = encodeURIComponent(chatmsg);
 		
+		var vtype = "&vd=0";
+		if (videoMode){
+			vtype = "&ad=0";
+		}
+		
 		if (window.location.hostname == "comms.cam"){
-			var iframesrc = "https://vdo.ninja/?"+urlEdited+"&controlbarspace&volumecontrol&sharperscreen&groupmode&novice&ltb=350&minipreview&transparent&hideheader&margin&rounded&hidetranslate&cleandirector&vd=0&webcam&nvb&sstype=3&ssb&showlabel=toprounded&labelsize=85&style=2&room="+roomname+additional+additional2+"&b64css="+injectCSS+streamID+label+"&chatmsg="+chatmsg;
+			var iframesrc = "https://vdo.ninja/?"+urlEdited+vtype+"&controlbarspace&volumecontrol&sharperscreen&groupmode&novice&ltb=350&minipreview&transparent&hideheader&margin&rounded&hidetranslate&cleandirector&webcam&nvb&sstype=3&ssb&showlabel=toprounded&labelsize=85&style=2&room="+roomname+additional+additional2+"&b64css="+injectCSS+streamID+label+"&chatmsg="+chatmsg;
 		} else {
-			var iframesrc = "./index.html?"+urlEdited+"&controlbarspace&volumecontrol&sharperscreen&groupmode&novice&ltb=350&minipreview&transparent&hideheader&margin&rounded&hidetranslate&cleandirector&vd=0&webcam&nvb&sstype=3&ssb&showlabel=toprounded&labelsize=85&style=2&room="+roomname+additional+additional2+"&b64css="+injectCSS+streamID+label+"&chatmsg="+chatmsg;
+			var iframesrc = "./index.html?"+urlEdited+vtype+"&controlbarspace&volumecontrol&sharperscreen&groupmode&novice&ltb=350&minipreview&transparent&hideheader&margin&rounded&hidetranslate&cleandirector&webcam&nvb&sstype=3&ssb&showlabel=toprounded&labelsize=85&style=2&room="+roomname+additional+additional2+"&b64css="+injectCSS+streamID+label+"&chatmsg="+chatmsg;
 		}
 		
 		
