@@ -42,7 +42,13 @@ The audience parameter is available with VDO.Ninja v25.2 and newer.
 
 There's a sandbox that lets you play with the IFRAME API here: [https://vdo.ninja/iframe](https://vdo.ninja/iframe) , but it might be more complex than you need.\
 \
-More about the[ IFRAME API here.](how-to-use-vdo.ninja-on-a-website.md#advanced-iframe-api-options)
+More about the[ ](how-to-use-vdo.ninja-on-a-website.md#advanced-iframe-api-options)[IFRAME API here.](https://docs.vdo.ninja/guides/iframe-api-documentation)
+
+### Transparency
+
+Setting the `allowtransparency` attribute on the IFrame to `true` will allow for the contents to be transparent. You can then make VDO.Ninja transparent by adding `&transparent` to the URL, which sets the page's background to `rgba(0,0,0,0)`.&#x20;
+
+[https://vdo.ninja/iframe ](https://vdo.ninja/iframe)can demonstrate this by opening [https://vdo.ninja/?transparent](https://vdo.ninja/?transparent) with it.
 
 ### Accessing media frames directly for use in a video element
 
