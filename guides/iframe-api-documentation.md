@@ -308,6 +308,12 @@ eventer(messageEvent, function (e) {
 
 This VDO.Ninja API is developed and expanded based on user feedback and requests. It is by no means complete, but it is getting better every week.
 
+### Transparency
+
+Setting the `allowtransparency` attribute on the IFrame to `true` will allow for the contents to be transparent. You can then make VDO.Ninja transparent by adding `&transparent` to the URL, which sets the page's background to `rgba(0,0,0,0)`.&#x20;
+
+https://vdo.ninja/iframe can demonstrate this by opening https://vdo.ninja/?transparent with it.
+
 ### Advanced IFrame functionality
 
 There's some users who wish to have an SDK instead of an IFrame API. While an SDK may happen eventually, currently the IFram API is surprisingly capable.
