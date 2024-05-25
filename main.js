@@ -1489,9 +1489,11 @@ async function main() {
 			session.record = false;
 			session.recordLocal = false;
 		} else if (session.recordLocal != parseInt(session.recordLocal)) {
-			session.recordLocal = 6000;
-		} else {
+			session.recordLocal = session.recordDefault;
+		} else if (session.recordLocal !== null){
 			session.recordLocal = parseInt(session.recordLocal);
+		} else {
+			session.recordLocal = session.recordDefault;
 		}
 	}
 
@@ -1516,10 +1518,10 @@ async function main() {
 		session.autorecord = true;
 		if (session.recordLocal === false) {
 			let bitautorec = urlParams.get("autorecord");
-			if (bitautorec !== null) {
+			if (bitautorec !== "") {
 				session.recordLocal = parseInt(bitautorec);
 			} else {
-				session.recordLocal = 6000;
+				session.recordLocal = session.recordDefault;
 			}
 		}
 	}
@@ -1528,9 +1530,11 @@ async function main() {
 		if (session.recordLocal === false) {
 			session.recordLocal = urlParams.get("autorecordlocal");
 			if (session.recordLocal != parseInt(session.recordLocal)) {
-				session.recordLocal = 6000;
-			} else {
+				session.recordLocal = session.recordDefault;
+			} else if (session.recordLocal !== ""){
 				session.recordLocal = parseInt(session.recordLocal);
+			} else {
+				session.recordLocal = session.recordDefault;
 			}
 		}
 	}
@@ -1539,9 +1543,11 @@ async function main() {
 		if (session.recordLocal === false) {
 			session.recordLocal = urlParams.get("autorecordremote");
 			if (session.recordLocal != parseInt(session.recordLocal)) {
-				session.recordLocal = 6000;
-			} else {
+				session.recordLocal = session.recordDefault;
+			} else if (session.recordLocal !== ""){
 				session.recordLocal = parseInt(session.recordLocal);
+			} else {
+				session.recordLocal = session.recordDefault;
 			}
 		}
 	}
@@ -2198,6 +2204,10 @@ async function main() {
 			}
 		}
 	}
+	
+	if (session.label){
+		pokeIframeAPI("this-label", session.label);
+	}
 
 	if (urlParams.has("transparent") || urlParams.has("transparency")) {
 		// sets the window to be transparent - useful for IFRAMES?
@@ -2418,7 +2428,29 @@ async function main() {
 			session.noiseSuppression = true;
 		}
 	}
+	
+	if (urlParams.has("isolation") || urlParams.has("voiceisolation") || urlParams.has("vi")) {
+		session.voiceIsolation = urlParams.get("isolation") || urlParams.get("voiceisolation") || urlParams.get("vi");
 
+		if (session.voiceIsolation) {
+			session.voiceIsolation = session.voiceIsolation.toLowerCase();
+		}
+		if (session.voiceIsolation == "false") {
+			session.voiceIsolation = false;
+		} else if (session.voiceIsolation == "0") {
+			session.voiceIsolation = false;
+		} else if (session.voiceIsolation == "no") {
+			session.voiceIsolation = false;
+		} else if (session.voiceIsolation == "off") {
+			session.voiceIsolation = false;
+		} else {
+			session.voiceIsolation = true;
+		}
+	}
+
+	if (session.voiceIsolation !== null) {
+		getById("whipoutvoiceisolation").classList.add("hidden");
+	}
 	if (session.noiseSuppression !== null) {
 		getById("whipoutdenoise").classList.add("hidden");
 	}
@@ -7646,7 +7678,7 @@ async function main() {
 				// blob mode not needed since iOS 15.6
 				script.src = "./thirdparty/StreamSaver_legacy.js?v=2"; // blob mode for Safari
 			} else {
-				script.src = "./thirdparty/StreamSaver.js?v=24"; // do not use blob mode
+				script.src = "./thirdparty/StreamSaver.js?v=29"; // do not use blob mode
 			}
 		};
 		script.src = "./thirdparty/polyfill.min.js"; // dynamically load this only if its needed. Keeps loading time down.

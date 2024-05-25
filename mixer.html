@@ -2230,6 +2230,9 @@
 	}
 	
 	var injectCSS = `
+		#directorLinks1,#directorLinks2 {
+			display:none!important;
+		}
 		.directorsgrid .vidcon {
 			display: inline-block !important;
 			width: 293.7px !important;
@@ -2970,12 +2973,15 @@
 		document.querySelectorAll(".inviteLink").forEach(ele=>{
 			if (ele.tagName == "A"){
 				ele.href = inviteURL
+				ele.title = "Copy link to clipboard";
+				ele.onclick = function(evt){copyFunction(inviteURL, evt);};
 			} else if (document.getElementById("obfuscateInvites").checked){
 				ele.innerHTML = inviteURL;
+				ele.onclick = function(evt){copyFunction(inviteURL, evt);};
+				ele.title = "Copy link to clipboard";
 			} else if (ele.tagName == "I"){
 				ele.innerHTML = "URL + ?room="+roomname+additional+additionalParams;
 			}
-			ele.onclick = function(evt){copyFunction(this, evt);};
 		});
 	
 		if (event){

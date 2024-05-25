@@ -4222,7 +4222,7 @@ function setupIncomingScreenTracking(v, UUID) {
 		log("AUTO RECORD START");
 		setTimeout(
 			function (UUID, v) {
-				var videoKbps = 4000;
+				var videoKbps = session.recordDefault;
 				if (session.recordLocal !== false) {
 					videoKbps = session.recordLocal;
 				}
@@ -4601,7 +4601,7 @@ function setupIncomingVideoTracking(v, UUID) {
 		log("AUTO RECORD START");
 		setTimeout(
 			function (UUID, v) {
-				var videoKbps = 4000;
+				var videoKbps = session.recordDefault;
 				if (session.recordLocal !== false) {
 					videoKbps = session.recordLocal;
 				}
@@ -6593,21 +6593,26 @@ function updateMixerRun(e = false) {
 
 			// ANIMATED  - CONTAINER ; width/height/z-index/cover///////////////
 			if (layout) {
-				var left = (w / 100) * layout[vid.dataset.sid].x || layout[vid.dataset.sid].xp || 0;
-				var top = (h / 100) * layout[vid.dataset.sid].y || layout[vid.dataset.sid].yp || 0;
-				top += hi;
-				var width = (w / 100) * layout[vid.dataset.sid].w || layout[vid.dataset.sid].wp || 0;
-				var height = (h / 100) * layout[vid.dataset.sid].h || layout[vid.dataset.sid].hp || 0;
-				if (layout[vid.dataset.sid].cover || layout[vid.dataset.sid].c) {
-					// this should be true/false
-					//vid.style.objectFit = "cover";
-					cover = true;
-				} else {
-					//vid.style.objectFit = "contain"; // this should fall back to sessio.cover if no layout supplied
-					cover = false;
+				try {
+					var left = (w / 100) * layout[vid.dataset.sid].x || layout[vid.dataset.sid].xp || 0;
+					var top = (h / 100) * layout[vid.dataset.sid].y || layout[vid.dataset.sid].yp || 0;
+					top += hi;
+					var width = (w / 100) * layout[vid.dataset.sid].w || layout[vid.dataset.sid].wp || 0;
+					var height = (h / 100) * layout[vid.dataset.sid].h || layout[vid.dataset.sid].hp || 0;
+				
+					if (layout[vid.dataset.sid].cover || layout[vid.dataset.sid].c) {
+						// this should be true/false
+						//vid.style.objectFit = "cover";
+						cover = true;
+					} else {
+						//vid.style.objectFit = "contain"; // this should fall back to sessio.cover if no layout supplied
+						cover = false;
+					}
+					//container.style.zindex = 0;
+					container.style.zIndex = layout[vid.dataset.sid].zIndex || layout[vid.dataset.sid].z || 0;
+				} catch(e){
+					errorlog(e);
 				}
-				//container.style.zindex = 0;
-				container.style.zIndex = layout[vid.dataset.sid].zIndex || layout[vid.dataset.sid].z || 0;
 			} else {
 				var left = Math.max(offsetx + Math.floor((((i % rw) + 0) * w) / rw), 0);
 				var top = Math.max(offsety + Math.floor(((Math.floor(i / rw) + 0) * h) / rh + hi), 0);
@@ -13500,7 +13505,9 @@ function toggleMute(apply = false, event = false) {
 					track.enabled = true;
 				});
 			}
+			//if (event){ // this might be a good solution, if there is a problem.
 			refreshMicrophoneDevice(); // to address an issue with iOS/iPad devices losing audio when an inbound audio souce hits.
+			//}
 		//}
 
 		// toggleMute(false, event)
@@ -13516,7 +13523,7 @@ function toggleMute(apply = false, event = false) {
 
 	if (!apply) {
 		// only if they are changing states do we bother to spam.
-		data = {};
+		var data = {};
 		data.muteState = session.muted;
 		session.sendMessage(data);
 		log("SEND MUTE STATE TO PEERS");
@@ -16241,7 +16248,9 @@ async function publishScreen() {
 	if (session.echoCancellation === true) {
 		constraints.audio.echoCancellation = true; // the defaults for screen publishing should be off.
 	}
-
+	if (session.voiceIsolation === true){
+		constraint.audio.voiceIsolation = true;
+	}
 	try {
 		let supportedConstraints = navigator.mediaDevices.getSupportedConstraints();
 		if (supportedConstraints.cursor) {
@@ -23460,8 +23469,8 @@ function refreshVideoDevice() {
 	grabVideo(session.quality, "videosource", "select#videoSource3");
 }
 function refreshMicrophoneDevice() {
-	if (session.screenShareState) {
-		log("can't refresh a screenshare");
+	if (session.screenShareState || session.mediafileShare) {
+		log("can't refresh a screenshare or fileshare");
 		return;
 	}
 	log("refreshing microphone..");
@@ -23782,7 +23791,7 @@ async function getAudioOnly(selector, trackid = null, override = false) {
 	}
 
 	for (var i = 0; i < audioList.length; i++) {
-		if (session.echoCancellation !== false && session.autoGainControl !== false && session.noiseSuppression !== false) {
+		if (session.echoCancellation !== false && session.autoGainControl !== false && session.noiseSuppression !== false && (session.voiceIsolation !== true)) {
 			var constraint = {
 				audio: {
 					deviceId: {
@@ -23813,6 +23822,9 @@ async function getAudioOnly(selector, trackid = null, override = false) {
 				constraint.audio.noiseSuppression = false;
 			} else {
 				constraint.audio.noiseSuppression = true;
+			}
+			if (session.voiceIsolation === true){
+				constraint.audio.voiceIsolation = true;
 			}
 		}
 		constraint.video = false;
@@ -25149,6 +25161,9 @@ async function grabScreen(quality = 0, audio = true, videoOnEnd = false) {
 	}
 	if (session.noiseSuppression === true) {
 		constraints.audio.noiseSuppression = true;
+	}
+	if (session.voiceIsolation === true){
+		constraint.audio.voiceIsolation = true;
 	}
 	if (audio == false) {
 		constraints.audio = false;
@@ -27887,7 +27902,7 @@ async function press2talk(clean = false) {
 					log("AUTO RECORD START");
 					setTimeout(
 						function (v) {
-							var videoKbps = 4000;
+							var videoKbps = session.recordDefault;
 							if (session.recordLocal !== false) {
 								videoKbps = session.recordLocal;
 							}
@@ -28246,7 +28261,7 @@ session.publishStream = function (v) {
 		log("AUTO RECORD START");
 		setTimeout(
 			function (v) {
-				var videoKbps = 4000;
+				var videoKbps = session.recordDefault;
 				if (session.recordLocal !== false) {
 					videoKbps = session.recordLocal;
 				}
@@ -28433,6 +28448,10 @@ async function publishScreen2(constraints, audioList = [], audio = true, overrid
 				constraint.audio.noiseSuppression = false;
 			} else {
 				constraint.audio.noiseSuppression = true;
+			}
+			
+			if (session.voiceIsolation === true) {
+				constraint.audio.voiceIsolation = true;
 			}
 
 			if (session.audioInputChannels) {
@@ -28866,7 +28885,7 @@ async function publishScreen2(constraints, audioList = [], audio = true, overrid
 				log("AUTO RECORD START");
 				setTimeout(
 					function (v) {
-						var videoKbps = 4000;
+						var videoKbps = session.recordDefault;
 						if (session.recordLocal !== false) {
 							videoKbps = session.recordLocal;
 						}
@@ -29316,6 +29335,7 @@ function nextFilePlaylist(vid) {
 session.publishFile = function (ele, event) {
 	// webcam stream is used to generated an SDP
 	log("FILE STREAM SETUP");
+	
 
 	if (session.transcript) {
 		setTimeout(function () {
@@ -29334,7 +29354,6 @@ session.publishFile = function (ele, event) {
 	var fileURL = URL.createObjectURL(files[0]);
 	var container = document.createElement("div");
 	container.id = "container";
-	//container.className = "vidcon";
 
 	if (session.cover) {
 		container.style.setProperty("height", "100%", "important");
@@ -29342,19 +29361,21 @@ session.publishFile = function (ele, event) {
 
 	var v = createVideoElement();
 	v.container = container;
-
+	
 	if (session.cleanOutput) {
 		container.style.height = "100%";
 		v.style.maxWidth = "100%";
 		v.style.boxShadow = "none";
 	}
+	
+	container.appendChild(v);
 
 	if (session.streamID) {
 		v.dataset.sid = session.streamID;
 	}
 
 	getById("gridlayout").appendChild(container);
-
+	
 	if (session.roomid !== false) {
 		if (session.roomid === "" && (!session.view || session.view === "")) {
 		} else {
@@ -29371,13 +29392,12 @@ session.publishFile = function (ele, event) {
 		getById("head3a").classList.remove("hidden");
 		getById("logoname").style.display = "none";
 	}
-	getById("head1").className = "hidden";
-
+	
 	updatePushId();
-
+	
 	getById("head1").className = "hidden";
 	getById("head2").className = "hidden";
-
+	
 	if (!session.cleanOutput) {
 		getById("chatbutton").className = "float";
 		getById("sharefilebutton").classList.remove("hidden"); // we won't override "display:none", if set, though.
@@ -29414,23 +29434,20 @@ session.publishFile = function (ele, event) {
 		var vid = getById("videosource");
 		nextFilePlaylist(vid);
 	}
-
+	
 	v.id = "videosource"; // could be set to UUID in the future
 	v.dataset.menu = "context-menu-video";
+	v.setAttribute("playsinline", "");
+	v.src = fileURL;
 	v.playlist = files;
 	v.addEventListener("ended", myHandler, false); // only fires if the video doesn't loop.
 
-	v.setAttribute("playsinline", "");
-	v.src = fileURL;
-
 	v.className = "tile clean fileshare";
+	
 	session.videoElement = v;
-
-	container.appendChild(v);
-
 	session.mirrorExclude = true;
 
-	v.addEventListener("click", function (e) {
+	v.addEventListener("click", (e) => {
 		log("click");
 		try {
 			if (e.ctrlKey || e.metaKey) {
@@ -29452,7 +29469,8 @@ session.publishFile = function (ele, event) {
 	v.touchTimeOut = null;
 	v.touchLastTap = 0;
 	v.touchCount = 0;
-	v.addEventListener("touchend", function (event) {
+	
+	v.addEventListener("touchend", (event) => {
 		if (session.disableMouseEvents) {
 			return;
 		}
@@ -29501,7 +29519,7 @@ session.publishFile = function (ele, event) {
 		}
 	});
 
-	v.onerror = function () {
+	v.onerror = () => {
 		if (session.cleanOutput) {
 			errorlog("File failed to load.\n\nSelect a compatible media file.");
 		} else {
@@ -29509,16 +29527,19 @@ session.publishFile = function (ele, event) {
 		}
 	};
 
-	v.onloadeddata = function () {
+	v.onloadeddata = () => {
+		
+		session.mediafileShare = true;
+		getById("mainmenu").remove();
+		
 		if (Firefox) {
 			session.streamSrc = v.mozCaptureStream();
 		} else {
 			session.streamSrc = v.captureStream(); // gaaaaaaaaaaaahhhhhhhh!
 		}
+		
 		toggleMute(true);
-		session.streamSrc = outboundAudioPipeline(session.streamSrc);
-		updateMixer();
-
+		
 		if (session.director) {
 		} else if (session.scene !== false) {
 		} else if (session.roomid !== false) {
@@ -29571,6 +29592,9 @@ session.publishFile = function (ele, event) {
 			container.backgroundColor = "#666";
 			applyMirror(session.mirrorExclude);
 		}
+		
+		//session.streamSrc = outboundAudioPipeline(session.streamSrc);
+		//updateMixer();
 
 		updateReshareLink();
 		pokeIframeAPI("started-fileshare"); // depreciated
@@ -34982,7 +35006,7 @@ function previewWebcam(miconly = false) {
 		var constraint = {
 			audio: false
 		};
-	} else if (session.echoCancellation !== false && session.autoGainControl !== false && session.noiseSuppression !== false) {
+	} else if ((session.echoCancellation !== false) && (session.autoGainControl !== false) && (session.noiseSuppression !== false) && (session.voiceIsolation !== true)) {
 		// AUTO
 		var constraint = {
 			audio: true
@@ -35012,6 +35036,10 @@ function previewWebcam(miconly = false) {
 			constraint.audio.noiseSuppression = true;
 		} else {
 			constraint.audio.noiseSuppression = false;
+		}
+		
+		if (session.voiceIsolation===true){
+			constraint.audio.voiceIsolation = true;
 		}
 	}
 
@@ -35816,9 +35844,14 @@ function pauseVideo(videoEle, update = true) {
 	}
 
 	function positionMenu(e) {
-		var clickCoords = getPosition(e);
-		clickCoordsX = clickCoords.x;
-		clickCoordsY = clickCoords.y;
+		try {
+			var clickCoords = getPosition(e);
+			clickCoordsX = clickCoords.x;
+			clickCoordsY = clickCoords.y;
+		} catch(e){
+			errorlog(e);
+			return;
+		}
 
 		menuWidth = menu.offsetWidth + 4;
 		menuHeight = menu.offsetHeight + 4;
@@ -35881,7 +35914,7 @@ function pauseVideo(videoEle, update = true) {
 			} else if (taskItemInContext.startWriter) {
 				taskItemInContext.startWriter();
 			} else {
-				var videoKbps = 4000;
+				var videoKbps = session.recordDefault;
 				if (session.recordLocal !== false) {
 					videoKbps = session.recordLocal;
 				}
@@ -36732,7 +36765,32 @@ function createPopoutChat() {
 			errorlog(e);
 		};
 	}
-	window.open("./popout.html?id=" + session.broadcastChannelID, "popup", "width=600,height=480,toolbar=no,menubar=no,resizable=yes");
+	
+	const popup = window.open("", "popup", "width=600,height=480,toolbar=no,menubar=no,resizable=yes");
+	
+	popup.onload = () => {
+	  const newUrl = "./HELLO"; // The new URL you want to show
+	  popup.history.replaceState({}, "", newUrl);
+	};
+	
+	const iframe = popup.document.createElement('iframe');
+	iframe.src = "./popout.html?id=" + session.broadcastChannelID;
+	iframe.style.width = "100%";
+	iframe.style.height = "100%";
+	iframe.style.border = "none";
+	iframe.style.overflow = "hidden";
+	iframe.style.position = "absolute";
+	iframe.style.top = "0";
+	iframe.style.left = "0";
+	popup.document.body.style.margin = "0";
+	popup.document.body.style.padding = "0";
+	popup.document.body.style.overflow = "hidden";
+	popup.document.body.appendChild(iframe);
+	popup.document.title = "Chat pop-out";
+	
+	
+	
+	//window.open("./popout.html?id=" + session.broadcastChannelID, "popup", "width=600,height=480,toolbar=no,menubar=no,resizable=yes");
 	return false;
 }
 
@@ -38175,7 +38233,7 @@ async function recordVideo(target, event = null, videoKbps = false) {
 
 	if (videoKbps === false) {
 		if (defaultRecordingBitrate == false) {
-			videoKbps = 4000;
+			videoKbps = session.recordDefault;
 			if (session.recordLocal !== false) {
 				videoKbps = session.recordLocal;
 			}
@@ -38436,8 +38494,8 @@ async function recordVideo(target, event = null, videoKbps = false) {
 	}
 
 	var writer = writable.getWriter();
-	readable.pipeTo(streamSaver.createWriteStream(filename.toString() + filext, video.recorder.stop));
 	video.recorder.writer = writer;
+	readable.pipeTo(streamSaver.createWriteStream(filename.toString() + filext, video.recorder.stop));
 	pokeIframeAPI("recording-started");
 
 	log(options);
@@ -38493,6 +38551,7 @@ async function recordVideo(target, event = null, videoKbps = false) {
 
 	video.recorder.mediaRecorder.onerror = function (event) {
 		errorlog(event);
+		console.log("It's possible using &recordcodec=vp8 might resolve recording errors if caused by an incompatible hardware encoder or codec");
 		video.recorder.stop();
 		session.requestRateLimit(35, UUID);
 		if (!session.cleanOutput) {
@@ -38518,7 +38577,9 @@ async function recordVideo(target, event = null, videoKbps = false) {
 
 	setTimeout(
 		function (v) {
-			v.recorder.mediaRecorder.start(1000);
+			if (v && v.recorder){
+				v.recorder.mediaRecorder.start(1000);
+			}
 		},
 		500,
 		video
@@ -39547,6 +39608,7 @@ async function recordLocalVideo(action = null, videoKbps = false, remote = false
 
 	video.recorder.mediaRecorder.onerror = function (event) {
 		errorlog(event);
+		console.log("It's possible using &recordcodec=vp8 might resolve recording errors if caused by an incompatible hardware encoder or codec");
 		if (event && event.error && event.error.name) {
 			video.recorder.stop(event.error.name);
 		} else {
@@ -42194,6 +42256,14 @@ async function startPublishing() {
 			session.noiseSuppression = false;
 		}
 	}
+	if (!getById("whipoutisolation").classList.contains("hidden")) {
+		if (getById("whipoutisolation").value === "1") {
+			session.voiceIsolation = true;
+		} else {
+			session.voiceIsolation = false;
+		}
+	}
+	
 	if (!getById("whipoutautogain").classList.contains("hidden")) {
 		if (getById("whipoutautogain").value === "1") {
 			session.autoGainControl = true;
@@ -43386,7 +43456,7 @@ async function whepIn(whepInput = false, whepInputToken = false, UUID = false) {
 						"a=ice-pwd:" +
 						icePwd +
 						"\r\n" +
-						"m=audio RTP/AVP 0\r\n" +
+						"m=audio 9 RTP/AVP 0\r\n" +
 						"a=mid:0\r\n" +
 						"a=" +
 						event.candidate.candidate +
@@ -43557,7 +43627,7 @@ async function whepIn(whepInput = false, whepInputToken = false, UUID = false) {
 								"a=ice-pwd:" +
 								icePwd +
 								"\r\n" +
-								"m=audio RTP/AVP 0\r\n" +
+								"m=audio 9 RTP/AVP 0\r\n" +
 								"a=mid:0\r\n";
 							candidates.forEach(candidate => {
 								patchCandidates += "a=" + candidate.candidate + "\r\n";
@@ -44963,6 +45033,9 @@ addEventToAll(".column", "click", function (e, ele) {
 	} catch (e) {
 		return;
 	}
+	if (!bounding_box){
+		errorlog("No bounding box for ele found");
+	}
 	ele.style.top = bounding_box.top + "px";
 	ele.style.left = bounding_box.left - 20 + "px";
 	ele.classList.add("in-animation");
@@ -45666,6 +45739,9 @@ async function createSecondStream() {
 		if (session.noiseSuppression === true) {
 			constraints.audio.noiseSuppression = true;
 		}
+		if (session.voiceIsolation === true){
+			constraint.audio.voiceIsolation = true;
+		}
 		//if (audio == false) {
 		//	constraints.audio = false;
 		//}
@@ -45929,7 +46005,7 @@ async function createSecondStream() {
 										ele.classList.add("hidden");
 										ele.vid = null;
 									} else {
-										var videoKbps = 4000;
+										var videoKbps = session.recordDefault;
 										if (session.recordLocal !== false) {
 											videoKbps = session.recordLocal;
 										}

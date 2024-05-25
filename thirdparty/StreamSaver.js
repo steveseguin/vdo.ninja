@@ -98,7 +98,7 @@ function streamSaverFunction(){
       }
 
       channel.port1.onmessage = evt => {
-		console.log(evt);
+		//console.log(evt);
         // Service worker sent us a link that we should open.
         if (evt.data.download) {
           // Special treatment for popup...
@@ -213,7 +213,7 @@ function streamSaverFunction(){
     WritableStream: global.WritableStream || ponyfill.WritableStream,
     supported: true,
     version: { full: '2.0.7', major: 2, minor: 0, dot: 7 },
-    mitm: './thirdparty/mitm.html?v=3'
+    mitm: './thirdparty/mitm.html?v=4'
   }
   
   //console.log(streamSaver);
@@ -232,6 +232,7 @@ function streamSaverFunction(){
     iframe.loaded = false
     iframe.name = 'iframe'
     iframe.isIframe = true
+	iframe.credentialless = true
     iframe.postMessage = (...args) => iframe.contentWindow.postMessage(...args)
     iframe.addEventListener('load', () => {
       iframe.loaded = true

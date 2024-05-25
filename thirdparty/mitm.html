@@ -41,7 +41,7 @@ let scope = ''
 
 function registerWorker() {
   return navigator.serviceWorker.getRegistration('./').then(swReg => {
-    return swReg || navigator.serviceWorker.register('sw.js', { scope: './' })
+    return swReg || navigator.serviceWorker.register('sw.js?v=2', { scope: './' })
   }).then(swReg => {
     const swRegTmp = swReg.installing || swReg.waiting
 
@@ -63,6 +63,11 @@ function registerWorker() {
 function onMessage (event) {
   let { data, ports, origin } = event
 
+  // Ignore messages other than from iframe parent (e.g. extensions)
+  if (event.source !== window.parent) {
+    return
+  }
+  
   // It's important to have a messageChannel, don't want to interfere
   // with other simultaneous downloads
   if (!ports || !ports.length) {

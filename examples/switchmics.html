@@ -1,0 +1,207 @@
+<html>
+<head><title>Toggle Two Mutes Controller</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+<meta content="text/html;charset=utf-8" http-equiv="Content-Type" />
+<style>
+body{
+	padding:0;
+	margin:0;
+	background-color:#003;
+	width:100%;
+	height:100%;
+	color:white;
+	font-family: tahoma, arial;
+}
+
+a {
+	color:white
+}
+
+iframe {
+	width:100%;
+	height:100%;
+	border:0;
+	margin:0;
+	padding:0;
+	display:block;
+}
+
+
+input{
+	padding:10px;
+	width:80%;
+	font-size:1.2em;
+	z-index: 1000;
+}
+
+div{
+	border:0;
+	margin:0;
+	padding:0;
+	text-align: center;
+}
+button {
+	margin:40px;
+	padding:40px;
+}
+
+#container2 button{
+	margin: 5px min(10px, 1vh);
+	padding:10px min(100px, 10vh);
+	cursor:pointer;
+	height:100%;
+	font-size: max(30px, 4.5vh);
+	font-weight: 900;
+}
+iframe{
+	border:1px solid white;
+}
+span {
+    margin: 0 10px;
+}
+.selected{
+	border:3px solid lightblue;
+}
+</style>
+</head>
+<body>
+
+
+
+<div id="container1" style="width:100%;height:89%;display:none;">
+</div>
+<div id="container2" style="width:100%;height:10%;display:none;">
+	<span>
+		<button id='a' onclick="mute('a')" style='background-color:green'>A</button>
+		<button id='c' onclick="mute('c')" style='background-color:red'>MUTE BOTH</button>
+		<button id='b' onclick="mute('b')" style='background-color:green'>B</button>
+	</span>
+</div>
+<div id="deleteme">
+	<h2>PTZ Remote Control interface</h2>
+	<input placeholder="Enter a push link. ie) https://vdo.ninja/?push=english123a&label=ENGLISH" id="viewlinka" type="text"><br>
+	<input placeholder="Enter a push link. ie) https://vdo.ninja/?push=french123b&label=FRENCH" id="viewlinkb" type="text" /><br>
+	<button onclick="loadIframes()">CONNECT</button>
+	<br>
+	This app is a toggle between two different inputs
+</div>
+<script>
+var iframe;
+
+function mute(target){
+	if (iframea && iframeb){
+		if (target=="a"){
+			document.getElementById("b").classList.remove("selected");
+			document.getElementById("c").classList.remove("selected");
+			document.getElementById("a").classList.add("selected");
+			iframea.contentWindow.postMessage({mic:true}, '*');
+			iframeb.contentWindow.postMessage({mic:false}, '*');
+		} else if (target=="b"){
+			document.getElementById("a").classList.remove("selected");
+			document.getElementById("c").classList.remove("selected");
+			document.getElementById("b").classList.add("selected");
+			iframea.contentWindow.postMessage({mic:false}, '*');
+			iframeb.contentWindow.postMessage({mic:true}, '*');
+		} else {
+			document.getElementById("a").classList.remove("selected");
+			document.getElementById("b").classList.remove("selected");
+			document.getElementById("c").classList.add("selected");
+			iframea.contentWindow.postMessage({mic:false}, '*');
+			iframeb.contentWindow.postMessage({mic:false}, '*');
+		}
+	}
+}
+
+var urlEdited = window.location.search.replace(/\?\?/g, "?");
+urlEdited = urlEdited.replace(/\?/g, "&");
+urlEdited = urlEdited.replace(/\&/, "?");
+
+if (urlEdited !== window.location.search){
+	warnlog(window.location.search + " changed to " + urlEdited);
+	window.history.pushState({path: urlEdited.toString()}, '', urlEdited.toString());
+}
+var urlParams = new URLSearchParams(urlEdited);
+
+if (urlParams.get("a")){
+	if (window.location.host){
+		var path = window.location.host+window.location.pathname.replace("/examples/","/").split("/").slice(0,-1).join("/");
+	} else {
+		var path = "vdo.ninja";
+	}
+	document.getElementById("viewlinka").value = "https://"+path+"/?push="+urlParams.get("a");
+	
+	if (urlParams.get("la")){
+		document.getElementById("viewlinka").value += "&label="+urlParams.get("la");
+		document.getElementById("a").innerHTML = urlParams.get("la")
+	}
+	
+}
+if (urlParams.get("b")){
+	if (window.location.host){
+		var path = window.location.host+window.location.pathname.replace("/examples/","/").split("/").slice(0,-1).join("/");
+	} else {
+		var path = "vdo.ninja";
+	}
+	document.getElementById("viewlinkb").value = "https://"+path+"/?push="+urlParams.get("b");
+	
+	if (urlParams.get("lb")){
+		document.getElementById("viewlinkb").value += "&label="+urlParams.get("lb");
+		document.getElementById("b").innerHTML = urlParams.get("lb")
+	}
+}
+
+var iframeb = null;
+var iframea = null;
+function loadIframes(){ 
+
+	var iframesrca = document.getElementById("viewlinka").value;
+	var iframesrcb = document.getElementById("viewlinkb").value;
+	
+	document.getElementById("deleteme").remove()
+	delete document.getElementById("deleteme");
+	document.getElementById("container1").style.display="flex";
+	document.getElementById("container2").style.display="inline-block";
+	
+	var params = window.location.search || "";
+		
+	if (iframesrca.includes("?")){
+		params = params.slice(1);
+		iframesrca = iframesrca + "&" + params
+	} else {
+		iframesrca = iframesrca + params
+	}
+	
+	if (iframesrcb.includes("?")){
+		params = params.slice(1);
+		iframesrcb = iframesrcb + "&" + params
+	} else {
+		iframesrcb = iframesrcb + params
+	}
+	
+	iframea = document.createElement("iframe");
+	iframea.allow = "encrypted-media;sync-xhr;usb;web-share;cross-origin-isolated;accelerometer;midi;geolocation;autoplay;camera;microphone;fullscreen;picture-in-picture;display-capture;gyroscope;";
+	iframea.src = iframesrca;
+	document.getElementById("container1").appendChild(iframea);
+	
+	iframeb = document.createElement("iframe");
+	iframeb.allow = "encrypted-media;sync-xhr;usb;web-share;cross-origin-isolated;accelerometer;midi;geolocation;autoplay;camera;microphone;fullscreen;picture-in-picture;display-capture;gyroscope;";
+	iframeb.src = iframesrcb;
+	document.getElementById("container1").appendChild(iframeb);
+}
+
+ window.addEventListener("message", function (e) {
+	if (iframeb && (e.source === iframeb.contentWindow)) {
+		console.log(e.data);
+		if (e.data.action == "this-label"){
+			document.getElementById("a").innerHTML = e.data.value;
+		}
+	} else if (iframea && (e.source === iframea.contentWindow)) {
+		if (e.data.action == "this-label"){
+			document.getElementById("b").innerHTML = e.data.value;
+		}
+	}
+}, false);
+
+</script>
+</body>
+</html>
