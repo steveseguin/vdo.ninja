@@ -16,13 +16,21 @@ Example: `&buffer=500`
 
 ## Details
 
-This feature will increase the size of the audio and video _playout delay_ by means of tweaking the webRTC _jitter buffer_ pipeline (or a related buffer).
+This feature will increase the size of the audio and video _playout delay_ by means of tweaking the webRTC _jitter buffer_ pipeline (or a related buffer).&#x20;
 
-This can effectively be used as a way to delay the incoming video and audio by upwards of around 10-seconds. It's compatible with modern Chromium-based browsers.
+This can effectively be used as a way to delay the incoming video and audio by around 4-seconds. It's compatible with modern Chromium-based browsers, likely Firefox, but not Safari.
 
-While in theory this option can also help to improve video and audio quality, as a larger playback buffer can help reduce the effects of network jitter and packet loss, it's not a miracle solution in this regard. Adding 200-ms of buffer delay using this feature is worth trying however, as some users have reported it has helped improve their connections.
+While in theory this option can also help to improve video and audio quality, as a larger playback buffer should help reduce the effects of network jitter and packet loss, it's not a miracle solution in this regard. Adding 200-ms of buffer delay using this feature is worth trying however, as some users have reported it has helped improve their connections.
 
-While one might think adding 10-seconds of buffer would then only improve the connection further, at this point it doesn't really. Work is being done to change this however, such as the work related to the `&chunked` transfer mode, which will work quite well with extended buffer times.
+The problem is that the browser doesn't fully make use of the available buffer if set high, and so it's largely used as mainly a hint. Network conditions, memory limits and other factors may impact the results as well. \
+\
+Older versions of Chromium allowed upwards of 15-seconds of buffering, with recent versions of Chromium allowing up to just 4-seconds.&#x20;
+
+### Chunked-mode
+
+If using the `&chunked` transfer mode, the method and function of the `&buffer` option is different than normal. There is not hard coded limit on what delay you can add, as it that uses it a custom buffering solution that isn't controlled by the browser. You can set the delay to be whatever you want; minutes even, assuming you have the memory for it.
+
+Using `&buffer` with `&chunked` mode can improve quality, however more than a few seconds is probably not advisable.
 
 #### Example values
 
