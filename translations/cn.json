@@ -545,7 +545,7 @@
 	"publish-via-whip": "通过WHIP发布",
 	"share-whepsrc": "通过WHEP共享",
 	"enter-the-whep-URL-you-wish-to-share": "输入您希望分享的WHEP URL。",
-	"info-blob": "<h3>🛠 如需支持，请访问 <a href=\"https://www.reddit.com/r/VDONinja/\">子论坛 <i class=\"lab la-reddit-alien\"></i></a> 或加入 <a href=\"https://discord.vdo.ninja/\">Discord <i class=\"lab la-discord\"></i></a>. The <a href=\"https://docs.vdo.ninja/\">文档在此</a> 汉化：<i>打了鸡血的小白兔</i></h3>",
+	"info-blob": "\n<h2>什么是VDO.Ninja</h2>\n<br>\n<li>100% <b>免费</b>；无需下载；不收集个人数据；无需登录</li>\n<li>将来自您的智能手机、远程计算机或朋友的实时视频直接传入 OBS 或其他工作室软件。</li>\n<li>我们使用尖端的 P2P 转发技术，提供隐私保护和超低延迟</li>\n<br>\n<li>Youtube视频 \n<i class=\"lab la-youtube\"></i>\n<a href=\"https://www.youtube.com/watch?v=QaA_6aOP9z8&amp;list=PLWodc2tCfAH1WHjl4WAOOoRSscJ8CHACe&amp;index=1\" alt=\"Youtube video demoing VDO.Ninja\">在这里演示</a>\n</li>\n<br><h3>\n   🛠 获取支持，请参阅 <a href=\"https://www.reddit.com/r/VDONinja/\">sub-reddit <i class=\"lab la-reddit-alien\"></i></a> 或加入 <a href=\"https://discord.vdo.ninja/\">Discord <i class=\"lab la-discord\"></i></a>。文档位于 <a href=\"https://docs.vdo.ninja/\">这里</a> ，我的个人邮箱是 <i>steve@seguin.email</i>\n</h3> \n\n",
 	"guest-1": "嘉宾 1",
 	"guest-2": "嘉宾 2",
 	"guest-3": "嘉宾 3",
