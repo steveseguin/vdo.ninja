@@ -1,6 +1,6 @@
 # Updates - Social Stream Standalone App
 
-#### [social-stream.md](../../steves-helper-apps/social-stream.md "mention")
+#### [social-stream-ninja](../../steves-helper-apps/social-stream-ninja/ "mention")
 
 #### [https://github.com/steveseguin/social\_stream/releases](https://github.com/steveseguin/social\_stream/releases)
 

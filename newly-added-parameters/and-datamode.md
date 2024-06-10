@@ -32,7 +32,7 @@ A remote control page, that works anywhere online, and another page to forward t
 
 #### Social Stream Ninja
 
-[Social Stream](../steves-helper-apps/social-stream.md) is used by thousands of users as a free way to send text messages and image data using VDO.Ninja's p2p data function. The p2p nature of this setup keeps latency and internet usage low when the two connections are on the same LAN, but also provides a NAT firewall bypass for sending messages across the Internet, without the need for websocket servers.
+[Social Stream](../steves-helper-apps/social-stream-ninja/) is used by thousands of users as a free way to send text messages and image data using VDO.Ninja's p2p data function. The p2p nature of this setup keeps latency and internet usage low when the two connections are on the same LAN, but also provides a NAT firewall bypass for sending messages across the Internet, without the need for websocket servers.
 
 {% embed url="https://socialstream.ninja" %}
 

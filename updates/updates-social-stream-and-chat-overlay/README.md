@@ -1,7 +1,7 @@
 # Updates - Social Stream & Chat Overlay
 
-[social-stream.md](../../steves-helper-apps/social-stream.md "mention")\
-[chat-overlay.md](../../steves-helper-apps/chat-overlay.md "mention")
+[social-stream-ninja](../../steves-helper-apps/social-stream-ninja/ "mention")\
+[Broken link](broken-reference "mention")
 
 #### February 20
 

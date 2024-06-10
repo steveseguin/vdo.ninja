@@ -18,7 +18,7 @@ Example: `&widget=https%3A%2F%2Fwww.youtube.com%2Flive_chat%3Fis_popout%3D1%26v%
 
 `&widget` lets you pass a URLComponent-encoded URL value. It will load a side-bar with that page as an IFrame embed, with support for YouTube/Twitch specifically added.
 
-This was designed for Twitch / YouTube / [Social Stream chat](../../steves-helper-apps/social-stream.md), but could in theory work with any CORS-friendly site, such as a third-party web tool.
+This was designed for Twitch / YouTube / [Social Stream chat](../../steves-helper-apps/social-stream-ninja/), but could in theory work with any CORS-friendly site, such as a third-party web tool.
 
 The director of a room also has the option to enable/disable the widget function for everyone in the room via the room settings menu.
 
@@ -35,6 +35,6 @@ If the director uses `&widget`, it will auto sync that with all guests as they c
 [chatbutton.md](../../general-settings/chatbutton.md)
 {% endcontent-ref %}
 
-{% content-ref url="../../steves-helper-apps/social-stream.md" %}
-[social-stream.md](../../steves-helper-apps/social-stream.md)
+{% content-ref url="../../steves-helper-apps/social-stream-ninja/" %}
+[social-stream-ninja](../../steves-helper-apps/social-stream-ninja/)
 {% endcontent-ref %}
