@@ -35360,8 +35360,8 @@ async function PictureInPicturePageToggle(state = null) {
 			});
 
 			var pipWindowHead = '<title>Pop-out Window</title>';
-			pipWindowHead += '<link rel="stylesheet" href="./css/main.css"/>';
 			pipWindowHead += '<link rel="stylesheet" href="./css/variables.css"/>';
+			pipWindowHead += '<link rel="stylesheet" href="./css/main.css"/>';
 			pipWindowHead += '<link rel="stylesheet" href="./css/icons.css"/>';
 			pipWindowHead += '<link rel="stylesheet" href="./css/animations.css"/>';
 			

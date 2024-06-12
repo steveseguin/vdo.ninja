@@ -29,16 +29,28 @@
 		<meta name="sourcecode" content="https://github.com/steveseguin/vdo.ninja" />
 		<meta name="stance-on-war" content="Steve Seguin condemns Russia's brutal invasion of Ukraine 💙💛." />
 		
-		<link rel="shortcut icon" href="data:image/x-icon;," type="image/x-icon" />
-		<link id="favicon1" rel="icon" type="image/png" sizes="32x32" href="./media/favicon-32x32.png" />
-		<link id="favicon2" rel="icon" type="image/png" sizes="16x16" href="./media/favicon-16x16.png" />
-		<link id="favicon3" rel="icon" href="./media/favicon.ico" />
-		<link id="thumbnailUrl" itemprop="thumbnailUrl" href="./media/vdoNinja_logo_full.png" />
 		<!-- Primary Meta Tags -->
 		<title>VDO.Ninja</title>
 		<meta id="metaTitle" name="title" content="VDO.Ninja" />
 		<meta name="description" content="Bring live video from your smartphone, computer, or friends directly into your Studio. 100% free." />
 		<meta name="author" content="Steve Seguin" />
+		
+		<meta name="msapplication-TileColor" content="#da532c" />
+		<meta name="theme-color" content="#0f131d" />
+		
+		<link rel="stylesheet" href="./css/variables.css" />
+		<!-- If a user is using an old custom main.css, their custom variables should override the defaults variables this way. i think. -->
+		<link rel="stylesheet" href="./css/main.css?ver=386" />
+		<link rel="stylesheet" href="./css/icons.css" />
+		<link rel="stylesheet" href="./css/animations.css" />
+		<script type="text/javascript" crossorigin="anonymous" src="./thirdparty/adapter.js"></script>
+		
+		<link rel="shortcut icon" href="data:image/x-icon;," type="image/x-icon" />
+		<link id="favicon1" rel="icon" type="image/png" sizes="32x32" href="./media/favicon-32x32.png" />
+		<link id="favicon2" rel="icon" type="image/png" sizes="16x16" href="./media/favicon-16x16.png" />
+		<link id="favicon3" rel="icon" href="./media/favicon.ico" />
+		<link id="thumbnailUrl" itemprop="thumbnailUrl" href="./media/vdoNinja_logo_full.png" />
+		
 		<!-- Open Graph / Facebook -->
 		<meta property="og:site_name" content="VDO.Ninja" />
 		<meta property="og:type" content="website" />
@@ -56,14 +68,7 @@
 		<meta property="twitter:title" content="VDO.Ninja" />
 		<meta property="twitter:description" content="Bring live video from your smartphone, computer, or friends directly into OBS Studio. 100% free." />
 		<meta property="twitter:image" content="./media/vdoNinja_logo_full.png" />
-		<meta name="msapplication-TileColor" content="#da532c" />
-		<meta name="theme-color" content="#0f131d" />
-		
-		<link rel="stylesheet" href="./css/main.css?ver=386" />
-		<link rel="stylesheet" href="./css/variables.css" />
-		<link rel="stylesheet" href="./css/icons.css" />
-		<link rel="stylesheet" href="./css/animations.css" />
-		<script type="text/javascript" crossorigin="anonymous" src="./thirdparty/adapter.js"></script>
+
 		<style id="lightbox-animations" type="text/css"></style>
 		
 		<!-- Until Chrome v115 ends ; pip2 -->
@@ -72,18 +77,6 @@
 		<!-- Until Chrome v117 ends ; blur -->
 		<meta http-equiv="origin-trial" content="Aqwjtr1IS9AdkcWCFAOHtMMmsKDy8Ti58hQBbHkR/HnloiMhkW17cYgnkiLgOH9zuTDC/o4GquQ0MHe9tqT51wcAAABdeyJvcmlnaW4iOiJodHRwczovL3Zkby5uaW5qYTo0NDMiLCJmZWF0dXJlIjoiTWVkaWFDYXB0dXJlQmFja2dyb3VuZEJsdXIiLCJleHBpcnkiOjE2OTg5Njk1OTl9">
 		
-		<!-- <link rel="manifest" href="manifest.json" /> -->
-			<!-- ios support 
-			<link rel="apple-touch-icon" href="images/icons/icon-72x72.png" />
-			<link rel="apple-touch-icon" href="images/icons/icon-96x96.png" />
-			<link rel="apple-touch-icon" href="images/icons/icon-128x128.png" />
-			<link rel="apple-touch-icon" href="images/icons/icon-144x144.png" />
-			<link rel="apple-touch-icon" href="images/icons/icon-152x152.png" />
-			<link rel="apple-touch-icon" href="images/icons/icon-192x192.png" />
-			<link rel="apple-touch-icon" href="images/icons/icon-384x384.png" />
-			<link rel="apple-touch-icon" href="images/icons/icon-512x512.png" />
-			<meta name="apple-mobile-web-app-status-bar" content="#db4938" />
-		-->
 	</head>
 	<body id="main" class="main hidden" onload="main()">
 		<span itemprop="image" itemscope itemtype="http://schema.org/ImageObject">
@@ -96,7 +89,7 @@
 		
 		<script type="text/javascript" crossorigin="anonymous"  src="./thirdparty/CodecsHandler.js?ver=10"></script>
 		<script type="text/javascript" crossorigin="anonymous" src="./thirdparty/aes.js"></script>
-		<script type="text/javascript" crossorigin="anonymous" src="./webrtc.js?ver=789"></script>
+		<script type="text/javascript" crossorigin="anonymous" src="./webrtc.js?ver=790"></script>
 		<input id="zoomSlider" type="range" style="display: none;" />
 		<span id="electronDragZone" style="pointer-events: none; z-index:-10; position:absolute;top:0;left:0;width:100%;height:2%;-webkit-app-region: drag;min-height:20px;"></span>
 		<div id="header">
@@ -2760,7 +2753,7 @@
 			// session.decrypted = session.decodeInvite("U2FsdGVkX1+d58DFIHoO3EQZSuX86ch4PqW2ouztnJ0="); // get a code from invite.cam
 			
 		</script>
-		<script type="text/javascript" crossorigin="anonymous" id="lib-js" src="./lib.js?ver=1168"></script>
-		<script type="text/javascript" crossorigin="anonymous" id="main-js" src="./main.js?ver=880"></script>
+		<script type="text/javascript" crossorigin="anonymous" id="lib-js" src="./lib.js?ver=1169"></script>
+		<script type="text/javascript" crossorigin="anonymous" id="main-js" src="./main.js?ver=881"></script>
 	</body>
 </html>
