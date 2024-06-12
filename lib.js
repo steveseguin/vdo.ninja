@@ -86,10 +86,10 @@ var miscTranslations = {
 	"enter-new-display-name": "Enter a new Display Name for this stream",
 	"what-bitrate": "What bitrate would you like to record at? (kbps)\n\n - This remote guest will save the recording directly to their local disk.\n\n - The recording can fail, so have backup recordings going.\n\n - This record option does not use Internet bandwidth and offers a high quality recording",
 	"enter-website": "Enter a website URL to share",
-	"press-ok-to-record": "You can specify the recording bitrate below (kbps)\n\n - Press OK to start recording. Press again to stop and download.\n\n - Keep this browser tab active to continue recording.\n\n - This recording option will record to your local disk.\n\n - Quality may depend on the Internet connection between you and the guest.",
+	"press-ok-to-record": "You can specify the recording bitrate below (kbps)\n\n - Press OK to start recording. Press again to stop and download.\n\n - Keep this browser tab active to continue recording.\n\n - This recording option will record to your local disk.\n\n - Quality may depend on the Internet connection between you and the guest.\n\n - Recordings may possibly fail; have a backup option.",
 	"no-streamID-provided": "No streamID was provided; one will be generated randomily.\n\nStream ID: ",
 	"alphanumeric-only": "Info: Only AlphaNumeric characters should be used for the stream ID.\n\nThe offending characters have been replaced by an underscore",
-	"stream-id-too-long": "The Stream ID should be less than 45 alPhaNuMeric characters long.\n\nWe will trim it to length.",
+	"stream-id-too-long": "The Stream ID should be less than 64 alPhaNuMeric characters long.\n\nWe will trim it to length.",
 	"share-with-trusted": "Share only with those you trust",
 	"pass-recommended": "A password is recommended",
 	"insecure-room-name": "Insecure room name.",
@@ -1493,8 +1493,8 @@ var sanitizeStreamID = function (streamID) {
 			warnUser(getTranslation("alphanumeric-only"), false, false);
 		}
 	}
-	if (streamID_sanitized.length > 44) {
-		streamID_sanitized = streamID_sanitized.substring(0, 50);
+	if (streamID_sanitized.length > 64) {
+		streamID_sanitized = streamID_sanitized.substring(0, 70); // leave room for salting
 		if (!session.cleanOutput) {
 			warnUser(getTranslation("stream-id-too-long"), false, false);
 		}
@@ -3688,7 +3688,7 @@ function play(streamid = null, UUID = false) {
 								if (session.directorList.indexOf(UUID) >= 0) {
 									warnlog("stream ID added to badStreamList: " + streamid);
 									session.badStreamList.push(streamid);
-									session.watchStream(streamid);
+									// session.watchStream(streamid); // changed June 4th 2024. We shouldn't be viewing the stream if on the bad list, no?
 								}
 							}
 						}
@@ -7039,7 +7039,7 @@ function updateMixerRun(e = false) {
 				vid.style.backgroundColor = "unset";
 			}
 
-			if (vid.dataset.UUID && session.rpcs[vid.dataset.UUID] && "label" in session.rpcs[vid.dataset.UUID] && session.rpcs[vid.dataset.UUID].label !== false && session.showlabels === true) {
+			if (vid.dataset.UUID && session.rpcs[vid.dataset.UUID] && ("label" in session.rpcs[vid.dataset.UUID]) && session.rpcs[vid.dataset.UUID].label !== false && (session.showlabels === true)) {
 				// remote source
 
 				if (animated && container.twidth && container.theight) {
@@ -7086,7 +7086,7 @@ function updateMixerRun(e = false) {
 						.map(word => `<span>${word}</span>`)
 						.join(" ");
 				}
-			} else if (session.showlabels === true && vid.id === "videosource" && session.label) {
+			} else if ((session.showlabels === true) && (((vid.id === "videosource") && session.label) || vid.labelText)) {
 				// local source
 				// creates a label holder that's the same size of the vid element.
 
@@ -7126,7 +7126,7 @@ function updateMixerRun(e = false) {
 					label.style.fontSize = parseInt(fontsize) + "px";
 				}
 
-				label.innerText = sanitizeLabel(session.label); //.replace(/[\W]+/g,"_").replace(/_+/g, ' ');
+				label.innerText = sanitizeLabel(vid.labelText || session.label); //.replace(/[\W]+/g,"_").replace(/_+/g, ' ');
 
 				if (label.innerText) {
 					label.innerHTML = label.innerHTML
@@ -11634,7 +11634,11 @@ function playoutdelay(UUID) {
 							if (session.rpcs[UUID].stats[tid]._type == "audio") {
 								session.rpcs[UUID].stats[tid]._sync_offset = sync_offset || 0;
 
-								receiver.playoutDelayHint = parseFloat(sync_offset / 1000) || 0;
+								if ("jitterBufferTarget" in receiver){
+									receiver.jitterBufferTarget = parseFloat(sync_offset) || 0;
+								} else {
+									receiver.playoutDelayHint = parseFloat(sync_offset / 1000) || 0;
+								}
 								// receiver.jitterBufferDelayhint = parseFloat(sync_offset/1000); // This is deprecated I believe
 
 								if (session.sync !== false) {
@@ -11657,7 +11661,11 @@ function playoutdelay(UUID) {
 								}
 							} else if (session.rpcs[UUID].stats[tid]._type == "video") {
 								session.rpcs[UUID].stats[tid]._sync_offset = sync_offset || 0;
-								receiver.playoutDelayHint = parseFloat(sync_offset / 1000) || 0; // Chrome seems to somewhat sync audio and video when using the delay
+								if ("jitterBufferTarget" in receiver){
+									receiver.jitterBufferTarget = parseFloat(sync_offset) || 0;
+								} else {
+									receiver.playoutDelayHint = parseFloat(sync_offset / 1000) || 0;
+								}
 								// receiver.jitterBufferDelayhint = parseFloat(sync_offset/1000); // This is deprecated I believe
 							}
 						}
@@ -18959,7 +18967,7 @@ function joinRoom(roomname) {
 					log(response);
 					for (var i in response) {
 						if ("UUID" in response[i]) {
-							if ("streamID" in response[i]) {
+							if (response[i].streamID) {
 								if (response[i].UUID in session.rpcs) {
 									log("RTC already connected"); /// lets just say instead of Stream, we have
 								} else {
@@ -18995,7 +19003,7 @@ function joinRoom(roomname) {
 				} else {
 					for (var i in response) {
 						if ("UUID" in response[i]) {
-							if ("streamID" in response[i]) {
+							if (response[i].streamID) {
 								if (response[i].UUID in session.rpcs) {
 									log("RTC already connected"); /// lets just say instead of Stream, we have
 								} else {
@@ -19014,7 +19022,7 @@ function joinRoom(roomname) {
 											}
 										}
 									} else {
-										log("STREAM ID DESALTED 3: " + streamID);
+										log("STREAM ID DESALTED 4: " + streamID);
 										play(streamID, response[i].UUID); // play handles the group room mechanics here
 									}
 								}
@@ -30685,7 +30693,7 @@ function updateDirectorsAudio(dataN, UUID) {
 			var manualInput = document.createElement("input");
 			manualInput.type = "number";
 			manualInput.dataset.keyname = i;
-			manualInput.value = parseFloat(input.value);
+			manualInput.value = data.micDelay || 0;
 			manualInput.className = "manualInput";
 			manualInput.id = "constraints_manual_" + i + "_" + UUID;
 			manualInput.dataset.UUID = UUID;
@@ -30744,7 +30752,7 @@ function updateDirectorsAudio(dataN, UUID) {
 			var manualInput = document.createElement("input");
 			manualInput.type = "number";
 			manualInput.dataset.keyname = i;
-			manualInput.value = parseFloat(input.value);
+			manualInput.value = data.lowcut;
 			manualInput.className = "manualInput";
 			manualInput.id = "constraints_manual_" + i + "_" + UUID;
 			manualInput.dataset.UUID = UUID;
@@ -30801,7 +30809,7 @@ function updateDirectorsAudio(dataN, UUID) {
 			var manualInput = document.createElement("input");
 			manualInput.type = "number";
 			manualInput.dataset.keyname = i;
-			manualInput.value = parseFloat(input.value);
+			manualInput.value = data.lowEQ;
 			manualInput.className = "manualInput";
 			manualInput.id = "label_" + i + "_" + UUID;
 			manualInput.dataset.UUID = UUID;
@@ -30855,7 +30863,7 @@ function updateDirectorsAudio(dataN, UUID) {
 			var manualInput = document.createElement("input");
 			manualInput.type = "number";
 			manualInput.dataset.keyname = i;
-			manualInput.value = parseFloat(input.value);
+			manualInput.value = data.midEQ;
 			manualInput.className = "manualInput";
 			manualInput.id = "label_" + i + "_" + UUID;
 			manualInput.dataset.UUID = UUID;
@@ -30909,7 +30917,7 @@ function updateDirectorsAudio(dataN, UUID) {
 			var manualInput = document.createElement("input");
 			manualInput.type = "number";
 			manualInput.dataset.keyname = i;
-			manualInput.value = parseFloat(input.value);
+			manualInput.value = data.highEQ;
 			manualInput.className = "manualInput";
 			manualInput.id = "label_" + i + "_" + UUID;
 			manualInput.dataset.UUID = UUID;
@@ -31292,7 +31300,7 @@ function updateDirectorsAudio(dataN, UUID) {
 			var manualInput = document.createElement("input");
 			manualInput.type = "number";
 			manualInput.dataset.keyname = i;
-			manualInput.value = parseFloat(input.value);
+			manualInput.value = data.subGain * 100;
 			manualInput.className = "manualInput";
 			manualInput.id = "label_" + i + "_" + n + "_" + UUID;
 			manualInput.dataset.UUID = UUID;
@@ -31829,7 +31837,7 @@ function listAudioSettings() {
 					manualInput.dataset.keyname = i;
 					manualInput.dataset.deviceid = track0.id;
 					manualInput.dataset.labelname = label.innerHTML;
-					manualInput.value = parseFloat(input.value);
+					manualInput.value = session.webAudios[webAudio].gainNode.gain.value * 100;
 					manualInput.className = "manualInput";
 					manualInput.id = "label_" + i;
 
@@ -32530,7 +32538,7 @@ function listAudioSettings() {
 					input.name = "constraints_" + i + "_" + track0.id;
 
 					input.value = session.webAudios[webAudio].subGainNodes[track0.id].gain.value * 100;
-					label.innerText += " " + parseInt(session.webAudios[webAudio].subGainNodes[track0.id].gain.value * 100);
+					//label.innerText += " " + parseInt(session.webAudios[webAudio].subGainNodes[track0.id].gain.value * 100);
 					input.title = parseInt(input.value);
 
 					var manualInput = document.createElement("input");
@@ -32538,13 +32546,13 @@ function listAudioSettings() {
 					manualInput.dataset.keyname = i;
 					manualInput.dataset.deviceid = track0.id;
 					manualInput.dataset.labelname = label.innerHTML;
-					manualInput.value = parseFloat(input.value);
+					manualInput.value = session.webAudios[webAudio].subGainNodes[track0.id].gain.value * 100;
 					manualInput.className = "manualInput";
 					manualInput.id = "manualInput_" + i + "_" + track0.id;
 
 					manualInput.onchange = function (e) {
 						getById("constraints_" + e.target.dataset.keyname + "_" + e.target.dataset.deviceid).value = parseFloat(e.target.value);
-						getById("label_" + e.target.dataset.keyname + "_" + e.target.dataset.deviceid).innerText = "Gain: " + parseInt(e.target.value);
+						//getById("label_" + e.target.dataset.keyname + "_" + e.target.dataset.deviceid).innerText = "Gain: " + parseInt(e.target.value);
 						getById("manualInput_" + e.target.dataset.keyname + "_" + e.target.dataset.deviceid).value = parseFloat(e.target.value);
 						changeSubGain(e.target.value, e.target.dataset.deviceid);
 						e.target.title = e.target.value;
@@ -32552,14 +32560,14 @@ function listAudioSettings() {
 					};
 
 					input.oninput = function (e) {
-						getById("label_" + e.target.dataset.keyname + "_" + e.target.dataset.deviceid).innerText = "Gain: " + parseInt(e.target.value);
+						//getById("label_" + e.target.dataset.keyname + "_" + e.target.dataset.deviceid).innerText = "Gain: " + parseInt(e.target.value);
 						getById("manualInput_" + e.target.dataset.keyname + "_" + e.target.dataset.deviceid).value = parseFloat(e.target.value);
 						changeSubGain(e.target.value, e.target.dataset.deviceid);
 						e.target.title = e.target.value;
 					};
 
 					input.onchange = function (e) {
-						getById("label_" + e.target.dataset.keyname + "_" + e.target.dataset.deviceid).innerText = "Gain: " + parseInt(e.target.value);
+						//getById("label_" + e.target.dataset.keyname + "_" + e.target.dataset.deviceid).innerText = "Gain: " + parseInt(e.target.value);
 						getById("manualInput_" + e.target.dataset.keyname + "_" + e.target.dataset.deviceid).value = parseFloat(e.target.value);
 						changeSubGain(e.target.value, e.target.dataset.deviceid);
 						e.target.title = e.target.value;
@@ -32749,7 +32757,7 @@ function listCameraSettings() {
 
 		var manualInput = document.createElement("input");
 		manualInput.type = "number";
-		manualInput.value = parseFloat(input.value);
+		manualInput.value = session.controlRoomBitrate;
 		manualInput.className = "manualInput";
 		manualInput.id = "label_" + i;
 
@@ -43627,7 +43635,7 @@ async function whepIn(whepInput = false, whepInputToken = false, UUID = false) {
 								"a=ice-pwd:" +
 								icePwd +
 								"\r\n" +
-								"m=audio 9 RTP/AVP 0\r\n" +
+								"m=audio 9 RTP/AVP 0\r\n" + // if I leave out the port (9), then MediaMTX breaks, but this is not in the draft spec as linked above
 								"a=mid:0\r\n";
 							candidates.forEach(candidate => {
 								patchCandidates += "a=" + candidate.candidate + "\r\n";
