@@ -35359,8 +35359,14 @@ async function PictureInPicturePageToggle(state = null) {
 				}
 			});
 
+			var pipWindowHead = '<title>Pop-out Window</title>';
+			pipWindowHead += '<link rel="stylesheet" href="./css/main.css"/>';
+			pipWindowHead += '<link rel="stylesheet" href="./css/variables.css"/>';
+			pipWindowHead += '<link rel="stylesheet" href="./css/icons.css"/>';
+			pipWindowHead += '<link rel="stylesheet" href="./css/animations.css"/>';
+			
 			session.pipWindow.document.body.className = "main";
-			session.pipWindow.document.head.innerHTML = '<title>Pop-out Window</title><link rel="stylesheet" href="./main.css">';
+			session.pipWindow.document.head.innerHTML = pipWindowHead;
 			session.pipWindow.document.body.style = document.body.style;
 			session.pipWindow.document.title = "Pop-out Window";
 			session.pipWindow.document.body.append(getById("gridlayout"));

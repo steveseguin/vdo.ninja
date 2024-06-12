@@ -1,6 +1,6 @@
 /**
  * Created 06/05/2024
- * Imported in the main.css file.
+ * Used by main.css
  * 
  * This file contains all @keyframe aninmations and some "universal" classes for animations.
  *   Some styles in main.css also use these animations explicitly, and so not all the
@@ -124,7 +124,7 @@
 
 
 /* Lightbox open animation */
-/* NOTE: For opening lightboxes on homepage, and the "outlightbox" equivalent for closeing
+/* NOTE: For opening lightboxes on homepage, and a sidenote, the "outlightbox" equivalent for closeing
    the lightboxes is found in lib.js */
 @keyframes inlightbox {
 	50% {

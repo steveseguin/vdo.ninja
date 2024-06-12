@@ -1,6 +1,10 @@
-@import url('variables.css');
-@import url('icons.css');
-@import url('animations.css');
+/**
+ * Uses other CSS files as 'children'
+ * 
+ * This file contains most styles used by vdo.ninja pages. Many HTML files use
+ *   this file. Other CSS files contain certain types of styles, such as variables.css,
+ *   animations.css, and icons.css which are used by this file.
+ */
 
 * {
 	padding: 0;
