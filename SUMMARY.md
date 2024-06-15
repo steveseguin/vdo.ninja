@@ -617,6 +617,7 @@
   * [Robotic audio](common-errors-and-known-issues/robotic-audio.md)
   * [Can't load camera from non-SSL host](common-errors-and-known-issues/cant-load-camera-from-non-ssl-host.md)
   * [Camera on macOS doesn't show?](common-errors-and-known-issues/camera-on-macos-doesnt-show.md)
+  * [Can't screen share Adobe Lightroom](common-errors-and-known-issues/cant-screen-share-adobe-lightroom.md)
 * [Platform specific issues](platform-specific-issues/README.md)
   * [Android](platform-specific-issues/android.md)
   * [macOS](platform-specific-issues/macos.md)
