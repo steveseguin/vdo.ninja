@@ -14,11 +14,12 @@ Sender-Side Option! ([`&push`](push.md))
 
 Example: `&screensharequality=1`
 
-| Value | Description |
-| ----- | ----------- |
-| `0`   | 1080p       |
-| `1`   | 720p        |
-| `2`   | 360p        |
+| Value | Description   |
+| ----- | ------------- |
+| `0`   | 1080p         |
+| `1`   | 720p          |
+| `2`   | 360p          |
+| -1    | unconstrained |
 
 ## Details
 
@@ -32,6 +33,19 @@ When a guest shares their screen during a group chat, it creates a secondary VDO
 Using this parameter will give you control over the quality of the screen share, specifically, overriding what you might have set with [`&quality`](../advanced-settings/video-parameters/and-quality.md). It will not impact the webcam quality.
 
 Set a target quality for your screen share, when you screen share as a secondary stream (in a room).
+
+
+
+### Achieving higher sharpness
+
+If looking to screen share a document at the highest quality possible, consider the follow URL parameters:
+
+* `&screensharequality=-1` may be a good option for screen sharing documents, where more sharpness is needed.
+* `&contenthint=detail` to hint to use higher resolution over frame rates; this would be applied to the viewer's URL.
+* `&codec=av1` can also be applied to the viewer's URL to change to a better video codec.
+* `&bitrate=6000` on the viewer side can increase the video bitrate, but you can go upwards of 20000-kbps if needed for heavier motion-based video.
+* `&scale=100` on the viewer end can avoid scaling down the image if the playback window is smaller than the video's native resolution.  This will avoid double aliasing issues.
+* As well, if using OBS Studio for playback, you can add a sharpness filter to the video to improve the clarity. This can undo some of the softness caused by video compression, improving edge sharpness.
 
 ## Related
 
