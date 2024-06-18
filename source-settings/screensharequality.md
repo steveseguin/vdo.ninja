@@ -44,7 +44,7 @@ If looking to screen share a document at the highest quality possible, consider 
 * `&screensharecontenthint=detail` to hint to use higher resolution over frame rates; this would be applied to the viewer's URL.
 * `&codec=av1` can also be applied to the viewer's URL to change to a better video codec.
 * `&screensharebitrate=6000` on the viewer side can increase the video bitrate, but you can go upwards of 20000-kbps if needed for heavier motion-based video.
-* `&scale=100` on the viewer end can avoid scaling down the image if the playback window is smaller than the video's native resolution.  This will avoid double aliasing issues.
+* `&sharperscreen` on the viewer end can avoid scaling down the image if the playback window is smaller than the video's native resolution.  This will avoid double aliasing issues.
 * As well, if using OBS Studio for playback, you can add a sharpness filter to the video to improve the clarity. This can undo some of the softness caused by video compression, improving edge sharpness.
 *   If in a group room, as a guest, the director can increase the total bitrate of the room, which will improve the screen share quality for all the guests in the room. By default, guests and directors view a screen share at a relatively low bitrate.\
     \
