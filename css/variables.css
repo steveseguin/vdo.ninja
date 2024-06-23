@@ -1,0 +1,112 @@
+/**
+ * Created 06/05/2024
+ * Used my main.css
+ * 
+ * This file contains the different color-themes and
+ *   theme management for applying the themes to the :root variables.
+ */
+
+:root {
+	/* Discord Greys - Dark to Lighter */
+	--discord-grey-0: #121212;
+	--discord-grey-1: #1e1f22;
+	--discord-grey-2: #232428;
+	--discord-grey-3: #2c2c2d;
+	--discord-grey-4: #2e3035;
+	--discord-grey-5: #313338;
+	--discord-grey-6: #383a40;
+	--discord-grey-7: #404249; /* primary */
+	--discord-grey-8: #5e6064;
+
+	--discord-text: hsl( 210 calc(1 * 9.1%) 92% /1);
+
+	--darktheme-red: rgb(161, 45, 45);
+	--darktheme-blue: rgb(33, 69, 114);
+	--darktheme-green: rgb(36, 88, 49);
+	--darktheme-lightgreen: #008770;
+	--darktheme-brown: rgb(96, 58, 25);
+	--darktheme-yellow: rgb(84, 70, 9);
+
+	/* Lightmode white - Darker to lighter */
+	--lighttheme-1: #fff;
+	--lighttheme-2: #f3f3f3;
+	--lighttheme-3: #ddd;
+	--lighttheme-4: #ccc; /* primary */
+	--lighttheme-5: #bbb;
+	--lighttheme-6: #aaa;
+	--lighttheme-7: #7e7e7e;
+	--lighttheme-8: #373737;
+	--lighttheme-text: black;
+
+	/* Director v2 - General colors */
+	/* -- Links */
+	--a-dark-link: #69aadc;
+	--a-dark-visited: #69aadc;
+	--a-dark-hover: #6da5dd;
+	--a-dark-focus: #6da5dd;
+	--a-dark-active: #3a80c6;
+
+	--a-darker-link: #b9dff9;
+	--a-darker-visited: #b9dff9;
+	--a-darker-hover: #048ae8;
+	--a-darker-focus: #d9e4eb;
+	--a-darker-active: #d9e4eb;
+
+	--a-lighter-link: #9ed0e1;
+	--a-lighter-visited: #9ed0e1;
+	--a-lighter-hover: #8acee4;
+	--a-lighter-focus: #8acee4;
+	--a-lighter-active: #89d5ee;
+
+	--a-link:  #144267;
+	--a-visited: #144267;
+	--a-hover: #38668c;
+	--a-focus: #38668c;
+	--a-active: #0165b5;
+
+	/* -- Box colors */
+	--director-box: rgb(165 119 18);
+	--codirector-box: rgb(67 122 213);
+
+	--director-dark-box: rgb(165 119 18);
+	--codirector-dark-box: rgb(129 127 127);
+
+	/* Original colors */
+	--background-color: #141926;
+	--dark-background-color: #02050c;
+	--container-color: #373737;
+	--button-color: #2A2A2A;
+	--blue-accent: #4a4c63;
+	--red-accent: #553737;
+	--light-grey: #ddd;
+	--near-black: #02050c;
+	--green-accent: #3f4f50;
+	--olive-accent: #535D32;
+	--regular-margin: 10px;
+	--director-margin: 15px 20px 0 0;
+	--fit-style: contain;
+	--fadein-speed: 0;
+	--video-margin: 0px;
+	--video-rounded: 0px;
+	--video-border: 0px;
+	--video-border-color: #0000;
+	--video-rounded: 0px;
+	--button-radius: 2px;
+	--myvideo-max-width: min(800px,100vw);
+	--myvideo-width:unset;
+	--myvideo-height:auto;
+	--myvideo-background: #FFF1;
+	--video-background-image: url("data:image/svg+xml,%3Csvg viewBox='-42 0 512 512.002' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='m210.351562 246.632812c33.882813 0 63.222657-12.152343 87.195313-36.128906 23.972656-23.972656 36.125-53.304687 36.125-87.191406 0-33.875-12.152344-63.210938-36.128906-87.191406-23.976563-23.96875-53.3125-36.121094-87.191407-36.121094-33.886718 0-63.21875 12.152344-87.191406 36.125s-36.128906 53.308594-36.128906 87.1875c0 33.886719 12.15625 63.222656 36.132812 87.195312 23.976563 23.96875 53.3125 36.125 87.1875 36.125zm0 0'/%3E%3Cpath d='m426.128906 393.703125c-.691406-9.976563-2.089844-20.859375-4.148437-32.351563-2.078125-11.578124-4.753907-22.523437-7.957031-32.527343-3.308594-10.339844-7.808594-20.550781-13.371094-30.335938-5.773438-10.15625-12.554688-19-20.164063-26.277343-7.957031-7.613282-17.699219-13.734376-28.964843-18.199219-11.226563-4.441407-23.667969-6.691407-36.976563-6.691407-5.226563 0-10.28125 2.144532-20.042969 8.5-6.007812 3.917969-13.035156 8.449219-20.878906 13.460938-6.707031 4.273438-15.792969 8.277344-27.015625 11.902344-10.949219 3.542968-22.066406 5.339844-33.039063 5.339844-10.972656 0-22.085937-1.796876-33.046874-5.339844-11.210938-3.621094-20.296876-7.625-26.996094-11.898438-7.769532-4.964844-14.800782-9.496094-20.898438-13.46875-9.75-6.355468-14.808594-8.5-20.035156-8.5-13.3125 0-25.75 2.253906-36.972656 6.699219-11.257813 4.457031-21.003906 10.578125-28.96875 18.199219-7.605469 7.28125-14.390625 16.121094-20.15625 26.273437-5.558594 9.785157-10.058594 19.992188-13.371094 30.339844-3.199219 10.003906-5.875 20.945313-7.953125 32.523437-2.058594 11.476563-3.457031 22.363282-4.148437 32.363282-.679688 9.796875-1.023438 19.964844-1.023438 30.234375 0 26.726562 8.496094 48.363281 25.25 64.320312 16.546875 15.746094 38.441406 23.734375 65.066406 23.734375h246.53125c26.625 0 48.511719-7.984375 65.0625-23.734375 16.757813-15.945312 25.253906-37.585937 25.253906-64.324219-.003906-10.316406-.351562-20.492187-1.035156-30.242187zm0 0'/%3E%3C/svg%3E");
+	--background-main-image: unset;
+	--show-codirectors: inline-block;
+	--full-screen-button: inherit;
+	--color-mode: light;
+	--video-background-image-size: auto 30%;
+}
+
+/* Changes color-mode based on what theme the browser states */
+@media (prefers-color-scheme: dark) {
+	:root {
+		--color-mode: dark;
+	}
+}

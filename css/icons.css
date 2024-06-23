@@ -1,0 +1,249 @@
+/**
+ * Created 06/05/2024
+ * Used by main.css
+ * 
+ * This file contains the classes and font styles for the font-awesome icons.
+ * -- Colors of the icons/text are set in the main.css file.
+ */
+
+@font-face {
+	font-family: 'Line Awesome Free';
+	font-style: normal;
+	font-weight: 900;
+	font-display: auto;
+	src: url("lineawesome/fonts/la-solid-900.eot");
+	src: url("lineawesome/fonts/la-solid-900.eot?#iefix") format("embedded-opentype"), url("lineawesome/fonts/la-solid-900.woff2") format("woff2"), url("lineawesome/fonts/la-solid-900.woff") format("woff"), url("lineawesome/fonts/la-solid-900.ttf") format("truetype"), url("lineawesome/fonts/la-solid-900.svg#lineawesome") format("svg"); 
+}
+.las {
+	-moz-osx-font-smoothing: grayscale;
+	-webkit-font-smoothing: antialiased;
+	display: inline-block;
+	font-style: normal;
+	font-variant: normal;
+	text-rendering: auto;
+	line-height: 1; }
+.las {
+	font-family: 'Line Awesome Free';
+	font-weight: 900; }
+.la-bell:before {
+	content: "\f0f3"; }
+.la-bell-slash:before {
+	content: "\f1f6"; }
+.la-long-arrow-alt-right:before {
+	content: "\f30b"; }
+.la-paperclip:before {
+	content: "\f0c6"; }
+.la-window-close:before {
+	content: "\f410"; }
+.la-stream:before {
+	content: "\f550"; }
+.la-file-upload:before {
+	content: "\f574"; }
+.la-comment-alt:before {
+	content: "\f27a"; }
+.la-tv:before {
+	content: "\f26c"; }
+.la-volume-up:before {
+	content: "\f028"; }
+.la-comment-dots:before {
+	content: "\f4ad"; }
+.la-microphone:before {
+	content: "\f130"; }
+.la-microphone-alt:before {
+	content: "\f3c9"; }
+.la-video:before {
+	content: "\f03d"; }
+.la-desktop:before {
+	content: "\f108"; }
+.la-tv:before {
+	content: "\f26c"; }
+.la-window-maximize:before {
+	content: "\f2d0"; }
+.la-sync-alt:before {
+	content: "\f2f1"; }
+.la-users-cog:before {
+	content: "\f509"; }
+.la-cog:before {
+	content: "\f013"; }
+.la-phone:before {
+	content: "\f095"; }
+.la-gamepad:before {
+	content: "\f11b"; }
+.la-user-slash:before {
+	content: "\f506"; }
+.la-skull-crossbones:before {
+	content: "\f714"; }
+.la-hand-paper:before {
+	content: "\f256"; }
+.la-phone-slash:before {
+	content: "\f3dd;"; }
+.la-dot-circle:before {
+	content: "\f192"; }
+.la-bug:before {
+	content: "\f188"; }
+.la-question-circle:before {
+	content: "\f059"; }
+.la-language:before {
+	content: "\f1ab"; }
+.la-calendar:before {
+	content: "\f073"; }
+.la-exclamation-circle:before {
+	content: "\f06a"; }
+.la-plug:before {
+	content: "\f1e6"; }
+.la-ethernet:before {
+	content: "\f796"; }
+.la-headphones:before {
+	content: "\f025"; }
+.la-robot:before {
+	content: "\f544"; }
+.la-info-circle:before {
+	content: "\f05a"; }
+.la-play:before {
+	content: "\f04b"; }
+.la-gamepad:before {
+	content: "\f11b"; }
+.la-file-video:before {
+	content: "\f1c8"; }
+.la-blender:before {
+	content: "\f517"; }
+.la-heartbeat:before {
+	content: "\f21e"; }
+.la-code-branch:before {
+	content: "\f126"; }
+.la-info:before {
+	content: "\f129"; }
+.la-square:before {
+	content: "\f0c8"; }
+.la-play-circle:before {
+	content: "\f144"; }
+.la.la-hdd-o:before {
+	content: "\f0a0"; }
+.la-key:before {
+	content: "\f084"; }
+.la-broadcast-tower:before {
+	content: "\f519"; }
+.la-clock:before {
+	content: "\f017"; }
+.la-tachometer-alt:before {
+	content: "\f3fd"; }
+.la-fire-alt:before {
+	content: "\f7e4"; }
+.la-book-open:before {
+	content: "\f518"; }
+.la-caret-down:before {
+	content: "\f0d7"; }
+.la-comments:before {
+	content: "\f086"; }
+.la-caret-right:before {
+	content: "\f0da"; }
+.la-copy:before {
+	content: "\f0c5"; }
+.la-tools:before {
+	content: "\f7d9"; }
+.la-th-large:before {
+	content: "\f009"; }
+.la-user-circle:before {
+	content: "\f2bd"; }
+.la-paper-plane:before {
+	content: "\f1d8"; }
+.la-envelope:before {
+	content: "\f0e0"; }
+.la-sign-out-alt:before {
+	content: "\f2f5"; }
+.la-angle-right:before {
+	content: "\f105"; }
+.la-angle-left:before {
+	content: "\f104"; }
+.la-external-link-square-alt:before  {
+	content: "\f360"; }
+.la-plus-square:before {
+	content: "\f0fe"; }
+.la-microphone-slash:before {
+	content: "\f131"; }
+.la-user:before {
+	content: "\f007"; }
+.la-video-slash:before {
+	content: "\f4e2"; }
+.la-volume-off:before {
+	content: "\f026"; }
+.la-eye-slash:before {
+	content: "\f070"; }
+.la-eye:before {
+	content: "\f06e"; }
+.la-minus:before {
+	content: "\f068"; }
+.la-minus-circle:before {
+	content: "\f056"; }
+.la-window-minimize:before {
+	content: "\f2d1"; }
+.la-hat-wizard:before {
+	content: "\f6e8"; }
+.la-plus:before {
+	content: "\f067"; }
+.la-sync:before {
+	content: "\f021"; }
+.la-circle:before {
+	content: "\f111"; }
+.la-chevron-left:before {
+	content: "\f053"; }
+.la-chevron-right:before {
+	content: "\f054"; }
+.la-binoculars:before {
+	content: "\f1e5"; }
+.la-user-cog:before {
+	content: "\f4fe"; }
+.la-stop-circle:before {
+	content: "\f28d"; }
+.la-redo-alt:before {
+	content: "\f2f9"; }
+.la-sliders-h:before {
+	content: "\f1de"; }
+.la-compress-arrows-alt:before {
+	content: "\f78c"; }
+.la-users:before {
+	content: "\f0c0"; }
+.la-spinner:before {
+	content: "\f110"; }
+.la-external-link:before {
+	content: "\f35d"; }
+.la-pen:before {
+	content: "\f304"; }
+.la-external-link-alt:before {
+	content: "\f35d"; }
+.la-times:before {
+	content: "\f00d"; }
+.la-volume-mute:before {
+	content: "\f6a9"; }
+.la-plug:before {
+	content: "\f1e6"; }
+.la-reply:before {
+	content: "\f3e5"; }
+.la-expand-arrows-alt:before {
+	content: "\f31e"; }
+.la-headset:before {
+	content: "\f590"; }
+.la-check:before {
+	content: "\f00c"; }
+.la-exclamation:before {
+	content: "\f12a"; }
+.la-chevron-down:before {
+	content: "\f078"; }
+.la-music:before {
+	content: "\f001"; }
+.la-thumbtack:before {
+	content: "\f08d"; }
+.la-hdd:before {
+	content: "\f0a0"; }
+.la-signal:before {
+	content: "\f012"; }
+.la-unlock:before {
+	content: "\f023"; }
+.la-lock-open:before {
+	content: "\f3c1"; }
+.la-theater-masks:before {
+	content: "\f630"; }
+.la-compact-disc:before {
+	content: "\f51f"; }
+.la-random:before {
+	content: "\f074"; }
