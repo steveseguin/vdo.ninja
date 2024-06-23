@@ -5294,13 +5294,46 @@ async function main() {
 	}
 
 	if (urlParams.has("screensharequality") || urlParams.has("ssq")) {
-		if (urlParams.get("screensharequality") || urlParams.get("ssq")) {
-			session.screensharequality = urlParams.get("screensharequality") || urlParams.get("ssq");
+		session.screensharequality = urlParams.get("screensharequality") || urlParams.get("ssq") || "0";
+		
+		if (session.screensharequality.toLowerCase() == "4k") {
+			session.screensharequality = -2;
+		} else if (session.screensharequality.toLowerCase() == "2160p") {
+			session.screensharequality = -2;
+		} else if (session.screensharequality.toLowerCase() == "2160") {
+			session.screensharequality = -2;
+		} else if (session.screensharequality.toLowerCase() == "2k") {
+			session.screensharequality = -3;
+		} else if (session.screensharequality.toLowerCase() == "1440p") {
+			session.screensharequality = -3;
+		} else if (session.screensharequality.toLowerCase() == "1440") {
+			session.screensharequality = -3;
+		} else if (session.screensharequality.toLowerCase() == "hd") {
+			session.screensharequality = 1;
+		} else if (session.screensharequality.toLowerCase() == "720p") {
+			session.screensharequality = 1;
+		} else if (session.screensharequality.toLowerCase() == "720") {
+			session.screensharequality = 1;
+		} else if (session.screensharequality.toLowerCase() == "fullhd") {
+			session.screensharequality = 0;
+		} else if (session.screensharequality.toLowerCase() == "1080p") {
+			session.screensharequality = 0;
+		} else if (session.screensharequality.toLowerCase() == "1080") {
+			session.screensharequality = 0;
+		} else if (session.screensharequality.toLowerCase() == "high") {
+			session.screensharequality = 0;
+		} else if (session.screensharequality.toLowerCase() == "360p") {
+			session.screensharequality = 2;
+		} else if (session.screensharequality.toLowerCase() == "360") {
+			session.screensharequality = 2;
+		} else if (session.screensharequality.toLowerCase() == "low") {
+			session.screensharequality = 2;
+		} else {
 			session.screensharequality = parseInt(session.screensharequality) || 0;
-			try {
-				getById("gear_screen").parentNode.removeChild(getById("gear_screen"));
-			} catch (e) {}
 		}
+		try {
+			getById("gear_screen").parentNode.removeChild(getById("gear_screen"));
+		} catch (e) {}
 	}
 
 	if (urlParams.has("screensharebitrate") || urlParams.has("ssbitrate")) {

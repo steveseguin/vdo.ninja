@@ -638,25 +638,30 @@
 					<button class='gobutton' style="padding: 10px; font-size: 120%;animation: pulsate 2s ease-out infinite;" alt="clilck to select you screen to share" onclick="publishScreen()">
 						<span data-translate="select-screen-to-share">SELECT SCREEN TO SHARE</span>
 					</button>
-					<span id="gear_screen" style="display: inline-block; cursor: pointer;" onclick="toggle(document.getElementById('videoSettings2'));">
+					<span title="Change the capture resolution. This defines what the maximum resolution the video can be encoded at. A lower resolution will be smoother." id="gear_screen" style="display: inline-block; cursor: pointer;" onclick="toggle(document.getElementById('videoSettings2'));">
 						<i class="las la-cog" style="font-size: 170%; vertical-align: middle;" aria-hidden="true"></i>
 					</span>
 					<center>
 						<span id="videoSettings2" style="display: none;">
 							<form id="webcamquality2">
+								<input type="radio" id="maxres2" name="resolution2" value="-1" />
+								<label style="cursor:help" for="maxres2" title="Attempts to capture the same resolution that the window/display is displayed at">
+									<span data-translate="highest-resolution">Highest</span>
+								</label> &nbsp;&nbsp;|&nbsp;&nbsp;
+							
 								<input type="radio" id="fullhd2" name="resolution2" value="0" />
-								<label for="fullhd">
-									<span data-translate="max-resolution">1080p (hi-def)</span>
+								<label style="cursor:help" for="fullhd2" title="This will capture at up to 1920x1080 resolution, but it will use up more CPU and may reduce frame rate.">
+									<span data-translate="1080p-resolution">Full HD</span>
 								</label> &nbsp;&nbsp;|&nbsp;&nbsp;
 								
 								<input type="radio" checked id="halfhd2" name="resolution2" value="1" />
-								<label for="halfhd">
-									<span data-translate="balanced">720p (balanced)</span>
+								<label style="cursor:help" for="halfhd2" title="This will capture at a medium resolution; suitable for gaming where frame rates matter more than resolution" >
+									<span data-translate="720p-balanced">Balanced</span>
 								</label> &nbsp;&nbsp;|&nbsp;&nbsp;
 								
 								<input type="radio" id="nothd2" name="resolution2" value="2" />
-								<label for="nothd">
-									<span data-translate="smooth-cool">360p (smooth)</span>
+								<label style="cursor:help" for="nothd2" title="This will capture at a low resolution, suitable for low powered computers or computers on poor networks">
+									<span data-translate="360p-smooth-cool">Low-res</span>
 								</label>
 								<div id="webcamstats2"></div>
 							</form>
@@ -1014,12 +1019,15 @@
 								If the video fails to load in OBS Studio, where the browser source remains blank, try disabling hardware-acceleration or 
 								<a href='https://docs.vdo.ninja/common-errors-and-known-issues/obs.ninja-doesnt-show-up-in-obs-or-is-choppy' title="Click to link out to the VDO.Ninja help guide for common OBS Studio problems" target="_blank">refer to this help guide</a> for more.
 							</li>
+							<li>
+								Apple M1 chip users may wish to update to newer versions of macOS, as older versions (eg: Big Sur) seem more prone to audio/video delay and desync issues.
+							</li>
 							<br />
 							<h4>
 								<span style="color:#daad09;">Welcome to VDO Ninja! We've rebranded!  Nothing else is changing and we're staying 100% free.</span>
 							</h4>
 							<br />
-							🌱 Site last updated on March 29th.  You can also still access the previous version, which <a href="https://vdo.ninja/v24/">is hosted here</a>. Development <a target="_blank" title="Open a page with recent VDO.Ninja development and feature updates" href="https://updates.vdo.ninja/">updates are here.</a>
+							🌱 Site last updated on June 23th. You can also still access the previous version, which <a href="https://vdo.ninja/v24/">is hosted here</a>. Development <a target="_blank" title="Open a page with recent VDO.Ninja development and feature updates" href="https://updates.vdo.ninja/">updates are here.</a>
 							<br />
 							<br />
 							<h3>
