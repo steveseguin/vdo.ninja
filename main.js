@@ -2581,9 +2581,11 @@ async function main() {
 			session.style = 1;
 		}
 	}
+	// https://vdo.ninja/?fakeguests=10&room=faketestroom123&scene&border=10&padding=20&rounded
+	// https://vdo.ninja/?fakeusers=10&scene&room=test12342345ff
 
-	if (urlParams.has("fakeguests") || urlParams.has("fakefeeds")) {
-		var total = parseInt(urlParams.get("fakeguests")) || parseInt(urlParams.get("fakefeeds")) || 4;
+	if (urlParams.has("fakeguests") || urlParams.has("fakefeeds")  || urlParams.has("fakeusers")) {
+		var total = parseInt(urlParams.get("fakeguests")) || parseInt(urlParams.get("fakefeeds")) || parseInt(urlParams.get("fakeusers")) || 4;
 		session.fakeFeeds = [];
 		log("Creating " + total + " fake feeds");
 		for (var i = 0; i < total; i++) {
@@ -2592,6 +2594,7 @@ async function main() {
 			fakeElement.loop = true;
 			fakeElement.muted = true;
 			fakeElement.src = "./media/fakesteve.webm";
+			fakeElement.labelText = "Fake Steve\\n@steveseguin\\nhe\/him";
 			fakeElement.dataset.sid = fakeElement.id = parseInt(Math.random() * 10000000000);
 			session.fakeFeeds.push(fakeElement);
 		}
@@ -2631,8 +2634,7 @@ async function main() {
 	}
 
 	if (urlParams.has("include") && urlParams.get("include")) {
-		urlParams
-			.get("include")
+		urlParams.get("include")
 			.split(",")
 			.forEach(sid => {
 				var sidd = sid.split(":s")[0];
@@ -3055,14 +3057,14 @@ async function main() {
 	}
 
 	try {
-		if (urlParams.has("darkmode") || urlParams.has("nightmode")) {
-			session.darkmode = urlParams.get("darkmode") || urlParams.get("nightmode") || null;
+		if (urlParams.has("darkmode") || urlParams.has("nightmode") ||  urlParams.has("darktheme")) {
+			session.darkmode = urlParams.get("darkmode") || urlParams.get("nightmode")  || urlParams.get("darktheme") || null;
 			if (session.darkmode === null || session.darkmode === "") {
 				session.darkmode = true;
 			} else if (darkmode == "false" || darkmode == "0" || darkmode == 0 || darkmode == "off") {
 				session.darkmode = false;
 			}
-		} else if (urlParams.has("lightmode") || urlParams.has("lightmode")) {
+		} else if (urlParams.has("lightmode") || urlParams.has("lighttheme")) {
 			session.darkmode = false;
 		} else if (window.obsstudio) {
 			session.darkmode = false; // prevent OBS from defaulting to dark mode, avoiding possible overlooked bugs.
