@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Screen Drawing</title>
+  <style>
+    body, html {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+    }
+    #videoContainer {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      background-color: black;
+    }
+    #video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    #drawingCanvas {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+    }
+    #clearButton {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      z-index: 10;
+      padding: 10px;
+      background-color: white;
+      border: none;
+      cursor: pointer;
+    }
+    #startButton {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      padding: 20px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <button id="startButton">Start</button>
+  <div id="videoContainer" style="display: none;">
+    <video id="video" autoplay></video>
+    <canvas id="drawingCanvas"></canvas>
+    <button id="clearButton">Clear</button>
+  </div>
+
+  <script>
+    const startButton = document.getElementById('startButton');
+    const videoContainer = document.getElementById('videoContainer');
+    const video = document.getElementById('video');
+    const drawingCanvas = document.getElementById('drawingCanvas');
+    const clearButton = document.getElementById('clearButton');
+    const ctx = drawingCanvas.getContext('2d');
+    let drawing = false;
+
+    startButton.addEventListener('click', async () => {
+      try {
+        const stream = await navigator.mediaDevices.getDisplayMedia({ video: true });
+        video.srcObject = stream;
+        videoContainer.style.display = 'block';
+        startButton.style.display = 'none';
+      } catch (err) {
+        console.error('Error: ' + err);
+      }
+    });
+
+    function resizeCanvas() {
+      drawingCanvas.width = window.innerWidth;
+      drawingCanvas.height = window.innerHeight;
+    }
+
+    function getMousePos(canvas, evt) {
+      var rect = canvas.getBoundingClientRect();
+      return {
+        x: evt.clientX - rect.left,
+        y: evt.clientY - rect.top
+      };
+    }
+
+    drawingCanvas.addEventListener('mousedown', (event) => {
+      drawing = true;
+      const pos = getMousePos(drawingCanvas, event);
+      ctx.beginPath();
+      ctx.moveTo(pos.x, pos.y);
+     // drawingCanvas.style.pointerEvents = 'auto';
+    });
+
+    drawingCanvas.addEventListener('mouseup', () => {
+      drawing = false;
+    //  drawingCanvas.style.pointerEvents = 'none';
+    });
+
+    drawingCanvas.addEventListener('mousemove', (event) => {
+      if (drawing) {
+        const pos = getMousePos(drawingCanvas, event);
+        ctx.lineTo(pos.x, pos.y);
+        ctx.stroke();
+      }
+    });
+
+    clearButton.addEventListener('click', () => {
+      ctx.clearRect(0, 0, drawingCanvas.width, drawingCanvas.height);
+    });
+
+    window.addEventListener('resize', resizeCanvas);
+
+    resizeCanvas();
+  </script>
+</body>
+</html>

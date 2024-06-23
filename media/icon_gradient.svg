@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="182.54446mm"
+   height="150.39075mm"
+   viewBox="0 0 182.54446 150.39075"
+   version="1.1"
+   id="svg5"
+   sodipodi:docname="icon_gradient.svg"
+   inkscape:version="1.1.1 (3bf5ae0d25, 2021-09-20)"
+   inkscape:export-filename="C:\Users\Steve\Desktop\logos\icon.png"
+   inkscape:export-xdpi="96"
+   inkscape:export-ydpi="96"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:xlink="http://www.w3.org/1999/xlink"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview7"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:document-units="mm"
+     showgrid="false"
+     inkscape:zoom="0.90509668"
+     inkscape:cx="74.577669"
+     inkscape:cy="290.02427"
+     inkscape:window-width="2560"
+     inkscape:window-height="1361"
+     inkscape:window-x="4791"
+     inkscape:window-y="891"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="layer1"
+     fit-margin-top="0"
+     fit-margin-left="0"
+     fit-margin-right="0"
+     fit-margin-bottom="0" />
+  <defs
+     id="defs2">
+    <linearGradient
+       inkscape:collect="always"
+       id="linearGradient8675">
+      <stop
+         style="stop-color:#1a1a1a;stop-opacity:1;"
+         offset="0"
+         id="stop8671" />
+      <stop
+         style="stop-color:#1a1a1a;stop-opacity:0;"
+         offset="1"
+         id="stop8673" />
+    </linearGradient>
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient8675"
+       id="linearGradient8677"
+       x1="12147.551"
+       y1="13839.459"
+       x2="18804.379"
+       y2="6122.8374"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="matrix(0.03131831,0,0,-0.03185519,-184.79499,264.40544)" />
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient8675"
+       id="linearGradient9462"
+       x1="9100.0771"
+       y1="8035"
+       x2="17871.928"
+       y2="12174.818"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="matrix(0.03131831,0,0,-0.03185519,-184.79499,264.40544)" />
+    <filter
+       inkscape:collect="always"
+       style="color-interpolation-filters:sRGB"
+       id="filter14044"
+       x="-0.02397901"
+       y="-0.02402294"
+       width="1.047958"
+       height="1.0480459">
+      <feGaussianBlur
+         inkscape:collect="always"
+         stdDeviation="0.3704028"
+         id="feGaussianBlur14046" />
+    </filter>
+  </defs>
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1"
+     transform="translate(-89.253181,107.67859)">
+    <ellipse
+       style="opacity:1;fill:#ffffff;fill-opacity:1;fill-rule:nonzero;stroke:#ffffff;stroke-width:4.76852;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:22.715;stroke-opacity:1;paint-order:markers fill stroke;filter:url(#filter14044)"
+       id="path13382"
+       cx="167.77542"
+       cy="-32.775543"
+       rx="68.251915"
+       ry="68.127106"
+       inkscape:export-filename="C:\Users\Steve\Desktop\logos\path13382.png"
+       inkscape:export-xdpi="96"
+       inkscape:export-ydpi="96" />
+    <path
+       d="m 159.89429,-98.07475 c -24.17773,2.835112 -44.97309,19.049403 -53.74221,41.921428 -0.93955,2.45285 -2.81865,8.569046 -2.81865,9.238005 0,0.06371 28.96943,0.09557 64.35912,0.09557 35.38969,0 64.35912,-0.03186 64.35912,-0.09557 0,-0.06371 -0.21923,-0.86009 -0.50109,-1.783891 -0.25055,-0.9238 -0.40714,-1.752035 -0.3445,-1.847601 0.094,-0.06371 0.84559,0.222987 1.69119,0.637104 2.25491,1.146787 7.10925,2.930678 10.11581,3.727057 4.82302,1.242353 7.61035,1.65647 13.12237,1.815746 l 5.41807,0.191131 -0.18791,-0.764524 c -0.53241,-1.943167 -3.13183,-6.68959 -4.66643,-8.600901 -1.97305,-2.420995 -3.69556,-3.918188 -6.29498,-5.510948 -1.56592,-0.955655 -2.66206,-1.401628 -6.38894,-2.612125 -0.28186,-0.06371 0.25055,-0.73267 1.31537,-1.752036 3.50765,-3.249229 7.8609,-9.206149 10.20977,-13.952572 0.78296,-1.59276 0.90823,-2.102443 0.56373,-2.293574 -0.78296,-0.509683 -3.88347,-0.764524 -8.5499,-0.732669 -3.72687,0.03186 -5.19884,0.191131 -7.17189,0.732669 -6.73343,1.847601 -11.807,6.020631 -14.65697,12.073117 l -0.93955,2.038732 -1.56591,-2.51656 c -2.50547,-3.950043 -5.57466,-7.677101 -9.73999,-11.754565 -10.14714,-9.970674 -23.01896,-16.246146 -37.1122,-18.093747 -4.1027,-0.541538 -12.62128,-0.637103 -16.47343,-0.159276 z"
+       id="path11"
+       style="opacity:1;fill:url(#linearGradient8677);fill-opacity:1;stroke-width:0.0315856"
+       inkscape:export-filename="C:\Users\Steve\Desktop\logos\path13382.png"
+       inkscape:export-xdpi="96"
+       inkscape:export-ydpi="96" />
+    <path
+       d="m 112.10256,-37.964009 v 5.351671 l 7.29716,0.891946 c 3.97743,0.477828 7.76694,0.955655 8.36199,1.051221 l 1.09614,0.159276 0.0626,1.847601 c 0.12527,4.204885 3.10051,7.135562 7.29716,7.135562 3.50765,0 6.42026,-2.229863 7.20321,-5.510948 0.43846,-1.879456 0.094,-1.78389 4.69775,-1.146786 1.81646,0.254841 3.6016,0.477827 4.00874,0.477827 2.41151,0.03186 -1.0335,-1.433483 -19.44867,-8.218638 -11.05536,-4.077464 -20.2003,-7.390404 -20.32558,-7.390404 -0.15659,0 -0.25054,2.420994 -0.25054,5.351672 z"
+       id="path21"
+       inkscape:export-filename="C:\Users\Steve\Desktop\logos\path13382.png"
+       inkscape:export-xdpi="96"
+       inkscape:export-ydpi="96"
+       style="stroke-width:0.0315856" />
+    <path
+       d="m 202.92565,-36.052698 c -10.7735,3.981899 -19.85581,7.358549 -20.16899,7.485969 -0.43846,0.191132 -0.5011,0.350407 -0.25055,0.605249 0.25055,0.254841 1.44064,0.191131 4.38456,-0.191131 2.2236,-0.286697 4.19666,-0.509683 4.38457,-0.509683 0.15659,0 0.40713,0.541538 0.53241,1.178642 1.09614,6.02063 8.98835,8.186783 12.8405,3.535926 1.25274,-1.497194 1.72251,-2.835112 1.72251,-4.810134 v -1.72018 l 1.1901,-0.191131 c 0.62636,-0.09557 4.4472,-0.573393 8.45594,-1.051221 l 7.26585,-0.891946 v -5.351671 c 0,-4.077464 -0.094,-5.351672 -0.37582,-5.319817 -0.21923,0 -9.20759,3.24923 -19.98108,7.231128 z"
+       id="path23"
+       inkscape:export-filename="C:\Users\Steve\Desktop\logos\path13382.png"
+       inkscape:export-xdpi="96"
+       inkscape:export-ydpi="96"
+       style="stroke-width:0.0315856" />
+    <path
+       d="m 104.3043,-14.263749 c 0.3445,1.274207 1.19009,3.758912 1.8791,5.5109475 7.0153,18.2848781 21.98545,32.7152785 40.36929,38.8314745 7.29717,2.420994 13.24765,3.37665 21.13986,3.37665 7.89221,0 13.84269,-0.955656 21.10854,-3.37665 19.3234,-6.434748 34.95123,-22.171211 41.37148,-41.698441 0.68901,-2.070588 1.25274,-4.045609 1.25274,-4.364161 0,-0.541538 -2.63074,-0.573394 -63.85803,-0.573394 h -63.88935 z"
+       id="path25"
+       style="opacity:1;fill:url(#linearGradient9462);fill-opacity:1;stroke-width:0.0315856"
+       inkscape:export-filename="C:\Users\Steve\Desktop\logos\path13382.png"
+       inkscape:export-xdpi="96"
+       inkscape:export-ydpi="96" />
+  </g>
+</svg>

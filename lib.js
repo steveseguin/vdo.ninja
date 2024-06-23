@@ -4193,8 +4193,10 @@ function setupIncomingScreenTracking(v, UUID) {
 		if (session.customWSS || session.wssSetViaUrl){
 			if (session.customWSS && (session.customWSS!==true)){
 				wss = "&pie="+session.customWSS;
+			} else if (session.customWSS==true){
+				wss = "&wss=" + session.wss;
 			} else {
-				wss = "&wss="+session.wss;
+				wss = "&wss2=" + session.wss;
 			}
 		} */
 		/* 
@@ -8521,211 +8523,169 @@ function setAvatarImage(tracks) {
 
 var drawOnScreenObject = null;
 function drawOnScreen() {
-	var canvas = document.getElementById("drawOnSCreen");
-	if (!canvas) {
-		canvas = document.createElement("canvas");
-		getById("gridlayout").appendChild(canvas);
-		getById("gridlayout").style.position = "relative";
-	} else {
-		return;
-	}
+    var canvas = document.getElementById("drawOnScreen");
+    if (!canvas) {
+        canvas = document.createElement("canvas");
+        document.getElementById("gridlayout").appendChild(canvas);
+        document.getElementById("gridlayout").style.position = "relative";
+    } else {
+        return;
+    }
 
-	var ctx = canvas.getContext("2d");
-	canvas.width = parseInt(getById("gridlayout").clientWidth / 2);
-	canvas.height = parseInt(getById("gridlayout").clientHeight / 2);
-	canvas.style.width = "100%";
-	canvas.style.height = "100%";
-	canvas.style.display = "block";
-	canvas.style.position = "absolute";
-	canvas.style.bottom = "0";
-	canvas.style.left = "0";
+    var ctx = canvas.getContext("2d");
+    canvas.width = parseInt(document.getElementById("gridlayout").clientWidth / 2);
+    canvas.height = parseInt(document.getElementById("gridlayout").clientHeight / 2);
+    canvas.style.width = "100%";
+    canvas.style.height = "100%";
+    canvas.style.display = "block";
+    canvas.style.position = "absolute";
+    canvas.style.bottom = "0";
+    canvas.style.left = "0";
 
-	var flag = false,
-		prevX = 0,
-		currX = 0,
-		prevY = 0,
-		currY = 0,
-		dot_flag = false;
+    var flag = false,
+        prevX = 0,
+        currX = 0,
+        prevY = 0,
+        currY = 0,
+        dot_flag = false;
 
-	var x = "black",
-		y = 2;
+    var x = "black",
+        y = 2;
 
-	var object = {};
+    var object = {};
 
-	object.stop = function stop() {
-		canvas.removeEventListener(
-			"mousemove",
-			function (e) {
-				findxy("move", e);
-			},
-			false
-		);
-		canvas.removeEventListener(
-			"mousedown",
-			function (e) {
-				findxy("down", e);
-			},
-			false
-		);
-		canvas.removeEventListener(
-			"mouseup",
-			function (e) {
-				findxy("up", e);
-			},
-			false
-		);
-		canvas.removeEventListener(
-			"mouseout",
-			function (e) {
-				findxy("out", e);
-			},
-			false
-		);
-		canvas.remove();
+    function findxy(res, e) {
+        if (res == "down") {
+            prevX = currX;
+            prevY = currY;
+            currX = e.clientX - canvas.offsetLeft;
+            currY = e.clientY - canvas.offsetTop;
 
-		getById("startDrawScreen").classList.remove("hidden");
+            flag = true;
+            dot_flag = true;
+            if (dot_flag) {
+                ctx.beginPath();
+                ctx.fillStyle = x;
+                ctx.fillRect(currX, currY, 2, 2);
+                ctx.closePath();
+                dot_flag = false;
+            }
+        }
+        if (res == "up" || res == "out") {
+            flag = false;
+        }
+        if (res == "move") {
+            if (flag) {
+                prevX = currX;
+                prevY = currY;
+                currX = e.clientX - canvas.offsetLeft;
+                currY = e.clientY - canvas.offsetTop;
+                draw();
+            }
+        }
+    }
 
-		document.querySelectorAll(".drawActive").forEach(ele => {
-			ele.classList.add("hidden");
-		});
+    function draw() {
+        ctx.beginPath();
 
-		delete canvas;
-		drawOnScreenObject = null;
-		object = null;
-	};
+        var mx = canvas.width / parseInt(document.getElementById("gridlayout").clientWidth);
+        var my = canvas.height / parseInt(document.getElementById("gridlayout").clientHeight);
+        var mo = parseInt(document.getElementById("header").clientHeight);
 
-	object.init = function init() {
-		//console.log("init");
-		canvas.addEventListener(
-			"mousemove",
-			function (e) {
-				findxy("move", e);
-			},
-			false
-		);
-		canvas.addEventListener(
-			"mousedown",
-			function (e) {
-				findxy("down", e);
-			},
-			false
-		);
-		canvas.addEventListener(
-			"mouseup",
-			function (e) {
-				findxy("up", e);
-			},
-			false
-		);
-		canvas.addEventListener(
-			"mouseout",
-			function (e) {
-				findxy("out", e);
-			},
-			false
-		);
+        ctx.moveTo(prevX * mx, prevY * my - mo * my);
+        ctx.lineTo(currX * mx, currY * my - mo * my);
+        ctx.strokeStyle = x;
+        ctx.lineWidth = y;
+        ctx.stroke();
+        ctx.closePath();
+    }
 
-		getById("startDrawScreen").classList.add("hidden");
+    function onMouseMove(e) {
+        findxy("move", e);
+    }
 
-		document.querySelectorAll(".drawActive").forEach(ele => {
-			ele.classList.remove("hidden");
-		});
-	};
+    function onMouseDown(e) {
+        findxy("down", e);
+    }
 
-	object.color = function color(obj) {
-		switch (obj.dataset.color) {
-			case "green":
-				x = "green";
-				break;
-			case "blue":
-				x = "blue";
-				break;
-			case "red":
-				x = "red";
-				break;
-			case "yellow":
-				x = "yellow";
-				break;
-			case "orange":
-				x = "orange";
-				break;
-			case "black":
-				x = "black";
-				break;
-			case "white":
-				x = "white";
-				break;
-		}
-		if (x == "white") y = 14;
-		else y = 2;
-	};
+    function onMouseUp(e) {
+        findxy("up", e);
+    }
 
-	function draw() {
-		//console.log('draw',prevX,currX);
-		ctx.beginPath();
+    function onMouseOut(e) {
+        findxy("out", e);
+    }
 
-		var mx = canvas.width / parseInt(getById("gridlayout").clientWidth);
-		var my = canvas.height / parseInt(getById("gridlayout").clientHeight);
-		var mo = parseInt(getById("header").clientHeight);
+    object.stop = function stop() {
+        canvas.removeEventListener("mousemove", onMouseMove, false);
+        canvas.removeEventListener("mousedown", onMouseDown, false);
+        canvas.removeEventListener("mouseup", onMouseUp, false);
+        canvas.removeEventListener("mouseout", onMouseOut, false);
+        canvas.remove();
 
-		ctx.moveTo(prevX * mx, prevY * my - mo * my);
-		ctx.lineTo(currX * mx, currY * my - mo * my);
-		ctx.strokeStyle = x;
-		ctx.lineWidth = y;
-		ctx.stroke();
-		ctx.closePath();
-	}
+        document.getElementById("startDrawScreen").classList.remove("hidden");
 
-	object.erase = function erase() {
-		//var m = confirm("Want to clear");
-		// if (m) {
-		ctx.clearRect(0, 0, canvas.width, canvas.height);
-		//document.getElementById("canvasimg").style.display = "none";
-		// }
-	};
+        document.querySelectorAll(".drawActive").forEach(ele => {
+            ele.classList.add("hidden");
+        });
 
-	object.save = function save() {
-		//document.getElementById("canvasimg").style.border = "2px solid";
-		var dataURL = canvas.toDataURL();
-		// document.getElementById("canvasimg").src = dataURL;
-		// document.getElementById("canvasimg").style.display = "inline";
-	};
+        drawOnScreenObject = null;
+    };
 
-	function findxy(res, e) {
-		//console.log(res,e);
-		if (res == "down") {
-			prevX = currX;
-			prevY = currY;
-			currX = e.clientX - canvas.offsetLeft;
-			currY = e.clientY - canvas.offsetTop;
+    object.init = function init() {
+        canvas.addEventListener("mousemove", onMouseMove, false);
+        canvas.addEventListener("mousedown", onMouseDown, false);
+        canvas.addEventListener("mouseup", onMouseUp, false);
+        canvas.addEventListener("mouseout", onMouseOut, false);
 
-			flag = true;
-			dot_flag = true;
-			if (dot_flag) {
-				ctx.beginPath();
-				ctx.fillStyle = x;
-				ctx.fillRect(currX, currY, 2, 2);
-				ctx.closePath();
-				dot_flag = false;
-			}
-		}
-		if (res == "up" || res == "out") {
-			flag = false;
-		}
-		if (res == "move") {
-			if (flag) {
-				prevX = currX;
-				prevY = currY;
-				currX = e.clientX - canvas.offsetLeft;
-				currY = e.clientY - canvas.offsetTop;
-				draw();
-			}
-		}
-	}
-	object.init();
-	drawOnScreenObject = object;
-	return object;
+        document.getElementById("startDrawScreen").classList.add("hidden");
+
+        document.querySelectorAll(".drawActive").forEach(ele => {
+            ele.classList.remove("hidden");
+        });
+    };
+
+    object.color = function color(obj) {
+        switch (obj.dataset.color) {
+            case "green":
+                x = "green";
+                break;
+            case "blue":
+                x = "blue";
+                break;
+            case "red":
+                x = "red";
+                break;
+            case "yellow":
+                x = "yellow";
+                break;
+            case "orange":
+                x = "orange";
+                break;
+            case "black":
+                x = "black";
+                break;
+            case "white":
+                x = "white";
+                break;
+        }
+        if (x == "white") y = 14;
+        else y = 2;
+    };
+
+    object.erase = function erase() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+    };
+
+    object.save = function save() {
+        var dataURL = canvas.toDataURL();
+    };
+
+    object.init();
+    drawOnScreenObject = object;
+    return object;
 }
+
 //////////  Canvas Effects  ///////////////
 
 var drawFrameMirroredActive = false;
@@ -16181,6 +16141,20 @@ async function publishScreen() {
 
 	if (quality == -1) {
 		// unlocked capture resolution
+	} else if (quality == -2) {
+		video.width = {
+			ideal: 3840
+		};
+		video.height = {
+			ideal: 2160
+		};
+	} else if (quality == -3) {
+		video.width = {
+			ideal: 2560
+		};
+		video.height = {
+			ideal: 1440
+		};
 	} else if (quality == 0) {
 		video.width = {
 			ideal: 1920
@@ -17060,10 +17034,12 @@ function soloLinkGenerator(streamID, scene = true) {
 
 	var wss = "";
 	if (session.wssSetViaUrl) {
-		if (session.customWSS && session.customWSS !== true) {
+		if (session.customWSS && (session.customWSS !== true)) {
 			wss = "&pie=" + session.customWSS;
-		} else {
+		} else if (session.customWSS==true){
 			wss = "&wss=" + session.wss;
+		} else {
+			wss = "&wss2=" + session.wss;
 		}
 	}
 
@@ -19627,8 +19603,10 @@ async function createRoomCallback(passAdd, passAdd2) {
 	if (session.wssSetViaUrl) {
 		if (session.customWSS && session.customWSS !== true) {
 			wss = "&pie=" + session.customWSS;
-		} else {
+		} else if (session.customWSS==true){
 			wss = "&wss=" + session.wss;
+		} else {
+			wss = "&wss2=" + session.wss;
 		}
 	}
 
@@ -21418,53 +21396,111 @@ var SelectedAudioOutputDevices = false; // session.sink
 var SelectedAudioInputDevices = []; // ..
 var SelectedVideoInputDevices = []; // ..
 
-async function enumerateDevices() {
-	log("enumerated start");
+// async function enumerateDevices() {
+	// log("enumerated start");
 
-	if (typeof navigator.mediaDevices === "object" && typeof navigator.mediaDevices.enumerateDevices === "function") {
-		return await navigator.mediaDevices.enumerateDevices();
-	} else if (typeof navigator.enumerateDevices === "function") {
-		log("enumerated failed 1");
-		return await navigator.enumerateDevices();
-	} else {
-		return await new Promise((resolve, reject) => {
-			try {
-				if (window.MediaStreamTrack == null || window.MediaStreamTrack.getSources == null) {
-					throw new Error();
-				}
-				window.MediaStreamTrack.getSources(devices => {
-					resolve(
-						devices
-							.filter(device => {
-								return device.kind.toLowerCase() === "video" || device.kind.toLowerCase() === "videoinput";
-							})
-							.map(device => {
-								return {
-									deviceId: device.deviceId != null ? device.deviceId : "",
-									groupId: device.groupId,
-									kind: "videoinput",
-									label: device.label,
-									toJSON: /* istanbul ignore next */ function () {
-										return this;
-									}
-								};
-							})
-					);
-				});
-			} catch (e) {
-				errorlog(e);
-				if (!session.cleanOutput) {
-					if (location.protocol !== "https:") {
-						warnUser("Error listing the media devices.\n\nYour browser will not allow access to media devices without SSL enabled.\n\nPossible solutions include switching to https, accessing the site from http://localhost, or enabling the `unsafely-treat-insecure-origin-as-secure` browser switch.");
-					} else if ("isSecureContext" in window && window.isSecureContext === false) {
-						warnUser("Error listing the media devices.\n\nThe website may have assets loaded in an insecure context.");
-					} else {
-						warnUser("An unknown error occured while trying to list the media devices.");
-					}
-				}
+	// if (typeof navigator.mediaDevices === "object" && typeof navigator.mediaDevices.enumerateDevices === "function") {
+		// return await navigator.mediaDevices.enumerateDevices();
+	// } else if (typeof navigator.enumerateDevices === "function") {
+		// log("enumerated failed 1");
+		// return await navigator.enumerateDevices();
+	// } else {
+		// return await new Promise((resolve, reject) => {
+			// try {
+				// if (window.MediaStreamTrack == null || window.MediaStreamTrack.getSources == null) {
+					// throw new Error();
+				// }
+				// window.MediaStreamTrack.getSources(devices => {
+					// resolve(
+						// devices
+							// .filter(device => {
+								// return device.kind.toLowerCase() === "video" || device.kind.toLowerCase() === "videoinput";
+							// })
+							// .map(device => {
+								// return {
+									// deviceId: device.deviceId != null ? device.deviceId : "",
+									// groupId: device.groupId,
+									// kind: "videoinput",
+									// label: device.label,
+									// toJSON: /* istanbul ignore next */ function () {
+										// return this;
+									// }
+								// };
+							// })
+					// );
+				// });
+			// } catch (e) {
+				// errorlog(e);
+				// if (!session.cleanOutput) {
+					// if (location.protocol !== "https:") {
+						// warnUser("Error listing the media devices.\n\nYour browser will not allow access to media devices without SSL enabled.\n\nPossible solutions include switching to https, accessing the site from http://localhost, or enabling the `unsafely-treat-insecure-origin-as-secure` browser switch.");
+					// } else if ("isSecureContext" in window && window.isSecureContext === false) {
+						// warnUser("Error listing the media devices.\n\nThe website may have assets loaded in an insecure context.");
+					// } else {
+						// warnUser("An unknown error occured while trying to list the media devices.");
+					// }
+				// }
+			// }
+		// });
+	// }
+// }
+
+async function enumerateDevices() {
+    log("enumerated start");
+
+    const timeout = new Promise((_, reject) => 
+        setTimeout(() => reject(function(){
+			if (!session.cleanOutput) {
+				warnUser("The browser has not responded to our request to list available media devices.\n\nPossible solutions:\n\n- Restart the computer and try again\n- Try another browser\n- Remove or uninstall devices that are not needed\n- Uninstall and reinstall your browser");
 			}
-		});
-	}
+			new Error("Device enumeration timed out.\n\nThe browser has not responded to our request to list available media devices.\n\nPossible solutions:\n\n- Restart the computer and try again\n- Try another browser\n- Remove or uninstall devices that are not needed\n- Uninstall and reinstall your browser");
+		}), 15000)
+    );
+
+    const enumeratePromise = new Promise(async (resolve, reject) => {
+        try {
+            if (typeof navigator.mediaDevices === "object" && typeof navigator.mediaDevices.enumerateDevices === "function") {
+                resolve(await navigator.mediaDevices.enumerateDevices());
+            } else if (typeof navigator.enumerateDevices === "function") {
+                log("enumerated failed 1");
+                resolve(await navigator.enumerateDevices());
+            } else {
+                window.MediaStreamTrack.getSources(devices => {
+                    resolve(
+                        devices
+                            .filter(device => {
+                                return device.kind.toLowerCase() === "video" || device.kind.toLowerCase() === "videoinput";
+                            })
+                            .map(device => {
+                                return {
+                                    deviceId: device.deviceId != null ? device.deviceId : "",
+                                    groupId: device.groupId,
+                                    kind: "videoinput",
+                                    label: device.label,
+                                    toJSON: /* istanbul ignore next */ function () {
+                                        return this;
+                                    }
+                                };
+                            })
+                    );
+                });
+            }
+        } catch (e) {
+            errorlog(e);
+            if (!session.cleanOutput) {
+                if (location.protocol !== "https:") {
+                    warnUser("Error listing the media devices.\n\nYour browser will not allow access to media devices without SSL enabled.\n\nPossible solutions include switching to https, accessing the site from http://localhost, or enabling the `unsafely-treat-insecure-origin-as-secure` browser switch.");
+                } else if ("isSecureContext" in window && window.isSecureContext === false) {
+                    warnUser("Error listing the media devices.\n\nThe website may have assets loaded in an insecure context.");
+                } else {
+                    warnUser("An unknown error occured while trying to list the media devices.");
+                }
+            }
+            reject(e);
+        }
+    });
+
+    return Promise.race([enumeratePromise, timeout]);
 }
 
 function requestOutputAudioStream() {
@@ -29242,8 +29278,10 @@ function updateReshareLink() {
 	if (session.wssSetViaUrl) {
 		if (session.customWSS && session.customWSS !== true) {
 			wss = "&pie=" + session.customWSS;
-		} else {
+		} else if (session.customWSS==true){
 			wss = "&wss=" + session.wss;
+		} else {
+			wss = "&wss2=" + session.wss;
 		}
 	}
 	if (session.audience && !session.audienceToken) {
@@ -35468,8 +35506,10 @@ function generateQRPageCallback(hash) {
 		if (session.wssSetViaUrl) {
 			if (session.customWSS && session.customWSS !== true) {
 				wss = "&pie=" + session.customWSS;
-			} else {
+			} else if (session.customWSS==true){
 				wss = "&wss=" + session.wss;
+			} else {
+				wss = "&wss2=" + session.wss;
 			}
 		}
 
@@ -40617,6 +40657,7 @@ function changeGroupDirector(ele, state = null) {
 		session.sendMessage({ group: false });
 	}
 	if (change) {
+		updateMixer();
 		pokeIframeAPI("group-set-updated", session.group);
 	}
 
@@ -40742,6 +40783,7 @@ function changeGroupDirectorAPI(group, state = null, update = true) {
 		}
 	}
 	if (changed) {
+		updateMixer();
 		pokeIframeAPI("group-set-updated", session.group);
 	}
 
@@ -40782,6 +40824,7 @@ function changeGroupViewDirectorAPI(group, state = null) {
 	}
 
 	if (changed) {
+		updateMixer();
 		pokeIframeAPI("group-view-set-updated", session.groupView);
 	}
 
@@ -40798,30 +40841,36 @@ function changeGroup(ele, state = null) {
 	var group = ele.dataset.group;
 
 	var index = session.rpcs[ele.dataset.UUID].group.indexOf(group);
+	
+	var changed = false;
 
 	if (state === true) {
 		ele.classList.add("pressed");
 		ele.ariaPressed = "true";
 		if (index === -1) {
 			session.rpcs[ele.dataset.UUID].group.push(group);
+			changed = true;
 		}
 	} else if (state === false) {
 		ele.classList.remove("pressed");
 		ele.ariaPressed = "false";
 		if (index > -1) {
 			session.rpcs[ele.dataset.UUID].group.splice(index, 1);
+			changed = true;
 		}
 	} else if (ele.classList.contains("pressed")) {
 		ele.classList.remove("pressed");
 		ele.ariaPressed = "false";
 		if (index > -1) {
 			session.rpcs[ele.dataset.UUID].group.splice(index, 1);
+			changed = true;
 		}
 	} else {
 		ele.classList.add("pressed");
 		ele.ariaPressed = "true";
 		if (index === -1) {
 			session.rpcs[ele.dataset.UUID].group.push(group);
+			changed = true;
 		}
 	}
 	if (session.rpcs[ele.dataset.UUID].group.length) {
@@ -40829,7 +40878,11 @@ function changeGroup(ele, state = null) {
 	} else {
 		session.sendRequest({ group: false }, ele.dataset.UUID);
 	}
-	syncDirectorState(ele);
+	syncDirectorState(ele); 
+	
+	if (changed) {
+		updateMixer();
+	}
 
 	if (session.rpcs[ele.dataset.UUID].group.indexOf(group) === -1) {
 		return false;
@@ -45651,6 +45704,20 @@ async function createSecondStream() {
 
 		if (quality == -1) {
 			// unlocked capture resolution
+		} else if (quality == -2) {
+			video.width = {
+				ideal: 3840
+			};
+			video.height = {
+				ideal: 2160
+			};
+		} else if (quality == -3) {
+			video.width = {
+				ideal: 2560
+			};
+			video.height = {
+				ideal: 1440
+			};
 		} else if (quality == 0) {
 			video.width = {
 				ideal: 1920
