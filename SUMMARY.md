@@ -567,6 +567,7 @@
   * [Logos and media assets](help/logos-and-media-assets.md)
   * [What does VDO stand for?](help/what-does-vdo-stand-for.md)
 * [Common errors and known issues](common-errors-and-known-issues/README.md)
+  * [Can't screen capture certain games](common-errors-and-known-issues/cant-screen-capture-certain-games.md)
   * [ATEM not working with Firestick](common-errors-and-known-issues/atem-not-working-with-firestick.md)
   * [Very old iPhone support](common-errors-and-known-issues/very-old-iphone-support.md)
   * [Can't select audio output on iOS](common-errors-and-known-issues/cant-select-audio-output-on-ios.md)
