@@ -63,7 +63,7 @@ For more advanced users, you can use VDO.Ninja's WHIP/WHEP support, with your ow
 
 The [Meshcast service](meshcast.io.md) long offered by VDO.Ninja works like a WHIP/WHEP host, offloading video distribution via the hosted servers, thus avoiding the need for multiple p2p streams. As a result, it was pretty easy to add support for generic WHIP/WHEP hosting alternatives.
 
-Currently a guide on using Cloudflare as the host is available, located here, [https://vdo.ninja/alpha/cloudflare](https://vdo.ninja/alpha/cloudflare), with guides for other self-hosted providers becoming available all the time.
+Currently a guide on using Cloudflare as the host is available, located here, [https://vdo.ninja/cloudflare](https://vdo.ninja/cloudflare), with guides for other self-hosted providers becoming available all the time.
 
 For the highly technical and curious, please note that if your WHIP server's response header includes a WHEP URL in it, where the WHIP stream can be viewed from, VDO.Ninja will automatically provide that URL to connected viewers to use as the main video source.
 
