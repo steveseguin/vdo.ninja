@@ -22,7 +22,9 @@ When used together with [`&noaudio`](../view-parameters/noaudio.md) (`&novideo&n
 
 * Useful for directors who may wish to only issue commands or text chat, but not need to see video or audio.
 
-You can pass a comma separated list of stream IDs that will be excluded, so that they specifically will play audio. `?novideo=guest1a,guest2a` will only allow audio from guest1a and guest2a to play
+You can pass a comma separated list of stream IDs that will be excluded, so that they specifically will play video. `?novideo=guest1a,guest2a` will only allow video from guest1a and guest2a to play.
+
+Video tracks are blocked and do not form any connection when using peer-to-peer, not taking up bandwidth or system load, but they also cannot be re-enabled without reconnecting. Video tracks from WHIP-based sources, Iframes, or some non-standard sources may still allow video tracks to connect, using up bandwidth, but will not be rendered. Check the connection stats for that stream ID to confirm.
 
 Use [`&broadcast`](../view-parameters/broadcast.md) or [`&showonly`](novideo.md) if you want to disable all videos except any stream IDs listed.
 
