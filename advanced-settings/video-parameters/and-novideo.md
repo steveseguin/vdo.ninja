@@ -24,8 +24,6 @@ When used together with [`&noaudio`](../view-parameters/noaudio.md) (`&novideo&n
 
 You can pass a comma separated list of stream IDs that will be excluded, so that they specifically will play audio. `?novideo=guest1a,guest2a` will only allow audio from guest1a and guest2a to play
 
-External Iframes may or may not be muted by default if using \&noaudio. While I try to mute frames when possible, like embedded Youtube videos, there may be still some Iframe sources I cannot mute.
-
 Use [`&broadcast`](../view-parameters/broadcast.md) or [`&showonly`](novideo.md) if you want to disable all videos except any stream IDs listed.
 
 ## Related
