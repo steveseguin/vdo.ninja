@@ -23,9 +23,11 @@ Example: `&noisegatesettings=10,25,3000`
 
 It takes a comma separated list:
 
-* First value is target gain (0 to 100), although 0 to 40 is probably the recommended range here.
+* First value is target volume (0 to 100), although 0 to 40 is probably the recommended range here.
+  * Since how we perceive loudness isn't linear, to have the audio become inaudible, you'll want to set this to 0 to 3. Setting it to 10 for example will leave it still quite audible, but just dampened.
 * Second value is the threshold value where the gate is triggered if below it. \~ 100 is loudly speaking, \~ 20 is light background noise levels, and under 5 is quiet background levels.
 * Third value is how 'sticky' the gate-open position is, in milliseconds. Having this set to a few seconds should prevent someone from being cut off while speaking or if taking a short pause.
+  * You may want to try a value of 10 to 300 for this third value, if just testing or want a sharper cut off.&#x20;
 
 Example:\
 [`https://vdo.ninja/?noisegate&noisegatesettings=10,25,3000`](https://vdo.ninja/?noisegate\&noisegatesettings=10,25,3000)
