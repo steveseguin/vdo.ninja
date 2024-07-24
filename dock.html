@@ -194,31 +194,27 @@ function goBack(){
 }
 
 document.addEventListener("dragstart", event => {
-	var url = event.target.href || event.target.value;
-	
-	if (!url || !url.startsWith('https://')) return;
-	if (event.target.dataset.drag!="1"){
-		return;
-	}
-	//event.target.ondragend = function(){event.target.blur();}
-	
-	var streamId = url.split('view=');
-	var label = url.split('label=');
+    var url = event.target.href || event.target.value;
+    
+    if (!url || !url.startsWith('https://')) return;
+    if (event.target.dataset.drag !== "1") return;
+    
+    var streamId = url.split('view=');
+    var label = url.split('label=');
 
-	url += '&layer-name=OBSN';
-	if (streamId.length>1) url += ': ' + streamId[1].split('&')[0];
-	if (label.length>1) url += ' - ' + decodeURI(label[1].split('&')[0]);
-	
-
-	url += '&layer-width=1920'; // this isn't always 100% correct, as the resolution can fluxuate, but it is probably good enough
-	url += '&layer-height=1080';
-	
-	event.dataTransfer.setDragImage(document.querySelector('#dragImage'), 24, 24);
-	event.dataTransfer.setData("text/uri-list", encodeURI(url));
-	//event.dataTransfer.setData("url", encodeURI(url));
-	
-	//warnlog(event);
-	
+    url += '&layer-name=VDO.Ninja';
+    if (streamId.length > 1) url += ': ' + streamId[1].split('&')[0];
+    if (label.length > 1) url += ' - ' + decodeURI(label[1].split('&')[0]);
+    
+    // Add layer dimensions
+    url += '&layer-width=1920';
+    url += '&layer-height=1080';
+    
+    event.dataTransfer.setDragImage(document.querySelector('#dragImage'), 24, 24);
+    event.dataTransfer.setData("text/uri-list", encodeURI(url));
+    
+    // Add this line to set the URL as plain text as well
+    event.dataTransfer.setData("text/plain", encodeURI(url));
 });
 
 </script>
@@ -285,7 +281,6 @@ document.addEventListener("dragstart", event => {
 			<input id="obs-link" class="task red" data-drag="1" onmousedown="copyFunction(this)" onclick="copyFunction(this)" />
 			<br />
 			<br />
-			<i>(links are draggable)</i>
 	</div>
 </div>
 <div class="gone" >

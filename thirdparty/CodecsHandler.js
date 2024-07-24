@@ -637,9 +637,63 @@ var CodecsHandler = (function() {
 		modifiedSDP = modifiedSDP.replace("a=rtpmap:106 CN/32000\r\n", "").replace("a=rtpmap:105 CN/16000\r\n", "").replace("a=rtpmap:13 CN/8000\r\n", "").replace(" 106 105 13", "");
 		return modifiedSDP;
 	}
+	
+	function modifySdp(sdp, disableAudio = false, disableVideo = false) {
+		if (!sdp || typeof sdp !== 'string') {
+			throw 'Invalid arguments.';
+		}
+		let sdpLines = sdp.split('\r\n');
+		let modifiedLines = [];
+		let inAudioSection = false;
+		let inVideoSection = false;
+		let bundleIds = [];
 
+		for (let line of sdpLines) {
+			if (line.startsWith('m=audio')) {
+				inAudioSection = true;
+				inVideoSection = false;
+				if (!disableAudio) {
+					modifiedLines.push(line);
+					bundleIds.push('0');
+				}
+			} else if (line.startsWith('m=video')) {
+				inAudioSection = false;
+				inVideoSection = true;
+				if (!disableVideo) {
+					modifiedLines.push(line);
+					bundleIds.push('1');
+				} else {
+					modifiedLines.push(''); // Add a line break if video is disabled
+				}
+			} else if (inVideoSection && disableVideo) {
+				continue; // Skip video lines if video is disabled
+			} else if (line.startsWith('a=group:')) {
+				// Skip existing group lines, we'll add updated ones later
+			} else if (inAudioSection && disableAudio) {
+				// Skip audio lines if audio is disabled
+			} else {
+				modifiedLines.push(line);
+			}
+		}
+		const tLineIndex = modifiedLines.findIndex(line => line.startsWith('t='));
+		if (bundleIds.length > 0) {
+			modifiedLines.splice(tLineIndex + 1, 0, 
+				`a=group:BUNDLE ${bundleIds.join(' ')}`,
+				`a=group:LS ${bundleIds.join(' ')}`
+			);
+		}
+
+		// Ensure there's a line break at the end
+		if (modifiedLines[modifiedLines.length - 1] !== '') {
+			modifiedLines.push('');
+		}
+
+		return modifiedLines.join('\r\n');
+	}
 	
     return {
+		modifySdp: modifySdp,
+		
         disableNACK: disableNACK,
 		
 		disablePLI: disablePLI,

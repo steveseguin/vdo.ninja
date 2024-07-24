@@ -274,6 +274,9 @@
 		font-size: 30%;
 		display: inline-block;
 		color: #000A;
+		right: 3px;
+		position: absolute;
+		bottom: 0;
 	}
 
 	</style>
@@ -474,10 +477,126 @@ function enterPressed(event, callback){
   }
 }
 
+function checkForSpecialVideoDevices() {
+  if (navigator.userAgent.toLowerCase().indexOf(' electron/') > -1) {
+    navigator.mediaDevices.enumerateDevices().then(devices => {
+      const specialDevices = [
+        "OBS Virtual Camera",
+        "Streamlabs Desktop Virtual Webcam",
+        "vMix Video",
+        "Blackmagic",
+        "NDI Video"
+      ];
+
+      let detectedDevice = null;
+
+      for (const priorityDevice of specialDevices) {
+        for (const device of devices) {
+          if (device.kind === 'videoinput' && device.label.includes(priorityDevice)) {
+            detectedDevice = device;
+            break;
+          }
+        }
+        if (detectedDevice) break;
+      }
+
+      if (detectedDevice) {
+        createSpecialDeviceLink(detectedDevice.label);
+      }
+    }).catch(console.error);
+  }
+}
+
+function createSpecialDeviceLink(deviceLabel) {
+  const normalizedLabel = normalizeDeviceLabel(deviceLabel);
+  const link = document.createElement('a');
+  link.href = `./?vd=${normalizedLabel}&fullscreen&cleanoutput&webcam&autostart&push=JNVWFzC&bypass&ad=0&nohistory`;
+  link.textContent = `${deviceLabel} detected - Click to full-window it`;
+  link.style.position = 'fixed';
+  link.style.bottom = '10px';
+  link.style.left = '50%';
+  link.style.transform = 'translateX(-50%)';
+  link.style.backgroundColor = 'rgba(50, 50, 50, 0.7)';
+  link.style.color = '#e0e0e0';
+  link.style.padding = '8px 12px';
+  link.style.borderRadius = '20px';
+  link.style.fontSize = '14px';
+  link.style.textDecoration = 'none';
+  link.style.opacity = '0';
+  link.style.transition = 'opacity 2s ease-in-out';
+  link.style.boxShadow = '0 2px 5px rgba(0,0,0,0.2)';
+  link.style.fontFamily = 'Arial, sans-serif';
+  link.style.zIndex = '1000';
+  link.title = "Make this video device fully fill the window, making it perfect for screen capture.";
+
+  document.body.appendChild(link);
+  setTimeout(() => link.style.opacity = '1', 100);
+
+  // Add hover effect
+  link.onmouseenter = () => {
+    link.style.backgroundColor = 'rgba(70, 70, 70, 0.9)';
+  };
+  link.onmouseleave = () => {
+    link.style.backgroundColor = 'rgba(50, 50, 50, 0.7)';
+  };
+}
+
+function normalizeDeviceLabel(deviceName) {
+  return String(deviceName).replace(/[\W]+/g, "_").toLowerCase();
+}
+function getPermssions(e=null){
+  if (listed==true){
+    return;
+  } 
+  if (e!==null){
+    e.currentTarget.blur();
+  }
+  navigator.mediaDevices.getUserMedia({audio: true, video: false}).then((stream)=>{
+    navigator.mediaDevices.enumerateDevices().then(gotDevices).catch(console.error);
+    stream.getTracks().forEach(track => {
+        track.stop();
+    });
+    listed=true;
+    audioOutputSelect.focus();
+    
+  }).catch(function(){
+    document.getElementById("messageDiv").innerHTML = "Failed to list available audio devices\n\nPlease ensure you allowed the microphone permissions.";
+    document.getElementById("messageDiv").style.display="block";
+    setTimeout(function(){document.getElementById("messageDiv").style.opacity="1.0";},0);
+  });
+}
+
+function preloadCSS(url) {
+  const link = document.createElement('link');
+  link.rel = 'preload';
+  link.as = 'style';
+  link.href = url;
+  document.head.appendChild(link);
+}
+
+function lazyPreloadCSS() {
+  const cssFiles = [
+    './css/main.css',
+    './css/icons.css',
+    './css/animations.css',
+    './css/variable.css'
+  ];
+
+  cssFiles.forEach(preloadCSS);
+}
+
+
 
 var isMobile = false;
 if( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)){ // does not detect iPad Pros.
 	isMobile=true; // if iOS, default to H264?  meh.  let's not.
+} else {
+	// Near the end of your script, replace or add:
+	document.addEventListener('DOMContentLoaded', () => {
+	  getPermssions();
+	  checkForSpecialVideoDevices();
+	  setTimeout(lazyPreloadCSS, 2000);
+	});
 }
 // Windows can show the cursor, since it captures in a different way.
 //if (navigator.platform.indexOf("Win") != -1){

@@ -40,8 +40,8 @@
 		
 		<link rel="stylesheet" href="./css/variables.css" />
 		<!-- If a user is using an old custom main.css, their custom variables should override the defaults variables this way. i think. -->
-		<link rel="stylesheet" href="./css/main.css?ver=386" />
-		<link rel="stylesheet" href="./css/icons.css" />
+		<link rel="stylesheet" href="./css/main.css?ver=389" />
+		<link rel="stylesheet" href="./css/icons.css?ver=1" />
 		<link rel="stylesheet" href="./css/animations.css" />
 		<script type="text/javascript" crossorigin="anonymous" src="./thirdparty/adapter.js"></script>
 		
@@ -87,9 +87,9 @@
 			<link itemprop="url" href="./media/vdoNinja_logo_full.png" />
 		</span>
 		
-		<script type="text/javascript" crossorigin="anonymous"  src="./thirdparty/CodecsHandler.js?ver=10"></script>
+		<script type="text/javascript" crossorigin="anonymous"  src="./thirdparty/CodecsHandler.js?ver=16"></script>
 		<script type="text/javascript" crossorigin="anonymous" src="./thirdparty/aes.js"></script>
-		<script type="text/javascript" crossorigin="anonymous" src="./webrtc.js?ver=799"></script>
+		<script type="text/javascript" crossorigin="anonymous" src="./webrtc.js?ver=808"></script>
 		<input id="zoomSlider" type="range" style="display: none;" />
 		<span id="electronDragZone" style="pointer-events: none; z-index:-10; position:absolute;top:0;left:0;width:100%;height:2%;-webkit-app-region: drag;min-height:20px;"></span>
 		<div id="header">
@@ -215,7 +215,11 @@
                     <div id="flipcamerabutton" onmousedown="event.preventDefault(); event.stopPropagation();"  title="Cycle the Cameras"  onclick="cycleCameras()" class="hidden float"  tabindex="2" role="button" aria-pressed="false" onkeyup="enterPressedClick(event,this);" style="cursor: pointer;" aria-label="Cycle Cameras" alt="Cycle the Cameras">
                         <i id="settingstoggle" class="toggleSize las la-sync-alt"></i> 
                     </div>
-                    
+					
+					 <div id="blackoutmode" onmousedown="event.preventDefault(); event.stopPropagation();"  title="Enter black-out mode"  onclick="blackoutMode()" class="float hidden"  tabindex="2" role="button" aria-pressed="false" onkeyup="enterPressedClick(event,this);" style="cursor: pointer;" aria-label="Black out mode" alt="Enter black-out mode">
+                        <i id="blackouttoggle" class="toggleSize las la-moon"></i> 
+                    </div>
+					
                     <div id="obscontrolbutton" onmousedown="event.preventDefault(); event.stopPropagation();"  title="OBS Remote Controller; start/stop and change scenes." onclick="toggleOBSControls();" class="hidden float"  tabindex="2" role="button" aria-pressed="false" onkeyup="enterPressedClick(event,this);" style="cursor: pointer;" aria-label="Remote OBS control menu" alt="Toggle the Remote OBS Controls Menu">
                         <i id="obscontroltoggle" class="toggleSize las la-gamepad"></i>
                     </div>
@@ -1027,7 +1031,7 @@
 								<span style="color:#daad09;">Welcome to VDO Ninja! We've rebranded!  Nothing else is changing and we're staying 100% free.</span>
 							</h4>
 							<br />
-							🌱 Site last updated on June 23th. You can also still access the previous version, which <a href="https://vdo.ninja/v24/">is hosted here</a>. Development <a target="_blank" title="Open a page with recent VDO.Ninja development and feature updates" href="https://updates.vdo.ninja/">updates are here.</a>
+							🌱 Site last updated on July 24th. You can also still access the previous version, which <a href="https://vdo.ninja/v24/">is hosted here</a>. Development <a target="_blank" title="Open a page with recent VDO.Ninja development and feature updates" href="https://updates.vdo.ninja/">updates are here.</a>
 							<br />
 							<br />
 							<h3>
@@ -1676,32 +1680,10 @@
 						</button>
 					</div>
 					
-					<!-- Row of Channels -->
-					<div class="row six advanced">
-						<button class="btn-HL-blue" data-action-type="add-channel" title="Set to Audio Channel 1" onclick="changeChannelOffset(this.dataset.UUID, 0);">
-							<span>C1</span>
-						</button>
-						<button class="btn-HL-blue" data-action-type="add-channel" title="Set to Audio Channel 2" onclick="changeChannelOffset(this.dataset.UUID, 1);">
-							<span>C2</span>
-						</button>
-						<button class="btn-HL-blue" data-action-type="add-channel" title="Set to Audio Channel 3" onclick="changeChannelOffset(this.dataset.UUID, 2);">
-							<span>C3</span>
-						</button>
-						<button class="btn-HL-blue" data-action-type="add-channel" title="Set to Audio Channel 4" onclick="changeChannelOffset(this.dataset.UUID,3);">
-							<span>C4</span>
-						</button>
-						<button class="btn-HL-blue" data-action-type="add-channel" title="Set to Audio Channel 5" onclick="changeChannelOffset(this.dataset.UUID, 4);">
-							<span>C5</span>
-						</button>
-						<button class="btn-HL-blue" data-action-type="add-channel" title="Set to Audio Channel 6" onclick="changeChannelOffset(this.dataset.UUID, 5);">
-							<span>C6</span>
-						</button>
-					</div>
-					
 					<!-- Row of Groups -->
-					<div class="row six advanced">
+					<div class="row advanced">
 						<button class="btn-HL-green" data-action-type="toggle-group" data-group="1" title="Add/remove from group 1" onclick="changeGroup(this);">
-							<span>G1</span>
+							<span>Group 1</span>
 						</button>
 						<button class="btn-HL-green" data-action-type="toggle-group" data-group="2" title="Add/remove from group 2" onclick="changeGroup(this);">
 							<span>G2</span>
@@ -1717,6 +1699,31 @@
 						</button>
 						<button class="btn-HL-green" data-action-type="toggle-group" data-group="6" title="Add/remove from group 6" onclick="changeGroup(this);">
 							<span>G6</span>
+						</button>
+						<button class="btn-HL-green" data-action-type="toggle-group" data-group="7" title="Add/remove from group 7" onclick="changeGroup(this);">
+							<span>G7</span>
+						</button>
+						<button class="btn-HL-green" data-action-type="toggle-group" data-group="8" title="Add/remove from group 8" onclick="changeGroup(this);">
+							<span>G8</span>
+						</button>
+					</div>
+					<!-- Row of Channels -->
+					<div class="row advanced">
+						<span style="flex: 1 21%;color: lightgreen; margin: auto 0;">Monitor Mix</span>
+						<button class="btn-HL-blue" style="flex: 1 21%;" data-action-type="add-channel" title="Listen to this guest via your left audio speaker (Audio Channel 1)" onclick="changeChannelOffset(this.dataset.UUID, 0);">
+							<span>Your Left</span>
+						</button>
+						<button class="btn-HL-blue" style="flex: 1 21%;" data-action-type="add-channel" title="Listen to this guest via your right audio speaker (Audio Channel 2)" onclick="changeChannelOffset(this.dataset.UUID, 1);">
+							<span>Your Right</span>
+						</button>
+					</div>
+					<div class="row advanced" title="This guest will only hear audio from your left or right mic channel. Make everyone has &stereo=1 added to their URL to enable two-channel audio.">
+						<span style="flex: 1 21%; color: #F44; margin:auto 0;">PGM / Mic</span>
+						<button class="btn-HL-blue" style="flex: 1 21%;" data-action-type="isolate-channel" title="This guest will only hear audio your channel 1 mic source. Make everyone has &stereo=1 added to their URL to enable two-channel audio." data-channel="1" onclick="directIsolateChannel(this.dataset.UUID, 1);">
+							<span>Channel 1</span>
+						</button>
+						<button class="btn-HL-blue" style="flex: 1 21%;" data-action-type="isolate-channel" title="This guest will only hear audio your channel 2 mic source. Make everyone has &stereo=1 added to their URL to enable two-channel audio."  data-channel="2" onclick="directIsolateChannel(this.dataset.UUID, 2);">
+							<span>Channel 2</span>
 						</button>
 					</div>
 				</div>
@@ -2189,6 +2196,12 @@
 					</a>
 				</li>
 				<li class="context-menu__item">
+					<a href="#" class="context-menu__link" data-action="DrawOnVideo">
+						<i class="las la-external-link"></i>
+						<span data-translate="draw-on-video">Toggle draw mode</span>
+					</a>
+				</li>
+				<li class="context-menu__item">
 					<a href="#" class="context-menu__link" data-action="ShowStats">
 						<i class="las la-external-link"></i>
 						<span data-translate="show-video-stats">Show Stats</span>
@@ -2639,7 +2652,7 @@
 			// if (!window.location.search){document.body.innerHTML = "";} // uncomment this line, if you wish to try it.
 			
 			var session = WebRTC.Media; // session is a required global variable if configuring manually. Run before loading main.js but after webrtc.js.
-			session.version = "25.5";
+			session.version = "25.6";
 			session.streamID = session.generateStreamID(); // randomly generates a streamID for this session. You can set your own programmatically if needed
 			
 			session.defaultPassword = "someEncryptionKey123"; // Change this password if self-deploying for added security/privacy
@@ -2754,14 +2767,14 @@
 			// session.language="auto"; // "blank" is another option, or a specific language, like "de" or "pt-br"
 			// session.record = false; // uncomment to block users from being able to record via vdo.ninja's built in recording function
 			// session.whipServerURL = "wss://whip.vdo.ninja"; // If you deploy your own whip websocket service
-			
+			// session.mediamtx = "youdomain.com:443"; // Your hosted MediaMTX SFU domain. Assumes HTTPS-enabled.
 			// session.GDRIVE_CLIENT_ID = "877199999934-67tq62xxxxxxxxxxxxxxxxxxxxxxxxx.apps.googleusercontent.com"; // get your own id/key from Google Cloud
 			// session.GDRIVE_API_KEY = 'AINNNNNNNNNNNNNNN-39s99999999999999999'; // lets you upload to google drive if self hosting.
 			
 			// session.decrypted = session.decodeInvite("U2FsdGVkX1+d58DFIHoO3EQZSuX86ch4PqW2ouztnJ0="); // get a code from invite.cam
 			
 		</script>
-		<script type="text/javascript" crossorigin="anonymous" id="lib-js" src="./lib.js?ver=1176"></script>
-		<script type="text/javascript" crossorigin="anonymous" id="main-js" src="./main.js?ver=884"></script>
+		<script type="text/javascript" crossorigin="anonymous" id="lib-js" src="./lib.js?ver=1199"></script>
+		<script type="text/javascript" crossorigin="anonymous" id="main-js" src="./main.js?ver=894"></script>
 	</body>
 </html>

@@ -127,12 +127,16 @@ async function main() {
 			let deleteWhip = sessionStorage.getItem("deleteWhipOnLoad");
 			deleteWhip = JSON.parse(deleteWhip);
 			if (deleteWhip.location) {
-				let xhttp = new XMLHttpRequest();
-				if (deleteWhip.whipOutputToken) {
-					xhttp.setRequestHeader("Authorization", "Bearer " + deleteWhip.whipOutputToken);
+				try {
+					let xhttp = new XMLHttpRequest();
+					if (deleteWhip.whipOutputToken) {
+						xhttp.setRequestHeader("Authorization", "Bearer " + deleteWhip.whipOutputToken);
+					}
+					xhttp.open("DELETE", deleteWhip.location, true);
+					xhttp.send();
+				} catch(e){
+					log(e);
 				}
-				xhttp.open("DELETE", deleteWhip.location, true);
-				xhttp.send();
 			}
 			sessionStorage.removeItem("deleteWhipOnLoad");
 		}
@@ -439,6 +443,15 @@ async function main() {
 			}, 1000);
 		}
 	}
+	
+	if (urlParams.has("noaudiowhipin")){
+		session.forceNoAudioWhipIn = true;
+	}
+	if (urlParams.has("novideowhipin")){
+		session.forceNoVideoWhipIn = true;
+	}
+	
+	
 
 	if (urlParams.has("cftoken") || urlParams.has("cft")) {
 		session.whipOutput = urlParams.get("cftoken") || urlParams.get("cft") || false;
@@ -530,7 +543,7 @@ async function main() {
 			}
 		}
 	}
-
+	
 	if (urlParams.has("nomouseevents") || urlParams.has("nme")) {
 		session.disableMouseEvents = true;
 	}
@@ -735,6 +748,14 @@ async function main() {
 	if (urlParams.has("chunkcast")) {
 		session.chunkcast = true;
 	}
+	
+	if (urlParams.has("drawing")) {
+		session.allowDrawing = urlParams.get("drawing") || true;
+	}
+	
+	if (urlParams.has("nohistory")) {
+		session.nohistory = true;
+	}
 	//if (urlParams.has('callin')){
 	// awaitInboundCall()();
 	//}
@@ -783,7 +804,9 @@ async function main() {
 						tmpHref = tmpHref + "/?" + filename;
 						filename = false;
 						//warnUser("Please ensure your URL is correctly formatted.");
-						window.history.pushState({ path: tmpHref.toString() }, "", tmpHref.toString());
+						if (!session.nohistory){
+							window.history.pushState({ path: tmpHref.toString() }, "", tmpHref.toString());
+						}
 					}
 				} else {
 					filename = filename2.split("&")[0];
@@ -1256,14 +1279,27 @@ async function main() {
 	} else if (urlParams.has("layout")) {
 		if (!urlParams.get("layout")) {
 			session.accept_layouts = true;
-		}
-		try {
-			session.layout = JSON.parse(decodeURIComponent(urlParams.get("layout"))) || JSON.parse(urlParams.get("layout")) || {};
-		} catch (e) {
+			session.layout = {};
+		} else {
+			let decodedParam;
 			try {
-				session.layout = JSON.parse(urlParams.get("layout")) || {};
+				decodedParam = decodeURIComponent(urlParams.get("layout"));
 			} catch (e) {
-				session.layout = {};
+				decodedParam = urlParams.get("layout");
+			}
+			try {
+				session.layout = JSON.parse(decodedParam);
+			} catch (e) {
+				try {
+					const base64Decoded = atob(decodedParam);
+					try {
+						session.layout = JSON.parse(base64Decoded);
+					} catch (e) {
+						session.layout = base64Decoded;
+					}
+				} catch (e) {
+					session.layout = decodedParam;
+				}
 			}
 		}
 		console.warn("Warning: If using &layout with &broadcast, only the director's video will appear in the custom layout, which is likely not intended.");
@@ -3094,7 +3130,7 @@ async function main() {
 		if (session.videoDevice === null) {
 			session.videoDevice = "1";
 		} else if (session.videoDevice) {
-			session.videoDevice = session.videoDevice.toLowerCase().replace(/[\W]+/g, "_");
+			session.videoDevice = normalizeDeviceLabel(session.videoDevice);
 		}
 
 		if (session.videoDevice == "false") {
@@ -3139,7 +3175,7 @@ async function main() {
 		if (session.audioDevice === null) {
 			session.audioDevice = "1";
 		} else if (session.audioDevice) {
-			session.audioDevice = session.audioDevice.toLowerCase().replace(/[^-,'A-Za-z0-9]+/g, "_");
+			session.audioDevice = normalizeDeviceLabel(session.audioDevice);
 		}
 
 		if (session.audioDevice == "false") {
@@ -3224,6 +3260,13 @@ async function main() {
 	if (urlParams.has("autojoin") || urlParams.has("autostart") || urlParams.has("aj") || urlParams.has("as")) {
 		session.autostart = true;
 	}
+	
+	if (urlParams.has("blackout") || urlParams.has("blackoutmode") || urlParams.has("bo") || urlParams.has("bom")) {
+		getById("blackoutmode").classList.remove("hidden");
+		if (urlParams.get("blackout") || urlParams.get("blackoutmode") || urlParams.get("bo") || urlParams.get("bom")) {
+			blackoutMode();
+		}
+	}
 
 	if (session.dataMode) {
 		delayedStartupFuncs.push([joinDataMode]);
@@ -3258,8 +3301,20 @@ async function main() {
 		} else {
 			session.exclude = session.exclude.split(",");
 		}
-		log("exclude video playback");
+		log("exclude audio/video playback");
 		log(session.exclude);
+	}
+	
+	if (urlParams.has("excludeaudio") || urlParams.has("exaudio") || urlParams.has("silence")) {
+		session.excludeaudio = urlParams.get("excludeaudio") || urlParams.get("exaudio") || urlParams.get("silence");
+
+		if (!session.excludeaudio) {
+			session.excludeaudio = false;
+		} else {
+			session.excludeaudio = session.excludeaudio.split(",");
+		}
+		log("exclude audio playback");
+		log(session.excludeaudio);
 	}
 
 	if (urlParams.has("novideo") || urlParams.has("nv") || urlParams.has("hidevideo") || urlParams.has("showonly")) {
@@ -3284,6 +3339,7 @@ async function main() {
 		}
 		log("disable audio playback");
 	}
+	
 
 	if (urlParams.has("nodirectoraudio")) {
 		session.nodirectoraudio = true;
@@ -3966,6 +4022,20 @@ async function main() {
 		} catch (e) {
 			errorlog(e);
 		}
+	} else if (urlParams.has("fullhd") || urlParams.has("1080p")) {
+		session.quality = 0;
+		getById("gear_screen").parentNode.removeChild(getById("gear_screen"));
+		getById("gear_webcam").parentNode.removeChild(getById("gear_webcam"));
+		if (session.outboundVideoBitrate === false) {
+			session.outboundVideoBitrate = 4000;
+		}
+	} else if (urlParams.has("4k")) {
+		session.quality = -2;
+		getById("gear_screen").parentNode.removeChild(getById("gear_screen"));
+		getById("gear_webcam").parentNode.removeChild(getById("gear_webcam"));
+		if (session.outboundVideoBitrate === false) {
+			session.outboundVideoBitrate = 8000;
+		}
 	}
 
 	if (urlParams.has("sink")) {
@@ -3974,7 +4044,7 @@ async function main() {
 		session.outputDevice = urlParams.get("outputdevice") || urlParams.get("od") || urlParams.get("audiooutput") || null;
 
 		if (session.outputDevice) {
-			session.outputDevice = session.outputDevice.toLowerCase().replace(/[\W]+/g, "_");
+			session.outputDevice = normalizeDeviceLabel(session.outputDevice);
 		} else {
 			session.outputDevice = null;
 			getById("headphonesDiv3").style.display = "none"; //
@@ -3985,7 +4055,7 @@ async function main() {
 				enumerateDevices().then(function (deviceInfos) {
 					for (let i = 0; i !== deviceInfos.length; ++i) {
 						if (deviceInfos[i].kind === "audiooutput") {
-							if (deviceInfos[i].label.replace(/[\W]+/g, "_").toLowerCase().includes(session.outputDevice)) {
+							if (normalizeDeviceLabel(deviceInfos[i].label).includes(session.outputDevice)) {
 								session.sink = deviceInfos[i].deviceId;
 								log("AUDIO OUT DEVICE: " + deviceInfos[i].deviceId);
 								break;
@@ -5001,6 +5071,26 @@ async function main() {
 
 	if (urlParams.has("hostwhep") || urlParams.has("whepout")) {
 		session.whepHost = urlParams.get("hostwhep") || urlParams.get("whepout") || session.streamID || false;
+	}
+
+	if (urlParams.get("mediamtx")){
+		session.mediamtx = urlParams.get("mediamtx");
+	} 
+	
+	if (session.mediamtx){
+		if (!session.mediamtx.includes(".") && !session.mediamtx.includes("localhost")){
+			session.mediamtx += ".com";
+		}
+		if (!session.mediamtx.includes(":")){
+			session.mediamtx += ":8889";
+		}
+		if (!session.whipOutput){
+			session.whipOutput = "https://"+session.mediamtx+"/"+session.streamID+"/whip";
+		}
+		if (!session.whipoutSettings){
+			session.whipoutSettings = { type: "whep", url: "https://"+session.mediamtx+"/"+session.streamID+"/whep" };
+			console.log("WHIP OUT: "+session.whipOutput+", WHEP SHARE: "+session.whipoutSettings.url);
+		}
 	}
 
 	if (urlParams.has("effects") || urlParams.has("effect")) {
@@ -6390,7 +6480,7 @@ async function main() {
 
 		if ("sendMessage" in e.data) {
 			// webrtc send to viewers
-			session.sendMessage(e.data);
+			session.sendMessage(e.data.sendMessage);
 		}
 
 		if ("sendRequest" in e.data) {
@@ -6418,7 +6508,7 @@ async function main() {
 
 		if ("sendPeers" in e.data) {
 			// webrtc send message to every connected peer; like send and request; a hammer vs a knife.
-			session.sendPeers(e.data);
+			session.sendPeers(e.data.sendPeers);
 		}
 
 		if ("reload" in e.data) {
