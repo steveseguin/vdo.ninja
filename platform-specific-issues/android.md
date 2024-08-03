@@ -25,7 +25,15 @@ Source-code for building the Android app is here:\
 
 ### External camera support
 
-UVC-based video devices are not supported currently with most Android devices, but a few perhaps, like the Yolobox, may support it. If not, screen-sharing is an option to make it work, where you can load up an app that does support UVC/USB cameras, and simply screen share that output to VDO.Ninja using the native Android app.
+UVC-based video devices are not supported currently with most Android devices via browser, but a few perhaps, like the Yolobox, may support it. \
+\
+There is an experimental version of the VDO.Ninja Android app that has USB-video input support, which you can download and sideload from here: [https://drive.google.com/file/d/1L8meslXPEzivocH3wz48abNtJ926hQUr/view?usp=drive\_link](https://drive.google.com/file/d/1L8meslXPEzivocH3wz48abNtJ926hQUr/view?usp=drive\_link)\
+\
+It may not work with Android 14 however, and USB audio isn't supported I believe.\
+\
+If that doesn't work, screen-sharing is an option to make it work, where you can load up an app that does support UVC/USB cameras, and simply screen share that output to VDO.Ninja using the native Android app.\
+\
+Newer iOS/iPad devices with USB-3 support may have USB media support, and the Raspberry Ninja project also supports HDMI/USB input, if you have a mobile Linux system, like an Orange Pi 5 Plus. The Orange Pi 5+ has a built-in HDMI input port.
 
 ### USB audio device support
 
@@ -33,9 +41,11 @@ USB-based audio devices have limited support with VDO.Ninja on Android. Some And
 
 **Firefox mobile seems to support USB audio devices fairly often,** so give Firefox a go if looking for support there. So definitely try Firefox out if using Android and looking to use USB microphones.
 
-If nothing works, using a 3.5mm to USB adapter will sometimes work, if your audio device has 3.5mm mic out as an option. You may also need a TRRS/TRS adapter. Below are a couple that I use  successfully on my Google Pixel smartphone:\
+If nothing works, using a 3.5mm to USB adapter will sometimes work, if your audio device has 3.5mm mic out as an option. You may also need a TRRS (not TRS) adapter. Below are a couple that I use  successfully on my Google Pixel smartphone:\
 [https://www.amazon.ca/gp/product/B08NVRV6G9](https://www.amazon.ca/gp/product/B08NVRV6G9)\
-[https://www.amazon.ca/Headphone-Splitter-KOOPAO-Compatible-Microphone/dp/B08RML676M](https://www.amazon.ca/Headphone-Splitter-KOOPAO-Compatible-Microphone/dp/B08RML676M)
+[https://www.amazon.ca/Headphone-Splitter-KOOPAO-Compatible-Microphone/dp/B08RML676M](https://www.amazon.ca/Headphone-Splitter-KOOPAO-Compatible-Microphone/dp/B08RML676M)\
+\
+Often a USB audio device that is treated as a headset/communication device, rather than just a microphone or game device, will work.
 
 ### Samsung phones
 
@@ -73,7 +83,13 @@ Pixel devices have problems in Portrait mode, where the video may glitch to be a
 
 ### External audio
 
-USB audio devices should work with Android devices, but it will depend on numerous factors. In most cases, the 3.5mm headset port on some Android phones will be the most reliable way to attach an external headset or microphone.
+USB audio devices should work with Android devices, but it will depend on numerous factors. In most cases, the 3.5mm headset port on some Android phones will be the most reliable way to attach an external headset or microphone.\
+\
+3.5mm TRRS inputs often work, and some USB devices that work as headset devices work with Chrome.\
+\
+Firefox tends to work with more USB audio devices than Chrome, but you might find MS Edge mobile works also.\
+\
+Bluetooth devices are hit and miss at the moment
 
 ### On-screen overlays blocking access
 
