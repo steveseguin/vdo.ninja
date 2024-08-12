@@ -2,7 +2,7 @@
 description: How to Keep VDO.Ninja Microphone Active in Background on Android
 ---
 
-# Keep Microphone Active in Background on Android
+# Keep Mic Active in Background on Android Browser
 
 This guide will show you how to keep your microphone active for VDO.Ninja even when your Android browser is running in the background. This is particularly useful for audio-only applications where you need to multitask while continuing to use the microphone.
 
@@ -51,3 +51,4 @@ This method has been tested on a Galaxy Z Fold 6 with the most current version o
 * **App Permissions**: Regularly check your browser's app permissions to ensure microphone access hasn't been revoked by system updates or other changes.
 * **Alternative Browsers**: If you're having trouble with your default browser, try using a different one. Some users report better results with specific browsers like Chrome or Firefox.
 * **Notification Importance**: Consider setting your browser app's notifications to "High" importance in your Android settings. This may help prevent the system from closing the app in low-memory situations.
+* **Native app alternative:** If you can't get it working with the browser, there is the [native app version](../steves-helper-apps/native-mobile-app-versions.md) of VDO.Ninja that you can try using instead. It's basic, but it should support background usage.
