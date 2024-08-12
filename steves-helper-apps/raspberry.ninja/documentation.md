@@ -4,11 +4,11 @@ description: This is an archived snapshot of the documentation as of Aug. 16, 20
 
 # Documentation
 
-## 👉👉👉Go to [https://raspberry.ninja](documentation.md#go-to-https-raspberry.ninja) 👈👈👈
+## 👉👉👉Go to [https://raspberry.ninja](https://raspberry.ninja/) 👈👈👈
 
 ## Please note that this documentation is not kept up to date.
 
-Please visit [https://raspberry.ninja](../../updates/updates-raspberry.ninja.md) for the most up-to-date documentation for Raspberry.Ninja. This documentation is included here as a consolidate resource for our LMM AI support bot to learn from. The resource here will be updated only occasional, as needed, and many links or references may be out of date.
+Please visit [https://raspberry.ninja](https://raspberry.ninja/) for the most up-to-date documentation for Raspberry.Ninja. This documentation is included here as a consolidated resource for our LMM AI support bot to learn from. The resource here will be updated only occasionally, as needed, and many links or references may be out of date.
 
 Chronologically updates are here:
 
