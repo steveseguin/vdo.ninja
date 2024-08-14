@@ -26,6 +26,16 @@ Example: `&activespeaker=1`
 
 In all four cases, if someone else is talking/active, your local preview will become a [mini-preview](../../source-settings/and-minipreview.md) in the top right.
 
+
+
+### Customize the delay on switching
+
+By default, the active speaker switches fairly quickly, typically within a few hundred milliseconds of a louder speaker taking over. You can add a fixed added delay, which works with modes 1 and 3, which will delay how long it takes before a switch between speakers is made
+
+`&activespeakerdelay`=2000, where 2000 is a value in milliseconds.
+
+This will not impact modes 2 or 4
+
 ## Related
 
 {% content-ref url="../mixer-scene-parameters/and-motiondetection-alpha.md" %}
