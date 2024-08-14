@@ -4,7 +4,7 @@ description: This option can be used in conjunction with &activespeaker
 
 # \&activespeakerdelay
 
-To understand the effect of setting `activeSpeakerTimeout` to 2000 in the `activeSpeaker=1` mode, let's analyze the relevant parts of the code:
+To understand the effect of setting  \&activespeakerdelay (`activeSpeakerTimeout)` to 2000 in the `activeSpeaker=1` mode, let's analyze the relevant parts of the code:
 
 When `activeSpeaker` is 1 (or 3), the code aims to show only one speaker at a time - the loudest or last-loud speaker. The `activeSpeakerTimeout` affects how quickly the system switches from one active speaker to another. Here's what happens:
 
@@ -18,10 +18,9 @@ When `activeSpeaker` is 1 (or 3), the code aims to show only one speaker at a ti
 The key difference is in these lines:
 
 ```javascript
-javascriptCopyif (!session.activeSpeakerTimeout) {
+if (!session.activeSpeakerTimeout) {
     session.rpcs[loudestActive].defaultSpeaker = false;
     changed = true;
-    log(loudestActive + " is loudest but not speaker anymore");
 } else {
     session.rpcs[loudestActive].defaultSpeaker = setTimeout(
         function (uuid) {
