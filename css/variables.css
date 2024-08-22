@@ -24,9 +24,9 @@
 	--darktheme-blue: rgb(33, 69, 114);
 	--darktheme-green: rgb(36, 88, 49);
 	--darktheme-lightgreen: #008770;
-	--darktheme-brown: rgb(96, 58, 25);
+	--darktheme-brown: rgb(76 58 41);
 	--darktheme-yellow: rgb(84, 70, 9);
-
+	
 	/* Lightmode white - Darker to lighter */
 	--lighttheme-1: #fff;
 	--lighttheme-2: #f3f3f3;

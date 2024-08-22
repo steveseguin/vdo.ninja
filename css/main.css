@@ -3610,6 +3610,9 @@ div#roomnotes2 {
 .darktheme .controlsGrid .btn-HL-blue {
 	background-color: var(--darktheme-blue);
 }
+.darktheme .controlsGrid .btn-HL-paleblue {
+	background-color: rgb(41 54 72);
+}
 /* Light theme */
 .controlsGrid .btn-HL-yellow {
 	background-color: rgb(255, 229, 127);
@@ -3621,7 +3624,10 @@ div#roomnotes2 {
 	background-color: rgb(189, 228, 199);
 }
 .controlsGrid .btn-HL-blue {
-	background-color: rgb(170, 204, 248)
+	background-color: rgb(170, 204, 248);
+}
+.controlsGrid .btn-HL-paleblue {
+	background-color: rgb(170, 204, 248);
 }
 
 /* Hides buttons that are supposed to be hidden when &novice is added to URL */
