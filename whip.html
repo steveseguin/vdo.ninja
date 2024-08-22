@@ -375,6 +375,13 @@
 								<option value="1">🔑 E2EE On</option>
 							</select >
 						</div>
+						<div class="inputComboGrid" id="advanced2a" style="margin: 10px 0px 10px 10px;">
+							<select style="border-radius:10px;margin-right:5px;width:unset!important;" class="changeText" id="keyFrameRateFlag" title="Tries to force a minimum keyframe rate internal. This may hurt quality as the method of triggering a keyframe from the browser may cause a flicker or a few blurry frames. Without it though, viewers may not be able to load the video promptly." >
+								<option value="0" selected>🎦 Force Keyframes Interval: Off</option>
+								<option value="2000">🎦 Force Keyframes Interval: 2s</option>
+								<option value="6000">🎦 Force Keyframes Interval: 6s</option>
+							</select >
+						</div>
 					</div>	
 				</div>
 				<br />
@@ -516,6 +523,9 @@ if (localStorage.getItem('bitrateGroupFlag')!==null){
 if (localStorage.getItem('codecGroupFlag')!==null){
 	document.getElementById('codecGroupFlag').value = localStorage.getItem('codecGroupFlag');
 }
+if (localStorage.getItem('keyFrameRateFlag')!==null){
+	document.getElementById('keyFrameRateFlag').value = localStorage.getItem('keyFrameRateFlag');
+}
 if (localStorage.getItem('svcGroupFlag')!==null){
 	document.getElementById('svcGroupFlag').value = localStorage.getItem('svcGroupFlag');
 }
@@ -586,6 +596,8 @@ function gohere1(){
 		
 		localStorage.setItem('bitrateGroupFlag', document.getElementById('bitrateGroupFlag').value);
 		localStorage.setItem('codecGroupFlag', document.getElementById('codecGroupFlag').value);
+		localStorage.setItem('keyFrameRateFlag', document.getElementById('keyFrameRateFlag').value);
+		
 		localStorage.setItem('svcGroupFlag', document.getElementById('svcGroupFlag').value);
 		
 		localStorage.setItem('whipoutaudiobitrate', document.getElementById('whipoutaudiobitrate').value);
@@ -617,6 +629,10 @@ function gohere1(){
 		if (document.getElementById('codecGroupFlag').value!=="default"){
 			codec = "&whipoutcodec="+document.getElementById('codecGroupFlag').value;
 		}
+		var keyFrameRateFlag = "";
+		if (document.getElementById('keyFrameRateFlag').value!=="0"){
+			keyFrameRateFlag = "&whipoutkeyframe="+document.getElementById('keyFrameRateFlag').value;
+		}
 		var svc = "";
 		if (document.getElementById('svcGroupFlag').value!=="0"){
 			svc = "&svc="+document.getElementById('svcGroupFlag').value;
@@ -628,9 +644,9 @@ function gohere1(){
 		}
 		
 		if (document.getElementById('changeText1a').value){
-			window.location = domain + "?push&whippush=" + encodeURIComponent(document.getElementById('changeText1').value) + "&whippushtoken=" + document.getElementById('changeText1a').value + codec + bitrate+whipoutaudiobitrate+vbrcbr+autogain+stereo+denoise+svc+e2ee;
+			window.location = domain + "?push&whippush=" + encodeURIComponent(document.getElementById('changeText1').value) + "&whippushtoken=" + document.getElementById('changeText1a').value + codec + bitrate+whipoutaudiobitrate+vbrcbr+autogain+stereo+denoise+svc+e2ee+keyFrameRateFlag;
 		} else {
-			window.location = domain + "?push&whippush=" + encodeURIComponent(document.getElementById('changeText1').value) + codec + bitrate+whipoutaudiobitrate+vbrcbr+autogain+stereo+denoise+svc+e2ee;
+			window.location = domain + "?push&whippush=" + encodeURIComponent(document.getElementById('changeText1').value) + codec + bitrate+whipoutaudiobitrate+vbrcbr+autogain+stereo+denoise+svc+e2ee+keyFrameRateFlag;
 		}
 	}
 }

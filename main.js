@@ -105,6 +105,9 @@ async function main() {
 	if (urlParams.has("cleanoutput") || urlParams.has("clean") || urlParams.has("cleanish")) {
 		session.cleanOutput = true;
 	}
+	if (urlParams.has("mutestatus") || urlParams.has("showmutestate") || urlParams.has("showmuted")){
+		session.showMuteState = true;
+	}
 
 	if (urlParams.has("cleanviewer") || urlParams.has("cv")) {
 		session.cleanViewer = true;
@@ -504,6 +507,15 @@ async function main() {
 		
 		getById("startPublishingButton").classList.remove("hidden");
 	}
+	
+	if (urlParams.has("whipoutkeyframe") ){
+		session.whipOutKeyframe = parseInt(urlParams.get("whipoutkeyframe")) || 0;
+	}
+	
+	if (urlParams.has("whipoutkeyframenewviewer") ){
+		session.whipOutKeyframeOnNewViewer = true;
+	}
+	
 
 	if (urlParams.has("svc") || urlParams.has("scalabilitymode")) {
 		// Experiment with this feature here: https://webrtc.github.io/samples/src/content/extensions/svc/
@@ -896,16 +908,19 @@ async function main() {
 
 	if (urlParams.has("bitratecutoff") || urlParams.has("bitcut")) {
 		session.lowBitrateCutoff = parseInt(urlParams.get("bitratecutoff")) || parseInt(urlParams.get("bitcut")) || 300; // low bitrate cut off.
+		session.hiddenSceneViewBitrate = false;
 	}
 
 	if (urlParams.has("motionswitch") || urlParams.has("motiondetection")) {
 		// switch OBS to this scene when there is motion, and "solo view" this video in the VDO.Ninja auto-mixer, if used
 		session.motionSwitch = parseInt(urlParams.get("motionswitch")) || parseInt(urlParams.get("motiondetection")) || 15; // threshold of motion needed to trigger
+		session.hiddenSceneViewBitrate = false;
 	}
 
 	if (urlParams.has("motionrecord") || urlParams.has("recordmotion")) {
 		// switch OBS to this scene when there is motion, and "solo view" this video in the VDO.Ninja auto-mixer, if used
 		session.motionRecord = parseInt(urlParams.get("motionrecord")) || parseInt(urlParams.get("recordmotion")) || 15; // threshold of motion needed to trigger
+		session.hiddenSceneViewBitrate = false;
 	}
 
 	if (urlParams.has("pausepreview") || urlParams.has("dpp")) {
@@ -934,6 +949,7 @@ async function main() {
 
 	if (urlParams.has("lowbitratescene") || urlParams.has("cutscene")) {
 		session.lowBitrateSceneChange = urlParams.get("lowbitratescene") || urlParams.get("cutscene") || "cutscene"; // low bitrate cut off.
+		session.hiddenSceneViewBitrate = false;
 		if (session.lowBitrateCutoff === false) {
 			session.lowBitrateCutoff = 300;
 		}
@@ -1591,6 +1607,8 @@ async function main() {
 		// minutes
 		session.recordingInterval = urlParams.get("splitrecording") || 5; // 5 minutes
 		session.recordingInterval = parseInt(session.recordingInterval) || 1;
+		// For Mac: https://gist.github.com/steveseguin/8083172a20ad7c9ebcb449e22fc8fe67
+		// For Windows: https://gist.github.com/steveseguin/7ca1df1df9ec6042f27ecc8d258e3f30
 	}
 	if (urlParams.has("pcm")) {
 		session.pcm = true;
@@ -1739,6 +1757,23 @@ async function main() {
 	if (urlParams.has("datamode") || urlParams.has("dataonly")) {
 		// this disables all media in/out.
 		session.dataMode = true;
+	}
+	
+	if (urlParams.has("pseudoguest") || urlParams.has("pseudoscene")) {
+		session.videoDevice = 0;
+		session.audioDevice = 0;
+		getById("mainmenu").classList.add("hidden");
+		getById("header").classList.add("hidden");
+		getById("mainmenu").style.display = "none";
+		getById("header").style.display = "none";
+		session.showList = false;
+		session.autostart = true;
+		getById("controlButtons").classList.add("hidden");
+		getById("controlButtons").style.display = "none";
+		getById("miniTaskBar").classList.add("hidden");
+		getById("miniTaskBar").style.display = "none";
+		session.dedicatedControlBarSpace = false;
+		session.pseudoguest = true;
 	}
 
 	if (session.dataMode) {
@@ -3918,8 +3953,8 @@ async function main() {
 		session.whipOutScreenShareCodec = session.whipOutScreenShareCodec.toLowerCase();
 	}
 
-	if (urlParams.has("mccodec") || urlParams.has("meshcastcodec") || urlParams.has("whipoutcodec") || urlParams.has("woc")) {
-		session.whipOutCodec = urlParams.get("mccodec") || urlParams.get("meshcastcodec") || urlParams.get("whipoutcodec") || urlParams.get("woc") || false;
+	if (urlParams.has("mccodec") || urlParams.has("meshcastcodec") || urlParams.has("whipoutcodec") || urlParams.has("whipoutvideocodec") || urlParams.has("woc") || urlParams.has("wovc")) {
+		session.whipOutCodec = urlParams.get("mccodec") || urlParams.get("meshcastcodec") || urlParams.get("whipoutcodec")  || urlParams.get("whipoutvideocodec") || urlParams.get("woc") || urlParams.get("wovc") || false;
 		getById("whipoutcodecGroupFlag").classList.add("hidden");
 	}
 
@@ -3934,6 +3969,11 @@ async function main() {
 			session.whipOutCodec = session.whipOutCodec.split(",");
 		}
 		getById("whipoutcodecGroupFlag").classList.add("hidden");
+	}
+	
+	if (urlParams.has("whipoutaudiocodec") || urlParams.has("woac")) {
+		session.whipOutAudioCodec = urlParams.get("whipoutaudiocodec") || urlParams.get("woac") || false;
+		// getById("whipoutaudiocodecGroupFlag").classList.add("hidden"); // havne't added this in yet as an actual html element
 	}
 
 	if (urlParams.has("mcab") || urlParams.has("mcaudiobitrate") || urlParams.has("meshcastab") || urlParams.has("meshcastaudiobitrate ") || urlParams.has("whipoutaudiobitrate") || urlParams.has("woab")) {
@@ -4213,10 +4253,16 @@ async function main() {
 			getById("controlButtons").classList.remove("hidden");
 		}
 	}
+	
+	if (urlParams.has("nocontrolbar")) {
+		getById("controlButtons").classList.add("hidden");
+		getById("controlButtons").style.display = "none";
+		session.dedicatedControlBarSpace = false;
+	}
 
 	if (urlParams.has("channels")) {
 		// must be loaded before channelOffset
-		session.audioChannels = parseInt(urlParams.get("channels")); // for audio output ; not input. see: &channelcount instead.
+		session.audioChannels = parseInt(urlParams.get("channels")) || 8; // for audio output ; not input. see: &channelcount instead.
 		session.offsetChannel = 0;
 		log("max channels is 32; channels offset");
 		session.audioEffects = true;
@@ -4449,7 +4495,7 @@ async function main() {
 		}
 		session.fadein = true;
 		document.querySelector(":root").style.setProperty("--fadein-speed", 0.5);
-		setInterval(function () {
+		session.activeSpeakerInterval = setInterval(function () {
 			activeSpeaker(false);
 		}, 100);
 	} else if (urlParams.has("noisegate") || urlParams.has("gating") || urlParams.has("gate") || urlParams.has("ng")) {
@@ -4465,7 +4511,7 @@ async function main() {
 			session.quietOthers = 1;
 			session.audioEffects = true;
 			//session.audioMeterGuest = true;
-			setInterval(function () {
+			session.activeSpeakerInterval = setInterval(function () {
 				activeSpeaker(false);
 			}, 100);
 		} else if (!session.quietOthers) {
@@ -4474,7 +4520,7 @@ async function main() {
 		} else {
 			session.audioEffects = true;
 			//session.audioMeterGuest = true;
-			setInterval(function () {
+			session.activeSpeakerInterval = setInterval(function () {
 				activeSpeaker(false);
 			}, 100);
 		}
@@ -4520,6 +4566,10 @@ async function main() {
 			session.widget = decodeURI(session.widget) || false;
 			log(session.widget);
 		}
+	}
+	
+	if (urlParams.has("widgetleft")) {
+		session.widgetleft = true;
 	}
 
 	if (urlParams.has("animated") || urlParams.has("animate")) {
@@ -4690,7 +4740,7 @@ async function main() {
 		if (session.iframetarget) {
 			session.iframetarget = decodeURIComponent(session.iframetarget);
 		} else {
-			session.iframetarget = window.location.hostname;
+			session.iframetarget = (window.location.protocol === "file:") ? "*" : window.location.origin;
 		}
 	}
 
@@ -5090,6 +5140,11 @@ async function main() {
 		if (!session.whipoutSettings){
 			session.whipoutSettings = { type: "whep", url: "https://"+session.mediamtx+"/"+session.streamID+"/whep" };
 			console.log("WHIP OUT: "+session.whipOutput+", WHEP SHARE: "+session.whipoutSettings.url);
+		}
+		if (session.stereo === false){ 
+			if (!session.whipOutAudioCodec || (session.whipOutAudioCodec=="opus")){
+				session.stereo=3;
+			}
 		}
 	}
 
@@ -7404,8 +7459,9 @@ async function main() {
 				lazyVideoObserver.observe(lazyVideo);
 			});
 		}
+		
 	});
-
+	
 	document.addEventListener("dragstart", event => {
 		var url = event.target.href || event.target.value;
 		if (!url || !url.startsWith("https://")) return;

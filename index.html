@@ -40,7 +40,7 @@
 		
 		<link rel="stylesheet" href="./css/variables.css" />
 		<!-- If a user is using an old custom main.css, their custom variables should override the defaults variables this way. i think. -->
-		<link rel="stylesheet" href="./css/main.css?ver=389" />
+		<link rel="stylesheet" href="./css/main.css?ver=393" />
 		<link rel="stylesheet" href="./css/icons.css?ver=1" />
 		<link rel="stylesheet" href="./css/animations.css" />
 		<script type="text/javascript" crossorigin="anonymous" src="./thirdparty/adapter.js"></script>
@@ -87,9 +87,9 @@
 			<link itemprop="url" href="./media/vdoNinja_logo_full.png" />
 		</span>
 		
-		<script type="text/javascript" crossorigin="anonymous"  src="./thirdparty/CodecsHandler.js?ver=16"></script>
+		<script type="text/javascript" crossorigin="anonymous"  src="./thirdparty/CodecsHandler.js?ver=18"></script>
 		<script type="text/javascript" crossorigin="anonymous" src="./thirdparty/aes.js"></script>
-		<script type="text/javascript" crossorigin="anonymous" src="./webrtc.js?ver=808"></script>
+		<script type="text/javascript" crossorigin="anonymous" src="./webrtc.js?ver=813"></script>
 		<input id="zoomSlider" type="range" style="display: none;" />
 		<span id="electronDragZone" style="pointer-events: none; z-index:-10; position:absolute;top:0;left:0;width:100%;height:2%;-webkit-app-region: drag;min-height:20px;"></span>
 		<div id="header">
@@ -142,20 +142,30 @@
 			<div id="head7" class="hidden" data-translate="director-muted-you">The director has muted you.</div>
 			<div id="head8" class="hidden" data-translate="director-video-muted-you">The director has disabled your camera temporarily.</div>
 		</div>
-		 <div id="obsState" class="hidden" >ACTIVE</div>
+		<div id="obsState" class="hidden" >ACTIVE</div>
+		<div id="chatModule" class="hidden">
+			<div class="chat-header">
+				<span>Chat</span>
+				<span>
+					<a id="popOutChat" onclick="createPopoutChat();"><i class="las la-external-link-alt"></i></a>
+					<a id="closeChat" onclick="toggleChat();">x</i></a>
+				</span>
+			</div>
+			
+			<div id="chatBody" class="resizable-div">
+				<!-- Chat messages will be inserted here -->
+			</div>
+			
+			<div class="chat-input-area">
+				<input type="text" id="chatInput" placeholder="Enter chat message to send" onkeypress="EnterButtonChat(event)" />
+				<button class="chatBarInputButton" onclick="sendChatMessage()">Send</button>
+				<button onclick="toggleFileshare()"><i class="las la-file-upload"></i></button>
+			</div>
+			<div class="resizer"></div>
+		</div>
+		<div id="activeShares"></div>
 		<div id="controlButtons" class="hidden">
-            <div class="controlPositioning">
-                <div id="chatModule" class="hidden">
-                    <a target="popup" id="popOutChat" onclick="createPopoutChat();"><i class="las la-external-link-alt"></i></a>
-                    <div id="chatBody"> 
-                        <div class="inMessage" id="welcomeMsg" data-translate='welcome-to-vdo-ninja-chat'>
-                            Welcome to the chat! You can send text messages directly to connected peers from here.
-                        </div>
-                    </div>
-                    <input type="text" id="chatInput" placeholder="Enter chat message to send here" onkeypress="EnterButtonChat(event)" />
-                    <button class="chatBarInputButton" onclick="sendChatMessage()" data-translate='send-chat'>Send</button>
-					 <button onclick="toggleFileshare()" data-translate='upload-chat'><i class="las la-file-upload"></i> Upload File</button>
-                </div>
+			<div class="controlPositioning">
                 <div id="subControlButtons">
                 
 					<div id="mediafileshare" onmousedown="event.preventDefault(); event.stopPropagation();"  title="Stream a media file" aria-label="Stream a media file" alt="Stream a media file to others" onclick="getById('fileselector2').click();" tabindex="2" role="button" aria-pressed="false" onkeyup="enterPressedClick(event,this);"  class="float hidden" style="cursor: pointer;">
@@ -1031,7 +1041,7 @@
 								<span style="color:#daad09;">Welcome to VDO Ninja! We've rebranded!  Nothing else is changing and we're staying 100% free.</span>
 							</h4>
 							<br />
-							🌱 Site last updated on July 24th. You can also still access the previous version, which <a href="https://vdo.ninja/v24/">is hosted here</a>. Development <a target="_blank" title="Open a page with recent VDO.Ninja development and feature updates" href="https://updates.vdo.ninja/">updates are here.</a>
+							🌱 Site last updated on August 20th. You can also still access the previous version, which <a href="https://vdo.ninja/v24/">is hosted here</a>. Development <a target="_blank" title="Open a page with recent VDO.Ninja development and feature updates" href="https://updates.vdo.ninja/">updates are here.</a>
 							<br />
 							<br />
 							<h3>
@@ -1343,10 +1353,17 @@
 						<div style="display:inline-block;margin-top: 12px;   position: relative;">
 						
 						<label class="switch">
-							  <input type="checkbox" data-param="&st" onchange="updateLink(3,this, true);">
-							  <span class="slider"></span>
+							<input type="checkbox" data-param="&st" onchange="updateLink(3,this, true);">
+							<span class="slider"></span>
 							</label>
 							<span data-translate="hide-audio-only-sources">Hide audio-only sources</span>
+							<br />
+							
+							<label class="switch" title="Enable 8-channel audio output into OBS Studio, if 7.1-channel audio support is also enabled in OBS">
+						    <input type="checkbox" data-param="&channels" onchange="updateLink(3,this, true);">
+							  <span class="slider"></span>
+							</label>
+							🎛️ <span data-translate="enable-8-channel-audio">8-channel output</span>
 							<br />
 							
 							<label class="switch">
@@ -1596,6 +1613,34 @@
 							<span>S8</span>
 						</button>
 					</div>
+					
+					<!-- Row of Scenes -->
+					<div class="row eight advanced sceneButtons">
+						<button class="btn-HL-blue" data-action-type="sceneAudioChannel" data-channel="1" title="Isolate to audio channel 1" onclick="directAudioChannel(this, event);">
+							<span>C1</span>
+						</button>
+						<button class="btn-HL-blue" data-action-type="sceneAudioChannel" data-channel="2" title="Isolate to audio channel 2" onclick="directAudioChannel(this, event);">
+							<span>C2</span>
+						</button>
+						<button class="btn-HL-blue" data-action-type="sceneAudioChannel" data-channel="3" title="Isolate to audio channel 3" onclick="directAudioChannel(this, event);">
+							<span>C3</span>
+						</button>
+						<button class="btn-HL-blue" data-action-type="sceneAudioChannel" data-channel="4" title="Isolate to audio channel 4" onclick="directAudioChannel(this, event);">
+							<span>C4</span>
+						</button>
+						<button class="btn-HL-blue" data-action-type="sceneAudioChannel" data-channel="5" title="Isolate to audio channel 5" onclick="directAudioChannel(this, event);">
+							<span>C5</span>
+						</button>
+						<button class="btn-HL-blue" data-action-type="sceneAudioChannel" data-channel="6" title="Isolate to audio channel 6" onclick="directAudioChannel(this, event);">
+							<span>C6</span>
+						</button>
+						<button class="btn-HL-blue" data-action-type="sceneAudioChannel" data-channel="7" title="Isolate to audio channel 7" onclick="directAudioChannel(this, event);">
+							<span>C7</span>
+						</button>
+						<button class="btn-HL-blue" data-action-type="sceneAudioChannel" data-channel="8" title="Isolate to audio channel 8" onclick="directAudioChannel(this, event);">
+							<span>C8</span>
+						</button>
+					</div>
 
                     <button data-action-type="stats-remote" title="Request the statistics of this video in any active scene" onclick="toggleSceneStats(this);">
                         <i class="las la-info-circle"></i>
@@ -1681,31 +1726,29 @@
 					</div>
 					
 					<!-- Row of Groups -->
-					<div class="row advanced">
+					<div class="row advanced" style="justify-content: center;">
 						<button class="btn-HL-green" data-action-type="toggle-group" data-group="1" title="Add/remove from group 1" onclick="changeGroup(this);">
 							<span>Group 1</span>
 						</button>
-						<button class="btn-HL-green" data-action-type="toggle-group" data-group="2" title="Add/remove from group 2" onclick="changeGroup(this);">
+						<button class="btn-HL-green" style="flex: 0 11%;" data-action-type="toggle-group" data-group="2" title="Add/remove from group 2" onclick="changeGroup(this);">
 							<span>G2</span>
 						</button>
-						<button class="btn-HL-green" data-action-type="toggle-group" data-group="3" title="Add/remove from group 3" onclick="changeGroup(this);">
+						<button class="btn-HL-green" style="flex: 0 11%;"data-action-type="toggle-group" data-group="3" title="Add/remove from group 3" onclick="changeGroup(this);">
 							<span>G3</span>
 						</button>
-						<button class="btn-HL-green" data-action-type="toggle-group" data-group="4" title="Add/remove from group 4" onclick="changeGroup(this);">
+						<button class="btn-HL-green" style="flex: 0 11%;"data-action-type="toggle-group" data-group="4" title="Add/remove from group 4" onclick="changeGroup(this);">
 							<span>G4</span>
 						</button>
-						<button class="btn-HL-green" data-action-type="toggle-group" data-group="5" title="Add/remove from group 5" onclick="changeGroup(this);">
+						<button class="btn-HL-green" style="flex: 0 11%;"data-action-type="toggle-group" data-group="5" title="Add/remove from group 5" onclick="changeGroup(this);">
 							<span>G5</span>
 						</button>
-						<button class="btn-HL-green" data-action-type="toggle-group" data-group="6" title="Add/remove from group 6" onclick="changeGroup(this);">
+						<button class="btn-HL-green" style="flex: 0 11%;"data-action-type="toggle-group" data-group="6" title="Add/remove from group 6" onclick="changeGroup(this);">
 							<span>G6</span>
 						</button>
-						<button class="btn-HL-green" data-action-type="toggle-group" data-group="7" title="Add/remove from group 7" onclick="changeGroup(this);">
+						<button class="btn-HL-green" style="flex: 0 11%;"data-action-type="toggle-group" data-group="7" title="Add/remove from group 7" onclick="changeGroup(this);">
 							<span>G7</span>
 						</button>
-						<button class="btn-HL-green" data-action-type="toggle-group" data-group="8" title="Add/remove from group 8" onclick="changeGroup(this);">
-							<span>G8</span>
-						</button>
+
 					</div>
 					<!-- Row of Channels -->
 					<div class="row advanced">
@@ -1814,6 +1857,35 @@
 						</span>
 					</div>
 				</div>
+				
+				<!-- Row of Scenes -->
+				<div class="row eight advanced sceneButtons">
+					<button class="btn-HL-blue" data-action-type="sceneAudioChannel" data-channel="1" title="Isolate to audio channel 1" onclick="directAudioChannel(this, event, true);">
+						<span>C1</span>
+					</button>
+					<button class="btn-HL-blue" data-action-type="sceneAudioChannel" data-channel="2" title="Isolate to audio channel 2" onclick="directAudioChannel(this, event, true);">
+						<span>C2</span>
+					</button>
+					<button class="btn-HL-blue" data-action-type="sceneAudioChannel" data-channel="3" title="Isolate to audio channel 3" onclick="directAudioChannel(this, event, true);">
+						<span>C3</span>
+					</button>
+					<button class="btn-HL-blue" data-action-type="sceneAudioChannel" data-channel="4" title="Isolate to audio channel 4" onclick="directAudioChannel(this, event, true);">
+						<span>C4</span>
+					</button>
+					<button class="btn-HL-blue" data-action-type="sceneAudioChannel" data-channel="5" title="Isolate to audio channel 5" onclick="directAudioChannel(this, event, true);">
+						<span>C5</span>
+					</button>
+					<button class="btn-HL-blue" data-action-type="sceneAudioChannel" data-channel="6" title="Isolate to audio channel 6" onclick="directAudioChannel(this, event, true);">
+						<span>C6</span>
+					</button>
+					<button class="btn-HL-blue" data-action-type="sceneAudioChannel" data-channel="7" title="Isolate to audio channel 7" onclick="directAudioChannel(this, event, true);">
+						<span>C7</span>
+					</button>
+					<button class="btn-HL-blue" data-action-type="sceneAudioChannel" data-channel="8" title="Isolate to audio channel 8" onclick="directAudioChannel(this, event, true);">
+						<span>C8</span>
+					</button>
+				</div>
+				
 				<!-- Row of Groups -->
 				<div class="row six advanced">
 					<button class="btn-HL-green" data-action-type="toggle-group" data-group="1" title="Add/remove from group 1" onclick="changeGroupDirector(this);">
@@ -2247,7 +2319,7 @@
 				<span></span>
 				<h3 data-translate="change-room-settings">Change room settings</h3><br />
 				
-				<label title="Increase this at your peril. Changes the total inbound video bitrate per guest; mobile devices excluded." for="trbSettingInput" data-translate="change-room-video-quality">Change room video quality:</label>
+				<label title="⚠️ Increase this at your peril. This changes the incoming video quailty that guests in the room sees; mobile devices excluded. Set too high and the room may become unstable, leading to lost audio and disconnected guests." for="trbSettingInput" data-translate="change-room-video-quality">Change room video quality:</label>
 				<span style="margin-left: 6px;" id="trbSettingInputFeedback"></span>-kbps
 				<input id="trbSettingInput" type="range" min="0" max="4000" value="500" onchange="getById('trbSettingInputManual').value=this.value;changeTRB(this);" oninput="getById('trbSettingInputFeedback').innerHTML = this.value;" style="width:calc(100% - 60px);display:inline-block;" />
 				<input id="trbSettingInputManual" min="0" value="500" onchange="getById('trbSettingInput').value=this.value;changeTRB(this);" oninput="getById('trbSettingInputFeedback').innerHTML = this.value;" style="width:42px;display:inline-block;text-align: center;" />
@@ -2652,13 +2724,19 @@
 			// if (!window.location.search){document.body.innerHTML = "";} // uncomment this line, if you wish to try it.
 			
 			var session = WebRTC.Media; // session is a required global variable if configuring manually. Run before loading main.js but after webrtc.js.
-			session.version = "25.6";
+			session.version = "26.0";
 			session.streamID = session.generateStreamID(); // randomly generates a streamID for this session. You can set your own programmatically if needed
 			
 			session.defaultPassword = "someEncryptionKey123"; // Change this password if self-deploying for added security/privacy
 			// session.salt = location.hostname; // used only if password is not == False. You can change to "session.salt = location.hostname+location.pathname;" for greater deployment isolation
 			
 			session.stunServers = [{ urls: ["stun:stun.l.google.com:19302", "stun:stun.cloudflare.com:3478"]}]; // google + cloudflare stun servers. default
+			
+			if (window.location.hostname === 'vdo.socialstream.ninja') {
+				session.wss = "wss://wss.socialstream.ninja:443"
+			} else if (window.location.hostname === 'test.socialstream.ninja') {
+				session.wss = "wss://wss.socialstream.ninja:443"
+			}
 			
 			///////////////  ------  Custom basic TURN SETUP SECTION STARTS Here --------
 			// session.configuration = {         // uncomment to disable the default usage of the vdo.ninja turn servers.
@@ -2774,7 +2852,7 @@
 			// session.decrypted = session.decodeInvite("U2FsdGVkX1+d58DFIHoO3EQZSuX86ch4PqW2ouztnJ0="); // get a code from invite.cam
 			
 		</script>
-		<script type="text/javascript" crossorigin="anonymous" id="lib-js" src="./lib.js?ver=1199"></script>
-		<script type="text/javascript" crossorigin="anonymous" id="main-js" src="./main.js?ver=894"></script>
+		<script type="text/javascript" crossorigin="anonymous" id="lib-js" src="./lib.js?ver=1217"></script>
+		<script type="text/javascript" crossorigin="anonymous" id="main-js" src="./main.js?ver=899"></script>
 	</body>
 </html>

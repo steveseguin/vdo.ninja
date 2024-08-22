@@ -348,11 +348,23 @@ button.hint {
 	cursor:pointer;
 	text-align:right;
 	color:#B3C7F9;
-	margin:5px;
+	margin: 0 5px;
 	cursor: pointer;
 	padding:3px;
 	background-color: black;
     border-radius: 50%;
+	border: solid #B3C7F9 1px;
+}
+
+#closeChat {
+	cursor: pointer;
+	text-align: right;
+	color: #B3C7F9;
+	margin: 0 5px;
+	cursor: pointer;
+	padding: 3px 8px;
+	background-color: black;
+	border-radius: 50%;
 	border: solid #B3C7F9 1px;
 }
 
@@ -1206,6 +1218,12 @@ button.glyphicon-button.active.focus {
 	align-items: center;
 }
 
+.resizable-div {
+  border: 1px solid #ccc;
+  overflow: auto;
+  position: relative;
+}
+
 #subControlButtons {
 	display: flex;
 	position: absolute;
@@ -1714,17 +1732,6 @@ input[type=range].thinSlider {
 	position: relative;
 	display: flex;
 }
-
-.inMessage {
-	color: #000;
-	margin: 3px;
-	border-radius: 3px;
-	background: #FFF;
-	padding: 5px;
-	text-align: left;
-	margin: 10px 3px;
-	border: 1px solid black;
-}
 .actionMessage {
 	color: #000;
 	margin: 3px;
@@ -1735,30 +1742,65 @@ input[type=range].thinSlider {
 	margin: 10px 3px;
 	border: 1px solid black;
 }
+.inMessage, .outMessage {
+    margin-bottom: 10px;
+    padding: 5px;
+    border-radius: 5px;
+}
+.inMessage {
+    background-color: #e6e6e6;
+}
+
 .outMessage {
-	color: #000;
-	border-radius: 3px;
-	background: #c5d3ff;
-	padding: 5px;
-	text-align: right;
-	margin-bottom: 5px;
-	border: 1px solid black;
+    background-color: #c5d3ff;
+    text-align: right;
 }
 #chatBody {
-	z-index: 12;
-	background-color: #000A;
-	width: 100%;
-	border-radius: 5px;
-	overflow-y: scroll;
-	overflow-wrap: anywhere;
-	max-height: min(500px, 70vh);
+    flex-grow: 1;
+    overflow-y: auto;
+    padding: 10px;
+    background-color: #4d4d4d;
+    min-height: 50px;
+	border-color: #6b6767;
+	height: 300px;
 }
 
 #chatBody::-webkit-scrollbar {
 	width: 0px;
 	background: transparent; /* make scrollbar transparent */
 }
+.chat-input-area {
+    display: flex;
+    padding: 10px 10px 4px 10px;
+	background-color: #2a2a2a;
+}
+.resizer {
+    height: 5px;
+    background: #2a2a2a;
+    cursor: ns-resize;
+    position: relative;
+    overflow: hidden;
+    cursor: ns-resize;
+    user-select: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+}
 
+.resizer::before {
+    content: '';
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: 30px;
+    height: 2px;
+    background: linear-gradient(to right, #666 20%, transparent 20%, transparent 40%, #666 40%, #666 60%, transparent 60%, transparent 80%, #666 80%);
+}
+
+.resizer:hover::before {
+    background: linear-gradient(to right, #999 20%, transparent 20%, transparent 40%, #999 40%, #999 60%, transparent 60%, transparent 80%, #999 80%);
+}
 div#chatBody a {
 	color: blue;
 	text-decoration: underline;
@@ -1770,25 +1812,37 @@ div#chatBody a {
 }
 
 #chatModule {
-	display: flex;
-	flex-wrap: wrap;
-	width: 100%;
-	max-width: min(500px, 100vw);
-	z-index: 3;
-	margin-bottom: 65px;
-	gap: 0px 5px;
-	pointer-events: auto;
+    position: fixed;
+    bottom: 10px;
+    right: 10px;
+    width: 400px;
+	max-width: 100%;
+	min-width: 100px;
+    background-color: #fff;
+    border: 1px solid #4f4e4e;
+    border-radius: 5px;
+    display: flex;
+    flex-direction: column;
+    max-height: 100vh;
+    z-index: 1000;
 }
+.chat-header {
+    padding: 10px;
+    background-color: #2a2a2a;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: move;
+	color:white;
+}
+
 #chatInput {
-	color: #000;
-	background-color: #FFFE;
-	width: calc(100% - 160px);
-	padding: 1px 3px;
-	font-size: 100%;
+    flex-grow: 1;
+    margin-right: 5px;
 }
 .chatBarInputButton {
-	width: 50px;
-	margin: unset;
+    width: 50px;
+    margin: 0 5px;
 }
 #callerMenu {
 	position: absolute;
@@ -3395,6 +3449,11 @@ div#roomnotes2 {
 	flex: 1 13%;
 }
 
+.controlsGrid .row.eight > * {
+	flex: 1 10%;
+}
+
+
 .controlsGrid button {
 	display: flex;
 	align-items: center;
@@ -3580,13 +3639,26 @@ div#roomnotes2 {
 	margin: 5px;
 	font-size: 125%;
 }
-
 #widget {
 	position: absolute;
 	width: 25%;
 	height: 100%;
 	right: 0;
 	top: 0;
+}
+#widget.left{
+	right: unset!important;
+	left: 0!important;
+}
+
+#directorlayout.widget {
+	position: absolute;
+	width: 75%;
+	left: 0;
+}
+#directorlayout.widget.left {
+	left: unset!important;
+	right: 0!important;
 }
 #localMuteElement{
 	top: 1vh;
@@ -3681,13 +3753,7 @@ div#roomnotes2 {
 	background-color:#0007;
 	width:4vh;
 }
-#widget {
-	position: absolute;
-	width: 25%;
-	height: 100%;
-	right: 0;
-	top: 0;
-}
+
 
 .pull-right {
 	float: right;
@@ -4705,7 +4771,7 @@ body.darktheme .outMessage{
 	background-color: #7f89a7;
 }
 body.darktheme .inMessage {
-	background-color: #b1b1b1;
+	background-color: #7e7d7d;
 }
 body.darktheme .actionMessage {
 	background-color: #b1b1b1;

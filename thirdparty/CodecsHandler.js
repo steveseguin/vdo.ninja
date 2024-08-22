@@ -401,116 +401,71 @@ var CodecsHandler = (function() {
 		
         return sdp;
     }
+	
+	function processOpus(sdpLines, opusPayload, opusIndex, codecType, params, debug){
+		var opusFmtpLineIndex = findLine(sdpLines, 'a=fmtp:' + opusPayload.toString());
+		if (opusFmtpLineIndex === null) {
+			return sdpLines;
+		}
 
-    function setOpusAttributes(sdp, params, debug=false) { 
-        params = params || {};
-
-        var sdpLines = sdp.split('\r\n');
-
-        var opusIndex = findLine(sdpLines, 'a=rtpmap', 'opus/48000');
-        var opusPayload;
-        if (opusIndex) {
-            opusPayload = getCodecPayloadType(sdpLines[opusIndex]);
-        }
-
-        if (!opusPayload) {
-            return sdp;
-        }
-
-        var opusFmtpLineIndex = findLine(sdpLines, 'a=fmtp:' + opusPayload.toString());
-        if (opusFmtpLineIndex === null) {
-            return sdp;
-        }
-
-        var appendOpusNext = '';
+		var appendOpusNext = '';
 		
 		// Please see https://tools.ietf.org/html/rfc7587 for more details on OPUS settings
 		
-	
 		if (typeof params.minptime != 'undefined') {  // max packet size in milliseconds
 			if (params.minptime != false) {
 				appendOpusNext += ';minptime:' + params.minptime; // 3, 5, 10, 20, 40, 60 and the default is 120. (20 is minimum recommended for webrtc)
 			}
-        }
+		}
 		
 		if (typeof params.maxptime != 'undefined') {  // max packet size in milliseconds
 			if (params.maxptime != false) {
 				appendOpusNext += ';maxptime:' + params.maxptime; // 3, 5, 10, 20, 40, 60 and the default is 120. (20 is minimum recommended for webrtc)
 			}
-        }
+		}
 		
 		if (typeof params.ptime != 'undefined') {  // packet size; webrtc doesn't support less than 10 or 20 I think.
 			if (params.ptime != false) {
 				appendOpusNext += ';ptime:' + params.ptime; 
 			}
-        }
-		
-		if (typeof params.stereo != 'undefined'){
-			if (params.stereo==0){  // &stereo=0
-				sdpLines[opusFmtpLineIndex] = sdpLines[opusFmtpLineIndex].replace(";stereo=1", "");
-				sdpLines[opusFmtpLineIndex] = sdpLines[opusFmtpLineIndex].replace(";sprop-stereo=1", "");
-				sdpLines[opusFmtpLineIndex] = sdpLines[opusFmtpLineIndex].replace(";stereo=0", "");
-				sdpLines[opusFmtpLineIndex] = sdpLines[opusFmtpLineIndex].replace(";sprop-stereo=0", "");
-				
-				if (sdpLines[opusFmtpLineIndex].split(";stereo=0").length==1){
-					appendOpusNext += ';stereo=0';  // defaults to 0
-				}
-				if (sdpLines[opusFmtpLineIndex].split(";sprop-stereo=0").length==1){
-					appendOpusNext += ';sprop-stereo=0';  // defaults to 0
-				}
-			} else if (params.stereo==1){ // &stereo=1
-				sdpLines[opusFmtpLineIndex] = sdpLines[opusFmtpLineIndex].replace(";stereo=1", "");
-				sdpLines[opusFmtpLineIndex] = sdpLines[opusFmtpLineIndex].replace(";sprop-stereo=1", "");
-				sdpLines[opusFmtpLineIndex] = sdpLines[opusFmtpLineIndex].replace(";stereo=0", "");
-				sdpLines[opusFmtpLineIndex] = sdpLines[opusFmtpLineIndex].replace(";sprop-stereo=0", "");
-				
-				if (sdpLines[opusFmtpLineIndex].split(";stereo=1").length==1){
-					appendOpusNext += ';stereo=1'; // defaults to 0
-				}
-				if (sdpLines[opusFmtpLineIndex].split(";sprop-stereo=1").length==1){
-					appendOpusNext += ';sprop-stereo=1'; // defaults to 0
-				}
-			} else if (params.stereo==2){ // &stereo=4
-				sdpLines[opusFmtpLineIndex] = sdpLines[opusFmtpLineIndex].replace(";stereo=1", "");
-				sdpLines[opusFmtpLineIndex] = sdpLines[opusFmtpLineIndex].replace(";sprop-stereo=1", "");
-				sdpLines[opusFmtpLineIndex] = sdpLines[opusFmtpLineIndex].replace(";stereo=0", "");
-				sdpLines[opusFmtpLineIndex] = sdpLines[opusFmtpLineIndex].replace(";sprop-stereo=0", "");
-				
-				sdpLines[opusIndex] = sdpLines[opusIndex].replace("opus/48000/2", "multiopus/48000/6");
-				if (sdpLines[opusFmtpLineIndex].split(";channel_mapping=0,4,1,2,3,5;num_streams=4;coupled_streams=2").length==1){
-					appendOpusNext += ';channel_mapping=0,4,1,2,3,5;num_streams=4;coupled_streams=2';  // Multi-channel 5.1 audio
-				}
-			} else if (params.stereo==3){ // &stereo=8
-				sdpLines[opusFmtpLineIndex] = sdpLines[opusFmtpLineIndex].replace(";stereo=1", "");
-				sdpLines[opusFmtpLineIndex] = sdpLines[opusFmtpLineIndex].replace(";sprop-stereo=1", "");
-				sdpLines[opusFmtpLineIndex] = sdpLines[opusFmtpLineIndex].replace(";stereo=0", "");
-				sdpLines[opusFmtpLineIndex] = sdpLines[opusFmtpLineIndex].replace(";sprop-stereo=0", "");
-			
-				sdpLines[opusIndex] = sdpLines[opusIndex].replace("opus/48000/2", "multiopus/48000/8");
-				if (sdpLines[opusFmtpLineIndex].split(";channel_mapping=0,6,1,2,3,4,5,7;num_streams=5;coupled_streams=3").length==1){
-					appendOpusNext += ';channel_mapping=0,6,1,2,3,4,5,7;num_streams=5;coupled_streams=3';  // Multi-channel 5.1 audio
-				}
-			}
-			
 		}
 		
-        if (typeof params.maxaveragebitrate != 'undefined') {
+		if (typeof params.stereo != 'undefined'){
+			// Remove existing stereo settings
+			sdpLines[opusFmtpLineIndex] = sdpLines[opusFmtpLineIndex]
+				.replace(/;stereo=[01]/g, '')
+				.replace(/;sprop-stereo=[01]/g, '');
+
+			if (params.stereo == 1){
+				appendOpusNext += ';stereo=1;sprop-stereo=1';
+			} else if (params.stereo == 0){
+				appendOpusNext += ';stereo=0;sprop-stereo=0';
+			} else if (params.stereo == 2 && codecType === 'OPUS'){
+				sdpLines[opusIndex] = sdpLines[opusIndex].replace("opus/48000/2", "multiopus/48000/6");
+				appendOpusNext += ';channel_mapping=0,4,1,2,3,5;num_streams=4;coupled_streams=2';
+			} else if (params.stereo == 3 && codecType === 'OPUS'){
+				sdpLines[opusIndex] = sdpLines[opusIndex].replace("opus/48000/2", "multiopus/48000/8");
+				appendOpusNext += ';channel_mapping=0,6,1,2,3,4,5,7;num_streams=5;coupled_streams=4';
+			}
+		}
+		
+		if (typeof params.maxaveragebitrate != 'undefined') {
 			if (sdpLines[opusFmtpLineIndex].split("maxaveragebitrate=").length==1){
 				appendOpusNext += ';maxaveragebitrate=' + params.maxaveragebitrate; // default 32000? (kbps)
 			}
-        }
+		}
 
-        if (typeof params.maxplaybackrate != 'undefined') {
+		if (typeof params.maxplaybackrate != 'undefined') {
 			if (sdpLines[opusFmtpLineIndex].split("maxplaybackrate=").length==1){
 				appendOpusNext += ';maxplaybackrate=' + params.maxplaybackrate; // Default should be 48000 (hz) , 8000 to 48000 are valid options
 			}
-        }
+		}
 
-        if (typeof params.cbr != 'undefined') {
+		if (typeof params.cbr != 'undefined') {
 			if (sdpLines[opusFmtpLineIndex].split("cbr=").length==1){
 				appendOpusNext += ';cbr=' + params.cbr; // default is 0 (vbr)
 			}
-        }
+		}
 		
 		if (typeof params.dtx != 'undefined') {
 			if (params.dtx){
@@ -518,25 +473,58 @@ var CodecsHandler = (function() {
 					appendOpusNext += ';usedtx=1';
 				}
 			}
-        }
+		}
 
-        if (typeof params.useinbandfec != 'undefined') {  // useful for handling packet loss
+		if (typeof params.useinbandfec != 'undefined') {  // useful for handling packet loss
 			if (sdpLines[opusFmtpLineIndex].split("useinbandfec=").length==1){
 				appendOpusNext += ';useinbandfec=' + params.useinbandfec;  // Defaults to 0
 			} else {
 				sdpLines[opusFmtpLineIndex] = sdpLines[opusFmtpLineIndex].replace("useinbandfec="+(params.useinbandfec ? 0 : 1), "useinbandfec="+params.useinbandfec);
 			}
-        }
+		}
 
-        sdpLines[opusFmtpLineIndex] = sdpLines[opusFmtpLineIndex].concat(appendOpusNext);
-		
+		if (appendOpusNext) {
+			sdpLines[opusFmtpLineIndex] = sdpLines[opusFmtpLineIndex] + appendOpusNext;
+		}
+
 		if (debug){
-			console.log("Adding to SDP (audio): "+appendOpusNext+" --> Result: "+sdpLines[opusFmtpLineIndex]);
+			console.log("Adding to SDP (" + codecType + "): "+appendOpusNext+" --> Result: "+sdpLines[opusFmtpLineIndex]);
+		}
+		return sdpLines;
+	}
+
+	function setOpusAttributes(sdp, params, debug=false) { 
+		params = params || {};
+
+		var sdpLines = sdp.split('\r\n');
+
+		var opusIndex = findLine(sdpLines, 'a=rtpmap', 'opus/48000');
+		var opusPayload;
+		if (opusIndex) {
+			opusPayload = getCodecPayloadType(sdpLines[opusIndex]);
 		}
 		
-        sdp = sdpLines.join('\r\n');
-        return sdp;
-    }
+		var redIndex = findLine(sdpLines, 'a=rtpmap', 'red/48000');
+		var redPayload;
+		if (redIndex) {
+			redPayload = getCodecPayloadType(sdpLines[redIndex]);
+		}
+
+		if (!opusPayload && !redPayload) {
+			return sdp;
+		}
+		
+		if (opusPayload){
+			if (debug) console.log("Processing OPUS codec");
+			sdpLines = processOpus(sdpLines, opusPayload, opusIndex, "OPUS", params, debug);
+		}
+		if (redPayload){
+			if (debug) console.log("Processing RED codec");
+			sdpLines = processOpus(sdpLines, redPayload, redIndex, "RED", params, debug);
+		}
+		
+		return sdpLines.join('\r\n');
+	}
 	
 	
 	function getOpusBitrate(sdp) { 

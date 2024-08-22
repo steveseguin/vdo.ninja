@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Media Recorder and Playback Tool | Record and Test Your Audio and Video</title>
+    <meta name="description" content="Use our Media Recorder and Playback Tool to easily record video and audio snippets without ads, sign-ins, or payments. Perfect for testing audio loudness and synchronization.">
+    <meta name="keywords" content="media recorder, video recording, audio recording, test audio, test video, audio loudness, audio synchronization, no ads, no sign-in, no payment">
+    <meta name="author" content="VDO.Ninja">
+    <link rel="canonical" href="https://vdo.ninja/recorder">
+	
+	<link rel="shortcut icon" href="data:image/x-icon;," type="image/x-icon" />
+	<link id="favicon1" rel="icon" type="image/png" sizes="32x32" href="../media/favicon-32x32.png" />
+	<link id="favicon2" rel="icon" type="image/png" sizes="16x16" href="../media/favicon-16x16.png" />
+	<link id="favicon3" rel="icon" href="../media/favicon.ico" />
+	<link id="thumbnailUrl" itemprop="thumbnailUrl" href="../media/vdoNinja_logo_full.png" />
+		
+    <style>
+        body {
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			min-height: 100vh;
+			margin: 0;
+			background-color: #2b2b2b;
+			font-family: 'Helvetica Neue', Arial, sans-serif;
+			color: #e0e0e0;
+		}
+		#container {
+			text-align: center;
+			width: 90%;
+			max-width: 800px;
+			padding: 20px;
+			background: #3a3a3a;
+			border-radius: 10px;
+			box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+		}
+		h1 {
+			font-size: 24px;
+			margin-bottom: 15px;
+			color: #ffffff;
+		}
+		#video {
+			display: block;
+			margin: 10px auto;
+			max-width: 100%;
+			max-height: 50vh;
+			border-radius: 10px;
+			box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+		}
+		#audio-meter {
+			width: 100%;
+			height: 20px;
+			background: #444;
+			margin-top: 10px;
+			border-radius: 10px;
+			overflow: hidden;
+			box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.3);
+		}
+		#meter-fill {
+			width: 0%;
+			height: 100%;
+			background: linear-gradient(90deg, #4caf50, #76ff0322);
+			border-radius: 10px;
+		}
+		#controls {
+			margin-top: 15px;
+			display: flex;
+			flex-wrap: wrap;
+			justify-content: center;
+		}
+		select, button {
+			margin: 5px;
+			padding: 8px 15px;
+			font-size: 14px;
+			border: none;
+			border-radius: 5px;
+			cursor: pointer;
+			background-color: #007bff;
+			color: white;
+			box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+			transition: background-color 0.2s;
+		}
+		button:hover {
+			background-color: #0056b3;
+		}
+		select {
+			background-color: #555;
+			color: #e0e0e0;
+			padding: 8px;
+			border: 1px solid #666;
+		}
+		.recording-indicator {
+			color: red;
+			animation: pulse 1s infinite;
+			margin-top: 10px;
+		}
+		@keyframes pulse {
+			0% { opacity: 1; }
+			50% { opacity: 0.5; }
+			100% { opacity: 1; }
+		}
+		.hidden {
+			display: none;
+		}
+
+		@media (max-width: 600px) {
+			#container {
+				padding: 10px;
+			}
+			h1 {
+				font-size: 20px;
+			}
+			select, button {
+				padding: 6px 12px;
+				font-size: 12px;
+			}
+		}
+
+		@media (max-height: 500px) {
+			#container {
+				height: auto;
+				overflow-y: auto;
+			}
+			#video {
+				max-height: 40vh;
+			}
+		}
+    </style>
+</head>
+<body>
+    <div id="container">
+        <h1>Media Recorder and Playback Tool</h1>
+        <select id="videoSource"></select>
+        <select id="audioSource"></select>
+        <video id="video" autoplay muted></video>
+        <div id="audio-meter">
+            <div id="meter-fill"></div>
+        </div>
+        <div id="controls">
+            <button id="record" disabled>Record</button>
+            <button id="play" class="hidden">Play</button>
+            <button id="download" class="hidden">Download</button>
+            <div id="recording-indicator" class="hidden recording-indicator">Recording...</div>
+        </div>
+    </div>
+    <script>
+        const videoElement = document.getElementById('video');
+        const recordButton = document.getElementById('record');
+        const playButton = document.getElementById('play');
+        const downloadButton = document.getElementById('download');
+        const meterFill = document.getElementById('meter-fill');
+        const videoSelect = document.getElementById('videoSource');
+        const audioSelect = document.getElementById('audioSource');
+        const recordingIndicator = document.getElementById('recording-indicator');
+
+        let mediaStream = null;
+        let mediaRecorder = null;
+        let recordedChunks = [];
+        let audioContext = null;
+        let meter = null;
+        let sourceNode = null;
+        let recordedBlob = null;
+
+		(function (w) {
+				w.URLSearchParams =
+					w.URLSearchParams ||
+					function (searchString) {
+						var self = this;
+						self.searchString = searchString;
+						self.get = function (name) {
+							var results = new RegExp("[\?&]" + name + "=([^&#]*)").exec(self.searchString);
+							if (results == null) {
+								return null;
+							} else {
+								return decodeURI(results[1]) || 0;
+							}
+						};
+					};
+			})(window);
+			
+		var urlParams = new URLSearchParams(window.location.search);
+		
+		var denoise = false;
+		if (urlParams.has("denoise")){
+			denoise = true;
+			console.log("De-noising enabled");
+		}
+		
+		var autogain = true;
+		if (urlParams.has("noautogain")){
+			autogain = false;
+			console.log("Auto-gain disabled");
+		}
+
+        async function init() {
+            try {
+                await getDevices();
+                await startMedia();
+            } catch (error) {
+                console.error('Error initializing media:', error);
+            }
+        }
+
+        async function getDevices() {
+            try {
+                const devices = await navigator.mediaDevices.enumerateDevices();
+                const videoDevices = devices.filter(device => device.kind === 'videoinput');
+                const audioDevices = devices.filter(device => device.kind === 'audioinput');
+
+                videoSelect.innerHTML = videoDevices.map(device => `<option value="${device.deviceId}">${device.label}</option>`).join('');
+                audioSelect.innerHTML = audioDevices.map(device => `<option value="${device.deviceId}">${device.label}</option>`).join('');
+            } catch (error) {
+                console.error('Error getting devices:', error);
+            }
+        }
+
+        async function startMedia() {
+            try {
+                if (mediaStream) {
+                    mediaStream.getTracks().forEach(track => track.stop());
+                }
+
+                const videoSource = videoSelect.value;
+                const audioSource = audioSelect.value;
+
+                mediaStream = await navigator.mediaDevices.getUserMedia({
+                    video: { deviceId: videoSource ? { exact: videoSource } : undefined },
+                    audio: {
+                        deviceId: audioSource ? { exact: audioSource } : undefined,
+                        echoCancellation: false,
+                        noiseSuppression: denoise,
+                        autoGainControl: autogain
+                    }
+                });
+                videoElement.srcObject = mediaStream;
+
+                if (audioContext) {
+                    audioContext.close();
+                }
+                audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                await audioContext.audioWorklet.addModule('testrecord-processor.js');
+
+                const audioTracks = mediaStream.getAudioTracks();
+                if (audioTracks.length > 0) {
+                    sourceNode = audioContext.createMediaStreamSource(mediaStream);
+                    meter = new AudioWorkletNode(audioContext, 'meter');
+                    meter.port.onmessage = (event) => {
+                        const volume = event.data;
+                        meterFill.style.width = `${Math.min(volume * 100, 100)}%`;
+                    };
+                    sourceNode.connect(meter).connect(audioContext.destination);
+                }
+
+                recordButton.removeAttribute("disabled");
+            } catch (error) {
+                console.error('Error starting media:', error);
+            }
+        }
+
+        recordButton.addEventListener('click', async () => {
+            try {
+                await audioContext.resume();
+                if (mediaRecorder && mediaRecorder.state === 'recording') {
+                    mediaRecorder.stop();
+                    recordButton.textContent = 'Record';
+                    recordingIndicator.classList.add('hidden');
+                    videoSelect.removeAttribute("disabled");
+                    audioSelect.removeAttribute("disabled");
+                } else {
+                    // Show live camera feed again
+                    videoElement.srcObject = mediaStream;
+                    videoElement.controls = false;
+                    videoElement.muted = true;
+                    playButton.classList.add('hidden');
+                    downloadButton.classList.add('hidden');
+
+                    recordedChunks = [];
+                    mediaRecorder = new MediaRecorder(mediaStream);
+                    mediaRecorder.ondataavailable = event => {
+                        if (event.data.size > 0) {
+                            recordedChunks.push(event.data);
+                        }
+                    };
+                    mediaRecorder.onstop = () => {
+                        recordedBlob = new Blob(recordedChunks, { type: 'video/webm' });
+                        videoElement.srcObject = null;
+                        videoElement.src = URL.createObjectURL(recordedBlob);
+                        videoElement.controls = true;
+                        videoElement.loop = true;
+                        videoElement.muted = false; // Unmute during playback
+                        playButton.classList.remove('hidden');
+                        downloadButton.classList.remove('hidden');
+                        playButton.textContent = 'Play';
+                        videoElement.pause(); // Ensure the video does not autoplay
+                    };
+                    mediaRecorder.start();
+                    recordButton.textContent = 'Stop';
+                    recordingIndicator.classList.remove('hidden');
+                    videoSelect.setAttribute("disabled", "true");
+                    audioSelect.setAttribute("disabled", "true");
+                }
+            } catch (error) {
+                console.error('Error during recording:', error);
+            }
+        });
+
+        function updatePlayButtonText() {
+			playButton.textContent = videoElement.paused ? 'Play' : 'Stop';
+		}
+
+		videoElement.addEventListener('play', updatePlayButtonText);
+		videoElement.addEventListener('pause', updatePlayButtonText);
+
+		playButton.addEventListener('click', () => {
+			if (videoElement.paused) {
+				videoElement.play();
+			} else {
+				videoElement.pause();
+			}
+			updatePlayButtonText();
+		});
+
+        downloadButton.addEventListener('click', () => {
+            const url = URL.createObjectURL(recordedBlob);
+            const a = document.createElement('a');
+            a.style.display = 'none';
+            a.href = url;
+            a.download = 'recording.webm';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        });
+
+        videoSelect.onchange = startMedia;
+        audioSelect.onchange = startMedia;
+
+        init();
+    </script>
+</body>
+</html>

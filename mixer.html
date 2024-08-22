@@ -1339,6 +1339,10 @@
 		roomname = urlParams.get("room") || urlParams.get("r") ||urlParams.get("dir") || urlParams.get("director");
 		roomname = sanitizeRoomName(roomname);
 	}
+	if (urlParams.has("updateonslotchange")){
+		updateOnSlotChange = true;
+	}
+	
 	var savedLastRoom = getStorage("savedRoom");
 	
 	if (savedLastRoom){

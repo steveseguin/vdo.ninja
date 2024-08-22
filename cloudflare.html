@@ -124,22 +124,19 @@
 			<h2>
 				What you can do with Cloudflare + VDO.Ninja?
 			</h2>
-			<h3>Restream VDO.Ninja as an RTMP Output</h3>
-			<p>Live Video Inputs (Cloudflare feature) can be set up to forward any input to another input. This can be a RTMP(S) service such as YouTube, Twitch or Facebook Live.</p>
-			<p>In theory you could publish from VDO.Ninja WHIP output to Cloudstream, and then to your RTMP destinations, like Youtube.</p>
-			<p></p>
 			<h3>Meshcast-alternative</h3>
 			<p>Instead of using Meshcast to broadcast video from director to guest, or guest to scene, you can use Cloudflare instead.</p>
 			<p>Meshcast, or any compatible WHIP/WHEP service, can help reduce CPU and network load of guests by offloading distribution to a server, compared to using the peer-to-peer default of VDO.Ninja
-			<h3>Automatic isolated guest recording</h3>
-			<p>Cloudflare will automatically record incoming videos, allowing you (in theory) to have a backup of each guest in a room.</p>
+			<p>VDO.Ninja has built-in support for Cloudflare's WHIP/WHEP, so setup and use is relatively easy.</p>
+			<h3>Isolated guest recording remotely via WHEP</h3>
+			<p>You can record the streams of each guest via WHEP remotely, without transcoding and without additional load on the guests.</p>
 			<p>This offers a redundant backup for your recordings, but also makes it easier to do higher quality VODs edits after the live ends.</p>
-			<h3>SRT, HLS, DASH, MP4, WHIP/WHEP options</h3>
-			<p>Lots input and output options, although if you're here, you're probably interested in the WHIP/WHEP mainly.</p>
-			<p>VDO.Ninja is compatible with WHEP and WHIP!</p>
-			<h3>Very competitive pricing</h3>
-			<p>There's a $5 entry tier, which is more than enough for testing.</p>
-			<p>Or pay $1 per 1000 minutes of streaming.</p>
+			<p>Raspberry.Ninja offers WHEP recording, via GStreamer for example, but FFMpeg builds may also support direct WHEP recording</p>
+			<h3>Pricing</h3>
+			<p>Cloudflare has decent pricing, however it's a bit obsecure at times what the limits actually are.</p>
+			<h3>MediaMTX</h3>
+			<p>If you prefer rolling your own SFU service, VDO.Ninja supports MediaMTX. (open-source!)</p>
+			<p>Just add <b>&mediamtx=yourdomain.com</b> to your VDO.Ninja publishing URLs to have it use your own MediaMTX server.
 		</div>
 	</div>
 	<div class='secondary'>
