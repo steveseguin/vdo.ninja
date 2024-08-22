@@ -1,6 +1,6 @@
 # Options to record streams
 
-There are several ways to record, with more ways coming. I'll list some of the ways here, although they may not be exactly what you had in mind.
+There are several ways to record, with more ways coming. I'll list some of the ways here, although they may not be exactly what you had in mind. Regardless of which method you prefer, having a backup recording going is always advisable.
 
 ### Local / Remote Recording in VDO.Ninja
 
@@ -16,11 +16,17 @@ Another issue is the format saved is WebM, which sometimes will need post-proces
 
 That said, this is an easy option and available for free within VDO.Ninja.
 
+Given thesmall chance the browser will fail with recording, you can use features like `&splitrecording` to automatically segment the video as its being recorded, saving perhaps 5-minute portions of the video at a time. You will need to concatenate the video chunks together however afterwards, but helps reduce the likelihood of the entire recording being lost due to a system crash.
+
 ### Using OBS to record; or multiple OBS
 
 You can open multiple OBS Studios. Each OBS can record a full-window video if needed. This is useful if doing an interview with someone, and you intend to post process edit it.
 
 OBS has advanced hardware accelerated encoding options, and so this is good option if wanting to have a few high-resolution recordings taking place, as you can offload the encoding to the GPU if available.
+
+If adding `&channel=8` to your view/scene link in OBS, and enabling 7.1-channel audio in OBS, you can have a specific guest be recorded to a specific audio channel in your OBS recording. This is a bit finicky, given how 7.1-channel audio is hard to downmix into a proper stereo output, but for recording a podcast it might be a great option still to help in post-production ease. As of VDO.Ninja v26, the director has options to control these channels dynamically, under a guest's scene-settings menu.
+
+<figure><img src="../.gitbook/assets/image (245).png" alt=""><figcaption><p>Multiple channels available for recording; one per guest, for example.</p></figcaption></figure>
 
 ### OBS Source Record plugin
 
@@ -43,25 +49,17 @@ There is no server-side support for chunked mode at the moment, but I will conti
 
 ### Recording via WHIP/WHEP service
 
-On the upcoming version of [VDO.Ninja](https://vdo.ninja/), you can use a WHIP/WHEP services to relay video via a server. In this case, the server itself can make a copy of the stream; the same stream everyone else in the room will see. There's also [SVC scalability support](../advanced-settings/whip-parameters/and-svc.md), so if your server supports that, you can push high-bitrates. ([https://vdo.ninja/alpha/whip](https://vdo.ninja/alpha/whip) for some common tooling)
+You can use a WHIP/WHEP services to relay video via a server. In this case, the server itself can make a copy of the stream; the same stream everyone else in the room will see. There's also [SVC scalability support](../advanced-settings/whip-parameters/and-svc.md), so if your server supports that, you can push high-bitrates. ([https://vdo.ninja/alpha/whip](https://vdo.ninja/alpha/whip) for some common tooling)
 
-To demo this concept, you can try out using Cloudflare's Stream service, as it has a free tier and I've done the heavily lifting to make it easy to use. Instructions and tool to setup Cloudflare with VDO.Ninja are here: [vdo.ninja/alpha/cloudflare](https://vdo.ninja/alpha/cloudflare). Cloudflare should technically be saving each stream to disk automatically, but I haven't actually tried downloading their videos recordings to see if they work well.
+You could in theory record to Twitch or paid WebRTC service via their WHIP ingest, but if you deploy your own SFU server, such as MediaMTX, you can configure it to record via WHIP as well. There's even a dedicated option for configuring MediaMTX with VDO.NInja: `&mediamtx` (v26 of VDO.Ninja)
 
-There are other premium providers other than Cloudflare, and specialized support for them and open-source projects will be added in time.
+### Recording to Google Drive / Dropbox
 
-### Recording via self-hosted SFU server
-
-If running on Linux, you can do the same concept as about with your own WHIP/WHEP/SFU service. It's a bit advanced, but you can deploy such a service and [VDO.Ninja](https://vdo.ninja/)'s (+v24) will be able to use it.
-
-So, instead of direct p2p connections for video/audio streams between peers, streams are broadcasted via the hosted server. This is essentially like deploying your own Meshcast service, which [VDO.Ninja](https://vdo.ninja/) offers, but one that you control. In this case, you'd configure your service to record to disk, which is something Meshcast does not do or offer.
-
-While I'm happy to support users from the [VDO.Ninja](https://vdo.ninja/) side of this all, I don't have the time to offer support to users wanting to deploy own WHIP/WHEP servers. There are many such WHIP/WHEP/SFU open source projects available, although they are perhaps targeted towards more technical users.
-
-### Recording to Dropbox / Cloud
-
-I have been working when I can on a way to auto-sync the local/remote recordings to Dropbox and other cloud providers. The code is there, but it still is a bit buggy and the user interface is lacking. This will record a local copy to disk, but automatically stream that local recording to the cloud as well; before or during the stream.
+I have been working when I can on a way to auto-sync the local/remote recordings to Google Drive, Dropbox and other cloud providers. The code is there, but it still is a bit buggy and the user interface is lacking. This will record a local copy to disk, but automatically stream that local recording to the cloud as well; before or during the stream.
 
 If there is of great interest to users, please let me know on Discord in the Feature Request channel how you'd like it to work, which provider, etc. I'm trying to figure out where best to invest my time on that feature, and with so little time, unless there's active interest, I let some tasks idle.
+
+\*update: Google Drive recording has a dedicated button in the Director's control room, which will let the director have remote guests upload their video to their Google Drive account automatically.
 
 ### Headless recording
 
@@ -77,7 +75,17 @@ You can very easily configure the FFmpeg script to save to MP4/MKV format though
 
 While it's mainly used for publishing video to [VDO.Ninja](https://vdo.ninja/) using the hardware encoder in small embedded computers, like the Raspberry Pi, it can also record video streams to disk, as perfect copies. No transcoding is done.
 
-If you are enterprising, you can have [Raspberry.Ninja](https://raspberry.ninja/) record the incoming guest streams to disk without transcoding, and then transcode them, before window-sharing them or publishing them to NDI. Doing this would require some Python coding, not too much, and all the code needed to achieve it is scattered around my Github. Still, this wouldn't be a task for novice developers.
+If you are enterprising, you can have [Raspberry.Ninja](https://raspberry.ninja/) record the incoming guest streams to disk without transcoding, and then transcode them, before window-sharing them or publishing them to NDI. NDI output support is available with Raspberry.Ninja, however it does require transcoding currently.&#x20;
+
+### Recording an entire window/scene to disk as a mixed output
+
+If you want to record more than a single guest, but rather an entire scene, using URL parameters you can achieve this. We are essentially doing a screen share of the output window, and recording that.\
+\
+**Record entire scene to disk:** [https://vdo.ninja/?scene=0\&layout\&remote\&clean\&chroma=000\&ssar=landscape\&nosettings\&prefercurrenttab\&selfbrowsersurface=include\&displaysurface=browser\&np\&nopush\&publish\&record\&screenshareaspectratio=1.7777777777777777\&locked=1.7777777777777777\&room=ROOMNAME](https://vdo.ninja/?scene=0\&layout\&remote\&clean\&chroma=000\&ssar=landscape\&nosettings\&prefercurrenttab\&selfbrowsersurface=include\&displaysurface=browser\&np\&nopush\&publish\&record\&screenshareaspectratio=1.7777777777777777\&locked=1.7777777777777777\&room=ROOMNAME)\
+**Publish entire scene to a WHIP endpont:**\
+[https://vdo.ninja/?scene=0\&layout\&remote\&clean\&chroma=000\&ssar=landscape\&nosettings\&prefercurrenttab\&selfbrowsersurface=include\&displaysurface=browser\&np\&nopush\&publish\&whippush\&screenshareaspectratio=1.7777777777777777\&locked=1.7777777777777777\&room=surprisethinP](https://vdo.ninja/?scene=0\&layout\&remote\&clean\&chroma=000\&ssar=landscape\&nosettings\&prefercurrenttab\&selfbrowsersurface=include\&displaysurface=browser\&np\&nopush\&publish\&whippush\&screenshareaspectratio=1.7777777777777777\&locked=1.7777777777777777\&room=surprisethinP)
+
+<figure><img src="../.gitbook/assets/image (243).png" alt=""><figcaption></figcaption></figure>
 
 ### Contact me for more discussion / updates
 
