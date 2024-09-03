@@ -15,6 +15,10 @@ If having issues with the video being very low quality, this is often due to hig
 **DO NOT USE WIFI**. Have everyone connect to stable wired Internet whenever possible.
 {% endhint %}
 
+
+
+### Video is smeared or "pixelated"
+
 "Pixelation" (as seen here: [https://imgur.com/oKEPOvu](https://imgur.com/oKEPOvu)) is a difficult issue to troubleshoot as there are several potential upstream configurations which can ultimately lead to high packet loss which is the primary cause. Here are some potential fixes and configurations that may assist in lowering packet loss:
 
 * Change the video codec or video encoder used: h264, VP8, and VP9 are options. VP9 seems to handle packet loss the best within OBS, but it also creates the most CPU load. VP8 handles packet loss the worst in OBS.
@@ -29,3 +33,23 @@ If having issues with the video being very low quality, this is often due to hig
 * Do not watch a 4K Netflix or Youtube video while streaming; it will increase network congestion and can cause packet loss and buffer-bloat.
 * If you have LOW QUALITY video, or low resolution or low bitrates, that perhaps can be adjusted. Please see below re: [bitrates and resolutions](https://github.com/steveseguin/obsninja/wiki/FAQ#bnr)
 * Ensure your computer and remote computer are not maxing out their CPU power. If they are, have them lower the resolution and bitrate.
+* If using an SFU server, like Janus or MediaMTX, or if using WHIP from OBS, increase the keyframe rate, ensure the PLI is working, and perhaps consider switching the server to work in TCP mode. It's also possible to try to set a keyframe rate with VDO.Ninja, however this is a last resort.
+
+
+
+### Green or pink or wrong colors
+
+* try using \&codec=av1 or perhaps vp8, vp9, or h264.  Sometimes a device, like a smartphone/Samsung will not encode the video in a way that the viewer supports
+* Try a different browser; sometimes Firefox is problematic or sometimes its the solution.
+* Try a different resolution. Some smartphones only work with 640x480, at least on specific cameras, while others will work with 1920x1080 or 1280x720, but fail with lower resolutions
+* If the video works for a bit, and then stops, or just spins as if loading, try \&codec=vp8, as perhaps the h264 encoder is unable to handle those high resolutions. This is especially try when screen sharing on mobile.
+
+### Colors slightly off
+
+* If colors aren't perfect, try disabling hardware acceleration in OBS (obs browser source hardware acceleration)
+* Use \&codec=av1 on the view link, as this codec seems to handle colors better than h264/vp8
+* Use the Electron Capture app instead of OBS browser source; window capturing may be required
+* Use a different graphics card (AMD sometimes work better than NVidia) or update graphics drivers
+* avoid HDR mode and reset any color filters you may have applied to your system/monitor
+* Try different browsers; Safari, Firefox, and Chromium may handle colors different
+* Increase the video bitrate; lower bitrate videos will have worse colors
