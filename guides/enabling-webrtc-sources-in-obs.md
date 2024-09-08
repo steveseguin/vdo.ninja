@@ -6,7 +6,9 @@ description: >-
 
 # Enabling WebRTC Sources in OBS
 
-This guide will help you troubleshoot and resolve issues with WebRTC/P2P-based browser sources in OBS (Open Broadcaster Software). We'll cover several methods to ensure these sources work properly.
+This guide will help you troubleshoot and resolve issues with WebRTC/P2P-based browser sources in OBS (Open Broadcaster Software). We'll cover several methods that can ensure these sources work properly, assuming the sources work fine in a normal browser already, and just fail within OBS.
+
+Often the issues with VDO.NInja or Social Stream Ninja not appearing in OBS are not firewall related, but rather glitches in the matrix, so we'll cover a few common solutions there also.
 
 ### Method 1: Adding OBS to Windows Firewall
 
@@ -65,5 +67,6 @@ If you're using third-party firewall software:
 * Check network settings: Ensure your network allows WebRTC connections and that no VPN or proxy is interfering.
 * Disable hardware acceleration: As already mentioned, in OBS settings, go to "Advanced" and uncheck "Enable browser source hardware acceleration".
 * Update OBS Studio: Certain versions of OBS may have issues with browser sources. Fully uninstall OBS Studio and then update with a recent stable version.
+* Check your links: Sometimes you have an old link in OBS, one that might contain an invalid password, stream ID, or session value. Delete the old browser source, make a new one, and use a freshly obtained link to ensure you haven't made a simple oversight.
 
 If you're still experiencing issues after trying these methods, consider reaching out to the OBS community forums or support channels for further assistance.
