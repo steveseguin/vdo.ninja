@@ -634,5 +634,3 @@
 * [FAQ](faq.md)
 * [Sponsor ❤](getting-started/sponsor.md)
 * [Edit this documentation](https://app.gitbook.com/invite/-MZHZncFvSR7JqXHwUKe/-MZHZo3beLi-WKccV59-)
-* [Redirect](advanced.md)
-* [Redirect 2](donate.md)
