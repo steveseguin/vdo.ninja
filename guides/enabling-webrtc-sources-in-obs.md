@@ -37,12 +37,17 @@ To always run OBS as administrator:
 
 1. You can use the [Electron Capture app](https://docs.vdo.ninja/steves-helper-apps/electron-capture) instead of the OBS Browser source
 2. Window capture the Electron Capture output into OBS instead.
+3. You can window-capture the audio via OBS or with a virtual audio cable.
 
 ### Method 4: Disable hardware acceleration and check settings
 
 1. Try to disable hardware acceleration for browser sources in the OBS settings
-2. Make sure "Shutdown source when not visible" is NOT checked in the source settings.
-3. Make sure "Refresh browser when scene becomes active" is NOT checked in the source settings.
+
+You may need to scroll down in the browser source settings to find the follow.
+
+1. Make sure "Shutdown source when not visible" is NOT checked in the browser source settings.
+2. Make sure "Refresh browser when scene becomes active" is NOT checked in the browser source settings.
+3. Clear the browser cache in the OBS Browser source using the "Refresh cache of current page" button.
 
 ### Method 5: Allowing OBS Through Third-Party Firewall Software
 
@@ -55,9 +60,10 @@ If you're using third-party firewall software:
 
 ### Troubleshooting Tips
 
-* Clear browser cache: In OBS, right-click on the browser source, select "Properties", then click "Refresh cache of current page".
+* Clear browser cache: As already mentioned, in OBS, right-click on the browser source, select "Properties", then click "Refresh cache of current page".
 * Test in different browsers: If a WebRTC source works in Chrome but not in OBS, try using a different browser like Firefox or Edge to isolate the issue.
 * Check network settings: Ensure your network allows WebRTC connections and that no VPN or proxy is interfering.
-* Disable hardware acceleration: In OBS settings, go to "Advanced" and uncheck "Enable browser source hardware acceleration".
+* Disable hardware acceleration: As already mentioned, in OBS settings, go to "Advanced" and uncheck "Enable browser source hardware acceleration".
+* Update OBS Studio: Certain versions of OBS may have issues with browser sources. Fully uninstall OBS Studio and then update with a recent stable version.
 
 If you're still experiencing issues after trying these methods, consider reaching out to the OBS community forums or support channels for further assistance.
