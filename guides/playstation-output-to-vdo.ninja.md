@@ -48,8 +48,64 @@ This method allows for more advanced stream customization but adds an extra step
 ### Additional Considerations
 
 * HDMI Splitters: If you want to play on a TV while streaming, use an HDMI splitter to send the signal to both your capture device and TV.
-* Audio Routing: Consider using a virtual audio cable to route game audio to VDO.Ninja if not captured by your chosen method.
+  * Some HDMI capture devices have an HDMI pass-through option, which can be used in place of an HDMI splitter.
+* Audio Routing: Consider using a virtual audio cable to route game audio to VDO.Ninja if not captured by your chosen method
 * Latency: Browser-compatible capture cards generally offer the lowest latency when used directly with VDO.Ninja.
+  * Some HDMI to USB capture devices are only compatible with OBS Studio and not the browser; a browser-compatible device is suggested.
 * Quality Settings: Experiment with VDO.Ninja's bitrate and resolution settings for optimal performance.
 
-By leveraging VDO.Ninja's browser-based capabilities, you can often achieve a simpler setup with compatible capture cards, while still having the flexibility to use OBS when needed for more complex streaming scenarios.
+By leveraging VDO.Ninja's browser-based capabilities, you can often achieve a simpler setup with compatible capture cards, while still having the flexibility to use OBS when needed for more complex streaming scenarios.\
+
+
+## HDMI Splitter / pass-thru considerations
+
+When considering HDMI splitters with pass-through for 4K content, it's important to understand their compatibility with various resolutions and frame rates:
+
+### 4K Resolution and Frame Rate Compatibility
+
+HDMI splitters with pass-through for 4K content typically support the following:
+
+* 4K resolution (3840 x 2160 pixels)
+* Frame rates up to 60fps for 4K content
+
+However, compatibility can vary depending on the specific splitter model and HDMI version.
+
+### Key Considerations
+
+### HDMI Version
+
+* HDMI 2.0 supports 4K at 60fps
+* HDMI 1.4 supports 4K at 30fps
+
+Ensure your splitter uses the appropriate HDMI version for your desired resolution and frame rate.
+
+### Bandwidth
+
+4K content requires significant bandwidth, especially at higher frame rates. Look for splitters that support:
+
+* 18 Gbps bandwidth for 4K60 HDR
+* 10.2 Gbps bandwidth for 4K30
+
+### HDR Support
+
+If you want to pass through HDR content, make sure the splitter explicitly supports it.
+
+### HDCP Compatibility
+
+For copy-protected content, ensure the splitter is compatible with HDCP 2.2 or later.
+
+### Trade-offs
+
+When using a splitter with pass-through, be aware of potential trade-offs:
+
+* Some splitters may introduce slight latency
+* Lower-quality splitters might degrade signal quality
+
+### Recommendations
+
+1. Choose a splitter that matches or exceeds your highest required resolution and frame rate.
+2. Opt for HDMI 2.0 or higher for the best 4K compatibility.
+3. Ensure the splitter supports the necessary bandwidth for your content.
+4. Verify HDR and HDCP compatibility if needed.
+
+By carefully considering these factors, you can select an HDMI splitter with pass-through that maintains the quality of your 4K content while allowing you to share it across multiple displays or capture devices.
