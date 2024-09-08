@@ -81,6 +81,7 @@
   * [How to set up OBS WHIP output settings](guides/obs-whip-output-settings.md)
   * [How to use VDO.Ninja on a website](guides/how-to-use-vdo.ninja-on-a-website.md)
   * [Keep Mic Active in Background on Android Browser](guides/keep-mic-active-in-background-on-android-browser.md)
+  * [PlayStation Output to VDO.Ninja](guides/playstation-output-to-vdo.ninja.md)
 * [Advanced Options (URL Parameters)](advanced-settings.md)
   * [Most common Parameters](advanced-settings/cheat-sheet-of-basic-parameters/README.md)
     * [\&push](https://docs.vdo.ninja/advanced-settings/source-parameters/push)
