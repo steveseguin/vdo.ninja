@@ -4,6 +4,8 @@ description: Streaming PlayStation Output to VDO.Ninja
 
 # PlayStation Output to VDO.Ninja
 
+This guide covers different methods for sharing your PlayStation gameplay through VDO.Ninja. VDO.Ninja allows you to easily share high-quality, low-latency video streams with others online.
+
 ### Method 1: Browser-Compatible Capture Card
 
 Some HDMI capture cards work directly with browsers, allowing you to bypass OBS entirely:
