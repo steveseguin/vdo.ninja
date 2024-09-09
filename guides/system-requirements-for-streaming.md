@@ -50,7 +50,8 @@ Note:
 * Recommended: 10+ Mbps for single 1080p stream at 60 fps
 * Multi-broadcast or group video: 30+ Mbps
 * Wired Ethernet recommended for all computers
-* VDO.Ninja connections made over LAN do not use Internet normally
+
+VDO.Ninja connections made over LAN do not use Internet normally.
 
 ### A basic streaming setup with VDO.Ninja as a remote camera
 
