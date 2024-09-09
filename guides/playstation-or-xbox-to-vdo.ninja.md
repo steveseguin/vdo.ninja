@@ -1,16 +1,16 @@
 ---
-description: Streaming PlayStation Output to VDO.Ninja
+description: Streaming PlayStation or Xbox Output to VDO.Ninja
 ---
 
-# PlayStation Output to VDO.Ninja
+# PlayStation or Xbox to VDO.Ninja
 
-This guide covers different methods for sharing your PlayStation gameplay through VDO.Ninja. VDO.Ninja allows you to easily share high-quality, low-latency video streams with others online.
+This guide covers different methods for sharing your console gameplay through VDO.Ninja. VDO.Ninja allows you to easily share high-quality, low-latency video streams with others online.
 
 ### Method 1: Browser-Compatible Capture Card
 
 Some HDMI capture cards work directly with browsers, allowing you to bypass OBS entirely:
 
-1. Connect your PlayStation to a browser-compatible capture card
+1. Connect your PlayStation or Xbox to a browser-compatible capture card
 2. Plug the capture card into your computer
 3. In VDO.Ninja:
    * Select "Add your Camera"
@@ -22,6 +22,8 @@ This method offers a streamlined setup with low latency and high quality.
 
 For a hardware-free solution:
 
+#### PlayStation:
+
 1. Install PS Remote Play on your computer
 2. Connect your PlayStation to PS Remote Play
 3. In VDO.Ninja:
@@ -29,9 +31,33 @@ For a hardware-free solution:
    * Choose to share the PS Remote Play window
    * Optionally select system audio to share game sound
 
+#### Xbox:
+
+1. Install the Xbox app on your Windows 10 or 11 PC
+2. Connect your Xbox to the Xbox app using Remote Play
+3. In VDO.Ninja:
+   * Select "Share Your Screen"
+   * Choose to share the Xbox app window
+   * Optionally select system audio to share game sound
+
 This approach is simple but may have slightly higher latency.
 
-### Method 3: Capture Card with OBS Virtual Camera
+### Method 4: Xbox-Specific Streaming (Windows 10/11 Only)
+
+Xbox offers a built-in streaming feature for Windows 10 and 11 users:
+
+1. Press the Windows key + G to open the Xbox Game Bar
+2. Click on "Capture" and select "Start Recording"
+3. In VDO.Ninja:
+   * Select "Share Your Screen"
+   * Choose to share the game window or entire screen
+   * Ensure system audio is selected to share game sound
+
+This method provides good quality and relatively low latency for Xbox users.
+
+Remember to adjust your console's privacy and streaming settings to enable remote play and streaming features.
+
+### Method 5: Capture Card with OBS Virtual Camera
 
 For capture cards not directly compatible with browsers:
 
