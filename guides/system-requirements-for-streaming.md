@@ -10,17 +10,17 @@ description: >-
 
 This guide outlines a general sense of system requirements and options for streaming using VDO.Ninja in combination with OBS Studio, targeting multiple platforms such as Kick, Twitch, and YouTube. \
 \
-System requirements will vary from user to user, and use case to use case, so there is official minimium system requirement. Even a Raspberry Pi may be sufficient for some users, while others may need to rethink their strategy completely if their idea is outside the bounds of current physics.
+System requirements will vary from user to user, and use case to use case, so there is no official minimum system requirement. Even a Raspberry Pi may be sufficient for some users, while others may need to rethink their strategy completely if their idea is outside the bounds of current physics.
 
 ### System Requirements for the average streamer
 
 #### CPU
 
-* Minimum: Intel Core i5-8400 or AMD Ryzen 5 2600
+* Minimum suggested: Intel Core i5-8400 or AMD Ryzen 5 2600
 * Recommended: Intel Core i7-12700K or AMD Ryzen 7 5800X
-* High-end: Intel Core i9-14900K or AMD Ryzen 9 7950X
+* High-end for flexibility: Intel Core i9-14900K or AMD Ryzen 9 7950X
 
-Note: More powerful CPUs will handle multiple streams and VDO.Ninja cameras better. Each additional VDO.Ninja published stream will require more CPU power due to WebRTC's CPU-intensive nature.
+Note: More powerful CPUs will handle multiple streams and VDO.Ninja cameras better. Each additional VDO.Ninja published stream will require more CPU power due to WebRTC's CPU-intensive nature. If using a GPU to accelerate the video encoding, a quad-core computer may also be minimally sufficient.
 
 #### GPU
 
