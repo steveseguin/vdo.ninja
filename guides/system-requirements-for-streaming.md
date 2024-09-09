@@ -51,7 +51,7 @@ Note:
 * Multi-broadcast or group video: 30+ Mbps
 * Wired Ethernet recommended for all computers
 
-VDO.Ninja connections made over LAN do not use Internet normally.
+VDO.Ninja connections made over LAN do not use Internet normally. Also, VDO.Ninja will adapt to the Internet bandwidth available, however quality will suffer if being choked. It's best to not exceed 80% of the available upload and download bandwidth to avoid buffer bloat and other such issues.
 
 ### A basic streaming setup with VDO.Ninja as a remote camera
 
