@@ -20,10 +20,19 @@ At present, the native mobile app versions of VDO.Ninja are fairly basic, but th
 
 There are some limitations to the native mobile app versions though.
 
-* Rooms and group chat are not supported yet.
-* Passwords are not supported yet.
-* UVC camera and mic support is not yet available, but we're working on it. UVC devices are supported via the Raspberry Pi and Nvidia Jetson devices however (see bottom).
+* You can only publish with the mobile apps; you cannot view or listen to remote guests
+* UVC camera and mic support is not fully supported yet, but we're working on it. UVC devices are supported via the Raspberry Pi and Nvidia Jetson devices however (see bottom).
 * The native app requires a modern version of Android, while the web-based version of VDO.Ninja has been tested with Android 5.1 using Chrome.
+
+### UVC / USB support
+
+Some users with iPhone 15 Pro devices or newer mention USB devices working with VDO.Ninja, perhaps via Safari, but I do not own one to test with.
+
+As per Android, this is a custom version of VDO.Ninja that supports USB video input (such as HDMI to USB). It's basic, and USB audio capture doesn't work, and Android 14 support hasn't been added yet, but give it a go.
+
+{% embed url="https://drive.google.com/file/d/1L8meslXPEzivocH3wz48abNtJ926hQUr/view?usp=drive_link" %}
+Andorid APK with USB-support; beta
+{% endembed %}
 
 ## Download the Android app
 
@@ -58,13 +67,29 @@ Download from the Apple App Store - It's Free
 
 The native App Store app is very basic, but It does support the ability to stream your camera's output to a remote computer, with the option to enable the Torch light.\
 \
-While screen share support is available in-app, it currently only works when the app is open, making it a bit useless if you need to switch apps. If you're looking to screen-share from an iPhone or iPad with VDO.Ninja, other ways to do it exist.  See this guide here:&#x20;
+While screen share support is available in-app, it currently only works when the app is open for some users, making it a bit useless if you need to switch apps. If you're looking to screen-share from an iPhone or iPad with VDO.Ninja, other ways to do it exist.  See this guide here:&#x20;
 
 {% embed url="https://docs.vdo.ninja/guides/screen-share-your-iphone-ipad" %}
 How to screen capture your iPhone or iPad with VDO.Ninja
 {% endembed %}
 
-Room support and passwords are not supported yet in the native mobile apps.
+Also note, screen sharing on iOS will not work if using iOS 15 or older. Please upgrade to iOS 17 or newer if using the native app.
+
+## USB / Lightning based audio
+
+USB-based microphones do not work normally.  You can solve this with a TRRS adapter in cases where USB or lightning fails.  I have a video about it here:
+
+{% embed url="https://www.youtube.com/watch?v=BBus_S8iJUE" %}
+
+## Other Problems?
+
+A common problem when using the native application is that the video doens't play when screen sharing.\
+\
+Try adding \&codec=vp8 to the view-link, as sometimes the phone's h264 harware encoder fails or is unable to support the input video resolution.
+
+If on iOS, screen sharing won't work on older versions of iOS. Please update to the newest version.
+
+You cannot capture the desktop/system audio when screen sharing -- just the microphone's audio. I realize many users want this addressed, however at present I figured out how to get this working.
 
 ## Updates
 
