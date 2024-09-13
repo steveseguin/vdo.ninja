@@ -8,7 +8,7 @@ OBS Studio v30 now has WHIP output support, which means that you can stream dire
 \
 While there are a few serious limitations with OBS's current WHIP implementation, when used with VDO.Ninja it still offers a great way to stream from one computer to another, on the same LAN, while minimizing CPU overhead and latency.
 
-### Prerequisites
+Prerequisites
 
 * OBS Studio (version 30 or later)
 * A stable internet connection
@@ -41,6 +41,8 @@ While there are a few serious limitations with OBS's current WHIP implementation
 {% hint style="info" %}
 The stream token you give to OBS is the stream ID you specified in VDO.Ninja.
 {% endhint %}
+
+<figure><img src="../.gitbook/assets/image (250).png" alt=""><figcaption><p>Example setup for OBS to VDO</p></figcaption></figure>
 
 ### Encoder options that can offer smooth playback
 
