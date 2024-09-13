@@ -79,7 +79,7 @@
   * [How to control PowerPoint remotely with VDO.Ninja](guides/how-to-control-powerpoint-remotely-with-vdo.ninja.md)
   * [How to improve quality of the native app](guides/improving-quality-of-the-native-app.md)
   * [How to stream transparent video](guides/how-to-stream-transparent-video.md)
-  * [How to set up OBS WHIP output settings](guides/obs-whip-output-settings.md)
+  * [Recommended OBS WHIP settings](guides/recommended-obs-whip-settings.md)
   * [How to use VDO.Ninja on a website](guides/how-to-use-vdo.ninja-on-a-website.md)
   * [Keep Mic Active in Background on Android Browser](guides/keep-mic-active-in-background-on-android-browser.md)
   * [PlayStation or Xbox to VDO.Ninja](guides/playstation-or-xbox-to-vdo.ninja.md)
