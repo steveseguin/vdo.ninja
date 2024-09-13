@@ -4,6 +4,8 @@ description: Where do I find the native mobile app versions?
 
 # Native mobile app versions
 
+VDO.Ninja is primarily a web/browser-based app, however there are also basic mobile app versions available that support simple one-way audio and video publishing. Some users may prefer them, however they are feature limited.
+
 {% embed url="https://play.google.com/store/apps/details?id=flutter.vdo.ninja" %}
 Android
 {% endembed %}
@@ -17,12 +19,14 @@ At present, the native mobile app versions of VDO.Ninja are fairly basic, but th
 * The native Android app supports screen-sharing, while the browser-based version of VDO.Ninja does not.
 * More camera types are listed on the Android native app version; some wide-angle lenses appear that do not appear in the browser-based version.
 * Sometimes the native mobile app will work when the browser-based versions do not.
+* Additional UVC/HDMI support is available experimentally for Android.
 
 There are some limitations to the native mobile app versions though.
 
 * You can only publish with the mobile apps; you cannot view or listen to remote guests
 * UVC camera and mic support is not fully supported yet, but we're working on it. UVC devices are supported via the Raspberry Pi and Nvidia Jetson devices however (see bottom).
 * The native app requires a modern version of Android, while the web-based version of VDO.Ninja has been tested with Android 5.1 using Chrome.
+* Older iPhones cannot screen share
 
 ### UVC / USB support
 
@@ -90,6 +94,16 @@ Try adding \&codec=vp8 to the view-link, as sometimes the phone's h264 harware e
 If on iOS, screen sharing won't work on older versions of iOS. Please update to the newest version.
 
 You cannot capture the desktop/system audio when screen sharing -- just the microphone's audio. I realize many users want this addressed, however at present I figured out how to get this working.
+
+## Raspberry Ninja
+
+If the mobile app versions of VDO.Ninja do not achieve what you want, there is a Linux / Windows WSL / Apple and embedded-friendly version of VDO.Ninja called Rasberry Ninja.\
+\
+It supports publishing and viewing videos, VDO.Ninja to NDI support, raw stream recording, built-in multiviewer SFU broadcasting,  and doesn't require a browser. It will work with hardware encoders, CSI-based cameras, and can work on even an extremely basic Raspberry Pi Zero W.
+
+{% embed url="https://raspberry.ninja" %}
+Check out Raspberry Ninja if you need more flexiblity and don't want to use the browser
+{% endembed %}
 
 ## Updates
 
