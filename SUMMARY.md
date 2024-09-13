@@ -87,6 +87,7 @@
   * [Picking the right microphone](guides/picking-the-right-microphone.md)
   * [Set Up Proper Lighting](guides/set-up-proper-lighting.md)
   * [System requirements for streaming](guides/system-requirements-for-streaming.md)
+  * [From OBS to VDO.Ninja using WHIP](guides/from-obs-to-vdo.ninja-using-whip.md)
 * [Advanced Options (URL Parameters)](advanced-settings.md)
   * [Most common Parameters](advanced-settings/cheat-sheet-of-basic-parameters/README.md)
     * [\&push](https://docs.vdo.ninja/advanced-settings/source-parameters/push)
