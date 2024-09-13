@@ -38,6 +38,10 @@ While there are a few serious limitations with OBS's current WHIP implementation
    * In OBS, click "Start Streaming"
    * The stream should appear automatically in the opened VDO.Ninja window
 
+{% hint style="info" %}
+The stream token you give to OBS is the stream ID you specified in VDO.Ninja.
+{% endhint %}
+
 ### Encoder options that can offer smooth playback
 
 Some H264 settings that have reported offered good results are the following:
