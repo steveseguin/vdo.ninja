@@ -34,6 +34,20 @@ description: Publishing from OBS Studio to VDO.Ninja using WHIP
    * In OBS, click "Start Streaming"
    * The stream should appear automatically in the opened VDO.Ninja window
 
+### Encoder options that can offer smooth playback
+
+Some H264 settings that have reported offered good results are the following:
+
+* Rate Control: CRF
+* CRF: 23
+* Keyframe Interval: 1s
+* Preset: Veryfast
+* Profile: High
+* Tune: Fastdecode (required for WebRTC playback)
+* x264 Options: bframes=0 (required for WebRTC playback)
+
+In some cases, adding [`&buffer=2500`](https://docs.vdo.ninja/advanced-settings/video-parameters/buffer) to the VDO.Ninja view link can further help reduce any lost of skipped frames, but at the cost of increased latency.
+
 ### Additional Notes
 
 * **Codec Choice**:
@@ -50,10 +64,15 @@ description: Publishing from OBS Studio to VDO.Ninja using WHIP
   * Lower resolutions and bitrates will reduce latency and improve stability
   * Higher resolutions and bitrates will increase quality but may introduce more delay
 
-Remember to test your setup before any important broadcasts to ensure everything works smoothly.\
+Remember to test your setup before any important broadcasts to ensure everything works smoothly.
 
+### Alternative browser-free option
+
+If looking for alternatives to publishing into VDO.Ninja, consider checking out [Raspberry.Ninja](https://docs.vdo.ninja/updates/updates-raspberry.ninja) also, which supports a broad range of encoders, including AV1-AOM, Intel QuickSync, Raspberry Pis, Nvidia Jetson, and many other hardware and software options. Playback is smooth, with support for multiple viewers. Runs on most systems, including Linux and _Windows for Linux Subsystem_ (WSL).
 
 {% embed url="https://www.youtube.com/watch?v=ynSOE2d4Z9Y" %}
+Demoing OBS to VDO.Ninja via WHIP
+{% endembed %}
 
 Related WHIP videos:
 
