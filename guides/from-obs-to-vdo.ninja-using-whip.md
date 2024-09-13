@@ -4,9 +4,13 @@ description: Publishing from OBS Studio to VDO.Ninja using WHIP
 
 # From OBS to VDO.Ninja using WHIP
 
+OBS Studio v30 now has WHIP output support, which means that you can stream directly to VDO.Ninja without a browser or other software.\
+\
+While there are a few serious limitations with OBS's current WHIP implementation, when used with VDO.Ninja it still offers a great way to stream from one computer to another, on the same LAN, while minimizing CPU overhead and latency.
+
 ### Prerequisites
 
-* OBS Studio (version 29 or later)
+* OBS Studio (version 30 or later)
 * A stable internet connection
 * Access to VDO.Ninja
 
@@ -65,6 +69,14 @@ In some cases, adding [`&buffer=2500`](https://docs.vdo.ninja/advanced-settings/
   * Higher resolutions and bitrates will increase quality but may introduce more delay
 
 Remember to test your setup before any important broadcasts to ensure everything works smoothly.
+
+### Streaming WHIP over the Internet or to more than one viewer
+
+I offer [https://Meshcast.io](https://meshcast.io), for free, which supports WHIP input and can broadcast to dozens of viewers online.\
+\
+There's also MediaMTX, which is a self-hosted broadcasting server option that VDO.Ninja supports. Deeper integration with MediaMTX is being added to VDO.Ninja all the time.
+
+In the future, OBS should be able to support 1 to 1 over the Internet, despite firewalls, with VDO.Ninja, in a peer to peer fashion.  This could be added at any time, so we'll wait and see; for now to stream over the Internet peer to peer, you need to enable port forwarding / DMZ / tunneling to have it work.
 
 ### Alternative browser-free option
 

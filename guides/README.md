@@ -44,4 +44,4 @@
 * [how-to-control-powerpoint-remotely-with-vdo.ninja.md](how-to-control-powerpoint-remotely-with-vdo.ninja.md "mention")
 * [improving-quality-of-the-native-app.md](improving-quality-of-the-native-app.md "mention")
 * [how-to-stream-transparent-video.md](how-to-stream-transparent-video.md "mention")
-* [recommended-obs-whip-settings.md](recommended-obs-whip-settings.md "mention")
+* [obs-whip-output-settings.md](obs-whip-output-settings.md "mention")
