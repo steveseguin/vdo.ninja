@@ -44,6 +44,10 @@ By adding `&scene` to a room URL, it tells VDO.Ninja that this is no [`&push`](.
 
 {% embed url="https://www.youtube.com/embed/axgIqPcHExQ" %}
 
+### Optimize scene performance using \&optimize=0&#x20;
+
+If using a normal manual scene, such as \&scene=3, you can add [\&optimize=0](scene.md#alternative-using-and-optimize-0) to the scene URL to enable a mode that is similar to \&solo. It's one of a few different ways to have permanent generic scene links that you can place specific guests into with varying stream IDs. There's also slots, however \&optimize=0 is tweaked for low CPU and network usage, at the cost of a slight added delay in adding a guest to the scene
+
 ## Related
 
 {% content-ref url="../../general-settings/room.md" %}
@@ -52,4 +56,8 @@ By adding `&scene` to a room URL, it tells VDO.Ninja that this is no [`&push`](.
 
 {% content-ref url="../mixer-scene-parameters/and-solo.md" %}
 [and-solo.md](../mixer-scene-parameters/and-solo.md)
+{% endcontent-ref %}
+
+{% content-ref url="../video-bitrate-parameters/optimize.md" %}
+[optimize.md](../video-bitrate-parameters/optimize.md)
 {% endcontent-ref %}
