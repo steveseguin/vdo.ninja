@@ -1,7 +1,5 @@
 # How does it work
 
-#### How VDO.Ninja Works
-
 VDO.Ninja harnesses the power of WebRTC, a technology that enables secure, real-time communication directly between web browsers. This peer-to-peer approach means most of the action happens right within your browser, ensuring low latency and high-quality video transmission. While VDO.Ninja does utilize servers for initial setup, the actual video data flows directly between devices, leading to a remarkably smooth experience.
 
 **Benefits of the Peer-to-Peer Approach**
