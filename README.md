@@ -25,13 +25,7 @@ There is a playlist of videos above that will demonstrate some of the basics. Yo
 
 The documentation that you are reading here contains details of advanced settings (URL parameters), support information, starting guides, and more. Using the search-box is a great way to navigate it for specific topics.
 
-There are some cheat sheet and quick-start guides here:
-
-{% content-ref url="guides/cheat-sheets.md" %}
-[cheat-sheets.md](guides/cheat-sheets.md)
-{% endcontent-ref %}
-
-There are a few basic guides for beginners here as well:
+A written guide to getting started is linked below:
 
 {% content-ref url="getting-started/" %}
 [getting-started](getting-started/)
