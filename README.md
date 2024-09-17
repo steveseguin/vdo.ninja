@@ -13,6 +13,12 @@ In its simplest form, [VDO.Ninja](https://vdo.ninja) brings live video from a sm
 Video intro to VDO.Ninja and getting-started playlist
 {% endembed %}
 
+For those looking for an AI-generated audio-explaination of what VDO.Ninja is, see:
+
+{% file src=".gitbook/assets/vdo_ai_podcast.mp3" %}
+Check out this AI-generated audio generated intro to what VDO.Ninja is &#x20;
+{% endfile %}
+
 ## Getting Started
 
 There is a playlist of videos above that will demonstrate some of the basics. YouTube actually has MANY community-created guides, in various languages, that you can check out also.
