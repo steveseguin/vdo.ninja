@@ -3,6 +3,20 @@
 [social-stream-ninja](../../steves-helper-apps/social-stream-ninja/ "mention")\
 [Broken link](broken-reference "mention")
 
+
+
+{% hint style="info" %}
+## ⚠️ Please note, this is not the official documentation for Social Stream Ninja, and it is not kept up to date.
+{% endhint %}
+
+#### For the newest updates to Social Stream Ninja, please visit the Discord at https://discord.socialstream.ninja or you can check out [https://updates.vdo.ninja/](https://updates.vdo.ninja/).
+
+#### Updates specifically for the Standalone app for Social Stream Ninja can be found here: [https://github.com/steveseguin/social\_stream/releases](https://github.com/steveseguin/social\_stream/releases)
+
+#### For those technically inclined, code updates can be found here: [https://github.com/steveseguin/social\_stream/commits/main/](https://github.com/steveseguin/social\_stream/commits/main/)
+
+#### \[The following is no longer being kept up to date, as I just don't have time to manually update this section anymore]
+
 #### February 20
 
 * Added a 'download wait list' button to Social Stream
