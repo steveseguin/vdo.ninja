@@ -64,7 +64,7 @@ Join me and the community on Discord for support and more: https://discord.vdo.n
 
 The sub-Reddit is available at, https://reddit.com/r/vdoninja. I will often offer a single-message response to support questions posted there, but for deeper discussion, join the Discord.
 
-Also check out the FAQ for common answers: https://docs.vdo.ninja or view recent product updates at https://updates.vdo.ninja
+Also check out the FAQ for common answers: https://docs.vdo.ninja or view recent product updates at: https://updates.vdo.ninja
 
 I maintain a Youtube playlist with VDO.Ninja related content I create at https://www.youtube.com/watch?v=vLpRzMjUDaE&list=PLWodc2tCfAH1WHjl4WAOOoRSscJ8CHACe, however Youtube is full of community-created guides that are worth checking out.
 
