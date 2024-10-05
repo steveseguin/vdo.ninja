@@ -14,7 +14,9 @@ OBS Studio v30 now has WHIP output, which can stream into VDO.Ninja. While there
 * Tune: Fastdecode (required for WebRTC playback)
 * x264 Options: bframes=0 (required for WebRTC playback)
 
-In some cases when using VDO.Ninja to view the WHIP video, adding [`&buffer=2500`](../advanced-settings/view-parameters/buffer.md) to the VDO.Ninja view link can further help reduce any lost of skipped frames, but at the cost of increased latency.
+In some cases when using VDO.Ninja to view the WHIP video, adding [`&buffer=2500`](../advanced-settings/view-parameters/buffer.md) to the VDO.Ninja view link can further help reduce any lost of skipped frames, but at the cost of increased latency.\
+\
+While these above settings may not offer the lowest latency or CPU usage, please try them out before seeking support about issues you may be having. It's very easy to break things with bad settings.
 
 ## How to view WHIP streams using VDO.Ninja
 
