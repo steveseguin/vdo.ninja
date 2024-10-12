@@ -629,6 +629,7 @@
   * [Camera on macOS doesn't show?](common-errors-and-known-issues/camera-on-macos-doesnt-show.md)
   * [Can't screen share Adobe Lightroom](common-errors-and-known-issues/cant-screen-share-adobe-lightroom.md)
   * [Decklink support?](common-errors-and-known-issues/decklink-support.md)
+  * [iOS audio stops during phone calls](common-errors-and-known-issues/ios-audio-stops-during-phone-calls.md)
 * [Platform specific issues](platform-specific-issues/README.md)
   * [Android](platform-specific-issues/android.md)
   * [macOS](platform-specific-issues/macos.md)
