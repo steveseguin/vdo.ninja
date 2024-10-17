@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MIDI Timecode Generator</title>
+    <script src="./thirdparty/webmidi3.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+			font-family: 'Arial', sans-serif;
+            background-color: #2c3e50;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='4' height='4' viewBox='0 0 4 4'%3E%3Cpath fill='%234a6b8a' fill-opacity='0.4' d='M1 3h1v1H1V3zm2-2h1v1H3V1z'%3E%3C/path%3E%3C/svg%3E");
+            color: #ecf0f1;
+        }
+        h1, h2 {
+            color: #2c3e50;
+        }
+        .section {
+            background-color: #f9f9f9;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+			color: #333;
+        }
+        select, input, button {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 10px;
+        }
+        button {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+
+        .container {
+            background-color: rgba(44, 62, 80, 0.8);
+            border-radius: 10px;
+            padding: 30px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.08);
+            max-width: 600px;
+            width: 100%;
+        }
+
+        h1 {
+            text-align: center;
+            color: #3498db;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+    </style>
+</head>
+<body>
+    <h1>MIDI Timecode Generator</h1>
+    
+    <div class="section">
+        <h2>MIDI Device Selection</h2>
+        <label for="midiOutDevice">MIDI Output Device:</label>
+        <select id="midiOutDevice"></select>
+    </div>
+    
+    <div class="section">
+        <h2>Timecode Settings</h2>
+        <label for="frameRate">Frame Rate:</label>
+        <select id="frameRate">
+            <option value="24">24 fps</option>
+            <option value="25">25 fps</option>
+            <option value="29.97">29.97 fps (drop-frame)</option>
+            <option value="30">30 fps</option>
+        </select>
+        
+        <label for="startTime">Start Time (HH:MM:SS:FF):</label>
+        <input type="text" id="startTime" value="00:00:00:00" pattern="[0-9]{2}:[0-9]{2}:[0-9]{2}:[0-9]{2}">
+    </div>
+    
+    <div id="currentTime">00:00:00:00</div>
+    
+    <div class="section">
+        <button id="startStop">Start Timecode</button>
+    </div>
+
+    <script>
+        let midiOutput;
+        let isRunning = false;
+        let currentFrame = 0;
+        let startFrame = 0;
+        let audioContext;
+        let oscillator;
+        let frameRate;
+        let currentOscillatorId = 0;
+        let lastFrameTime = 0;
+
+        WebMidi.enable({ sysex: true })
+            .then(() => {
+                const midiOutSelect = document.getElementById('midiOutDevice');
+                WebMidi.outputs.forEach((device, index) => {
+                    midiOutSelect.options.add(new Option(device.name, index));
+                });
+                midiOutput = WebMidi.outputs[0];
+                console.log("WebMidi enabled. SysEx status:", WebMidi.sysexEnabled);
+            })
+            .catch(err => console.error("WebMidi could not be enabled:", err));
+
+        document.getElementById('midiOutDevice').addEventListener('change', (event) => {
+            midiOutput = WebMidi.outputs[event.target.value];
+        });
+
+        document.getElementById('startStop').addEventListener('click', toggleTimecode);
+
+        function toggleTimecode() {
+            if (isRunning) {
+                stopTimecode();
+            } else {
+                startTimecode();
+            }
+        }
+
+        function startTimecode() {
+            if (!audioContext) {
+                audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            }
+            if (audioContext.state === 'suspended') {
+                audioContext.resume();
+            }
+
+            frameRate = parseFloat(document.getElementById('frameRate').value);
+            const startTime = document.getElementById('startTime').value;
+            startFrame = timeToFrames(startTime, frameRate);
+            currentFrame = startFrame;
+
+            isRunning = true;
+            document.getElementById('startStop').textContent = 'Stop Timecode';
+
+            lastFrameTime = audioContext.currentTime;
+            setupTimecodeOscillator();
+        }
+
+        function stopTimecode() {
+            isRunning = false;
+            currentOscillatorId++;
+            document.getElementById('startStop').textContent = 'Start Timecode';
+        }
+
+        function setupTimecodeOscillator(timeOne = null, thisOscillatorId = null) {
+            if (!thisOscillatorId) {
+                thisOscillatorId = ++currentOscillatorId;
+            } else if (currentOscillatorId !== thisOscillatorId) {
+                return;
+            }
+
+            if (!timeOne) {
+                timeOne = audioContext.currentTime;
+            }
+
+            oscillator = audioContext.createOscillator();
+            const silence = audioContext.createGain();
+            silence.gain.value = 0;
+            oscillator.connect(silence);
+            silence.connect(audioContext.destination);
+
+            const frameInterval = 1 / frameRate;
+
+            oscillator.onended = () => {
+                oscillator.disconnect();
+                silence.disconnect();
+                if (currentOscillatorId === thisOscillatorId && isRunning) {
+                    let timeTwo = audioContext.currentTime;
+					if (timeTwo - lastFrameTime >= frameInterval) {
+						console.log("Current Frame:", currentFrame);
+						sendMIDITimecode(currentFrame, frameRate);
+						currentFrame++;
+						updateDisplayTime(currentFrame, frameRate);
+						lastFrameTime = timeTwo;
+					}
+                    setupTimecodeOscillator(timeTwo, thisOscillatorId);
+                }
+            };
+
+            oscillator.start(timeOne);
+            oscillator.stop(timeOne + 0.01); // Short duration to allow frequent checks
+        }
+
+		let lastQuarterFrame = -1;
+
+		function sendMIDITimecode(frame, frameRate) {
+			const time = framesToTime(frame, frameRate);
+			
+			// Send all 8 quarter frames in sequence
+			for (let i = 0; i < 8; i++) {
+				const quarterFrame = (lastQuarterFrame + 1) % 8;
+				const mtcQuarterFrame = getMTCQuarterFrame(quarterFrame, time, frameRate);
+				if (midiOutput) {
+					midiOutput.send(mtcQuarterFrame);
+				}
+				lastQuarterFrame = quarterFrame;
+			}
+
+			// Send Full Frame message every second
+			if (frame % Math.round(frameRate) === 0) {
+				sendFullFrameMessage(time, frameRate);
+			}
+		}
+
+        function getMTCQuarterFrame(quarterFrame, time, frameRate) {
+            switch (quarterFrame) {
+                case 0: return [0xF1, 0x00 | (time.frame & 0x0F)];
+                case 1: return [0xF1, 0x10 | ((time.frame >> 4) & 0x01)];
+                case 2: return [0xF1, 0x20 | (time.second & 0x0F)];
+                case 3: return [0xF1, 0x30 | ((time.second >> 4) & 0x03)];
+                case 4: return [0xF1, 0x40 | (time.minute & 0x0F)];
+                case 5: return [0xF1, 0x50 | ((time.minute >> 4) & 0x03)];
+                case 6: return [0xF1, 0x60 | (time.hour & 0x0F)];
+                case 7: return [0xF1, 0x70 | ((time.hour >> 4) & 0x01) | (getFrameRateCode(frameRate) << 1)];
+            }
+        }
+        
+        function sendFullFrameMessage(time, frameRate) {
+            if (midiOutput) {
+                const fullFrame = [
+                    0xF0, // Start of SysEx
+                    0x7F, // Universal Real Time SysEx ID
+                    0x7F, // Device ID (7F = all devices)
+                    0x01, // Sub-ID #1 (01 = Full Time Code)
+                    0x01, // Sub-ID #2 (01 = Full Time Code)
+                    time.hour & 0x1F | (getFrameRateCode(frameRate) << 5),
+                    time.minute,
+                    time.second,
+                    time.frame,
+                    0xF7  // End of SysEx
+                ];
+                midiOutput.sendSysex(0x7F, fullFrame.slice(1, -1));
+            }
+        }
+        
+		function framesToTime(frame, frameRate) {
+			let totalSeconds = Math.floor(frame / frameRate);
+			const hours = Math.floor(totalSeconds / 3600);
+			totalSeconds %= 3600;
+			const minutes = Math.floor(totalSeconds / 60);
+			const seconds = totalSeconds % 60;
+			const frames = Math.floor(frame % frameRate);
+
+			console.log("Time calculated:", { hour: hours, minute: minutes, second: seconds, frame: frames });
+			return { hour: hours, minute: minutes, second: seconds, frame: frames };
+		}
+
+        function timeToFrames(timeString, frameRate) {
+            const [hours, minutes, seconds, frames] = timeString.split(':').map(Number);
+            return (hours * 3600 + minutes * 60 + seconds) * frameRate + frames;
+        }
+
+        function updateDisplayTime(frame, frameRate) {
+            const time = framesToTime(frame, frameRate);
+            document.getElementById('currentTime').textContent = 
+                `${time.hour.toString().padStart(2, '0')}:${time.minute.toString().padStart(2, '0')}:${time.second.toString().padStart(2, '0')}:${time.frame.toString().padStart(2, '0')}`;
+        }
+
+        function getFrameRateCode(frameRate) {
+            switch (frameRate) {
+                case 24: return 0;
+                case 25: return 1;
+                case 29.97: return 2;
+                case 30: return 3;
+                default: return 0;
+            }
+        }
+    </script>
+</body>
+</html>

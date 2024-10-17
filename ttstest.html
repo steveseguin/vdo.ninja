@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TTS Audio Stream Demo</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        textarea {
+            width: 100%;
+            height: 100px;
+        }
+        button, select {
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <h1>TTS Audio Stream Demo</h1>
+    <textarea id="text-input" placeholder="Enter text to speak"></textarea>
+    <br>
+    <select id="voice-select"></select>
+    <br>
+    <button id="speak-button">Speak</button>
+    <button id="pause-button">Pause</button>
+    <button id="resume-button">Resume</button>
+    <button id="stop-button">Stop</button>
+    <script>
+        const textInput = document.getElementById('text-input');
+        const voiceSelect = document.getElementById('voice-select');
+        const speakButton = document.getElementById('speak-button');
+        const pauseButton = document.getElementById('pause-button');
+        const resumeButton = document.getElementById('resume-button');
+        const stopButton = document.getElementById('stop-button');
+
+        let voices = [];
+
+        function loadVoices() {
+            voices = speechSynthesis.getVoices();
+            voiceSelect.innerHTML = voices
+                .map((voice, index) => `<option value="${index}">${voice.name} (${voice.lang})</option>`)
+                .join('');
+        }
+
+        // Load voices when they are ready
+        speechSynthesis.onvoiceschanged = loadVoices;
+
+        // Initial load attempt
+        loadVoices();
+
+        function speak(text) {
+            const utterance = new SpeechSynthesisUtterance(text);
+            const selectedVoice = voices[voiceSelect.value];
+            if (selectedVoice) {
+                utterance.voice = selectedVoice;
+            }
+            
+            utterance.addEventListener('start', () => {
+                console.log('Speech started');
+            });
+            utterance.addEventListener('end', () => {
+                console.log('Speech ended');
+            });
+            speechSynthesis.speak(utterance);
+        }
+
+        speakButton.addEventListener('click', () => {
+            const text = textInput.value;
+            if (text) {
+                speak(text);
+            }
+        });
+
+        pauseButton.addEventListener('click', () => {
+            speechSynthesis.pause();
+        });
+
+        resumeButton.addEventListener('click', () => {
+            speechSynthesis.resume();
+        });
+
+        stopButton.addEventListener('click', () => {
+            speechSynthesis.cancel();
+        });
+    </script>
+</body>
+</html>

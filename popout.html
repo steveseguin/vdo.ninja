@@ -18,7 +18,6 @@
 		--discord-grey-7: #404249; 
 		--discord-grey-8: #5e6064; 
 		--discord-text: hsl( 210 calc(1 * 9.1%) 87.1% /1);
-
 		--baby-blue: #BCF;
 	}
 
@@ -121,6 +120,53 @@
 	::-webkit-scrollbar-thumb:hover {
 	  background-color: var(--discord-grey-8); 
 	}
+	
+	    .modal {
+      display: none;
+      position: fixed;
+      z-index: 1;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      overflow: auto;
+      background-color: rgba(0,0,0,0.4);
+    }
+
+    .modal-content {
+      background-color: var(--discord-grey-3);
+      margin: 1% auto;
+      padding: 20px;
+      border: 1px solid var(--discord-grey-8);
+      width: 80%;
+      max-width: 500px;
+      border-radius: 5px;
+      color: var(--discord-text);
+    }
+
+    .modal-content input {
+      width: 100%;
+      padding: 10px;
+      margin: 10px 0;
+      border-radius: 4px;
+      border: 1px solid var(--discord-grey-8);
+      background-color: var(--discord-grey-5);
+      color: var(--discord-text);
+    }
+
+    .modal-content button {
+      padding: 10px 20px;
+      margin-top: 10px;
+      background-color: var(--discord-grey-2);
+      color: var(--discord-text);
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    .modal-content button:hover {
+      background-color: var(--discord-grey-4);
+    }
 
   </style>
 </head>
@@ -136,30 +182,231 @@
         <button onclick="sendChatMessage()" data-translate='send-chat'>Send</button>
     </div>
 </div>
+
+<div id="inputModal" class="modal">
+  <div class="modal-content">
+    <h2>Enter Chat Details</h2>
+    <input type="text" id="roomInput" placeholder="Room ID">
+    <input type="text" id="viewInput" placeholder="View ID (if not in a  room)">
+    <input type="password" id="passwordInput" placeholder="Password (optional)">
+    <button onclick="submitModalInput()">Join Chat</button>
+  </div>
+</div>
+
 <script>
-
-
-/// If you have a routing system setup, you could have just one global listener for all iframes instead.
-//var chatUpdateTimeout = null;
 var messageList = [];
-(function (w) {
-    w.URLSearchParams = w.URLSearchParams || function (searchString) {
-        var self = this;
-        self.searchString = searchString;
-        self.get = function (name) {
-            var results = new RegExp('[\?&]' + name + '=([^&#]*)').exec(self.searchString);
-            if (results == null) {
-                return null;
-            }
-            else {
-                return decodeURI(results[1]) || 0;
+var urlParams = new URLSearchParams(window.location.search);
+var bc;
+var iframe;
+var bid;
+var room;
+var view;
+var label;
+var password;
+var connected = false;
+var connectionTimeout;
+async function initializeCommunication() {
+	let params = await getDecoded();
+	
+	//console.log(params);
+	
+    bid = urlParams.get("id") || params?.broadcastChannelID || "default-channel";
+    room = urlParams.get("room") || params?.room || "";
+    view = urlParams.get("view") || params?.view || "";
+    label = urlParams.get("label") || params?.label || "";
+    password = urlParams.get("password") || params?.password;
+	
+    if (bid && ("BroadcastChannel" in window)) {
+        bc = new BroadcastChannel(bid);
+        
+        bc.onmessage = function(e) {
+            if (e.data && e.data.messageList) {
+                clearTimeout(connectionTimeout);
+                connected = true;
+                handleMessage(e.data);
+            } else if (e.data){
+                handleMessage(e.data);
             }
         };
-    };
 
-})(window);
-var urlParams = new URLSearchParams(window.location.search);
+        bc.postMessage({"loaded": true});
 
+        connectionTimeout = setTimeout(function() {
+            if (!connected) {
+                console.log("BroadcastChannel connection timed out");
+                bc.close();
+                loadIframe();
+            }
+        }, 2000); // Wait for 5 seconds
+
+        bc.onclose = function() {
+            console.log("Broadcast channel closed");
+            if (connected) {
+                window.close();
+				connected = false;
+            }
+        };
+    } else {
+        loadIframe();
+    }
+}
+
+async function getDecoded() {
+
+    async function deriveKey(password) {
+        const encoder = new TextEncoder();
+        try {
+            const keyMaterial = await crypto.subtle.importKey(
+                'raw',
+                encoder.encode(password),
+                { name: 'PBKDF2' },
+                false,
+                ['deriveBits', 'deriveKey']
+            );
+            
+            return await crypto.subtle.deriveKey(
+                {
+                    name: 'PBKDF2',
+                    salt: encoder.encode('salt'),
+                    iterations: 100000,
+                    hash: 'SHA-256'
+                },
+                keyMaterial,
+                { name: 'AES-GCM', length: 256 },
+                true,
+                ['encrypt', 'decrypt']
+            );
+        } catch (error) {
+            console.error('Error in deriveKey:', error);
+            throw error;
+        }
+    }
+
+	function decrypt(encryptedText, key) {
+	  const textEncoder = new TextEncoder();
+	  const encodedKey = textEncoder.encode(key);
+	  const encrypted = Uint8Array.from(atob(encryptedText), c => c.charCodeAt(0));
+	  
+	  const decrypted = encrypted.map((byte, i) => 
+		byte ^ encodedKey[i % encodedKey.length]
+	  );
+	  
+	  return new TextDecoder().decode(decrypted);
+	}
+   
+   const ENCRYPTION_KEY = 'your32characterlongencryptionkey!!';
+  
+	try {
+		const urlParams = new URLSearchParams(window.location.search);
+		const encodedData = urlParams.get('data');
+		if (encodedData) {
+			//console.log('Encoded data from URL:', encodedData);
+			const decrypted = decrypt(encodedData, ENCRYPTION_KEY);
+			const params = JSON.parse(decrypted);
+			//console.log('Decoded params:', params);
+			return params;
+		}
+		//console.log('No encoded data found in URL');
+		return null;
+	} catch (error) {
+		//console.error('Error in getDecoded:', error);
+		return null;
+	}
+
+}
+
+function loadIframe() {
+
+    if (!view && !room) {
+        showInputModal();
+        return;
+    }
+
+    iframe = document.createElement("iframe");
+    iframe.style.display = "none";
+    iframe.allow = "autoplay";
+
+    var srcString = "./?datamode";
+    if (room) srcString += "&scene&room=" + encodeURIComponent(room);
+    if (view) srcString += "&view=" + encodeURIComponent(view);
+    if (password) srcString += "&password=" + encodeURIComponent(password);
+	if (label) srcString += "&label=" + encodeURIComponent(label);
+
+    iframe.src = srcString;
+    document.body.appendChild(iframe);
+	
+    var eventMethod = window.addEventListener ? "addEventListener" : "attachEvent";
+    var eventer = window[eventMethod];
+    var messageEvent = eventMethod === "attachEvent" ? "onmessage" : "message";
+
+    eventer(messageEvent, function (e) {
+        if (e.source != iframe.contentWindow) return;
+       // console.log(e);
+        if ("gotChat" in e.data) {
+            handleMessage(e.data.gotChat);
+        } else if ("chat" in e.data) {
+            handleMessage(e.data.chat);
+        }
+    });
+}
+
+
+function handleMessage(data) {
+    if (data.msg) {
+        messageList.push(data);
+        messageList = messageList.slice(-100);
+        updateMessages(data);
+    } else if (data.messageList) {
+        messageList = data.messageList;
+        updateMessages();
+    }
+}
+
+function showInputModal() {
+    document.getElementById('inputModal').style.display = 'block';
+}
+
+function submitModalInput() {
+    var room = document.getElementById('roomInput').value;
+    var view = document.getElementById('viewInput').value;
+    var password = document.getElementById('passwordInput').value;
+
+    if (!room && !view) {
+        alert("Please enter either a Room ID or a View ID");
+        return;
+    }
+
+    document.getElementById('inputModal').style.display = 'none';
+    updateURLParams(room, view, password);
+    loadIframe();
+}
+
+function sendChatMessage() {
+    var msg = document.getElementById('chatInput').value;
+    msg = sanitize(msg);
+    if (msg == "") return;
+    
+    //console.log(msg);
+    if (bc && connected) {
+		try {
+			bc.postMessage({"msg": msg});
+		} catch(e){
+			if (iframe) {
+				const targetOrigin = new URL(iframe.src).origin || "*";
+				iframe.contentWindow.postMessage({ sendChat:msg }, targetOrigin);
+			}
+		}
+    } else if (iframe) {
+        const targetOrigin = new URL(iframe.src).origin || "*";
+		iframe.contentWindow.postMessage({ sendChat:msg }, targetOrigin);
+    }
+    
+    document.getElementById('chatInput').value = "";
+    
+    messageList.push({"msg": msg, type: "sent", time: new Date()});
+    messageList = messageList.slice(-100);
+    updateMessages({"msg": msg, type: "sent", time: new Date()});
+}
 
 function replaceURLs(message) {
 	if(!message) return;
@@ -212,25 +459,7 @@ function replaceURLs(message) {
 	});
 }
 
-if (urlParams.has("id")){
- var bid = urlParams.get("id");
-}
-var bc = new BroadcastChannel(bid);
-bc.postMessage({"loaded":true});
-bc.onmessage = function (e) {
-	//if (e.source != iframe.contentWindow){return} // reject messages send from other iframes
-	console.log(e);
-	if ("data" in e){
-		if ("msg" in e.data){
-			messageList.push(e.data);
-			messageList = messageList.slice(-100);
-			updateMessages(e.data);
-		} else if ("messageList" in e.data){
-			messageList = e.data.messageList;
-			updateMessages();
-		}
-	}
-};
+
 function sanitize(string) {
 	var temp = document.createElement('div');
 	temp.textContent = string;
@@ -246,19 +475,6 @@ function EnterButtonChat(event){
 		// Trigger the button element with a click
 		sendChatMessage();
 	}
-}
-
-function sendChatMessage(chatMsg = false){ // filtered + visual
-	var msg = document.getElementById('chatInput').value;
-	msg = sanitize(msg);
-	if (msg==""){return;}
-	console.log(msg);
-	bc.postMessage({"msg":msg})
-	document.getElementById('chatInput').value = "";
-	
-	messageList.push({"msg":msg, type: "sent"});
-	messageList = messageList.slice(-100);
-	updateMessages({"msg":msg, type: "sent"});
 }
 
 function timeSince(date) {
@@ -290,13 +506,12 @@ function timeSince(date) {
 }
 
 
-
 function updateMessages(message = false){
 	if (message){
 		var time = timeSince(message.time);
 		var msg = document.createElement("div");
 		////// KEEP THIS IN /////////
-		console.log(message.msg); // Display Recieved messages for View-Only clients.
+		//console.log(message.msg); // Display Recieved messages for View-Only clients.
 		/////////////////////////////
 		var label = "";
 		if (message.label){
@@ -328,7 +543,7 @@ function updateMessages(message = false){
 			var time = timeSince(messageList[i].time);
 			var msg = document.createElement("div");
 			////// KEEP THIS IN /////////
-			console.log(messageList[i].msg); // Display Recieved messages for View-Only clients.
+			//console.log(messageList[i].msg); // Display Recieved messages for View-Only clients.
 			/////////////////////////////
 			var label = "";
 			if (messageList[i].label){
@@ -363,6 +578,8 @@ function updateMessages(message = false){
 	document.getElementById("chatBody").scrollTop = document.getElementById("chatBody").scrollHeight;
 	//chatUpdateTimeout = setTimeout(function(){updateMessages()},60000);
 }
+
+initializeCommunication();
 
 </script>
 </body>

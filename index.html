@@ -28,6 +28,8 @@
 		<meta name="license" content="https://github.com/steveseguin/vdo.ninja/LICENSE.md" />
 		<meta name="sourcecode" content="https://github.com/steveseguin/vdo.ninja" />
 		<meta name="stance-on-war" content="Steve Seguin condemns Russia's brutal invasion of Ukraine 💙💛." />
+		<meta name="robots" content="index, follow">
+		<link rel="canonical" href="https://vdo.ninja/">
 		
 		<!-- Primary Meta Tags -->
 		<title>VDO.Ninja</title>
@@ -38,10 +40,10 @@
 		<meta name="msapplication-TileColor" content="#da532c" />
 		<meta name="theme-color" content="#0f131d" />
 		
-		<link rel="stylesheet" href="./css/variables.css?ver=2" />
+		<link rel="stylesheet" href="./css/variables.css?ver=3" />
 		<!-- If a user is using an old custom main.css, their custom variables should override the defaults variables this way. i think. -->
-		<link rel="stylesheet" href="./css/main.css?ver=394" />
-		<link rel="stylesheet" href="./css/icons.css?ver=1" />
+		<link rel="stylesheet" href="./css/main.css?ver=395" />
+		<link rel="stylesheet" href="./css/icons.css?ver=2" />
 		<link rel="stylesheet" href="./css/animations.css" />
 		<script type="text/javascript" crossorigin="anonymous" src="./thirdparty/adapter.js"></script>
 		
@@ -50,33 +52,26 @@
 		<link id="favicon2" rel="icon" type="image/png" sizes="16x16" href="./media/favicon-16x16.png" />
 		<link id="favicon3" rel="icon" href="./media/favicon.ico" />
 		<link id="thumbnailUrl" itemprop="thumbnailUrl" href="./media/vdoNinja_logo_full.png" />
+
+		<!-- X (Twitter) Card Tags -->
+		<meta name="twitter:card" content="summary_large_image">
+		<meta name="twitter:creator" content="@SteveSeguin">
+		<meta name="twitter:title" content="VDO.Ninja">
+		<meta name="twitter:description" content="Bring live video from your smartphone, computer, or friends directly into OBS Studio or other. 100% free.">
+		<meta name="twitter:image" content="https://vdo.ninja/media/vdoNinja_logo_full.png">
 		
-		<!-- Open Graph / Facebook -->
-		<meta property="og:site_name" content="VDO.Ninja" />
-		<meta property="og:type" content="website" />
-		<meta property="og:url" content="https://vdo.ninja/" />
-		<meta property="og:title" content="VDO.Ninja" />
-		<meta property="og:description" content="Bring live video from your smartphone, computer, or friends directly into Studio. 100% free." />
-		<meta property="og:image" itemprop="image" content="https://vdo.ninja/media/vdoNinja_logo_full.png" />
-		<meta name="msapplication-TileImage" content="./media/vdoNinja_logo_full.png" />
-		<meta property="og:image:type" content="image/png" />
-		<meta property="og:image:width" content="1200" />
-		<meta property="og:image:height" content="630" />
-		<!-- Twitter -->
-		<meta property="twitter:card" content="summary_large_image" />
-		<meta property="twitter:url" content="https://vdo.ninja/" />
-		<meta property="twitter:title" content="VDO.Ninja" />
-		<meta property="twitter:description" content="Bring live video from your smartphone, computer, or friends directly into OBS Studio. 100% free." />
-		<meta property="twitter:image" content="./media/vdoNinja_logo_full.png" />
+		<!-- Open Graph Tags (also used by X) -->
+		<meta property="og:type" content="website">
+		<meta property="og:url" content="https://vdo.ninja/">
+		<meta property="og:title" content="VDO.Ninja">
+		<meta property="og:description" content="Bring live video from your smartphone, computer, or friends directly into OBS Studio or other. 100% free.">
+		<meta property="og:image" content="https://vdo.ninja/media/vdoNinja_logo_full.png">
+		<meta property="og:image:width" content="1200">
+		<meta property="og:image:height" content="630">
+		<meta property="og:site_name" content="VDO.Ninja">
 
 		<style id="lightbox-animations" type="text/css"></style>
-		
-		<!-- Until Chrome v115 ends ; pip2 -->
-		<meta http-equiv="origin-trial" content="AoalTVyEOoiQninAV09SzviYaAtRKuTfDIsMUNQLIg1/+ZWOpXEFOL+GQGqkQzkkszPrK26oGzB1hIF3beHJjAMAAABeeyJvcmlnaW4iOiJodHRwczovL3Zkby5uaW5qYTo0NDMiLCJmZWF0dXJlIjoiRG9jdW1lbnRQaWN0dXJlSW5QaWN0dXJlQVBJIiwiZXhwaXJ5IjoxNjk0MTMxMTk5fQ==">
-		
-		<!-- Until Chrome v117 ends ; blur -->
-		<meta http-equiv="origin-trial" content="Aqwjtr1IS9AdkcWCFAOHtMMmsKDy8Ti58hQBbHkR/HnloiMhkW17cYgnkiLgOH9zuTDC/o4GquQ0MHe9tqT51wcAAABdeyJvcmlnaW4iOiJodHRwczovL3Zkby5uaW5qYTo0NDMiLCJmZWF0dXJlIjoiTWVkaWFDYXB0dXJlQmFja2dyb3VuZEJsdXIiLCJleHBpcnkiOjE2OTg5Njk1OTl9">
-		
+
 	</head>
 	<body id="main" class="main hidden" onload="main()">
 		<span itemprop="image" itemscope itemtype="http://schema.org/ImageObject">
@@ -87,9 +82,9 @@
 			<link itemprop="url" href="./media/vdoNinja_logo_full.png" />
 		</span>
 		
-		<script type="text/javascript" crossorigin="anonymous"  src="./thirdparty/CodecsHandler.js?ver=18"></script>
+		<script type="text/javascript" crossorigin="anonymous"  src="./thirdparty/CodecsHandler.js?ver=28"></script>
 		<script type="text/javascript" crossorigin="anonymous" src="./thirdparty/aes.js"></script>
-		<script type="text/javascript" crossorigin="anonymous" src="./webrtc.js?ver=813"></script>
+		<script type="text/javascript" crossorigin="anonymous" src="./webrtc.js?ver=840"></script>
 		<input id="zoomSlider" type="range" style="display: none;" />
 		<span id="electronDragZone" style="pointer-events: none; z-index:-10; position:absolute;top:0;left:0;width:100%;height:2%;-webkit-app-region: drag;min-height:20px;"></span>
 		<div id="header">
@@ -917,7 +912,34 @@
 						</label>
 					</div>
 				</div>
-
+			</div>
+			
+			<div id="container-18" class="column columnfade pointer rounded card hidden" style="display:none! opacity:0; width:0; height:0; overflow-y: auto;">
+				<h2><span data-translate="whip-in">Join Room via WHIP</span></h2>
+				<i style="margin-top:30px;font-size:560%;overflow:hidden;" class="largeDarkIcon las la-broadcast-tower"></i>
+				<div class="container-inner">
+					<br />
+					WIP || SELECT SERVER || CUSTOM MEDIAMTX || CUSTOM WHIP || GENERATE TOKEN
+					|| PREVIEW HERE 
+					<button onclick="previewIframe(getById('iframeURL').value);" >Refresh</button> 
+					<button onclick="this.innerHTML = 'Update'; session.publishIFrame(getById('iframeURL').value);" >JOIN</button><br />
+					<div class="message-card info">
+						<h1>Encoder information</h1>
+						<p>WHIP URL HERE</p>
+						<ul style="text-align: left;">
+						<li>encoder settings here</li>
+						<li>encoder settings here</li>
+						<li>encoder settings here</li>
+					</ul>
+					</div>
+				</div>
+				<div class="outer close">
+					<div class="inner">
+						<label class="labelclass">
+							<span data-translate="back">Back</span>
+						</label>
+					</div>
+				</div>
 			</div>
 			
 			<div id="container-7" class="column columnfade pointer rounded card hidden" style="overflow: hidden;" onclick="window.location = './speedtest.html';">
@@ -954,7 +976,13 @@
 				<h2><span data-translate="get-full-documentation">Full Documentation</span></h2>
 				<i style="margin-top:30px;font-size:600%;overflow:hidden;" class="largeDarkIcon las la-info"></i>
 			</div>
-			
+			<div id="container-11" class="column columnfade pointer rounded card hidden" style="overflow: hidden;" onclick="window.location = 'https://docs.vdo.ninja/steves-helper-apps/native-mobile-app-versions';">
+				<h2><span data-translate="get-the-native-app">Native Mobile Apps</span></h2>
+				<i style="margin-top:30px;font-size:600%;overflow:hidden;" class="largeDarkIcon las la-mobile"></i>
+				<div class="container-inner">
+					Loading ...
+				</div>
+			</div>
 			<div id="container-11" class="column columnfade pointer rounded card hidden" style="overflow: hidden;" onclick="window.location = 'https://github.vdo.ninja';">
 				<h2><span data-translate="get-the-source-code">Source Code</span></h2>
 				<i style="margin-top:30px;font-size:600%;overflow:hidden;" class="largeDarkIcon las la-code-branch"></i>
@@ -1041,13 +1069,13 @@
 								<span style="color:#daad09;">Welcome to VDO Ninja! We've rebranded!  Nothing else is changing and we're staying 100% free.</span>
 							</h4>
 							<br />
-							🌱 Site last updated on August 20th. You can also still access the previous version, which <a href="https://vdo.ninja/v24/">is hosted here</a>. Development <a target="_blank" title="Open a page with recent VDO.Ninja development and feature updates" href="https://updates.vdo.ninja/">updates are here.</a>
+							🎃 Site last updated on October 15th. You can also still access the previous version, which <a href="https://vdo.ninja/v25/">is hosted here</a>. Development <a target="_blank" title="Open a page with recent VDO.Ninja development and feature updates" href="https://updates.vdo.ninja/">updates are here.</a>
 							<br />
 							<br />
 							<h3>
 							   🛠 For support, join the <a href="https://discord.gg/T4xpQVv" target="_blank">Discord <i class="lab la-discord"></i></a> or see the <a href="https://www.reddit.com/r/VDONinja/" target="_blank">sub-reddit <i class="lab la-reddit-alien"></i></a>. The <a href="https://docs.vdo.ninja/" target="_blank">documentation is here</a> and my personal email is <i>steve@seguin.email</i>
 							</h3> 
-								
+							<a href='https://docs.vdo.ninja/steves-helper-apps/native-mobile-app-versions' target='_blank'>
 						</span>
 					</div>
 				</center>
@@ -1350,7 +1378,7 @@
 			
 				<div class='directorBlock' id="customizeLinks3" style='display:none;margin-top:5px;padding-bottom:0;'>
 					<div  style="display:inline-block; position: relative; margin-right:10px; ">
-						<div style="display:inline-block;margin-top: 12px;   position: relative;">
+						<div style="display:inline-block;margin-top: 12px; position: relative; margin-right:10px; ">
 						
 						<label class="switch">
 							<input type="checkbox" data-param="&st" onchange="updateLink(3,this, true);">
@@ -1443,11 +1471,19 @@
 						</div>
 						
 						<div  style="display:inline-block;margin-top: 12px; position: relative; ">
+						
 							<label class="switch" title="Playback the video with mono-channel audio">
 							  <input type="checkbox" data-param="&mono" onchange="updateLink(3,this, true);">
 							  <span class="slider"></span>
 							</label>
 							<span data-translate="force-mono-audio">Force mono audio</span>
+							<br />
+							
+							<label class="switch" title="This scene will allow a director's video/audio to appear as if it were a guest.">
+							  <input type="checkbox" data-param="&showdirector" onchange="updateLink(3,this, true);">
+							  <span class="slider"></span>
+							</label>
+							<span data-translate="show-director">Include Director</span>
 							<br />
 							
 							<label class="switch" title="Have the videos fit their respective areas, even if it means cropping a bit">
@@ -1626,7 +1662,7 @@
 							<span>C3</span>
 						</button>
 						<button class="btn-HL-paleblue" data-action-type="sceneAudioChannel" data-channel="4" title="Isolate to audio channel 4" onclick="directAudioChannel(this, event);">
-							<span>C4</span>
+							<span style="color:orange">C4</span>
 						</button>
 						<button class="btn-HL-paleblue" data-action-type="sceneAudioChannel" data-channel="5" title="Isolate to audio channel 5" onclick="directAudioChannel(this, event);">
 							<span>C5</span>
@@ -1870,7 +1906,7 @@
 						<span>C3</span>
 					</button>
 					<button class="btn-HL-paleblue" data-action-type="sceneAudioChannel" data-channel="4" title="Isolate to audio channel 4" onclick="directAudioChannel(this, event, true);">
-						<span>C4</span>
+						<span style="color:orange">C4</span>
 					</button>
 					<button class="btn-HL-paleblue" data-action-type="sceneAudioChannel" data-channel="5" title="Isolate to audio channel 5" onclick="directAudioChannel(this, event, true);">
 						<span>C5</span>
@@ -2106,7 +2142,6 @@
 						<br />
 					</span>
 					<button class="generalButton" onclick="clearStorage();" title="Clear site's local storage and settings" data-translate="cleaer-sites-local-storage">Clear site's local browser storage and saved settings</button>
-					
 				</span>
 		</div>
 		<nav id="context-menu" class="context-menu">
@@ -2732,12 +2767,6 @@
 			
 			session.stunServers = [{ urls: ["stun:stun.l.google.com:19302", "stun:stun.cloudflare.com:3478"]}]; // google + cloudflare stun servers. default
 			
-			if (window.location.hostname === 'vdo.socialstream.ninja') {
-				session.wss = "wss://wss.socialstream.ninja:443"
-			} else if (window.location.hostname === 'test.socialstream.ninja') {
-				session.wss = "wss://wss.socialstream.ninja:443"
-			}
-			
 			///////////////  ------  Custom basic TURN SETUP SECTION STARTS Here --------
 			// session.configuration = {         // uncomment to disable the default usage of the vdo.ninja turn servers.
 			//	iceServers: session.stunServers,
@@ -2852,7 +2881,7 @@
 			// session.decrypted = session.decodeInvite("U2FsdGVkX1+d58DFIHoO3EQZSuX86ch4PqW2ouztnJ0="); // get a code from invite.cam
 			
 		</script>
-		<script type="text/javascript" crossorigin="anonymous" id="lib-js" src="./lib.js?ver=1217"></script>
-		<script type="text/javascript" crossorigin="anonymous" id="main-js" src="./main.js?ver=899"></script>
+		<script type="text/javascript" crossorigin="anonymous" id="lib-js" src="./lib.js?ver=1265"></script>
+		<script type="text/javascript" crossorigin="anonymous" id="main-js" src="./main.js?ver=941"></script>
 	</body>
 </html>

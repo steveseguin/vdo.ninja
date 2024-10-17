@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Adaptive Loudness Transition Analysis</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+        h1, h2 {
+            color: #2c3e50;
+            text-align: center;
+        }
+        .input-group {
+            margin-bottom: 20px;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        input[type="file"], input[type="number"] {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        #error {
+            color: #e74c3c;
+            font-weight: bold;
+        }
+        #results, #debug {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            margin-top: 20px;
+        }
+        .region {
+            margin-bottom: 10px;
+            padding: 10px;
+            background-color: #ecf0f1;
+            border-radius: 4px;
+        }
+        .region-header {
+            font-weight: bold;
+            color: #2980b9;
+        }
+        #debug {
+            font-family: monospace;
+            white-space: pre-wrap;
+            background-color: #2c3e50;
+            color: #ecf0f1;
+        }
+    </style>
+</head>
+<body>
+    <h1>Adaptive Loudness Transition Analysis</h1>
+    <div class="input-group">
+        <label for="audioFile">Select WAV file:</label>
+        <input type="file" id="audioFile" accept=".wav">
+        <label for="transitionThreshold">Transition Threshold (dB):</label>
+        <input type="number" id="transitionThreshold" value="5" min="1" max="20" step="0.5">
+        <label for="analysisWindowSize">Analysis Window Size (seconds):</label>
+        <input type="number" id="analysisWindowSize" value="5" min="1" max="30" step="1">
+    </div>
+    <div id="error"></div>
+    <div id="results"></div>
+    <div id="debug"></div>
+
+    <script>
+        let audioContext;
+
+        document.getElementById('audioFile').addEventListener('change', handleFileUpload);
+
+        async function handleFileUpload(event) {
+            const errorDiv = document.getElementById('error');
+            const resultsDiv = document.getElementById('results');
+            const debugDiv = document.getElementById('debug');
+            errorDiv.innerHTML = '';
+            resultsDiv.innerHTML = '';
+            debugDiv.innerHTML = '';
+
+            try {
+                audioContext = new (window.AudioContext || window.webkitAudioContext)();
+
+                const file = event.target.files[0];
+                if (!file) {
+                    throw new Error('No file selected');
+                }
+
+                const arrayBuffer = await file.arrayBuffer();
+                const audioBuffer = await audioContext.decodeAudioData(arrayBuffer);
+                
+                console.log('Audio duration:', audioBuffer.duration, 'seconds');
+                debugDiv.innerHTML += `Audio duration: ${audioBuffer.duration.toFixed(2)} seconds\n`;
+                
+                const loudnessData = analyzeLoudness(audioBuffer);
+                console.log('Loudness data:', loudnessData);
+                debugDiv.innerHTML += `Loudness data length: ${loudnessData.length}\n`;
+                debugDiv.innerHTML += `First 5 loudness data points: ${JSON.stringify(loudnessData.slice(0, 5), null, 2)}\n`;
+                debugDiv.innerHTML += `Last 5 loudness data points: ${JSON.stringify(loudnessData.slice(-5), null, 2)}\n`;
+
+                if (loudnessData.length === 0) {
+                    throw new Error('No loudness data generated. The audio file might be too short.');
+                }
+
+                const silenceThreshold = determineSilenceThreshold(loudnessData);
+                debugDiv.innerHTML += `Automatically determined silence threshold: ${silenceThreshold.toFixed(2)} dB\n`;
+
+                const transitionThreshold = parseFloat(document.getElementById('transitionThreshold').value);
+                const analysisWindowSize = parseFloat(document.getElementById('analysisWindowSize').value);
+                const regions = identifyLoudnessTransitions(loudnessData, silenceThreshold, transitionThreshold, analysisWindowSize);
+                console.log('Regions:', regions);
+                debugDiv.innerHTML += `Number of regions identified: ${regions.length}\n`;
+                debugDiv.innerHTML += `Regions: ${JSON.stringify(regions, null, 2)}\n`;
+
+                displayResults(regions, audioBuffer.duration, silenceThreshold);
+            } catch (error) {
+                console.error('Error:', error);
+                errorDiv.innerHTML = `Error: ${error.message}`;
+                debugDiv.innerHTML += `Error stack trace: ${error.stack}\n`;
+            }
+        }
+
+        function analyzeLoudness(audioBuffer) {
+            const channelData = audioBuffer.getChannelData(0);
+            const sampleRate = audioBuffer.sampleRate;
+            const segmentLength = 0.1 * sampleRate; // 100ms segments
+            const loudnessData = [];
+
+            for (let i = 0; i < channelData.length; i += segmentLength) {
+                const segment = channelData.slice(i, i + segmentLength);
+                const loudness = calculateLoudness(segment);
+                if (!isNaN(loudness)) {
+                    loudnessData.push({ time: i / sampleRate, loudness });
+                }
+            }
+
+            return loudnessData;
+        }
+
+        function calculateLoudness(samples) {
+            if (samples.length === 0) return NaN;
+            const rms = Math.sqrt(samples.reduce((sum, sample) => sum + sample * sample, 0) / samples.length);
+            return 20 * Math.log10(Math.max(rms, 1e-10)); // Avoid log of 0
+        }
+
+        function determineSilenceThreshold(loudnessData) {
+            const sortedLoudness = loudnessData.map(d => d.loudness).sort((a, b) => a - b);
+            const medianIndex = Math.floor(sortedLoudness.length / 2);
+            const median = sortedLoudness[medianIndex];
+            
+            // Assuming half of the audio should be silence, we'll use the median as our threshold
+            return median;
+        }
+
+        function identifyLoudnessTransitions(loudnessData, silenceThreshold, transitionThreshold, analysisWindowSize) {
+            const windowSamples = Math.floor(analysisWindowSize / 0.1); // Convert seconds to number of 100ms samples
+            let regions = [];
+            let currentRegion = null;
+            let prevAvgLoudness = null;
+
+            for (let i = 0; i < loudnessData.length - windowSamples; i += windowSamples) {
+                const window = loudnessData.slice(i, i + windowSamples);
+                const avgLoudness = average(window.map(d => d.loudness));
+
+                if (avgLoudness > silenceThreshold) {
+                    if (!currentRegion) {
+                        currentRegion = { start: window[0].time, avgLoudness };
+                    } else if (prevAvgLoudness !== null && Math.abs(avgLoudness - prevAvgLoudness) > transitionThreshold) {
+                        currentRegion.end = window[0].time;
+                        regions.push(currentRegion);
+                        currentRegion = { start: window[0].time, avgLoudness };
+                    }
+                    prevAvgLoudness = avgLoudness;
+                } else if (currentRegion) {
+                    currentRegion.end = window[0].time;
+                    regions.push(currentRegion);
+                    currentRegion = null;
+                    prevAvgLoudness = null;
+                }
+            }
+
+            if (currentRegion) {
+                currentRegion.end = loudnessData[loudnessData.length - 1].time;
+                regions.push(currentRegion);
+            }
+
+            return regions;
+        }
+
+        function average(arr) {
+            return arr.reduce((sum, val) => sum + val, 0) / arr.length;
+        }
+
+        function displayResults(regions, totalDuration, silenceThreshold) {
+            const resultsDiv = document.getElementById('results');
+            resultsDiv.innerHTML = '<h2>Analysis Results</h2>';
+            resultsDiv.innerHTML += `<p>Automatically determined silence threshold: ${silenceThreshold.toFixed(2)} dB</p>`;
+            if (regions.length === 0) {
+                resultsDiv.innerHTML += '<p>No significant loudness transitions identified. Try adjusting the parameters.</p>';
+                return;
+            }
+            regions.forEach((region, i) => {
+                const regionDuration = (region.end - region.start).toFixed(2);
+                const percentOfTotal = ((region.end - region.start) / totalDuration * 100).toFixed(1);
+                const loudnessDescription = describeLoudness(region.avgLoudness);
+                resultsDiv.innerHTML += `
+                    <div class="region">
+                        <span class="region-header">Region ${i + 1}:</span><br>
+                        Start: ${formatTime(region.start)}<br>
+                        End: ${formatTime(region.end)}<br>
+                        Duration: ${regionDuration}s (${percentOfTotal}% of total)<br>
+                        Avg Loudness: ${region.avgLoudness.toFixed(2)} dB (${loudnessDescription})
+                    </div>
+                `;
+            });
+        }
+
+        function formatTime(seconds) {
+            const minutes = Math.floor(seconds / 60);
+            const remainingSeconds = (seconds % 60).toFixed(2);
+            return `${minutes}:${remainingSeconds.padStart(5, '0')}`;
+        }
+
+        function describeLoudness(loudness) {
+            if (loudness > -10) return "Very Loud";
+            if (loudness > -20) return "Loud";
+            if (loudness > -30) return "Moderate";
+            if (loudness > -40) return "Soft";
+            return "Very Soft";
+        }
+    </script>
+</body>
+</html>

@@ -2793,6 +2793,7 @@ img {
 	border-radius: var(--video-rounded);
 	border-width: var(--video-border);
 	border-color: var(--video-border-color);
+	background-color: var(--video-holder-color);
 	border-style: solid;
 }
 

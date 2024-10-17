@@ -1,6 +1,6 @@
 <html>
 <head>
-<script src="https://vdo.ninja/thirdparty/webmidi.js"></script>
+<script src="./thirdparty/webmidi3.js"></script>
 <link rel="stylesheet" href="https://vdo.ninja/css/variables.css" />
 <link rel="stylesheet" href="https://vdo.ninja/css/main.css" />
 <link rel="stylesheet" href="https://vdo.ninja/css/icons.css" />
@@ -10,6 +10,7 @@
 			max-width: 80%;
 			width: fit-content;
 			margin: 0 auto;
+			overflow: auto;
 		}
 
 		h1 {
@@ -116,10 +117,13 @@
 				https://github.com/djipco/webmidi
 				<br /><br />
 				Below you can test the <a href="https://docs.vdo.ninja/general-settings/midi">MIDI hotkey commands</a> for VDO.Ninja below:<br />
-				<br /><br />
+				<br />
 				The idea of this app is to select a MIDI output loopback device. Pressing any of the below buttons will trigger the respective MIDI note/command, sending it to the output MIDI device. 
 				Since the MIDI output device should be a loopback device, you can select the MIDI loopback device in VDO.Ninja as its MIDI input source.
-				<br /><br />Refer to the documentation for what a MIDI note/value does in VDO.Ninja, but it can be used to control the director's room, either locally or remotely.
+				<br /><br />Refer to the <a href='https://docs.vdo.ninja/advanced-settings/api-and-midi-parameters'>documentation</a> for what a MIDI note/value does in VDO.Ninja, but it can be used to control the director's room, either locally or remotely.
+				<br /><br />
+				To help configure the URL parameters for your use case, you can also use this <a href="midiconfig.html">the MIDI config</a> page to customize your links.
+				
 			</div>
 		</div>
 		<div class="card">

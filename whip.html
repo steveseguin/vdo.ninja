@@ -1,19 +1,55 @@
-<html>
+<!DOCTYPE html>
+<html lang="en">
 <head>
-	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-	<link rel="stylesheet" href="./lineawesome/css/line-awesome.min.css" />
-	<link rel="shortcut icon" href="data:image/x-icon;," type="image/x-icon" />
-	<link id="favicon1" rel="icon" type="image/png" sizes="32x32" href="./media/favicon-32x32.png" />
-	<link id="favicon2" rel="icon" type="image/png" sizes="16x16" href="./media/favicon-16x16.png" />
-	<link id="favicon3" rel="icon" href="./media/favicon.ico" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>WHIP/WHEP Client - WebRTC Streaming Tool</title>
+    <meta name="description" content="A powerful WHIP/WHEP client for WebRTC streaming, leveraging VDO.Ninja for seamless audio and video transmission.">
+    <meta name="keywords" content="WHIP, WHEP, WebRTC, streaming, VDO.Ninja, MediaMTX">
+    <meta name="author" content="Your Name or Company">
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://vdo.ninja/">
+    <meta property="og:title" content="WHIP/WHEP Client - WebRTC Streaming Tool">
+    <meta property="og:description" content="A powerful WHIP/WHEP client for WebRTC streaming, leveraging VDO.Ninja for seamless audio and video transmission.">
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://vdo.ninja/">
+    <meta property="twitter:title" content="WHIP/WHEP Client - WebRTC Streaming Tool">
+    <meta property="twitter:description" content="A powerful WHIP/WHEP client for WebRTC streaming, leveraging VDO.Ninja for seamless audio and video transmission.">
+
+    <!-- Favicon -->
+    <link rel="shortcut icon" href="data:image/x-icon;," type="image/x-icon" />
+    <link id="favicon1" rel="icon" type="image/png" sizes="32x32" href="./media/favicon-32x32.png" />
+    <link id="favicon2" rel="icon" type="image/png" sizes="16x16" href="./media/favicon-16x16.png" />
+    <link id="favicon3" rel="icon" href="./media/favicon.ico" />
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="./lineawesome/css/line-awesome.min.css" />
 	<style>
-	html {
-		border:0;
-		margin:0;
-		outline:0;
-		overflow: hidden;
-	}
+html {
+    border: 0;
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    width: 100%;
+}
+
+body {
+    padding: 0;
+    min-height: 100vh;
+    width: 100%;
+    background: linear-gradient(to top, #363644, 50%, #151b29) fixed;
+    font-size: 2em;
+    font-family: Helvetica, Arial, sans-serif;
+    display: flex;
+    flex-flow: column;
+    margin: 0;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
 
 	video {
 
@@ -23,22 +59,6 @@
 		cursor: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=), none;
 		user-select: none;
 		
-	}
-	body {
-		padding: 0 0px;
-		height: 100%;
-		width: 100%;
-		background-color: -webkit-linear-gradient(to top, #363644, 50%, #151b29);  /* Chrome 10-25, Safari 5.1-6 */
-		background: linear-gradient(to top, #363644, 50%, #151b29); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
-		font-size: 2em;
-		font-family: Helvetica, Arial, sans-serif;
-		display: flex;
-		flex-flow: column;
-		border:0;
-		margin:0;
-		outline:0;
-		overflow-y: auto;
-		overflow-x: hidden;
 	}
 
 	#moreinfo {
@@ -381,6 +401,13 @@
 								<option value="2000">🎦 Force Keyframes Interval: 2s</option>
 								<option value="6000">🎦 Force Keyframes Interval: 6s</option>
 							</select >
+							<select style="border-radius:10px;margin-right:5px;width:unset!important;" class="changeText" id="whipwaitFlag" title="Time to wait for ICE candidates before sending the offer. Needed if you whip server is behind a firewall.">
+								<option value="0">⌛Do not wait for ICE candidates</option>
+								<option selected value="200">⌛Wait 200-ms for ICE candidates</option>
+								<option value="500">⌛Wait 500-ms for ICE candidates</option>
+								<option value="1000">⌛Wait 1000-ms for ICE candidates</option>
+								<option value="5000">⌛Wait 5000-ms for ICE candidates</option>
+							</select>
 						</div>
 					</div>	
 				</div>
@@ -482,7 +509,7 @@
 						<i class="las la-history"></i>
 					</label>
 				</div>
-				<br />
+				<br /><br /><br /><br /><br />
 				<div id="moreinfo">
 					<h3 style='cursor:pointer;'>More information and options</h3>
 					For more WHIP/WHEP options, tools, services, and documentation, please see: <a href='https://docs.vdo.ninja/steves-helper-apps/whip-and-whep-tooling' target="_blank"><br /><br />
@@ -490,9 +517,65 @@
 					<br />
 					<h3 style='cursor:pointer;'>For community support</h3>
 					For support, join our <a href='https://discord.vdo.ninja' target="_blank">Discord server here</a>.
+					<br /><br />
+					<div id="additional-info">
+						<h2>About WHIP/WHEP and MediaMTX Integration</h2>
+						<p>WHIP (WebRTC-HTTP ingestion protocol) and WHEP (WebRTC-HTTP egress protocol) are standardized protocols for WebRTC streaming. This client utilizes VDO.Ninja as the WebRTC layer to provide a powerful and flexible streaming solution.</p>
+						
+						<h3>Using MediaMTX</h3>
+						<p>To easily configure this client for use with MediaMTX, you can use the <code>&mediamtx</code> parameter in the URL. Here's what you need to know:</p>
+						<ul>
+							<li>Simply add <code>&mediamtx=domainname</code> to your URL to configure the client for MediaMTX.</li>
+							<li>The default port for MediaMTX is 8889. If you're using the default port, you don't need to specify it.</li>
+							<li>If you're using a non-standard port, include it like this: <code>&mediamtx=domainname.com:443</code></li>
+							<li>MediaMTX doesn't support <code>stereo=0</code>, so this setting is automatically removed if detected.</li>
+						</ul>
+
+						<h3>Important Notes</h3>
+						<ul>
+							<li>Ensure your MediaMTX server is properly configured and accessible.</li>
+							<li>For optimal performance, use a wired internet connection when streaming.</li>
+							<li>Be aware of your bandwidth limitations when configuring video and audio bitrates.</li>
+							<li>Some browsers may have limitations with certain codecs. If you experience issues, try switching to a different codec.</li>
+						</ul>
+
+						<h3>Troubleshooting</h3>
+						<p>If you encounter issues:</p>
+						<ul>
+							<li>Check your network connection and firewall settings.</li>
+							<li>Ensure your MediaMTX server is running and accessible.</li>
+							<li>Try using different browsers or updating your current browser.</li>
+							<li>Verify that your camera and microphone are properly connected and permitted in your browser settings.</li>
+						</ul>
+
+						<p>For more detailed information on WHIP and WHEP, visit the <a href="https://www.ietf.org/archive/id/draft-ietf-wish-whip-01.html" target="_blank">IETF WHIP draft</a> and <a href="https://www.ietf.org/archive/id/draft-murillo-whep-00.html" target="_blank">IETF WHEP draft</a>.</p>
+					</div>
+					<br />
+					<div id="about-vdo-ninja">
+						<h2>About VDO.Ninja</h2>
+						<p>VDO.Ninja is a powerful, free, and open-source platform for live video production. It uses peer-to-peer technology to bring remote cameras into OBS or other studio software, allowing content creators to produce real-time live shows using remote media streams.</p>
+						<p>Key features of VDO.Ninja include:</p>
+						<ul>
+							<li>High-quality, low-latency video streaming</li>
+							<li>Peer-to-peer technology for direct video transfer</li>
+							<li>Ability to turn smartphones into wireless webcams</li>
+							<li>Compatible with OBS and other studio software</li>
+							<li>Free to use with no account required</li>
+						</ul>
+						<p>VDO.Ninja is designed to be serverless, ensuring it can be offered for free while providing increased levels of security and privacy.</p>
+						
+						<h3>Open Source</h3>
+						<p>Both VDO.Ninja and this WHIP/WHEP client are open-source projects. You can find their source code and contribute to their development on GitHub:</p>
+						<ul>
+							<li>VDO.Ninja: <a href="https://github.com/steveseguin/vdoninja" target="_blank">https://github.com/steveseguin/vdoninja</a></li>
+							<li>WHIP/WHEP Client: <a href="https://github.com/steveseguin/vdo.ninja/blob/develop/whip.html" target="_blank">https://github.com/steveseguin/vdo.ninja/blob/develop/whip.html</a></li>
+						</ul>
+						<p>We encourage the community to contribute, report issues, and suggest improvements to help make these tools even better for everyone.</p>
+					</div>
+					<br /><br /><br /><br />
 				</div>
 				<br /><br /><br /><br />
-				
+
 		</div>
 <script>
 
@@ -556,6 +639,10 @@ if (localStorage.getItem('stereowhep')!==null){
 	document.getElementById('stereowhep').value = localStorage.getItem('stereowhep');
 }
 
+if (localStorage.getItem('whipwaitFlag')!==null){
+    document.getElementById('whipwaitFlag').value = localStorage.getItem('whipwaitFlag');
+}
+
 const scalabilityModes = [
 	'L1T1',
 	'L1T2',
@@ -599,6 +686,8 @@ function gohere1(){
 		localStorage.setItem('keyFrameRateFlag', document.getElementById('keyFrameRateFlag').value);
 		
 		localStorage.setItem('svcGroupFlag', document.getElementById('svcGroupFlag').value);
+		localStorage.setItem('whipwaitFlag', document.getElementById('whipwaitFlag').value);
+
 		
 		localStorage.setItem('whipoutaudiobitrate', document.getElementById('whipoutaudiobitrate').value);
 		localStorage.setItem('vbrcbr', document.getElementById('vbrcbr').value);
@@ -643,10 +732,12 @@ function gohere1(){
 			e2ee = "&e2ee&password";
 		}
 		
+		var whipwait = "&whipwait=" + document.getElementById('whipwaitFlag').value;
+		
 		if (document.getElementById('changeText1a').value){
-			window.location = domain + "?push&whippush=" + encodeURIComponent(document.getElementById('changeText1').value) + "&whippushtoken=" + document.getElementById('changeText1a').value + codec + bitrate+whipoutaudiobitrate+vbrcbr+autogain+stereo+denoise+svc+e2ee+keyFrameRateFlag;
+			window.location = domain + "?push&whippush=" + encodeURIComponent(document.getElementById('changeText1').value) + "&whippushtoken=" + document.getElementById('changeText1a').value + codec + bitrate+whipoutaudiobitrate+vbrcbr+autogain+stereo+denoise+svc+e2ee+keyFrameRateFlag + whipwait;
 		} else {
-			window.location = domain + "?push&whippush=" + encodeURIComponent(document.getElementById('changeText1').value) + codec + bitrate+whipoutaudiobitrate+vbrcbr+autogain+stereo+denoise+svc+e2ee+keyFrameRateFlag;
+			window.location = domain + "?push&whippush=" + encodeURIComponent(document.getElementById('changeText1').value) + codec + bitrate+whipoutaudiobitrate+vbrcbr+autogain+stereo+denoise+svc+e2ee+keyFrameRateFlag + whipwait;
 		}
 	}
 }

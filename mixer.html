@@ -365,7 +365,7 @@
 	.ui-draggable, .ui-droppable {
 		background-position: top;
 	}
-	#containerMenu2 {
+	#containerMenu0, #containerMenu2 {
 		width: calc(100vw - 300px);
 		position: absolute;
 		left: 155px;
@@ -979,15 +979,20 @@
 	</div>
 	<div id="container">
 		<div id="containermenu"></div>
-		<div id="containermenu2" class="hidden">
-			<button onclick="addElement();">➕ Add Element to Scene</button>
-			<button onclick="saveScene(false, event);">💾 Save Scene</button>
-			<button onclick="saveScene(true, event);">💾<span style="position:relative;right:12px;top:2px;width:12px;display: inline-block;">💾</span>Duplicate Scene</button>
+		<div id="containerMenu0" class="hidden">
+			<button onclick="setobsSceneName();" title="When this layout is triggered, OBS will change to the specified scene as well">Link OBS Scene</button>
+			<button onclick="saveScene();closeScene();">💾❌ Save and Close</button>
+			<button onclick="closeScene();">❌ Close</button>
+		</div>
+		<div id="containerMenu2" class="hidden">
+			<button onclick="addElement();">➕ Add Element to Layout</button>
+			<button onclick="saveScene(false, event);">💾 Save Layout</button>
+			<button onclick="saveScene(true, event);">💾<span style="position:relative;right:12px;top:2px;width:12px;display: inline-block;">💾</span>Duplicate Layout</button>
 			<button onclick="setobsSceneName();" title="When this layout is triggered, OBS will change to the specified scene as well">Link OBS Scene</button>
 			<button onclick="copyJSON();" title="This can be used with &format directly in VDO.Ninja without the mixer app. Requires a guest being active.">Show as JSON</button>
-			<button onclick="removeScene();">🗑️ Remove Scene</button>
+			<button onclick="removeScene();">🗑️ Remove Layout</button>
 			<button id="saveAndClose" onclick="saveScene(false, event);closeScene();">💾❌ Save and Close</button>
-			<button onclick="closeScene();">❌ Close Scene Maker</button>
+			<button onclick="closeScene();">❌ Close Layout Maker</button>
 		</div>
 	</div>
 	<div id="chatModuleButton" class="hidden" onclick="toggleChat();" style="user-select: none;position: fixed;top: 10px;right: 10px;cursor: pointer;" title="Show the chat window">💬</div>
@@ -2090,6 +2095,10 @@
 			});
 		}
 		
+		//if (savedSession.settings && ("autoMixerSceneName" in savedSession.settings)){
+		//	autoMixerSceneName = savedSession.settings.autoMixerSceneName;
+		//}
+		
 		
 		if (savedSession.settings && ("pixelDensity" in savedSession.settings)){
 			pixelDensity = savedSession.settings.pixelDensity;
@@ -2935,16 +2944,22 @@
 							console.log("Current OBS scene: " + currentOBSState.currentScene.name);
 							
 							if (remoteSyncOBS){
+								
+								//if (document.getElementById("automix") && autoMixerSceneName && autoMixerSceneName.toLowerCase().trim() == currentOBSState.currentScene.name.toLowerCase().trim()){
+									//document.getElementById("automix").click();
+									//console.log("Auto mix remotely selected; matched OBS scene");
+									//return;
+								//}
 								var layouts = document.querySelectorAll(".canvasContainer>canvas");
 								for (var i=0;i<layouts.length;i++){
-									if (!layouts[i].layout){
+									if (!("layout" in layouts[i])){
 										console.log("no layout");
 										continue;
 									}
 									try {
 										var obs = layouts[i].obsSceneName || false;
-										console.log("obs scene names:"+obs+ " vs "+currentOBSState.currentScene.name);
-										if (obs && obs.toLowerCase().trim() == currentOBSState.currentScene.name.toLowerCase().trim()){
+										console.log("obs scene names: "+obs+ " vs "+currentOBSState.currentScene.name);
+										if (obs && (obs+"").toLowerCase().trim() == currentOBSState.currentScene.name.toLowerCase().trim()){
 											if (layouts[i].parentNode && layouts[i].parentNode.classList.contains("pressed")){
 												console.log("Matched scene already active");
 											} else {
@@ -2954,6 +2969,7 @@
 											break;
 										}
 									} catch(e){
+										console.log(obs);
 										errorlog(e);
 									}
 								}
@@ -3138,15 +3154,57 @@
 		drawLayout(layout);
 	}
 	
+	function addLayout0(item=false){
+	
+		closeScene();
+		
+		iframe.classList.add("hidden");
+		document.getElementById("canvas").classList.remove("hidden");
+		document.getElementById("containerMenu2").classList.add("hidden");
+		
+		document.getElementById("containerMenu0").classList.remove("hFadeOut");
+		document.getElementById("containerMenu0").classList.remove("hidden");
+		document.getElementById("containerMenu0").classList.add("hFadeIn");
+		
+		document.getElementById("iframeContainer").classList.remove("tFadeStart");
+		document.getElementById("iframeContainer").classList.add("tFadeIn");
+		document.getElementById("iframeContainer").classList.remove("tFadeout");
+		
+				
+		try {
+			if (!item.target){
+				document.getElementById("canvas").obsSceneName = item.parentNode.querySelector("canvas").obsSceneName;;
+			} else {
+				document.getElementById("canvas").obsSceneName = parseInt(Math.random()*1000000000)+"";
+				document.getElementById("canvas").sceneName = parseInt(Math.random()*1000000000);
+			}
+		} catch(e){
+			document.getElementById("canvas").obsSceneName = "";
+			errorlog(e);
+		}
+		
+		try {
+			var tar = item.parentNode.querySelector("canvas").sceneName;
+			document.getElementById("canvas").sceneName = tar;
+		} catch(e){
+			document.querySelectorAll(".editButton").forEach(ele=>{
+				ele.dataset.state = "inactive";
+			});
+		}
+		
+	}
+	
 	function addLayout2(item=false){
 	
 		closeScene();
 		
+		document.getElementById("containerMenu0").classList.add("hidden");
+		
 		//document.getElementById("containermenu").classList.add("hidden");
 		iframe.classList.add("hidden");
-		document.getElementById("containermenu2").classList.add("hFadeIn");
-		document.getElementById("containermenu2").classList.remove("hFadeOut");
-		document.getElementById("containermenu2").classList.remove("hidden");
+		document.getElementById("containerMenu2").classList.add("hFadeIn");
+		document.getElementById("containerMenu2").classList.remove("hFadeOut");
+		document.getElementById("containerMenu2").classList.remove("hidden");
 		
 		//document.getElementById("canvas").classList.remove("shake");
 		document.getElementById("iframeContainer").classList.remove("tFadeStart");
@@ -3162,10 +3220,9 @@
 		
 		try {
 			if (!item.target){
-				var obsSceneName = item.parentNode.querySelector("canvas").obsSceneName;
-				document.getElementById("canvas").obsSceneName = obsSceneName;
+				document.getElementById("canvas").obsSceneName = item.parentNode.querySelector("canvas").obsSceneName;;
 			} else {
-				document.getElementById("canvas").obsSceneName = parseInt(Math.random()*1000000000);
+				document.getElementById("canvas").obsSceneName = parseInt(Math.random()*1000000000)+"";
 				document.getElementById("canvas").sceneName = parseInt(Math.random()*1000000000);
 			}
 		} catch(e){
@@ -3174,8 +3231,7 @@
 		}
 		
 		try {
-			var tar = item.parentNode.querySelector("canvas").sceneName;
-			document.getElementById("canvas").sceneName = tar;
+			document.getElementById("canvas").sceneName = item.parentNode.querySelector("canvas").sceneName;
 		} catch(e){
 			document.querySelectorAll(".editButton").forEach(ele=>{
 				ele.dataset.state = "inactive";
@@ -3188,9 +3244,12 @@
 	function closeScene(){
 		//document.getElementById("containermenu").classList.remove("hidden");
 		iframe.classList.remove("hidden");
-		document.getElementById("containermenu2").classList.remove("hFadeIn");
-		document.getElementById("containermenu2").classList.add("hFadeOut");
-		//document.getElementById("containermenu2").classList.add("hidden");
+		document.getElementById("containerMenu2").classList.remove("hFadeIn");
+		document.getElementById("containerMenu2").classList.add("hFadeOut");
+		
+		document.getElementById("containerMenu0").classList.remove("hFadeIn");
+		document.getElementById("containerMenu0").classList.add("hFadeOut");
+		//document.getElementById("containerMenu2").classList.add("hidden");
 		document.getElementById("canvas").classList.add("hidden");
 		document.getElementById("canvas").innerHTML = "";
 		
@@ -3298,7 +3357,7 @@
 	}
 	
 	function drawLayout(layoutOriginal, sceneName=false, obsSceneName = ""){
-	
+	 
 		var layout = [];
 		
 		for (var i=0;i<layoutOriginal.length;i++){
@@ -3510,7 +3569,10 @@
 		var ctx = canvas.getContext('2d');
 		var container = document.createElement('div');
 		container.classList.add("inline");
-		//container.classList.add("canvasContainer");
+		container.classList.add("canvasContainer");
+		
+		var editButton = document.createElement("button");
+		container.appendChild(editButton);
 		container.appendChild(canvas);
 		container.id = "automix"
 		document.getElementById("containermenu").appendChild(container);
@@ -3530,6 +3592,28 @@
 		var hotkey = document.createElement('div');
 		hotkey.title = "Keyboard hotkey value. Drag elements around to change order.";
 		container.appendChild(hotkey);
+		
+		
+		editButton.innerHTML = "🔧";
+		editButton.classList.add("editButton");
+		editButton.title = "Auto-mixer options";
+		editButton.dataset.state = "inactive";
+		editButton.onclick = function(){
+			getById("saveAndClose").classList.remove("shake");
+			document.querySelectorAll(".editButton").forEach(ele=>{
+				ele.dataset.state = "inactive";
+			});
+			this.dataset.state = "active";
+			addLayout0(this); 
+		}
+		
+		try {
+			canvasContainer.focus();
+			canvasContainer.querySelector(".editButton").dataset.state = "active";
+			canvasContainer.classList.remove("shake");
+			setTimeout(function(canvasContainer){canvasContainer.classList.add("shake");},10,canvasContainer);
+		} catch(e){}
+		
 	}
 	
 	function pullUp(event){
@@ -4348,15 +4432,33 @@
 		document.getElementById("exportModal").classList.add("hidden");
 	}
 	
-	function setobsSceneName(){
-		var obsSceneName = document.getElementById("canvas").obsSceneName || "";
-		var input = prompt("Enter the OBS scene you want to link this scene to.\n\nWhen changing layouts it will auto-select the linked OBS scene, and vice versas.\n\nTo activate the syncing you also need to enable this feature in the mixer settings and enable permissions in the OBS browser source.", obsSceneName);
-		if (input !==null){
-			document.getElementById("canvas").obsSceneName = input;
+	function setobsSceneName() {
+		var currentSceneName = "";
+		var isAutoMixer = document.getElementById("containerMenu0").classList.contains("hFadeIn");
+		
+		if (isAutoMixer) {
+			// Get the current obsSceneName for auto mixer
+			currentSceneName = document.getElementById("automix").querySelector("canvas").obsSceneName || "";
+		} else {
+			// Get the current obsSceneName for custom layout
+			currentSceneName = document.getElementById("canvas").obsSceneName || "";
+		}
+
+		var obsSceneName = prompt("Enter the OBS Scene name to link to this layout", currentSceneName);
+		
+		if (obsSceneName !== null) {
+			if (isAutoMixer) {
+				// Set obsSceneName for auto mixer
+				document.getElementById("automix").querySelector("canvas").obsSceneName = obsSceneName;
+			} else {
+				// Set obsSceneName for custom layout
+				document.getElementById("canvas").obsSceneName = obsSceneName;
+			}
 		}
 	}
   
 	function saveScene(makenew=false, event=null){
+		console.log("saveScene", makenew);
 		var scene = [];
 		
 		var compute = window.getComputedStyle(document.getElementById("canvas"));
@@ -4430,10 +4532,20 @@
 			
 		} else {
 			var sceneName = document.getElementById("canvas").sceneName || parseInt(Math.random()*1000000000);
-			var obsSceneName = document.getElementById("canvas").obsSceneName || "";
-			log("'sceneName: "+sceneName);
+			
+			var isAutoMixer = document.getElementById("containerMenu0").classList.contains("hFadeIn");
+			if (isAutoMixer) {
+				// Save auto mixer settings
+				var autoMixCanvas = document.getElementById("automix").querySelector("canvas");
+				var obsSceneName = autoMixCanvas.obsSceneName || "";
+			//drawLayout(scene, sceneName, obsSceneName);
+			} else {
+				var obsSceneName = document.getElementById("canvas").obsSceneName || "";
+				log("'sceneName: "+sceneName+", "+obsSceneName);
+				//drawLayout(scene, sceneName, obsSceneName);
+			}
 			drawLayout(scene, sceneName, obsSceneName);
-			popupMessage(event, "Scene saved");
+			popupMessage(event, "Layout saved");
 		}
 		
 		saveSession();
@@ -4451,7 +4563,7 @@
 				}
 			}
 		}
-		popupMessage(event, "Scene removed");
+		popupMessage(event, "Layout removed");
 		closeScene();
 		saveSession();
 	}
@@ -4472,8 +4584,7 @@
 		savedSession.settings.pixelDensity = pixelDensity;
 		savedSession.settings.absolutePixel = absolutePixel;
 		savedSession.settings.showDirector = showDirector;
-		
-		
+		//savedSession.settings.autoMixerSceneName = autoMixerSceneName;
 		savedSession.settings.toggleEchoInvite = toggleEchoInvite;
 		savedSession.settings.toggleDenoiseInvite = toggleDenoiseInvite;
 		savedSession.settings.toggleAutogainInvite = toggleAutogainInvite;
@@ -4485,7 +4596,10 @@
 		savedSession.obsScenes = [];
 		
 		for (var i=0;i<layouts.length;i++){
-			if (!layouts[i].layout){continue;}
+			if (!layouts[i].layout){
+				document.getElementById("automix").querySelector("canvas").obsSceneName = layouts[i].obsSceneName || "";
+				continue;
+			}
 			try {
 				savedSession.layouts.push(JSON.parse(layouts[i].layout));
 				var obs = layouts[i].obsSceneName || false;

@@ -1039,10 +1039,17 @@
 		mobile = true;
 	}
 	
+	
+	
+	var chat = true;
+	if (urlParams.has('hidechat')){
+		chat = false;
+	}
+	
 	if (mobile){
 		toggleChat();
 		document.body.classList.add("mobile");
-	}	
+	}
 	
 	var password = false;
 	if (urlParams.has('password') || urlParams.has('pass') || urlParams.has('pw') || urlParams.has('p')) {
@@ -1730,6 +1737,10 @@
 		//}
 		
 		document.getElementById("chatModule").classList.remove("hidden");
+		
+		if (!chat && !mobile){
+			toggleChat();
+		}
 		
 		iframe.onload = function(){
 			iframe.contentWindow.postMessage({ groups: savedSession.groups }, "*"); 

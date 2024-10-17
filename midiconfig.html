@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VDO.Ninja MIDI Configuration</title>
+    <script src="./thirdparty/webmidi3.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+			background-color: #333;
+        }
+        h1 {
+            color: #FcFeF0;
+        }
+		h2 {
+            color: #2c3e50;
+        }
+        .section {
+            background-color: #f9f9f9;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        select, input {
+            padding: 8px;
+            margin-bottom: 10px;
+        }
+        button {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+        button:hover {
+            background-color: #2980b9;
+        }
+        #urlOutput {
+            word-break: break-all;
+            background-color: #ecf0f1;
+            padding: 10px;
+            border-radius: 5px;
+        }
+        .subsection {
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid #ddd;
+        }
+    </style>
+</head>
+<body>
+    <h1>VDO.Ninja MIDI Configuration</h1>
+    
+    <div class="section">
+        <h2>MIDI Mode</h2>
+        <label>
+            <input type="radio" name="midiMode" value="send" checked> Send MIDI
+        </label>
+        <label>
+            <input type="radio" name="midiMode" value="receive"> Receive MIDI
+        </label>
+        <label>
+            <input type="radio" name="midiMode" value="both"> Both Send and Receive
+        </label>
+    </div>
+    
+    <div class="section" id="sendSection">
+        <h2>Send MIDI Configuration</h2>
+        <label for="midiOutDevice">MIDI Output Device:</label>
+        <select id="midiOutDevice"></select>
+        
+        <label for="midiOutChannel">MIDI Channel (1-16):</label>
+        <input type="number" id="midiOutChannel" min="1" max="16" value="1">
+        
+        <label for="midiHotkeys">MIDI Hotkeys Mode:</label>
+        <select id="midiHotkeys">
+            <option value="1">Mode 1 (A1 standard)</option>
+            <option value="2">Mode 2 (A0 standard)</option>
+            <option value="3">Mode 3 (Alternate mapping)</option>
+            <option value="4">Mode 4 (Control Change)</option>
+            <option value="5">Mode 5 (With Offset)</option>
+        </select>
+        
+        <div id="offsetSection" style="display:none;">
+            <label for="midiOffset">MIDI Offset:</label>
+            <input type="number" id="midiOffset" min="0" value="0">
+        </div>
+    </div>
+    
+    <div class="section" id="receiveSection" style="display:none;">
+        <h2>Receive MIDI Configuration</h2>
+        <label for="midiInDevice">MIDI Input Device:</label>
+        <select id="midiInDevice"></select>
+    </div>
+    <div class="section">
+        <button onclick="generateURL()">Generate VDO.Ninja URL</button>
+        <p>Generated URL:</p>
+        <div id="urlOutput"></div>
+    </div>
+    <div class="section">
+        <h2>Additional MIDI Options</h2>
+        
+        <div class="subsection">
+            <label for="midiDelay">MIDI Delay (ms):</label>
+            <input type="number" id="midiDelay" min="0" value="0">
+        </div>
+        
+        <div class="subsection">
+            <label for="midiRemote">MIDI Remote Mode:</label>
+            <select id="midiRemote">
+                <option value="0">Disabled</option>
+                <option value="1">Mode 1</option>
+                <option value="2">Mode 2</option>
+                <option value="3">Mode 3</option>
+                <option value="4">Mode 4</option>
+            </select>
+        </div>
+        
+        <div class="subsection">
+            <label for="midiDevice">Specific MIDI Device (optional):</label>
+            <input type="number" id="midiDevice" min="1" value="">
+            <small>Leave blank to use all devices</small>
+        </div>
+    </div>
+    
+    
+
+    <script>
+        let midiOutputs = [];
+        let midiInputs = [];
+
+        WebMidi.enable()
+            .then(() => {
+                midiOutputs = WebMidi.outputs;
+                midiInputs = WebMidi.inputs;
+                populateMIDIDevices();
+            })
+            .catch(err => console.error("WebMidi could not be enabled:", err));
+
+        function populateMIDIDevices() {
+            const midiOutSelect = document.getElementById('midiOutDevice');
+            const midiInSelect = document.getElementById('midiInDevice');
+
+            midiOutSelect.innerHTML = '';
+            midiInSelect.innerHTML = '';
+
+            midiOutputs.forEach((device, index) => {
+                midiOutSelect.options.add(new Option(device.name, index + 1));
+            });
+
+            midiInputs.forEach((device, index) => {
+                midiInSelect.options.add(new Option(device.name, index + 1));
+            });
+        }
+
+        document.querySelectorAll('input[name="midiMode"]').forEach((radio) => {
+            radio.addEventListener('change', (event) => {
+                document.getElementById('sendSection').style.display = 
+                    (event.target.value === 'send' || event.target.value === 'both') ? 'block' : 'none';
+                document.getElementById('receiveSection').style.display = 
+                    (event.target.value === 'receive' || event.target.value === 'both') ? 'block' : 'none';
+            });
+        });
+
+        document.getElementById('midiHotkeys').addEventListener('change', (event) => {
+            document.getElementById('offsetSection').style.display = event.target.value === '5' ? 'block' : 'none';
+        });
+
+        function generateURL() {
+            const baseUrl = 'https://vdo.ninja/?';
+            let params = [];
+
+            const midiMode = document.querySelector('input[name="midiMode"]:checked').value;
+
+            if (midiMode === 'send' || midiMode === 'both') {
+                const midiOutDevice = document.getElementById('midiOutDevice').value;
+                const midiOutChannel = document.getElementById('midiOutChannel').value;
+                const midiHotkeys = document.getElementById('midiHotkeys').value;
+
+                params.push(`midiout=${midiOutDevice}`);
+                params.push(`midichannel=${midiOutChannel}`);
+                params.push(`midi=${midiHotkeys}`);
+
+                if (midiHotkeys === '5') {
+                    const midiOffset = document.getElementById('midiOffset').value;
+                    params.push(`midioffset=${midiOffset}`);
+                }
+            }
+
+            if (midiMode === 'receive' || midiMode === 'both') {
+                const midiInDevice = document.getElementById('midiInDevice').value;
+                params.push(`midiin=${midiInDevice}`);
+            }
+
+            // Additional MIDI options
+            const midiDelay = document.getElementById('midiDelay').value;
+            if (midiDelay > 0) {
+                params.push(`mididelay=${midiDelay}`);
+            }
+
+            const midiRemote = document.getElementById('midiRemote').value;
+            if (midiRemote !== '0') {
+                params.push(`midiremote=${midiRemote}`);
+            }
+
+            const midiDevice = document.getElementById('midiDevice').value;
+            if (midiDevice) {
+                params.push(`mididevice=${midiDevice}`);
+            }
+
+            const url = baseUrl + params.join('&');
+            document.getElementById('urlOutput').textContent = url;
+        }
+    </script>
+</body>
+</html>

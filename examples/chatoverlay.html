@@ -1,30 +1,31 @@
+<!DOCTYPE html>
 <html>
 	<head>
 		<meta charset="utf8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
 		<title>VDON Chat Overlay</title>
 		<style>
-		
 			@font-face {
 			  font-family: 'Cousine';
 			  src: url('fonts/Cousine-Bold.ttf') format('truetype');
 			}
 		
 			body {
-				margin:0;
-				padding:0 10px;
-				height:100%;
+				margin: 0;
+				padding: 0 10px;
+				height: 100%;
 				border: 0;
 				display: flex;
 				flex-direction: column-reverse;
-				position:absolute;
-				bottom:0;
-				overflow:hidden;
-				max-width:100%;
+				position: absolute;
+				bottom: 0;
+				overflow: hidden;
+				max-width: 100%;
+				font-family: Arial, sans-serif;
 			}
 
-			div {
-				margin:0;
+			#chat-overlay {
+				margin: 0;
 				background-color: black; 
 				padding: 8px 8px 0px 8px;
 				color: white;
@@ -34,129 +35,147 @@
 				letter-spacing: 0.0em;
 				text-transform: uppercase;
 				text-shadow: 0.05em 0.05em 0px rgba(0,0,0,1);
-				max-width:100%;
+				max-width: 100%;
 				word-wrap: break-word;
 				overflow-wrap: break-word;
 				word-break: break-all;
 				hyphens: auto;
-				display:inline-block;
+				display: inline-block;
 			}
 			
-			
-			
+			#chat-overlay:empty {
+				display:none!important;
+			}
 			a {
-				color:white;
-				font-size:1.2em;
+				color: white;
+				font-size: 1.2em;
 				text-transform: none;
 				word-wrap: break-word;
 				overflow-wrap: break-word;
-				word-wrap: break-word;
 				word-break: break-all;
 				hyphens: auto;
 			}
-			</style>
+
+			#input-form {
+				background-color: #f0f0f0;
+				padding: 20px;
+				border-radius: 5px;
+				margin-top: 20px;
+			}
+
+			#input-form label {
+				display: block;
+				margin-bottom: 5px;
+			}
+
+			#input-form input {
+				width: 100%;
+				padding: 5px;
+				margin-bottom: 10px;
+			}
+
+			#input-form button {
+				background-color: #4CAF50;
+				color: white;
+				padding: 10px 15px;
+				border: none;
+				border-radius: 4px;
+				cursor: pointer;
+			}
+
+			#input-form button:hover {
+				background-color: #45a049;
+			}
+		</style>
+	</head>
+	<body>
+		<div id="chat-overlay"></div>
+		<div id="input-form" style="display: none;">
+			<h2>Chat Overlay Configuration</h2>
+			<label for="room">Room:</label>
+			<input type="text" id="room" name="room">
+			<label for="view">View:</label>
+			<input type="text" id="view" name="view">
+			<label for="password">Password:</label>
+			<input type="password" id="password" name="password">
+			<button onclick="startOverlay()">Start Overlay</button>
+		</div>
+
 		<script>
-		
-		
 			(function (w) {
-				w.URLSearchParams =
-					w.URLSearchParams ||
-					function (searchString) {
-						var self = this;
-						self.searchString = searchString;
-						self.get = function (name) {
-							var results = new RegExp("[\?&]" + name + "=([^&#]*)").exec(
-								self.searchString
-							);
-							if (results == null) {
-								return null;
-							} else {
-								return decodeURI(results[1]) || 0;
-							}
-						};
+				w.URLSearchParams = w.URLSearchParams || function (searchString) {
+					var self = this;
+					self.searchString = searchString;
+					self.get = function (name) {
+						var results = new RegExp("[\?&]" + name + "=([^&#]*)").exec(self.searchString);
+						return results == null ? null : decodeURI(results[1]) || 0;
 					};
+				};
 			})(window);
-			var urlParams = new URLSearchParams(window.location.search);
 			
+			var urlParams = new URLSearchParams(window.location.search);
 
 			function loadIframe() {
-				
-				var iframe = document.createElement("iframe");
+				var view = urlParams.get("view") || "";
+				var room = urlParams.get("room") || "";
+				var password = urlParams.get("password") || "";
 
-				var view= "";
-				var room="";
-				var password="";
-				if (urlParams.has("view")) {
-					view = "&view="+(urlParams.get("view") || "");
-				} else if (urlParams.has("room")) {
-					room = "&room="+urlParams.get("room");
-				} else {
-					var help = document.createElement("h2");
-					help.innerHTML = "This app supports <i>&room, &view, </i>and<i> &password</i> URL parameters.";
-					document.body.appendChild(help);
+				if (!view && !room) {
+					document.getElementById('input-form').style.display = 'block';
 					return;
 				}
-				if (urlParams.has("password")) {
-					password = "&password="+urlParams.get("password");
-				}
-				
+
+				var iframe = document.createElement("iframe");
 				iframe.allow = "autoplay";
-				var srcString = "../?datamode&label=chatOverlay&scene"+room+view+password;
+				var srcString = "./?datamode&label=chatOverlay" + 
+					(room ? "&scene&room=" + room : "") + 
+					(view ? "&view=" + view : "") + 
+					(password ? "&password=" + password : "");
 				
 				iframe.src = srcString;
-				iframe.style.width="0";
-				iframe.style.height="0";
-				iframe.style.border="0";
+				iframe.style.width = "0";
+				iframe.style.height = "0";
+				iframe.style.border = "0";
 				
 				document.body.appendChild(iframe);
 
-				////////////  LISTEN FOR EVENTS
-	
 				var eventMethod = window.addEventListener ? "addEventListener" : "attachEvent";
 				var eventer = window[eventMethod];
 				var messageEvent = eventMethod === "attachEvent" ? "onmessage" : "message";
 
-
-				/// If you have a routing system setup, you could have just one global listener for all iframes instead.
-				
 				eventer(messageEvent, function (e) {
-					if (e.source != iframe.contentWindow){return} // reject messages send from other iframes
-
+					if (e.source != iframe.contentWindow) return;
 					console.log(e);
-					if ("gotChat" in e.data){
-						logData(e.data.gotChat.label,e.data.gotChat.msg);
+					if ("gotChat" in e.data) {
+						logData(e.data.gotChat.label, e.data.gotChat.msg);
 					}
 				});
 			}
 
-			function printValues(obj) {
-				var out = "";
-				for (var key in obj) {
-					if (typeof obj[key] === "object") {
-						out += "<br />";
-						out += printValues(obj[key]);
-					} else {
-						if (key.startsWith("_")) {
-						} else {
-							out += "<b>" + key + "</b>: " + obj[key] + "<br />";
-						}
-					}
-				}
-				return out;
+			function startOverlay() {
+				var room = document.getElementById('room').value;
+				var view = document.getElementById('view').value;
+				var password = document.getElementById('password').value;
+
+				var newUrl = window.location.pathname + '?';
+				if (room) newUrl += 'room=' + encodeURIComponent(room) + '&';
+				if (view) newUrl += 'view=' + encodeURIComponent(view) + '&';
+				if (password) newUrl += 'password=' + encodeURIComponent(password) + '&';
+				newUrl = newUrl.slice(0, -1);  // Remove the trailing '&' or '?'
+
+				window.location.href = newUrl;
 			}
 
 			function logData(type, data) {
-				var span = document.createElement('span');
 				var entry = document.createElement('div');
-				if (type){
-					type = "<i>"+type.replace(/_/g, ' ')+"</i>";
+				if (type) {
+					type = "<i>" + type.replace(/_/g, ' ') + "</i>";
 				}
 				entry.innerHTML = type + data;
-				span.appendChild(entry);
-				document.body.prepend(span);
+				document.getElementById('chat-overlay').prepend(entry);
 			}
+
+			window.onload = loadIframe;
 		</script>
-	</head>
-	<body onload="loadIframe();">
 	</body>
 </html>

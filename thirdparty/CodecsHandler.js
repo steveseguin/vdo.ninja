@@ -83,113 +83,125 @@ var CodecsHandler = (function() {
 				});
 			}
 			var LINE = line.toUpperCase();
-			if (LINE.indexOf('VP8/90000') !== -1 && !info.vp8LineNumber) {
+			if (LINE.includes('VP8/90000') && !info.vp8LineNumber) {
 				info.vp8LineNumber = line.replace('a=rtpmap:', '').split(' ')[0];
 			}
-			if (LINE.indexOf('VP9/90000') !== -1 && !info.vp9LineNumber) {
+			if (LINE.includes('VP9/90000') && !info.vp9LineNumber) {
 				info.vp9LineNumber = line.replace('a=rtpmap:', '').split(' ')[0];
 			}
-			if (LINE.indexOf('H264/90000') !== -1 && !info.h264LineNumber) {
+			if (LINE.includes('H264/90000') && !info.h264LineNumber) {
 				info.h264LineNumber = line.replace('a=rtpmap:', '').split(' ')[0];
 			}
-			if (LINE.indexOf('H265/90000') !== -1 && !info.h265LineNumber) {
+			if (LINE.includes('H265/90000') && !info.h265LineNumber) {
 				info.h265LineNumber = line.replace('a=rtpmap:', '').split(' ')[0];
 			}
-			if (LINE.indexOf('AV1X/90000') !== -1 && !info.av1LineNumber) {
+			if (LINE.includes('AV1X/90000') && !info.av1LineNumber) {
 				info.av1LineNumber = line.replace('a=rtpmap:', '').split(' ')[0];
-			} else if (LINE.indexOf('AV1/90000') !== -1 && !info.av1LineNumber) {
+			} else if (LINE.includes('AV1/90000') && !info.av1LineNumber) {
 				info.av1LineNumber = line.replace('a=rtpmap:', '').split(' ')[0];
 			}
-			if (LINE.indexOf('RED/90000') !== -1 && !info.redLineNumber) {
-			    info.redLineNumber = line.replace('a=rtpmap:', '').split(' ')[0];
+			if (LINE.includes('RED/90000') && !info.redLineNumber) {
+				info.redLineNumber = line.replace('a=rtpmap:', '').split(' ')[0];
 			}
-			if (LINE.indexOf('ULPFEC/90000') !== -1 && !info.ulpfecLineNumber) {
-			    info.ulpfecLineNumber = line.replace('a=rtpmap:', '').split(' ')[0];
+			if (LINE.includes('ULPFEC/90000') && !info.ulpfecLineNumber) {
+				info.ulpfecLineNumber = line.replace('a=rtpmap:', '').split(' ')[0];
 			}
 		});
 		return info;
 	}
 	
-	function preferAudioCodec(sdp, codec, useRed=false, useUlpfec=false) {
-		if (codec) {
-			codec = codec.toLowerCase();
-		}
+	function preferAudioCodec(sdp, codec, useRed = false, useUlpfec = false) {
+		codec = codec ? codec.toLowerCase() : null;
 		var info = splitAudioLines(sdp);
 		if (!info.audioCodecNumbers) {
 			return sdp;
 		}
+
 		var preferCodecNumber = '';
 		var errorCorrectionNumbers = [];
+
+		// Set preferred codec number
 		if (codec && info[codec + 'LineNumber']) {
 			preferCodecNumber = info[codec + 'LineNumber'];
 		}
-		if (useRed && info.redPcmLineNumber) {
-			errorCorrectionNumbers.push(info.redPcmLineNumber);
-		}
-		if (useRed && info.redLineNumber && !info.redPcmLineNumber) {
-			errorCorrectionNumbers.push(info.redLineNumber);
+
+		// Handle RED/ULPFEC error correction
+		if (useRed && info.redLineNumber) {
+			if (info.redPcmLineNumber) {
+				errorCorrectionNumbers.push(info.redPcmLineNumber);
+			} else if (info.redLineNumber) {
+				errorCorrectionNumbers.push(info.redLineNumber);
+			}
 		}
 		if (useUlpfec && info.ulpfecLineNumber) {
 			errorCorrectionNumbers.push(info.ulpfecLineNumber);
 		}
-		var newOrder = [preferCodecNumber].concat(errorCorrectionNumbers);
+
+		// Set codec order: preferred codec + error correction + others
+		var newOrder = [].concat(errorCorrectionNumbers).concat(preferCodecNumber).filter(Boolean);
 		info.audioCodecNumbers.forEach(function(codecNumber) {
 			if (!newOrder.includes(codecNumber)) {
 				newOrder.push(codecNumber);
 			}
 		});
-		var newLine = info.audioCodecNumbersOriginal.split('SAVPF')[0] + 'SAVPF ' + newOrder.join(' ').trim();
+
+		// Replace SDP line with updated codec order
+		var newLine = info.audioCodecNumbersOriginal.split('SAVPF')[0] + 'SAVPF ' + newOrder.join(' ');
 		sdp = sdp.replace(info.audioCodecNumbersOriginal, newLine);
-		
+
 		return sdp;
 	}
 	
 	function splitAudioLines(sdp) {
-        var info = {};
-        sdp.split('\n').forEach(function(line) {
-            if (line.indexOf('m=audio') === 0) {
-                info.audioCodecNumbers = [];
-                line.split('SAVPF')[1].split(' ').forEach(function(codecNumber) {
-                    codecNumber = codecNumber.trim();
-                    if (!codecNumber || !codecNumber.length) return;
-                    info.audioCodecNumbers.push(codecNumber);
-                    info.audioCodecNumbersOriginal = line;
-                });
-            }
+		var info = {};
+		sdp.split('\n').forEach(function(line) {
+			if (line.indexOf('m=audio') === 0) {
+				info.audioCodecNumbers = [];
+				line.split('SAVPF')[1].split(' ').forEach(function(codecNumber) {
+					codecNumber = codecNumber.trim();
+					if (!codecNumber || !codecNumber.length) return;
+					info.audioCodecNumbers.push(codecNumber);
+					info.audioCodecNumbersOriginal = line;
+				});
+			}
 			var LINE = line.toLowerCase();
-            if (LINE.indexOf('opus/48000') !== -1 && !info.opusLineNumber) {
-                info.opusLineNumber = line.replace('a=rtpmap:', '').split(' ')[0];
-            }
-            if (LINE.indexOf('isac/32000') !== -1 && !info.isacLineNumber) {
-                info.isacLineNumber = line.replace('a=rtpmap:', '').split(' ')[0];
-            }
-            if (LINE.indexOf('g722/8000') !== -1 && !info.g722LineNumber) {
-                info.g722LineNumber = line.replace('a=rtpmap:', '').split(' ')[0];
-            }
-			if (LINE.indexOf('pcmu/8000') !== -1 && !info.pcmuLineNumber) {
-                info.pcmuLineNumber = line.replace('a=rtpmap:', '').split(' ')[0];
-            }
-			if (LINE.indexOf('pcma/8000') !== -1 && !info.pcmaLineNumber) {
-                info.pcmaLineNumber = line.replace('a=rtpmap:', '').split(' ')[0];
-            }
-			if (LINE.indexOf('red/48000') !== -1 && !info.redLineNumber) {
-                info.redLineNumber = line.replace('a=rtpmap:', '').split(' ')[0];
-            }
-			if (LINE.indexOf('ulpfec/48000') !== -1 && !info.ulpfecLineNumber) {
+			if (LINE.includes('opus/48000') && !info.opusLineNumber) {
+				info.opusLineNumber = line.replace('a=rtpmap:', '').split(' ')[0];
+			}
+			if (LINE.includes('isac/32000') && !info.isacLineNumber) {
+				info.isacLineNumber = line.replace('a=rtpmap:', '').split(' ')[0];
+			}
+			if (LINE.includes('g722/8000') && !info.g722LineNumber) {
+				info.g722LineNumber = line.replace('a=rtpmap:', '').split(' ')[0];
+			}
+			if (LINE.includes('pcmu/8000') && !info.pcmuLineNumber) {
+				info.pcmuLineNumber = line.replace('a=rtpmap:', '').split(' ')[0];
+			}
+			if (LINE.includes('pcma/8000') && !info.pcmaLineNumber) {
+				info.pcmaLineNumber = line.replace('a=rtpmap:', '').split(' ')[0];
+			}
+			if (LINE.includes('red/48000') && !info.redLineNumber) {
+				info.redLineNumber = line.replace('a=rtpmap:', '').split(' ')[0];
+			}
+			if (LINE.includes('ulpfec/48000') && !info.ulpfecLineNumber) {
 				info.ulpfecLineNumber = line.replace('a=rtpmap:', '').split(' ')[0];
 			}
-			if (line.indexOf('red/8000') !== -1 && !info.redPcmLineNumber) {
+			if (LINE.includes('red/8000') && !info.redPcmLineNumber) {
 				info.redPcmLineNumber = line.replace('a=rtpmap:', '').split(' ')[0];
 			}
-			if (line.indexOf('ulpfec/8000') !== -1 && !info.ulpfecLineNumber) {
+			if (LINE.includes('ulpfec/8000') && !info.ulpfecLineNumber) {
 				info.ulpfecLineNumber = line.replace('a=rtpmap:', '').split(' ')[0];
 			}
-        });
-        return info;
-    }
+		});
+		return info;
+	}
+	
+	function extractSdp(sdpLine, pattern) {
+		var result = sdpLine.match(pattern);
+		return result && result.length === 2 ? result[1] : null;
+	}
 	
 	function addRedForPcmToSdp(sdp, info, redPcmLine) {
-		// Ensure RED for PCM is not already the first codec
 		if (!info.audioCodecNumbers.includes(redPcmLine)) {
 			var newOrder = info.audioCodecNumbers.filter(codecNumber => codecNumber !== redPcmLine);
 			newOrder.unshift(redPcmLine); // Add RED for PCM at the start
@@ -198,11 +210,7 @@ var CodecsHandler = (function() {
 		}
 		return sdp;
 	}
-    
-    function extractSdp(sdpLine, pattern) {
-        var result = sdpLine.match(pattern);
-        return (result && result.length == 2)? result[1]: null;
-    }
+
 
     function disableNACK(sdp) {
         if (!sdp || typeof sdp !== 'string') {
