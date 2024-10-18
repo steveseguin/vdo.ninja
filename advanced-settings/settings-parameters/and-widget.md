@@ -29,6 +29,10 @@ You can encode the URL here:\
 
 If the director uses `&widget`, it will auto sync that with all guests as they connect. I'll try to find ways to make it easier to resize/minimize in the future.
 
+{% hint style="warning" %}
+Widgets and IFrames will fail to load if inserting custom CSS into VDO.Ninja using \&css or \&base64css.  This is done for user security in mind.
+{% endhint %}
+
 ## Related
 
 {% content-ref url="../../general-settings/chatbutton.md" %}
