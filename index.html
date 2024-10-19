@@ -2759,7 +2759,7 @@
 			// if (!window.location.search){document.body.innerHTML = "";} // uncomment this line, if you wish to try it.
 			
 			var session = WebRTC.Media; // session is a required global variable if configuring manually. Run before loading main.js but after webrtc.js.
-			session.version = "26.0";
+			session.version = "26.1";
 			session.streamID = session.generateStreamID(); // randomly generates a streamID for this session. You can set your own programmatically if needed
 			
 			session.defaultPassword = "someEncryptionKey123"; // Change this password if self-deploying for added security/privacy
@@ -2870,15 +2870,16 @@
 			// session.apiserver = "wss://api.vdo.ninja:443"; // specifiy a custom websocket API URL.
 			// session.darkmode = false; // enable or disable the dark style theme as the default
 			// session.defaultBackgroundImages = ["./media/bg_sample1.webp", "./media/bg_sample2.webp"]; // for &effects=5 (virtual backgrounds)
-			// session.hidehome = true; // If used, 'hide home' will make the landing page inaccessible, along with hiding a few go-home elements.
+			
 			// session.language="auto"; // "blank" is another option, or a specific language, like "de" or "pt-br"
 			// session.record = false; // uncomment to block users from being able to record via vdo.ninja's built in recording function
 			// session.whipServerURL = "wss://whip.vdo.ninja"; // If you deploy your own whip websocket service
 			// session.mediamtx = "youdomain.com:443"; // Your hosted MediaMTX SFU domain. Assumes HTTPS-enabled.
 			// session.GDRIVE_CLIENT_ID = "877199999934-67tq62xxxxxxxxxxxxxxxxxxxxxxxxx.apps.googleusercontent.com"; // get your own id/key from Google Cloud
 			// session.GDRIVE_API_KEY = 'AINNNNNNNNNNNNNNN-39s99999999999999999'; // lets you upload to google drive if self hosting.
-			
 			// session.decrypted = session.decodeInvite("U2FsdGVkX1+d58DFIHoO3EQZSuX86ch4PqW2ouztnJ0="); // get a code from invite.cam
+			// session.hidehome = true; // If used, 'hide home' will make the landing page inaccessible, along with hiding a few go-home elements.
+			// if ("42" != prompt("enter the password")){document.body.innerHTML = "";window.location.href = "";} // if you want a low-effort password for the site
 			
 		</script>
 		<script type="text/javascript" crossorigin="anonymous" id="lib-js" src="./lib.js?ver=1265"></script>

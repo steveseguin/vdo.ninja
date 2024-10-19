@@ -4687,6 +4687,14 @@ async function main() {
 	if (urlParams.has("widgetleft")) {
 		session.widgetleft = true;
 	}
+	if (urlParams.get("widgetwidth")) { // default is 25%
+		try{
+			session.widgetwidth = parseFloat(urlParams.get("widgetwidth"));
+			document.querySelector(":root").style.setProperty("--widget-width", session.widgetwidth+"%");
+		} catch(e){
+			errorlog(e);
+		}
+	}
 
 	if (urlParams.has("animated") || urlParams.has("animate")) {
 		session.animatedMoves = urlParams.get("animated") || urlParams.get("animate");

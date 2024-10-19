@@ -5123,11 +5123,11 @@ function updateMixerRun(e = false) {
 						document.body.appendChild(widget);
 						if (session.widgetleft){
 							widget.classList.add("left");
-							playarea.style.left = "25%";
-							playarea.style.width = "75%";
+							playarea.style.left = session.widgetwidth+"%";
+							playarea.style.width = (100 - session.widgetwidth)+"%";
 						} else {
 							playarea.style.left = "0";
-							playarea.style.width = "75%";
+							playarea.style.width = (100 - session.widgetwidth)+"%";
 						}
 					}
 					widget.style.height = "calc(100% - " + hi + "px)";
@@ -5155,7 +5155,7 @@ function updateMixerRun(e = false) {
 			var w = window.innerWidth;
 
 			if (session.widget && session.iFramesAllowed) {
-				w *= 0.75;
+				w *= (100 - session.widgetwidth);
 				try {
 					let widget = document.getElementById("widget");
 					if (!widget) {
@@ -5169,12 +5169,12 @@ function updateMixerRun(e = false) {
 						
 						if (session.widgetleft){
 							widget.classList.add("left");
-							playarea.style.left = "25%";
-							playarea.style.width = "75%";
+							playarea.style.left = session.widgetwidth+"%";
+							playarea.style.width = (100 - session.widgetwidth)+"%";
 							playarea.style.position = "absolute";
 						} else {
 							playarea.style.left = "0";
-							playarea.style.width = "75%";
+							playarea.style.width = (100 - session.widgetwidth)+"%";
 						}
 					}
 					widget.style.height = "calc(100% - " + hi + "px)";
@@ -6448,8 +6448,8 @@ function updateMixerRun(e = false) {
 								container.style.left = session.leftMiniPreview + "%";
 								togglePreview.style.left = session.leftMiniPreview + "%";
 							} else if (session.widget) {
-								container.style.right = "25%";
-								togglePreview.style.right = "25%";
+								container.style.right = session.widgetwidth+"%";
+								togglePreview.style.right = session.widgetwidth+"%";
 							} else {
 								container.style.right = "2vw";
 								togglePreview.style.right = "2vw";
@@ -8617,12 +8617,52 @@ session.remoteTilt = function (tilt) {
 			//updateCameraConstraints("tilt", session.tilt); // TODO: I should align the remote zoom and focus with the local one.
 			track0.applyConstraints({ advanced: [{ tilt: session.tilt }] });
 		} else if (Firefox) {
-			warnlog("firefox sucks. that's why");
+			warnlog("firefox doesn't support this");
 		}
 	} catch (e) {
 		errorlog(e);
 	}
 };
+
+session.remoteExposure = function (exposure) { // exposure is a float between 0 and 1
+    try {
+        var track0 = session.streamSrc.getVideoTracks();
+        track0 = track0[0];
+        if (track0.getCapabilities) {
+            var capabilities = track0.getCapabilities();
+            var settings = track0.getSettings();
+
+            if (!capabilities.exposureMode || !capabilities.exposureTime) {
+                warnlog("Exposure control not supported on this device");
+                return;
+            }
+
+            // Switch to manual exposure mode
+            if (settings.exposureMode !== 'manual') {
+                track0.applyConstraints({ advanced: [{ exposureMode: 'manual' }] });
+            }
+
+            // Get the exposure time range
+            var minExposureTime = capabilities.exposureTime.min;
+            var maxExposureTime = capabilities.exposureTime.max;
+
+            // Calculate the new exposure time based on the input (0-1)
+            var newExposureTime = minExposureTime + (maxExposureTime - minExposureTime) * exposure;
+
+            // Ensure the new exposure time is within the valid range
+            newExposureTime = Math.max(minExposureTime, Math.min(maxExposureTime, newExposureTime));
+
+            // Apply the new exposure time
+            track0.applyConstraints({ advanced: [{ exposureTime: newExposureTime }] });
+
+            console.log(`Applied new exposure time: ${newExposureTime}`);
+        } else if (Firefox) {
+            warnlog("Firefox doesn't support this feature");
+        }
+    } catch (e) {
+        errorlog(e);
+    }
+}
 //function updateRemotePTZControls(videoOptions, UUID){
 //	console.log(videoOptions);
 //	console.log(UUID);
@@ -16561,6 +16601,10 @@ async function directTimer(ele, event = false, manualSetTime = false) {
 			msg.resumeClock = true;
 			ele.classList.add("red");
 		}
+	}
+	
+	if (!session.director){
+		return;
 	}
 
 	if (ele.dataset.UUID) {
