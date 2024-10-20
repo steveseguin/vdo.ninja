@@ -32238,7 +32238,7 @@ function updateDirectorsAudio(dataN, UUID) {
 								}
 							}
 						}
-					} else if (i.toLowerCase == "torch") {
+					} else if (i.toLowerCase() == "torch") {
 						var opt = new Option("Off", false);
 						input.options.add(opt);
 						opt = new Option("On", true);
@@ -32680,7 +32680,7 @@ function updateDirectorsVideo(data, UUID) {
 							}
 						}
 					}
-				} else if (i.toLowerCase == "torch") {
+				} else if (i.toLowerCase() == "torch") {
 					var opt = new Option("Off", false);
 					input.options.add(opt);
 					opt = new Option("On", true);
@@ -33480,7 +33480,7 @@ function listAudioSettings() {
 								}
 							}
 						}
-					} else if (i.toLowerCase == "torch") {
+					} else if (i.toLowerCase() == "torch") {
 						var opt = new Option("Off", false);
 						input.options.add(opt);
 						opt = new Option("On", true);
@@ -34146,7 +34146,7 @@ function listCameraSettings() {
 							opt.selected = "true";
 						}
 					}
-				} else if (i.toLowerCase == "torch") {
+				} else if (i.toLowerCase() == "torch") {
 					warnlog("TORCH");
 					var opt = new Option("Off", false);
 					input.options.add(opt);
