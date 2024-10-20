@@ -5155,7 +5155,7 @@ function updateMixerRun(e = false) {
 			var w = window.innerWidth;
 
 			if (session.widget && session.iFramesAllowed) {
-				w *= (100 - session.widgetwidth);
+				w *= (100 - session.widgetwidth)/100;
 				try {
 					let widget = document.getElementById("widget");
 					if (!widget) {
