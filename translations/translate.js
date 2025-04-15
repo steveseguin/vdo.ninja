@@ -23,6 +23,7 @@ async function updateTranslation(filename) {
 const updateList = [
     "blank", // must be first
     "en",
+    "by",
     "cs",
     "cn",
     "de",
