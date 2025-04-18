@@ -764,7 +764,7 @@
     "this-is-you": "This is you, a co-director.<br />You are also a performer.",
     "preview-meshcast-disabled": "You can't adjust the preview bitrate for Meshcast-based streams",
     "co-director": "Co-Director",
-    "you-not-yet-activated": "Please wait until the director brings you into the room",
+    "you-not-yet-activated": "Калі ласка, пачакайце, пакуль дырэктар дадасць вас у залю.",
     "sample-rate-too-high": "Your audio playback device has its sample rate set very high. If having audio issues, try using 48-kHz instead.",
     "no-network": "Network connection lost 🤷‍♀️❌📶",
     "no-network-details": "Network connection lost. 🤷‍♀️❌📶\n\nHave you lost your Internet connection?",
