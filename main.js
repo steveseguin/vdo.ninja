@@ -2354,7 +2354,7 @@ async function main() {
 								session.taintedSession = false;
 								session.hash = hash;
 								if (urlParams.has("room") && !urlParams.has("dir") && !urlParams.has("director")) {
-									log("previewWebcam... " + hash2);
+									log("previewWebcam... ");
 									previewWebcam();
 								}
 							}
@@ -2364,7 +2364,7 @@ async function main() {
 					session.taintedSession = false;
 					session.hash = hash;
 					if (urlParams.has("room") && !urlParams.has("dir") && !urlParams.has("director")) {
-						log("previewWebcam. " + hash2);
+						log("previewWebcam");
 						previewWebcam();
 					}
 
