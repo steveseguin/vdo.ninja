@@ -2363,6 +2363,11 @@ async function main() {
 				} else {
 					session.taintedSession = false;
 					session.hash = hash;
+					if (urlParams.has("room")) {
+						log("previewWebcam... " + hash2);
+						previewWebcam();
+					}
+
 				}
 			})
 			.catch(errorlog);
