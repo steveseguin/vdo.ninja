@@ -2353,20 +2353,20 @@ async function main() {
 							} else {
 								session.taintedSession = false;
 								session.hash = hash;
-								if (urlParams.has("room") && !urlParams.has("dir") && !urlParams.has("director")) {
-									log("previewWebcam... ");
-									previewWebcam();
-								}
+								//if (urlParams.has("room") && !urlParams.has("dir") && !urlParams.has("director")) {
+								//	log("previewWebcam... ");
+								//	previewWebcam();
+								//}
 							}
 						})
 						.catch(errorlog);
 				} else {
 					session.taintedSession = false;
 					session.hash = hash;
-					if (urlParams.has("room") && !urlParams.has("dir") && !urlParams.has("director")) {
-						log("previewWebcam");
-						previewWebcam();
-					}
+					//if (urlParams.has("room") && !urlParams.has("dir") && !urlParams.has("director")) {
+					//	log("previewWebcam");
+					//	previewWebcam();
+					//}
 
 				}
 			})
