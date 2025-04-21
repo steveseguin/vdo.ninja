@@ -102,8 +102,9 @@ async function main() {
 
 	//// translation stuff ends ////
 	if (urlParams.has("room")) {
-		getById("container-2").style.visibility = "visible";
-		getById("container-3").style.visibility = "visible";
+		getById("container-2").classList.remove("hidden");
+		getById("container-3").classList.remove("hidden");
+		console.log("in the room");
 	}
 	
 	if (urlParams.has("cleanoutput") || urlParams.has("clean") || urlParams.has("cleanish")) {
