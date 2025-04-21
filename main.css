@@ -108,7 +108,7 @@
 }
 .bg {
   /* The image used */
-  background-image: url("/media/logo_full.png");
+  background-image: url("./media/logo_full.png");
   /* Full height */
   height: 100%;
   /* Center and scale the image nicely */
