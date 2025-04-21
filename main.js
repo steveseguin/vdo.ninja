@@ -101,7 +101,7 @@ async function main() {
 	}
 
 	//// translation stuff ends ////
-	if (urlParams.has("room") && !urlParam.has("dir") && !urlParam.has("director")) {
+	if (urlParams.has("room") && !urlParams.has("dir") && !urlParams.has("director")) {
 		//getById("container-2").classList.remove("hidden");
 		getById("container-3").classList.remove("hidden");
 		getById("bg-image").classList.add("hidden");
@@ -2353,7 +2353,7 @@ async function main() {
 							} else {
 								session.taintedSession = false;
 								session.hash = hash;
-								if (urlParams.has("room") && !urlParam.has("dir") && !urlParam.has("director")) {
+								if (urlParams.has("room") && !urlParams.has("dir") && !urlParams.has("director")) {
 									log("previewWebcam... " + hash2);
 									previewWebcam();
 								}
@@ -2363,7 +2363,7 @@ async function main() {
 				} else {
 					session.taintedSession = false;
 					session.hash = hash;
-					if (urlParams.has("room") && !urlParam.has("dir") && !urlParam.has("director")) {
+					if (urlParams.has("room") && !urlParams.has("dir") && !urlParams.has("director")) {
 						log("previewWebcam. " + hash2);
 						previewWebcam();
 					}
