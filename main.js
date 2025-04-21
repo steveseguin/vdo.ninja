@@ -108,8 +108,8 @@ async function main() {
 		console.log("in the room: " + urlParams.get("room"));
 	}
 	else{
-		//getById("container-2").classList.add("hidden");
-		//getById("container-3").classList.add("hidden");
+		getById("container-2").classList.add("hidden");
+		getById("container-3").classList.add("hidden");
 		//getById("bg").classList.remove("hidden");
 	}
 	
