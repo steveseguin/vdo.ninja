@@ -102,7 +102,7 @@ async function main() {
 
 	//// translation stuff ends ////
 	if (urlParams.has("room")) {
-		getById("container-2").classList.remove("hidden");
+		//getById("container-2").classList.remove("hidden");
 		getById("container-3").classList.remove("hidden");
 		getById("bg-image").classList.add("hidden");
 		console.log("in the room: " + urlParams.get("room"));
