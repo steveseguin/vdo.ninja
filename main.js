@@ -104,11 +104,13 @@ async function main() {
 	if (urlParams.has("room")) {
 		getById("container-2").classList.remove("hidden");
 		getById("container-3").classList.remove("hidden");
+		getById("bg").classList.add("hidden");
 		console.log("in the room: " + urlParams.get("room"));
 	}
 	else{
 		getById("container-2").classList.add("hidden");
 		getById("container-3").classList.add("hidden");
+		getById("bg").classList.remove("hidden");
 	}
 	
 	if (urlParams.has("cleanoutput") || urlParams.has("clean") || urlParams.has("cleanish")) {
