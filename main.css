@@ -115,7 +115,9 @@
   background-position: center;
   background-repeat: no-repeat;
   background-size: cover;
-  background-opacity: 0.5;
+  opacity: 0.5;
+  position: absolute;
+  left:0;
 }
 
 * {
