@@ -50,17 +50,17 @@
 	--a-darker-focus: #d9e4eb;
 	--a-darker-active: #d9e4eb;
 
-	--a-lighter-link: #9ed0e1;
-	--a-lighter-visited: #9ed0e1;
-	--a-lighter-hover: #8acee4;
-	--a-lighter-focus: #8acee4;
-	--a-lighter-active: #89d5ee;
+	--a-lighter-link: #eb1d31;
+	--a-lighter-visited: #eb1d31;
+	--a-lighter-hover: #9b1320;
+	--a-lighter-focus: #9b1320;
+	--a-lighter-active: #eb1d31;
 
-	--a-link:  #144267;
-	--a-visited: #144267;
-	--a-hover: #38668c;
-	--a-focus: #38668c;
-	--a-active: #0165b5;
+	--a-link:  #eb1d31;
+	--a-visited: #eb1d31;
+	--a-hover: #f86472;
+	--a-focus: #f86472;
+	--a-active: #9b1320;
 
 	/* -- Box colors */
 	--director-box: rgb(165 119 18);
