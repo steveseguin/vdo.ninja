@@ -110,7 +110,7 @@ async function main() {
 	else{
 		getById("container-2").classList.add("hidden");
 		getById("container-3").classList.add("hidden");
-		if(urlParams.has("dir") || urlParams.has("director"))
+		if(!urlParams.has("dir") && !urlParams.has("director"))
 			getById("bg-image").classList.remove("hidden");
 	}
 	
