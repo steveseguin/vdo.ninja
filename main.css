@@ -31,12 +31,18 @@
 	--lighttheme-text: black;
 
 	/* Director v2 - General colors */
-	/* -- Links */
+	/* -- Links
 	--a-dark-link: #69aadc;
 	--a-dark-visited: #69aadc;
 	--a-dark-hover: #6da5dd;
 	--a-dark-focus: #6da5dd;
 	--a-dark-active: #3a80c6;
+*/
+	--a-dark-link: #dcaa69;
+	--a-dark-visited: #dcaa69;
+	--a-dark-hover: #dda56d;
+	--a-dark-focus: #dda56d;
+	--a-dark-active: #c6803a;
 
 	--a-darker-link: #b9dff9;
 	--a-darker-visited: #b9dff9;
