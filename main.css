@@ -125,7 +125,23 @@
   left:0;
   z-index: -1;
 }
-.title {
+.prompt {
+    position: absolute;
+    top: 5%;
+    left: 20%;
+    -webkit-transform: translate3d(-20%, -5%, 0);
+    transform: translate3d(-20%, -5%, 0);
+    z-index: 99;
+    text-align: center;
+    font-family: 'Roboto', sans-serif;
+    font-weight: 300;
+    text-transform: uppercase;
+    background-color: rgba(30, 30, 30, 0.75);
+    box-shadow: 0 1em 2em -1em rgba(0, 0, 0, 0.5);
+    padding: 1em 2em;
+    line-height: 1.5;
+}
+.baner {
     position: absolute;
     top: 5%;
     left: 50%;
