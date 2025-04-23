@@ -104,6 +104,7 @@
 	--full-screen-button: inherit;
 	--color-mode: light;
 	--video-background-image-size: auto 30%;
+	--gray90: #dddddd;
 }
 
 /* Changes color-mode based on what theme the browser states */
