@@ -28,7 +28,7 @@
 	--lighttheme-6: #aaa;
 	--lighttheme-7: #7e7e7e;
 	--lighttheme-8: #373737;
-	--lighttheme-text: black;
+	--lighttheme-text: #dddddd;
 
 	/* Director v2 - General colors */
 	/* -- Links
@@ -113,12 +113,9 @@
 	}
 }
 .bg {
-  /* The image used */
   background-image: url("./media/logo_full.png");
-  /* Full height */
   height: 100%;
   width: 100%;
-  /* Center and scale the image nicely */
   background-position: center;
   background-repeat: no-repeat;
   background-size: cover;
