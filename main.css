@@ -128,7 +128,7 @@
 .prompt {
     position: absolute;
     top: 5%;
-    left: 40%;
+    left: 30%;
     -webkit-transform: translate3d(-20%, -5%, 0);
     transform: translate3d(-20%, -5%, 0);
     z-index: 99;
