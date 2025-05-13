@@ -606,7 +606,7 @@
     "optional": "Enter an optional password here"
   },
   "placeholders": {
-    "join-by-room-name-here": "Join by Room Name here",
+    "join-by-room-name-here": "نام اتاق را وارد کنید",
     "load-a-website-url": "Load a website URL",
     "enter-chat-message-to-send": "Enter chat message to send",
     "enter-your-message-here": "Enter your message here",
