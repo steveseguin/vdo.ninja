@@ -22,11 +22,11 @@
 	/* Lightmode white - Darker to lighter */
 	--lighttheme-1: #fff;
 	--lighttheme-2: #f3f3f3;
-	--lighttheme-3: #ddd;
-	--lighttheme-4: #ccc; /* primary */
-	--lighttheme-5: #bbb;
-	--lighttheme-6: #aaa;
-	--lighttheme-7: #7e7e7e;
+	--lighttheme-3: #c4e3ff;
+	--lighttheme-4: #99d3ff; /* primary */
+	--lighttheme-5: #99d3ff;
+	--lighttheme-6: #66bdff;
+	--lighttheme-7: #8fb7d6;
 	--lighttheme-8: #373737;
 	--lighttheme-text: black;
 
@@ -87,7 +87,7 @@
 	--video-border-color: #0000;
 	--video-holder-color: #0000;
 	--video-rounded: 0px;
-	--button-radius: 2px;
+	--button-radius: 6px;
 	--myvideo-max-width: min(800px,100vw);
 	--myvideo-width:unset;
 	--myvideo-height:auto;
@@ -205,7 +205,7 @@ table {
 
 #progressContainer {
     width: 100%;
-    background-color: #ddd9;
+    background-color: #dddf;
 	position: absolute;
 	right: 0;
 	bottom: 0;
@@ -458,7 +458,7 @@ body.whitetheme {
 
 .whitetheme button {
     background-color: #f0f0f0;
-    border: 1px solid #ddd;
+    border: 1px solid #ddefff;
     color: #000000;
 }
 
@@ -502,14 +502,14 @@ body.whitetheme {
 
 .whitetheme select {
     background-color: #ffffff;
-    border: 1px solid #ddd;
+    border: 1px solid #ddefff;
     color: #000000;
 }
 
 .whitetheme input[type='text'],
 .whitetheme input[type='password'] {
     background-color: #ffffff;
-    border: 1px solid #ddd;
+    border: 1px solid ##aaffff;
     color: #000000;
 }
 
@@ -1812,10 +1812,10 @@ div[data-action-type='toggle-group'] {
 	box-shadow: 10px 8px 32px -10px #8883;
 }
 .testtonebutton:hover{
-	background-color:#DDD
+	background-color:#ddefff
 }
 .testtonebutton:active{
-	background-color:#AAA
+	background-color:#AAFFF
 }
 
 .highlight {
@@ -2513,7 +2513,7 @@ label {
 
 /* .card {
 	box-shadow: 0 4px 8px 0 rgba(0, 0, 0, .1);
-	background-color: #ddd;
+	background-color: #aaffff;
 } */
 
 .column {
@@ -2815,7 +2815,7 @@ input[type="file"]#fileselector4 + label {
 
 .file-manager {
     max-width: 400px;
-    background: #ddda;
+    background: #dddf;
     border-radius: 8px;
     box-shadow: 0 2px 4px rgba(0,0,0,0.1);
     padding: 16px;
@@ -5647,7 +5647,7 @@ button i {
 .gobutton {
 	font-size: 110%;
 	padding: 10px;
-	border: 3px solid #ddd;
+	border: 3px solid ##aaffff;
 	cursor: pointer;
 	background-color: #99bfd9;
 	color: #000;
