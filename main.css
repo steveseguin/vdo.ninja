@@ -38,8 +38,8 @@
 	--a-dark-focus: #6da5dd;
 	--a-dark-active: #3a80c6;
 
-	--a-darker-link: #b9dff9;
-	--a-darker-visited: #b9dff9;
+	--a-darker-link: #1695eb;
+	--a-darker-visited: #16caeb;
 	--a-darker-hover: #048ae8;
 	--a-darker-focus: #d9e4eb;
 	--a-darker-active: #d9e4eb;
@@ -64,7 +64,7 @@
 	--codirector-dark-box: rgb(129 127 127);
 	
 	--widget-width: 25%;
-	--rtl-or-ltr: left;
+	--rtl-or-ltr: right;
 	
 	/* Original colors */
 	--background-color: #141926;
