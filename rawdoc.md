@@ -631,6 +631,7 @@ Please report bugs. It's a first release, using the alpha version of VDO.Ninja, 
     * [\&outboundaudiobitrate](source-settings/and-outboundaudiobitrate.md)
     * [\&inputchannels](advanced-settings/audio-parameters/and-inputchannels.md)
     * [\&monomic](advanced-settings/audio-parameters/and-monomic.md)
+    * [\&nomutepreview](advanced-settings/audio-parameters/and-nomutepreview.md)
     * [\&audiooutput](https://docs.vdo.ninja/advanced-settings/view-parameters/and-outputdevice)
     * [\&sink](https://docs.vdo.ninja/advanced-settings/view-parameters/and-sink)
     * [\&volume](advanced-settings/audio-parameters/and-volume.md)
@@ -1628,6 +1629,31 @@ There is [`&mono`](../view-parameters/mono.md) to set the audio output to mono o
 [and-inputchannels.md](and-inputchannels.md)
 
 [mono.md](../view-parameters/mono.md)
+
+---
+description: Unmutes the local self-preview by default
+---
+
+# &nomutepreview
+
+Sender-Side Option! ([`&push`](../source-settings/push.md))
+
+## Details
+
+If `&nomutepreview` is passed, the video preview will be unmuted when you press the start button, playing the microphone input back to you (audio monitoring).
+
+You can also activate this during a stream by [showing the control bar](../newly-added-parameters/and-videocontrols.md) and using the volume control there.
+
+This can also be passed in director mode and will affect the director's own stream.
+
+## Related
+
+[and-preview.md](../../source-settings/and-preview.md)
+
+[and-nopreview.md](../../source-settings/and-nopreview.md)
+
+[and-volume.md](../../source-settings/and-volume.md)
+
 ---
 description: Disables all audio playback from room directors
 ---
@@ -1941,7 +1967,7 @@ You can add them to both, source ([`&push`](../../source-settings/push.md)) and 
 
 You have to add them to the source side ([`&push`](../../source-settings/push.md)).
 
-<table><thead><tr><th width="286.57142857142856">Parameter</th><th>Explanation</th></tr></thead><tbody><tr><td><a href="../../source-settings/audiodevice.md"><code>&#x26;audiodevice</code></a></td><td>Pre-configures the selected audio device</td></tr><tr><td><a href="../../source-settings/aec.md"><code>&#x26;echocancellation</code></a></td><td>Automatic echo-cancellation is ON or OFF</td></tr><tr><td><a href="and-audiogain.md"><code>&#x26;audiogain</code></a></td><td>Applies a gain multiplier (as a percentage) to the local microphone</td></tr><tr><td><a href="../../source-settings/autogain.md"><code>&#x26;autogain</code></a></td><td>Sets whether audio auto-normalization is ON or OFF</td></tr><tr><td><a href="../../source-settings/and-compressor.md"><code>&#x26;compressor</code></a></td><td>Applies a generic audio compressor to the local microphone</td></tr><tr><td><a href="../../source-settings/and-denoise.md"><code>&#x26;denoise</code></a></td><td>Turn audio noise reduction filter ON or OFF</td></tr><tr><td><a href="and-distort.md"><code>&#x26;distort</code></a></td><td>Will try to "distort" your microphone's output audio, making your voice a bit anonymous</td></tr><tr><td><a href="../../source-settings/and-equalizer.md"><code>&#x26;equalizer</code></a></td><td>Provides access to a generic audio equalizer that can be applied to the local microphone</td></tr><tr><td><a href="../../source-settings/and-limiter.md"><code>&#x26;limiter</code></a></td><td>Applies a generic audio limiter to the local microphone</td></tr><tr><td><a href="../../source-settings/lowcut.md"><code>&#x26;lowcut</code></a></td><td>Adds a low-cut filter</td></tr><tr><td><a href="../../source-settings/noisegate.md"><code>&#x26;noisegate</code></a></td><td>Lowers your mic volume to 10% of its current value based on volume-level activity</td></tr><tr><td><a href="and-noisegatesettings.md"><code>&#x26;noisegatesettings</code></a></td><td>Lets you tweak the &#x26;noisegate variables, making it more or less aggressive as needed</td></tr><tr><td><a href="and-audiocontenthint.md"><code>&#x26;audiocontenthint</code></a></td><td><code>=music</code> fixed bitrate; <code>=speech</code> bitrate is variable</td></tr><tr><td><a href="../../newly-added-parameters/and-audiolatency.md"><code>&#x26;audiolatency</code></a></td><td>Adds an audio-latency to the published audio stream</td></tr><tr><td><a href="../../source-settings/and-micdelay.md"><code>&#x26;micdelay</code></a></td><td>Delays the microphone by specified time in ms</td></tr><tr><td><a href="../../source-settings/and-mute.md"><code>&#x26;mute</code></a></td><td>Starts with the microphone muted by default</td></tr><tr><td><a href="and-automute.md"><code>&#x26;automute</code></a></td><td>Will mute the microphone of a guest when not loaded in an active OBS scene</td></tr><tr><td><a href="../../source-settings/and-outboundaudiobitrate.md"><code>&#x26;outboundaudiobitrate</code></a></td><td>Target audio bitrate and max bitrate for outgoing audio streams</td></tr><tr><td><a href="and-inputchannels.md"><code>&#x26;inputchannels</code></a></td><td>Audio capture device to select N-number of audio channels</td></tr><tr><td><a href="and-monomic.md"><code>&#x26;monomic</code></a></td><td>Sets a guest's audio input to mono (1-channel)</td></tr></tbody></table>
+<table><thead><tr><th width="286.57142857142856">Parameter</th><th>Explanation</th></tr></thead><tbody><tr><td><a href="../../source-settings/audiodevice.md"><code>&#x26;audiodevice</code></a></td><td>Pre-configures the selected audio device</td></tr><tr><td><a href="../../source-settings/aec.md"><code>&#x26;echocancellation</code></a></td><td>Automatic echo-cancellation is ON or OFF</td></tr><tr><td><a href="and-audiogain.md"><code>&#x26;audiogain</code></a></td><td>Applies a gain multiplier (as a percentage) to the local microphone</td></tr><tr><td><a href="../../source-settings/autogain.md"><code>&#x26;autogain</code></a></td><td>Sets whether audio auto-normalization is ON or OFF</td></tr><tr><td><a href="../../source-settings/and-compressor.md"><code>&#x26;compressor</code></a></td><td>Applies a generic audio compressor to the local microphone</td></tr><tr><td><a href="../../source-settings/and-denoise.md"><code>&#x26;denoise</code></a></td><td>Turn audio noise reduction filter ON or OFF</td></tr><tr><td><a href="and-distort.md"><code>&#x26;distort</code></a></td><td>Will try to "distort" your microphone's output audio, making your voice a bit anonymous</td></tr><tr><td><a href="../../source-settings/and-equalizer.md"><code>&#x26;equalizer</code></a></td><td>Provides access to a generic audio equalizer that can be applied to the local microphone</td></tr><tr><td><a href="../../source-settings/and-limiter.md"><code>&#x26;limiter</code></a></td><td>Applies a generic audio limiter to the local microphone</td></tr><tr><td><a href="../../source-settings/lowcut.md"><code>&#x26;lowcut</code></a></td><td>Adds a low-cut filter</td></tr><tr><td><a href="../../source-settings/noisegate.md"><code>&#x26;noisegate</code></a></td><td>Lowers your mic volume to 10% of its current value based on volume-level activity</td></tr><tr><td><a href="and-noisegatesettings.md"><code>&#x26;noisegatesettings</code></a></td><td>Lets you tweak the &#x26;noisegate variables, making it more or less aggressive as needed</td></tr><tr><td><a href="and-audiocontenthint.md"><code>&#x26;audiocontenthint</code></a></td><td><code>=music</code> fixed bitrate; <code>=speech</code> bitrate is variable</td></tr><tr><td><a href="../../newly-added-parameters/and-audiolatency.md"><code>&#x26;audiolatency</code></a></td><td>Adds an audio-latency to the published audio stream</td></tr><tr><td><a href="../../source-settings/and-micdelay.md"><code>&#x26;micdelay</code></a></td><td>Delays the microphone by specified time in ms</td></tr><tr><td><a href="../../source-settings/and-mute.md"><code>&#x26;mute</code></a></td><td>Starts with the microphone muted by default</td></tr><tr><td><a href="and-automute.md"><code>&#x26;automute</code></a></td><td>Will mute the microphone of a guest when not loaded in an active OBS scene</td></tr><tr><td><a href="../../source-settings/and-outboundaudiobitrate.md"><code>&#x26;outboundaudiobitrate</code></a></td><td>Target audio bitrate and max bitrate for outgoing audio streams</td></tr><tr><td><a href="and-inputchannels.md"><code>&#x26;inputchannels</code></a></td><td>Audio capture device to select N-number of audio channels</td></tr><tr><td><a href="and-monomic.md"><code>&#x26;monomic</code></a></td><td>Sets a guest's audio input to mono (1-channel)</td></tr><tr><td><a href="and-nomutepreview.md"><code>&#x26;nomutepreview</code></a></td><td>Unmutes the local self-preview by default</td></tr></tbody></table>
 
 ## **Viewer side options**
 
@@ -7655,6 +7681,8 @@ If you want the VDO.Ninja self-preview to not be mini-sized in [broadcast](../vi
 [and-nopreview.md](../../source-settings/and-nopreview.md)
 
 [broadcast.md](../view-parameters/broadcast.md)
+
+[and-nomutepreview.md](../audio-parameters/and-nomutepreview.md)
 ---
 description: Used to position where the mini preview is located by default on screen
 ---
@@ -19939,8 +19967,6 @@ Example: `&minipreview=0`
 
 ## Details
 
-## Details
-
 Shows the mini self-preview at the top right corner. This is the default behavior when [`&broadcast`](../advanced-settings/view-parameters/broadcast.md) mode is on.
 
 You can change the default position of the mini preview with [`&minipreviewoffset`](../advanced-settings/video-parameters/and-minipreview-1.md).
@@ -19956,6 +19982,8 @@ You can change the default position of the mini preview with [`&minipreviewoffse
 [and-nopreview.md](and-nopreview.md)
 
 [broadcast.md](../advanced-settings/view-parameters/broadcast.md)
+
+[and-nomutepreview.md](../advanced-settings/audio-parameters/and-nomutepreview.md)
 ---
 description: Starts with the microphone muted by default
 ---
@@ -20180,6 +20208,8 @@ Forces the guest to have a self-preview.
 [and-minipreview.md](and-minipreview.md)
 
 [and-nopreview.md](and-nopreview.md)
+
+[and-nomutepreview.md](../audio-parameters/and-nomutepreview.md)
 ---
 description: Auto mutes guest's video
 ---

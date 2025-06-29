@@ -29193,6 +29193,9 @@ async function grabVideo(quality = 0, eleName = "previewWebcam", selector = "sel
 	}
 
 	session.videoElement.controls = session.showControls || false;
+	if (typeof session.volume == "number") {
+		session.videoElement.volume = session.volume;
+	}
 
 	log("selector: " + selector);
 	var videoSelect = document.querySelector(selector); // document.querySelector("videoSource3").value == "ZZZ"
@@ -31147,7 +31150,11 @@ async function press2talk(clean = false) {
 	}
 
 	// videosource
-	session.videoElement.muted = true;
+	if (typeof session.volume == "number") {
+		session.videoElement.volume = session.volume;
+	}
+	session.videoElement.muted = !session.noMutePreview;
+
 	session.videoElement.autoplay = true;
 	session.videoElement.controls = session.showControls || false;
 	session.videoElement.setAttribute("playsinline", "");
@@ -31427,6 +31434,10 @@ session.publishStream = function (v) {
 	if (session.nopreview) {
 		v.style.display = "none";
 		container.style.display = "none";
+	}
+
+	if (session.noMutePreview) {
+		v.muted = false;
 	}
 
 	if (((session.roomid === false || session.roomid === "") && session.quality === false) || session.forceMediaSettings) {
