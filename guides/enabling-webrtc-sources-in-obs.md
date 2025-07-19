@@ -60,6 +60,18 @@ If you're using third-party firewall software:
 3. Add OBS (`obs64.exe`) to the list of allowed applications.
 4. Ensure OBS has permissions for both incoming and outgoing connections.
 
+### Method 6: Disabling Web Security to enable local IP sharing
+
+OBS browser sources seems to hide local IPs by default, which may cause Internet usage via forced TURN-server usage, rather than direct peer-to-peer. Not ideal!
+
+If you start OBS with the following command-line arguments, peer to peer connectivity issues may be resolved. To quickly test if this is a potential issue, add `&turn=0` to the VDO.Ninja view URL added to OBS, and see if you can establish a connection. \
+\
+While it's not going to impact most users, it may be a problem for some. If it is a problem, you can just ignore it, use the [ElectronCapture.app](../steves-helper-apps/electron-capture.md) instead, or if you don't mind lowering the security browser inside OBS, you can use the following command-line to start OBS:
+
+`obs64.exe --disable-web-security --allow-running-insecure-content --ignore-certificate-errors --use-fake-ui-for-media-stream`
+
+To further help diagnose the above issue, and to compare results across different browsers, please see: [https://vdo.ninja/stun](https://vdo.ninja/stun)
+
 ### Troubleshooting Tips
 
 * Clear browser cache: As already mentioned, in OBS, right-click on the browser source, select "Properties", then click "Refresh cache of current page".
