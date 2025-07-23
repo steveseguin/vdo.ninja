@@ -24,7 +24,11 @@ If problems persis&#x74;**,&#x20;**<mark style="background-color:yellow;">**cons
 
 When using OBS Studio, you might notice the issue becomes more pronounced when the browser source is minimized or running in the background. Some users have found success by simply <mark style="background-color:yellow;">**running OBS in Administrator mode**</mark>, suggesting the problem may be related to system priority settings.
 
-If you see "Max audio buffering reached!" in your OBS log files, your computer might be struggling with CPU load. You have several options: reduce the demands on your CPU, upgrade your hardware, or try using the [Electron Capture app ](../steves-helper-apps/electron-capture.md)instead of the OBS Browser source for audio and video capture.
+If you see "Max audio buffering reached!" in your OBS log files, your computer might be struggling with CPU load. You have several options: reduce the demands on your CPU, upgrade your hardware, or try using the [Electron Capture app ](../steves-helper-apps/electron-capture.md)instead of the OBS Browser source for audio and video capture.\
+\
+DO NOT use OBS's CPU monitor to judge CPU usage — it's deceptive and never close to accurate. Instead, use the Windows Task Manager, or whatever system resource manager there is. It will offer a more accurate total system CPU usage value, and if its near or at 100%, then that can cause OBS to have delayed or robotic audio.\
+\
+Try not monitoring the audio of sources in OBS, especially browser sources; for some users, this has fixed the issue. You can monitor the audio of guests via VDO.Ninja instead directly, or by using the Electron Capture app instead.
 
 ### Audio Routing and Echo Issues
 
@@ -38,13 +42,21 @@ Do not test audio with two devices side by side, or even in the room next door. 
 
 High packet loss can significantly impact audio quality. While adding `&enhance&red` to your view/scene link might help, addressing the underlying packet loss is usually more effective. If you're using a VPN or operating behind a strict firewall that forces the use of relay servers, try to resolve these network constraints first.
 
-Avoid WiFi and bad network connections.
+Avoid WiFi and bad network connections.\
+\
+Ensure that OBS is allowed through your system's firewall; sometimes a user might block OBS from accessing the Internet in full, and that can cause network issues.\
+\
+OBS also has an issue where it hides local IP addresses when making peer connections; this can in some cases force connections that should stay on a local network to be forced over the Internet. This can add network instability and packet loss, which at times may cause bad audio. If you're comfortable lowering the web security of your browser engine within OBS, you can do this by starting OBS with the following command line parameters:\
+\
+`obs64.exe --disable-web-security --allow-running-insecure-content --ignore-certificate-errors --use-fake-ui-for-media-stream`
 
 ### Version-Specific Considerations
 
 Different versions of VDO.Ninja may handle audio processing differently. If you're experiencing persistent issues, you might want to try an older version, such as https://vdo.ninja/v23/. For systems under heavy load, adding `&noap` to your VDO.Ninja URL will disable web-audio processing, which can help with robotic audio effects caused by audio buffer underruns.
 
-If you notice that the audio issues are specific to certain versions, please report them through the Discord community (https://discord.vdo.ninja). Your feedback helps improve the platform for everyone.
+If you notice that the audio issues are specific to certain versions, please report them through the Discord community (https://discord.vdo.ninja). Your feedback helps improve the platform for everyone.\
+\
+Different versions of OBS Studio also can cause issues.  Try different versions of OBS if facing issues, especially new issues, and consider not using new versions of OBS for production purposes until doing tests. I like to skip versions if the current version is working well, only upgrading when needed.
 
 ### Electron Capture app
 
