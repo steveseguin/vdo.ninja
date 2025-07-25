@@ -1,5 +1,5 @@
 name = "vdoninja"
-main = "worker.js"
+main = "index.js"
 compatibility_date = "2025-01-01"
 
 [assets]
