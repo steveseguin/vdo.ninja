@@ -106,8 +106,8 @@
 				</span>
 			</a>
 			<div id="head1">
-				<input type="text" autocorrect="off" autocapitalize="none" id="joinroomID" name="joinroomID" tabindex="1" size="22" placeholder="Join by Room Name here" alt="Enter a room name to join" title="Enter a room name to quick join" onkeyup="jumptoroom(event)"/>
-				<button onclick="jumptoroom();" id='jumptoroomButton' role="button" aria-pressed="false" tabindex="1" alt="Join room" title="Join room" >GO</button>
+				<input type="text" autocorrect="off" autocapitalize="none" id="joinroomID" name="joinroomID" tabindex="0" size="22" placeholder="Join by Room Name here" alt="Enter a room name to join" title="Enter a room name to quick join" onkeyup="jumptoroom(event)"/>
+				<button onclick="jumptoroom();" id='jumptoroomButton' role="button" aria-pressed="false" tabindex="0" alt="Join room" title="Join room" >GO</button>
 			</div>
 			<div id="head1a" class="hidden">
 				<input type="text" autocorrect="off" autocapitalize="none" id="joinbyURL" name="joinbyURL" size="22" placeholder="Load a website URL" alt="Enter the URL to load" title="Enter the URL to load"/>
@@ -115,7 +115,7 @@
 			</div>
 			<div id="head5" class="hidden"></div>
 			<div id="head3" style="display: inline-block;" class="hidden">
-				<span style="color: #888;" id="copythisurl" tabindex="1" > &nbsp; 
+				<span style="color: #888;" id="copythisurl" tabindex="0" > &nbsp; 
 					<span data-translate="copy-this-url">Copy this URL into an OBS "Browser Source"</span> <i style="color: #CCC;" class="las la-long-arrow-alt-right"></i> &nbsp; 
 				</span>
 			</div>
@@ -312,7 +312,7 @@
 			</span>
 		</span>
 		<div id="mainmenu" class="row" style="opacity: 0;">
-			<div id="container-1" title="Add Group Chat to OBS"  alt="Add Group Chat to OBS" tabindex="1" role="button" aria-pressed="false" onkeyup="enterPressedClick(event,this);" class="column columnfade pointer card" style=" overflow-y: auto;">
+			<div id="container-1" title="Add Group Chat to OBS"  alt="Add Group Chat to OBS" tabindex="0" role="button" aria-pressed="false" onkeyup="enterPressedClick(event,this);" class="column columnfade pointer card" style=" overflow-y: auto;">
 				
 					<h2>
 						<span data-translate="add-group-chat">Create a Room</span>
@@ -435,7 +435,7 @@
 						</div>
 					</div>
 			</div>
-			<div id="container-3"  title="Add your Camera to OBS" onkeyup="enterPressedClick(event,this);"  alt="Add your Camera to OBS" tabindex="1" role="button" aria-pressed="false" class="column columnfade pointer card" onclick="previewWebcam()" style=" overflow-y: auto;">
+			<div id="container-3"  title="Add your Camera to OBS" onkeyup="enterPressedClick(event,this);"  alt="Add your Camera to OBS" tabindex="0" role="button" aria-pressed="false" class="column columnfade pointer card" onclick="previewWebcam()" style=" overflow-y: auto;">
 				<h2 id="add_camera">
 					<span data-translate="add-your-camera">Add your Camera to OBS</span>
 				</h2>
@@ -449,7 +449,7 @@
 						<span data-translate="ask-for-permissions">Allow Access to Camera/Microphone</span>
 					</button>
 					<span style="display:block;">
-						<button onclick="publishWebcam(this)" title="Start streaming (Alt + s)" aria-label="Start streaming (Alt + s)" role="button" aria-pressed="false" tabindex="1" id="gowebcam" class="gowebcam" alt="Start Streaming  (Alt + s)" disabled data-audioready="false" data-ready="false" >
+						<button onclick="publishWebcam(this)" title="Start streaming (Alt + s)" aria-label="Start streaming (Alt + s)" role="button" aria-pressed="false" tabindex="0" id="gowebcam" class="gowebcam" alt="Start Streaming  (Alt + s)" disabled data-audioready="false" data-ready="false" >
 							<span data-translate="waiting-for-camera">Waiting for Camera to Load</span>
 						</button>
 					</span>
@@ -468,7 +468,7 @@
                             <i class="las la-video"></i><span data-translate="video-source"> Video Source </span>
                         </div>
 						<span style="display:inline-block;padding-top: 5px;">
-							<select id="videoSourceSelect" tabindex="1" title="Video source list"></select>
+							<select id="videoSourceSelect" tabindex="0" title="Video source list"></select>
 							<span id="gear_webcam" onclick="toggle(document.getElementById('videoSettings'));">
 								<i class="las la-cog" style="font-size: 140%; vertical-align: middle;" aria-hidden="true"></i>
 							</span>
@@ -654,7 +654,7 @@
 					</div>
 				</div>
 			</div>
-			<div id="container-3a"  title="Add your Microphone to OBS" onkeyup="enterPressedClick(event,this);"  alt="Add your Microphone to OBS" tabindex="1" role="button" aria-pressed="false" class="microphoneBackground column columnfade pointer card hidden" onclick="previewWebcam(true)" style=" overflow-y: auto;">
+			<div id="container-3a"  title="Add your Microphone to OBS" onkeyup="enterPressedClick(event,this);"  alt="Add your Microphone to OBS" tabindex="0" role="button" aria-pressed="false" class="microphoneBackground column columnfade pointer card hidden" onclick="previewWebcam(true)" style=" overflow-y: auto;">
 				<h2 id="add_microphone">
 					<span data-translate="add-your-microphone">Add your Microphone to OBS</span>
 				</h2>
@@ -666,7 +666,7 @@
 					</div>
 				</div>
 			</div>
-			<div id="container-2" title="Remote Screenshare into OBS" onkeyup="enterPressedClick(event,this);"  alt="Remote Screenshare into OBS"  tabindex="1" role="button" aria-pressed="false" class="column columnfade pointer card screenshareIcon" style=" overflow-y: auto;">
+			<div id="container-2" title="Remote Screenshare into OBS" onkeyup="enterPressedClick(event,this);"  alt="Remote Screenshare into OBS"  tabindex="0" role="button" aria-pressed="false" class="column columnfade pointer card screenshareIcon" style=" overflow-y: auto;">
 				<h2 id="add_screen">
 					<span data-translate="remote-screenshare-obs">Remote Screenshare into OBS</span>
 				</h2>
@@ -765,7 +765,7 @@
 					</div>
 				</div>
 			</div>
-			<div id="container-4" tabindex="1" alt="Create Reusable Invite" onkeyup="enterPressedClick(event,this);" onclick="loadQR();" title="Create Reusable Invite" role="button" aria-pressed="false" class="column columnfade pointer card" style=" overflow-y: auto;">
+			<div id="container-4" tabindex="0" alt="Create Reusable Invite" onkeyup="enterPressedClick(event,this);" onclick="loadQR();" title="Create Reusable Invite" role="button" aria-pressed="false" class="column columnfade pointer card" style=" overflow-y: auto;">
 				<h2>
 					<span data-translate="create-reusable-invite">Create Reusable Invite</span>
 				</h2>
