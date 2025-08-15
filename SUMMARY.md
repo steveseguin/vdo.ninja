@@ -652,6 +652,7 @@
   * [Can't connect unless via VPN](common-errors-and-known-issues/cant-connect-unless-via-vpn.md)
   * [Improving vMix performance](common-errors-and-known-issues/improving-vmix-performance.md)
   * [Use a Virtual Camera more than Once](common-errors-and-known-issues/use-a-virtual-camera-more-than-once.md)
+  * [OBS Virtual Camera not working](common-errors-and-known-issues/obs-virtual-camera-not-working.md)
 * [Platform specific issues](platform-specific-issues/README.md)
   * [Android](platform-specific-issues/android.md)
   * [macOS](platform-specific-issues/macos.md)
