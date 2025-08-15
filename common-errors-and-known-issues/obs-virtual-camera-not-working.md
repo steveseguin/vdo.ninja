@@ -22,7 +22,7 @@ The virtual camera functionality (built into OBS 26+ or available via plugins) f
 * **Enable proper Windows permissions**
 * **Check and clean registry entries**
 
-#### Common Issues & Fixes
+### Common Issues & Fixes
 
 **"Camera in use by another program" Error**
 
@@ -40,7 +40,7 @@ The virtual camera functionality (built into OBS 26+ or available via plugins) f
    * Turn off "Use hardware acceleration when available"
    * **This resolves \~70% of browser-related Virtual Camera issues**
 
-**Virtual Camera Not Appearing**
+### **Virtual Camera Not Appearing**
 
 1. **Check Registry for remnants:**
    * Open Registry Editor
@@ -54,17 +54,19 @@ The virtual camera functionality (built into OBS 26+ or available via plugins) f
 
     This provides SYSTEM-level access for protected key removal
 
-**Windows 11 Specific Issues**
+### **Windows 11 Specific Issues**
 
 * Navigate to: Settings → Privacy & Security → Camera
 * Enable **"Let desktop apps access your camera"**
 * Note: OBS won't appear in the individual app list
 
-**Portable OBS Installation**
+### **Portable OBS Installation**
 
 1. Extract portable version
 2. Create `portable_mode.txt` in root directory
 3. Run as administrator: `\data\obs-plugins\win-dshow\virtualcam-install.bat`
+
+##
 
 ## macOS Platform Solutions
 
