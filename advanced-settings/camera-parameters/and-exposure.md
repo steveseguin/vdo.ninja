@@ -24,7 +24,7 @@ These settings will apply to ALL video devices though, not just a specific one. 
 
 ## Shutter Speed
 
-On Android/Chrome , the `exposureTime` value is often loosely consider the same as shutter speed. Depending on what the camera driver reports, it might be in seconds of milliseconds. To be safe,  you might want to try a few different exposure times, look at the current frame rate, and deduce your own look-up-chart. See [https://vdo.ninja/supports](https://vdo.ninja/supports) for other support values.
+On Android/Chrome , the `exposureTime` value is often loosely consider the same as shutter speed. Depending on what the camera driver reports, it might be in seconds of milliseconds. To be safe,  you might want to try a few different exposure times, look at the current frame rate, and deduce your own look-up-chart.&#x20;
 
 | Shutter Speed (photography) | `exposureTime` (seconds) | `exposureTime` (milliseconds) |
 | --------------------------- | ------------------------ | ----------------------------- |
