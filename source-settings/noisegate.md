@@ -52,6 +52,8 @@ It takes a comma separated list:
 Example:\
 [`https://vdo.ninja/alpha/?noisegate&noisegatesettings=10,25,3000`](https://vdo.ninja/alpha/?noisegate\&noisegatesettings=10,25,3000)
 
+To help users with testing the noise gate and configurating the noise gate settings, there's an interactive page here for it: [https://vdo.ninja/noisegate](https://vdo.ninja/noisegate)
+
 ## Related
 
 {% content-ref url="../advanced-settings/audio-parameters/and-noisegatesettings.md" %}
