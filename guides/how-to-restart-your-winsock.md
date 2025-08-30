@@ -1,9 +1,12 @@
+---
+description: Restarting Winsock on Windows
+---
+
 # How to restart your winsock
 
-## Restarting Winsock on Windows
-
 When troubleshooting network issues on Windows, one common step is to **reset Winsock** (Windows Sockets API).\
-This can fix problems caused by corrupted network configuration, malware, or software conflicts.
+\
+This can fix problems caused by corrupted network configuration, malware, or software conflicts. It can also be caused by ISPs that enforce content filtering or DPI (Deep Packet Inspection) that interacts badly with VPN/proxy drivers.&#x20;
 
 ***
 
