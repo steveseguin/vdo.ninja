@@ -13,8 +13,7 @@ description: >-
 * Try different network (WiFi vs cellular)
 * Restart your [winsock ](../guides/how-to-restart-your-winsock.md)if on Windows
 * Use [https://proxy.vdo.ninja](https://proxy.vdo.ninja/) to access VDO.Ninja via a hosted Cloudflare proxy
-* Use a version of VDO.NInja hosted in Hong Kong instead of in North America: [https://china.vdo.ninja/alpha/](https://china.vdo.ninja/alpha/)\
-
+* Use a version of VDO.NInja hosted in Hong Kong instead of in North America: [https://china.vdo.ninja/alpha](https://china.vdo.ninja/alpha/)
 * Self-host the VDO.Ninja handshake server on your local network
 * Use an network tunnel to bridge your network with the remote network one
 
