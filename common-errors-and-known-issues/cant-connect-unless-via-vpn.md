@@ -38,7 +38,8 @@ Check if you can connect to websocket server, and if not:
 
 #### Quick Solutions
 
-* Restart all devices
+* Restart all devices, including WiFi Router
 * Update browser to latest version
 * Try different network (WiFi vs cellular)
+* Restart your [winsock ](../guides/how-to-restart-your-winsock.md)if on Windows
 * For persistent issues, use an older version like `vdo.ninja/v27.4`
