@@ -42,4 +42,6 @@ Check if you can connect to websocket server, and if not:
 * Update browser to latest version
 * Try different network (WiFi vs cellular)
 * Restart your [winsock ](../guides/how-to-restart-your-winsock.md)if on Windows
+* Use [https://proxy.vdo.ninja](https://proxy.vdo.ninja/) to access VDO.Ninja via a hosted Cloudflare proxy
+* Use a version of VDO.NInja hosted in Hong Kong instead of in North America: [https://china.vdo.ninja/alpha/](https://china.vdo.ninja/alpha/)
 * For persistent issues, use an older version like `vdo.ninja/v27.4`
