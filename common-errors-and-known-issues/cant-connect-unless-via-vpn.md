@@ -39,7 +39,7 @@ Check if you can connect to websocket server, and if not:
 #### Quick Solutions
 
 * Restart all devices, including WiFi Router
-* Change to a different browser or try incongito mode
+* Change to a different browser or try incognito mode
 * Try different network (WiFi vs cellular)
 * Restart your [winsock ](../guides/how-to-restart-your-winsock.md)if on Windows
 * Use [https://proxy.vdo.ninja](https://proxy.vdo.ninja/) to access VDO.Ninja via a hosted Cloudflare proxy
