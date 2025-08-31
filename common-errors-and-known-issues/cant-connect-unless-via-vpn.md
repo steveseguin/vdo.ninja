@@ -1,8 +1,19 @@
 # Can't connect unless via VPN
 
-Here's a concise list of things to check if a user can't connect to VDO.Ninja:
+#### tl;dr; — The Quick Solutions
+
+* Restart all devices, including WiFi Router
+* Change to a different browser or try incognito mode
+* Try different network (WiFi vs cellular)
+* Restart your [winsock ](../guides/how-to-restart-your-winsock.md)if on Windows
+* Use [https://proxy.vdo.ninja](https://proxy.vdo.ninja/) to access VDO.Ninja via a hosted Cloudflare proxy
+* Use a version of VDO.NInja hosted in Hong Kong instead of in North America: [https://china.vdo.ninja/alpha/](https://china.vdo.ninja/alpha/)\
+  \
+
 
 ### Connectivity Troubleshooting Checklist
+
+Here's a concise list of things to check if a user can't connect to VDO.Ninja:
 
 #### WebSocket Connection Issues
 
@@ -10,7 +21,7 @@ Check if you can connect to websocket server, and if not:
 
 * Try proxy mode via `proxy.vdo.ninja` or `vdo.ninja/?proxy`
 * Use backup server at `https://backup.vdo.ninja`
-* Try alternate websocket client: `vhttps://vdo.ninja/?wss2=wss.socialstream.ninja&push=LNZFxhQ`
+* Try alternate websocket client: `https://vdo.ninja/?wss2=wss.socialstream.ninja&push=LNZFxhQ`
 * Consider using your own websocket server with `vdo.ninja/?wss=serverhere.com`
 
 #### WebRTC Connection Issues
@@ -36,12 +47,4 @@ Check if you can connect to websocket server, and if not:
 * Check for network configuration issues (double NAT setups)
 * Ensure ports TCP 443, UDP 3478, and UDP 49152-65535 are open
 
-#### Quick Solutions
-
-* Restart all devices, including WiFi Router
-* Change to a different browser or try incognito mode
-* Try different network (WiFi vs cellular)
-* Restart your [winsock ](../guides/how-to-restart-your-winsock.md)if on Windows
-* Use [https://proxy.vdo.ninja](https://proxy.vdo.ninja/) to access VDO.Ninja via a hosted Cloudflare proxy
-* Use a version of VDO.NInja hosted in Hong Kong instead of in North America: [https://china.vdo.ninja/alpha/](https://china.vdo.ninja/alpha/)
-* For persistent issues, use an older version like `vdo.ninja/v27.4`
+####
