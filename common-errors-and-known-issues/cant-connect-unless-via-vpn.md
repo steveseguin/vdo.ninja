@@ -1,6 +1,12 @@
+---
+description: >-
+  At a corporate event? Maybe state censorship is blocking access? Here's some
+  options if a VPN isn't possible.
+---
+
 # Can't connect unless via VPN
 
-#### tl;dr; — The Quick Solutions
+## tl;dr; — The Quick Solutions
 
 * Restart all devices, including WiFi Router
 * Change to a different browser or try incognito mode
@@ -8,10 +14,11 @@
 * Restart your [winsock ](../guides/how-to-restart-your-winsock.md)if on Windows
 * Use [https://proxy.vdo.ninja](https://proxy.vdo.ninja/) to access VDO.Ninja via a hosted Cloudflare proxy
 * Use a version of VDO.NInja hosted in Hong Kong instead of in North America: [https://china.vdo.ninja/alpha/](https://china.vdo.ninja/alpha/)\
-  \
 
+* Self-host the VDO.Ninja handshake server on your local network
+* Use an network tunnel to bridge your network with the remote network one
 
-### Connectivity Troubleshooting Checklist
+## Connectivity Troubleshooting Checklist
 
 Here's a concise list of things to check if a user can't connect to VDO.Ninja:
 
