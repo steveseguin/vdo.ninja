@@ -99,7 +99,7 @@ A free Chrome extension (also a Standalone app version is available now) that le
 [http://socialstream.ninja](http://socialstream.ninja)
 
 ### Rasbperry Ninja
-Use a Linux system, Raspberry Pi, Nvidia Jetson, Mac, and even Windows PC (WSL) to publis or view WebRTC video using Gstreamer and Python; no browser needed . This project can use the system's local hardware encoder to enable high resolution video and even accelerated AV1 encoding. Support for USB, CSI, and HDMI video sources is available, along with options to pass-thru sources without transcoding. OpenCV-friendly, for low-latency computer vision and machine learning applications.
+Use a Linux system, Raspberry Pi, Nvidia Jetson, Mac, and even Windows PC (WSL) to publish or view WebRTC video using Gstreamer and Python; no browser needed . This project can use the system's local hardware encoder to enable high resolution video and even accelerated AV1 encoding. Support for USB, CSI, and HDMI video sources is available, along with options to pass-thru sources without transcoding. OpenCV-friendly, for low-latency computer vision and machine learning applications.
 [http://raspberry.ninja](https://github.com/steveseguin/raspberry_ninja)
 
 ### CAPTION.Ninja
