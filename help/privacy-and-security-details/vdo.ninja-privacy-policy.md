@@ -4,12 +4,6 @@ description: We strive to protect your privacy, but you use VDO.Ninja at your ow
 
 # VDO.Ninja Privacy Policy
 
-Perfect—here’s a **clean, merged, copy-paste Privacy Policy** that keeps all the useful bits from your old version, adds the Cloudflare transparency you wanted, and matches the ToS we just wrote. It’s short, plain, and accurate for a P2P/WebRTC app.
-
-***
-
-## VDO.Ninja — Privacy Policy
-
 **Effective Date:** September 8, 2025\
 **Supersedes:** November 18, 2023
 
@@ -63,7 +57,7 @@ If you disagree with this policy, please don’t use the Service.
 
 **Mobile app & credentials:**
 
-* Native apps may store **stream IDs, room names, and settings locally**; credentials may be cached locally and expire. Uninstalling the app removes local data.
+* Native apps may store **stream IDs, passwords, room names, and settings locally**; credentials may be cached locally and expire. Uninstalling the app removes local data.
 
 ***
 
@@ -99,6 +93,7 @@ We don’t keep more than we need.
 * **No user accounts** → little to delete. We generally don’t maintain profiles.
 * **Web:** Clear preferences in **Settings** or via your browser’s site-data controls.
 * **Mobile:** Clear/override settings in-app; uninstalling deletes local app data.
+* **Newly added or experimental features:** Please ask us if not yet covered here.
 * **Ask us:** You can request access/deletion of any operational data we still hold (note: due to minimal logging, we may have very little).
 
 ***
