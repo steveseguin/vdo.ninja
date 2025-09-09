@@ -58,4 +58,9 @@ VDO.Ninja also offers[ native mobile apps for iOS and Android](./#native-mobile-
 
 **Remember:** VDO.Ninja is constantly evolving, so keep an eye out for new features and updates. Don't hesitate to explore the documentation and experiment to discover all the amazing things you can achieve with this powerful tool!
 
+#### **Terms of Service and Privacy Policy**
+
+Also, please review the Terms of Service and Privacy Policy: [https://docs.vdo.ninja/help/privacy-and-security-details](https://docs.vdo.ninja/help/privacy-and-security-details) Most of it should come as no surprise, but please note that we must insist that users using the service are 16 years of age or older.\
+
+
 **Happy Streaming!**
