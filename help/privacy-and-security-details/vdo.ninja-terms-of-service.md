@@ -83,5 +83,5 @@ If any provision is found unenforceable, the remaining provisions remain in full
 ### 16) Contact
 
 General questions: **steve@seguin.email**\
-Abuse & child-safety reports: **abuse@vdo.ninja**  (please CC **steve@seguin.email** as well)\
-Copyright notices: **copyright@vdo.ninja**   (please CC **steve@seguin.email** as well)
+Abuse & child-safety reports: **steve@seguin.email** (plain description only; **no illegal media**)\
+Copyright notices: **steve@seguin.email**

@@ -4,49 +4,160 @@ description: We strive to protect your privacy, but you use VDO.Ninja at your ow
 
 # VDO.Ninja Privacy Policy
 
-**Effective Date:** November 18, 2023
+Perfect—here’s a **clean, merged, copy-paste Privacy Policy** that keeps all the useful bits from your old version, adds the Cloudflare transparency you wanted, and matches the ToS we just wrote. It’s short, plain, and accurate for a P2P/WebRTC app.
 
-Welcome to VDO.Ninja, a peer-to-peer networking service designed to facilitate seamless video and audio communication. This Privacy Policy outlines our practices regarding the collection, use, and protection of your information.
+***
 
-**1. Data Collection and Use**
+## VDO.Ninja — Privacy Policy
 
-* **IP Addresses:** VDO.Ninja operates as a peer-to-peer network, which may share your IP address and basic system information with remote guests you connect with. Using VPNs, TURN servers, or enabling IP-leak protection will offer enhanced privacy, however doing so could be detrimental to the performance of the service.
-* **Personal Information:** We do not store personal information longer than necessary. This may include data for TURN relay servers, error reporting, rate-limiting, speed-test results, and anti-flooding measures.
-* **Cookies and Local Storage:** VDO.Ninja does not use tracking cookies. Local browser storage may be used for storing user preferences and settings; not for tracking purposes.
-* **Third-Party Services:** When using third-party services like Discord or YouTube, their respective privacy policies apply.
+**Effective Date:** September 8, 2025\
+**Supersedes:** November 18, 2023
 
-**2. Data Deletion Policy**
+VDO.Ninja is a peer-to-peer tool for real-time video, audio, and text. We don’t host your call content, and we aim to keep what we process minimal. This policy explains **what we (and our providers) process**, **why**, and **your options**.
 
-* **No User Accounts:** VDO.Ninja does not create user accounts in its web or mobile app versions, thus eliminating the need for a mechanism to delete user accounts. However, related products or services may have their own privacy policies and data management procedures.
-* **Web Version:** In the web version of VDO.Ninja, users can delete any local preference data, such as camera configuration settings.  An option to do so is provided in the user settings menu, or it may be done using their browser's built-in clear local storage options.
-* **Mobile App:** The native mobile app versions of VDO.Ninja may store stream IDs, room names, and user settings locally. This data can be manually cleared or overridden by the user at any time. Additionally, all such local data is deleted when the app is uninstalled.
-* **Data Retention:** Data collected during optional pre-check performance tests is automatically deleted after a period of typically 7 days. Any personal data in general is not retained longer than necessary for the technical functioning of the service.
+If you disagree with this policy, please don’t use the Service.
 
-**3. Data Security and Responsibility**
+***
 
-* **Media Data:** Media data transferred via TURN servers is encrypted per the WebRTC standard. Media sent via Meshcast or other SFU services will not be end-to-end encrypted by default, and so may technically allow for server-side recording. Any viewer of a stream can record the stream without notice to others. Built-in recording options are offered, including the option to upload direct to cloud services. External recording tools, like OBS Studio, can also be used to record.
-* **System Information:** Basic debug and system statistical information may be transmitted between peers, including browser user agent, basic hardware specifications, IP address, display name, and operating system details. Performing the optional pre-check system test may also store such test result information for a limited period of time on a server, only as technically required to offer the service.
-* **User Auth Credentials:** Credentials may be cached in local browser storage and are subject to expiration.
+### 1) What we don’t store by default
 
-**4. Third-Party Services and Cloudflare**
+* **No call content storage.** We do **not** store your video, audio, or text content after a session ends.
+* **No tracking ads/cookies.** We don’t use tracking cookies for advertising.
 
-* **Cloudflare:** We use Cloudflare for web server caching, DNS, STUN, TURN geo-routing, security services, bandwidth testing, and probably more. Cloudflare's use of data is GDPR-compliant.
-* **Meshcast.io:** This third-party service, when used with VDO.Ninja, operates independently of our privacy practices.
-* **Invite.cam:** May retain details of social-sign-in credentials within a database for purposes of authenticating users and store VDO.Ninja related settings.
-* **Google:** We may use Google for STUN services and host the core servers on Google Cloud.
-* **SSO:** We may offer Social Sign In (SSO) options for additional functionality using services such as Dropbox, Google Drive, Discord, and YouTube chat.
+***
 
-**5. User Responsibility**
+### 2) What is naturally exposed in P2P calls
 
-* **Stream ID and Room Names:** Treat these as sensitive information and choose secure values that cannot be guessed. We provide options for additional client-side encryption for added security, but the system may choose to fail-safe rather than to fail-securely in some cases.
-* **Handshake Server:** The initial connection is managed by a server, but subsequent data transfers are peer-to-peer when possible. While connected to the handshake server new peer connections can potentially be established.&#x20;
-* **Self-Hosting:** Unless specified, self-hosting VDO.Ninja will still result in the the system still using the official handshake servers and other such services by default. You must configure your VDO.Ninja deployment to use your own such services if desired. Any self-hosted handshake server code provided is intended for private personal use; it's not secured for public use or access.
+* **Your IP address and basic device/network info** can be visible to **the peers you connect with**. That’s how P2P works.
+  * You may use a **VPN** or force a **relay (TURN/SFU)** path to reduce exposure (trade-off: performance/latency).
 
-**6. Legal Disclaimer**
+***
 
-* **No Guarantee of Privacy or Security:** While we strive to protect your information, we cannot guarantee absolute privacy or security. Use of VDO.Ninja in any capacity is at your own risk.
-* **Contact Information:** For privacy-related inquiries, contact [steve@seguin.email](mailto:steve@seguin.email).
+### 3) What we (and our providers) may process
 
-**7. Amendments**
+**Operational metadata (minimal by design):**
 
-* This policy may be updated periodically. We encourage users to review it regularly.
+* **Connection diagnostics** (timestamps, error codes), **IP address**, **User-Agent/browser details**, **room name or token** used, and **optional pre-check test results**.
+* **Why:** to set up/maintain connections, fight abuse (rate-limit/anti-flood), run speed tests you trigger, and comply with law when required.
+
+**Cloudflare (reverse proxy / DDoS & bot protection):**
+
+* We front the site and some endpoints with **Cloudflare**. Cloudflare **automatically** receives and logs:
+  * **IP address** and **approximate location** (country/region)
+  * **Full request URL (including query parameters)**, headers, and **referrer**
+  * **User-Agent** / device details; TLS/network metadata
+  * Derived security signals and **security cookies/tokens** (to separate humans from bots)
+* **Important:** **We do not control Cloudflare’s independent logs or retention.** Cloudflare may process this data on infrastructure **outside your country** to deliver security and performance. If you object to Cloudflare processing, please don’t use the Service.
+
+**TURN/SFU/STUN & hosting:**
+
+* **TURN** relays encrypted media when direct P2P is blocked (state is typically **ephemeral**).
+* **SFU / Meshcast** forwards media for multi-party/broadcast; **not E2EE by default** and **server-side recording is technically possible**.
+* **STUN** (e.g., Google STUN or Cloudflare STUN) helps discover paths through NAT; it exposes your IP/port to that STUN service.
+* Some infrastructure may run on providers like **Google Cloud** or other reputable hosts (they process operational data to run their services).
+
+**Optional sign-in / integrations (only if you enable them):**
+
+* If you connect **YouTube, Discord, Google Drive, Dropbox, etc.**, those services may share identifiers/permissions with us **only to enable that feature**. Their policies apply to their use of data.
+* **Invite.cam** and other companions may store their own sign-in details/settings under their own policies.
+
+**Mobile app & credentials:**
+
+* Native apps may store **stream IDs, room names, and settings locally**; credentials may be cached locally and expire. Uninstalling the app removes local data.
+
+***
+
+### 4) Cookies & local storage
+
+* We don’t use tracking cookies.
+* We use **local storage** for **preferences** (e.g., camera/mic). Clear it in **Settings** or via your browser’s “Clear site data.”
+
+***
+
+### 5) Recording & security realities
+
+* **WebRTC encryption:** Media is encrypted in transit.
+* **SFU/Meshcast:** Not E2EE by default; a server could record.
+* **Anyone can record:** Viewers/participants can record locally (OBS/system tools) without notifying others.
+* **Built-in features:** If you enable recording/upload, content may be saved to a cloud you select (their policies apply).
+
+***
+
+### 6) Retention
+
+* **Routine ops data:** typically **7–30 days**.
+* **Pre-check test results:** typically **\~7 days**.
+* **Incident/legal holds:** If there’s a lawful request or a safety report, we may preserve **relevant** logs for the legally required period (e.g., up to **1 year** for certain child-safety matters).
+* **Cloudflare:** keeps its **own** security logs per its policies (we don’t control that).
+
+We don’t keep more than we need.
+
+***
+
+### 7) Deletion & your controls
+
+* **No user accounts** → little to delete. We generally don’t maintain profiles.
+* **Web:** Clear preferences in **Settings** or via your browser’s site-data controls.
+* **Mobile:** Clear/override settings in-app; uninstalling deletes local app data.
+* **Ask us:** You can request access/deletion of any operational data we still hold (note: due to minimal logging, we may have very little).
+
+***
+
+### 8) International transfers
+
+Operational data (IP addresses, URLs, diagnostics) may be processed on infrastructure **outside your province/state or country**, including by **Cloudflare** and hosting providers. By using the Service, you **consent** to this cross-border processing for security and performance.
+
+***
+
+### 9) Legal bases (EEA/UK, if applicable)
+
+We rely on:
+
+* **Contract necessity** (to provide features you request), and
+* **Legitimate interests** (security, DDoS/bot mitigation, abuse prevention, reliability, and product improvement).
+
+***
+
+### 10) Children’s privacy
+
+The Service is intended for individuals **16+** and is **not** directed to children under 16. If you believe a minor has used the Service or provided data, contact us and we’ll take appropriate steps.
+
+***
+
+### 11) Safety & reporting (important)
+
+* **Do not send us illegal media** (e.g., CSAM). If you have such evidence, report it to your **national child-safety hotline** (e.g., **Cybertip.ca** in Canada, **NCMEC CyberTipline** in the U.S.) and send us the **report number** with a plain description (room name, timestamps, screen names).
+* We may disable links we control, block IPs/ranges/ASNs, **preserve relevant logs**, and **report** suspected child exploitation to hotlines/authorities.
+* We do **not** proactively monitor communications.
+
+***
+
+### 12) Self-hosting
+
+Unless fully reconfigured, a self-hosted copy may still use **official handshake/relay infrastructure** by default. If you self-host for public use, you’re responsible for **securing** your deployment and setting your own privacy/abuse processes.
+
+***
+
+### 13) Security
+
+We use reasonable technical and organizational measures (TLS, Cloudflare DDoS/bot protections, minimal retention). No system is perfectly secure. Use strong room tokens, share links carefully, and consider VPN/relay trade-offs.
+
+***
+
+### 14) Changes to this policy
+
+We may update this policy from time to time. If we make **material** changes, we’ll update the effective date and post a notice. Continued use after changes take effect means you accept the updated policy.
+
+***
+
+### 15) Contact
+
+Privacy questions/requests: [**steve@seguin.email**](mailto:steve@seguin.email)\
+Abuse & child-safety reports: [**steve@seguin.email**](mailto:steve@seguin.email) (plain description only; **no illegal media**)\
+Copyright notices: [**steve@seguin.email**](mailto:steve@seguin.email)
+
+***
+
+#### One-line summary
+
+We don’t store your call content. **Cloudflare** fronts our site and logs request data (including **IP** and **full URLs with query parameters**) for security and performance. We keep only minimal operational logs and may preserve incident-related data when legally required.
