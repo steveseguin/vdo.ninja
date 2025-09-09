@@ -587,6 +587,7 @@
   * [Privacy and security details](help/privacy-and-security-details.md)
     * [VDO.Ninja Terms of Service](help/privacy-and-security-details/vdo.ninja-terms-of-service.md)
     * [VDO.Ninja Privacy Policy](help/privacy-and-security-details/vdo.ninja-privacy-policy.md)
+    * [Abuse & Child Safety](help/privacy-and-security-details/abuse-and-child-safety.md)
   * [Project Contact Info](help/project-contact-info.md)
   * [Where can I report a bug?](help/report-a-bug.md)
   * [Where can I get support?](help/where-can-i-get-support.md)
