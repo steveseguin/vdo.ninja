@@ -8,7 +8,7 @@ Common causes and quick fixes when `?view=` shows nothing or the wrong feed.
 
 - Incorrect ID: `?view=` expects one or more stream IDs, not slot numbers. Example: `?view=ABC123` not `?view=0`.
 - Get IDs: In Director, copy the guest’s stream ID from the guest tile menu; then use it in `?view=`.
-- Rooms vs scenes: In rooms, use `?scene&room=MyRoom` to render the scene, or `?view=ID1,ID2` to pull specific streams.
+- In rooms, use `?scene&room=MyRoom` to render the scene, or `?scene&room=MyRoom&view=ID1,ID2` to pull specific streams in a room
 - Push vs view: Don’t paste a `?push=` link into OBS. Replace `?push=` with `?view=` when capturing in OBS.
 - Empty view: `?view` with no value disables playback. Provide at least one valid ID.
 
