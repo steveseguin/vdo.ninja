@@ -14,13 +14,13 @@ Advanced Option! (global)
 
 Examples:
 
-- `&wss=wss://china.rtc.ninja:8443`
-- `&wss2=wss://socialstream.ninja`
+- `&wss=wss://wss.piesocket.io:8443`
+- `&wss2=wss://vdo.socialstream.ninja`
 
-| Parameter | Value | Description                     |
-| --------- | ----- | ------------------------------- |
-| `&wss`    | URL   | Primary signaling WebSocket URL |
-| `&wss2`   | URL   | Alternate signaling URL         |
+| Parameter | Value | Description                      |
+| --------- | ----- | -------------------------------- |
+| `&wss`    | URL   | Primary signaling WebSocket URL  |
+| `&wss2`   | URL   | Alternate signaling protocol URL |
 
 ## Details
 
