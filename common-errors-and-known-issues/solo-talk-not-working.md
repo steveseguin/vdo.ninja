@@ -11,6 +11,7 @@ Solo Talk is a director control that opens a private audio path to a guest.
 - Mic source: Ensure the director’s mic is enabled in VDO.Ninja. If your mic only exists in OBS, guests won’t hear Solo Talk.
 - Mixer app: Some director controls are not available in the Mixer UI.
 - Firefox: Solo Talk support is experimental in Firefox.
+- Not fully compatible with Meshcast or with embedded IFRAME sources
 
 Related
 
