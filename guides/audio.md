@@ -52,6 +52,33 @@ While this option still requires a virtual audio cable, as seen above, you can u
 
 <figure><img src="../.gitbook/assets/image (5) (5).png" alt=""><figcaption><p>Another way of selecting application audio for the Virtual Audio Cable</p></figcaption></figure>
 
+
+
+***
+
+#### Capturing Application and System Audio on Linux🐧&#x20;
+
+If you’re on **Linux**, Chrome/Chromium browsers may not yet support full system or application audio capture when screen sharing.\
+\
+To route and capture app-specific or system-wide audio, you can use **PipeWire** or tools built on top of it like [**Sonusmix**](https://codeberg.org/sonusmix/sonusmix).
+
+**🔧 Option 1: Using PipeWire (manual)**
+
+1. Ensure your system uses **PipeWire** (most modern distros do).
+2. Use `pavucontrol` or `helvum` to route application audio to a **virtual sink**.
+3. In your app (e.g., VDO.Ninja, OBS, or browser), select that virtual sink as your **input/microphone**.
+4. For window capture, use the built-in **screen/window picker** in Chromium or your compositor (e.g., GNOME, KDE).
+
+**🎚️ Option 2: Using Sonusmix (easy UI)**
+
+1. Download the **Sonusmix AppImage** from Codeberg.
+2. Launch it to create or manage **virtual devices** and route audio between apps visually.
+3. Select the routed virtual output in your streaming or capture app (OBS, VDO.Ninja, etc.).
+
+> 💡 With Sonusmix or PipeWire routing, you can isolate a single game, window, or app’s audio — ideal for high-quality, low-latency sharing.
+
+***
+
 #### Publishing directly from OBS to VDO.Ninja
 
 An alternative to using a virtual audio cable is to use OBS to capture the audio, and then publish the audio to VDO.Ninja directly using the WHIP-publishing mode.
