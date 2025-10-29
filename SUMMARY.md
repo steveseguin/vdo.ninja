@@ -621,6 +621,7 @@
   * [Feature Requests](help/feature-requests.md)
   * [Logos and media assets](help/logos-and-media-assets.md)
   * [What does VDO stand for?](help/what-does-vdo-stand-for.md)
+  * [Copyright & DMCA Policy](help/copyright-and-dmca-policy.md)
 * [Common errors and known issues](common-errors-and-known-issues/README.md)
   * [Can't screen capture certain games](common-errors-and-known-issues/cant-screen-capture-certain-games.md)
   * [ATEM not working with Firestick](common-errors-and-known-issues/atem-not-working-with-firestick.md)

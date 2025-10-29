@@ -6,7 +6,8 @@
 **Project development URL**: [https://github.com/steveseguin/vdo.ninja](https://github.com/steveseguin/vdo.ninja)\
 **Developer/maintainer**: [steve@seguin.email](mailto:steve@seguin.email)\
 **Donations**: [via GitHub Sponsors](https://github.com/steveseguin/obsninja/wiki/Sponsor-%E2%9D%A4)\
-**Terms of Service and Privacy Policy:** [https://docs.vdo.ninja/help/privacy-and-security-details](https://docs.vdo.ninja/help/privacy-and-security-details)
+**Terms of Service and Privacy Policy:** [https://docs.vdo.ninja/help/privacy-and-security-details](https://docs.vdo.ninja/help/privacy-and-security-details)\
+Copyright & DMCA Policy
 
 ### Community Support
 
