@@ -7,7 +7,7 @@
 **Developer/maintainer**: [steve@seguin.email](mailto:steve@seguin.email)\
 **Donations**: [via GitHub Sponsors](https://github.com/steveseguin/obsninja/wiki/Sponsor-%E2%9D%A4)\
 **Terms of Service and Privacy Policy:** [https://docs.vdo.ninja/help/privacy-and-security-details](https://docs.vdo.ninja/help/privacy-and-security-details)\
-Copyright & DMCA Policy
+**Copyright & DMCA Policy**: [https://docs.vdo.ninja/help/copyright-and-dmca-policy](https://docs.vdo.ninja/help/copyright-and-dmca-policy)
 
 ### Community Support
 
