@@ -7,7 +7,7 @@
 	--discord-grey-4: #2e3035;
 	--discord-grey-5: #313338;
 	--discord-grey-6: #383a40;
-	--discord-grey-7: #006dda; /* primary */
+	--discord-grey-7: #2793ff; /* primary */
 	--discord-grey-8: #41a0ff;
 
 	--discord-text: hsl(210 calc(1 * 9.1%) 92% /1);
@@ -18,6 +18,7 @@
 	--darktheme-lightgreen: #008770;
 	--darktheme-brown: rgb(76 58 41);
 	--darktheme-yellow: rgb(84, 70, 9);
+	--darktheme-text:black ;
 	
 	/* Lightmode white - Darker to lighter */
 	--lighttheme-1: #fff;
@@ -489,25 +490,25 @@ a {
 }
 
 .infoblob:hover {
-    box-shadow: 0 0 25px #ff00ff, 0 0 50px rgba(255, 0, 255, 0.7);
+    
     transform: translateY(-5px);
 }
 
 .infoblob a:link {
     color: #00f7ff;
     text-decoration: none;
-    text-shadow: 0 0 8px #00f7ff;
+
     transition: all 0.3s ease;
 }
 
 .infoblob a:visited {
-    color: #ff00ff;
-    text-shadow: 0 0 8px #ff00ff;
+    color: #ff97ff;
+   
 }
 
 .infoblob a:hover {
     color: #ffffff;
-    text-shadow: 0 0 12px #ffffff, 0 0 20px #ff00ff;
+   
     transform: scale(1.05);
     display: inline-block;
 }
@@ -515,18 +516,17 @@ a {
 .infoblob a:focus {
     color: #ffffff;
     outline: none;
-    text-shadow: 0 0 15px #ffffff, 0 0 25px #00f7ff;
+
 }
 
 .infoblob a:active {
     color: #ff007a;
-    text-shadow: 0 0 10px #ff007a;
+
 }
 
 .darktheme .infoblob {
     background: linear-gradient(135deg, rgba(20, 20, 20, 0.9), rgba(40, 40, 60, 0.9));
-    border: 2px solid #ff00ff;
-    box-shadow: 0 0 15px #ff00ff, 0 0 30px rgba(255, 0, 255, 0.5);
+
 }
 
 .darktheme .infoblob:hover {
@@ -535,27 +535,27 @@ a {
 
 .darktheme .infoblob a:link {
     color: violet;
-    text-shadow: 0 0 8px #ff00ff;
+    
 }
 
 .darktheme .infoblob a:visited {
     color: #00f7ff;
-    text-shadow: 0 0 8px #00f7ff;
+    
 }
 
 .darktheme .infoblob a:hover {
     color: #ffffff;
-    text-shadow: 0 0 12px #ffffff, 0 0 20px #00f7ff;
+   
 }
 
 .darktheme .infoblob a:focus {
     color: #ffffff;
-    text-shadow: 0 0 15px #ffffff, 0 0 25px #ff00ff;
+    
 }
 
 .darktheme .infoblob a:active {
     color: #00f7ff;
-    text-shadow: 0 0 10px #00f7ff;
+ 
 }
 
 /* White theme styling */
@@ -2519,7 +2519,7 @@ div#chatBody a {
 		margin: 5px;
 	}
 	.infoblob {
-		color: skyblue;
+		color: rgb(255, 255, 255);
 		width: 100%;
 		padding: 20px;
 		line-height: 2em;
@@ -2833,7 +2833,7 @@ label {
 	height: 200px;
 	text-align: center;
 	font-size: 100%;
-	transition: box-shadow 0.1s ease-in-out;
+	transition: box-shadow 0.2s ease-in-out;
 	border-radius: 50px;
 }
 
@@ -2860,6 +2860,7 @@ label {
 	color: black;
 }
 
+
 .graphSection {
 	display: flex;
 	flex-direction: column;
@@ -2867,7 +2868,7 @@ label {
 	gap: 5px;
 }
 .darktheme .graphSection > span {
-	color: var(--discord-text)
+	color: var(--discord-text);
 }
 .graphSection > span {
 	display: block;
@@ -3469,7 +3470,7 @@ iframe {
 	top: unset;
 }
 .bigbutton .bigbuttontext {
-	border-radius: 0;
+	border-radius: 10;
 	margin: 3px;
 	display:block;
 	font-size:200%;
@@ -5867,7 +5868,7 @@ body.darktheme h2 {
 	color: #DDD;
 }
 body.darktheme .column .las {
-	color: var(--discord-text);
+	color: var(--darktheme-text);
 }
 body.darktheme label {
 	color: var(--discord-text);
@@ -5945,7 +5946,7 @@ body.darktheme .startupWarning>.las  {
 
 button {
 	background-color: var(--lighttheme-2);
-	color: var(--lighttheme-text);
+	color: var(--darktheme-text);
 	filter: brightness(1);
 	display: inline-flex;
 	align-items: center;
@@ -6118,6 +6119,7 @@ input[type='checkbox'], input[type='radio'] {
 .title {
 	text-align: left;
 	user-select: none;
+	color: #0000FF;
 	display: inline-block;
 }
 
