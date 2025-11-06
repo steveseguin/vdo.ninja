@@ -43,8 +43,6 @@ Guests can specify their preferred slot assignment:
 &slot=N    # N is the desired slot number
 ```
 
-)![Image](https://media.discordapp.net/attachments/701232125831151697/1223142944123654144/image.png?ex=67b6bea2\&is=67b56d22\&hm=2f2e9443ff8abdf9fd04d6823c71300e91499b0f764274fc8dec9eaa6bdebd4a&=\&format=webp\&quality=lossless\&width=486\&height=257)
-
 ### Fixed Slot Count (`&slots`)
 
 Forces a specific number of slots in the auto-mixer:
