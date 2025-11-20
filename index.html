@@ -1091,15 +1091,25 @@
 				<b>?push=xxx</b> links are for sending video, while <b>?view=xxx</b> links are for viewing.
 			</div>
 			
-			<div id="info" class="fullcolumn columnfade">
-				
-					<div class="banner"><center><span data-translate="info-blob">	
+			<div id="info" class="fullcolumn columnfade">	
+					<div id="banner" class="banner"><center><span data-translate="info-blob">	
 						<h2>TV.BELARUSIAN.WORLD</h2><br />
 						<h3>
 						   If you are interested, please join the <a href="https://discord.gg/Pey6EuwB43" target="_blank">Discord</a><br />or contact via e-mail: <a href="mailto:info@belarusian.world" target="_blank" rel="noopener">info@belarusian.world</a>
 						</h3>
 					</span> 
-					</center></div> 
+					</center>
+					</div>
+			<script>
+		        const params = new URLSearchParams(window.location.search);
+				if(params){
+			        const content = params.get('desc');
+			        const banner = document.getElementById('banner');
+			        if (content) {
+			            banner.innerHTML = "<center><h2>" + decodeURIComponent(content) + "</h2></center>";
+			        }
+				}
+		    </script>				
 			<!--
 					<div class="infoblob" style="display:none;" >
 						<span data-translate="info-blob">
