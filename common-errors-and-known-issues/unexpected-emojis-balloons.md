@@ -132,11 +132,3 @@ If you’re seeing animations, emojis, blur, or camera auto-framing on an Apple 
 * It can turn on automatically
 * It affects **every** app, including VDO.Ninja
 * You must turn it off in **Control Center**, not in VDO.Ninja
-
-If you want, I can turn this into:
-
-* A shorter version
-* A FAQ section
-* A GitBook collapsible-section layout
-* A troubleshooting flowchart\
-  Just let me know.
