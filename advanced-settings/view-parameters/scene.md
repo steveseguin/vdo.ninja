@@ -42,6 +42,11 @@ By adding `&scene` to a room URL, it tells VDO.Ninja that this is no [`&push`](.
 * In [v17.2](broken-reference) of VDO.Ninja, if using [`&view`](view.md) in a scene link, the director won't be able to remotely control the scene. This applies to solo links.
 * In [v18](../../releases/v18/), you can create custom scenes, as per the video below.
 
+### Let guests auto-join scenes
+
+* `&joinscene=` / `&joinscenes=` (guest link) lets a guest request one or more scene IDs to join automatically (comma separated). Scene names are sanitized before use.
+* The director side must allow this with `&openscene` on the scene link; otherwise the request is ignored.
+
 {% embed url="https://www.youtube.com/embed/axgIqPcHExQ" %}
 
 ### Optimize scene performance using \&optimize=0&#x20;

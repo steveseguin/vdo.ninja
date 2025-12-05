@@ -17,6 +17,10 @@ Example: `&codec=h264`
 
 <table><thead><tr><th width="176">Value</th><th>Description</th></tr></thead><tbody><tr><td><a href="codec.md#h264"><code>h264</code></a></td><td>request the h264 codec </td></tr><tr><td><a href="codec.md#vp8"><code>vp8</code></a></td><td>request the VP8 codec </td></tr><tr><td><a href="codec.md#vp9"><code>vp9</code></a></td><td>request the VP9 codec</td></tr><tr><td><a href="codec.md#av1"><code>av1</code></a></td><td>request the AV1 codec</td></tr><tr><td><a href="codec.md#h265-hevc"><code>h265</code></a></td><td>request the H265 codec</td></tr><tr><td><a href="codec.md#webp"><code>webp</code></a></td><td>request the webp codec</td></tr><tr><td><a href="codec.md#hardware"><code>hardware</code></a></td><td>request the h264 codec and<a href="../../newly-added-parameters/and-h264profile.md"><code>&#x26;h264profile</code></a></td></tr><tr><td><a href="codec.md#comma-seperated-update-in-v23-on-alpha"><code>av1,h264</code></a></td><td>Comma separated values that define the order of preferred video codecs if the primary one fails</td></tr></tbody></table>
 
+### Prefer a codec (viewer-side)
+
+If you need the viewer to request a specific codec without changing the sender URL, add `&prefervideocodec=<codec>` to the viewer/scene link. This hints the negotiation to favor that codec when possible (e.g., `&prefervideocodec=h264` or `vp9`). Leave the sender untouched; the viewer preference is applied per-connection.
+
 ### Example usage
 
 `https://vdo.ninja/?view=abc123`**`&codec=h264`**\

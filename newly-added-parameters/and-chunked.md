@@ -16,6 +16,24 @@ Example: `&chunked=2000`
 | --------------- | ------------------------------------- |
 | (integer value) | bitrate in kbps (default around 2000) |
 
+### Presets and adaptation (new)
+
+You can load a preset with `&chunkprofile=` to seed sensible defaults for chunked/WebCodecs publishing. Presets only apply when `&chunked` is enabled and can still be overridden by the individual flags listed.
+
+| Parameter | Values | Description |
+| --- | --- | --- |
+| `&chunkprofile` | `mobile` \| `balanced` \| `desktop` | Seeds bitrate/FEC/buffer/adaptation defaults tuned for the device class. |
+| `&chunkbuffer` | ms | Target playout buffer for chunked viewers. |
+| `&chunkbufferfloor` / `&chunkbufferceil` | ms | Floor/ceiling guardrails for buffer-based adaptation. |
+| `&chunkjitterslack` | ms | Extra headroom before a rebuffer event is triggered. |
+| `&chunkadapt` | `bitrate` \| `framerate` \| `hybrid` | Chooses the adaptation strategy when buffers shrink. |
+| `&chunkadaptfloor` / `&chunkadaptceil` | kbps (or fps for framerate) | Min/max clamps used by the selected adaptation mode. |
+| `&chunkadaptthreshold` | ms | Buffer threshold that arms adaptation. |
+| `&chunkadaptmaxdrop` | percent | Maximum step-down per adaptation tick. |
+| `&chunkadaptinterval` | ms | Minimum interval between adaptation steps. |
+| `&chunkfec` | integer | Parity FEC rate (e.g., `4` = one parity packet per 4 chunks). |
+| `&chunknack` | `1` to enable | Enables selective retransmissions of missed chunks. |
+
 ## Details
 
 ### Chunked video transfer mode

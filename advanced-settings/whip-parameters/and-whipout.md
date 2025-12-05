@@ -19,6 +19,14 @@ Example: `&whipout=bearertoken`
 | -------------- | --------------------- |
 | (string value) | bearer token from OBS |
 
+### Optional tuning
+
+| Parameter | Description |
+| --- | --- |
+| `&whipoutkeyframe=<ms>` | Force a keyframe (GOP) interval for WHIP output; e.g., `3000` forces a keyframe every 3s. |
+| `&whipoutcodec` / `&wovc` | Set the video codec (e.g., `h264`, `vp9`, `av1`). |
+| `&whipoutaudiocodec` / `&woac` | Set the audio codec. |
+
 ## Details
 
 Added experimental "WHIP" support to VDO.Ninja, which means in the near future you'll be able to publish directly from OBS to VDO.Ninja without a virtual camera. There's some big caveats to it all, so I don't recommend it over the normal method to most users, but we'll see how it evolves.
