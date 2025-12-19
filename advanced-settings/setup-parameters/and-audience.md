@@ -26,6 +26,40 @@ No additional setup is required.
 
 ***
 
+### Example Usage
+
+#### Publisher Link
+
+```
+https://vdo.ninja/?audience=12345abcPublishingToken&push=JkYwyxy
+```
+
+* `push=JkYwyxy`\
+  A normal stream ID, although it doesn't quite work like normal.
+* `audience=12345abcPublishingToken`\
+  Publishing token — _**you generate this yourself. It needs to be a random non-guessable string.**_
+
+When the stream starts:
+
+* VDO.Ninja automatically generates the **viewer link** for you, which will include the matching audience viewer token.
+* The viewer link is shown to the publisher by default.
+* Do not share the publisher's audience key with the public; just the viewer's audience key.
+
+***
+
+#### Viewer Link (Auto-Generated)
+
+```
+https://vdo.ninja/?audience=HrDrNy3jiA50QzlU&view=JkYwyxy
+```
+
+* Safe to share publicly
+* Safe to embed in an iframe
+* Does not allow publishing
+* While both the viewer and publisher use an \&audience in the URL, they are different values.
+
+***
+
 ### About Audience Tokens (Important)
 
 Audience tokens and publishing tokens are:
@@ -50,38 +84,6 @@ Tokens are resolved by the server against a database and are treated purely as a
   * a stream ID
   * a publishing token
 * Compatible with existing VDO.Ninja URLs and workflows
-
-***
-
-### Example Usage
-
-#### Publisher Link
-
-```
-https://vdo.ninja/?audience=12345abcPublishingToken&push=JkYwyxy
-```
-
-* `push=JkYwyxy`\
-  Stream ID
-* `audience=12345abcPublishingToken`\
-  Publishing token
-
-When the stream starts:
-
-* VDO.Ninja automatically generates a **viewer link**
-* The viewer link is shown to the publisher by default
-
-***
-
-#### Viewer Link (Auto-Generated)
-
-```
-https://vdo.ninja/?audience=HrDrNy3jiA50QzlU&view=JkYwyxy
-```
-
-* Safe to share publicly
-* Safe to embed in an iframe
-* Does not allow publishing
 
 ***
 
