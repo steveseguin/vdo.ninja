@@ -69,7 +69,7 @@ description: >-
 #### Firewall and Security Issues
 
 * If in Iran, China, Russia, or other sanctioned/restricted country, WebRTC may be blocked; try using a VPN or self-host VDO.Ninja instead.
-* If behind a corporate firewall, try switching to cellular network or talking to your IT department
+* If behind a corporate firewall or corporate VPN, try switching to cellular network or talking to your IT department. You may just need to switch a personal device on a cellular network.
 * If using PFSense or a PiHole:
   * Try bypassing it or using a different network
   * Whitelist the IP address of the remote camera source
@@ -85,6 +85,14 @@ description: >-
 * If issues persist on one network type, try another (WiFi vs. cellular)
 * Try with or without a VPN, such as speedify.com, to see if it helps.
   * Speedify does offer a 1GB free usage tier I believe that's suitable for testing
+
+#### Certain Browsers
+
+* Some browsers or browser extensions will block WebRTC
+  * De-Googled Chromium has a `WebRTC IP Policy` that blocks VDO.Ninja, which you can change in the `chrome://flags` menu.
+  * Brave browser with premium VPN service may block VDO.Ninja
+  * Some other security or privacy focused browsers may block VDO.Ninja
+* It's also possible that some browsers are configured to block UDP, IP leaking, or WebRTC in other ways, so trying OTHER browsers is suggested.
 
 ### Performance Optimization
 
@@ -118,8 +126,7 @@ description: >-
 * If hardware acceleration is unchecked, check it and restart
 * If it's checked but not working, try unchecking it
 *   In OBS Settings → Advanced menu, try toggling "Browser source hardware acceleration"\
-    \
-
+    <br>
 
     ![Disabling or enabling the hardware acceleration in OBS can sometimes fix choppy or missing video.](<../.gitbook/assets/image (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1).png>)
 
