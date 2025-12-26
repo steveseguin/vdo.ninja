@@ -1,7 +1,7 @@
 # VDO.Ninja Terms of Service
 
-**Effective Date:** September 8, 2025\
-**Supersedes:** November 18, 2023
+**Effective Date:** December 26, 2025\
+**Supersedes:** September 8, 2025
 
 Welcome to VDO.Ninja. By using the Service, you agree to these Terms of Service (“Terms”) and to our Privacy Policy and Copyright Policy.
 

@@ -4,8 +4,8 @@ description: We strive to protect your privacy, but you use VDO.Ninja at your ow
 
 # VDO.Ninja Privacy Policy
 
-**Effective Date:** September 8, 2025\
-**Supersedes:** November 18, 2023
+**Effective Date:** December 26, 2025\
+**Supersedes:** September 8, 2025
 
 VDO.Ninja is a peer-to-peer tool for real-time video, audio, and text. We don’t host your call content, and we aim to keep what we process minimal. This policy explains **what we (and our providers) process**, **why**, and **your options**.
 
@@ -33,6 +33,22 @@ If you disagree with this policy, please don’t use the Service.
 
 * **Connection diagnostics** (timestamps, error codes), **IP address**, **User-Agent/browser details**, **room name or token** used, and **optional pre-check test results**.
 * **Why:** to set up/maintain connections, fight abuse (rate-limit/anti-flood), run speed tests you trigger, and comply with law when required.
+
+**Quality of Service (QoS) analytics (opt-out available):**
+
+* **Where collected:** QoS analytics are collected on **vdo.ninja** and **backup.vdo.ninja** only. **Self-hosted instances do not send QoS data** to us unless explicitly configured to do so.
+* We collect **anonymized connection analytics** to monitor service health and improve reliability. This includes:
+  * **Session metadata:** duration, connection type (publisher/viewer/director), success/failure status
+  * **Technical details:** browser type, platform (desktop/mobile/tablet), transport type (P2P/TURN/SFU)
+  * **Performance metrics:** packet loss, round-trip time, jitter, bitrate (aggregate statistics)
+  * **Media info:** video/audio codec, resolution
+  * **Server hostnames:** only for **official VDO.Ninja TURN and Meshcast servers**; custom/private servers are recorded as "private" (no hostname captured)
+  * **Geographic region:** derived from GeoIP lookup (**IP address is not stored**)
+  * **Sanitized errors:** error messages with sensitive data (room IDs, passwords, IPs) removed
+* **What we do NOT collect:** room names, stream IDs, passwords, tokens, IP addresses, or any call content.
+* **Why:** to identify connection issues, optimize server infrastructure, and improve service reliability.
+* **Retention:** QoS data is retained for approximately **30 days**.
+* **Opt-out:** Add `&qos=0` to your URL to disable QoS reporting entirely.
 
 **Cloudflare (reverse proxy / DDoS & bot protection):**
 
@@ -80,11 +96,12 @@ If you disagree with this policy, please don’t use the Service.
 ### 6) Retention
 
 * **Routine ops data:** typically **7–30 days**.
+* **QoS analytics:** typically **\~30 days**.
 * **Pre-check test results:** typically **\~7 days**.
-* **Incident/legal holds:** If there’s a lawful request or a safety report, we may preserve **relevant** logs for the legally required period (e.g., up to **1 year** for certain child-safety matters).
-* **Cloudflare:** keeps its **own** security logs per its policies (we don’t control that).
+* **Incident/legal holds:** If there's a lawful request or a safety report, we may preserve **relevant** logs for the legally required period (e.g., up to **1 year** for certain child-safety matters).
+* **Cloudflare:** keeps its **own** security logs per its policies (we don't control that).
 
-We don’t keep more than we need.
+We don't keep more than we need.
 
 ***
 
@@ -155,4 +172,4 @@ Copyright notices: [**steve@seguin.email**](mailto:steve@seguin.email)
 
 #### One-line summary
 
-We don’t store your call content. **Cloudflare** fronts our site and logs request data (including **IP** and **full URLs with query parameters**) for security and performance. We keep only minimal operational logs and may preserve incident-related data when legally required.
+We don't store your call content. **Cloudflare** fronts our site and logs request data (including **IP** and **full URLs with query parameters**) for security and performance. We collect **anonymized QoS analytics** (no IPs, room names, or content) on official VDO.Ninja domains to monitor service health. We keep only minimal operational logs and may preserve incident-related data when legally required.
