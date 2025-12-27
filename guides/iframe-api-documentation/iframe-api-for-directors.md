@@ -97,6 +97,8 @@ iframe.contentWindow.postMessage({ action: "forceKeyframe" }, "*");
 iframe.contentWindow.postMessage({ action: "sendChat", value: "Hello everyone!" }, "*");
 ```
 
+PTZ commands require the sender to opt in with `&ptz` and grant camera permissions, and the camera must support PTZ/focus. In Chrome, PTZ changes are blocked when the sender tab/window is hidden, so keep it visible during control. If you are not acting as a director, PTZ control also requires `&remote` on both sides.
+
 **Director Commands (Target Required)**
 
 These commands require director permissions and target specific guests:

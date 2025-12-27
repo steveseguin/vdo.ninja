@@ -1,0 +1,79 @@
+---
+description: How to enable and control PTZ remotely (director, viewer, API)
+---
+
+# PTZ Remote Control
+
+## Overview
+
+VDO.Ninja can remotely control pan, tilt, zoom, and focus on supported cameras. The sender must opt in with `&ptz`, and the camera/browser must actually expose PTZ or focus controls. Directors can control PTZ from the built-in video settings menu, while viewers can opt in using `&remote`.
+
+To confirm device support, use `https://vdo.ninja/supports` with the target camera selected.
+
+## Quick Start (Push + View)
+
+Sender (push link):
+`https://vdo.ninja/?push=STREAMID&ptz&remote`
+
+Viewer (view link):
+`https://vdo.ninja/?view=STREAMID&remote`
+
+If you want a shared passcode, add the same value on both sides:
+`&remote=somepasscode`
+
+## Director Control (Rooms)
+
+Director link:
+`https://vdo.ninja/?director=ptztestroom`
+
+Guest link:
+`https://vdo.ninja/?room=ptztestroom&ptz`
+
+Directors (and co-directors) can adjust PTZ from the per-guest video settings menu. Viewers do not need `&remote` for this.
+
+## Viewer Mouse Controls (with `&remote`)
+
+When `&remote` is enabled on both sides, viewers can use the mouse wheel over the video:
+
+- Wheel: zoom in or out
+- Shift + wheel: pan left or right
+- Ctrl (or Command) + wheel: focus in or out
+- Ctrl (or Command) + Shift + wheel: tilt up or down
+- Hold Alt for smaller step sizes
+
+Pan/tilt only work if the camera exposes those controls and the sender has `&ptz`.
+
+## Right-click Menu (with `&remote`)
+
+Right-clicking a remote video (with `&remote` enabled) exposes the remote context menu (hangup/reload). PTZ is still controlled by the mouse/keyboard shortcuts above or the sliders below; the right-click menu does not currently surface PTZ controls.
+
+## PTZ Example App
+
+Use the example controller:
+`https://vdo.ninja/examples/ptz?view=STREAMID&remote`
+
+Make sure the sender uses:
+`https://vdo.ninja/?push=STREAMID&ptz&remote`
+
+Chrome requires the sender page to remain visible on screen for PTZ controls to work. If the sender tab/window is hidden, the browser blocks PTZ changes.
+
+## On-screen PTZ Sliders
+
+Add `&ptzslider` to a director or view link to show PTZ sliders (zoom/pan/tilt) directly on the video element. `&zoomslider` shows a zoom-only slider.
+
+Example:
+`https://vdo.ninja/?view=STREAMID&remote&ptzslider`
+
+## Automation with `&api`
+
+For scripted control or Stream Deck integrations, add `&api=YOURKEY` to the controlling page and use the HTTP/WSS API or IFRAME API commands (`zoom`, `pan`, `tilt`, `focus`).
+
+References:
+- [IFRAME API for Directors](iframe-api-documentation/iframe-api-for-directors.md)
+- [HTTP/WSS API reference](../advanced-settings/api-and-midi-parameters/api/api-reference.md)
+
+## Troubleshooting
+
+- If you see `the page is not visible` or `couldn't save defaults`, the sender tab is hidden. Keep the sender visible or in a small always-on-top window.
+- If controls do nothing, verify `&ptz` is on the sender link and `&remote` (with matching passcode) is on the viewer link.
+- If only zoom or focus work, the camera may not support pan/tilt.

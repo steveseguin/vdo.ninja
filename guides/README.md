@@ -6,6 +6,8 @@
 * [video-bitrate-in-rooms.md](video-bitrate-in-rooms.md "mention")
 * [hotkey-support](hotkey-support/ "mention")
 * [midi-api-and-webhid-support.md](midi-api-and-webhid-support.md "mention")
+* [ptz-remote-control.md](ptz-remote-control.md "mention")
+* [ninjabacker-tipping.md](ninjabacker-tipping.md "mention")
 * [hardware-accelerated-video-encoding.md](hardware-accelerated-video-encoding.md "mention")
 * [audio-filters.md](audio-filters.md "mention")
 * [options-to-record-streams.md](options-to-record-streams.md "mention")

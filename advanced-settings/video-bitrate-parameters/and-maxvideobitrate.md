@@ -23,7 +23,7 @@ Example: `&maxvideobitrate=8000`
 
 Useful if you are a director and you wish to prevent guests from pulling more than 500-kbps (LQ) or 1200-kbps (HQ) when in [broadcast](../view-parameters/broadcast.md) mode.
 
-This is NOT the same as setting the target bitrate as a publisher; this just sets a max limit that viewers can pull video streams at.\
+This is NOT the same as setting the target bitrate as a publisher; this is a software-enforced max limit that viewers can pull video streams at. A viewer-side [`&videobitrate`](bitrate.md) cannot exceed this value, and it also caps any sender-side default from [`&outboundvideobitrate`](and-outboundvideobitrate.md).\
 \
 Please see [`&totalroombitrate`](totalroombitrate.md) or [`&limittotalbitrate`](limittotalbitrate.md), as well.
 

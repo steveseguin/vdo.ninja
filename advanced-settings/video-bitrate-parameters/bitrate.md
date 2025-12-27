@@ -25,6 +25,10 @@ Example: `&videobitrate=6000`
 
 This parameter is only for scenes and solo links. Use [`&totalroombitrate`](totalroombitrate.md) for example to set up the video bitrate for guests in a room.
 
+If the sender uses [`&outboundvideobitrate`](and-outboundvideobitrate.md), that sets the default target bitrate on the push side. A viewer-set `&videobitrate` overrides that default. A sender-side [`&maxvideobitrate`](and-maxvideobitrate.md) still caps the maximum bitrate, regardless of what the viewer requests.
+
+In some cases, `&videobitrate` is enforced via SDP munging, so it can also act as a maximum cap depending on browser/negotiation.
+
 {% hint style="info" %}
 Default value will target around **2500**-kbps.
 {% endhint %}

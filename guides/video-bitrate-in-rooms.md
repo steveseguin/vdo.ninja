@@ -22,11 +22,11 @@ As a director of a room you can control the total room bitrate dynamically.
 
 <div align="left">
 
-<figure><img src="../.gitbook/assets/image (3) (8).png" alt=""><figcaption><p>The default is (as explained before) 500-kbps. You can increase it op to 4000-kbps.</p></figcaption></figure>
+<figure><img src="../.gitbook/assets/image (3) (8).png" alt=""><figcaption><p>The default is (as explained before) 500-kbps. You can increase it up to 4000-kbps by default (the slider max increases if a higher <code>&amp;totalroombitrate</code> is set).</p></figcaption></figure>
 
 </div>
 
-You can control the total room bitrate also with a URL parameter: [`&totalroombitrate=6000`](../advanced-settings/video-bitrate-parameters/totalroombitrate.md)
+You can control the total room bitrate also with a URL parameter: [`&totalroombitrate=6000`](../advanced-settings/video-bitrate-parameters/totalroombitrate.md) (alias: `&totalbitrate=6000`)
 
 <div align="left">
 
@@ -34,7 +34,7 @@ You can control the total room bitrate also with a URL parameter: [`&totalroombi
 
 </div>
 
-The default setting for the room is now 6000-kbps. You can decrease it dynamically though if the guests have any problems.
+When the director joins with `&totalroombitrate=6000`, that value becomes the default for all guests by proxy. You can decrease it dynamically though if the guests have any problems.
 
 ## Guest
 
@@ -42,7 +42,9 @@ If you add [`&roombitrate=2000`](../advanced-settings/video-bitrate-parameters/r
 
 You can also use [`&totalroombitrate`](../advanced-settings/video-bitrate-parameters/totalroombitrate.md) on the guest's URL if you want to have different settings for each guest. So adding `&totalroombitrate=4000` to a guest's URL, the guest can view all video streams in the room with a combined bitrate of 4000-kbps.
 
-If you use [`&controlroombitrate`](../advanced-settings/video-bitrate-parameters/and-controlroombitrate.md) on the guest's URL, the guest can change the total room bitrate dynamically via a slider. If you add `&controlroombitrate&totalroombitrate=4000` to the guest's URL the guest can change the bitrate between 0 and 4000-kbps. It doesn't affect what other guest's are viewing.
+If `&totalroombitrate` is not set on a room link, `&videobitrate` will be used as the total room bitrate target for that guest.
+
+If you use [`&controlroombitrate`](../advanced-settings/video-bitrate-parameters/and-controlroombitrate.md) on the guest's URL, the guest can change the total room bitrate dynamically via a slider. If you add `&controlroombitrate&totalroombitrate=4000` to the guest's URL the guest can change the bitrate between 0 and 4000-kbps (it cannot exceed the `&totalroombitrate` cap). It doesn't affect what other guest's are viewing.
 
 ![](<../.gitbook/assets/image (26).png>)![](<../.gitbook/assets/image (4) (1) (1) (1) (2) (1).png>)
 
@@ -64,6 +66,12 @@ The bitrate of each guest will be 3000-kbps.
 
 3 guests in a scene -> `&totalscenebitrate=3000`\
 The bitrate of each guest will be 1000-kbps.
+
+## Notes and caveats
+
+- Screen shares are weighted differently in the room mixer; they can take a larger share of the total budget versus camera feeds.
+- Hidden, muted, or disabled videos are not counted when the room bitrate is split across streams.
+- `&minroombitrate` can enforce a per-stream floor when splitting a total room bitrate.
 
 ## Meshcast
 

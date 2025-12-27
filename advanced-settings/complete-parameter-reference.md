@@ -65,7 +65,7 @@ If you are self-hosting VDO.Ninja, often these URL parameters can be hard-coded 
 | `bgimg2`            | See `avatarimg2`                | -                  | -                                 |
 | `bgimg3`            | See `avatarimg3`                | -                  | -                                 |
 | `bigbutton`         | -                               | String             | Shows large mute button with text |
-| `bitrate`           | -                               | Integer (kbps)     | Sets video bitrate                |
+| `bitrate`           | -                               | Integer (kbps)     | Viewer-side target bitrate (may cap via SDP)  |
 | `bitratecutoff`     | `bitcut`                        | Integer            | Sets bitrate cutoff threshold     |
 | `blackout`          | `blackoutmode`, `bo`, `bom`     | Boolean            | -                                 |
 | `blur`              | -                               | Integer (1-10)     | Sets background blur amount       |
@@ -278,13 +278,13 @@ If you are self-hosting VDO.Ninja, often these URL parameters can be hard-coded 
 
 | Parameter              | Aliases              | Values               | Description                 |
 | ---------------------- | -------------------- | -------------------- | --------------------------- |
-| `maxbitrate`           | `mvb`                | Integer              | Sets maximum bitrate        |
+| `maxbitrate`           | `mvb`                | Integer              | Software max video bitrate per stream |
 | `maxbandwidth`         | -                    | Integer (0-200)      | -                           |
 | `maxconnections`       | `mc`                 | Integer              | Maximum allowed connections |
 | `maxframerate`         | `mfr`, `mfps`        | Integer              | Sets maximum framerate      |
 | `maxpublishers`        | `mp`                 | Integer              | Maximum allowed publishers  |
 | `maxtotalscenebitrate` | `mtsb`, `tsb`        | Integer              | -                           |
-| `maxvideobitrate`      | -                    | Integer              | -                           |
+| `maxvideobitrate`      | -                    | Integer              | Software max video bitrate per stream |
 | `maxviewers`           | `mv`                 | Integer              | Maximum allowed viewers     |
 | `mc`                   | See `maxconnections` | -                    | -                           |
 | `mcaudiobitrate`       | `mcab`               | Integer              | -                           |
@@ -362,7 +362,7 @@ If you are self-hosting VDO.Ninja, often these URL parameters can be hard-coded 
 | `orderby`              | -                               | String          | -                    |
 | `orientation`          | -                               | String          | -                    |
 | `outboundaudiobitrate` | `oab`                           | Integer         | -                    |
-| `outboundvideobitrate` | `ovb`                           | Integer         | -                    |
+| `outboundvideobitrate` | `ovb`                           | Integer         | Sender-side default target (may cap via SDP) |
 | `overlaycontrols`      | -                               | Boolean         | -                    |
 | `ovb`                  | See `outboundvideobitrate`      | -               | -                    |
 

@@ -1,5 +1,5 @@
 ---
-description: Target video bitrate and max bitrate for outgoing video streams
+description: Default target video bitrate for outgoing video streams
 ---
 
 # \&outboundvideobitrate
@@ -20,9 +20,13 @@ Example: `&outboundvideobitrate=4000`
 
 ## Details
 
-Target video bitrate and max bitrate for outgoing video streams.
+Target video bitrate for outgoing video streams (sender-side default).
 
-Sets the viewer's bitrate and overrides the [`&videobitrate`](bitrate.md) parameter. It won't override the room's total bitrate parameter, as that's a dynamically set bitrate, so **to get higher bitrate in group rooms you still need to use** [`&totalroombitrate`](totalroombitrate.md).
+`&outboundvideobitrate` sets the default target for viewers that do not specify [`&videobitrate`](bitrate.md). If the viewer uses `&videobitrate`, their request overrides this default. A sender-side [`&maxvideobitrate`](and-maxvideobitrate.md) still caps the maximum bitrate, regardless of viewer request.
+
+In some cases, `&outboundvideobitrate` is applied via SDP munging, so it can also act as a maximum cap depending on browser/negotiation.
+
+It won't override the room's total bitrate parameter, as that's a dynamically set bitrate, so **to get higher bitrate in group rooms you still need to use** [`&totalroombitrate`](totalroombitrate.md).
 
 ## Related
 

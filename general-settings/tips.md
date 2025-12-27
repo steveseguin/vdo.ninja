@@ -13,3 +13,7 @@ Shows a help-screen on the guest joining.\
 
 Also available as a director room toggle to add to the guest's invite link.\
 ![](<../.gitbook/assets/image (27) (2).png>)
+
+{% hint style="warning" %}
+This `&tips` option is a guest help-screen. It is not related to Ninja Backer tipping. For tipping, use `&tip`/`&tipsid` and `&showtips`.
+{% endhint %}

@@ -21,20 +21,38 @@ Example: `&remote=somepasscode`
 ## Details
 
 {% hint style="info" %}
-**Android** devices **only**!
+PTZ, zoom, and focus support depends on the camera and browser. Android devices and some UVC webcams are most common. Check `https://vdo.ninja/supports` for capability.
 {% endhint %}
 
 Must be enabled by both the sender and viewer with identical passcodes in order to work. This is a security precaution. If you pass no value to `&remote`, it will still work, so long as both sides leave it blank.
 
 In some ways, the `&remote` function gives permissions to a viewer that would otherwise be restricted to a director or the sender themselves.
 
-A director of a room can remotely change focus/zoom of a participant without needing the `&remote` command. This applies to both the main director and any co-director, and that's accessible via their per-guest video settings options.
+A director of a room can remotely change focus/zoom of a participant without needing the `&remote` command. This applies to both the main director and any co-director, and that's accessible via their per-guest video settings options. Pan/tilt controls also work there when the guest uses `&ptz`.
 
 There is a toggle in the director's room which adds `&remote` to the guest's invite link.![](<../.gitbook/assets/image (104) (2).png>)
 
 ### Remote Zooming using `&remote`
 
-Use the mouse wheel over the video you wish to zoom in or out of as a viewer. The sender needs to support zoom, which often is limited to some webcams and Android devices.
+Use the mouse wheel over the video you wish to zoom in or out of as a viewer. The sender needs to support zoom, which often is limited to some webcams and Android devices. For full PTZ support, the sender should also use `&ptz`.
+
+### Remote PTZ mouse controls
+
+When `&remote` is enabled on both sides and the sender uses `&ptz`, the mouse wheel can control additional PTZ features:
+
+- Wheel: zoom in or out
+- Shift + wheel: pan left or right
+- Ctrl (or Command) + wheel: focus in or out
+- Ctrl (or Command) + Shift + wheel: tilt up or down
+- Hold Alt for smaller step sizes
+
+Chrome blocks PTZ changes when the sender tab/window is hidden; keep it visible during control.
+
+PTZ controls are not exposed in the right-click menu; use the shortcuts above or the PTZ sliders.
+
+{% content-ref url="../guides/ptz-remote-control.md" %}
+[ptz-remote-control.md](../guides/ptz-remote-control.md)
+{% endcontent-ref %}
 
 ### Remote Focus using `&remote`
 

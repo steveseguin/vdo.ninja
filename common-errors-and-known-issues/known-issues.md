@@ -39,6 +39,7 @@ Many WebRTC issues that affect VDO.Ninja are documented by related services and 
 | Camera freezes in Chrome/Chromium v131  | Try alternative browser versions                                                                               |
 | Camlink freezing when already in use    | Ensure device isn't being used elsewhere before selecting                                                      |
 | USB 3.x video device issues             | Avoid USB hubs and use quality/short cables directly to computer                                               |
+| PTZ controls ignored in background tabs | Keep the sender tab/window visible; Chrome blocks PTZ changes when hidden. See [PTZ remote control](../guides/ptz-remote-control.md) |
 
 #### OBS Specific Issues
 

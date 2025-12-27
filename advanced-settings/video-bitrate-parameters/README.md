@@ -6,11 +6,15 @@ description: Changing the bitrate of the outgoing and incoming video and for roo
 
 They are separated in two groups: [source side](./#source-side-options) (push) options for the sender of the video and [viewer side](./#viewer-side-options) (view) options for the viewer of the video. Some of them are especially for rooms.
 
+Viewer-side `&videobitrate` overrides the sender default from `&outboundvideobitrate`, while `&maxvideobitrate` remains a software-enforced cap. Room-level limits still apply where relevant.
+
+Depending on browser/negotiation, `&videobitrate` and `&outboundvideobitrate` can also be enforced via SDP munging and may act as caps.
+
 ## Source side options
 
 You have to add them to the source side ([`&push`](../../source-settings/push.md)).
 
-<table><thead><tr><th width="150">Parameter</th><th>Explanation</th></tr></thead><tbody><tr><td><a href="and-outboundvideobitrate.md"><code>&#x26;outboundvideobitrate</code></a></td><td>Target video bitrate and max bitrate for outgoing video streams</td></tr><tr><td><a href="and-maxvideobitrate.md"><code>&#x26;maxvideobitrate</code></a></td><td>Limits the max video bitrate out for this publisher, per stream out</td></tr><tr><td><a href="limittotalbitrate.md"><code>&#x26;limittotalbitrate</code></a></td><td>Limits the total outbound bitrate</td></tr><tr><td><a href="and-controlroombitrate.md"><code>&#x26;controlroombitrate</code></a></td><td>Allows a guest to control their total room video bitrate dynamically from the settings panel (under video settings)</td></tr><tr><td><a href="roombitrate.md"><code>&#x26;roombitrate</code></a></td><td>Limits any guest viewer in the group chat room from pulling the video stream at more than the specified bitrate value</td></tr><tr><td><a href="and-maxbandwidth.md"><code>&#x26;maxbandwidth</code></a></td><td>Judges the available bandwidth of a sender's connection</td></tr></tbody></table>
+<table><thead><tr><th width="150">Parameter</th><th>Explanation</th></tr></thead><tbody><tr><td><a href="and-outboundvideobitrate.md"><code>&#x26;outboundvideobitrate</code></a></td><td>Default target video bitrate for outgoing streams</td></tr><tr><td><a href="and-maxvideobitrate.md"><code>&#x26;maxvideobitrate</code></a></td><td>Hard max video bitrate out for this publisher, per stream</td></tr><tr><td><a href="limittotalbitrate.md"><code>&#x26;limittotalbitrate</code></a></td><td>Limits the total outbound bitrate</td></tr><tr><td><a href="and-controlroombitrate.md"><code>&#x26;controlroombitrate</code></a></td><td>Allows a guest to control their total room video bitrate dynamically from the settings panel (under video settings)</td></tr><tr><td><a href="roombitrate.md"><code>&#x26;roombitrate</code></a></td><td>Limits any guest viewer in the group chat room from pulling the video stream at more than the specified bitrate value</td></tr><tr><td><a href="and-maxbandwidth.md"><code>&#x26;maxbandwidth</code></a></td><td>Judges the available bandwidth of a sender's connection</td></tr></tbody></table>
 
 ## **Viewer side options**
 

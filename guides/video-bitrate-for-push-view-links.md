@@ -23,25 +23,32 @@ There are five parameters we will take a look at:
 
 ## On the source side ([\&push](../source-settings/push.md))
 
-### The push link sets the target and maximum outgoing video bitrate
+### The push link sets the default outgoing video bitrate target
 
 [`&outboundvideobitrate (&ovb)`](../advanced-settings/video-bitrate-parameters/and-outboundvideobitrate.md)\
-Sets the target and maximum outgoing video bitrate on the source side.
+Sets the sender-side default target bitrate for outgoing streams.
 
 [https://vdo.ninja/?push=streamid\&ovb=4000](https://vdo.ninja/?push=streamid\&ovb=4000)\
 [https://vdo.ninja/?view=streamid](https://vdo.ninja/?view=streamid)\
 \
-The push link sets the outgoing and incoming video bitrate to 4000-kbps. The view link doesn't need an additional parameter as its bitrate is set at 4000-kbps because the push link is using `&ovb.`
+The push link sets the outgoing default target to 4000-kbps. The view link doesn't need an additional parameter unless you want to override the default.
 
-### The push link sets the video bitrate per stream out
+[https://vdo.ninja/?push=streamid\&ovb=4000](https://vdo.ninja/?push=streamid\&ovb=4000)\
+[https://vdo.ninja/?view=streamid\&vb=2000](https://vdo.ninja/?view=streamid\&vb=2000)\
+\
+In this case the viewer requests 2000-kbps, which overrides the push-side default target (unless capped by a max).
+
+Depending on browser/negotiation, `&ovb` can be enforced via SDP munging and may also cap the maximum bitrate.
+
+### The push link sets a software max bitrate per stream out
 
 [`&maxvideobitrate (&mvb)`](../advanced-settings/video-bitrate-parameters/and-maxvideobitrate.md)\
-`&mvb` is similar to `&ovb` but it sets the target and maximum bitrate per stream out.
+`&mvb` sets a software-enforced cap per stream out. Viewer requests (`&vb`) and sender defaults (`&ovb`) cannot exceed it.
 
 [https://vdo.ninja/?push=streamid\&mvb=1000](https://vdo.ninja/?push=streamid\&mvb=1000)\
 [https://vdo.ninja/?view=streamid](https://vdo.ninja/?view=streamid)\
 \
-Every view link has a video bitrate of 1000-kbps.
+Every view link will be capped to 1000-kbps, even if it requests a higher bitrate.
 
 ### The push link limits the video bitrate to a maximum defined value
 
@@ -58,12 +65,14 @@ The incoming video bitrate will still default to around 2500-kbps but permits th
 ### The view link sets the video bitrate per stream in
 
 [`&videobitrate (&vb)`](../advanced-settings/video-bitrate-parameters/bitrate.md)\
-The view link is setting the target and maximum video bitrate per incoming stream.
+The view link is setting the target video bitrate per incoming stream.
 
 [https://vdo.ninja/?push=streamid](https://vdo.ninja/?push=streamid)\
 [https://vdo.ninja/?view=streamid\&vb=2000](https://vdo.ninja/?view=streamid\&vb=2000)\
 \
 The view link is setting the bitrate per incoming stream (in this case 2000-kbps). So if you have a view link with three incoming video feeds: `&view=stream1,stream2,stream3` - every source is pushing 2000-kbps as `&vb=2000` and the view link has a combined bitrate of 6000-kbps.
+
+Depending on browser/negotiation, `&vb` can be enforced via SDP munging and may also cap the maximum bitrate.
 
 ### The view link sets the total video bitrate for all incoming streams combined
 
@@ -79,13 +88,13 @@ So if you have a view link with three incoming video feeds: `&view=stream1,strea
 
 As doing some testing there were these results:
 
-All the three push parameters are always limiting the maximum. So if you set one of the three parameters to a value, the outgoing video bitrate will never be higher than you set it.
+All three push parameters cap the maximum. If you set one of these values, the outgoing video bitrate will never be higher than that limit.
 
-`&tsb` also always limits the bitrate on the viewer side, whereas `&vb` is overwritten by `&ovb` and `&mvb`.
+`&tsb` always limits the bitrate on the viewer side (total across streams). `&vb` sets the viewer target per stream, but it can be capped by sender-side limits or SDP munging.
 
-* `&ovb` is overwriting `&vb`
-* `&mvb` is overwriting `&vb`
-* `&tsb` is stronger than `&ovb`
+* `&vb` overrides the default target from `&ovb`
+* `&mvb` is a software max cap, regardless of `&vb` or `&ovb`
+* `&tsb` caps the total incoming bitrate across all streams
 
 ## Related
 
