@@ -101,6 +101,7 @@
   * [Windows TTS Audio Capture Methods for OBS](guides/windows-tts-audio-capture-methods-for-obs.md)
   * [Syncing USB audio with VDO.Ninja -> OBS Virtual Camera](guides/syncing-usb-audio-with-vdo.ninja-greater-than-obs-virtual-camera.md)
   * [How to restart your winsock](guides/how-to-restart-your-winsock.md)
+  * [Mesh Network Debug](guides/mesh-network-debug.md)
 * [Advanced Options (URL Parameters)](advanced-settings.md)
   * [Most common Parameters](advanced-settings/cheat-sheet-of-basic-parameters/README.md)
     * [\&push](https://docs.vdo.ninja/advanced-settings/source-parameters/push)

@@ -53,3 +53,11 @@ For this reason, disable notifications, inbound calls, etc, while streaming on m
 Computers that are running at near 100% CPU load can fail to encode audio streams, audio drop outs may occur during a call as a result. Please consider reducing the CPU load on your system to avoid this issue.
 
 Heavy network packet loss, such as a bad WiFi connection can also cause audio drop outs. Completely connection losses are possible also, particularly if behind a corporate firewall or VPN service that is throttling or restricting WebRTC services.
+
+### P2P connection issues between guests
+
+If audio drops between specific guests in a room, the P2P connection may have failed. Directors can use the Mesh Network Debug tool to diagnose and patch failed connections.
+
+{% content-ref url="../guides/mesh-network-debug.md" %}
+[mesh-network-debug.md](../guides/mesh-network-debug.md)
+{% endcontent-ref %}

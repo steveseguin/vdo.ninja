@@ -96,3 +96,11 @@ Don't be afraid to try from different networks, computers, browsers, or other re
 Advanced users can always just deploy their own TURN server locally or nearby, and specify it via VDO.Ninja. Hosting it yourself can reduce latency, improve performance, and improve security (no IP leaking). Using relay mode doesn't need to be a bad thing!
 
 Join the Discord if still stuck and need help: [https://discord.vdo.ninja ](https://discord.vdo.ninja)
+
+### Visualizing connection types
+
+Directors can use the Mesh Network Debug tool to see which guests are using TURN relay connections and identify problematic P2P links.
+
+{% content-ref url="../guides/mesh-network-debug.md" %}
+[mesh-network-debug.md](../guides/mesh-network-debug.md)
+{% endcontent-ref %}

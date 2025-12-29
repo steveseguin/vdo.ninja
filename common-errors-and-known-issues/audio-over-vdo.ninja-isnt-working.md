@@ -58,3 +58,10 @@ If on Android, using Firefox might work well without the need of TRRS however.
 
 If using the native VDO.Ninja mobile app, please note that screen sharing might only contain microphone-sourced audio -- the system audio won't be detected at the moment. This will hopefully change soon, but there is no timeline as to when it will be working.
 
+### Guests can't hear each other in a room
+
+If you're a director and specific guests can't hear each other, the P2P connection between them may have failed. Use the Mesh Network Debug tool to visualize connections and patch failed ones.
+
+{% content-ref url="../guides/mesh-network-debug.md" %}
+[mesh-network-debug.md](../guides/mesh-network-debug.md)
+{% endcontent-ref %}
