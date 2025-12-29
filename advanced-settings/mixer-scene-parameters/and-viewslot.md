@@ -19,10 +19,21 @@ Basic syntax for viewing a specific slot:\
 The `&viewslot` parameter provides single-video viewing of slot assignments with these characteristics:
 
 * Only shows content from the specified slot number
+* **Automatically updates when new guests join** and are assigned slots
 * Dynamically updates when directors change slot assignments
 * Optimizes performance by only loading the visible video stream
 * Disables layouts and auto-mixing functionality
 * Requires director to be using `&slotmode`
+
+### Auto-Update Behavior
+
+Scene links using `&viewslot` automatically receive slot assignment updates whenever:
+
+* A new guest joins and is assigned to the specified slot
+* The director manually reassigns slots
+* A guest disconnects, freeing their slot
+
+This means you don't need to refresh the scene link when guests join or leave.
 
 ## Performance Optimization
 
@@ -40,8 +51,11 @@ By default, only the visible video stream is connected to reduce CPU and network
 Guests can specify their preferred slot assignment:
 
 ```
-&slot=N    # N is the desired slot number
+&slot=N    # N is the desired slot number (1 or higher)
+&slot=0    # Exclude this guest from slot assignments
 ```
+
+Using `&slot=0` allows guests (like instructors or control room operators) to join without consuming a slot.
 
 ### Fixed Slot Count (`&slots`)
 

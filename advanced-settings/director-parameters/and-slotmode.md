@@ -12,6 +12,25 @@ Adding `&slotmode` to a director's URL gives you the possibility to assign slots
 
 <figure><img src="../../.gitbook/assets/image (2) (2) (2) (1).png" alt=""><figcaption></figcaption></figure>
 
+### Director Slot Behavior
+
+By default, the director does **not** consume a slot when using `&slotmode`. This means:
+
+* Guests are assigned slots starting from slot 1
+* The director remains hidden from slot-based scene links (`&viewslot`)
+
+If you want the director to appear in scenes and consume a slot, add [`&showdirector`](../../viewers-settings/and-showdirector.md) to the director's URL:
+
+```
+&director=roomname&slotmode&showdirector
+```
+
+This is useful when the director is also a performer who should appear in slot-based layouts.
+
+### Excluding Guests from Slots
+
+Guests can use [`&slot=0`](../settings-parameters/and-slot.md) to join the room without consuming a slot. This is useful for instructors, musicians, or control room operators who should not appear in slot-based scenes.
+
 ## Related
 
 {% content-ref url="../../steves-helper-apps/mixer-app.md" %}
