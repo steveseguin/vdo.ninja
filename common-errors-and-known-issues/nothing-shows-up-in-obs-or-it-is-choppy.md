@@ -141,6 +141,16 @@ description: >-
 * Can't publish WHIP via OBS outside your LAN? [Download our patched OBS version](https://backup.vdo.ninja/OBS_VDO_Ninja.zip). [\[source\]](https://github.com/steveseguin/obs-studio/)
 * Try alternative connection methods if WHIP fails to connect
 
+#### H.265/HEVC Not Supported in OBS Browser Sources
+
+* OBS Browser sources currently do not support H.265 (HEVC) video playback
+* This is a limitation of the Chromium version bundled with OBS, which lacks H.265 decoding support
+* If you're trying to use VDO.Ninja to play a WHIP or WHEP stream encoded with H.265, it will not display in OBS
+* Workarounds:
+  * Re-encode the source stream using H.264 instead of H.265
+  * Use the [Electron Capture app](http://electroncapture.app) which does support H.265 playback
+  * Wait for a future OBS update that includes a newer Chromium version with H.265 support
+
 ### Additional Recommendations
 
 * Restart all devices involved (computer, phone, router) before extended troubleshooting
