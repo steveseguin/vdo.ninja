@@ -10,7 +10,6 @@ Sender-Side Option! ([`&push`](../source-settings/push.md))
 
 * `&tipsid`
 * `&tipid`
-* `&tips` (legacy; also used by the guest help-screen - avoid)
 
 ## Options
 
@@ -25,7 +24,7 @@ Example: `&tip=YOUR_TIP_ID`
 Enables Ninja Backer tipping for the sender. Viewers must opt in with `&showtips` to see the tip button (two-way opt-in). If `&tip`/`&tipsid` is present without a value, the setup modal appears.
 
 {% hint style="warning" %}
-`&tips` is also used for the guest help-screen. For tipping, use `&tip` or `&tipsid` to avoid confusion.
+`&tips` is reserved for the guest help-screen. For tipping, use `&tip` or `&tipsid`.
 {% endhint %}
 
 ## Related parameters
