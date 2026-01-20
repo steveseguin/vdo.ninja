@@ -3614,6 +3614,10 @@ async function main() {
 		}
 	}
 
+	if (urlParams.has("nomutepreview")) {
+		session.noMutePreview = true;
+	}
+
 	if (urlParams.has("obsfix")) {
 		session.obsfix = urlParams.get("obsfix");
 		if (session.obsfix) {
