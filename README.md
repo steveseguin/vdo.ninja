@@ -1,5 +1,6 @@
 
 <img src="https://github.com/user-attachments/assets/8134f167-2ea5-42e8-9450-b7aed322b6b0" width="300" />
+<img src="https://files.catbox.moe/p7rkmu.png" width="300" />
 
 [![GitHub stars](https://img.shields.io/github/stars/steveseguin/vdoninja?style=social)](https://github.com/steveseguin/vdoninja)
 [![GitHub forks](https://img.shields.io/github/forks/steveseguin/vdoninja?style=social)](https://github.com/steveseguin/vdoninja/fork)
