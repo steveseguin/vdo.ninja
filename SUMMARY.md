@@ -278,6 +278,7 @@
     * [\&ptime](advanced-settings/view-parameters/and-ptime.md)
     * [\&maxptime](advanced-settings/view-parameters/and-maxptime.md)
     * [\&minptime](advanced-settings/view-parameters/minptime.md)
+    * [\&lowlatency](newly-added-parameters/and-lowlatency.md)
     * [\&audiocodec](advanced-settings/audio-parameters/minptime-1.md)
     * [\&dtx](advanced-settings/audio-parameters/minptime-2.md)
     * [\&nofec](advanced-settings/audio-parameters/minptime-3.md)

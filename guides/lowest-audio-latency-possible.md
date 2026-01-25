@@ -6,7 +6,19 @@ description: Two-way low-latency audio-only transmissions
 
 If you are a musician looking to jam out with a friend, you should be able to achieve under 40ms of latency using [VDO.Ninja](https://vdo.ninja) if both you and them have a good Internet connections. This implies being directly connected via wired Ethernet with low packet loss, rather than via Wi-Fi or cellular.&#x20;
 
-The following link is an example of settings optimized for low-latency audio-only two-way communications. I find most of the latency with a setup like this is outside the scope of VDO.Ninja; so the sound card settings, the capture device, how far away I am from the mic / speakers, etc.
+## Quick start with \&lowlatency
+
+The easiest way to achieve low latency is using the [`&lowlatency`](../newly-added-parameters/and-lowlatency.md) parameter (aliases: `&ll`, `&ultralow`), which configures multiple optimizations automatically:
+
+```
+https://vdo.ninja/?push=MystreamID123&view=TheirStreamID123&lowlatency&novideo
+```
+
+This single parameter disables audio processing (echo cancellation, auto-gain, noise suppression), sets optimal packet timing (10ms ptime), minimizes buffers, uses constant bitrate, and bypasses the WebAudio pipeline.
+
+## Manual configuration
+
+For fine-grained control, here's a manual example of settings optimized for low-latency audio-only two-way communications. I find most of the latency with a setup like this is outside the scope of VDO.Ninja; so the sound card settings, the capture device, how far away I am from the mic / speakers, etc.
 
 ```
 https://vdo.ninja/?push=MystreamID123&view=TheirStreamID123&aec=0&agc=0&denoise=0&ab=16&enhance&ptime=10&maxptime=10&novideo&noap
@@ -29,3 +41,13 @@ Looking at the link, let's explore:
 [`&noap`](../general-settings/noaudioprocessing.md) just disables any of the advanced web-audio processing, such as compression, gain, level-meters, and panning. This will free up some milliseconds of latency in some cases,
 
 Without much effort, you should be able to achieve 40-milliseconds of latency, or less, with this setup. Achieving between 20- to 30-ms is feasible in cases, but expectations of under 20-ms will require significantly more investment.
+
+{% hint style="info" %}
+For playback on Windows, consider using the [Electron Capture](../steves-helper-apps/electron-capture.md) app which now supports ASIO audio devices, providing even lower audio output latency compared to standard Windows audio.
+{% endhint %}
+
+## Related
+
+{% content-ref url="../newly-added-parameters/and-lowlatency.md" %}
+[and-lowlatency.md](../newly-added-parameters/and-lowlatency.md)
+{% endcontent-ref %}

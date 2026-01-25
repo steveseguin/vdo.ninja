@@ -24,6 +24,16 @@ The Electron Capture app uses recent versions of Chromium, which is more resista
 
 Lastly, since playback is agnostic, you can window-capture the same video multiple times, using one copy in a mixed-down live stream, while using a window-capture to record a clean full-resolution isolated video stream.
 
+## ASIO Support (Windows)
+
+The Electron Capture app for Windows now supports ASIO audio device input via VDO.Ninja. ASIO (Audio Stream Input/Output) provides significantly lower audio latency compared to standard Windows audio drivers, making it ideal for:
+
+- Musicians using professional audio interfaces
+- IEM (in-ear monitor) applications
+- Real-time audio monitoring with minimal delay
+
+When combined with the [`&lowlatency`](../newly-added-parameters/and-lowlatency.md) parameter, ASIO support enables ultra-low latency audio workflows directly through VDO.Ninja.
+
 ## Updates
 
 {% content-ref url="../updates/updates-electron-capture-app.md" %}
