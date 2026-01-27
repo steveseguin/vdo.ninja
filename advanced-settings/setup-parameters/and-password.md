@@ -36,12 +36,38 @@ Please use alphanumeric-characters only; spaces or other characters may cause th
 **Passwords are CASE-SENSITIVE**; mobile users should watch-out for auto-capitalization when entering them.
 {% endhint %}
 
+### Hiding passwords from server logs
+
+For additional security, you can place the password in the URL **fragment** (after `#`) instead of the query string (after `?`). Fragment parameters are never sent to the server, keeping them hidden from Cloudflare logs:
+
+```
+https://vdo.ninja/?push=cam1#p=mysecretpassword
+```
+
+You can combine this with a hash fallback in case the fragment is stripped during URL sharing:
+
+```
+https://vdo.ninja/?push=cam1&hash=99e5#p=secret
+```
+
+If the fragment survives, `p=secret` is used directly. If stripped, the user is prompted to enter a password, which is then validated against `&hash`.
+
+See [Fragment URL Parameters](../../help/privacy-and-security-details/fragment-url-parameters.md) for more details.
+
+### Using hashed passwords
+
 Adding [`&hash=HASH_VALUE`](../../newly-added-parameters/and-hash.md) will act as if `&password=PASSWORD` was added.
+
+The hash is generated from `password + salt` (salt defaults to the room name). Hash values can be 1-6 characters; shorter hashes are more secure (reveal less about the password) but more prone to false positives.
 
 Use this link to get the hash for the password:\
 [https://vdo.ninja/examples/changepass.html](https://vdo.ninja/examples/changepass.html)
 
 ## Related
+
+{% content-ref url="../../help/privacy-and-security-details/fragment-url-parameters.md" %}
+[fragment-url-parameters.md](../../help/privacy-and-security-details/fragment-url-parameters.md)
+{% endcontent-ref %}
 
 {% content-ref url="../../newly-added-parameters/and-hash.md" %}
 [and-hash.md](../../newly-added-parameters/and-hash.md)

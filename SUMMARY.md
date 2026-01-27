@@ -619,6 +619,7 @@
 * [Help!](help/README.md)
   * [Fail safes and Backups](help/fail-safes-and-backups.md)
   * [Privacy and security details](help/privacy-and-security-details.md)
+    * [Fragment URL Parameters](help/privacy-and-security-details/fragment-url-parameters.md)
     * [VDO.Ninja Terms of Service](help/privacy-and-security-details/vdo.ninja-terms-of-service.md)
     * [VDO.Ninja Privacy Policy](help/privacy-and-security-details/vdo.ninja-privacy-policy.md)
     * [Abuse & Child Safety](help/privacy-and-security-details/abuse-and-child-safety.md)
