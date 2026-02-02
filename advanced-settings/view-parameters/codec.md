@@ -1,10 +1,14 @@
 ---
-description: Sets the codec to encode the video
+description: Requests a preferred video codec from the sender
 ---
 
 # \&codec
 
 Viewer-Side Option! ([`&view`](view.md), [`&scene`](scene.md), [`&room`](../../general-settings/room.md))
+
+{% hint style="info" %}
+This is a **viewer-side** parameter. The viewer (OBS, scene link, etc.) uses this to request a preferred codec from the sender. The sender's browser then encodes using that codec if supported. This does not force a codec - it reorders the codec priority list during negotiation.
+{% endhint %}
 
 ## Aliases
 
@@ -17,9 +21,11 @@ Example: `&codec=h264`
 
 <table><thead><tr><th width="176">Value</th><th>Description</th></tr></thead><tbody><tr><td><a href="codec.md#h264"><code>h264</code></a></td><td>request the h264 codec </td></tr><tr><td><a href="codec.md#vp8"><code>vp8</code></a></td><td>request the VP8 codec </td></tr><tr><td><a href="codec.md#vp9"><code>vp9</code></a></td><td>request the VP9 codec</td></tr><tr><td><a href="codec.md#av1"><code>av1</code></a></td><td>request the AV1 codec</td></tr><tr><td><a href="codec.md#h265-hevc"><code>h265</code></a></td><td>request the H265 codec</td></tr><tr><td><a href="codec.md#webp"><code>webp</code></a></td><td>request the webp codec</td></tr><tr><td><a href="codec.md#hardware"><code>hardware</code></a></td><td>request the h264 codec and<a href="../../newly-added-parameters/and-h264profile.md"><code>&#x26;h264profile</code></a></td></tr><tr><td><a href="codec.md#comma-seperated-update-in-v23-on-alpha"><code>av1,h264</code></a></td><td>Comma separated values that define the order of preferred video codecs if the primary one fails</td></tr></tbody></table>
 
-### Prefer a codec (viewer-side)
+### Note on \&prefervideocodec
 
-If you need the viewer to request a specific codec without changing the sender URL, add `&prefervideocodec=<codec>` to the viewer/scene link. This hints the negotiation to favor that codec when possible (e.g., `&prefervideocodec=h264` or `vp9`). Leave the sender untouched; the viewer preference is applied per-connection.
+{% hint style="warning" %}
+The `&prefervideocodec` parameter is currently **non-functional**. While the parameter is parsed by the application, it is not actually used in the codec negotiation logic. Use `&codec` instead for viewer-side codec preferences.
+{% endhint %}
 
 ### Example usage
 
@@ -31,7 +37,9 @@ The `&codec` parameter is added to the viewer-side; so the [`&view`](view.md) or
 
 ### **Description**
 
-Video that is captured by a camera is compressed and sent over VDO.Ninja. The default codec is left up to the peer-connection to decide on, where the viewer and the sender agree on what is best automatically.
+Video that is captured by a camera is compressed (encoded) by the **sender** and sent over VDO.Ninja. The `&codec` parameter allows the **viewer** to request a preferred codec from the sender. The default codec is left up to the peer-connection to decide on, where the viewer and the sender agree on what is best automatically.
+
+When you add `&codec=h264` to a viewer link, you are telling the sender "I prefer to receive H264-encoded video." The sender's browser will then attempt to encode using that codec if it's supported. This is a preference, not a requirement - if the requested codec isn't available, negotiation will fall back to the next available codec.
 
 Normally VP8 is selected, which is an older codec that uses little CPU, but isn't as efficient as some others. Some mobile devices may hardware-encoder VP8, such as Google Pixel phones, but the vast majority will use software (CPU) to encode VP8.
 
