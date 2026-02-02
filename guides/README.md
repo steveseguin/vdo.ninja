@@ -11,6 +11,7 @@
 * [ninjabacker-tipping.md](ninjabacker-tipping.md "mention")
 * [hardware-accelerated-video-encoding.md](hardware-accelerated-video-encoding.md "mention")
 * [audio-filters.md](audio-filters.md "mention")
+* [audio-reactive-avatars.md](audio-reactive-avatars.md "mention")
 * [options-to-record-streams.md](options-to-record-streams.md "mention")
 * [guides-and-how-tos.md](guides-and-how-tos.md "mention")
 

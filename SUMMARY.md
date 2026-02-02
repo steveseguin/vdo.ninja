@@ -50,6 +50,7 @@
   * [Ninja Backer tipping](guides/ninjabacker-tipping.md)
   * [Hardware-accelerated video encoding](guides/hardware-accelerated-video-encoding.md)
   * [Audio Filters & Bitrate](guides/audio-filters.md)
+  * [Audio-Reactive Avatars](guides/audio-reactive-avatars.md)
   * [Options to record streams](guides/options-to-record-streams.md)
   * [External guides and how-tos](guides/guides-and-how-tos.md)
   * [How to lock the resolution](guides/how-do-i-lock-the-resolution.md)
