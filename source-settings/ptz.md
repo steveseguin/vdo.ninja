@@ -18,6 +18,15 @@ Can also be added to a simple push link, then you can change pan, tilt and zoom 
 \
 ![](<../.gitbook/assets/image (127).png>)
 
+The dedicated PTZ controller is available at:
+`https://vdo.ninja/alpha/ptz.html`
+
+For API/automation workflows, `targetGuest` supports PTZ actions:
+`ptzZoom`, `ptzPan`, `ptzTilt`, `ptzFocus`, `ptzAutofocus`.
+
+The dedicated PTZ surface and API also support remote output transforms:
+`remoteMirror` (aliases: `mirror`, `mirrorGuest`) and `remoteRotate` (aliases: `rotate`, `rotateGuest`).
+
 {% hint style="info" %}
 Chrome blocks PTZ changes when the sender page is hidden. Keep the sender visible on screen if controls appear to do nothing or you see "page is not visible" errors.
 {% endhint %}

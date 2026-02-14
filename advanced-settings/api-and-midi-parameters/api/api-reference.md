@@ -181,6 +181,13 @@ Currently toggling is primarily available for options; on/off absolute value opt
 | forceKeyframe          | {guest slot or stream ID} | null                                               | Trigger a keyframe for active scenes, wrt to a guest; helps resolve rainbow puke              |
 | soloVideo              | {guest slot or stream ID} | null                                               | Toggle whether a video is highlighted everywhere                                              |
 | volume                 | {guest slot or stream ID} | {0 to 100}                                         | Set the microphone volume of a specific remote guest                                          |
+| ptzZoom                | {guest slot or stream ID} | {number}; optional value2=`abs`                    | Change remote zoom (delta by default, absolute when `value2` indicates absolute mode)         |
+| ptzPan                 | {guest slot or stream ID} | {number}; optional value2=`abs`                    | Change remote pan                                                                              |
+| ptzTilt                | {guest slot or stream ID} | {number}; optional value2=`abs`                    | Change remote tilt                                                                             |
+| ptzFocus               | {guest slot or stream ID} | {number}; optional value2=`abs`                    | Change remote focus                                                                            |
+| ptzAutofocus           | {guest slot or stream ID} | {true/false}                                       | Enable or disable remote autofocus                                                             |
+| remoteMirror           | {guest slot or stream ID} | {true/false/toggle}                                | Set or toggle remote mirror state (aliases: `mirror`, `mirrorGuest`)                          |
+| remoteRotate           | {guest slot or stream ID} | {true/false/number}                                | Rotate remote output (`true`=+90 step, `false`=reset, number=explicit rotation; aliases: `rotate`, `rotateGuest`) |
 | stopRoomTimer          | {guest slot or stream ID} | null                                               | Stop the timer for the specific guest (+v23.9)                                                |
 | startRoomTimer         | {guest slot or stream ID} | Integer to count down from                         | Value to count down from is in seconds (+v23.9)                                               |
 | PauseRoomTimer         | {guest slot or stream ID} | null                                               | Pause the timer for the specific guest (+v23.9)                                               |

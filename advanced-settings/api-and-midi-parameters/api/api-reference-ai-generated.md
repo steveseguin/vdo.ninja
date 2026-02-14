@@ -159,6 +159,13 @@ These commands target specific guests when you are the director.
 | `soloVideo`             | Guest ID/slot | N/A                       | Highlight specific guest's video |
 | `volume`                | Guest ID/slot | `0` to `100`              | Set guest's microphone volume    |
 | `mixorder`              | Guest ID/slot | `-1` or `1`               | Change guest's position in mixer |
+| `ptzZoom`               | Guest ID/slot | Number (+ optional `value2`) | Change remote zoom (`value2="abs"` for absolute mode) |
+| `ptzPan`                | Guest ID/slot | Number (+ optional `value2`) | Change remote pan (`value2="abs"` for absolute mode) |
+| `ptzTilt`               | Guest ID/slot | Number (+ optional `value2`) | Change remote tilt (`value2="abs"` for absolute mode) |
+| `ptzFocus`              | Guest ID/slot | Number (+ optional `value2`) | Change remote focus (`value2="abs"` for absolute mode) |
+| `ptzAutofocus`          | Guest ID/slot | `true` / `false`          | Enable or disable remote autofocus |
+| `remoteMirror`          | Guest ID/slot | `true` / `false` / `toggle` | Set or toggle remote mirror state (aliases: `mirror`, `mirrorGuest`) |
+| `remoteRotate`          | Guest ID/slot | `true` / `false` / Number | Rotate remote output (`true`=+90 step, `false`=reset, number=explicit rotation; aliases: `rotate`, `rotateGuest`) |
 
 ### Target Parameter Explanation
 
@@ -214,6 +221,7 @@ Layout object properties:
 * `slot`: Which video slot to display (0-indexed)
 * `z`: Z-index for layering (optional)
 * `c`: Cover mode (true/false, optional)
+* `cropTop`, `cropRight`, `cropBottom`, `cropLeft`: Crop values in pixels, rendered via `clip-path: inset(...)` (optional)
 
 ### Implementation Examples
 

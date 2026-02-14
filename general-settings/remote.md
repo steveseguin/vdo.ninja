@@ -1,5 +1,5 @@
 ---
-description: Allows remote operation of the zoom and focus, and access to statistics
+description: Allows remote PTZF control, mirror/rotate transforms, and access to statistics
 ---
 
 # \&remote
@@ -30,6 +30,8 @@ In some ways, the `&remote` function gives permissions to a viewer that would ot
 
 A director of a room can remotely change focus/zoom of a participant without needing the `&remote` command. This applies to both the main director and any co-director, and that's accessible via their per-guest video settings options. Pan/tilt controls also work there when the guest uses `&ptz`.
 
+Remote transform actions (mirror/rotate) now follow the same authorization model as PTZ/focus requests when initiated by non-director controllers.
+
 There is a toggle in the director's room which adds `&remote` to the guest's invite link.![](<../.gitbook/assets/image (104) (2).png>)
 
 ### Remote Zooming using `&remote`
@@ -53,6 +55,18 @@ PTZ controls are not exposed in the right-click menu; use the shortcuts above or
 {% content-ref url="../guides/ptz-remote-control.md" %}
 [ptz-remote-control.md](../guides/ptz-remote-control.md)
 {% endcontent-ref %}
+
+### Remote Mirror / Rotate using `&remote`
+
+With `&remote` enabled, a controller can also request output transforms on the sender:
+
+- Mirror toggle/set (`remoteMirror`; aliases: `mirror`, `mirrorGuest`)
+- Rotate (`remoteRotate`; aliases: `rotate`, `rotateGuest`)
+  - `true`: step rotation by +90 degrees
+  - `false`: reset rotation to 0 degrees
+  - number: set an explicit rotation value
+
+These actions are available in the dedicated PTZ page (`https://vdo.ninja/alpha/ptz.html`) and via API/IFRAME commands.
 
 ### Remote Focus using `&remote`
 
@@ -90,4 +104,4 @@ If viewers of a stream ID being monitor have a label assigned ([`&label`](label.
 
 When using the `&remote` control option, the viewer can now remotely hang-up the sender via the right-click menu. The sender needs to remote control enabled for this to work of course.
 
-`&remote`, if used on a push link without a password added, it will now allow the remote viewer limited control (hangup, focus, zoom, detailed stats), even if they don't have `&remote` added to their URL also. When using `&remote`, the option to "reload" the remote browser is now available, so you can potentially reload a remote unattended session that contains`&autostart&webcam`.![](<../.gitbook/assets/image (115).png>)
+`&remote`, if used on a push link without a password added, it will now allow the remote viewer limited control (hangup, PTZF, mirror/rotate transforms, detailed stats), even if they don't have `&remote` added to their URL also. When using `&remote`, the option to "reload" the remote browser is now available, so you can potentially reload a remote unattended session that contains`&autostart&webcam`.![](<../.gitbook/assets/image (115).png>)

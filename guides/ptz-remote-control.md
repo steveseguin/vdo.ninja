@@ -1,5 +1,5 @@
 ---
-description: How to enable and control PTZ remotely (director, viewer, API)
+description: How to enable and control PTZ remotely (director, viewer, API, and remote mirror/rotate)
 ---
 
 # PTZ Remote Control
@@ -7,6 +7,8 @@ description: How to enable and control PTZ remotely (director, viewer, API)
 ## Overview
 
 VDO.Ninja can remotely control pan, tilt, zoom, and focus on supported cameras. The sender must opt in with `&ptz`, and the camera/browser must actually expose PTZ or focus controls. Directors can control PTZ from the built-in video settings menu, while viewers can opt in using `&remote`.
+
+Remote output transforms (mirror/rotate) are also available via `&remote` authorization, including from the dedicated `ptz.html` page and API commands.
 
 To confirm device support, use `https://vdo.ninja/supports` with the target camera selected.
 
@@ -57,6 +59,25 @@ Make sure the sender uses:
 
 Chrome requires the sender page to remain visible on screen for PTZ controls to work. If the sender tab/window is hidden, the browser blocks PTZ changes.
 
+## Dedicated PTZ Control Surface (Alpha)
+
+You can also use the dedicated PTZ control page:
+`https://vdo.ninja/alpha/ptz.html`
+
+Typical use:
+
+- Controller: `https://vdo.ninja/alpha/ptz.html?view=STREAMID&remote`
+- Sender: `https://vdo.ninja/?push=STREAMID&ptz&remote`
+
+Use matching `&remote=PASSCODE` values on both sides if you want passcode-gated control.
+
+Additional remote transform controls in `ptz.html`:
+
+- `Mirror Remote` button (toggle remote mirror state)
+- `Rotate Remote +90` button
+- `Reset Remote Rotation` button
+- Hotkeys: `Ctrl/Cmd+M` (mirror), `Ctrl/Cmd+R` (rotate +90), `Ctrl/Cmd+Shift+R` (reset rotation)
+
 ## On-screen PTZ Sliders
 
 Add `&ptzslider` to a director or view link to show PTZ sliders (zoom/pan/tilt) directly on the video element. `&zoomslider` shows a zoom-only slider.
@@ -67,6 +88,27 @@ Example:
 ## Automation with `&api`
 
 For scripted control or Stream Deck integrations, add `&api=YOURKEY` to the controlling page and use the HTTP/WSS API or IFRAME API commands (`zoom`, `pan`, `tilt`, `focus`).
+
+For director-side targeted control, the legacy `targetGuest` action also supports:
+
+- `ptzZoom`
+- `ptzPan`
+- `ptzTilt`
+- `ptzFocus`
+- `ptzAutofocus`
+- `remoteMirror` (aliases: `mirror`, `mirrorGuest`)
+- `remoteRotate` (aliases: `rotate`, `rotateGuest`)
+
+Example:
+
+```javascript
+iframe.contentWindow.postMessage({
+    function: "targetGuest",
+    target: "1", // slot or stream ID
+    action: "remoteRotate",
+    value: true // true=+90 step, false=reset, number=explicit rotation
+}, "*");
+```
 
 References:
 - [IFRAME API for Directors](iframe-api-documentation/iframe-api-for-directors.md)

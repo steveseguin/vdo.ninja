@@ -211,6 +211,25 @@ iframe.contentWindow.postMessage({
 }, "*");
 ```
 
+PTZ-specific `targetGuest` actions are also supported:
+
+- `ptzZoom`
+- `ptzPan`
+- `ptzTilt`
+- `ptzFocus`
+- `ptzAutofocus`
+- `remoteMirror` (aliases: `mirror`, `mirrorGuest`)
+- `remoteRotate` (aliases: `rotate`, `rotateGuest`)
+
+```javascript
+iframe.contentWindow.postMessage({
+    function: "targetGuest",
+    target: "guestStreamID",
+    action: "remoteMirror",
+    value: true      // true/false to set, omit for toggle
+}, "*");
+```
+
 #### Using Commands Function
 
 Access any command from the Commands object:
