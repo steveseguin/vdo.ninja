@@ -16,6 +16,14 @@ You can use them for publisher, viewer and director URLs.
 
 \*NEW IN [VERSION 24](../../releases/v24.md)
 
+### Connection Recovery (Trials)
+
+These options help with unstable peer-to-peer links and recovery behavior:
+
+- [`&autorecover`](and-autorecover.md)
+- [`&p2pfailtimeout`](and-p2pfailtimeout.md)
+- [`&peerrecoversteps`](and-peerrecoversteps.md) (alias: `&p2precoversteps`)
+
 ## Source Side Options
 
 **Source Settings**, which are settings specific to publishing. The parameters can be added to a publishing link, like for example a guest, a director or just a basic push link.

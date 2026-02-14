@@ -32,6 +32,10 @@ Some parameters, like [`&view`](../advanced-settings/view-parameters/view.md) wi
 http://vdo.ninja/?push=aaa&view=bbb,ccc,ddd
 ```
 
+{% hint style="info" %}
+Parameters provided in the URL fragment (after `#`) are also supported. If the same parameter exists in both query and fragment, the fragment value wins.
+{% endhint %}
+
 {% content-ref url="../advanced-settings.md" %}
 [advanced-settings.md](../advanced-settings.md)
 {% endcontent-ref %}

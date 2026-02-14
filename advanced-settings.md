@@ -33,10 +33,14 @@ http://vdo.ninja/?push=aaa&view=bbb,ccc,ddd
 You might notice the stream ID values I'm using (ie: `aaa`, `bbb`, etc); these can be manually created and reused. Use `&push=STREAMID` to publish a video and `&view=STREAMID` to remotely view it. If you don't manually specify a stream ID, VDO.Ninja will sometimes generate one for you.
 
 {% hint style="info" %}
-To make up a valid stream ID of your own though, choose something with less than 31-characters of length and ensure it's AlpHaNuMerIc-only.
+To make up a valid stream ID of your own though, keep it at 64-characters or less and use alphanumeric characters where possible.
 {% endhint %}
 
 A stream ID must also not already be in active use, else you will be provided with an error.
+
+{% hint style="info" %}
+URL fragment parameters (after `#`) are merged with normal query parameters and take precedence on conflicts. Example: `?view=A#view=B` resolves to `view=B`.
+{% endhint %}
 
 ## General/Sender/Viewer Option
 

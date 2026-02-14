@@ -45,6 +45,7 @@ Sometimes two peers just can't get a good connection, while with other peers the
 #### More generic options to try
 
 * Using [`&chunked`](../newly-added-parameters/and-chunked.md) mode on the sender's side can enable an alternative way of sending video data, but this option is only supported by Chrome and other Chromium-based browsers. It also is fairly CPU intensive and may require some tweaking of bitrates and buffers to have it work well for you situation
+* For a structured recovery workflow (including retry controls, auto-relay, mesh fallback, and director-side mitigations), see [Handling Guest Disconnects and Connection Recovery](../guides/handling-guest-disconnects-and-connection-recovery.md)
 * Try using [`&codec=av1`](../advanced-settings/view-parameters/codec.md#av1) on the viewer side; this won't solve packet loss issues, but the AV1 codec is more efficient than the default codecs, and so it may offer better video quality despite the packet loss.
 * Try adding [`&buffer=500`](../advanced-settings/view-parameters/buffer.md) to the viewer link, as this might allow for more time for lost packets to arrive.
 * Reduce the bitrate of your video streams. If your connection can only handle 30-mbps in and 10-mbps out, trying to push it to do more will cause network thrashing and packet loss. In this case, try to ensure that your connection's up and download links are not saturated by more than 80% of their tested max capacity. Leaving some headroom will reduce latency and packet loss, ultimately leading to better quality.

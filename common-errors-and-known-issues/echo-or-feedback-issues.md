@@ -21,6 +21,16 @@ Dealing with feedback is challenging, as the reasons are numerous, but not alway
 
 ![](<../.gitbook/assets/image (121) (1) (1) (1) (1).png>)
 
+#### Guests using external speakers without headphones
+
+If guests cannot use headphones and are using external speakers (or a PA/monitor system), add [`&noheadphones`](../source-settings/noheadphones.md) to their guest links. This forces echo cancellation, noise suppression, auto gain control, voice isolation, and a noise gate all ON — even if other parameters would normally disable them.
+
+For more aggressive control, add [`&noisegate=4`](../source-settings/noisegate.md) which ducks non-active speakers' microphones so only one person is really "hot" at a time. This is the most effective software-side fix for cascading echo in speaker-based setups. Tune sensitivity with [`&noisegatesettings`](../advanced-settings/audio-parameters/and-noisegatesettings.md).
+
+If using a director, add [`&mixminus`](../other-parameters.md#mix-minus-and-mixminus) to the director URL for N-1 audio routing (each guest hears everyone except themselves).
+
+Physical setup also matters: keep speaker volume low, position mics close to mouths, point speakers away from mics, and prefer directional/dynamic microphones over wide-pickup condensers.
+
 #### Troubleshooting
 
 A good way to troubleshoot is to mute one person at a time in a room, seeing if muting any specific single person solves the issue for everyone else.&#x20;

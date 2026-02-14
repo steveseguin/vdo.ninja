@@ -30,6 +30,10 @@ The alpha version of VDO.Ninja has the cutting edge available to it, often with 
 
 Check out the alpha version here: [https://vdo.ninja/alpha/whip](https://vdo.ninja/alpha/whip)
 
+### Director-side WHIP recovery control
+
+In director views and Mesh Network Debug, guests publishing via WHIP can expose a **Restart WHIP** action. This lets the director trigger a WHIP reconnect for that guest without requiring a full guest page reload.
+
 ### WHIP ingest from OBS Studio or other
 
 While VDO.Ninja can act as a host for incoming WHIP requests (published to `https://whip.vdo.ninja/YOURTOKENHERE`), many such publishing clients do not support NAT traversal or STUN server support yet.&#x20;

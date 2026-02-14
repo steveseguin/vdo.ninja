@@ -14,7 +14,7 @@ Sender-Side Option! ([`&room`](../general-settings/room.md))
 
 Example: `&push=StreamID`
 
-<table><thead><tr><th width="186">Value</th><th>Description</th></tr></thead><tbody><tr><td>(no value given)</td><td>creates a randomly generated stream ID</td></tr><tr><td>(string)</td><td>1 to 49-characters long: aLphaNumEric-characters; case sensitive.</td></tr></tbody></table>
+<table><thead><tr><th width="186">Value</th><th>Description</th></tr></thead><tbody><tr><td>(no value given)</td><td>creates a randomly generated stream ID</td></tr><tr><td>(string)</td><td>1 to 64-characters long. Non-alphanumeric characters are sanitized to <code>_</code>; case sensitive.</td></tr></tbody></table>
 
 ## Details
 
@@ -27,7 +27,7 @@ If the parameter is not provided, a randomly generated stream ID will be used in
 [https://vdo.ninja/?push](https://vdo.ninja/?push)
 
 This is a useful parameter if you wish to reuse an invite link or if you refresh the page often.\
-The value needs to be 1 to 24-characters long: `aLphaNumEric-characters`; case sensitive.\
+The value can be up to 64-characters long and is case sensitive.\
 If left empty, the stream ID will default to a random one.
 
 {% hint style="info" %}

@@ -13,6 +13,8 @@ description: >-
 
 The Mixer App is an alternative to the director's control center of VDO.Ninja. It gives you the full power to customize scenes, layouts and positions of the video feeds dynamically.
 
+Recent layout versions also support per-slot crop controls (`top/right/bottom/left`) that persist in layout data and render using `clip-path`.
+
 There are currently 3 versions of the Mixer App. The newest version with all the current updates is Alpha.
 
 | Version    | Link                                                           |

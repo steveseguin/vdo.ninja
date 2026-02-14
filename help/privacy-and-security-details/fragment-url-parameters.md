@@ -1,12 +1,12 @@
 ---
-description: Hide sensitive URL parameters from server logs using fragment URLs
+description: Hide URL parameters from server logs using fragment URLs
 ---
 
 # Fragment URL Parameters
 
 ## Overview
 
-VDO.Ninja now supports placing sensitive URL parameters in the **fragment** portion of the URL (after `#`) instead of the query string (after `?`). Parameters placed in the fragment are never sent to the server, keeping them hidden from Cloudflare and other intermediaries.
+VDO.Ninja supports placing URL parameters in the **fragment** portion of the URL (after `#`) instead of the query string (after `?`). Parameters placed in the fragment are never sent to the server, keeping them hidden from Cloudflare and other intermediaries. This works for any parameter: passwords, stream IDs, room names, tokens, and more.
 
 ## How It Works
 
@@ -23,7 +23,9 @@ Fragment parameters take **precedence** over query parameters. If the same param
 
 ## Use Cases
 
-### Hiding Passwords from Server Logs
+This works for **any URL parameter**, not just passwords. Stream IDs, room names, tokens, and any other parameter can be placed in the fragment.
+
+### Hiding Passwords
 
 Instead of:
 ```
@@ -35,13 +37,19 @@ Use:
 https://vdo.ninja/?push=cam1#p=mysecretpassword
 ```
 
-### Hiding Tokens and Keys
+### Hiding Stream IDs and Room Names
+
+```
+https://vdo.ninja/?view=streamid#room=secretroom
+```
+
+### Hiding Multiple Parameters
 
 ```
 https://vdo.ninja/?push=cam1#p=secret&token=abc123&key=xyz
 ```
 
-Multiple sensitive parameters can be placed after the `#`.
+Multiple parameters can be placed after the `#`.
 
 ## Fallback Behavior
 
@@ -66,10 +74,6 @@ The fragment is still visible in the browser's address bar. If you share your sc
 ### URL Sharing
 
 Some platforms and messaging apps may strip or modify the fragment portion when sharing URLs. Test your sharing workflow to ensure fragments are preserved.
-
-### Page Refresh
-
-Unlike cookies or localStorage, fragment parameters persist on page refresh since they remain in the URL.
 
 ## Technical Details
 

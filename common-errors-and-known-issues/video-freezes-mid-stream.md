@@ -36,6 +36,9 @@ Mobile devices may also have the video freeze for a few moments at a time if swi
 
 Services like [https://speedify.com](https://speedify.cm) can offer a VPN with bonding, designed for streaming, and it can help avoid network issues on mobile networks, where IP addresses or wireless connections constantly are changing.
 
+If this is a recurring production issue, use this recovery playbook and URL tuning guide:
+[Handling Guest Disconnects and Connection Recovery](../guides/handling-guest-disconnects-and-connection-recovery.md)
+
 ### iPhone specific issues
 
 Regarding mobile, iOS users can only send video to 3 viewers at a time if using the H264 hardware encoder. Newer versions of VDO.Ninja will try to keep track of how many H264 streams are being used, and revert to VP8-software-based encoding when the hardware encoders are maxed out, however VP8 encoding can cause iPhones to get very warm. If forcing H264 with an iPhone or iPad, and you max them out, you might cause videos to freeze or go black though.\

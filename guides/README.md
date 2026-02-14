@@ -7,6 +7,7 @@
 * [hotkey-support](hotkey-support/ "mention")
 * [midi-api-and-webhid-support.md](midi-api-and-webhid-support.md "mention")
 * [ptz-remote-control.md](ptz-remote-control.md "mention")
+* [handling-guest-disconnects-and-connection-recovery.md](handling-guest-disconnects-and-connection-recovery.md "mention")
 * [ninjabacker-tipping.md](ninjabacker-tipping.md "mention")
 * [hardware-accelerated-video-encoding.md](hardware-accelerated-video-encoding.md "mention")
 * [audio-filters.md](audio-filters.md "mention")

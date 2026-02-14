@@ -198,6 +198,7 @@ iframeContainer.appendChild(button);
 button = document.createElement("button");
 button.innerHTML = "Request Loudness Levels";
 button.onclick = () => {
+    // Subscribe once; updates continue until getLoudness:false
     iframe.contentWindow.postMessage({
         "getLoudness": true
     }, '*');
@@ -288,6 +289,8 @@ eventer(messageEvent, function (e) {
 
     if ("loudness" in e.data) {
         console.log(e.data);
+        // Snapshot + continuous updates both arrive here.
+        // e.data.mode is typically "snapshot" or "update".
         if (document.getElementById("loudness")) {
             outputWindow = document.getElementById("loudness");
         } else {

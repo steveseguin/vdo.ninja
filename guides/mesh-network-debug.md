@@ -54,6 +54,7 @@ For guest nodes, you have several recovery options:
 | **Refresh Mic** | Reinitializes the audio track - use when audio stops working |
 | **ICE Restart** | Performs an ICE restart to re-establish the connection - use for degraded connections |
 | **Refresh All** | Full restart of audio, video, and ICE - nuclear option for stubborn issues |
+| **Restart WHIP** | Tells that guest to restart its WHIP publishing connection (useful for WHIP/MediaMTX path issues) |
 
 ## Connection Details Panel
 
@@ -108,6 +109,12 @@ This adds a small amount of latency but restores audio communication when direct
 
 1. Click **Auto-Patch Failed** to patch all broken connections at once
 2. Later, click **Unpatch Recovered** to restore any connections that have healed
+
+### WHIP publisher path is degraded
+
+1. Click the affected guest node
+2. Use **Restart WHIP** to force that guest to re-establish WHIP publishing
+3. If needed, use **Refresh All** as a follow-up
 
 ### Guest showing TURN indicator
 

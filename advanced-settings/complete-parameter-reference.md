@@ -40,8 +40,10 @@ If you are self-hosting VDO.Ninja, often these URL parameters can be hard-coded 
 | `autorecord`       | -                                     | Boolean/Integer                                 | Starts recording automatically            |
 | `autorecordlocal`  | -                                     | Boolean/Integer                                 | -                                         |
 | `autorecordremote` | -                                     | Boolean/Integer                                 | -                                         |
+| `autorecover`      | -                                     | Boolean                                         | Enables connection-recovery bundle        |
 | `autoreload`       | -                                     | Integer (minutes)                               | Auto reloads page after specified minutes |
 | `autoreload24`     | -                                     | Time (HH:MM)                                    | Reloads at specified time                 |
+| `autorelay`        | -                                     | Boolean                                         | Enables relay escalation in recovery      |
 | `autostart`        | `as`                                  | Boolean                                         | Auto starts session                       |
 | `autohide`         | -                                     | Boolean                                         | -                                         |
 | `avatarimg`        | `bgimage`, `bgimg`                    | URL                                             | Sets avatar/background image              |
@@ -271,6 +273,7 @@ If you are self-hosting VDO.Ninja, often these URL parameters can be hard-coded 
 | `locked`            | -               | Number/String (`portrait`,`landscape`,`square`) | Locks aspect ratio            |
 | `locksize`          | -               | Boolean                                         | -                             |
 | `lowcut`            | `lc`, `higpass` | Integer                                         | Sets low-cut filter frequency |
+| `lowlatency`        | `ll`, `ultralow` | Boolean                                        | Enables low-latency preset    |
 | `lowbitratescene`   | `cutscene`      | String                                          | -                             |
 | `lowmobilebitrate`  | -               | Integer                                         | -                             |
 
@@ -375,8 +378,12 @@ If you are self-hosting VDO.Ninja, often these URL parameters can be hard-coded 
 | `pan`             | See `panning`          | -              | -                       |
 | `panning`         | `pan`                  | Boolean/String | Sets audio panning      |
 | `password`        | `pass`, `pw`, `p`      | String         | Sets room password      |
+| `p2pfailtimeout`  | -                      | Integer (ms)   | Sets P2P recovery timeout window |
+| `p2precoversteps` | See `peerrecoversteps` | -              | -                       |
 | `pcm`             | -                      | Boolean        | -                       |
+| `peerrecoversteps`| `p2precoversteps`      | Integer (1-6)  | Max automated recovery steps |
 | `permaid`         | See `push`             | -              | -                       |
+| `pendingicettl`   | -                      | Integer (ms)   | Pending ICE queue TTL   |
 | `pie`             | -                      | String/Boolean | -                       |
 | `pip`             | -                      | Boolean        | Picture-in-picture mode |
 | `pip2`            | `pipall`               | Boolean        | -                       |
@@ -395,7 +402,7 @@ If you are self-hosting VDO.Ninja, often these URL parameters can be hard-coded 
 | `proxy`           | -                      | Boolean        | -                       |
 | `push`            | `id`, `permaid`        | String         | Sets stream ID          |
 | `pusheffectsdata` | -                      | Boolean        | -                       |
-| `pushloudness`    | `getloudness`          | Boolean        | -                       |
+| `pushloudness`    | `getloudness`          | Boolean        | Enables continuous IFRAME loudness events (`action: "loudness"`). |
 | `pw`              | See `password`         | -              | -                       |
 
 ### Q

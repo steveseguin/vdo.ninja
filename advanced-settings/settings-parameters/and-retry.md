@@ -34,3 +34,14 @@ Examples:
 [and-waitimage.md](../newly-added-parameters/and-waitimage.md)
 {% endcontent-ref %}
 
+{% content-ref url="and-autorecover.md" %}
+[and-autorecover.md](and-autorecover.md)
+{% endcontent-ref %}
+
+{% content-ref url="and-p2pfailtimeout.md" %}
+[and-p2pfailtimeout.md](and-p2pfailtimeout.md)
+{% endcontent-ref %}
+
+{% content-ref url="and-peerrecoversteps.md" %}
+[and-peerrecoversteps.md](and-peerrecoversteps.md)
+{% endcontent-ref %}

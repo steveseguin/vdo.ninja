@@ -883,6 +883,16 @@ iframe.contentWindow.postMessage({
 }, "*");
 ```
 
+Notes:
+
+- Loudness push is opt-in and off by default.
+- Call `getLoudness: true` once to subscribe.
+- `&pushloudness` (or `&getloudness`) in the iframe URL also enables loudness push.
+- The first message is a snapshot (`mode: "snapshot"`), then continuous updates arrive as `mode: "update"`.
+- Loudness messages use `action: "loudness"` and include a `loudness` object.
+- `cib` is echoed only if you provide it on the subscribe request.
+- Avoid polling `getLoudness` on an interval.
+
 #### `getStreamIDs` - List Stream IDs
 
 Gets a list of all connected stream IDs.
