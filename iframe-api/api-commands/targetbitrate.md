@@ -8,10 +8,10 @@ description: this sets the fundamental bitrate target, but does not necessarily 
 
 | Value type         | Description              |
 | ------------------ | ------------------------ |
-| (positive integer) | Set target bitrate to 30 |
+| (positive integer) | Set target bitrate in kbps |
 
 ### CODE EXAMPLE
 
 ```
-iframe.contentWindow.postMessage({ "panning": 100 });
+iframe.contentWindow.postMessage({ "targetBitrate": 1000 });
 ```

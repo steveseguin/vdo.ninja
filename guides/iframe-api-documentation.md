@@ -16,13 +16,13 @@ Creating an VDON iframe can be done in HTML or programmatically with JavaScript 
 
 ```
 const iframe = document.createElement("iframe");
-iframe.allow = "document-domain;encrypted-media;sync-xhr;usb;web-share;cross-origin-isolated;midi *;geolocation;camera *;microphone *;fullscreen;picture-in-picture;display-capture;accelerometer;autoplay;gyroscope;screen-wake-lock;";
+iframe.allow = "encrypted-media;sync-xhr;usb;web-share;midi *;geolocation;camera *;microphone *;fullscreen;picture-in-picture;display-capture;accelerometer;autoplay;gyroscope;screen-wake-lock;";
 iframe.src = "https://vdo.ninja/?push=vhX5PYg&cleanoutput&transparent";
 ```
 
 You can also make an VDO.Ninja without Javascript, using just HTML, like:
 
-`<iframe allow="document-domain;encrypted-media;sync-xhr;usb;web-share;cross-origin-isolated;midi *;geolocation;camera *;microphone *;fullscreen;picture-in-picture;display-capture;accelerometer;autoplay;gyroscope;screen-wake-lock;" src="https://vdo.ninja/?push=vhX5PYg&cleanoutput&transparent"></iframe>`\
+`<iframe allow="encrypted-media;sync-xhr;usb;web-share;midi *;geolocation;camera *;microphone *;fullscreen;picture-in-picture;display-capture;accelerometer;autoplay;gyroscope;screen-wake-lock;" src="https://vdo.ninja/?push=vhX5PYg&cleanoutput&transparent"></iframe>`\
 \
 Adding that IFrame to the DOM will reveal a simple page for accessing for a user to select and share their webcam. For a developer wishing to access a remote guest's stream, this makes the ingestion of that stream into production software like OBS Studios very easy. The level of customization and control opens up opportunities, such as a pay-to-join audience option for a streaming interactive broadcast experience.
 
@@ -254,17 +254,21 @@ eventer(messageEvent, function (e) {
 
     if ("stats" in e.data) {
         const outputWindow = document.createElement("div");
+        const inboundStats = e.data.stats.inbound || e.data.stats.inbound_stats || {};
+        const outboundStats = e.data.stats.outbound || e.data.stats.outbound_stats || {};
+        const totalInbound = Number.isFinite(e.data.stats.total_inbound_connections)
+            ? e.data.stats.total_inbound_connections
+            : Object.keys(inboundStats).length;
+        const totalOutbound = Number.isFinite(e.data.stats.total_outbound_connections)
+            ? e.data.stats.total_outbound_connections
+            : Object.keys(outboundStats).length;
 
-        let out = `<br />total_inbound_connections:${
-            e.data.stats.total_inbound_connections
-        }`;
-        out += `<br />total_outbound_connections:${
-            e.data.stats.total_outbound_connections
-        }`;
+        let out = `<br />total_inbound_connections:${totalInbound}`;
+        out += `<br />total_outbound_connections:${totalOutbound}`;
 
-        for (const streamID in e.data.stats.inbound_stats) {
+        for (const streamID in inboundStats) {
             out += `<br /><br /><b>streamID:</b> ${streamID}<br />`;
-            out += printValues(e.data.stats.inbound_stats[streamID]);
+            out += printValues(inboundStats[streamID]);
         }
 
         outputWindow.innerHTML = out;
@@ -291,10 +295,11 @@ eventer(messageEvent, function (e) {
         console.log(e.data);
         // Snapshot + continuous updates both arrive here.
         // e.data.mode is typically "snapshot" or "update".
+        let outputWindow;
         if (document.getElementById("loudness")) {
             outputWindow = document.getElementById("loudness");
         } else {
-            const outputWindow = document.createElement("div");
+            outputWindow = document.createElement("div");
             outputWindow.style.border = "1px dotted black";
             iframeContainer.appendChild(outputWindow);
             outputWindow.id = "loudness";
@@ -327,11 +332,9 @@ If you wish to use your own video mixer logic for example, you can disable the e
 
 If you aren't self-hosting the code, you may run into cross origin permission issues or limitations on cross-origin permissions with certain features. You can get around these issues usually by hosting VDO.Ninja as a subdomains though, in certain cases at least, along with the correct web hosting settings set.
 
-[https://javascript.info/cross-window-communication#windows-on-subdomains-document-domain](https://javascript.info/cross-window-communication#windows-on-subdomains-document-domain)
-
 See the video below for an advanced demo of the IFRAME API and how videos hosted within VDO.Ninja can be accessed and manipulated by the parent window. Video works well in this fashion; pulling audio from the IFRAME is a bit trickier however. \
 \
-\[update:  document.domain or such is a bit depreciated now, and while it is possible to use a sub-domain still, you'll need to specify certain headers and permissions with your webserver to allow for it.  https://versus.cam for example uses vdo.ninja as a subdomain to access frames across the IFRAME API]
+\[update: avoid using `document.domain` for new integrations. Prefer `postMessage`-based iframe control. If you need cross-origin isolation features, configure them explicitly per browser/deployment instead of forcing them in all embeds.]
 
 {% embed url="https://www.youtube.com/watch?v=SqbufszHKi4&feature=youtu.be" %}
 

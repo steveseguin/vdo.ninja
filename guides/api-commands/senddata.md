@@ -15,5 +15,5 @@ General Option! ([`&push`](../../source-settings/push.md), [`&view`](../../advan
 ### CODE EXAMPLE
 
 ```
-iframe.contentWindow.postMessage({ "sendData": { foo: "bar" });
+iframe.contentWindow.postMessage({ "sendData": { "foo": "bar" } });
 ```

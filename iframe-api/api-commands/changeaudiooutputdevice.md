@@ -7,5 +7,5 @@ number
 ### Example
 
 ```
-iframe.contentWindow.postMessage({ "changeAudioODevice": 1 });
+iframe.contentWindow.postMessage({ "changeAudioOutputDevice": 1 });
 ```

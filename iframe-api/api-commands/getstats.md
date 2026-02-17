@@ -1,7 +1,6 @@
 ---
 description: >-
-  Webrtc send message to every connected peer; like send and request; a hammer
-  vs a knife.
+  Request a current connection stats snapshot from the embedded VDO.Ninja instance.
 ---
 
 # getStats
@@ -12,13 +11,13 @@ Sender Option! ([`&push`](../../source-settings/push.md))
 
 | Value | Description    |
 | ----- | -------------- |
-| (any) | Reloads iframe |
+| (any) | Returns current stats snapshot |
 
 ### Example
 
 ```
 
 iframe.contentWindow.postMessage({ 
-    "getStats": null,
+    "getStats": true,
 });
 ```
