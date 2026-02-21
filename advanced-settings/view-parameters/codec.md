@@ -23,8 +23,11 @@ Example: `&codec=h264`
 
 ### Note on \&prefervideocodec
 
-{% hint style="warning" %}
-The `&prefervideocodec` parameter is currently **non-functional**. While the parameter is parsed by the application, it is not actually used in the codec negotiation logic. Use `&codec` instead for viewer-side codec preferences.
+{% hint style="info" %}
+`&prefervideocodec` is a **sender-side** preference flag, while `&codec` is **viewer-side**.
+
+- `&prefervideocodec` can be set on a push/room/studio URL to request a preferred codec order for peers.
+- Viewer-side `&codec` remains the stronger per-view override when explicitly set.
 {% endhint %}
 
 ### Example usage
@@ -34,6 +37,12 @@ The `&prefervideocodec` parameter is currently **non-functional**. While the par
 `https://vdo.ninja/?room=xxx7654&scene&bitrate=2000`**`&codec=vp9`**\
 \
 The `&codec` parameter is added to the viewer-side; so the [`&view`](view.md) or [`&scene`](scene.md) link.
+
+Sender-side preference examples (`&prefervideocodec`):
+
+`https://vdo.ninja/?push=streamID&prefervideocodec=vp9`\
+\
+`https://vdo.ninja/?room=myroom&prefervideocodec=h264`
 
 ### **Description**
 

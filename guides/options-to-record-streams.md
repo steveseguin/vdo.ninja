@@ -55,11 +55,20 @@ You could in theory record to Twitch or paid WebRTC service via their WHIP inges
 
 ### Recording to Google Drive / Dropbox
 
-I have been working when I can on a way to auto-sync the local/remote recordings to Google Drive, Dropbox and other cloud providers. The code is there, but it still is a bit buggy and the user interface is lacking. This will record a local copy to disk, but automatically stream that local recording to the cloud as well; before or during the stream.
+Cloud Sync can upload local recording chunks to Google Drive or Dropbox as part of studio workflows.
 
-If there is of great interest to users, please let me know on Discord in the Feature Request channel how you'd like it to work, which provider, etc. I'm trying to figure out where best to invest my time on that feature, and with so little time, unless there's active interest, I let some tasks idle.
+Current flow is centered around the **Cloud Sync** card:
 
-\*update: Google Drive recording has a dedicated button in the Director's control room, which will let the director have remote guests upload their video to their Google Drive account automatically.
+* **Google Drive:** link with built-in OAuth
+* **Dropbox:** link with OAuth, with optional manual token fallback (`&dropbox=...`)
+
+This gives you local recordings plus cloud redundancy.
+
+See setup details here:
+
+{% content-ref url="cloud-sync-google-drive-and-dropbox.md" %}
+[cloud-sync-google-drive-and-dropbox.md](cloud-sync-google-drive-and-dropbox.md)
+{% endcontent-ref %}
 
 ### Headless recording
 

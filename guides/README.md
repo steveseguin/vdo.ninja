@@ -13,6 +13,7 @@
 * [audio-filters.md](audio-filters.md "mention")
 * [audio-reactive-avatars.md](audio-reactive-avatars.md "mention")
 * [options-to-record-streams.md](options-to-record-streams.md "mention")
+* [cloud-sync-google-drive-and-dropbox.md](cloud-sync-google-drive-and-dropbox.md "mention")
 * [guides-and-how-tos.md](guides-and-how-tos.md "mention")
 
 ## How-to's

@@ -66,7 +66,7 @@ With `&remote` enabled, a controller can also request output transforms on the s
   - `false`: reset rotation to 0 degrees
   - number: set an explicit rotation value
 
-These actions are available in the dedicated PTZ page (`https://vdo.ninja/alpha/ptz.html`) and via API/IFRAME commands.
+These actions are available in the dedicated PTZ page (`https://vdo.ninja/ptz.html`) and via API/IFRAME commands.
 
 ### Remote Focus using `&remote`
 

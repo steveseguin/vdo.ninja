@@ -19,7 +19,10 @@ Can also be added to a simple push link, then you can change pan, tilt and zoom 
 ![](<../.gitbook/assets/image (127).png>)
 
 The dedicated PTZ controller is available at:
-`https://vdo.ninja/alpha/ptz.html`
+`https://vdo.ninja/ptz.html`
+
+`ptz.html` supports additional URL setup flags (stage mode, preview controls, overlay options). See the dedicated parameter list in:
+[`PTZ Remote Control`](../guides/ptz-remote-control.md)
 
 For API/automation workflows, `targetGuest` supports PTZ actions:
 `ptzZoom`, `ptzPan`, `ptzTilt`, `ptzFocus`, `ptzAutofocus`.

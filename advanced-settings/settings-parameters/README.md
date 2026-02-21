@@ -24,6 +24,17 @@ These options help with unstable peer-to-peer links and recovery behavior:
 - [`&p2pfailtimeout`](and-p2pfailtimeout.md)
 - [`&peerrecoversteps`](and-peerrecoversteps.md) (alias: `&p2precoversteps`)
 
+### Chat Lite Overlay Integration
+
+- [`&chatlite`](../../newly-added-parameters/and-chatlite.md)
+- [`&chatlitebutton`](../../newly-added-parameters/and-chatlite.md) (alias: `&ssnchatbutton`)
+- [`&chatlitesession`](../../newly-added-parameters/and-chatlite.md) (alias: `&ssnsession`)
+
+### Synthetic Test Media (Automation)
+
+- [`&testmedia`](../../newly-added-parameters/and-testmedia.md) (alias: `&syntheticmedia`)
+- Companion flags: `&testaudio`, `&testvideo`, `&testfps`, `&testwidth`, `&testheight`, `&testtone`
+
 ## Source Side Options
 
 **Source Settings**, which are settings specific to publishing. The parameters can be added to a publishing link, like for example a guest, a director or just a basic push link.

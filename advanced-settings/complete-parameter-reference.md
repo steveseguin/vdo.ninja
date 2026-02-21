@@ -93,6 +93,9 @@ If you are self-hosting VDO.Ninja, often these URL parameters can be hard-coded 
 | `channeloffset`      | -                                               | Integer               | -                               |
 | `chat`               | See `chatbutton`                                | -                     | -                               |
 | `chatbutton`         | `chat`, `cb`                                    | Boolean               | Shows chat button               |
+| `chatlite`           | `ssnlite`, `socialstreamlite`                   | Boolean               | Enables Chat Lite integration   |
+| `chatlitebutton`     | `ssnchatbutton`                                 | Boolean               | Shows Chat Lite control button  |
+| `chatlitesession`    | `ssnsession`                                    | String                | Sets Chat Lite session ID       |
 | `chroma`             | -                                               | Color code            | Sets chroma key color           |
 | `chunked`            | `chunk`                                         | Integer               | Sets chunked transfer size      |
 | `chunkedbuffer`      | `sendingbuffer`                                 | Integer               | Sets chunk buffer size          |
@@ -299,6 +302,7 @@ If you are self-hosting VDO.Ninja, often these URL parameters can be hard-coded 
 | `md`                   | See `micdelay`       | -                    | -                           |
 | `mediasettings`        | -                    | Boolean              | Shows media settings        |
 | `meshcast`             | -                    | String               | -                           |
+| `meshcast2`            | -                    | String/Boolean       | Enables Meshcast 2.0 mode   |
 | `meshcastcode`         | `mccode`             | String               | -                           |
 | `meter`                | `meterstyle`         | Integer              | Sets audio meter style      |
 | `micdelay`             | `delay`, `md`        | Integer              | Sets microphone delay       |
@@ -496,6 +500,13 @@ If you are self-hosting VDO.Ninja, often these URL parameters can be hard-coded 
 | `tallyoff`         | `notally`, `to`            | Boolean       | -                            |
 | `tc`               | `timecode`, `showtimecode` | Boolean       | -                            |
 | `tcp`              | -                          | Boolean       | Forces TCP mode              |
+| `testmedia`        | `syntheticmedia`           | Boolean/String | Enables synthetic media mode |
+| `testaudio`        | -                          | Boolean       | Synthetic media audio toggle |
+| `testvideo`        | -                          | Boolean       | Synthetic media video toggle |
+| `testfps`          | -                          | Integer       | Synthetic media FPS          |
+| `testwidth`        | -                          | Integer       | Synthetic media width        |
+| `testheight`       | -                          | Integer       | Synthetic media height       |
+| `testtone`         | -                          | Integer       | Synthetic audio tone (Hz)    |
 | `timer`            | -                          | Integer (1-9) | Sets timer position          |
 | `to`               | See `tallyoff`             | -             | -                            |
 | `token`            | -                          | String        | Authentication token         |

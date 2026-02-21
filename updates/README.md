@@ -4,6 +4,8 @@ description: What is new
 
 # Updates
 
+All pages in this section are intended to be rolling, recent-only highlights. Older entries should be removed after permanent docs are updated.
+
 * [updates-vdo.ninja.md](updates-vdo.ninja.md "mention")
 * [updates-social-stream-and-chat-overlay](updates-social-stream-and-chat-overlay/ "mention")
 * [updates-social-stream-standalone-app.md](updates-social-stream-and-chat-overlay/updates-social-stream-standalone-app.md "mention")

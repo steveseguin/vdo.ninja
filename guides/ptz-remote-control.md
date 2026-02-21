@@ -59,14 +59,14 @@ Make sure the sender uses:
 
 Chrome requires the sender page to remain visible on screen for PTZ controls to work. If the sender tab/window is hidden, the browser blocks PTZ changes.
 
-## Dedicated PTZ Control Surface (Alpha)
+## Dedicated PTZ Control Surface
 
 You can also use the dedicated PTZ control page:
-`https://vdo.ninja/alpha/ptz.html`
+`https://vdo.ninja/ptz.html`
 
 Typical use:
 
-- Controller: `https://vdo.ninja/alpha/ptz.html?view=STREAMID&remote`
+- Controller: `https://vdo.ninja/ptz.html?view=STREAMID&remote`
 - Sender: `https://vdo.ninja/?push=STREAMID&ptz&remote`
 
 Use matching `&remote=PASSCODE` values on both sides if you want passcode-gated control.
@@ -77,6 +77,29 @@ Additional remote transform controls in `ptz.html`:
 - `Rotate Remote +90` button
 - `Reset Remote Rotation` button
 - Hotkeys: `Ctrl/Cmd+M` (mirror), `Ctrl/Cmd+R` (rotate +90), `Ctrl/Cmd+Shift+R` (reset rotation)
+
+### `ptz.html` URL Parameters
+
+The dedicated PTZ page supports additional setup/tuning query parameters:
+
+- `?view=STREAMID` or `?url=FULL_VIEW_URL`: target the stream/viewer source
+- `?remote` or `?remote=PASSCODE`: enable/pass through remote authorization
+- `?target=STREAMID_OR_SLOT`: explicit API target override
+- `?mode=raw`: disable the light embed preset defaults
+- `?stage=1`: start in stage mode
+- `?previewpad=0|1`: disable/enable drag and wheel preview pad
+- `?paninvert=1` (alias `?invertpan=1`): invert pan direction
+- `?mirrorpreview=1`: mirror the preview pane by default
+- `?rotatepreview=90|-90|180`: set preview rotation
+- `?overlayautohide=0|1`: disable/enable control overlay auto-hide
+- `?overlayopacity=0.3..0.95`: set stage overlay opacity
+- `?overlaytransparent=0|1`: force solid/transparent stage controls
+- `?noaudio`: mute viewer audio when using light preset mode
+- `?nopreview`: include `&nopreview` in generated sender template links
+
+Example:
+
+`https://vdo.ninja/ptz.html?view=STREAMID&remote=PASSCODE&stage=1&previewpad=1&paninvert=1&overlayopacity=0.75`
 
 ## On-screen PTZ Sliders
 
