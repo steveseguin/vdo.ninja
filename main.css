@@ -6119,7 +6119,6 @@ input[type='checkbox'], input[type='radio'] {
 .title {
 	text-align: left;
 	user-select: none;
-	color: #0000FF;
 	display: inline-block;
 }
 
