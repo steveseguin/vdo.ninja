@@ -1,18 +1,7 @@
 <html lang="fa" dir="rtl">
 	<head>
 	    	<link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;700&display=swap" rel="stylesheet">
-	    	<style>
-		        body, button, input, select, label, h2, h3, h4, span, div, p, a, li {
-	            	font-family: 'Vazirmatn', sans-serif !important;
-	        	}
-		</style>
-		<script>
- 		if (!window.location.href.includes("proxy")) {
-    		window.location.href += (window.location.search ? "&" : "?") + "proxy";
-  		}
-		</script>
 
-		
 		<script type="text/javascript">
 			//  MS Internet Explorer must not be given a chance to fail before I can give the user an error message.
 			try {
@@ -27,6 +16,11 @@
 				console.error(e);
 			}
 		
+		</script>
+		<script>
+			if (window.location.search.includes('podcast')) {
+				document.write('<style>#directorlayout,#controlButtons{display:none!important}</style>');
+			}
 		</script>
 		<style>
 			html {
