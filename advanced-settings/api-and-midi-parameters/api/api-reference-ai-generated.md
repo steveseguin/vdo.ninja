@@ -1,3 +1,7 @@
+---
+description: Advanced settings reference for API reference - alt version in VDO.Ninja including usage details and configuration notes.
+---
+
 # API reference - alt version
 
 ## VDO.Ninja Remote Control API Documentation

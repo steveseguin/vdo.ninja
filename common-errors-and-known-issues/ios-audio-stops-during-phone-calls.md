@@ -1,3 +1,7 @@
+---
+description: Troubleshooting guide for iOS audio stops during phone calls in VDO.Ninja and OBS with likely causes and practical fixes.
+---
+
 # iOS audio stops during phone calls
 
 With using iOS devices (iPhones or iPads) , you may occasionally experience an issue where your microphone stops working. This typically occurs when there's an incoming call, text message, or other system notification on your device. Unfortunately, this is a known limitation with iOS devices imposed by Apple.

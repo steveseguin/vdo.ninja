@@ -1,3 +1,7 @@
+---
+description: Troubleshooting guide for Can't auto-start screen sharing in VDO.Ninja and OBS with likely causes and practical fixes.
+---
+
 # Can't auto-start screen sharing
 
 Browsers won't let you auto-start a screen share, as it will require a user's input to select the source. You can configure the screen share pop up to show certain screen share options instead of others, but you'll still need to manually select which source to capture.

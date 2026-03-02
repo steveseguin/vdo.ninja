@@ -1,3 +1,7 @@
+---
+description: Curated external VDO.Ninja community guides covering show formats, audio workflows, screen sharing, and video quality.
+---
+
 # External guides and how-tos
 
 ## Community show format guides and examples

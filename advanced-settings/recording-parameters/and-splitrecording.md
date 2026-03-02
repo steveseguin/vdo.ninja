@@ -1,3 +1,7 @@
+---
+description: Reference for the &splitrecording URL parameter in VDO.Ninja including behavior examples and related options.
+---
+
 # &splitrecording
 
 #### **Description**

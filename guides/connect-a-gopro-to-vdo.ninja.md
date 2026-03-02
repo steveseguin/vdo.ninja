@@ -1,3 +1,7 @@
+---
+description: Connect GoPro cameras to VDO.Ninja using USB webcam mode or HDMI capture adapters for live streaming.
+---
+
 # How to connect a GoPro to VDO.Ninja
 
 A GoPro itself doesn't support streaming directly to a remote VDO.Ninja viewer, but there are indirect methods to achieve this.

@@ -1,3 +1,7 @@
+---
+description: Troubleshooting guide for Improving vMix performance in VDO.Ninja and OBS with likely causes and practical fixes.
+---
+
 # Improving vMix performance
 
 I found a tip that may be worth adding to your vMix performance page, docs.vdo.ninja/common-errors-and-known-issues/vmix-high-cpu

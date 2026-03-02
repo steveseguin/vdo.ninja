@@ -1,3 +1,7 @@
+---
+description: Capture VDO.Ninja feeds without OBS browser sources using Electron Capture, Vingester, NDI, and virtual camera workflows.
+---
+
 # How to capture without browser sources
 
 ### Vingester.app

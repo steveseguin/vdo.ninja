@@ -1,3 +1,7 @@
+---
+description: Troubleshooting guide for Is the VDO.Ninja server down? in VDO.Ninja and OBS with likely causes and practical fixes.
+---
+
 # Is the VDO.Ninja server down?
 
 The "V" in VDO.Ninja, in the top left, will go red as an indication that the client cannot talk to the VDO.Ninja server. It will _NOT_ try to reconnect automatically, although that is a coming feature I will add eventually.

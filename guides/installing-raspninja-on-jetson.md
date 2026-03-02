@@ -1,3 +1,7 @@
+---
+description: Install RaspNinja on NVIDIA Jetson hardware for dedicated VDO.Ninja publishing and capture workflows.
+---
+
 # How to install RaspNinja on Jetson
 
 Download image for your device from:\

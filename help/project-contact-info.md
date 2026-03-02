@@ -1,3 +1,7 @@
+---
+description: VDO.Ninja help page for Project Contact Info including support policy and project resource information.
+---
+
 # Project Contact Info
 
 ## Project Information and Support Links

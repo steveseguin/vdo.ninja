@@ -1,3 +1,7 @@
+---
+description: Reference for the &nofullscreenbutton URL parameter in VDO.Ninja including behavior examples and related options.
+---
+
 # &nofullscreenbutton
 
 **Also known as:** `&nofsb`

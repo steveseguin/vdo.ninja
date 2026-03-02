@@ -1,3 +1,7 @@
+---
+description: Compare VDO.Ninja recording options for local, remote, segmented, and backup capture workflows.
+---
+
 # Options to record streams
 
 There are several ways to record, with more ways coming. I'll list some of the ways here, although they may not be exactly what you had in mind. Regardless of which method you prefer, having a backup recording going is always advisable.

@@ -1,3 +1,7 @@
+---
+description: Frequently asked questions about VDO.Ninja, with project links, support channels, bug reporting, and contact details.
+---
+
 # FAQ
 
 ## Project Information and Support Links

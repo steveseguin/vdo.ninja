@@ -1,3 +1,7 @@
+---
+description: IFRAME API command reference for requestStatsContinuous in VDO.Ninja with syntax behavior and examples.
+---
+
 # requestStatsContinuous
 
 General Option! ([`&push`](../../source-settings/push.md), [`&view`](../../advanced-settings/view-parameters/view.md), [`&scene`](../../advanced-settings/view-parameters/scene.md))

@@ -1,3 +1,7 @@
+---
+description: Set up multi-person calls in VDO.Ninja with room links or custom push and view URL combinations.
+---
+
 # Multi-Person Chat
 
 There's different ways to achieve a chat-room like experience with VDO.Ninja, and most users would be best served using a group room for this, however, below we cover a method that does not use[ a group room](https://docs.vdo.ninja/getting-started/rooms).\

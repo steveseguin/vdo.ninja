@@ -1,3 +1,7 @@
+---
+description: Help and support resources for VDO.Ninja, including policies, bug reporting, contact info, and community channels.
+---
+
 # Help!
 
 * [fail-safes-and-backups.md](fail-safes-and-backups.md "mention")

@@ -1,3 +1,7 @@
+---
+description: Troubleshooting index for common VDO.Ninja and OBS issues, including audio, video, screen share, and connectivity fixes.
+---
+
 # Common errors and known issues
 
 * [atem-not-working-with-firestick.md](atem-not-working-with-firestick.md "mention")

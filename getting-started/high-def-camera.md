@@ -1,3 +1,7 @@
+---
+description: Getting started guide for High-def camera in VDO.Ninja with setup steps and practical usage tips.
+---
+
 # High-def camera
 
 You can customize the playback of videos by added parameters to the VDO.Ninja URL links, along with many other aspects. The default video bitrate of most modern browsers is around 2500-kbps, which is okay, but we can achieve higher video quality if we manually set this to something even higher.

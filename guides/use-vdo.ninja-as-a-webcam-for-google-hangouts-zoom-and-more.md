@@ -1,3 +1,7 @@
+---
+description: Step-by-step guide to use VDO.Ninja with OBS Virtual Camera for Zoom, Google Hangouts, and similar video apps.
+---
+
 # How to use VDO.Ninja as a webcam for Google Hangouts, Zoom, and more
 
 In this walk-through we demonstrate how to use VDO.Ninja and the OBS Virtual Camera to bring remote cameras, smartphones, and other media sources into third-party video software as a virtual webcam.

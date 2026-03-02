@@ -1,3 +1,7 @@
+---
+description: API command reference for changeVideoDevice in VDO.Ninja including purpose syntax and usage examples.
+---
+
 # changeVideoDevice
 
 ## Type

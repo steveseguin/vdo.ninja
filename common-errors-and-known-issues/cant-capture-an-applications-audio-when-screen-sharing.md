@@ -1,3 +1,7 @@
+---
+description: Troubleshooting guide for Can't capture an application's audio when screen-sharing in VDO.Ninja and OBS with likely causes and practical fixes.
+---
+
 # Can't capture an application's audio when screen-sharing
 
 **Chrome** only supports audio capture from a TAB or from the DESKTOP. If you would like to capture the audio from a desktop application, two popular options include VB Virtual Cable for Windows or Loopback for macOS.

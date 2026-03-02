@@ -1,3 +1,7 @@
+---
+description: Troubleshooting guide for Loading circle shows in OBS or browser in VDO.Ninja and OBS with likely causes and practical fixes.
+---
+
 # Loading circle shows in OBS or browser
 
 The loading circle will appear in a VDO.Ninja view link if a video does not auto-load within several seconds or so.

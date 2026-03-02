@@ -1,3 +1,7 @@
+---
+description: Reference index of VDO.Ninja API commands for controlling streams layouts devices and media behavior.
+---
+
 # API commands
 
 * [audiobitrate.md](audiobitrate.md "mention")

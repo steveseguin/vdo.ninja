@@ -1,3 +1,7 @@
+---
+description: API command reference for add in VDO.Ninja including purpose syntax and usage examples.
+---
+
 # add
 
 General Option! ([`&push`](../../source-settings/push.md), [`&view`](../../advanced-settings/view-parameters/view.md), [`&scene`](../../advanced-settings/view-parameters/scene.md))

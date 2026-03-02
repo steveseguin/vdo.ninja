@@ -1,3 +1,7 @@
+---
+description: Teleprompter tool for flipping, mirroring, and rotating websites or chat overlays for readable on-camera prompts.
+---
+
 # Teleprompter Tool
 
 {% embed url="https://vdo.ninja/teleprompter" %}

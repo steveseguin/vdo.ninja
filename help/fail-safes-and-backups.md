@@ -1,3 +1,7 @@
+---
+description: VDO.Ninja help page for Fail safes and Backups including support policy and project resource information.
+---
+
 # Fail safes and Backups
 
 Low-latency Live streaming is inherently challenging, and as more remote streams that are added to a live production, the more likely a problem will occur.

@@ -1,3 +1,7 @@
+---
+description: VDO.Ninja basics: publish a camera feed with a push link and receive it in OBS or a browser using a view link.
+---
+
 # VDO.Ninja basics
 
 VDO.Ninja needs two things to work:

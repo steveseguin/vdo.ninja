@@ -1,3 +1,7 @@
+---
+description: Reference for the &privacy URL parameter in VDO.Ninja including behavior examples and related options.
+---
+
 # &privacy
 
 #### **Description**

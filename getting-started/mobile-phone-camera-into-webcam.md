@@ -1,3 +1,7 @@
+---
+description: Use a mobile phone as a webcam with VDO.Ninja and OBS Virtual Camera, including optional audio setup guidance.
+---
+
 # Mobile phone camera into webcam
 
 {% hint style="info" %}

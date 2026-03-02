@@ -1,3 +1,7 @@
+---
+description: Troubleshooting guide for Video lag grows over time in VDO.Ninja and OBS with likely causes and practical fixes.
+---
+
 # Video lag grows over time
 
 Video lag that goes over time typically hints at a CPU being overloaded; it might not be able to handle the capture resolution or the load required to encode video for several viewers at once.

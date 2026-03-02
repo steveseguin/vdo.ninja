@@ -1,3 +1,7 @@
+---
+description: API command reference for remove in VDO.Ninja including purpose syntax and usage examples.
+---
+
 # remove
 
 General Option! ([`&push`](../../source-settings/push.md), [`&view`](../../advanced-settings/view-parameters/view.md), [`&scene`](../../advanced-settings/view-parameters/scene.md))

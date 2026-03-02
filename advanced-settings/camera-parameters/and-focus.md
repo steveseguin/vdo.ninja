@@ -1,3 +1,7 @@
+---
+description: Reference for the &focus URL parameter in VDO.Ninja including behavior examples and related options.
+---
+
 # &focus
 
 #### **Description**

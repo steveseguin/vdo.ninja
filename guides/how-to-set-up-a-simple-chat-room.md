@@ -1,3 +1,7 @@
+---
+description: Create a simple VDO.Ninja chat room link with room, chat button, clean layout, and optional camera or audio controls.
+---
+
 # How to set up a simple chat room
 
 ### Link

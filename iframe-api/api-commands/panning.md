@@ -1,3 +1,7 @@
+---
+description: IFRAME API command reference for panning in VDO.Ninja with syntax behavior and examples.
+---
+
 # panning
 
 

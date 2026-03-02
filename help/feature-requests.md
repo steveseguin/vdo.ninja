@@ -1,3 +1,7 @@
+---
+description: VDO.Ninja help page for Feature Requests including support policy and project resource information.
+---
+
 # Feature Requests
 
 Please feel free to make feature requests or submit bug reports; feedback of any kind is greatly appreciated. Development is largely based on user-feedback.

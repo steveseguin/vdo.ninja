@@ -1,3 +1,7 @@
+---
+description: Reference for the &insertablestreams URL parameter in VDO.Ninja including behavior examples and related options.
+---
+
 # &insertablestreams
 
 **Also known as:** `&is`

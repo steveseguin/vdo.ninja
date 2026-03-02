@@ -1,3 +1,7 @@
+---
+description: Mirror VDO.Ninja video in fullscreen for teleprompters and iPads using browser fullscreen and effects parameters.
+---
+
 # How to mirror a video while Full-Screen - For iPads and Teleprompters
 
 To  get a video to mirror while full-screened, you have a few options.

@@ -1,3 +1,7 @@
+---
+description: Troubleshooting guide for Hosted your own TURN server? in VDO.Ninja and OBS with likely causes and practical fixes.
+---
+
 # Hosted your own TURN server?
 
 For a guide on deploying your own TURN server on a Ubuntu server, see the below link: [https://github.com/steveseguin/vdo.ninja/blob/master/turnserver.md](https://github.com/steveseguin/vdo.ninja/blob/master/turnserver.md)

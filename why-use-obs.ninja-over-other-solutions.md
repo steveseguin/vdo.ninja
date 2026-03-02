@@ -1,3 +1,7 @@
+---
+description: Compare VDO.Ninja to other remote video tools for OBS with a focus on low latency, quality, flexibility, and control.
+---
+
 # Why use VDO.Ninja over other solutions?
 
 In some cases, the functionality of [VDO.Ninja](https://vdo.ninja) may overlap with existing solutions. However, in its primary function as an ultra-low latency peer-to-peer video bridge to OBS, it has many benefits and advantages over other methods:

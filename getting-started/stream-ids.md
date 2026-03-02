@@ -1,3 +1,7 @@
+---
+description: Understand VDO.Ninja stream IDs, how push and view links use them, and best practices for secure naming.
+---
+
 # What are stream IDs?
 
 Stream IDs are not magical in any way and can be manually or automatically created and reused.

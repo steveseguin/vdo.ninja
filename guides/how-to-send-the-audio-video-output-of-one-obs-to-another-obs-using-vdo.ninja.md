@@ -1,3 +1,7 @@
+---
+description: Send low-latency audio and video from one OBS setup to another remote OBS instance using VDO.Ninja links.
+---
+
 # How to send the audio/video output of one OBS to another OBS using VDO.Ninja
 
 In this walk-through we demonstrate how to use VDO.Ninja to stream a low-latency video/audio stream from one OBS Studio to another remote OBS Studio.

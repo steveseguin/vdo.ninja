@@ -1,3 +1,7 @@
+---
+description: Troubleshooting guide for Cursor shows when screen-sharing in VDO.Ninja and OBS with likely causes and practical fixes.
+---
+
 # Cursor shows when screen-sharing
 
 Most browsers do not allow the mouse cursor to be hidden when screen sharing.&#x20;

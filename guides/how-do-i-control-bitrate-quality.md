@@ -1,3 +1,7 @@
+---
+description: Control VDO.Ninja bitrate and video quality using URL parameters for resolution, frame rate, and room bandwidth.
+---
+
 # How to control bitrate/quality
 
 ## Video Bitrate

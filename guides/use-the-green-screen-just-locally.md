@@ -1,3 +1,7 @@
+---
+description: Apply VDO.Ninja green screen effects locally with Electron Capture for OBS-friendly chroma key workflows.
+---
+
 # How to use the green screen just locally
 
 Since OBS is using a very old browser inside, the green screen effect inside [VDO.Ninja](https://vdo.ninja/) wouldn't really run well within OBS itself, and even if it did, accessing the camera from a browser-source is a hassle to setup.

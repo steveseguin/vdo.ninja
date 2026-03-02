@@ -1,3 +1,7 @@
+---
+description: Platform-specific VDO.Ninja notes and fixes for Android, iOS, macOS, and Opera GX environments.
+---
+
 # Platform specific issues
 
 * [android.md](android.md "mention")

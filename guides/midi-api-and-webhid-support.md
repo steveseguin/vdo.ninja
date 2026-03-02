@@ -1,3 +1,7 @@
+---
+description: Use MIDI, WebHID, and API controls with VDO.Ninja for hotkeys, automation, and remote control workflows.
+---
+
 # MIDI, API and WebHID support
 
 ## MIDI hotkeys

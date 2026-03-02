@@ -1,3 +1,7 @@
+---
+description: Reference for the &controlbarspace URL parameter in VDO.Ninja including behavior examples and related options.
+---
+
 # &controlbarspace
 
 **Also known as:** `&nocontrolbarspace` (to disable)

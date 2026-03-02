@@ -1,3 +1,7 @@
+---
+description: VDO.Ninja help page for Copyright & DMCA Policy including support policy and project resource information.
+---
+
 # Copyright & DMCA Policy
 
 _Last updated: October 29, 2025_

@@ -1,3 +1,7 @@
+---
+description: Troubleshooting guide for Video freezes mid-stream in VDO.Ninja and OBS with likely causes and practical fixes.
+---
+
 # Video freezes mid-stream
 
 If the stream or camera _freezes_ after a while, there could be many reasons. Let's explore some causes and solutions below.

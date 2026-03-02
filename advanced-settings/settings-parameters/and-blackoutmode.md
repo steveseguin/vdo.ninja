@@ -1,3 +1,7 @@
+---
+description: Reference for the &blackoutmode URL parameter in VDO.Ninja including behavior examples and related options.
+---
+
 # &blackoutmode
 
 **Also known as:** `&blackout`, `&bo`, `&bom`

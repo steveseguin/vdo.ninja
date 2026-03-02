@@ -1,3 +1,7 @@
+---
+description: Reference for the &chunkedbuffer URL parameter in VDO.Ninja including behavior examples and related options.
+---
+
 # &chunkedbuffer
 
 **Also known as:** `&sendingbuffer`

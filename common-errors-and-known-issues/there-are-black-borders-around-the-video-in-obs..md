@@ -1,3 +1,7 @@
+---
+description: Troubleshooting guide for There are black borders around the video in OBS. in VDO.Ninja and OBS with likely causes and practical fixes.
+---
+
 # There are black borders around the video in OBS.
 
 If a black border appears around the video, check that the custom CSS settings in the browser source has not been modified from the default setting:

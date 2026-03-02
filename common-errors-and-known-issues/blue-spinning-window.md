@@ -1,3 +1,7 @@
+---
+description: Troubleshooting guide for Blue spinning window in VDO.Ninja and OBS with likely causes and practical fixes.
+---
+
 # Blue spinning window
 
 _**If you are experiencing this issue and you are using MacOS, please refer to the MacOS specific section**_

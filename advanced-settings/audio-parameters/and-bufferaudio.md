@@ -1,3 +1,7 @@
+---
+description: Reference for the &bufferaudio URL parameter in VDO.Ninja including behavior examples and related options.
+---
+
 # &bufferaudio
 
 **Also known as:** `&audiobuffer`

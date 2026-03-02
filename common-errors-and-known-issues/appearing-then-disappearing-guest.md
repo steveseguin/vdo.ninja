@@ -1,3 +1,7 @@
+---
+description: Troubleshooting guide for Appearing then disappearing guest in VDO.Ninja and OBS with likely causes and practical fixes.
+---
+
 # Appearing then disappearing guest
 
 In this case, it sounds like the remote guest is failing to create a WebRTC peer connection with the director.

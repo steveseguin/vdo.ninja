@@ -1,3 +1,7 @@
+---
+description: Platform specific VDO.Ninja notes for macOS including compatibility limits and recommended fixes.
+---
+
 # macOS
 
 {% hint style="info" %}

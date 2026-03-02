@@ -1,3 +1,7 @@
+---
+description: Beginner guide to VDO.Ninja with push/view links, OBS setup, rooms, and first-stream best practices.
+---
+
 # Getting started
 
 ### **VDO.Ninja: Your Gateway to Effortless Live Video**

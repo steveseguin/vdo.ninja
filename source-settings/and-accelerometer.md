@@ -1,3 +1,7 @@
+---
+description: Reference for the &accelerometer URL parameter in VDO.Ninja including behavior examples and related options.
+---
+
 # &accelerometer
 
 **Also known as:** `&sensors`, `&sensor`, `&gyro`, `&gyros`

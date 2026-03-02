@@ -1,3 +1,7 @@
+---
+description: Troubleshooting guide for Getting “Overconstrained" Camera Error in VDO.Ninja and OBS with likely causes and practical fixes.
+---
+
 # Getting “Overconstrained" Camera Error
 
 If you get an Overconstrained error, it typically means the webcam or camera device has settings that are not compatible with VDO.Ninja code. With every camera being different, and everyone wanting high-quality video, it's a game of whack-a-mole to address each specific instance.

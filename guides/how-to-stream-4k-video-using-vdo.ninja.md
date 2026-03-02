@@ -1,3 +1,7 @@
+---
+description: Stream 4K video with VDO.Ninja by setting custom resolution, bitrate, and CPU-aware quality settings.
+---
+
 # How to stream 4K video using VDO.Ninja
 
 {% hint style="warning" %}

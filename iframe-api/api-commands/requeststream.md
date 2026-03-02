@@ -1,3 +1,7 @@
+---
+description: IFRAME API command reference for requestStream in VDO.Ninja with syntax behavior and examples.
+---
+
 # requestStream
 
 General Option! ([`&push`](../../source-settings/push.md), [`&view`](../../advanced-settings/view-parameters/view.md), [`&scene`](../../advanced-settings/view-parameters/scene.md))

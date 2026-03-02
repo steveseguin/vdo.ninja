@@ -1,3 +1,7 @@
+---
+description: Reference for the &scenelinkcodec URL parameter in VDO.Ninja including behavior examples and related options.
+---
+
 # &scenelinkcodec
 
 #### **Description**

@@ -1,3 +1,7 @@
+---
+description: Reference for the \&pausepreview URL parameter in VDO.Ninja including behavior examples and related options.
+---
+
 # \&pausepreview
 
 Director Option! ([`&director`](../../viewers-settings/director.md))

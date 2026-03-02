@@ -1,3 +1,7 @@
+---
+description: Reference for the &outboundsamplerate URL parameter in VDO.Ninja including behavior examples and related options.
+---
+
 # &outboundsamplerate
 
 **Also known as:** `&obsr`

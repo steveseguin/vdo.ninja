@@ -1,3 +1,7 @@
+---
+description: VDO.Ninja help page for VDO.Ninja Terms of Service including support policy and project resource information.
+---
+
 # VDO.Ninja Terms of Service
 
 **Effective Date:** December 26, 2025\

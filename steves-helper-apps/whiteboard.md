@@ -1,3 +1,7 @@
+---
+description: Browser-based VDO.Ninja whiteboard for live collaborative drawing with real-time streaming via P2P or WHIP.
+---
+
 # Whiteboard
 
 ## VDO.Ninja Whiteboard: Live Streaming Collaboration Tool

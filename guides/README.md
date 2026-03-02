@@ -1,3 +1,7 @@
+---
+description: VDO.Ninja how-to guides for OBS workflows, bitrate and quality tuning, screen sharing, mobile, WHIP, and API usage.
+---
+
 # Guides
 
 * [cheat-sheets.md](cheat-sheets.md "mention")

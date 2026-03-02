@@ -1,3 +1,7 @@
+---
+description: Troubleshooting guide for Mic stops on MacOS when OBS opens in VDO.Ninja and OBS with likely causes and practical fixes.
+---
+
 # Mic stops on MacOS when OBS opens
 
 If the microphone stops working in VDO.Ninja when OBS Studio is open, on MacOS, considering using Safari instead of Chrome or other browser.

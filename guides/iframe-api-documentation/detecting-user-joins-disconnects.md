@@ -1,3 +1,7 @@
+---
+description: Detect user joins and disconnects in embedded VDO.Ninja streams using iframe postMessage events.
+---
+
 # Detecting User Joins / Disconnects
 
 ## Understanding the VDO.Ninja IFRAME API: Detecting User Joins and Disconnects

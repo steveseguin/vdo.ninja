@@ -1,3 +1,7 @@
+---
+description: Troubleshooting guide for Audio is delayed in OBS in VDO.Ninja and OBS with likely causes and practical fixes.
+---
+
 # Audio is delayed in OBS
 
 ### OBS specific issues

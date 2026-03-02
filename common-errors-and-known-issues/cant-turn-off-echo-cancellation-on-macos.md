@@ -1,3 +1,7 @@
+---
+description: Troubleshooting guide for Can't turn off echo-cancellation on macOS in VDO.Ninja and OBS with likely causes and practical fixes.
+---
+
 # Can't turn off echo-cancellation on macOS
 
 I've had user reports that MacOS is forcing Echo cancellation on all devices except the built in mic. This was at least tested with a Scarlett Solo gen3\

@@ -1,3 +1,7 @@
+---
+description: Platform specific VDO.Ninja notes for Firefox including compatibility limits and recommended fixes.
+---
+
 # Firefox
 
 Firefox is not fully supported, although we try to maintain basic support for remote guest usage. It is recommend that you use:

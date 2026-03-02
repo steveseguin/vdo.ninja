@@ -1,3 +1,7 @@
+---
+description: Troubleshooting guide for Low frame rates in VDO.Ninja and OBS with likely causes and practical fixes.
+---
+
 # Low frame rates
 
 There are several reasons you may be experiencing low frame rates, including:

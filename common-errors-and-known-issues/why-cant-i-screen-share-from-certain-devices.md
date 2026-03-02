@@ -1,3 +1,7 @@
+---
+description: Troubleshooting guide for Can't screen-share from certain devices in VDO.Ninja and OBS with likely causes and practical fixes.
+---
+
 # Can't screen-share from certain devices
 
 The Screen sharing feature is highly dependent on the operating system of the device whose screen you are trying to capture.

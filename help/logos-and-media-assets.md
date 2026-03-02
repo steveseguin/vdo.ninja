@@ -1,3 +1,7 @@
+---
+description: VDO.Ninja help page for Logos and media assets including support policy and project resource information.
+---
+
 # Logos and media assets
 
 For a collection of [VDO.Ninja](https://vdo.ninja/) media assets, there is a Google Drive containing them below. \

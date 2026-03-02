@@ -1,3 +1,7 @@
+---
+description: Remotely control PowerPoint with VDO.Ninja using the &powerpoint parameter, API endpoints, MIDI, and iframe tools.
+---
+
 # How to control PowerPoint remotely with VDO.Ninja
 
 ### Overview
