@@ -25,7 +25,13 @@ Rooms are complemented by the [`&director=roomname`](../viewers-settings/directo
 
 Rooms limit the viewing bitrate that guests of a room can request. OBS does not have these viewing limits though.
 
-Rooms have no forced limit on the number of guests allowed, but practically 10 is about the limit I'd recommend.
+On the official hosted service, claimed rooms support admission controls:
+
+* default claim-time room cap is 80 guests
+* use [`&roomcap`](../advanced-settings/director-parameters/and-roomcap.md) to set a different cap (up to 1000)
+* use [`&requireapproval`](../advanced-settings/director-parameters/and-requireapproval.md) for manual director approval
+
+Practically, CPU/network limits usually become the bottleneck before hard server limits.
 
 Adding [`&showonly=xxx`](../advanced-settings/video-parameters/and-novideo.md) and [`&roombitrate=0`](../advanced-settings/video-bitrate-parameters/roombitrate.md) to the guest's URL can be used to help increase the capacity of rooms to 30 or more.
 

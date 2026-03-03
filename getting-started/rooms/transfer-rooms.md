@@ -18,6 +18,12 @@ When a guest is transferred to a new room, they do not know which room they are 
 
 The [`&queue`](../../general-settings/queue.md) command can be used in conjunction with rooms and transfer rooms. When you transfer a user from a queue, they will no longer be in any queue once transferred. When in queue, the guest will not be able to see anyone, but the director will be able to see them. When transferred out of the queue, they will be able to see everyone in the room.
 
+If the destination room uses [`&requireapproval`](../../advanced-settings/director-parameters/and-requireapproval.md), transferred guests enter that room in a pending state until the destination room's director approves them. This is supported on the official `vdo.ninja` service and on compatible self-hosted signaling servers.
+
+If a transferred guest is still pending in that destination room and disconnects/refreshes before approval, they can appear "lost" from the transfer flow and may need to rejoin from the original invite path.
+
+If the destination room has a [`&roomcap`](../../advanced-settings/director-parameters/and-roomcap.md) limit and is already full, the transfer will be rejected.
+
 If you transfer someone to a room, the passwords for both rooms need to match. This may change in the future.
 
 If someone in a transfer room disconnects or refresh, they will end up back in the original landing room. This is for privacy and security reasons, as once a user is kicked out or disconnected, the expectation is they cannot enter the room again unless explicitly allowed. Be sure that any guest who is transferred has a stable connection; unstable mobile connections or connections using VPN services may get booted out every now and then.

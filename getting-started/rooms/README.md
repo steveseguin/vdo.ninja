@@ -12,6 +12,7 @@ The rooms feature creates a virtual room where multiple devices can connect to s
 🔑 Adding a password will allow you to use your room, even if the same room name is already in use.\
 🏷️ You can change the room name anytime; just modify the URL.\
 ✈️ If the director transfers a user to a new room, that's a temporary transfer; the user will be moved back to the original room if they reconnect/refresh.\
+🛂 Add `&requireapproval` to the director URL to require manual approval for each guest join (official `vdo.ninja` service and compatible self-hosted signaling services).\
 \
 
 

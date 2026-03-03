@@ -431,12 +431,17 @@ If you are self-hosting VDO.Ninja, often these URL parameters can be hard-coded 
 | `recordcodec`       | `rc`              | String             | Sets recording codec   |
 | `recordfolder`      | -                 | String             | Sets recording folder  |
 | `reload`            | -                 | Boolean            | -                      |
+| `requireapproval`   | -                 | Boolean            | Requires manual director approval for claimed-room joins |
 | `requireencryption` | -                 | Boolean            | -                      |
+| `rcap`              | See `roomcap`     | -                  | -                      |
 | `retransmit`        | -                 | Boolean            | -                      |
 | `retrytimeout`      | -                 | Integer (min 5000) | -                      |
 | `room`              | `r`, `roomid`     | String             | Sets room ID           |
 | `roombitrate`       | `rbr`             | Integer            | Sets room bitrate      |
+| `roomcap`           | `rcap`            | Integer            | Claimed-room admission cap |
+| `roomkey`           | `rk`              | String             | Claimed-room bypass key |
 | `rounded`           | `round`           | Integer            | Sets rounded corners   |
+| `rk`                | See `roomkey`     | -                  | -                      |
 | `ruler`             | `grid`, `thirds`  | URL/Boolean        | Shows composition grid |
 
 ### S
