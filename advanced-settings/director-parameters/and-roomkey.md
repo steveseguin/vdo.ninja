@@ -23,7 +23,9 @@ Example: `&roomkey=TRUSTED_BYPASS_KEY`
 If the room director sets a bypass key, guests joining with the same key can bypass:
 
 * manual approval queues from [`&requireapproval`](and-requireapproval.md)
-* admission limits from [`&roomcap`](and-roomcap.md)
+* custom admission limits from [`&roomcap`](and-roomcap.md), up to the server hard max
+
+`&roomkey` cannot bypass the server hard cap (`80` on the official service).
 
 This behavior works on the official hosted VDO.Ninja service (`vdo.ninja`) and on self-hosted signaling services that support claim-time admission controls.
 

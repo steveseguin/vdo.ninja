@@ -28,7 +28,7 @@ Rooms limit the viewing bitrate that guests of a room can request. OBS does not 
 On the official hosted service, claimed rooms support admission controls:
 
 * default claim-time room cap is 80 guests
-* use [`&roomcap`](../advanced-settings/director-parameters/and-roomcap.md) to set a different cap (up to 1000)
+* use [`&roomcap`](../advanced-settings/director-parameters/and-roomcap.md) to set a cap (hard max 80)
 * use [`&requireapproval`](../advanced-settings/director-parameters/and-requireapproval.md) for manual director approval
 
 Practically, CPU/network limits usually become the bottleneck before hard server limits.
