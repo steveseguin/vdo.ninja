@@ -80,6 +80,7 @@ For larger productions:
 
 ## Related
 
+- [Primary and Backup Guests with `&scene` and `&slots=1`](primary-and-backup-guests-with-scene-and-slots.md)
 - [Mesh Network Debug](mesh-network-debug.md)
 - [`&autorecover`](../advanced-settings/settings-parameters/and-autorecover.md)
 - [`&autorelay`](../advanced-settings/turn-and-stun-parameters/and-autorelay.md)
@@ -87,4 +88,3 @@ For larger productions:
 - [`&peerrecoversteps`](../advanced-settings/settings-parameters/and-peerrecoversteps.md)
 - [`&pendingicettl`](../advanced-settings/turn-and-stun-parameters/and-pendingicettl.md)
 - [Packet Loss](../common-errors-and-known-issues/packet-loss.md)
-

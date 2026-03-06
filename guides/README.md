@@ -12,6 +12,7 @@ description: VDO.Ninja how-to guides for OBS workflows, bitrate and quality tuni
 * [midi-api-and-webhid-support.md](midi-api-and-webhid-support.md "mention")
 * [ptz-remote-control.md](ptz-remote-control.md "mention")
 * [handling-guest-disconnects-and-connection-recovery.md](handling-guest-disconnects-and-connection-recovery.md "mention")
+* [primary-and-backup-guests-with-scene-and-slots.md](primary-and-backup-guests-with-scene-and-slots.md "mention")
 * [ninjabacker-tipping.md](ninjabacker-tipping.md "mention")
 * [hardware-accelerated-video-encoding.md](hardware-accelerated-video-encoding.md "mention")
 * [audio-filters.md](audio-filters.md "mention")

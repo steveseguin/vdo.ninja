@@ -107,6 +107,7 @@
   * [How to restart your winsock](guides/how-to-restart-your-winsock.md)
   * [Mesh Network Debug](guides/mesh-network-debug.md)
   * [Handling Guest Disconnects and Connection Recovery](guides/handling-guest-disconnects-and-connection-recovery.md)
+  * [Primary and Backup Guests with &scene and &slots=1](guides/primary-and-backup-guests-with-scene-and-slots.md)
 * [Advanced Options (URL Parameters)](advanced-settings.md)
   * [Most common Parameters](advanced-settings/cheat-sheet-of-basic-parameters/README.md)
     * [\&push](https://docs.vdo.ninja/advanced-settings/source-parameters/push)
