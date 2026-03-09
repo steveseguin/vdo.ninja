@@ -19,6 +19,8 @@ This feature is URL-gated and opt-in.
 
 Chat Lite can use native provider cards (YouTube/Twitch/Kick) and Social Stream WebSocket relay mode for broader event inputs.
 
+In simple terms: this adds a chat drawer/overlay inside VDO.Ninja so you can see supported chat feeds without leaving the page.
+
 ### Companion flags
 
 Use these optional parameters with `&chatlite`:
@@ -32,6 +34,13 @@ When the Chat Lite button is visible:
 * Click: toggle overlay visibility
 * `SHIFT` + click: open configuration popup
 * `ALT`/`CTRL` + click: toggle TTS mode
+
+## Notes and limits
+
+* The built-in Chat Lite overlay works best inside the same browser profile that opened VDO.Ninja.
+* The "copy overlay link" flow should be treated as a local pop-out/activity view, not a guaranteed cross-browser or cross-machine OBS overlay link.
+* If you want a true standalone Social Stream overlay over SSN WebSockets, use the Social Stream theme overlays instead of the built-in Chat Lite activity page.
+* Pop-outs and setup windows opened from the same VDO.Ninja page stay paired to that page; manually opened standalone Chat Lite pages still use the default browser-level session behavior.
 
 ## Examples
 

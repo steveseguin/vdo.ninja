@@ -8,6 +8,8 @@ Chat Lite is a lightweight social activity overlay UI that can run standalone or
 
 Current provider cards include YouTube, Twitch, Kick, and Social Stream WebSocket relay mode.
 
+In plain terms: it lets VDO.Ninja show live chat messages from supported services inside the app, so you can keep chat on screen without opening a separate dashboard.
+
 ## Sources
 
 Chat Lite can ingest from native provider cards (YouTube/Twitch/Kick) or from the Social Stream WebSocket relay source:
@@ -34,6 +36,18 @@ See the full parameter reference:
 {% content-ref url="../newly-added-parameters/and-chatlite.md" %}
 [and-chatlite.md](../newly-added-parameters/and-chatlite.md)
 {% endcontent-ref %}
+
+## What it is good for
+
+* Showing YouTube, Twitch, Kick, or SSN-fed activity directly inside a VDO.Ninja page
+* Opening a local pop-out/activity view from the same browser profile
+* Keeping chat visible for the director or host without needing the full Social Stream app
+
+## Current limitations
+
+* The built-in activity overlay is primarily a local browser feature. The copied overlay link is best treated as a same-browser pop-out, not a standalone OBS/browser-source overlay for another machine or browser profile.
+* If you need a standalone overlay fed by Social Stream WebSockets, use the Social Stream theme overlays instead.
+* Windows opened from the same VDO.Ninja page stay paired together. Standalone Chat Lite pages opened manually still use the default browser-level session behavior.
 
 ### Control-strip behavior
 
