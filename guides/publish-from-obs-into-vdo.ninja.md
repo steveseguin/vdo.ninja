@@ -1,10 +1,10 @@
 ---
-description: How to share audio and video from OBS Studio into VDO.Ninja
+description: Publish audio and video from OBS Studio into VDO.Ninja using OBS Virtual Camera, VB-CABLE, and low-latency browser workflows.
 ---
 
 # Publish from OBS into VDO.Ninja
 
-In this walk-through we demonstrate how to use VDO.Ninja with the OBS Virtual camera and Virtual Audio Cable.\
+This guide shows how to publish audio and video from OBS Studio into VDO.Ninja with low latency by using OBS Virtual Camera and a virtual audio cable. It is useful for feeding OBS output into VDO.Ninja rooms, sending program output to remote guests, or using OBS as the source for browser-based live production.\
 \
 This combination is powerful and opens the world to numerous new live show formats. You could also push back audio and/or video from OBS into VDO.Ninja to share with a group there, or into a large Zoom call, all with super low latency.\
 \
@@ -14,17 +14,17 @@ Combining this OBS to VDO.Ninja approach with \&broadcast mode or a server-assis
 
 * OBS Studio v26 or newer
   * This ideally will run on OBS on the same system as VDO.Ninja
-  * For Windows, OBS version 26 or newer is recommended: [https://obsproject.com/download](https://www.google.com/url?q=https://obsproject.com/download\&sa=D\&source=editors\&ust=1626144550329000\&usg=AOvVaw1SHwecfzt\_otZPz1YNkN3r)\
+  * For Windows, OBS version 26 or newer is recommended: [https://obsproject.com/download](https://obsproject.com/download)\
 
 * Virtual Audio Cable Software
   * For Windows or Mac, you can use VB-CABLE Virtual Audio
     * This is recommended software as it enables proper audio support
     * The software is Donationware
-    * [https://www.vb-audio.com/Cable/](https://www.google.com/url?q=https://www.vb-audio.com/Cable/\&sa=D\&source=editors\&ust=1626144550330000\&usg=AOvVaw3F2QQT0F6uzv1rHBdsARNF)\
+    * [https://www.vb-audio.com/Cable/](https://www.vb-audio.com/Cable/)\
 
     * There's also Voicemeter or VAC available as good options on PC.
     * For macOS, you have a few other good choices too:
-      * [https://github.com/steveseguin/vdo.ninja/wiki/FAQ#how-to-capture-audio-on-mac](https://www.google.com/url?q=https://github.com/steveseguin/obsninja/wiki/FAQ%23how-to-capture-audio-on-mac\&sa=D\&source=editors\&ust=1626144550330000\&usg=AOvVaw1Rzm5d\_ud17CiLByYZ66lb)
+      * [macOS audio capture options](../platform-specific-issues/macos.md#capturing-audio)
 
 ### Step 0
 
@@ -33,11 +33,11 @@ This guide assumes you have OBS installed, along with the other required softwar
 \
 We also will assume you are using Windows. You will need to adapt accordingly for macOS, which likely is going to be more complicated.
 
-On the computer that will be using Zoom or Google Hangouts to broadcast, please do the following:
+On the computer that will be publishing from OBS into VDO.Ninja, please do the following:
 
 1. Uninstall and remove all old versions of OBS, including StreamLabs OBS if that is installed.
 2. Install OBS Studio v26 or newer. [https://github.com/obsproject/obs-studio/releases/](https://github.com/obsproject/obs-studio/releases/)
-3. Lastly, install the VB-Cable Virtual Audio device. [https://www.vb-audio.com/Cable/](https://www.google.com/url?q=https://www.vb-audio.com/Cable/\&sa=D\&source=editors\&ust=1626144550333000\&usg=AOvVaw1V70Tdr32UiXMUJZ0Uysnb)
+3. Lastly, install the VB-Cable Virtual Audio device. [https://www.vb-audio.com/Cable/](https://www.vb-audio.com/Cable/)
 
 ### Step 1
 
@@ -106,4 +106,3 @@ It is also important that you activate the OBS Virtual Camera in OBS before sele
 If you wish not to use a third-party browser, but publish video directly from OBS itself, you can load OBS up in a special mode that allows for it.\
 \
 Please see this article for more on that: [https://docs.vdo.ninja/guides/share-webcam-from-inside-obs](https://docs.vdo.ninja/guides/share-webcam-from-inside-obs)
-

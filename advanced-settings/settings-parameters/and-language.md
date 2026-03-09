@@ -18,7 +18,7 @@ Example: `&language=fr`
 
 ## Details
 
-You can [contribute new or update existing translations](https://github.com/steveseguin/obsninja/tree/master/translations).
+You can [contribute new or update existing translations](https://github.com/steveseguin/vdo.ninja/tree/master/translations).
 
 You can also change the language of VDO.Ninja dynamically on the bottom right.\
 ![](<../../.gitbook/assets/image (115) (2).png>)

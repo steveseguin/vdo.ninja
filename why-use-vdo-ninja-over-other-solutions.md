@@ -9,7 +9,7 @@ In some cases, the functionality of [VDO.Ninja](https://vdo.ninja) may overlap w
 * **100% free.** There's **no downloads** required, **no personal data collected**, and **no sign-in** needed.
 * Compatible with most modern browsers and mobile devices.
 * **Free support** offered via email, Discord, Reddit and numerous written guides.
-* **Video data is peer-to-peer**, so unlike Skype, your video data does not go thru the NSA's spying servers.
+* **Video data is peer-to-peer**, so unlike Skype, your video data does not go through the NSA's spying servers.
 * **Video can be transferred over a LAN directly**, so if using your phone as a webcam, you can crank the bitrates up to 40-mbps if you want, and your bandwidth won't be affected.
 * **Low latency**. I'm talking as low as 30-ms, and normally it never goes higher than 200-ms.
 * **Adjustable resolutions and video bitrates** (1920x1080p60 @ 30-mbps -- or even custom resolutions). 4K @ 30fps is possible, but CPU intensive.
@@ -17,15 +17,15 @@ In some cases, the functionality of [VDO.Ninja](https://vdo.ninja) may overlap w
 * You can **parameterize many aspects of VDO.Ninja** such as total bitrate usage, bitrate per viewer usage, auto-select a device, autostart a session, removing the preview window.
 * The interface is **open-source**, so you can white-label, stylize, tweak, and deploy the website code however you want.
 * **Reusable invite links**, meaning OBS Browser Sources don't need to be recreated or changed once created and shared.
-* Playback of video has been tested to work on using Amazon's Firestick's with Silk browser, along with a Tesla's Model 3's infotainment display.
-* **No plugins needed for OBS** -- just drag the selected link into OBS (v25 or newer on PC\*) and it auto generates the OBS Browser source with the correct resolution. (\*[macOS](https://github.com/steveseguin/obsninja/wiki/FAQ#MacOS) users need to update to OBS v26.1.2 to access support for VDO.Ninja natively.)
+* Playback of video has been tested on Amazon Fire TV devices using the Silk browser, along with a Tesla Model 3 infotainment display.
+* **No plugins needed for OBS** -- just drag the selected link into OBS (v25 or newer on PC\*) and it auto generates the OBS Browser source with the correct resolution. (\*[macOS](common-errors-and-known-issues/virtual-camera-not-working-on-mac.md) users should update OBS and review the macOS virtual camera notes.)
 * **QR Code support for invite links**, which allows for easy ingestion of mobile devices without needing to use the keyboard.
 * **Browser-based control of OBS scenes**.
 * **No overlays or windows to crop** -- VDO.Ninja auto-fills the window and if there is a black border, it becomes a transparent layer.
 * **Group rooms available** with a Director able to control participants, the options presented to them, and even an autojoin experience.
 * **Group chat rooms** have an "auto-mix" mode, making for easy management of dynamic group chat sessions.
 * Those in a **group-chat can also be split up into individual streams**, so the Director has control to treat them like different sources in OBS, switching and mixing as they want.
-* **Free TURN servers** are hosted for VDO.Ninja users, which normally are quite costly, but are kindly subsidized by community sponsors and by Steve, the developer of the application. [Sponsor ❤](getting-started/sponsor.md)&#x20;
+* **Free TURN servers** are hosted for VDO.Ninja users, which normally are quite costly, but are kindly subsidized by community sponsors and by Steve, the developer of the application. [Sponsor](getting-started/sponsor.md)
 * **Tally-light** support is offered when VDO.Ninja is used in conjunction with OBS.
 * Group rooms and streams can be **password protected** and given extra security.
 * The group-room director has a **"push to talk"** capability, along with text-chat being available.

@@ -37,7 +37,7 @@ description: Troubleshooting index for common VDO.Ninja and OBS issues, includin
 * [video-is-pixelated.md](video-is-pixelated.md "mention")
 * [video-freezes-mid-stream.md](video-freezes-mid-stream.md "mention")
 * [webcam-freezes-after-a-time.md](webcam-freezes-after-a-time.md "mention")
-* [is-the-obs.ninja-server-down.md](is-the-obs.ninja-server-down.md "mention")
+* [is-the-vdo-ninja-server-down.md](is-the-vdo-ninja-server-down.md "mention")
 * [hosted-your-own-turn-server.md](hosted-your-own-turn-server.md "mention")
 * [why-cant-i-screen-share-from-certain-devices.md](why-cant-i-screen-share-from-certain-devices.md "mention")
 * [cursor-shows-when-screen-sharing.md](cursor-shows-when-screen-sharing.md "mention")

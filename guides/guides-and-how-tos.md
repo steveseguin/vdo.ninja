@@ -22,20 +22,20 @@ description: Curated external VDO.Ninja community guides covering show formats, 
 
 * [How to add custom backgrounds and live video effects](https://snapcamera.snapchat.com/)
 * [How to improve your video quality with some better lighting tricks](https://docs.google.com/document/d/e/2PACX-1vTs0So9I7Gx33IKLgxBlMPBTpvhc5JzLi3iFLxSeHEcGRJeSePkzyrStojFN3lEmlVmuPY9MID5DFbJ/pub)
-* [How to see your camera's max resolution limit, and if it supports manual focus/zoom](https://obs.ninja/supports)
+* [How to see your camera's max resolution limit, and if it supports manual focus/zoom](https://vdo.ninja/supports)
 * [How to send output of your webcam only and not the entire output from OBS into VDO.Ninja](https://github.com/exeldro/obs-virtual-cam-filter)
 * [How to apply a green screen to VDO.Ninja streams](https://medium.com/@lordfloofen/free-virtual-green-screen-4c27d04fc731)
 * [Info on using "chrome.exe --autoplay-policy=no-user-gesture-required" to force Auto-play in Chrome](https://developers.google.com/web/updates/2017/09/autoplay-policy-changes)
 
 ## Self hosted
 
-* [How to deploy your own TURN (relay) server](https://github.com/steveseguin/obsninja/blob/master/turnserver.md)
-* [Alternative domain names and other connection methods](https://github.com/steveseguin/obsninja/blob/master/install.md)
-* [Consider the IFRAME API as an alternative to self-hosting VDO.Ninja](https://github.com/steveseguin/obsninja/blob/master/IFRAME.md)
+* [How to deploy your own TURN (relay) server](https://github.com/steveseguin/vdo.ninja/blob/master/turnserver.md)
+* [Alternative domain names and other connection methods](https://github.com/steveseguin/vdo.ninja/blob/master/install.md)
+* [Consider the IFRAME API as an alternative to self-hosting VDO.Ninja](https://docs.vdo.ninja/guides/iframe-api-documentation)
 
 ## Network
 
-* [How to test your Internet connection quality with a video-echo test](https://obs.ninja/speedtest)
+* [How to test your Internet connection quality with a video-echo test](https://vdo.ninja/speedtest)
 * [How to host your own RTSP server for VDO.Ninja by using OBS with the OBS-RTSP-Server plugin](https://obsproject.com/forum/resources/obs-rtspserver.1037/)
 * [How to improve streaming performance and reliability with a Speedify](https://support.speedify.com/article/725-how-to-improve-streaming-via-obs-with-speedify)
 * [LAN vs WAN - VDO.Ninja traffic diagram ](https://drive.google.com/file/d/1oI7NYIlf\_RurYoM0TEgJtzBJRV\_wohuh/view)- by saimiri 31

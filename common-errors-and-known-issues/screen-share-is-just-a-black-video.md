@@ -1,8 +1,10 @@
 ---
-description: When screen-sharing, your local preview and output is black
+description: Fix black screen problems when screen sharing with VDO.Ninja, OBS, Chrome, DRM-protected apps, and hardware acceleration conflicts.
 ---
 
 # Screen-share is just a black video
+
+If your VDO.Ninja screen share is black in the local preview, in OBS, or for remote viewers, the most common causes are browser hardware acceleration conflicts, unsupported capture mode choices, or DRM and HDCP-protected content such as Netflix or Prime Video.
 
 <figure><img src="../.gitbook/assets/image (35).png" alt=""><figcaption><p>Google Chrome's HWA setting</p></figcaption></figure>
 

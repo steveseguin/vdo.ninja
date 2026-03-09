@@ -1,88 +1,54 @@
 ---
-description: Reference for the &chunkedbuffer URL parameter in VDO.Ninja including behavior examples and related options.
+description: Sender-side backlog control for chunked/WebCodecs publishing.
 ---
 
 # &chunkedbuffer
 
-**Also known as:** `&sendingbuffer`
+Also known as: `&sendingbuffer`
 
-#### **Description**
+## Description
 
-Sets the buffer size in milliseconds for chunked media transmission mode, controlling latency vs reliability trade-off.
+Sets the sender-side chunk backlog target, in milliseconds, for [`&chunked`](../../newly-added-parameters/and-chunked.md) publishing.
 
-#### **Sender-Side Option**
+This is not the same as the viewer playout buffer. Use `&chunkbuffer`, `&chunkbufferfloor`, `&chunkbufferceil`, and `&chunkjitterslack` for viewer-side chunked playback tuning.
 
-This parameter configures the buffering behavior when using chunked transmission mode for improved reliability.
+## Usage
 
-#### **Usage**
+* `&chunkedbuffer=5000` keeps about 5 seconds of chunk backlog on the sender side. This is the current default target.
+* `&chunkedbuffer=2000` reduces latency and sender memory usage, but leaves less room for retries.
+* `&chunkedbuffer=10000` gives more retry headroom on unstable links, but increases backlog and end-to-end delay.
+* `&sendingbuffer=3000` is an alias for the same setting.
 
-* **`&chunkedbuffer=5000`** - 5 second buffer (default)
-* **`&chunkedbuffer=2000`** - 2 second buffer (lower latency)
-* **`&chunkedbuffer=10000`** - 10 second buffer (more reliable)
-* **`&sendingbuffer=3000`** - Alias usage
+## Examples
 
-#### **Examples**
-
-```
+```text
 https://vdo.ninja/?push=streamID&chunked&chunkedbuffer=3000
 https://vdo.ninja/?push=streamID&chunked&sendingbuffer=5000
-https://vdo.ninja/?room=roomname&chunked&chunkedbuffer=2000
+https://vdo.ninja/?room=roomname&chunked=2500&chunkedbuffer=7000
 ```
 
-#### **Details**
+## How it works
 
-* Only applies when using [`&chunked`](and-chunked.md) mode
-* Value in milliseconds (default: 5000ms)
-* Controls how much data is buffered before sending
-* Higher values improve reliability on poor connections
-* Lower values reduce latency but may cause issues
+1. The sender encodes media into chunk payloads.
+2. Those payloads are queued for transmission over data channels.
+3. `&chunkedbuffer` defines how much queued media the sender tries to keep available.
+4. Larger values give FEC/NACK/retry logic more time to recover missing data before the backlog runs dry.
 
-#### **Buffer Size Guidelines**
+## Guidelines
 
-* **1000-2000ms**: Low latency, good networks
-* **3000-5000ms**: Balanced (default range)
-* **5000-10000ms**: Poor networks, high reliability
-* **10000ms+**: Extreme conditions
+* `1000-2000` ms: lower latency, better only on strong links
+* `3000-5000` ms: balanced range for most testing
+* `5000-10000` ms: more resilient on lossy or high-RTT paths
 
-#### **How It Works**
+## Notes
 
-1. Media is encoded into chunks
-2. Chunks are buffered for specified duration
-3. Buffer allows for retransmission if needed
-4. Larger buffer = more retry opportunities
+* Requires [`&chunked`](../../newly-added-parameters/and-chunked.md)
+* Applies on the publishing side
+* Higher values use more memory and increase overall delay
+* Viewer-side latency is still controlled separately
 
-#### **Trade-offs**
+## Related Parameters
 
-**Small Buffer (1-2 seconds):**
-- ✅ Lower latency
-- ✅ More real-time
-- ❌ Less reliable on poor networks
-- ❌ May drop frames
-
-**Large Buffer (5-10 seconds):**
-- ✅ Very reliable
-- ✅ Handles packet loss well
-- ❌ Higher latency
-- ❌ Less real-time interaction
-
-#### **Use Cases**
-
-* Streaming over cellular networks
-* International broadcasts
-* Unreliable internet connections
-* Recording important content
-* One-way broadcasts (higher buffer acceptable)
-
-#### **Notes**
-
-* Requires [`&chunked`](and-chunked.md) to be enabled
-* Affects sender-side behavior only
-* Memory usage increases with buffer size
-* Consider your use case when setting
-
-#### **Related Parameters**
-
-* [`&chunked`](and-chunked.md) - Enables chunked transmission mode
-* [`&buffer`](../view-parameters/buffer.md) - Viewer-side buffer control
-* [`&nochunk`](../settings-parameters/and-nochunked.md) - Disables chunked mode
-* [`&retransmit`](../settings-parameters/and-retransmit.md) - Relay chunked streams
+* [`&chunked`](../../newly-added-parameters/and-chunked.md) - Enables chunked publishing
+* [`&chunkbuffer`](../../newly-added-parameters/and-chunked.md) - Viewer playout target for chunked streams
+* [`&retransmit`](../settings-parameters/and-retransmit.md) - Relays chunked streams without transcoding

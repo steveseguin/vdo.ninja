@@ -1,25 +1,23 @@
 ---
-description: >-
-  Screen sharing in browsers only allows for tab-audio or desktop-audio capture;
-  not window.
+description: How to capture application audio for VDO.Ninja on Windows and macOS using VB-CABLE, Loopback, virtual audio devices, and OBS-based alternatives.
 ---
 
 # How to capture an application's audio
 
-This page contains the standard guide for capturing application-specific audio in Windows. Less complex methods are being developed, with some current [alternative options listed here](audio.md#other-options).
+This page contains the standard guide for capturing application-specific audio into VDO.Ninja, especially on Windows where app-specific audio routing is common. If you need to send game audio, music app audio, browser audio, or another desktop app into VDO.Ninja, this is the main guide. Less complex methods are being developed, with some current [alternative options listed here](#other-options).
 
-#### Guide: Routing Windows application’s audio to [VDO.Ninja](https://vdo.ninja/)
+#### Guide: Routing a Windows application's audio to [VDO.Ninja](https://vdo.ninja/)
 
-(For macOS users, you can use [Loopback by Roguemedia](https://www.google.com/url?q=https://rogueamoeba.com/loopback/\&sa=D\&source=editors\&ust=1622130763272000\&usg=AOvVaw09b4uk6dZqBTznSzHMJcul) instead, or check out this list of free options: [https://docs.vdo.ninja/platform-specific-issues/macos#capturing-audio](https://docs.vdo.ninja/platform-specific-issues/macos#capturing-audio))
+(For macOS users, you can use [Loopback](https://rogueamoeba.com/loopback/) instead, or check out this list of free options: [https://docs.vdo.ninja/platform-specific-issues/macos#capturing-audio](https://docs.vdo.ninja/platform-specific-issues/macos#capturing-audio))
 
 * 1\) Install the VB-Cable Virtual Audio device. ([Voicemeeter](https://vb-audio.com/Voicemeeter/) can be used instead)\
-  [https://www.vb-audio.com/Cable/](https://www.google.com/url?q=https://www.vb-audio.com/Cable/\&sa=D\&source=editors\&ust=1622130763273000\&usg=AOvVaw3I-yLt2nEk9AOrRsJ0fH9q)
+  [https://www.vb-audio.com/Cable/](https://www.vb-audio.com/Cable/)
 
 ![](https://lh5.googleusercontent.com/BJg9POjpwA3Psi0qX_Ruew9VU8uZkR0wdbIcTL1GLmyfXEwa5lx71k7QdYLj51h_MRw_WnkoKoPcd-vVuD5of98OXkmHQRexbEwZnre2hbWQtdCvEi41ne2Om5ghHy1NuVIb-Ou1)
 
 Tip: If you want to configure the VB Audio driver with custom settings, the recommended sample rate is 48000-hz, as that is the sample used by VDO.Ninja.
 
-* 2\) Load up Window Mixer by typing in Mixer to the windows search bar:
+* 2\) Load up Windows Mixer by typing in Mixer to the Windows search bar:
 
 ![](https://lh5.googleusercontent.com/1TcP9r7sYHpQKoFu72F_RUm7_wCYArK3LSTDar5phOvKqiMIjUbPsyKc29EEYDW0--LTXjhBdnbjjvobfAfDIe9yF1_302ormfnAFDZM10wzqRjmcFe0YRzNiTUrusA5whvMBvLo)
 
@@ -27,7 +25,7 @@ Tip: If you want to configure the VB Audio driver with custom settings, the reco
 
 ![](https://lh4.googleusercontent.com/8v-kZNpbgx_AFbccMaznCzsiB0hJUgFjmtgzp-TR-QY6YEvUP67mo969OgeR6Ae9cgKZ_Z_sC8RE7Ws9DVs32fK1ql7vQLTdsGYx1CvhSREHLRUHE-tf8grWIaH4FkMCNUPhufK3)
 
-* 4\) We can now head over to [https://vdo.ninja](https://vdo.ninja), but we will want to add the advanced URL parameter [`&proaudio`](../advanced-settings/audio-parameters/and-proaudio.md) to the web URL, which disables echo cancellation and other digital effects. It will make the audio sound better and echo cancellation is likely not needed if capturing from a Game or Application window.\
+* 4\) We can now head over to [https://vdo.ninja](https://vdo.ninja), but we will want to add the advanced URL parameter [`&proaudio`](../advanced-settings/audio-parameters/and-proaudio.md) to the web URL, which disables echo cancellation and other digital effects. It will make the audio sound better and echo cancellation is likely not needed if capturing from a game or application window.\
   \
   For example, [`https://vdo.ninja/?push=myStreamID&proaudio`](https://vdo.ninja/?push=myStreamID\&proaudio)\
   \
@@ -35,12 +33,13 @@ Tip: If you want to configure the VB Audio driver with custom settings, the reco
 
 * 5\) In VDO.Ninja, select the Cable Output device.\
   \
-  Tip: If you hold down `CTRL` (`Command`) while selecting inputs, you can select more than one at a time. \
+  Tip: If you hold down `CTRL` (`Command`) while selecting inputs, you can select more than one at a time.\
   ![](https://lh3.googleusercontent.com/VzGq5kxxnObkfu-jLhc1HRzXdlbscE68QDVbOHPTHYa0cDLOF5DHQF3UrqoT_tk9GrJrBBWKmQh2buUzh8UCERiususMiH7IrI7RiAKWHNuqC33j78Sv6DJVUcvwH9HPVvAqw20N)\
 
 * 6\) A simple way to hear the audio as an output is to just unmute the video. Right-click and show the controls, if not visible, then unmute.\
   ![](https://lh3.googleusercontent.com/Eu257zu9VlV2ueK_IGMoQlDARqpkGxoqB8PVl_aSobcsqk-hndfVgzLB0o3z_F52O1CrBQuM_CeslpIrYZBXRg9raG8WCLGi4wzfBOF6phsXRtyeTx9zlY3ABc0tYD8TcMvEYLXJ)![](https://lh4.googleusercontent.com/p_6XTkNhfGQWi0quBnvEe5Bbsy06nT9jkCFi_aHTCQbOi8HydOI5XQHtoxp4v0r8WhAHQ_2c5LWYWnWx9SVtrWTNyyKrDlXElq991W8AyfeATdSZKx1BfzVE1sJ5sU0KXzy3yPlF)
-* 7\) Alternatively, you can also use the Sound properties for the VB cable to “listen to this device” in Windows, so you can hear the audio even if not in VDO.Ninja. This method might have lower latency than the method in step 6.\
+
+* 7\) Alternatively, you can also use the Sound properties for the VB cable to "listen to this device" in Windows, so you can hear the audio even if not in VDO.Ninja. This method might have lower latency than the method in step 6.\
   \
   ![](https://lh3.googleusercontent.com/AQwJuAdfBEGqhrSOyjqYmZyoNf8HrfrRRtNK3w2HhFMWiP87NZeoFQ6rh2pznr-InI8gg1OyI3CnPnyWUbtV1tnlTfXMswIchomWpbfwyJtlkFFOt-BnS5nO8ObxwBocmU8NuqlJ)
 
@@ -52,30 +51,28 @@ While this option still requires a virtual audio cable, as seen above, you can u
 
 <figure><img src="../.gitbook/assets/image (5) (5).png" alt=""><figcaption><p>Another way of selecting application audio for the Virtual Audio Cable</p></figcaption></figure>
 
-
-
 ***
 
-#### Capturing Application and System Audio on Linux🐧&#x20;
+#### Capturing application and system audio on Linux
 
-If you’re on **Linux**, Chrome/Chromium browsers may not yet support full system or application audio capture when screen sharing.\
+If you're on **Linux**, Chrome and Chromium browsers may not yet support full system or application audio capture when screen sharing.\
 \
 To route and capture app-specific or system-wide audio, you can use **PipeWire** or tools built on top of it like [**Sonusmix**](https://codeberg.org/sonusmix/sonusmix).
 
-**🔧 Option 1: Using PipeWire (manual)**
+**Option 1: Using PipeWire (manual)**
 
 1. Ensure your system uses **PipeWire** (most modern distros do).
 2. Use `pavucontrol` or `helvum` to route application audio to a **virtual sink**.
-3. In your app (e.g., VDO.Ninja, OBS, or browser), select that virtual sink as your **input/microphone**.
-4. For window capture, use the built-in **screen/window picker** in Chromium or your compositor (e.g., GNOME, KDE).
+3. In your app (for example VDO.Ninja, OBS, or your browser), select that virtual sink as your **input/microphone**.
+4. For window capture, use the built-in **screen/window picker** in Chromium or your compositor (for example GNOME or KDE).
 
-**🎚️ Option 2: Using Sonusmix (easy UI)**
+**Option 2: Using Sonusmix (easy UI)**
 
 1. Download the **Sonusmix AppImage** from Codeberg.
 2. Launch it to create or manage **virtual devices** and route audio between apps visually.
-3. Select the routed virtual output in your streaming or capture app (OBS, VDO.Ninja, etc.).
+3. Select the routed virtual output in your streaming or capture app (OBS, VDO.Ninja, and so on).
 
-> 💡 With Sonusmix or PipeWire routing, you can isolate a single game, window, or app’s audio — ideal for high-quality, low-latency sharing.
+> With Sonusmix or PipeWire routing, you can isolate a single game, window, or app's audio, which is ideal for high-quality, low-latency sharing.
 
 ***
 

@@ -52,16 +52,16 @@ This guide will cover the deployment of MediaMTX on:
 
 Several VPS providers offer affordable and reliable services. Some popular options include:
 
-* **Vultr:** [https://www.vultr.com/](https://www.google.com/url?sa=E\&source=gmail\&q=https://www.vultr.com/) - Offers a wide range of plans and locations, starting at around $2.50/month (IPv6 only) or $3.50/month (IPv4). Their High-Frequency Compute options are recommended for better performance.
-* **DigitalOcean:** [https://www.digitalocean.com/](https://www.google.com/url?sa=E\&source=gmail\&q=https://www.digitalocean.com/) - Another popular choice with user-friendly interface and good performance.
-* **Linode:** [https://www.linode.com/](https://www.google.com/url?sa=E\&source=gmail\&q=https://www.linode.com/) - Known for its excellent customer support and robust infrastructure.
-* **AWS Lightsail:** [https://aws.amazon.com/lightsail/](https://www.google.com/url?sa=E\&source=gmail\&q=https://aws.amazon.com/lightsail/) - Amazon's offering, integrating well with other AWS services.
+* **Vultr:** [https://www.vultr.com/](https://www.vultr.com/) - Offers a wide range of plans and locations, starting at around $2.50/month (IPv6 only) or $3.50/month (IPv4). Their High-Frequency Compute options are recommended for better performance.
+* **DigitalOcean:** [https://www.digitalocean.com/](https://www.digitalocean.com/) - Another popular choice with user-friendly interface and good performance.
+* **Linode:** [https://www.linode.com/](https://www.linode.com/) - Known for its excellent customer support and robust infrastructure.
+* **AWS Lightsail:** [https://aws.amazon.com/lightsail/](https://aws.amazon.com/lightsail/) - Amazon's offering, integrating well with other AWS services.
 
 For this guide, we'll use **Vultr** as an example, but the steps are similar for other providers.
 
 **Setting up your Vultr VPS**
 
-1. **Sign up for a Vultr account:** Visit [https://www.vultr.com/](https://www.google.com/url?sa=E\&source=gmail\&q=https://www.vultr.com/) and create an account.
+1. **Sign up for a Vultr account:** Visit [https://www.vultr.com/](https://www.vultr.com/) and create an account.
 2. **Deploy a new server:**
    * Choose **Cloud Compute**.
    * Select **Optimized Cloud Compute** for CPU & Storage Technology. High Frequency is the recommended option here.
@@ -74,7 +74,7 @@ For this guide, we'll use **Vultr** as an example, but the steps are similar for
 3. **Wait for the server to be provisioned:** This usually takes a few minutes.
 4. **Connect to your server:** Once the server is running, Vultr will display its IP address. You'll need to connect to it using SSH:
    * **Linux/macOS:** Open your terminal and run: `ssh root@your_server_ip` (replace `your_server_ip` with the actual IP address).
-   * **Windows:** You can use an SSH client like PuTTY ([https://www.putty.org/](https://www.google.com/url?sa=E\&source=gmail\&q=https://www.putty.org/)).
+   * **Windows:** You can use an SSH client like PuTTY ([https://www.putty.org/](https://www.putty.org/)).
 
 **Installing MediaMTX**
 
@@ -98,7 +98,7 @@ Once you're connected to your server via SSH, follow these steps:
     sudo mv mediamtx.yml /usr/local/etc/
     ```
 
-    If you're on a different architecture, like ARM, check the [Mediamtx releases](https://www.google.com/url?sa=E\&source=gmail\&q=https://github.com/bluenviron/mediamtx/releases/) for the correct package.
+    If you're on a different architecture, like ARM, check the [Mediamtx releases](https://github.com/bluenviron/mediamtx/releases/) for the correct package.
 3.  **Run MediaMTX:**
 
     Bash
@@ -123,12 +123,12 @@ Once you're connected to your server via SSH, follow these steps:
 If you'd like to avoid using IP addresses directly and enable HTTPS, you'll want to use a domain name.
 
 1. **Purchase a domain name:** You can buy affordable domain names from registrars like:
-   * **Namecheap:** [https://www.namecheap.com/](https://www.google.com/url?sa=E\&source=gmail\&q=https://www.namecheap.com/) - Often has great deals on domains, especially for the first year. You can get domains for as low as $1/year.
-   * **Porkbun:** [https://porkbun.com/](https://www.google.com/url?sa=E\&source=gmail\&q=https://porkbun.com/) - Also offers competitive pricing and user-friendly interface.
+   * **Namecheap:** [https://www.namecheap.com/](https://www.namecheap.com/) - Often has great deals on domains, especially for the first year. You can get domains for as low as $1/year.
+   * **Porkbun:** [https://porkbun.com/](https://porkbun.com/) - Also offers competitive pricing and user-friendly interface.
 2. **Configure DNS records:**
    * After purchasing your domain, go to your domain registrar's DNS settings.
    * Create an `A` record that points your domain (or a subdomain like `media.yourdomain.com`) to your Vultr server's IP address. If you're using IPv6, create an `AAAA` record instead.
-   * DNS changes can take some time to propagate (up to 48 hours, but usually much faster). You can use tools like [https://www.whatsmydns.net/](https://www.google.com/url?sa=E\&source=gmail\&q=https://www.whatsmydns.net/) to check the propagation status.
+   * DNS changes can take some time to propagate (up to 48 hours, but usually much faster). You can use tools like [https://www.whatsmydns.net/](https://www.whatsmydns.net/) to check the propagation status.
 
 **Enabling HTTPS (Optional but Recommended)**
 
@@ -138,7 +138,7 @@ If you have a domain name, here's how to set up free SSL certificates using Let'
 
 **Using Cloudflare for Free SSL**
 
-1. **Create a Cloudflare account:** Go to [https://www.cloudflare.com/](https://www.google.com/url?sa=E\&source=gmail\&q=https://www.cloudflare.com/) and sign up for a free account.
+1. **Create a Cloudflare account:** Go to [https://www.cloudflare.com/](https://www.cloudflare.com/) and sign up for a free account.
 2. **Add your domain to Cloudflare:** Follow the instructions to add your website to Cloudflare. This usually involves changing your domain's nameservers to Cloudflare's nameservers. You will need to update your domain name's DNS records at your domain registrar, replacing them with the ones provided to you by Cloudflare.
 3. **Enable SSL/TLS:**
    * In your Cloudflare dashboard, go to the **SSL/TLS** tab.
@@ -213,7 +213,7 @@ If your VPS provider has a built-in firewall, you might need to open these ports
 
 **Installing MediaMTX on Windows**
 
-1. **Download MediaMTX:** Go to the MediaMTX releases page on GitHub ([https://github.com/bluenviron/mediamtx/releases](https://www.google.com/url?sa=E\&source=gmail\&q=https://github.com/bluenviron/mediamtx/releases)) and download the latest release for Windows (e.g., `mediamtx_vX.Y.Z_windows_amd64.zip`).
+1. **Download MediaMTX:** Go to the MediaMTX releases page on GitHub ([https://github.com/bluenviron/mediamtx/releases](https://github.com/bluenviron/mediamtx/releases)) and download the latest release for Windows (e.g., `mediamtx_vX.Y.Z_windows_amd64.zip`).
 2. **Extract the archive:** Extract the downloaded ZIP file to a folder of your choice (e.g., `C:\mediamtx`).
 3.  **Run MediaMTX:** Open a Command Prompt or PowerShell window, navigate to the extracted folder, and run:
 
@@ -247,7 +247,7 @@ You may need to manually forward ports `8889, 8554, 1935, 8888, 80, 443` to the 
 
 **Installing MediaMTX on macOS**
 
-1. **Download MediaMTX:** Go to the MediaMTX releases page on GitHub ([https://github.com/bluenviron/mediamtx/releases](https://www.google.com/url?sa=E\&source=gmail\&q=https://github.com/bluenviron/mediamtx/releases)) and download the latest release for macOS (e.g., `mediamtx_vX.Y.Z_darwin_amd64.tar.gz`).
+1. **Download MediaMTX:** Go to the MediaMTX releases page on GitHub ([https://github.com/bluenviron/mediamtx/releases](https://github.com/bluenviron/mediamtx/releases)) and download the latest release for macOS (e.g., `mediamtx_vX.Y.Z_darwin_amd64.tar.gz`).
 2.  **Extract the archive:** Open a Terminal window and use the `tar` command to extract the archive:
 
     Bash

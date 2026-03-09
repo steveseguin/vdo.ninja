@@ -16,9 +16,9 @@ In this walk-through we demonstrate how to use VDO.Ninja to stream a low-latency
   * For Windows, use VB-CABLE Virtual Audio
     * This is recommended software as it enables proper audio support
     * The software is Donationware
-    * [https://www.vb-audio.com/Cable/](https://www.google.com/url?q=https://www.vb-audio.com/Cable/\&sa=D\&source=editors\&ust=1658835550127888\&usg=AOvVaw1mgCACykvK7pkvmteZz-Mj)
+    * [https://www.vb-audio.com/Cable/](https://www.vb-audio.com/Cable/)
   * For macOS, you have a few choices:
-    * [https://github.com/steveseguin/obsninja/wiki/FAQ#how-to-capture-audio-on-mac](https://www.google.com/url?q=https://github.com/steveseguin/obsninja/wiki/FAQ%23how-to-capture-audio-on-mac\&sa=D\&source=editors\&ust=1658835550128112\&usg=AOvVaw07GMfUuAZJy6FI8EYhOdd1)
+    * [macOS audio capture options](../platform-specific-issues/macos.md#capturing-audio)
 
 #### Basic Workflow Diagram
 

@@ -1,8 +1,10 @@
 ---
-description: Several possible causes of audio not working in Windows are listed
+description: Troubleshooting guide for no audio in VDO.Ninja, OBS browser sources, Windows playback, sample-rate issues, and mobile audio workflows.
 ---
 
 # Audio over VDO.Ninja isn't working
+
+If VDO.Ninja audio is not playing in OBS, a browser source, Windows, or a direct browser-to-browser test, the most common causes are OBS browser-source settings, invalid Windows sample-rate settings, wrong output device selection, or mobile and USB audio limitations. This page covers the most common fixes.
 
 ### OBS isn't set to capture audio
 

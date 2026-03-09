@@ -26,7 +26,7 @@ Uses of relay mode include:
 * Some peer to peer connections over residential networks struggle, and introducing a relay server can help avoid those issues.
 * Has the advantage of hiding your IP address from peers.
 
-You can [deploy your own TURN server](https://github.com/steveseguin/obsninja/blob/master/turnserver.md) if intending to use this feature a lot or needing more bandwidth.
+You can [deploy your own TURN server](https://github.com/steveseguin/vdo.ninja/blob/master/turnserver.md) if intending to use this feature a lot or needing more bandwidth.
 
 Please feel free to donate to VDO.Ninja to help support the provided TURN servers.
 

@@ -28,7 +28,7 @@ Limiting the height can force the camera to use higher frame rates.
 
 Limiting the height can reduce the CPU load.
 
-[https://vdo.ninja/supports](https://obs.ninja/supports) will list the support resolutions of your default camera.
+[https://vdo.ninja/supports](https://vdo.ninja/supports) will list the support resolutions of your default camera.
 
 [https://webrtchacks.github.io/WebRTC-Camera-Resolution/](https://webrtchacks.github.io/WebRTC-Camera-Resolution/) Is a tool to help you find the resolutions supported by your camera.
 

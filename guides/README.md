@@ -1,8 +1,10 @@
 ---
-description: VDO.Ninja how-to guides for OBS workflows, bitrate and quality tuning, screen sharing, mobile, WHIP, and API usage.
+description: VDO.Ninja how-to guides for OBS Studio, remote guests, screen sharing, mobile apps, bitrate and quality tuning, WHIP, Meshcast, and API workflows.
 ---
 
-# Guides
+# VDO.Ninja guides and how-to articles
+
+This section collects practical VDO.Ninja guides for OBS Studio, remote guest workflows, screen sharing, mobile phones, audio routing, bitrate tuning, recording, WHIP, Meshcast, and browser-source production setups.
 
 * [cheat-sheets.md](cheat-sheets.md "mention")
 * [how-does-group-chat-work.md](../help/how-does-group-chat-work.md "mention")

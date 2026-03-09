@@ -1,7 +1,7 @@
 ---
 description: >-
-  A low latency video CDN (content delivery network), which can be used to host
-  larger group rooms in VDO.Ninja
+  A low latency video CDN and app surface for larger-room and one-to-many
+  VDO.Ninja workflows.
 ---
 
 # Meshcast.io
@@ -10,7 +10,14 @@ description: >-
 [https://meshcast.io/](https://meshcast.io/)
 {% endembed %}
 
-This is a free to use service that can work in conjunction with VDO.Ninja. It's a low latency video CDN (content delivery network), which can be used to host larger group rooms in VDO.Ninja. It's not designed for mass broadcast, not at present anyways, but it can handle upwards of 100-viewers without taxing your CPU or network.
+Meshcast is a free-to-use service that works alongside VDO.Ninja. It provides a low-latency CDN-style path for larger rooms and one-to-many distribution workflows without pushing the full load onto the original publisher.
+
+The main public entry points are:
+
+* [https://meshcast.io](https://meshcast.io)
+* [https://app.meshcast.io](https://app.meshcast.io)
+
+It is not intended as a mass-broadcast CDN in the traditional sense, but it is designed to handle larger viewing groups more efficiently than pure peer-to-peer fanout alone.
 
 {% embed url="https://www.youtube.com/watch?v=-7QsLChfdsE" %}
 [https://youtu.be/-7QsLChfdsE](https://youtu.be/-7QsLChfdsE)

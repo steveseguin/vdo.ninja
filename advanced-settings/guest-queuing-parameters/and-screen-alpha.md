@@ -1,7 +1,5 @@
 ---
-description: >-
-  Replaces the way &queue worked before, where the guest can see/hear the
-  director, but not other guests, until activated
+description: The guest can see and hear the director before being activated into the room.
 ---
 
 # \&screen
@@ -14,26 +12,18 @@ Sender-Side Option! ([`&push`](../../source-settings/push.md), [`&room`](../../g
 
 ## Details
 
-`&screen` now replaces the way [`&queue`](../../general-settings/queue.md) worked before, where the guest can see/hear the director, but not other guests, until activated.
+`&screen` restores the older guest-approval behavior that base [`&queue`](../../general-settings/queue.md) used to provide.
 
-[`&queue`](../../general-settings/queue.md) was changed to not allow the guest to see the director's video, until the director activates the guest with their pink activate-guest button. Otherwise, it's the same as before.
+With `&screen`, the guest can see and hear the director before activation, but they are still not admitted into the room with the other guests until the director activates or transfers them.
 
-`&queue2` is given the alias `&screen`, intending to imply you can use this mode to screen incoming guests by talking to them, before approving them.
+Use this when you want a quick pre-show screening conversation without running the full room in screening-room mode.
 
-This mode do not apply when you have [`&queue`](../../general-settings/queue.md) also on the director's link, however, rather just when added to the guest-invite link only.
+This mode applies to guest invite links, not to the director link running the room in `&queue` mode.
 
-Transferring the guest to another room will also automatically activate the guest. You don't need to press the pink 'activate' button if you just intend to transfer them and don't want to talk to the guest you are screening.
+Transferring the guest to another room also counts as activation.
 
 ## Related
 
 {% content-ref url="../../general-settings/queue.md" %}
 [queue.md](../../general-settings/queue.md)
-{% endcontent-ref %}
-
-{% content-ref url="and-hold-alpha.md" %}
-[and-hold-alpha.md](and-hold-alpha.md)
-{% endcontent-ref %}
-
-{% content-ref url="and-holdwithvideo-alpha.md" %}
-[and-holdwithvideo-alpha.md](and-holdwithvideo-alpha.md)
 {% endcontent-ref %}

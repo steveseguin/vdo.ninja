@@ -13,7 +13,7 @@ There are several reasons you may be experiencing low frame rates, including:
 * Resolution is set to high, so selecting a lower resolution might help. This is especially true for H264 streams.
 * Your Internet may be very slow or unstable. Try maybe Speedify.com and DO NOT use Wi-Fi.
 * Make sure your CPU is not running near 100%. An overloaded computer or network will lag.
-* Lower the resolution of OBS Ninja; select "Smooth and Cool" or 640x360 during camera selection.
+* Lower the resolution used by VDO.Ninja; select "Smooth and Cool" or 640x360 during camera selection.
 
 Regardless, putting your own version of the HTML server up will not make it any faster.
 

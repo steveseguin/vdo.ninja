@@ -1,18 +1,20 @@
 ---
-description: Understanding URL parameters and custom settings
+description: VDO.Ninja URL parameters and advanced settings for OBS, rooms, remote guests, bitrate, audio, video, screen sharing, WHIP, and mobile workflows.
 ---
 
-# Advanced Options (URL Parameters)
+# VDO.Ninja URL Parameters and Advanced Settings
 
 ## Overview
 
-VDO.Ninja is a tool that can be seen as a mediator, negotiating a direct connection between a publishing device and a viewing device (such as [OBS \[Open Broadcaster Software\]](https://obsproject.com/)). There are generally two links involved; one to push (publish) and one to pull (view), although links can be made to do both at the same time.
+VDO.Ninja uses URL parameters to control how publishing, viewing, rooms, guest invites, OBS integration, bitrate, audio, video, recording, WHIP, and mobile workflows behave. If you are searching for a specific VDO.Ninja parameter such as `&push`, `&room`, `&meshcast`, `&whip`, `&quality`, or `&queue`, this section is the main reference.
+
+VDO.Ninja negotiates a direct connection between a publishing device and a viewing device, such as [OBS \[Open Broadcaster Software\]](https://obsproject.com/). There are generally two links involved: one to push (publish) and one to pull (view), although links can be made to do both at the same time.
 
 The viewer (receiver) and the publisher (sender) each play their own role in determining the qualities of a stream, so likewise each side has its own set of parameters available to them. A publisher can have multiple viewers access their video stream, with each viewer having the ability to customize the quality of the stream they receive.
 
 The following guide details the options, syntax, values, and general use of these available settings/parameters.
 
-## Passing parameters via the URL to achieve your desired stream settings
+## Passing parameters via the URL
 
 You can customize the playback of videos by adding query string parameters to the VDO.Ninja URL links, along with many other aspects. VDO.Ninja is highly flexible in this regard, letting you achieve your desired outcome without needing to code and without additional software.
 
@@ -42,7 +44,7 @@ A stream ID must also not already be in active use, else you will be provided wi
 URL fragment parameters (after `#`) are merged with normal query parameters and take precedence on conflicts. Example: `?view=A#view=B` resolves to `view=B`.
 {% endhint %}
 
-## General/Sender/Viewer Option
+## General, sender, viewer, and director options
 
 All of the available parameters can be seperated in five categories. You find the category on the top of the page of a parameter.
 

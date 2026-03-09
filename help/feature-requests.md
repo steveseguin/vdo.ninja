@@ -6,7 +6,7 @@ description: VDO.Ninja help page for Feature Requests including support policy a
 
 Please feel free to make feature requests or submit bug reports; feedback of any kind is greatly appreciated. Development is largely based on user-feedback.
 
-The best way to track submissions is to make them feature requests and bug reports directly to the GitHub repository here: [https://github.com/steveseguin/obsninja/issues](https://github.com/steveseguin/obsninja/issues)
+The best way to track submissions is to make them feature requests and bug reports directly to the GitHub repository here: [https://github.com/steveseguin/vdo.ninja/issues](https://github.com/steveseguin/vdo.ninja/issues)
 
 You can also submit bug reports or feature requests elsewhere, though they are more likely to be lost or missed:
 

@@ -12,7 +12,7 @@ For live updates, use:
 ## Scope of this page
 
 - Only highlights from the last 120 days are kept here.
-- Current window: **October 24, 2025 to February 21, 2026**.
+- Current window: **November 9, 2025 to March 9, 2026**.
 - Anything older should be removed after permanent docs are updated.
 - This page is not a long-term changelog archive.
 

@@ -1,7 +1,7 @@
 ---
 description: >-
-  Allows assistant directors to have access to the director's room, with a
-  subset of control
+  Allows assistant directors to join the director room with a shared
+  co-director password and a subset of protected controls.
 ---
 
 # \&codirector
@@ -18,59 +18,45 @@ Director Option! ([`&director`](../viewers-settings/director.md))
 
 Example: `&codirector=DirectorPassword`
 
-<table><thead><tr><th width="211">Value</th><th>Description</th></tr></thead><tbody><tr><td>(no value given)</td><td>the site will prompt you for a password on load</td></tr><tr><td>(alpha numeric value)</td><td>password for the directors</td></tr></tbody></table>
+| Value | Description |
+| --- | --- |
+| (no value given) | Prompt for the co-director password on load |
+| (alpha numeric value) | Shared co-director password |
 
 ## Details
 
-The basic idea is there is a URL parameter called `&codirector` that you need to add to all the director links used.
+Adding `&codirector` to the director URL enables trusted assistant-director access.
 
-For example, `https://vdo.ninja/?director=MYROOMNAME&codirector=DirectorPWD123`
+Example:
 
-So long as all the directors have `&codirector=DirectorPWD123` added to their URLs, they all share a common director's password, and so they all treat each other as valid directors.
+```text
+https://vdo.ninja/?director=MYROOMNAME&codirector=DirectorPWD123
+```
 
-If the passwords don't match, the first director into the room will be the real director, and the others will be rejected.
+Any other director using the same room name and matching co-director password can join as a co-director.
 
-If you don't enter a password via the URL, the site will prompt you for a password on load.
+The first valid director in the room remains the main director. Co-directors inherit most director tools, but the main director remains authoritative and cannot be removed or controlled in the same way as other guests.
 
-### Description
+## Current behavior
 
-Using this flag, the director can set a director's password (or prompt the user for one). Any other director that joins the room, who also has a matching director's password set, will be granted co-director controls.
+* Co-directors can share most director controls
+* The main director remains the authority
+* Some controls remain restricted to avoid conflicts with the main director
+* Queue and held-guest state is synced from the main director over the normal shared-state path
 
-A co-director has nearly all the same controls and powers as the main director, except they cannot control the main director, nor kick them out of the room. They also have a few features unavailable to them at present, such as solo-talk, as those currently would conflict with the main director's ability to use those features.
+That last point matters for `&queue`: late-joining co-directors should still see the current "Activate Guest" controls for held guests, and activating a guest from a co-director routes through the normal director activation flow.
 
-The first director to join the room is the main director, and so their password is the 'correct' password.
+## Optional room-settings workflow
 
-A co-director cannot force-disconnect the main director.
+You can also enable co-directors from the room settings panel, which generates a co-director invite link for you.
 
-If the main director does not have `&codirector={somepassword}` in their URL, nor enabled co-director mode via the room-settings menu, then remote co-directors will not be able to join.
+## Warnings
 
-{% hint style="info" %}
-The co-director mode is still evolving, and certain things like shared-state between all the directors may still be missing.
-
-Starting with [v20](../releases/v20.md) of VDO.Ninja, a co-director invite link will be available via the room settings button, along with the option to customize permissions.
-{% endhint %}
-
-<div align="left"><img src="../.gitbook/assets/image (31) (1).png" alt="The co-directors have a special color assigned to them"></div>
-
-### Optional - Enable via Room Settings
-
-You can also enable the co-director mode by checking the "Add co-directors .." option in the room settings menu. This will provide you a link with the `&codirector` invite link already generated.
-
-This will only work while the check-box is selected, so be sure to re-enable it if reloading the page without `&codirector` added to your own link.
-
-### ![](<../.gitbook/assets/image (12) (3).png>)
-
-### Warnings
-
-Do not confuse the room password with the director's password; if they are the same, you potentially allow a mischievous guest to have access that they should not have.
-
-Co-directors will not be able to join as co-directors unless the main director has enabled the co-director option via the room setting's checkbox or by having a matching `&codirector=xxx` parameter in their own link.
-
-If the main director leaves and re-joins, or a new director joins, all the co-directors will need to be re-checked. It's possible that a network outage could have a co-director and the main director to switch roles, depending on who re-connected.
-
-If you copy and paste the main director's URL to a new browser/tab, be sure to remove the [`&push=STREAMID`](../source-settings/push.md) portion of the URL. If you do not, you will get an error about the stream ID being already in use. Each co-director and guest needs their own unique stream ID.
-
-If using the [`&queue`](../general-settings/queue.md) parameter with co-directors, you may need to use [`&view=STREAMID`](../advanced-settings/view-parameters/view.md) to allow the co-director to bypass the queue, else they won't be able to be validated since they will be stuck in the queue. There is more info about this in the [queue's documentation](../general-settings/queue.md).
+* Do not reuse the room password as the co-director password.
+* Co-directors can only join if the main director has enabled co-director mode with a matching password or room setting.
+* If the main director leaves and rejoins, co-directors may need to reconnect and revalidate.
+* If duplicating a director URL into another tab, remove any existing [`&push=STREAMID`](../source-settings/push.md) value first, since each participant needs a unique stream ID.
+* [`&view`](../advanced-settings/view-parameters/view.md) can still be used to intentionally exempt specific stream IDs from queue behavior, but it is no longer the recommended workaround just to let co-directors see queued guests.
 
 ## Related
 

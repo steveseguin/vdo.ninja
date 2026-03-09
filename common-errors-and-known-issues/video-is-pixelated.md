@@ -1,8 +1,10 @@
 ---
-description: When the video turns into a rainbow puke with distorted colors
+description: Troubleshooting pixelated, smeared, corrupted, or wrong-color video in VDO.Ninja and OBS, especially under packet loss or decoder problems.
 ---
 
 # Video stream looks corrupted
+
+If a VDO.Ninja stream looks smeared, blocky, rainbow-colored, green, pink, or otherwise corrupted in OBS or a browser, the most common causes are packet loss, codec compatibility problems, decoder bugs, or bad hardware-acceleration behavior.
 
 {% hint style="info" %}
 Update: This issue of rainbow puke impacted OBS v25 and older, but is no longer an issue for most users.
@@ -25,13 +27,13 @@ If having issues with the video being very low quality, this is often due to hig
 * Use Speedify.com (in AUTO or TCP mode).
 * Use the Electron Capture app instead of OBS to capture video. The Electron Capture app uses a newer version of Chromium, which works far better than OBS when dealing with packet loss related issues.
 * Lowering the framerate or resolution, especially for those using H264, can provide smoother video, and perhaps with less distortion.
-* You can increase the jitter buffer size by using the [`&buffer`](../advanced-settings/view-parameters/buffer.md) URL parameter; such as "[https://obs.ninja?view=abs\&buffer=300](https://obs.ninja/?view=abs\&buffer=300)". This only works if using Chrome/Chromium v76 or newer though; OBS v25 currently uses Chromium v75 and so is not yet compatible.
+* You can increase the jitter buffer size by using the [`&buffer`](../advanced-settings/view-parameters/buffer.md) URL parameter; such as "[https://vdo.ninja/?view=abs\&buffer=300](https://vdo.ninja/?view=abs\&buffer=300)". This only works if using Chrome/Chromium v76 or newer though; OBS v25 currently uses Chromium v75 and so is not yet compatible.
 * You connect two peers via TCP, instead of UDP, which will ensure there is no packet loss. This option is for more advanced users and requires a compatible TURN server (or VPN). Please use your own TURN servers for this option if so, as the bandwidth costs can be quite high for me.
 * You can scale down the video while viewing with [`&scale=50`](../advanced-settings/view-parameters/scale.md) to potentially reduce stutter and reduce the frequency of frame corruption.
 * Normally the video should "fix itself" after a moment of so, but if not that is likely a bug in the browser used for decoding. If in OBS you can toggle the visibility of the element to try to trigger a resolution. I've also provided a "SEND KEYFRAME" button in the hidden stats menu that lets the publish do this from their end.
 * Mentioning this again, but connect over wired ETHERNET if possible and avoid wireless connections, including WiFi networks. DSL connections are also often quite poor. Do so for both OBS and the video-connected device for optimal results. Even 4G LTE is better than Wi-Fi in many cases.
 * Do not watch a 4K Netflix or Youtube video while streaming; it will increase network congestion and can cause packet loss and buffer-bloat.
-* If you have LOW QUALITY video, or low resolution or low bitrates, that perhaps can be adjusted. Please see below re: [bitrates and resolutions](https://github.com/steveseguin/obsninja/wiki/FAQ#bnr)
+* If you have low quality video, low resolution, or low bitrates, those may need adjustment. See [How to control bitrate and quality](../guides/how-do-i-control-bitrate-quality.md).
 * Ensure your computer and remote computer are not maxing out their CPU power. If they are, have them lower the resolution and bitrate.
 * If using an SFU server, like Janus or MediaMTX, or if using WHIP from OBS, increase the keyframe rate, ensure the PLI is working, and perhaps consider switching the server to work in TCP mode. It's also possible to try to set a keyframe rate with VDO.Ninja, however this is a last resort.
 
