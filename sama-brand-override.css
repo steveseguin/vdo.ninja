@@ -1,0 +1,748 @@
+/*
+ * ============================================
+ * SAMA — Story Advantage Messaging Assistant
+ * Brand Override Stylesheet
+ * ============================================
+ * Load AFTER your main style.css
+ *
+ * Brand Palette:
+ *   Primary Deep Navy:  #222056
+ *   Primary Lime Yellow: #e3e425
+ *   Secondary Black:    #000000
+ *   Secondary Mid Gray: #58595B
+ *   Secondary Light Gray: #939598
+ * ============================================
+ */
+
+/* ==========================================
+   1. ROOT VARIABLE OVERRIDES
+   ========================================== */
+
+:root {
+	/* --- Backgrounds --- */
+	--background-color: #1a1842;
+	--dark-background-color: #0e0d2a;
+	--container-color: #2a2850;
+	--button-color: #222056;
+	--near-black: #0e0d2a;
+
+	/* --- Accent colours --- */
+	--blue-accent: #2d2b62;
+	--red-accent: #3d2056;
+	--green-accent: #2a3d22;
+	--olive-accent: #4a5520;
+	--accent-color: #e3e425;
+	--accent-hover-color: #f0ed5a;
+
+	/* --- Light-theme links (navy) --- */
+	--a-link: #222056;
+	--a-visited: #222056;
+	--a-hover: #3a3880;
+	--a-focus: #3a3880;
+	--a-active: #1a1845;
+
+	/* --- Dark-theme links (yellow) --- */
+	--a-dark-link: #e3e425;
+	--a-dark-visited: #e3e425;
+	--a-dark-hover: #f0ed5a;
+	--a-dark-focus: #f0ed5a;
+	--a-dark-active: #c8c620;
+
+	/* --- Darker link variants --- */
+	--a-darker-link: #e3e425;
+	--a-darker-visited: #e3e425;
+	--a-darker-hover: #f0ed5a;
+	--a-darker-focus: #f0ed5a;
+	--a-darker-active: #c8c620;
+
+	/* --- Lighter link variants --- */
+	--a-lighter-link: #e3e425;
+	--a-lighter-visited: #e3e425;
+	--a-lighter-hover: #f0ed5a;
+	--a-lighter-focus: #f0ed5a;
+	--a-lighter-active: #c8c620;
+
+	/* --- Director/Codirector boxes --- */
+	--director-box: rgb(227 228 37);
+	--codirector-box: rgb(34 32 86);
+	--director-dark-box: rgb(227 228 37);
+	--codirector-dark-box: rgb(88 89 91);
+}
+
+/* Dark-mode variable overrides */
+@media (prefers-color-scheme: dark) {
+	:root {
+		--discord-grey-5: #2a2850;
+		--discord-grey-7: #35336b;
+		--accent-color: #e3e425;
+		--accent-hover-color: #f0ed5a;
+	}
+}
+
+
+/* ==========================================
+   2. BODY & BACKGROUNDS
+   ========================================== */
+
+body {
+	background-color: var(--background-color);
+	background-image:
+		radial-gradient(1200px 800px at 10% -10%, rgba(34,32,86,0.15), transparent 60%),
+		radial-gradient(1000px 600px at 110% 0%, rgba(227,228,37,0.03), transparent 60%);
+}
+
+body.darktheme {
+	background-color: var(--dark-background-color);
+}
+
+
+/* ==========================================
+   3. SELECTION
+   ========================================== */
+
+::selection {
+	background-color: #22205688;
+	color: #FFF;
+}
+
+
+/* ==========================================
+   4. LINKS — ALL THEMES
+   ========================================== */
+
+/* Light theme */
+a:link    { color: var(--a-link); }
+a:visited { color: var(--a-visited); }
+a:hover   { color: var(--a-hover); }
+a:focus   { color: var(--a-focus); }
+a:active  { color: var(--a-active); }
+
+/* Dark theme */
+.darktheme a:link    { color: var(--a-dark-link); }
+.darktheme a:visited { color: var(--a-dark-visited); }
+.darktheme a:hover   { color: var(--a-dark-hover); }
+.darktheme a:focus   { color: var(--a-dark-focus); }
+.darktheme a:active  { color: var(--a-dark-active); }
+
+/* Director container links */
+.directorContainer a:link    { color: var(--a-lighter-link); }
+.directorContainer a:visited { color: var(--a-lighter-visited); }
+.directorContainer a:hover   { color: var(--a-lighter-hover); }
+.directorContainer a:focus   { color: var(--a-lighter-focus); }
+.directorContainer a:active  { color: var(--a-lighter-active); }
+
+/* Infoblob links */
+.infoblob a:link    { color: var(--a-lighter-link); }
+.infoblob a:visited { color: var(--a-lighter-visited); }
+.infoblob a:hover   { color: var(--a-lighter-hover); }
+.infoblob a:focus   { color: var(--a-lighter-focus); }
+.infoblob a:active  { color: var(--a-lighter-active); }
+
+.darktheme .infoblob a:link    { color: var(--a-darker-link); }
+.darktheme .infoblob a:visited { color: var(--a-darker-visited); }
+.darktheme .infoblob a:hover   { color: var(--a-darker-hover); }
+.darktheme .infoblob a:focus   { color: var(--a-darker-focus); }
+.darktheme .infoblob a:active  { color: var(--a-darker-active); }
+
+/* Solo links */
+a.soloLink:link,
+a.soloLink:visited { color: #e3e425; }
+.darktheme a.soloLink:link,
+.darktheme a.soloLink:visited { color: #e3e425; }
+a.soloLink:hover { color: #f0ed5a; }
+.darktheme a.soloLink:hover { color: #f0ed5a; }
+
+
+/* ==========================================
+   5. BUTTONS & CTA
+   ========================================== */
+
+/* Go button (primary CTA) */
+.gobutton {
+	background-color: #222056 !important;
+	border-color: #e3e425 !important;
+	color: #e3e425 !important;
+}
+.gobutton:hover {
+	background-color: #2d2b62 !important;
+	border-color: #c8c620 !important;
+}
+.darktheme .gobutton {
+	background-color: #222056 !important;
+	border-color: #e3e425 !important;
+	color: #e3e425 !important;
+}
+.darktheme .gobutton:hover {
+	background-color: #2d2b62 !important;
+	border-color: #c8c620 !important;
+}
+
+/* Go webcam (pulsing green → SAMA yellow) */
+.gowebcam:enabled {
+	background-color: #e3e425 !important;
+	background: radial-gradient(#e3e425, #f0ed5a) !important;
+	color: #222056 !important;
+	font-weight: bold !important;
+	box-shadow: 0 0 31px 0px #e3e42544;
+}
+
+/* Main screenshare button */
+.mainScreenShareButton {
+	background-color: #e3e425 !important;
+	background: radial-gradient(#e3e425, #f0ed5a) !important;
+	color: #222056 !important;
+}
+
+/* Grey buttons → navy */
+button.grey {
+	background-color: var(--button-color);
+}
+
+/* Dark-theme buttons */
+.darktheme :not(.promptModalInner) > button {
+	background-color: #2a2850;
+	border-color: #58595B;
+}
+.darktheme :not(.promptModalInner) > button:hover {
+	filter: brightness(1.15);
+}
+
+
+/* ==========================================
+   6. FOCUS & ACCESSIBILITY
+   ========================================== */
+
+:where(a, button, [role="button"], input, select, textarea):focus-visible {
+	outline: 2px solid #e3e425;
+	outline-offset: 2px;
+}
+.darktheme :where(a, button, [role="button"], input, select, textarea):focus-visible {
+	outline-color: #e3e425;
+}
+
+input[type="text"]:focus,
+input[type="password"]:focus {
+	border-color: #e3e425;
+	box-shadow: 0 0 0 2px rgba(227, 228, 37, 0.2);
+}
+
+select:focus {
+	border-color: #e3e425;
+}
+
+/* Radio & checkbox accent */
+input[type="radio"],
+input[type="checkbox"] {
+	accent-color: #e3e425;
+}
+
+
+/* ==========================================
+   7. CARDS & COLUMNS
+   ========================================== */
+
+.column.card,
+.column {
+	background-color: #f0f0e8 !important;
+	border: 1px solid #d4d4c8;
+}
+.darktheme .column.card,
+.darktheme .column {
+	background-color: #35336b !important;
+	border: 1px solid #4d4a9e;
+}
+.column:hover {
+	box-shadow: 0 10px 24px rgba(34, 32, 86, 0.25);
+}
+
+
+/* ==========================================
+   8. CONTAINERS & DIRECTORS
+   ========================================== */
+
+.directorContainer {
+	background-color: var(--container-color);
+}
+
+.directorBlue {
+	background-color: #2d2b62 !important;
+}
+.directorBox {
+	background-color: #35336b !important;
+}
+
+.containerGreen {
+	background-color: #3a6b22 !important;
+}
+body.darktheme .containerGreen {
+	background-color: #1a3010 !important;
+}
+
+
+/* ==========================================
+   9. HEADER
+   ========================================== */
+
+#header {
+	background-color: rgba(14, 13, 42, 0.70) !important;
+}
+.darktheme #header {
+	background-color: rgba(14, 13, 42, 0.75) !important;
+}
+
+#head9 {
+	color: #e3e425;
+}
+
+
+/* ==========================================
+   10. CONTROL BAR / TOOLBAR
+   ========================================== */
+
+#subControlButtons {
+	background-color: #1a1842;
+	border: 1px solid rgba(227, 228, 37, 0.12);
+	box-shadow: 0 8px 24px rgba(14, 13, 42, 0.5);
+}
+.darktheme #subControlButtons {
+	background-color: rgba(26, 24, 66, 0.75);
+	border: 1px solid rgba(227, 228, 37, 0.1);
+}
+
+#subControlButtons div,
+#subControlButtons span button {
+	background-color: #222056;
+}
+#subControlButtons div:hover {
+	background-color: #2d2b62;
+}
+
+
+/* ==========================================
+   11. CONTROLS GRID (Director buttons)
+   ========================================== */
+
+/* Icon colours */
+.controlsGrid button[data-action-type="addToScene"] i,
+.controlsGrid button[data-action-type="solo-chat"] i {
+	color: #e3e425;
+}
+.controlsGrid button[data-action-type="solo-video"] > i {
+	color: #e3e425;
+}
+
+/* Highlight colours — dark theme */
+.darktheme .controlsGrid .btn-HL-yellow  { background-color: rgb(84 70 9); }
+.darktheme .controlsGrid .btn-HL-blue    { background-color: #222056; }
+.darktheme .controlsGrid .btn-HL-purple  { background-color: #3d2056; }
+.darktheme .controlsGrid .btn-HL-teal    { background-color: rgb(20 80 80); }
+
+/* Highlight colours — light theme */
+.controlsGrid .btn-HL-blue   { background-color: #c8c8e8; }
+.controlsGrid .btn-HL-purple { background-color: #d8c8e8; }
+
+/* Director message box */
+.darktheme .controlsGrid .director-message-box {
+	background: rgba(42, 40, 80, 0.55);
+	border: 1px solid rgba(227, 228, 37, 0.1);
+}
+.darktheme .controlsGrid .director-message-box textarea {
+	background-color: rgba(53, 51, 107, 0.7);
+}
+
+
+/* ==========================================
+   12. CHAT MODULE
+   ========================================== */
+
+#chatModule {
+	border: 1px solid rgba(34, 32, 86, 0.3) !important;
+}
+.darktheme #chatModule {
+	background-color: rgba(26, 24, 66, 0.75) !important;
+	border: 1px solid rgba(227, 228, 37, 0.1) !important;
+}
+
+.chatBarInputButton {
+	background-color: #e3e425 !important;
+	color: #222056 !important;
+	border: 1px solid #c8c620 !important;
+}
+.chatBarInputButton:hover {
+	background-color: #f0ed5a !important;
+}
+
+/* Chat links */
+div#chatBody a {
+	color: #222056 !important;
+	background-color: rgba(227, 228, 37, 0.1) !important;
+	border: 1px solid #222056 !important;
+}
+.darktheme div#chatBody a {
+	color: #e3e425 !important;
+	background-color: rgba(227, 228, 37, 0.1) !important;
+	border-color: #e3e425 !important;
+}
+
+
+/* ==========================================
+   13. RESHARE / INVITE LINKS
+   ========================================== */
+
+#reshare,
+#inviteLinkURL {
+	color: #e3e425 !important;
+}
+
+a.grabLinks:link,
+a.grabLinks:visited {
+	color: #222056 !important;
+}
+.darktheme a.grabLinks:link,
+.darktheme a.grabLinks:visited {
+	color: #e3e425 !important;
+}
+a.grabLinks:hover,
+a.grabLinks:active {
+	color: #3a3880 !important;
+}
+.darktheme a.grabLinks:hover,
+.darktheme a.grabLinks:active {
+	color: #f0ed5a !important;
+}
+
+
+/* ==========================================
+   14. SLIDERS / RANGE INPUTS
+   ========================================== */
+
+input[type="range"]::-webkit-slider-runnable-track {
+	background: #58595B;
+}
+input[type="range"]::-webkit-slider-thumb {
+	background: #e3e425;
+	border: 1px solid #222056;
+}
+input[type="range"]::-moz-range-track {
+	background: #58595B;
+}
+input[type="range"]::-moz-range-thumb {
+	background: #e3e425;
+	border: 1px solid #222056;
+}
+input[type="range"]::-moz-range-progress {
+	background: #e3e425;
+}
+
+.darktheme input[type="range"]::-webkit-slider-runnable-track { background: #35336b; }
+.darktheme input[type="range"]::-moz-range-track { background: #35336b; }
+.darktheme input[type="range"]::-webkit-slider-thumb { background: #e3e425; border-color: #222056; }
+.darktheme input[type="range"]::-moz-range-thumb { background: #e3e425; border-color: #222056; }
+.darktheme input[type="range"]::-moz-range-progress { background: #e3e425; }
+
+
+/* ==========================================
+   15. PROGRESS BAR
+   ========================================== */
+
+#progressBar {
+	background-color: #e3e42599;
+}
+
+
+/* ==========================================
+   16. MODALS & PROMPTS
+   ========================================== */
+
+.darktheme #promptModal,
+.darktheme .customModelPopup,
+.darktheme .promptModal {
+	background-color: #2a2850;
+}
+
+#modalBackdrop {
+	background: var(--background-color);
+}
+#modalBackdrop.darktheme {
+	background-color: var(--dark-background-color);
+}
+
+.modalBackdrop { background: var(--background-color); }
+.modalBackdrop.darktheme { background-color: var(--dark-background-color); }
+.opaqueBackdrop { background: var(--background-color); }
+.opaqueBackdrop.darktheme { background-color: var(--dark-background-color); }
+
+
+/* ==========================================
+   17. MESSAGE CARDS & WARNINGS
+   ========================================== */
+
+.warning.message-card {
+	border-left: 4px solid #e3e425;
+}
+.info.message-card {
+	border-left: 4px solid #222056;
+	background: #f0f0e8;
+}
+.darktheme .info.message-card {
+	background: #2a2850;
+	border-left-color: #e3e425;
+}
+.darktheme .warning.message-card {
+	border-left-color: #e3e425;
+}
+
+.startupWarning {
+	border-left: 4px solid #e3e425;
+}
+
+.cameraTip {
+	border-left: 4px solid #e3e425;
+	background: #f5f5e0;
+}
+.darktheme .cameraTip {
+	background-color: #2a2850;
+	color: #e5dbdb;
+}
+
+
+/* ==========================================
+   18. TOOLTIPS
+   ========================================== */
+
+.tooltip .tooltiptext {
+	background-color: rgba(34, 32, 86, 0.95) !important;
+	color: #e8eef6 !important;
+	border: 1px solid rgba(227, 228, 37, 0.15);
+}
+
+
+/* ==========================================
+   19. OBS STATE INDICATOR
+   ========================================== */
+
+#obsState {
+	border: #e3e425 solid 2px;
+	background-color: #222056DD;
+}
+
+
+/* ==========================================
+   20. TIPPING FEATURE — SAMA BRANDED
+   ========================================== */
+
+.tipModalInner {
+	background: linear-gradient(135deg, #1a1842 0%, #222056 100%);
+}
+
+.tipAmountBtn.selected {
+	background: linear-gradient(135deg, #e3e425 0%, #c8c620 100%);
+	box-shadow: 0 4px 15px rgba(227, 228, 37, 0.4);
+	color: #222056;
+}
+
+.tipConfirmBtn {
+	background: linear-gradient(135deg, #222056 0%, #e3e425 100%);
+	box-shadow: 0 4px 15px rgba(227, 228, 37, 0.3);
+	color: #fff;
+}
+.tipConfirmBtn:hover:not(:disabled) {
+	box-shadow: 0 6px 20px rgba(227, 228, 37, 0.4);
+}
+
+.tipTotal span:last-child {
+	background: linear-gradient(135deg, #e3e425, #f0ed5a);
+	-webkit-background-clip: text;
+	-webkit-text-fill-color: transparent;
+	background-clip: text;
+}
+
+.tip-amount {
+	background: linear-gradient(135deg, #e3e425, #f0ed5a);
+	-webkit-background-clip: text;
+	-webkit-text-fill-color: transparent;
+	background-clip: text;
+}
+
+.tip-notification {
+	background: linear-gradient(135deg, rgba(227, 228, 37, 0.15) 0%, rgba(34, 32, 86, 0.15) 100%);
+	border-left: 3px solid #e3e425;
+}
+
+.message.tip-message-container {
+	background: linear-gradient(135deg, rgba(227, 228, 37, 0.08) 0%, rgba(34, 32, 86, 0.08) 100%);
+}
+
+.tipButton {
+	background: linear-gradient(135deg, #e3e425 0%, #222056 100%) !important;
+}
+
+.tipSuccess {
+	color: #e3e425;
+	background: rgba(227, 228, 37, 0.2);
+	border: 1px solid rgba(227, 228, 37, 0.5);
+}
+
+.tipOnboardingBtn {
+	background: #222056;
+}
+.tipOnboardingBtn:hover {
+	background: #1a1845;
+}
+
+#tipOnboardingModal .promptModalInner {
+	border-top: 3px solid #e3e425;
+}
+
+
+/* ==========================================
+   21. DARK-THEME CONTAINERS
+   ========================================== */
+
+body.darktheme div.multiselect    { background-color: #35336b; }
+body.darktheme .audioMenu         { background-color: #35336b; }
+body.darktheme #avatarDiv         { background-color: #35336b; }
+body.darktheme .directorsgrid .vidcon { background-color: #2a2850; }
+body.darktheme .promptModal       { background-color: #2a2850; }
+
+.darktheme #addPasswordBasic,
+.darktheme #avatarDiv,
+.darktheme #avatarDiv2,
+.darktheme #avatarDiv3,
+.darktheme #audioScreenShare1,
+.darktheme #audioMenu,
+.darktheme #audioMenu2,
+.darktheme #effectsDiv,
+.darktheme #effectsDiv2,
+.darktheme #effectsDiv3,
+.darktheme #grabDirectorSoloLinkParent,
+.darktheme #videoMenu,
+.darktheme #videoMenu2,
+.darktheme #videoMenu3,
+.darktheme #headphonesDiv,
+.darktheme #headphonesDiv2,
+.darktheme #headphonesDiv3,
+.darktheme #videoSettings,
+.darktheme #videoSettings2,
+.darktheme #popupSelector_user_settings,
+.darktheme .invite_setting_group {
+	background-color: #2a2850;
+	border: 1px solid #4d4a9e;
+}
+
+.darktheme #grabDirectorSoloLink {
+	background-color: #35336b;
+	border: 1px solid #4d4a9e;
+}
+
+.darktheme ul#audioSource,
+.darktheme ul#audioSource3 {
+	background-color: #35336b !important;
+	border: 1px solid #4d4a9e !important;
+}
+.darktheme ul#audioSource label,
+.darktheme ul#audioSource3 label {
+	background-color: transparent !important;
+	color: var(--discord-text) !important;
+}
+
+
+/* ==========================================
+   22. SSO PANEL
+   ========================================== */
+
+body.darktheme .sso-options-panel {
+	background: #2a2850;
+	border: 1px solid #4d4a9e;
+}
+
+body.darktheme .sso-options-input {
+	border: 1px solid #4d4a9e;
+	background: #35336b;
+}
+
+
+/* ==========================================
+   23. GLASS EFFECTS — SAMA NAVY TINT
+   ========================================== */
+
+.glass {
+	background-color: rgba(34, 32, 86, 0.6);
+	backdrop-filter: blur(10px) saturate(120%);
+	-webkit-backdrop-filter: blur(10px) saturate(120%);
+	border: 1px solid rgba(227, 228, 37, 0.08);
+}
+
+.directorContainer,
+#guestFeeds,
+.hideLinksClass {
+	border: 1px solid rgba(227, 228, 37, 0.06);
+	box-shadow: 0 10px 28px rgba(14, 13, 42, 0.4);
+}
+
+
+/* ==========================================
+   24. MISCELLANEOUS
+   ========================================== */
+
+/* Close / icon colours */
+.close-btn:hover,
+.overlayCloseBtn:hover { color: #e3e425; }
+.darktheme .close-btn:hover,
+.darktheme .overlayCloseBtn:hover { color: #e3e425; }
+
+.director-link-icons .las:hover { color: #e3e425; }
+.darktheme .director-link-icons .las:hover { color: #e3e425; }
+
+/* Copy URL label */
+.darktheme #copythisurl { color: #939598 !important; }
+
+/* Guest tips dark */
+.darktheme #guestTips {
+	background-color: #35336b;
+	border-color: #4d4a9e;
+}
+
+/* Scrollbar */
+body {
+	scrollbar-color: #222056 #0e0d2a;
+}
+
+/* Mix dropdown (director audio) */
+.darktheme .mix-dropdown {
+	background: #1a1842;
+	border-color: #4d4a9e;
+}
+
+/* Pulsating animation colours */
+.pulsate {
+	box-shadow: 0 0 0 0 rgba(34, 32, 86, 1);
+}
+@keyframes pulse {
+	0% {
+		transform: scale(1);
+		box-shadow: 0 0 0 0 rgba(34, 32, 86, 0.7);
+	}
+	15% {
+		transform: scale(1.2);
+		box-shadow: 0 0 0 10px rgba(34, 32, 86, 0);
+	}
+	50% {
+		transform: scale(1.0);
+		box-shadow: 0 0 0 0 rgba(34, 32, 86, 0);
+	}
+	85% {
+		transform: scale(0.95);
+		box-shadow: 0 0 0 0 rgba(34, 32, 86, 0);
+	}
+	100% {
+		transform: scale(1);
+		box-shadow: 0 0 0 0 rgba(34, 32, 86, 0);
+	}
+}
+
+@keyframes pulsate {
+	0%   { box-shadow: 0 0 31px #e3e42544; transform: scale(1.0); }
+	50%  { box-shadow: 0 0 17px #0004; transform: scale(0.99); }
+	100% { box-shadow: 0 0 31px #e3e42544; transform: scale(1.0); }
+}
