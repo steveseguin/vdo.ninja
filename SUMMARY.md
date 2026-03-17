@@ -60,6 +60,7 @@
   * [Audio-Reactive Avatars](guides/audio-reactive-avatars.md)
   * [Options to record streams](guides/options-to-record-streams.md)
   * [Cloud Sync (Google Drive + Dropbox)](guides/cloud-sync-google-drive-and-dropbox.md)
+  * [Recording Format Options and Settings](guides/recording-format-options-and-settings.md)
   * [External guides and how-tos](guides/guides-and-how-tos.md)
   * [How to lock the resolution](guides/how-do-i-lock-the-resolution.md)
   * [How to use VDO.Ninja as a webcam for Google Hangouts, Zoom, and more](guides/use-vdo.ninja-as-a-webcam-for-google-hangouts-zoom-and-more.md)
