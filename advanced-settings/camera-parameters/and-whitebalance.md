@@ -24,8 +24,7 @@ It is normally in Kelvin, so `5000` or `6500` are typical values it will take.
 
 VDO.Ninja already tries to auto-save camera settings for android devices that support video settings, but for desktop browsers, it does not. Using these new values though you can manually set things to auto-configure as you want.
 
-These settings will apply to ALL video devices though, not just a specific one. If a setting isn't supported by your camera or browser, it will just fail quietly, and not apply. You'll see an error in the console log though.\
-
+These settings will apply to ALL video devices though, not just a specific one. If a setting isn't supported by your camera or browser, it will just fail quietly, and not apply. You'll see an error in the console log though.<br>
 
 {% hint style="warning" %}
 * Firefox and Safari may not support this feature.

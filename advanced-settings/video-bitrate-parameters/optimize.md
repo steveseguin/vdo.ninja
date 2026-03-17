@@ -36,8 +36,7 @@ While adding a guest to a scene this way takes about a second, for the connectio
 
 Pausing and resuming a video/audio track does take a split second to do, and it may result in temporarily low quality video after being enabled, it you don't intend to add/remove guests frequently to a scene, it is highly recommended you use it.\
 \
-The only time you shouldn't use \&optimize=0 is perhaps when you have just a single group scene, and you prefer speed and quality as you add/remove guests to the room. This might also be the case if using the \&activespeaker mode, where guests are hidden and removed when not active speaking.\
-
+The only time you shouldn't use \&optimize=0 is perhaps when you have just a single group scene, and you prefer speed and quality as you add/remove guests to the room. This might also be the case if using the \&activespeaker mode, where guests are hidden and removed when not active speaking.<br>
 
 {% hint style="warning" %}
 This does not work with iPhone-sourced video streams.

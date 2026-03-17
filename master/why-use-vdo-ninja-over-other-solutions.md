@@ -1,5 +1,7 @@
 ---
-description: Compare VDO.Ninja to other remote video tools for OBS with a focus on low latency, quality, flexibility, and control.
+description: >-
+  Compare VDO.Ninja to other remote video tools for OBS with a focus on low
+  latency, quality, flexibility, and control.
 ---
 
 # Why use VDO.Ninja over other solutions?
@@ -18,14 +20,14 @@ In some cases, the functionality of [VDO.Ninja](https://vdo.ninja) may overlap w
 * The interface is **open-source**, so you can white-label, stylize, tweak, and deploy the website code however you want.
 * **Reusable invite links**, meaning OBS Browser Sources don't need to be recreated or changed once created and shared.
 * Playback of video has been tested on Amazon Fire TV devices using the Silk browser, along with a Tesla Model 3 infotainment display.
-* **No plugins needed for OBS** -- just drag the selected link into OBS (v25 or newer on PC\*) and it auto generates the OBS Browser source with the correct resolution. (\*[macOS](common-errors-and-known-issues/virtual-camera-not-working-on-mac.md) users should update OBS and review the macOS virtual camera notes.)
+* **No plugins needed for OBS** -- just drag the selected link into OBS (v25 or newer on PC\*) and it auto generates the OBS Browser source with the correct resolution. (\*[macOS](../common-errors-and-known-issues/virtual-camera-not-working-on-mac.md) users should update OBS and review the macOS virtual camera notes.)
 * **QR Code support for invite links**, which allows for easy ingestion of mobile devices without needing to use the keyboard.
 * **Browser-based control of OBS scenes**.
 * **No overlays or windows to crop** -- VDO.Ninja auto-fills the window and if there is a black border, it becomes a transparent layer.
 * **Group rooms available** with a Director able to control participants, the options presented to them, and even an autojoin experience.
 * **Group chat rooms** have an "auto-mix" mode, making for easy management of dynamic group chat sessions.
 * Those in a **group-chat can also be split up into individual streams**, so the Director has control to treat them like different sources in OBS, switching and mixing as they want.
-* **Free TURN servers** are hosted for VDO.Ninja users, which normally are quite costly, but are kindly subsidized by community sponsors and by Steve, the developer of the application. [Sponsor](getting-started/sponsor.md)
+* **Free TURN servers** are hosted for VDO.Ninja users, which normally are quite costly, but are kindly subsidized by community sponsors and by Steve, the developer of the application. [Sponsor](../getting-started/sponsor.md)
 * **Tally-light** support is offered when VDO.Ninja is used in conjunction with OBS.
 * Group rooms and streams can be **password protected** and given extra security.
 * The group-room director has a **"push to talk"** capability, along with text-chat being available.

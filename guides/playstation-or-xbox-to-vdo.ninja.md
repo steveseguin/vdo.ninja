@@ -80,8 +80,7 @@ This method allows for more advanced stream customization but adds an extra step
   * Some HDMI to USB capture devices are only compatible with OBS Studio and not the browser; a browser-compatible device is suggested.
 * Quality Settings: Experiment with VDO.Ninja's bitrate and resolution settings for optimal performance.
 
-By leveraging VDO.Ninja's browser-based capabilities, you can often achieve a simpler setup with compatible capture cards, while still having the flexibility to use OBS when needed for more complex streaming scenarios.\
-
+By leveraging VDO.Ninja's browser-based capabilities, you can often achieve a simpler setup with compatible capture cards, while still having the flexibility to use OBS when needed for more complex streaming scenarios.<br>
 
 ## HDMI Splitter / pass-thru considerations
 

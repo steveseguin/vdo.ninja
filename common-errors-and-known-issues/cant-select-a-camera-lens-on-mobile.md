@@ -65,8 +65,7 @@ Below is a non-exhaustive short list of smartphones that appear to support more 
   * back telephoto camera
   * back ultra wide camera
   * desk view camera
-  * front camera\
-
+  * front camera<br>
 * iPhone 13 v16 supports
   * back camera
   * back ultra wide camera
@@ -75,11 +74,7 @@ Below is a non-exhaustive short list of smartphones that appear to support more 
 
 This list was based on results obtained using BrowserStack.com, so cloud-hosted devices. There may be errors with the results obtained, however you can check yourself on BrowserStack usually for free if a camera is supported or if the results have changed.
 
-<div align="left">
-
-<figure><img src="../.gitbook/assets/image (237).png" alt="" width="252"><figcaption><p>The iPhone 15 Pro offers extensive camera options</p></figcaption></figure>
-
-</div>
+<div align="left"><figure><img src="../.gitbook/assets/image (237).png" alt="" width="252"><figcaption><p>The iPhone 15 Pro offers extensive camera options</p></figcaption></figure></div>
 
 ### WHIP mode
 
@@ -97,11 +92,7 @@ _`https://vdo.ninja/alpha/?whip=STREAMIDHERE`_
 
 There are camera lens adapters available for smartphones for fairly cheap; anywhere from $3 on aliexpress to $20 on Amazon. While not the best solution, it may be a solution available in a pinch that works across all mobile applications and services.
 
-<div align="left">
-
-<figure><img src="../.gitbook/assets/image (3) (2) (1).png" alt=""><figcaption></figcaption></figure>
-
-</div>
+<div align="left"><figure><img src="../.gitbook/assets/image (3) (2) (1).png" alt=""><figcaption></figcaption></figure></div>
 
 ### USB  external cameras
 

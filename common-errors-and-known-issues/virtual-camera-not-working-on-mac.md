@@ -34,21 +34,17 @@ Please also be sure to START the virtual camera before selecting or opening it i
 
 If the OBS Virtual Camera is not appearing in Chrome or your browser after installing OBS on MacOS, you may need to enable screen recording permissions.
 
-1.  Open your System Preferences; you can find this via the Apple logo in the top left corner of your desktop.\
-
+1.  Open your System Preferences; you can find this via the Apple logo in the top left corner of your desktop.<br>
 
     <figure><img src="../.gitbook/assets/image (5) (3) (1).png" alt=""><figcaption></figcaption></figure>
 
 
-2.  Click Privacy & Security and then Screen Recording.\
-
+2.  Click Privacy & Security and then Screen Recording.<br>
 
     <figure><img src="../.gitbook/assets/image (12) (2) (2).png" alt=""><figcaption></figcaption></figure>
 3. For OBS, enable the permission.\
    \
-   &#xNAN;_&#x49;f OBS isn't listed, click the + button, enter your system's password, and navigate to OBS in the Application settings. Select it and enable._\
-
-4.  Quit and relaunch OBS.\
-
+   &#xNAN;_&#x49;f OBS isn't listed, click the + button, enter your system's password, and navigate to OBS in the Application settings. Select it and enable._<br>
+4.  Quit and relaunch OBS.<br>
 
     <figure><img src="../.gitbook/assets/image (2) (14).png" alt=""><figcaption><p>If OBS isn't listed, press the + button, navigate to it, and select it</p></figcaption></figure>

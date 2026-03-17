@@ -1,5 +1,5 @@
 ---
-description: VDO.Ninja documentation for OBS Studio, remote guests, browser-based live video, WebRTC streaming, and mobile-to-browser video workflows.
+description: '"Vee-Dee-Oh" .. oh, video!'
 ---
 
 # What is VDO.Ninja?
@@ -17,7 +17,7 @@ Video intro to VDO.Ninja and getting-started playlist
 For those looking for an AI-generated audio-explanation of what VDO.Ninja is, see:
 
 {% file src=".gitbook/assets/vdo_ai_podcast.mp3" %}
-Check out this AI-generated audio generated intro to what VDO.Ninja is &#x20;
+Check out this AI-generated audio generated intro to what VDO.Ninja is
 {% endfile %}
 
 ## Getting started with VDO.Ninja
@@ -34,7 +34,7 @@ A written guide to getting started is linked below:
 
 ## Need help or support?
 
-The preferred support mechanism is via [Reddit](https://www.reddit.com/r/vdoninja) or [Discord](https://discord.gg/feenJm8HTa), which offer community-assisted support. Discord is very active, so check it out. As well, development issues, feature requests, and bugs are tracked on [GitHub](https://github.com/steveseguin/vdo.ninja).&#x20;
+The preferred support mechanism is via [Reddit](https://www.reddit.com/r/vdoninja) or [Discord](https://discord.gg/feenJm8HTa), which offer community-assisted support. Discord is very active, so check it out. As well, development issues, feature requests, and bugs are tracked on [GitHub](https://github.com/steveseguin/vdo.ninja).
 
 For mission critical support issues, or business-related inquiries, you can contact Steve directly. Please don't make it a habit.
 

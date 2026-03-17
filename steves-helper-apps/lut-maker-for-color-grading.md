@@ -2,7 +2,7 @@
 description: PNG and 3D LUT maker for color calibration
 ---
 
-# LUT maker for color calibration
+# LUT maker for color grading
 
 Using accurate color samples obtained from the local paint shop (free) or a color checker card from Datacolor/Aliexpress, you can create online a color filter (LUT) for the purpose of color correcting video recordings, photos, and OBS live streams.\
 \
@@ -15,4 +15,4 @@ It's also open-source and no downloads are needed; you can run the script using 
 {% embed url="https://www.youtube.com/watch?v=pu9IpbfckDo" %}
 
 \
-\
+<br>

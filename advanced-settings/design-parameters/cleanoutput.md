@@ -14,8 +14,7 @@ General Option! ([`&push`](../../source-settings/push.md), [`&room`](../../gener
 
 Hides many of the UI elements and pop-ups that may cause unwanted visual elements not desired in a high-stakes live stream.\
 \
-`&cleanish`is a slightly less strict version, which tries to better balance what is available and what isn't in this mode.\
-
+`&cleanish`is a slightly less strict version, which tries to better balance what is available and what isn't in this mode.<br>
 
 As of VDO.Ninja version 26.4,&#x20;
 

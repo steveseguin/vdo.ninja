@@ -17,8 +17,7 @@ Same as [`&cleanoutput`](cleanoutput.md), except:
 and as of VDO.Ninja version 26.4,&#x20;
 
 * You can still access the right-click menu, while you can't if using \&clean\
-  \
-
+  <br>
 
 ## Related
 

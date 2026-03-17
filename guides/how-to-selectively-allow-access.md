@@ -22,4 +22,4 @@ description: >-
 * There are additional link-shortner services with password and user-access controls, which can be used to mask an invite-link for VDO.Ninja, and limit who can acess the real link that way. These services can be dynamically updated, allowing you to change the VDO.Ninja invite link after sending out the shortened alias link, and even changing the user-access allowances.
 * There are also services designed for queue or user lobby management, which can be used to on-the-fly redirect a selected user to a VDO.Ninja link. [https://app.invite.cam](https://app.invite.cam) is such a service being developed by the developers of VDO.Ninja for such a purpose, although it is still in a young state of development.
 
-More options for user control will be added to VDO.Ninja in the future. Feedback can be provided via the Discord server ([https://discord.vdo.ninja](https://discord.vdo.ninja)) in the #feature-request channel.\
+More options for user control will be added to VDO.Ninja in the future. Feedback can be provided via the Discord server ([https://discord.vdo.ninja](https://discord.vdo.ninja)) in the #feature-request channel.<br>

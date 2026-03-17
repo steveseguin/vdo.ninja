@@ -24,8 +24,7 @@ Do not include the # character with the hex value.
 
 You can specify the background color independent of the border color with `&color`. If using [`&border`](and-border.md), it will not set the background color, so you may need to use both `&border` and `&color`.
 
-May not yet work with [`&forcedlandscape`](../mobile-parameters/and-forcelandscape.md) or [`&rotate`](and-rotate.md).\
-
+May not yet work with [`&forcedlandscape`](../mobile-parameters/and-forcelandscape.md) or [`&rotate`](and-rotate.md).<br>
 
 <figure><img src="../../.gitbook/assets/image (14) (2).png" alt=""><figcaption></figcaption></figure>
 

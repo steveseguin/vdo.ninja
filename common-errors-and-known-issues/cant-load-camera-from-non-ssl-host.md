@@ -28,4 +28,4 @@ cd vdoninja
 python -m http.server 8000
 ```
 
-When accessing VDO.Ninja in this way, make sure the remote computer that may also be accessing VDO.Ninja is using the same "salt". To debug this, you can try adding `&salt=vdo.ninja` to all the VDO.Ninja links, as that will manually assign all the links to use the same salt. The salt is used in the encryption process for site isolation and increased privacy/security when not using the official VDO.Ninja deployment.\
+When accessing VDO.Ninja in this way, make sure the remote computer that may also be accessing VDO.Ninja is using the same "salt". To debug this, you can try adding `&salt=vdo.ninja` to all the VDO.Ninja links, as that will manually assign all the links to use the same salt. The salt is used in the encryption process for site isolation and increased privacy/security when not using the official VDO.Ninja deployment.<br>

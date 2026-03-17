@@ -47,8 +47,7 @@ If looking to screen share a document at the highest quality possible, consider 
 * `&sharperscreen` on the viewer end can avoid scaling down the image if the playback window is smaller than the video's native resolution.  This will avoid double aliasing issues.
 * As well, if using OBS Studio for playback, you can add a sharpness filter to the video to improve the clarity. This can undo some of the softness caused by video compression, improving edge sharpness.
 *   If in a group room, as a guest, the director can increase the total bitrate of the room, which will improve the screen share quality for all the guests in the room. By default, guests and directors view a screen share at a relatively low bitrate.\
-    \
-
+    <br>
 
     <figure><img src="../.gitbook/assets/image (242).png" alt=""><figcaption></figcaption></figure>
 
