@@ -60,13 +60,13 @@ Many WebRTC issues that affect VDO.Ninja are documented by related services and 
 * May need to close all other Safari tabs to access camera
 * Chrome only works on iOS 14.3+
 * Try "Capture for VDO.Ninja" app from App Store
-* USB audio devices often don't work with iOS WebRTC
+* USB audio devices have limited support in Safari; the [native iOS app](../steves-helper-apps/native-mobile-app-versions.md) has improved USB audio support
 
 **Android**
 
 * Firefox has bugs in larger group rooms
 * Chrome may need background/foreground toggle for camera
-* USB audio often doesn't work with Chrome (use Firefox or 3.5mm TRRS adapters)
+* USB audio has limited support in Chrome (try Firefox, 3.5mm TRRS adapters, or the [native Android app](../steves-helper-apps/native-mobile-app-versions.md))
 
 **macOS**
 
@@ -85,7 +85,7 @@ Many WebRTC issues that affect VDO.Ninja are documented by related services and 
 * Setting audio bitrate to 64kbps+ may cause video bitrate issues (set higher video bitrate to compensate)
 * Check for misaligned or high audio sample rates in OBS
 * Bluetooth headphones can cause audio clicking, especially on macOS
-* USB audio devices have limited compatibility with mobile WebRTC
+* USB audio devices have limited compatibility with mobile browsers; native apps for [iOS](../steves-helper-apps/native-mobile-app-versions.md) and [Android](../steves-helper-apps/native-mobile-app-versions.md) offer improved USB audio support
 
 ### Alternative Solutions
 

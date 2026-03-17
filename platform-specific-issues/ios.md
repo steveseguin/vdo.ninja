@@ -1,7 +1,5 @@
 ---
-description: >-
-  Last updated November 17th 2021; keep in mind, this article may become dated
-  quickly.
+description: "iOS-specific notes, limitations, and tips for using VDO.Ninja on iPhone and iPad."
 ---
 
 # iOS (iPhone/iPad)
@@ -22,23 +20,25 @@ The AV1 video codec is now also supported with modern iOS versions and works qui
 
 ### External microphones and audio device support on iOS
 
-Some external microphones are supported by Safari on iOS, however iOS devices are very finicky as to which microphones are supported. Just because your device is listed, doesn't mean it will work or stay selected.\
-\
-This is a long-known issue with iPhones, as per their bug tracker: it's not an issue with VDO.Ninja. [https://bugs.webkit.org/show\_bug.cgi?id=211192](https://bugs.webkit.org/show_bug.cgi?id=211192)\
-\
-I've made a video going over possible solutions here: [https://www.youtube.com/watch?v=BBus\_S8iJUE](https://www.youtube.com/watch?v=BBus_S8iJUE), although many of the points covered in the video can be found below also.
+#### Native App (recommended for external audio)
 
-Users with an **iPhone 15 Pro or iPad, which have with USB 3.x support**, have reported success usually with external USB-based microphones, where as devices with Lightning or USB 2.0 ports have had poor success. Given these user reports, I'd recommend getting an iPhone 15 Pro (rather than an iPhone 15 or iPhone 14), or perhaps a newer iPad, if wanting to stay in the Apple ecosystem.
+The [VDO.Ninja native iOS app](../steves-helper-apps/native-mobile-app-versions.md) now has improved USB microphone support, including external USB audio devices such as DJI wireless mics. If you need reliable external microphone support on iOS, the native app is the recommended approach.
 
-That all said, I did find that some certified Lightning-based TRRS microphone adapters, which register as headsets, sometime seem to work better than other devices. Using a XLR to 3.5mm adapter, I've been able to connect professional microphones to an older iPhone 11 for example.
+#### Safari (browser-based)
 
-One Lightning-based TRRS adapter that I have tested for myself that seems to usually work is this one: [https://www.amazon.ca/gp/product/B07Q49SVYR](https://www.amazon.ca/gp/product/B07Q49SVYR)
+External microphone support in Safari on iOS remains finicky. Just because a device is listed doesn't mean it will work or stay selected. This is a long-known WebKit issue, not specific to VDO.Ninja: [https://bugs.webkit.org/show\_bug.cgi?id=211192](https://bugs.webkit.org/show_bug.cgi?id=211192)
 
-Many of those cheap Amazon wireless Lightning-based lavalier microphones do not seem to work though, and while they may work with specific applications, they are not well supported by Safari. In testing I can't get them to work, however it's perhaps possible they will in future iOS updates.
+A video going over possible solutions is here: [https://www.youtube.com/watch?v=BBus\_S8iJUE](https://www.youtube.com/watch?v=BBus_S8iJUE)
 
-AirPods do seem to also often work, if needing something wireless though. **AirPods** can however create clicking or distortion if used as a microphone; please ensure that they are fully-charged if you intend to use them in a live production. If they are on low-power, they will create audible problems.\
-\
-If willing to use Android, some users have noted that Firefox for Android often works with USB microphones. Firefox mobile on Android supports USB microphones reliably, if that is a potential solution. Since Apple does not allow for third-party browser engines, Chrome and Firefox for iOS are essentially just a re-skinned version of Safari, so they will not work any better unfortunately.
+Users with an **iPhone 15 Pro or iPad with USB 3.x support** have generally reported success with external USB-based microphones, whereas devices with Lightning or USB 2.0 ports have had poor success.
+
+Some certified Lightning-based TRRS microphone adapters that register as headsets tend to work better than other devices. Using a XLR to 3.5mm adapter, professional microphones can be connected to older iPhones. One Lightning-based TRRS adapter that has been tested successfully: [https://www.amazon.ca/gp/product/B07Q49SVYR](https://www.amazon.ca/gp/product/B07Q49SVYR)
+
+Many cheap Amazon wireless Lightning-based lavalier microphones do not work with Safari.
+
+AirPods generally work, but can create clicking or distortion as a microphone — ensure they are fully charged for live production use.
+
+Since Apple does not allow third-party browser engines on iOS, Chrome and Firefox for iOS are essentially re-skinned Safari and offer no additional microphone compatibility.
 
 ### Low quality audio from iOS
 
@@ -53,14 +53,26 @@ iOS does not work with the volume visualizer meter; it causes clicking noises wh
 * If your camera does not load or fails to load, fully close Safari / Chrome, and then try again. There seems to be an issue where old tabs or idle apps can block VDO.Ninja from accessing the camera.
 * Video shared by an iPhone/iPad to other guests in a group room may be choppy or of low-quality. This is intentional, as otherwise the iPhone would overheat or become too slow to use. Adding [`&forceios`](../advanced-settings/mobile-parameters/and-forceios.md) to the URL of a specific guest can force a different, smoother, behavior for them, but use it sparingly.
 
-### Limited features; no focus/exposure control
+### Limited browser features; no focus/exposure control
 
-iOS does not yet support for many features that VDO.Ninja would like to make use of. It lacks zoom, focus, screen-sharing, exposure, and many other advanced options. These are features Apple needs to enable and allow the browser to access, which currently it does not.
+Safari on iOS does not yet support many features that VDO.Ninja would like to make use of. It lacks zoom, focus, screen-sharing, exposure, and many other advanced options. These are features Apple needs to enable and allow the browser to access.
+
+The native iOS app overcomes many of these browser limitations — see below.
 
 ### Native app option
 
 {% embed url="https://apps.apple.com/us/app/vdo-ninja/id1607609685" %}
 
-There is a basic native iOS app provided by VDO.Ninja at this time, but it is extremely basic. It lacks useful screen-capture support, group-room support, and password support. It does work with the Torch light function though, you can zoom with it also, and it's useful to have when Safari refuses to work.
+The VDO.Ninja native iOS app has grown significantly in features and is recommended when Safari's limitations are a problem. Current capabilities include:
 
-Supporting a native app for iOS takes a lot of resources and time, so it's being developed in tandem with the Android native app using a mobile development framework.
+* **Local recording** while publishing
+* **Screen recording** (still hit and miss on iOS, but functional in many cases)
+* **Dual-camera mode** — front and rear cameras simultaneously
+* **Ultra-wide camera support**
+* **Improved USB microphone support** — including external USB audio devices (DJI mics, etc.)
+* Torch light and zoom controls
+* Background operation
+
+Screen sharing on iOS remains somewhat unreliable, but the native app provides the best available support for it on the platform.
+
+For more details, see [Native mobile app versions](../steves-helper-apps/native-mobile-app-versions.md).

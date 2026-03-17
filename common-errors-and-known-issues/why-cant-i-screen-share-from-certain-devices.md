@@ -8,10 +8,10 @@ The Screen sharing feature is highly dependent on the operating system of the de
 
 * Chrome browser used on a PC is most compatible, fully supporting screen sharing with audio.
 * Firefox on PC supports screen sharing, but it cannot screen share with audio.
-* Safari on iOS does not yet support it officially, although it does support it with the "technical builds" designed for developers. Until Apple officially supports, there isn't much I can do there easily.
-* Android does not support it and it is doubtful that it will in the near future.
+* Safari on iOS does not support screen sharing via the browser.
+* Android does not support screen sharing via the browser.
 
-In either case, you can use Native mobile apps to solve this problem, as the native apps let you screen share using iOS and Android. However, the native apps are pretty basic right now, and may lack many features and may even lack system-audio capture.
+The native mobile apps for both [iOS and Android](../steves-helper-apps/native-mobile-app-versions.md) support screen sharing. The Android native app includes system audio capture. Screen sharing on iOS is still hit and miss, but functional in many cases.
 
 There's other tricks as well to get screen sharing working on mobile, such as using QuickTime via USB.
 

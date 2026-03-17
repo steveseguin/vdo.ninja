@@ -8,40 +8,55 @@ description: Mobile app version of VDO.Ninja and other Android related topics
 
 ### Native Android app
 
-The native mobile app for Android is fairly simple, as it can be only used for one-way publishing. It does support screen-sharing though, so it has its value.  It will also work while in the background, and sometimes works on certain devices when the browser-version won't.\
-\
+The native mobile app for Android supports one-way publishing with a number of features beyond what the browser version can offer. It will also work while in the background, and sometimes works on certain devices when the browser version won't.
+
+Current native app capabilities include:
+
+* **Local recording** while publishing, with a video gallery for reviewing and deleting clips
+* **Screen sharing** with system audio
+* **Ultra-wide camera support** and expanded camera selection options
+* **Improved USB audio support** — including external USB microphones
+* **USB video (UVC) capture** support
+* Background operation
+
 Please note, the native app requires a modern version of Android, while the web-based version of VDO.Ninja has been tested with Android 5.1 using Chrome.
 
 The **Google Play Store** <img src="../.gitbook/assets/image (116) (1).png" alt="" data-size="line"> hosted version is here: \
 [https://play.google.com/store/apps/details?id=flutter.vdo.ninja](https://play.google.com/store/apps/details?id=flutter.vdo.ninja)  \
 (It will auto-update when I push new releases.)
 
-As well, the Android APK file for direct-downloading is hosted here:[\
-https://drive.google.com/file/d/1M0kv5nWLtcfl2JOnsAGiG1zUmkeIVLyZ/view?usp=sharing](https://drive.google.com/file/d/1M0kv5nWLtcfl2JOnsAGiG1zUmkeIVLyZ/view?usp=sharing)\
-(Manually installing will requires manual updating, as well.  APK last updated May 12, 2022)
+An Android APK for direct download is also available here (kept updated with the newest build):\
+[https://drive.google.com/file/d/1L8meslXPEzivocH3wz48abNtJ926hQUr/view?usp=drive\_link](https://drive.google.com/file/d/1L8meslXPEzivocH3wz48abNtJ926hQUr/view?usp=drive\_link)\
+(Manually installing requires manual updating.)
 
 Source-code for building the Android app is here:\
 [https://github.com/steveseguin/vdon\_flutter/](https://github.com/steveseguin/vdon\_flutter/)
 
+For more details, see [Native mobile app versions](../steves-helper-apps/native-mobile-app-versions.md).
+
 ### External camera support
 
-UVC-based video devices are not supported currently with most Android devices via browser, but a few perhaps, like the Yolobox, may support it. \
-\
-There is an experimental version of the VDO.Ninja Android app that has USB-video input support, which you can download and sideload from here: [https://drive.google.com/file/d/1L8meslXPEzivocH3wz48abNtJ926hQUr/view?usp=drive\_link](https://drive.google.com/file/d/1L8meslXPEzivocH3wz48abNtJ926hQUr/view?usp=drive\_link)\
-\
-It may not work with Android 14 however, and USB audio isn't supported I believe.\
-\
-If that doesn't work, screen-sharing is an option to make it work, where you can load up an app that does support UVC/USB cameras, and simply screen share that output to VDO.Ninja using the native Android app.\
-\
-Newer iOS/iPad devices with USB-3 support may have USB media support, and the Raspberry Ninja project also supports HDMI/USB input, if you have a mobile Linux system, like an Orange Pi 5 Plus. The Orange Pi 5+ has a built-in HDMI input port.
+UVC-based video devices are not supported via the browser on most Android devices, but a few devices like the Yolobox may support it.
+
+The VDO.Ninja native Android app now includes USB video (UVC) capture support. Download the latest version from the Play Store or see [Native mobile app versions](../steves-helper-apps/native-mobile-app-versions.md) for the latest test APK.
+
+If that doesn't work, screen-sharing is an option — load an app that supports UVC/USB cameras and screen share that output to VDO.Ninja using the native Android app.
+
+The Raspberry.Ninja project also supports HDMI/USB input if you have a mobile Linux system like an Orange Pi 5 Plus, which has a built-in HDMI input port.
 
 ### USB audio device support
 
-USB-based audio devices have limited support with VDO.Ninja on Android. Some Android devices will support USB audio using Chrome, although many will not.
+#### Native app (recommended)
 
-**Firefox mobile seems to support USB audio devices fairly often,** so give Firefox a go if looking for support there. So definitely try Firefox out if using Android and looking to use USB microphones.
+The VDO.Ninja native Android app now has improved USB audio support, making it the most reliable option for external USB microphones on Android.
 
-If nothing works, using a 3.5mm to USB adapter will sometimes work, if your audio device has 3.5mm mic out as an option. You may also need a TRRS (not TRS) adapter. Below are a couple that I use  successfully on my Google Pixel smartphone:\
+#### Browser-based
+
+USB-based audio devices have limited support via the browser on Android. Some Android devices will support USB audio using Chrome, although many will not.
+
+**Firefox mobile tends to support USB audio devices more often than Chrome,** so try Firefox if Chrome doesn't work with your USB microphone.
+
+If nothing works via the browser, using a 3.5mm to USB adapter will sometimes work if your audio device has 3.5mm mic out as an option. You may also need a TRRS (not TRS) adapter. Below are a couple that have been tested successfully on a Google Pixel smartphone:\
 [https://www.amazon.ca/gp/product/B08NVRV6G9](https://www.amazon.ca/gp/product/B08NVRV6G9)\
 [https://www.amazon.ca/Headphone-Splitter-KOOPAO-Compatible-Microphone/dp/B08RML676M](https://www.amazon.ca/Headphone-Splitter-KOOPAO-Compatible-Microphone/dp/B08RML676M)\
 \
@@ -61,13 +76,13 @@ Firefox on Android seems to fix a couple Chrome-specific issues. Chrome will mut
 
 ### Internal Cameras
 
-Not all cameras may appear as options when using a mobile device; this comes down to the manufacturer of the phone really. If you cannot select your fish-eye camera, try instead buying a fisheye lens adapter from Amazon for a couple dollars; it will offer better performance probably anyways. The Android APK version of VDO.Ninja will reveal a few extra cameras (wide angle, for example), versus the browser, but it may still not support all.
+Not all cameras may appear as options when using a mobile device via the browser; this comes down to the manufacturer of the phone. The native Android app now supports expanded camera selection including ultra-wide cameras. If you cannot select your desired camera via the browser, try the native app instead.
 
 ### Screen sharing
 
-Screen sharing on mobile devices is not support via the Browser, although Android devices can screen sharing using the native Android app (linked previously). The screen sharing function may not include audio, or at least it might be unstable, and this will hopefully be addressed over time with additional development of the mobile app.
+Screen sharing on Android is not supported via the browser. The native Android app supports screen sharing, including system audio capture.
 
-For iPhone screen sharing, you can refer to [this guide](../guides/screen-share-your-iphone-ipad.md). It conceptually might also work for Android users, if the native app provided by VDO.Ninja does not work.
+For iPhone screen sharing, you can refer to [this guide](../guides/screen-share-your-iphone-ipad.md).
 
 ### Performance issues
 
@@ -83,13 +98,9 @@ Pixel devices have problems in Portrait mode, where the video may glitch to be a
 
 ### External audio
 
-USB audio devices should work with Android devices, but it will depend on numerous factors. In most cases, the 3.5mm headset port on some Android phones will be the most reliable way to attach an external headset or microphone.\
-\
-3.5mm TRRS inputs often work, and some USB devices that work as headset devices work with Chrome.\
-\
-Firefox tends to work with more USB audio devices than Chrome, but you might find MS Edge mobile works also.\
-\
-Bluetooth devices are hit and miss at the moment
+The native Android app now has improved USB audio support, making it the most reliable way to use external microphones on Android.
+
+For the browser-based version: 3.5mm TRRS inputs often work, and some USB devices that register as headset devices work with Chrome. Firefox tends to work with more USB audio devices than Chrome. Bluetooth devices are hit and miss.
 
 ### On-screen overlays blocking access
 
