@@ -10,11 +10,32 @@ Sender-Side Option! ([`&push`](push.md))
 
 * `&effect`
 
+## URL Shortcut Aliases
+
+Each effect also has a dedicated URL parameter alias that can be used instead of `&effects=N`:
+
+| Alias                                                  | Effect                    | Equivalent        |
+| ------------------------------------------------------ | ------------------------- | ----------------- |
+| [`&backgroundblur`](and-backgroundblur.md) / `&bgblur` | Background blur           | `&effects=3`      |
+| [`&greenscreen`](and-greenscreen.md)                   | Digital greenscreen       | `&effects=4`      |
+| [`&virtualbackground`](and-virtualbackground.md) / `&vbg` | Virtual background     | `&effects=5`      |
+| [`&transparentbg`](and-transparentbg.md)               | Transparent background    | `&effects=16`     |
+| [`&facemesh`](and-facemesh.md)                         | Face mesh                 | `&effects=6`      |
+| `&digitalzoom`                                         | Digital zoom              | `&effects=7`      |
+| [`&chromakey`](and-chromakey.md)                       | Chroma key (remove green) | `&effects=14`     |
+| [`&chromakeybg`](and-chromakeybg.md)                   | Chroma key + background   | `&effects=15`     |
+| [`&facetracker`](and-facetracker.md) / `&facetracking` | Face tracker             | `&effects=1`      |
+| [`&overlayfx`](and-overlayfx.md)                       | Overlay image             | `&effects=overlay`|
+| [`&anonymousmask`](and-anonymousmask.md) / `&anonmask` | Anonymous mask           | `&effects=anon`   |
+| [`&dogface`](and-dogface.md) / `&dogears`              | Dog ears and nose         | `&effects=dog`    |
+
+Aliases that accept a value (e.g. `&backgroundblur=5`, `&chromakey=30`, `&digitalzoom=2.5`) will set the effect value directly without needing a separate [`&effectvalue`](../newly-added-parameters/and-effectvalue.md) parameter.
+
 ## Options
 
 Example: `&effects=7` or `&effects=zoom`
 
-<table><thead><tr><th width="227">Value</th><th>Description</th></tr></thead><tbody><tr><td>(no value given)</td><td>Shows a "Digital Video Effects" panel when setting up devices</td></tr><tr><td><code>0</code> | <code>false</code> | <code>off</code></td><td>Disables effects</td></tr><tr><td><code>1</code> | <code>facetracking</code></td><td>Face tracker</td></tr><tr><td><code>-1</code></td><td>Flip image</td></tr><tr><td><code>2</code></td><td>Mirror image</td></tr><tr><td><code>-2</code></td><td>Flip + mirror image</td></tr><tr><td><code>3</code></td><td>Background blur</td></tr><tr><td><code>4</code></td><td>Virtual Greenscreen</td></tr><tr><td><code>5</code></td><td>Background replacement</td></tr><tr><td><code>6</code></td><td>Avatar</td></tr><tr><td><code>7</code> | <code>digitalzoom</code></td><td>Zoom (software-based zoom)</td></tr><tr><td><code>8</code></td><td><a data-mention href="effects.md#and-effects-8">#and-effects-8</a></td></tr><tr><td><code>9</code></td><td>Face tracking</td></tr><tr><td><code>10</code></td><td>Face tracking</td></tr><tr><td><code>11</code> | <code>anon</code></td><td>Anonymous face mask</td></tr><tr><td><code>13</code></td><td>New experimental background blur effect; it's not supported by most browsers/systems and its in origin trial</td></tr></tbody></table>
+<table><thead><tr><th width="227">Value</th><th>Description</th></tr></thead><tbody><tr><td>(no value given)</td><td>Shows a "Digital Video Effects" panel when setting up devices</td></tr><tr><td><code>0</code> | <code>false</code> | <code>off</code></td><td>Disables effects</td></tr><tr><td><code>1</code> | <code>facetracking</code></td><td>Face tracker</td></tr><tr><td><code>-1</code></td><td>Flip image</td></tr><tr><td><code>2</code></td><td>Mirror image</td></tr><tr><td><code>-2</code></td><td>Flip + mirror image</td></tr><tr><td><code>3</code></td><td>Background blur</td></tr><tr><td><code>4</code></td><td>Virtual Greenscreen</td></tr><tr><td><code>5</code></td><td>Background replacement</td></tr><tr><td><code>6</code></td><td>Face mesh</td></tr><tr><td><code>7</code> | <code>digitalzoom</code></td><td>Zoom (software-based zoom)</td></tr><tr><td><code>8</code></td><td><a data-mention href="effects.md#and-effects-8">#and-effects-8</a></td></tr><tr><td><code>9</code></td><td>Face tracking</td></tr><tr><td><code>10</code></td><td>Face tracking</td></tr><tr><td><code>11</code> | <code>anon</code></td><td>Anonymous face mask</td></tr><tr><td><code>13</code></td><td>New experimental background blur effect; it's not supported by most browsers/systems and its in origin trial</td></tr><tr><td><code>14</code></td><td>Chroma key (remove green)</td></tr><tr><td><code>15</code></td><td>Chroma key with background image</td></tr><tr><td><code>16</code></td><td>Background transparent</td></tr><tr><td><code>overlay</code></td><td>Overlay image</td></tr><tr><td><code>dog</code></td><td>Dog ears and nose</td></tr></tbody></table>
 
 ## Details
 
@@ -28,6 +49,10 @@ You can pre-select the digital video effect by adding `&effects=X` (see [Options
 The guest can change the digital video effect dynamically via the video settings panel if you have added `&effects` to the guest's URL.
 
 You can also pre-select the effect value by adding [`&effectvalue`](../newly-added-parameters/and-effectvalue.md) to the URL. ie: the amount of blur.
+
+### Effect value memory
+
+When a user manually adjusts an effect's value via the slider (blur amount, zoom level, chroma threshold, etc.), that value is automatically saved to localStorage and tied to the current room and streamID. The password is hashed before being used as part of the storage key, so it is never stored in plaintext. On the next visit to the same room or stream, the saved value is restored automatically. This means different rooms can have different preferred effect settings. Explicitly setting [`&effectvalue`](../newly-added-parameters/and-effectvalue.md) in the URL will override any saved value.
 
 ### Greenscreen performance
 
@@ -58,6 +83,50 @@ This `&effects=8` mode might also be helpful in solving issues with cameras disc
 
 {% content-ref url="../newly-added-parameters/and-effectvalue.md" %}
 [and-effectvalue.md](../newly-added-parameters/and-effectvalue.md)
+{% endcontent-ref %}
+
+{% content-ref url="and-backgroundblur.md" %}
+[and-backgroundblur.md](and-backgroundblur.md)
+{% endcontent-ref %}
+
+{% content-ref url="and-greenscreen.md" %}
+[and-greenscreen.md](and-greenscreen.md)
+{% endcontent-ref %}
+
+{% content-ref url="and-virtualbackground.md" %}
+[and-virtualbackground.md](and-virtualbackground.md)
+{% endcontent-ref %}
+
+{% content-ref url="and-transparentbg.md" %}
+[and-transparentbg.md](and-transparentbg.md)
+{% endcontent-ref %}
+
+{% content-ref url="and-chromakey.md" %}
+[and-chromakey.md](and-chromakey.md)
+{% endcontent-ref %}
+
+{% content-ref url="and-chromakeybg.md" %}
+[and-chromakeybg.md](and-chromakeybg.md)
+{% endcontent-ref %}
+
+{% content-ref url="and-facemesh.md" %}
+[and-facemesh.md](and-facemesh.md)
+{% endcontent-ref %}
+
+{% content-ref url="and-facetracker.md" %}
+[and-facetracker.md](and-facetracker.md)
+{% endcontent-ref %}
+
+{% content-ref url="and-overlayfx.md" %}
+[and-overlayfx.md](and-overlayfx.md)
+{% endcontent-ref %}
+
+{% content-ref url="and-anonymousmask.md" %}
+[and-anonymousmask.md](and-anonymousmask.md)
+{% endcontent-ref %}
+
+{% content-ref url="and-dogface.md" %}
+[and-dogface.md](and-dogface.md)
 {% endcontent-ref %}
 
 {% content-ref url="../newly-added-parameters/and-chunked.md" %}

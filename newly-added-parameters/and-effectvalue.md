@@ -24,6 +24,8 @@ Adding `&effectvalue` to a sender-side can take an integer. This can set the amo
 
 If not using `&effectvalue` you can change it dynamically via the settings menu.
 
+When a user manually adjusts the effect amount via the slider, the value is automatically saved to localStorage per room and streamID. On the next visit to the same room or stream, the saved value is restored as the default. Setting `&effectvalue` explicitly in the URL will override any saved preference.
+
 ![](<../.gitbook/assets/image (9) (2) (1).png>)
 
 {% hint style="warning" %}
