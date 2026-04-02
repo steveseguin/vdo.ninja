@@ -926,6 +926,14 @@ iframe.contentWindow.postMessage({
 }, "*");
 ```
 
+For chunked viewer integrations, each remote stream entry can include:
+
+* `chunkedBufferDefault` - the current inherited/default chunked playout request
+* `chunkedBufferOverride` - an explicit per-stream buffer override, if one is set
+* `chunkedBufferRequested` - the effective requested value for that stream before live adaptation
+* `chunkedBufferCeil` - the configured viewer-side ceiling for chunked playout
+* `chunkedBufferAdaptive` - whether adaptive chunked target adjustments are enabled
+
 #### `getGuestList` - Get Guest List
 
 Gets a list of all connected guests.
@@ -1136,6 +1144,20 @@ iframe.contentWindow.postMessage({
     UUID: "*"
 }, "*");
 ```
+
+Notes:
+
+* Sending `setBufferDelay` **without** `streamID`, `UUID`, or `label` updates the viewer's default requested buffer.
+* Sending it **with** `streamID`, `UUID`, or `label` creates/updates an explicit per-stream override.
+* `UUID: "*"` fans the same request out to all currently connected streams.
+* For chunked video workflows, the live target can still differ from the requested value if adaptive buffering is enabled.
+* If you need a fixed long-delay video target, load the viewer with:
+
+```text
+&noaudio&chunkbufferadaptive=0&chunkbufferceil=180000
+```
+
+That pattern is useful for music-sync tools where the audio is handled externally and VDO.Ninja is only delaying video to match it.
 
 #### `automixer` - Automixer Control
 

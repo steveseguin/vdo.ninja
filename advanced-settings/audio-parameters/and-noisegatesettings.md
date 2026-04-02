@@ -32,7 +32,11 @@ It takes a comma separated list:
 Example:\
 [`https://vdo.ninja/?noisegate&noisegatesettings=10,25,3000`](https://vdo.ninja/?noisegate\&noisegatesettings=10,25,3000)
 
-To help users with testing the noise gate and configurating the noise gate settings, there's an interactive page here for it: [https://vdo.ninja/noisegate](https://vdo.ninja/noisegate)
+To help users with testing the noise gate and configuring the noise gate settings, there's an interactive page here for it: [https://vdo.ninja/noisegate](https://vdo.ninja/noisegate)
+
+{% hint style="warning" %}
+The interactive `/noisegate` test page uses a classic DAW-style parameter set (threshold in dBFS, attack ms, release ms, hold ms, depth %). The 5-value string it displays is **not** directly compatible with `&noisegatesettings`, which uses the 3-value internal format (TargetGain, Threshold, StickinessMs) described above. Use the test page to tune the live feel of the gate, then translate your preferred settings manually to the 3-value URL format.
+{% endhint %}
 
 ## Related
 

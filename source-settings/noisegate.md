@@ -52,7 +52,11 @@ It takes a comma separated list:
 Example:\
 [`https://vdo.ninja/alpha/?noisegate&noisegatesettings=10,25,3000`](https://vdo.ninja/alpha/?noisegate\&noisegatesettings=10,25,3000)
 
-To help users with testing the noise gate and configurating the noise gate settings, there's an interactive page here for it: [https://vdo.ninja/noisegate](https://vdo.ninja/noisegate)
+To help users with testing the noise gate and configuring the noise gate settings, there's an interactive page here for it: [https://vdo.ninja/noisegate](https://vdo.ninja/noisegate)
+
+{% hint style="warning" %}
+The `/noisegate` test page uses a classic DAW-style 5-parameter format. Its output string is **not** directly compatible with the `&noisegatesettings` URL parameter, which uses the 3-value internal format. See [`&noisegatesettings`](../advanced-settings/audio-parameters/and-noisegatesettings.md) for the correct format.
+{% endhint %}
 
 ## Related
 

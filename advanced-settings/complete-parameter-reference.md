@@ -99,6 +99,14 @@ If you are self-hosting VDO.Ninja, often these URL parameters can be hard-coded 
 | `chroma`             | -                                               | Color code            | Sets chroma key color           |
 | `chunked`            | `chunk`                                         | Integer               | Sets chunked transfer size      |
 | `chunkedbuffer`      | `sendingbuffer`                                 | Integer               | Sets chunk buffer size          |
+| `chunkbuffer`        | -                                               | Integer               | Sets chunked viewer playout target |
+| `chunkbufferfloor`   | -                                               | Integer               | Sets chunked viewer playout floor |
+| `chunkbufferceil`    | -                                               | Integer               | Sets chunked viewer playout ceiling |
+| `chunkbufferadaptive`| -                                               | Boolean               | Enables/disables adaptive chunked viewer targeting |
+| `fixedchunkbuffer`   | -                                               | Boolean               | Shortcut to disable adaptive chunked viewer targeting |
+| `chunkjitterslack`   | -                                               | Integer               | Adds extra headroom before chunked rebuffering |
+| `chunkprofile`       | -                                               | String                | Applies chunked preset defaults |
+| `chunkadapt`         | -                                               | String                | Sets chunked adaptation mode    |
 | `clean`              | See `cleanoutput`                               | -                     | -                               |
 | `cleanoutput`        | `clean`                                         | Boolean               | Minimizes UI elements           |
 | `cleanish`           | -                                               | Boolean               | -                               |
