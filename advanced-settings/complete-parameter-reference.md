@@ -247,7 +247,7 @@ If you are self-hosting VDO.Ninja, often these URL parameters can be hard-coded 
 | `include`           | -                      | Stream ID(s)   | Includes specified streams     |
 | `insertablestreams` | `is`                   | Boolean/String | -                              |
 | `intro`             | `ib`                   | Boolean        | Shows intro                    |
-| `isolation`         | `voiceisolation`, `vi` | Boolean        | -                              |
+| `isolation`         | `voiceisolation`, `vi` | Boolean        | Requests mic voice isolation   |
 
 ### J
 
