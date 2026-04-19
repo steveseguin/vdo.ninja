@@ -30,8 +30,13 @@ Example:
 - In non-clean layouts, a small WHEP status card appears with copy/open actions and can be dismissed.
 - Use with `&dataonly` when you want to advertise an external WHEP feed without publishing local camera/mic.
 - `&nowhep` / `&nomeshcast` disables advertising the WHEP URL to peers.
+- Use [`&autowhep`](and-autowhep.md) when you want VDO.Ninja to try deriving this WHEP URL from a configured WHIP output URL.
 
 ## Related
+
+{% content-ref url="and-autowhep.md" %}
+[and-autowhep.md](and-autowhep.md)
+{% endcontent-ref %}
 
 {% content-ref url="and-whepsharetoken.md" %}
 [and-whepsharetoken.md](and-whepsharetoken.md)

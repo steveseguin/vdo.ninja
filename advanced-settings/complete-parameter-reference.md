@@ -46,6 +46,7 @@ If you are self-hosting VDO.Ninja, often these URL parameters can be hard-coded 
 | `autorelay`        | -                                     | Boolean                                         | Enables relay escalation in recovery      |
 | `autostart`        | `as`                                  | Boolean                                         | Auto starts session                       |
 | `autohide`         | -                                     | Boolean                                         | -                                         |
+| `autowhep`         | -                                     | Boolean                                         | Auto-derives WHEP share URL from WHIP output URL |
 | `avatarimg`        | `bgimage`, `bgimg`                    | URL                                             | Sets avatar/background image              |
 | `avatarimg2`       | `bgimage2`, `bgimg2`                  | URL                                             | Sets secondary avatar/background image    |
 | `avatarimg3`       | `bgimage3`, `bgimg3`                  | URL                                             | Sets tertiary avatar/background image     |
@@ -227,7 +228,7 @@ If you are self-hosting VDO.Ninja, often these URL parameters can be hard-coded 
 | `hidesolo`        | `hs`                | Boolean    | -                         |
 | `hidescreenshare` | `hidess`, `sshide`  | Boolean    | Hides screen share option |
 | `hint`            | See `contenthint`   | -          | -                         |
-| `holdercolor`     | -                   | Color code | -                         |
+| `holdercolor`     | `videobg`, `videobgcolor`, `videobackground`, `videobackgroundcolor`, `holderbg`, `holderbgcolor` | Color code | Sets the video holder background color |
 | `host`            | -                   | Boolean    | -                         |
 | `hotkeys`         | See `midi`          | -          | -                         |
 | `hs`              | See `hidesolo`      | -          | -                         |

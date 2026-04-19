@@ -57,6 +57,8 @@ There's a few requirements to make it work though, so either an API wrapper is n
 \-- If your WHIP server returns an exposed "WHEP" field in the POST response header, with the URL to the WHEP view link, it will use that WHEP link. You just need to then specify the `&whipout` URL on the sender side then.\
 \-- This should let you make your own Meshcast service with minimal work; the open-source WHIP API code I released the other day further makes it pretty easy.
 
+You can also add [`&autowhep`](and-autowhep.md) if your WHIP output service uses a known URL pattern and you want VDO.Ninja to try deriving the matching WHEP share URL before the WHIP response is available.
+
 I've refined the WHIP service on `vdo.ninja/alpha/?whipview=xxx`, making it as robust as I can I think, so if some third-party WHIP client/app doesn't work with it, it may not an issue with VDO.Ninja. In those cases it will be up to the client to ensure full support of the WHIP specification, else it may not work with VDO.Ninja.
 
 ## Related
@@ -67,4 +69,8 @@ I've refined the WHIP service on `vdo.ninja/alpha/?whipview=xxx`, making it as r
 
 {% content-ref url="and-whip.md" %}
 [and-whip.md](and-whip.md)
+{% endcontent-ref %}
+
+{% content-ref url="and-autowhep.md" %}
+[and-autowhep.md](and-autowhep.md)
 {% endcontent-ref %}
