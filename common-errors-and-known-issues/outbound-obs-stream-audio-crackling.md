@@ -14,7 +14,7 @@ Try these first if the show is already live:
 
 1. In OBS, right-click the affected browser source and select **Properties**, then click **Refresh cache of current page** or **Refresh**.
 2. If only one source is bad, hide/show that source, or deactivate/reactivate it if it has a deactivate option.
-3. If all guest audio is bad, switch to a backup audio route if you have one, such as Electron Capture, Wave Link, a virtual audio cable, or a second browser.
+3. If all guest audio is bad, switch to a backup audio route if you have one, such as [Electron Capture](https://electroncapture.app/), Wave Link, a [virtual audio cable](https://vb-audio.com/Cable/), or a second browser.
 4. Stop monitoring the affected source in OBS if you do not need to hear it through OBS. Go to **Advanced Audio Properties** and set **Audio Monitoring** to **Monitor Off** for the noisy source.
 5. If OBS logs show max audio buffering, fully restart OBS after the segment or during a break. In many cases the source does not recover cleanly by itself.
 6. If the audio path goes through Wave Link, Voicemeeter, a capture card utility, or another audio mixer, restart that app too.
@@ -121,9 +121,9 @@ If the recording is clean with monitoring off, the problem may be OBS monitoring
 If you need to hear the guests, do not monitor the same browser source through OBS if that monitoring path is unreliable. Instead, monitor through:
 
 * the VDO.Ninja director page in a regular browser
-* Electron Capture
+* [Electron Capture](https://electroncapture.app/)
 * Wave Link
-* a virtual audio cable
+* a [virtual audio cable](https://vb-audio.com/Cable/)
 * a separate browser routed to your headphones or mixer
 
 ### Avoid double-capturing audio
@@ -162,8 +162,8 @@ If your setup depends on Application Audio Capture, test a show without it.
 Better alternatives:
 
 * route the app into Wave Link
-* route the app into VB-CABLE or another virtual audio cable
-* use Electron Capture and capture the Electron audio separately
+* route the app into [VB-CABLE](https://vb-audio.com/Cable/) or another virtual audio cable
+* use [Electron Capture](https://electroncapture.app/) and capture the Electron audio separately
 * use a normal Audio Input Capture pointed at a virtual device
 * use a separate hardware mixer or audio interface loopback
 
@@ -171,14 +171,13 @@ Window Audio Capture can also be useful, but treat it as another OBS capture pat
 
 ## Electron Capture workaround
 
-Electron Capture is often the cleanest workaround when OBS Browser Source audio is the problem.
+[Electron Capture](https://electroncapture.app/) is often the cleanest workaround when OBS Browser Source audio is the problem.
 
 Instead of loading the VDO.Ninja view link directly inside an OBS Browser Source, you load the view link in Electron Capture, then bring the Electron window and audio into OBS.
 
 Basic setup:
 
-1. Install Electron Capture:
-   [https://vdo.ninja/electron](https://vdo.ninja/electron)
+1. Install [Electron Capture](https://electroncapture.app/).
 2. Open the VDO.Ninja view link in Electron Capture.
 3. In OBS, add the Electron window as a **Window Capture** source for video.
 4. Route Electron's audio into OBS using one of the audio methods below.
@@ -187,7 +186,7 @@ Basic setup:
 
 Use this when you want a stable audio input that appears in OBS like a microphone.
 
-1. Install a virtual audio cable, such as VB-CABLE on Windows, or BlackHole/Loopback on macOS.
+1. Install a virtual audio cable, such as [VB-CABLE](https://vb-audio.com/Cable/) on Windows, or BlackHole/Loopback on macOS.
 2. In Electron Capture, set the audio output device to the virtual cable input.
 3. In OBS, add **Audio Input Capture**.
 4. Select the virtual cable output.
@@ -290,7 +289,7 @@ Try:
 * in OBS browser sources, avoid **Shutdown source when not visible**
 * in OBS browser sources, avoid **Refresh browser when scene becomes active** unless you intentionally want it
 * test OBS browser source hardware acceleration both on and off
-* use Electron Capture instead of OBS Browser Source if the browser source keeps failing
+* use [Electron Capture](https://electroncapture.app/) instead of OBS Browser Source if the browser source keeps failing
 
 Electron Capture is useful here because it runs as its own app and gives more control over capture, window size, output device, and visibility behavior.
 
@@ -345,7 +344,7 @@ These are less likely to fix a problem where the VDO.Ninja room sounds clean but
 
 For a production show with remote guests, a stable path is usually:
 
-1. VDO.Ninja guest view link opens in Electron Capture or OBS Browser Source.
+1. VDO.Ninja guest view link opens in [Electron Capture](https://electroncapture.app/) or OBS Browser Source.
 2. Audio is routed into OBS once, not twice.
 3. OBS monitoring is off unless needed.
 4. If monitoring is needed, route it to a dedicated device that OBS is not also capturing.
@@ -354,7 +353,7 @@ For a production show with remote guests, a stable path is usually:
 7. Unused OBS global audio devices are disabled.
 8. A local test recording is made before the show.
 
-For higher reliability, use Electron Capture plus a virtual audio cable or Wave Link channel. This avoids the OBS Browser Source audio path, which is often where long-running crackling starts.
+For higher reliability, use [Electron Capture](https://electroncapture.app/) plus a [virtual audio cable](https://vb-audio.com/Cable/) or Wave Link channel. This avoids the OBS Browser Source audio path, which is often where long-running crackling starts.
 
 ## What to ask the user for
 
@@ -383,7 +382,7 @@ The most useful fixes are:
 * avoid Application Audio Capture for long shows if it becomes noisy
 * increase Wave Link or virtual cable buffers
 * check OBS logs for max audio buffering
-* use Electron Capture with a virtual audio cable or Wave Link channel instead of relying on OBS Browser Source audio
+* use [Electron Capture](https://electroncapture.app/) with a [virtual audio cable](https://vb-audio.com/Cable/) or Wave Link channel instead of relying on OBS Browser Source audio
 
 {% content-ref url="audio-clicking-popping-distortion.md" %}
 [audio-clicking-popping-distortion.md](audio-clicking-popping-distortion.md)
