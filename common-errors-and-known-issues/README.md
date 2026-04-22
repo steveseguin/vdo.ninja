@@ -22,6 +22,7 @@ description: Troubleshooting index for common VDO.Ninja and OBS issues, includin
 * [appearing-then-disappearing-guest.md](appearing-then-disappearing-guest.md "mention")
 * [cant-auto-start-screen-sharing.md](cant-auto-start-screen-sharing.md "mention")
 * [audio-clicking-popping-distortion.md](audio-clicking-popping-distortion.md "mention")
+* [outbound-obs-stream-audio-crackling.md](outbound-obs-stream-audio-crackling.md "mention")
 * [cant-share-my-screen.md](cant-share-my-screen.md "mention")
 * [nothing-shows-up-in-obs-or-it-is-choppy.md](nothing-shows-up-in-obs-or-it-is-choppy.md "mention")
 * [already-in-use-or-claimed-errors.md](already-in-use-or-claimed-errors.md "mention")
