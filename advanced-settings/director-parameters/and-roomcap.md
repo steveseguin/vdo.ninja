@@ -1,5 +1,5 @@
 ---
-description: Set a server-side cap on how many guests can be admitted to a claimed room
+description: Set a server-side cap on how many guests can be admitted to a claimed room.
 ---
 
 # \&roomcap
@@ -14,21 +14,46 @@ Director Option! ([`&director`](../../viewers-settings/director.md))
 
 Example: `&roomcap=20`
 
-<table><thead><tr><th width="200">Value</th><th>Description</th></tr></thead><tbody><tr><td>Integer (&gt; 0)</td><td>Maximum admitted guests for the claimed room.</td></tr></tbody></table>
+| Value | Description |
+| --- | --- |
+| Integer greater than `0` | Maximum admitted guests for the claimed room |
 
 ## Details
 
-`&roomcap` sets a server-side admission cap for a claimed room.
+`&roomcap` sets a handshake-server admission cap for a claimed room.
 
-On the official VDO.Ninja service:
+```text
+https://vdo.ninja/?director=MyRoom&roomcap=10
+```
+
+On the official `vdo.ninja` service:
 
 * Default cap is `80` when not set.
-* Maximum accepted value is `80` (higher values are clamped).
-* New join attempts are blocked when the cap is reached.
-* Transfers into the destination room also respect this cap.
-* Matching `&roomkey` values can bypass a lower custom `&roomcap` (for example, `50`), but cannot bypass the server hard cap of `80`.
+* Maximum accepted value is `80`; higher values are clamped.
+* New join attempts are blocked when the room is full.
+* Pending approval requests count toward the cap so the room is not overfilled while the director is deciding.
+* Transfers into the destination room also respect the destination room's cap.
+* Matching [`&roomkey`](and-roomkey.md) values can bypass a lower custom cap, but cannot bypass the server hard cap.
 
-This works on the official hosted service (`vdo.ninja`) and on self-hosted services that include the same room-admission implementation.
+## Live director behavior
+
+Room caps are attached to the live director claiming the room. If the director is not present, that director's live cap is not present either.
+
+If a director claims or reclaims the room, pending guests are re-evaluated using the director's current cap and approval settings.
+
+## Combining with approval
+
+`&roomcap` can be combined with [`&requireapproval`](and-requireapproval.md):
+
+```text
+https://vdo.ninja/?director=MyRoom&requireapproval&roomcap=10
+```
+
+This makes guests wait for approval and also prevents the room from admitting more than the cap allows.
+
+## Not the same as source connection limits
+
+`&roomcap` limits admission to a claimed room. It is not the same as [`&maxconnections`](../../source-settings/and-maxconnections.md), which limits peer connections to a single source/push stream.
 
 ## Related
 

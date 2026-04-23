@@ -1,5 +1,5 @@
 ---
-description: Quick director access to a list of rooms for transfering guests
+description: Quick director access to preset transfer-room destinations.
 ---
 
 # \&rooms
@@ -14,9 +14,13 @@ Example: `&rooms=room1,room2,room3`
 
 ## Details
 
-[https://vdo.ninja/?director=ROOMID\&rooms=ROOMID2,ROOMID3,ROOMID4](https://vdo.ninja/?director=ROOMID\&rooms=ROOMID2,ROOMID3,ROOMID4)
+`&rooms` adds preset transfer destinations to the director control bar.
 
-The link above would add "_ROOMID2_", "_ROOMID3_", "_ROOMID4_" guest transfer buttons to the director control bar.
+```text
+https://vdo.ninja/?director=ROOMID&rooms=ROOMID2,ROOMID3,ROOMID4
+```
+
+The link above adds `ROOMID2`, `ROOMID3`, and `ROOMID4` as transfer buttons.
 
 <figure><img src="../.gitbook/assets/image (37).png" alt=""><figcaption></figcaption></figure>
 
@@ -25,6 +29,14 @@ Pressing any of these buttons will arm the transfer buttons beneath each caller 
 ![](<../.gitbook/assets/image (4) (2) (1) (1).png>)
 
 Arming can be disabled by clicking the room name again. If the current room is in the list it will be ignored.
+
+## Access-control notes
+
+`&rooms` only creates shortcut buttons. The destination room's own rules still apply.
+
+* If the destination room has [`&requireapproval`](../advanced-settings/director-parameters/and-requireapproval.md), transferred guests wait for approval there.
+* If the destination room has [`&roomcap`](../advanced-settings/director-parameters/and-roomcap.md) and is full, the transfer is rejected.
+* If the guest link uses [`&queuetransfer`](../advanced-settings/settings-parameters/and-queuetransfer.md), the guest remains queued after transfer until activated.
 
 {% hint style="warning" %}
 If [`&cleanoutput`](../advanced-settings/design-parameters/cleanoutput.md) is enabled, rooms parameter is ignored.

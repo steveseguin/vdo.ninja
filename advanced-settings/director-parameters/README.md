@@ -19,10 +19,11 @@ Parameters specified for the director's control panel; have to be used together 
 | [`&minidirector`](../../newly-added-parameters/and-minidirector.md) | Default mini director stylesheet |
 | [`&orderby`](../../newly-added-parameters/and-orderby.md) | Orders guests by their stream ID in the director's room |
 | [`&queue`](../../general-settings/queue.md) | A basic guest queuing system |
-| [`&rooms`](../../director-settings/rooms.md) | Quick director access to a list of rooms for transfering guests |
+| [`&rooms`](../../director-settings/rooms.md) | Quick director access to a list of rooms for transferring guests |
 | [`&roomcap`](and-roomcap.md) | Claim-time room admission cap (default 80 on official service; hard max 80) |
 | [`&roomkey`](and-roomkey.md) | Trusted bypass key for claim-time admission controls |
 | [`&requireapproval`](and-requireapproval.md) | Require manual director approval before new guests can join |
+| [`&approvepopup`](and-approvepopup.md) | Show a director confirmation popup for pending approval requests |
 | [`&broadcasttransfer`](and-broadcasttransfer.md) | Will let you specify the default for whether to transfer a guest from room to room in broadcast mode or not |
 | [`&showdirector`](../../viewers-settings/and-showdirector.md) | Lets the director perform alongside guests, showing up in scene-view links |
 | [`&slotmode`](and-slotmode.md) | Gives you the possibility to assign slots to the connected guests |

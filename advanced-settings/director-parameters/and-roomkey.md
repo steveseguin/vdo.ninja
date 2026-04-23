@@ -1,5 +1,5 @@
 ---
-description: Add a trusted bypass key for claim-time room admission controls
+description: Add a trusted bypass key for room approval and custom room caps.
 ---
 
 # \&roomkey
@@ -14,25 +14,44 @@ General Option! ([`&director`](../../viewers-settings/director.md), [`&room`](..
 
 Example: `&roomkey=TRUSTED_BYPASS_KEY`
 
-<table><thead><tr><th width="250">Value</th><th>Description</th></tr></thead><tbody><tr><td>String</td><td>Trusted bypass key shared between director and selected invite links.</td></tr></tbody></table>
+| Value | Description |
+| --- | --- |
+| String | Trusted bypass key shared between the director and selected guest links |
 
 ## Details
 
-`&roomkey` is used with room-admission controls on claimed rooms.
+`&roomkey` is a trusted bypass key for the room admission controls on a claimed room.
 
-If the room director sets a bypass key, guests joining with the same key can bypass:
+Add it to the director link:
 
-* manual approval queues from [`&requireapproval`](and-requireapproval.md)
-* custom admission limits from [`&roomcap`](and-roomcap.md), up to the server hard max
+```text
+https://vdo.ninja/?director=MyRoom&requireapproval&roomcap=10&roomkey=TRUSTEDKEY
+```
 
-`&roomkey` cannot bypass the server hard cap (`80` on the official service).
+Add the same key only to trusted guest links:
 
-This behavior works on the official hosted VDO.Ninja service (`vdo.ninja`) and on self-hosted signaling services that support claim-time admission controls.
+```text
+https://vdo.ninja/?room=MyRoom&roomkey=TRUSTEDKEY
+```
 
-## Security Notes
+Guests with a matching key can bypass:
 
-* Treat room keys like passwords; only share with trusted users.
-* Changing the key rotates who can bypass admission checks.
+* manual approval from [`&requireapproval`](and-requireapproval.md)
+* a lower custom cap from [`&roomcap`](and-roomcap.md)
+
+`&roomkey` cannot bypass the server hard cap. On the official `vdo.ninja` service, the hard cap is `80`.
+
+## Live director behavior
+
+The bypass key is attached to the live director claim. If the director leaves and a new director claims the room with a different key, the trusted bypass changes with that director's settings.
+
+## Security notes
+
+Treat a room key like a password.
+
+* Share it only with guests who should bypass approval or a custom cap.
+* Rotate it if it is exposed.
+* Do not use a predictable key for public events.
 
 ## Related
 

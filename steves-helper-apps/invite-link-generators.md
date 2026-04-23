@@ -11,4 +11,7 @@ description: Link generators to create invite links for VDO.Ninja
 | Excel-based                  | [https://drive.google.com/file/d/1A7qiFAC](https://drive.google.com/file/d/1A7qiFACoCxk9J-uTv9yyZa5yQWzFol8l/view)... |
 | Trampoline                   | [https://rse.github.io/vdo-ninja-trampoline/](https://rse.github.io/vdo-ninja-trampoline/)                            |
 | URL Obfuscator for VDO.Ninja | [https://invite.cam/](https://invite.cam/)                                                                            |
+| Large lobby and access flow  | [https://app.invite.cam/](https://app.invite.cam/)                                                                    |
 | Dock for OBS                 | [https://vdo.ninja/dock](https://vdo.ninja/dock)                                                                      |
+
+For larger lobby and waiting-list workflows, see [app.invite.cam](app-invite-cam.md).

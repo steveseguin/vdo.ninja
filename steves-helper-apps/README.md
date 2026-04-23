@@ -28,4 +28,5 @@ This section covers the VDO.Ninja ecosystem beyond the main web app, including h
 * [vdo-applications.md](vdo-applications.md "mention")
 * [tech-demonstrations.md](tech-demonstrations.md "mention")
 * [invite-link-generators.md](invite-link-generators.md "mention")
+* [app-invite-cam.md](app-invite-cam.md "mention") ([https://app.invite.cam](https://app.invite.cam))
 * [community-contributed-tools.md](community-contributed-tools.md "mention")

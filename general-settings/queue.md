@@ -64,11 +64,11 @@ For all three modes above, transferring the guest to another room also counts as
 
 Separate from `&queue`, claimed rooms also support approval and capacity controls tied to the active director session:
 
-* `&requireapproval` forces manual approval before a guest can join the claimed room.
-* `&roomcap=NUMBER` or `&rcap=NUMBER` sets the room guest cap.
-* `&roomkey=KEY` or `&rk=KEY` acts as a trusted bypass key for approval and room-cap checks.
+* [`&requireapproval`](../advanced-settings/director-parameters/and-requireapproval.md) forces manual approval before a guest can join the claimed room.
+* [`&roomcap=NUMBER`](../advanced-settings/director-parameters/and-roomcap.md) or `&rcap=NUMBER` sets the room guest cap.
+* [`&roomkey=KEY`](../advanced-settings/director-parameters/and-roomkey.md) or `&rk=KEY` acts as a trusted bypass key for approval and room-cap checks.
 
-These controls are tied to the current director. If the director leaves, the approval and cap state is removed with them.
+These controls are tied to the current director's live room claim. Pending guests are room-scoped, but approval/cap/key settings come from the active director. If the director leaves and later reclaims the room, pending guests are re-evaluated against the director's current settings.
 
 ## Co-directors and queue state
 

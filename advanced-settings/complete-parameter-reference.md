@@ -27,6 +27,8 @@ If you are self-hosting VDO.Ninja, often these URL parameters can be hard-coded 
 | `alpha`            | -                                     | Boolean                                         | -                                         |
 | `am`               | See `automute`                        | -                                               | -                                         |
 | `apiserver`        | -                                     | URL                                             | Sets custom API server                    |
+| `approvalpopup`    | See `approvepopup`                    | -                                               | -                                         |
+| `approvepopup`     | `approvalpopup`                       | Boolean                                         | Shows a director popup for pending approval requests |
 | `ar`               | See `aspectratio`                     | -                                               | -                                         |
 | `aspectratio`      | `ar`                                  | Number/String (`portrait`,`landscape`,`square`) | Sets aspect ratio                         |
 | `audience`         | -                                     | String                                          | -                                         |

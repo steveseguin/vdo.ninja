@@ -24,6 +24,8 @@ If a transferred guest is still pending in that destination room and disconnects
 
 If the destination room has a [`&roomcap`](../../advanced-settings/director-parameters/and-roomcap.md) limit and is already full, the transfer will be rejected.
 
+If the guest link includes [`&queuetransfer`](../../advanced-settings/settings-parameters/and-queuetransfer.md), the guest is transferred into the destination queue flow and waits there until activated.
+
 If you transfer someone to a room, the passwords for both rooms need to match. This may change in the future.
 
 If someone in a transfer room disconnects or refresh, they will end up back in the original landing room. This is for privacy and security reasons, as once a user is kicked out or disconnected, the expectation is they cannot enter the room again unless explicitly allowed. Be sure that any guest who is transferred has a stable connection; unstable mobile connections or connections using VPN services may get booted out every now and then.
@@ -39,3 +41,17 @@ If you'd like to transfer a user to a new room, along with a new password or set
 There's an option called [`&rooms`](../../director-settings/rooms.md), which allows the director to list multiple room names via the URL. These rooms become buttons that the director can press to pre-arm the transfer button with.&#x20;
 
 ![](<../../.gitbook/assets/image (130) (1).png>)
+
+## Related
+
+{% content-ref url="../../director-settings/rooms.md" %}
+[rooms.md](../../director-settings/rooms.md)
+{% endcontent-ref %}
+
+{% content-ref url="../../advanced-settings/settings-parameters/and-queuetransfer.md" %}
+[and-queuetransfer.md](../../advanced-settings/settings-parameters/and-queuetransfer.md)
+{% endcontent-ref %}
+
+{% content-ref url="../../advanced-settings/director-parameters/and-requireapproval.md" %}
+[and-requireapproval.md](../../advanced-settings/director-parameters/and-requireapproval.md)
+{% endcontent-ref %}
