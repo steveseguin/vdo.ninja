@@ -20,19 +20,14 @@ jobs:
 
       - name: Run translation diff
         id: diff
-        run: node .github/ci-checkTranslations.js
-        continue-on-error: true
-
-      - name: Read report
-        if: failure()
-        id: report
         run: |
+          output=$(node .github/ci-checkTranslations.js || true)
           echo "body<<EOF" >> $GITHUB_OUTPUT
-          cat translation_report.md >> $GITHUB_OUTPUT
+          echo "$output" >> $GITHUB_OUTPUT
           echo "EOF" >> $GITHUB_OUTPUT
 
       - name: Comment on PR
-        if: failure()
+        if: contains(steps.diff.outputs.body, '⚠️')
         uses: actions/github-script@v7
         with:
           script: |
@@ -40,5 +35,5 @@ jobs:
               issue_number: context.issue.number,
               owner: context.repo.owner,
               repo: context.repo.repo,
-              body: `${{ steps.report.outputs.body }}`
+              body: `${{ steps.diff.outputs.body }}`
             })
