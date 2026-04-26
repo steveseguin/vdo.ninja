@@ -10,3 +10,4 @@ cf/
 wrangler.toml
 package.json
 docs.md
+.github/translation_report.md
