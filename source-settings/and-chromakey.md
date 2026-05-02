@@ -29,6 +29,10 @@ If the user manually adjusts the threshold via the slider during a session, that
 [and-chromakeybg.md](and-chromakeybg.md)
 {% endcontent-ref %}
 
+{% content-ref url="../advanced-settings/view-parameters/and-viewchroma.md" %}
+[and-viewchroma.md](../advanced-settings/view-parameters/and-viewchroma.md)
+{% endcontent-ref %}
+
 {% content-ref url="effects.md" %}
 [effects.md](effects.md)
 {% endcontent-ref %}

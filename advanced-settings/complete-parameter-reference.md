@@ -289,7 +289,7 @@ If you are self-hosting VDO.Ninja, often these URL parameters can be hard-coded 
 | `lowcut`            | `lc`, `higpass` | Integer                                         | Sets low-cut filter frequency |
 | `lowlatency`        | `ll`, `ultralow` | Boolean                                        | Enables low-latency preset    |
 | `lowbitratescene`   | `cutscene`      | String                                          | -                             |
-| `lowmobilebitrate`  | -               | Integer                                         | -                             |
+| `lowmobilebitrate`  | -               | Integer                                         | Lower fallback mobile sender bitrate cap |
 
 ### M
 
@@ -299,6 +299,7 @@ If you are self-hosting VDO.Ninja, often these URL parameters can be hard-coded 
 | `maxbandwidth`         | -                    | Integer (0-200)      | -                           |
 | `maxconnections`       | `mc`                 | Integer              | Maximum allowed connections |
 | `maxframerate`         | `mfr`, `mfps`        | Integer              | Sets maximum framerate      |
+| `maxmobilebitrate`     | -                    | Integer              | Normal mobile sender bitrate cap |
 | `maxpublishers`        | `mp`                 | Integer              | Maximum allowed publishers  |
 | `maxtotalscenebitrate` | `mtsb`, `tsb`        | Integer              | -                           |
 | `maxvideobitrate`      | -                    | Integer              | Software max video bitrate per stream |
@@ -451,6 +452,10 @@ If you are self-hosting VDO.Ninja, often these URL parameters can be hard-coded 
 | `roombitrate`       | `rbr`             | Integer            | Sets room bitrate      |
 | `roomcap`           | `rcap`            | Integer            | Claimed-room admission cap |
 | `roomkey`           | `rk`              | String             | Claimed-room bypass key |
+| `roomonlybitrate`   | See `roomtier2bitrate` | -              | -                      |
+| `roomonlylowbitrate` | See `roomtier1bitrate` | -             | -                      |
+| `roomtier1bitrate`  | `rt1b`, `roomonlylowbitrate`, `rolb` | Integer | Lower automatic room-only bitrate tier |
+| `roomtier2bitrate`  | `rt2b`, `roomonlybitrate`, `rob` | Integer | Higher automatic room-only bitrate tier |
 | `rounded`           | `round`           | Integer            | Sets rounded corners   |
 | `rk`                | See `roomkey`     | -                  | -                      |
 | `ruler`             | `grid`, `thirds`  | URL/Boolean        | Shows composition grid |
@@ -562,11 +567,15 @@ If you are self-hosting VDO.Ninja, often these URL parameters can be hard-coded 
 | `videobitrate`   | `bitrate`, `vb`                       | Integer                                  | Sets video bitrate         |
 | `videocontrols`  | See `controls`                        | -                                        | -                          |
 | `videodevice`    | `vdevice`, `vd`, `device`, `d`, `vdo` | Device ID/name or `0`/`false`/`no`/`off` | Selects video input device |
-| `view`           | `v`, `streamid`                       | Stream ID                                | Sets view mode             |
-| `viewereffect`   | `viewereffects`, `ve`                 | Integer                                  | Sets viewer effects        |
-| `viewgroup`      | See `groupview`                       | -                                        | -                          |
-| `viewheight`     | `vh`                                  | Integer                                  | Sets view height           |
-| `viewwidth`      | `vw`                                  | Integer                                  | Sets view width            |
+| `view`                 | `v`, `streamid`                       | Stream ID                                | Sets view mode                                                    |
+| `viewchroma`           | `vchroma`                                                   | Hex color (e.g. `00ff00`, `f00`)         | Receiver-side chroma key: removes this color from incoming video  |
+| `viewchromathreshold`  | `vchromathreshold`, `viewchromathresh`, `vchromathresh`     | 0-255 (default 40)                       | Distance threshold for `viewchroma` color matching                |
+| `viewchromasmoothing`  | `vchromasmoothing`, `viewchromasmooth`, `vchromasmooth`     | 1-255 (default 30)                       | Edge softness for `viewchroma` transparency falloff               |
+| `viewchromahide`       | `viewchromahidesource`, `vchromahide`, `vchromahidesource`  | `0`/`1`/`true`/`false`/`off` (default 1) | Hide the raw source video behind the keyed canvas                 |
+| `viewereffect`         | `viewereffects`, `ve`                 | Integer                                  | Sets viewer effects                                               |
+| `viewgroup`            | See `groupview`                       | -                                        | -                                                                 |
+| `viewheight`           | `vh`                                  | Integer                                  | Sets view height                                                  |
+| `viewwidth`            | `vw`                                  | Integer                                  | Sets view width                                                   |
 | `virtualeffects` | -                                     | Boolean                                  | -                          |
 | `vdo`            | See `videodevice`                     | -                                        | -                          |
 | `volume`         | `vol`                                 | 0-100                                    | Sets volume level          |

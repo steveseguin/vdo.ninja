@@ -33,6 +33,8 @@ Split between the number of streams that guest is viewing.
 
 So for example, with 6-guests in a room, the default of 500-kbps will have each guest requesting 100-kbps from each other. 5 streams x 100-kbps.
 
+For guest-only conferencing rooms, VDO.Ninja may use automatic room-only tiers when no explicit total room bitrate is set. These tiers raise the default room budget for normal or stronger devices while keeping weaker mobile devices more protected. See [room-only-mobile-bitrate-tiers.md](../../guides/room-only-mobile-bitrate-tiers.md "mention") for the high-level guide.
+
 ### Two values
 
 `&totalroombitrate` can take two values; the second of which gets used if the device is a 'mobile' device, while the first gets used otherwise. ie: `&totalroombitrate=1000,500`\

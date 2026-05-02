@@ -10,6 +10,8 @@ This guide will show you how to control and set up the bitrate in rooms as a dir
 
 Every guest is viewing video streams in a room with a combined bitrate of 500-kbps. If there is only one video stream, the guest will view the video on 500-kbps. Two video streams: 250-kbps per video.
 
+For guest-only room calls, VDO.Ninja may use higher automatic room-only bitrate tiers. These tiers are designed for conferencing-style rooms where there is no director or scene viewer connected to the guest. See [room-only-mobile-bitrate-tiers.md](room-only-mobile-bitrate-tiers.md "mention") for details.
+
 ## Director
 
 As a director of a room you can control the total room bitrate dynamically.
@@ -72,6 +74,7 @@ The bitrate of each guest will be 1000-kbps.
 - Screen shares are weighted differently in the room mixer; they can take a larger share of the total budget versus camera feeds.
 - Hidden, muted, or disabled videos are not counted when the room bitrate is split across streams.
 - `&minroombitrate` can enforce a per-stream floor when splitting a total room bitrate.
+- Automatic room-only mobile tiers do not apply when a guest is connected to a director or scene viewer. In those production-style rooms, set `&totalroombitrate`, `&roombitrate`, `&videobitrate`, or `&totalscenebitrate` explicitly depending on whether you are tuning guest-to-guest room quality or scene quality.
 
 ## Meshcast
 
@@ -87,4 +90,8 @@ There are more parameters to control the bitrate. You can find them here:
 
 {% content-ref url="../advanced-settings/video-bitrate-parameters/" %}
 [video-bitrate-parameters](../advanced-settings/video-bitrate-parameters/)
+{% endcontent-ref %}
+
+{% content-ref url="room-only-mobile-bitrate-tiers.md" %}
+[room-only-mobile-bitrate-tiers.md](room-only-mobile-bitrate-tiers.md)
 {% endcontent-ref %}

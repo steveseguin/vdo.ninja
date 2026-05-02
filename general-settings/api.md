@@ -10,6 +10,10 @@ General Option! ([`&push`](../source-settings/push.md), [`&room`](room.md), [`&v
 
 * `&osc`
 
+{% hint style="warning" %}
+`&osc` is only a legacy alias for this HTTP/WSS remote API key parameter. VDO.Ninja does not support native OSC protocol input, such as UDP OSC messages from another app. External OSC tools need their own bridge to the HTTP/WSS API.
+{% endhint %}
+
 ## Options
 
 Example: `&api=SomeAPIKey`

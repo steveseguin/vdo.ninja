@@ -29,6 +29,10 @@ The threshold value controls sensitivity. If the user manually adjusts the thres
 [and-chromakey.md](and-chromakey.md)
 {% endcontent-ref %}
 
+{% content-ref url="../advanced-settings/view-parameters/and-viewchroma.md" %}
+[and-viewchroma.md](../advanced-settings/view-parameters/and-viewchroma.md)
+{% endcontent-ref %}
+
 {% content-ref url="effects.md" %}
 [effects.md](effects.md)
 {% endcontent-ref %}

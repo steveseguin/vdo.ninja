@@ -22,7 +22,26 @@ You have to add them to the viewer side ([`&room`](../../general-settings/room.m
 
 <table><thead><tr><th width="150">Parameter</th><th>Explanation</th></tr></thead><tbody><tr><td><a href="bitrate.md"><code>&#x26;videobitrate</code></a></td><td>Sets the "desired target" bitrate in kbps</td></tr><tr><td><a href="and-totalscenebitrate.md"><code>&#x26;totalscenebitrate</code></a></td><td>Max. video bitrate a scene uses</td></tr><tr><td><a href="totalroombitrate.md"><code>&#x26;totalroombitrate</code></a></td><td>The total bitrate a guest in a room can view video streams with</td></tr><tr><td><a href="and-totalbitrate.md"><code>&#x26;totalbitrate</code></a></td><td>Sets both <a href="and-totalscenebitrate.md"><code>&#x26;totalscenebitrate</code></a> and <a href="totalroombitrate.md"><code>&#x26;totalroombitrate</code></a> flags</td></tr><tr><td><a href="and-zoomedbitrate.md"><code>&#x26;zoomedbitrate</code></a></td><td>Lets you set the target bitrate for a guest when they 'zoom in' (fullscreen) on a video</td></tr><tr><td><a href="optimize.md"><code>&#x26;optimize</code></a></td><td>Video bitrate reduced when the video is not visible in OBS (not active in a scene)</td></tr><tr><td><a href="../../newly-added-parameters/and-screensharebitrate.md"><code>&#x26;screensharebitrate</code></a></td><td>Lets you manually set the video bitrate for screen-shares</td></tr></tbody></table>
 
+## Room-only and mobile room options
+
+These parameters are for guest room calls where mobile device safety and mesh-network load matter.
+
+| Parameter | Explanation |
+| --- | --- |
+| [`&roomtier1bitrate`](roomtier1bitrate.md) | Automatic room-only total bitrate tier for weaker mobile devices |
+| [`&roomtier2bitrate`](roomtier2bitrate.md) | Automatic room-only total bitrate tier for normal or stronger devices |
+| [`&maxmobilebitrate`](and-maxmobilebitrate.md) | Normal mobile sender cap for guest room publishing |
+| [`&lowmobilebitrate`](and-lowmobilebitrate.md) | Lower fallback mobile sender cap for older or overloaded mobile devices |
+
+{% hint style="info" %}
+Automatic room-only tiers are meant for guest-only conferencing rooms. If a director or scene viewer is connected, use explicit room or scene bitrate parameters instead.
+{% endhint %}
+
 ## Related
+
+{% content-ref url="../../guides/room-only-mobile-bitrate-tiers.md" %}
+[room-only-mobile-bitrate-tiers.md](../../guides/room-only-mobile-bitrate-tiers.md)
+{% endcontent-ref %}
 
 {% content-ref url="../video-parameters/" %}
 [video-parameters](../video-parameters/)

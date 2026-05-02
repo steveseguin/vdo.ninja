@@ -8,17 +8,25 @@ Sender-Side Option! ([`&push`](../../source-settings/push.md))
 
 ## Details
 
-[`https://vdo.ninja/alpha/?flagship`](https://vdo.ninja/alpha/?flagship)
+`&flagship` is a manual hint that tells VDO.Ninja to treat a mobile publisher as more capable than the default mobile assumptions.
 
-Been playing around a new flag called `&flagship`, which will optimize the mobile experience for more capable smartphones; essentially, streaming higher quality video to other guests versus the normal mobile-performance mode.
+It does not detect the phone model or chipset. It is useful when you know the guest is using a high-end mobile device and you want less aggressive mobile protection.
 
-Can be used to try to have a mobile phone push closer-to-desktop quality out, to other guests. The quality is only slightly worse than what a desktop user would push out I think. Just add `&flagship` to the guest invite links to trigger.
+For room-only conferencing, VDO.Ninja can also use automatic room-only bitrate tiers. Those tiers are usually safer than forcing all mobile devices into a high-performance mode. See [room-only-mobile-bitrate-tiers.md](../../guides/room-only-mobile-bitrate-tiers.md "mention").
 
-If you don't include `&flagship`, I've still made some performance tweak, such as increasing the default bitrate from 200-kbps to 350-kbps with just one other guest in the room; with two other, its 250-kbps; after that, it starts to drop down a lot again though. I need to organize my thoughts a bit more on all this, but so far I think it's an improvement.
+In director or scene controlled rooms, `&flagship` can be useful if you intentionally want a capable mobile guest to send higher quality video to other room guests. Test carefully, as mobile browsers can overheat or become CPU-limited when sending several peer-to-peer video streams.
 
-I've also modified the non-flagship mode, for low-end mobile devices, to use the [`&limittotalbitrate`](../video-bitrate-parameters/limittotalbitrate.md) flag by default (500-kbps). [`&limittotalbitrate`](../video-bitrate-parameters/limittotalbitrate.md) hasn't been that heavily tested yet, but it's part of v22 and might be better than [`&totalroombitrate`](../video-bitrate-parameters/totalroombitrate.md); currently I'll increasingly use them together I think though. They are both the same concept, except one is viewer-side controlled, and the other is sender-side controlled; both limit the bitrate that guests in the room see based on the number of guests in the room.
+If you need a numeric mobile cap instead of a broad hint, use [`&maxmobilebitrate`](../video-bitrate-parameters/and-maxmobilebitrate.md).
 
 ## Related
+
+{% content-ref url="../../guides/room-only-mobile-bitrate-tiers.md" %}
+[room-only-mobile-bitrate-tiers.md](../../guides/room-only-mobile-bitrate-tiers.md)
+{% endcontent-ref %}
+
+{% content-ref url="../video-bitrate-parameters/and-maxmobilebitrate.md" %}
+[and-maxmobilebitrate.md](../video-bitrate-parameters/and-maxmobilebitrate.md)
+{% endcontent-ref %}
 
 {% content-ref url="and-notmobile.md" %}
 [and-notmobile.md](and-notmobile.md)
