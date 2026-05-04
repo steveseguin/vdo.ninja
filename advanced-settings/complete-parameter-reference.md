@@ -355,6 +355,7 @@ If you are self-hosting VDO.Ninja, often these URL parameters can be hard-coded 
 | `nohub`              | See `nohangupbutton`                 | -               | -                                 |
 | `nohangupbutton`     | `nohub`                              | Boolean         | Hides hangup button               |
 | `noisegate`          | `gating`, `gate`, `ng`               | Boolean/Integer | Sets noise gate                   |
+| `nomobilebitratecap` | -                                    | Boolean         | Disables only the mobile sender bitrate safety cap |
 | `nomouseevents`      | `nme`                                | Boolean         | -                                 |
 | `nopreview`          | `np`                                 | Boolean         | Disables preview                  |
 | `nopush`             | `noseed`                             | Boolean         | -                                 |
@@ -456,8 +457,12 @@ If you are self-hosting VDO.Ninja, often these URL parameters can be hard-coded 
 | `roomonlylowbitrate` | See `roomtier1bitrate` | -             | -                      |
 | `roomtier1bitrate`  | `rt1b`, `roomonlylowbitrate`, `rolb` | Integer | Lower automatic room-only bitrate tier |
 | `roomtier2bitrate`  | `rt2b`, `roomonlybitrate`, `rob` | Integer | Higher automatic room-only bitrate tier |
+| `rob`               | See `roomtier2bitrate` | -              | -                      |
+| `rolb`              | See `roomtier1bitrate` | -              | -                      |
 | `rounded`           | `round`           | Integer            | Sets rounded corners   |
 | `rk`                | See `roomkey`     | -                  | -                      |
+| `rt1b`              | See `roomtier1bitrate` | -              | -                      |
+| `rt2b`              | See `roomtier2bitrate` | -              | -                      |
 | `ruler`             | `grid`, `thirds`  | URL/Boolean        | Shows composition grid |
 
 ### S

@@ -89,6 +89,7 @@ To improve room quality in a director or scene controlled room, use explicit par
 * Add [`&controlroombitrate`](../advanced-settings/video-bitrate-parameters/and-controlroombitrate.md) if you want guests to adjust their own room receive budget from the interface.
 * Use [`&roombitrate`](../advanced-settings/video-bitrate-parameters/roombitrate.md) on weaker guests to cap how much other room guests can pull from them.
 * Use [`&maxmobilebitrate`](../advanced-settings/video-bitrate-parameters/and-maxmobilebitrate.md) or [`&flagship`](../advanced-settings/upcoming-parameters/and-flagship.md) on a known-capable mobile publisher if you intentionally want to lift mobile sender limits in production-style rooms.
+* Use [`&nomobilebitratecap`](../advanced-settings/video-bitrate-parameters/and-nomobilebitratecap.md) only when you want a mobile publisher to accept higher viewer or director bitrate requests while keeping the mobile interface.
 * Use [`&videobitrate`](../advanced-settings/video-bitrate-parameters/bitrate.md) or [`&totalscenebitrate`](../advanced-settings/video-bitrate-parameters/and-totalscenebitrate.md) for scene quality. Scene bitrate and guest room bitrate are separate concerns.
 * For larger rooms or one-to-many production, consider [`&meshcast`](../newly-added-parameters/and-meshcast.md) or [`&broadcast`](../advanced-settings/view-parameters/broadcast.md) so guests do not need to upload many peer-to-peer video streams.
 

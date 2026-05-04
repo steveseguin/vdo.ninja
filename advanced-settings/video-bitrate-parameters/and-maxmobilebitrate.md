@@ -28,6 +28,10 @@ For guest-only conferencing rooms, prefer [`&roomtier2bitrate`](roomtier2bitrate
 
 ## Related
 
+{% content-ref url="and-nomobilebitratecap.md" %}
+[and-nomobilebitratecap.md](and-nomobilebitratecap.md)
+{% endcontent-ref %}
+
 {% content-ref url="and-lowmobilebitrate.md" %}
 [and-lowmobilebitrate.md](and-lowmobilebitrate.md)
 {% endcontent-ref %}

@@ -29,9 +29,16 @@ These parameters are for guest room calls where mobile device safety and mesh-ne
 | Parameter | Explanation |
 | --- | --- |
 | [`&roomtier1bitrate`](roomtier1bitrate.md) | Automatic room-only total bitrate tier for weaker mobile devices |
+| [`&rt1b`](rt1b.md) | Short alias for `&roomtier1bitrate` |
+| [`&roomonlylowbitrate`](roomonlylowbitrate.md) | Alias for `&roomtier1bitrate` |
+| [`&rolb`](rolb.md) | Short alias for `&roomtier1bitrate` |
 | [`&roomtier2bitrate`](roomtier2bitrate.md) | Automatic room-only total bitrate tier for normal or stronger devices |
+| [`&rt2b`](rt2b.md) | Short alias for `&roomtier2bitrate` |
+| [`&roomonlybitrate`](roomonlybitrate.md) | Alias for `&roomtier2bitrate` |
+| [`&rob`](rob.md) | Short alias for `&roomtier2bitrate` |
 | [`&maxmobilebitrate`](and-maxmobilebitrate.md) | Normal mobile sender cap for guest room publishing |
 | [`&lowmobilebitrate`](and-lowmobilebitrate.md) | Lower fallback mobile sender cap for older or overloaded mobile devices |
+| [`&nomobilebitratecap`](and-nomobilebitratecap.md) | Disables only the mobile sender bitrate safety cap |
 
 {% hint style="info" %}
 Automatic room-only tiers are meant for guest-only conferencing rooms. If a director or scene viewer is connected, use explicit room or scene bitrate parameters instead.
