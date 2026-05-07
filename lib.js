@@ -8,6 +8,29 @@
  */
 /*jshint esversion: 6 */
 
+const USE_LONGPIPE = true;
+
+let EffectsPipeline = null;
+async function loadLongpipe() {
+	if (EffectsPipeline) return;
+	try {
+		({ EffectsPipeline } = await import("https://esm.sh/longpipe@0.0.6"));
+		if (session.effect == "3" || session.effect == "4" || session.effect == "5" || session.effect == "16") {
+			updateRenderOutpipe();
+		}
+	} catch (e) {
+		errorlog("LongPipe failed to load: " + e);
+	}
+}
+
+function effectToLongpipeBg() {
+	if (session.effect == "3") return "blur";
+	if (session.effect == "4") return { color: "#00ff00" };
+	if (session.effect == "5") return (session.effectsImage && session.effectsImage.src) ? session.effectsImage.src : "blur";
+	if (session.effect == "16") return "none";
+	return "blur";
+}
+
 ///// For the debug output, uncomment this section.
 /*
 let lastLogTime = performance.now(); // Initialize with the current time
@@ -12780,7 +12803,22 @@ function applyEffects(track) {
 		session.canvas.height = 2 * parseInt(session.canvasSource.height / 2);
 		session.canvas.width = 2 * parseInt(session.canvasSource.width / 2);
 
-		TFLiteWorker();
+		if (USE_LONGPIPE) {
+			if (EffectsPipeline) {
+
+				console.log("Longpipe back")
+				if (session.longpipe) { session.longpipe.destroy(); session.longpipe = null; }
+				session.longpipe = new EffectsPipeline(session.canvasSource.srcObject, {
+					preset: 'fast',
+					background: effectToLongpipeBg()
+				});
+				return session.longpipe.stream.getVideoTracks()[0];
+			}
+			// loadLongpipe() is still in-flight; it will call updateRenderOutpipe() when ready
+			return track;
+		} else {
+			TFLiteWorker();
+		}
 	} else if (session.effect == "6") {
 		setupCanvas();
 		session.canvasSource.srcObject.addTrack(track);
@@ -57439,8 +57477,10 @@ async function effectsDynamicallyUpdate(event, ele) {
 		return;
 	} else if (session.effect === "3" || session.effect === "4" || session.effect === "16") {
 		if (!["3", "4", "5", "16"].includes(lastEffectValue)) {
-			attemptSegmentationEffectModelLoad();
-			if (!(session.tfliteModule && session.tfliteModule.looping)) {
+			USE_LONGPIPE ? loadLongpipe() : attemptSegmentationEffectModelLoad();
+			if (!USE_LONGPIPE && !(session.tfliteModule && session.tfliteModule.looping)) {
+				updateRenderOutpipe();
+			} else if (USE_LONGPIPE) {
 				updateRenderOutpipe();
 			}
 		}
@@ -57460,8 +57500,10 @@ async function effectsDynamicallyUpdate(event, ele) {
 		}
 	} else if (session.effect === "5") {
 		if (!["3", "4", "5", "16"].includes(lastEffectValue)) {
-			attemptSegmentationEffectModelLoad();
-			if (!(session.tfliteModule && session.tfliteModule.looping)) {
+			USE_LONGPIPE ? loadLongpipe() : attemptSegmentationEffectModelLoad();
+			if (!USE_LONGPIPE && !(session.tfliteModule && session.tfliteModule.looping)) {
+				updateRenderOutpipe();
+			} else if (USE_LONGPIPE) {
 				updateRenderOutpipe();
 			}
 		}
