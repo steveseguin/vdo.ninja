@@ -14,7 +14,7 @@ let EffectsPipeline = null;
 async function loadLongpipe() {
 	if (EffectsPipeline) return;
 	try {
-		({ EffectsPipeline } = await import("https://esm.sh/longpipe@0.0.6"));
+		({ EffectsPipeline } = await import("https://esm.sh/longpipe@0.0.7"));
 		if (session.effect == "3" || session.effect == "4" || session.effect == "5" || session.effect == "16") {
 			updateRenderOutpipe();
 		}
@@ -24,7 +24,10 @@ async function loadLongpipe() {
 }
 
 function effectToLongpipeBg() {
-	if (session.effect == "3") return "blur";
+	if (session.effect == "3") {
+		var strength = session.effectValue ? parseFloat(session.effectValue) / 20 : 0.5; // default 10/20 = 0.5
+		return { blur: { strength: strength } };
+	}
 	if (session.effect == "4") return { color: "#00ff00" };
 	if (session.effect == "5") return session.effectsImage && session.effectsImage.src ? session.effectsImage.src : "blur";
 	if (session.effect == "16") return "none";
@@ -12685,6 +12688,24 @@ function applyEffects(track) {
 					preset: "auto",
 					background: effectToLongpipeBg()
 				});
+
+				var lpSpinner = document.createElement("i");
+				lpSpinner.className = "las la-spinner icn-spinner";
+				lpSpinner.id = "longpipeSpinner";
+				lpSpinner.style = "position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-size:200%;color:white;pointer-events:none;z-index:100;";
+				var lpPreview = getById("previewWebcam");
+				if (lpPreview && lpPreview.parentNode) {
+					lpPreview.parentNode.style.position = "relative";
+					lpPreview.parentNode.appendChild(lpSpinner);
+				}
+				session.longpipe.ready.then(function () {
+					var s = getById("longpipeSpinner");
+					if (s) s.remove();
+				}).catch(function () {
+					var s = getById("longpipeSpinner");
+					if (s) s.remove();
+				});
+
 				return session.longpipe.stream.getVideoTracks()[0];
 			}
 			// loadLongpipe() is still in-flight; it will call updateRenderOutpipe() when ready
@@ -57322,7 +57343,7 @@ async function effectsDynamicallyUpdate(event, ele) {
 		session.effectValue = 5;
 	}
 	if (session.effectValue_default === false && session.effect == "3") {
-		session.effectValue = 2;
+		session.effectValue = 10;
 	} else {
 		session.effectValue = session.effectValue_default;
 	}
@@ -58018,6 +58039,9 @@ async function changeEffectAmount(ev, ele) {
 	}
 	log("session.effectValue: " + session.effectValue);
 	saveEffectValue(session.effect, ele.value);
+	if (USE_LONGPIPE && session.longpipe && session.effect == "3") {
+		session.longpipe.setBackground({ blur: { strength: parseFloat(ele.value) / 20 } });
+	}
 }
 async function loadTFLiteModel() {
 	try {
