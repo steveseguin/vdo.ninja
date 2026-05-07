@@ -26,7 +26,7 @@ async function loadLongpipe() {
 function effectToLongpipeBg() {
 	if (session.effect == "3") return "blur";
 	if (session.effect == "4") return { color: "#00ff00" };
-	if (session.effect == "5") return (session.effectsImage && session.effectsImage.src) ? session.effectsImage.src : "blur";
+	if (session.effect == "5") return session.effectsImage && session.effectsImage.src ? session.effectsImage.src : "blur";
 	if (session.effect == "16") return "none";
 	return "blur";
 }
@@ -98,7 +98,7 @@ var miscTranslations = {
 	"room-is-claimed-codirector": "The room is already claimed by someone else.\n\nTrying to join as a co-director...",
 	"streamid-already-published": "The stream ID you are publishing to is already in use.\n\nPlease try with a different invite link or refresh to retry again.\n\nYou will now be disconnected.",
 	"streamid-already-published-obvious": "The stream ID you are publishing to is already in use.\n\nPlease consider using a password or a more varied/unique stream ID to avoid this issue.\n\nYou will now be disconnected.",
-	"director": "Director",
+	director: "Director",
 	"unknown-user": "Unknown User",
 	"room-test-not-good": "The room name 'test' is very commonly used and may not be secure.\n\nAre you sure you wish to proceed?",
 	"load-previous-session": "Would you like to load your previous session's settings?",
@@ -119,21 +119,21 @@ var miscTranslations = {
 	"pass-recommended": "A password is recommended",
 	"insecure-room-name": "Insecure room name.",
 	"allowed-chars": "Allowed chars",
-	"transfer": "transfer",
-	"armed": "armed",
+	transfer: "transfer",
+	armed: "armed",
 	"transfer-guest-to-room": "Transfer guests to room:\n\n(Please note: rooms must share the same password)",
 	"transfer-guest-to-url": "Transfer guests to new website URL.\n\nGuests will be prompted to accept unless they are using &consent",
 	"change-url": "change URL",
 	"mute-in-scene": "mute in scene",
 	"unmute-guest": "unmute guest",
-	"unmute": "unmute",
-	"undeafen": "undeafen",
-	"deafen": "deafen guest",
-	"unblind": "unblind",
-	"blind": "blind guest",
+	unmute: "unmute",
+	undeafen: "undeafen",
+	deafen: "deafen guest",
+	unblind: "unblind",
+	blind: "blind guest",
 	"mute-guest": "mute guest",
-	"mute": "mute",
-	"unhide": "unhide guest",
+	mute: "mute",
+	unhide: "unhide guest",
 	"hide-guest": "Hide",
 	"insecure-stream-id": "⚠️ Insecure stream ID detected\n\nIt is strongly advised that a password is used if using a short non-unique stream ID.\n\nThis is just a warning that can be ignored.",
 	"confirm-disconnect-users": "Are you sure you wish to disconnect these users?",
@@ -151,7 +151,7 @@ var miscTranslations = {
 	"you-have-been-activated": "The director has now allowed you to see others in the room",
 	"you-not-yet-activated": "Please wait until the director brings you into the room",
 	"you-are-no-longer-a-co-director": "You are no longer a co-director as you were transferred.",
-	"transferred": "Transferred",
+	transferred: "Transferred",
 	"room-changed": "Your room has changed",
 	"headphones-tip": "<i>Tip:</i> Use headphones to avoid audio echo issues.",
 	"camera-tip-c922": "<i>Tip:</i> To achieve 60-fps with a C922 webcam, low-light compensation needs to be turned off, exposure set to auto, and 720p used.",
@@ -214,7 +214,6 @@ function getTranslation(key) {
 		warnlog("misc translation not found");
 		return key.replaceAll("-", " "); //
 	}
-
 }
 
 // Extract hostname from TURN server URL for QoS tracking
@@ -236,10 +235,10 @@ function extractTurnHostnameFromUrl(turnUrl) {
 function buildQosTurnAllowlist(turnlist) {
 	var allowlist = [];
 	if (!turnlist || !Array.isArray(turnlist)) return allowlist;
-	turnlist.forEach(function(turn) {
+	turnlist.forEach(function (turn) {
 		var urls = turn.urls || turn.url || [];
 		if (typeof urls === "string") urls = [urls];
-		urls.forEach(function(u) {
+		urls.forEach(function (u) {
 			var host = extractTurnHostnameFromUrl(u);
 			if (host && !allowlist.includes(host)) {
 				allowlist.push(host);
@@ -270,19 +269,7 @@ try {
 }
 
 function getSlotColor(index) {
-
-	var slotColorPalette = [
-		"#00AAAA",
-		"#FF0000",
-		"#0000FF",
-		"#AA00AA",
-		"#00FF00",
-		"#AAAA00",
-		"#AACC44",
-		"#CCAA44",
-		"#CC44AA",
-		"#44AACC"
-	];
+	var slotColorPalette = ["#00AAAA", "#FF0000", "#0000FF", "#AA00AA", "#00FF00", "#AAAA00", "#AACC44", "#CCAA44", "#CC44AA", "#44AACC"];
 
 	index = parseInt(index);
 	if (!isFinite(index) || index < 0) {
@@ -660,7 +647,7 @@ function submitDebugLog(msg = false) {
 		if (navigator.platform) {
 			appendDebugLog({ userAgent: navigator.platform });
 		}
-	} catch (e) { }
+	} catch (e) {}
 	window.focus();
 	var res = confirm(getTranslation("submit-error-report"));
 	if (res) {
@@ -714,13 +701,13 @@ function detectGPUSupport() {
 				if (debugInfo) {
 					return gl.getParameter(debugInfo.UNMASKED_RENDERER_WEBGL);
 				}
-			} catch (e) { }
+			} catch (e) {}
 		}
 
 		try {
 			return gl.getParameter(gl.RENDERER) || false; // firefox
-		} catch (e) { }
-	} catch (e) { }
+		} catch (e) {}
+	} catch (e) {}
 	return false;
 }
 
@@ -782,15 +769,17 @@ function isIntelMac() {
 
 function judgePerformance() {
 	try {
-		if (SafariVersion && SafariVersion >= 17 && (iOS || iPad)) { // iphone xr or newer
+		if (SafariVersion && SafariVersion >= 17 && (iOS || iPad)) {
+			// iphone xr or newer
 			return 0;
 		}
 
-		const cores = typeof navigator.hardwareConcurrency === 'number' ? navigator.hardwareConcurrency : 0;
-		const memory = typeof navigator.deviceMemory === 'number' ? navigator.deviceMemory : 0;
+		const cores = typeof navigator.hardwareConcurrency === "number" ? navigator.hardwareConcurrency : 0;
+		const memory = typeof navigator.deviceMemory === "number" ? navigator.deviceMemory : 0;
 
 		if (isIntelMac()) {
-			if (cores < 6) { // yes. they are that bad.
+			if (cores < 6) {
+				// yes. they are that bad.
 				return 2;
 			} else {
 				return 1;
@@ -802,7 +791,8 @@ function judgePerformance() {
 				return 2;
 			} else if (cores >= 8 && (!memory || memory >= 6)) {
 				return 0;
-			} else if (cores >= 4) { // assume hardware encoded acceleration
+			} else if (cores >= 4) {
+				// assume hardware encoded acceleration
 				return 1;
 			}
 		}
@@ -814,7 +804,7 @@ function judgePerformance() {
 		} else if (cores > 8) {
 			return 0;
 		}
-		return 1
+		return 1;
 	} catch (e) {
 		return 1; // 99% safe default
 	}
@@ -858,7 +848,7 @@ try {
 	var iPhone12Up = false;
 
 	var isMELD = false;
-	if (typeof navigator !== 'undefined' && navigator.userAgent && navigator.userAgent.includes("Meld/")) {
+	if (typeof navigator !== "undefined" && navigator.userAgent && navigator.userAgent.includes("Meld/")) {
 		isMELD = true;
 	}
 
@@ -873,7 +863,6 @@ try {
 	if (session.quality_room < session.quality_wb) {
 		session.quality_room = session.quality_wb;
 	}
-
 } catch (e) {
 	errorlog(e);
 }
@@ -896,7 +885,7 @@ const needsLegacyWakeLock = () => {
 			}
 			return true;
 		}
-	} catch (e) { }
+	} catch (e) {}
 
 	return true; // No Wake Lock API or no active lock; need legacy keep alive for mobile
 };
@@ -924,11 +913,7 @@ function ensureLegacyKeepAlivePlayer(ignoreVideoPresence = false) {
 	}
 
 	try {
-		if (
-			!ignoreVideoPresence &&
-			session.streamSrc.getVideoTracks &&
-			session.streamSrc.getVideoTracks().length
-		) {
+		if (!ignoreVideoPresence && session.streamSrc.getVideoTracks && session.streamSrc.getVideoTracks().length) {
 			removeLegacyKeepAlivePlayer();
 			return false;
 		}
@@ -1291,24 +1276,9 @@ function createSyntheticTestMediaStream(constraints = {}) {
 
 	if (wantsVideo) {
 		var requestedVideo = constraints && typeof constraints.video === "object" ? constraints.video : {};
-		var targetWidth = clampSyntheticSetting(
-			parseSyntheticConstraintNumber(requestedVideo.width, session.testMediaWidth || 1280),
-			160,
-			3840,
-			session.testMediaWidth || 1280
-		);
-		var targetHeight = clampSyntheticSetting(
-			parseSyntheticConstraintNumber(requestedVideo.height, session.testMediaHeight || 720),
-			120,
-			2160,
-			session.testMediaHeight || 720
-		);
-		var targetFps = clampSyntheticSetting(
-			parseSyntheticConstraintNumber(requestedVideo.frameRate, session.testMediaFps || 30),
-			1,
-			60,
-			session.testMediaFps || 30
-		);
+		var targetWidth = clampSyntheticSetting(parseSyntheticConstraintNumber(requestedVideo.width, session.testMediaWidth || 1280), 160, 3840, session.testMediaWidth || 1280);
+		var targetHeight = clampSyntheticSetting(parseSyntheticConstraintNumber(requestedVideo.height, session.testMediaHeight || 720), 120, 2160, session.testMediaHeight || 720);
+		var targetFps = clampSyntheticSetting(parseSyntheticConstraintNumber(requestedVideo.frameRate, session.testMediaFps || 30), 1, 60, session.testMediaFps || 30);
 
 		var canvas = document.createElement("canvas");
 		canvas.width = targetWidth;
@@ -1715,7 +1685,7 @@ async function promptAlt(inputText, block = false, asterix = false, value = fals
 						<p style="margin:10px 5px">${field.placeholder}</p>
 						<select id="select_${promptID}" data-pid="${promptID}" style="width:100%;padding:8px;margin-bottom:10px">
 							<option value="">-- Select --</option>
-							${field.options.map(opt => `<option value="${opt}">${opt}</option>`).join('')}
+							${field.options.map(opt => `<option value="${opt}">${opt}</option>`).join("")}
 						</select>
 						<input id="input_${promptID}" style="display:none" autocorrect="off" autocapitalize="none" data-pid="${promptID}" type="text" class="largeTextEntry" placeholder="${field.placeholder}" />
 					</div>
@@ -1752,7 +1722,7 @@ async function promptAlt(inputText, block = false, asterix = false, value = fals
 
 		// Only add select listener if we have a select field
 		if (field && field.type === "select") {
-			document.getElementById(`select_${promptID}`).addEventListener("change", (e) => {
+			document.getElementById(`select_${promptID}`).addEventListener("change", e => {
 				const input = document.getElementById(`input_${promptID}`);
 				if (e.target.value === "[Custom]") {
 					input.style.display = "block";
@@ -1798,14 +1768,14 @@ async function promptAlt(inputText, block = false, asterix = false, value = fals
 				}
 			});
 		} else if (field && field.type === "file") {
-			document.getElementById(`input_${promptID}`).addEventListener("change", async (e) => {
+			document.getElementById(`input_${promptID}`).addEventListener("change", async e => {
 				const file = e.target.files[0];
 				if (file) {
 					result = file;
-					if (file.type.startsWith('image/')) {
+					if (file.type.startsWith("image/")) {
 						const preview = document.getElementById(`preview_${promptID}`);
 						const reader = new FileReader();
-						reader.onload = (e) => {
+						reader.onload = e => {
 							preview.innerHTML = `<img src="${e.target.result}" style="max-width:100%; max-height:200px;">`;
 						};
 						reader.readAsDataURL(file);
@@ -1859,7 +1829,7 @@ async function promptAlt(inputText, block = false, asterix = false, value = fals
 				document.getElementById("modalBackdrop_" + pid).remove();
 				Prompts[pid].resolve();
 			});
-		} catch (e) { }
+		} catch (e) {}
 
 		try {
 			document.getElementById("cancel_" + promptID).addEventListener("click", function (event) {
@@ -1868,7 +1838,7 @@ async function promptAlt(inputText, block = false, asterix = false, value = fals
 				document.getElementById("modalBackdrop_" + pid).remove();
 				Prompts[pid].resolve();
 			});
-		} catch (e) { }
+		} catch (e) {}
 
 		try {
 			document.getElementById("close_" + promptID).addEventListener("click", function (event) {
@@ -1877,7 +1847,7 @@ async function promptAlt(inputText, block = false, asterix = false, value = fals
 				document.getElementById("modalBackdrop_" + pid).remove();
 				Prompts[pid].resolve();
 			});
-		} catch (e) { }
+		} catch (e) {}
 
 		getById("modal_" + promptID).addEventListener("click", function (e) {
 			e.stopPropagation();
@@ -1915,10 +1885,10 @@ async function promptRecordingOptions(inputText, block = false, defaultOptions =
 		const bitrateLabel = document.getElementById(`bitrateLabel_${promptID}`);
 
 		// PCM option always available
-		pcmContainer.style.opacity = '1';
-		pcmContainer.style.pointerEvents = 'auto';
+		pcmContainer.style.opacity = "1";
+		pcmContainer.style.pointerEvents = "auto";
 		bitrateLabel.parentNode.style.opacity = "1";
-		bitrateLabel.parentNode.style.pointerEvents = 'auto';
+		bitrateLabel.parentNode.style.pointerEvents = "auto";
 		//document.getElementById(`usePCM_${promptID}`).disabled = false;
 
 		// Update bitrate controls based on mode
@@ -1926,7 +1896,7 @@ async function promptRecordingOptions(inputText, block = false, defaultOptions =
 			// Audio-only PCM mode
 			bitrateLabel.textContent = "Uncompressed PCM16 audio";
 			bitrateLabel.parentNode.style.opacity = "0.5";
-			bitrateLabel.parentNode.style.pointerEvents = 'none';
+			bitrateLabel.parentNode.style.pointerEvents = "none";
 			slider.disabled = true;
 			value.disabled = true;
 			slider.value = "";
@@ -2076,12 +2046,11 @@ async function promptRecordingOptions(inputText, block = false, defaultOptions =
 				const bitrateLabel = document.getElementById(`bitrateLabel_${promptID}`);
 				bitrateLabel.textContent = "Uncompressed PCM16 audio";
 				bitrateLabel.parentNode.style.opacity = "0.5";
-				bitrateLabel.parentNode.style.pointerEvents = 'none';
+				bitrateLabel.parentNode.style.pointerEvents = "none";
 			} else {
 				const bitrateLabel = document.getElementById(`bitrateLabel_${promptID}`);
 				bitrateLabel.textContent = "Video bitrate (with PCM16 audio):";
 			}
-
 		}
 
 		// Add event listeners
@@ -2289,7 +2258,7 @@ async function promptAltRecord(inputText, block = false, asterix = false, value 
 
 				Prompts[pid].resolve();
 			});
-		} catch (e) { }
+		} catch (e) {}
 
 		try {
 			document.getElementById("cancel_" + promptID).addEventListener("click", function (event) {
@@ -2298,7 +2267,7 @@ async function promptAltRecord(inputText, block = false, asterix = false, value 
 				document.getElementById("modalBackdrop_" + pid).remove();
 				Prompts[pid].resolve();
 			});
-		} catch (e) { }
+		} catch (e) {}
 
 		try {
 			document.getElementById("close_" + promptID).addEventListener("click", function (event) {
@@ -2307,7 +2276,7 @@ async function promptAltRecord(inputText, block = false, asterix = false, value 
 				document.getElementById("modalBackdrop_" + pid).remove();
 				Prompts[pid].resolve();
 			});
-		} catch (e) { }
+		} catch (e) {}
 
 		getById("modal_" + promptID).addEventListener("click", function (e) {
 			e.stopPropagation();
@@ -2397,7 +2366,7 @@ async function promptRecord() {
 
 				Prompts[pid].resolve();
 			});
-		} catch (e) { }
+		} catch (e) {}
 
 		try {
 			document.getElementById("cancel_" + promptID).addEventListener("click", function (event) {
@@ -2406,7 +2375,7 @@ async function promptRecord() {
 				document.getElementById("modalBackdrop_" + pid).remove();
 				Prompts[pid].resolve();
 			});
-		} catch (e) { }
+		} catch (e) {}
 
 		try {
 			document.getElementById("close_" + promptID).addEventListener("click", function (event) {
@@ -2415,7 +2384,7 @@ async function promptRecord() {
 				document.getElementById("modalBackdrop_" + pid).remove();
 				Prompts[pid].resolve();
 			});
-		} catch (e) { }
+		} catch (e) {}
 
 		getById("modal_" + promptID).addEventListener("click", function (e) {
 			e.stopPropagation();
@@ -2592,7 +2561,7 @@ async function confirmAlt(inputText, block = false, context = null) {
 		inputText = "<span style='font-size:1.2em'>" + inputText.replace("\n", "</span><br /><span>") + "</span>";
 		inputText = inputText.replace(/\n/g, "<br />");
 
-		modalTemplate = `<div id="modal_${promptID}" class="promptModal" data-context="${context ? ("" + context).replace(/["<>]/g, "") : ''}" style="z-index:${zindex + 2}">
+		modalTemplate = `<div id="modal_${promptID}" class="promptModal" data-context="${context ? ("" + context).replace(/["<>]/g, "") : ""}" style="z-index:${zindex + 2}">
                 <div class="promptModalInner">
 					<span id="close_${promptID}" class='modalClose' data-pid="${promptID}">×</span>
 					<span class='promptModalMessage' style='margin: 0 0 15px 0;'>${inputText}</span>
@@ -2600,7 +2569,7 @@ async function confirmAlt(inputText, block = false, context = null) {
 					<button id="cancel_${promptID}" data-pid="${promptID}" style="width:120px; background-color: #fff; position: relative;border: 1px solid #999; margin: 0;" data-translate='cancel'>❌ Cancel</button>
 				</div>
                 </div>
-                <div id="modalBackdrop_${promptID}" class="${backdropClass}" data-context="${context ? ("" + context).replace(/["<>]/g, "") : ''}" style="z-index:${zindex + 1}"></div>`;
+                <div id="modalBackdrop_${promptID}" class="${backdropClass}" data-context="${context ? ("" + context).replace(/["<>]/g, "") : ""}" style="z-index:${zindex + 1}"></div>`;
 
 		document.body.insertAdjacentHTML("beforeend", modalTemplate); // Insert modal at body end
 
@@ -2776,7 +2745,9 @@ function closeModal(ele = false, modalID = false) {
 					// Remove modal and backdrop
 					promptModalMatch.remove();
 					var backdrop = document.getElementById("modalBackdrop_" + pid);
-					if (backdrop) { backdrop.remove(); }
+					if (backdrop) {
+						backdrop.remove();
+					}
 					// Do NOT resolve the promise - let it stay pending
 					// Resolving would trigger the denial dialog in promptApproval
 					if (typeof Prompts !== "undefined" && Prompts[pid]) {
@@ -2785,7 +2756,9 @@ function closeModal(ele = false, modalID = false) {
 				} else {
 					promptModalMatch.remove();
 				}
-			} catch (e) { warnlog(e); }
+			} catch (e) {
+				warnlog(e);
+			}
 			return;
 		}
 
@@ -3457,12 +3430,7 @@ function convertShortcodes(string) {
 }
 
 function escapeHtml(unsafe) {
-	return unsafe
-		.replace(/&/g, "&amp;")
-		.replace(/</g, "&lt;")
-		.replace(/>/g, "&gt;")
-		.replace(/"/g, "&quot;")
-		.replace(/'/g, "&#039;");
+	return unsafe.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
 }
 
 function sanitizeCustomHTML(unsafe = "", maxLength = 4096) {
@@ -3475,33 +3443,11 @@ function sanitizeCustomHTML(unsafe = "", maxLength = 4096) {
 		return "";
 	}
 
-	if (maxLength && (html.length > maxLength)) {
+	if (maxLength && html.length > maxLength) {
 		html = html.substring(0, maxLength);
 	}
 
-	const allowedTags = new Set([
-		"a",
-		"b",
-		"strong",
-		"i",
-		"em",
-		"u",
-		"s",
-		"br",
-		"p",
-		"div",
-		"span",
-		"ul",
-		"ol",
-		"li",
-		"img",
-		"hr",
-		"small",
-		"sub",
-		"sup",
-		"code",
-		"pre"
-	]);
+	const allowedTags = new Set(["a", "b", "strong", "i", "em", "u", "s", "br", "p", "div", "span", "ul", "ol", "li", "img", "hr", "small", "sub", "sup", "code", "pre"]);
 	const stripTagsCompletely = new Set(["script", "style", "iframe", "object", "embed", "svg", "math", "form", "input", "button", "textarea", "select", "meta", "link"]);
 	const allowedGlobalAttrs = new Set(["title"]);
 	const allowedTagAttrs = {
@@ -3623,7 +3569,7 @@ function sanitizeRedirectURL(raw = "", maxLength = 2048) {
 		return "";
 	}
 
-	if (maxLength && (href.length > maxLength)) {
+	if (maxLength && href.length > maxLength) {
 		href = href.substring(0, maxLength);
 	}
 
@@ -3637,16 +3583,10 @@ function sanitizeRedirectURL(raw = "", maxLength = 2048) {
 		const hostOnly = hostCandidate.replace(/:\d+$/, "");
 		const hostParts = hostOnly.split(".");
 		const tld = (hostParts[hostParts.length - 1] || "").toLowerCase();
-		const commonTlds = new Set([
-			"com", "org", "net", "edu", "gov", "mil", "io", "co", "us", "ca", "uk", "gg", "tv", "fm", "me", "app", "dev", "ai",
-			"biz", "info", "live", "media", "video", "stream", "ninja", "cloud", "online", "site", "tech"
-		]);
-		const looksLikeHostname = (hostParts.length >= 2)
-			&& commonTlds.has(tld)
-			&& hostParts.every(part => /^[a-z0-9-]+$/i.test(part) && !part.startsWith("-") && !part.endsWith("-"));
-		const looksLikeIPv4 = /^(\d{1,3}\.){3}\d{1,3}$/.test(hostOnly)
-			&& hostOnly.split(".").every(octet => Number(octet) >= 0 && Number(octet) <= 255);
-		const looksLikeLocalhost = (hostOnly.toLowerCase() === "localhost");
+		const commonTlds = new Set(["com", "org", "net", "edu", "gov", "mil", "io", "co", "us", "ca", "uk", "gg", "tv", "fm", "me", "app", "dev", "ai", "biz", "info", "live", "media", "video", "stream", "ninja", "cloud", "online", "site", "tech"]);
+		const looksLikeHostname = hostParts.length >= 2 && commonTlds.has(tld) && hostParts.every(part => /^[a-z0-9-]+$/i.test(part) && !part.startsWith("-") && !part.endsWith("-"));
+		const looksLikeIPv4 = /^(\d{1,3}\.){3}\d{1,3}$/.test(hostOnly) && hostOnly.split(".").every(octet => Number(octet) >= 0 && Number(octet) <= 255);
+		const looksLikeLocalhost = hostOnly.toLowerCase() === "localhost";
 		if (looksLikeHostname || looksLikeIPv4 || looksLikeLocalhost) {
 			href = "https://" + href;
 		}
@@ -4031,12 +3971,11 @@ function toggleOBSControlsLock(ele, disable = null) {
 
 	// If disable is not specified, toggle based on current state
 	// Otherwise, use the provided value
-	const shouldDisable = disable !== null ? disable :
-		element.style.pointerEvents !== 'none';
+	const shouldDisable = disable !== null ? disable : element.style.pointerEvents !== "none";
 
-	element.style.pointerEvents = shouldDisable ? 'none' : 'auto';
-	element.style.opacity = shouldDisable ? '0.6' : '1';
-	ele.textContent = shouldDisable ? '🔒' : '🔓';
+	element.style.pointerEvents = shouldDisable ? "none" : "auto";
+	element.style.opacity = shouldDisable ? "0.6" : "1";
+	ele.textContent = shouldDisable ? "🔒" : "🔓";
 
 	return shouldDisable; // returns the new state
 }
@@ -4503,7 +4442,6 @@ function processOBSCommand(msg) {
 	try {
 		//  {changeScene: this.dataset.obsScene}
 		if (msg.obsCommand.action && typeof msg.obsCommand.action == "string") {
-
 			if (msg.obsCommand.action == "stopVirtualcam" || msg.obsCommand.action == "startVirtualcam") {
 				if (session.obsState.virtualcam === false) {
 					if (msg.UUID) {
@@ -5042,7 +4980,7 @@ function makeDraggableElement(element) {
 }
 
 function clearCacheForCurrentSite() {
-	if ('caches' in window) {
+	if ("caches" in window) {
 		try {
 			caches.keys().then(function (cacheNames) {
 				cacheNames.forEach(function (cacheName) {
@@ -5050,7 +4988,7 @@ function clearCacheForCurrentSite() {
 				});
 			});
 			log("Cache cleared for current site");
-		} catch (e) { }
+		} catch (e) {}
 	} else {
 		warnlog("Cache API not supported");
 	}
@@ -5234,8 +5172,8 @@ function renderQueueButtonState() {
 		return;
 	}
 
-	var pendingCount = (session.pendingJoinRequests && session.pendingJoinRequests.length) ? session.pendingJoinRequests.length : 0;
-	var queueCount = (session.queueList && session.queueList.length) ? session.queueList.length : 0;
+	var pendingCount = session.pendingJoinRequests && session.pendingJoinRequests.length ? session.pendingJoinRequests.length : 0;
+	var queueCount = session.queueList && session.queueList.length ? session.queueList.length : 0;
 	var hasPending = pendingCount > 0;
 	var hasQueue = !!session.queue && queueCount > 0;
 	var shouldShow = !!session.queue || hasPending || hasQueue;
@@ -5309,7 +5247,7 @@ function updateJoinRequestPanel(adding = false) {
 		} else {
 			list.innerHTML = session.pendingJoinRequests
 				.map(function (request) {
-					var label = request.label || ("Guest " + request.UUID.substring(0, 8));
+					var label = request.label || "Guest " + request.UUID.substring(0, 8);
 					var stamp = "";
 					if (request.requestedAt) {
 						try {
@@ -5318,13 +5256,7 @@ function updateJoinRequestPanel(adding = false) {
 							stamp = "";
 						}
 					}
-					return '<div class="joinRequestItem">' +
-						'<div class="joinRequestMeta"><strong>' + escapeJoinRequestText(label) + '</strong><span>' + escapeJoinRequestText(request.UUID) + '</span>' + (stamp ? '<span>' + escapeJoinRequestText(stamp) + '</span>' : "") + '</div>' +
-						'<div class="joinRequestActions">' +
-						'<button class="joinApproveBtn" onclick="approveJoinRequest(\'' + request.UUID + '\')">Approve</button>' +
-						'<button class="joinDenyBtn" onclick="denyJoinRequest(\'' + request.UUID + '\')">Deny</button>' +
-						'</div>' +
-						'</div>';
+					return '<div class="joinRequestItem">' + '<div class="joinRequestMeta"><strong>' + escapeJoinRequestText(label) + "</strong><span>" + escapeJoinRequestText(request.UUID) + "</span>" + (stamp ? "<span>" + escapeJoinRequestText(stamp) + "</span>" : "") + "</div>" + '<div class="joinRequestActions">' + '<button class="joinApproveBtn" onclick="approveJoinRequest(\'' + request.UUID + "')\">Approve</button>" + '<button class="joinDenyBtn" onclick="denyJoinRequest(\'' + request.UUID + "')\">Deny</button>" + "</div>" + "</div>";
 				})
 				.join("");
 		}
@@ -5476,7 +5408,8 @@ function updateQueue(adding = false) {
 }
 
 function hideStreamLowBandwidth(bandwidth, UUID) {
-	if (session.lowBitrateCutoff === false) { // allow 0,but I should probably also do this if there is a disconnect.
+	if (session.lowBitrateCutoff === false) {
+		// allow 0,but I should probably also do this if there is a disconnect.
 		return;
 	}
 
@@ -5521,7 +5454,6 @@ function changeSceneLowBandwidth(state) {
 	}
 	try {
 		if (session.obsState.sourceActive && session.obsState.details && session.obsState.details.currentScene) {
-
 			changeSceneLowBandwidthRevert = session.obsState.details.currentScene.name || false;
 		} else if ("sourceActive" in session.obsState && !session.obsState.sourceActive && session.obsState.details && session.obsState.details.currentScene) {
 			if (session.obsState.details.currentScene.name !== session.lowBitrateSceneChange) {
@@ -5576,7 +5508,7 @@ function isScreenShareVideoElement(vid) {
 		if (vidUUID && session.rpcs && session.rpcs[vidUUID] && session.rpcs[vidUUID].screenShareState) {
 			return !session.rpcs[vidUUID + "_screen"];
 		}
-	} catch (e) { }
+	} catch (e) {}
 	return false;
 }
 
@@ -5665,18 +5597,23 @@ function handleScreenShareAspectRatioResize(v, aspectRatio, UUID) {
 	clearTimeout(v.screenShareResizeTimer);
 	v.screenShareResizePending = true;
 	v.pendingScreenShareAspectRatio = aspectRatio;
-	v.screenShareResizeTimer = setTimeout(function (video, uuid) {
-		var settledAspectRatio = parseFloat(video.videoWidth / video.videoHeight) || video.pendingScreenShareAspectRatio || aspectRatio;
-		if (!settledAspectRatio) {
-			video.screenShareResizePending = false;
-			video.resetAR = true;
-			return;
-		}
-		finishScreenShareAspectRatioResize(video, settledAspectRatio, uuid);
-		if (session.viewChroma && !session.director) {
-			syncIncomingViewChromaCanvas(uuid);
-		}
-	}, screenShareResizeStabilizeDelay, v, UUID);
+	v.screenShareResizeTimer = setTimeout(
+		function (video, uuid) {
+			var settledAspectRatio = parseFloat(video.videoWidth / video.videoHeight) || video.pendingScreenShareAspectRatio || aspectRatio;
+			if (!settledAspectRatio) {
+				video.screenShareResizePending = false;
+				video.resetAR = true;
+				return;
+			}
+			finishScreenShareAspectRatioResize(video, settledAspectRatio, uuid);
+			if (session.viewChroma && !session.director) {
+				syncIncomingViewChromaCanvas(uuid);
+			}
+		},
+		screenShareResizeStabilizeDelay,
+		v,
+		UUID
+	);
 	return true;
 }
 
@@ -5732,7 +5669,7 @@ function setupIncomingScreenTracking(v, UUID) {
 				if (bigPlayButton) {
 					bigPlayButton.parentNode.removeChild(bigPlayButton);
 				}
-			} catch (e) { }
+			} catch (e) {}
 
 			resetupAudioOut(e.target, true);
 
@@ -5745,7 +5682,7 @@ function setupIncomingScreenTracking(v, UUID) {
 						}
 					}
 				}
-			} catch (e) { }
+			} catch (e) {}
 		},
 		{ once: true }
 	);
@@ -6346,72 +6283,71 @@ function setupIncomingVideoTracking(v, UUID) {
 	}
 
 	if (session.ptzSlider && (session.director || (session.rpcs[UUID].stats.info && session.rpcs[UUID].stats.info.remote))) {
-
-		const ptzContainer = document.createElement('div');
-		ptzContainer.className = 'video-ptz-controls';
+		const ptzContainer = document.createElement("div");
+		ptzContainer.className = "video-ptz-controls";
 
 		// Zoom slider
-		const zoomSlider = document.createElement('div');
-		zoomSlider.className = 'video-zoom-slider';
+		const zoomSlider = document.createElement("div");
+		zoomSlider.className = "video-zoom-slider";
 
-		const zoomLabel = document.createElement('label');
+		const zoomLabel = document.createElement("label");
 		zoomLabel.innerText = "Zoom";
 
-		const zoomInput = document.createElement('input');
+		const zoomInput = document.createElement("input");
 		zoomInput.title = "Camera zoom control";
-		zoomInput.type = 'range';
-		zoomInput.min = '0';
-		zoomInput.max = '100';
-		zoomInput.value = '0';
+		zoomInput.type = "range";
+		zoomInput.min = "0";
+		zoomInput.max = "100";
+		zoomInput.value = "0";
 
 		let zoomUpdating = false;
-		zoomInput.addEventListener('input', (e) => {
+		zoomInput.addEventListener("input", e => {
 			if (zoomUpdating) return;
-			const zoomValue = parseInt(e.target.value) / 100;  // Normalize to 0-1
+			const zoomValue = parseInt(e.target.value) / 100; // Normalize to 0-1
 
 			session.requestZoomChange(zoomValue, UUID, session.remote, true);
 		});
 
 		// Pan slider
-		const panSlider = document.createElement('div');
-		panSlider.className = 'video-pan-slider';
+		const panSlider = document.createElement("div");
+		panSlider.className = "video-pan-slider";
 
-		const panLabel = document.createElement('label');
+		const panLabel = document.createElement("label");
 		panLabel.innerText = "Pan";
 
-		const panInput = document.createElement('input');
+		const panInput = document.createElement("input");
 		panInput.title = "Camera pan control (left/right)";
-		panInput.type = 'range';
-		panInput.min = '-100';
-		panInput.max = '100';
-		panInput.value = '0';
+		panInput.type = "range";
+		panInput.min = "-100";
+		panInput.max = "100";
+		panInput.value = "0";
 
 		let panUpdating = false;
-		panInput.addEventListener('input', (e) => {
+		panInput.addEventListener("input", e => {
 			if (panUpdating) return;
-			const panValue = parseInt(e.target.value) / 100;  // Normalize to -1 to 1
+			const panValue = parseInt(e.target.value) / 100; // Normalize to -1 to 1
 
 			session.requestPanChange(panValue, UUID, session.remote, true);
 		});
 
 		// Tilt slider
-		const tiltSlider = document.createElement('div');
-		tiltSlider.className = 'video-tilt-slider';
+		const tiltSlider = document.createElement("div");
+		tiltSlider.className = "video-tilt-slider";
 
-		const tiltLabel = document.createElement('label');
+		const tiltLabel = document.createElement("label");
 		tiltLabel.innerText = "Tilt";
 
-		const tiltInput = document.createElement('input');
+		const tiltInput = document.createElement("input");
 		tiltInput.title = "Camera tilt control (up/down)";
-		tiltInput.type = 'range';
-		tiltInput.min = '-100';
-		tiltInput.max = '100';
-		tiltInput.value = '0';
+		tiltInput.type = "range";
+		tiltInput.min = "-100";
+		tiltInput.max = "100";
+		tiltInput.value = "0";
 
 		let tiltUpdating = false;
-		tiltInput.addEventListener('input', (e) => {
+		tiltInput.addEventListener("input", e => {
 			if (tiltUpdating) return;
-			const tiltValue = parseInt(e.target.value) / 100;  // Normalize to -1 to 1
+			const tiltValue = parseInt(e.target.value) / 100; // Normalize to -1 to 1
 
 			session.requestTiltChange(tiltValue, UUID, session.remote, true);
 		});
@@ -6437,43 +6373,43 @@ function setupIncomingVideoTracking(v, UUID) {
 		v.container.appendChild(ptzContainer);
 
 		// Store references for external updates
-		session.rpcs[UUID].zoomSlider = (value) => {
+		session.rpcs[UUID].zoomSlider = value => {
 			zoomUpdating = true;
-			zoomInput.value = Math.round(value * 100);  // Convert 0-1 to 0-100
+			zoomInput.value = Math.round(value * 100); // Convert 0-1 to 0-100
 			zoomUpdating = false;
 		};
 
-		session.rpcs[UUID].panSlider = (value) => {
+		session.rpcs[UUID].panSlider = value => {
 			panUpdating = true;
-			panInput.value = Math.round(value * 100);  // Convert -1 to 1 to -100 to 100
+			panInput.value = Math.round(value * 100); // Convert -1 to 1 to -100 to 100
 			panUpdating = false;
 		};
 
-		session.rpcs[UUID].tiltSlider = (value) => {
+		session.rpcs[UUID].tiltSlider = value => {
 			tiltUpdating = true;
-			tiltInput.value = Math.round(value * 100);  // Convert -1 to 1 to -100 to 100
+			tiltInput.value = Math.round(value * 100); // Convert -1 to 1 to -100 to 100
 			tiltUpdating = false;
 		};
 	} else if (session.zoomSlider && (session.director || (session.rpcs[UUID].stats.info && session.rpcs[UUID].stats.info.remote))) {
-		const slider = document.createElement('div');
-		slider.className = 'video-zoom-slider0';
+		const slider = document.createElement("div");
+		slider.className = "video-zoom-slider0";
 
-		const input = document.createElement('input');
+		const input = document.createElement("input");
 		input.title = "Hint: The remote camera's browser may needs to be visible for zoom to work in certain browsers";
-		input.type = 'range';
-		input.min = '0';
-		input.max = '255';
-		input.value = '0';
+		input.type = "range";
+		input.min = "0";
+		input.max = "255";
+		input.value = "0";
 
 		let updating = false;
-		input.addEventListener('input', (e) => {
+		input.addEventListener("input", e => {
 			if (updating) return;
 			const zoomValue = parseInt(e.target.value) / 255;
 			session.requestZoomChange(zoomValue, UUID, session.remote, true);
 		});
 
 		// Update slider if remote changes occur
-		const updateSlider = (value) => {
+		const updateSlider = value => {
 			updating = true;
 			input.value = Math.round(value * 255);
 			updating = false;
@@ -6587,7 +6523,7 @@ session.requestPanChange = async function (pan, UUID, passwd = session.remote, a
 	// pan is now expected to be a value between -1 and 1
 	log("request pan change: " + pan);
 	var msg = {};
-	msg.pan = pan;  // Normalized value -1 to 1
+	msg.pan = pan; // Normalized value -1 to 1
 	msg.remote = passwd;
 	msg.abs = absolute;
 	msg = await session.encodeRemote(msg);
@@ -6604,7 +6540,7 @@ session.requestTiltChange = async function (tilt, UUID, passwd = session.remote,
 	// tilt is now expected to be a value between -1 and 1
 	log("request tilt change: " + tilt);
 	var msg = {};
-	msg.tilt = tilt;  // Normalized value -1 to 1
+	msg.tilt = tilt; // Normalized value -1 to 1
 	msg.remote = passwd;
 	msg.abs = absolute;
 	msg = await session.encodeRemote(msg);
@@ -6621,7 +6557,7 @@ session.requestZoomChange = async function (zoom, UUID, passwd = session.remote,
 	// zoom is now expected to be a value between 0 and 1
 	log("request zoom change: " + zoom);
 	var msg = {};
-	msg.zoom = zoom;  // Normalized value 0 to 1
+	msg.zoom = zoom; // Normalized value 0 to 1
 	msg.abs = absolute;
 	msg.remote = passwd;
 	msg = await session.encodeRemote(msg);
@@ -6668,10 +6604,10 @@ session.requestAutofocusChange = async function (enabled, UUID, passwd = session
 function remotePTZRequest(event) {
 	event.preventDefault();
 
-	var scale = event.deltaY > 0 ? -0.05 : 0.05;  // Use larger normalized steps
+	var scale = event.deltaY > 0 ? -0.05 : 0.05; // Use larger normalized steps
 
 	if (!event.altKey) {
-		scale *= 2;  // Double the scale when not holding Alt
+		scale *= 2; // Double the scale when not holding Alt
 	}
 
 	if (event.ctrlKey || event.metaKey) {
@@ -6691,7 +6627,8 @@ function remotePTZRequest(event) {
 	}
 }
 
-function remoteFocusZoomRequest(event) { // obsolete.
+function remoteFocusZoomRequest(event) {
+	// obsolete.
 	event.preventDefault();
 
 	var scale = event.deltaY > 0 ? -0.004 : 0.004;
@@ -6756,7 +6693,7 @@ function createRichVideoElement(UUID) {
 					if (bigPlayButton) {
 						bigPlayButton.parentNode.removeChild(bigPlayButton);
 					}
-				} catch (e) { }
+				} catch (e) {}
 
 				resetupAudioOut(e.target, true);
 				try {
@@ -6768,17 +6705,13 @@ function createRichVideoElement(UUID) {
 							}
 						}
 					}
-				} catch (e) { }
+				} catch (e) {}
 			},
 			{ once: true }
 		);
 
 		if (session.rpcs[UUID].mirrorState !== null || session.rpcs[UUID].flipState !== null) {
-			applyMirrorGuest(
-				!!session.rpcs[UUID].mirrorState,
-				session.rpcs[UUID].videoElement,
-				session.rpcs[UUID].flipState !== null ? !!session.rpcs[UUID].flipState : undefined
-			);
+			applyMirrorGuest(!!session.rpcs[UUID].mirrorState, session.rpcs[UUID].videoElement, session.rpcs[UUID].flipState !== null ? !!session.rpcs[UUID].flipState : undefined);
 		}
 
 		if (session.posterImage) {
@@ -7035,7 +6968,7 @@ function updateMixer(e = false) {
 
 	try {
 		updateMixerRun(e);
-	} catch (e) { }
+	} catch (e) {}
 
 	if (session.mobile) {
 		setTimeout(function () {
@@ -7082,10 +7015,10 @@ function updateMixerRun(e = false) {
 							if (session.widgetleft) {
 								widget.classList.add("left");
 								playarea.style.left = session.widgetwidth + "%";
-								playarea.style.width = (100 - session.widgetwidth) + "%";
+								playarea.style.width = 100 - session.widgetwidth + "%";
 							} else {
 								playarea.style.left = "0";
-								playarea.style.width = (100 - session.widgetwidth) + "%";
+								playarea.style.width = 100 - session.widgetwidth + "%";
 							}
 						}
 					}
@@ -7129,11 +7062,11 @@ function updateMixerRun(e = false) {
 							if (session.widgetleft) {
 								widget.classList.add("left");
 								playarea.style.left = session.widgetwidth + "%";
-								playarea.style.width = (100 - session.widgetwidth) + "%";
+								playarea.style.width = 100 - session.widgetwidth + "%";
 								playarea.style.position = "absolute";
 							} else {
 								playarea.style.left = "0";
-								playarea.style.width = (100 - session.widgetwidth) + "%";
+								playarea.style.width = 100 - session.widgetwidth + "%";
 							}
 						}
 					}
@@ -7243,7 +7176,7 @@ function updateMixerRun(e = false) {
 
 		var miniPreview = session.minipreview;
 
-		if (miniPreview && (!session.activeSpeaker && session.layout) && session.streamID && session.streamID in session.layout) {
+		if (miniPreview && !session.activeSpeaker && session.layout && session.streamID && session.streamID in session.layout) {
 			miniPreview = false;
 			if (session.videoElement.container && session.videoElement.container.id == "minipreview") {
 				delete session.videoElement.container;
@@ -7272,7 +7205,6 @@ function updateMixerRun(e = false) {
 			if (session.videoElement.style.display !== "none") {
 				// local feed
 				if (miniPreview && soloVideo !== true) {
-
 				} else {
 					if (session.order !== false) {
 						session.videoElement.order = session.order;
@@ -7323,7 +7255,8 @@ function updateMixerRun(e = false) {
 			delayedRequestList[UUID] = [bandwidth, UUID, optimizeAudio, lock];
 		}
 
-		if (soloVideo && soloVideo in session.rpcs) {  // this technically can be a scene or guest
+		if (soloVideo && soloVideo in session.rpcs) {
+			// this technically can be a scene or guest
 			// remote guest being full screened; infocus == UUID
 			mediaPool = []; // remove myself from fullscreen
 
@@ -7385,7 +7318,6 @@ function updateMixerRun(e = false) {
 								session.rpcs[j].videoElement.order = 0;
 							}
 							if (session.scene !== false) {
-
 							} else {
 								var totalRoomBitrate = session.totalRoomBitrate;
 								if (session.controlRoomBitrate !== false && session.controlRoomBitrate !== true) {
@@ -7403,7 +7335,8 @@ function updateMixerRun(e = false) {
 					}
 				}
 			}
-		} else if (soloVideo && soloVideo === true) { // this cannot be a scene, as you can't have yourself in a scene.
+		} else if (soloVideo && soloVideo === true) {
+			// this cannot be a scene, as you can't have yourself in a scene.
 			// well, fullscreen myself. "true" represents me. UUID would be for others.
 			// already added myself to this as fullscreen
 			for (var j in session.rpcs) {
@@ -7485,7 +7418,7 @@ function updateMixerRun(e = false) {
 			}
 
 			if (session.broadcast !== false) {
-				if ((!session.activeSpeaker && session.layout) && session.streamID in session.layout) {
+				if (!session.activeSpeaker && session.layout && session.streamID in session.layout) {
 					// skip
 				} else {
 					if (roomQuality > 0) {
@@ -7628,7 +7561,7 @@ function updateMixerRun(e = false) {
 							applyMuteState(i);
 							continue;
 						}
-					} catch (e) { }
+					} catch (e) {}
 				}
 				applyMuteState(i);
 				var doNotPush = false;
@@ -7640,7 +7573,7 @@ function updateMixerRun(e = false) {
 					} else if (session.rpcs[i].videoElement && session.rpcs[i].videoElement.dataset && session.rpcs[i].videoElement.dataset.sid) {
 						isScreenShareFeed = session.rpcs[i].videoElement.dataset.sid.endsWith(":s");
 					}
-				} catch (e) { }
+				} catch (e) {}
 
 				if (session.noScreenShare && isScreenShareFeed) {
 					doNotPush = true;
@@ -8056,12 +7989,12 @@ function updateMixerRun(e = false) {
 			// Filter mediaPool to only include videos in the slotsList
 			const filteredMediaPool = [];
 			for (let i = 0; i < mediaPool.length; i++) {
-				if (session.slotsList.includes(i + 1)) { // +1 for 1-indexed slotsList
+				if (session.slotsList.includes(i + 1)) {
+					// +1 for 1-indexed slotsList
 					filteredMediaPool.push(mediaPool[i]);
 				}
 			}
 			mediaPool = filteredMediaPool;
-
 		}
 
 		if (session.viewChroma && mediaPool.length > 1) {
@@ -8126,7 +8059,7 @@ function updateMixerRun(e = false) {
 												hasLiveScreenTwin = screenRPC.videoElement.srcObject.getVideoTracks().some(trk => trk.readyState === "live");
 											}
 										}
-									} catch (e) { }
+									} catch (e) {}
 
 									if (hasLiveScreenTwin) {
 										continue;
@@ -8134,9 +8067,7 @@ function updateMixerRun(e = false) {
 								}
 
 								// Check for screen share indicators: flag, UUID suffix, or stream ID suffix
-								const isScreen = rpc.screenShareState ||
-									currentUUID.endsWith("_screen") ||
-									(mediaPool[NW - 1].dataset.sid && mediaPool[NW - 1].dataset.sid.endsWith(":s"));
+								const isScreen = rpc.screenShareState || currentUUID.endsWith("_screen") || (mediaPool[NW - 1].dataset.sid && mediaPool[NW - 1].dataset.sid.endsWith(":s"));
 
 								if (isScreen && !rpc.smallScreen) {
 									let hasLiveScreenVideo = false;
@@ -8149,7 +8080,7 @@ function updateMixerRun(e = false) {
 										if (!hasLiveScreenVideo && mediaPool[NW - 1].srcObject && mediaPool[NW - 1].srcObject.getVideoTracks) {
 											hasLiveScreenVideo = mediaPool[NW - 1].srcObject.getVideoTracks().some(trk => trk.readyState === "live");
 										}
-									} catch (e) { }
+									} catch (e) {}
 
 									console.log("updateMixer check:", {
 										uuid: mediaPool[NW - 1].dataset.UUID,
@@ -8173,7 +8104,7 @@ function updateMixerRun(e = false) {
 								if (mediaPool[NW - 1].srcObject && mediaPool[NW - 1].srcObject.getVideoTracks) {
 									hasLivePrimaryScreenVideo = mediaPool[NW - 1].srcObject.getVideoTracks().some(trk => trk.readyState === "live");
 								}
-							} catch (e) { }
+							} catch (e) {}
 
 							if (hasLivePrimaryScreenVideo) {
 								sscount += 1;
@@ -8379,7 +8310,6 @@ function updateMixerRun(e = false) {
 			}
 			posCount += 1;
 		}
-
 	} else if (session.rows && mediaPool.length) {
 		try {
 			customLayout = {};
@@ -8403,9 +8333,10 @@ function updateMixerRun(e = false) {
 					let col = i % cols;
 					let row = parseInt(i / cols) % rows;
 
-					if (row === Math.floor((n - 1) / cols) && n % cols !== 0) {  // Last row logic
+					if (row === Math.floor((n - 1) / cols) && n % cols !== 0) {
+						// Last row logic
 						let itemsInLastRow = n % cols || cols;
-						let offset = (cols - itemsInLastRow) * (100 / cols) / 2;
+						let offset = ((cols - itemsInLastRow) * (100 / cols)) / 2;
 						customLayout[mediaPool[i].dataset.sid] = {
 							y: (100 / rows) * row,
 							h: 100 / rows,
@@ -8424,7 +8355,6 @@ function updateMixerRun(e = false) {
 					}
 				}
 			} else {
-
 				let cols;
 
 				if (session.slots) {
@@ -8476,7 +8406,7 @@ function updateMixerRun(e = false) {
 				} else if (childNodes[n].querySelector("iframe")) {
 					var iftemp = childNodes[n].querySelector("iframe");
 					if (iftemp.framesource) {
-						if ((!session.activeSpeaker && session.layout) && session.layout[""]) {
+						if (!session.activeSpeaker && session.layout && session.layout[""]) {
 							for (var i = 0; i < session.layout[""].length; i++) {
 								if (session.layout[""][i].iframeSrc && session.layout[""][i].iframeSrc == iftemp.framesource) {
 									childNodes[n].matched = true;
@@ -8593,7 +8523,7 @@ function updateMixerRun(e = false) {
 							}
 							if (miniPerformerX !== null) {
 								if (session.widget && !session.leftMiniPreview) {
-									if (miniPerformerX > (99 - session.widgetwidth)) {
+									if (miniPerformerX > 99 - session.widgetwidth) {
 										miniPerformerX = 99 - session.widgetwidth;
 									}
 								}
@@ -8712,7 +8642,8 @@ function updateMixerRun(e = false) {
 		}
 
 		if (session.pauseInvisible) {
-			mediaPool_invisible.forEach(vid => {  // This is an experimental version, with improvements? Maybe its better?
+			mediaPool_invisible.forEach(vid => {
+				// This is an experimental version, with improvements? Maybe its better?
 				if (vid) {
 					try {
 						vid.style.width = "";
@@ -8737,7 +8668,8 @@ function updateMixerRun(e = false) {
 					}
 				}
 			});
-		} else { // this is the old version; a fail safe.
+		} else {
+			// this is the old version; a fail safe.
 			mediaPool_invisible.forEach(vid => {
 				if (vid) {
 					try {
@@ -8761,7 +8693,6 @@ function updateMixerRun(e = false) {
 				}
 			});
 		}
-
 	} catch (e) {
 		errorlog(e);
 	}
@@ -8840,7 +8771,7 @@ function updateMixerRun(e = false) {
 			clearTimeout(session.waitImageTimeoutObject);
 			session.waitImageTimeoutObject = false;
 			getById("retryimage").style.display = "none";
-		} catch (e) { }
+		} catch (e) {}
 	}
 	mediaPool.forEach(vid => {
 		try {
@@ -8882,7 +8813,10 @@ function updateMixerRun(e = false) {
 			var videoMargin = session.videoMargin || 0;
 			var borderRadius = session.borderRadius || 0;
 			var borderColor = session.borderColor || "#000";
-			var cropTop = 0, cropRight = 0, cropBottom = 0, cropLeft = 0;
+			var cropTop = 0,
+				cropRight = 0,
+				cropBottom = 0,
+				cropLeft = 0;
 			var fadein = session.fadein || false;
 			var backgroundMedia = session.defaultMedia || false;
 			var foregroundMedia = session.defaultOverlayMedia || false;
@@ -8894,7 +8828,6 @@ function updateMixerRun(e = false) {
 
 			if (layout) {
 				if (!(vid.dataset.sid && vid.dataset.sid in layout)) {
-
 					if (vid.container) {
 						vid.container.style.display = "none";
 					}
@@ -8930,8 +8863,7 @@ function updateMixerRun(e = false) {
 					borderColor = layout[vid.dataset.sid].borderColor;
 				}
 				// Crop properties
-				if ("cropTop" in layout[vid.dataset.sid] || "cropRight" in layout[vid.dataset.sid] ||
-					"cropBottom" in layout[vid.dataset.sid] || "cropLeft" in layout[vid.dataset.sid]) {
+				if ("cropTop" in layout[vid.dataset.sid] || "cropRight" in layout[vid.dataset.sid] || "cropBottom" in layout[vid.dataset.sid] || "cropLeft" in layout[vid.dataset.sid]) {
 					cropTop = layout[vid.dataset.sid].cropTop || 0;
 					cropRight = layout[vid.dataset.sid].cropRight || 0;
 					cropBottom = layout[vid.dataset.sid].cropBottom || 0;
@@ -8948,7 +8880,6 @@ function updateMixerRun(e = false) {
 				}
 
 				if (layout[vid.dataset.sid].text) {
-
 					if (!vid.container || !vid.container.textOverlay) {
 						textOverlay = document.createElement("div");
 						textOverlay.className = "textOverlay";
@@ -9007,7 +8938,6 @@ function updateMixerRun(e = false) {
 						vid.holder.classList.add("fadein");
 					}
 				}
-
 			}
 
 			offsety = Math.max((h - Math.ceil(mpl / rw) * Math.ceil(h / rh)) / 2, 0);
@@ -9319,12 +9249,12 @@ function updateMixerRun(e = false) {
 				vid.style.borderColor = borderColor;
 				vid.style.borderWidth = borderOffset + "px";
 				vid.style.borderRadius = borderRadius + "px";
-			// Apply crop via clip-path
-			if (cropTop || cropRight || cropBottom || cropLeft) {
-				vid.style.clipPath = `inset(${cropTop}px ${cropRight}px ${cropBottom}px ${cropLeft}px)`;
-			} else {
-				vid.style.clipPath = "";
-			}
+				// Apply crop via clip-path
+				if (cropTop || cropRight || cropBottom || cropLeft) {
+					vid.style.clipPath = `inset(${cropTop}px ${cropRight}px ${cropBottom}px ${cropLeft}px)`;
+				} else {
+					vid.style.clipPath = "";
+				}
 				holder.style.borderColor = borderColor;
 				holder.style.borderWidth = "0px";
 				holder.style.borderRadius = borderRadius + "px";
@@ -9402,12 +9332,12 @@ function updateMixerRun(e = false) {
 				holder.style.borderWidth = borderOffset + "px";
 				holder.style.borderRadius = borderRadius + "px";
 				vid.style.borderWidth = "0px";
-			// Apply crop via clip-path
-			if (cropTop || cropRight || cropBottom || cropLeft) {
-				vid.style.clipPath = `inset(${cropTop}px ${cropRight}px ${cropBottom}px ${cropLeft}px)`;
-			} else {
-				vid.style.clipPath = "";
-			}
+				// Apply crop via clip-path
+				if (cropTop || cropRight || cropBottom || cropLeft) {
+					vid.style.clipPath = `inset(${cropTop}px ${cropRight}px ${cropBottom}px ${cropLeft}px)`;
+				} else {
+					vid.style.clipPath = "";
+				}
 
 				if ("rotated" in vid && (vid.rotated == 90 || vid.rotated == 270)) {
 					vid.style.width = Math.ceil(wrw - borderOffset * 2) + "px";
@@ -9452,10 +9382,10 @@ function updateMixerRun(e = false) {
 				} else if (container.blurred) {
 					try {
 						container.blurred.remove();
-					} catch (e) { }
+					} catch (e) {}
 					try {
 						delete container.blurred;
-					} catch (e) { }
+					} catch (e) {}
 				}
 
 				////////// NON-COVER VERSION (based on holder)
@@ -9517,12 +9447,12 @@ function updateMixerRun(e = false) {
 				holder.style.borderWidth = borderOffset + "px";
 				holder.style.borderRadius = borderRadius + "px";
 				vid.style.borderWidth = "0px";
-			// Apply crop via clip-path
-			if (cropTop || cropRight || cropBottom || cropLeft) {
-				vid.style.clipPath = `inset(${cropTop}px ${cropRight}px ${cropBottom}px ${cropLeft}px)`;
-			} else {
-				vid.style.clipPath = "";
-			}
+				// Apply crop via clip-path
+				if (cropTop || cropRight || cropBottom || cropLeft) {
+					vid.style.clipPath = `inset(${cropTop}px ${cropRight}px ${cropBottom}px ${cropLeft}px)`;
+				} else {
+					vid.style.clipPath = "";
+				}
 			}
 
 			if (session.colorVideosBackground) {
@@ -9531,16 +9461,7 @@ function updateMixerRun(e = false) {
 				vid.style.backgroundColor = "unset";
 			}
 
-			if ((vid.dataset.UUID && session.rpcs && session.rpcs[vid.dataset.UUID] &&
-				(
-					("label" in session.rpcs[vid.dataset.UUID] && session.rpcs[vid.dataset.UUID].label !== false && session.showlabels === true) ||
-					(session.showmeta === true && session.rpcs[vid.dataset.UUID] && session.rpcs[vid.dataset.UUID].meta)
-				))
-				||
-				((session.showlabels === true || session.showmeta === true) &&
-					(((vid.id === "videosource") && session.label) || vid.labelText || session.meta)
-				)) {
-
+			if ((vid.dataset.UUID && session.rpcs && session.rpcs[vid.dataset.UUID] && (("label" in session.rpcs[vid.dataset.UUID] && session.rpcs[vid.dataset.UUID].label !== false && session.showlabels === true) || (session.showmeta === true && session.rpcs[vid.dataset.UUID] && session.rpcs[vid.dataset.UUID].meta))) || ((session.showlabels === true || session.showmeta === true) && ((vid.id === "videosource" && session.label) || vid.labelText || session.meta))) {
 				if (animated && container.twidth && container.theight) {
 					var vidwidth = container.twidth;
 					var vidheight = container.theight;
@@ -9578,48 +9499,27 @@ function updateMixerRun(e = false) {
 					label.style.fontSize = parseInt(fontsize) + "px";
 				}
 
-				if ((
-					vid.dataset.UUID &&
-					session.rpcs &&
-					session.rpcs[vid.dataset.UUID] &&
-					(
+				if (
+					(vid.dataset.UUID &&
+						session.rpcs &&
+						session.rpcs[vid.dataset.UUID] &&
 						// Label check
-						(
-							"label" in session.rpcs[vid.dataset.UUID] &&
-							session.rpcs[vid.dataset.UUID].label !== false &&
-							session.showlabels === true
-						)
-						||
-						// Meta check with explicit undefined checks
-						(
-							session.showmeta === true &&
-							session.rpcs[vid.dataset.UUID] &&
-							session.rpcs[vid.dataset.UUID].meta
-						)
-					)
-				)
-					||
-					(
-						(session.showlabels === true || session.showmeta === true) &&
-						(
-							((vid.id === "videosource") && session.label) ||
-							vid.labelText ||
-							session.meta
-						)
-					)
+						(("label" in session.rpcs[vid.dataset.UUID] && session.rpcs[vid.dataset.UUID].label !== false && session.showlabels === true) ||
+							// Meta check with explicit undefined checks
+							(session.showmeta === true && session.rpcs[vid.dataset.UUID] && session.rpcs[vid.dataset.UUID].meta))) ||
+					((session.showlabels === true || session.showmeta === true) && ((vid.id === "videosource" && session.label) || vid.labelText || session.meta))
 				) {
-
 					let labelContent = [];
 					let imageElements = [];
 
 					if (session.showlabels === true) {
 						if (vid.dataset.UUID && session.rpcs[vid.dataset.UUID] && session.rpcs[vid.dataset.UUID].label) {
 							session.rpcs[vid.dataset.UUID].label.split("\\n").forEach(label => {
-								labelContent.push({ type: 'text', value: label });
+								labelContent.push({ type: "text", value: label });
 							});
-						} else if ((vid.id === "videosource") && session.label || vid.labelText) {
+						} else if ((vid.id === "videosource" && session.label) || vid.labelText) {
 							(vid.labelText || session.label).split("\\n").forEach(label => {
-								labelContent.push({ type: 'text', value: label });
+								labelContent.push({ type: "text", value: label });
 							});
 						}
 					}
@@ -9632,20 +9532,20 @@ function updateMixerRun(e = false) {
 							metaData = Object.entries(session.meta);
 						}
 						metaData.forEach(([key, value]) => {
-							if (value && typeof value === 'object') {
-								if (value.type && value.type == 'file') {
+							if (value && typeof value === "object") {
+								if (value.type && value.type == "file") {
 									// console.log(value);
 									if (value.filetype) {
 										imageElements.push(value);
 									}
 								} else {
 									labelContent.push({
-										type: 'text',
+										type: "text",
 										value: value.value || JSON.stringify(value)
 									});
 								}
 							} else if (value) {
-								labelContent.push({ type: 'text', value: value });
+								labelContent.push({ type: "text", value: value });
 							}
 						});
 					}
@@ -9675,9 +9575,7 @@ function updateMixerRun(e = false) {
 							}
 							holder.label.style.fontSize = parseInt(fontsize) + "px";
 						}
-						holder.label.innerHTML = labelContent
-							.map(item => `<span>${escapeHtml(String(item.value))}</span>`)
-							.join("");
+						holder.label.innerHTML = labelContent.map(item => `<span>${escapeHtml(String(item.value))}</span>`).join("");
 					}
 
 					// Handle image content
@@ -9699,13 +9597,13 @@ function updateMixerRun(e = false) {
 						holder.imageContainer.style.minHeight = "max(7vw, calc(" + holder.style.height + " * 0.22), 30px)";
 
 						// Clear existing images
-						holder.imageContainer.innerHTML = '';
+						holder.imageContainer.innerHTML = "";
 						// Add new images
 						imageElements.forEach(meta => {
 							if (meta.filetype.startsWith("image/")) {
 								const imgElement = document.createElement("img");
 								imgElement.src = meta.value;
-								imgElement.className = `meta-image ${meta.templateName || ''}`;
+								imgElement.className = `meta-image ${meta.templateName || ""}`;
 								imgElement.style.width = "auto"; // Fill container width
 								imgElement.style.height = "auto"; // Fill container height
 								imgElement.style.objectFit = "contain"; // Maintain aspect ratio
@@ -10173,11 +10071,11 @@ async function changeLg(lang, rtl = false, save = false) {
 					.then(async function (data) {
 						translation = data; // translation.innerHTML[ele.dataset.translate]
 						document.documentElement.dir = rtl ? "rtl" : "ltr";
-						document.documentElement.setAttribute('lang', lang);
-						document.body.classList.remove('rtl');
-						document.body.classList.remove('ltr');
-						document.body.classList.add(rtl ? 'rtl' : 'ltr');
-						document.documentElement.style.setProperty('--rtl-or-ltr', rtl ? 'right' : 'left');
+						document.documentElement.setAttribute("lang", lang);
+						document.body.classList.remove("rtl");
+						document.body.classList.remove("ltr");
+						document.body.classList.add(rtl ? "rtl" : "ltr");
+						document.documentElement.style.setProperty("--rtl-or-ltr", rtl ? "right" : "left");
 						if (save) {
 							try {
 								localStorage.setItem("vdo_ninja_language", lang);
@@ -10224,7 +10122,7 @@ async function changeLg(lang, rtl = false, save = false) {
 							for (var i = 0; i < translationBacklog.length; i++) {
 								try {
 									miniTranslate(translationBacklog[i][0], translationBacklog[i][1]);
-								} catch (e) { }
+								} catch (e) {}
 							}
 							translationBacklog = [];
 						}
@@ -10297,7 +10195,7 @@ function loadQR(callback = false, value = false) {
 function showInviteQR() {
 	var inviteURL = getById("inviteLinkURL").href;
 	warnUser("Loading QR Code...");
-	loadQR(function(url) {
+	loadQR(function (url) {
 		getById("alertModalMessage").innerHTML = "";
 		var qrcode = new QRCode(getById("alertModalMessage"), {
 			width: 300,
@@ -10308,7 +10206,7 @@ function showInviteQR() {
 		});
 		qrcode.makeCode(url);
 		getById("alertModalMessage").title = "";
-		setTimeout(function() {
+		setTimeout(function () {
 			getById("alertModalMessage").title = "";
 			if (getById("alertModalMessage").getElementsByTagName("img").length) {
 				getById("alertModalMessage").getElementsByTagName("img")[0].style.cursor = "none";
@@ -10367,14 +10265,14 @@ session.clearFramegrabAudioTracks = function (stopTracks = true) {
 			stream.getAudioTracks().forEach(track => {
 				try {
 					stream.removeTrack(track);
-				} catch (err) { }
+				} catch (err) {}
 				if (stopTracks) {
 					try {
 						track.stop();
-					} catch (stopErr) { }
+					} catch (stopErr) {}
 				}
 			});
-		} catch (err) { }
+		} catch (err) {}
 	};
 	removeTracks(session.streamSrc);
 	removeTracks(session.streamSrcClone);
@@ -10456,7 +10354,7 @@ session.autoSelectFramegrabAudioDevice = function () {
 		}
 		const desired = normalizeDeviceLabel(value);
 		const labelMatch = inputs.find(input => {
-			const label = input.dataset && input.dataset.label ? input.dataset.label : (input.getAttribute ? input.getAttribute("data-label") : "");
+			const label = input.dataset && input.dataset.label ? input.dataset.label : input.getAttribute ? input.getAttribute("data-label") : "";
 			return label && normalizeDeviceLabel(label) === desired;
 		});
 		if (labelMatch) {
@@ -10476,7 +10374,7 @@ session.autoSelectFramegrabAudioDevice = function () {
 	try {
 		candidate.checked = true;
 		candidate.dispatchEvent(new Event("change", { bubbles: true }));
-	} catch (err) { }
+	} catch (err) {}
 	if (typeof SelectedAudioInputDevices !== "undefined") {
 		if (!Array.isArray(SelectedAudioInputDevices)) {
 			SelectedAudioInputDevices = [];
@@ -10511,7 +10409,7 @@ session.applyFramegrabAudioSettings = async function (settings = {}) {
 		const MAX_RETRIES = 6;
 		const RETRY_DELAY_MS = 600;
 		if (session.framegrabAudioRetryAttempts >= MAX_RETRIES) {
-			log('[FRAMEGRAB AUDIO] Retry limit reached; disabling audio');
+			log("[FRAMEGRAB AUDIO] Retry limit reached; disabling audio");
 			session.framegrabAudio = false;
 			session.framegrabAudioRequested = false;
 			session.pendingFramegrabAudioSettings = null;
@@ -10519,7 +10417,7 @@ session.applyFramegrabAudioSettings = async function (settings = {}) {
 			session.clearFramegrabAudioTracks();
 			session.framegrabAudioPending = false;
 			if (!session.cleanOutput) {
-				warnUser('Unable to attach an audio input for the framegrab. Please confirm microphone access and try again.', 6000);
+				warnUser("Unable to attach an audio input for the framegrab. Please confirm microphone access and try again.", 6000);
 			}
 			return;
 		}
@@ -10563,17 +10461,7 @@ session.applyFramegrabAudioSettings = async function (settings = {}) {
 		if (Array.isArray(desiredId)) {
 			desiredId = desiredId.find(Boolean) || null;
 		}
-		if (
-			desiredId === null ||
-			desiredId === false ||
-			desiredId === "" ||
-			desiredId === 0 ||
-			desiredId === "0" ||
-			desiredId === 1 ||
-			desiredId === "1" ||
-			desiredId === "default" ||
-			desiredId === "communications"
-		) {
+		if (desiredId === null || desiredId === false || desiredId === "" || desiredId === 0 || desiredId === "0" || desiredId === 1 || desiredId === "1" || desiredId === "default" || desiredId === "communications") {
 			return false;
 		}
 		desiredId = String(desiredId);
@@ -10590,7 +10478,7 @@ session.applyFramegrabAudioSettings = async function (settings = {}) {
 	} catch (err) {
 		errorlog(err);
 	}
-	const audioInputsAvailable = Array.isArray(deviceInfos) && deviceInfos.some(info => info && info.kind === 'audioinput');
+	const audioInputsAvailable = Array.isArray(deviceInfos) && deviceInfos.some(info => info && info.kind === "audioinput");
 	let autoSelectOk = false;
 	try {
 		autoSelectOk = session.autoSelectFramegrabAudioDevice() === true;
@@ -10599,7 +10487,7 @@ session.applyFramegrabAudioSettings = async function (settings = {}) {
 	}
 	if (!autoSelectOk) {
 		if (!audioInputsAvailable) {
-			log('[FRAMEGRAB AUDIO] No audio inputs detected; retrying');
+			log("[FRAMEGRAB AUDIO] No audio inputs detected; retrying");
 		}
 		scheduleRetry();
 		return;
@@ -10607,9 +10495,7 @@ session.applyFramegrabAudioSettings = async function (settings = {}) {
 	try {
 		await grabAudio("#audioSource3", null, overrideConstraints);
 		session.framegrabAudioInitialized = true;
-		const trackCount = session.streamSrc && typeof session.streamSrc.getAudioTracks === "function"
-			? session.streamSrc.getAudioTracks().length
-			: 0;
+		const trackCount = session.streamSrc && typeof session.streamSrc.getAudioTracks === "function" ? session.streamSrc.getAudioTracks().length : 0;
 		if (!trackCount) {
 			session.framegrabAudioPending = true;
 			scheduleRetry();
@@ -10671,7 +10557,7 @@ session.startFramegrabAudio = async function (overrideSettings = null) {
 			if (!session.cleanOutput) {
 				try {
 					getById("header").classList.remove("red");
-				} catch (err) { }
+				} catch (err) {}
 			}
 			success = true;
 		}
@@ -11084,10 +10970,10 @@ function isolateChannel(source, channel) {
 	return merger;
 }
 
-function directIsolateChannel(UUID, channel = null) { // isolateChannel()
+function directIsolateChannel(UUID, channel = null) {
+	// isolateChannel()
 	try {
 		if (UUID) {
-
 			var targets = document.querySelectorAll("[data--u-u-i-d='" + UUID + "'][data-action-type='isolate-channel']");
 			var add = false;
 
@@ -11095,13 +10981,11 @@ function directIsolateChannel(UUID, channel = null) { // isolateChannel()
 				add = true;
 			}
 			targets.forEach(ele => {
-				if (channel && parseInt(ele.dataset.channel) && (parseInt(ele.dataset.channel) == channel)) {
-
+				if (channel && parseInt(ele.dataset.channel) && parseInt(ele.dataset.channel) == channel) {
 					if (ele.classList.contains("pressed")) {
 						add = false;
 						ele.classList.remove("pressed");
 						ele.ariaPressed = "false";
-
 					} else {
 						ele.classList.add("pressed");
 						ele.ariaPressed = "true";
@@ -11115,12 +10999,11 @@ function directIsolateChannel(UUID, channel = null) { // isolateChannel()
 			var msg = {};
 
 			if (add) {
-				msg.isolateChannel = channel
+				msg.isolateChannel = channel;
 			} else {
 				msg.isolateChannel = false;
 			}
 			return session.sendMessage(msg, UUID);
-
 		}
 	} catch (e) {
 		errorlog(e);
@@ -11464,8 +11347,8 @@ function drawOnScreen() {
 // SENDER DRAWERS LOGIC PORTION START
 function fitCurve(points) {
 	if (points.length <= 1) return points;
-	if (points.length === 2) return [{ t: 'l', p: [points[0], points[1]] }];
-	if (points.length === 3) return [{ t: 'q', p: points }];
+	if (points.length === 2) return [{ t: "l", p: [points[0], points[1]] }];
+	if (points.length === 3) return [{ t: "q", p: points }];
 
 	let result = [];
 	for (let i = 0; i < points.length - 1; i += 3) {
@@ -11475,7 +11358,7 @@ function fitCurve(points) {
 		let p3 = points[i + 3] || p2;
 
 		result.push({
-			t: 'b',
+			t: "b",
 			p: [p0, p1, p2, p3]
 		});
 	}
@@ -11559,11 +11442,14 @@ function requestDrawingAccess(video) {
 	}
 	if (!session.pendingDrawingAccessRequests[target.UUID] || Date.now() - session.pendingDrawingAccessRequests[target.UUID] > 30000) {
 		session.pendingDrawingAccessRequests[target.UUID] = Date.now();
-		session.sendRequest({
-			drawingRequest: true,
-			drawingTargetUUID: target.UUID,
-			drawingTargetIsScreen: target.isScreen
-		}, target.sendUUID);
+		session.sendRequest(
+			{
+				drawingRequest: true,
+				drawingTargetUUID: target.UUID,
+				drawingTargetIsScreen: target.isScreen
+			},
+			target.sendUUID
+		);
 		addLocalDrawingStatusMessage("Drawing access requested. Waiting for the host to approve.");
 	}
 	return true;
@@ -11602,32 +11488,34 @@ function drawOnThis(video, force = false) {
 		var container = video.container || video.parentNode;
 		var holder = container.holder || null;
 
-		var canvas = document.createElement('canvas');
+		var canvas = document.createElement("canvas");
 		if (!holder) {
 			holder = document.createElement("div");
 			container.holder = holder;
 			holder.className = "holder";
 			holder.dataset.holder = true;
 
-			container.style = "display: flex;\
+			container.style =
+				"display: flex;\
                 align-items: center;\
                 justify-content: center;";
 
 			container.appendChild(holder);
 			holder.appendChild(video);
-			video.style.setProperty('top', '0', 'important');
-			video.style.setProperty('left', '0', 'important');
+			video.style.setProperty("top", "0", "important");
+			video.style.setProperty("left", "0", "important");
 
 			session.windowed = false;
 			applyMirror();
 
 			canvas.style.position = "fixed";
-			holder.style = "position: relative;\
+			holder.style =
+				"position: relative;\
               width: 800px;\
               height: 450px; \
               display: flex;\
               align-items: center;\
-              justify-content: center;"
+              justify-content: center;";
 		} else {
 			canvas.className = "drawingCanvas";
 		}
@@ -11636,14 +11524,14 @@ function drawOnThis(video, force = false) {
 		holder.appendChild(canvas);
 		video.canvas = canvas;
 
-		const ctx = canvas.getContext('2d');
+		const ctx = canvas.getContext("2d");
 		ctx.lineWidth = 3;
 
-		const buttonContainer = document.createElement('div');
-		const enableDrawingBtn = document.createElement('button');
-		const pingDrawingBtn = document.createElement('button');
-		const clearDrawingBtn = document.createElement('button');
-		const undoDrawingBtn = document.createElement('button'); // Undo button
+		const buttonContainer = document.createElement("div");
+		const enableDrawingBtn = document.createElement("button");
+		const pingDrawingBtn = document.createElement("button");
+		const clearDrawingBtn = document.createElement("button");
+		const undoDrawingBtn = document.createElement("button"); // Undo button
 
 		enableDrawingBtn.textContent = "Enable Drawing";
 		pingDrawingBtn.textContent = "Ping";
@@ -11711,8 +11599,8 @@ function drawOnThis(video, force = false) {
 				return;
 			}
 
-			ctx.lineCap = 'round';
-			ctx.strokeStyle = 'red';
+			ctx.lineCap = "round";
+			ctx.strokeStyle = "red";
 
 			const canvasX = x * canvas.width;
 			const canvasY = y * canvas.height;
@@ -11762,8 +11650,8 @@ function drawOnThis(video, force = false) {
 		function redrawCanvas() {
 			ctx.clearRect(0, 0, canvas.width, canvas.height);
 			ctx.beginPath();
-			ctx.lineCap = 'round';
-			ctx.lineJoin = 'round';
+			ctx.lineCap = "round";
+			ctx.lineJoin = "round";
 			ctx.strokeStyle = "red";
 
 			let isNewPath = true;
@@ -11782,30 +11670,23 @@ function drawOnThis(video, force = false) {
 				if (segment.t) {
 					// This is a complex segment (line or bezier)
 					switch (segment.t) {
-						case 'b':
+						case "b":
 							let [p0, p1, p2, p3] = segment.p;
 							if (isNewPath) {
 								ctx.moveTo(p0.x * canvas.width, p0.y * canvas.height);
 								isNewPath = false;
 							}
-							ctx.bezierCurveTo(
-								p1.x * canvas.width, p1.y * canvas.height,
-								p2.x * canvas.width, p2.y * canvas.height,
-								p3.x * canvas.width, p3.y * canvas.height
-							);
+							ctx.bezierCurveTo(p1.x * canvas.width, p1.y * canvas.height, p2.x * canvas.width, p2.y * canvas.height, p3.x * canvas.width, p3.y * canvas.height);
 							break;
-						case 'q':
+						case "q":
 							let [q0, q1, q2] = segment.p;
 							if (isNewPath) {
 								ctx.moveTo(q0.x * canvas.width, q0.y * canvas.height);
 								isNewPath = false;
 							}
-							ctx.quadraticCurveTo(
-								q1.x * canvas.width, q1.y * canvas.height,
-								q2.x * canvas.width, q2.y * canvas.height
-							);
+							ctx.quadraticCurveTo(q1.x * canvas.width, q1.y * canvas.height, q2.x * canvas.width, q2.y * canvas.height);
 							break;
-						case 'l':
+						case "l":
 							let [l0, l1] = segment.p;
 							if (isNewPath) {
 								ctx.moveTo(l0.x * canvas.width, l0.y * canvas.height);
@@ -11839,7 +11720,7 @@ function drawOnThis(video, force = false) {
 				if (points[i] === null) {
 					if (currentSegment.length > 0) {
 						if (currentSegment.length === 2) {
-							processedPoints.push({ t: 'l', p: currentSegment });
+							processedPoints.push({ t: "l", p: currentSegment });
 						} else {
 							processedPoints.push(...fitCurve(currentSegment));
 						}
@@ -11849,7 +11730,7 @@ function drawOnThis(video, force = false) {
 				} else if (i > 0 && isSignificantBreak(points[i - 1], points[i])) {
 					if (currentSegment.length > 0) {
 						if (currentSegment.length === 2) {
-							processedPoints.push({ t: 'l', p: currentSegment });
+							processedPoints.push({ t: "l", p: currentSegment });
 						} else {
 							processedPoints.push(...fitCurve(currentSegment));
 						}
@@ -11866,7 +11747,7 @@ function drawOnThis(video, force = false) {
 			}
 			if (currentSegment.length > 0) {
 				if (currentSegment.length === 2) {
-					processedPoints.push({ t: 'l', p: currentSegment });
+					processedPoints.push({ t: "l", p: currentSegment });
 				} else {
 					processedPoints.push(...fitCurve(currentSegment));
 				}
@@ -11892,11 +11773,7 @@ function drawOnThis(video, force = false) {
 		function drawBezierCurve(points) {
 			const [start, control1, control2, end] = points;
 			ctx.moveTo(start.x * canvas.width, start.y * canvas.height);
-			ctx.bezierCurveTo(
-				control1.x * canvas.width, control1.y * canvas.height,
-				control2.x * canvas.width, control2.y * canvas.height,
-				end.x * canvas.width, end.y * canvas.height
-			);
+			ctx.bezierCurveTo(control1.x * canvas.width, control1.y * canvas.height, control2.x * canvas.width, control2.y * canvas.height, end.x * canvas.width, end.y * canvas.height);
 		}
 
 		function sendRemoteDrawingPayload(drawPayload) {
@@ -11965,7 +11842,8 @@ function drawOnThis(video, force = false) {
 						} else {
 							found = true;
 						}
-						if (i === 0) { // Handle case when there's no null in drawingData
+						if (i === 0) {
+							// Handle case when there's no null in drawingData
 							drawingData = [];
 						}
 					}
@@ -11981,18 +11859,19 @@ function drawOnThis(video, force = false) {
 					} else if (video.id === "screensharesource") {
 						for (var UUID in session.pcs) {
 							if (session.pcs[UUID].allowDrawing && !session.pcs[UUID].realUUID) {
-							session.sendMessage({ draw: "undo", altUUID: true }, UUID);
+								session.sendMessage({ draw: "undo", altUUID: true }, UUID);
+							}
 						}
+					} else if (session.rpcs[video.dataset.UUID] && session.rpcs[video.dataset.UUID].allowDrawing) {
+						sendRemoteDrawingPayload("undo");
 					}
-				} else if (session.rpcs[video.dataset.UUID] && session.rpcs[video.dataset.UUID].allowDrawing) {
-					sendRemoteDrawingPayload("undo");
 				}
-
-			}
 				return;
 			}
 			if (alt === "sync") {
-				if (!drawingData.length) { return; }
+				if (!drawingData.length) {
+					return;
+				}
 				// Send the processed points
 				if (video.id === "videosource") {
 					for (var UUID in session.pcs) {
@@ -12022,7 +11901,9 @@ function drawOnThis(video, force = false) {
 			}
 			if (alt === "ping") {
 				const point = arguments[1];
-				if (!point) { return; }
+				if (!point) {
+					return;
+				}
 				const dataToSend = {
 					ping: point,
 					c: "red"
@@ -12103,21 +11984,21 @@ function drawOnThis(video, force = false) {
 		}
 
 		resizeCanvas();
-		window.addEventListener('resize', resizeCanvas);
-		video.addEventListener('resize', resizeCanvas);
+		window.addEventListener("resize", resizeCanvas);
+		video.addEventListener("resize", resizeCanvas);
 
-		enableDrawingBtn.addEventListener('click', () => {
+		enableDrawingBtn.addEventListener("click", () => {
 			drawingEnabled = !drawingEnabled;
-			enableDrawingBtn.textContent = drawingEnabled ? 'Disable Drawing' : 'Enable Drawing';
+			enableDrawingBtn.textContent = drawingEnabled ? "Disable Drawing" : "Enable Drawing";
 			if (drawingEnabled) {
 				pingMode = false;
 				pingDrawingBtn.classList.remove("pressed");
 				pingDrawingBtn.textContent = "Ping";
 			}
-			canvas.style.pointerEvents = (drawingEnabled || pingMode) ? "auto" : "none";
+			canvas.style.pointerEvents = drawingEnabled || pingMode ? "auto" : "none";
 		});
 
-		pingDrawingBtn.addEventListener('click', () => {
+		pingDrawingBtn.addEventListener("click", () => {
 			pingMode = !pingMode;
 			if (pingMode) {
 				drawingEnabled = false;
@@ -12128,23 +12009,22 @@ function drawOnThis(video, force = false) {
 				pingDrawingBtn.classList.remove("pressed");
 				pingDrawingBtn.textContent = "Ping";
 			}
-			canvas.style.pointerEvents = (drawingEnabled || pingMode) ? "auto" : "none";
+			canvas.style.pointerEvents = drawingEnabled || pingMode ? "auto" : "none";
 		});
 
-		clearDrawingBtn.addEventListener('click', () => {
+		clearDrawingBtn.addEventListener("click", () => {
 			ctx.clearRect(0, 0, canvas.width, canvas.height);
 			drawingData = [];
 			lastPoints = [];
 			sendDrawingData("clear");
 		});
 
-		undoDrawingBtn.addEventListener('click', () => {
+		undoDrawingBtn.addEventListener("click", () => {
 			sendDrawingData("undo");
 		});
 
 		function stopDrawing() {
 			if (isDrawing) {
-
 				isDrawing = false;
 				ctx.beginPath();
 				lastPoint = null;
@@ -12154,32 +12034,33 @@ function drawOnThis(video, force = false) {
 		}
 
 		function onPointerEnter(e) {
-			if (e.buttons !== 1) { // If left mouse button is not pressed
+			if (e.buttons !== 1) {
+				// If left mouse button is not pressed
 				stopDrawing();
 			}
 		}
 
-		canvas.addEventListener('pointerdown', startDrawing);
-		canvas.addEventListener('pointermove', draw);
-		canvas.addEventListener('pointerup', stopDrawing);
-		canvas.addEventListener('pointercancel', stopDrawing);
-		canvas.addEventListener('pointerleave', stopDrawing);
-		canvas.addEventListener('pointerenter', onPointerEnter);
+		canvas.addEventListener("pointerdown", startDrawing);
+		canvas.addEventListener("pointermove", draw);
+		canvas.addEventListener("pointerup", stopDrawing);
+		canvas.addEventListener("pointercancel", stopDrawing);
+		canvas.addEventListener("pointerleave", stopDrawing);
+		canvas.addEventListener("pointerenter", onPointerEnter);
 
 		function createCleanupFunction() {
 			return function cleanup() {
 				sendDrawingData("cleanup");
 
-				window.removeEventListener('resize', resizeCanvas);
-				video.removeEventListener('resize', resizeCanvas);
+				window.removeEventListener("resize", resizeCanvas);
+				video.removeEventListener("resize", resizeCanvas);
 
 				if (canvas) {
-					canvas.removeEventListener('pointerdown', startDrawing);
-					canvas.removeEventListener('pointermove', draw);
-					canvas.removeEventListener('pointerup', stopDrawing);
-					canvas.removeEventListener('pointercancel', stopDrawing);
-					canvas.removeEventListener('pointerleave', stopDrawing);
-					canvas.removeEventListener('pointerenter', onPointerEnter);
+					canvas.removeEventListener("pointerdown", startDrawing);
+					canvas.removeEventListener("pointermove", draw);
+					canvas.removeEventListener("pointerup", stopDrawing);
+					canvas.removeEventListener("pointercancel", stopDrawing);
+					canvas.removeEventListener("pointerleave", stopDrawing);
+					canvas.removeEventListener("pointerenter", onPointerEnter);
 
 					if (canvas.parentNode) {
 						canvas.parentNode.removeChild(canvas);
@@ -12195,15 +12076,14 @@ function drawOnThis(video, force = false) {
 		function syncNewConnections() {
 			return function syncDrawing() {
 				setTimeout(() => {
-					sendDrawingData("sync")
+					sendDrawingData("sync");
 				}, 4000);
-			}
+			};
 		}
 
 		video.syncDrawOnVideo = syncNewConnections();
 		video.clearDrawOnVideo = createCleanupFunction();
 		return video.clearDrawOnVideo;
-
 	} catch (e) {
 		errorlog(e);
 	}
@@ -12220,7 +12100,7 @@ function receiveDrawingOnVideo(video, UUID = false) {
 			warnlog("no video holder; not compatible");
 			return;
 		}
-		const canvas = document.createElement('canvas');
+		const canvas = document.createElement("canvas");
 		canvas.className = "drawingCanvas";
 		canvas.style.pointerEvents = "none";
 		var receivedDrawingData = [];
@@ -12232,7 +12112,7 @@ function receiveDrawingOnVideo(video, UUID = false) {
 		}
 		container.appendChild(canvas);
 
-		var color = 'red';
+		var color = "red";
 		if (UUID) {
 			color = getColorFromName(UUID);
 		}
@@ -12254,11 +12134,11 @@ function receiveDrawingOnVideo(video, UUID = false) {
 			redrawCanvas();
 		}
 
-		const ctx = canvas.getContext('2d');
-		ctx.lineCap = 'round';
-		ctx.lineJoin = 'round';
+		const ctx = canvas.getContext("2d");
+		ctx.lineCap = "round";
+		ctx.lineJoin = "round";
 		ctx.imageSmoothingEnabled = true;
-		ctx.imageSmoothingQuality = 'high';
+		ctx.imageSmoothingQuality = "high";
 		ctx.lineWidth = 3;
 
 		function resizeCanvas() {
@@ -12273,24 +12153,20 @@ function receiveDrawingOnVideo(video, UUID = false) {
 		let observer = null;
 		if (!(video && video.container && video.container.holder)) {
 			positionCanvas();
-			window.addEventListener('resize', positionCanvas);
-			video.addEventListener('resize', positionCanvas);
+			window.addEventListener("resize", positionCanvas);
+			video.addEventListener("resize", positionCanvas);
 			observer = new ResizeObserver(positionCanvas);
 			observer.observe(video);
 		} else {
 			resizeCanvas();
-			window.addEventListener('resize', resizeCanvas);
-			video.addEventListener('resize', resizeCanvas);
+			window.addEventListener("resize", resizeCanvas);
+			video.addEventListener("resize", resizeCanvas);
 		}
 
 		function drawBezierCurve(points) {
 			const [start, control1, control2, end] = points;
 			ctx.moveTo(start.x * canvas.width, start.y * canvas.height);
-			ctx.bezierCurveTo(
-				control1.x * canvas.width, control1.y * canvas.height,
-				control2.x * canvas.width, control2.y * canvas.height,
-				end.x * canvas.width, end.y * canvas.height
-			);
+			ctx.bezierCurveTo(control1.x * canvas.width, control1.y * canvas.height, control2.x * canvas.width, control2.y * canvas.height, end.x * canvas.width, end.y * canvas.height);
 		}
 
 		function redrawCanvas() {
@@ -12299,8 +12175,8 @@ function receiveDrawingOnVideo(video, UUID = false) {
 			let activeWidth = 2;
 			let activeColor = color;
 			ctx.lineWidth = activeWidth;
-			ctx.lineCap = 'round';
-			ctx.lineJoin = 'round';
+			ctx.lineCap = "round";
+			ctx.lineJoin = "round";
 			ctx.strokeStyle = activeColor;
 
 			let isNewPath = true;
@@ -12329,30 +12205,23 @@ function receiveDrawingOnVideo(video, UUID = false) {
 				}
 
 				switch (segment.t) {
-					case 'b':
+					case "b":
 						let [p0, p1, p2, p3] = segment.p;
 						if (isNewPath) {
 							ctx.moveTo(p0.x * canvas.width, p0.y * canvas.height);
 							isNewPath = false;
 						}
-						ctx.bezierCurveTo(
-							p1.x * canvas.width, p1.y * canvas.height,
-							p2.x * canvas.width, p2.y * canvas.height,
-							p3.x * canvas.width, p3.y * canvas.height
-						);
+						ctx.bezierCurveTo(p1.x * canvas.width, p1.y * canvas.height, p2.x * canvas.width, p2.y * canvas.height, p3.x * canvas.width, p3.y * canvas.height);
 						break;
-					case 'q':
+					case "q":
 						let [q0, q1, q2] = segment.p;
 						if (isNewPath) {
 							ctx.moveTo(q0.x * canvas.width, q0.y * canvas.height);
 							isNewPath = false;
 						}
-						ctx.quadraticCurveTo(
-							q1.x * canvas.width, q1.y * canvas.height,
-							q2.x * canvas.width, q2.y * canvas.height
-						);
+						ctx.quadraticCurveTo(q1.x * canvas.width, q1.y * canvas.height, q2.x * canvas.width, q2.y * canvas.height);
 						break;
-					case 'l':
+					case "l":
 						let [l0, l1] = segment.p;
 						if (isNewPath) {
 							ctx.moveTo(l0.x * canvas.width, l0.y * canvas.height);
@@ -12418,7 +12287,8 @@ function receiveDrawingOnVideo(video, UUID = false) {
 						} else {
 							found = true;
 						}
-						if (i === 0) { // Handle case when there's no null in receivedDrawingData
+						if (i === 0) {
+							// Handle case when there's no null in receivedDrawingData
 							receivedDrawingData = [];
 						}
 					}
@@ -12445,16 +12315,18 @@ function receiveDrawingOnVideo(video, UUID = false) {
 					if (newData.w) {
 						style.w = newData.w;
 					}
-					receivedDrawingData.push(...newData.p.map(segment => {
-						if (segment && typeof segment === "object") {
-							return Object.assign({}, style, segment);
-						}
-						return segment;
-					}));
+					receivedDrawingData.push(
+						...newData.p.map(segment => {
+							if (segment && typeof segment === "object") {
+								return Object.assign({}, style, segment);
+							}
+							return segment;
+						})
+					);
 				} else if (Array.isArray(newData)) {
 					// Old format or array of points
 					receivedDrawingData.push(...newData);
-				} else if (typeof newData === 'object' && newData.x !== undefined && newData.y !== undefined) {
+				} else if (typeof newData === "object" && newData.x !== undefined && newData.y !== undefined) {
 					// Single point
 					receivedDrawingData.push(Object.assign({ c: newData.c || color }, newData));
 				} else {
@@ -12473,15 +12345,14 @@ function receiveDrawingOnVideo(video, UUID = false) {
 		}
 
 		function cleanup() {
-
 			try {
 				if (observer) {
-					window.removeEventListener('resize', positionCanvas);
-					video.removeEventListener('resize', positionCanvas);
+					window.removeEventListener("resize", positionCanvas);
+					video.removeEventListener("resize", positionCanvas);
 					observer.disconnect();
 				} else {
-					window.removeEventListener('resize', resizeCanvas);
-					video.removeEventListener('resize', resizeCanvas);
+					window.removeEventListener("resize", resizeCanvas);
+					video.removeEventListener("resize", resizeCanvas);
 				}
 
 				clearDrawing();
@@ -12805,11 +12676,13 @@ function applyEffects(track) {
 
 		if (USE_LONGPIPE) {
 			if (EffectsPipeline) {
+				if (session.longpipe) {
+					session.longpipe.destroy();
+					session.longpipe = null;
+				}
 
-				console.log("Longpipe back")
-				if (session.longpipe) { session.longpipe.destroy(); session.longpipe = null; }
 				session.longpipe = new EffectsPipeline(session.canvasSource.srcObject, {
-					preset: 'fast',
+					preset: "auto",
 					background: effectToLongpipeBg()
 				});
 				return session.longpipe.stream.getVideoTracks()[0];
@@ -12889,7 +12762,7 @@ function applyEffects(track) {
 
 		try {
 			JEELIZFACEFILTER.destroy();
-		} catch (e) { }
+		} catch (e) {}
 		if (session.canvasWebGL) {
 			session.canvasWebGL.remove();
 			session.canvasWebGL = null;
@@ -12909,7 +12782,6 @@ function applyEffects(track) {
 	}
 	try {
 		return session.canvas.captureStream().getVideoTracks()[0];
-
 	} catch (e) {
 		if (!session.cleanOutput) {
 			warnUser(getTranslation("not-clean-session"), false, false);
@@ -13109,7 +12981,7 @@ async function makeImages(startup = false) {
 						}
 					}
 				}
-			} catch (e) { }
+			} catch (e) {}
 		}
 	} catch (e) {
 		errorlog(e);
@@ -13190,12 +13062,7 @@ function updateUserList() {
 			getById("userList").innerHTML = "";
 
 			for (var UUID in session.rpcs) {
-				if (
-					(session.rpcs[UUID].videoElement && session.rpcs[UUID].streamSrc && session.rpcs[UUID].streamSrc.getTracks().length) ||
-					session.rpcs[UUID].canvas ||
-					session.rpcs[UUID].viewChromaCanvas ||
-					session.rpcs[UUID].imageElement
-				) {
+				if ((session.rpcs[UUID].videoElement && session.rpcs[UUID].streamSrc && session.rpcs[UUID].streamSrc.getTracks().length) || session.rpcs[UUID].canvas || session.rpcs[UUID].viewChromaCanvas || session.rpcs[UUID].imageElement) {
 					if (session.rpcs[UUID].videoElement && document.body.contains(session.rpcs[UUID].videoElement)) {
 						continue;
 					} else if (session.rpcs[UUID].canvas && document.body.contains(session.rpcs[UUID].canvas)) {
@@ -13210,12 +13077,7 @@ function updateUserList() {
 					// end of screen share / director ?
 					continue;
 				}
-				if (
-					session.rpcs[UUID].videoMuted ||
-					(!session.rpcs[UUID].imageElement && !session.rpcs[UUID].canvas && !session.rpcs[UUID].viewChromaCanvas) ||
-					(session.infocus && session.infocus !== UUID) ||
-					(!session.rpcs[UUID].defaultSpeaker && session.activeSpeaker)
-				) {
+				if (session.rpcs[UUID].videoMuted || (!session.rpcs[UUID].imageElement && !session.rpcs[UUID].canvas && !session.rpcs[UUID].viewChromaCanvas) || (session.infocus && session.infocus !== UUID) || (!session.rpcs[UUID].defaultSpeaker && session.activeSpeaker)) {
 					if (session.directorList.indexOf(UUID) >= 0) {
 						if (!session.rpcs[UUID].streamSrc) {
 							// director not active yet, so we won't bother showing it.
@@ -13269,7 +13131,7 @@ function updateUserList() {
 								menu.interval = setInterval(printViewStats, session.statsInterval, innerMenu, UUID);
 							}
 						}
-					} catch (e) { }
+					} catch (e) {}
 
 					getById("userList").appendChild(insert);
 
@@ -13327,7 +13189,7 @@ function updateUserList() {
 			} else {
 				getById("connectUsers").style.display = "block";
 			}
-		} catch (e) { }
+		} catch (e) {}
 		updateUserListActive = false;
 	}, 200);
 }
@@ -13487,17 +13349,7 @@ function MediaPipeSelfieWorker() {
 				sourceFrameCtx.drawImage(session.canvasSource, 0, 0, sourceFrameCanvas.width, sourceFrameCanvas.height);
 				frameSource = sourceFrameCanvas;
 			}
-			segmentationInputCtx.drawImage(
-				frameSource,
-				0,
-				0,
-				session.canvasSource.width,
-				session.canvasSource.height,
-				0,
-				0,
-				segmentationWidth,
-				segmentationHeight
-			);
+			segmentationInputCtx.drawImage(frameSource, 0, 0, session.canvasSource.width, session.canvasSource.height, 0, 0, segmentationWidth, segmentationHeight);
 			const imageData = segmentationInputCtx.getImageData(0, 0, segmentationWidth, segmentationHeight);
 			const results = segmenterState.segmenter.segmentForVideo(segmentationInputCanvas, performance.now());
 			let alphaMask = null;
@@ -13556,7 +13408,7 @@ function MediaPipeSelfieWorker() {
 				if (session.effectsImage.complete) {
 					try {
 						session.canvasCtx.drawImage(session.effectsImage, 0, 0, session.canvas.width, session.canvas.height);
-					} catch (e) { }
+					} catch (e) {}
 				}
 			} else if (session.effect == "3") {
 				if (session.effectValue) {
@@ -13576,7 +13428,7 @@ function MediaPipeSelfieWorker() {
 					if (segmenterState.segmenter && segmenterState.segmenter.close) {
 						segmenterState.segmenter.close();
 					}
-				} catch (ignore) { }
+				} catch (ignore) {}
 				segmenterState.ready = false;
 				segmenterState.failed = true;
 				segmenterState.segmenter = null;
@@ -13623,10 +13475,7 @@ function TFLiteWorker() {
 		MediaPipeSelfieWorker();
 		return;
 	}
-	if (
-		shouldUseMediaPipeSelfieSegmenter() &&
-		(!session.mediaPipeSelfieSegmenter || (!session.mediaPipeSelfieSegmenter.ready && !session.mediaPipeSelfieSegmenter.failed))
-	) {
+	if (shouldUseMediaPipeSelfieSegmenter() && (!session.mediaPipeSelfieSegmenter || (!session.mediaPipeSelfieSegmenter.ready && !session.mediaPipeSelfieSegmenter.failed))) {
 		LaunchTFWorkerCallback = true;
 		attemptMediaPipeSelfieSegmenterLoad();
 		if (session.tfliteModule == false || TFLITELOADING) {
@@ -13799,7 +13648,7 @@ function TFLiteWorker() {
 				if (session.effectsImage.complete) {
 					try {
 						session.canvasCtx.drawImage(session.effectsImage, 0, 0, session.canvas.width, session.canvas.height);
-					} catch (e) { }
+					} catch (e) {}
 				}
 			} else if (session.effect == "3") {
 				// BLUR
@@ -13917,7 +13766,7 @@ function TFLiteWorker() {
 				if (session.effectsImage.complete) {
 					try {
 						session.canvasCtx.drawImage(session.effectsImage, 0, 0, session.canvas.width, session.canvas.height);
-					} catch (e) { }
+					} catch (e) {}
 				}
 			} else if (session.effect == "3") {
 				// BLUR
@@ -14331,7 +14180,7 @@ function drawFace() {
 					.catch(e => {
 						errorlog("Boo, Face Detection failed: " + e);
 					});
-			} catch (e) { }
+			} catch (e) {}
 			setTimeout(function () {
 				detectFace();
 			}, 200);
@@ -14422,7 +14271,7 @@ function drawFace() {
 				//ctx.beginPath();
 				//ctx.rect(lastFace.x, lastFace.y, lastFace.w, lastFace.h);
 				//	ctx.stroke();
-			} catch (e) { }
+			} catch (e) {}
 
 			if (!timers.timeoutDraw) {
 				try {
@@ -14508,7 +14357,7 @@ async function getFaces() {
 				}
 			}
 			log(videos);
-		} catch (e) { }
+		} catch (e) {}
 		pokeIframeAPI("face-tracking-data", videos);
 		setTimeout(function () {
 			getFaces();
@@ -14625,18 +14474,14 @@ function changeZoomPosition(event, ele) {
 	if (ele.id === "zoomPositionX1" || ele.id === "zoomPositionX") {
 		xPosition = value;
 		// Update other horizontal slider
-		const otherSlider = ele.id === "zoomPositionX1" ?
-			getById("zoomPositionX") :
-			getById("zoomPositionX1");
+		const otherSlider = ele.id === "zoomPositionX1" ? getById("zoomPositionX") : getById("zoomPositionX1");
 		if (otherSlider) {
 			otherSlider.value = value;
 		}
 	} else if (ele.id === "zoomPositionY1" || ele.id === "zoomPositionY") {
 		yPosition = value;
 		// Update other vertical slider
-		const otherSlider = ele.id === "zoomPositionY1" ?
-			getById("zoomPositionY") :
-			getById("zoomPositionY1");
+		const otherSlider = ele.id === "zoomPositionY1" ? getById("zoomPositionY") : getById("zoomPositionY1");
 		if (otherSlider) {
 			otherSlider.value = value;
 		}
@@ -14715,26 +14560,10 @@ function digitalZoom(resetZoom = false) {
 						xa = (srcWidth - scaledWidth) * xPosition;
 						ya = (srcHeight - scaledHeight) * yPosition;
 						// Draw the zoomed region
-						session.canvasCtx.drawImage(
-							session.canvasSource,
-							xa, ya,
-							scaledWidth,
-							scaledHeight,
-							0, 0,
-							srcWidth,
-							srcHeight
-						);
+						session.canvasCtx.drawImage(session.canvasSource, xa, ya, scaledWidth, scaledHeight, 0, 0, srcWidth, srcHeight);
 					} else {
 						// If no zoom, draw the full image
-						session.canvasCtx.drawImage(
-							session.canvasSource,
-							0, 0,
-							srcWidth,
-							srcHeight,
-							0, 0,
-							srcWidth,
-							srcHeight
-						);
+						session.canvasCtx.drawImage(session.canvasSource, 0, 0, srcWidth, srcHeight, 0, 0, srcWidth, srcHeight);
 					}
 				} catch (e) {
 					errorlog(e);
@@ -14776,9 +14605,14 @@ function digitalZoom(resetZoom = false) {
 }
 
 function rgbToHsv(r, g, b) {
-	r /= 255; g /= 255; b /= 255;
-	const max = Math.max(r, g, b), min = Math.min(r, g, b);
-	let h, s, v = max;
+	r /= 255;
+	g /= 255;
+	b /= 255;
+	const max = Math.max(r, g, b),
+		min = Math.min(r, g, b);
+	let h,
+		s,
+		v = max;
 	const d = max - min;
 	s = max === 0 ? 0 : d / max;
 
@@ -14786,9 +14620,15 @@ function rgbToHsv(r, g, b) {
 		h = 0;
 	} else {
 		switch (max) {
-			case r: h = (g - b) / d + (g < b ? 6 : 0); break;
-			case g: h = (b - r) / d + 2; break;
-			case b: h = (r - g) / d + 4; break;
+			case r:
+				h = (g - b) / d + (g < b ? 6 : 0);
+				break;
+			case g:
+				h = (b - r) / d + 2;
+				break;
+			case b:
+				h = (r - g) / d + 4;
+				break;
 		}
 		h /= 6;
 	}
@@ -14804,12 +14644,7 @@ function normalizeHexColor(colorValue, fallback = "#00ff00") {
 		colorValue = "#" + colorValue;
 	}
 	if (/^#[0-9a-fA-F]{3}$/.test(colorValue)) {
-		return (
-			"#" +
-			colorValue[1] + colorValue[1] +
-			colorValue[2] + colorValue[2] +
-			colorValue[3] + colorValue[3]
-		).toLowerCase();
+		return ("#" + colorValue[1] + colorValue[1] + colorValue[2] + colorValue[2] + colorValue[3] + colorValue[3]).toLowerCase();
 	}
 	if (/^#[0-9a-fA-F]{6}$/.test(colorValue)) {
 		return colorValue.toLowerCase();
@@ -14941,8 +14776,8 @@ function chromaKey(reinit = false) {
 					const smoothing = 15;
 
 					// Green range in HSV (normalized to 0-1)
-					const targetHue = 0.33;  // Pure green
-					const hueRange = 0.15;   // Range around pure green
+					const targetHue = 0.33; // Pure green
+					const hueRange = 0.15; // Range around pure green
 
 					for (let i = 0; i < data.length; i += 4) {
 						const r = data[i];
@@ -14955,13 +14790,13 @@ function chromaKey(reinit = false) {
 						const [h, s, v] = rgbToHsv(r, g, b);
 						// Calculate how "green" the pixel is
 						const hueDiff = Math.abs(h - targetHue);
-						const isInGreenRange = hueDiff <= hueRange || hueDiff >= (1 - hueRange);
+						const isInGreenRange = hueDiff <= hueRange || hueDiff >= 1 - hueRange;
 						if (!isInGreenRange) {
 							continue;
 						}
 						// Green intensity calculation
 						const greenDominance = (g - Math.max(r, b)) / 255;
-						const saturationBoost = s * 0.7;  // Reduce impact of washed-out greens
+						const saturationBoost = s * 0.7; // Reduce impact of washed-out greens
 						const keyValue = (greenDominance * 0.6 + saturationBoost * 0.4) * 100;
 						let alpha = 255;
 						if (keyValue > threshold) {
@@ -14974,9 +14809,9 @@ function chromaKey(reinit = false) {
 					session.canvasCtx.putImageData(imageData, 0, 0);
 
 					if (session.effect === "15" && session.effectsImage && session.effectsImage.complete) {
-						session.canvasCtx.globalCompositeOperation = 'destination-over';
+						session.canvasCtx.globalCompositeOperation = "destination-over";
 						session.canvasCtx.drawImage(session.effectsImage, 0, 0, session.canvas.width, session.canvas.height);
-						session.canvasCtx.globalCompositeOperation = 'source-over';
+						session.canvasCtx.globalCompositeOperation = "source-over";
 					}
 				} catch (e) {
 					errorlog(e);
@@ -15346,9 +15181,9 @@ function directorGraphStats() {
 						e.stopPropagation();
 						var currentUUID = this.closest('[data-action-type="stats-graphs-details-container"]').dataset.uid;
 						const result = await promptAlt("Select target bitrate (kbps)", false, false, false, false, false, false, {
-							type: 'select',
-							options: ['50', '500', '1000', '2000', '5000', '10000', '20000', '[Custom]'],
-							placeholder: 'Enter custom bitrate in kbps'
+							type: "select",
+							options: ["50", "500", "1000", "2000", "5000", "10000", "20000", "[Custom]"],
+							placeholder: "Enter custom bitrate in kbps"
 						});
 						if (result) {
 							var msg = {
@@ -15394,9 +15229,9 @@ function directorGraphStats() {
 						e.stopPropagation();
 						var currentUUID = this.closest('[data-action-type="stats-graphs-details-container"]').dataset.uid;
 						const result = await promptAlt("Select target resolution", false, false, false, false, false, false, {
-							type: 'select',
-							options: ['360', '720', '1080', '[Custom]'],
-							placeholder: 'Enter custom height in pixels'
+							type: "select",
+							options: ["360", "720", "1080", "[Custom]"],
+							placeholder: "Enter custom height in pixels"
 						});
 						if (result) {
 							session.requestResolution(currentUUID, 4096, result || 2160, false, uuid);
@@ -15417,7 +15252,6 @@ function directorGraphStats() {
 }
 
 function remoteStats(msg, UUID) {
-
 	var rpc = session.rpcs && session.rpcs[UUID] ? session.rpcs[UUID] : null;
 
 	if (isIFrame && rpc) {
@@ -15480,9 +15314,9 @@ function remoteStats(msg, UUID) {
 							e.preventDefault();
 							e.stopPropagation();
 							const result = await promptAlt("Select target bitrate (kbps)", false, false, false, false, false, false, {
-								type: 'select',
-								options: ['50', '500', '1000', '2000', '5000', '10000', '20000', '[Custom]'],
-								placeholder: 'Enter custom bitrate in kbps'
+								type: "select",
+								options: ["50", "500", "1000", "2000", "5000", "10000", "20000", "[Custom]"],
+								placeholder: "Enter custom bitrate in kbps"
 							});
 							if (result) {
 								var msg = {
@@ -15527,9 +15361,9 @@ function remoteStats(msg, UUID) {
 							e.preventDefault();
 							e.stopPropagation();
 							const result = await promptAlt("Select target resolution", false, false, false, false, false, false, {
-								type: 'select',
-								options: ['360', '720', '1080', '1440', '2160', '[Custom]'],
-								placeholder: 'Enter custom height in pixels'
+								type: "select",
+								options: ["360", "720", "1080", "1440", "2160", "[Custom]"],
+								placeholder: "Enter custom height in pixels"
 							});
 							if (result) {
 								session.requestResolution(UUID, 4096, result || 2160, false, uuid);
@@ -15583,7 +15417,7 @@ function processStats(UUID) {
 				}
 			}
 		}
-	} catch (e) { }
+	} catch (e) {}
 
 	try {
 		if (session.rpcs[UUID].realUUID && session.rpcs[session.rpcs[UUID].realUUID]) {
@@ -15765,7 +15599,7 @@ function processStats(UUID) {
 									try {
 										lastFramesDecoded = session.rpcs[UUID].stats[trackID]._framesDecoded;
 										lastTimestamp = session.rpcs[UUID].stats[trackID]._timestamp;
-									} catch (e) { }
+									} catch (e) {}
 									session.rpcs[UUID].stats[trackID].FPS = parseInt((10 * (stat.framesDecoded - lastFramesDecoded)) / (stat.timestamp / 1000 - lastTimestamp)) / 10;
 									//session.rpcs[UUID].stats[trackID].FPS = parseInt((stat.framesDecoded - lastFramesDecoded)/(stat.timestamp/1000 - lastTimestamp));
 									session.rpcs[UUID].stats[trackID]._framesDecoded = stat.framesDecoded;
@@ -15916,7 +15750,7 @@ function processStats(UUID) {
 								delete session.rpcs[UUID].stats["Peer-to-Peer_Connection"].candidateType_local;
 								delete session.rpcs[UUID].stats["Peer-to-Peer_Connection"].local_relay_IP;
 								delete session.rpcs[UUID].stats["Peer-to-Peer_Connection"].local_relay_protocol;
-							} catch (e) { }
+							} catch (e) {}
 						}
 					}
 					if (nominatedCandidate.remoteCandidateId && session.rpcs[UUID].stats["Peer-to-Peer_Connection"]._remote_ice_id && session.rpcs[UUID].stats["Peer-to-Peer_Connection"]._remote_ice_id !== nominatedCandidate.remoteCandidateId) {
@@ -15925,7 +15759,7 @@ function processStats(UUID) {
 								delete session.rpcs[UUID].stats["Peer-to-Peer_Connection"].candidateType_remote;
 								delete session.rpcs[UUID].stats["Peer-to-Peer_Connection"].remote_relay_IP;
 								delete session.rpcs[UUID].stats["Peer-to-Peer_Connection"].remote_relay_protocol;
-							} catch (e) { }
+							} catch (e) {}
 						}
 					}
 					if (nominatedCandidate.localCandidateId) {
@@ -15968,7 +15802,7 @@ function processStats(UUID) {
 									delete session.rpcs[UUID].stats["Peer-to-Peer_Connection"].local_relay_protocol;
 									delete session.rpcs[UUID].stats["Peer-to-Peer_Connection"].local_relay_url;
 									delete session.rpcs[UUID].stats["Peer-to-Peer_Connection"].local_ip_blocking;
-								} catch (e) { }
+								} catch (e) {}
 							}
 						}
 						if ("networkType" in candidate) {
@@ -15998,7 +15832,7 @@ function processStats(UUID) {
 									delete session.rpcs[UUID].stats["Peer-to-Peer_Connection"].remote_relay_IP;
 									delete session.rpcs[UUID].stats["Peer-to-Peer_Connection"].remote_relay_protocol;
 									delete session.rpcs[UUID].stats["Peer-to-Peer_Connection"].remote_ip_blocking;
-								} catch (e) { }
+								} catch (e) {}
 							}
 						}
 						if ("networkType" in candidate) {
@@ -16070,7 +15904,9 @@ function processStats(UUID) {
 								}
 							}
 						}
-					} catch (e) { warnlog("QoS accumulation error: " + e); }
+					} catch (e) {
+						warnlog("QoS accumulation error: " + e);
+					}
 				}
 
 				playoutdelay(UUID);
@@ -16095,150 +15931,152 @@ function processPcsQosStats(UUID) {
 	if (!session.pcs || !(UUID in session.pcs)) return;
 
 	try {
-		session.pcs[UUID].getStats().then(function(stats) {
-			if (!(UUID in session.pcs)) return;
-			if (!session.qosEnabled || !session.qosData || session.qosData.sent) return;
+		session.pcs[UUID].getStats()
+			.then(function (stats) {
+				if (!(UUID in session.pcs)) return;
+				if (!session.qosEnabled || !session.qosData || session.qosData.sent) return;
 
-			var qd = session.qosData;
-			var nominatedCandidate = null;
-			var candidates = {};
+				var qd = session.qosData;
+				var nominatedCandidate = null;
+				var candidates = {};
 
-			stats.forEach(function(stat) {
-				try {
-					if (stat.id && stat.id.startsWith("DEPRECATED_")) return;
+				stats.forEach(function (stat) {
+					try {
+						if (stat.id && stat.id.startsWith("DEPRECATED_")) return;
 
-					if (stat.type === "outbound-rtp") {
-						if (stat.kind === "video") {
-							if (stat.qualityLimitationReason) {
-								session.pcs[UUID].stats.quality_limitation_reason = stat.qualityLimitationReason;
-							}
-							if (stat.frameWidth && stat.frameHeight) {
-								var res = stat.frameWidth + " x " + stat.frameHeight;
-								if (stat.framesPerSecond) {
-									res += " @ " + stat.framesPerSecond;
+						if (stat.type === "outbound-rtp") {
+							if (stat.kind === "video") {
+								if (stat.qualityLimitationReason) {
+									session.pcs[UUID].stats.quality_limitation_reason = stat.qualityLimitationReason;
 								}
-								session.pcs[UUID].stats.resolution = res;
-								if (!qd.lastResolution) qd.lastResolution = res;
-							}
-							if (stat.encoderImplementation) {
-								session.pcs[UUID].stats.encoder = stat.encoderImplementation;
-								if (!qd.lastVideoCodec) qd.lastVideoCodec = stat.encoderImplementation;
-							}
-							// Track bitrate for publishers
-							if (stat.bytesSent !== undefined && stat.timestamp) {
-								if (session.pcs[UUID].stats._lastBytesSent !== undefined) {
-									var timeDiff = stat.timestamp - session.pcs[UUID].stats._lastTimestamp;
-									if (timeDiff > 0) {
-										var bitrate = parseInt((8 * (stat.bytesSent - session.pcs[UUID].stats._lastBytesSent)) / timeDiff);
-										if (bitrate > 0) {
-											qd.bitrateSamples.push(bitrate);
-											if (qd.bitrateSamples.length > 500) qd.bitrateSamples.shift();
+								if (stat.frameWidth && stat.frameHeight) {
+									var res = stat.frameWidth + " x " + stat.frameHeight;
+									if (stat.framesPerSecond) {
+										res += " @ " + stat.framesPerSecond;
+									}
+									session.pcs[UUID].stats.resolution = res;
+									if (!qd.lastResolution) qd.lastResolution = res;
+								}
+								if (stat.encoderImplementation) {
+									session.pcs[UUID].stats.encoder = stat.encoderImplementation;
+									if (!qd.lastVideoCodec) qd.lastVideoCodec = stat.encoderImplementation;
+								}
+								// Track bitrate for publishers
+								if (stat.bytesSent !== undefined && stat.timestamp) {
+									if (session.pcs[UUID].stats._lastBytesSent !== undefined) {
+										var timeDiff = stat.timestamp - session.pcs[UUID].stats._lastTimestamp;
+										if (timeDiff > 0) {
+											var bitrate = parseInt((8 * (stat.bytesSent - session.pcs[UUID].stats._lastBytesSent)) / timeDiff);
+											if (bitrate > 0) {
+												qd.bitrateSamples.push(bitrate);
+												if (qd.bitrateSamples.length > 500) qd.bitrateSamples.shift();
+											}
 										}
 									}
-								}
-								session.pcs[UUID].stats._lastBytesSent = stat.bytesSent;
-								session.pcs[UUID].stats._lastTimestamp = stat.timestamp;
-							}
-						}
-					} else if (stat.type === "remote-candidate") {
-						candidates[stat.id] = stat;
-						if (stat.relayProtocol && stat.ip) {
-							session.pcs[UUID].stats.remote_relay_IP = stat.ip;
-							session.pcs[UUID].stats.remote_relayProtocol = stat.relayProtocol;
-						}
-						if (stat.candidateType) {
-							session.pcs[UUID].stats.candidateType_remote = stat.candidateType;
-						}
-					} else if (stat.type === "local-candidate") {
-						candidates[stat.id] = stat;
-						if (stat.relayProtocol && stat.ip) {
-							session.pcs[UUID].stats.local_relayIP = stat.ip;
-							session.pcs[UUID].stats.local_relayProtocol = stat.relayProtocol;
-						}
-						if (stat.candidateType) {
-							session.pcs[UUID].stats.candidateType_local = stat.candidateType;
-						}
-					} else if (stat.type === "candidate-pair" && stat.nominated) {
-						if (!nominatedCandidate || nominatedCandidate.priority < stat.priority) {
-							nominatedCandidate = stat;
-						}
-					} else if (stat.type === "remote-inbound-rtp") {
-						// Packet loss from remote peer
-						if (stat.packetsLost !== undefined && stat.packetsReceived !== undefined) {
-							var total = stat.packetsLost + stat.packetsReceived;
-							if (total > 0) {
-								var lossPercent = (stat.packetsLost / total) * 100;
-								if (stat.kind === "video") {
-									qd.packetLossVideoSamples.push(lossPercent);
-									if (qd.packetLossVideoSamples.length > 500) qd.packetLossVideoSamples.shift();
-								} else if (stat.kind === "audio") {
-									qd.packetLossAudioSamples.push(lossPercent);
-									if (qd.packetLossAudioSamples.length > 500) qd.packetLossAudioSamples.shift();
+									session.pcs[UUID].stats._lastBytesSent = stat.bytesSent;
+									session.pcs[UUID].stats._lastTimestamp = stat.timestamp;
 								}
 							}
+						} else if (stat.type === "remote-candidate") {
+							candidates[stat.id] = stat;
+							if (stat.relayProtocol && stat.ip) {
+								session.pcs[UUID].stats.remote_relay_IP = stat.ip;
+								session.pcs[UUID].stats.remote_relayProtocol = stat.relayProtocol;
+							}
+							if (stat.candidateType) {
+								session.pcs[UUID].stats.candidateType_remote = stat.candidateType;
+							}
+						} else if (stat.type === "local-candidate") {
+							candidates[stat.id] = stat;
+							if (stat.relayProtocol && stat.ip) {
+								session.pcs[UUID].stats.local_relayIP = stat.ip;
+								session.pcs[UUID].stats.local_relayProtocol = stat.relayProtocol;
+							}
+							if (stat.candidateType) {
+								session.pcs[UUID].stats.candidateType_local = stat.candidateType;
+							}
+						} else if (stat.type === "candidate-pair" && stat.nominated) {
+							if (!nominatedCandidate || nominatedCandidate.priority < stat.priority) {
+								nominatedCandidate = stat;
+							}
+						} else if (stat.type === "remote-inbound-rtp") {
+							// Packet loss from remote peer
+							if (stat.packetsLost !== undefined && stat.packetsReceived !== undefined) {
+								var total = stat.packetsLost + stat.packetsReceived;
+								if (total > 0) {
+									var lossPercent = (stat.packetsLost / total) * 100;
+									if (stat.kind === "video") {
+										qd.packetLossVideoSamples.push(lossPercent);
+										if (qd.packetLossVideoSamples.length > 500) qd.packetLossVideoSamples.shift();
+									} else if (stat.kind === "audio") {
+										qd.packetLossAudioSamples.push(lossPercent);
+										if (qd.packetLossAudioSamples.length > 500) qd.packetLossAudioSamples.shift();
+									}
+								}
+							}
+							// Jitter from remote peer
+							if (stat.jitter !== undefined) {
+								var jitterMs = stat.jitter * 1000;
+								qd.jitterSamples.push(jitterMs);
+								if (qd.jitterSamples.length > 500) qd.jitterSamples.shift();
+							}
 						}
-						// Jitter from remote peer
-						if (stat.jitter !== undefined) {
-							var jitterMs = stat.jitter * 1000;
-							qd.jitterSamples.push(jitterMs);
-							if (qd.jitterSamples.length > 500) qd.jitterSamples.shift();
+					} catch (e) {}
+				});
+
+				// Process nominated candidate for RTT and transport type
+				if (nominatedCandidate) {
+					// RTT
+					if (nominatedCandidate.totalRoundTripTime && nominatedCandidate.responsesReceived) {
+						var rtt = parseInt((nominatedCandidate.totalRoundTripTime / nominatedCandidate.responsesReceived) * 1000);
+						session.pcs[UUID].stats.average_roundTripTime_ms = rtt;
+						qd.rttSamples.push(rtt);
+						if (qd.rttSamples.length > 500) qd.rttSamples.shift();
+					}
+					if (nominatedCandidate.currentRoundTripTime) {
+						var currentRtt = parseInt(nominatedCandidate.currentRoundTripTime * 1000);
+						qd.rttSamples.push(currentRtt);
+						if (qd.rttSamples.length > 500) qd.rttSamples.shift();
+					}
+
+					// Transport type from nominated candidate
+					var localCandidate = candidates[nominatedCandidate.localCandidateId];
+					var remoteCandidate = candidates[nominatedCandidate.remoteCandidateId];
+
+					if (localCandidate) {
+						if (localCandidate.candidateType === "relay") {
+							qd.transportType = "turn";
+							// Use stat.url to get TURN hostname (official servers only)
+							// Note: stat.url may not be available in all browsers (graceful degradation)
+							if (localCandidate.url && session.qosTurnAllowlist && session.qosTurnAllowlist.length) {
+								var host = extractTurnHostnameFromUrl(localCandidate.url);
+								if (host && session.qosTurnAllowlist.includes(host) && !qd.turnServersUsed.includes(host)) {
+									qd.turnServersUsed.push(host);
+								}
+							}
+							// If url unavailable (Safari/Firefox), we still track transportType="turn"
+							// but skip hostname - better no data than wrong/private data
+						} else if (!qd.transportType || qd.transportType === "unknown") {
+							qd.transportType = "p2p";
+						}
+						if (!qd.candidateTypesLocal.includes(localCandidate.candidateType)) {
+							qd.candidateTypesLocal.push(localCandidate.candidateType);
 						}
 					}
-				} catch (e) { }
+					if (remoteCandidate && !qd.candidateTypesRemote.includes(remoteCandidate.candidateType)) {
+						qd.candidateTypesRemote.push(remoteCandidate.candidateType);
+					}
+				}
+
+				// Schedule next stats collection (every 5 seconds)
+				if (UUID in session.pcs && session.qosEnabled && session.qosData && !session.qosData.sent) {
+					clearTimeout(session.pcs[UUID].qosStatsTimeout);
+					session.pcs[UUID].qosStatsTimeout = setTimeout(processPcsQosStats, 5000, UUID);
+				}
+			})
+			.catch(function (e) {
+				warnlog("QoS pcs stats error: " + e);
 			});
-
-			// Process nominated candidate for RTT and transport type
-			if (nominatedCandidate) {
-				// RTT
-				if (nominatedCandidate.totalRoundTripTime && nominatedCandidate.responsesReceived) {
-					var rtt = parseInt((nominatedCandidate.totalRoundTripTime / nominatedCandidate.responsesReceived) * 1000);
-					session.pcs[UUID].stats.average_roundTripTime_ms = rtt;
-					qd.rttSamples.push(rtt);
-					if (qd.rttSamples.length > 500) qd.rttSamples.shift();
-				}
-				if (nominatedCandidate.currentRoundTripTime) {
-					var currentRtt = parseInt(nominatedCandidate.currentRoundTripTime * 1000);
-					qd.rttSamples.push(currentRtt);
-					if (qd.rttSamples.length > 500) qd.rttSamples.shift();
-				}
-
-				// Transport type from nominated candidate
-				var localCandidate = candidates[nominatedCandidate.localCandidateId];
-				var remoteCandidate = candidates[nominatedCandidate.remoteCandidateId];
-
-				if (localCandidate) {
-					if (localCandidate.candidateType === "relay") {
-						qd.transportType = "turn";
-						// Use stat.url to get TURN hostname (official servers only)
-						// Note: stat.url may not be available in all browsers (graceful degradation)
-						if (localCandidate.url && session.qosTurnAllowlist && session.qosTurnAllowlist.length) {
-							var host = extractTurnHostnameFromUrl(localCandidate.url);
-							if (host && session.qosTurnAllowlist.includes(host) && !qd.turnServersUsed.includes(host)) {
-								qd.turnServersUsed.push(host);
-							}
-						}
-						// If url unavailable (Safari/Firefox), we still track transportType="turn"
-						// but skip hostname - better no data than wrong/private data
-					} else if (!qd.transportType || qd.transportType === "unknown") {
-						qd.transportType = "p2p";
-					}
-					if (!qd.candidateTypesLocal.includes(localCandidate.candidateType)) {
-						qd.candidateTypesLocal.push(localCandidate.candidateType);
-					}
-				}
-				if (remoteCandidate && !qd.candidateTypesRemote.includes(remoteCandidate.candidateType)) {
-					qd.candidateTypesRemote.push(remoteCandidate.candidateType);
-				}
-			}
-
-			// Schedule next stats collection (every 5 seconds)
-			if (UUID in session.pcs && session.qosEnabled && session.qosData && !session.qosData.sent) {
-				clearTimeout(session.pcs[UUID].qosStatsTimeout);
-				session.pcs[UUID].qosStatsTimeout = setTimeout(processPcsQosStats, 5000, UUID);
-			}
-		}).catch(function(e) {
-			warnlog("QoS pcs stats error: " + e);
-		});
 	} catch (e) {
 		warnlog("QoS pcs stats error: " + e);
 	}
@@ -16284,8 +16122,7 @@ function createConnectionDetailsEle(UUID) {
 function playoutdelay(UUID) {
 	// applies a delay to all videos
 	try {
-		if ((session.rpcs[UUID].buffer !== false) || (session.buffer != false) || (session.audioBuffer !== false)) {
-
+		if (session.rpcs[UUID].buffer !== false || session.buffer != false || session.audioBuffer !== false) {
 			// if buffer is set, then session.sync will be set; at least to 0.
 			var receivers = getReceivers2(UUID).reverse() || []; //session.rpcs[UUID].getReceivers().reverse();
 
@@ -16403,7 +16240,7 @@ function printViewStats(menu, UUID) {
 		var chunkSummary = "Video Buffer: <b>" + parseInt(chunkVideo.buffer_buffer || 0) + " ms</b> / Δ " + parseInt(chunkVideo.buffer_delta || 0) + " ms";
 		chunkSummary = chunkSummaryOverride;
 		if (chunkVideo.rebuffering) {
-			chunkSummary += " <span style=\"color:#f33\">(rebuffering)</span>";
+			chunkSummary += ' <span style="color:#f33">(rebuffering)</span>';
 		}
 		menu.innerHTML += chunkSummary + "<br />";
 		if (typeof chunkVideo.fec_repairs !== "undefined" || typeof chunkVideo.nacks_sent !== "undefined") {
@@ -16427,7 +16264,7 @@ function printViewStats(menu, UUID) {
 		var audioSummary = "Audio Buffer: <b>" + parseInt(chunkAudio.buffer_buffer || 0) + " ms</b> / Δ " + parseInt(chunkAudio.buffer_delta || 0) + " ms";
 		audioSummary = audioSummaryOverride;
 		if (chunkAudio.rebuffering) {
-			audioSummary += " <span style=\"color:#f33\">(rebuffering)</span>";
+			audioSummary += ' <span style="color:#f33">(rebuffering)</span>';
 		}
 		menu.innerHTML += audioSummary + "<br />";
 	}
@@ -16525,7 +16362,7 @@ function printValues(obj, sort = false) {
 					} else {
 						out += `<div class="meta-item">
                             <small>${category}:</small>
-                            <span class="meta-value">${data.value || ''}</span>
+                            <span class="meta-value">${data.value || ""}</span>
                         </div>`;
 					}
 				});
@@ -16734,7 +16571,6 @@ function printValues(obj, sort = false) {
 			} catch (e) {
 				warnlog(e);
 			}
-
 		}
 	});
 	return out;
@@ -16895,7 +16731,7 @@ function processMeshcastStats(UUID) {
 							try {
 								lastFramesDecoded = session.rpcs[UUID].stats[trackID]._framesDecoded;
 								lastTimestamp = session.rpcs[UUID].stats[trackID]._timestamp;
-							} catch (e) { }
+							} catch (e) {}
 							session.rpcs[UUID].stats[trackID].FPS = parseInt((10 * (stat.framesDecoded - lastFramesDecoded)) / (stat.timestamp / 1000 - lastTimestamp)) / 10;
 							//session.rpcs[UUID].stats[trackID].FPS = parseInt((stat.framesDecoded - lastFramesDecoded)/(stat.timestamp/1000 - lastTimestamp));
 							session.rpcs[UUID].stats[trackID]._framesDecoded = stat.framesDecoded;
@@ -17022,7 +16858,7 @@ function processMeshcastStats(UUID) {
 							try {
 								delete session.rpcs[UUID].stats["WHEP_Connection"].local_relay_IP;
 								delete session.rpcs[UUID].stats["WHEP_Connection"].local_relay_protocol;
-							} catch (e) { }
+							} catch (e) {}
 						}
 						if ("networkType" in candidate) {
 							session.rpcs[UUID].stats["WHEP_Connection"].remote_networkType = candidate.networkType;
@@ -17046,7 +16882,7 @@ function processMeshcastStats(UUID) {
 							try {
 								delete session.rpcs[UUID].stats["WHEP_Connection"].local_relay_IP;
 								delete session.rpcs[UUID].stats["WHEP_Connection"].local_relay_protocol;
-							} catch (e) { }
+							} catch (e) {}
 						}
 					}
 
@@ -17101,7 +16937,7 @@ function printMyStats(menu, screenshare = false) {
 	try {
 		session.stats.outbound_connections = Object.keys(session.pcs).length;
 		session.stats.inbound_connections = Object.keys(session.rpcs).length;
-	} catch (e) { }
+	} catch (e) {}
 
 	try {
 		var obscam = false;
@@ -17316,7 +17152,7 @@ function printMyStats(menu, screenshare = false) {
 	try {
 		getById("menuStatsBox").scrollLeft = scrollLeft;
 		getById("menuStatsBox").scrollTop = scrollTop;
-	} catch (e) { }
+	} catch (e) {}
 }
 
 function updateLocalStats() {
@@ -17418,7 +17254,7 @@ function updateLocalStats() {
 											try {
 												lastFramesEncoded = data.stats._framesEncoded;
 												lastTimestamp = data.stats._timestamp;
-											} catch (e) { }
+											} catch (e) {}
 											data.stats._FPS = parseInt((10 * (stat.framesEncoded - lastFramesEncoded)) / (stat.timestamp / 1000 - lastTimestamp)) / 10 || "?";
 											data.stats._framesEncoded = stat.framesEncoded;
 											data.stats._timestamp = stat.timestamp / 1000;
@@ -17586,7 +17422,7 @@ function updateLocalStats() {
 											delete data.stats.remote_relay_IP;
 											delete data.stats.remote_relay_protocol;
 											delete data.stats.remote_ip_blocking;
-										} catch (e) { }
+										} catch (e) {}
 									}
 								}
 							}
@@ -17609,7 +17445,7 @@ function updateLocalStats() {
 											delete data.stats.local_relay_IP;
 											delete data.stats.local_relay_protocol;
 											delete data.stats.local_ip_blocking;
-										} catch (e) { }
+										} catch (e) {}
 									}
 								}
 							}
@@ -17759,7 +17595,7 @@ function updateLocalStats() {
 										try {
 											lastFramesEncoded = session.pcs[UUID].stats._framesEncoded;
 											lastTimestamp = session.pcs[UUID].stats._timestamp;
-										} catch (e) { }
+										} catch (e) {}
 										session.pcs[UUID].stats._FPS = parseInt((10 * (stat.framesEncoded - lastFramesEncoded)) / (stat.timestamp - lastTimestamp)) / 10;
 										session.pcs[UUID].stats._framesEncoded = stat.framesEncoded;
 										session.pcs[UUID].stats._timestamp = stat.timestamp;
@@ -17939,7 +17775,7 @@ function updateLocalStats() {
 										delete session.pcs[UUID].stats.remote_relay_IP;
 										delete session.pcs[UUID].stats.remote_relay_protocol;
 										delete session.pcs[UUID].stats.remote_ip_blocking;
-									} catch (e) { }
+									} catch (e) {}
 								}
 							}
 						}
@@ -17962,7 +17798,7 @@ function updateLocalStats() {
 										delete session.pcs[UUID].stats.local_relay_IP;
 										delete session.pcs[UUID].stats.local_relay_protocol;
 										delete session.pcs[UUID].stats.local_ip_blocking;
-									} catch (e) { }
+									} catch (e) {}
 								}
 							}
 						}
@@ -18026,7 +17862,7 @@ function updateLocalStats() {
 				session.info.out.s = totalScenes;
 			}
 		}
-	} catch (e) { }
+	} catch (e) {}
 	//session.info.out = {};
 
 	var uploadQuality = nackRate / totalStreams || 0;
@@ -18096,7 +17932,7 @@ function updateLocalStats() {
 			if (Object.keys(session.pcs).length || meshcastActive) {
 				document.getElementById("head5").classList.remove("hidden");
 			}
-		} catch (e) { }
+		} catch (e) {}
 		document.getElementById("head5").innerHTML = headerStats;
 		//miniTranslate(document.getElementById("head5"));
 		document.getElementById("head5").onclick = function () {
@@ -18260,7 +18096,7 @@ function toggleMute(apply = false, event = false) {
 
 	try {
 		postMessageIframe(document.getElementById("screensharesource"), { mic: !session.muted });
-	} catch (e) { }
+	} catch (e) {}
 
 	if (!apply) {
 		// only if they are changing states do we bother to spam.
@@ -18555,7 +18391,7 @@ function openSpeakerVolumePanel() {
 		} catch (e) {
 			try {
 				speakerVolumeSliderElement.focus();
-			} catch (err) { }
+			} catch (err) {}
 		}
 	}
 
@@ -18731,9 +18567,7 @@ function getPeerDisplayName(UUID, fallback = "Someone", preferLabel = true) {
 		return fallback;
 	}
 
-	let name = preferLabel
-		? (session.rpcs[UUID].label || session.rpcs[UUID].streamID || fallback)
-		: (session.rpcs[UUID].streamID || session.rpcs[UUID].label || fallback);
+	let name = preferLabel ? session.rpcs[UUID].label || session.rpcs[UUID].streamID || fallback : session.rpcs[UUID].streamID || session.rpcs[UUID].label || fallback;
 	if (!name) {
 		return fallback;
 	}
@@ -18748,9 +18582,11 @@ function getPeerDisplayName(UUID, fallback = "Someone", preferLabel = true) {
 const fileTransfers = {};
 
 function toggleFileshare(UUID = false, event = null) {
-	if (session.cleanOputput) { return; }
+	if (session.cleanOputput) {
+		return;
+	}
 
-	let string = '';
+	let string = "";
 	if (UUID === false) {
 		string = 'Share a file with the group<br /><input id="fileselector4" onchange="session.shareFile(this, false, event);" type="file" title="Transfer any file to the group"/><label for="fileselector4">Choose file(s) to share</label>';
 	} else if (session.directorList.indexOf(UUID) >= 0) {
@@ -18824,17 +18660,17 @@ function toggleFileManagerSize() {
 function updateFileShare() {
 	if (session.cleanOutput) return;
 
-	const activeSharesDiv = document.getElementById('activeShares');
-	activeSharesDiv.innerHTML = '';
+	const activeSharesDiv = document.getElementById("activeShares");
+	activeSharesDiv.innerHTML = "";
 
-	const container = document.createElement('div');
-	container.className = `file-manager${isFileManagerMinimized ? ' minimized' : ''}`;
+	const container = document.createElement("div");
+	container.className = `file-manager${isFileManagerMinimized ? " minimized" : ""}`;
 
 	// Header
-	const header = document.createElement('div');
-	header.className = 'file-manager-header';
-	const headerControls = document.createElement('div');
-	headerControls.className = 'header-controls';
+	const header = document.createElement("div");
+	header.className = "file-manager-header";
+	const headerControls = document.createElement("div");
+	headerControls.className = "header-controls";
 
 	header.innerHTML = `<h3>File Sharing</h3>`;
 	headerControls.innerHTML = `
@@ -18842,7 +18678,7 @@ function updateFileShare() {
             Add Files
         </button>
         <button class="button button-secondary" onclick="toggleFileManagerSize()">
-            ${isFileManagerMinimized ? 'Expand' : 'Minimize'}
+            ${isFileManagerMinimized ? "Expand" : "Minimize"}
         </button>
     `;
 	header.appendChild(headerControls);
@@ -18850,17 +18686,17 @@ function updateFileShare() {
 
 	if (!isFileManagerMinimized) {
 		// Hidden file input
-		const fileInput = document.createElement('input');
-		fileInput.type = 'file';
-		fileInput.id = 'fileInput';
-		fileInput.style.display = 'none';
+		const fileInput = document.createElement("input");
+		fileInput.type = "file";
+		fileInput.id = "fileInput";
+		fileInput.style.display = "none";
 		fileInput.multiple = true;
-		fileInput.onchange = (e) => session.shareFile(e.target, false, e);
+		fileInput.onchange = e => session.shareFile(e.target, false, e);
 		container.appendChild(fileInput);
 
 		// File list
-		const fileList = document.createElement('div');
-		fileList.className = 'file-list';
+		const fileList = document.createElement("div");
+		fileList.className = "file-list";
 
 		if (!(session.hostedFiles && session.hostedFiles.length)) {
 			fileList.innerHTML = '<div class="no-files">No files being shared</div>';
@@ -18868,23 +18704,23 @@ function updateFileShare() {
 			session.hostedFiles.forEach(file => {
 				const transfer = enhancedFileTransfers.transfers[file.id];
 
-				const fileItem = document.createElement('div');
-				fileItem.className = 'file-item';
+				const fileItem = document.createElement("div");
+				fileItem.className = "file-item";
 
-				const fileInfo = document.createElement('div');
-				fileInfo.className = 'file-info';
+				const fileInfo = document.createElement("div");
+				fileInfo.className = "file-info";
 				fileInfo.innerHTML = `
                     <span class="file-name">${file.name}</span>
                     <span class="file-size">${formatFileSize(file.size)}</span>
                 `;
 
 				if (transfer && transfer.downloaders.size > 0) {
-					const downloadList = document.createElement('div');
-					downloadList.className = 'transfer-info';
+					const downloadList = document.createElement("div");
+					downloadList.className = "transfer-info";
 
 					transfer.downloaders.forEach((data, UUID) => {
-						const transferItem = document.createElement('div');
-						transferItem.className = 'transfer-item';
+						const transferItem = document.createElement("div");
+						transferItem.className = "transfer-item";
 						transferItem.innerHTML = `
                             <div class="download-info">
                                 Downloading by: ${getLabelForUUID(UUID)}
@@ -18901,7 +18737,7 @@ function updateFileShare() {
 					fileInfo.appendChild(downloadList);
 				}
 
-				const actions = document.createElement('div');
+				const actions = document.createElement("div");
 				actions.innerHTML = `
                     <button class="button button-danger" onclick="cancelFileTransfer('${file.id}')">
                         Stop Sharing
@@ -18920,7 +18756,7 @@ function updateFileShare() {
 	activeSharesDiv.appendChild(container);
 }
 function getLabelForUUID(UUID) {
-	if (!UUID) return 'Unknown';
+	if (!UUID) return "Unknown";
 
 	let label = UUID;
 	if (session.rpcs[UUID] && session.rpcs[UUID].label) {
@@ -18930,21 +18766,21 @@ function getLabelForUUID(UUID) {
 	}
 
 	if (session.directorList.indexOf(UUID) >= 0) {
-		label = 'Director: ' + label;
+		label = "Director: " + label;
 	}
 
 	return label;
 }
 function formatFileSize(bytes) {
-	if (bytes === 0) return '0 B';
+	if (bytes === 0) return "0 B";
 	const k = 1024;
-	const sizes = ['B', 'KB', 'MB', 'GB'];
+	const sizes = ["B", "KB", "MB", "GB"];
 	const i = Math.floor(Math.log(bytes) / Math.log(k));
-	return parseFloat((bytes / Math.pow(k, i)).toFixed(1)) + ' ' + sizes[i];
+	return parseFloat((bytes / Math.pow(k, i)).toFixed(1)) + " " + sizes[i];
 }
 
 function formatSpeed(bytesPerSecond) {
-	return bytesPerSecond ? formatFileSize(bytesPerSecond) + '/s' : '';
+	return bytesPerSecond ? formatFileSize(bytesPerSecond) + "/s" : "";
 }
 
 function cancelFileTransfer(fileId) {
@@ -18962,12 +18798,10 @@ function cancelFileTransfer(fileId) {
 function truncateUrl(url) {
 	try {
 		const urlObj = new URL(url);
-		const path = urlObj.pathname.length > 15 ?
-			urlObj.pathname.substring(0, 15) + '...' :
-			urlObj.pathname;
+		const path = urlObj.pathname.length > 15 ? urlObj.pathname.substring(0, 15) + "..." : urlObj.pathname;
 		return urlObj.hostname + path;
 	} catch (e) {
-		return url.length > 30 ? url.substring(0, 30) + '...' : url;
+		return url.length > 30 ? url.substring(0, 30) + "..." : url;
 	}
 }
 
@@ -19005,7 +18839,7 @@ session.sendFile = function (UUID, fileid) {
 	}
 
 	transferchannel.binaryType = "arraybuffer";
-	var chunk = session.hostedFiles[fid].file.slice(0, chunksize);  // Use the stored File object
+	var chunk = session.hostedFiles[fid].file.slice(0, chunksize); // Use the stored File object
 
 	fileTransfers[fileid] = {
 		channel: transferchannel,
@@ -19049,12 +18883,12 @@ session.sendFile = function (UUID, fileid) {
 		} catch (e) {
 			try {
 				transferchannel.close();
-			} catch (e) { }
+			} catch (e) {}
 			warnlog(e);
 			return;
 		}
 		cid += 1;
-		const progress = Math.min(100, Math.round((cid * chunksize / session.hostedFiles[fid].size) * 100));
+		const progress = Math.min(100, Math.round(((cid * chunksize) / session.hostedFiles[fid].size) * 100));
 		fileTransfers[fileid].progress = progress;
 		updateFileShare(); // Update progress display
 
@@ -19062,7 +18896,7 @@ session.sendFile = function (UUID, fileid) {
 
 		if (cid * chunksize < session.hostedFiles[fid].size) {
 			try {
-				chunk = session.hostedFiles[fid].file.slice(cid * chunksize, (cid + 1) * chunksize);  // Use the stored File object
+				chunk = session.hostedFiles[fid].file.slice(cid * chunksize, (cid + 1) * chunksize); // Use the stored File object
 				fr.readAsArrayBuffer(chunk);
 			} catch (e) {
 				errorlog(e);
@@ -19075,7 +18909,7 @@ session.sendFile = function (UUID, fileid) {
 };
 
 function toggleChat(event = null) {
-	const chatModule = document.getElementById('chatModule');
+	const chatModule = document.getElementById("chatModule");
 
 	if (!chatModule.configured) {
 		setupAdjustableChat();
@@ -19369,7 +19203,7 @@ function initChatLiteIntegration() {
 	let hasChatLiteButtonParam = false;
 	let hasChatLiteStateParam = false;
 	try {
-		const search = (typeof window !== "undefined" && window.location && window.location.search) ? window.location.search : "";
+		const search = typeof window !== "undefined" && window.location && window.location.search ? window.location.search : "";
 		const chatLiteUrlParams = new URLSearchParams(search);
 		hasChatLiteEnabledParam = chatLiteUrlParams.has("chatlite") || chatLiteUrlParams.has("ssnlite") || chatLiteUrlParams.has("socialstreamlite");
 		hasChatLiteButtonParam = chatLiteUrlParams.has("chatlitebutton") || chatLiteUrlParams.has("ssnchatbutton") || chatLiteUrlParams.has("chatliteconfig");
@@ -19415,7 +19249,7 @@ function initChatLiteIntegration() {
 }
 
 function toggleDirectFeedback(event = null) {
-	const unmuteSelf = document.getElementById('unmuteSelf');
+	const unmuteSelf = document.getElementById("unmuteSelf");
 	unmuteSelf.classList.remove("hidden");
 
 	if (session.videoElement) {
@@ -19436,7 +19270,6 @@ function toggleDirectFeedback(event = null) {
 	if (session.videoElement.muted) {
 		unmuteSelf.classList.remove("red", "pulsate");
 		unmuteSelf.ariaPressed = "false";
-
 	} else {
 		unmuteSelf.classList.add("red", "pulsate");
 		unmuteSelf.ariaPressed = "true";
@@ -19444,21 +19277,21 @@ function toggleDirectFeedback(event = null) {
 }
 
 function setupAdjustableChat() {
-	const chatModule = document.getElementById('chatModule');
+	const chatModule = document.getElementById("chatModule");
 	chatModule.configured = true;
 
-	const chatBody = getById('chatBody');
+	const chatBody = getById("chatBody");
 	let isResizing = false;
 	let isDragging = false;
 	let startY, startHeight, startX, startTop, startLeft;
 
 	function initResize(e) {
 		isResizing = true;
-		document.body.style.userSelect = 'none';
+		document.body.style.userSelect = "none";
 		startY = e.clientY;
 		startHeight = parseInt(window.getComputedStyle(chatBody).height, 10);
-		document.addEventListener('mousemove', resize);
-		document.addEventListener('mouseup', stopResize);
+		document.addEventListener("mousemove", resize);
+		document.addEventListener("mouseup", stopResize);
 	}
 
 	function resize(e) {
@@ -19472,18 +19305,18 @@ function setupAdjustableChat() {
 
 	function stopResize() {
 		isResizing = false;
-		document.removeEventListener('mousemove', resize);
-		document.removeEventListener('mouseup', stopResize);
-		document.body.style.userSelect = '';
+		document.removeEventListener("mousemove", resize);
+		document.removeEventListener("mouseup", stopResize);
+		document.body.style.userSelect = "";
 	}
 
 	function initDrag(e) {
 		isDragging = true;
-		document.body.style.userSelect = 'none';
+		document.body.style.userSelect = "none";
 		startX = e.clientX - chatModule.offsetLeft;
 		startY = e.clientY - chatModule.offsetTop;
-		document.addEventListener('mousemove', drag);
-		document.addEventListener('mouseup', stopDrag);
+		document.addEventListener("mousemove", drag);
+		document.addEventListener("mouseup", stopDrag);
 	}
 
 	function drag(e) {
@@ -19492,17 +19325,17 @@ function setupAdjustableChat() {
 			const newTop = Math.min(Math.max(e.clientY - startY, 0), window.innerHeight - chatModule.offsetHeight);
 			chatModule.style.left = `${newLeft}px`;
 			chatModule.style.top = `${newTop}px`;
-			chatModule.style.bottom = 'auto';
-			chatModule.style.right = 'auto';
+			chatModule.style.bottom = "auto";
+			chatModule.style.right = "auto";
 			keepInBounds();
 		}
 	}
 
 	function stopDrag() {
 		isDragging = false;
-		document.removeEventListener('mousemove', drag);
-		document.removeEventListener('mouseup', stopDrag);
-		document.body.style.userSelect = '';
+		document.removeEventListener("mousemove", drag);
+		document.removeEventListener("mouseup", stopDrag);
+		document.body.style.userSelect = "";
 	}
 
 	function keepInBounds() {
@@ -19515,19 +19348,19 @@ function setupAdjustableChat() {
 			chatModule.style.top = `${window.innerHeight - rect.height}px`;
 		}
 		if (rect.left < 0) {
-			chatModule.style.left = '0px';
+			chatModule.style.left = "0px";
 		}
 		if (rect.top < 0) {
-			chatModule.style.top = '0px';
-			chatModule.style.bottom = 'auto';
+			chatModule.style.top = "0px";
+			chatModule.style.bottom = "auto";
 		}
 	}
 
-	chatModule.querySelector('.resizer').addEventListener('mousedown', initResize);
-	chatModule.querySelector('.chat-header').addEventListener('mousedown', initDrag);
+	chatModule.querySelector(".resizer").addEventListener("mousedown", initResize);
+	chatModule.querySelector(".chat-header").addEventListener("mousedown", initDrag);
 
 	// Keep chat window in bounds when window is resized
-	window.addEventListener('resize', keepInBounds);
+	window.addEventListener("resize", keepInBounds);
 
 	// Initial positioning
 	keepInBounds();
@@ -19771,8 +19604,8 @@ async function showSettings() {
 	updateConstraintSliders();
 
 	// Handler only closes the menu when clicking outside
-	settingsClickHandler = (e) => {
-		if (!popupSelector.contains(e.target) && !e.target.closest('#settingsbutton')) {
+	settingsClickHandler = e => {
+		if (!popupSelector.contains(e.target) && !e.target.closest("#settingsbutton")) {
 			hideSettings();
 			pokeIframeAPI("settings-menu-state", false);
 		}
@@ -19856,7 +19689,9 @@ function toggleFullscreenButtonSetting() {
 
 		// Exit fullscreen if currently in it
 		if (document.fullscreenElement) {
-			try { document.exitFullscreen(); } catch(e) {}
+			try {
+				document.exitFullscreen();
+			} catch (e) {}
 		}
 	} else {
 		// Enable
@@ -19869,7 +19704,7 @@ function toggleFullscreenButtonSetting() {
 
 	try {
 		setStorage("fullscreenButtonSetting", session.fullscreenButton);
-	} catch(e) {}
+	} catch (e) {}
 }
 
 function togglePIPButtonSetting() {
@@ -19888,7 +19723,7 @@ function togglePIPButtonSetting() {
 		btn.classList.add("selected");
 		try {
 			setStorage("pipButtonSetting", true);
-		} catch(e) {}
+		} catch (e) {}
 	} else {
 		// Disable
 		pipPage.classList.add("hidden");
@@ -19896,7 +19731,7 @@ function togglePIPButtonSetting() {
 		btn.classList.remove("selected");
 		try {
 			setStorage("pipButtonSetting", false);
-		} catch(e) {}
+		} catch (e) {}
 	}
 }
 
@@ -19924,7 +19759,7 @@ function initButtonToggleSettings() {
 		if (savedPIP === true && pipPage && pipPage.classList.contains("hidden") && typeof documentPictureInPicture !== "undefined") {
 			togglePIPButtonSetting();
 		}
-	} catch(e) {}
+	} catch (e) {}
 
 	// Update button states to reflect current state
 	updateButtonToggleStates();
@@ -20067,142 +19902,149 @@ function sendQosReport() {
 		var qd = session.qosData;
 
 		// Helper functions
-			var avg = function(arr) {
-				if (!arr || !arr.length) return null;
-				return arr.reduce(function(a, b) { return a + b; }, 0) / arr.length;
-			};
-			var max = function(arr) {
-				if (!arr || !arr.length) return null;
-				return Math.max.apply(null, arr);
-			};
-			var toQosErrorText = function(entry) {
-				if (!entry || typeof entry !== "object" || !("error" in entry)) {
-					return "";
-				}
-				var raw = entry.error;
-				if (typeof raw === "string") {
-					return raw;
-				}
-				if (!raw || typeof raw !== "object") {
-					return "";
-				}
-				if (typeof raw.name === "string" && raw.name) {
-					return raw.name;
-				}
-				if (typeof raw.type === "string" && raw.type) {
-					return "event:" + raw.type;
-				}
-				if (typeof raw.code !== "undefined" && raw.code !== null) {
-					return "code:" + raw.code;
-				}
-				if (raw.constructor && raw.constructor.name) {
-					return raw.constructor.name;
-				}
-				return "[object-error]";
-			};
-			var isIpLikeHost = function(host) {
-				if (!host || typeof host !== "string") {
-					return false;
-				}
-				var h = host.trim().toLowerCase().replace(/^\[|\]$/g, "");
-				if (!h) {
-					return false;
-				}
-				if (/^(?:\d{1,3}\.){3}\d{1,3}$/.test(h)) {
-					return true;
-				}
-				if (h.indexOf(":") !== -1 && /^[0-9a-f:.%]+$/i.test(h)) {
-					return true;
-				}
+		var avg = function (arr) {
+			if (!arr || !arr.length) return null;
+			return (
+				arr.reduce(function (a, b) {
+					return a + b;
+				}, 0) / arr.length
+			);
+		};
+		var max = function (arr) {
+			if (!arr || !arr.length) return null;
+			return Math.max.apply(null, arr);
+		};
+		var toQosErrorText = function (entry) {
+			if (!entry || typeof entry !== "object" || !("error" in entry)) {
+				return "";
+			}
+			var raw = entry.error;
+			if (typeof raw === "string") {
+				return raw;
+			}
+			if (!raw || typeof raw !== "object") {
+				return "";
+			}
+			if (typeof raw.name === "string" && raw.name) {
+				return raw.name;
+			}
+			if (typeof raw.type === "string" && raw.type) {
+				return "event:" + raw.type;
+			}
+			if (typeof raw.code !== "undefined" && raw.code !== null) {
+				return "code:" + raw.code;
+			}
+			if (raw.constructor && raw.constructor.name) {
+				return raw.constructor.name;
+			}
+			return "[object-error]";
+		};
+		var isIpLikeHost = function (host) {
+			if (!host || typeof host !== "string") {
 				return false;
-			};
-			var sanitizeHostForQos = function(value, maxLen) {
-				if (!value || typeof value !== "string") {
-					return null;
-				}
-				var host = value.trim().toLowerCase();
-				if (!host) {
-					return null;
-				}
-				if (host.indexOf("://") !== -1) {
-					try {
-						host = new URL(host).hostname.toLowerCase();
-					} catch (e) {
-						return null;
-					}
-				}
-				host = host.replace(/^\[|\]$/g, "");
-				host = host.replace(/:\d+$/g, "");
-				if (!host) {
-					return null;
-				}
-				if (!/^[a-z0-9.-]+$/i.test(host)) {
-					return null;
-				}
-				if (isIpLikeHost(host)) {
-					return null;
-				}
-				var limit = parseInt(maxLen, 10) || 40;
-				if (host.length > limit) {
-					host = host.substring(0, limit);
-				}
-				return host;
-			};
-			var sanitizeCandidateType = function(value) {
-				if (!value || typeof value !== "string") {
-					return null;
-				}
-				var type = value.toLowerCase();
-				if (type === "host" || type === "srflx" || type === "relay" || type === "prflx") {
-					return type;
-				}
+			}
+			var h = host
+				.trim()
+				.toLowerCase()
+				.replace(/^\[|\]$/g, "");
+			if (!h) {
+				return false;
+			}
+			if (/^(?:\d{1,3}\.){3}\d{1,3}$/.test(h)) {
+				return true;
+			}
+			if (h.indexOf(":") !== -1 && /^[0-9a-f:.%]+$/i.test(h)) {
+				return true;
+			}
+			return false;
+		};
+		var sanitizeHostForQos = function (value, maxLen) {
+			if (!value || typeof value !== "string") {
 				return null;
-			};
-			var sanitizeCount = function(value) {
-				var num = parseInt(value, 10);
-				if (!isFinite(num) || num < 0) {
-					return 0;
-				}
-				return Math.min(num, 10000);
-			};
-			var getTurnServerForQos = function() {
-				if (!qd.turnServersUsed || !qd.turnServersUsed.length) {
-					if (qd.transportType === "turn") {
-						return "private";
-					}
+			}
+			var host = value.trim().toLowerCase();
+			if (!host) {
+				return null;
+			}
+			if (host.indexOf("://") !== -1) {
+				try {
+					host = new URL(host).hostname.toLowerCase();
+				} catch (e) {
 					return null;
 				}
-				var host = sanitizeHostForQos(qd.turnServersUsed[0], 30);
-				if (!host) {
-					if (qd.transportType === "turn") {
-						return "private";
-					}
-					return null;
-				}
-				if (session.qosTurnAllowlist && session.qosTurnAllowlist.length) {
-					if (session.qosTurnAllowlist.includes(host)) {
-						return host;
-					}
+			}
+			host = host.replace(/^\[|\]$/g, "");
+			host = host.replace(/:\d+$/g, "");
+			if (!host) {
+				return null;
+			}
+			if (!/^[a-z0-9.-]+$/i.test(host)) {
+				return null;
+			}
+			if (isIpLikeHost(host)) {
+				return null;
+			}
+			var limit = parseInt(maxLen, 10) || 40;
+			if (host.length > limit) {
+				host = host.substring(0, limit);
+			}
+			return host;
+		};
+		var sanitizeCandidateType = function (value) {
+			if (!value || typeof value !== "string") {
+				return null;
+			}
+			var type = value.toLowerCase();
+			if (type === "host" || type === "srflx" || type === "relay" || type === "prflx") {
+				return type;
+			}
+			return null;
+		};
+		var sanitizeCount = function (value) {
+			var num = parseInt(value, 10);
+			if (!isFinite(num) || num < 0) {
+				return 0;
+			}
+			return Math.min(num, 10000);
+		};
+		var getTurnServerForQos = function () {
+			if (!qd.turnServersUsed || !qd.turnServersUsed.length) {
+				if (qd.transportType === "turn") {
 					return "private";
 				}
-				return "private";
-			};
-			var getMeshcastServerForQos = function() {
-				var host = null;
-				if (qd.meshcastServersUsed && qd.meshcastServersUsed.length) {
-					host = sanitizeHostForQos(qd.meshcastServersUsed[0], 40);
+				return null;
+			}
+			var host = sanitizeHostForQos(qd.turnServersUsed[0], 30);
+			if (!host) {
+				if (qd.transportType === "turn") {
+					return "private";
 				}
-				if (!host) {
-					if (qd.transportType === "meshcast" || qd.transportType === "whip" || qd.transportType === "whep") {
-						return "private";
-					}
-					return null;
-				}
-				if (host === "meshcast.io" || host.endsWith(".meshcast.io")) {
+				return null;
+			}
+			if (session.qosTurnAllowlist && session.qosTurnAllowlist.length) {
+				if (session.qosTurnAllowlist.includes(host)) {
 					return host;
 				}
 				return "private";
-			};
+			}
+			return "private";
+		};
+		var getMeshcastServerForQos = function () {
+			var host = null;
+			if (qd.meshcastServersUsed && qd.meshcastServersUsed.length) {
+				host = sanitizeHostForQos(qd.meshcastServersUsed[0], 40);
+			}
+			if (!host) {
+				if (qd.transportType === "meshcast" || qd.transportType === "whip" || qd.transportType === "whep") {
+					return "private";
+				}
+				return null;
+			}
+			if (host === "meshcast.io" || host.endsWith(".meshcast.io")) {
+				return host;
+			}
+			return "private";
+		};
 
 		// Determine browser (using existing detection)
 		var browser = "Unknown";
@@ -20229,8 +20071,8 @@ function sendQosReport() {
 		if (session.director) connectionType = "director";
 		else if (session.streamSrc || session.videoElement) connectionType = "publisher";
 
-			// For publishers: also collect stats from outbound connections (session.pcs)
-			// This supplements the inbound stats from processStats
+		// For publishers: also collect stats from outbound connections (session.pcs)
+		// This supplements the inbound stats from processStats
 		if (session.pcs) {
 			for (var uuid in session.pcs) {
 				try {
@@ -20265,22 +20107,22 @@ function sendQosReport() {
 					if (pcStats.encoder) {
 						qd.lastVideoCodec = pcStats.encoder;
 					}
-				} catch (e) { }
+				} catch (e) {}
 			}
 		}
 
-			// Set transport type for WHIP/WHEP if not already set
-			if (!qd.transportType || qd.transportType === "unknown") {
-				if (session.whipOut) qd.transportType = "whip";
-				else if (session.whepIn || session.whepInput) qd.transportType = "whep";
-			}
-			var turnServer = getTurnServerForQos();
-			var meshcastServer = getMeshcastServerForQos();
-			var candidateLocal = sanitizeCandidateType((qd.candidateTypesLocal && qd.candidateTypesLocal.length) ? qd.candidateTypesLocal[0] : null);
-			var candidateRemote = sanitizeCandidateType((qd.candidateTypesRemote && qd.candidateTypesRemote.length) ? qd.candidateTypesRemote[0] : null);
+		// Set transport type for WHIP/WHEP if not already set
+		if (!qd.transportType || qd.transportType === "unknown") {
+			if (session.whipOut) qd.transportType = "whip";
+			else if (session.whepIn || session.whepInput) qd.transportType = "whep";
+		}
+		var turnServer = getTurnServerForQos();
+		var meshcastServer = getMeshcastServerForQos();
+		var candidateLocal = sanitizeCandidateType(qd.candidateTypesLocal && qd.candidateTypesLocal.length ? qd.candidateTypesLocal[0] : null);
+		var candidateRemote = sanitizeCandidateType(qd.candidateTypesRemote && qd.candidateTypesRemote.length ? qd.candidateTypesRemote[0] : null);
 
-				// Build payload - NO room IDs, stream IDs, or passwords
-			var payload = {
+		// Build payload - NO room IDs, stream IDs, or passwords
+		var payload = {
 			// Session
 			sessionDuration: Math.round((Date.now() - qd.startTime) / 1000),
 			connectionType: connectionType,
@@ -20290,18 +20132,18 @@ function sendQosReport() {
 			browserVersion: browserVersion,
 			platform: platform,
 
-				// Transport
-				transportType: qd.transportType || "unknown",
-				turnServer: turnServer,
-				meshcastServer: meshcastServer,
-				wssSuccess: qd.wssSuccess,
-				candidateLocal: candidateLocal,
-				candidateRemote: candidateRemote,
+			// Transport
+			transportType: qd.transportType || "unknown",
+			turnServer: turnServer,
+			meshcastServer: meshcastServer,
+			wssSuccess: qd.wssSuccess,
+			candidateLocal: candidateLocal,
+			candidateRemote: candidateRemote,
 
-				// Quality
-				connectionSuccess: qd.connectionSuccesses > 0 || qd.rttSamples.length > 0,
-				connectionFailures: qd.connectionFailures,
-				iceRestarts: sanitizeCount(qd.iceRestarts),
+			// Quality
+			connectionSuccess: qd.connectionSuccesses > 0 || qd.rttSamples.length > 0,
+			connectionFailures: qd.connectionFailures,
+			iceRestarts: sanitizeCount(qd.iceRestarts),
 
 			// Packet loss
 			avgPacketLossVideo: avg(qd.packetLossVideoSamples) !== null ? Math.round(avg(qd.packetLossVideoSamples) * 100) / 100 : null,
@@ -20319,55 +20161,57 @@ function sendQosReport() {
 			avgVideoBitrate: avg(qd.bitrateSamples) !== null ? Math.round(avg(qd.bitrateSamples)) : null,
 			maxResolution: qd.lastResolution,
 
-				// Errors (last 3 actual error logs, sanitized to remove private data)
-				errors: (typeof errorReport !== "undefined" && errorReport && errorReport.length > 0) ?
-					errorReport
-						.filter(function(e) {
-							return e && typeof e === "object" && ("error" in e);
-						})
-						.map(function(e) {
-							var msg = toQosErrorText(e);
-							if (!msg) {
-								return null;
-							}
-							// Strip private/personal data from error messages
-							msg = msg
-								// Remove full URLs and URL parameters
-								.replace(/https?:\/\/[^\s"'<>)]+/gi, "[URL]")
-								.replace(/wss?:\/\/[^\s"'<>)]+/gi, "[WSS]")
-								// Remove UUIDs (various formats)
-								.replace(/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/gi, "[UUID]")
-								.replace(/[0-9a-f]{32,}/gi, "[HASH]")
-								// Remove stream IDs, view IDs, push IDs
-								.replace(/(streamID|stream_id|streamid|sid|push|view|scene|label)[=:]["']?[a-zA-Z0-9_-]{1,80}["']?/gi, "$1=[REDACTED]")
-								// Remove room IDs
-								.replace(/(room|roomid|room_id)[=:]["']?[a-zA-Z0-9_-]{3,30}["']?/gi, "$1=[REDACTED]")
-								// Remove passwords and hashes
-								.replace(/(password|pass|pwd|hash|salt|key|token|auth)[=:]["']?[^\s"'&]{1,50}["']?/gi, "$1=[REDACTED]")
-								// Remove IP addresses (IPv4 and IPv6)
-								.replace(/\b(?:\d{1,3}\.){3}\d{1,3}(?::\d+)?\b/g, "[IP]")
-								.replace(/\b([0-9a-f]{1,4}:){2,7}[0-9a-f]{1,4}\b/gi, "[IPv6]")
-								// Remove base64-ish strings that might be tokens/credentials
-								.replace(/[A-Za-z0-9+/=]{40,}/g, "[TOKEN]")
-								// Remove email addresses
-								.replace(/[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/g, "[EMAIL]")
-								// Remove query string parameters
-								.replace(/\?[^\s"'<>]+/g, "?[PARAMS]");
-							if (/(a=candidate|candidate:|ice-ufrag|ice-pwd|\bcandidate\b|\bice\b|\boffer\b|\banswer\b|\bsdp\b|\bturn\b)/i.test(msg)) {
-								msg = "[REDACTED_SIGNALING]";
-							} else if (/\b(stream|room|label|password|pass|pwd|token|auth|hash|chat|message|msg|sid|view|push|scene)\b/i.test(msg)) {
-								msg = "[REDACTED_SENSITIVE]";
-							}
-							return {
-								msg: msg.substring(0, 200),
-								line: e.line || 0,
-								time: e.time ? parseInt(e.time) : 0
-							};
-						})
-						.filter(function(entry) {
-							return !!entry;
-						})
-						.slice(-3) : null
+			// Errors (last 3 actual error logs, sanitized to remove private data)
+			errors:
+				typeof errorReport !== "undefined" && errorReport && errorReport.length > 0
+					? errorReport
+							.filter(function (e) {
+								return e && typeof e === "object" && "error" in e;
+							})
+							.map(function (e) {
+								var msg = toQosErrorText(e);
+								if (!msg) {
+									return null;
+								}
+								// Strip private/personal data from error messages
+								msg = msg
+									// Remove full URLs and URL parameters
+									.replace(/https?:\/\/[^\s"'<>)]+/gi, "[URL]")
+									.replace(/wss?:\/\/[^\s"'<>)]+/gi, "[WSS]")
+									// Remove UUIDs (various formats)
+									.replace(/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/gi, "[UUID]")
+									.replace(/[0-9a-f]{32,}/gi, "[HASH]")
+									// Remove stream IDs, view IDs, push IDs
+									.replace(/(streamID|stream_id|streamid|sid|push|view|scene|label)[=:]["']?[a-zA-Z0-9_-]{1,80}["']?/gi, "$1=[REDACTED]")
+									// Remove room IDs
+									.replace(/(room|roomid|room_id)[=:]["']?[a-zA-Z0-9_-]{3,30}["']?/gi, "$1=[REDACTED]")
+									// Remove passwords and hashes
+									.replace(/(password|pass|pwd|hash|salt|key|token|auth)[=:]["']?[^\s"'&]{1,50}["']?/gi, "$1=[REDACTED]")
+									// Remove IP addresses (IPv4 and IPv6)
+									.replace(/\b(?:\d{1,3}\.){3}\d{1,3}(?::\d+)?\b/g, "[IP]")
+									.replace(/\b([0-9a-f]{1,4}:){2,7}[0-9a-f]{1,4}\b/gi, "[IPv6]")
+									// Remove base64-ish strings that might be tokens/credentials
+									.replace(/[A-Za-z0-9+/=]{40,}/g, "[TOKEN]")
+									// Remove email addresses
+									.replace(/[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/g, "[EMAIL]")
+									// Remove query string parameters
+									.replace(/\?[^\s"'<>]+/g, "?[PARAMS]");
+								if (/(a=candidate|candidate:|ice-ufrag|ice-pwd|\bcandidate\b|\bice\b|\boffer\b|\banswer\b|\bsdp\b|\bturn\b)/i.test(msg)) {
+									msg = "[REDACTED_SIGNALING]";
+								} else if (/\b(stream|room|label|password|pass|pwd|token|auth|hash|chat|message|msg|sid|view|push|scene)\b/i.test(msg)) {
+									msg = "[REDACTED_SENSITIVE]";
+								}
+								return {
+									msg: msg.substring(0, 200),
+									line: e.line || 0,
+									time: e.time ? parseInt(e.time) : 0
+								};
+							})
+							.filter(function (entry) {
+								return !!entry;
+							})
+							.slice(-3)
+					: null
 		};
 
 		// Send using sendBeacon for reliability during page unload
@@ -20382,7 +20226,7 @@ function sendQosReport() {
 // For view/scene links without explicit hangup - send QoS on page unload
 // Only triggers if there are no active push connections (publisher links have explicit hangup)
 if (typeof window !== "undefined") {
-	window.addEventListener("beforeunload", function() {
+	window.addEventListener("beforeunload", function () {
 		// Only send for viewers (no push) and if we haven't already sent
 		if (session && session.qosEnabled && session.qosData && !session.qosData.sent) {
 			// Check that we're not a publisher (publishers use explicit hangup)
@@ -20393,7 +20237,7 @@ if (typeof window !== "undefined") {
 	});
 
 	// Also trigger on visibility change to hidden (tab close, navigate away)
-	document.addEventListener("visibilitychange", function() {
+	document.addEventListener("visibilitychange", function () {
 		if (document.visibilityState === "hidden") {
 			if (session && session.qosEnabled && session.qosData && !session.qosData.sent) {
 				// Only for viewers
@@ -20409,11 +20253,13 @@ session.hangup = function (reload = false, estop = false) {
 	// Send QoS report on hangup
 	try {
 		sendQosReport();
-	} catch (e) { warnlog(e); }
+	} catch (e) {
+		warnlog(e);
+	}
 
 	try {
 		window.removeEventListener("beforeunload", confirmUnload);
-	} catch (e) { }
+	} catch (e) {}
 
 	// Clean up auto-end timer if it exists
 	if (session.autoEndTimer) {
@@ -20429,32 +20275,36 @@ session.hangup = function (reload = false, estop = false) {
 		if (countdown) {
 			countdown.remove();
 		}
-	} catch (e) { }
+	} catch (e) {}
 
 	try {
 		if (estop) {
 			recordLocalVideo("estop");
 		}
-	} catch (e) { }
+	} catch (e) {}
 	try {
 		if (estop) {
 			recordLocalVideo("estop", false, false, true); // screen share
 		}
-	} catch (e) { }
+	} catch (e) {}
 	session.taintedSession = true;
 	warnlog("hanging up");
 
 	try {
 		recordLocalVideo("stop");
-	} catch (e) { }
+	} catch (e) {}
 	try {
 		recordLocalVideo("stop", false, false, true); // screen share
-	} catch (e) { }
+	} catch (e) {}
 
 	// Download session log before session object gets deleted at 1200ms
 	if (session.sessionLog && sessionLogData && sessionLogData.length) {
 		setTimeout(function () {
-			try { downloadSessionLog(); } catch (e) { errorlog(e); }
+			try {
+				downloadSessionLog();
+			} catch (e) {
+				errorlog(e);
+			}
 		}, 1000);
 	}
 
@@ -20476,11 +20326,11 @@ session.hangup = function (reload = false, estop = false) {
 		msg.videoMuted = true; // might not trigger
 		msg.bye = true;
 		session.sendMessage(msg); // make sure the remote video goes black.
-	} catch (e) { }
+	} catch (e) {}
 
 	try {
 		session.ws.close();
-	} catch (e) { }
+	} catch (e) {}
 
 	try {
 		if (session.canvasSource && session.canvasSource.srcObject) {
@@ -20529,7 +20379,7 @@ session.hangup = function (reload = false, estop = false) {
 						recordLocalVideo("stop", null, session.rpcs[i].videoElement);
 					}
 				}
-			} catch (e) { }
+			} catch (e) {}
 			log("closing rpc due to hangup event");
 			session.closeRPC(i, true);
 		}
@@ -20572,7 +20422,7 @@ session.hangup = function (reload = false, estop = false) {
 			for (i in session) {
 				try {
 					delete session[i];
-				} catch (e) { }
+				} catch (e) {}
 			}
 			delete session;
 		}, 1200);
@@ -20600,7 +20450,7 @@ function hangup(showhangup = true) {
 						document.getElementById("main").innerHTML = "";
 						document.getElementById("hangupTemplate").innerHTML = "";
 					}
-				} catch (e) { }
+				} catch (e) {}
 
 				setTimeout(function () {
 					session.hangup();
@@ -20615,7 +20465,7 @@ function hangup(showhangup = true) {
 				document.getElementById("main").innerHTML = "";
 				document.getElementById("hangupTemplate").innerHTML = "";
 			}
-		} catch (e) { }
+		} catch (e) {}
 
 		setTimeout(function () {
 			session.hangup();
@@ -20653,10 +20503,9 @@ function hangup2() {
 function hangupComplete() {
 	try {
 		getById("main").innerHTML = document.getElementById("hangupTemplate").innerHTML;
+	} catch (e) {}
 
-	} catch (e) { }
-
-	updateMixerRun = function () { };
+	updateMixerRun = function () {};
 
 	pokeIframeAPI("hungup", true); // don't use Hangup, as that's an action.
 	pokeAPI("hangup", true);
@@ -20664,9 +20513,13 @@ function hangupComplete() {
 	if (session.redirectHangup) {
 		const safeRedirectHref = sanitizeRedirectURL(session.redirectHangup, 4096);
 		if (safeRedirectHref) {
-			setTimeout(function (href) {
-				window.location.href = href;
-			}, session.redirectHangupTimer || 0, safeRedirectHref);
+			setTimeout(
+				function (href) {
+					window.location.href = href;
+				},
+				session.redirectHangupTimer || 0,
+				safeRedirectHref
+			);
 		} else {
 			warnlog("Blocked unsafe hangup redirect URL.");
 		}
@@ -20693,7 +20546,7 @@ function gobackSlide() {
 	sendRawMIDI(data);
 	try {
 		pokeIframeAPI("back-slide", true);
-	} catch (e) { }
+	} catch (e) {}
 }
 
 function nextSlide() {
@@ -20703,7 +20556,7 @@ function nextSlide() {
 
 	try {
 		pokeIframeAPI("next-slide", true);
-	} catch (e) { }
+	} catch (e) {}
 }
 
 function raisehand() {
@@ -20742,7 +20595,7 @@ function raisehand() {
 
 	try {
 		pokeIframeAPI("hand", handstate);
-	} catch (e) { }
+	} catch (e) {}
 
 	return handstate;
 }
@@ -20841,7 +20694,7 @@ async function directMigrate(ele, event, room = false) {
 		try {
 			migrateRoom = sanitizeRoomName(migrateRoom);
 			previousRoom = migrateRoom;
-		} catch (e) { }
+		} catch (e) {}
 	}
 	ele.innerHTML = '<i class="las la-paper-plane"></i> <span data-translate="forward-to-room">transfer</span>';
 	miniTranslate(ele);
@@ -20909,26 +20762,31 @@ async function directHangup(ele, event) {
 		// clean up locally after 4 seconds to prevent stuck control boxes for co-directors
 		if (session.rpcs[targetUUID]) {
 			var sessionAtHangup = session.rpcs[targetUUID].session; // Capture session ID to verify it's the same connection
-			var fallbackTimeout = setTimeout(function(uuid, origSession) {
-				try {
-					// Only close if it's still the same session (not a reconnect or re-request)
-					if (!(uuid in session.rpcs) || session.rpcs[uuid].session !== origSession) {
-						return;
+			var fallbackTimeout = setTimeout(
+				function (uuid, origSession) {
+					try {
+						// Only close if it's still the same session (not a reconnect or re-request)
+						if (!(uuid in session.rpcs) || session.rpcs[uuid].session !== origSession) {
+							return;
+						}
+						// Skip if connection AND data channel are healthy - message should have been delivered
+						var rpc = session.rpcs[uuid];
+						var connState = rpc.connectionState || "unknown";
+						var channelOpen = rpc.receiveChannel && rpc.receiveChannel.readyState === "open";
+						if (connState === "connected" && channelOpen) {
+							warnlog("Hangup fallback: skipping - connection and channel healthy");
+							return;
+						}
+						warnlog("Hangup fallback: cleaning up (conn: " + connState + ", channel: " + (channelOpen ? "open" : "closed") + ")");
+						session.closeRPC(uuid, true);
+					} catch (e) {
+						warnlog(e);
 					}
-					// Skip if connection AND data channel are healthy - message should have been delivered
-					var rpc = session.rpcs[uuid];
-					var connState = rpc.connectionState || "unknown";
-					var channelOpen = rpc.receiveChannel && rpc.receiveChannel.readyState === "open";
-					if (connState === "connected" && channelOpen) {
-						warnlog("Hangup fallback: skipping - connection and channel healthy");
-						return;
-					}
-					warnlog("Hangup fallback: cleaning up (conn: " + connState + ", channel: " + (channelOpen ? "open" : "closed") + ")");
-					session.closeRPC(uuid, true);
-				} catch (e) {
-					warnlog(e);
-				}
-			}, 4000, targetUUID, sessionAtHangup);
+				},
+				4000,
+				targetUUID,
+				sessionAtHangup
+			);
 			// Store timeout so closeRPC can cancel it if cleanup happens normally
 			session.rpcs[targetUUID].hangupFallbackTimeout = fallbackTimeout;
 		}
@@ -20949,11 +20807,13 @@ function getAutoAssignChannel() {
 
 	// Build usage map: channel -> count of guests using it
 	var usage = {};
-	session.autochannels.forEach(function(ch) { usage[ch] = 0; });
+	session.autochannels.forEach(function (ch) {
+		usage[ch] = 0;
+	});
 
 	// Count current assignments from sceneAudioChannel buttons in guest containers
 	var buttons = document.querySelectorAll('#guestFeeds [data-action-type="sceneAudioChannel"][data-state="1"]');
-	buttons.forEach(function(btn) {
+	buttons.forEach(function (btn) {
 		var ch = parseInt(btn.dataset.channel);
 		if (ch in usage) {
 			usage[ch]++;
@@ -21050,7 +20910,7 @@ async function directAudioChannel(ele, event, director = false) {
 					}
 				}
 			}
-			ele.dataset.state = "1"
+			ele.dataset.state = "1";
 			ele.classList.add("pressed");
 			ele.ariaPressed = "true";
 			added = true;
@@ -21060,7 +20920,6 @@ async function directAudioChannel(ele, event, director = false) {
 	}
 
 	if (director) {
-
 		if (added) {
 			document.querySelectorAll('#controls_director [data-action-type="sceneAudioChannel"][data-state="1"]:not([data-channel="' + channel + '"])').forEach(el => {
 				el.dataset.state = "0";
@@ -21075,9 +20934,7 @@ async function directAudioChannel(ele, event, director = false) {
 			});
 			channel = false;
 		}
-
 	} else {
-
 		if (added) {
 			document.querySelectorAll('[data-sid][data--u-u-i-d="' + UUID + '"][data-action-type="sceneAudioChannel"][data-state="1"]:not([data-channel="' + channel + '"])').forEach(el => {
 				el.dataset.state = "0";
@@ -21189,7 +21046,7 @@ function directEnable(ele, event, director = false) {
 		} else {
 			pokeIframeAPI("remove-from-scene", scene, ele.dataset.UUID);
 		}
-	} catch (e) { }
+	} catch (e) {}
 
 	//for (var uuid in session.pcs){ // removing this since it's obsolete at this point.
 	//	if (session.pcs[uuid].stats.info && ("version" in session.pcs[uuid].stats.info) &&  (session.pcs[uuid].stats.info.version < 17.2)){
@@ -21255,7 +21112,7 @@ function getQuickStats(sid = false) {
 		for (var i in session.pcs) {
 			stats.outbound[i] = session.pcs[i].stats;
 		}
-	} catch (e) { }
+	} catch (e) {}
 	if (sid) {
 		if (sid in stats.inbound) {
 			return stats.inbound[sid];
@@ -21381,9 +21238,7 @@ function getDetailedState(sid = false) {
 						if (!others[i] || !others[i].dataset) {
 							continue;
 						}
-						if (others[i].dataset.actionType === "solo-video" &&
-							others[i].classList &&
-							others[i].classList.contains("altpress")) {
+						if (others[i].dataset.actionType === "solo-video" && others[i].classList && others[i].classList.contains("altpress")) {
 							otherState[others[i].dataset.actionType] = "alt";
 							continue;
 						} else if (others[i].dataset.actionType === "remove-queue") {
@@ -21425,7 +21280,7 @@ function getDetailedState(sid = false) {
 					}
 					item.others = otherState;
 				}
-			} catch (e) { }
+			} catch (e) {}
 
 			streamList[session.rpcs[UUID].streamID] = item;
 		}
@@ -21450,7 +21305,7 @@ function getDetailedState(sid = false) {
 			}
 			streamList[session.streamID].scenes = sceneState;
 		}
-	} catch (e) { }
+	} catch (e) {}
 
 	if (session.director) {
 		let featured = document.querySelector("#highlightDirector[data-action-type='solo-video'], #container_director [data-action-type='solo-video']");
@@ -21596,7 +21451,7 @@ function syncOtherState(sid) {
 				if (ele.nodeName && ele.nodeName.toLowerCase() == "input") {
 					try {
 						ele.checked = true;
-					} catch (e) { }
+					} catch (e) {}
 				}
 				ele.classList.add("altpress");
 				ele.classList.remove("pressed");
@@ -21793,7 +21648,7 @@ function syncSceneState(sid) {
 					}
 				}
 			}
-		} catch (e) { }
+		} catch (e) {}
 	}
 }
 
@@ -21878,7 +21733,7 @@ async function issueLayoutOBS(data) {
 	if (UUID) {
 		try {
 			log("CONTROL STATE" + session.pcs[UUID].obsState.details.controlLevel);
-		} catch (e) { }
+		} catch (e) {}
 
 		if (session.pcs[UUID] && scene !== false && session.pcs[UUID].scene === scene + "") {
 			if (!session.pcs[UUID].solo) {
@@ -21894,7 +21749,7 @@ async function issueLayoutOBS(data) {
 		for (var uuid in session.pcs) {
 			try {
 				log("CONTROL STATE" + session.pcs[UUID].obsState.details.controlLevel);
-			} catch (e) { }
+			} catch (e) {}
 
 			if (scene !== false && session.pcs[uuid].scene === scene + "") {
 				if (!session.pcs[uuid].solo) {
@@ -21961,7 +21816,7 @@ async function directPageReload(ele, event) {
 		}
 		try {
 			previousURL = reloadURL;
-		} catch (e) { }
+		} catch (e) {}
 	}
 	ele.innerHTML = '<i class="las la-sync"></i> <span data-translate="change-url">change URL</span>';
 	miniTranslate(ele);
@@ -22052,15 +21907,15 @@ function formatTime24h(date, clock24 = true) {
 	hours = hours % 24;
 
 	// Pad single digit hours and minutes with leading zeros
-	hours = hours.toString().padStart(2, '0');
-	minutes = minutes.toString().padStart(2, '0');
+	hours = hours.toString().padStart(2, "0");
+	minutes = minutes.toString().padStart(2, "0");
 
 	if (clock24) {
 		// 24-hour format
 		return `${hours}:${minutes}`;
 	} else {
 		// 12-hour format
-		let period = hours >= 12 ? 'PM' : 'AM';
+		let period = hours >= 12 ? "PM" : "AM";
 		hours = hours % 12 || 12; // Convert 0 to 12 for midnight
 		return `${hours}:${minutes} ${period}`;
 	}
@@ -22241,8 +22096,7 @@ async function directRoomTimer(ele, event = false, preSetTime = false) {
 			}
 			ele.innerHTML = '<i class="las la-clock"></i><span data-translate="remove-timer"> Remove Timer</span>';
 			ele.classList.add("red");
-
-		} else if (event.altKey && ele.dataset.actionType && !ele.dataset.UUID && (ele.dataset.actionType == "create-timer-global")) {
+		} else if (event.altKey && ele.dataset.actionType && !ele.dataset.UUID && ele.dataset.actionType == "create-timer-global") {
 			if (preSetTime !== false) {
 				var getTime = preSetTime;
 			} else {
@@ -22373,7 +22227,7 @@ function requestFileUpload(ele) {
 				ele.classList.remove("pressed");
 				ele.ariaPressed = "false";
 				ele.disabled = false;
-			} catch (e) { }
+			} catch (e) {}
 		},
 		15000,
 		ele
@@ -22538,7 +22392,7 @@ function remoteLowerhands(UUID) {
 	try {
 		getById("hands_" + UUID).classList.add("hidden");
 		session.rpcs[UUID].remoteRaisedHandElement.classList.add("hidden");
-	} catch (e) { }
+	} catch (e) {}
 
 	// Sync hand-lowered state to co-directors (only main director syncs)
 	if (session.directorState !== false) {
@@ -22547,7 +22401,9 @@ function remoteLowerhands(UUID) {
 				var ele = { dataset: { sid: session.rpcs[UUID].streamID } };
 				syncDirectorState(ele);
 			}
-		} catch (e) { errorlog(e); }
+		} catch (e) {
+			errorlog(e);
+		}
 	}
 
 	return true;
@@ -22670,7 +22526,7 @@ function remoteHideVideo(ele, event = false, skipSend = false) {
 			}
 			try {
 				session.pcs[i].sendChannel.send(JSON.stringify(msg));
-			} catch (e) { }
+			} catch (e) {}
 		}
 		syncDirectorState(ele);
 	}
@@ -22793,14 +22649,14 @@ function applyMuteState(UUID) {
 		if (session.noaudio === true) {
 			muteOutcome = true;
 		} else if (session.noaudio.length) {
-			if (("streamID" in session.rpcs[UUID]) && session.rpcs[UUID].streamID && !session.noaudio.includes(session.rpcs[UUID].streamID)) {
+			if ("streamID" in session.rpcs[UUID] && session.rpcs[UUID].streamID && !session.noaudio.includes(session.rpcs[UUID].streamID)) {
 				muteOutcome = true;
 			}
 		} else {
 			muteOutcome = true;
 		}
 	} else if (!muteOutcome && session.excludeaudio) {
-		if (("streamID" in session.rpcs[UUID]) && session.rpcs[UUID].streamID && session.excludeaudio.includes(session.rpcs[UUID].streamID)) {
+		if ("streamID" in session.rpcs[UUID] && session.rpcs[UUID].streamID && session.excludeaudio.includes(session.rpcs[UUID].streamID)) {
 			muteOutcome = true;
 		}
 	}
@@ -23046,14 +22902,14 @@ function sendChat(chatmessage = "hi", UUID = false, overlay = false) {
 // =====================
 
 // Initialize default tip settings
-if (typeof session.receiveTips === 'undefined') session.receiveTips = false;
-if (typeof session.tipId === 'undefined') session.tipId = null;
-if (typeof session.tipsId === 'undefined') session.tipsId = null; // Overlay token for SSE
-if (typeof session.tipServer === 'undefined') session.tipServer = "https://ninjabacker.com";
-if (typeof session.tipAmounts === 'undefined') session.tipAmounts = [5, 10, 25, 50, 100];
-if (typeof session.tipCurrency === 'undefined') session.tipCurrency = "USD";
-if (typeof session.tipEventSource === 'undefined') session.tipEventSource = null;
-if (typeof session.tipStripe === 'undefined') session.tipStripe = null;
+if (typeof session.receiveTips === "undefined") session.receiveTips = false;
+if (typeof session.tipId === "undefined") session.tipId = null;
+if (typeof session.tipsId === "undefined") session.tipsId = null; // Overlay token for SSE
+if (typeof session.tipServer === "undefined") session.tipServer = "https://ninjabacker.com";
+if (typeof session.tipAmounts === "undefined") session.tipAmounts = [5, 10, 25, 50, 100];
+if (typeof session.tipCurrency === "undefined") session.tipCurrency = "USD";
+if (typeof session.tipEventSource === "undefined") session.tipEventSource = null;
+if (typeof session.tipStripe === "undefined") session.tipStripe = null;
 
 // Cache for performer validation results
 var tipPerformerCache = {};
@@ -23075,7 +22931,7 @@ async function validateTipPerformer(tipId, tipServer) {
 		var isValid = response.ok; // 200 = performer exists and has charges_enabled
 		tipPerformerCache[cacheKey] = isValid;
 		return isValid;
-	} catch(e) {
+	} catch (e) {
 		// Network error - assume not valid, don't cache to allow retry
 		return false;
 	}
@@ -23111,7 +22967,7 @@ async function addTipIconToVideo(UUID) {
 
 	// If container doesn't exist yet, try again later
 	if (!videoContainer) {
-		setTimeout(function() {
+		setTimeout(function () {
 			addTipIconToVideo(UUID);
 		}, 1000);
 		return;
@@ -23129,7 +22985,8 @@ async function addTipIconToVideo(UUID) {
 	// 2. In OBS studio, OR
 	// 3. It's a scene/view link (not a guest publisher page)
 	var showQRCode = false;
-	if (session.tipQRSize && session.tipQRSize !== 150) { // User explicitly set size
+	if (session.tipQRSize && session.tipQRSize !== 150) {
+		// User explicitly set size
 		showQRCode = true;
 	} else if (isOBS || isSceneOrView) {
 		showQRCode = !session.noTipQR; // Can be disabled with &notipqr
@@ -23186,9 +23043,9 @@ async function addTipIconToVideo(UUID) {
 	}
 
 	// Click handler
-	tipOverlay.onclick = function(e) {
+	tipOverlay.onclick = function (e) {
 		e.stopPropagation();
-		if (typeof openTipModal === 'function') {
+		if (typeof openTipModal === "function") {
 			openTipModal(this.dataset.UUID);
 		}
 	};
@@ -23220,7 +23077,7 @@ function startTipQRAnimation(tipOverlay, isOBS) {
 			tipOverlay.classList.remove("showQR");
 			tipOverlay.classList.add("showLabel");
 			// Show label for 6 seconds
-			setTimeout(function() {
+			setTimeout(function () {
 				if (tipOverlay && tipOverlay.parentElement) {
 					tipOverlay.classList.remove("showLabel");
 					tipOverlay.classList.add("showQR");
@@ -23229,14 +23086,14 @@ function startTipQRAnimation(tipOverlay, isOBS) {
 		}
 
 		// Show label every 60 seconds
-		tipOverlay.qrInterval = setInterval(function() {
+		tipOverlay.qrInterval = setInterval(function () {
 			if (tipOverlay && tipOverlay.parentElement) {
 				showLabel();
 			}
 		}, 60000);
 
 		// First label after 20 seconds
-		setTimeout(function() {
+		setTimeout(function () {
 			if (tipOverlay && tipOverlay.parentElement) {
 				showLabel();
 			}
@@ -23246,7 +23103,7 @@ function startTipQRAnimation(tipOverlay, isOBS) {
 		function showQR() {
 			tipOverlay.classList.add("showQR");
 			// Show QR for 8 seconds
-			setTimeout(function() {
+			setTimeout(function () {
 				if (tipOverlay && tipOverlay.parentElement) {
 					tipOverlay.classList.remove("showQR");
 				}
@@ -23254,14 +23111,14 @@ function startTipQRAnimation(tipOverlay, isOBS) {
 		}
 
 		// Show QR every 45 seconds
-		tipOverlay.qrInterval = setInterval(function() {
+		tipOverlay.qrInterval = setInterval(function () {
 			if (tipOverlay && tipOverlay.parentElement) {
 				showQR();
 			}
 		}, 45000);
 
 		// First QR after 15 seconds
-		setTimeout(function() {
+		setTimeout(function () {
 			if (tipOverlay && tipOverlay.parentElement) {
 				showQR();
 			}
@@ -23274,7 +23131,7 @@ function startTipLabelAnimation(tipOverlay) {
 	function showLabel() {
 		tipOverlay.classList.add("showLabel");
 		// Show label for 5 seconds
-		setTimeout(function() {
+		setTimeout(function () {
 			if (tipOverlay && tipOverlay.parentElement) {
 				tipOverlay.classList.remove("showLabel");
 			}
@@ -23282,14 +23139,14 @@ function startTipLabelAnimation(tipOverlay) {
 	}
 
 	// Show label every 45 seconds
-	tipOverlay.labelInterval = setInterval(function() {
+	tipOverlay.labelInterval = setInterval(function () {
 		if (tipOverlay && tipOverlay.parentElement) {
 			showLabel();
 		}
 	}, 45000);
 
 	// First label after 10 seconds
-	setTimeout(function() {
+	setTimeout(function () {
 		if (tipOverlay && tipOverlay.parentElement) {
 			showLabel();
 		}
@@ -23320,9 +23177,9 @@ function generateStyledTipQR(container, url, size) {
 	} else {
 		// Queue this container and load library
 		tipQRPendingContainers.push({ container: container, url: url, size: size });
-		loadQR(function() {
+		loadQR(function () {
 			// Process all pending containers
-			tipQRPendingContainers.forEach(function(item) {
+			tipQRPendingContainers.forEach(function (item) {
 				createTipQR(item.container, item.url, item.size);
 			});
 			tipQRPendingContainers = [];
@@ -23348,7 +23205,7 @@ function createTipQR(container, url, size) {
 
 		// Remove default title
 		qrDiv.title = "";
-		setTimeout(function() {
+		setTimeout(function () {
 			qrDiv.title = "";
 			// Style the generated image
 			var imgs = qrDiv.getElementsByTagName("img");
@@ -23380,43 +23237,9 @@ function showTipOnboardingModal() {
 		return;
 	}
 
-	var step2Content =
-		'<h4>2. Enter Your Username</h4>' +
-		'<p>After registering, enter your username below:</p>' +
-		'<div style="display:flex;gap:8px;margin:8px 0;">' +
-			'<input type="text" id="tipUsernameInput" placeholder="your_username" style="flex:1;padding:8px;box-sizing:border-box;">' +
-			'<button onclick="applyTipUsername()" style="padding:8px 16px;background:#4CAF50;color:white;border:none;border-radius:4px;cursor:pointer;">Apply</button>' +
-		'</div>' +
-		'<p id="tipUsernameStatus" style="font-size:0.9em;color:#ff9800;">Enter your registered username to enable tipping.</p>';
+	var step2Content = "<h4>2. Enter Your Username</h4>" + "<p>After registering, enter your username below:</p>" + '<div style="display:flex;gap:8px;margin:8px 0;">' + '<input type="text" id="tipUsernameInput" placeholder="your_username" style="flex:1;padding:8px;box-sizing:border-box;">' + '<button onclick="applyTipUsername()" style="padding:8px 16px;background:#4CAF50;color:white;border:none;border-radius:4px;cursor:pointer;">Apply</button>' + "</div>" + '<p id="tipUsernameStatus" style="font-size:0.9em;color:#ff9800;">Enter your registered username to enable tipping.</p>';
 
-	var modalHTML =
-		'<div id="tipOnboardingModal" class="promptModal" style="z-index:9999">' +
-			'<div class="promptModalInner" style="max-width:500px">' +
-				'<span class="modalClose" onclick="closeTipOnboarding()">&times;</span>' +
-				'<h2>Tipping Setup</h2>' +
-				'<p>To receive tips, follow these steps:</p>' +
-
-				'<h4>1. Register Your Account</h4>' +
-				'<p>Create a username and connect your Stripe account:</p>' +
-				'<a href="' + tipServer + '/register" target="_blank" class="tipOnboardingBtn">' +
-					'Register &amp; Create Username' +
-				'</a>' +
-
-				step2Content +
-
-				'<h4>3. Viewer Setup</h4>' +
-				'<p>Viewers need <code>&amp;showtips</code> in their URL to see tip buttons.</p>' +
-
-				'<h4>4. QR Code Feature</h4>' +
-				'<p>A scannable QR code will appear on your video periodically. Use <code>&amp;notipqr</code> to disable, or <code>&amp;tipqrsize=200</code> to resize.</p>' +
-
-				'<div style="display:flex;gap:10px;margin-top:16px;">' +
-					'<button onclick="closeTipOnboarding(true)" style="flex:1;">Got it, don\'t show again</button>' +
-					'<button onclick="closeTipOnboarding(false)" style="flex:1;background:#666;">Remind me later</button>' +
-				'</div>' +
-			'</div>' +
-		'</div>' +
-		'<div id="tipOnboardingBackdrop" style="position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);z-index:9998" onclick="closeTipOnboarding(false)"></div>';
+	var modalHTML = '<div id="tipOnboardingModal" class="promptModal" style="z-index:9999">' + '<div class="promptModalInner" style="max-width:500px">' + '<span class="modalClose" onclick="closeTipOnboarding()">&times;</span>' + "<h2>Tipping Setup</h2>" + "<p>To receive tips, follow these steps:</p>" + "<h4>1. Register Your Account</h4>" + "<p>Create a username and connect your Stripe account:</p>" + '<a href="' + tipServer + '/register" target="_blank" class="tipOnboardingBtn">' + "Register &amp; Create Username" + "</a>" + step2Content + "<h4>3. Viewer Setup</h4>" + "<p>Viewers need <code>&amp;showtips</code> in their URL to see tip buttons.</p>" + "<h4>4. QR Code Feature</h4>" + "<p>A scannable QR code will appear on your video periodically. Use <code>&amp;notipqr</code> to disable, or <code>&amp;tipqrsize=200</code> to resize.</p>" + '<div style="display:flex;gap:10px;margin-top:16px;">' + '<button onclick="closeTipOnboarding(true)" style="flex:1;">Got it, don\'t show again</button>' + '<button onclick="closeTipOnboarding(false)" style="flex:1;background:#666;">Remind me later</button>' + "</div>" + "</div>" + "</div>" + '<div id="tipOnboardingBackdrop" style="position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);z-index:9998" onclick="closeTipOnboarding(false)"></div>';
 
 	document.body.insertAdjacentHTML("beforeend", modalHTML);
 }
@@ -23472,7 +23295,7 @@ async function applyTipUsername() {
 
 		// Reload with new parameter
 		window.location.href = url.toString();
-	} catch(e) {
+	} catch (e) {
 		errorlog("Failed to lookup performer:", e);
 		warnUser("Failed to verify username. Please try again.");
 	}
@@ -23501,15 +23324,15 @@ function showTipBanner(tipData) {
 	document.body.appendChild(banner);
 
 	// Trigger animation
-	setTimeout(function() {
+	setTimeout(function () {
 		banner.classList.add("tipBannerShow");
 	}, 10);
 
 	// Remove after 5 seconds
-	setTimeout(function() {
+	setTimeout(function () {
 		banner.classList.remove("tipBannerShow");
 		banner.classList.add("tipBannerHide");
-		setTimeout(function() {
+		setTimeout(function () {
 			banner.remove();
 		}, 500); // Wait for fade out animation
 	}, 5000);
@@ -23577,11 +23400,11 @@ function processTipMessage(tipData, UUID) {
 				body: notifyMsg,
 				icon: "./media/logo.png"
 			});
-		} catch(e) {}
+		} catch (e) {}
 	}
 
 	// API callback
-	if (typeof pokeAPI === 'function') {
+	if (typeof pokeAPI === "function") {
 		pokeAPI("tip", tipData);
 	}
 
@@ -23589,7 +23412,7 @@ function processTipMessage(tipData, UUID) {
 	if (isIFrame && session.iframetarget) {
 		try {
 			parent.postMessage({ action: "tip", value: tipData }, session.iframetarget);
-		} catch(e) {}
+		} catch (e) {}
 	}
 }
 
@@ -23608,7 +23431,7 @@ function initTipNotifications() {
 	try {
 		session.tipEventSource = new EventSource(sseURL);
 
-		session.tipEventSource.onmessage = function(event) {
+		session.tipEventSource.onmessage = function (event) {
 			try {
 				var tipData = JSON.parse(event.data);
 				if (tipData.type === "tip") {
@@ -23616,17 +23439,17 @@ function initTipNotifications() {
 					// Broadcast to room peers
 					broadcastTipReceived(tipData);
 				}
-			} catch(e) {
+			} catch (e) {
 				errorlog("Tip SSE parse error:", e);
 			}
 		};
 
-		session.tipEventSource.onerror = function(err) {
+		session.tipEventSource.onerror = function (err) {
 			warnlog("Tip SSE connection error, will retry...");
 		};
 
 		log("Tip notifications initialized for: " + subscribeId);
-	} catch(e) {
+	} catch (e) {
 		errorlog("Failed to initialize tip notifications:", e);
 	}
 }
@@ -23646,7 +23469,7 @@ async function fetchPerformerFromToken() {
 				log("Performer username from token: " + data.username);
 			}
 		}
-	} catch(e) {
+	} catch (e) {
 		errorlog("Failed to fetch performer from token:", e);
 	}
 }
@@ -23681,47 +23504,13 @@ function openTipModal(UUID) {
 	var modalID = "tipModal_" + UUID;
 	var zindex = 32 + document.querySelectorAll(".promptModal").length + document.querySelectorAll(".alertModal").length;
 
-	var amountButtons = amounts.map(function(amt) {
-		return '<button class="tipAmountBtn" data-amount="' + amt + '" onclick="selectTipAmount(this, \'' + UUID + '\')">' + currencySymbol + amt + '</button>';
-	}).join('');
+	var amountButtons = amounts
+		.map(function (amt) {
+			return '<button class="tipAmountBtn" data-amount="' + amt + '" onclick="selectTipAmount(this, \'' + UUID + "')\">" + currencySymbol + amt + "</button>";
+		})
+		.join("");
 
-	var modalTemplate =
-		'<div id="' + modalID + '" class="tipModal" style="z-index:' + (zindex + 2) + '">' +
-			'<div class="tipModalInner">' +
-				'<button class="tipCloseBtn" onclick="closeTipModal(\'' + modalID + '\', \'' + UUID + '\')">&times;</button>' +
-				'<div class="tipModalHeader">' +
-					'<h3>\uD83D\uDCB0 Send a tip to ' + peerLabel + '</h3>' +
-				'</div>' +
-				'<div class="tipAmounts">' + amountButtons + '</div>' +
-				'<div class="tipInputGroup">' +
-					'<label>Custom amount:</label>' +
-					'<input type="number" class="tipCustomInput" id="tipCustomInput_' + UUID + '" min="1" max="1000" placeholder="Enter amount" oninput="customTipAmount(\'' + UUID + '\', this.value)" />' +
-				'</div>' +
-				'<div class="tipInputGroup">' +
-					'<label>Your name (optional):</label>' +
-					'<input type="text" class="tipCustomInput" id="tipName_' + UUID + '" maxlength="50" placeholder="Anonymous" />' +
-				'</div>' +
-				'<div class="tipInputGroup">' +
-					'<label>Message (optional):</label>' +
-					'<input type="text" class="tipCustomInput" id="tipMessageInput_' + UUID + '" maxlength="200" placeholder="Say something nice..." />' +
-				'</div>' +
-				'<div class="tipCardElement">' +
-					'<label>Card details:</label>' +
-					'<div id="tipCardElement_' + UUID + '"></div>' +
-				'</div>' +
-				'<div class="tipStripeBadge">' +
-					'<span>Powered by</span>' +
-					'<svg xmlns="http://www.w3.org/2000/svg" width="60" height="25" viewBox="0 0 120 60" fill-rule="evenodd" fill="#6772e5"><path d="M101.547 30.94c0-5.885-2.85-10.53-8.3-10.53-5.47 0-8.782 4.644-8.782 10.483 0 6.92 3.908 10.414 9.517 10.414 2.736 0 4.805-.62 6.368-1.494v-4.598c-1.563.782-3.356 1.264-5.632 1.264-2.23 0-4.207-.782-4.46-3.494h11.24c0-.3.046-1.494.046-2.046zM90.2 28.757c0-2.598 1.586-3.678 3.035-3.678 1.402 0 2.897 1.08 2.897 3.678zm-14.597-8.345c-2.253 0-3.7 1.057-4.506 1.793l-.3-1.425H65.73v26.805l5.747-1.218.023-6.506c.828.598 2.046 1.448 4.07 1.448 4.115 0 7.862-3.3 7.862-10.598-.023-6.667-3.816-10.3-7.84-10.3zm-1.38 15.84c-1.356 0-2.16-.483-2.713-1.08l-.023-8.53c.598-.667 1.425-1.126 2.736-1.126 2.092 0 3.54 2.345 3.54 5.356 0 3.08-1.425 5.38-3.54 5.38zm-16.4-17.196l5.77-1.24V13.15l-5.77 1.218zm0 1.747h5.77v20.115h-5.77zm-6.185 1.7l-.368-1.7h-4.966V40.92h5.747V27.286c1.356-1.77 3.655-1.448 4.368-1.195v-5.287c-.736-.276-3.425-.782-4.782 1.7zm-11.494-6.7L34.535 17l-.023 18.414c0 3.402 2.552 5.908 5.954 5.908 1.885 0 3.264-.345 4.023-.76v-4.667c-.736.3-4.368 1.356-4.368-2.046V25.7h4.368v-4.897h-4.37zm-15.54 10.828c0-.897.736-1.24 1.954-1.24a12.85 12.85 0 0 1 5.7 1.47V21.47c-1.908-.76-3.793-1.057-5.7-1.057-4.667 0-7.77 2.437-7.77 6.506 0 6.345 8.736 5.333 8.736 8.07 0 1.057-.92 1.402-2.207 1.402-1.908 0-4.345-.782-6.276-1.84v5.47c2.138.92 4.3 1.3 6.276 1.3 4.782 0 8.07-2.368 8.07-6.483-.023-6.85-8.782-5.632-8.782-8.207z"/></svg>' +
-				'</div>' +
-				'<div class="tipTotal">' +
-					'<span>Selected: </span><span id="tipSelectedAmount_' + UUID + '">' + currencySymbol + '0</span>' +
-				'</div>' +
-				'<button id="tipConfirmBtn_' + UUID + '" class="tipConfirmBtn" disabled onclick="confirmTip(\'' + UUID + '\')">' +
-					'Send Tip' +
-				'</button>' +
-				'<div id="tipError_' + UUID + '" class="tipError hidden"></div>' +
-			'</div>' +
-		'</div>';
+	var modalTemplate = '<div id="' + modalID + '" class="tipModal" style="z-index:' + (zindex + 2) + '">' + '<div class="tipModalInner">' + '<button class="tipCloseBtn" onclick="closeTipModal(\'' + modalID + "', '" + UUID + "')\">&times;</button>" + '<div class="tipModalHeader">' + "<h3>\uD83D\uDCB0 Send a tip to " + peerLabel + "</h3>" + "</div>" + '<div class="tipAmounts">' + amountButtons + "</div>" + '<div class="tipInputGroup">' + "<label>Custom amount:</label>" + '<input type="number" class="tipCustomInput" id="tipCustomInput_' + UUID + '" min="1" max="1000" placeholder="Enter amount" oninput="customTipAmount(\'' + UUID + "', this.value)\" />" + "</div>" + '<div class="tipInputGroup">' + "<label>Your name (optional):</label>" + '<input type="text" class="tipCustomInput" id="tipName_' + UUID + '" maxlength="50" placeholder="Anonymous" />' + "</div>" + '<div class="tipInputGroup">' + "<label>Message (optional):</label>" + '<input type="text" class="tipCustomInput" id="tipMessageInput_' + UUID + '" maxlength="200" placeholder="Say something nice..." />' + "</div>" + '<div class="tipCardElement">' + "<label>Card details:</label>" + '<div id="tipCardElement_' + UUID + '"></div>' + "</div>" + '<div class="tipStripeBadge">' + "<span>Powered by</span>" + '<svg xmlns="http://www.w3.org/2000/svg" width="60" height="25" viewBox="0 0 120 60" fill-rule="evenodd" fill="#6772e5"><path d="M101.547 30.94c0-5.885-2.85-10.53-8.3-10.53-5.47 0-8.782 4.644-8.782 10.483 0 6.92 3.908 10.414 9.517 10.414 2.736 0 4.805-.62 6.368-1.494v-4.598c-1.563.782-3.356 1.264-5.632 1.264-2.23 0-4.207-.782-4.46-3.494h11.24c0-.3.046-1.494.046-2.046zM90.2 28.757c0-2.598 1.586-3.678 3.035-3.678 1.402 0 2.897 1.08 2.897 3.678zm-14.597-8.345c-2.253 0-3.7 1.057-4.506 1.793l-.3-1.425H65.73v26.805l5.747-1.218.023-6.506c.828.598 2.046 1.448 4.07 1.448 4.115 0 7.862-3.3 7.862-10.598-.023-6.667-3.816-10.3-7.84-10.3zm-1.38 15.84c-1.356 0-2.16-.483-2.713-1.08l-.023-8.53c.598-.667 1.425-1.126 2.736-1.126 2.092 0 3.54 2.345 3.54 5.356 0 3.08-1.425 5.38-3.54 5.38zm-16.4-17.196l5.77-1.24V13.15l-5.77 1.218zm0 1.747h5.77v20.115h-5.77zm-6.185 1.7l-.368-1.7h-4.966V40.92h5.747V27.286c1.356-1.77 3.655-1.448 4.368-1.195v-5.287c-.736-.276-3.425-.782-4.782 1.7zm-11.494-6.7L34.535 17l-.023 18.414c0 3.402 2.552 5.908 5.954 5.908 1.885 0 3.264-.345 4.023-.76v-4.667c-.736.3-4.368 1.356-4.368-2.046V25.7h4.368v-4.897h-4.37zm-15.54 10.828c0-.897.736-1.24 1.954-1.24a12.85 12.85 0 0 1 5.7 1.47V21.47c-1.908-.76-3.793-1.057-5.7-1.057-4.667 0-7.77 2.437-7.77 6.506 0 6.345 8.736 5.333 8.736 8.07 0 1.057-.92 1.402-2.207 1.402-1.908 0-4.345-.782-6.276-1.84v5.47c2.138.92 4.3 1.3 6.276 1.3 4.782 0 8.07-2.368 8.07-6.483-.023-6.85-8.782-5.632-8.782-8.207z"/></svg>' + "</div>" + '<div class="tipTotal">' + '<span>Selected: </span><span id="tipSelectedAmount_' + UUID + '">' + currencySymbol + "0</span>" + "</div>" + '<button id="tipConfirmBtn_' + UUID + '" class="tipConfirmBtn" disabled onclick="confirmTip(\'' + UUID + "')\">" + "Send Tip" + "</button>" + '<div id="tipError_' + UUID + '" class="tipError hidden"></div>' + "</div>" + "</div>";
 
 	document.body.insertAdjacentHTML("beforeend", modalTemplate);
 
@@ -23731,15 +23520,17 @@ function openTipModal(UUID) {
 
 // Load Stripe.js dynamically if not already loaded
 function loadStripeJS() {
-	return new Promise(function(resolve, reject) {
-		if (typeof Stripe !== 'undefined') {
+	return new Promise(function (resolve, reject) {
+		if (typeof Stripe !== "undefined") {
 			resolve();
 			return;
 		}
-		var script = document.createElement('script');
-		script.src = 'https://js.stripe.com/v3/';
+		var script = document.createElement("script");
+		script.src = "https://js.stripe.com/v3/";
 		script.onload = resolve;
-		script.onerror = function() { reject(new Error('Failed to load Stripe.js')); };
+		script.onerror = function () {
+			reject(new Error("Failed to load Stripe.js"));
+		};
 		document.head.appendChild(script);
 	});
 }
@@ -23764,7 +23555,7 @@ async function initTipStripeElements(UUID, peer) {
 					var perfData = await perfResponse.json();
 					stripeKey = perfData.stripePublishableKey;
 				}
-			} catch(e) {
+			} catch (e) {
 				// Fall back to config endpoint
 			}
 		}
@@ -23786,30 +23577,29 @@ async function initTipStripeElements(UUID, peer) {
 		var stripe = Stripe(stripeKey);
 		var elements = stripe.elements();
 
-		var cardElement = elements.create('card', {
+		var cardElement = elements.create("card", {
 			hidePostalCode: true,
 			style: {
 				base: {
-					color: '#ffffff',
+					color: "#ffffff",
 					fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
-					fontSize: '16px',
-					'::placeholder': { color: '#a0a0a0' }
+					fontSize: "16px",
+					"::placeholder": { color: "#a0a0a0" }
 				}
 			}
 		});
 
-		cardElement.mount('#tipCardElement_' + UUID);
+		cardElement.mount("#tipCardElement_" + UUID);
 
 		// Store for later use
 		if (!window.tipStripeElements) window.tipStripeElements = {};
 		window.tipStripeElements[UUID] = { stripe: stripe, cardElement: cardElement };
 
-		cardElement.on('change', function(event) {
+		cardElement.on("change", function (event) {
 			var amount = window.tipStripeElements[UUID].selectedAmount || 0;
 			document.getElementById("tipConfirmBtn_" + UUID).disabled = !event.complete || amount <= 0;
 		});
-
-	} catch(e) {
+	} catch (e) {
 		errorlog("Failed to init Stripe:", e);
 		document.getElementById("tipError_" + UUID).textContent = "Failed to load payment form";
 		document.getElementById("tipError_" + UUID).classList.remove("hidden");
@@ -23818,18 +23608,18 @@ async function initTipStripeElements(UUID, peer) {
 
 // Select a predefined tip amount
 function selectTipAmount(btn, UUID) {
-	document.querySelectorAll('#tipModal_' + UUID + ' .tipAmountBtn').forEach(function(b) {
-		b.classList.remove('selected');
+	document.querySelectorAll("#tipModal_" + UUID + " .tipAmountBtn").forEach(function (b) {
+		b.classList.remove("selected");
 	});
-	btn.classList.add('selected');
+	btn.classList.add("selected");
 
 	var amount = parseFloat(btn.dataset.amount);
 	var peer = session.rpcs[UUID] || session.pcs[UUID];
 	var currency = peer?.tipCurrency || session.tipCurrency || "USD";
 	var currencySymbol = getTipCurrencySymbol(currency);
 
-	document.getElementById('tipSelectedAmount_' + UUID).textContent = currencySymbol + amount.toFixed(2);
-	document.getElementById('tipCustomInput_' + UUID).value = "";
+	document.getElementById("tipSelectedAmount_" + UUID).textContent = currencySymbol + amount.toFixed(2);
+	document.getElementById("tipCustomInput_" + UUID).value = "";
 
 	if (window.tipStripeElements && window.tipStripeElements[UUID]) {
 		window.tipStripeElements[UUID].selectedAmount = amount;
@@ -23847,17 +23637,17 @@ function customTipAmount(UUID, value) {
 	var currencySymbol = getTipCurrencySymbol(currency);
 
 	// Deselect preset buttons
-	document.querySelectorAll('#tipModal_' + UUID + ' .tipAmountBtn').forEach(function(b) {
-		b.classList.remove('selected');
+	document.querySelectorAll("#tipModal_" + UUID + " .tipAmountBtn").forEach(function (b) {
+		b.classList.remove("selected");
 	});
 
 	if (amount > 0) {
-		document.getElementById('tipSelectedAmount_' + UUID).textContent = currencySymbol + amount.toFixed(2);
+		document.getElementById("tipSelectedAmount_" + UUID).textContent = currencySymbol + amount.toFixed(2);
 		if (window.tipStripeElements && window.tipStripeElements[UUID]) {
 			window.tipStripeElements[UUID].selectedAmount = amount;
 		}
 	} else {
-		document.getElementById('tipSelectedAmount_' + UUID).textContent = currencySymbol + "0";
+		document.getElementById("tipSelectedAmount_" + UUID).textContent = currencySymbol + "0";
 		if (window.tipStripeElements && window.tipStripeElements[UUID]) {
 			window.tipStripeElements[UUID].selectedAmount = 0;
 		}
@@ -23887,22 +23677,22 @@ async function confirmTip(UUID) {
 	var tipServer = peer.tipServer || session.tipServer || "https://ninjabacker.com";
 	var amount = stripeData.selectedAmount;
 	var currency = peer.tipCurrency || session.tipCurrency || "USD";
-	var tipperName = document.getElementById('tipName_' + UUID)?.value || "Anonymous";
-	var message = document.getElementById('tipMessageInput_' + UUID)?.value || "";
+	var tipperName = document.getElementById("tipName_" + UUID)?.value || "Anonymous";
+	var message = document.getElementById("tipMessageInput_" + UUID)?.value || "";
 	var performerUsername = peer.tipId || peer.streamID;
 
-	var submitBtn = document.getElementById('tipConfirmBtn_' + UUID);
-	var errorEl = document.getElementById('tipError_' + UUID);
+	var submitBtn = document.getElementById("tipConfirmBtn_" + UUID);
+	var errorEl = document.getElementById("tipError_" + UUID);
 
 	submitBtn.disabled = true;
 	submitBtn.textContent = "Processing...";
-	errorEl.classList.add('hidden');
+	errorEl.classList.add("hidden");
 
 	try {
 		// Create PaymentIntent
 		var intentResponse = await fetch(tipServer + "/v1/tip/intent", {
-			method: 'POST',
-			headers: { 'Content-Type': 'application/json' },
+			method: "POST",
+			headers: { "Content-Type": "application/json" },
 			body: JSON.stringify({
 				amount: amount,
 				currency: currency,
@@ -23914,7 +23704,7 @@ async function confirmTip(UUID) {
 
 		if (!intentResponse.ok) {
 			var errData = await intentResponse.json();
-			throw new Error(errData.error || 'Failed to create payment');
+			throw new Error(errData.error || "Failed to create payment");
 		}
 
 		var intentData = await intentResponse.json();
@@ -23928,11 +23718,11 @@ async function confirmTip(UUID) {
 			throw new Error(result.error.message);
 		}
 
-		if (result.paymentIntent.status === 'succeeded') {
+		if (result.paymentIntent.status === "succeeded") {
 			// Confirm with backend
 			await fetch(tipServer + "/v1/tip/confirm", {
-				method: 'POST',
-				headers: { 'Content-Type': 'application/json' },
+				method: "POST",
+				headers: { "Content-Type": "application/json" },
 				body: JSON.stringify({
 					tipId: intentData.tipId,
 					paymentIntentId: result.paymentIntent.id
@@ -23940,14 +23730,13 @@ async function confirmTip(UUID) {
 			});
 
 			// Success!
-			closeTipModal('tipModal_' + UUID, UUID);
+			closeTipModal("tipModal_" + UUID, UUID);
 			warnUser("Tip sent successfully! Thank you!", 3000);
 		}
-
-	} catch(e) {
+	} catch (e) {
 		errorlog("Tip payment error:", e);
 		errorEl.textContent = e.message;
-		errorEl.classList.remove('hidden');
+		errorEl.classList.remove("hidden");
 		submitBtn.disabled = false;
 		submitBtn.textContent = "Send Tip";
 	}
@@ -24240,7 +24029,7 @@ async function publishScreen() {
 
 			return res;
 		})
-		.catch(() => { });
+		.catch(() => {});
 }
 
 function getWidth() {
@@ -24652,8 +24441,7 @@ function publishWebcam(btn = false, miconly = false) {
 					// Check if user joined via text input (casual user)
 					if (sessionStorage.getItem("jvi")) {
 						sessionStorage.removeItem("jvi");
-						if (!urlParams.has("push") && !urlParams.has("id") && !urlParams.has("permaid")
-							&& !urlParams.has("perma") && !urlParams.has("sticky")) {
+						if (!urlParams.has("push") && !urlParams.has("id") && !urlParams.has("permaid") && !urlParams.has("perma") && !urlParams.has("sticky")) {
 							// Show invite header INSTEAD of "You are in room"
 							var inviteURL = location.protocol + "//" + location.host + location.pathname + "?room=" + session.roomid + getCloudflareInviteParam();
 							var urlPW = urlParams.get("password") || urlParams.get("pass") || urlParams.get("pw") || urlParams.get("p");
@@ -24665,7 +24453,7 @@ function publishWebcam(btn = false, miconly = false) {
 								getById("head9").classList.remove("hidden");
 							} else if (urlPW) {
 								// Actual password in URL - generate hash
-								generateHash(session.password + session.salt, 4).then(function(hash) {
+								generateHash(session.password + session.salt, 4).then(function (hash) {
 									inviteURL += "&hash=" + hash;
 									getById("inviteLinkURL").href = inviteURL;
 									getById("inviteLinkURL").innerText = inviteURL;
@@ -24842,7 +24630,7 @@ function parseURL4Iframe(iframeURL) {
 		}
 	}
 
-	if (iframeURL.startsWith("http://") && !electronApi && (location.hostname !== "insecure.vdo.ninja")) {
+	if (iframeURL.startsWith("http://") && !electronApi && location.hostname !== "insecure.vdo.ninja") {
 		try {
 			iframeURL = "https://" + iframeURL.split("http://")[1];
 		} catch (e) {
@@ -24852,13 +24640,13 @@ function parseURL4Iframe(iframeURL) {
 
 	if (iframeURL.startsWith("https://") || iframeURL.startsWith("http://")) {
 		var domain;
-			try {
-				domain = new URL(iframeURL);
-				domain = domain.hostname;
-			} catch (e) {
-				warnlog("Blocked invalid iframe URL.");
-				return "about:blank";
-			}
+		try {
+			domain = new URL(iframeURL);
+			domain = domain.hostname;
+		} catch (e) {
+			warnlog("Blocked invalid iframe URL.");
+			return "about:blank";
+		}
 
 		if (domain == "youtu.be") {
 			iframeURL = iframeURL.replace("youtu.be/", "youtube.com/watch?v=");
@@ -24977,7 +24765,7 @@ function soloLinkGenerator(streamID, scene = true) {
 
 	var wss = "";
 	if (session.wssSetViaUrl) {
-		if (session.customWSS && (session.customWSS !== true)) {
+		if (session.customWSS && session.customWSS !== true) {
 			wss = "&pie=" + session.customWSS;
 		} else if (session.customWSS == true) {
 			wss = "&wss=" + session.wss;
@@ -25034,7 +24822,7 @@ function YoutubeAPI(iframe, func, args) {
 			}),
 			"*"
 		);
-	} catch (e) { }
+	} catch (e) {}
 }
 
 function YoutubeListen(iframe_id) {
@@ -25047,7 +24835,7 @@ function YoutubeListen(iframe_id) {
 	}
 	try {
 		iframe.contentWindow.postMessage(JSON.stringify({ event: "listening", id: iframe_id }), "*"); //
-	} catch (e) { }
+	} catch (e) {}
 	setTimeout(
 		function (iframe_id) {
 			YoutubeListen(iframe_id);
@@ -25452,7 +25240,11 @@ session.publishIFrame = function (iframeURL) {
 
 	session.iframeSrc = parseURL4Iframe(iframeURL);
 
-	if (!session.iFramesAllowed) { errorlog("Can't create iFRAME - security is tainted due to possible CSS injection"); warnUser("Can't create iFRAME - security is tainted due to possible CSS injection"); return; }
+	if (!session.iFramesAllowed) {
+		errorlog("Can't create iFRAME - security is tainted due to possible CSS injection");
+		warnUser("Can't create iFRAME - security is tainted due to possible CSS injection");
+		return;
+	}
 
 	var iframe = document.createElement("iframe");
 	iframe.allow = "autoplay;camera;microphone;fullscreen;picture-in-picture;display-capture;midi;screen-wake-lock;"; // do not allow location
@@ -25701,14 +25493,15 @@ function disabledWebAudioPathway() {
 
 	var newStream = createMediaStream(); // This will be the returned stream
 
-	if (session.streamSrc && typeof session.streamSrc.clone === 'function' && !window.obsstudio) { // Prefer cloning if available and not obsstudio
+	if (session.streamSrc && typeof session.streamSrc.clone === "function" && !window.obsstudio) {
+		// Prefer cloning if available and not obsstudio
 		log("disabledWebAudioPathway: Cloning session.streamSrc (non-obsstudio path)");
 		newStream = session.streamSrc.clone();
 	} else {
 		log("disabledWebAudioPathway: Creating new stream and adding tracks manually.");
 		if (session.streamSrc) {
 			session.streamSrc.getAudioTracks().forEach(function (track) {
-				if (track.readyState === 'live') {
+				if (track.readyState === "live") {
 					// For obsstudio, audio tracks can also be cloned for consistency, though less critical than video.
 					// For simplicity here, adding original, but could be `track.clone()`
 					newStream.addTrack(track);
@@ -25726,7 +25519,7 @@ function disabledWebAudioPathway() {
 
 		if (videoSourceForDisabledPath) {
 			videoSourceForDisabledPath.getVideoTracks().forEach(function (track) {
-				if (track.readyState === 'live') {
+				if (track.readyState === "live") {
 					if (window.obsstudio) {
 						log(`disabledWebAudioPathway (obsstudio): Cloning video track ${track.id}`);
 						try {
@@ -25751,7 +25544,6 @@ function disabledWebAudioPathway() {
 }
 
 function outboundAudioPipeline(sourceStream = false) {
-
 	if (session.disableWebAudio) {
 		return disabledWebAudioPathway(); // Safemode
 	}
@@ -25769,7 +25561,7 @@ function outboundAudioPipeline(sourceStream = false) {
 			var audioTracksForCleanup = session.streamSrcClone.getAudioTracks();
 			if (audioTracksForCleanup.length) {
 				for (var waid in session.webAudios) {
-					if (session.webAudios[waid] && typeof session.webAudios[waid].stop === 'function') {
+					if (session.webAudios[waid] && typeof session.webAudios[waid].stop === "function") {
 						session.webAudios[waid].stop();
 					}
 					delete session.webAudios[waid];
@@ -25783,7 +25575,7 @@ function outboundAudioPipeline(sourceStream = false) {
 		}
 
 		// Create iOS-compatible stream (always clone for iOS)
-		if (session.streamSrc && typeof session.streamSrc.clone === 'function') {
+		if (session.streamSrc && typeof session.streamSrc.clone === "function") {
 			log("iOS: Cloning session.streamSrc");
 			streamSrc = session.streamSrc.clone();
 			session.streamSrcClone = streamSrc;
@@ -25795,7 +25587,7 @@ function outboundAudioPipeline(sourceStream = false) {
 	}
 
 	for (var waid in session.webAudios) {
-		if (session.webAudios[waid] && typeof session.webAudios[waid].stop === 'function') {
+		if (session.webAudios[waid] && typeof session.webAudios[waid].stop === "function") {
 			session.webAudios[waid].stop();
 		}
 		delete session.webAudios[waid];
@@ -25846,7 +25638,6 @@ function outboundAudioPipeline(sourceStream = false) {
 			}
 
 			return finalOutputStream;
-
 		} else {
 			log("No audio tracks found. Handling video passthrough.");
 			// Return video-only stream
@@ -25879,7 +25670,7 @@ function createOptimizedStream(source, shouldClone = false) {
 	if (!source) return newStream;
 
 	source.getAudioTracks().forEach(track => {
-		if (track.readyState === 'live') {
+		if (track.readyState === "live") {
 			if (shouldClone) {
 				try {
 					newStream.addTrack(track.clone());
@@ -25910,7 +25701,7 @@ function addVideoTracksToStream(targetStream, sourceStream) {
 
 	if (videoSourceStream) {
 		videoSourceStream.getVideoTracks().forEach(track => {
-			if (track.readyState === 'live') {
+			if (track.readyState === "live") {
 				// Only clone for OBS Studio
 				if (window.obsstudio) {
 					log(`OBS: Cloning video track ${track.id}`);
@@ -26098,7 +25889,7 @@ function applyAudioProcessing(webAudio, streamSrc) {
 			const tracks = streamSrc.getTracks();
 			if (tracks.length) {
 				tracks.forEach(track => {
-					track.addEventListener('ended', () => {
+					track.addEventListener("ended", () => {
 						log("Track ended, stopping webAudio");
 						webAudio.stop();
 					});
@@ -26127,8 +25918,10 @@ function applyMicPanning(inputNode, webAudio, value) {
 		value = 90;
 	}
 	value = parseFloat(value);
-	if (isNaN(value)) { value = 90; }
-	var panNorm = (value / 90.0) - 1.0;
+	if (isNaN(value)) {
+		value = 90;
+	}
+	var panNorm = value / 90.0 - 1.0;
 	if (panNorm < -1) panNorm = -1;
 	if (panNorm > 1) panNorm = 1;
 
@@ -26141,7 +25934,9 @@ function applyMicPanning(inputNode, webAudio, value) {
 		splitter.connect(mono, 1, 0);
 	} catch (e) {
 		// If connection fails (e.g., mono input), fallback to direct
-		try { inputNode.connect(mono, 0, 0); } catch (ee) { }
+		try {
+			inputNode.connect(mono, 0, 0);
+		} catch (ee) {}
 	}
 
 	// Pre-pan gain reduction to avoid clipping when panned
@@ -26169,7 +25964,7 @@ function applyMicPanning(inputNode, webAudio, value) {
 			} else {
 				webAudio.micPanNode.setPosition(x, 0, z);
 			}
-		} catch (e) { }
+		} catch (e) {}
 	}
 
 	webAudio.micPanGainNode.connect(webAudio.micPanNode);
@@ -26179,10 +25974,12 @@ function applyMicPanning(inputNode, webAudio, value) {
 function changeMicPanning(value, deviceid = null) {
 	// Update all active outbound webAudio chains
 	let pan = parseFloat(value);
-	if (isNaN(pan)) { pan = 90; }
+	if (isNaN(pan)) {
+		pan = 90;
+	}
 	if (pan < 0) pan = 0;
 	if (pan > 180) pan = 180;
-	let norm = (pan / 90.0) - 1.0;
+	let norm = pan / 90.0 - 1.0;
 	if (norm < -1) norm = -1;
 	if (norm > 1) norm = 1;
 	session.micPanning = pan;
@@ -26209,23 +26006,29 @@ function changeMicPanning(value, deviceid = null) {
 			if (wa.micPanGainNode && wa.micPanGainNode.gain) {
 				wa.micPanGainNode.gain.setValueAtTime(1 - Math.abs(norm) / 2, wa.audioContext.currentTime);
 			}
-		} catch (e) { errorlog(e); }
+		} catch (e) {
+			errorlog(e);
+		}
 	}
 }
 
 // helper to keep approval popup text current with label/streamID
 session.updateApprovalPrompt = function (UUID) {
 	try {
-		if (!session.director || !session.approval_popup) { return; }
-		var label = (session.rpcs[UUID] && session.rpcs[UUID].label) || ("Guest " + (UUID || '').substring(0, 8));
+		if (!session.director || !session.approval_popup) {
+			return;
+		}
+		var label = (session.rpcs[UUID] && session.rpcs[UUID].label) || "Guest " + (UUID || "").substring(0, 8);
 		var sid = (session.rpcs[UUID] && session.rpcs[UUID].streamID) || UUID;
-		try { label = ("" + label).replace(/[<>]/g, ""); sid = ("" + sid).replace(/[<>]/g, ""); } catch (e) { }
-		var line = "A guest is waiting to be admitted.\n\n" +
-			"Guest: " + label + "\n" +
-			"ID: " + sid + "\n\n" +
-			(session.directorState === false ? "Approve?\n(This sends the action to the main director.)" : "Approve?");
-		updateConfirmAlt('approval-' + UUID, line);
-	} catch (e) { errorlog(e); }
+		try {
+			label = ("" + label).replace(/[<>]/g, "");
+			sid = ("" + sid).replace(/[<>]/g, "");
+		} catch (e) {}
+		var line = "A guest is waiting to be admitted.\n\n" + "Guest: " + label + "\n" + "ID: " + sid + "\n\n" + (session.directorState === false ? "Approve?\n(This sends the action to the main director.)" : "Approve?");
+		updateConfirmAlt("approval-" + UUID, line);
+	} catch (e) {
+		errorlog(e);
+	}
 };
 
 function requestChangeMicPanning(value, UUID, track = 0) {
@@ -26281,7 +26084,7 @@ function createStopFunction(webAudio) {
 
 			try {
 				// Only disconnect if it has a disconnect method (is an audio node)
-				if (typeof webAudio[node].disconnect === 'function') {
+				if (typeof webAudio[node].disconnect === "function") {
 					webAudio[node].disconnect();
 					log("Disconnected node: " + node);
 				}
@@ -26826,21 +26629,17 @@ function activeSpeaker(border = false) {
 
 	// First pass: check if any video is available
 	for (var UUID in session.rpcs) {
-		if (session.rpcs[UUID].videoElement && session.rpcs[UUID].videoElement.srcObject &&
-			session.rpcs[UUID].videoElement.srcObject.getVideoTracks().length && !session.rpcs[UUID].videoMuted) {
+		if (session.rpcs[UUID].videoElement && session.rpcs[UUID].videoElement.srcObject && session.rpcs[UUID].videoElement.srcObject.getVideoTracks().length && !session.rpcs[UUID].videoMuted) {
 			anyVideoAvailable = true;
 			break;
 		}
 	}
 
 	for (var UUID in session.rpcs) {
-
 		if (session.scene) {
 			let pass = checkMuteState(UUID);
 			// If no one is visible and this person has video, show them immediately
-			if (pass && !anyoneIsSpeaking && !defaultSpeaker && anyVideoAvailable === false &&
-				session.rpcs[UUID].videoElement && session.rpcs[UUID].videoElement.srcObject &&
-				session.rpcs[UUID].videoElement.srcObject.getVideoTracks().length && !session.rpcs[UUID].videoMuted) {
+			if (pass && !anyoneIsSpeaking && !defaultSpeaker && anyVideoAvailable === false && session.rpcs[UUID].videoElement && session.rpcs[UUID].videoElement.srcObject && session.rpcs[UUID].videoElement.srcObject.getVideoTracks().length && !session.rpcs[UUID].videoMuted) {
 				session.rpcs[UUID].defaultSpeaker = true;
 				defaultSpeaker = true;
 				anyVideoAvailable = true;
@@ -26930,8 +26729,7 @@ function activeSpeaker(border = false) {
 			} else if (anyVideoAvailable === false) {
 				// Immediately select the first available video source if no one is currently visible
 				for (var UUID in session.rpcs) {
-					if (session.rpcs[UUID].videoElement && session.rpcs[UUID].videoElement.srcObject &&
-						session.rpcs[UUID].videoElement.srcObject.getVideoTracks().length && !session.rpcs[UUID].videoMuted) {
+					if (session.rpcs[UUID].videoElement && session.rpcs[UUID].videoElement.srcObject && session.rpcs[UUID].videoElement.srcObject.getVideoTracks().length && !session.rpcs[UUID].videoMuted) {
 						if (session.rpcs[UUID].defaultSpeaker !== false) {
 							clearTimeout(session.rpcs[UUID].defaultSpeaker);
 						} else {
@@ -27118,8 +26916,7 @@ function activeSpeaker(border = false) {
 			} else if (anyVideoAvailable === false) {
 				// Immediately select the first available video source if no one is currently visible
 				for (var UUID in session.rpcs) {
-					if (session.rpcs[UUID].videoElement && session.rpcs[UUID].videoElement.srcObject &&
-						session.rpcs[UUID].videoElement.srcObject.getVideoTracks().length && !session.rpcs[UUID].videoMuted) {
+					if (session.rpcs[UUID].videoElement && session.rpcs[UUID].videoElement.srcObject && session.rpcs[UUID].videoElement.srcObject.getVideoTracks().length && !session.rpcs[UUID].videoMuted) {
 						if (session.rpcs[UUID].defaultSpeaker !== false) {
 							clearTimeout(session.rpcs[UUID].defaultSpeaker);
 						} else {
@@ -27314,12 +27111,14 @@ async function joinRoom(roomname) {
 				if (session.director && session.authMode && window.vdoAuth && session.authToken && session.pendingRoomSettings) {
 					try {
 						window.vdoAuth.updateRoomSettings(session.realRoomId || session.roomid, session.pendingRoomSettings);
-					} catch (e) { console.error(e); }
+					} catch (e) {
+						console.error(e);
+					}
 					// Clear once applied
 					session.pendingRoomSettings = null;
 					try {
-						sessionStorage.removeItem('vdo_pending_room_settings');
-						sessionStorage.removeItem('vdo_pending_room_settings_recover');
+						sessionStorage.removeItem("vdo_pending_room_settings");
+						sessionStorage.removeItem("vdo_pending_room_settings_recover");
 					} catch (e2) {}
 				}
 				var token = "";
@@ -27450,7 +27249,7 @@ async function joinRoom(roomname) {
 
 async function createRoom(roomname = false, reload = false) {
 	var passwordRoom = "";
-	var createdViaWizard = (reload !== true) && (roomname === false);
+	var createdViaWizard = reload !== true && roomname === false;
 	if (reload === true) {
 		let oldDirectorSettings = getStorage("directorOtherSettings");
 		if (!oldDirectorSettings || typeof oldDirectorSettings !== "object") {
@@ -27519,7 +27318,7 @@ async function createRoom(roomname = false, reload = false) {
 
 		// Pre-join SSO room setup (optional)
 		try {
-			var ssoBox = getById('useSSOForRoom');
+			var ssoBox = getById("useSSOForRoom");
 			if (ssoBox && ssoBox.checked) {
 				// Enable auth mode for this room
 				session.authMode = true;
@@ -27528,12 +27327,15 @@ async function createRoom(roomname = false, reload = false) {
 				// Note: join gating handled by vdoAuth.joinRoom in joinRoom()
 				// Capture desired access mode to apply after join
 				var selected = document.querySelector('input[name="ssoAccessMode"]:checked');
-				var accessMode = (selected && selected.value) ? selected.value : 'public';
+				var accessMode = selected && selected.value ? selected.value : "public";
 				var allowlist = [];
-				if (accessMode === 'allowlist') {
-					var csv = (getById('preAllowlistCSV') && getById('preAllowlistCSV').value) ? getById('preAllowlistCSV').value : '';
+				if (accessMode === "allowlist") {
+					var csv = getById("preAllowlistCSV") && getById("preAllowlistCSV").value ? getById("preAllowlistCSV").value : "";
 					if (csv) {
-						allowlist = csv.split(',').map(x => x.trim()).filter(x => x.length > 0);
+						allowlist = csv
+							.split(",")
+							.map(x => x.trim())
+							.filter(x => x.length > 0);
 					}
 				}
 				// Store to apply after join
@@ -27541,36 +27343,38 @@ async function createRoom(roomname = false, reload = false) {
 				// Persist only when an OAuth redirect is expected.
 				if (!session.authToken && !session.universalToken) {
 					try {
-						sessionStorage.setItem('vdo_pending_room_settings', JSON.stringify(session.pendingRoomSettings));
-						sessionStorage.setItem('vdo_pending_room_settings_recover', '1');
-					} catch(e2){}
+						sessionStorage.setItem("vdo_pending_room_settings", JSON.stringify(session.pendingRoomSettings));
+						sessionStorage.setItem("vdo_pending_room_settings_recover", "1");
+					} catch (e2) {}
 				} else {
 					try {
-						sessionStorage.removeItem('vdo_pending_room_settings');
-						sessionStorage.removeItem('vdo_pending_room_settings_recover');
-					} catch(e2){}
+						sessionStorage.removeItem("vdo_pending_room_settings");
+						sessionStorage.removeItem("vdo_pending_room_settings_recover");
+					} catch (e2) {}
 				}
 				// If guests must sign in (authenticated/allowlist), mark as requireAuth for UX
-				if (accessMode === 'authenticated' || accessMode === 'allowlist') {
+				if (accessMode === "authenticated" || accessMode === "allowlist") {
 					session.requireAuth = true;
 				}
-				} else if (session.authMode && !session.pendingRoomSettings) {
-					// Recover settings after OAuth redirect (checkbox state lost on reload)
-					try {
-						var shouldRecover = sessionStorage.getItem('vdo_pending_room_settings_recover') === '1';
-						var stored = sessionStorage.getItem('vdo_pending_room_settings');
-						if (shouldRecover && stored) {
-							session.pendingRoomSettings = JSON.parse(stored);
-							if (session.pendingRoomSettings.accessMode === 'authenticated' || session.pendingRoomSettings.accessMode === 'allowlist') {
-								session.requireAuth = true;
-							}
+			} else if (session.authMode && !session.pendingRoomSettings) {
+				// Recover settings after OAuth redirect (checkbox state lost on reload)
+				try {
+					var shouldRecover = sessionStorage.getItem("vdo_pending_room_settings_recover") === "1";
+					var stored = sessionStorage.getItem("vdo_pending_room_settings");
+					if (shouldRecover && stored) {
+						session.pendingRoomSettings = JSON.parse(stored);
+						if (session.pendingRoomSettings.accessMode === "authenticated" || session.pendingRoomSettings.accessMode === "allowlist") {
+							session.requireAuth = true;
 						}
-						sessionStorage.removeItem('vdo_pending_room_settings');
-						sessionStorage.removeItem('vdo_pending_room_settings_recover');
-					} catch(e2){}
-				}
-			} catch (e) { errorlog(e); }
+					}
+					sessionStorage.removeItem("vdo_pending_room_settings");
+					sessionStorage.removeItem("vdo_pending_room_settings_recover");
+				} catch (e2) {}
+			}
+		} catch (e) {
+			errorlog(e);
 		}
+	}
 
 	var parsedClaimCap = parseInt(session.claimRoomCap);
 	if (Number.isFinite(parsedClaimCap) && parsedClaimCap > 0) {
@@ -27988,15 +27792,23 @@ function toggleCoDirector_transfer(ele) {
 
 function updateConfirmAlt(context, inputText) {
 	try {
-		if (!context) { return; }
+		if (!context) {
+			return;
+		}
 		var ctx = ("" + context).replace(/["<>]/g, "");
 		var modal = document.querySelector('.promptModal[data-context="' + ctx + '"]');
-		if (!modal) { return; }
+		if (!modal) {
+			return;
+		}
 		var text = "<span style='font-size:1.2em'>" + ("" + inputText).replace("\n", "</span><br /><span>") + "</span>";
 		text = text.replace(/\n/g, "<br />");
-		var msg = modal.querySelector('.promptModalMessage');
-		if (msg) { msg.innerHTML = text; }
-	} catch (e) { /* noop */ }
+		var msg = modal.querySelector(".promptModalMessage");
+		if (msg) {
+			msg.innerHTML = text;
+		}
+	} catch (e) {
+		/* noop */
+	}
 }
 
 function toggleCoDirector_approve(ele) {
@@ -28007,26 +27819,39 @@ function toggleCoDirector_approve(ele) {
 
 // Route approvals are default; no UI toggle needed anymore.
 
-	function toggleApprovalPopup(ele) {
-		session.approval_popup = ele.checked;
-		try {
-				var token = "";
-				if (session.token) { token += "&token=" + session.token; }
-				var roomKeyParam = session.claimBypassKey ? "&roomkey=" + session.claimBypassKey : "";
-				var url = "https://" + location.host + location.pathname + "?dir=" + session.roomid + getCloudflareInviteParam() + "&codirector=" + session.directorPassword + token + roomKeyParam;
-				if (session.approval_popup) { url += "&approvepopup"; }
-				try { console.log("[flags] toggled approval_popup=" + session.approval_popup + "; co-director invite=" + url); } catch (e) { }
-				var implicitAuthSecret = session.authMode && session.authImplicitRoomSecret && (session.password === session.authImplicitRoomSecret);
-				if (implicitAuthSecret) { url += "&auth"; }
-				if ((session.password !== session.sitePassword) && !implicitAuthSecret) {
-					if (session.password === false) { url += "&password=false"; }
-					else { url += "&password=" + session.password; }
-				}
-				if (getById("codirectorSettings_invite")) {
-					getById("codirectorSettings_invite").value = url;
-				}
-			} catch (e) { /* noop */ }
+function toggleApprovalPopup(ele) {
+	session.approval_popup = ele.checked;
+	try {
+		var token = "";
+		if (session.token) {
+			token += "&token=" + session.token;
 		}
+		var roomKeyParam = session.claimBypassKey ? "&roomkey=" + session.claimBypassKey : "";
+		var url = "https://" + location.host + location.pathname + "?dir=" + session.roomid + getCloudflareInviteParam() + "&codirector=" + session.directorPassword + token + roomKeyParam;
+		if (session.approval_popup) {
+			url += "&approvepopup";
+		}
+		try {
+			console.log("[flags] toggled approval_popup=" + session.approval_popup + "; co-director invite=" + url);
+		} catch (e) {}
+		var implicitAuthSecret = session.authMode && session.authImplicitRoomSecret && session.password === session.authImplicitRoomSecret;
+		if (implicitAuthSecret) {
+			url += "&auth";
+		}
+		if (session.password !== session.sitePassword && !implicitAuthSecret) {
+			if (session.password === false) {
+				url += "&password=false";
+			} else {
+				url += "&password=" + session.password;
+			}
+		}
+		if (getById("codirectorSettings_invite")) {
+			getById("codirectorSettings_invite").value = url;
+		}
+	} catch (e) {
+		/* noop */
+	}
+}
 
 async function toggleCoDirector(ele) {
 	//session.coDirectorAllowed = ele.checked;
@@ -28076,11 +27901,11 @@ async function toggleCoDirector(ele) {
 	if (session.approval_popup) {
 		getById("codirectorSettings_invite").value += "&approvepopup";
 	}
-	var implicitAuthSecret = session.authMode && session.authImplicitRoomSecret && (session.password === session.authImplicitRoomSecret);
+	var implicitAuthSecret = session.authMode && session.authImplicitRoomSecret && session.password === session.authImplicitRoomSecret;
 	if (implicitAuthSecret) {
 		getById("codirectorSettings_invite").value += "&auth";
 	}
-	if ((session.password !== session.sitePassword) && !implicitAuthSecret) {
+	if (session.password !== session.sitePassword && !implicitAuthSecret) {
 		if (session.password === false) {
 			getById("codirectorSettings_invite").value += "&password=false";
 		} else {
@@ -28284,7 +28109,7 @@ async function createRoomCallback(passAdd, passAdd2) {
 		document.querySelectorAll(".hidden2").forEach(ele2 => {
 			ele2.classList.remove("hidden2");
 		});
-	} catch (e) { }
+	} catch (e) {}
 
 	getById("head1").className = "hidden";
 	getById("head2").className = "hidden";
@@ -28323,27 +28148,27 @@ async function createRoomCallback(passAdd, passAdd2) {
 		if (session.token) {
 			token += "&token=" + session.token;
 		}
-			var roomKeyParam = session.claimBypassKey ? "&roomkey=" + session.claimBypassKey : "";
+		var roomKeyParam = session.claimBypassKey ? "&roomkey=" + session.claimBypassKey : "";
 
-			getById("codirectorSettings_invite").value = "https://" + location.host + location.pathname + "?dir=" + session.roomid + getCloudflareInviteParam() + "&codirector=" + session.directorPassword + token + roomKeyParam;
-			if (session.approval_popup) {
-				getById("codirectorSettings_invite").value += "&approvepopup";
-			}
-			var implicitAuthSecret = session.authMode && session.authImplicitRoomSecret && (session.password === session.authImplicitRoomSecret);
-			if (implicitAuthSecret) {
-				getById("codirectorSettings_invite").value += "&auth";
-			}
-			if ((session.password !== session.sitePassword) && !implicitAuthSecret) {
-				if (session.password == false) {
-					getById("codirectorSettings_invite").value += "&password=false";
-				} else {
-					getById("codirectorSettings_invite").value += "&password=" + session.password;
-				}
-			}
-
-			if (session.codirector_transfer) {
-				getById("codirectorSettings_transfer").checked = true;
+		getById("codirectorSettings_invite").value = "https://" + location.host + location.pathname + "?dir=" + session.roomid + getCloudflareInviteParam() + "&codirector=" + session.directorPassword + token + roomKeyParam;
+		if (session.approval_popup) {
+			getById("codirectorSettings_invite").value += "&approvepopup";
+		}
+		var implicitAuthSecret = session.authMode && session.authImplicitRoomSecret && session.password === session.authImplicitRoomSecret;
+		if (implicitAuthSecret) {
+			getById("codirectorSettings_invite").value += "&auth";
+		}
+		if (session.password !== session.sitePassword && !implicitAuthSecret) {
+			if (session.password == false) {
+				getById("codirectorSettings_invite").value += "&password=false";
 			} else {
+				getById("codirectorSettings_invite").value += "&password=" + session.password;
+			}
+		}
+
+		if (session.codirector_transfer) {
+			getById("codirectorSettings_transfer").checked = true;
+		} else {
 			getById("codirectorSettings_transfer").checked = false;
 		}
 		if (session.codirector_changeURL) {
@@ -28397,14 +28222,14 @@ async function createRoomCallback(passAdd, passAdd2) {
 
 		// Create universal token for scene links if we're authenticated
 		if (session.authToken && !session.universalViewToken) {
-				vdoAuth.createUniversalToken().then(() => {
-					// Update all links once token is created
-					if (session.universalViewToken) {
-						// Update scene link with universal token
-						var sceneAuthParams = "&universaltoken=" + session.universalViewToken;
-						getById("director_block_3").dataset.raw = "https://" + location.host + location.pathname + "?scene&room=" + session.roomid + codecGroupFlag + passAdd2 + wss + token + sceneAuthParams + roomKeyParam;
-						getById("director_block_3").href = "https://" + location.host + location.pathname + "?scene&room=" + session.roomid + codecGroupFlag + passAdd2 + wss + token + sceneAuthParams + roomKeyParam;
-						getById("director_block_3").innerText = "https://" + location.host + location.pathname + "?scene&room=" + session.roomid + codecGroupFlag + passAdd2 + wss + token + sceneAuthParams + roomKeyParam;
+			vdoAuth.createUniversalToken().then(() => {
+				// Update all links once token is created
+				if (session.universalViewToken) {
+					// Update scene link with universal token
+					var sceneAuthParams = "&universaltoken=" + session.universalViewToken;
+					getById("director_block_3").dataset.raw = "https://" + location.host + location.pathname + "?scene&room=" + session.roomid + codecGroupFlag + passAdd2 + wss + token + sceneAuthParams + roomKeyParam;
+					getById("director_block_3").href = "https://" + location.host + location.pathname + "?scene&room=" + session.roomid + codecGroupFlag + passAdd2 + wss + token + sceneAuthParams + roomKeyParam;
+					getById("director_block_3").innerText = "https://" + location.host + location.pathname + "?scene&room=" + session.roomid + codecGroupFlag + passAdd2 + wss + token + sceneAuthParams + roomKeyParam;
 
 					// Update all solo links
 					updateAllSoloLinks();
@@ -28791,7 +28616,7 @@ function requestAudioSettings(ele) {
 		query("#container_" + UUID + " [data-action-type='advanced-camera-settings']").ariaPressed = "false";
 		query("#container_" + UUID + " .advancedVideoSettings").classList.add("hidden");
 		query("#container_" + UUID + " .advancedVideoSettings").innerHTML = "";
-	} catch (e) { }
+	} catch (e) {}
 
 	if (ele.value == 1) {
 		ele.value = 0;
@@ -28832,7 +28657,7 @@ function requestVideoSettings(ele) {
 		query("#container_" + UUID + " [data-action-type='advanced-audio-settings']").ariaPressed = "false";
 		query("#container_" + UUID + " .advancedAudioSettings").classList.add("hidden");
 		query("#container_" + UUID + " .advancedAudioSettings").innerHTML = "";
-	} catch (e) { }
+	} catch (e) {}
 
 	if (ele.value == 1) {
 		ele.value = 0;
@@ -28949,9 +28774,7 @@ async function createDirectorOnlyBox() {
 			biggestSlot += 1;
 		} else if (slotDefault !== null && session.slotmode == 2) {
 			// Check if slot is already in use - include director's stream
-			const slotInUse = Object.keys(session.rpcs).some(UUID =>
-				getSlotState(UUID) === slotDefault
-			) || getSlotState(session.streamID) === slotDefault || getSlotState(session.streamID + ":s") === slotDefault;
+			const slotInUse = Object.keys(session.rpcs).some(UUID => getSlotState(UUID) === slotDefault) || getSlotState(session.streamID) === slotDefault || getSlotState(session.streamID + ":s") === slotDefault;
 
 			if (slotInUse) {
 				slotDefault = null; // This slot is already in use
@@ -28979,8 +28802,7 @@ async function createDirectorOnlyBox() {
 		var slotStyle = biggestSlot ? " style='background:" + getSlotColor(biggestSlot - 1) + ";'" : "";
 
 		// Build HTML with same structure
-		buttons +=
-			`<div draggable='true' title='Drag to swap layout positions'
+		buttons += `<div draggable='true' title='Drag to swap layout positions'
 					ondragend='dragendSlot(event)'
 					ondragstart='dragSlot(event)'
 					ondrop='dropSlot(event)'
@@ -29127,7 +28949,6 @@ async function createDirectorOnlyBox() {
 		labelID.innerText = session.label;
 	}
 	pokeIframeAPI("control-box", true, true);
-
 }
 
 async function createDirectorScreenshareOnlyBox() {
@@ -29192,8 +29013,7 @@ async function createDirectorScreenshareOnlyBox() {
 		var slotName = biggestSlot ? "slot: " + biggestSlot : "unset";
 		var slotStyle = biggestSlot ? " style='background:" + getSlotColor(biggestSlot - 1) + ";'" : "";
 
-		buttons +=
-			`<div draggable='true' title='Drag to swap layout positions'
+		buttons += `<div draggable='true' title='Drag to swap layout positions'
 				 ondragend='dragendSlot(event)'
 				 ondragstart='dragSlot(event)'
 				 ondrop='dropSlot(event)'
@@ -29317,7 +29137,6 @@ async function createDirectorScreenshareOnlyBox() {
 	});
 
 	pokeIframeAPI("control-box", true, true);
-
 }
 
 function shiftPC(ele, shift, director = false) {
@@ -29387,7 +29206,7 @@ function updateLockedElements() {
 			if (parseInt(lock)) {
 				lockPosition(document.getElementById("position_" + UUID), true);
 			}
-		} catch (e) { }
+		} catch (e) {}
 	}
 }
 
@@ -29402,14 +29221,14 @@ function lockPosition(ele, apply = false) {
 
 				while (currentPosition > parseInt(ele.dataset.locked)) {
 					var node = document.getElementById("container_" + UUID);
-					(parent = node.parentNode), (prev = node.previousSibling), (oldChild = parent.removeChild(node));
+					((parent = node.parentNode), (prev = node.previousSibling), (oldChild = parent.removeChild(node)));
 					parent.insertBefore(oldChild, prev);
 					currentPosition = Array.prototype.indexOf.call(getById("guestFeeds").children, document.getElementById("container_" + UUID)) + 1;
 				}
 
 				while (currentPosition < parseInt(ele.dataset.locked) && getById("guestFeeds").children.length > currentPosition) {
 					var node = document.getElementById("container_" + UUID);
-					(parent = node.parentNode), (next = node.nextSibling), (oldChild = parent.removeChild(node));
+					((parent = node.parentNode), (next = node.nextSibling), (oldChild = parent.removeChild(node)));
 					parent.insertBefore(node, next.nextSibling);
 					currentPosition = Array.prototype.indexOf.call(getById("guestFeeds").children, document.getElementById("container_" + UUID)) + 1;
 				}
@@ -29502,19 +29321,19 @@ function dropSlot(event) {
 	origThing.dataset.sid = targetSID;
 
 	// Update the UI text as well
-	const targetButton = targetThing.querySelector('button');
-	const origButton = origThing.querySelector('button');
+	const targetButton = targetThing.querySelector("button");
+	const origButton = origThing.querySelector("button");
 
 	if (targetButton) {
-		targetButton.innerText = targetSlot ? `slot: ${targetSlot}` : 'unset';
+		targetButton.innerText = targetSlot ? `slot: ${targetSlot}` : "unset";
 	}
 
 	if (origButton) {
-		origButton.innerText = origSlot ? `slot: ${origSlot}` : 'unset';
+		origButton.innerText = origSlot ? `slot: ${origSlot}` : "unset";
 	}
 
 	// Update past slots for future reference
-	session.pastSlots[SID] = targetSlot;  // we don't need to run syncSlotState(), as this handles it
+	session.pastSlots[SID] = targetSlot; // we don't need to run syncSlotState(), as this handles it
 	session.pastSlots[targetSID] = origSlot;
 
 	// Tell any iframes about the swap
@@ -29600,7 +29419,7 @@ function setSlot(ele, slot) {
 			slot = parseInt(slot) || 0;
 
 			// Find container with stream ID
-			const container = ele.closest('[data-sid]');
+			const container = ele.closest("[data-sid]");
 			const streamID = container ? container.dataset.sid : null;
 
 			if (!streamID) {
@@ -29629,16 +29448,16 @@ function setSlot(ele, slot) {
 					if (otherSlotBar) {
 						otherSlotBar.dataset.slot = currentSlot;
 						applySlotColor(otherSlotBar, currentSlot);
-						const otherButton = otherSlotBar.querySelector('button');
+						const otherButton = otherSlotBar.querySelector("button");
 						if (otherButton) {
-							otherButton.innerText = currentSlot ? `slot: ${currentSlot}` : 'unset';
+							otherButton.innerText = currentSlot ? `slot: ${currentSlot}` : "unset";
 						}
 					}
 
 					// Update UI for the element we're setting
 					container.dataset.slot = slot;
 					applySlotColor(container, slot);
-					ele.innerText = slot ? `slot: ${slot}` : 'unset';
+					ele.innerText = slot ? `slot: ${slot}` : "unset";
 
 					// Update pastSlots
 					session.pastSlots[streamID] = slot;
@@ -29662,7 +29481,7 @@ function setSlot(ele, slot) {
 					// Update UI
 					container.dataset.slot = slot;
 					applySlotColor(container, slot);
-					ele.innerText = slot ? `slot: ${slot}` : 'unset';
+					ele.innerText = slot ? `slot: ${slot}` : "unset";
 
 					// Update pastSlots
 					session.pastSlots[streamID] = slot;
@@ -29687,7 +29506,7 @@ function setSlot(ele, slot) {
 				// Update UI
 				container.dataset.slot = slot;
 				applySlotColor(container, slot);
-				ele.innerText = slot ? `slot: ${slot}` : 'unset';
+				ele.innerText = slot ? `slot: ${slot}` : "unset";
 
 				// Update pastSlots
 				session.pastSlots[streamID] = slot;
@@ -29698,7 +29517,6 @@ function setSlot(ele, slot) {
 
 			// Always update all peers
 			broadcastSlotUpdate();
-
 		} catch (e) {
 			errorlog(e);
 			return false;
@@ -29786,9 +29604,9 @@ function syncSlotState(streamID, slotValue = false, updateUI = true) {
 		if (slotsBar) {
 			slotsBar.dataset.slot = slotValue;
 			applySlotColor(slotsBar, slotValue);
-			const slotButton = slotsBar.querySelector('button');
+			const slotButton = slotsBar.querySelector("button");
 			if (slotButton) {
-				slotButton.innerText = slotValue ? `slot: ${slotValue}` : 'unset';
+				slotButton.innerText = slotValue ? `slot: ${slotValue}` : "unset";
 			}
 		}
 	}
@@ -29797,7 +29615,9 @@ function syncSlotState(streamID, slotValue = false, updateUI = true) {
 	session.pastSlots[streamID] = slotValue || 0;
 
 	clearTimeout(session.slotBroadcastThrottle);
-	session.slotBroadcastThrottle = setTimeout(function () { broadcastSlotUpdate(); }, 10);
+	session.slotBroadcastThrottle = setTimeout(function () {
+		broadcastSlotUpdate();
+	}, 10);
 	return true;
 }
 function broadcastSlotUpdate(UUID = false) {
@@ -29825,9 +29645,9 @@ function updateSlotUI() {
 		if (slotBar) {
 			slotBar.dataset.slot = slot;
 			applySlotColor(slotBar, slot);
-			const button = slotBar.querySelector('button');
+			const button = slotBar.querySelector("button");
 			if (button) {
-				button.innerText = slot ? `slot: ${slot}` : 'unset';
+				button.innerText = slot ? `slot: ${slot}` : "unset";
 			}
 		}
 	});
@@ -29970,9 +29790,9 @@ function createControlBox(UUID, soloLink, streamID, slot_init = false) {
 		ele.dataset.sid = streamID;
 	});
 
-
 	var buttons = "";
-	if (session.slotmode && slot_init !== 0) { // slot_init === 0 means guest explicitly opted out of slots
+	if (session.slotmode && slot_init !== 0) {
+		// slot_init === 0 means guest explicitly opted out of slots
 		var biggestSlot = 0;
 		var slotDefault = null;
 
@@ -30001,14 +29821,10 @@ function createControlBox(UUID, soloLink, streamID, slot_init = false) {
 			biggestSlot += 1;
 		} else if (slotDefault !== null && session.slotmode == 2) {
 			// Check if slot is already in use by any remote participant
-			const remoteSlotInUse = Object.keys(session.rpcs).some(UUID =>
-				getSlotState(UUID) === slotDefault
-			);
+			const remoteSlotInUse = Object.keys(session.rpcs).some(UUID => getSlotState(UUID) === slotDefault);
 
 			// Check if slot is used by the director
-			const directorSlotInUse = Object.entries(session.currentSlots).some(([slot, sid]) =>
-				parseInt(slot) === slotDefault && (sid === session.streamID || sid === session.streamID + ":s")
-			);
+			const directorSlotInUse = Object.entries(session.currentSlots).some(([slot, sid]) => parseInt(slot) === slotDefault && (sid === session.streamID || sid === session.streamID + ":s"));
 
 			if (remoteSlotInUse || directorSlotInUse) {
 				slotDefault = null; // This slot is already in use
@@ -30039,8 +29855,7 @@ function createControlBox(UUID, soloLink, streamID, slot_init = false) {
 		var slotName = biggestSlot ? "slot: " + biggestSlot : "unset";
 		var slotStyle = biggestSlot ? " style='background:" + getSlotColor(biggestSlot - 1) + ";'" : "";
 
-		buttons +=
-			`<div draggable='true' title='Drag to swap layout positions'
+		buttons += `<div draggable='true' title='Drag to swap layout positions'
 				 ondragend='dragendSlot(event)'
 				 ondragstart='dragSlot(event)'
 				 ondrop='dropSlot(event)'
@@ -30375,8 +30190,7 @@ function createControlBoxScreenshare(UUID, soloLink, streamID) {
 		session.pastSlots[streamID] = biggestSlot;
 
 		// Build HTML with same structure
-		buttons +=
-			`<div draggable='true' title='Drag to swap layout positions'
+		buttons += `<div draggable='true' title='Drag to swap layout positions'
 				 ondragend='dragendSlot(event)'
 				 ondragstart='dragSlot(event)'
 				 ondrop='dropSlot(event)'
@@ -30576,7 +30390,7 @@ function minimizeMe(button, director = false) {
 function blackoutMode() {
 	var overlay = document.getElementById("blackoutOverlay");
 	if (!overlay) {
-		overlay = document.createElement('div');
+		overlay = document.createElement("div");
 		overlay.id = "blackoutOverlay";
 		overlay.style.cssText = `
             position: fixed;
@@ -30593,7 +30407,7 @@ function blackoutMode() {
             cursor: pointer;
             z-index: 9999;
         `;
-		overlay.textContent = 'Click to exit black-out mode';
+		overlay.textContent = "Click to exit black-out mode";
 		document.body.appendChild(overlay);
 	} else {
 		overlay.classList.remove("hidden");
@@ -30601,10 +30415,10 @@ function blackoutMode() {
 
 	function exitBlackout() {
 		overlay.classList.add("hidden");
-		overlay.removeEventListener('click', exitBlackout);
+		overlay.removeEventListener("click", exitBlackout);
 	}
 
-	overlay.addEventListener('click', exitBlackout);
+	overlay.addEventListener("click", exitBlackout);
 }
 
 function cycleCameras() {
@@ -30736,12 +30550,16 @@ async function enumerateDevices() {
 	log("enumerated start");
 
 	const timeout = new Promise((_, reject) =>
-		setTimeout(() => reject(function () {
-			if (!session.cleanOutput) {
-				warnUser("The browser has not responded to our request to list available media devices.\n\nPossible solutions:\n\n- Restart the computer and try again\n- Try another browser\n- Remove or uninstall devices that are not needed\n- Uninstall and reinstall your browser");
-			}
-			new Error("Device enumeration timed out.\n\nThe browser has not responded to our request to list available media devices.\n\nPossible solutions:\n\n- Restart the computer and try again\n- Try another browser\n- Remove or uninstall devices that are not needed\n- Uninstall and reinstall your browser");
-		}), 15000)
+		setTimeout(
+			() =>
+				reject(function () {
+					if (!session.cleanOutput) {
+						warnUser("The browser has not responded to our request to list available media devices.\n\nPossible solutions:\n\n- Restart the computer and try again\n- Try another browser\n- Remove or uninstall devices that are not needed\n- Uninstall and reinstall your browser");
+					}
+					new Error("Device enumeration timed out.\n\nThe browser has not responded to our request to list available media devices.\n\nPossible solutions:\n\n- Restart the computer and try again\n- Try another browser\n- Remove or uninstall devices that are not needed\n- Uninstall and reinstall your browser");
+				}),
+			15000
+		)
 	);
 
 	const enumeratePromise = new Promise(async (resolve, reject) => {
@@ -30851,10 +30669,11 @@ function requestOutputAudioStream() {
 }
 
 let selectedScreenShareAudioDevices = [];
-async function requestAudioStream() { // for the screen share.
-	const deviceList = document.getElementById('audioDeviceList');
-	const errorElement = document.getElementById('audioSelectError');
-	const showDevicesButton = document.getElementById('showAudioDevices');
+async function requestAudioStream() {
+	// for the screen share.
+	const deviceList = document.getElementById("audioDeviceList");
+	const errorElement = document.getElementById("audioSelectError");
+	const showDevicesButton = document.getElementById("showAudioDevices");
 
 	try {
 		// Request audio permission first
@@ -30868,12 +30687,12 @@ async function requestAudioStream() { // for the screen share.
 
 		// Enumerate devices
 		const devices = await navigator.mediaDevices.enumerateDevices();
-		const audioInputs = devices.filter(device => device.kind === 'audioinput');
+		const audioInputs = devices.filter(device => device.kind === "audioinput");
 
 		// Clear and show device list
-		deviceList.innerHTML = '';
-		deviceList.style.display = 'block';
-		showDevicesButton.style.display = 'none';
+		deviceList.innerHTML = "";
+		deviceList.style.display = "block";
+		showDevicesButton.style.display = "none";
 
 		selectedScreenShareAudioDevices = [];
 
@@ -30881,26 +30700,26 @@ async function requestAudioStream() { // for the screen share.
 		audioInputs.forEach(device => {
 			const deviceLabel = device.label || `Microphone ${device.deviceId.slice(0, 4)}`;
 
-			const div = document.createElement('div');
-			div.className = 'audio-device-item';
+			const div = document.createElement("div");
+			div.className = "audio-device-item";
 
-			const checkbox = document.createElement('input');
-			checkbox.type = 'checkbox';
+			const checkbox = document.createElement("input");
+			checkbox.type = "checkbox";
 			checkbox.id = device.deviceId;
 			checkbox.value = device.deviceId;
 
 			// Check if device was previously selected
-			if (session.audioDevice && ((typeof session.audioDevice === 'object' && session.audioDevice.includes(device.deviceId)) || normalizeDeviceLabel(deviceLabel).includes(session.audioDevice))) {
+			if (session.audioDevice && ((typeof session.audioDevice === "object" && session.audioDevice.includes(device.deviceId)) || normalizeDeviceLabel(deviceLabel).includes(session.audioDevice))) {
 				checkbox.checked = true;
 				selectedScreenShareAudioDevices.push(device.deviceId);
 			}
 
-			checkbox.addEventListener('change', function () {
+			checkbox.addEventListener("change", function () {
 				// Update session.audioDevice array
 				// if (!session.audioDevice || typeof session.audioDevice !== 'object') {
 				// session.audioDevice = [];
 				// }
-				if (!selectedScreenShareAudioDevices || typeof selectedScreenShareAudioDevices !== 'object') {
+				if (!selectedScreenShareAudioDevices || typeof selectedScreenShareAudioDevices !== "object") {
 					selectedScreenShareAudioDevices = [];
 				}
 
@@ -30917,7 +30736,7 @@ async function requestAudioStream() { // for the screen share.
 				}
 			});
 
-			const label = document.createElement('label');
+			const label = document.createElement("label");
 			label.htmlFor = device.deviceId;
 			label.textContent = deviceLabel;
 
@@ -30926,21 +30745,20 @@ async function requestAudioStream() { // for the screen share.
 			deviceList.appendChild(div);
 		});
 
-		errorElement.style.display = 'none';
-
+		errorElement.style.display = "none";
 	} catch (e) {
-		let errorMessage = '';
+		let errorMessage = "";
 
 		if (!window.isSecureContext) {
-			errorMessage = 'This website must be loaded in a secure context (HTTPS) to access audio devices.';
+			errorMessage = "This website must be loaded in a secure context (HTTPS) to access audio devices.";
 		} else if (/ipad|iphone|ipod/.test(navigator.userAgent.toLowerCase())) {
-			errorMessage = 'iOS 13.4 or later is recommended for audio device access.';
+			errorMessage = "iOS 13.4 or later is recommended for audio device access.";
 		} else {
-			errorMessage = 'An error occurred while accessing audio devices.';
+			errorMessage = "An error occurred while accessing audio devices.";
 		}
 
 		errorElement.textContent = errorMessage;
-		errorElement.style.display = 'block';
+		errorElement.style.display = "block";
 	}
 }
 
@@ -30991,7 +30809,7 @@ function loadSettings() {
 			if (session.store && session.store.SelectedVideoInputDevices) {
 				SelectedVideoInputDevices = session.store.SelectedVideoInputDevices;
 			}
-		} catch (e) { }
+		} catch (e) {}
 	}
 }
 
@@ -31026,7 +30844,7 @@ function gotDevices(deviceInfos, miconly = false) {
 
 		// Then sort by label if both exist
 		if (a.label && b.label) {
-			return a.label.localeCompare(b.label, undefined, { sensitivity: 'base' });
+			return a.label.localeCompare(b.label, undefined, { sensitivity: "base" });
 		}
 
 		return 0;
@@ -31165,9 +30983,9 @@ function gotDevices(deviceInfos, miconly = false) {
 			matched2.sort((a, b) => {
 				if (a.label && b.label) {
 					if (a.label.length < b.label.length) {
-						return -1
+						return -1;
 					}
-					return a.label.localeCompare(b.label, undefined, { sensitivity: 'base' });
+					return a.label.localeCompare(b.label, undefined, { sensitivity: "base" });
 				}
 				return 0;
 			});
@@ -31364,7 +31182,7 @@ function gotDevices(deviceInfos, miconly = false) {
 							getById("multiselect1").checked = false;
 							try {
 								getById("multiselect1").parentNode.style.display = "none";
-							} catch (e) { }
+							} catch (e) {}
 							adMatch[j] = null;
 							break;
 						} else if (normalizeDeviceLabel(deviceInfo.label).includes(adMatch[j])) {
@@ -31374,7 +31192,7 @@ function gotDevices(deviceInfos, miconly = false) {
 							getById("multiselect1").checked = false;
 							try {
 								getById("multiselect1").parentNode.style.display = "none";
-							} catch (e) { }
+							} catch (e) {}
 							adMatch[j] = null;
 							break;
 						}
@@ -31388,7 +31206,7 @@ function gotDevices(deviceInfos, miconly = false) {
 					getById("multiselect1").checked = false;
 					try {
 						getById("multiselect1").parentNode.style.display = "none";
-					} catch (e) { }
+					} catch (e) {}
 				}
 
 				option.value = deviceInfo.deviceId || "default";
@@ -31929,10 +31747,10 @@ function gotDevices2(deviceInfos) {
 								activeAudioIds.add(s.deviceId);
 							}
 						}
-					} catch (e) { }
+					} catch (e) {}
 				});
 			}
-		} catch (e) { }
+		} catch (e) {}
 
 		// Identify normalized labels that have non-default/communications entries
 		const nonDefaultNormLabelSet = new Set();
@@ -31945,7 +31763,7 @@ function gotDevices2(deviceInfos) {
 					nonDefaultNormLabelSet.add(normalizeAudioAliasLabel(d.label));
 				}
 			}
-		} catch (e) { }
+		} catch (e) {}
 
 		// Track which normalized labels we've already auto-checked to avoid duplicates
 		const checkedByNormLabel = new Set();
@@ -31988,7 +31806,7 @@ function gotDevices2(deviceInfos) {
 					if (deviceInfo.deviceId) {
 						addedDeviceIds.add(deviceInfo.deviceId);
 					}
-				} catch (e) { }
+				} catch (e) {}
 
 				var option = document.createElement("input");
 				option.type = "checkbox";
@@ -32005,7 +31823,7 @@ function gotDevices2(deviceInfos) {
 						shouldCheck = true;
 					} else if (!activeAudioIds.size && deviceInfo.label && activeAudioNormLabels.has(normLabel)) {
 						// Prefer non-default entries when multiple share a label
-						const isDefaultish = (devIdLower === "default" || devIdLower === "communications");
+						const isDefaultish = devIdLower === "default" || devIdLower === "communications";
 						if (checkedByNormLabel.has(normLabel)) {
 							shouldCheck = false;
 						} else if (isDefaultish && nonDefaultNormLabelSet.has(normLabel)) {
@@ -32021,15 +31839,19 @@ function gotDevices2(deviceInfos) {
 							checkedByNormLabel.add(normLabel);
 						}
 					}
-				} catch (e) { }
+				} catch (e) {}
 
 				option.style.display = "none";
 				option.value = deviceInfo.deviceId || "default";
 				option.name = "multiselecta" + counter;
 				option.id = "multiselecta" + counter;
 				option.dataset.label = deviceInfo.label || "microphone " + ((audioInputSelect.length || 0) + 1);
-				try { option.dataset.norm = normalizeAudioAliasLabel(option.dataset.label); } catch (e) { }
-				try { option.dataset.groupId = deviceInfo.groupId || ""; } catch (e) { }
+				try {
+					option.dataset.norm = normalizeAudioAliasLabel(option.dataset.label);
+				} catch (e) {}
+				try {
+					option.dataset.groupId = deviceInfo.groupId || "";
+				} catch (e) {}
 
 				var label = document.createElement("label");
 				label.for = option.name;
@@ -32250,7 +32072,7 @@ function gotDevices2(deviceInfos) {
 					}
 					return;
 				}
-			} catch (e) { }
+			} catch (e) {}
 			activatedPreview = false;
 			grabVideo(session.quality, "videosource", "select#videoSource3");
 
@@ -32459,42 +32281,53 @@ function refreshVideoDevice(UUID = false) {
 		return;
 	}
 	log("refreshing video device..");
-			activatedPreview = false;
-			grabVideo(session.quality, "videosource", "select#videoSource3");
-
+	activatedPreview = false;
+	grabVideo(session.quality, "videosource", "select#videoSource3");
 }
 
 function directRefreshVideo(ele) {
 	var UUID = ele.dataset.UUID;
-	if (!UUID) { return; }
+	if (!UUID) {
+		return;
+	}
 
 	var data = {};
 	data.refreshVideo = true;
 	data.UUID = UUID;
 	if (session.sendRequest(data, UUID)) {
 		ele.classList.add("pressed");
-		setTimeout((ele) => {
-			if (ele) {
-				ele.classList.remove("pressed");
-			}
-		}, 400, ele);
+		setTimeout(
+			ele => {
+				if (ele) {
+					ele.classList.remove("pressed");
+				}
+			},
+			400,
+			ele
+		);
 	}
 }
 
 function directRefreshConnection(ele) {
 	var UUID = ele.dataset.UUID;
-	if (!UUID) { return; }
+	if (!UUID) {
+		return;
+	}
 
 	var data = {};
 	data.refreshConnection = true;
 	data.UUID = UUID;
 	if (session.sendRequest(data, UUID)) {
 		ele.classList.add("pressed");
-		setTimeout((ele) => {
-			if (ele) {
-				ele.classList.remove("pressed");
-			}
-		}, 400, ele);
+		setTimeout(
+			ele => {
+				if (ele) {
+					ele.classList.remove("pressed");
+				}
+			},
+			400,
+			ele
+		);
 	}
 }
 
@@ -32561,14 +32394,14 @@ function restartWhipDirector(ele) {
 // ============================================
 
 var meshData = {
-	nodes: {},      // uuid -> node info
-	edges: [],      // connection info between nodes
+	nodes: {}, // uuid -> node info
+	edges: [], // connection info between nodes
 	pendingResponses: 0,
 	lastRefresh: 0,
 	modalOpen: false,
-	patchedConnections: {},  // "uuidA-uuidB" -> {prevStateA: bool, prevStateB: bool} for connections being relayed via mix-minus
-	whipStatus: null,        // {state, url, connected, reconnectAttempts} - WHIP outbound status
-	whepConnections: {}      // uuid -> {state, connected} - WHEP inbound connections
+	patchedConnections: {}, // "uuidA-uuidB" -> {prevStateA: bool, prevStateB: bool} for connections being relayed via mix-minus
+	whipStatus: null, // {state, url, connected, reconnectAttempts} - WHIP outbound status
+	whepConnections: {} // uuid -> {state, connected} - WHEP inbound connections
 };
 
 // Patch a failed P2P connection via mix-minus relay
@@ -32678,7 +32511,7 @@ function unpatchConnection(uuidA, uuidB) {
 // Auto-patch all failed connections in the mesh
 function autoPatchAllFailed() {
 	var patchCount = 0;
-	meshData.edges.forEach(function(edge) {
+	meshData.edges.forEach(function (edge) {
 		if (edge.state === "failed" || edge.state === "disconnected") {
 			// Skip edges involving director or viewers - patching only makes sense for guest↔guest
 			var sourceNode = meshData.nodes[edge.source];
@@ -32707,13 +32540,15 @@ function autoUnpatchRecovered() {
 	var toUnpatch = [];
 	for (var patchKey in meshData.patchedConnections) {
 		// Find the corresponding edge
-		var edge = meshData.edges.find(function(e) { return e.id === patchKey; });
+		var edge = meshData.edges.find(function (e) {
+			return e.id === patchKey;
+		});
 		if (edge && edge.state === "connected") {
 			toUnpatch.push(patchKey);
 		}
 	}
 	// Now unpatch collected connections
-	toUnpatch.forEach(function(patchKey) {
+	toUnpatch.forEach(function (patchKey) {
 		var uuids = patchKey.split("-");
 		unpatchConnection(uuids[0], uuids[1]);
 		unpatchCount++;
@@ -32738,7 +32573,9 @@ function meshPatchConnection(uuidA, uuidB) {
 	patchConnectionViaMixMinus(uuidA, uuidB);
 	// Refresh the edge details panel
 	var edgeId = [uuidA, uuidB].sort().join("-");
-	var edge = meshData.edges.find(function(e) { return e.id === edgeId; });
+	var edge = meshData.edges.find(function (e) {
+		return e.id === edgeId;
+	});
 	if (edge) {
 		showEdgeDetails(edge);
 	}
@@ -32750,7 +32587,9 @@ function meshUnpatchConnection(uuidA, uuidB) {
 	unpatchConnection(uuidA, uuidB);
 	// Refresh the edge details panel
 	var edgeId = [uuidA, uuidB].sort().join("-");
-	var edge = meshData.edges.find(function(e) { return e.id === edgeId; });
+	var edge = meshData.edges.find(function (e) {
+		return e.id === edgeId;
+	});
 	if (edge) {
 		showEdgeDetails(edge);
 	}
@@ -32769,9 +32608,7 @@ function requestMeshData() {
 		meshData.whipStatus = {
 			state: session.whipOut.connectionState || session.whipOut.iceConnectionState || "unknown",
 			url: session.whipOutput || "",
-			connected: session.whipOut.connectionState === 'connected' ||
-			           session.whipOut.iceConnectionState === 'connected' ||
-			           session.whipOut.iceConnectionState === 'completed',
+			connected: session.whipOut.connectionState === "connected" || session.whipOut.iceConnectionState === "connected" || session.whipOut.iceConnectionState === "completed",
 			reconnectAttempts: session.getWhipReconnectAttempts ? session.getWhipReconnectAttempts() : 0
 		};
 	}
@@ -32782,9 +32619,7 @@ function requestMeshData() {
 		if (session.rpcs[uuid] && session.rpcs[uuid].whep) {
 			meshData.whepConnections[uuid] = {
 				state: session.rpcs[uuid].whep.connectionState || session.rpcs[uuid].whep.iceConnectionState || "unknown",
-				connected: session.rpcs[uuid].whep.connectionState === 'connected' ||
-				           session.rpcs[uuid].whep.iceConnectionState === 'connected' ||
-				           session.rpcs[uuid].whep.iceConnectionState === 'completed'
+				connected: session.rpcs[uuid].whep.connectionState === "connected" || session.rpcs[uuid].whep.iceConnectionState === "connected" || session.rpcs[uuid].whep.iceConnectionState === "completed"
 			};
 		}
 	}
@@ -32799,7 +32634,7 @@ function requestMeshData() {
 			directorConnections.push({
 				peerUUID: uuid,
 				peerStreamID: rpc.streamID || uuid,
-				direction: "incoming",  // Director receives from guest
+				direction: "incoming", // Director receives from guest
 				state: rpc.connectionState || "connected",
 				bandwidth: rpc.bandwidth || -1,
 				audioEnabled: true,
@@ -32815,7 +32650,7 @@ function requestMeshData() {
 			directorConnections.push({
 				peerUUID: uuid,
 				peerStreamID: pc.streamID || uuid,
-				direction: "outgoing",  // Director sends to guest/scene
+				direction: "outgoing", // Director sends to guest/scene
 				state: pc.connectionState || "connected",
 				bandwidth: -1,
 				audioEnabled: true,
@@ -32855,7 +32690,7 @@ function requestMeshData() {
 	log("Requested mesh data from " + meshData.pendingResponses + " guests");
 
 	// Set timeout to process after responses come in
-	setTimeout(function() {
+	setTimeout(function () {
 		aggregateMeshData();
 		renderMeshVisualization();
 	}, 2000);
@@ -33013,7 +32848,7 @@ function aggregateMeshData() {
 				}
 
 				// Merge states - keep the worse one
-				var stateRank = { "failed": 0, "disconnected": 1, "new": 1, "connecting": 1, "closed": 1, "connected": 2 };
+				var stateRank = { failed: 0, disconnected: 1, new: 1, connecting: 1, closed: 1, connected: 2 };
 				var existingRank = stateRank[edgeMap[edgeId].state] !== undefined ? stateRank[edgeMap[edgeId].state] : 1;
 				var newRank = stateRank[conn.state] !== undefined ? stateRank[conn.state] : 1;
 				if (newRank < existingRank) {
@@ -33086,7 +32921,7 @@ function getMeshHealthBadge() {
 		color = "#FF9800"; // orange
 	}
 
-	return '<span class="meshHealthBadge" style="background:' + color + ';color:#fff;padding:2px 8px;border-radius:12px;font-size:12px;cursor:pointer;" onclick="openMeshVisualization()">' + text + '</span>';
+	return '<span class="meshHealthBadge" style="background:' + color + ';color:#fff;padding:2px 8px;border-radius:12px;font-size:12px;cursor:pointer;" onclick="openMeshVisualization()">' + text + "</span>";
 }
 
 function openMeshVisualization() {
@@ -33163,7 +32998,7 @@ function closeMeshVisualization() {
 function meshKeyHandler(e) {
 	if (!meshData.modalOpen) return;
 
-	switch(e.key) {
+	switch (e.key) {
 		case "Escape":
 			closeMeshVisualization();
 			break;
@@ -33253,7 +33088,7 @@ function renderMeshVisualization() {
 		}
 
 		// Place guests in a ring around director
-		guestNodes.forEach(function(node, i) {
+		guestNodes.forEach(function (node, i) {
 			var angle = (2 * Math.PI * i) / guestNodes.length - Math.PI / 2;
 			nodePositions[node.uuid] = {
 				x: centerX + radius * Math.cos(angle),
@@ -33263,7 +33098,7 @@ function renderMeshVisualization() {
 	} else if (meshLayoutMode === "grid") {
 		var cols = Math.ceil(Math.sqrt(filteredNodes.length));
 		var spacing = Math.min(width, height) / (cols + 1);
-		filteredNodes.forEach(function(node, i) {
+		filteredNodes.forEach(function (node, i) {
 			var col = i % cols;
 			var row = Math.floor(i / cols);
 			nodePositions[node.uuid] = {
@@ -33273,7 +33108,7 @@ function renderMeshVisualization() {
 		});
 	} else {
 		// Force-directed: simple random for now
-		filteredNodes.forEach(function(node) {
+		filteredNodes.forEach(function (node) {
 			nodePositions[node.uuid] = {
 				x: 100 + Math.random() * (width - 200),
 				y: 100 + Math.random() * (height - 200)
@@ -33285,7 +33120,7 @@ function renderMeshVisualization() {
 	var defs = document.createElementNS("http://www.w3.org/2000/svg", "defs");
 
 	// Arrow markers for different colors
-	["#4CAF50", "#FF9800", "#F44336"].forEach(function(color, idx) {
+	["#4CAF50", "#FF9800", "#F44336"].forEach(function (color, idx) {
 		var marker = document.createElementNS("http://www.w3.org/2000/svg", "marker");
 		marker.setAttribute("id", "arrow-" + idx);
 		marker.setAttribute("markerWidth", "10");
@@ -33304,7 +33139,7 @@ function renderMeshVisualization() {
 	svg.appendChild(defs);
 
 	// Draw edges first (so they appear behind nodes)
-	meshData.edges.forEach(function(edge) {
+	meshData.edges.forEach(function (edge) {
 		var sourcePos = nodePositions[edge.source];
 		var targetPos = nodePositions[edge.target];
 
@@ -33369,15 +33204,15 @@ function renderMeshVisualization() {
 		}
 
 		// Click handler for edge
-		line.onclick = function() {
+		line.onclick = function () {
 			showEdgeDetails(edge);
 		};
 
 		// Hover effect
-		line.onmouseenter = function() {
+		line.onmouseenter = function () {
 			this.setAttribute("stroke-width", parseInt(strokeWidth) + 2);
 		};
-		line.onmouseleave = function() {
+		line.onmouseleave = function () {
 			this.setAttribute("stroke-width", strokeWidth);
 		};
 
@@ -33385,7 +33220,7 @@ function renderMeshVisualization() {
 	});
 
 	// Draw nodes
-	filteredNodes.forEach(function(node) {
+	filteredNodes.forEach(function (node) {
 		var pos = nodePositions[node.uuid];
 		if (!pos) return;
 
@@ -33453,7 +33288,7 @@ function renderMeshVisualization() {
 		g.appendChild(text);
 
 		// Click handler
-		g.onclick = function() {
+		g.onclick = function () {
 			showNodeDetails(node);
 		};
 
@@ -33490,25 +33325,27 @@ function renderMeshVisualization() {
 	if (meshData.whipStatus) {
 		var whipColor = meshData.whipStatus.connected ? "#4CAF50" : "#F44336";
 		var whipIcon = meshData.whipStatus.connected ? "la-broadcast-tower" : "la-exclamation-triangle";
-		whipWhepStatus += '<span style="margin-left:15px;color:' + whipColor + ';" title="WHIP Outbound to ' + (meshData.whipStatus.url || 'server') + '">';
+		whipWhepStatus += '<span style="margin-left:15px;color:' + whipColor + ';" title="WHIP Outbound to ' + (meshData.whipStatus.url || "server") + '">';
 		whipWhepStatus += '<i class="las ' + whipIcon + '"></i> WHIP: ' + meshData.whipStatus.state;
 		if (!meshData.whipStatus.connected) {
 			whipWhepStatus += ' <button onclick="session.restartWhipConnection()" style="margin-left:4px;padding:2px 6px;background:#F44336;border:none;color:#fff;border-radius:3px;cursor:pointer;font-size:11px;">Reconnect</button>';
 		}
 		if (meshData.whipStatus.reconnectAttempts > 0) {
-			whipWhepStatus += ' <small style="color:#FF9800;">(' + meshData.whipStatus.reconnectAttempts + ' retries)</small>';
+			whipWhepStatus += ' <small style="color:#FF9800;">(' + meshData.whipStatus.reconnectAttempts + " retries)</small>";
 		}
-		whipWhepStatus += '</span>';
+		whipWhepStatus += "</span>";
 	}
 
 	// Count WHEP connection issues
 	var whepTotal = Object.keys(meshData.whepConnections).length;
-	var whepFailed = Object.values(meshData.whepConnections).filter(function(w) { return !w.connected; }).length;
+	var whepFailed = Object.values(meshData.whepConnections).filter(function (w) {
+		return !w.connected;
+	}).length;
 	if (whepTotal > 0) {
 		var whepColor = whepFailed === 0 ? "#4CAF50" : "#F44336";
 		whipWhepStatus += '<span style="margin-left:15px;color:' + whepColor + ';" title="WHEP Inbound connections">';
-		whipWhepStatus += '<i class="las la-download"></i> WHEP: ' + (whepTotal - whepFailed) + '/' + whepTotal + ' connected';
-		whipWhepStatus += '</span>';
+		whipWhepStatus += '<i class="las la-download"></i> WHEP: ' + (whepTotal - whepFailed) + "/" + whepTotal + " connected";
+		whipWhepStatus += "</span>";
 	}
 
 	statusBar.innerHTML = `
@@ -33528,18 +33365,20 @@ function showNodeDetails(node) {
 	panel.style.display = "block";
 
 	var connections = node.connections || [];
-	var connHtml = connections.map(function(c) {
-		var stateColor = c.state === "connected" ? "#4CAF50" : c.state === "failed" ? "#F44336" : "#FF9800";
-		var turnBadge = c.candidateType === "relay" ? ' <span style="background:#FF5722;color:#fff;padding:1px 4px;border-radius:3px;font-size:10px;">TURN</span>' : '';
-		return `<div style="padding:5px 0;border-bottom:1px solid #333;">
-			<span style="color:${stateColor};">●</span> ${c.peerStreamID || c.peerUUID.substring(0,8)}${turnBadge}
+	var connHtml = connections
+		.map(function (c) {
+			var stateColor = c.state === "connected" ? "#4CAF50" : c.state === "failed" ? "#F44336" : "#FF9800";
+			var turnBadge = c.candidateType === "relay" ? ' <span style="background:#FF5722;color:#fff;padding:1px 4px;border-radius:3px;font-size:10px;">TURN</span>' : "";
+			return `<div style="padding:5px 0;border-bottom:1px solid #333;">
+			<span style="color:${stateColor};">●</span> ${c.peerStreamID || c.peerUUID.substring(0, 8)}${turnBadge}
 			<span style="float:right;color:#888;">${c.state}</span>
-			${c.bandwidth > 0 ? '<br><small style="color:#888;">' + c.bandwidth + ' kbps</small>' : ''}
+			${c.bandwidth > 0 ? '<br><small style="color:#888;">' + c.bandwidth + " kbps</small>" : ""}
 		</div>`;
-	}).join("");
+		})
+		.join("");
 
 	// Action buttons for guest nodes (not director) - recovery focused
-	var actionButtons = '';
+	var actionButtons = "";
 	if (!node.isDirector && !node.isViewer) {
 		actionButtons = `
 			<h4 style="margin-top:15px;">Recovery Actions</h4>
@@ -33564,9 +33403,9 @@ function showNodeDetails(node) {
 	}
 
 	// Build browser/TURN info line
-	var infoLine = '';
+	var infoLine = "";
 	if (node.browser && node.browser !== "Unknown") {
-		infoLine += '<span style="background:#2196F3;color:#fff;padding:2px 6px;border-radius:3px;font-size:11px;margin-right:5px;">' + node.browser + '</span>';
+		infoLine += '<span style="background:#2196F3;color:#fff;padding:2px 6px;border-radius:3px;font-size:11px;margin-right:5px;">' + node.browser + "</span>";
 	}
 	if (node.usingTurn) {
 		infoLine += '<span style="background:#FF5722;color:#fff;padding:2px 6px;border-radius:3px;font-size:11px;margin-right:5px;" title="Using TURN relay server">TURN</span>';
@@ -33576,15 +33415,15 @@ function showNodeDetails(node) {
 		var whepInfo = meshData.whepConnections[node.uuid];
 		var whepColor = whepInfo.connected ? "#4CAF50" : "#F44336";
 		var whepBg = whepInfo.connected ? "#1B5E20" : "#B71C1C";
-		infoLine += '<span style="background:' + whepBg + ';color:#fff;padding:2px 6px;border-radius:3px;font-size:11px;" title="WHEP Inbound: ' + whepInfo.state + '">WHEP: ' + whepInfo.state + '</span>';
+		infoLine += '<span style="background:' + whepBg + ';color:#fff;padding:2px 6px;border-radius:3px;font-size:11px;" title="WHEP Inbound: ' + whepInfo.state + '">WHEP: ' + whepInfo.state + "</span>";
 	}
 
 	panel.innerHTML = `
 		<h3 style="margin-top:0;">${node.label}</h3>
 		<p style="color:#888;">UUID: ${node.uuid.substring(0, 12)}...</p>
 		<p>Stream ID: ${node.streamID}</p>
-		${infoLine ? '<p>' + infoLine + '</p>' : ''}
-		<p>Health: <span style="color:${node.health === 'healthy' ? '#4CAF50' : node.health === 'failed' ? '#F44336' : '#FF9800'};">${node.health}</span></p>
+		${infoLine ? "<p>" + infoLine + "</p>" : ""}
+		<p>Health: <span style="color:${node.health === "healthy" ? "#4CAF50" : node.health === "failed" ? "#F44336" : "#FF9800"};">${node.health}</span></p>
 		<h4>Connections (${connections.length})</h4>
 		${connHtml || '<p style="color:#888;">No connections</p>'}
 		${actionButtons}
@@ -33616,17 +33455,16 @@ function showEdgeDetails(edge) {
 
 	// Check if this connection is patched via mix-minus
 	var isPatched = isConnectionPatched(edge.source, edge.target);
-	var patchedStatus = isPatched ? '<p><strong>Status:</strong> <span style="color:#00BCD4;">🔊 Patched via Mix-Minus</span></p>' : '';
+	var patchedStatus = isPatched ? '<p><strong>Status:</strong> <span style="color:#00BCD4;">🔊 Patched via Mix-Minus</span></p>' : "";
 
 	// Check if patching is applicable (only guest↔guest, not director/viewer edges)
 	var sourceNode = meshData.nodes[edge.source];
 	var targetNode = meshData.nodes[edge.target];
-	var canPatch = !(sourceNode && (sourceNode.isDirector || sourceNode.isViewer)) &&
-	               !(targetNode && (targetNode.isDirector || targetNode.isViewer));
+	var canPatch = !(sourceNode && (sourceNode.isDirector || sourceNode.isViewer)) && !(targetNode && (targetNode.isDirector || targetNode.isViewer));
 
 	// Build action buttons based on state
-	var actionButtons = '';
-	if (edge.state === 'failed' || edge.state === 'disconnected') {
+	var actionButtons = "";
+	if (edge.state === "failed" || edge.state === "disconnected") {
 		actionButtons += `<button onclick="reconnectEdge('${edge.source}', '${edge.target}')" style="width:100%;padding:10px;background:#F44336;border:none;color:#fff;border-radius:4px;cursor:pointer;margin-bottom:10px;">
 			<i class="las la-sync"></i> Reconnect P2P
 		</button>`;
@@ -33648,13 +33486,13 @@ function showEdgeDetails(edge) {
 
 	panel.innerHTML = `
 		<h3 style="margin-top:0;">Connection Details</h3>
-		<p><strong>From:</strong> ${edge.sourceStreamID || edge.source.substring(0,12)}</p>
-		<p><strong>To:</strong> ${edge.targetStreamID || edge.target.substring(0,12)}</p>
+		<p><strong>From:</strong> ${edge.sourceStreamID || edge.source.substring(0, 12)}</p>
+		<p><strong>To:</strong> ${edge.targetStreamID || edge.target.substring(0, 12)}</p>
 		<p><strong>State:</strong> <span style="color:${stateColor};">${edge.state}</span></p>
 		${patchedStatus}
 		<p><strong>Direction:</strong> ${directionText}</p>
-		${edge.bandwidth > 0 ? '<p><strong>Bandwidth:</strong> ' + edge.bandwidth + ' kbps</p>' : ''}
-		${edge.candidateType !== 'unknown' ? '<p><strong>Type:</strong> ' + edge.candidateType + '</p>' : ''}
+		${edge.bandwidth > 0 ? "<p><strong>Bandwidth:</strong> " + edge.bandwidth + " kbps</p>" : ""}
+		${edge.candidateType !== "unknown" ? "<p><strong>Type:</strong> " + edge.candidateType + "</p>" : ""}
 		<p><strong>NACK count:</strong> ${edge.nackCount}</p>
 		<p><strong>PLI count:</strong> ${edge.pliCount}</p>
 		<div style="margin-top:20px;">
@@ -33667,7 +33505,9 @@ function showEdgeDetails(edge) {
 function reconnectEdge(sourceUUID, targetUUID) {
 	// Find the edge to determine direction
 	var edgeId = [sourceUUID, targetUUID].sort().join("-");
-	var edgeData = meshData.edges.find(function(e) { return e.id === edgeId; });
+	var edgeData = meshData.edges.find(function (e) {
+		return e.id === edgeId;
+	});
 
 	// Determine who should initiate the reconnect
 	// For outgoing edges: source publishes to target, so source reconnects
@@ -33703,7 +33543,9 @@ function reconnectEdge(sourceUUID, targetUUID) {
 
 function directRefreshMicrophone(ele) {
 	var UUID = ele.dataset.UUID;
-	if (!UUID) { return; }
+	if (!UUID) {
+		return;
+	}
 	//  remoteAudioLabel_
 	// '[data-action-type="refresh-mic"][data--u-u-i-d="' + UUID + '"]'
 
@@ -33713,13 +33555,18 @@ function directRefreshMicrophone(ele) {
 	var data = {};
 	data.refreshMicrophone = true;
 	data.UUID = UUID;
-	if (session.sendRequest(data, UUID)) { // Viewer is requesting the PUBLISHER
+	if (session.sendRequest(data, UUID)) {
+		// Viewer is requesting the PUBLISHER
 		ele.classList.add("pressed");
-		setTimeout((ele) => {
-			if (ele) {
-				ele.classList.remove("pressed");
-			}
-		}, 400, ele);
+		setTimeout(
+			ele => {
+				if (ele) {
+					ele.classList.remove("pressed");
+				}
+			},
+			400,
+			ele
+		);
 	}
 }
 
@@ -33908,14 +33755,14 @@ function playtone(screen = false, tonename = "testtone") {
 	if (session.notifyTypes && !session.notifyTypes.includes(type)) return;
 
 	timeoutTone = true;
-	setTimeout(() => timeoutTone = false, 500);
+	setTimeout(() => (timeoutTone = false), 500);
 
 	const toneEle = document.getElementById(tonename);
 	if (!toneEle) return;
 
 	if (iOS || iPad) {
 		toneEle.muted = false;
-		toneEle.play().catch(e => console.error('Playback failed:', e));
+		toneEle.play().catch(e => console.error("Playback failed:", e));
 		return;
 	}
 
@@ -33925,7 +33772,8 @@ function playtone(screen = false, tonename = "testtone") {
 	}
 
 	if (session.sink) {
-		toneEle.setSinkId(session.sink)
+		toneEle
+			.setSinkId(session.sink)
 			.then(() => toneEle.play())
 			.catch(() => toneEle.play());
 	} else {
@@ -34007,17 +33855,17 @@ function showNotification(title, body = "") {
 }
 
 function toFirefoxConstraint(chromeConstraint) {
-	if (!chromeConstraint || typeof chromeConstraint !== 'object') {
+	if (!chromeConstraint || typeof chromeConstraint !== "object") {
 		return chromeConstraint;
 	}
 
 	const result = { ...chromeConstraint };
 
-	if (result.audio && typeof result.audio === 'object') {
+	if (result.audio && typeof result.audio === "object") {
 		result.audio = flattenConstraints(result.audio);
 	}
 
-	if (result.video && typeof result.video === 'object') {
+	if (result.video && typeof result.video === "object") {
 		result.video = flattenConstraints(result.video);
 	}
 
@@ -34028,10 +33876,10 @@ function flattenConstraints(constraints) {
 	const result = { ...constraints };
 
 	for (const [key, value] of Object.entries(constraints)) {
-		if (value && typeof value === 'object') {
-			if ('exact' in value) {
+		if (value && typeof value === "object") {
+			if ("exact" in value) {
 				result[key] = value.exact;
-			} else if ('ideal' in value) {
+			} else if ("ideal" in value) {
 				result[key] = value.ideal;
 			}
 		}
@@ -34105,24 +33953,22 @@ async function getAudioOnly(selector, trackid = null, override = false, requestT
 
 		for (var i = 0; i < audioList.length; i++) {
 			const el = audioList[i];
-			const rawLabel = (el.dataset && typeof el.dataset.label !== "undefined" && el.dataset.label) ? el.dataset.label : (el.label || el.text || el.textContent || "");
+			const rawLabel = el.dataset && typeof el.dataset.label !== "undefined" && el.dataset.label ? el.dataset.label : el.label || el.text || el.textContent || "";
 			let normLabel = normalizeAudioAliasLabel(rawLabel);
 			const deviceIdLower = (el.value || "").toLowerCase();
 			const groupId = (el.dataset && el.dataset.groupId) || "";
 			const hasGroupId = !!groupId;
-			const isDefaultish = (deviceIdLower === "default" || deviceIdLower === "communications");
+			const isDefaultish = deviceIdLower === "default" || deviceIdLower === "communications";
 
 			if (!normLabel) {
 				if (!isDefaultish) {
-					normLabel = rawLabel ? rawLabel.toLowerCase() : (groupId || deviceIdLower);
+					normLabel = rawLabel ? rawLabel.toLowerCase() : groupId || deviceIdLower;
 				}
 			}
 
 			const baseKey = groupId || normLabel || deviceIdLower || rawLabel;
 			const groupKey = groupId || normLabel || deviceIdLower || baseKey;
-			const uniqueKey = (isDefaultish && !groupId)
-				? (groupKey + "|alias")
-				: (groupKey + "|" + ((el.value || "").toLowerCase() || normLabel || rawLabel || ""));
+			const uniqueKey = isDefaultish && !groupId ? groupKey + "|alias" : groupKey + "|" + ((el.value || "").toLowerCase() || normLabel || rawLabel || "");
 
 			if (uniqueSeen.has(uniqueKey)) {
 				continue;
@@ -34169,10 +34015,12 @@ async function getAudioOnly(selector, trackid = null, override = false, requestT
 		}
 
 		audioList = orderedEntries.map(entry => entry.element);
-	} catch (e) { /* non-fatal */ }
+	} catch (e) {
+		/* non-fatal */
+	}
 
 	for (var i = 0; i < audioList.length; i++) {
-		if (session.echoCancellation !== false && session.autoGainControl !== false && session.noiseSuppression !== false && (session.voiceIsolation !== true)) {
+		if (session.echoCancellation !== false && session.autoGainControl !== false && session.noiseSuppression !== false && session.voiceIsolation !== true) {
 			var constraint = {
 				audio: {
 					deviceId: {
@@ -34302,7 +34150,7 @@ async function getAudioOnly(selector, trackid = null, override = false, requestT
 				}
 				stream.getTracks().forEach(track => track.stop());
 			});
-		} catch (e) { }
+		} catch (e) {}
 		return [];
 	}
 
@@ -34446,7 +34294,8 @@ function applyMirrorGuest(mirror, videoElement, flip = undefined) {
 	try {
 		const mirrored = !!mirror;
 		let flipped;
-		if (flip == null) {  // Treats both null and undefined as "preserve existing"
+		if (flip == null) {
+			// Treats both null and undefined as "preserve existing"
 			flipped = videoElement.dataset && videoElement.dataset.flipGuest === "true";
 		} else {
 			flipped = !!flip;
@@ -34799,7 +34648,7 @@ function reconnectDevices(event) {
 					setTimeout(function () {
 						enumerateDevices()
 							.then(gotDevices2)
-							.then(function () { });
+							.then(function () {});
 					}, 1000);
 				});
 		}, 2000);
@@ -34837,7 +34686,7 @@ function reconnectDevices(event) {
 						setTimeout(function () {
 							enumerateDevices()
 								.then(gotDevices2)
-								.then(function () { });
+								.then(function () {});
 						}, 1000);
 					}
 				});
@@ -34907,7 +34756,7 @@ function verifyAndRepairOutboundAudioPeers(context = "audio-reconnect") {
 			if ("realUUID" in session.pcs[UUID]) {
 				continue;
 			}
-			if (session.chunked && session.pcs[UUID].allowChunked && (session.pcs[UUID].allowChunked !== 2)) {
+			if (session.chunked && session.pcs[UUID].allowChunked && session.pcs[UUID].allowChunked !== 2) {
 				continue;
 			}
 			if (!hasActiveOutboundAudioSender(UUID)) {
@@ -34947,9 +34796,7 @@ function handleAudioTrackEnded(event) {
 			closeModal(false, modalID);
 
 			// Check if there are any active audio tracks after reconnection attempt
-			const hasAudioTracks = session.streamSrc &&
-				session.streamSrc.getAudioTracks &&
-				session.streamSrc.getAudioTracks().length > 0;
+			const hasAudioTracks = session.streamSrc && session.streamSrc.getAudioTracks && session.streamSrc.getAudioTracks().length > 0;
 
 			if (!hasAudioTracks) {
 				// Reconnection failed, open settings menu
@@ -34957,8 +34804,8 @@ function handleAudioTrackEnded(event) {
 					warnUser("Failed to reconnect your microphone. Please select a different device.", 5000);
 				}
 
-			// Open the settings menu
-				if (typeof toggleSettings === 'function') {
+				// Open the settings menu
+				if (typeof toggleSettings === "function") {
 					toggleSettings(true); // force show the settings
 				}
 			} else {
@@ -34966,8 +34813,8 @@ function handleAudioTrackEnded(event) {
 					verifyAndRepairOutboundAudioPeers("mic-reconnect");
 				}, 500);
 			}
-			}, 2000);
-		}, 1000);
+		}, 2000);
+	}, 1000);
 }
 
 var vingesterFixed = false;
@@ -35284,7 +35131,7 @@ async function toggleScreenShare(reload = false) {
 				getById("screensharebutton").ariaPressed = "true";
 				enumerateDevices()
 					.then(gotDevices2)
-					.then(function () { });
+					.then(function () {});
 			}
 		});
 		return;
@@ -35303,7 +35150,7 @@ async function toggleScreenShare(reload = false) {
 				getById("screensharebutton").ariaPressed = "true";
 				enumerateDevices()
 					.then(gotDevices2)
-					.then(function () { });
+					.then(function () {});
 
 				//if (session.videoElement.readyState!==4){
 				session.videoElement.play().then(() => {
@@ -35544,7 +35391,7 @@ async function getAsioDevicesAsync() {
 		if (typeof window !== "undefined" && window.electronApi) {
 			// Try async first (works in sandbox mode)
 			if (typeof window.electronApi.getAsioDevicesAsync === "function") {
-				electronAsioDevicesCache = await window.electronApi.getAsioDevicesAsync() || [];
+				electronAsioDevicesCache = (await window.electronApi.getAsioDevicesAsync()) || [];
 				return electronAsioDevicesCache;
 			}
 			// Fall back to sync (works with --node flag)
@@ -35677,8 +35524,8 @@ async function createAsioMediaStream(deviceIndex, options = {}) {
 		await asioStream.start();
 	} else {
 		// Use sync event handlers (--node mode)
-		asioStream.on('data', processAudioData);
-		asioStream.on('error', (err) => {
+		asioStream.on("data", processAudioData);
+		asioStream.on("error", err => {
 			console.error("ASIO stream error:", err);
 		});
 		asioStream.start();
@@ -35695,7 +35542,7 @@ async function createAsioMediaStream(deviceIndex, options = {}) {
 	});
 
 	destination.stream.getAudioTracks().forEach(track => {
-		track.addEventListener('ended', () => {
+		track.addEventListener("ended", () => {
 			stopAsioStream(streamId);
 		});
 	});
@@ -35723,7 +35570,7 @@ function stopAsioStream(streamId) {
 					streamData.asioStream.stop();
 				}
 			}
-			if (streamData.audioContext && streamData.audioContext.state !== 'closed') {
+			if (streamData.audioContext && streamData.audioContext.state !== "closed") {
 				streamData.audioContext.close();
 			}
 		} catch (e) {
@@ -35748,7 +35595,7 @@ function addAsioDevicesToDropdown(audioInputSelect, startCounter) {
 	function appendAsioDevices(asioDevices) {
 		if (!asioDevices || asioDevices.length === 0) return;
 
-		asioDevices.forEach(function(device) {
+		asioDevices.forEach(function (device) {
 			// Check if already added
 			if (audioInputSelect.querySelector('input[value="asio:' + device.index + '"]')) return;
 
@@ -35810,7 +35657,12 @@ function addAsioDevicesToDropdown(audioInputSelect, startCounter) {
 		});
 
 		if (asioDevices.length > 0) {
-			log("ASIO devices added to dropdown:", asioDevices.map(function(d) { return d.name; }));
+			log(
+				"ASIO devices added to dropdown:",
+				asioDevices.map(function (d) {
+					return d.name;
+				})
+			);
 		}
 	}
 
@@ -35828,16 +35680,20 @@ function addAsioDevicesToDropdown(audioInputSelect, startCounter) {
 	}
 
 	// Try async (works in sandbox mode)
-	electronSupportsAsioAsync().then(function(supported) {
-		if (!supported) return;
-		getAsioDevicesAsync().then(function(asioDevices) {
-			appendAsioDevices(asioDevices);
-		}).catch(function(e) {
-			console.warn("Failed to get ASIO devices async:", e);
+	electronSupportsAsioAsync()
+		.then(function (supported) {
+			if (!supported) return;
+			getAsioDevicesAsync()
+				.then(function (asioDevices) {
+					appendAsioDevices(asioDevices);
+				})
+				.catch(function (e) {
+					console.warn("Failed to get ASIO devices async:", e);
+				});
+		})
+		.catch(function (e) {
+			console.warn("Failed to check ASIO support async:", e);
 		});
-	}).catch(function(e) {
-		console.warn("Failed to check ASIO support async:", e);
-	});
 }
 function extractElectronAudioTargetFromSource(source) {
 	if (!source || !source.id) {
@@ -35988,17 +35844,17 @@ if (navigator.userAgent.toLowerCase().indexOf(" electron/") > -1) {
 								if (constraints.video.width.ideal) {
 									new_constraints.video.mandatory.maxWidth = constraints.video.width.ideal;
 								}
-							} catch (e) { }
+							} catch (e) {}
 							try {
 								if (constraints.video.height.ideal) {
 									new_constraints.video.mandatory.maxHeight = constraints.video.height.ideal;
 								}
-							} catch (e) { }
+							} catch (e) {}
 							try {
 								if (constraints.video.frameRate.ideal) {
 									new_constraints.video.mandatory.maxFrameRate = constraints.video.frameRate.ideal;
 								}
-							} catch (e) { }
+							} catch (e) {}
 							///
 							//if (Firefox){ // this is electron
 							//	new_constraints = toFirefoxConstraint(new_constraints);
@@ -36048,17 +35904,17 @@ if (navigator.userAgent.toLowerCase().indexOf(" electron/") > -1) {
 								if (constraints.video.width.ideal) {
 									new_constraints.video.mandatory.maxWidth = constraints.video.width.ideal;
 								}
-							} catch (e) { }
+							} catch (e) {}
 							try {
 								if (constraints.video.height.ideal) {
 									new_constraints.video.mandatory.maxHeight = constraints.video.height.ideal;
 								}
-							} catch (e) { }
+							} catch (e) {}
 							try {
 								if (constraints.video.frameRate.ideal) {
 									new_constraints.video.mandatory.maxFrameRate = constraints.video.frameRate.ideal;
 								}
-							} catch (e) { }
+							} catch (e) {}
 							///
 							//if (Firefox){
 							//	new_constraints = toFirefoxConstraint(new_constraints);
@@ -36091,17 +35947,17 @@ if (navigator.userAgent.toLowerCase().indexOf(" electron/") > -1) {
 								if (constraints.video.width.ideal) {
 									new_constraints.video.mandatory.maxWidth = constraints.video.width.ideal;
 								}
-							} catch (e) { }
+							} catch (e) {}
 							try {
 								if (constraints.video.height.ideal) {
 									new_constraints.video.mandatory.maxHeight = constraints.video.height.ideal;
 								}
-							} catch (e) { }
+							} catch (e) {}
 							try {
 								if (constraints.video.frameRate.ideal) {
 									new_constraints.video.mandatory.maxFrameRate = constraints.video.frameRate.ideal;
 								}
-							} catch (e) { }
+							} catch (e) {}
 							warnlog(new_constraints);
 							///
 							//if (Firefox){
@@ -36120,8 +35976,8 @@ if (navigator.userAgent.toLowerCase().indexOf(" electron/") > -1) {
 						<div class="desktop-capturer-selection__scroller">
 						  <ul class="desktop-capturer-selection__list">
 							${sources
-									.map(
-										({ id, name, thumbnail, display_id, appIcon }) => `
+								.map(
+									({ id, name, thumbnail, display_id, appIcon }) => `
 							  <li class="desktop-capturer-selection__item">
 								<button class="desktop-capturer-click desktop-capturer-selection__btn" data-id="${id}" title="${name}">
 								  <img class="desktop-capturer-selection__thumbnail" src="${thumbnail.toDataURL()}" />
@@ -36129,8 +35985,8 @@ if (navigator.userAgent.toLowerCase().indexOf(" electron/") > -1) {
 								</button>
 							  </li>
 							`
-									)
-									.join("")}
+								)
+								.join("")}
 							<button id="cancelscreenshare" style="margin: 10px; background-color: #F88; width: 100px;"><i class="las la-window-close" style="font-size:40px;"></i><br />Cancel</button>
 						  </ul>
 						</div>
@@ -36140,8 +35996,8 @@ if (navigator.userAgent.toLowerCase().indexOf(" electron/") > -1) {
 						<div class="desktop-capturer-selection__scroller">
 						  <ul class="desktop-capturer-selection__list">
 							${sources
-									.map(
-										({ id, name, thumbnail, display_id, appIcon }) => `
+								.map(
+									({ id, name, thumbnail, display_id, appIcon }) => `
 							  <li class="desktop-capturer-selection__item">
 								<button class="desktop-capturer-click desktop-capturer-selection__btn" data-id="${id}" title="${name}">
 								  <img class="desktop-capturer-selection__thumbnail" src="${thumbnail.toDataURL()}" />
@@ -36149,8 +36005,8 @@ if (navigator.userAgent.toLowerCase().indexOf(" electron/") > -1) {
 								</button>
 							  </li>
 							`
-									)
-									.join("")}
+								)
+								.join("")}
 							<div id="alsoCaptureAudioParent1" style="text-align: center;margin: auto 5px;font-size: 120%;"><i class="las la-music" style="font-size:40px;"></i><br />Include Desktop Audio<br /><input id="alsoCaptureAudio" style="width:20px;height:20px;margin-top: 10px;" type="checkbox" checked></div>
 							<div id="alsoCaptureAudioParent2" style="text-align: center;margin: auto 5px;font-size: 120%;display:none;"><i class="las la-music" style="font-size:40px;"></i><br />Audio capture not <br />supported on macOS</div>
 							<div id="captureAppAudioParent" style="text-align: center;margin: auto 5px;font-size: 120%;display:none;"><i class="las la-headphones" style="font-size:40px;"></i><br />Include App Audio<br /><input id="captureAppAudio" style="width:20px;height:20px;margin-top: 10px;" type="checkbox"></div>
@@ -36264,17 +36120,17 @@ if (navigator.userAgent.toLowerCase().indexOf(" electron/") > -1) {
 										if (constraints.video.width.ideal) {
 											new_constraints.video.mandatory.maxWidth = constraints.video.width.ideal;
 										}
-									} catch (e) { }
+									} catch (e) {}
 									try {
 										if (constraints.video.height.ideal) {
 											new_constraints.video.mandatory.maxHeight = constraints.video.height.ideal;
 										}
-									} catch (e) { }
+									} catch (e) {}
 									try {
 										if (constraints.video.frameRate.ideal) {
 											new_constraints.video.mandatory.maxFrameRate = constraints.video.frameRate.ideal;
 										}
-									} catch (e) { }
+									} catch (e) {}
 									if (typeof warnlog === "function") {
 										warnlog(new_constraints);
 										warnlog("navigator.mediaDevices.getUserMedia starting...");
@@ -36806,7 +36662,7 @@ function togglePTZControls(UUID) {
 		modal.style.zIndex = 25;
 		var modalTemplate = `<div id="modalBackdrop" style="z-index:24;background-color:#0000;"></div>`;
 		document.body.insertAdjacentHTML("beforeend", modalTemplate);
-		document.getElementById("modalBackdrop").addEventListener("click", function() {
+		document.getElementById("modalBackdrop").addEventListener("click", function () {
 			togglePTZControls();
 		});
 
@@ -36823,43 +36679,43 @@ function togglePTZControls(UUID) {
 		getById("ptzFocusValue").innerText = "0";
 
 		// Pan slider handlers
-		getById("ptzPanSlider").oninput = function(e) {
+		getById("ptzPanSlider").oninput = function (e) {
 			getById("ptzPanValue").innerText = e.target.value;
 		};
-		getById("ptzPanSlider").onchange = function(e) {
+		getById("ptzPanSlider").onchange = function (e) {
 			var normalizedValue = parseInt(e.target.value) / 100; // Convert -100..100 to -1..1
 			session.requestPanChange(normalizedValue, targetUUID, session.remote, true);
 		};
 
 		// Tilt slider handlers
-		getById("ptzTiltSlider").oninput = function(e) {
+		getById("ptzTiltSlider").oninput = function (e) {
 			getById("ptzTiltValue").innerText = e.target.value;
 		};
-		getById("ptzTiltSlider").onchange = function(e) {
+		getById("ptzTiltSlider").onchange = function (e) {
 			var normalizedValue = parseInt(e.target.value) / 100; // Convert -100..100 to -1..1
 			session.requestTiltChange(normalizedValue, targetUUID, session.remote, true);
 		};
 
 		// Zoom slider handlers
-		getById("ptzZoomSlider").oninput = function(e) {
+		getById("ptzZoomSlider").oninput = function (e) {
 			getById("ptzZoomValue").innerText = e.target.value;
 		};
-		getById("ptzZoomSlider").onchange = function(e) {
+		getById("ptzZoomSlider").onchange = function (e) {
 			var normalizedValue = parseInt(e.target.value) / 100; // Convert 0..100 to 0..1
 			session.requestZoomChange(normalizedValue, targetUUID, session.remote, true);
 		};
 
 		// Focus slider handlers
-		getById("ptzFocusSlider").oninput = function(e) {
+		getById("ptzFocusSlider").oninput = function (e) {
 			getById("ptzFocusValue").innerText = e.target.value;
 		};
-		getById("ptzFocusSlider").onchange = function(e) {
+		getById("ptzFocusSlider").onchange = function (e) {
 			var normalizedValue = parseInt(e.target.value) / 100; // Convert -100..100 to -1..1
 			session.requestFocusChange(normalizedValue, targetUUID, session.remote, true);
 		};
 
 		// Reset Autofocus button handler
-		getById("ptzResetAutofocusBtn").onclick = function() {
+		getById("ptzResetAutofocusBtn").onclick = function () {
 			session.requestAutofocusChange(true, targetUUID, session.remote);
 		};
 	}
@@ -36925,7 +36781,7 @@ function sendMediaDevices(UUID) {
 			if (asioAvailable) {
 				var asioDevices = await getAsioDevicesAsync();
 				if (asioDevices && asioDevices.length > 0) {
-					asioDevices.forEach(function(device) {
+					asioDevices.forEach(function (device) {
 						deviceInfos.push({
 							deviceId: "asio:" + device.index,
 							kind: "audioinput",
@@ -36999,7 +36855,7 @@ function changeVideoDeviceById(deviceId, UUID = false) {
 								data.UUID = UUID;
 								data.rejected = "changeCamera";
 								session.sendMessage(data, data.UUID);
-							} catch (e) { }
+							} catch (e) {}
 						}
 					});
 				} else {
@@ -37055,7 +36911,7 @@ function changeAudioDeviceById(deviceId, UUID = false) {
 								data.UUID = UUID;
 								data.rejected = "changeMicrophone";
 								session.sendMessage(data, data.UUID);
-							} catch (e) { }
+							} catch (e) {}
 						}
 					});
 				} else {
@@ -37120,7 +36976,7 @@ function changeAudioOutputDeviceById(deviceId, UUID = false) {
 									data.UUID = UUID;
 									data.rejected = "changeSpeaker";
 									session.sendMessage(data, data.UUID);
-								} catch (e) { }
+								} catch (e) {}
 							}
 						});
 					} else {
@@ -37183,10 +37039,10 @@ function checkBasicStreamsExist() {
 				if (event && event.type) {
 					type = event.type;
 				}
-				if (event && event.currentTarget && event.currentTarget.error && ("code" in event.currentTarget.error)) {
+				if (event && event.currentTarget && event.currentTarget.error && "code" in event.currentTarget.error) {
 					code = event.currentTarget.error.code;
 				}
-			} catch (e) { }
+			} catch (e) {}
 			errorlog("video error detail: type=" + type + (code ? " code=" + code : ""));
 			setTimeout(function () {
 				if (session.videoElement) {
@@ -37298,7 +37154,8 @@ async function grabVideo(quality = 0, eleName = "previewWebcam", selector = "sel
 
 		if (session.avatar && session.avatar.ready) {
 			updateRenderOutpipe();
-		} else if (session.mobile && needsLegacyWakeLock()) {  // OBSOLETE since we now have "WAKE LOCK" API used.
+		} else if (session.mobile && needsLegacyWakeLock()) {
+			// OBSOLETE since we now have "WAKE LOCK" API used.
 			startLegacyKeepAliveLoop();
 		}
 
@@ -37394,7 +37251,6 @@ async function grabVideo(quality = 0, eleName = "previewWebcam", selector = "sel
 						//errorlog("DELETED SENDER");
 					}
 				});
-
 			}
 
 			var msg = {};
@@ -37451,13 +37307,17 @@ async function grabVideo(quality = 0, eleName = "previewWebcam", selector = "sel
 
 		if (session.outboundVideoBitrate_userSet === false) {
 			// default is 2500
-			if (session.quality == 0) { // 1080p
+			if (session.quality == 0) {
+				// 1080p
 				session.outboundVideoBitrate = 4000;
-			} else if (session.quality == -1) { // unlocked
+			} else if (session.quality == -1) {
+				// unlocked
 				session.outboundVideoBitrate = 4000;
-			} else if (session.quality == -2) { // 4k
+			} else if (session.quality == -2) {
+				// 4k
 				session.outboundVideoBitrate = 8000;
-			} else if (session.quality == -3) { // 2k
+			} else if (session.quality == -3) {
+				// 2k
 				session.outboundVideoBitrate = 6000;
 			} else {
 				session.outboundVideoBitrate = false;
@@ -37486,7 +37346,6 @@ async function grabVideo(quality = 0, eleName = "previewWebcam", selector = "sel
 				};
 			}
 		} else if (videoSelect.options[videoSelect.selectedIndex].text.includes("NDI Video")) {
-
 			// NDI does not like "EXACT"
 			constraints.video.deviceId = videoSelect.value; // NDI is fucked up
 		} else {
@@ -37711,7 +37570,7 @@ async function grabVideo(quality = 0, eleName = "previewWebcam", selector = "sel
 										query('#effectSelector3 option[value="13"]').disabled = true;
 									}
 								}
-							} catch (e) { }
+							} catch (e) {}
 							session.streamSrc.addTrack(track); // tracks previously removed.
 							try {
 								track.onended = function (e) {
@@ -37927,7 +37786,7 @@ async function grabVideo(quality = 0, eleName = "previewWebcam", selector = "sel
 										data.videoOptions = listVideoSettingsPrep();
 										sendMediaDevices(data.UUID);
 										session.sendMessage(data, data.UUID);
-									} catch (e) { }
+									} catch (e) {}
 								}
 								if (iOS || iPad) {
 									// TEMPORARY: iOS 15.3 beta fix
@@ -37950,7 +37809,7 @@ async function grabVideo(quality = 0, eleName = "previewWebcam", selector = "sel
 											toggleSystemPip(session.videoElement, true);
 										}
 									}
-								} catch (e) { }
+								} catch (e) {}
 								// this will reset scaling for all viewers of this stream. I also call it when aspect ratio, width, or height is changed via applyConstraints
 								dragElement(session.videoElement);
 							},
@@ -38389,7 +38248,7 @@ async function grabAudio(selector = "#audioSource", trackid = null, override = f
 				}
 				stream.getTracks().forEach(track => track.stop());
 			});
-		} catch (e) { }
+		} catch (e) {}
 		activatedPreview = false;
 		return;
 	}
@@ -39098,7 +38957,7 @@ async function attemptPeerAudioRepair(UUID, track, videoSource = null, context =
 			if (!repaired) {
 				// Try to recover null-track audio transceivers before falling back to addTrack.
 				var allSenders = pc.getSenders ? pc.getSenders() : [];
-				var hasAudioSender = allSenders.some(function(s) {
+				var hasAudioSender = allSenders.some(function (s) {
 					return s.track && s.track.kind === "audio";
 				});
 
@@ -39106,13 +38965,7 @@ async function attemptPeerAudioRepair(UUID, track, videoSource = null, context =
 				if (pc.getTransceivers) {
 					var transceivers = pc.getTransceivers();
 					nullAudioSender = transceivers.find(function (t) {
-						return t &&
-							t.sender &&
-							typeof t.sender.replaceTrack === "function" &&
-							!t.sender.track &&
-							t.receiver &&
-							t.receiver.track &&
-							t.receiver.track.kind === "audio";
+						return t && t.sender && typeof t.sender.replaceTrack === "function" && !t.sender.track && t.receiver && t.receiver.track && t.receiver.track.kind === "audio";
 					});
 				}
 
@@ -39133,8 +38986,7 @@ async function attemptPeerAudioRepair(UUID, track, videoSource = null, context =
 				} else if (!repaired) {
 					let source = videoSource;
 					if (!source || typeof source.getTracks !== "function") {
-						if (session.videoElement && session.videoElement.srcObject &&
-							typeof session.videoElement.srcObject.getTracks === "function") {
+						if (session.videoElement && session.videoElement.srcObject && typeof session.videoElement.srcObject.getTracks === "function") {
 							source = session.videoElement.srcObject;
 						} else if (session.streamSrc && typeof session.streamSrc.getTracks === "function") {
 							source = session.streamSrc;
@@ -39246,7 +39098,7 @@ function senderAudioUpdate(callbackUUID = false, videoSource = null) {
 			if ("realUUID" in session.pcs[UUID]) {
 				continue;
 			} // do not process the screen share audio
-			if (session.chunked && session.pcs[UUID].allowChunked && (session.pcs[UUID].allowChunked !== 2)) {
+			if (session.chunked && session.pcs[UUID].allowChunked && session.pcs[UUID].allowChunked !== 2) {
 				continue;
 			}
 
@@ -39337,7 +39189,6 @@ function senderAudioUpdate(callbackUUID = false, videoSource = null) {
 							return;
 						}
 						var sender = session.pcs[UUID].addTrack(track, videoSource);
-
 					});
 				} else {
 					var senders = getSenders2(UUID);
@@ -39372,7 +39223,7 @@ function senderAudioUpdate(callbackUUID = false, videoSource = null) {
 			if (toggleSettingsState) {
 				updateConstraintSliders();
 			}
-		} catch (e) { }
+		} catch (e) {}
 
 		if (callbackUUID) {
 			try {
@@ -39381,7 +39232,7 @@ function senderAudioUpdate(callbackUUID = false, videoSource = null) {
 				data.audioOptions = listAudioSettingsPrep();
 				sendMediaDevices(data.UUID);
 				session.sendMessage(data, data.UUID);
-			} catch (e) { }
+			} catch (e) {}
 		}
 
 		if (session.twilio) {
@@ -39620,16 +39471,15 @@ async function press2talk(clean = false) {
 
 				if (session.seeding) {
 					setTimeout(function () {
-					if (session.meshcast2) {
-						meshcast2();
-					} else if (session.meshcast) {
-						meshcast();
-					} else if (session.whipOutput) {
-						whipOut();
-					} else if (session.whepHost) {
-						whepOut();
-					}
-
+						if (session.meshcast2) {
+							meshcast2();
+						} else if (session.meshcast) {
+							meshcast();
+						} else if (session.whipOutput) {
+							whipOut();
+						} else if (session.whepHost) {
+							whepOut();
+						}
 					}, 1000);
 					return;
 				}
@@ -39644,10 +39494,8 @@ async function press2talk(clean = false) {
 					whepOut();
 				}
 
-
 				session.seeding = true;
 				await session.seedStream();
-
 			});
 	});
 } // publishdirector
@@ -39764,7 +39612,7 @@ session.publishStream = function (v) {
 	if (((session.roomid === false || session.roomid === "") && session.quality === false) || session.forceMediaSettings) {
 		try {
 			if (session.quality_wb !== false && session.quality === false) {
-				getById("webcamquality3").elements.namedItem("resolution").value = (session.roomid ? (session.quality_room || 0) : session.quality_wb);
+				getById("webcamquality3").elements.namedItem("resolution").value = session.roomid ? session.quality_room || 0 : session.quality_wb;
 			} else if (session.quality !== false) {
 				getById("webcamquality3").elements.namedItem("resolution").value = session.quality;
 			}
@@ -39916,7 +39764,6 @@ session.publishStream = function (v) {
 		if (session.disableMouseEvents) {
 			return;
 		}
-
 	});
 
 	updateReshareLink();
@@ -40058,7 +39905,7 @@ session.postPublish = async function () {
 	if (session.waitPage && session.iFramesAllowed) {
 		let waitPageIFrame = parseURL4Iframe(session.waitPage);
 		if (waitPageIFrame) {
-			session.layout = combinedLayout([{ "w": 100, "h": 100, "x": 0, "y": 0, "z": 1, "slot": 1, "cover": false, "borderThickness": 20, "animated": 1000, "borderColor": "#0000", "backgroundMedia": "", "foregroundMedia": "", "iframeSrc": waitPageIFrame, "defaultStreamID": "", "margin": 50, "rounded": 30, "muted": false }]);
+			session.layout = combinedLayout([{ w: 100, h: 100, x: 0, y: 0, z: 1, slot: 1, cover: false, borderThickness: 20, animated: 1000, borderColor: "#0000", backgroundMedia: "", foregroundMedia: "", iframeSrc: waitPageIFrame, defaultStreamID: "", margin: 50, rounded: 30, muted: false }]);
 			updateMixer();
 		}
 	}
@@ -40075,7 +39922,8 @@ session.postPublish = async function () {
 
 	if (session.meshcast2) {
 		await meshcast2();
-	} else if (session.whipOutput) { // was handling these functions within session.seedStream(); doing it here now instead. 8-08-2024
+	} else if (session.whipOutput) {
+		// was handling these functions within session.seedStream(); doing it here now instead. 8-08-2024
 		whipOut();
 	} else if (session.meshcast) {
 		await meshcast();
@@ -40098,7 +39946,7 @@ session.postPublish = async function () {
 	if (session.poke) {
 		if (session.poke === true) {
 			let topic = await generateTopic(session.roomid, session.streamID, false, false, session.hash, window.location.hostname);
-			await triggerNotification(topic)
+			await triggerNotification(topic);
 		} else {
 			await triggerNotification(session.poke);
 		}
@@ -40119,8 +39967,7 @@ session.postPublish = async function () {
 		const updateCountdown = () => {
 			const minutes = Math.floor(remainingTime / 60000);
 			const seconds = Math.floor((remainingTime % 60000) / 1000);
-			document.getElementById("autoEndTime").textContent =
-				String(minutes).padStart(2, '0') + ':' + String(seconds).padStart(2, '0');
+			document.getElementById("autoEndTime").textContent = String(minutes).padStart(2, "0") + ":" + String(seconds).padStart(2, "0");
 			remainingTime -= 1000;
 
 			if (remainingTime < 0) {
@@ -40138,29 +39985,27 @@ session.postPublish = async function () {
 			session.hangup();
 		}, session.autoEnd);
 	}
-
 };
 function triggerNotification(topic, customMessage = null) {
 	if (!topic) return false;
 
-	const message = customMessage || ((session.label ? session.label : 'Someone') +
-		(session.roomid ? ' joined your room' : ' joined your stream'));
+	const message = customMessage || (session.label ? session.label : "Someone") + (session.roomid ? " joined your room" : " joined your stream");
 
 	const notifyUrl = `https://notify.vdo.ninja/?notify=${topic}&message=${encodeURIComponent(message)}`;
 
-	console.log('Sending notification to:', notifyUrl);
+	console.log("Sending notification to:", notifyUrl);
 
 	return fetch(notifyUrl)
 		.then(response => {
-			console.log('Notification response status:', response.status);
+			console.log("Notification response status:", response.status);
 			if (!response.ok) {
 				return response.text().then(text => {
 					try {
 						const errorData = JSON.parse(text);
-						console.error('Notification server error:', errorData);
+						console.error("Notification server error:", errorData);
 						return false;
 					} catch (e) {
-						console.error('Notification error response:', text);
+						console.error("Notification error response:", text);
 						return false;
 					}
 				});
@@ -40171,13 +40016,13 @@ function triggerNotification(topic, customMessage = null) {
 		.then(data => {
 			if (data === false) return false;
 
-			console.log('Notification result:', data);
+			console.log("Notification result:", data);
 
 			// Check push results to diagnose issues
 			if (data.pushResults && Array.isArray(data.pushResults)) {
 				data.pushResults.forEach(result => {
 					if (!result.success) {
-						console.warn('Push notification failed:', result);
+						console.warn("Push notification failed:", result);
 					}
 				});
 			}
@@ -40185,7 +40030,7 @@ function triggerNotification(topic, customMessage = null) {
 			return data.success === true;
 		})
 		.catch(error => {
-			console.error('Error sending notification:', error);
+			console.error("Error sending notification:", error);
 			return false;
 		});
 }
@@ -40193,17 +40038,17 @@ function hashTopic(text) {
 	const salt1 = "abc12345ASB234ASD1116";
 	const salt2 = "xyzJKL789MNO567PQR890";
 	const salt3 = "9843kasdjfh234jhk234j";
-	let saltedText = salt1 + text + salt2 + text.split('').reverse().join('') + salt3;
+	let saltedText = salt1 + text + salt2 + text.split("").reverse().join("") + salt3;
 	let hash = 0;
 	if (saltedText.length === 0) return "0";
 	for (let i = 0; i < saltedText.length; i++) {
 		const char = saltedText.charCodeAt(i);
-		hash = ((hash << 5) - hash) + char;
+		hash = (hash << 5) - hash + char;
 		hash = hash & hash;
 	}
 	let hash2 = 0;
 	for (let i = 0; i < saltedText.length; i++) {
-		hash2 = ((hash2 << 7) + hash2) + saltedText.charCodeAt(i);
+		hash2 = (hash2 << 7) + hash2 + saltedText.charCodeAt(i);
 		hash2 = hash2 & hash2;
 	}
 	const combinedHash = Math.abs(hash).toString(36) + Math.abs(hash2).toString(36);
@@ -40214,16 +40059,16 @@ function hashTopic(text) {
 }
 
 async function generateTopic(roomId, pushId, viewId, password, hash, domain) {
-	domain = domain || 'vdo.ninja';
+	domain = domain || "vdo.ninja";
 	if (!roomId && !viewId && !pushId) {
-		console.error('At least one of roomId, viewId or pushId is required');
+		console.error("At least one of roomId, viewId or pushId is required");
 		return null;
 	}
 	const components = {
 		room: roomId || viewId || pushId,
-		domain: domain.replace(/\./g, '_')
+		domain: domain.replace(/\./g, "_")
 	};
-	let sensitiveData = Object.values(components).filter(Boolean).join('_');
+	let sensitiveData = Object.values(components).filter(Boolean).join("_");
 	if (hash) {
 		sensitiveData += `_${hash}`;
 	} else if (password) {
@@ -40711,14 +40556,14 @@ async function publishScreen2(constraints, audioList = [], audio = true, overrid
 
 			if (session.meshcast2) {
 				await meshcast2();
-			} else if (session.whipOutput) { // was handling these functions within session.seedStream(); doing it here now instead. 8-08-2024
+			} else if (session.whipOutput) {
+				// was handling these functions within session.seedStream(); doing it here now instead. 8-08-2024
 				whipOut();
 			} else if (session.meshcast) {
 				await meshcast();
 			} else if (session.whepHost) {
 				whepOut();
 			}
-
 
 			session.seeding = true;
 			session.seedStream();
@@ -40883,7 +40728,7 @@ function cancelFile(ele) {
 	var idx = ele.dataset.tid;
 	try {
 		transferList[idx].dc.close();
-	} catch (e) { }
+	} catch (e) {}
 	transferList[idx].status = 5;
 	updateDownloadLink(idx);
 }
@@ -41017,7 +40862,7 @@ function drawingPermissionRequestMessage(request, idx) {
 	if ((!peer || !peer.label) && request.altUUID && session.pcs && session.pcs[request.altUUID]) {
 		peer = session.pcs[request.altUUID];
 	}
-	var label = peer && peer.label ? sanitizeLabel(peer.label) : ("Guest " + request.UUID.substring(0, 8));
+	var label = peer && peer.label ? sanitizeLabel(peer.label) : "Guest " + request.UUID.substring(0, 8);
 	var targetUUID = request.altUUID || request.UUID;
 	var safeTarget = escapeHtml(targetUUID);
 	var data = {};
@@ -41105,7 +40950,7 @@ session.shareFile = function (ele, UUID = false, event = false) {
 			size: file.size,
 			state: 1,
 			restricted: UUID || false,
-			file: file  // Store the actual File object
+			file: file // Store the actual File object
 		});
 
 		log(session.hostedFiles);
@@ -41132,12 +40977,11 @@ session.shareFile = function (ele, UUID = false, event = false) {
 		updateFileShare();
 
 		closeModal();
-
 	} catch (e) {
 		errorlog(e);
 	} finally {
 		// Clear the file input
-		ele.value = '';
+		ele.value = "";
 	}
 };
 
@@ -41161,7 +41005,7 @@ session.hostFile = function (ele, event = false) {
 			size: ele.files[i].size,
 			state: 1,
 			restricted: false,
-			file: ele.files[i]  // Store the actual File object
+			file: ele.files[i] // Store the actual File object
 		});
 	}
 
@@ -41224,7 +41068,6 @@ session.hostFile = function (ele, event = false) {
 
 	session.seeding = true;
 	session.seedStream();
-
 };
 
 function updateReshareLink() {
@@ -41234,7 +41077,7 @@ function updateReshareLink() {
 		document.querySelectorAll(".hidden2").forEach(ele2 => {
 			ele2.classList.remove("hidden2");
 		});
-	} catch (e) { }
+	} catch (e) {}
 
 	var added = "";
 	if (session.defaultPassword === false) {
@@ -41310,7 +41153,7 @@ function cleanupMediaState(vid) {
 			URL.revokeObjectURL(vid.currentObjectURL);
 			vid.currentObjectURL = null;
 		}
-		vid.src = '';
+		vid.src = "";
 	}
 
 	if (session.streamSrc) {
@@ -41328,11 +41171,11 @@ session.changePublishFile = function (ele, event) {
 	// Clean up existing state first
 	cleanupMediaState(vid);
 
-	if (files[0].type.startsWith('image/')) {
+	if (files[0].type.startsWith("image/")) {
 		const objectURL = URL.createObjectURL(files[0]);
 		session.canvasSource = new CanvasStreamSource();
 		session.canvasSource.imgSrc = objectURL;
-		window.postMessage({ type: 'canvas-frame', frame: session.canvasSource.imgSrc }, '*');
+		window.postMessage({ type: "canvas-frame", frame: session.canvasSource.imgSrc }, "*");
 
 		session.streamSrc = session.canvasSource.getStream();
 		// Process the stream like we do for video
@@ -41344,7 +41187,7 @@ session.changePublishFile = function (ele, event) {
 		}
 		senderAudioUpdate();
 
-		vid.play();  // We still need play() but don't set srcObjec
+		vid.play(); // We still need play() but don't set srcObjec
 	} else {
 		log("FILE VIDEO STREAM CHANGE");
 		vid.playlist = files;
@@ -41387,7 +41230,6 @@ function nextFilePlaylist(vid) {
 				pushOutVideoTrack(tracks[0]); // video only
 			}
 			senderAudioUpdate(false, session.streamSrc);
-
 		} catch (e) {
 			errorlog(e);
 			if (session.blankStream) {
@@ -41397,7 +41239,7 @@ function nextFilePlaylist(vid) {
 		}
 	};
 
-	vid.onerror = (e) => {
+	vid.onerror = e => {
 		errorlog(e);
 		cleanupMediaState(vid);
 		if (session.blankStream) {
@@ -41433,11 +41275,11 @@ session.publishFile = function (ele, event) {
 	log("FILE STREAM SETUP");
 
 	if (!session.blankStream) {
-		const canvas = document.createElement('canvas');
+		const canvas = document.createElement("canvas");
 		canvas.width = 1280;
 		canvas.height = 720;
-		const ctx = canvas.getContext('2d');
-		ctx.fillStyle = 'black';
+		const ctx = canvas.getContext("2d");
+		ctx.fillStyle = "black";
 		ctx.fillRect(0, 0, canvas.width, canvas.height);
 
 		session.blankStream = canvas.captureStream(30);
@@ -41453,7 +41295,7 @@ session.publishFile = function (ele, event) {
 	const files = Array.from(ele.files);
 	log(files);
 	const file = files[0];
-	const isImage = file.type.startsWith('image/');
+	const isImage = file.type.startsWith("image/");
 
 	var fileURL = URL.createObjectURL(file);
 	var container = document.createElement("div");
@@ -41492,11 +41334,10 @@ session.publishFile = function (ele, event) {
 	v.setAttribute("playsinline", "");
 
 	if (isImage) {
-
 		session.canvasSource = new CanvasStreamSource();
 		session.canvasSource.imgSrc = fileURL;
 
-		window.postMessage({ type: 'canvas-frame', frame: session.canvasSource.imgSrc }, '*');
+		window.postMessage({ type: "canvas-frame", frame: session.canvasSource.imgSrc }, "*");
 
 		session.streamSrc = session.canvasSource.getStream();
 		v.srcObject = session.streamSrc;
@@ -41507,18 +41348,22 @@ session.publishFile = function (ele, event) {
 	}
 
 	v.playlist = files;
-	v.addEventListener("ended", function (e) {
-		log("MY HANDLER TRIGGERED");
-		var vid = getById("videosource");
-		nextFilePlaylist(vid);
-	}, false);
+	v.addEventListener(
+		"ended",
+		function (e) {
+			log("MY HANDLER TRIGGERED");
+			var vid = getById("videosource");
+			nextFilePlaylist(vid);
+		},
+		false
+	);
 
 	v.className = "tile clean fileshare";
 
 	session.videoElement = v;
 	session.mirrorExclude = true;
 
-	v.addEventListener("click", (e) => {
+	v.addEventListener("click", e => {
 		log("click");
 		try {
 			if (e.ctrlKey || e.metaKey) {
@@ -41541,7 +41386,7 @@ session.publishFile = function (ele, event) {
 	v.touchLastTap = 0;
 	v.touchCount = 0;
 
-	v.addEventListener("touchend", (event) => {
+	v.addEventListener("touchend", event => {
 		if (session.disableMouseEvents) {
 			return;
 		}
@@ -41724,7 +41569,6 @@ session.publishFile = function (ele, event) {
 			whepOut();
 		}
 
-
 		session.seeding = true;
 
 		if (session.videoMutedFlag) {
@@ -41738,8 +41582,8 @@ session.publishFile = function (ele, event) {
 
 class CanvasStreamSource {
 	constructor() {
-		this.canvas = document.createElement('canvas');
-		this.ctx = this.canvas.getContext('2d', { willReadFrequently: true });
+		this.canvas = document.createElement("canvas");
+		this.ctx = this.canvas.getContext("2d", { willReadFrequently: true });
 		this.stream = this.canvas.captureStream(30);
 
 		this.initialized = false;
@@ -41750,7 +41594,7 @@ class CanvasStreamSource {
 		this.frameCheckInterval = setInterval(() => {
 			this.drawKeyframeTrigger();
 		}, 100);
-		window.addEventListener('message', this.boundHandleFrame);
+		window.addEventListener("message", this.boundHandleFrame);
 	}
 
 	drawKeyframeTrigger() {
@@ -41783,7 +41627,7 @@ class CanvasStreamSource {
 
 		try {
 			if (typeof frame !== "string") {
-				const videoTrack = new MediaStreamTrackGenerator({ kind: 'video' });
+				const videoTrack = new MediaStreamTrackGenerator({ kind: "video" });
 				this.writer = videoTrack.writable.getWriter();
 				const newStream = new MediaStream([videoTrack]);
 
@@ -41803,7 +41647,7 @@ class CanvasStreamSource {
 	}
 
 	handleFrame(event) {
-		if (!event.data || !event.data.frame || (event.data.type != "canvas-frame")) return;
+		if (!event.data || !event.data.frame || event.data.type != "canvas-frame") return;
 
 		const frame = event.data.frame;
 		this.initializeForFrame(frame);
@@ -41845,7 +41689,7 @@ class CanvasStreamSource {
 		if (this.imgSrc) {
 			URL.revokeObjectURL(this.imgSrc);
 		}
-		window.removeEventListener('message', this.boundHandleFrame);
+		window.removeEventListener("message", this.boundHandleFrame);
 		this.canvas = null;
 		this.ctx = null;
 		this.stream = null;
@@ -41855,7 +41699,6 @@ class CanvasStreamSource {
 }
 
 session.publishFrameSource = function (ele, event) {
-
 	var container = document.createElement("div");
 	container.id = "container";
 
@@ -41941,7 +41784,7 @@ session.publishFrameSource = function (ele, event) {
 	session.videoElement = v;
 	session.mirrorExclude = true;
 
-	v.addEventListener("click", (e) => {
+	v.addEventListener("click", e => {
 		log("click");
 		try {
 			if (e.ctrlKey || e.metaKey) {
@@ -41964,7 +41807,7 @@ session.publishFrameSource = function (ele, event) {
 	v.touchLastTap = 0;
 	v.touchCount = 0;
 
-	v.addEventListener("touchend", (event) => {
+	v.addEventListener("touchend", event => {
 		if (session.disableMouseEvents) {
 			return;
 		}
@@ -42013,12 +41856,11 @@ session.publishFrameSource = function (ele, event) {
 		}
 	});
 
-	v.onerror = (e) => {
+	v.onerror = e => {
 		errorlog(e);
 	};
 
 	v.onloadeddata = async () => {
-
 		session.mediafileShare = true;
 		getById("mainmenu").remove();
 
@@ -42105,14 +41947,14 @@ session.publishFrameSource = function (ele, event) {
 
 		if (session.meshcast2) {
 			await meshcast2();
-		} else if (session.whipOutput) { // was handling these functions within session.seedStream(); doing it here now instead. 8-08-2024
+		} else if (session.whipOutput) {
+			// was handling these functions within session.seedStream(); doing it here now instead. 8-08-2024
 			whipOut();
 		} else if (session.meshcast) {
 			await meshcast();
 		} else if (session.whepHost) {
 			whepOut();
 		}
-
 
 		session.seeding = true;
 
@@ -42485,10 +42327,12 @@ function loadIframe(iframesrc, target) {
 		} else {
 			iframesrc = "./confirm.html?url=" + encodeURI(iframesrc);
 		}
-	} else if (!ipsafe && (typeof target == "object")) { // likely widget
-		if (session.widgetwidth <= 28) { // 28 for marcus
+	} else if (!ipsafe && typeof target == "object") {
+		// likely widget
+		if (session.widgetwidth <= 28) {
+			// 28 for marcus
 			iframe.classList.remove("insecure");
-		} else if (isIFrame && (session.widgetwidth <= 50)) {
+		} else if (isIFrame && session.widgetwidth <= 50) {
 			iframe.classList.remove("insecure");
 		} else {
 			if (session.cleanOutput || window.obsstudio) {
@@ -42545,7 +42389,7 @@ function updateConstraintSliders() {
 			getById("effectsDiv3").style.display = "block";
 			try {
 				getById("effectSelector3").value = session.effect || "0";
-			} catch (E) { }
+			} catch (E) {}
 		}
 		//}
 	}
@@ -42599,7 +42443,9 @@ function mixMinusAudio(uid = false) {
 		try {
 			var oldNodes = session.p2pMixMinusNodes[uid];
 			for (var n = 0; n < oldNodes.length; n++) {
-				try { oldNodes[n].disconnect(); } catch (e) {}
+				try {
+					oldNodes[n].disconnect();
+				} catch (e) {}
 			}
 		} catch (e) {}
 		delete session.p2pMixMinusNodes[uid];
@@ -42714,7 +42560,7 @@ function cleanupMixMinusAudioNodes(uuid) {
 			for (var i = 0; i < nodes.sources.length; i++) {
 				try {
 					nodes.sources[i].disconnect();
-				} catch (e) { }
+				} catch (e) {}
 			}
 			nodes.sources = [];
 		}
@@ -42724,7 +42570,7 @@ function cleanupMixMinusAudioNodes(uuid) {
 			for (var i = 0; i < nodes.splitters.length; i++) {
 				try {
 					nodes.splitters[i].disconnect();
-				} catch (e) { }
+				} catch (e) {}
 			}
 			nodes.splitters = [];
 		}
@@ -42733,13 +42579,12 @@ function cleanupMixMinusAudioNodes(uuid) {
 		if (nodes.merger) {
 			try {
 				nodes.merger.disconnect();
-			} catch (e) { }
+			} catch (e) {}
 			nodes.merger = null;
 		}
 
 		// Destination doesn't need explicit disconnect
 		nodes.destination = null;
-
 	} catch (e) {
 		warnlog("Error cleaning up mix-minus audio nodes: " + e);
 	}
@@ -42914,15 +42759,15 @@ function initMixMinusStateForGuest(uuid) {
 		excludeSources: [],
 		includeSources: [],
 		// Director audio options
-		useDirectorMix: true,           // Use processed WebAudio output (with effects)
-		rawDevices: {},                 // { deviceId: true/false } for raw input devices
-		directorAudioDevices: {},       // Legacy - kept for backwards compatibility
+		useDirectorMix: true, // Use processed WebAudio output (with effects)
+		rawDevices: {}, // { deviceId: true/false } for raw input devices
+		directorAudioDevices: {}, // Legacy - kept for backwards compatibility
 		// Audio node references for cleanup
 		audioNodes: {
 			merger: null,
 			destination: null,
-			sources: [],      // MediaStreamSource nodes
-			splitters: []     // ChannelSplitter nodes
+			sources: [], // MediaStreamSource nodes
+			splitters: [] // ChannelSplitter nodes
 		}
 	};
 
@@ -43206,7 +43051,7 @@ function toggleMixDropdown(UUID, buttonEle, event) {
 		buttonEle.classList.add("pressed");
 
 		// Add click outside listener to close dropdown
-		setTimeout(function() {
+		setTimeout(function () {
 			document.addEventListener("click", closeMixDropdownOnClickOutside);
 		}, 10);
 	} else {
@@ -43259,17 +43104,17 @@ function populateMixDropdown(targetUUID, dropdown) {
 			var checked = state.useDirectorMix !== false;
 			html += '<div class="mix-dropdown-item">';
 			html += '<input type="checkbox" id="mix-dir-' + targetUUID.substring(0, 8) + '" ';
-			html += (checked ? 'checked ' : '');
-			html += 'onchange="toggleMixSource(\'' + targetUUID + '\', \'__director_mix__\', \'mix\', this)">';
+			html += checked ? "checked " : "";
+			html += "onchange=\"toggleMixSource('" + targetUUID + "', '__director_mix__', 'mix', this)\">";
 			html += '<label for="mix-dir-' + targetUUID.substring(0, 8) + '">Director Mix (with effects)</label>';
-			html += '</div>';
+			html += "</div>";
 		} else {
 			html += '<div class="mix-dropdown-item" style="color: #888;">No director mix available</div>';
 		}
 	} else {
 		html += '<div class="mix-dropdown-item" style="color: #888;">No director mix available</div>';
 	}
-	html += '</div>';
+	html += "</div>";
 
 	// Section 2: Director Input Devices (raw, unprocessed)
 	html += '<div class="mix-dropdown-section">';
@@ -43283,21 +43128,21 @@ function populateMixDropdown(targetUUID, dropdown) {
 			for (var i = 0; i < inputTracks.length; i++) {
 				var track = inputTracks[i];
 				var deviceId = track.getSettings().deviceId || track.id;
-				var label = track.label || ("Mic " + (i + 1));
+				var label = track.label || "Mic " + (i + 1);
 				var checked = state.rawDevices && state.rawDevices[deviceId] === true;
 
 				html += '<div class="mix-dropdown-item">';
-				html += '<input type="checkbox" id="mix-raw-' + i + '-' + targetUUID.substring(0, 8) + '" ';
-				html += (checked ? 'checked ' : '');
-				html += 'onchange="toggleMixSource(\'' + targetUUID + '\', \'' + deviceId + '\', \'raw\', this)">';
-				html += '<label for="mix-raw-' + i + '-' + targetUUID.substring(0, 8) + '">' + sanitizeLabel(label) + '</label>';
-				html += '</div>';
+				html += '<input type="checkbox" id="mix-raw-' + i + "-" + targetUUID.substring(0, 8) + '" ';
+				html += checked ? "checked " : "";
+				html += "onchange=\"toggleMixSource('" + targetUUID + "', '" + deviceId + "', 'raw', this)\">";
+				html += '<label for="mix-raw-' + i + "-" + targetUUID.substring(0, 8) + '">' + sanitizeLabel(label) + "</label>";
+				html += "</div>";
 			}
 		}
 	} else {
 		html += '<div class="mix-dropdown-item" style="color: #888;">No input devices</div>';
 	}
-	html += '</div>';
+	html += "</div>";
 
 	// Other guests section
 	html += '<div class="mix-dropdown-section">';
@@ -43329,17 +43174,17 @@ function populateMixDropdown(targetUUID, dropdown) {
 
 		html += '<div class="mix-dropdown-item">';
 		html += '<input type="checkbox" id="mix-guest-' + UUID.substring(0, 8) + '" ';
-		html += (checked ? 'checked ' : '');
-		html += 'onchange="toggleMixSource(\'' + targetUUID + '\', \'' + UUID + '\', false, this)">';
-		html += '<label for="mix-guest-' + UUID.substring(0, 8) + '">' + sanitizeLabel(displayLabel) + '</label>';
-		html += '</div>';
+		html += checked ? "checked " : "";
+		html += "onchange=\"toggleMixSource('" + targetUUID + "', '" + UUID + "', false, this)\">";
+		html += '<label for="mix-guest-' + UUID.substring(0, 8) + '">' + sanitizeLabel(displayLabel) + "</label>";
+		html += "</div>";
 	}
 
 	if (guestCount === 0) {
 		html += '<div class="mix-dropdown-item" style="color: #888;">No other guests</div>';
 	}
 
-	html += '</div>';
+	html += "</div>";
 
 	dropdown.innerHTML = html;
 }
@@ -43358,11 +43203,11 @@ function toggleMixSource(targetUUID, sourceId, sourceType, checkbox) {
 
 	var state = session.mixMinusState[targetUUID];
 
-	if (sourceType === 'mix') {
+	if (sourceType === "mix") {
 		// Toggle Director Mix (processed WebAudio output)
 		state.useDirectorMix = !state.useDirectorMix;
 		updateMixMinusForGuest(targetUUID);
-	} else if (sourceType === 'raw') {
+	} else if (sourceType === "raw") {
 		// Toggle raw input device
 		if (!state.rawDevices) {
 			state.rawDevices = {};
@@ -43431,7 +43276,7 @@ function listAudioSettingsPrep() {
 				try {
 					delete trackSet.currentAudioConstraints.channelCount;
 					delete trackSet.audioConstraints.channelCount;
-				} catch (e) { }
+				} catch (e) {}
 			} else if (session.audioInputChannels && session.audioInputChannels == 1) {
 				// this is pretty hacky, but it gets around not being able to actually set 1-channel. Not sure why.
 				trackSet.currentAudioConstraints.channelCount = 1;
@@ -43454,7 +43299,7 @@ function listAudioSettingsPrep() {
 					trackSet.lowEQ = session.webAudios[waid].lowEQ.gain.value;
 					trackSet.midEQ = session.webAudios[waid].midEQ.gain.value;
 					trackSet.highEQ = session.webAudios[waid].highEQ.gain.value;
-				} catch (e) { }
+				} catch (e) {}
 				break;
 			}
 		} else {
@@ -43468,7 +43313,7 @@ function listAudioSettingsPrep() {
 					// TODO:  EXCLUDE CURRENT TRACK IF ALREADY EXISTS ... if (track.id === wa.id){..
 					try {
 						trackSet.lowcut = session.webAudios[waid].lowcut1.frequency.value;
-					} catch (e) { }
+					} catch (e) {}
 					break;
 				}
 			}
@@ -43484,7 +43329,7 @@ function listAudioSettingsPrep() {
 					trackSet.subGain = session.webAudios[waid].subGainNodes[track0.id].gain.value;
 				}
 				break;
-			} catch (e) { }
+			} catch (e) {}
 		}
 
 		if (i == 0 && !session.disableWebAudio) {
@@ -43601,16 +43446,19 @@ function setupClosedCaptions() {
 				} else if (event && event.type) {
 					speechError = event.type;
 				}
-			} catch (e) { }
+			} catch (e) {}
 			errorlog("SpeechRecognition error: " + speechError);
 		};
 		Recognition.onend = function (e) {
 			warnlog(e);
 			log("Stopped transcription " + Date.now());
 			clearTimeout(timeoutRecognition);
-			timeoutRecognition = setTimeout(function () {
-				Recognition.start();
-			}, parseInt(500 * retriesRecognition * retriesRecognition)); // restart it if it fails.
+			timeoutRecognition = setTimeout(
+				function () {
+					Recognition.start();
+				},
+				parseInt(500 * retriesRecognition * retriesRecognition)
+			); // restart it if it fails.
 			retriesRecognition += 1;
 			if (retriesRecognition == 3) {
 				console.error("Captioning service is having a problem connecting");
@@ -43676,8 +43524,7 @@ async function requestGoogleDriveRecord(ele, state = null, bitrate = null, event
 		ele.ariaPressed = ele.classList.contains("armed") ? "true" : "false";
 
 		// Add callback only once for all armed buttons
-		if (document.querySelectorAll('[data-action-type="recorder-google-drive-remote"].armed').length === 1 &&
-			ele.classList.contains("armed")) {
+		if (document.querySelectorAll('[data-action-type="recorder-google-drive-remote"].armed').length === 1 && ele.classList.contains("armed")) {
 			Callbacks.push([multiGdriveRecord]);
 		}
 		return;
@@ -43801,9 +43648,7 @@ async function multiGdriveRecord() {
 
 		// Generate unique filename for each recording
 		const rpc = session.rpcs[UUID] || {};
-		const filename = buildRecordingFilenameBase(rpc.label, rpc.streamID, UUID || "recording", 55) +
-			"_" + Date.now().toString() +
-			(SafariVersion ? ".mp4" : ".webm");
+		const filename = buildRecordingFilenameBase(rpc.label, rpc.streamID, UUID || "recording", 55) + "_" + Date.now().toString() + (SafariVersion ? ".mp4" : ".webm");
 
 		// Get upload link for each recording
 		const uploadLink = await session.gdrive.startResumableUpload(filename);
@@ -43850,7 +43695,9 @@ async function requestVideoRecord(ele, state = null, bitrate = null) {
 				session.sendRequest(msg, msg.UUID);
 				ele.classList.add("pressed");
 				ele.ariaPressed = "true"; // "btn-HL-green"
-			} else { return; }
+			} else {
+				return;
+			}
 		} else {
 			msg.value = bitrate;
 			session.sendRequest(msg, msg.UUID);
@@ -43990,7 +43837,10 @@ function toggleSystemPip(vid, autoRetry = false) {
 			if (document.pictureInPictureElement === vid) {
 				pipPromise = document.exitPictureInPicture();
 			} else {
-				pipPromise = document.exitPictureInPicture().catch(errorlog).then(() => vid.requestPictureInPicture());
+				pipPromise = document
+					.exitPictureInPicture()
+					.catch(errorlog)
+					.then(() => vid.requestPictureInPicture());
 			}
 		} else {
 			pipPromise = vid.requestPictureInPicture();
@@ -44106,7 +43956,7 @@ function clearAutoPiPPrompt() {
 	if (session.autoPiPPrompt) {
 		try {
 			session.autoPiPPrompt.remove();
-		} catch (e) { }
+		} catch (e) {}
 		session.autoPiPPrompt = false;
 	}
 	session.autoPiPPromptVideo = false;
@@ -44124,7 +43974,6 @@ function updateDirectorsAudio(dataN, UUID) {
 
 	//log(dataN);
 	if (!dataN.length) {
-
 		var label = document.createElement("label");
 		label.innerText = "No microphone selected";
 		label.style.display = "block";
@@ -44750,7 +44599,7 @@ function updateDirectorsAudio(dataN, UUID) {
 									opt.selected = "true";
 								}
 							}
-						} catch (e) { }
+						} catch (e) {}
 					} else {
 						continue;
 					}
@@ -44794,7 +44643,7 @@ function updateDirectorsAudio(dataN, UUID) {
 						if (data.audioConstraints[i] === true) {
 							opt.selected = "true";
 						}
-					} catch (e) { }
+					} catch (e) {}
 
 					input.dataset.deviceId = data.deviceId;
 					input.id = "constraints_" + i + "_" + n + "_" + UUID;
@@ -45190,7 +45039,7 @@ function updateDirectorsVideo(data, UUID) {
 								opt.selected = "true";
 							}
 						}
-					} catch (e) { }
+					} catch (e) {}
 				} else {
 					continue;
 				}
@@ -45238,7 +45087,7 @@ function updateDirectorsVideo(data, UUID) {
 					if (data.audioConstraints[i] === true) {
 						opt.selected = "true";
 					}
-				} catch (e) { }
+				} catch (e) {}
 
 				input.id = "constraints_" + i + "_" + UUID;
 				input.className = "constraintCameraInput";
@@ -45331,7 +45180,7 @@ function listAudioSettings() {
 					try {
 						delete session.currentAudioConstraints.channelCount;
 						delete session.audioConstraints.channelCount;
-					} catch (e) { }
+					} catch (e) {}
 				} else if (session.audioInputChannels && session.audioInputChannels == 1) {
 					// this is pretty hacky, but it gets around not being able to actually set 1-channel. Not sure why.
 					session.currentAudioConstraints.channelCount = 1;
@@ -46662,7 +46511,7 @@ function listCameraSettings() {
 						if (session.currentCameraConstraints[i]) {
 							opt.selected = "selected";
 						}
-					} catch (e) { }
+					} catch (e) {}
 				} else if (session.cameraConstraints[i].length && "continuous" == session.cameraConstraints[i][0]) {
 					var opt = new Option("continuous", "continuous");
 					input.options.add(opt);
@@ -46829,7 +46678,7 @@ function listCameraSettings() {
 											.applyConstraints({
 												advanced: [{ [i]: cameraSettings["default"][i] }]
 											})
-											.then(() => { })
+											.then(() => {})
 											.catch(e => {
 												errorlog("Failed to reset to defaults (" + i + "): " + (e && e.message ? e.message : e));
 												failed = true;
@@ -46907,9 +46756,7 @@ function applySavedAudioSettings(track0) {
 	const allowedProps = ["autoGainControl", "echoCancellation", "noiseSuppression"];
 
 	for (const prop in session.currentAudioConstraints) {
-		if (audioSettings[prop] !== undefined &&
-			audioSettings[prop] !== session.currentAudioConstraints[prop] &&
-			allowedProps.includes(prop)) {
+		if (audioSettings[prop] !== undefined && audioSettings[prop] !== session.currentAudioConstraints[prop] && allowedProps.includes(prop)) {
 			constraints[prop] = audioSettings[prop];
 			warnlog("DIFF: " + prop);
 		}
@@ -46918,7 +46765,8 @@ function applySavedAudioSettings(track0) {
 	warnlog(constraints);
 	if (!Object.keys(constraints).length) return;
 
-	track0.applyConstraints({ advanced: [constraints] })
+	track0
+		.applyConstraints({ advanced: [constraints] })
 		.then(() => warnlog("audio settings updated for deviceId:" + deviceId))
 		.catch(e => errorlog("Failed to reset to audio defaults: " + (e && e.message ? e.message : e)));
 }
@@ -46931,8 +46779,7 @@ function applySavedVideoSettings(track0) {
 
 	// Handle mobile orientation
 	if (session.mobile) {
-		const isPortrait = (screen?.orientation?.type?.includes("portrait")) ||
-			window.matchMedia("(orientation: portrait)").matches;
+		const isPortrait = screen?.orientation?.type?.includes("portrait") || window.matchMedia("(orientation: portrait)").matches;
 		if (!isPortrait && session.currentCameraConstraints?.aspectRatio) {
 			session.currentCameraConstraints.aspectRatio = 1 / session.currentCameraConstraints.aspectRatio;
 		}
@@ -46960,9 +46807,7 @@ function applySavedVideoSettings(track0) {
 	};
 
 	for (const prop in session.currentCameraConstraints) {
-		if (!cameraSettings.current[prop] ||
-			cameraSettings.current[prop] === session.currentCameraConstraints[prop] ||
-			skipProps.includes(prop)) continue;
+		if (!cameraSettings.current[prop] || cameraSettings.current[prop] === session.currentCameraConstraints[prop] || skipProps.includes(prop)) continue;
 
 		if (urlOverrides[prop]) {
 			log(`${prop} is manually set via URL`);
@@ -46976,7 +46821,8 @@ function applySavedVideoSettings(track0) {
 	warnlog(constraints);
 	if (!Object.keys(constraints).length) return;
 
-	track0.applyConstraints({ advanced: [constraints] })
+	track0
+		.applyConstraints({ advanced: [constraints] })
 		.then(() => warnlog("video settings updated for deviceId:" + deviceId))
 		.catch(e => errorlog("Failed to reset to defaults: " + (e && e.message ? e.message : e)));
 }
@@ -47055,7 +46901,8 @@ async function updateCameraConstraints(constraint, value = null, ctrl = false, U
 		log(constraints);
 
 		// Apply constraints
-		await track0.applyConstraints({ advanced: [constraints] })
+		await track0
+			.applyConstraints({ advanced: [constraints] })
 			.then(() => {
 				log("applied constraint");
 
@@ -47079,7 +46926,6 @@ async function updateCameraConstraints(constraint, value = null, ctrl = false, U
 				updateCameraConstraintsBusy = false;
 				updateCameraConstraintsNext = false;
 			});
-
 	} catch (e) {
 		errorlog(e);
 		updateCameraConstraintsBusy = false;
@@ -47169,8 +47015,7 @@ async function buildConstraints(constraint, value, ctrl, track0) {
 			constraints[constraint] = value;
 			if (current?.frameRate) constraints.frameRate = current.frameRate;
 			if (session.mobile) {
-				const isPortrait = (screen?.orientation?.type?.includes("portrait")) ||
-					window.matchMedia("(orientation: portrait)").matches;
+				const isPortrait = screen?.orientation?.type?.includes("portrait") || window.matchMedia("(orientation: portrait)").matches;
 				if (isPortrait && constraints.aspectRatio) {
 					constraints.aspectRatio = 1 / constraints.aspectRatio;
 				}
@@ -47234,8 +47079,7 @@ async function applyCurrentSetting(track0, prop, current) {
 
 // Helper to adjust constraints for mobile orientation
 function adjustConstraintsForMobileOrientation(constraints) {
-	const isPortrait = (screen?.orientation?.type?.includes("portrait")) ||
-		window.matchMedia("(orientation: portrait)").matches;
+	const isPortrait = screen?.orientation?.type?.includes("portrait") || window.matchMedia("(orientation: portrait)").matches;
 
 	if (!isPortrait) return;
 
@@ -47293,7 +47137,7 @@ function setupSharpnessTool() {
 			} else if (event && event.type) {
 				workerError = event.type;
 			}
-		} catch (e) { }
+		} catch (e) {}
 		errorlog("focus_worker error: " + workerError);
 		promise.reject(event);
 	};
@@ -47476,7 +47320,7 @@ session.remoteFocus = async function (focusDistance, absolute = false) {
 
 		const step = focusRange.step || 0.01;
 		const steps = Math.round((newFocusDistance - focusRange.min) / step);
-		newFocusDistance = focusRange.min + (steps * step);
+		newFocusDistance = focusRange.min + steps * step;
 
 		// Use updateCameraConstraints with save=false to avoid debouncing
 		await updateCameraConstraints("focusDistance", newFocusDistance, false, false, false);
@@ -47536,7 +47380,7 @@ session.remoteZoom = async function (zoom, absolute = false) {
 
 		const step = zoomRange.step || 1;
 		const steps = Math.round((newZoom - zoomRange.min) / step);
-		newZoom = zoomRange.min + (steps * step);
+		newZoom = zoomRange.min + steps * step;
 
 		// Use updateCameraConstraints with save=false
 		await updateCameraConstraints("zoom", newZoom, false, false, false);
@@ -47586,7 +47430,7 @@ session.remotePan = async function (pan, absolute = false) {
 
 		const step = panRange.step || 1;
 		const steps = Math.round((newPan - panRange.min) / step);
-		newPan = panRange.min + (steps * step);
+		newPan = panRange.min + steps * step;
 
 		// Use updateCameraConstraints with save=false
 		await updateCameraConstraints("pan", newPan, false, false, false);
@@ -47636,7 +47480,7 @@ session.remoteTilt = async function (tilt, absolute = false) {
 
 		const step = tiltRange.step || 1;
 		const steps = Math.round((newTilt - tiltRange.min) / step);
-		newTilt = tiltRange.min + (steps * step);
+		newTilt = tiltRange.min + steps * step;
 
 		// Use updateCameraConstraints with save=false
 		await updateCameraConstraints("tilt", newTilt, false, false, false);
@@ -47663,7 +47507,7 @@ session.remoteExposure = async function (exposure, absolute = false) {
 		}
 
 		// Ensure manual mode
-		if (settings.exposureMode !== 'manual') {
+		if (settings.exposureMode !== "manual") {
 			await updateCameraConstraints("exposureMode", "manual", false, false, false);
 		}
 
@@ -47782,7 +47626,6 @@ async function requestBasicPermissions(constraint = { video: true, audio: true }
 	log("REQUESTING BASIC PERMISSIONS");
 
 	try {
-
 		if (!navigator.mediaDevices) {
 			throw new Error("navigator.mediaDevices not found - check your security / browser settings.");
 		}
@@ -48234,7 +48077,7 @@ function listenWebsocket(roomid) {
 			}
 			try {
 				callSocket.close();
-			} catch (e) { }
+			} catch (e) {}
 		}
 		callSocket = new WebSocket("wss://call.vdo.ninja:8443/" + roomid);
 		callSocket.onclose = function () {
@@ -48684,7 +48527,6 @@ async function shareWebsite(autostart = false, evt = false) {
 			);
 		}
 	} else if (session.iFramesAllowed) {
-
 		var iframe = document.createElement("iframe");
 		iframe.allow = "autoplay;camera;microphone;fullscreen;picture-in-picture;display-capture;midi;screen-wake-lock;"; // do not allow location
 		iframe.src = session.iframeSrc;
@@ -48954,7 +48796,7 @@ function previewWebcam(miconly = false) {
 		var constraint = {
 			audio: false
 		};
-	} else if ((session.echoCancellation !== false) && (session.autoGainControl !== false) && (session.noiseSuppression !== false) && (session.voiceIsolation !== true)) {
+	} else if (session.echoCancellation !== false && session.autoGainControl !== false && session.noiseSuppression !== false && session.voiceIsolation !== true) {
 		// AUTO
 		var constraint = {
 			audio: true
@@ -49312,7 +49154,7 @@ async function PictureInPicturePageToggle(state = null) {
 				}
 			});
 
-			var pipWindowHead = '<title>Pop-out Window</title>';
+			var pipWindowHead = "<title>Pop-out Window</title>";
 			pipWindowHead += '<link rel="stylesheet" href="./main.css"/>';
 
 			session.pipWindow.document.body.className = "main";
@@ -49701,7 +49543,6 @@ function pauseVideo(videoEle, update = true) {
 
 	function contextListener() {
 		document.addEventListener("contextmenu", function (e) {
-
 			if (!session.cleanish && session.cleanOutput) {
 				e.preventDefault();
 				e.stopPropagation();
@@ -49776,7 +49617,7 @@ function pauseVideo(videoEle, update = true) {
 				menu.querySelectorAll("input").forEach(ele => {
 					ele.removeEventListener("input", handleInputElement);
 				});
-			} catch (e) { }
+			} catch (e) {}
 		}
 		menu = getById(menutype || "context-menu");
 		menuItemSyncState(menu);
@@ -49837,19 +49678,18 @@ function pauseVideo(videoEle, update = true) {
 		}
 
 		// Handle submenu edge positioning
-		var submenus = menu.querySelectorAll('.context-menu__submenu');
-		submenus.forEach(function(submenu) {
-			submenu.classList.remove('context-menu__submenu--left');
+		var submenus = menu.querySelectorAll(".context-menu__submenu");
+		submenus.forEach(function (submenu) {
+			submenu.classList.remove("context-menu__submenu--left");
 			var parentRect = submenu.parentElement.getBoundingClientRect();
 			var submenuWidth = 200; // Width defined in CSS
 			if (parentRect.right + submenuWidth > windowWidth) {
-				submenu.classList.add('context-menu__submenu--left');
+				submenu.classList.add("context-menu__submenu--left");
 			}
 		});
 	}
 
 	async function menuItemListener(link, inputElement = false, e = false) {
-
 		if (link.getAttribute("data-action") === "Open") {
 			window.open(taskItemInContext.href);
 		} else if (link.getAttribute("data-action") === "Copy") {
@@ -49965,7 +49805,6 @@ function pauseVideo(videoEle, update = true) {
 			mediaElement.setAttribute("controls", "");
 			mediaElement.controls = true;
 			taskItemInContext.controls = mediaElement.controls;
-
 		} else if (link.getAttribute("data-action") === "HideControls") {
 			var mediaElement = resolveMediaContextElement(taskItemInContext);
 
@@ -49973,7 +49812,6 @@ function pauseVideo(videoEle, update = true) {
 			mediaElement.controls = false;
 			mediaElement.removeAttribute("controls");
 			taskItemInContext.controls = mediaElement.controls;
-
 		} else if (link.getAttribute("data-action") === "Edit") {
 			//copyFunction(taskItemInContext.href);
 			var response = await promptAlt("Please note, manual edits to the URL may conflict with the toggles", false, false, taskItemInContext.href);
@@ -50082,11 +49920,11 @@ function pauseVideo(videoEle, update = true) {
 		} else if (link.getAttribute("data-action") === "SendTip") {
 			var UUID = taskItemInContext.dataset.UUID;
 			if (UUID && session.rpcs[UUID] && session.rpcs[UUID].acceptsTips) {
-				if (typeof openTipModal === 'function') {
+				if (typeof openTipModal === "function") {
 					openTipModal(UUID);
 				}
 			} else if (session.pcs && session.pcs[UUID] && session.pcs[UUID].acceptsTips) {
-				if (typeof openTipModal === 'function') {
+				if (typeof openTipModal === "function") {
 					openTipModal(UUID);
 				}
 			}
@@ -50197,9 +50035,7 @@ function pauseVideo(videoEle, update = true) {
 				} else if (taskItemInContext.dataset && taskItemInContext.dataset.UUID && session.rpcs && session.rpcs[taskItemInContext.dataset.UUID]) {
 					items[i].parentNode.classList.remove("hidden");
 					if (drawLabel) {
-						drawLabel.textContent = taskItemInContext.clearDrawOnVideo
-							? "Stop draw mode"
-							: (session.rpcs[taskItemInContext.dataset.UUID].allowDrawing ? "Draw/Ping on video" : "Request draw access");
+						drawLabel.textContent = taskItemInContext.clearDrawOnVideo ? "Stop draw mode" : session.rpcs[taskItemInContext.dataset.UUID].allowDrawing ? "Draw/Ping on video" : "Request draw access";
 					}
 				} else {
 					items[i].parentNode.classList.add("hidden");
@@ -50289,7 +50125,8 @@ function pauseVideo(videoEle, update = true) {
 	contextListener();
 })();
 
-function checkVideoControlBar(ele) { // this is aggressive. Lets not use it unless required.
+function checkVideoControlBar(ele) {
+	// this is aggressive. Lets not use it unless required.
 	if (ele) {
 		if (ele.showControlBar) {
 			if (ele.showControlBarInterval) {
@@ -50299,9 +50136,13 @@ function checkVideoControlBar(ele) { // this is aggressive. Lets not use it unle
 			ele.removeAttribute("controls");
 			ele.setAttribute("controls", "");
 			ele.focus();
-			ele.showControlBarInterval = setTimeout(function (ele) {
-				checkVideoControlBar(ele);
-			}, 100, ele);
+			ele.showControlBarInterval = setTimeout(
+				function (ele) {
+					checkVideoControlBar(ele);
+				},
+				100,
+				ele
+			);
 		}
 	}
 }
@@ -50876,7 +50717,7 @@ function popOutClock(clock) {
 	}
 }
 
-session.popupChat = null
+session.popupChat = null;
 async function createPopoutChat() {
 	if (session.popupChat && !session.popupChat.closed) {
 		session.popupChat.focus();
@@ -50906,7 +50747,7 @@ async function createPopoutChat() {
 	let params = {
 		broadcastChannelID: session.broadcastChannelID,
 		room: session.roomid || false,
-		view: session.view_set ? [...session.view_set, session.streamID].join(",") : (session.roomid ? false : session.streamID),
+		view: session.view_set ? [...session.view_set, session.streamID].join(",") : session.roomid ? false : session.streamID,
 		label: session.label || false,
 		password: session.password
 	};
@@ -50916,19 +50757,15 @@ async function createPopoutChat() {
 		const encodedText = textEncoder.encode(text);
 		const encodedKey = textEncoder.encode(key);
 
-		const encrypted = encodedText.map((byte, i) =>
-			byte ^ encodedKey[i % encodedKey.length]
-		);
+		const encrypted = encodedText.map((byte, i) => byte ^ encodedKey[i % encodedKey.length]);
 
 		return btoa(String.fromCharCode.apply(null, encrypted));
 	}
 
 	async function generateSecureUrl(params) {
-		const ENCRYPTION_KEY = 'your32characterlongencryptionkey!!';
+		const ENCRYPTION_KEY = "your32characterlongencryptionkey!!";
 
-		const filteredParams = Object.fromEntries(
-			Object.entries(params).filter(([_, v]) => v != null && v !== undefined)
-		);
+		const filteredParams = Object.fromEntries(Object.entries(params).filter(([_, v]) => v != null && v !== undefined));
 		const paramsString = JSON.stringify(filteredParams);
 		const encrypted = encrypt(paramsString, ENCRYPTION_KEY);
 		return `./popout.html?id=${session.broadcastChannelID}&data=${encodeURIComponent(encrypted)}`;
@@ -50945,7 +50782,7 @@ async function createPopoutChat() {
 	session.popupChat.document.body.style.overflow = "hidden";
 	session.popupChat.document.title = "Chat pop-out";
 
-	const style = session.popupChat.document.createElement('style');
+	const style = session.popupChat.document.createElement("style");
 	style.textContent = `
 	@keyframes pulse {
 	  0% { background-color: #000; }
@@ -51019,7 +50856,7 @@ function getChatMessage(msg, label = false, director = false, overlay = false, U
 	}
 
 	if (session.sessionLog) {
-		var chatSource = label ? sanitizeLabel(label) : (director ? "Director" : "Someone");
+		var chatSource = label ? sanitizeLabel(label) : director ? "Director" : "Someone";
 		pushSessionLogEntry("chat", chatSource, msg);
 	}
 
@@ -51039,9 +50876,7 @@ function getChatMessage(msg, label = false, director = false, overlay = false, U
 		}
 	}
 
-	const streamFallbackLabel = (!label && session.director && UUID && session.rpcs[UUID] && session.rpcs[UUID].streamID)
-		? getPeerDisplayName(UUID, false, false)
-		: false;
+	const streamFallbackLabel = !label && session.director && UUID && session.rpcs[UUID] && session.rpcs[UUID].streamID ? getPeerDisplayName(UUID, false, false) : false;
 
 	if (label) {
 		label = sanitizeLabel(label);
@@ -51081,11 +50916,11 @@ function getChatMessage(msg, label = false, director = false, overlay = false, U
 			if (textOverlay) {
 				if (overlay == 2) {
 					// Clear previous persistent messages
-					while (textOverlay.querySelector('.persistent-overlay')) {
-						textOverlay.removeChild(textOverlay.querySelector('.persistent-overlay'));
+					while (textOverlay.querySelector(".persistent-overlay")) {
+						textOverlay.removeChild(textOverlay.querySelector(".persistent-overlay"));
 					}
 					var spanOverlay = document.createElement("span");
-					spanOverlay.className = 'persistent-overlay';
+					spanOverlay.className = "persistent-overlay";
 					spanOverlay.innerHTML = "<b><i>" + label + "</i></b> " + msg + "<br />";
 					textOverlay.appendChild(spanOverlay);
 					textOverlay.style.display = "block";
@@ -51102,7 +50937,7 @@ function getChatMessage(msg, label = false, director = false, overlay = false, U
 						function (ele) {
 							try {
 								ele.parentNode.removeChild(ele);
-							} catch (e) { }
+							} catch (e) {}
 						},
 						showtime,
 						spanOverlay
@@ -51162,22 +50997,22 @@ function rainbow(step, colours) {
 	var q = 1 - f;
 	switch (i % 6) {
 		case 0:
-			(r = 1), (g = f), (b = 0);
+			((r = 1), (g = f), (b = 0));
 			break;
 		case 1:
-			(r = q), (g = 1), (b = 0);
+			((r = q), (g = 1), (b = 0));
 			break;
 		case 2:
-			(r = 0), (g = 1), (b = f);
+			((r = 0), (g = 1), (b = f));
 			break;
 		case 3:
-			(r = 0), (g = q), (b = 1);
+			((r = 0), (g = q), (b = 1));
 			break;
 		case 4:
-			(r = f), (g = 0), (b = 1);
+			((r = f), (g = 0), (b = 1));
 			break;
 		case 5:
-			(r = 1), (g = 0), (b = q);
+			((r = 1), (g = 0), (b = q));
 			break;
 	}
 	var c = "#" + ("00" + (~~(r * 200 + 35)).toString(16)).slice(-2) + ("00" + (~~(g * 200 + 35)).toString(16)).slice(-2) + ("00" + (~~(b * 200 + 35)).toString(16)).slice(-2);
@@ -51262,7 +51097,6 @@ function getColorFromName(str, colorseed = false, totalcolors = false) {
 }
 
 function updateClosedCaptions(msg, label, UUID) {
-
 	if (!session.rpcs[UUID].color && session.ccColored) {
 		session.rpcs[UUID].color = getColorFromName(UUID);
 	}
@@ -51838,11 +51672,7 @@ function setupGoogleDriveUploader(filename = false, sessionUri = false) {
 
 	function initTokenClient() {
 		console.log("Initializing GIS token client");
-		if (
-			typeof google === "undefined" ||
-			!google.accounts ||
-			!google.accounts.oauth2
-		) {
+		if (typeof google === "undefined" || !google.accounts || !google.accounts.oauth2) {
 			const gisError = new Error("Google Identity Services failed to load.");
 			errorlog(gisError);
 			if (!session.cleanOutput) {
@@ -51969,7 +51799,7 @@ function setupGoogleDriveUploader(filename = false, sessionUri = false) {
 	gdrive.revokeToken = function () {
 		if (session.gdrive.accessToken) {
 			google.accounts.oauth2.revoke(session.gdrive.accessToken, () => {
-				console.log('Access token revoked');
+				console.log("Access token revoked");
 				session.gdrive.accessToken = false;
 			});
 		}
@@ -52102,14 +51932,7 @@ const DROPBOX_SDK_URL = "https://cdnjs.cloudflare.com/ajax/libs/dropbox.js/10.34
 const DROPBOX_OAUTH_STORAGE_KEY = "dropboxOAuthTokens";
 const DROPBOX_OAUTH_SESSION_KEY = "dropboxOAuthSession";
 const DROPBOX_AUTH_MESSAGE_SOURCE = "vdoninja-dropbox-auth";
-const DROPBOX_ALLOWED_REDIRECT_ORIGINS = [
-	"https://vdo.ninja",
-	"https://dev.versus.cam",
-	"https://versus.cam",
-	"https://backup.vdo.ninja",
-	"https://obs.ninja",
-	"http://localhost:8080"
-];
+const DROPBOX_ALLOWED_REDIRECT_ORIGINS = ["https://vdo.ninja", "https://dev.versus.cam", "https://versus.cam", "https://backup.vdo.ninja", "https://obs.ninja", "http://localhost:8080"];
 const DROPBOX_REFRESH_SKEW_MS = 120000;
 var dropboxScriptPromise = null;
 var dropboxInitPromise = null;
@@ -52140,13 +51963,13 @@ function getDropboxRedirectUri() {
 function persistDropboxAuthSession(sessionData) {
 	try {
 		localStorage.setItem(DROPBOX_OAUTH_SESSION_KEY, JSON.stringify(sessionData));
-	} catch (e) { }
+	} catch (e) {}
 }
 
 function clearDropboxAuthSession() {
 	try {
 		localStorage.removeItem(DROPBOX_OAUTH_SESSION_KEY);
-	} catch (e) { }
+	} catch (e) {}
 }
 
 function getStoredDropboxOAuthTokens() {
@@ -52168,7 +51991,7 @@ function getStoredDropboxOAuthTokens() {
 			}
 			return parsed;
 		}
-	} catch (e) { }
+	} catch (e) {}
 	return null;
 }
 
@@ -52186,7 +52009,7 @@ function persistDropboxOAuthTokens(record) {
 	};
 	try {
 		localStorage.setItem(DROPBOX_OAUTH_STORAGE_KEY, JSON.stringify(normalized));
-	} catch (e) { }
+	} catch (e) {}
 	if (typeof session !== "undefined") {
 		session.dropboxOAuth = normalized;
 		session.dropboxAccessToken = normalized.accessToken;
@@ -52199,7 +52022,7 @@ function clearDropboxOAuthTokens() {
 	}
 	try {
 		localStorage.removeItem(DROPBOX_OAUTH_STORAGE_KEY);
-	} catch (e) { }
+	} catch (e) {}
 }
 
 function normalizeDropboxTokenResponse(response, fallbackRefreshToken = null) {
@@ -52314,7 +52137,7 @@ async function createDropboxPkcePair() {
 			var data = new TextEncoder().encode(verifier);
 			var digest = await window.crypto.subtle.digest("SHA-256", data);
 			return { verifier: verifier, challenge: base64UrlEncode(digest), method: "S256" };
-		} catch (e) { }
+		} catch (e) {}
 	}
 	return { verifier: verifier, challenge: verifier, method: "plain" };
 }
@@ -52382,7 +52205,7 @@ function cleanupDropboxAuthFlow(result, isError) {
 	if (dropboxAuthWindow && !dropboxAuthWindow.closed) {
 		try {
 			dropboxAuthWindow.close();
-		} catch (e) { }
+		} catch (e) {}
 	}
 	dropboxAuthWindow = null;
 	var resolver = dropboxAuthFlowResolver;
@@ -52442,7 +52265,7 @@ function dropboxAuthMessageHandler(event) {
 		}
 		try {
 			event.source.postMessage({ source: DROPBOX_AUTH_MESSAGE_SOURCE, type: "session", session: sessionPayload }, event.origin);
-		} catch (e) { }
+		} catch (e) {}
 		return;
 	}
 	if (data.type === "tokens" && data.tokens) {
@@ -52489,7 +52312,6 @@ if (typeof window !== "undefined") {
 	window.addEventListener("message", streamSaverMessageHandler, false);
 }
 
-
 function getStoredDropboxToken() {
 	try {
 		return localStorage.getItem("dropboxAccessToken") || null;
@@ -52504,7 +52326,7 @@ function persistDropboxToken(token) {
 	}
 	try {
 		localStorage.setItem("dropboxAccessToken", token);
-	} catch (e) { }
+	} catch (e) {}
 }
 
 function clearDropboxAuthState({ clearToken = false, clearOAuth = false } = {}) {
@@ -52514,7 +52336,7 @@ function clearDropboxAuthState({ clearToken = false, clearOAuth = false } = {}) 
 			session.dropboxAccessToken = null;
 			try {
 				localStorage.removeItem("dropboxAccessToken");
-			} catch (e) { }
+			} catch (e) {}
 		}
 	}
 	if (clearOAuth) {
@@ -52526,7 +52348,7 @@ function clearDropboxAuthState({ clearToken = false, clearOAuth = false } = {}) 
 	}
 	try {
 		localStorage.removeItem("dropboxSession");
-	} catch (e) { }
+	} catch (e) {}
 }
 
 function dropboxErrorSuggestsReauth(error) {
@@ -52947,7 +52769,7 @@ async function streamVideoToDropbox(filename) {
 
 	function uploadChunk(chunk) {
 		var promise = enqueueChunk(chunk);
-		promise.catch(() => { });
+		promise.catch(() => {});
 		return promise;
 	}
 
@@ -52964,7 +52786,9 @@ async function recordVideo(target, event = null, videoKbps = false) {
 		warnlog("recordings are disabled by decree of thy host magistrate");
 	}
 
-	if (!target) { return; }
+	if (!target) {
+		return;
+	}
 
 	var UUID = target.dataset.UUID;
 
@@ -53042,8 +52866,8 @@ async function recordVideo(target, event = null, videoKbps = false) {
 
 	var configureRecording = {
 		bitrate: videoKbps,
-		usePCM: (videoKbps === 0 || session.pcm) ? true : false,
-		audioOnly: (videoKbps !== false && videoKbps <= 0) ? true : false
+		usePCM: videoKbps === 0 || session.pcm ? true : false,
+		audioOnly: videoKbps !== false && videoKbps <= 0 ? true : false
 	};
 	if (configureRecording.audioOnly && configureRecording.bitrate < 0) {
 		configureRecording.bitrate = Math.abs(configureRecording.bitrate);
@@ -53076,7 +52900,7 @@ async function recordVideo(target, event = null, videoKbps = false) {
 
 				try {
 					clearInterval(video.recorder.writer.interval);
-				} catch (e) { }
+				} catch (e) {}
 
 				delete video.recorder;
 				delete video.recording;
@@ -53206,7 +53030,7 @@ async function recordVideo(target, event = null, videoKbps = false) {
 			(writer1, UUID1, video1) => {
 				try {
 					writer1.close();
-				} catch (e) { }
+				} catch (e) {}
 				updateLocalRecordButton(UUID1, -1);
 				delete video1.recorder;
 				delete video1.recording;
@@ -53368,11 +53192,11 @@ async function recordVideo(target, event = null, videoKbps = false) {
 		var recError = "unknown";
 		try {
 			if (event && event.error && event.error.name) {
-				recError = event.error.name + (event.error.message ? (": " + event.error.message) : "");
+				recError = event.error.name + (event.error.message ? ": " + event.error.message : "");
 			} else if (event && event.type) {
 				recError = event.type;
 			}
-		} catch (e) { }
+		} catch (e) {}
 		errorlog("MediaRecorder error: " + recError);
 		console.log("It's possible using &recordcodec=vp8 might resolve recording errors if caused by an incompatible hardware encoder or codec");
 		video.recorder.stop();
@@ -53438,7 +53262,7 @@ function updateGdriveButton(UUID, gdrive, screen = false) {
 					}
 				})
 			);
-		} catch (e) { }
+		} catch (e) {}
 	}
 }
 
@@ -53511,7 +53335,7 @@ function updateRemoteRecordButton(UUID, recorder, screen = false) {
 					}
 				})
 			);
-		} catch (e) { }
+		} catch (e) {}
 	}
 }
 
@@ -53553,7 +53377,9 @@ var sessionLogStartTime = 0;
 var sessionLogDownloaded = false;
 
 function pushSessionLogEntry(type, source, content) {
-	if (!session.sessionLog) { return; }
+	if (!session.sessionLog) {
+		return;
+	}
 	if (!sessionLogStartTime) {
 		sessionLogStartTime = Date.now();
 	}
@@ -53594,9 +53420,9 @@ async function dropSessionMarker() {
 	}
 	var timeMs = Date.now() - sessionLogStartTime;
 
-	var note = await promptAlt("Session Marker #" + markerNum, false, false, false, false, false, false, {placeholder: "Type your note here..."});
+	var note = await promptAlt("Session Marker #" + markerNum, false, false, false, false, false, false, { placeholder: "Type your note here..." });
 
-	var label = (note && note.trim()) ? note.trim() : defaultLabel;
+	var label = note && note.trim() ? note.trim() : defaultLabel;
 
 	sessionLogData.push({
 		time: timeMs / 1000,
@@ -53617,9 +53443,15 @@ async function dropSessionMarker() {
 }
 
 function downloadSessionLog() {
-	if (!session.sessionLog) { return; }
-	if (!sessionLogData.length) { return; }
-	if (sessionLogDownloaded) { return; }
+	if (!session.sessionLog) {
+		return;
+	}
+	if (!sessionLogData.length) {
+		return;
+	}
+	if (sessionLogDownloaded) {
+		return;
+	}
 	sessionLogDownloaded = true;
 
 	var csv = "index,time_seconds,timecode,type,source,content\n";
@@ -53628,7 +53460,7 @@ function downloadSessionLog() {
 		var timecode = formatSessionLogTimecode(entry.time);
 		var content = (entry.content || "").replace(/"/g, '""');
 		var source = (entry.source || "").replace(/"/g, '""');
-		csv += (i + 1) + "," + entry.time.toFixed(3) + ',"' + timecode + '",' + entry.type + ',"' + source + '","' + content + '"\n';
+		csv += i + 1 + "," + entry.time.toFixed(3) + ',"' + timecode + '",' + entry.type + ',"' + source + '","' + content + '"\n';
 	}
 
 	var timestamp = new Date().toISOString().replace(/[:.]/g, "-").slice(0, 19);
@@ -53643,7 +53475,9 @@ function downloadSessionLog() {
 		document.body.appendChild(a);
 		a.click();
 		document.body.removeChild(a);
-		setTimeout(function () { URL.revokeObjectURL(url); }, 1000);
+		setTimeout(function () {
+			URL.revokeObjectURL(url);
+		}, 1000);
 	} catch (e) {
 		errorlog(e);
 	}
@@ -53741,7 +53575,7 @@ function setupSensorData(pollrate = 30) {
 						session.sensors.data[sensorKey].x = sensor.x !== null ? parseFloat(sensor.x.toFixed(5)) : null;
 						session.sensors.data[sensorKey].y = sensor.y !== null ? parseFloat(sensor.y.toFixed(5)) : null;
 						session.sensors.data[sensorKey].z = sensor.z !== null ? parseFloat(sensor.z.toFixed(5)) : null;
-					} catch (e) { }
+					} catch (e) {}
 					try {
 						session.sensors.data[sensorKey].t = parseInt(Math.round(sensor.timeStamp || 0)) || Date.now();
 					} catch (e) {
@@ -53816,12 +53650,15 @@ function setupSensorData(pollrate = 30) {
 		}
 	}
 
-	setInterval(function () {
-		if (session.sensors && session.sensors.data) {
-			cleanupSensorData(session.sensors.data);
-			session.sendMessage({ sensors: session.sensors.data });
-		}
-	}, parseInt(1000 / pollrate));
+	setInterval(
+		function () {
+			if (session.sensors && session.sensors.data) {
+				cleanupSensorData(session.sensors.data);
+				session.sendMessage({ sensors: session.sensors.data });
+			}
+		},
+		parseInt(1000 / pollrate)
+	);
 }
 
 function setupExternalSensorBridge() {
@@ -54022,11 +53859,11 @@ async function recordLocalVideo(action = null, configureRecording = false, remot
 	}
 	log("original", configureRecording);
 	if (typeof configureRecording !== "object") {
-		let bitrate = configureRecording !== false ? configureRecording : (session.recordLocal !== false ? session.recordLocal : session.recordDefault);
+		let bitrate = configureRecording !== false ? configureRecording : session.recordLocal !== false ? session.recordLocal : session.recordDefault;
 		configureRecording = {
 			bitrate: bitrate,
-			usePCM: (bitrate === 0 || session.pcm) ? true : false,
-			audioOnly: (bitrate !== false && bitrate <= 0) ? true : false
+			usePCM: bitrate === 0 || session.pcm ? true : false,
+			audioOnly: bitrate !== false && bitrate <= 0 ? true : false
 		};
 	}
 
@@ -54062,7 +53899,7 @@ async function recordLocalVideo(action = null, configureRecording = false, remot
 			if (session.gdrive && session.gdrive.sessionUri) {
 				log("Restarting recording to attach Google Drive upload");
 				video.recorder.stop();
-				setTimeout(function() {
+				setTimeout(function () {
 					recordLocalVideo("start", configureRecording, remote, altUUID);
 				}, 1000);
 				return;
@@ -54161,7 +53998,7 @@ async function recordLocalVideo(action = null, configureRecording = false, remot
 		try {
 			video.recorder.writer.close();
 			clearInterval(video.recorder.writer.interval);
-		} catch (e) { }
+		} catch (e) {}
 	};
 
 	video.recorder.stop = function (restart = false, notify = false) {
@@ -54287,7 +54124,7 @@ async function recordLocalVideo(action = null, configureRecording = false, remot
 				try {
 					delete video.recorder;
 					delete video.recording;
-				} catch (e) { }
+				} catch (e) {}
 
 				if (!remote) {
 					if (restart) {
@@ -54460,16 +54297,16 @@ async function recordLocalVideo(action = null, configureRecording = false, remot
 			errorlog("Failing the recording; no audio track");
 			try {
 				video.recorder.writer.close();
-			} catch (e) { }
+			} catch (e) {}
 
 			try {
 				clearInterval(video.recorder.writer.interval);
-			} catch (e) { }
+			} catch (e) {}
 
 			try {
 				delete video.recorder;
 				delete video.recording;
-			} catch (e) { }
+			} catch (e) {}
 			var msg = {};
 			msg.recorder = -3;
 			if (altUUID) {
@@ -54502,16 +54339,16 @@ async function recordLocalVideo(action = null, configureRecording = false, remot
 					errorlog("Fail safe failed; closing the recording");
 					try {
 						video.recorder.writer.close();
-					} catch (e) { }
+					} catch (e) {}
 
 					try {
 						clearInterval(video.recorder.writer.interval);
-					} catch (e) { }
+					} catch (e) {}
 
 					try {
 						delete video.recorder;
 						delete video.recording;
-					} catch (e) { }
+					} catch (e) {}
 					var msg = {};
 					msg.recorder = -3;
 					if (altUUID) {
@@ -54563,7 +54400,9 @@ async function recordLocalVideo(action = null, configureRecording = false, remot
 
 		return {
 			acquire: async () => {
-				const release = () => { isLocked = false; };
+				const release = () => {
+					isLocked = false;
+				};
 				while (isLocked) {
 					await new Promise(resolve => setTimeout(resolve, 10));
 				}
@@ -54635,7 +54474,7 @@ async function recordLocalVideo(action = null, configureRecording = false, remot
 		}
 	}
 
-	video.recorder.mediaRecorder.ondataavailable = (event) => {
+	video.recorder.mediaRecorder.ondataavailable = event => {
 		handleDataAvailable(event).catch(e => errorlog(e));
 	};
 
@@ -54643,11 +54482,11 @@ async function recordLocalVideo(action = null, configureRecording = false, remot
 		var recError = "unknown";
 		try {
 			if (event && event.error && event.error.name) {
-				recError = event.error.name + (event.error.message ? (": " + event.error.message) : "");
+				recError = event.error.name + (event.error.message ? ": " + event.error.message : "");
 			} else if (event && event.type) {
 				recError = event.type;
 			}
-		} catch (e) { }
+		} catch (e) {}
 		errorlog("MediaRecorder error: " + recError);
 		console.log("It's possible using &recordcodec=vp8 might resolve recording errors if caused by an incompatible hardware encoder or codec");
 		if (event && event.error && event.error.name) {
@@ -54758,16 +54597,20 @@ async function recordWindowCapture(bitrate = 6000) {
 
 		if (session.screensharequality) {
 			var q = parseInt(session.screensharequality);
-			if (q === -2) { // 4k
+			if (q === -2) {
+				// 4k
 				targetWidth = 3840;
 				targetHeight = 2160;
-			} else if (q === -3) { // 2k/1440p
+			} else if (q === -3) {
+				// 2k/1440p
 				targetWidth = 2560;
 				targetHeight = 1440;
-			} else if (q === 1) { // 720p
+			} else if (q === 1) {
+				// 720p
 				targetWidth = 1280;
 				targetHeight = 720;
-			} else if (q === 2) { // 360p
+			} else if (q === 2) {
+				// 360p
 				targetWidth = 640;
 				targetHeight = 360;
 			}
@@ -54821,7 +54664,7 @@ async function recordWindowCapture(bitrate = 6000) {
 		session.recordWindowElement = video;
 
 		// Handle stream ending (user stops sharing)
-		stream.getVideoTracks()[0].onended = function() {
+		stream.getVideoTracks()[0].onended = function () {
 			log("Window capture ended");
 			if (video.recording) {
 				recordLocalVideo("stop", false, video);
@@ -54841,7 +54684,7 @@ async function recordWindowCapture(bitrate = 6000) {
 			if (session.goLivePC) {
 				try {
 					session.goLivePC.close();
-				} catch(e) {}
+				} catch (e) {}
 				session.goLivePC = null;
 			}
 			var liveBtn = document.getElementById("goLiveButton");
@@ -54865,7 +54708,6 @@ async function recordWindowCapture(bitrate = 6000) {
 
 		log("Starting window recording at " + bitrate + " kbps" + (usePCM ? " with PCM audio" : ""));
 		recordLocalVideo("start", configureRecording, video);
-
 	} catch (e) {
 		errorlog("Window capture failed: " + e);
 		if (session.recordWindowElement) {
@@ -54959,7 +54801,9 @@ session.onTrack = function (event, UUID) {
 						try {
 							session.rpcs[UUID].streamSrc.removeTrack(tracks[j]);
 							log("Replaced dead " + tracks[j].kind + " track");
-						} catch(e) { warnlog(e); }
+						} catch (e) {
+							warnlog(e);
+						}
 					} else {
 						// Old track is still live - skip duplicate as before
 						newTracks.splice(i, 1);
@@ -55118,7 +54962,7 @@ session.onTrack = function (event, UUID) {
 				setTimeout(function () {
 					updateMixer();
 				}, 1);
-			} catch (e) { }
+			} catch (e) {}
 		};
 
 		newStream.onerror = function (e1) {
@@ -55132,7 +54976,7 @@ session.onTrack = function (event, UUID) {
 						trackInfo += " kind=" + e1.track.kind;
 					}
 				}
-			} catch (e) { }
+			} catch (e) {}
 			errorlog("Remote stream track error" + trackInfo);
 			try {
 				warnlog("Track threw an error; going to reconnect it");
@@ -55141,7 +54985,7 @@ session.onTrack = function (event, UUID) {
 						if (trk.id == e1.track.id && trk.kind == e1.track.kind) {
 							session.rpcs[UUID].streamSrc.removeTrack(trk);
 						}
-					} catch (e) { }
+					} catch (e) {}
 				});
 				if (e1.track.kind == "video") {
 					updateIncomingVideoElement(UUID, true, false);
@@ -55212,7 +55056,6 @@ function sendFrameHandler(tracks, UUID = null) {
 		log("STARTING NEW SEND STREAM VIDEO TRACK");
 
 		const startImageStream = async () => {
-
 			log("startImageStream");
 			const canvas = document.createElement("canvas");
 			const ctx = canvas.getContext("2d", { willReadFrequently: true });
@@ -55230,15 +55073,18 @@ function sendFrameHandler(tracks, UUID = null) {
 						const format = typeof session.sendframes === "string" ? session.sendframes : "webp";
 						const imageData = canvas.toDataURL(`image/${format}`, 0.8);
 
-						parent.postMessage({
-							type: 'frame',
-							frame: imageData,
-							UUID,
-							streamID: (session.rpcs[UUID] ? session.rpcs[UUID].streamID : null),
-							trackID: trk.id,
-							kind: trk.kind,
-							format: format
-						}, session.sendframes);
+						parent.postMessage(
+							{
+								type: "frame",
+								frame: imageData,
+								UUID,
+								streamID: session.rpcs[UUID] ? session.rpcs[UUID].streamID : null,
+								trackID: trk.id,
+								kind: trk.kind,
+								format: format
+							},
+							session.sendframes
+						);
 					} finally {
 						frame.close();
 					}
@@ -55263,14 +55109,18 @@ function sendFrameHandler(tracks, UUID = null) {
 					}
 
 					try {
-						parent.postMessage({
-							frame: value,
-							UUID,
-							streamID: (session.rpcs[UUID] ? session.rpcs[UUID].streamID : null),
-							trackID: trk.id,
-							kind: trk.kind,
-							type: "frame"
-						}, session.sendframes, [value]);
+						parent.postMessage(
+							{
+								frame: value,
+								UUID,
+								streamID: session.rpcs[UUID] ? session.rpcs[UUID].streamID : null,
+								trackID: trk.id,
+								kind: trk.kind,
+								type: "frame"
+							},
+							session.sendframes,
+							[value]
+						);
 					} finally {
 						value.close();
 					}
@@ -55286,7 +55136,7 @@ function sendFrameHandler(tracks, UUID = null) {
 		};
 
 		try {
-			if (typeof MediaStreamTrackProcessor === 'function') {
+			if (typeof MediaStreamTrackProcessor === "function") {
 				try {
 					new SharedArrayBuffer(1);
 					await startFrameStream();
@@ -55596,12 +55446,7 @@ function stopIncomingViewChroma(UUID, removeCanvas = true) {
 			clearTimeout(state.timer);
 			state.timer = null;
 		}
-		if (
-			rpc.videoElement &&
-			typeof rpc.videoElement.cancelVideoFrameCallback === "function" &&
-			state.videoFrameHandle !== null &&
-			state.videoFrameHandle !== undefined
-		) {
+		if (rpc.videoElement && typeof rpc.videoElement.cancelVideoFrameCallback === "function" && state.videoFrameHandle !== null && state.videoFrameHandle !== undefined) {
 			try {
 				rpc.videoElement.cancelVideoFrameCallback(state.videoFrameHandle);
 			} catch (e) {}
@@ -55746,14 +55591,14 @@ function updateIncomingVideoElement(UUID, video = true, audio = true) {
 			}
 		}
 	}
-	if ((session.optimize === 0) && session.activatedStreams.size && session.rpcs[UUID] && session.rpcs[UUID].streamID) {
+	if (session.optimize === 0 && session.activatedStreams.size && session.rpcs[UUID] && session.rpcs[UUID].streamID) {
 		if (session.activatedStreams.has(session.rpcs[UUID].streamID)) {
 			if (session.activatedStreamsQueue[session.rpcs[UUID].streamID]) {
 				let msgs = session.activatedStreamsQueue[session.rpcs[UUID].streamID];
 				delete session.activatedStreamsQueue[session.rpcs[UUID].streamID];
 				msgs.forEach(msgWithTime => {
 					log(msgWithTime);
-					if (msgWithTime.time && (msgWithTime.time > Date.now() - 10000)) {
+					if (msgWithTime.time && msgWithTime.time > Date.now() - 10000) {
 						session.directorActions(msgWithTime.msg);
 					}
 				});
@@ -55835,11 +55680,11 @@ function ensureLoudnessPipeline(UUID, reason = "unknown") {
 			var loudnessLastTickAt = parseInt(pipeline.loudnessLastTickAt) || 0;
 			var loudnessStartedAt = parseInt(pipeline.loudnessStartedAt) || 0;
 
-			if (loudnessLastTickAt && (now - loudnessLastTickAt) < heartbeatWindowMs) {
+			if (loudnessLastTickAt && now - loudnessLastTickAt < heartbeatWindowMs) {
 				return true;
 			}
 
-			if (!loudnessLastTickAt && loudnessStartedAt && (now - loudnessStartedAt) < warmupWindowMs) {
+			if (!loudnessLastTickAt && loudnessStartedAt && now - loudnessStartedAt < warmupWindowMs) {
 				return true;
 			}
 		}
@@ -55898,7 +55743,7 @@ function updateIncomingAudioElement(UUID) {
 	}
 
 	log("updateIncomingAudioElement: " + UUID);
-	if (session.audioEffects === true || session.pushLoudness || (session.rpcs[UUID].isolatedChannel !== undefined)) {
+	if (session.audioEffects === true || session.pushLoudness || session.rpcs[UUID].isolatedChannel !== undefined) {
 		var tracks = session.rpcs[UUID].streamSrc.getAudioTracks();
 		if (tracks.length) {
 			var track = tracks[0];
@@ -55979,7 +55824,7 @@ function cycleStyleOptions() {
 				if (session.rpcs[UUID].canvas) {
 					session.rpcs[UUID].canvas.remove();
 				}
-			} catch (e) { }
+			} catch (e) {}
 			session.rpcs[UUID].canvas = null;
 		}
 		updateIncomingAudioElement(UUID);
@@ -56051,7 +55896,7 @@ function addAudioPipeline(UUID, track) {
 					// clear audioMeterGuest, if active.
 					clearTimeout(session.rpcs[UUID].inboundAudioPipeline[trackid].analyser.interval);
 				}
-			} catch (e) { }
+			} catch (e) {}
 			source = fftWaveform(source, UUID, trackid);
 		} else if (session.style === 3 || session.meterStyle) {
 			log("adding a loudness meter node to audio");
@@ -56073,7 +55918,7 @@ function addAudioPipeline(UUID, track) {
 					// nothign active, so clear
 					clearTimeout(session.rpcs[UUID].inboundAudioPipeline[trackid].analyser.interval);
 				}
-			} catch (e) { }
+			} catch (e) {}
 		}
 
 		if (session.playChannel) {
@@ -56302,11 +56147,12 @@ function setupGuestLabelControl(UUID) {
 						labelPayload.directorState[session.rpcs[UUID].streamID] = getDetailedState(session.rpcs[UUID].streamID);
 						session.pushDirectorStateUpdate(labelPayload, "label-change");
 					}
-				} catch (e) { errorlog(e); }
+				} catch (e) {
+					errorlog(e);
+				}
 
 				pokeAPI("details", getDetailedState(session.rpcs[UUID].streamID));
 			}
-
 		};
 	}
 	updateAriaLabel(UUID);
@@ -56383,17 +56229,22 @@ function directorCoDirectorColoring(UUID) {
 		try {
 			session.rpcs[UUID].stats.info.director = true;
 			getById("container_" + UUID).classList.add("directorBox");
-		} catch (e) { }
+		} catch (e) {}
 	} else if (session.directorList.indexOf(UUID) >= 0) {
 		try {
 			session.rpcs[UUID].stats.info.coDirector = true;
 			addDirectorBlue(UUID);
-		} catch (e) { }
+		} catch (e) {}
 	}
 }
 
 function addDirectorBlue(UUID) {
-	try { getById("container_" + UUID).classList.add("directorBlue"); log("[ui] addDirectorBlue for UUID=" + UUID); } catch (e) { errorlog(e); }
+	try {
+		getById("container_" + UUID).classList.add("directorBlue");
+		log("[ui] addDirectorBlue for UUID=" + UUID);
+	} catch (e) {
+		errorlog(e);
+	}
 }
 
 function soloLinkGeneratorInit(UUID) {
@@ -56890,7 +56741,7 @@ function stereoPanning(source, UUID, trackid, value) {
 				} else if (panNode.setPosition) {
 					panNode.setPosition(x, 0, z);
 				}
-			} catch (e) { }
+			} catch (e) {}
 			session.rpcs[UUID].inboundAudioPipeline[trackid].panType = "panner";
 		}
 	} catch (e) {
@@ -56936,10 +56787,14 @@ function adjustPan(UUID, value) {
 						pn.setPosition(x, 0, z);
 					}
 				}
-			} catch (e) { warnlog(e); }
+			} catch (e) {
+				warnlog(e);
+			}
 		}
 		if ("gainPanNode" in session.rpcs[UUID].inboundAudioPipeline[trackid] && session.rpcs[UUID].inboundAudioPipeline[trackid].gainPanNode.gain) {
-			try { session.rpcs[UUID].inboundAudioPipeline[trackid].gainPanNode.gain.setValueAtTime(1 - Math.abs(value) / 2, session.audioCtx.currentTime); } catch (e) { }
+			try {
+				session.rpcs[UUID].inboundAudioPipeline[trackid].gainPanNode.gain.setValueAtTime(1 - Math.abs(value) / 2, session.audioCtx.currentTime);
+			} catch (e) {}
 		}
 	}
 }
@@ -56952,7 +56807,7 @@ function addDelayNode(source, UUID, trackid) {
 		delay = 0;
 	}
 
-	if ((session.audioBuffer !== false) && session.audioBuffer >= 0) {
+	if (session.audioBuffer !== false && session.audioBuffer >= 0) {
 		delay += parseFloat(session.audioBuffer);
 	} else if (session.buffer && session.buffer > 0) {
 		delay += parseFloat(session.buffer);
@@ -57388,7 +57243,7 @@ async function effectsDynamicallyUpdate(event, ele) {
 		if (savedVal !== null) {
 			session.effectValue_default = savedVal;
 		}
-	} catch(e) {}
+	} catch (e) {}
 
 	getById("selectImageContent").style.display = "none";
 	getById("selectImageContent3").style.display = "none";
@@ -57439,7 +57294,7 @@ async function effectsDynamicallyUpdate(event, ele) {
 			pair.forEach(id => {
 				const slider = getById(id);
 				if (slider) {
-					if (id.includes('X')) {
+					if (id.includes("X")) {
 						slider.value = xPosition;
 					} else {
 						slider.value = yPosition;
@@ -57483,6 +57338,8 @@ async function effectsDynamicallyUpdate(event, ele) {
 			} else if (USE_LONGPIPE) {
 				updateRenderOutpipe();
 			}
+		} else if (USE_LONGPIPE && session.longpipe) {
+			session.longpipe.setBackground(effectToLongpipeBg());
 		}
 		if (session.effect === "3" && session.effectValue_default == false) {
 			getById("selectEffectAmount").style.display = "block";
@@ -57506,6 +57363,8 @@ async function effectsDynamicallyUpdate(event, ele) {
 			} else if (USE_LONGPIPE) {
 				updateRenderOutpipe();
 			}
+		} else if (USE_LONGPIPE && session.longpipe) {
+			session.longpipe.setBackground(effectToLongpipeBg());
 		}
 		loadContentEffectsImages();
 	} else if ((session.effect === "14" || session.effect === "15") && session.effectValue_default == false) {
@@ -57575,7 +57434,7 @@ function loadContentEffectsImages() {
 					changeEffectsImage(event, this);
 				};
 				getById("selectImage_contents").prepend(img);
-			} catch (e) { }
+			} catch (e) {}
 		});
 		session.defaultBackgroundImages = false;
 		session.selectedImage_contents = getById("selectImage_contents");
@@ -57640,7 +57499,7 @@ function loadOverlayImages() {
 					changeOverlayImage(event, this);
 				};
 				getById("selectImageOverlay_contents").prepend(img);
-			} catch (e) { }
+			} catch (e) {}
 		});
 		session.defaultForegroundImages = false;
 		session.selectImageOverlay_contents = getById("selectImageOverlay_contents");
@@ -57667,7 +57526,7 @@ async function loadEffect(effect) {
 		effectsLoaded[filename]();
 		return;
 	} else {
-		effectsLoaded[filename] = function () { };
+		effectsLoaded[filename] = function () {};
 	}
 	warnlog("Loading Effect: " + effect);
 	var script = document.createElement("script");
@@ -58081,6 +57940,9 @@ async function changeEffectsImage(ev, ele) {
 		}
 		session.effectsImage = ele;
 		session.effectsImage.classList.add("selectedContentEffectsImage");
+	}
+	if (USE_LONGPIPE && session.longpipe && session.effect == "5") {
+		session.longpipe.setBackground(session.effectsImage.src);
 	}
 }
 
@@ -59005,7 +58867,7 @@ function getWhipOutCanvasTrack(baseRTC = session.whipOut) {
 	}
 	var tracks = baseRTC.canvasStream.getVideoTracks();
 	if (tracks.length) {
-		return tracks[0]
+		return tracks[0];
 	}
 	errorlog("Meschast canvas not working");
 	return false;
@@ -59103,7 +58965,8 @@ function whipOut() {
 
 					trk.enabled = true; // Force the track to appear active
 
-					const constraints = { // keep it quite and not denoised out back to zero
+					const constraints = {
+						// keep it quite and not denoised out back to zero
 						channelCount: { ideal: 1 },
 						autoGainControl: { ideal: false },
 						echoCancellation: { ideal: false },
@@ -59158,7 +59021,8 @@ function whipOut() {
 				var track = tracks[0];
 			}
 
-			if (track) { // it's actually just "track" now.
+			if (track) {
+				// it's actually just "track" now.
 				if (session.screenShareState && session.screenshareContentHint && track.kind === "video") {
 					try {
 						track.contentHint = session.screenshareContentHint;
@@ -59250,7 +59114,8 @@ function whipOut() {
 								return;
 							}
 						}
-						if (session.stunOnly) { // or whatever flag you want to use
+						if (session.stunOnly) {
+							// or whatever flag you want to use
 							if (!filterStunOnly(event.candidate)) {
 								return;
 							}
@@ -59265,19 +59130,17 @@ function whipOut() {
 				// WHIP connection state monitoring for auto-reconnection
 				session.whipOut.oniceconnectionstatechange = function () {
 					log("WHIP ICE state: " + session.whipOut.iceConnectionState);
-					if (session.whipOut.iceConnectionState === 'disconnected' ||
-						session.whipOut.iceConnectionState === 'failed') {
+					if (session.whipOut.iceConnectionState === "disconnected" || session.whipOut.iceConnectionState === "failed") {
 						retryWhipConnection();
 					}
 				};
 
 				session.whipOut.onconnectionstatechange = function () {
 					log("WHIP connection state: " + session.whipOut.connectionState);
-					if (session.whipOut.connectionState === 'failed') {
+					if (session.whipOut.connectionState === "failed") {
 						retryWhipConnection();
 					}
 				};
-
 			} else {
 				console.log(tracks, track);
 				errorlog("No audio / video track found; can't publish to WHIP");
@@ -59339,7 +59202,7 @@ function whipOut() {
 
 					ajax(sdp, "sdp");
 				})
-				.catch(function (err) { });
+				.catch(function (err) {});
 		} catch (e) {
 			errorlog(e);
 		}
@@ -59388,38 +59251,38 @@ function whipOut() {
 					session.whipOut.stats.whipHost = "generic";
 					session.whipOut.stats.whep_URL = false;
 					session.whipOut.stats.watch_URL = false; // cloudflare and meshcast have this, but meh. aec is an issue, so won't bother for now.
-						var WHELPlaybackURL = false; // we will try to determine the WHEP address, if we need to share it with other viewers.
+					var WHELPlaybackURL = false; // we will try to determine the WHEP address, if we need to share it with other viewers.
 
-						try {
-							const locationHeader = this.getResponseHeader("location");
-							if (locationHeader) {
-								session.whipOut.location = completeLocationURL(session.whipOutput, locationHeader);
-							} else if (!session.whipOut.location && session.whipOutput) {
-								session.whipOut.location = session.whipOutput;
-								session.whipOut.location = completeLocationURL(session.whipOutput, session.whipOut.location);
-							}
-						} catch (e) {
-							errorlog(e);
+					try {
+						const locationHeader = this.getResponseHeader("location");
+						if (locationHeader) {
+							session.whipOut.location = completeLocationURL(session.whipOutput, locationHeader);
+						} else if (!session.whipOut.location && session.whipOutput) {
+							session.whipOut.location = session.whipOutput;
+							session.whipOut.location = completeLocationURL(session.whipOutput, session.whipOut.location);
 						}
-						try {
-							log(this.getAllResponseHeaders());
-							WHELPlaybackURL = this.getResponseHeader("whep") || this.getResponseHeader("WHEP") || false;
-							if (!WHELPlaybackURL) {
-								console.log("Note: No WHEP key/value was found in the WHIP header response or it was not exposed.\n\nProviding the WHEP URL for this WHIP output via the WHEP header key will allow p2p access to the WHEP stream for others conneted to this peer.");
-							}
-							if (!WHELPlaybackURL && session.whipOutput) {
-								var targetDomain = session.whipOutput.split("/");
+					} catch (e) {
+						errorlog(e);
+					}
+					try {
+						log(this.getAllResponseHeaders());
+						WHELPlaybackURL = this.getResponseHeader("whep") || this.getResponseHeader("WHEP") || false;
+						if (!WHELPlaybackURL) {
+							console.log("Note: No WHEP key/value was found in the WHIP header response or it was not exposed.\n\nProviding the WHEP URL for this WHIP output via the WHEP header key will allow p2p access to the WHEP stream for others conneted to this peer.");
+						}
+						if (!WHELPlaybackURL && session.whipOutput) {
+							var targetDomain = session.whipOutput.split("/");
 							try {
 								if (targetDomain.length > 2 && targetDomain[2].endsWith(".cloudflarestream.com") && targetDomain[3].length == 65) {
 									WHELPlaybackURL = "https://" + targetDomain[2] + "/" + targetDomain[3].slice(33, 65) + "/webRTC/play";
 									session.whipOut.stats.whipHost = "Cloudflare";
-								} else if (/^https?:\/\/(?:[\w-]+\.)*meshcast\.io(?:\/|$)/i.test(session.whipOutput)) { // this should be only if meshcast doens't return a whep URL.  we guess as a fallback.
+								} else if (/^https?:\/\/(?:[\w-]+\.)*meshcast\.io(?:\/|$)/i.test(session.whipOutput)) {
+									// this should be only if meshcast doens't return a whep URL.  we guess as a fallback.
 									session.whipOut.stats.whipHost = "Meshcast";
 									session.whipOut.stats.watch_URL = "https://meshcast.io/view.html?geo=" + session.whipOutput.split("https://")[1].split(".")[0] + "&id=" + session.whipOutput.split("meshcast.io/")[1].split("/whip")[0];
 								} else if (/^https?:\/\/app\.meshcast\.io(?:\/|$)/i.test(session.whipOutput)) {
 									session.whipOut.stats.whipHost = "Meshcast2";
 								}
-
 							} catch (e) {
 								errorlog(e);
 							}
@@ -59432,7 +59295,8 @@ function whipOut() {
 									WHELPlaybackURL = targetDomain[0] + "//" + targetDomain[2] + "/" + WHELPlaybackURL;
 								}
 							}
-						} else if (WHELPlaybackURL && /^https?:\/\/(?:[\w-]+\.)*meshcast\.io(?:\/|$)/i.test(WHELPlaybackURL)) { // this should be only if meshcast doens't return a whep URL.  we guess as a fallback.
+						} else if (WHELPlaybackURL && /^https?:\/\/(?:[\w-]+\.)*meshcast\.io(?:\/|$)/i.test(WHELPlaybackURL)) {
+							// this should be only if meshcast doens't return a whep URL.  we guess as a fallback.
 							try {
 								session.whipOut.stats.whipHost = "Meshcast";
 								session.whipOut.stats.watch_URL = "https://meshcast.io/view.html?geo=" + WHELPlaybackURL.split("https://")[1].split(".")[0] + "&id=" + WHELPlaybackURL.split("meshcast.io/")[1].split("/whip")[0];
@@ -59467,27 +59331,28 @@ function whipOut() {
 						warnlog("Processing answer:");
 						warnlog(jsep);
 						if (session.whipOut && session.whipOut.location) {
-								sessionStorage.setItem("deleteWhipOnLoad", JSON.stringify({ location: session.whipOut.location, whipOutputToken: session.whipOutputToken }));
-								session.whipOut.deleteme = function () {
-									let xhttp = new XMLHttpRequest();
-									xhttp.onload = function () {
-										sessionStorage.removeItem("deleteWhipOnLoad");
-									};
-									xhttp.onerror = function () {
-										sessionStorage.removeItem("deleteWhipOnLoad");
-									};
-									xhttp.open("DELETE", session.whipOut.location, true);
-									if (session.whipOutputToken) {
-										xhttp.setRequestHeader("Authorization", "Bearer " + session.whipOutputToken);
-									}
-									xhttp.send();
-									delete session.whipOut.deleteme;
+							sessionStorage.setItem("deleteWhipOnLoad", JSON.stringify({ location: session.whipOut.location, whipOutputToken: session.whipOutputToken }));
+							session.whipOut.deleteme = function () {
+								let xhttp = new XMLHttpRequest();
+								xhttp.onload = function () {
+									sessionStorage.removeItem("deleteWhipOnLoad");
 								};
-							}
+								xhttp.onerror = function () {
+									sessionStorage.removeItem("deleteWhipOnLoad");
+								};
+								xhttp.open("DELETE", session.whipOut.location, true);
+								if (session.whipOutputToken) {
+									xhttp.setRequestHeader("Authorization", "Bearer " + session.whipOutputToken);
+								}
+								xhttp.send();
+								delete session.whipOut.deleteme;
+							};
+						}
 						if (session.localNetworkOnly) {
 							jsep.sdp = filterSDPLAN(jsep.sdp);
 						}
-						if (session.stunOnly) { // or whatever flag you want to use
+						if (session.stunOnly) {
+							// or whatever flag you want to use
 							jsep.sdp = filterStunOnly(jsep.sdp);
 						}
 						session.whipOut
@@ -59561,118 +59426,118 @@ function whipOut() {
 									}
 								}
 							});
-				} else if (contentType == "application/error") {
-					if (this.responseText == 432) {
-						warnUser("Whip out error: 432");
-					} else {
-						warnUser("Unknown Whip Out error");
-					}
-				} else if (callback) {
-					callback();
-				} else if (WHELPlaybackURL) {
-					errorlog("WHEP URL provided in header response, but no SDP answer provided. Will still use the WHEP URL, and hope for the best..");
-					if (session.whipoutSettings) {
-						if (session.whipoutSettings) {
-							session.whipoutSettings.started = Date.now();
-						}
-						await sleep(1000);
-						for (var UUID in session.pcs) {
-							if (session.pcs[UUID].whipout === null) {
-								var data = {};
-								data.whepSettings = session.whipoutSettings;
-								var sentWhepSettings = session.sendWhepControlWithFallback ? session.sendWhepControlWithFallback(data, UUID) : session.sendMessage(data, UUID);
-								if (sentWhepSettings) {
-									session.pcs[UUID].whipout = true;
-								}
-							}
-						}
-					}
-				}
-			} else if (this.readyState == 4) {
-				try {
-					if (session.meshcast2 && typeof session.whipOutput === "string" && session.whipOutput.includes("app.meshcast.io/api/gateway/whip")) {
-						let errorCode = null;
-						let errorPayload = null;
-						if (this.getResponseHeader && this.getResponseHeader("content-type") && this.getResponseHeader("content-type").includes("application/json")) {
-							try {
-								errorPayload = JSON.parse(this.responseText || "{}");
-							} catch (e) {
-								errorPayload = null;
-							}
+					} else if (contentType == "application/error") {
+						if (this.responseText == 432) {
+							warnUser("Whip out error: 432");
 						} else {
-							try {
-								errorPayload = JSON.parse(this.responseText || "{}");
-							} catch (e) {
-								errorPayload = null;
+							warnUser("Unknown Whip Out error");
+						}
+					} else if (callback) {
+						callback();
+					} else if (WHELPlaybackURL) {
+						errorlog("WHEP URL provided in header response, but no SDP answer provided. Will still use the WHEP URL, and hope for the best..");
+						if (session.whipoutSettings) {
+							if (session.whipoutSettings) {
+								session.whipoutSettings.started = Date.now();
+							}
+							await sleep(1000);
+							for (var UUID in session.pcs) {
+								if (session.pcs[UUID].whipout === null) {
+									var data = {};
+									data.whepSettings = session.whipoutSettings;
+									var sentWhepSettings = session.sendWhepControlWithFallback ? session.sendWhepControlWithFallback(data, UUID) : session.sendMessage(data, UUID);
+									if (sentWhepSettings) {
+										session.pcs[UUID].whipout = true;
+									}
+								}
 							}
 						}
-						if (errorPayload && errorPayload.code) {
-							errorCode = errorPayload.code;
-						}
+					}
+				} else if (this.readyState == 4) {
+					try {
+						if (session.meshcast2 && typeof session.whipOutput === "string" && session.whipOutput.includes("app.meshcast.io/api/gateway/whip")) {
+							let errorCode = null;
+							let errorPayload = null;
+							if (this.getResponseHeader && this.getResponseHeader("content-type") && this.getResponseHeader("content-type").includes("application/json")) {
+								try {
+									errorPayload = JSON.parse(this.responseText || "{}");
+								} catch (e) {
+									errorPayload = null;
+								}
+							} else {
+								try {
+									errorPayload = JSON.parse(this.responseText || "{}");
+								} catch (e) {
+									errorPayload = null;
+								}
+							}
+							if (errorPayload && errorPayload.code) {
+								errorCode = errorPayload.code;
+							}
 
-						if (errorCode === "ORIGIN_NOT_ALLOWED") {
-							if (!session.cleanOutput) {
-								promptAlt("Meshcast2 access blocked for this origin. Create an account to continue.", false, false, false, 5);
-							}
-						} else if (errorCode === "QUOTA_EXCEEDED") {
-							if (!session.cleanOutput) {
-								promptAlt("Meshcast2 anonymous bandwidth limit reached. Premium account required.", false, false, false, 5);
-							}
-						} else if (["TOKEN_INVALID", "TOKEN_EXPIRED", "STREAM_LIMIT_REACHED"].includes(errorCode)) {
-							if (!session.meshcast2FallbackAttempted) {
-								session.meshcast2FallbackAttempted = true;
-								session.meshcast2FallbackActive = true;
-								session.meshcast2Anonymous = false;
-								session.whipoutSettings = false;
-								session.whipOutput = false;
-								session.whipOutputScreen = false;
-								session.whipoutScreenSettings = false;
+							if (errorCode === "ORIGIN_NOT_ALLOWED") {
 								if (!session.cleanOutput) {
-									promptAlt("Meshcast2 token rejected. Falling back to anonymous relay.", false, false, false, 5);
+									promptAlt("Meshcast2 access blocked for this origin. Create an account to continue.", false, false, false, 5);
 								}
-								if (typeof meshcast2 === "function") {
-									meshcast2();
+							} else if (errorCode === "QUOTA_EXCEEDED") {
+								if (!session.cleanOutput) {
+									promptAlt("Meshcast2 anonymous bandwidth limit reached. Premium account required.", false, false, false, 5);
 								}
-								return;
+							} else if (["TOKEN_INVALID", "TOKEN_EXPIRED", "STREAM_LIMIT_REACHED"].includes(errorCode)) {
+								if (!session.meshcast2FallbackAttempted) {
+									session.meshcast2FallbackAttempted = true;
+									session.meshcast2FallbackActive = true;
+									session.meshcast2Anonymous = false;
+									session.whipoutSettings = false;
+									session.whipOutput = false;
+									session.whipOutputScreen = false;
+									session.whipoutScreenSettings = false;
+									if (!session.cleanOutput) {
+										promptAlt("Meshcast2 token rejected. Falling back to anonymous relay.", false, false, false, 5);
+									}
+									if (typeof meshcast2 === "function") {
+										meshcast2();
+									}
+									return;
+								}
+							} else if (!session.cleanOutput) {
+								promptAlt("Meshcast2 publish failed. Check your token and try again.", false, false, false, 5);
 							}
-						} else if (!session.cleanOutput) {
-							promptAlt("Meshcast2 publish failed. Check your token and try again.", false, false, false, 5);
+						}
+					} catch (e) {
+						errorlog(e);
+					}
+				}
+			};
+
+			if (type === "trickle-ice-sdpfrag") {
+				xhttp.open("PATCH", session.whipOutput, true); // Not supported by most sites yet
+			} else {
+				xhttp.open("POST", session.whipOutput, true);
+			}
+
+			if (session.whipOutputToken) {
+				xhttp.setRequestHeader("Authorization", "Bearer " + session.whipOutputToken);
+			}
+
+			xhttp.setRequestHeader("Content-Type", "application/" + type);
+
+			xhttp.onerror = function (e) {
+				errorlog(e);
+
+				if (window.location.protocol == "https:" && session.whipOutput.startsWith("http://") && !session.whipOutput.startsWith("http://localhost")) {
+					console.warn("Mixed HTTP and HTTPS content; this may not work. There are some options, like using localhost, disabling web security in your browser, or using SSL entirely");
+					if (!session.cleanOutput) {
+						if (window.location.hostname === "vdo.ninja") {
+							warnUser("Error: You cannot publish to an HTTP WHIP endpoint from an HTTPS-enabled website.\n\nThere are some possible exceptions and solutions, such as deploying an SSL certificate, hosting from localhost, trying from http://insecure.vdo.ninja, and/or using the Electron Capture app.");
+						} else {
+							warnUser("Error: You cannot publish to an HTTP WHIP endpoint from an HTTPS-enabled website.");
 						}
 					}
-				} catch (e) {
-					errorlog(e);
+				} else if (!session.cleanOutput) {
+					warnUser("WHIP out failed.\n\nCheck the developer console for possible details.");
 				}
-			}
-		};
-
-		if (type === "trickle-ice-sdpfrag") {
-			xhttp.open("PATCH", session.whipOutput, true); // Not supported by most sites yet
-		} else {
-			xhttp.open("POST", session.whipOutput, true);
-		}
-
-		if (session.whipOutputToken) {
-			xhttp.setRequestHeader("Authorization", "Bearer " + session.whipOutputToken);
-		}
-
-		xhttp.setRequestHeader("Content-Type", "application/" + type);
-
-		xhttp.onerror = function (e) {
-			errorlog(e);
-
-			if (window.location.protocol == "https:" && session.whipOutput.startsWith("http://") && !session.whipOutput.startsWith("http://localhost")) {
-				console.warn("Mixed HTTP and HTTPS content; this may not work. There are some options, like using localhost, disabling web security in your browser, or using SSL entirely");
-				if (!session.cleanOutput) {
-					if (window.location.hostname === "vdo.ninja") {
-						warnUser("Error: You cannot publish to an HTTP WHIP endpoint from an HTTPS-enabled website.\n\nThere are some possible exceptions and solutions, such as deploying an SSL certificate, hosting from localhost, trying from http://insecure.vdo.ninja, and/or using the Electron Capture app.");
-					} else {
-						warnUser("Error: You cannot publish to an HTTP WHIP endpoint from an HTTPS-enabled website.");
-					}
-				}
-			} else if (!session.cleanOutput) {
-				warnUser("WHIP out failed.\n\nCheck the developer console for possible details.");
-			}
-		};
+			};
 
 			xhttp.send(data);
 		} catch (e) {
@@ -59744,10 +59609,7 @@ function whipOut() {
 		}
 
 		// Check if already connected
-		if (session.whipOut &&
-			(session.whipOut.connectionState === 'connected' ||
-			 session.whipOut.iceConnectionState === 'connected' ||
-			 session.whipOut.iceConnectionState === 'completed')) {
+		if (session.whipOut && (session.whipOut.connectionState === "connected" || session.whipOut.iceConnectionState === "connected" || session.whipOut.iceConnectionState === "completed")) {
 			log("WHIP connection is already established. No need to reconnect.");
 			whipReconnecting = false;
 			whipReconnectAttempts = 0;
@@ -59771,10 +59633,7 @@ function whipOut() {
 			}
 
 			// Check if connection recovered
-			if (session.whipOut &&
-				(session.whipOut.connectionState === 'connected' ||
-				 session.whipOut.iceConnectionState === 'connected' ||
-				 session.whipOut.iceConnectionState === 'completed')) {
+			if (session.whipOut && (session.whipOut.connectionState === "connected" || session.whipOut.iceConnectionState === "connected" || session.whipOut.iceConnectionState === "completed")) {
 				log("WHIP connection recovered. Stopping retry.");
 				whipReconnecting = false;
 				whipReconnectAttempts = 0;
@@ -59805,23 +59664,17 @@ function whipOut() {
 				var maxCheckAttempts = 6; // Up to 30 seconds total (6 x 5s)
 				function checkConnectionState() {
 					checkAttempts++;
-					if (session.whipOut &&
-						(session.whipOut.connectionState === 'connected' ||
-						 session.whipOut.iceConnectionState === 'connected' ||
-						 session.whipOut.iceConnectionState === 'completed')) {
+					if (session.whipOut && (session.whipOut.connectionState === "connected" || session.whipOut.iceConnectionState === "connected" || session.whipOut.iceConnectionState === "completed")) {
 						log("WHIP reconnection successful");
 						whipReconnecting = false;
 						whipReconnectAttempts = 0;
-					} else if (session.whipOut &&
-						(session.whipOut.connectionState === 'connecting' ||
-						 session.whipOut.iceConnectionState === 'checking' ||
-						 session.whipOut.iceConnectionState === 'new')) {
+					} else if (session.whipOut && (session.whipOut.connectionState === "connecting" || session.whipOut.iceConnectionState === "checking" || session.whipOut.iceConnectionState === "new")) {
 						// Still connecting - wait longer before declaring failure
 						if (checkAttempts < maxCheckAttempts) {
 							log("WHIP still connecting, waiting... (" + checkAttempts + "/" + maxCheckAttempts + ")");
 							setTimeout(checkConnectionState, 5000);
 						} else {
-							log("WHIP connection timeout after " + (checkAttempts * 5) + "s");
+							log("WHIP connection timeout after " + checkAttempts * 5 + "s");
 							scheduleNextRetry();
 						}
 					} else {
@@ -59860,7 +59713,7 @@ function whipOut() {
 	}
 
 	// Expose for manual reconnection from UI
-	session.restartWhipConnection = function() {
+	session.restartWhipConnection = function () {
 		log("Manual WHIP restart requested");
 		whipReconnecting = false;
 		whipReconnectAttempts = 0;
@@ -59878,7 +59731,7 @@ function whipOut() {
 	};
 
 	// Track reconnect attempts for mesh debug visibility
-	session.getWhipReconnectAttempts = function() {
+	session.getWhipReconnectAttempts = function () {
 		return whipReconnectAttempts;
 	};
 
@@ -60068,12 +59921,12 @@ async function whipOutScreen() {
 						if (sender.replaceTrack) {
 							const result = sender.replaceTrack(null);
 							if (result && typeof result.catch === "function") {
-								result.catch(() => { });
+								result.catch(() => {});
 							}
 						}
-					} catch (e) { }
+					} catch (e) {}
 				});
-			} catch (e) { }
+			} catch (e) {}
 			session.whipOutScreen.close();
 		}
 	} catch (e) {
@@ -60244,7 +60097,7 @@ async function whipOutScreen() {
 		pc.location = completeLocationURL(session.whipOutputScreen, locationHeader);
 		try {
 			sessionStorage.setItem("deleteWhipScreenOnLoad", JSON.stringify({ location: pc.location, whipOutputToken: session.whipOutputToken }));
-		} catch (e) { }
+		} catch (e) {}
 		pc.deleteme = function () {
 			try {
 				const xhr = new XMLHttpRequest();
@@ -60253,13 +60106,17 @@ async function whipOutScreen() {
 					xhr.setRequestHeader("Authorization", "Bearer " + session.whipOutputToken);
 				}
 				xhr.onload = function () {
-					try { sessionStorage.removeItem("deleteWhipScreenOnLoad"); } catch (e) { }
+					try {
+						sessionStorage.removeItem("deleteWhipScreenOnLoad");
+					} catch (e) {}
 				};
 				xhr.onerror = function () {
-					try { sessionStorage.removeItem("deleteWhipScreenOnLoad"); } catch (e) { }
+					try {
+						sessionStorage.removeItem("deleteWhipScreenOnLoad");
+					} catch (e) {}
 				};
 				xhr.send();
-			} catch (e) { }
+			} catch (e) {}
 		};
 	}
 
@@ -60288,7 +60145,7 @@ async function whipOutScreen() {
 		try {
 			const links = linkHeader.split(",").map(link => link.trim());
 			for (const link of links) {
-				if (link.toLowerCase().includes("rel=\"urn:ietf:params:whep\"") || link.toLowerCase().includes("rel=\"urn:ietf:params:whip\"")) {
+				if (link.toLowerCase().includes('rel="urn:ietf:params:whep"') || link.toLowerCase().includes('rel="urn:ietf:params:whip"')) {
 					const urlMatch = link.match(/<([^>]+)>/);
 					if (urlMatch && urlMatch[1]) {
 						whepUrl = urlMatch[1];
@@ -60338,7 +60195,6 @@ async function whipOutScreen() {
 		whepUrl = session.whipOutputScreen.replace("/whip", "/whep");
 	}
 
-
 	if (contentType && contentType.indexOf("application/sdp") === 0 && body) {
 		try {
 			const answer = { type: "answer", sdp: body };
@@ -60382,7 +60238,7 @@ function whipClient() {
 			}
 			try {
 				socket.close();
-			} catch (e) { }
+			} catch (e) {}
 		}
 		log("Trying to load whip websocket...");
 
@@ -60391,9 +60247,12 @@ function whipClient() {
 		socket.onclose = function () {
 			failedCount += 1;
 			clearTimeout(connecting);
-			connecting = setTimeout(function () {
-				connect();
-			}, 100 * (failedCount - 1));
+			connecting = setTimeout(
+				function () {
+					connect();
+				},
+				100 * (failedCount - 1)
+			);
 		};
 
 		socket.onerror = function (e) {
@@ -60428,22 +60287,26 @@ function whipClient() {
 					var sendTrickle = null;
 					if (data.tricklePatchSupported) {
 						var trickleStreamID = data.streamID;
-						sendTrickle = function(candidate) {
+						sendTrickle = function (candidate) {
 							if (candidate === null) {
-								try { socket.send(JSON.stringify({ type: "end-of-candidates", streamID: trickleStreamID })); } catch(e) {}
+								try {
+									socket.send(JSON.stringify({ type: "end-of-candidates", streamID: trickleStreamID }));
+								} catch (e) {}
 							} else {
 								try {
-									socket.send(JSON.stringify({
-										type: "candidate",
-										candidate: {
-											candidate: candidate.candidate,
-											sdpMid: candidate.sdpMid,
-											sdpMLineIndex: candidate.sdpMLineIndex,
-											usernameFragment: candidate.usernameFragment
-										},
-										streamID: trickleStreamID
-									}));
-								} catch(e) {}
+									socket.send(
+										JSON.stringify({
+											type: "candidate",
+											candidate: {
+												candidate: candidate.candidate,
+												sdpMid: candidate.sdpMid,
+												sdpMLineIndex: candidate.sdpMLineIndex,
+												usernameFragment: candidate.usernameFragment
+											},
+											streamID: trickleStreamID
+										})
+									);
+								} catch (e) {}
 							}
 						};
 					}
@@ -60515,14 +60378,15 @@ async function processWhipIn(data, sendTrickle) {
 		}
 	}
 
-	if (!msg.description.sdp.includes("a=group:BUNDLE")) { // handling of bundle-only media lines; gstreamer's whipsink 1.25 for example
+	if (!msg.description.sdp.includes("a=group:BUNDLE")) {
+		// handling of bundle-only media lines; gstreamer's whipsink 1.25 for example
 		try {
-			const sdpLines = msg.description.sdp.split('\r\n');
-			const bundleLines = sdpLines.filter(line => line.includes('a=mid:'));
+			const sdpLines = msg.description.sdp.split("\r\n");
+			const bundleLines = sdpLines.filter(line => line.includes("a=mid:"));
 			if (bundleLines.length > 0) {
-				const mids = bundleLines.map(line => line.split(':')[1]);
-				sdpLines.splice(1, 0, `a=group:BUNDLE ${mids.join(' ')}`);
-				msg.description.sdp = sdpLines.join('\r\n');
+				const mids = bundleLines.map(line => line.split(":")[1]);
+				sdpLines.splice(1, 0, `a=group:BUNDLE ${mids.join(" ")}`);
+				msg.description.sdp = sdpLines.join("\r\n");
 			}
 		} catch (e) {
 			errorlog(e);
@@ -60539,7 +60403,7 @@ async function processWhipIn(data, sendTrickle) {
 	await session.setupIncoming(msg); // could end up setting up the peer the wrong way.
 
 	session.rpcs[UUID].whip = true;
-	session.rpcs[UUID].onicegatheringstatechange = (event) => {
+	session.rpcs[UUID].onicegatheringstatechange = event => {
 		if (session.rpcs[UUID].iceGatheringState === "complete") {
 			if (session.rpcs[UUID].whipCallback2) {
 				session.rpcs[UUID].whipCallback2([...session.rpcs[UUID].iceBundle]);
@@ -60564,19 +60428,19 @@ async function processWhipIn(data, sendTrickle) {
 	log("CONNECT PEER DONE");
 
 	log("ICE BUNDLE PROMISE");
-		setTimeout(
-			function (UUID) {
-				if (session.rpcs[UUID].whipCallback2) {
-					session.rpcs[UUID].whipCallback2([...session.rpcs[UUID].iceBundle]);
+	setTimeout(
+		function (UUID) {
+			if (session.rpcs[UUID].whipCallback2) {
+				session.rpcs[UUID].whipCallback2([...session.rpcs[UUID].iceBundle]);
 				clearTimeout(session.rpcs[UUID].iceTimer);
 				session.rpcs[UUID].iceTimer = null;
 				session.rpcs[UUID].iceBundle = [];
 				session.rpcs[UUID].whipCallback2 = null;
-				}
-			},
-			session.whipWait,
-			UUID
-		);
+			}
+		},
+		session.whipWait,
+		UUID
+	);
 
 	if (data.tricklePatchSupported && sendTrickle) {
 		// Trickle path: return the answer immediately without waiting for ICE gathering.
@@ -60588,7 +60452,7 @@ async function processWhipIn(data, sendTrickle) {
 		session.rpcs[UUID].whipCallback2 = null;
 
 		// Override onicecandidate to forward candidates directly via the WebSocket
-		session.rpcs[UUID].onicecandidate = function(event) {
+		session.rpcs[UUID].onicecandidate = function (event) {
 			if (!event.candidate) {
 				sendTrickle(null); // end-of-candidates
 				return;
@@ -60597,14 +60461,16 @@ async function processWhipIn(data, sendTrickle) {
 				if (session.icefilter && event.candidate.candidate.indexOf(session.icefilter) === -1) return;
 				if (session.localNetworkOnly && !filterIceLAN(event.candidate)) return;
 				if (session.stunOnly && !filterStunOnly(event.candidate)) return;
-			} catch(e) {}
+			} catch (e) {}
 			sendTrickle(event.candidate);
 		};
 
 		// Drain any candidates already gathered before we installed the trickle handler
 		var earlyBundle = [...(session.rpcs[UUID].iceBundle || [])];
 		session.rpcs[UUID].iceBundle = [];
-		earlyBundle.forEach(function(c) { sendTrickle(c); });
+		earlyBundle.forEach(function (c) {
+			sendTrickle(c);
+		});
 	} else {
 		// Normal blocking path: wait for ICE gathering to complete (or timeout) before answering
 		var iceBundle = await promise2; // waiting for ICE GATHER COMPLETE; default 2 second. change with &whipwait=2000
@@ -60697,7 +60563,8 @@ async function processWhipIn(data, sendTrickle) {
 	if (session.localNetworkOnly) {
 		sdpAnswer = filterSDPLAN(sdpAnswer);
 	}
-	if (session.stunOnly) { // or whatever flag you want to use
+	if (session.stunOnly) {
+		// or whatever flag you want to use
 		sdpAnswer = filterStunOnly(sdpAnswer);
 	}
 
@@ -60714,7 +60581,7 @@ async function handleIncomingIceCandidate(data) {
 			if (candidate && typeof candidate.candidate === "string" && candidate.candidate.startsWith("a=candidate:")) {
 				candidate = { ...candidate, candidate: candidate.candidate.substring(2) };
 			}
-			if (!candidate || (typeof candidate.candidate !== "string")) {
+			if (!candidate || typeof candidate.candidate !== "string") {
 				warnlog("Invalid incoming ICE candidate for stream: " + data.streamID);
 				return;
 			}
@@ -60762,11 +60629,12 @@ function processSDPFromServer(sdp) {
 }
 
 function filterIceLAN(candidate) {
-
-	if (typeof candidate === 'string') {
+	if (typeof candidate === "string") {
 		return filterSDPLAN(candidate);
 	}
-	if (!candidate) { return candidate; }
+	if (!candidate) {
+		return candidate;
+	}
 
 	try {
 		let candidateString = candidate.candidate;
@@ -60808,12 +60676,12 @@ function filterSDPLAN(sdp) {
 
 function filterStunOnlySDP(sdpString) {
 	try {
-		const lines = sdpString.split('\r\n');
+		const lines = sdpString.split("\r\n");
 		const filteredLines = lines.filter(line => {
 			// If it's a candidate line
-			if (line.startsWith('a=candidate:')) {
+			if (line.startsWith("a=candidate:")) {
 				// Only keep STUN candidates
-				return line.includes(' typ srflx ');
+				return line.includes(" typ srflx ");
 			}
 
 			// Keep everything that's not a candidate line
@@ -60828,10 +60696,10 @@ function filterStunOnlySDP(sdpString) {
 
 		// First pass - find STUN candidate details
 		for (const line of filteredLines) {
-			if (line.includes(' typ srflx ')) {
-				const parts = line.split(' ');
+			if (line.includes(" typ srflx ")) {
+				const parts = line.split(" ");
 				for (let i = 0; i < parts.length; i++) {
-					if (parts[i] === 'typ' && parts[i + 1] === 'srflx') {
+					if (parts[i] === "typ" && parts[i + 1] === "srflx") {
 						stunPort = parts[5];
 						stunAddress = parts[4];
 						break;
@@ -60842,17 +60710,17 @@ function filterStunOnlySDP(sdpString) {
 
 		// Second pass - build the SDP with STUN info
 		for (const line of filteredLines) {
-			if (line.startsWith('m=')) {
-				currentMedia = line.split(' ')[0].substr(2);
-				if (stunPort && (currentMedia === 'audio' || currentMedia === 'video')) {
+			if (line.startsWith("m=")) {
+				currentMedia = line.split(" ")[0].substr(2);
+				if (stunPort && (currentMedia === "audio" || currentMedia === "video")) {
 					// Use STUN port for media lines
-					const parts = line.split(' ');
+					const parts = line.split(" ");
 					parts[1] = stunPort;
-					processedLines.push(parts.join(' '));
+					processedLines.push(parts.join(" "));
 				} else {
 					processedLines.push(line);
 				}
-			} else if (line.startsWith('c=') && stunAddress) {
+			} else if (line.startsWith("c=") && stunAddress) {
 				// Use STUN address for connection lines
 				processedLines.push(`c=IN IP4 ${stunAddress}`);
 			} else {
@@ -60860,7 +60728,7 @@ function filterStunOnlySDP(sdpString) {
 			}
 		}
 
-		return processedLines.join('\r\n');
+		return processedLines.join("\r\n");
 	} catch (e) {
 		errorlog(e);
 		return sdpString; // Return original on error
@@ -60869,10 +60737,12 @@ function filterStunOnlySDP(sdpString) {
 
 // If you need to modify the individual candidate filter as well:
 function filterStunOnly(candidate) {
-	if (typeof candidate === 'string') {
+	if (typeof candidate === "string") {
 		return filterStunOnlySDP(candidate);
 	}
-	if (!candidate) { return candidate; }
+	if (!candidate) {
+		return candidate;
+	}
 	console.log(candidate);
 	try {
 		let candidateString = candidate.candidate;
@@ -60923,21 +60793,19 @@ function isIpv6Candidate(candidate) {
 	if (!candidate) return false;
 
 	try {
-		var candidateString = (typeof candidate === 'string')
-			? candidate
-			: (candidate.candidate || '');
+		var candidateString = typeof candidate === "string" ? candidate : candidate.candidate || "";
 
 		if (!candidateString) return false;
 
 		// Parse the candidate string to extract the address
 		// Format: "candidate:... <foundation> <component> <protocol> <priority> <address> <port> ..."
-		var parts = candidateString.split(' ');
+		var parts = candidateString.split(" ");
 		if (parts.length < 5) return false;
 
 		var address = parts[4];
 
 		// mDNS hostnames (.local) are not IPv6
-		if (address && address.endsWith('.local')) {
+		if (address && address.endsWith(".local")) {
 			return false;
 		}
 
@@ -60945,7 +60813,7 @@ function isIpv6Candidate(candidate) {
 		// Examples:
 		//   IPv4: "192.168.1.1"
 		//   IPv6: "2001:db8::1", "::1", "fe80::1%eth0"
-		if (address && address.includes(':')) {
+		if (address && address.includes(":")) {
 			return true;
 		}
 
@@ -60965,7 +60833,7 @@ function isIpv6Candidate(candidate) {
  * @returns {string} The filtered SDP string
  */
 function filterSdpIpv6(sdp, hasIpv4) {
-	if (!sdp || typeof sdp !== 'string') return sdp;
+	if (!sdp || typeof sdp !== "string") return sdp;
 
 	// If no IPv4 exists, we must keep IPv6 for connectivity
 	if (!hasIpv4) {
@@ -60974,14 +60842,14 @@ function filterSdpIpv6(sdp, hasIpv4) {
 	}
 
 	try {
-		var lines = sdp.split('\n');
-		var filteredLines = lines.filter(function(line) {
-			if (line.startsWith('a=candidate:')) {
-				var parts = line.split(' ');
+		var lines = sdp.split("\n");
+		var filteredLines = lines.filter(function (line) {
+			if (line.startsWith("a=candidate:")) {
+				var parts = line.split(" ");
 				if (parts.length >= 5) {
 					var address = parts[4];
 					// Drop IPv6 candidates (contain colons, not .local)
-					if (address && address.includes(':') && !address.endsWith('.local')) {
+					if (address && address.includes(":") && !address.endsWith(".local")) {
 						log("🟧 Dropped IPv6 candidate from SDP: " + address);
 						return false;
 					}
@@ -60989,7 +60857,7 @@ function filterSdpIpv6(sdp, hasIpv4) {
 			}
 			return true;
 		});
-		return filteredLines.join('\n');
+		return filteredLines.join("\n");
 	} catch (e) {
 		errorlog("filterSdpIpv6 error:", e);
 		return sdp;
@@ -61004,22 +60872,22 @@ function filterSdpIpv6(sdp, hasIpv4) {
  * @returns {boolean} true if IPv4 candidates exist
  */
 function sdpHasIpv4Candidates(sdp) {
-	if (!sdp || typeof sdp !== 'string') return false;
+	if (!sdp || typeof sdp !== "string") return false;
 
 	try {
-		var lines = sdp.split('\n');
+		var lines = sdp.split("\n");
 		for (var i = 0; i < lines.length; i++) {
 			var line = lines[i];
-			if (line.startsWith('a=candidate:')) {
-				var parts = line.split(' ');
+			if (line.startsWith("a=candidate:")) {
+				var parts = line.split(" ");
 				if (parts.length >= 5) {
 					var address = parts[4];
 					// IPv4: contains dots, no colons, not .local
-					if (address && !address.includes(':') && !address.endsWith('.local')) {
+					if (address && !address.includes(":") && !address.endsWith(".local")) {
 						return true;
 					}
 					// mDNS (.local) counts as non-IPv6, so treat as potential IPv4
-					if (address && address.endsWith('.local')) {
+					if (address && address.endsWith(".local")) {
 						return true;
 					}
 				}
@@ -61173,193 +61041,189 @@ async function whepIn(whepInput = false, whepInputToken = false, UUID = false) {
 	}
 	whepInputToken = whepInputToken || session.whepInputToken;
 
-		function hasListValue(list, value) {
-			if (!list || (value === null) || (typeof value === "undefined")) {
-				return false;
-			}
+	function hasListValue(list, value) {
+		if (!list || value === null || typeof value === "undefined") {
+			return false;
+		}
 		if (typeof list.includes === "function") {
 			return list.includes(value);
 		}
 		if (typeof list.indexOf === "function") {
 			return list.indexOf(value) !== -1;
-			}
+		}
+		return false;
+	}
+
+	function supportsTrickleIcePatch(acceptPatchHeader) {
+		if (!acceptPatchHeader || typeof acceptPatchHeader !== "string") {
+			return false;
+		}
+		return acceptPatchHeader
+			.split(",")
+			.map(item => item.trim().toLowerCase().split(";")[0].trim())
+			.includes("application/trickle-ice-sdpfrag");
+	}
+
+	function disableWhepPatchTrickle(reason) {
+		if (tricklePatchDisabledReason === reason) {
+			return;
+		}
+
+		tricklePatchDisabledReason = reason || "disabled";
+		candidates = [];
+
+		if (reason === "missing-etag") {
+			warnlog("WHEP endpoint omitted ETag for this session; disabling trickle ICE PATCH fallback.");
+		} else if (reason === "etag-mismatch") {
+			warnlog("WHEP endpoint rejected the PATCH ETag; disabling trickle ICE for this session.");
+		} else if (reason === "precondition-required") {
+			warnlog("WHEP endpoint requires conditional PATCH requests; disabling trickle ICE for this session.");
+		}
+	}
+
+	function canTrickleViaPatch() {
+		if (tricklePatchDisabledReason) {
+			return false;
+		}
+		if (!supportsTrickleIcePatch(acceptPatch)) {
+			return false;
+		}
+		return !!(eTag && icePwd && iceUfrag);
+	}
+
+	function normalizeCandidateLineForPatch(candidate) {
+		if (!candidate || !candidate.candidate) {
 			return false;
 		}
 
-		function supportsTrickleIcePatch(acceptPatchHeader) {
-			if (!acceptPatchHeader || typeof acceptPatchHeader !== "string") {
-				return false;
-			}
-			return acceptPatchHeader
-				.split(",")
-				.map(item => item.trim().toLowerCase().split(";")[0].trim())
-				.includes("application/trickle-ice-sdpfrag");
+		if (candidate.candidate.startsWith("a=")) {
+			return candidate.candidate;
 		}
 
-		function disableWhepPatchTrickle(reason) {
-			if (tricklePatchDisabledReason === reason) {
+		return "a=" + candidate.candidate;
+	}
+
+	function extractTrickleSectionMetadata(referenceSdp) {
+		const lines = (referenceSdp || "").split(/\r\n|\n/);
+		const mediaSections = [];
+		let bundleMids = [];
+		let currentSection = null;
+
+		lines.forEach(line => {
+			if (!line) {
 				return;
 			}
 
-			tricklePatchDisabledReason = reason || "disabled";
-			candidates = [];
-
-			if (reason === "missing-etag") {
-				warnlog("WHEP endpoint omitted ETag for this session; disabling trickle ICE PATCH fallback.");
-			} else if (reason === "etag-mismatch") {
-				warnlog("WHEP endpoint rejected the PATCH ETag; disabling trickle ICE for this session.");
-			} else if (reason === "precondition-required") {
-				warnlog("WHEP endpoint requires conditional PATCH requests; disabling trickle ICE for this session.");
+			if (line.startsWith("a=group:BUNDLE")) {
+				bundleMids = line.substring("a=group:BUNDLE".length).trim().split(/\s+/).filter(Boolean);
+				return;
 			}
+
+			if (line.startsWith("m=")) {
+				currentSection = {
+					index: mediaSections.length,
+					mLine: line,
+					mid: null
+				};
+				mediaSections.push(currentSection);
+				return;
+			}
+
+			if (currentSection && line.startsWith("a=mid:")) {
+				currentSection.mid = line.substring("a=mid:".length).trim();
+			}
+		});
+
+		const byMid = {};
+		mediaSections.forEach(section => {
+			if (section.mid !== null) {
+				byMid[section.mid] = section;
+			}
+		});
+
+		if (!bundleMids.length) {
+			bundleMids = mediaSections.map(section => section.mid).filter(Boolean);
 		}
 
-		function canTrickleViaPatch() {
-			if (tricklePatchDisabledReason) {
-				return false;
+		return {
+			bundleMids: bundleMids,
+			mediaSections: mediaSections,
+			byMid: byMid,
+			firstMediaSection: mediaSections[0] || null
+		};
+	}
+
+	function buildTrickleIcePatchFragment(candidateList, includeEndOfCandidates = true) {
+		let referenceSdp = "";
+		try {
+			if (session.rpcs[UUID] && session.rpcs[UUID].whep && session.rpcs[UUID].whep.localDescription) {
+				referenceSdp = session.rpcs[UUID].whep.localDescription.sdp || "";
 			}
-			if (!supportsTrickleIcePatch(acceptPatch)) {
-				return false;
-			}
-			return !!(eTag && icePwd && iceUfrag);
+		} catch (e) {}
+
+		const sdpMeta = extractTrickleSectionMetadata(referenceSdp);
+		if (!sdpMeta.firstMediaSection) {
+			return "";
 		}
 
-		function normalizeCandidateLineForPatch(candidate) {
-			if (!candidate || !candidate.candidate) {
-				return false;
+		const sections = new Map();
+		(candidateList || []).forEach(candidate => {
+			const candidateLine = normalizeCandidateLineForPatch(candidate);
+			if (!candidateLine) {
+				return;
 			}
 
-			if (candidate.candidate.startsWith("a=")) {
-				return candidate.candidate;
+			let section = null;
+			if (candidate.sdpMid !== null && typeof candidate.sdpMid !== "undefined" && `${candidate.sdpMid}` in sdpMeta.byMid) {
+				section = sdpMeta.byMid[`${candidate.sdpMid}`];
+			} else if (candidate.sdpMLineIndex !== null && typeof candidate.sdpMLineIndex !== "undefined" && sdpMeta.mediaSections[candidate.sdpMLineIndex]) {
+				section = sdpMeta.mediaSections[candidate.sdpMLineIndex];
+			} else {
+				section = sdpMeta.firstMediaSection;
 			}
 
-			return "a=" + candidate.candidate;
-		}
-
-		function extractTrickleSectionMetadata(referenceSdp) {
-			const lines = (referenceSdp || "").split(/\r\n|\n/);
-			const mediaSections = [];
-			let bundleMids = [];
-			let currentSection = null;
-
-			lines.forEach(line => {
-				if (!line) {
-					return;
-				}
-
-				if (line.startsWith("a=group:BUNDLE")) {
-					bundleMids = line.substring("a=group:BUNDLE".length).trim().split(/\s+/).filter(Boolean);
-					return;
-				}
-
-				if (line.startsWith("m=")) {
-					currentSection = {
-						index: mediaSections.length,
-						mLine: line,
-						mid: null
-					};
-					mediaSections.push(currentSection);
-					return;
-				}
-
-				if (currentSection && line.startsWith("a=mid:")) {
-					currentSection.mid = line.substring("a=mid:".length).trim();
-				}
-			});
-
-			const byMid = {};
-			mediaSections.forEach(section => {
-				if (section.mid !== null) {
-					byMid[section.mid] = section;
-				}
-			});
-
-			if (!bundleMids.length) {
-				bundleMids = mediaSections.map(section => section.mid).filter(Boolean);
-			}
-
-			return {
-				bundleMids: bundleMids,
-				mediaSections: mediaSections,
-				byMid: byMid,
-				firstMediaSection: mediaSections[0] || null
-			};
-		}
-
-		function buildTrickleIcePatchFragment(candidateList, includeEndOfCandidates = true) {
-			let referenceSdp = "";
-			try {
-				if (session.rpcs[UUID] && session.rpcs[UUID].whep && session.rpcs[UUID].whep.localDescription) {
-					referenceSdp = session.rpcs[UUID].whep.localDescription.sdp || "";
-				}
-			} catch (e) {}
-
-			const sdpMeta = extractTrickleSectionMetadata(referenceSdp);
-			if (!sdpMeta.firstMediaSection) {
-				return "";
-			}
-
-			const sections = new Map();
-			(candidateList || []).forEach(candidate => {
-				const candidateLine = normalizeCandidateLineForPatch(candidate);
-				if (!candidateLine) {
-					return;
-				}
-
-				let section = null;
-				if (candidate.sdpMid !== null && typeof candidate.sdpMid !== "undefined" && `${candidate.sdpMid}` in sdpMeta.byMid) {
-					section = sdpMeta.byMid[`${candidate.sdpMid}`];
-				} else if (
-					candidate.sdpMLineIndex !== null &&
-					typeof candidate.sdpMLineIndex !== "undefined" &&
-					sdpMeta.mediaSections[candidate.sdpMLineIndex]
-				) {
-					section = sdpMeta.mediaSections[candidate.sdpMLineIndex];
-				} else {
-					section = sdpMeta.firstMediaSection;
-				}
-
-				const key = `${section.index}:${section.mid !== null ? section.mid : ""}`;
-				if (!sections.has(key)) {
-					sections.set(key, {
-						section: section,
-						candidates: []
-					});
-				}
-				sections.get(key).candidates.push(candidateLine);
-			});
-
-			if (!sections.size && includeEndOfCandidates) {
-				const section = sdpMeta.firstMediaSection;
-				sections.set(`${section.index}:${section.mid !== null ? section.mid : ""}`, {
+			const key = `${section.index}:${section.mid !== null ? section.mid : ""}`;
+			if (!sections.has(key)) {
+				sections.set(key, {
 					section: section,
 					candidates: []
 				});
 			}
+			sections.get(key).candidates.push(candidateLine);
+		});
 
-			const lines = [];
-			if (sdpMeta.bundleMids.length) {
-				lines.push("a=group:BUNDLE " + sdpMeta.bundleMids.join(" "));
-			}
-
-			Array.from(sections.values())
-				.sort((left, right) => left.section.index - right.section.index)
-				.forEach((entry, index, values) => {
-					lines.push(entry.section.mLine);
-					if (entry.section.mid !== null && typeof entry.section.mid !== "undefined") {
-						lines.push("a=mid:" + entry.section.mid);
-					}
-					lines.push("a=ice-ufrag:" + iceUfrag);
-					lines.push("a=ice-pwd:" + icePwd);
-					entry.candidates.forEach(candidateLine => {
-						lines.push(candidateLine);
-					});
-					if (includeEndOfCandidates && index === values.length - 1) {
-						lines.push("a=end-of-candidates");
-					}
-				});
-
-			return lines.length ? lines.join("\r\n") + "\r\n" : "";
+		if (!sections.size && includeEndOfCandidates) {
+			const section = sdpMeta.firstMediaSection;
+			sections.set(`${section.index}:${section.mid !== null ? section.mid : ""}`, {
+				section: section,
+				candidates: []
+			});
 		}
+
+		const lines = [];
+		if (sdpMeta.bundleMids.length) {
+			lines.push("a=group:BUNDLE " + sdpMeta.bundleMids.join(" "));
+		}
+
+		Array.from(sections.values())
+			.sort((left, right) => left.section.index - right.section.index)
+			.forEach((entry, index, values) => {
+				lines.push(entry.section.mLine);
+				if (entry.section.mid !== null && typeof entry.section.mid !== "undefined") {
+					lines.push("a=mid:" + entry.section.mid);
+				}
+				lines.push("a=ice-ufrag:" + iceUfrag);
+				lines.push("a=ice-pwd:" + icePwd);
+				entry.candidates.forEach(candidateLine => {
+					lines.push(candidateLine);
+				});
+				if (includeEndOfCandidates && index === values.length - 1) {
+					lines.push("a=end-of-candidates");
+				}
+			});
+
+		return lines.length ? lines.join("\r\n") + "\r\n" : "";
+	}
 
 	function getWhepAudioRecoveryState(targetUUID) {
 		try {
@@ -61475,7 +61339,7 @@ async function whepIn(whepInput = false, whepInputToken = false, UUID = false) {
 						return false;
 					}
 				}
-			} catch (e) { }
+			} catch (e) {}
 			var rpc = session.rpcs[targetUUID];
 			if (!rpc || !rpc.whep || !rpc.isWhepSession) {
 				return false;
@@ -61483,7 +61347,7 @@ async function whepIn(whepInput = false, whepInputToken = false, UUID = false) {
 			if (rpc.whepExpectedAudio === false) {
 				return false;
 			}
-			if (rpc.settings && (rpc.settings.audio === false)) {
+			if (rpc.settings && rpc.settings.audio === false) {
 				return false;
 			}
 			if (rpc.settings && (rpc.settings.noaudiowhep || rpc.settings.audioViaP2P || rpc.settings.audioTransport === "p2p")) {
@@ -61533,7 +61397,7 @@ async function whepIn(whepInput = false, whepInputToken = false, UUID = false) {
 		var now = Date.now();
 		var recent = [];
 		for (var i = 0; i < state.reconnectAttempts.length; i++) {
-			if ((now - state.reconnectAttempts[i]) <= 600000) {
+			if (now - state.reconnectAttempts[i] <= 600000) {
 				recent.push(state.reconnectAttempts[i]);
 			}
 		}
@@ -61541,7 +61405,7 @@ async function whepIn(whepInput = false, whepInputToken = false, UUID = false) {
 		if (state.reconnectAttempts.length >= 3) {
 			return false;
 		}
-		if (state.reconnectAttempts.length && ((now - state.reconnectAttempts[state.reconnectAttempts.length - 1]) < 60000)) {
+		if (state.reconnectAttempts.length && now - state.reconnectAttempts[state.reconnectAttempts.length - 1] < 60000) {
 			return false;
 		}
 		state.reconnectAttempts.push(now);
@@ -61563,7 +61427,7 @@ async function whepIn(whepInput = false, whepInputToken = false, UUID = false) {
 
 	function resumeViewerAudioContext(callback) {
 		if (!callback) {
-			callback = function () { };
+			callback = function () {};
 		}
 		try {
 			if (!session.audioCtx || !session.audioCtx.resume || session.audioCtx.state !== "suspended") {
@@ -61571,7 +61435,7 @@ async function whepIn(whepInput = false, whepInputToken = false, UUID = false) {
 				return;
 			}
 			var resumePromise = session.audioCtx.resume();
-			if (resumePromise && (typeof resumePromise.then === "function")) {
+			if (resumePromise && typeof resumePromise.then === "function") {
 				resumePromise
 					.then(function () {
 						callback();
@@ -61591,7 +61455,7 @@ async function whepIn(whepInput = false, whepInputToken = false, UUID = false) {
 
 	function attemptWhepAudioSoftResume(targetUUID, callback) {
 		if (!callback) {
-			callback = function () { };
+			callback = function () {};
 		}
 		if (!session.rpcs || !(targetUUID in session.rpcs)) {
 			callback({ autoplayBlocked: false });
@@ -61622,7 +61486,7 @@ async function whepIn(whepInput = false, whepInputToken = false, UUID = false) {
 
 		try {
 			var playPromise = rpc.videoElement.play();
-			if (playPromise && (typeof playPromise.then === "function")) {
+			if (playPromise && typeof playPromise.then === "function") {
 				playPromise
 					.then(function () {
 						finish(false);
@@ -61666,7 +61530,8 @@ async function whepIn(whepInput = false, whepInputToken = false, UUID = false) {
 			}
 			var hasHealthyAudioTrack = false;
 			audioTracks.forEach(function (audioTrack) {
-				if (audioTrack && audioTrack.readyState === "live") { // Ignore .muted for WHEP, silence triggers it
+				if (audioTrack && audioTrack.readyState === "live") {
+					// Ignore .muted for WHEP, silence triggers it
 					hasHealthyAudioTrack = true;
 				}
 			});
@@ -62037,19 +61902,24 @@ async function whepIn(whepInput = false, whepInputToken = false, UUID = false) {
 					try {
 						let newStream = event.streams[0];
 						track = newStream.getVideoTracks()[0];
-					} catch (e) { }
-				} else if (event.track && event.track.kind && (event.track.kind == "video")) {
-					track = event.track
+					} catch (e) {}
+				} else if (event.track && event.track.kind && event.track.kind == "video") {
+					track = event.track;
 				}
 				if (track) {
 					log(track);
-					setTimeout(function (track, UUID) {
-						if (session.rpcs[UUID] && track && track.id) {
-							if (session.rpcs[UUID].stats && session.rpcs[UUID].stats[track.id] && ("keyFramesRequested_pli" in session.rpcs[UUID].stats[track.id])) {
-								// TODO ?? maybe not,b ut console.log("I need to request a keyframe. keyFramesRequested_pli: "+session.rpcs[UUID].stats[track.id].keyFramesRequested_pli);
+					setTimeout(
+						function (track, UUID) {
+							if (session.rpcs[UUID] && track && track.id) {
+								if (session.rpcs[UUID].stats && session.rpcs[UUID].stats[track.id] && "keyFramesRequested_pli" in session.rpcs[UUID].stats[track.id]) {
+									// TODO ?? maybe not,b ut console.log("I need to request a keyframe. keyFramesRequested_pli: "+session.rpcs[UUID].stats[track.id].keyFramesRequested_pli);
+								}
 							}
-						}
-					}, 6100, track, UUID); // 3 seconds for stats to update + 2 second for keyframe to trigger + 1100 for delay
+						},
+						6100,
+						track,
+						UUID
+					); // 3 seconds for stats to update + 2 second for keyframe to trigger + 1100 for delay
 				}
 
 				// IF track is a video..
@@ -62075,15 +61945,14 @@ async function whepIn(whepInput = false, whepInputToken = false, UUID = false) {
 		session.rpcs[UUID].whep.onnegotiationneeded = requestStream; // bug: https://groups.google.com/forum/#!topic/discuss-webrtc/3-TmyjQ2SeE
 
 		session.rpcs[UUID].whep.oniceconnectionstatechange = function () {
-			if (session.rpcs[UUID] && session.rpcs[UUID].whep && (session.rpcs[UUID].whep.iceConnectionState === 'disconnected' ||
-				session.rpcs[UUID].whep.iceConnectionState === 'failed')) {
+			if (session.rpcs[UUID] && session.rpcs[UUID].whep && (session.rpcs[UUID].whep.iceConnectionState === "disconnected" || session.rpcs[UUID].whep.iceConnectionState === "failed")) {
 				console.warn("ICE connection failed or disconnected");
 				retryWhepConnection(UUID);
 			}
 		};
 
 		session.rpcs[UUID].whep.onconnectionstatechange = function () {
-			if (session.rpcs[UUID] && session.rpcs[UUID].whep && session.rpcs[UUID].whep.connectionState === 'failed') {
+			if (session.rpcs[UUID] && session.rpcs[UUID].whep && session.rpcs[UUID].whep.connectionState === "failed") {
 				console.warn("Whep connection failed");
 				retryWhepConnection(UUID);
 			}
@@ -62100,7 +61969,7 @@ async function whepIn(whepInput = false, whepInputToken = false, UUID = false) {
 					session.rpcs[UUID].whep.iceCompletedCallback();
 				}
 				return;
-				} else if (canTrickleViaPatch() && event.candidate && !session.rpcs[UUID].whep.iceCompletedCallback) {
+			} else if (canTrickleViaPatch() && event.candidate && !session.rpcs[UUID].whep.iceCompletedCallback) {
 				// "left over" candidates not sent with the SDP offer
 				log("Send patch request with ice candidate");
 
@@ -62110,7 +61979,8 @@ async function whepIn(whepInput = false, whepInputToken = false, UUID = false) {
 							return;
 						}
 					}
-					if (session.stunOnly) { // or whatever flag you want to use
+					if (session.stunOnly) {
+						// or whatever flag you want to use
 						if (!filterStunOnly(event.candidate)) {
 							return;
 						}
@@ -62132,7 +62002,8 @@ async function whepIn(whepInput = false, whepInputToken = false, UUID = false) {
 							return;
 						}
 					}
-					if (session.stunOnly) { // or whatever flag you want to use
+					if (session.stunOnly) {
+						// or whatever flag you want to use
 						if (!filterStunOnly(event.candidate)) {
 							return;
 						}
@@ -62196,10 +62067,7 @@ async function whepIn(whepInput = false, whepInputToken = false, UUID = false) {
 				return;
 			}
 
-			if (session.rpcs[UUID].whep &&
-				(session.rpcs[UUID].whep.connectionState === 'connected' ||
-					session.rpcs[UUID].whep.iceConnectionState === 'connected' ||
-					session.rpcs[UUID].whep.iceConnectionState === 'completed')) {
+			if (session.rpcs[UUID].whep && (session.rpcs[UUID].whep.connectionState === "connected" || session.rpcs[UUID].whep.iceConnectionState === "connected" || session.rpcs[UUID].whep.iceConnectionState === "completed")) {
 				if (!forceReconnect) {
 					log("WHEP connection is already established. No need to reconnect.");
 					session.rpcs[UUID].reconnecting = false;
@@ -62231,7 +62099,7 @@ async function whepIn(whepInput = false, whepInputToken = false, UUID = false) {
 					});
 					session.rpcs[UUID].streamSrc = null;
 				}
-			} catch (e) { }
+			} catch (e) {}
 
 			try {
 				if (!session.rpcs[UUID].UUID && document.getElementById("container_" + UUID)) {
@@ -62267,22 +62135,24 @@ async function whepIn(whepInput = false, whepInputToken = false, UUID = false) {
 				warnlog(e);
 			}
 
-			whepConnect(UUID).then(() => {
-				log("WHEP reconnection successful");
-				session.rpcs[UUID].reconnecting = false;
-			}).catch(error => {
-				warnlog("WHEP reconnection failed:", error);
-				currentRetry++;
-				if (currentRetry < maxRetries) {
-					currentDelay = Math.min(currentDelay * 2, maxDelay);
-					log(`Retrying in ${currentDelay}ms`);
-					setTimeout(attemptReconnect, currentDelay);
-				} else {
-					log("Max retries reached, stopping reconnection attempts");
+			whepConnect(UUID)
+				.then(() => {
+					log("WHEP reconnection successful");
 					session.rpcs[UUID].reconnecting = false;
-					// Implement user feedback here
-				}
-			});
+				})
+				.catch(error => {
+					warnlog("WHEP reconnection failed:", error);
+					currentRetry++;
+					if (currentRetry < maxRetries) {
+						currentDelay = Math.min(currentDelay * 2, maxDelay);
+						log(`Retrying in ${currentDelay}ms`);
+						setTimeout(attemptReconnect, currentDelay);
+					} else {
+						log("Max retries reached, stopping reconnection attempts");
+						session.rpcs[UUID].reconnecting = false;
+						// Implement user feedback here
+					}
+				});
 		}
 
 		attemptReconnect();
@@ -62306,7 +62176,8 @@ async function whepIn(whepInput = false, whepInputToken = false, UUID = false) {
 					if (session.localNetworkOnly) {
 						offer.sdp = filterSDPLAN(offer.sdp);
 					}
-					if (session.stunOnly) { // or whatever flag you want to use
+					if (session.stunOnly) {
+						// or whatever flag you want to use
 						offer.sdp = filterStunOnly(offer.sdp);
 					}
 
@@ -62361,24 +62232,24 @@ async function whepIn(whepInput = false, whepInputToken = false, UUID = false) {
 				if (this.readyState == 4 && (this.status == 200 || this.status == 201)) {
 					try {
 						// 200 not in spec (meant to be an options response), but I want to be flexible
-							let responseHeaders = xhttp.getAllResponseHeaders() || "";
-							let responseHeadersLower = responseHeaders.toLowerCase();
-							var contentType = false;
-							if (responseHeadersLower.indexOf("content-type") >= 0) {
-								contentType = this.getResponseHeader("content-type");
-							}
-							if (responseHeadersLower.indexOf("location") >= 0) {
-								responseLocation = this.getResponseHeader("location");
-							}
-							if (responseHeadersLower.indexOf("accept-patch") >= 0) {
-								acceptPatch = this.getResponseHeader("accept-patch");
-							}
-							if (responseHeadersLower.indexOf("etag") >= 0) {
-								eTag = this.getResponseHeader("etag");
-							}
-							if (supportsTrickleIcePatch(acceptPatch) && !eTag) {
-								disableWhepPatchTrickle("missing-etag");
-							}
+						let responseHeaders = xhttp.getAllResponseHeaders() || "";
+						let responseHeadersLower = responseHeaders.toLowerCase();
+						var contentType = false;
+						if (responseHeadersLower.indexOf("content-type") >= 0) {
+							contentType = this.getResponseHeader("content-type");
+						}
+						if (responseHeadersLower.indexOf("location") >= 0) {
+							responseLocation = this.getResponseHeader("location");
+						}
+						if (responseHeadersLower.indexOf("accept-patch") >= 0) {
+							acceptPatch = this.getResponseHeader("accept-patch");
+						}
+						if (responseHeadersLower.indexOf("etag") >= 0) {
+							eTag = this.getResponseHeader("etag");
+						}
+						if (supportsTrickleIcePatch(acceptPatch) && !eTag) {
+							disableWhepPatchTrickle("missing-etag");
+						}
 						if (responseLocation && !(responseLocation.startsWith("http://") || responseLocation.startsWith("https://"))) {
 							let requestURL = new URL(whepInput); // Replace 'yourRequestURL' with the URL you posted to.
 							let protocol = requestURL.protocol;
@@ -62402,7 +62273,8 @@ async function whepIn(whepInput = false, whepInputToken = false, UUID = false) {
 							if (session.localNetworkOnly) {
 								description.sdp = filterSDPLAN(description.sdp);
 							}
-							if (session.stunOnly) { // or whatever flag you want to use
+							if (session.stunOnly) {
+								// or whatever flag you want to use
 								description.sdp = filterStunOnly(description.sdp);
 							}
 							description.sdp = processSDPFromServer(description.sdp); // setup stereo/mono
@@ -62415,9 +62287,9 @@ async function whepIn(whepInput = false, whepInputToken = false, UUID = false) {
 								.catch(function (e) {
 									log(e);
 									requestingStream = false;
-							});
+								});
 							// the request is done, but lets handle any old ice candidates
-								if (canTrickleViaPatch() && candidates.length && !session.rpcs[UUID].whep.iceCompletedCallback) {
+							if (canTrickleViaPatch() && candidates.length && !session.rpcs[UUID].whep.iceCompletedCallback) {
 								// "left over" candidates not sent with the SDP offer
 								log("Send patch request with ice candidates");
 								let patchCandidates = buildTrickleIcePatchFragment(candidates, true);
@@ -62553,7 +62425,7 @@ function whepOut() {
 			}
 			try {
 				socket.close();
-			} catch (e) { }
+			} catch (e) {}
 		}
 		log("Trying to load whep websocket...");
 
@@ -62562,9 +62434,12 @@ function whepOut() {
 		socket.onclose = function () {
 			failedCount += 1;
 			clearTimeout(connecting);
-			connecting = setTimeout(function () {
-				connect();
-			}, 100 * (failedCount - 1));
+			connecting = setTimeout(
+				function () {
+					connect();
+				},
+				100 * (failedCount - 1)
+			);
 		};
 
 		socket.onerror = function (e) {
@@ -62675,7 +62550,8 @@ async function processWHEPout(data) {
 		if (session.localNetworkOnly) {
 			description.sdp = filterSDPLAN(description.sdp);
 		}
-		if (session.stunOnly) { // or whatever flag you want to use
+		if (session.stunOnly) {
+			// or whatever flag you want to use
 			description.sdp = filterStunOnly(description.sdp);
 		}
 
@@ -62740,7 +62616,8 @@ async function processWHEPout(data) {
 			localDescription.sdp = filterSDPLAN(localDescription.sdp);
 		}
 
-		if (session.stunOnly) { // or whatever flag you want to use
+		if (session.stunOnly) {
+			// or whatever flag you want to use
 			localDescription.sdp = filterStunOnly(localDescription.sdp);
 		}
 
@@ -62817,20 +62694,24 @@ function pokeAPI(action, data, streamID = null) {
 }
 
 function pokeDiscord(action, data = {}) {
-	if (!session || !session.discordHook) { return; }
+	if (!session || !session.discordHook) {
+		return;
+	}
 	const { streamID, label, ses, hangup, startTime } = data;
 	if (hangup && !session.discordHookSensitive) return;
 	const duration = Math.floor((Date.now() - (startTime || 0)) / 1000);
 	const message = {
-		embeds: [{
-			title: "Incoming stream disconnected unexpectedly and it didn't reconnect in 60s",
-			color: 0xFF0000,
-			fields: [
-				{ name: "Incoming Stream ID", value: streamID || "Unknown", inline: true },
-				{ name: "Duration of connection", value: `${duration}s`, inline: true }
-			],
-			timestamp: new Date().toISOString()
-		}]
+		embeds: [
+			{
+				title: "Incoming stream disconnected unexpectedly and it didn't reconnect in 60s",
+				color: 0xff0000,
+				fields: [
+					{ name: "Incoming Stream ID", value: streamID || "Unknown", inline: true },
+					{ name: "Duration of connection", value: `${duration}s`, inline: true }
+				],
+				timestamp: new Date().toISOString()
+			}
+		]
 	};
 	if (label) message.embeds[0].fields.push({ name: "Viewer", value: label, inline: true });
 	if (session.label) message.embeds[0].fields.push({ name: "Publisher", value: session.label, inline: true });
@@ -62839,10 +62720,10 @@ function pokeDiscord(action, data = {}) {
 		const isReconnected = Object.values(session.rpcs || {}).some(rpc => rpc.streamID === streamID);
 		if (!isReconnected) {
 			fetch(session.discordHook, {
-				method: 'POST',
-				headers: { 'Content-Type': 'application/json' },
+				method: "POST",
+				headers: { "Content-Type": "application/json" },
 				body: JSON.stringify(message)
-			}).catch(err => console.error('Discord webhook failed:', err));
+			}).catch(err => console.error("Discord webhook failed:", err));
 		}
 	}, 60000);
 }
@@ -62871,7 +62752,7 @@ function getGuestTargetGroup(group, id) {
 }
 
 function resolveTargetGuestUUID(target) {
-	if ((target === null) || (typeof target === "undefined")) {
+	if (target === null || typeof target === "undefined") {
 		return false;
 	}
 	if (!session.rpcs) {
@@ -62890,11 +62771,7 @@ function resolveTargetGuestUUID(target) {
 		}
 	}
 
-	var element =
-		getGuestTarget("solo-video", target) ||
-		getGuestTarget("mute-guest", target) ||
-		getGuestTarget("hangup", target) ||
-		getRightOrderedElement("[data--u-u-i-d]", target);
+	var element = getGuestTarget("solo-video", target) || getGuestTarget("mute-guest", target) || getGuestTarget("hangup", target) || getRightOrderedElement("[data--u-u-i-d]", target);
 
 	if (!element) {
 		return false;
@@ -62916,7 +62793,7 @@ function resolveTargetGuestUUID(target) {
 
 async function targetGuest(target, action, value = null, value2 = null) {
 	if (target) {
-		if ((target == (parseInt(target) + "")) && (target < 100)) {
+		if (target == parseInt(target) + "" && target < 100) {
 			target -= 1;
 		}
 	} else {
@@ -62925,14 +62802,14 @@ async function targetGuest(target, action, value = null, value2 = null) {
 	warnlog("target " + target);
 	warnlog("action " + action);
 	warnlog("value " + value);
-	if ((action == 0) || (action == "forward") || (action == "transfer")) {
+	if (action == 0 || action == "forward" || action == "transfer") {
 		var element = getGuestTarget("forward", target);
 		if (element) {
 			return await directMigrate(element, true, value); // if value is set, it will auto transfer the guest to that room.
 		} else {
 			return false;
 		}
-	} else if ((action == 1) || (action == "addScene")) {
+	} else if (action == 1 || action == "addScene") {
 		var scene = 1;
 		if (value == "null" || value == null || value == "toggle") {
 			scene = 1;
@@ -63127,7 +63004,7 @@ async function targetGuest(target, action, value = null, value2 = null) {
 	} else if (action == "pgm" || action == "channel") {
 		var element = getGuestTarget("isolate-channel", target); // just something that probably exists.
 		if (element) {
-			return directIsolateChannel(element.dataset.UUID, (parseInt(value) || null));
+			return directIsolateChannel(element.dataset.UUID, parseInt(value) || null);
 		}
 	} else if (action == 22 || action == "sendDirectorChat") {
 		var element = getGuestTarget("solo-video", target); // just something that probably exists.
@@ -63145,7 +63022,7 @@ async function targetGuest(target, action, value = null, value2 = null) {
 			element.value = parseInt(value) || 0;
 			return remoteVolume(element);
 		}
-	} else if ((action == 28) || (action == "setslot")) {
+	} else if (action == 28 || action == "setslot") {
 		var element = getGuestTarget("setslot", target);
 		if (element) {
 			return setSlot(element, value);
@@ -63166,7 +63043,8 @@ async function targetGuest(target, action, value = null, value2 = null) {
 		} else {
 			return false;
 		}
-	} else if (action == "requestResolution") { // director's preview or scene preview or s/e; not capture resolution
+	} else if (action == "requestResolution") {
+		// director's preview or scene preview or s/e; not capture resolution
 		var element = getGuestTarget("solo-video", target); // just need to find the guest
 		if (element) {
 			let resolution = value.split("x");
@@ -63176,10 +63054,10 @@ async function targetGuest(target, action, value = null, value2 = null) {
 			} else {
 				return "Failed. Must be WIDTHxHEIGHT";
 			}
-
 		}
 		return false;
-	} else if (action == "setWidth") { // actual capture resolution ; director only
+	} else if (action == "setWidth") {
+		// actual capture resolution ; director only
 		var element = getGuestTarget("solo-video", target); // just need to find the guest
 		if (element) {
 			requestVideoHack("width", parseInt(value), element.dataset.UUID);
@@ -63416,7 +63294,7 @@ function oscClient() {
 			}
 			try {
 				socket.close();
-			} catch (e) { }
+			} catch (e) {}
 		}
 		socket = new WebSocket(session.apiserver);
 
@@ -63424,9 +63302,12 @@ function oscClient() {
 			session.apiSocket = false;
 			failedCount += 1;
 			clearTimeout(connecting);
-			connecting = setTimeout(function () {
-				connect();
-			}, 100 * (failedCount - 1));
+			connecting = setTimeout(
+				function () {
+					connect();
+				},
+				100 * (failedCount - 1)
+			);
 		};
 
 		socket.onerror = function () {
@@ -63484,14 +63365,14 @@ function oscClient() {
 	connect();
 }
 
-function safelyDecodeValue(value) { // since the layout can be a number, json, or base64 encoded json
+function safelyDecodeValue(value) {
+	// since the layout can be a number, json, or base64 encoded json
 	if (Number.isInteger(Number(value))) {
 		return parseInt(value, 10);
 	}
 	try {
-		return JSON.parse(value);  // Try parsing as JSON
-	} catch (e) {
-	}
+		return JSON.parse(value); // Try parsing as JSON
+	} catch (e) {}
 	try {
 		const decodedValue = atob(value); // Try decoding as base64 instead
 		try {
@@ -63895,7 +63776,7 @@ function setupCommands() {
 	commands.activeSpeaker = function (value = null, value2 = null) {
 		var res = {};
 		res.previous = session.activeSpeaker;
-		if ((value && (value == "toggle" || value == "null")) || (value === null)) {
+		if ((value && (value == "toggle" || value == "null")) || value === null) {
 			res.action = "toggle";
 			if (session.activeSpeaker) {
 				session.activeSpeaker = false;
@@ -63997,8 +63878,8 @@ function setupCommands() {
 				updateMixer();
 				response.combined_layout = session.layout;
 				var temp = previousDebug;
-				previousDebug = response
-				return { response: response, previous: temp }
+				previousDebug = response;
+				return { response: response, previous: temp };
 			} else if (checkType(value) === "Object") {
 				log(value);
 				session.layout = value;
@@ -64012,8 +63893,8 @@ function setupCommands() {
 				updateMixer();
 				response.layout = session.layout;
 				var temp = previousDebug;
-				previousDebug = response
-				return { response: response, previous: temp }
+				previousDebug = response;
+				return { response: response, previous: temp };
 			}
 
 			if (value === null) {
@@ -64024,14 +63905,13 @@ function setupCommands() {
 					issueLayout("0");
 					response.issued = true;
 					response.scene = "0";
-
 				}
 				response.type = 3;
 				response.layout = session.layout;
 				updateMixer();
 				var temp = previousDebug;
-				previousDebug = response
-				return { response: response, previous: temp }
+				previousDebug = response;
+				return { response: response, previous: temp };
 			} else if (value === false) {
 				session.layout = false;
 				pokeIframeAPI("layout-updated", session.layout);
@@ -64045,8 +63925,8 @@ function setupCommands() {
 				response.type = 3;
 				updateMixer();
 				var temp = previousDebug;
-				previousDebug = response
-				return { response: response, previous: temp }
+				previousDebug = response;
+				return { response: response, previous: temp };
 			} else if (session.layouts && session.layouts[value]) {
 				try {
 					log(session.layouts);
@@ -64104,26 +63984,26 @@ function setupCommands() {
 					}
 				} catch (e) {
 					errorlog(e);
-					response.error = e.message
+					response.error = e.message;
 				}
 				updateMixer();
 				temp = previousDebug;
-				previousDebug = response
-				return { response: response, previous: temp }
+				previousDebug = response;
+				return { response: response, previous: temp };
 			} else {
 				errorlog("no layout found");
 				log(session.layouts);
 				var temp = previousDebug;
-				previousDebug = response
-				return { response: response, previous: temp }
+				previousDebug = response;
+				return { response: response, previous: temp };
 			}
 		} catch (e) {
-			response.error = e.message
+			response.error = e.message;
 			errorlog(e);
 		}
 		var temp = previousDebug;
-		previousDebug = response
-		return { response: response, previous: temp }
+		previousDebug = response;
+		return { response: response, previous: temp };
 	};
 
 	commands.width = function (value = null, value2 = null) {
@@ -64151,7 +64031,7 @@ function setupCommands() {
 		if (!value) return false;
 
 		let aspectRatio;
-		if (typeof value === 'string' && value.includes(":")) {
+		if (typeof value === "string" && value.includes(":")) {
 			let parts = value.split(":");
 			aspectRatio = parseFloat(parts[0]) / parseFloat(parts[1]);
 		} else {
@@ -64184,7 +64064,7 @@ function setupCommands() {
 		}
 
 		// Special handling for aspectRatio with colon notation
-		if (value === "aspectRatio" && typeof value2 === 'string' && value2.includes(":")) {
+		if (value === "aspectRatio" && typeof value2 === "string" && value2.includes(":")) {
 			let parts = value2.split(":");
 			constraintValue = parseFloat(parts[0]) / parseFloat(parts[1]);
 		}
@@ -64202,11 +64082,11 @@ var previousDebug = {};
 
 function checkType(value) {
 	if (Array.isArray(value)) {
-		return 'Array';
-	} else if (typeof value === 'object' && value !== null) {
-		return 'Object';
+		return "Array";
+	} else if (typeof value === "object" && value !== null) {
+		return "Object";
 	} else {
-		return 'Neither an Array nor an Object';
+		return "Neither an Array nor an Object";
 	}
 }
 async function processMessage(data) {
@@ -64358,7 +64238,7 @@ function midiHotkeysNote(note, velocity = false) {
 	/* 	if (velocity !== false && typeof velocity !== "undefined") {
 			// Get integer value of velocity
 			const velocityValue = parseInt(velocity);
-	
+
 			// Check if valid MIDI velocity (0-127)
 			if (!isNaN(velocityValue) && velocityValue >= 0 && velocityValue <= 127) {
 				// Camera control MIDI commands using Channel 1, various CC numbers
@@ -64402,7 +64282,7 @@ function getRightOrderedElement(selector, guestslot, UUID = false) {
 				if (lock && lock == guestslot + 1) {
 					return elements[i].querySelector(selector) || false;
 				}
-			} catch (e) { }
+			} catch (e) {}
 		}
 	}
 
@@ -64498,7 +64378,6 @@ function midiHotkeysCommand(command, value) {
 			Commands.pan(0, "abs");
 			Commands.tilt(0, "abs");
 		}
-
 	} else if (command > 110) {
 		// Existing guest slot controls remain unchanged
 		var guestslot = command - 111;
@@ -64612,10 +64491,10 @@ function midiHotkeysCommand(command, value) {
 			Commands.zoom(normalizedValue * 2, "abs");
 		} else if (command == 81) {
 			// CC81: Pan absolute (0-127 maps to -1 to +1)
-			Commands.pan((normalizedValue * 2) - 1, "abs");
+			Commands.pan(normalizedValue * 2 - 1, "abs");
 		} else if (command == 82) {
 			// CC82: Tilt absolute (0-127 maps to -1 to +1)
-			Commands.tilt((normalizedValue * 2) - 1, "abs");
+			Commands.tilt(normalizedValue * 2 - 1, "abs");
 		} else if (command == 83) {
 			// CC83: Exposure absolute (0-127 maps to 0-1)
 			Commands.exposure(normalizedValue, "abs");
@@ -64635,7 +64514,8 @@ session.createResourceChannel = function (UUID) {
 	});
 
 	session.pcs[UUID].resourceChannel = channel;
-	if (session.pcs[UUID] && !session.pcs[UUID].resourceQueue) { // Initialize if not exists
+	if (session.pcs[UUID] && !session.pcs[UUID].resourceQueue) {
+		// Initialize if not exists
 		session.pcs[UUID].resourceQueue = [...session.resources];
 	}
 	session.pcs[UUID].processingResource = false;
@@ -64654,7 +64534,7 @@ session.createResourceChannel = function (UUID) {
 		}
 	};
 
-	session.pcs[UUID].resourceChannel.onerror = (e) => {
+	session.pcs[UUID].resourceChannel.onerror = e => {
 		warnlog("Resource channel error");
 		if (session.pcs[UUID]) {
 			session.pcs[UUID].processingResource = false; // Reset processing state on error
@@ -64742,7 +64622,6 @@ session.processResourceQueue = async function (UUID) {
 		}
 		log("sent.");
 		queue.shift();
-
 	} catch (e) {
 		errorlog(e);
 	}
@@ -64768,7 +64647,8 @@ session.recieveResourcesChannel = async function (UUID, channel) {
 	let receivedChunks = [];
 	let receivedSize = 0;
 
-	channel.onmessage = async (e) => { // Fixed: Using channel parameter instead of nested property
+	channel.onmessage = async e => {
+		// Fixed: Using channel parameter instead of nested property
 		try {
 			if (typeof e.data === "string") {
 				const data = JSON.parse(e.data);
@@ -64872,7 +64752,7 @@ function sendRawMIDI(input, UUID = false, streamID = false) {
 function sendMIDINote(note, on = true, channel = 1, uuid = null) {
 	// MIDI Note On status byte: 144 + (channel - 1)
 	// MIDI Note Off status byte: 128 + (channel - 1)
-	const statusByte = on ? (144 + (channel - 1)) : (128 + (channel - 1));
+	const statusByte = on ? 144 + (channel - 1) : 128 + (channel - 1);
 	const velocity = on ? 127 : 0; // 127 for note on, 0 for note off
 
 	// Convert note names like "C1", "D3" to MIDI note numbers
@@ -64881,9 +64761,23 @@ function sendMIDINote(note, on = true, channel = 1, uuid = null) {
 		const noteName = note.slice(0, -1);
 		const octave = parseInt(note.slice(-1));
 		const noteValues = {
-			"C": 0, "C#": 1, "Db": 1, "D": 2, "D#": 3, "Eb": 3,
-			"E": 4, "F": 5, "F#": 6, "Gb": 6, "G": 7,
-			"G#": 8, "Ab": 8, "A": 9, "A#": 10, "Bb": 10, "B": 11
+			C: 0,
+			"C#": 1,
+			Db: 1,
+			D: 2,
+			"D#": 3,
+			Eb: 3,
+			E: 4,
+			F: 5,
+			"F#": 6,
+			Gb: 6,
+			G: 7,
+			"G#": 8,
+			Ab: 8,
+			A: 9,
+			"A#": 10,
+			Bb: 10,
+			B: 11
 		};
 
 		// C1 is MIDI note 24, each octave is 12 notes
@@ -64902,7 +64796,7 @@ function sendMIDINote(note, on = true, channel = 1, uuid = null) {
 function buttonMIDI(ele, state = null) {
 	const note = ele.dataset.midiNote;
 	const uuid = ele.dataset.uuid || null;
-	const isToggleMode = ele.dataset.midiMode === 'toggle';
+	const isToggleMode = ele.dataset.midiMode === "toggle";
 
 	// Handle state tracking similar to changeGroup function
 	let newState;
@@ -64961,7 +64855,7 @@ function buttonMIDI(ele, state = null) {
 		}
 
 		// Sync director state if available
-		if (typeof syncDirectorState === 'function') {
+		if (typeof syncDirectorState === "function") {
 			syncDirectorState(ele);
 		}
 	}
@@ -65044,7 +64938,7 @@ function displayOverlayMessage(label, msg) {
 	if (!(session.cleanOutput && session.cleanish == false)) {
 		var textOverlay = getById("overlayMsgs");
 		if (textOverlay) {
-			textOverlay.innerText = msg
+			textOverlay.innerText = msg;
 			textOverlay.style.display = "block";
 			var showtime = msg.length * 200 + 3000;
 			if (showtime > 8000) {
@@ -65054,7 +64948,7 @@ function displayOverlayMessage(label, msg) {
 				function (ele) {
 					try {
 						ele.parentNode.removeChild(ele);
-					} catch (e) { }
+					} catch (e) {}
 				},
 				showtime,
 				spanOverlay
@@ -65068,18 +64962,32 @@ let mtcCounter = 0;
 let lastDisplayedTime = 0;
 function handleQuarterFrame(data) {
 	const mtcType = (data >> 4) & 0x7;
-	const mtcValue = data & 0xF;
+	const mtcValue = data & 0xf;
 
 	//console.log(`Quarter Frame: Type ${mtcType}, Value ${mtcValue}`);
 
 	switch (mtcType) {
-		case 0: lastMTCValues.frames = mtcValue; break;
-		case 1: lastMTCValues.frames |= (mtcValue << 4); break;
-		case 2: lastMTCValues.seconds = mtcValue; break;
-		case 3: lastMTCValues.seconds |= (mtcValue << 4); break;
-		case 4: lastMTCValues.minutes = mtcValue; break;
-		case 5: lastMTCValues.minutes |= (mtcValue << 4); break;
-		case 6: lastMTCValues.hours = mtcValue; break;
+		case 0:
+			lastMTCValues.frames = mtcValue;
+			break;
+		case 1:
+			lastMTCValues.frames |= mtcValue << 4;
+			break;
+		case 2:
+			lastMTCValues.seconds = mtcValue;
+			break;
+		case 3:
+			lastMTCValues.seconds |= mtcValue << 4;
+			break;
+		case 4:
+			lastMTCValues.minutes = mtcValue;
+			break;
+		case 5:
+			lastMTCValues.minutes |= mtcValue << 4;
+			break;
+		case 6:
+			lastMTCValues.hours = mtcValue;
+			break;
 		case 7:
 			lastMTCValues.hours |= (mtcValue & 0x1) << 4;
 			lastMTCValues.type = (mtcValue >> 1) & 0x3;
@@ -65110,9 +65018,9 @@ function handleFullFrame(data) {
 function displayTimecode(timecode) {
 	const frameRates = [24, 25, 29.97, 30];
 	const frameRate = frameRates[timecode.type] || 24; // Default to 24 if unknown
-	const dropFrame = (timecode.type === 2);
+	const dropFrame = timecode.type === 2;
 
-	let timecodeString = `${timecode.hours.toString().padStart(2, '0')}:${timecode.minutes.toString().padStart(2, '0')}:${timecode.seconds.toString().padStart(2, '0')} f${timecode.frames.toString().padStart(2, '0')}/${frameRate.toString()}`;
+	let timecodeString = `${timecode.hours.toString().padStart(2, "0")}:${timecode.minutes.toString().padStart(2, "0")}:${timecode.seconds.toString().padStart(2, "0")} f${timecode.frames.toString().padStart(2, "0")}/${frameRate.toString()}`;
 
 	//console.log("Displaying Timecode:", timecodeString, `(${frameRate} fps${dropFrame ? ' DF' : ''})`);
 	displayOverlayMessage("Timecode", timecodeString);
@@ -65335,7 +65243,9 @@ addEventToAll(".close", "click", function (e, ele) {
 			"px;\
 				}\
 				100% {\
-					height: " + targetBox.height + "px;\
+					height: " +
+			targetBox.height +
+			"px;\
 					width: " +
 			targetBox.width +
 			"px;\
@@ -66414,7 +66324,7 @@ function stopSecondScreenshare() {
 		});
 	}
 	if (document.getElementById("container_screen_director")) {
-		document.getElementById("container_screen_director")
+		document.getElementById("container_screen_director");
 	}
 
 	session.screenStream = false;
@@ -66424,12 +66334,14 @@ function stopSecondScreenshare() {
 	if (session.whipOutScreen) {
 		try {
 			session.whipOutScreen.getSenders().forEach(sender => {
-				try { sender.track && sender.track.stop && sender.track.stop(); } catch (e) { }
+				try {
+					sender.track && sender.track.stop && sender.track.stop();
+				} catch (e) {}
 			});
-		} catch (e) { }
+		} catch (e) {}
 		try {
 			session.whipOutScreen.close();
-		} catch (e) { }
+		} catch (e) {}
 		session.whipOutScreen = null;
 	}
 	if (session.whipoutScreenSettings) {
@@ -66449,7 +66361,7 @@ function stopSecondScreenshare() {
 	getById("screenshare3button").title = getTranslation("share-a-screen");
 
 	if (document.getElementById("screensharesource")) {
-		document.getElementById("screensharesource").load()
+		document.getElementById("screensharesource").load();
 	}
 
 	setTimeout(function () {
@@ -66462,7 +66374,7 @@ function stopSecondScreenshare() {
 }
 
 function enableFullscreenZoom() {
-	const content = document.getElementById('gridlayout');
+	const content = document.getElementById("gridlayout");
 	let lastScrollPosition = { x: 0, y: 0 };
 	content.style.overflow = "visible";
 	content.style.transformOrigin = "center center"; // Set transform origin to center
@@ -66474,7 +66386,8 @@ function enableFullscreenZoom() {
 	content.parentElement.style.alignItems = "center";
 	content.parentElement.style.minHeight = "100vh";
 
-	content.parentNode.insertAdjacentHTML('afterbegin',
+	content.parentNode.insertAdjacentHTML(
+		"afterbegin",
 		'<div class="zoom-control" style="padding:20px 40px;z-index:9999;position:fixed;bottom:0px;left:0;width:100%;">\
 		<input type="range" \
 			   id="zoomSlider2"\
@@ -66482,20 +66395,21 @@ function enableFullscreenZoom() {
 			   max="400"\
 			   value="100"\
 			   step="10">\
-	</div>');
+	</div>'
+	);
 
 	const viewport = document.querySelector('meta[name="viewport"]');
 
-	viewport.content = 'width=device-width, initial-scale=1.0, maximum-scale=4.0, user-scalable=yes';
+	viewport.content = "width=device-width, initial-scale=1.0, maximum-scale=4.0, user-scalable=yes";
 	if (!viewport) {
-		const meta = document.createElement('meta');
-		meta.name = 'viewport';
-		meta.content = 'width=device-width, initial-scale=1.0, maximum-scale=4.0, user-scalable=yes';
+		const meta = document.createElement("meta");
+		meta.name = "viewport";
+		meta.content = "width=device-width, initial-scale=1.0, maximum-scale=4.0, user-scalable=yes";
 		document.head.appendChild(meta);
 	}
 
-	const slider = document.getElementById('zoomSlider2');
-	slider.addEventListener('input', (e) => {
+	const slider = document.getElementById("zoomSlider2");
+	slider.addEventListener("input", e => {
 		const scale = e.target.value / 100;
 
 		// Calculate the center point before scaling
@@ -66512,10 +66426,7 @@ function enableFullscreenZoom() {
 		const newLeft = centerX - newWidth / 2;
 		const newTop = centerY - newHeight / 2;
 
-		window.scrollTo(
-			window.scrollX + (newLeft - rect.left),
-			window.scrollY + (newTop - rect.top)
-		);
+		window.scrollTo(window.scrollX + (newLeft - rect.left), window.scrollY + (newTop - rect.top));
 	});
 }
 
@@ -66528,10 +66439,10 @@ async function loadRoomAccessSettings() {
 	try {
 		// Get room settings
 		const response = await fetch(`${AUTH_SERVICE_URL}/api/room/access`, {
-			method: 'POST',
+			method: "POST",
 			headers: {
-				'Authorization': `Bearer ${session.authToken}`,
-				'Content-Type': 'application/json'
+				Authorization: `Bearer ${session.authToken}`,
+				"Content-Type": "application/json"
 			},
 			body: JSON.stringify({ room: session.roomid })
 		});
@@ -66542,7 +66453,7 @@ async function loadRoomAccessSettings() {
 				// Get detailed room settings
 				const settingsResponse = await fetch(`${AUTH_SERVICE_URL}/api/room/settings/${session.realRoomId || session.roomid}`, {
 					headers: {
-						'Authorization': `Bearer ${session.authToken}`
+						Authorization: `Bearer ${session.authToken}`
 					}
 				});
 
@@ -66550,7 +66461,7 @@ async function loadRoomAccessSettings() {
 					currentRoomSettings = await settingsResponse.json();
 
 					// Update UI with current settings
-					const accessMode = currentRoomSettings.accessMode || 'public';
+					const accessMode = currentRoomSettings.accessMode || "public";
 					document.querySelector(`input[name="roomAccessMode"][value="${accessMode}"]`).checked = true;
 					updateRoomAccessMode(accessMode);
 
@@ -66565,18 +66476,18 @@ async function loadRoomAccessSettings() {
 			}
 		}
 	} catch (e) {
-		console.error('Failed to load room settings:', e);
+		console.error("Failed to load room settings:", e);
 	}
 }
 
 function updateRoomAccessMode(mode) {
 	// Show/hide allowlist section based on mode
-	if (mode === 'allowlist') {
-		getById('allowlistSection').style.display = 'block';
-		getById('accessRequestsSection').style.display = 'block';
+	if (mode === "allowlist") {
+		getById("allowlistSection").style.display = "block";
+		getById("accessRequestsSection").style.display = "block";
 	} else {
-		getById('allowlistSection').style.display = 'none';
-		getById('accessRequestsSection').style.display = 'none';
+		getById("allowlistSection").style.display = "none";
+		getById("accessRequestsSection").style.display = "none";
 	}
 
 	// Update room settings on server
@@ -66588,14 +66499,14 @@ function updateRoomAccessMode(mode) {
 }
 
 function addToAllowlist() {
-	const input = getById('allowlistInput');
+	const input = getById("allowlistInput");
 	const value = input.value.trim();
 
 	if (!value) return;
 
 	// Validate format
-	if (!value.startsWith('@') && !value.startsWith('email:')) {
-		alert('Please enter a username (starting with @) or email pattern (starting with email:)');
+	if (!value.startsWith("@") && !value.startsWith("email:")) {
+		alert("Please enter a username (starting with @) or email pattern (starting with email:)");
 		return;
 	}
 
@@ -66618,24 +66529,24 @@ function addToAllowlist() {
 		displayAllowlist(currentRoomSettings.allowlist);
 
 		// Clear input
-		input.value = '';
+		input.value = "";
 	}
 }
 
 function displayAllowlist(allowlist) {
-	const display = getById('allowlistDisplay');
-	display.innerHTML = '';
+	const display = getById("allowlistDisplay");
+	display.innerHTML = "";
 
 	allowlist.forEach(entry => {
-		const item = document.createElement('div');
-		item.style.cssText = 'padding: 5px; margin: 2px 0; background: #f0f0f0; border-radius: 3px; display: flex; justify-content: space-between; align-items: center;';
+		const item = document.createElement("div");
+		item.style.cssText = "padding: 5px; margin: 2px 0; background: #f0f0f0; border-radius: 3px; display: flex; justify-content: space-between; align-items: center;";
 
-		const label = document.createElement('span');
+		const label = document.createElement("span");
 		label.textContent = entry;
 
-		const removeBtn = document.createElement('button');
-		removeBtn.textContent = 'Remove';
-		removeBtn.style.cssText = 'padding: 2px 8px; font-size: 12px;';
+		const removeBtn = document.createElement("button");
+		removeBtn.textContent = "Remove";
+		removeBtn.style.cssText = "padding: 2px 8px; font-size: 12px;";
 		removeBtn.onclick = () => removeFromAllowlist(entry);
 
 		item.appendChild(label);
@@ -66670,13 +66581,13 @@ async function loadAccessRequests() {
 		const requests = await window.vdoAuth.getRoomAccessRequests(session.realRoomId || session.roomid);
 		displayAccessRequests(requests);
 	} catch (e) {
-		console.error('Failed to load access requests:', e);
+		console.error("Failed to load access requests:", e);
 	}
 }
 
 function displayAccessRequests(requests) {
-	const list = getById('accessRequestsList');
-	list.innerHTML = '';
+	const list = getById("accessRequestsList");
+	list.innerHTML = "";
 
 	if (requests.length === 0) {
 		list.innerHTML = '<div style="padding: 10px; color: #666;">No pending requests</div>';
@@ -66684,29 +66595,29 @@ function displayAccessRequests(requests) {
 	}
 
 	requests.forEach(request => {
-		const item = document.createElement('div');
-		item.style.cssText = 'padding: 10px; margin: 5px 0; background: #f9f9f9; border: 1px solid #ddd; border-radius: 5px;';
+		const item = document.createElement("div");
+		item.style.cssText = "padding: 10px; margin: 5px 0; background: #f9f9f9; border: 1px solid #ddd; border-radius: 5px;";
 
-		const info = document.createElement('div');
-		const header = document.createElement('div');
-		header.style.cssText = 'display: flex; align-items: center; margin-bottom: 5px;';
+		const info = document.createElement("div");
+		const header = document.createElement("div");
+		header.style.cssText = "display: flex; align-items: center; margin-bottom: 5px;";
 
 		if (request.avatar) {
-			const avatarImg = document.createElement('img');
+			const avatarImg = document.createElement("img");
 			avatarImg.src = request.avatar;
-			avatarImg.alt = '';
-			avatarImg.style.cssText = 'width: 30px; height: 30px; border-radius: 50%; margin-right: 10px;';
+			avatarImg.alt = "";
+			avatarImg.style.cssText = "width: 30px; height: 30px; border-radius: 50%; margin-right: 10px;";
 			header.appendChild(avatarImg);
 		}
 
-		const textWrap = document.createElement('div');
-		const nameEl = document.createElement('strong');
-		nameEl.textContent = request.displayName || '';
+		const textWrap = document.createElement("div");
+		const nameEl = document.createElement("strong");
+		nameEl.textContent = request.displayName || "";
 		textWrap.appendChild(nameEl);
 
 		if (request.userHandle) {
-			const handleEl = document.createElement('span');
-			handleEl.style.cssText = 'color: #666; margin-left: 5px;';
+			const handleEl = document.createElement("span");
+			handleEl.style.cssText = "color: #666; margin-left: 5px;";
 			handleEl.textContent = request.userHandle;
 			textWrap.appendChild(handleEl);
 		}
@@ -66714,8 +66625,8 @@ function displayAccessRequests(requests) {
 		header.appendChild(textWrap);
 		info.appendChild(header);
 
-		const meta = document.createElement('div');
-		meta.style.cssText = 'color: #999; font-size: 12px;';
+		const meta = document.createElement("div");
+		meta.style.cssText = "color: #999; font-size: 12px;";
 		const metaParts = [];
 
 		if (request.provider) {
@@ -66729,21 +66640,21 @@ function displayAccessRequests(requests) {
 			}
 		}
 
-		meta.textContent = metaParts.join(' • ');
+		meta.textContent = metaParts.join(" • ");
 		info.appendChild(meta);
 
-		const actions = document.createElement('div');
-		actions.style.cssText = 'margin-top: 8px; display: flex; gap: 10px;';
+		const actions = document.createElement("div");
+		actions.style.cssText = "margin-top: 8px; display: flex; gap: 10px;";
 
-		const approveBtn = document.createElement('button');
-		approveBtn.textContent = 'Approve';
-		approveBtn.style.cssText = 'padding: 5px 15px; background: #4CAF50; color: white; border: none; border-radius: 3px; cursor: pointer;';
-		approveBtn.onclick = () => handleAccessRequest(request.userId, 'approve');
+		const approveBtn = document.createElement("button");
+		approveBtn.textContent = "Approve";
+		approveBtn.style.cssText = "padding: 5px 15px; background: #4CAF50; color: white; border: none; border-radius: 3px; cursor: pointer;";
+		approveBtn.onclick = () => handleAccessRequest(request.userId, "approve");
 
-		const denyBtn = document.createElement('button');
-		denyBtn.textContent = 'Deny';
-		denyBtn.style.cssText = 'padding: 5px 15px; background: #f44336; color: white; border: none; border-radius: 3px; cursor: pointer;';
-		denyBtn.onclick = () => handleAccessRequest(request.userId, 'deny');
+		const denyBtn = document.createElement("button");
+		denyBtn.textContent = "Deny";
+		denyBtn.style.cssText = "padding: 5px 15px; background: #f44336; color: white; border: none; border-radius: 3px; cursor: pointer;";
+		denyBtn.onclick = () => handleAccessRequest(request.userId, "deny");
 
 		actions.appendChild(approveBtn);
 		actions.appendChild(denyBtn);
@@ -66764,11 +66675,11 @@ async function handleAccessRequest(userId, action) {
 			loadAccessRequests();
 
 			// Reload allowlist if approved
-			if (action === 'approve') {
+			if (action === "approve") {
 				loadRoomAccessSettings();
 			}
 		}
 	} catch (e) {
-		console.error('Failed to handle access request:', e);
+		console.error("Failed to handle access request:", e);
 	}
 }
