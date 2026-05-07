@@ -23,6 +23,16 @@ async function loadLongpipe() {
 	}
 }
 
+function longpipeHandlesEffect(effect) {
+	return USE_LONGPIPE && effect !== "16";
+}
+
+function needsSegmentationRebuild(from, to) {
+	if (!["3", "4", "5", "16"].includes(from)) return true;
+	if (!USE_LONGPIPE) return false;
+	return longpipeHandlesEffect(from) !== longpipeHandlesEffect(to);
+}
+
 function effectToLongpipeBg() {
 	if (session.effect == "3") {
 		var strength = session.effectValue ? parseFloat(session.effectValue) / 20 : 0.5; // default 10/20 = 0.5
@@ -30,7 +40,7 @@ function effectToLongpipeBg() {
 	}
 	if (session.effect == "4") return { color: "#00ff00" };
 	if (session.effect == "5") return session.effectsImage && session.effectsImage.src ? session.effectsImage.src : "blur";
-	if (session.effect == "16") return "none";
+
 	return "blur";
 }
 
@@ -12677,7 +12687,7 @@ function applyEffects(track) {
 		session.canvas.height = 2 * parseInt(session.canvasSource.height / 2);
 		session.canvas.width = 2 * parseInt(session.canvasSource.width / 2);
 
-		if (USE_LONGPIPE) {
+		if (USE_LONGPIPE && session.effect !== "16") {
 			if (EffectsPipeline) {
 				if (session.longpipe) {
 					session.longpipe.destroy();
@@ -57352,14 +57362,18 @@ async function effectsDynamicallyUpdate(event, ele) {
 		updateRenderOutpipe();
 		return;
 	} else if (session.effect === "3" || session.effect === "4" || session.effect === "16") {
-		if (!["3", "4", "5", "16"].includes(lastEffectValue)) {
-			USE_LONGPIPE ? loadLongpipe() : attemptSegmentationEffectModelLoad();
+		if (needsSegmentationRebuild(lastEffectValue, session.effect)) {
+			if (USE_LONGPIPE && session.longpipe && !longpipeHandlesEffect(session.effect)) {
+				session.longpipe.destroy();
+				session.longpipe = null;
+			}
+			longpipeHandlesEffect(session.effect) ? loadLongpipe() : attemptSegmentationEffectModelLoad();
 			if (!USE_LONGPIPE && !(session.tfliteModule && session.tfliteModule.looping)) {
 				updateRenderOutpipe();
-			} else if (USE_LONGPIPE) {
+			} else {
 				updateRenderOutpipe();
 			}
-		} else if (USE_LONGPIPE && session.longpipe) {
+		} else if (USE_LONGPIPE && session.longpipe && session.effect !== "16") {
 			session.longpipe.setBackground(effectToLongpipeBg());
 		}
 		if (session.effect === "3" && session.effectValue_default == false) {
@@ -57377,11 +57391,15 @@ async function effectsDynamicallyUpdate(event, ele) {
 			getById("selectEffectAmountInput3").value = session.effectValue;
 		}
 	} else if (session.effect === "5") {
-		if (!["3", "4", "5", "16"].includes(lastEffectValue)) {
-			USE_LONGPIPE ? loadLongpipe() : attemptSegmentationEffectModelLoad();
+		if (needsSegmentationRebuild(lastEffectValue, session.effect)) {
+			if (USE_LONGPIPE && session.longpipe && !longpipeHandlesEffect(session.effect)) {
+				session.longpipe.destroy();
+				session.longpipe = null;
+			}
+			longpipeHandlesEffect(session.effect) ? loadLongpipe() : attemptSegmentationEffectModelLoad();
 			if (!USE_LONGPIPE && !(session.tfliteModule && session.tfliteModule.looping)) {
 				updateRenderOutpipe();
-			} else if (USE_LONGPIPE) {
+			} else {
 				updateRenderOutpipe();
 			}
 		} else if (USE_LONGPIPE && session.longpipe) {

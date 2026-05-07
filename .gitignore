@@ -1,4 +1,5 @@
 node_modules/
+.idea/
 package-lock.json
 turn-credentials.php
 .vscode/
