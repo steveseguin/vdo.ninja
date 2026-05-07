@@ -7350,7 +7350,7 @@ async function main() {
 	} else if (urlParams.has("backgroundblur") || urlParams.has("bgblur")) {
 		session.effect = "3";
 		if (urlParams.get("backgroundblur") || urlParams.get("bgblur")){
-			session.effectValue_default = parseFloat(urlParams.get("backgroundblur") || urlParams.get("bgblur")) || 2;
+			session.effectValue_default = parseFloat(urlParams.get("backgroundblur") || urlParams.get("bgblur")) || 10;
 		}
 	} else if (urlParams.has("greenscreen")) {
 		session.effect = "4";
@@ -7504,7 +7504,7 @@ async function main() {
 			session.effectValue = 5;
 			session.effect = "3";
 		} else if (session.effect === "3") {
-			session.effectValue = 2;
+			session.effectValue = 10;
 		} else if (session.effect === "7") {
 			session.effectValue = session.effectValue || 1;
 		} else if (["15", "14"].includes(session.effect)) {
@@ -8232,7 +8232,7 @@ async function main() {
 	}, 50);
 
 	if (session.effect == "3" || session.effect == "4" || session.effect == "5" || session.effect == "16") {
-		attemptSegmentationEffectModelLoad();
+		USE_LONGPIPE ? loadLongpipe() : attemptSegmentationEffectModelLoad();
 	} else if (session.effect == "6") {
 		loadTensorflowJS();
 	} else if (session.effect == "9") {
