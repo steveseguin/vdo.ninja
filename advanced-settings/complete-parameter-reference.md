@@ -344,6 +344,8 @@ If you are self-hosting VDO.Ninja, often these URL parameters can be hard-coded 
 | `noap`               | See `noaudioprocessing`              | -               | -                                 |
 | `noaudio`            | `na`, `hideaudio`                    | Stream ID(s)    | Disables audio for streams        |
 | `noaudioprocessing`  | `noap`                               | Boolean         | Disables audio processing         |
+| `noautoclaim`        | See `noclaim`                        | -               | -                                 |
+| `noclaim`            | `noautoclaim`, `nonclaiming`, `claim=0` | Boolean      | Skips director room claim attempt |
 | `nocursor`           | `hidecursor`, `nomouse`, `hidemouse` | Boolean         | Hides cursor                      |
 | `nocontrols`         | -                                    | Boolean         | -                                 |
 | `nocontrolbar`       | -                                    | Boolean         | -                                 |
@@ -355,6 +357,7 @@ If you are self-hosting VDO.Ninja, often these URL parameters can be hard-coded 
 | `nohub`              | See `nohangupbutton`                 | -               | -                                 |
 | `nohangupbutton`     | `nohub`                              | Boolean         | Hides hangup button               |
 | `noisegate`          | `gating`, `gate`, `ng`               | Boolean/Integer | Sets noise gate                   |
+| `nonclaiming`        | See `noclaim`                        | -               | -                                 |
 | `nomobilebitratecap` | -                                    | Boolean         | Disables only the mobile sender bitrate safety cap |
 | `nomouseevents`      | `nme`                                | Boolean         | -                                 |
 | `nopreview`          | `np`                                 | Boolean         | Disables preview                  |

@@ -50,6 +50,8 @@ That last point matters for `&queue`: late-joining co-directors should still see
 
 You can also enable co-directors from the room settings panel, which generates a co-director invite link for you.
 
+The room settings panel can also generate a non-claiming co-director link. This adds [`&noclaim`](../advanced-settings/director-parameters/and-noclaim.md), so the co-director joins director mode without trying to claim the room as the main director.
+
 ## Warnings
 
 * Do not reuse the room password as the co-director password.
@@ -66,6 +68,10 @@ You can also enable co-directors from the room settings panel, which generates a
 
 {% content-ref url="../advanced-settings/director-parameters/and-hidecodirectors.md" %}
 [and-hidecodirectors.md](../advanced-settings/director-parameters/and-hidecodirectors.md)
+{% endcontent-ref %}
+
+{% content-ref url="../advanced-settings/director-parameters/and-noclaim.md" %}
+[and-noclaim.md](../advanced-settings/director-parameters/and-noclaim.md)
 {% endcontent-ref %}
 
 {% content-ref url="../advanced-settings/director-parameters/and-maindirectorpassword.md" %}

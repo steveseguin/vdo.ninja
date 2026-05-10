@@ -497,6 +497,7 @@
     * [\&rooms](director-settings/rooms.md)
     * [\&roomcap](advanced-settings/director-parameters/and-roomcap.md)
     * [\&roomkey](advanced-settings/director-parameters/and-roomkey.md)
+    * [\&noclaim](advanced-settings/director-parameters/and-noclaim.md)
     * [\&requireapproval](advanced-settings/director-parameters/and-requireapproval.md)
     * [\&approvepopup](advanced-settings/director-parameters/and-approvepopup.md)
     * [\&graphs](director-settings/and-graphs.md)
