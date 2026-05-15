@@ -46,6 +46,71 @@ Without much effort, you should be able to achieve 40-milliseconds of latency, o
 For playback on Windows, consider using the [Electron Capture](../steves-helper-apps/electron-capture.md) app which now supports ASIO audio devices, providing even lower audio output latency compared to standard Windows audio.
 {% endhint %}
 
+## Remote lip-sync and in-ear cue performances
+
+For a remote lip-sync performance, the goal is usually not to make the Internet delay disappear. The more reliable approach is to make the audience-facing audio/video chain match the performer's delayed cue.
+
+For example, if the music is played from the venue laptop, split that same music feed:
+
+* Send one copy to the performer's wired in-ear monitors using a low-latency VDO.Ninja audio-only link.
+* Send the other copy to the venue PA, but delay it enough to match the projected video of the remote performer.
+
+This keeps the performer lip-syncing to the same source the audience hears, while giving the venue operator a single place to correct the timing.
+
+### Suggested cue links
+
+Venue cue sender:
+
+```
+https://vdo.ninja/?push=show-cue&miconly&lowlatency&autostart
+```
+
+Performer cue receiver:
+
+```
+https://vdo.ninja/?view=show-cue&lowlatency&novideo&ab=32
+```
+
+Feed the venue music source into the cue sender with an audio interface, mixer aux send, or virtual audio cable. Use wired earphones or wired IEMs on the performer side; Bluetooth headphones add too much unpredictable delay for this use case.
+
+Start with a low audio bitrate, such as `&ab=16` or `&ab=32`, when timing and stability matter more than full music quality. Raise it only if the cue quality is not good enough.
+
+### Performer video back to the venue
+
+Use a separate VDO.Ninja video link for the performer's camera. If the venue does not need the performer's microphone, disable the sent audio so only the clean venue music reaches the PA.
+
+Performer camera sender:
+
+```
+https://vdo.ninja/?push=show-cam&ad=0
+```
+
+Venue/OBS view link:
+
+```
+https://vdo.ninja/?view=show-cam&noaudio&cleanoutput
+```
+
+If mobile-data jitter makes the video unstable, add a small video buffer on the venue view link, such as `&buffer=100` or `&buffer=200`, and then add the same extra delay to the PA timing. Lower latency is useful, but stable latency is usually more important for a convincing audience lip-sync.
+
+### How to set the PA delay
+
+Do a rehearsal with a clear click, clap, or count-in. Watch the projected performer and adjust the venue PA delay until the mouth movement and beat look correct in the room.
+
+As a starting point:
+
+```
+PA delay = cue delay to performer + performer video return/display delay
+```
+
+In practice, measure it rather than guessing. Mobile networks can change delay during a walk, especially on 4G/5G or when the phone changes towers. If the timing drifts, increase the video buffer slightly and match the PA delay to that more stable path.
+
+### Transitioning into the venue
+
+If the performer physically enters the room at the end, plan that transition. During the remote section, the PA may be delayed to match the projected video. Once the performer is in the room, that camera/video path delay no longer applies.
+
+Common solutions are to keep the performer on wired in-ears until the ending, switch the PA delay back to normal during a musical break, or hide the timing change during a blackout, applause moment, or doorway reveal.
+
 ## Related
 
 {% content-ref url="../newly-added-parameters/and-lowlatency.md" %}
