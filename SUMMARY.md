@@ -345,6 +345,7 @@
     * [\&hideplaybutton](advanced-settings/mixer-scene-parameters/and-hideplaybutton.md)
     * [\&motiondetection](advanced-settings/mixer-scene-parameters/and-motiondetection-alpha.md)
     * [\&scene](advanced-settings/view-parameters/scene.md)
+    * [\&scenerestore](advanced-settings/mixer-scene-parameters/and-scenerestore.md)
     * [\&scenetype](advanced-settings/mixer-scene-parameters/scenetype.md)
     * [\&autoadd](newly-added-parameters/and-autoadd.md)
     * [\&hiddenscenebitrate](newly-added-parameters/and-hiddenscenebitrate.md)
