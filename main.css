@@ -1,4 +1,20 @@
 :root {
+	/* Modern dark design tokens */
+	--bg: #0d1117;
+	--surface: #161b22;
+	--surface-2: #21262d;
+	--surface-3: #30363d;
+	--border: #30363d;
+	--primary: #58a6ff;
+	--primary-glow: rgba(88,166,255,0.12);
+	--success: #3fb950;
+	--danger: #f85149;
+	--text: #c9d1d9;
+	--text-muted: #8b949e;
+	--text-strong: #f0f6fc;
+	--radius: 6px;
+	--transition: 0.15s ease;
+
 	/* Discord Greys - Dark to Lighter */
 	--discord-grey-0: #121212;
 	--discord-grey-1: #1e1f22;
@@ -591,8 +607,20 @@ body.whitetheme {
 
 
 input {
-	border-radius: 4px;
-	padding: 2px;
+	border-radius: var(--radius);
+	padding: 5px 8px;
+	background: var(--surface-2);
+	border: 1px solid var(--border);
+	color: var(--text);
+	transition: border-color var(--transition), box-shadow var(--transition);
+	outline: none;
+}
+input:focus {
+	border-color: var(--primary);
+	box-shadow: 0 0 0 3px var(--primary-glow);
+}
+input::placeholder {
+	color: var(--text-muted);
 }
 
 button.grey {
@@ -1757,19 +1785,23 @@ body.darktheme{
 }
 
 ::-webkit-scrollbar {
-	width: 15px;
-	height: 15px;
+	width: 8px;
+	height: 8px;
 }
 
 ::-webkit-scrollbar-track {
-	-webkit-box-shadow: inset 0 0 13px rgb(0 0 0 / 50%);
-	border-radius: 3px;
+	background: var(--surface);
+	border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb {
-	border-radius: 5px;
-	-webkit-box-shadow: inset 0 0 16px rgb(150 150 150 / 100%);
-	border: solid 3px transparent;
+	background: var(--surface-3);
+	border-radius: 4px;
+	border: 2px solid var(--surface);
+}
+
+::-webkit-scrollbar-thumb:hover {
+	background: #484f58;
 }
 
 .previewWebcam {
@@ -1782,12 +1814,19 @@ body.darktheme{
 
 #getPermissions{
 	font-size: 110%;
-	border: 3px solid #99A;
+	border: 1px solid var(--primary);
 	cursor: pointer;
-	background-color: #cce0ff;
+	background-color: var(--primary);
+	color: #fff;
+	font-weight: 600;
 	margin: 20px;
 	padding: 10px 50px;
 	text-align:center;
+	border-radius: var(--radius);
+	transition: opacity var(--transition);
+}
+#getPermissions:hover {
+	opacity: 0.85;
 }
 
 .gowebcam {
@@ -2017,20 +2056,24 @@ input[type=range].thinSlider {
     border-radius: 5px;
 }
 .inMessage {
-    background-color: #e6e6e6;
+    background-color: var(--surface-2);
+    color: var(--text);
+    border: 1px solid var(--border);
 }
 
 .outMessage {
-    background-color: #c5d3ff;
+    background-color: rgba(88,166,255,0.15);
+    border: 1px solid rgba(88,166,255,0.3);
+    color: var(--text-strong);
     text-align: right;
 }
 #chatBody {
     flex-grow: 1;
     overflow-y: auto;
     padding: 10px;
-    background-color: #4d4d4d;
+    background-color: var(--surface);
     min-height: 50px;
-	border-color: #6b6767;
+	border-color: var(--border);
 	height: 300px;
 }
 
@@ -2041,11 +2084,12 @@ input[type=range].thinSlider {
 .chat-input-area {
     display: flex;
     padding: 10px 10px 4px 10px;
-	background-color: #2a2a2a;
+	background-color: var(--surface-2);
+	border-top: 1px solid var(--border);
 }
 .resizer {
     height: 5px;
-    background: #2a2a2a;
+    background: var(--surface-2);
     cursor: ns-resize;
     position: relative;
     overflow: hidden;
@@ -2087,22 +2131,30 @@ div#chatBody a {
     width: 400px;
 	max-width: 100%;
 	min-width: 100px;
-    background-color: #fff;
-    border: 1px solid #4f4e4e;
-    border-radius: 5px;
+    background-color: rgba(13,17,23,0.92);
+    border: 1px solid var(--border);
+    border-radius: 10px;
     display: flex;
     flex-direction: column;
     max-height: 100vh;
     z-index: 1000;
+    backdrop-filter: blur(12px);
+    box-shadow: 0 8px 32px rgba(0,0,0,0.6);
 }
 .chat-header {
-    padding: 10px;
-    background-color: #2a2a2a;
+    padding: 10px 12px;
+    background-color: var(--surface-2);
     display: flex;
     justify-content: space-between;
     align-items: center;
     cursor: move;
-	color:white;
+	color: var(--text-strong);
+    border-radius: 10px 10px 0 0;
+    border-bottom: 1px solid var(--border);
+    font-weight: 600;
+    font-size: 0.9em;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
 }
 
 #chatInput {
@@ -2128,11 +2180,12 @@ div#chatBody a {
 }
 .section {
     display: block;
-    padding: 20px 5px;
+    padding: 20px 16px;
     margin: 20px auto;
-    border-radius: 20px;
-    border: 2px solid #6e6e6e;
+    border-radius: 10px;
+    border: 1px solid var(--border);
     max-width: 680px;
+    background: var(--surface-2);
 }
 
 @media only screen and (max-width: 500px) {
@@ -2577,21 +2630,26 @@ label {
 	height: 200px;
 	text-align: center;
 	font-size: 100%;
-	transition: box-shadow 0.1s ease-in-out;
+	transition: box-shadow 0.15s ease, transform 0.15s ease, border-color 0.15s ease;
 	border-radius: 12px;
+	background: var(--surface);
+	border: 1px solid var(--border);
+	color: var(--text);
 }
 
 .column:hover {
-	box-shadow: 0 8px 16px 0 rgba(0, 0, 0, .3);
-	transform: translateY(-1px);
+	box-shadow: 0 8px 24px rgba(0, 0, 0, .5), 0 0 0 1px var(--primary);
+	transform: translateY(-2px);
+	border-color: var(--primary);
 }
 
 .column:active {
-	box-shadow: 0 8px 16px 0 rgba(0, 0, 0, .5);
+	box-shadow: 0 4px 12px rgba(0, 0, 0, .6);
+	transform: translateY(0);
 }
 
 .column>h2 {
-	color: black;
+	color: var(--text-strong);
 }
 
 .graphSection {
@@ -5176,18 +5234,22 @@ iframe.insecure {
 .cameraTip {
 	width: 100%;
 	display: block;
-	border-left: 4px solid #50cef1;
-	background: #dbf0ff;
+	border-left: 4px solid var(--primary);
+	background: rgba(88,166,255,0.08);
+	color: var(--text);
 	padding: 10px;
 	align-items: center;
 	position: relative;
 	margin: 8px auto 0px auto;
-	box-shadow: 0px 5px 10px -5px #a9a9a9;
+	box-shadow: none;
 	text-align: left;
 	font-size: 97%;
 	white-space:normal;
 	min-height: 44px;
 	border-radius: 5px;
+	border-top: 1px solid var(--border);
+	border-right: 1px solid var(--border);
+	border-bottom: 1px solid var(--border);
 }
 .cameraTip > p {
 	text-align: left;
@@ -5212,14 +5274,15 @@ iframe.insecure {
 
 #alertModal {
 	position: absolute;
-	background-color: rgb(221 221 221);
-	box-shadow: 0 0 30px 10px #0000005c;
-	color: black;
+	background-color: var(--surface);
+	border: 1px solid var(--border);
+	box-shadow: 0 8px 40px rgba(0,0,0,0.8);
+	color: var(--text-strong);
 	font-size: 1.2em;
 	top: 50%;
 	left: 50%;
 	transform: translate(-50%, -50%);
-	border-radius: 10px;
+	border-radius: 12px;
 	font-weight: bold;
 	z-index:32;
 	overflow-wrap: break-word;
@@ -5706,20 +5769,22 @@ input[type='checkbox'], input[type='radio'] {
 }
 
 .darktheme .card {
-	background-color: var(--discord-grey-7);
+	background-color: var(--surface-2);
+	border: 1px solid var(--border);
 }
 
 .card {
-	background-color: var(--lighttheme-3);
+	background-color: var(--surface);
+	border: 1px solid var(--border);
 }
 
 .darktheme .container-inner {
-	background-color: var(--discord-grey-7);
+	background-color: var(--surface-2);
 }
 
 .container-inner {
 	display: none;
-	background-color: var(--lighttheme-3);
+	background-color: var(--surface);
 	min-height: calc(100% - 100px);
 	margin-bottom:30px;
 }
@@ -6463,3 +6528,168 @@ button.toggleSettings,
 	content: "\f2ce"; }
 .la-chalkboard:before {
 	content: "\f51b"; }
+
+/* ===== Modern UI overrides ===== */
+
+/* Body base */
+body {
+	background-color: var(--bg);
+	color: var(--text);
+}
+body.darktheme {
+	background-color: var(--bg);
+}
+
+/* h2 global — ensure readable on dark */
+h2 {
+	color: var(--text-strong);
+}
+
+/* Buttons — flat dark style */
+button:not(.gowebcam):not(.mainScreenShareButton):not(.select-screen-btn):not(.randomRoomName) {
+	background: var(--surface-2);
+	border: 1px solid var(--border);
+	color: var(--text);
+	border-radius: var(--radius);
+	cursor: pointer;
+	transition: background var(--transition), border-color var(--transition);
+}
+button:not(.gowebcam):not(.mainScreenShareButton):not(.select-screen-btn):not(.randomRoomName):hover {
+	background: var(--surface-3);
+	border-color: #484f58;
+	filter: none;
+}
+
+/* Select elements */
+select {
+	background: var(--surface-2);
+	border: 1px solid var(--border);
+	color: var(--text);
+	border-radius: var(--radius);
+	padding: 4px 6px;
+	outline: none;
+}
+select:focus {
+	border-color: var(--primary);
+	box-shadow: 0 0 0 3px var(--primary-glow);
+}
+
+/* #mainmenu rows */
+#mainmenu.row {
+	background: var(--bg);
+}
+
+/* Pop-out chat and close chat buttons */
+#popOutChat,
+#closeChat {
+	background-color: var(--surface-3);
+	border: 1px solid var(--border);
+	color: var(--text-muted);
+}
+#popOutChat:hover,
+#closeChat:hover {
+	color: var(--text-strong);
+	border-color: var(--primary);
+}
+
+/* Range track modernize */
+input[type=range]::-webkit-slider-runnable-track {
+	background: var(--surface-3);
+	border: none;
+	box-shadow: none;
+}
+input[type=range]:focus::-webkit-slider-runnable-track {
+	background: var(--primary);
+}
+input[type=range]::-webkit-slider-thumb {
+	background-color: var(--primary);
+	border: none;
+	box-shadow: none;
+	border-radius: 50%;
+}
+
+/* Control bar .float buttons stay icon-sized */
+.float {
+	opacity: 0.9;
+	transition: opacity var(--transition), background-color var(--transition);
+}
+.float:hover {
+	opacity: 1;
+}
+
+/* Mini task bar icons */
+#miniTaskBar i {
+	color: var(--text-muted);
+	transition: color var(--transition);
+}
+#miniTaskBar i:hover {
+	color: var(--text-strong);
+}
+
+/* infoblob text */
+.infoblob {
+	color: var(--text);
+}
+
+/* Label text in forms */
+label {
+	color: var(--text);
+}
+th {
+	color: var(--text);
+}
+
+/* Chat body links */
+div#chatBody a {
+	color: var(--primary);
+	background-color: transparent;
+	border: 1px solid var(--border);
+	border-radius: 4px;
+}
+
+/* Resizer handle */
+.resizer::before {
+	background: linear-gradient(to right, var(--border) 20%, transparent 20%, transparent 40%, var(--border) 40%, var(--border) 60%, transparent 60%, transparent 80%, var(--border) 80%);
+}
+.resizer:hover::before {
+	background: linear-gradient(to right, #484f58 20%, transparent 20%, transparent 40%, #484f58 40%, #484f58 60%, transparent 60%, transparent 80%, #484f58 80%);
+}
+
+/* Container inner box shadows */
+.container-inner>div, .container-inner>span>div, .container-inner button:not(.gowebcam), .message-card {
+	box-shadow: none;
+}
+
+/* Section form border */
+.section {
+	color: var(--text);
+}
+
+/* alertModal links */
+#alertModal a:link,
+#alertModal a:visited,
+#alertModal a:hover {
+	color: var(--primary);
+}
+
+/* .gowebcam active state — keep green */
+.gowebcam:enabled {
+	background: linear-gradient(135deg, #26e726, #1ecf1e) !important;
+	color: #000 !important;
+	border: none;
+}
+
+/* #connectUsers panel */
+#connectUsers {
+	background-color: var(--surface);
+	border: 1px solid var(--border);
+	box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+}
+
+/* Tooltip */
+.tooltip .tooltiptext {
+	background-color: var(--surface-3);
+	color: var(--text);
+	border: 1px solid var(--border);
+	border-radius: var(--radius);
+}
