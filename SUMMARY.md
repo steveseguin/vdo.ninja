@@ -351,6 +351,7 @@
     * [\&autoadd](newly-added-parameters/and-autoadd.md)
     * [\&hiddenscenebitrate](newly-added-parameters/and-hiddenscenebitrate.md)
     * [\&preloadbitrate](newly-added-parameters/and-preloadbitrate.md)
+    * [\&nosignalpattern](advanced-settings/newly-added-parameters/and-nosignalpattern.md)
     * [\&waitimage](advanced-settings/newly-added-parameters/and-waitimage.md)
     * [\&waitmessage](advanced-settings/newly-added-parameters/and-waitmessage.md)
     * [\&waittimeout](advanced-settings/newly-added-parameters/and-waittimeout.md)

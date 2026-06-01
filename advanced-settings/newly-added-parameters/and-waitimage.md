@@ -34,6 +34,10 @@ You can encode the URL here:\
 
 ## Related
 
+{% content-ref url="and-nosignalpattern.md" %}
+[and-nosignalpattern.md](and-nosignalpattern.md)
+{% endcontent-ref %}
+
 {% content-ref url="and-waitmessage.md" %}
 [and-waitmessage.md](and-waitmessage.md)
 {% endcontent-ref %}
