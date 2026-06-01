@@ -58,6 +58,32 @@ Firewalls can also matter. VDO.Ninja normally tries to make a direct peer-to-pee
 
 If one guest is always unstable, test them from a different network before blaming the camera or VDO.Ninja settings.
 
+Related network and troubleshooting guides:
+
+{% content-ref url="../common-errors-and-known-issues/packet-loss.md" %}
+[packet-loss.md](../common-errors-and-known-issues/packet-loss.md)
+{% endcontent-ref %}
+
+{% content-ref url="../common-errors-and-known-issues/video-freezes-mid-stream.md" %}
+[video-freezes-mid-stream.md](../common-errors-and-known-issues/video-freezes-mid-stream.md)
+{% endcontent-ref %}
+
+{% content-ref url="../common-errors-and-known-issues/relay-candidate-being-selected.md" %}
+[relay-candidate-being-selected.md](../common-errors-and-known-issues/relay-candidate-being-selected.md)
+{% endcontent-ref %}
+
+{% content-ref url="../common-errors-and-known-issues/enterprise-firewall-checklist.md" %}
+[enterprise-firewall-checklist.md](../common-errors-and-known-issues/enterprise-firewall-checklist.md)
+{% endcontent-ref %}
+
+{% content-ref url="handling-guest-disconnects-and-connection-recovery.md" %}
+[handling-guest-disconnects-and-connection-recovery.md](handling-guest-disconnects-and-connection-recovery.md)
+{% endcontent-ref %}
+
+{% content-ref url="mesh-network-debug.md" %}
+[mesh-network-debug.md](mesh-network-debug.md)
+{% endcontent-ref %}
+
 ## Part 2: Buffer
 
 A buffer is a small waiting area for video and audio.
@@ -139,9 +165,27 @@ Related setting:
 [and-chunked.md](../newly-added-parameters/and-chunked.md)
 {% endcontent-ref %}
 
+{% content-ref url="../advanced-settings/newly-added-parameters/and-chunkedbuffer.md" %}
+[and-chunkedbuffer.md](../advanced-settings/newly-added-parameters/and-chunkedbuffer.md)
+{% endcontent-ref %}
+
+{% content-ref url="../advanced-settings/settings-parameters/and-nochunked.md" %}
+[and-nochunked.md](../advanced-settings/settings-parameters/and-nochunked.md)
+{% endcontent-ref %}
+
 ## Part 3: Recording method
 
 There are several ways to record with VDO.Ninja. They are not all equal.
+
+For a broader overview of recording choices and file formats, see:
+
+{% content-ref url="options-to-record-streams.md" %}
+[options-to-record-streams.md](options-to-record-streams.md)
+{% endcontent-ref %}
+
+{% content-ref url="recording-format-options-and-settings.md" %}
+[recording-format-options-and-settings.md](recording-format-options-and-settings.md)
+{% endcontent-ref %}
 
 ### OBS recording
 
