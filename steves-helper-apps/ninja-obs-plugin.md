@@ -16,9 +16,10 @@ The Ninja OBS Plugin is an OBS Studio plugin for publishing directly from OBS to
 * multi-viewer support
 * peer-to-peer publishing model
 * open-source plugin
-* Windows, macOS, and Linux support
+* support for OBS v32 systems, including Windows, macOS, and Linux
 * can auto-add room participants into OBS as browser sources
 
 ## Notes
 
 * positioned as a simpler publishing workflow than relying on a separate browser publisher
+* useful for non-Windows users who want an OBS-native publishing workflow, since the standalone Game Capture app is currently Windows-only

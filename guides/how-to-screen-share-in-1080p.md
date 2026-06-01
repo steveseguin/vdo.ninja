@@ -84,6 +84,16 @@ It's free and uses VDO.Ninja, while adding a nifty management dashboard for moni
 [versus.cam.md](../steves-helper-apps/versus.cam.md)
 {% endcontent-ref %}
 
+### Game Capture app
+
+For Windows game feeds, the [Game Capture app](../steves-helper-apps/game-capture.md) is often easier than browser screen sharing or asking every player to run OBS. It publishes a selected game or app window directly into VDO.Ninja, supports window-specific audio capture without virtual audio cables, and uses hardware-accelerated encoding for gameplay-oriented workflows.
+
+This is a good option when each player needs to send a separate perspective to one OBS or Twitch host. The host can still add each player as an isolated VDO.Ninja view, solo, or scene source in OBS.
+
+{% content-ref url="../steves-helper-apps/game-capture.md" %}
+[game-capture.md](../steves-helper-apps/game-capture.md)
+{% endcontent-ref %}
+
 ## Still not getting 60-fps?
 
 Using _Entire Screen_ or _Chrome Tab_ capture, instead of _Window_ capture, can increase the frame rate when screen sharing via the Chrome browser:

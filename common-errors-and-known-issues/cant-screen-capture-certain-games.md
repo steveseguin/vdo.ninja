@@ -6,6 +6,7 @@ description: Some games may need settings tweaked to be captured properly with t
 
 If you're struggling to capture a game with VDO.Ninja using the browser, a list of options are below.
 
+* On Windows, try the [Game Capture app](../steves-helper-apps/game-capture.md). It captures a selected game or app window and publishes it directly to VDO.Ninja, with window-specific audio capture and hardware-accelerated encoding.
 * Disable Fullscreen Optimizations: Right-click the game's .exe file, go to Properties > Compatibility, and check "Disable fullscreen optimizations"
   * Sometimes you want to even uncheck "Disable fullscreen optimizations", so try both ways
   * Restart the game after applying changes.<br>
@@ -22,4 +23,3 @@ If you're struggling to capture a game with VDO.Ninja using the browser, a list 
 * Update your graphics card drivers<br>
 * If using a browser such as Opera GX, it may throttle or disable VDO.Ninja when gaming.
   * The Electron Capture application, or a different browser, are better choices
-

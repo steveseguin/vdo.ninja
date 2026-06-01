@@ -56,6 +56,8 @@ The director can also join the room if needed. Toggle the 'Director will also be
 
 The director will be provided isolated direct links to each of those video streams in the group room, allowing for fine-grain mixing control in OBS.
 
+For multiplayer game streams, each player can publish their own gameplay feed with the [Game Capture app](../../steves-helper-apps/game-capture.md) instead of browser screen sharing. The director can then add each player to OBS as an isolated view, solo link, or scene source.
+
 Using OBS VirtualCam (or the Mac equivalent), you can even let your guests view the OBS live stream with sub-100ms of latency. In this case, each guest only needs to view one video stream, the main mixed OBS stream, freeing up group resources to allow for even larger group rooms.
 
 A director can also address a specific guest via full screen text messages, or via dedicated talkback audio.
