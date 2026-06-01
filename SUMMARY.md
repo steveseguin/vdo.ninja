@@ -61,6 +61,7 @@
   * [Audio Filters & Bitrate](guides/audio-filters.md)
   * [Audio-Reactive Avatars](guides/audio-reactive-avatars.md)
   * [Options to record streams](guides/options-to-record-streams.md)
+  * [Recording video with consistent results](guides/recording-video-with-consistent-results.md)
   * [Cloud Sync (Google Drive + Dropbox)](guides/cloud-sync-google-drive-and-dropbox.md)
   * [Recording Format Options and Settings](guides/recording-format-options-and-settings.md)
   * [External guides and how-tos](guides/guides-and-how-tos.md)
