@@ -78,6 +78,25 @@ Notes:
 * Supports chunk-level recovery options such as parity FEC and NACK-based retransmits
 * Can be relayed without transcoding in supported workflows
 
+### Recording with chunked mode
+
+Chunked mode can be useful when the recording path can tolerate more delay than the live conversation path.
+
+For example, you might use:
+
+* a chunked, buffered view for OBS recording
+* a separate normal WebRTC view for lower-latency monitoring or guest conversation
+
+Viewers decide whether to use the chunked path. If a viewer should ignore the chunked version and connect with the normal lower-latency WebRTC path, add:
+
+```text
+&nochunked
+```
+
+This can let one production source prioritize steadier recording while another source keeps delay lower.
+
+Chunked recordings can also be written directly to disk from the encoded chunks without re-encoding the video. This can reduce CPU load and avoid an extra encode generation, but the workflow should still be tested before a real session.
+
 ### Tradeoffs
 
 * This path is more experimental than standard WebRTC RTP video
@@ -103,4 +122,8 @@ Notes:
 
 {% content-ref url="../advanced-settings/settings-parameters/and-retransmit.md" %}
 [and-retransmit.md](../advanced-settings/settings-parameters/and-retransmit.md)
+{% endcontent-ref %}
+
+{% content-ref url="../guides/recording-video-with-consistent-results.md" %}
+[recording-video-with-consistent-results.md](../guides/recording-video-with-consistent-results.md)
 {% endcontent-ref %}

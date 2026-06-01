@@ -197,6 +197,37 @@ The downside is that OBS records what it receives. If the guest's Wi-Fi has a ba
 
 Use OBS recording as your main live record, but keep a backup.
 
+### Other publishing paths to test
+
+If a normal browser publisher is not steady enough, there are other ways to get video into VDO.Ninja or into your production.
+
+These options are not required for most people, but they can be useful for more demanding recording work:
+
+* **OBS WHIP output:** OBS can publish using WHIP into VDO.Ninja or another WHIP-compatible service. This can be a good test when you want OBS to handle capture and encoding instead of a browser tab.
+* **Game Capture:** a standalone Windows app for publishing game, window, or screen-style captures into VDO.Ninja. It can be useful when a browser's capture path is too dynamic for the job. [https://github.com/steveseguin/Game-capture](https://github.com/steveseguin/Game-capture)
+* **Ninja OBS Plugin:** an OBS plugin for VDO.Ninja publishing and receiving workflows, without needing to manage everything through separate browser tabs. [https://steveseguin.github.io/ninja-obs-plugin/](https://steveseguin.github.io/ninja-obs-plugin/)
+* **Meshcast:** a server-based companion service for VDO.Ninja. It can help when pure peer-to-peer publishing is not the right fit, or when you want RTMP, SRT, WHIP, or VDO.Ninja/WebRTC options in the same workflow. [https://app.meshcast.io](https://app.meshcast.io)
+
+These can be more predictable in some setups because the capture and encoding path is less like a changing browser call and more like a steady video feed. Test them before using them for a real recording.
+
+Related tools:
+
+{% content-ref url="../steves-helper-apps/whip-and-whep-tooling.md" %}
+[whip-and-whep-tooling.md](../steves-helper-apps/whip-and-whep-tooling.md)
+{% endcontent-ref %}
+
+{% content-ref url="../steves-helper-apps/game-capture.md" %}
+[game-capture.md](../steves-helper-apps/game-capture.md)
+{% endcontent-ref %}
+
+{% content-ref url="../steves-helper-apps/ninja-obs-plugin.md" %}
+[ninja-obs-plugin.md](../steves-helper-apps/ninja-obs-plugin.md)
+{% endcontent-ref %}
+
+{% content-ref url="../steves-helper-apps/meshcast.io.md" %}
+[meshcast.io.md](../steves-helper-apps/meshcast.io.md)
+{% endcontent-ref %}
+
 ### Guest local recording
 
 This is often the best safety copy.
@@ -337,6 +368,14 @@ For worse Wi-Fi, test:
 ```
 
 Do not use this for the first time during a paid session.
+
+You can also use chunked mode for the recording path while keeping a smaller, lower-latency WebRTC path for monitoring or conversation. A viewer can opt out of chunked playback with:
+
+```text
+&nochunked
+```
+
+For example, the OBS recording source might use chunked mode and a larger buffer, while a separate confidence-monitor or guest-view link uses normal WebRTC with less delay. Chunked recordings can also be saved directly to disk without re-encoding the encoded video, which can reduce extra CPU work and avoid another generation of quality loss.
 
 ## A plain-English checklist before recording
 
