@@ -16,9 +16,9 @@ If you record a guest after their video has already crossed a weak Wi-Fi connect
 
 For important recordings, do not depend on only one copy. Use a live recording and at least one backup.
 
-## The simple recommendation
+## A simple approach
 
-For most serious productions, a good starting setup is:
+For many serious productions, a practical approach to test is:
 
 1. Record the live show in OBS or your production software.
 2. Add a little buffer to the OBS VDO.Ninja source.
@@ -184,7 +184,7 @@ Important notes:
 * Guest local recording uses more CPU and disk space on the guest's computer.
 * It should be tested before an important session.
 * The guest should not close the tab until the recording is saved.
-* Chrome or Edge is recommended.
+* Chrome or Edge usually gives the most predictable browser recording support.
 * Mobile browsers and Safari can be less predictable for serious recording work.
 
 Related settings:
@@ -230,7 +230,7 @@ If the connection has a freeze, that freeze may be in the recording.
 
 This is convenient, but for the cleanest backup, guest-side local recording is usually better.
 
-## Recommended setups
+## Example setups to test
 
 ### Simple interview
 
@@ -239,7 +239,7 @@ Use this when you want a steady live recording and a basic backup.
 Guest link:
 
 ```text
-https://vdo.ninja/?room=ROOMNAME&push=GUESTID&ovb=2200&maxfps=24&contenthint=detail&record=6000&splitrecording=5
+https://vdo.ninja/?room=ROOMNAME&push=GUESTID&ovb=2200&maxfps=30&contenthint=detail&record=6000&splitrecording=5
 ```
 
 OBS/view link:
@@ -261,7 +261,7 @@ Use this when the final show is recorded live, but you also want cleaner guest f
 Guest link:
 
 ```text
-https://vdo.ninja/?room=ROOMNAME&push=GUESTID&ovb=2200&maxfps=24&contenthint=detail&autorecordlocal=6000&splitrecording=5
+https://vdo.ninja/?room=ROOMNAME&push=GUESTID&ovb=2200&maxfps=30&contenthint=detail&autorecordlocal=6000&splitrecording=5
 ```
 
 OBS/view link:
@@ -277,7 +277,7 @@ Use this only after testing. It adds delay, but may give a steadier OBS feed.
 Guest link:
 
 ```text
-https://vdo.ninja/?room=ROOMNAME&push=GUESTID&maxfps=24&contenthint=detail&chunked=2500&chunkprofile=balanced&autorecordlocal=6000&splitrecording=5
+https://vdo.ninja/?room=ROOMNAME&push=GUESTID&maxfps=30&contenthint=detail&chunked=2500&chunkprofile=balanced&autorecordlocal=6000&splitrecording=5
 ```
 
 OBS/view link:
@@ -326,21 +326,19 @@ Higher numbers are not always better.
 
 If the guest's connection is weak, asking for more quality can make the recording worse, not better.
 
-For many interviews and podcasts:
+VDO.Ninja may use a higher camera frame rate by default, often around 60 fps if the camera and browser allow it. If you want to cap the frame rate to reduce load, 30 fps is usually a safer first test, because some cameras do not support every frame rate cleanly.
 
 ```text
-&ovb=2200&maxfps=24
+&ovb=2200&maxfps=30
 ```
 
-is a reasonable starting point.
-
-For unstable Wi-Fi:
+For unstable Wi-Fi, lower the bitrate first:
 
 ```text
-&ovb=1800&maxfps=20
+&ovb=1800&maxfps=30
 ```
 
-may look less sharp, but it can be steadier.
+It may look less sharp, but it can be steadier. You can also leave the frame rate alone if the camera is already stable.
 
 For strong wired connections, you can test higher values, but always test before the real recording.
 
