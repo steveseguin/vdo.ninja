@@ -60,7 +60,7 @@ The practical benefit of using \&chunked mode with \&buffer is that you can have
 
 As well, the buffering works to buffer the stream, in a way similar to HLS or RTMP buffering.\
 \
-The default buffer is around 1-second actually when using \&chunked mode, as it requires a buffer to avoid playback issues. If the buffer underruns, the stream may fail.
+The default chunked viewer buffer depends on how chunked mode is being used. Plain `&chunked` starts around 3000-ms if no profile or buffer override is used, while `&chunkprofile` presets use lower starting targets. For clearer control with chunked mode, use `&chunkbuffer`, `&chunkbufferfloor`, and `&chunkbufferceil`.
 
 Please refer to \&chunked mode for more details, but it could be an option for you if your goal is to improve the quality of streams when facing high-packet loss. It's only compatible with Chromium-based browsers; not Firefox or Safari as of yet.
 

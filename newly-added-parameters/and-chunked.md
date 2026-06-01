@@ -22,9 +22,9 @@ Example: `&chunked=2500`
 
 | Parameter | Values | Description |
 | --- | --- | --- |
-| `&chunkprofile` | `mobile` \| `balanced` \| `desktop` | Applies a preset for bitrate, buffer, and recovery defaults. |
+| `&chunkprofile` | `mobile` \| `balanced` \| `desktop` | Applies a preset for buffer and recovery defaults. These profiles use lower starting viewer buffers than the plain chunked default. |
 | `&chunkedbuffer` / `&sendingbuffer` | ms | Sender-side chunk backlog target. Default is about `5000`. |
-| `&chunkbuffer` | ms | Viewer-side chunk playout target. |
+| `&chunkbuffer` | ms | Viewer-side chunk playout target. Plain chunked mode defaults to about `3000` ms if no profile or buffer override is used. |
 | `&chunkbufferfloor` / `&chunkbufferceil` | ms | Adaptive playout floor and ceiling for chunked viewers. |
 | `&chunkbufferadaptive` | `0` / `1` | Enables or disables automatic chunked playout target adjustments on the viewer. |
 | `&fixedchunkbuffer` | flag | Shortcut that disables adaptive chunked playout target adjustments. |
@@ -50,6 +50,56 @@ This mode is useful when you want tighter control over bitrate, buffering, recor
 * Viewer playout behavior is controlled with `&chunkbuffer`, `&chunkbufferfloor`, `&chunkbufferceil`, `&chunkbufferadaptive`, and `&chunkjitterslack`.
 * Chunked mode can be used with [`&retransmit`](../advanced-settings/settings-parameters/and-retransmit.md) for chunked relay workflows.
 * `&nochunked` disables the chunked path, and `&nochunkaudio` disables the chunked audio portion when applicable.
+
+### Default buffer delay and changing it
+
+Chunked mode uses its own viewer-side buffer. If you enable `&chunked` without a chunk profile or buffer override, the viewer target starts at about:
+
+```text
+3000 ms
+```
+
+You can change that viewer delay with:
+
+```text
+&chunkbuffer=1000
+```
+
+Lower values reduce delay, but give the connection less time to recover from jitter or packet loss. Higher values add delay, but can make recording and playback steadier.
+
+Examples:
+
+```text
+&chunkbuffer=750
+&chunkbuffer=1500
+&chunkbuffer=3000
+```
+
+The `&chunkprofile` presets also change the starting buffer target:
+
+* `&chunkprofile=mobile` starts around `900 ms`
+* `&chunkprofile=balanced` starts around `750 ms`
+* `&chunkprofile=desktop` starts around `620 ms`
+
+Those profile values are lower latency starting points, not guarantees. The viewer can still adapt within the configured floor and ceiling unless adaptive buffering is disabled.
+
+For more control, use:
+
+```text
+&chunkbuffer=1000&chunkbufferfloor=700&chunkbufferceil=2000
+```
+
+To keep the target from automatically adjusting, use:
+
+```text
+&fixedchunkbuffer
+```
+
+or:
+
+```text
+&chunkbufferadaptive=0
+```
 
 ### External music-sync workflows
 

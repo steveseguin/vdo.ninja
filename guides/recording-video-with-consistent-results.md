@@ -216,6 +216,14 @@ Related tools:
 [whip-and-whep-tooling.md](../steves-helper-apps/whip-and-whep-tooling.md)
 {% endcontent-ref %}
 
+{% content-ref url="using-game-capture-with-vdo.ninja.md" %}
+[using-game-capture-with-vdo.ninja.md](using-game-capture-with-vdo.ninja.md)
+{% endcontent-ref %}
+
+{% content-ref url="using-ninja-obs-plugin-with-vdo.ninja.md" %}
+[using-ninja-obs-plugin-with-vdo.ninja.md](using-ninja-obs-plugin-with-vdo.ninja.md)
+{% endcontent-ref %}
+
 {% content-ref url="../steves-helper-apps/game-capture.md" %}
 [game-capture.md](../steves-helper-apps/game-capture.md)
 {% endcontent-ref %}
