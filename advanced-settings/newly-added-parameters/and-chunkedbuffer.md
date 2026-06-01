@@ -14,7 +14,9 @@ This is not the same as the viewer playout buffer. Use `&chunkbuffer`, `&chunkbu
 
 ## Usage
 
-* `&chunkedbuffer=5000` keeps about 5 seconds of chunk backlog on the sender side. This is the current default target.
+* If not set, the current base sender backlog target is about 500 ms.
+* `&chunkedbuffer` or `&sendingbuffer` without a value falls back to about 5000 ms.
+* `&chunkedbuffer=5000` keeps about 5 seconds of chunk backlog on the sender side.
 * `&chunkedbuffer=2000` reduces latency and sender memory usage, but leaves less room for retries.
 * `&chunkedbuffer=10000` gives more retry headroom on unstable links, but increases backlog and end-to-end delay.
 * `&sendingbuffer=3000` is an alias for the same setting.
@@ -44,7 +46,7 @@ https://vdo.ninja/?room=roomname&chunked=2500&chunkedbuffer=7000
 
 * Requires [`&chunked`](../../newly-added-parameters/and-chunked.md)
 * Applies on the publishing side
-* Higher values use more memory and increase overall delay
+* Higher values use more memory and can increase overall delay
 * Viewer-side latency is still controlled separately
 
 ## Related Parameters

@@ -22,7 +22,7 @@ Example: `&record=1000`
 
 Usually up to the browser.
 
-Default bitrate will record at around 4000 kbps, but it will still prompt still for value if not set.
+Default bitrate will record at around 6000 kbps, but it will still prompt for a value in some recording flows if not set.
 
 The Director of a room will be notified if a user is recording and they can start/stop the recording.\
 The Director of a room can trigger the record function remotely, even if the \&record parameter has not been added.

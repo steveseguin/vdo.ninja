@@ -23,7 +23,7 @@ Example: `&chunked=2500`
 | Parameter | Values | Description |
 | --- | --- | --- |
 | `&chunkprofile` | `mobile` \| `balanced` \| `desktop` | Applies a preset for buffer and recovery defaults. These profiles use lower starting viewer buffers than the plain chunked default. |
-| `&chunkedbuffer` / `&sendingbuffer` | ms | Sender-side chunk backlog target. Default is about `5000`. |
+| `&chunkedbuffer` / `&sendingbuffer` | ms | Sender-side chunk backlog target. If not set, the current base target is about `500` ms. If the flag is present without a value, it falls back to `5000` ms. |
 | `&chunkbuffer` | ms | Viewer-side chunk playout target. Plain chunked mode defaults to about `3000` ms if no profile or buffer override is used. |
 | `&chunkbufferfloor` / `&chunkbufferceil` | ms | Adaptive playout floor and ceiling for chunked viewers. |
 | `&chunkbufferadaptive` | `0` / `1` | Enables or disables automatic chunked playout target adjustments on the viewer. |
@@ -47,7 +47,7 @@ This mode is useful when you want tighter control over bitrate, buffering, recor
 
 * `&chunked` is a sender flag. If present without a valid number, VDO.Ninja still enables chunked mode and uses the default chunked bitrate target.
 * Sender-side backlog is controlled with [`&chunkedbuffer`](../advanced-settings/newly-added-parameters/and-chunkedbuffer.md), not with viewer [`&buffer`](../advanced-settings/view-parameters/buffer.md).
-* Viewer playout behavior is controlled with `&chunkbuffer`, `&chunkbufferfloor`, `&chunkbufferceil`, `&chunkbufferadaptive`, and `&chunkjitterslack`.
+* Viewer playout behavior is controlled with `&chunkbuffer`, `&chunkbufferfloor`, `&chunkbufferceil`, `&chunkbufferadaptive`, and `&chunkjitterslack`. The older viewer `&buffer` value can also override the chunked viewer target, but `&chunkbuffer` is clearer for chunked-specific tuning.
 * Chunked mode can be used with [`&retransmit`](../advanced-settings/settings-parameters/and-retransmit.md) for chunked relay workflows.
 * `&nochunked` disables the chunked path, and `&nochunkaudio` disables the chunked audio portion when applicable.
 

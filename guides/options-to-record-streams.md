@@ -20,7 +20,7 @@ Another issue is the format saved is WebM, which sometimes will need post-proces
 
 That said, this is an easy option and available for free within VDO.Ninja.
 
-Given thesmall chance the browser will fail with recording, you can use features like `&splitrecording` to automatically segment the video as its being recorded, saving perhaps 5-minute portions of the video at a time. You will need to concatenate the video chunks together however afterwards, but helps reduce the likelihood of the entire recording being lost due to a system crash.
+Given the small chance the browser will fail with recording, you can use features like `&splitrecording` to automatically segment the video as its being recorded, saving perhaps 5-minute portions of the video at a time. You will need to concatenate the video chunks together however afterwards, but helps reduce the likelihood of the entire recording being lost due to a system crash.
 
 ### Using OBS to record; or multiple OBS
 
@@ -47,7 +47,9 @@ If interested in Vingester, as it has NDI output options, consider downloading i
 
 ### Chunked mode
 
-If using the [`&chunked`](../newly-added-parameters/and-chunked.md) mode of [VDO.Ninja](https://vdo.ninja/), a video stream is encoded once, and that is sent to all viewers and even the local/remote recordings. This is experimental and still pretty high CPU, due to the high quality of the stream being shared, but it might be lower CPU than trying to do two high quality encodings.
+If using the [`&chunked`](../newly-added-parameters/and-chunked.md) mode of [VDO.Ninja](https://vdo.ninja/), a video stream is encoded once, and that encoded stream can be sent to viewers and saved to disk without re-encoding the recording. This is experimental and can still be high CPU when publishing high-quality video, but it can avoid the extra CPU cost and quality loss of recording a second encoded copy.
+
+Chunked mode also lets you split the workflow: use a buffered chunked view for recording, while using a separate normal WebRTC view with `&nochunked` for lower-latency monitoring or conversation.
 
 There is no server-side support for chunked mode at the moment, but I will continue to improve it and work on it as requests come in.
 

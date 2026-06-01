@@ -34,7 +34,7 @@ When you start a recording (via right-click or director UI), a dialog appears wi
 
 | Parameter | Purpose | Default |
 | --- | --- | --- |
-| [`&record`](../advanced-settings/recording-parameters/and-record.md) | Enable recording / set bitrate | 4000 kbps |
+| [`&record`](../advanced-settings/recording-parameters/and-record.md) | Enable recording / set bitrate | 6000 kbps |
 | [`&autorecord`](../advanced-settings/recording-parameters/and-autorecord.md) | Auto-record local + remote on load | — |
 | [`&autorecordlocal`](../advanced-settings/recording-parameters/and-autorecordlocal.md) | Auto-record local video only | — |
 | [`&autorecordremote`](../advanced-settings/recording-parameters/and-autorecordremote.md) | Auto-record remote video(s) only | — |
@@ -43,7 +43,7 @@ When you start a recording (via right-click or director UI), a dialog appears wi
 | `&splitrecording` | Split recording into segments | 5 min |
 | [`&recordmotion`](../advanced-settings/recording-parameters/and-recordmotion.md) | Snapshot on motion detection | sensitivity 15 |
 | `&recordwindow` (`&rw`) | Record entire browser tab/scene | 6000 kbps |
-| [`&chunked`](../newly-added-parameters/and-chunked.md) | Low-CPU chunked-transfer recording | ~2000 kbps |
+| [`&chunked`](../newly-added-parameters/and-chunked.md) | Chunked/WebCodecs publishing and direct-to-disk recording path | 2500 kbps |
 | `&recordfolder` | Google Drive folder name for uploads | — |
 | `&studioiso` | Enable/disable podcast studio isolated recording | on |
 | `&framegrab` | Frame capture source URL | — |
@@ -56,7 +56,7 @@ Add `&record` to a guest/sender link to give them a record button, or use it wit
 
 | Value | Behaviour |
 | --- | --- |
-| _(no value)_ | Video + audio at 4000 kbps |
+| _(no value)_ | Video + audio at 6000 kbps |
 | Positive integer (e.g. `6000`) | Video + audio at that kbps |
 | `0` | Audio-only, 32-bit PCM lossless |
 | Negative integer (e.g. `-120`) | Audio-only, Opus at that kbps |
@@ -231,7 +231,7 @@ ffmpeg -i "concat:recording.webm|recording.webm_1|recording.webm_2" -c copy outp
 
 On mobile or laptop, VDO.Ninja will also auto-save the current segment at 2% battery.
 
-> **Note:** On Safari and iOS, split recording is applied by default (5-minute segments) even without this parameter, due to Safari's memory management limitations with long recordings. Other browsers default to 10-minute segments when `&splitrecording` is used without a value.
+> **Note:** If `&splitrecording` is used without a value, the split interval is 5 minutes. If `&splitrecording` is not used, Safari recording flows may still auto-enable split recording to reduce memory issues: 5-minute segments on iOS/iPad and 10-minute segments on desktop Safari.
 
 ***
 
@@ -243,7 +243,7 @@ On mobile or laptop, VDO.Ninja will also auto-save the current segment at 2% bat
 
 ## Chunked Mode (`&chunked`)
 
-An alternative recording approach that writes encoded data directly without browser re-encoding — significantly lower CPU usage.
+An alternative publishing and recording approach that can write encoded video directly without re-encoding during recording. This can reduce extra recording CPU compared with recording a second encoded copy, but chunked publishing itself is still experimental and should be tested first.
 
 | Sub-parameter | Purpose |
 | --- | --- |
@@ -252,7 +252,7 @@ An alternative recording approach that writes encoded data directly without brow
 | `&chunkadapt` | Adaptation strategy: `bitrate`, `framerate`, `hybrid` |
 | `&chunkfec` | Forward error correction parity rate |
 
-**Limitations:** Chromium browsers only, audio sync is not always guaranteed, no Meshcast support.
+**Limitations:** primarily Chromium browsers, explicit buffering/delay, and no Meshcast-style server redistribution for the chunked path.
 
 See the full [`&chunked` documentation](../newly-added-parameters/and-chunked.md) for details.
 
@@ -372,7 +372,7 @@ ffmpeg -i recording.webm -c:a copy output.wav
 * **To change the recording codec**, add `&recordcodec=vp8` (or `h264`, `vp9`, `av1`) to the URL before joining. There is no way to change it from the recording dialog.
 * **For podcasts/interviews**, use `&pcm` for lossless audio and a high video bitrate (e.g. `&record=6000`).
 * **For safety**, add `&splitrecording` to protect against browser crashes.
-* **For low CPU**, consider `&chunked` mode (Chromium only).
+* **For direct-to-disk recording without another video encode**, consider `&chunked` mode (Chromium-focused, experimental).
 * **Mixed browser rooms** will produce mixed formats — Chrome guests will save WebM files, Safari guests will save MP4. This is normal.
 * **Safari < 18.4** only supports MP4/H.264/AAC. If your guests are on older Safari or iOS, the recording format cannot be changed.
 * **Check your codecs** at [https://vdo.ninja/codecs](https://vdo.ninja/codecs) to see what your browser supports.

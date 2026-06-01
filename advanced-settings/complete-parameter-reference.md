@@ -100,8 +100,8 @@ If you are self-hosting VDO.Ninja, often these URL parameters can be hard-coded 
 | `chatlitebutton`     | `ssnchatbutton`                                 | Boolean               | Shows Chat Lite control button  |
 | `chatlitesession`    | `ssnsession`                                    | String                | Sets Chat Lite session ID       |
 | `chroma`             | -                                               | Color code            | Sets chroma key color           |
-| `chunked`            | `chunk`                                         | Integer               | Sets chunked transfer size      |
-| `chunkedbuffer`      | `sendingbuffer`                                 | Integer               | Sets chunk buffer size          |
+| `chunked`            | `chunk`                                         | Integer               | Enables chunked/WebCodecs publishing; value sets target video bitrate |
+| `chunkedbuffer`      | `sendingbuffer`                                 | Integer               | Sets sender-side chunk backlog target |
 | `chunkbuffer`        | -                                               | Integer               | Sets chunked viewer playout target |
 | `chunkbufferfloor`   | -                                               | Integer               | Sets chunked viewer playout floor |
 | `chunkbufferceil`    | -                                               | Integer               | Sets chunked viewer playout ceiling |
