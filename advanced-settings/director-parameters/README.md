@@ -13,6 +13,7 @@ Parameters specified for the director's control panel; have to be used together 
 | [`&director`](../../viewers-settings/director.md) | Enters a room as the director, instead of a guest and have full control |
 | [`&codirector`](../../director-settings/codirector.md) | Allows assistant directors to have access to the director's room, with a subset of control |
 | [`&blindall`](../../newly-added-parameters/and-blindall.md) | It allows the director 'blinding' all the guests at a time with a new button |
+| [`&highlightmute`](and-highlightmute.md) | Mutes non-highlighted guests and unmutes the highlighted guest when Highlight changes |
 | [`&muteall`](and-muteall.md) | Adds a URL-gated director button for muting or unmuting all guests at once |
 | [`&cleandirector`](../../director-settings/cleandirector.md) | Hides the invite URL options in the Director's room |
 | [`&hidesolo`](../../newly-added-parameters/and-hidesolo.md) | Lets you hide the solo links from showing |

@@ -494,6 +494,7 @@
     * [\&director](viewers-settings/director.md)
     * [\&codirector](director-settings/codirector.md)
     * [\&blindall](newly-added-parameters/and-blindall.md)
+    * [\&highlightmute](advanced-settings/director-parameters/and-highlightmute.md)
     * [\&muteall](advanced-settings/director-parameters/and-muteall.md)
     * [\&cleandirector](director-settings/cleandirector.md)
     * [\&hidesolo](newly-added-parameters/and-hidesolo.md)

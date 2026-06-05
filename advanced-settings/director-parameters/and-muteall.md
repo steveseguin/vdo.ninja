@@ -29,7 +29,7 @@ The global mute state is live browser state. It is not a room-level saved settin
 
 Manual per-guest changes are still allowed. If a director manually unmutes one guest while the global mute-all button remains active, that guest stays unmuted until another global mute-all action or another audio-follow action changes them. New guests will still be muted while the global mute-all state is active.
 
-If `&highlightmute` / **Mute follows Highlight** is also active, Highlight can still unmute the highlighted guest. In that combination, `&muteall` is not an absolute lockout.
+If [`&highlightmute`](and-highlightmute.md) / **Mute follows Highlight** is also active, Highlight can still unmute the highlighted guest. In that combination, `&muteall` is not an absolute lockout.
 
 The button targets normal guest audio controls only. It skips directors, screen-share entries, pseudo-guests, and guests that do not yet have a director mute control available.
 

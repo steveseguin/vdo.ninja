@@ -226,6 +226,7 @@ If you are self-hosting VDO.Ninja, often these URL parameters can be hard-coded 
 | `hidecodirector`  | `hidedirector`      | Boolean    | Hides director controls   |
 | `hidecursor`      | See `nocursor`      | -          | -                         |
 | `hideheader`      | `noheader`, `hh`    | Boolean    | Hides header              |
+| `highlightmute`   | `hmute`, `mutefollowhighlight`, `mfh` | Boolean | Mutes non-highlighted guests when Highlight changes |
 | `hidemouse`       | See `nocursor`      | -          | -                         |
 | `hidesolo`        | `hs`                | Boolean    | -                         |
 | `hidescreenshare` | `hidess`, `sshide`  | Boolean    | Hides screen share option |
@@ -322,6 +323,7 @@ If you are self-hosting VDO.Ninja, often these URL parameters can be hard-coded 
 | `midihotkeys`          | -                    | Boolean/Integer      | -                           |
 | `midiiframe`           | -                    | Boolean              | -                           |
 | `midioffset`           | -                    | Integer              | -                           |
+| `mfh`                  | See `highlightmute`  | -                    | -                           |
 | `minipreview`          | `mini`               | Boolean/Integer      | Shows mini preview          |
 | `minipreviewoffset`    | `mpo`                | Integer (-20 to 120) | -                           |
 | `minroombitrate`       | `mrb`                | Integer              | -                           |
@@ -330,6 +332,7 @@ If you are self-hosting VDO.Ninja, often these URL parameters can be hard-coded 
 | `morescenes`           | -                    | Integer              | -                           |
 | `motionswitch`         | `motiondetection`    | Integer              | -                           |
 | `muteall`              | `muteallguests`, `muteguests` | Boolean      | Shows director mute-all guests button |
+| `mutefollowhighlight`  | See `highlightmute`  | -                    | -                           |
 | `mp`                   | See `maxpublishers`  | -                    | -                           |
 | `mrb`                  | See `minroombitrate` | -                    | -                           |
 | `mv`                   | See `maxviewers`     | -                    | -                           |
