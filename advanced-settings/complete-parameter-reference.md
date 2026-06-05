@@ -329,6 +329,7 @@ If you are self-hosting VDO.Ninja, often these URL parameters can be hard-coded 
 | `mono`                 | -                    | Boolean              | Forces mono audio           |
 | `morescenes`           | -                    | Integer              | -                           |
 | `motionswitch`         | `motiondetection`    | Integer              | -                           |
+| `muteall`              | `muteallguests`, `muteguests` | Boolean      | Shows director mute-all guests button |
 | `mp`                   | See `maxpublishers`  | -                    | -                           |
 | `mrb`                  | See `minroombitrate` | -                    | -                           |
 | `mv`                   | See `maxviewers`     | -                    | -                           |
