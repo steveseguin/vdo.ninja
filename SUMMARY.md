@@ -32,6 +32,7 @@
   * [Mixer App](steves-helper-apps/mixer-app.md)
   * [Screen Recorder](steves-helper-apps/screen-recorder.md)
   * [WHIP and WHEP tooling](steves-helper-apps/whip-and-whep-tooling.md)
+  * [Icecast and AzuraCast audio publishing](steves-helper-apps/icecast-and-azuracast.md)
   * [Versus.cam](steves-helper-apps/versus.cam.md)
   * [Speed and Quality Tests](steves-helper-apps/speed-and-quality-tests.md)
   * [Comms](steves-helper-apps/comms.md)

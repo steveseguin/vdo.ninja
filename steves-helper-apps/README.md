@@ -20,6 +20,7 @@ This section covers the VDO.Ninja ecosystem beyond the main web app, including h
 * [mixer-app.md](mixer-app.md "mention") ([https://vdo.ninja/alpha/mixer](https://vdo.ninja/alpha/mixer))
 * [screen-recorder.md](screen-recorder.md "mention") ([https://vdo.ninja/screenrecorder/](https://vdo.ninja/screenrecorder/))
 * [whip-and-whep-tooling.md](whip-and-whep-tooling.md "mention") ([https://vdo.ninja/whip](https://vdo.ninja/whip))
+* [icecast-and-azuracast.md](icecast-and-azuracast.md "mention") ([https://vdo.ninja/icecast](https://vdo.ninja/icecast))
 * [versus.cam.md](versus.cam.md "mention") ([https://versus.cam/](https://versus.cam/))
 * [speed-and-quality-tests.md](speed-and-quality-tests.md "mention") ([https://vdo.ninja/check](https://vdo.ninja/alpha/check))
 * [comms.md](comms.md "mention") ([https://comms.cam/](https://comms.cam/))

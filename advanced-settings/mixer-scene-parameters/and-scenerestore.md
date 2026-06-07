@@ -24,6 +24,8 @@ The lease auto-renews while the guest remains connected, so long-running session
 
 `&scenerestore` is opt-in. It does not bypass room authentication, director approval, queue/hold modes, or the normal director trust checks.
 
+This option is sometimes mistaken for `&scenestore` or "scene store". The current parameter name is `&scenerestore`. It is a reconnect helper for scene assignments, not a permanent cloud scene database.
+
 ## Related
 
 {% content-ref url="../view-parameters/scene.md" %}
@@ -32,4 +34,8 @@ The lease auto-renews while the guest remains connected, so long-running session
 
 {% content-ref url="scenetype.md" %}
 [scenetype.md](scenetype.md)
+{% endcontent-ref %}
+
+{% content-ref url="../../guides/how-to-get-permanent-links.md" %}
+[how-to-get-permanent-links.md](../../guides/how-to-get-permanent-links.md)
 {% endcontent-ref %}

@@ -11,7 +11,12 @@ description: Link generators to create invite links for VDO.Ninja
 | Excel-based                  | [https://drive.google.com/file/d/1A7qiFAC](https://drive.google.com/file/d/1A7qiFACoCxk9J-uTv9yyZa5yQWzFol8l/view)... |
 | Trampoline                   | [https://rse.github.io/vdo-ninja-trampoline/](https://rse.github.io/vdo-ninja-trampoline/)                            |
 | URL Obfuscator for VDO.Ninja | [https://invite.cam/](https://invite.cam/)                                                                            |
+| Managed short links          | [https://invite.cam/dashboard](https://invite.cam/dashboard)                                                           |
 | Large lobby and access flow  | [https://app.invite.cam/](https://app.invite.cam/)                                                                    |
 | Dock for OBS                 | [https://vdo.ninja/dock](https://vdo.ninja/dock)                                                                      |
 
-For larger lobby and waiting-list workflows, see [app.invite.cam](app-invite-cam.md).
+Use [invite.cam](https://invite.cam/) when you mainly need to hide, encode, or shorten a VDO.Ninja URL. Use the signed-in dashboard when you need reusable short links that can be managed later.
+
+For larger lobby, waiting-list, helper, and room-owner workflows, see [app.invite.cam](app-invite-cam.md).
+
+For OBS/browser-source persistence, see [Permanent links, reusable invites, and stream IDs](../guides/how-to-get-permanent-links.md). A short link can make an invite easier to share, but the underlying guest/source still needs a stable stream ID, `&permaid`, scene, or slot strategy.

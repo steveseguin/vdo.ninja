@@ -10,6 +10,8 @@ Use [`https://vdo.ninja/?push=STREAMID`](https://vdo.ninja/?\&push=STREAMID) to 
 
 Stream IDs only exist when they are actively used; once you stop using a stream ID, it no longer exists until it is used again.
 
+If you want an OBS browser source to keep showing the same guest after refreshes or reconnects, give that guest a stable [`&push`](../source-settings/push.md) value and use the matching [`&view`](../advanced-settings/view-parameters/view.md) link in OBS. The full walkthrough is here: [Permanent links, reusable invites, and stream IDs](../guides/how-to-get-permanent-links.md).
+
 ### Additional technical details of stream IDs
 
 * When in a group room, a stream ID can only be accessed from within that same room, unless transferred to a new room by the room's director.

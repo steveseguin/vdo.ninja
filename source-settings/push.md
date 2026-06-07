@@ -30,6 +30,8 @@ This is a useful parameter if you wish to reuse an invite link or if you refresh
 The value can be up to 64-characters long and is case sensitive.\
 If left empty, the stream ID will default to a random one.
 
+For a persistent OBS/browser-source setup, give the guest a planned `&push=STREAMID` and use the matching `&view=STREAMID` link in OBS. See [Permanent links, reusable invites, and stream IDs](../guides/how-to-get-permanent-links.md) for examples and alternatives such as `&permaid`, scenes, and slots.
+
 {% hint style="info" %}
 If the stream ID is already in active use, an error will be shown and the stream will not publish.
 {% endhint %}
@@ -44,4 +46,8 @@ If using a [`&room`](../general-settings/room.md) URL and not using [`&scene`](.
 
 {% content-ref url="../advanced-settings/view-parameters/view.md" %}
 [view.md](../advanced-settings/view-parameters/view.md)
+{% endcontent-ref %}
+
+{% content-ref url="../guides/how-to-get-permanent-links.md" %}
+[how-to-get-permanent-links.md](../guides/how-to-get-permanent-links.md)
 {% endcontent-ref %}

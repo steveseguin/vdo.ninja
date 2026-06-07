@@ -16,7 +16,14 @@ Use it when you expect many people to request access, or when you want authentic
 * events where many people may request access
 * owner-managed waiting lists
 * signed-in or authenticated access workflows
+* reusable host room links tied to a signed-in owner
 * separating the public invite/lobby from the final VDO.Ninja room link
+
+## Permanent room idea
+
+The simple version: the host signs in, gets a room under their name, and shares that app.invite.cam room link. Guests can wait in the lobby, raise their hand, chat, or be moved into the live VDO.Ninja room when the host is ready.
+
+This is different from a raw VDO.Ninja `&push` stream ID. `app.invite.cam` manages the lobby, identity, helpers, and invite rules before someone reaches the final VDO.Ninja room flow. If your only problem is "my OBS browser source changes when a guest refreshes," start with [Permanent links, reusable invites, and stream IDs](../guides/how-to-get-permanent-links.md).
 
 ## How it differs from VDO.Ninja URL parameters
 
@@ -44,6 +51,10 @@ Use it when you expect many people to request access, or when you want authentic
 
 {% content-ref url="../guides/sso-and-signed-in-access.md" %}
 [sso-and-signed-in-access.md](../guides/sso-and-signed-in-access.md)
+{% endcontent-ref %}
+
+{% content-ref url="../guides/how-to-get-permanent-links.md" %}
+[how-to-get-permanent-links.md](../guides/how-to-get-permanent-links.md)
 {% endcontent-ref %}
 
 {% content-ref url="invite-link-generators.md" %}

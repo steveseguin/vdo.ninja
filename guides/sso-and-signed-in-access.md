@@ -8,6 +8,15 @@ SSO is its own access path. It is separate from VDO.Ninja's room-cap, approval, 
 
 Use SSO when you need identity checked before a person reaches the VDO.Ninja room flow. In that setup, the SSO or invite system handles sign-in, allowlists, identity policy, and access decisions. Approved users are then sent to the intended VDO.Ninja link.
 
+In VDO.Ninja URLs, the common signed-in flags are:
+
+| Parameter | Meaning |
+| --- | --- |
+| `&auth` | Turns on the signed-in access layer for the room flow |
+| `&requireauth` | Requires sign-in before the user can join the protected room flow |
+| `&authtoken` | Temporary redirect token from the SSO service; normally saved then removed from the visible URL |
+| `&universaltoken` | Viewer/scene/solo access token generated for browser-source style links, so OBS does not need to complete a human sign-in |
+
 ## When to use it
 
 SSO is the better fit when you need:
@@ -40,6 +49,12 @@ One common pattern is:
 
 Another pattern is a self-hosted VDO.Ninja deployment behind an identity gateway, such as Cloudflare Zero Trust. In that case, users sign in before the VDO.Ninja page is served.
 
+## Browser source links
+
+OBS and other browser sources usually cannot complete a normal sign-in flow comfortably. For authenticated rooms, the director can generate scene, view, or solo links that include a `&universaltoken`. That token lets the browser source view the intended room/stream without showing the sign-in UI inside OBS.
+
+This signed-in access layer is about identity and permission. For a browser source to keep following the same guest after refreshes, you still need a stable stream strategy, such as [`&push`](../source-settings/push.md), [`&permaid`](../advanced-settings/setup-parameters/and-permaid.md), scenes, or slots. See [Permanent links, reusable invites, and stream IDs](how-to-get-permanent-links.md).
+
 ## Larger lobby option
 
 For larger lobbies, use [app.invite.cam](../steves-helper-apps/app-invite-cam.md). It is designed around authenticated room ownership, waiting lists, and owner-controlled grant/revoke access.
@@ -52,4 +67,8 @@ For larger lobbies, use [app.invite.cam](../steves-helper-apps/app-invite-cam.md
 
 {% content-ref url="../steves-helper-apps/app-invite-cam.md" %}
 [app-invite-cam.md](../steves-helper-apps/app-invite-cam.md)
+{% endcontent-ref %}
+
+{% content-ref url="how-to-get-permanent-links.md" %}
+[how-to-get-permanent-links.md](how-to-get-permanent-links.md)
 {% endcontent-ref %}
