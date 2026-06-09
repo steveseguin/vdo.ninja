@@ -14,7 +14,7 @@ let EffectsPipeline = null;
 async function loadLongpipe() {
 	if (EffectsPipeline) return;
 	try {
-		({ EffectsPipeline } = await import("https://esm.sh/longpipe@0.0.7"));
+		({ EffectsPipeline } = await import("https://esm.sh/longpipe@0.0.12"));
 		if (session.effect == "3" || session.effect == "4" || session.effect == "5" || session.effect == "16") {
 			updateRenderOutpipe();
 		}
