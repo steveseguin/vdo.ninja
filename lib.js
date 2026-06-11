@@ -9,27 +9,207 @@
 /*jshint esversion: 6 */
 
 const USE_LONGPIPE = true;
+const LONGPIPE_MODULE_URL = "./thirdparty/longpipe/longpipe.mjs";
+const LONGPIPE_WEIGHTS_BASE_URL = "./thirdparty/longpipe/models/v/0.0.4/";
+const LONGPIPE_PRESETS = {
+	xs: { model: "xs", dtype: "f16", resolution: { w: 384, h: 216 }, skipFrames: 2 },
+	small: { model: "small", dtype: "f16", resolution: { w: 384, h: 216 }, skipFrames: 1 },
+	medium: { model: "medium", dtype: "f16", resolution: { w: 512, h: 288 }, skipFrames: 1 },
+	large: { model: "large", dtype: "f32", resolution: { w: 640, h: 360 }, skipFrames: 0 },
+	xl: { model: "xl", dtype: "f32", resolution: { w: 1280, h: 720 }, skipFrames: 0 }
+};
+const LONGPIPE_PRESET_ALIASES = {
+	fast: "xs",
+	balanced: "medium",
+	quality: "xl"
+};
 
 let EffectsPipeline = null;
+let longpipeRuntimeDisabled = false;
+
+function getLongpipeUrlParam(names) {
+	try {
+		if (typeof urlParams === "undefined" || !urlParams) return false;
+		for (var i = 0; i < names.length; i++) {
+			if (urlParams.has(names[i])) {
+				return (urlParams.get(names[i]) || "").toLowerCase();
+			}
+		}
+	} catch (e) {}
+	return false;
+}
+
+function hasLongpipeUrlParam(names) {
+	try {
+		if (typeof urlParams === "undefined" || !urlParams) return false;
+		for (var i = 0; i < names.length; i++) {
+			if (urlParams.has(names[i])) return true;
+		}
+	} catch (e) {}
+	return false;
+}
+
+function cloneLongpipePreset(preset) {
+	return {
+		model: preset.model,
+		dtype: preset.dtype,
+		resolution: { w: preset.resolution.w, h: preset.resolution.h },
+		skipFrames: preset.skipFrames
+	};
+}
+
+function getLongpipeCaptureQualityTier() {
+	try {
+		var quality = false;
+		if (session.quality !== false && typeof session.quality !== "undefined") {
+			quality = session.quality;
+		} else if (session.roomid && session.quality_room !== false && typeof session.quality_room !== "undefined") {
+			quality = session.quality_room;
+		} else if (session.quality_wb !== false && typeof session.quality_wb !== "undefined") {
+			quality = session.quality_wb;
+		}
+		quality = parseInt(quality);
+		return isNaN(quality) ? 1 : quality;
+	} catch (e) {
+		return 1;
+	}
+}
+
+function getLongpipePerformanceTier() {
+	try {
+		if (typeof session.quality_wb === "number") return session.quality_wb;
+		return judgePerformance();
+	} catch (e) {
+		return 1;
+	}
+}
+
+function hasLongpipeHighEndGpu() {
+	try {
+		if (typeof gpgpuSupport !== "string") return false;
+		var gpu = gpgpuSupport.toLowerCase();
+		return gpu.indexOf("nvidia") >= 0 ||
+			gpu.indexOf("geforce") >= 0 ||
+			gpu.indexOf("rtx") >= 0 ||
+			gpu.indexOf("gtx") >= 0 ||
+			gpu.indexOf("quadro") >= 0 ||
+			gpu.indexOf("radeon") >= 0 ||
+			gpu.indexOf("amd") >= 0 ||
+			gpu.indexOf("intel(r) arc") >= 0 ||
+			gpu.indexOf("apple") >= 0;
+	} catch (e) {
+		return false;
+	}
+}
+
+function getLongpipePresetName() {
+	if (hasLongpipeUrlParam(["longpipeauto", "lpauto"])) return "auto";
+	var requested = getLongpipeUrlParam(["longpipepreset", "lppreset", "lpmodel"]);
+	if (requested) {
+		if (requested === "auto") return "auto";
+		if (requested in LONGPIPE_PRESET_ALIASES) requested = LONGPIPE_PRESET_ALIASES[requested];
+		if (requested in LONGPIPE_PRESETS) return requested;
+		warnlog("Ignoring unknown Longpipe preset: " + requested);
+	}
+
+	var captureTier = getLongpipeCaptureQualityTier();
+	var performanceTier = getLongpipePerformanceTier();
+	var highEndGpu = hasLongpipeHighEndGpu();
+
+	if (captureTier >= 2) return highEndGpu && !session.mobile ? "small" : "xs";
+	if (session.mobile) return performanceTier <= 0 && captureTier <= 0 ? "medium" : "small";
+	if (performanceTier >= 2) return "small";
+	if (highEndGpu) {
+		if (captureTier < 0) return "xl";
+		if (captureTier === 0) return "large";
+		return "medium";
+	}
+	return "medium";
+}
+
+function getLongpipePreset() {
+	var presetName = getLongpipePresetName();
+	if (presetName === "auto") return "auto";
+	return cloneLongpipePreset(LONGPIPE_PRESETS[presetName] || LONGPIPE_PRESETS.medium);
+}
+
+function shouldUseLongpipeAdaptive(preset) {
+	if (hasLongpipeUrlParam(["nolongpipeadaptive", "nolpadaptive"])) return false;
+	return preset === "auto" && hasLongpipeUrlParam(["longpipeadaptive", "lpadaptive"]);
+}
+
+function longpipeEnabled() {
+	return USE_LONGPIPE && !longpipeRuntimeDisabled;
+}
+
+function removeLongpipeSpinner() {
+	var s = getById("longpipeSpinner");
+	if (s) s.remove();
+}
+
+function disableLongpipe(reason, rerender) {
+	if (longpipeRuntimeDisabled) return;
+	if (typeof rerender === "undefined") rerender = true;
+	longpipeRuntimeDisabled = true;
+	EffectsPipeline = null;
+	removeLongpipeSpinner();
+	try {
+		if (session.longpipe) {
+			session.longpipe.destroy();
+			session.longpipe = null;
+		}
+	} catch (e) {}
+	errorlog("LongPipe failed; falling back to TFLite: " + reason);
+	if (rerender && (session.effect == "3" || session.effect == "4" || session.effect == "5")) {
+		try {
+			attemptSegmentationEffectModelLoad();
+		} catch (e) {
+			errorlog(e);
+		}
+		try {
+			updateRenderOutpipe();
+		} catch (e) {
+			errorlog(e);
+		}
+	}
+}
+
+function getLongpipeOptions() {
+	var preset = getLongpipePreset();
+	return {
+		background: effectToLongpipeBg(),
+		weightsBaseUrl: LONGPIPE_WEIGHTS_BASE_URL,
+		preset: preset,
+		adaptive: shouldUseLongpipeAdaptive(preset),
+		audio: "passthrough",
+		debug: hasLongpipeUrlParam(["longpipedebug", "lpdebug"]),
+		onError: function (event) {
+			var message = event && event.message ? event.message : event;
+			errorlog("LongPipe error: " + message);
+		}
+	};
+}
+
 async function loadLongpipe() {
+	if (!longpipeEnabled()) return;
 	if (EffectsPipeline) return;
 	try {
-		({ EffectsPipeline } = await import("https://esm.sh/longpipe@0.0.12"));
+		({ EffectsPipeline } = await import(LONGPIPE_MODULE_URL));
 		if (session.effect == "3" || session.effect == "4" || session.effect == "5" || session.effect == "16") {
 			updateRenderOutpipe();
 		}
 	} catch (e) {
-		errorlog("LongPipe failed to load: " + e);
+		disableLongpipe(e);
 	}
 }
 
 function longpipeHandlesEffect(effect) {
-	return USE_LONGPIPE && effect !== "16";
+	return longpipeEnabled() && effect !== "16";
 }
 
 function needsSegmentationRebuild(from, to) {
 	if (!["3", "4", "5", "16"].includes(from)) return true;
-	if (!USE_LONGPIPE) return false;
+	if (!longpipeEnabled()) return false;
 	return longpipeHandlesEffect(from) !== longpipeHandlesEffect(to);
 }
 
@@ -12857,10 +13037,16 @@ function applyEffects(track) {
 		session.canvas.height = 2 * parseInt(session.canvasSource.height / 2);
 		session.canvas.width = 2 * parseInt(session.canvasSource.width / 2);
 
-		if (USE_LONGPIPE && session.effect !== "16") {
+		if (longpipeHandlesEffect(session.effect)) {
 			if (EffectsPipeline) {
 				if (session.longpipe) { session.longpipe.destroy(); session.longpipe = null; }
-				session.longpipe = new EffectsPipeline(session.canvasSource.srcObject, { background: effectToLongpipeBg() });
+				try {
+					session.longpipe = new EffectsPipeline(session.canvasSource.srcObject, getLongpipeOptions());
+				} catch (e) {
+					disableLongpipe(e, false);
+					TFLiteWorker();
+					return track;
+				}
 
 				var lpSpinner = document.createElement("i");
 				lpSpinner.className = "las la-spinner icn-spinner";
@@ -12872,11 +13058,9 @@ function applyEffects(track) {
 					lpPreview.parentNode.appendChild(lpSpinner);
 				}
 				session.longpipe.ready.then(function () {
-					var s = getById("longpipeSpinner");
-					if (s) s.remove();
-				}).catch(function () {
-					var s = getById("longpipeSpinner");
-					if (s) s.remove();
+					removeLongpipeSpinner();
+				}).catch(function (e) {
+					disableLongpipe(e);
 				});
 
 				return session.longpipe.stream.getVideoTracks()[0];
@@ -58061,17 +58245,17 @@ async function effectsDynamicallyUpdate(event, ele) {
 		return;
 	} else if (session.effect === "3" || session.effect === "4" || session.effect === "16") {
 		if (needsSegmentationRebuild(lastEffectValue, session.effect)) {
-			if (USE_LONGPIPE && session.longpipe && !longpipeHandlesEffect(session.effect)) {
+			if (session.longpipe && !longpipeHandlesEffect(session.effect)) {
 				session.longpipe.destroy();
 				session.longpipe = null;
 			}
 			longpipeHandlesEffect(session.effect) ? loadLongpipe() : attemptSegmentationEffectModelLoad();
-			if (!USE_LONGPIPE && !(session.tfliteModule && session.tfliteModule.looping)) {
+			if (!longpipeEnabled() && !(session.tfliteModule && session.tfliteModule.looping)) {
 				updateRenderOutpipe();
 			} else {
 				updateRenderOutpipe();
 			}
-		} else if (USE_LONGPIPE && session.longpipe && session.effect !== "16") {
+		} else if (longpipeHandlesEffect(session.effect) && session.longpipe) {
 			session.longpipe.setBackground(effectToLongpipeBg());
 		}
 		if (session.effect === "3" && session.effectValue_default == false) {
@@ -58090,17 +58274,17 @@ async function effectsDynamicallyUpdate(event, ele) {
 		}
 	} else if (session.effect === "5") {
 		if (needsSegmentationRebuild(lastEffectValue, session.effect)) {
-			if (USE_LONGPIPE && session.longpipe && !longpipeHandlesEffect(session.effect)) {
+			if (session.longpipe && !longpipeHandlesEffect(session.effect)) {
 				session.longpipe.destroy();
 				session.longpipe = null;
 			}
 			longpipeHandlesEffect(session.effect) ? loadLongpipe() : attemptSegmentationEffectModelLoad();
-			if (!USE_LONGPIPE && !(session.tfliteModule && session.tfliteModule.looping)) {
+			if (!longpipeEnabled() && !(session.tfliteModule && session.tfliteModule.looping)) {
 				updateRenderOutpipe();
 			} else {
 				updateRenderOutpipe();
 			}
-		} else if (USE_LONGPIPE && session.longpipe) {
+		} else if (longpipeHandlesEffect(session.effect) && session.longpipe) {
 			session.longpipe.setBackground(effectToLongpipeBg());
 		}
 		loadContentEffectsImages();
@@ -58678,7 +58862,7 @@ async function changeEffectsImage(ev, ele) {
 		session.effectsImage = ele;
 		session.effectsImage.classList.add("selectedContentEffectsImage");
 	}
-	if (USE_LONGPIPE && session.longpipe && session.effect == "5") {
+	if (longpipeHandlesEffect(session.effect) && session.longpipe && session.effect == "5") {
 		session.longpipe.setBackground(session.effectsImage.src);
 	}
 }
@@ -58755,7 +58939,7 @@ async function changeEffectAmount(ev, ele) {
 	}
 	log("session.effectValue: " + session.effectValue);
 	saveEffectValue(session.effect, ele.value);
-	if (USE_LONGPIPE && session.longpipe && session.effect == "3") {
+	if (longpipeHandlesEffect(session.effect) && session.longpipe && session.effect == "3") {
 		session.longpipe.setBackground({ blur: { strength: parseFloat(ele.value) / 20 } });
 	}
 }

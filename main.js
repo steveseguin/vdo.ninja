@@ -8295,7 +8295,7 @@ async function main() {
 	}, 50);
 
 	if (session.effect == "3" || session.effect == "4" || session.effect == "5" || session.effect == "16") {
-		USE_LONGPIPE ? loadLongpipe() : attemptSegmentationEffectModelLoad();
+		longpipeHandlesEffect(session.effect) ? loadLongpipe() : attemptSegmentationEffectModelLoad();
 	} else if (session.effect == "6") {
 		loadTensorflowJS();
 	} else if (session.effect == "9") {

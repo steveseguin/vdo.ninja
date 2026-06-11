@@ -1,0 +1,37 @@
+Longpipe Model Weights License
+==============================
+
+This license applies to the trained model weights distributed with Longpipe,
+including the binary weight files served from cdn.longpipe.dev (e.g.
+`model_xs.bin`, `model_small.bin`, `model_large.bin`, `model_xl.bin`, and
+related `.bin` / `.f16.bin` files) and any copies or derivatives thereof.
+
+The Longpipe SDK source code is licensed separately under the MIT License;
+see `sdk/LICENSE`. This file covers the model weights only.
+
+For documentation of the training data sources used to produce these weights,
+see `docs/DATASET_PLAN.md`.
+
+----
+
+MIT License
+
+Copyright (c) 2026 Sam Bhattacharyya
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of these model weights and associated files (the "Weights"), to deal in the
+Weights without restriction, including without limitation the rights to use,
+copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+the Weights, and to permit persons to whom the Weights are furnished to do
+so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Weights.
+
+THE WEIGHTS ARE PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE WEIGHTS OR THE USE OR OTHER DEALINGS IN THE
+WEIGHTS.
