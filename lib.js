@@ -120,8 +120,7 @@ function getLongpipePresetName() {
 	if (session.mobile) return performanceTier <= 0 && captureTier <= 0 ? "medium" : "small";
 	if (performanceTier >= 2) return "small";
 	if (highEndGpu) {
-		if (captureTier < 0) return "xl";
-		if (captureTier === 0) return "large";
+		if (captureTier < 0) return "large";
 		return "medium";
 	}
 	return "medium";
