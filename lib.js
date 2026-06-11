@@ -25409,7 +25409,7 @@ function getInviteCamWssFromValue(value) {
 	var parts = invitecam.split(".");
 	var room = parts.shift();
 	var token = parts.join(".");
-	var wss = "wss.invite.cam/api/room/" + encodeURIComponent(room) + "/vdoninja";
+	var wss = "wss://wss.invite.cam/api/room/" + encodeURIComponent(room) + "/vdoninja";
 	if (token) {
 		wss += "/" + encodeURIComponent("viewer:0:" + token);
 	}

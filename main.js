@@ -7480,6 +7480,9 @@ async function main() {
 		if (session.scene !== false && !session.wssSetViaUrl && session.invitecam) {
 			var inviteCamWss = getInviteCamWssFromValue(session.invitecam);
 			if (inviteCamWss) {
+				if (!inviteCamWss.startsWith("wss://")) {
+					inviteCamWss = "wss://" + inviteCamWss;
+				}
 				session.wss = inviteCamWss;
 				session.wssSetViaUrl = true;
 			}
