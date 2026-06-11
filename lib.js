@@ -109,7 +109,7 @@ function getLongpipePresetName() {
 		if (requested === "auto") return "auto";
 		if (requested in LONGPIPE_PRESET_ALIASES) requested = LONGPIPE_PRESET_ALIASES[requested];
 		if (requested in LONGPIPE_PRESETS) return requested;
-		warnlog("Ignoring unknown Longpipe preset: " + requested);
+		warnlog("Ignoring unknown segmentation preset: " + requested);
 	}
 
 	var captureTier = getLongpipeCaptureQualityTier();
@@ -141,24 +141,18 @@ function longpipeEnabled() {
 	return USE_LONGPIPE && !longpipeRuntimeDisabled;
 }
 
-function removeLongpipeSpinner() {
-	var s = getById("longpipeSpinner");
-	if (s) s.remove();
-}
-
 function disableLongpipe(reason, rerender) {
 	if (longpipeRuntimeDisabled) return;
 	if (typeof rerender === "undefined") rerender = true;
 	longpipeRuntimeDisabled = true;
 	EffectsPipeline = null;
-	removeLongpipeSpinner();
 	try {
 		if (session.longpipe) {
 			session.longpipe.destroy();
 			session.longpipe = null;
 		}
 	} catch (e) {}
-	errorlog("LongPipe failed; falling back to TFLite: " + reason);
+	errorlog("Segmentation engine failed; falling back to TFLite: " + reason);
 	if (rerender && (session.effect == "3" || session.effect == "4" || session.effect == "5")) {
 		try {
 			attemptSegmentationEffectModelLoad();
@@ -184,7 +178,7 @@ function getLongpipeOptions() {
 		debug: hasLongpipeUrlParam(["longpipedebug", "lpdebug"]),
 		onError: function (event) {
 			var message = event && event.message ? event.message : event;
-			errorlog("LongPipe error: " + message);
+			errorlog("Segmentation engine error: " + message);
 		}
 	};
 }
@@ -13047,18 +13041,7 @@ function applyEffects(track) {
 					return track;
 				}
 
-				var lpSpinner = document.createElement("i");
-				lpSpinner.className = "las la-spinner icn-spinner";
-				lpSpinner.id = "longpipeSpinner";
-				lpSpinner.style = "position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-size:200%;color:white;pointer-events:none;z-index:100;";
-				var lpPreview = getById("previewWebcam");
-				if (lpPreview && lpPreview.parentNode) {
-					lpPreview.parentNode.style.position = "relative";
-					lpPreview.parentNode.appendChild(lpSpinner);
-				}
-				session.longpipe.ready.then(function () {
-					removeLongpipeSpinner();
-				}).catch(function (e) {
+				session.longpipe.ready.catch(function (e) {
 					disableLongpipe(e);
 				});
 
