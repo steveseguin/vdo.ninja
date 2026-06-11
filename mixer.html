@@ -432,6 +432,31 @@
 		margin: 20px 0;
 		top: 60px;
 	}
+
+	#addElementControls {
+		display: inline-flex;
+		align-items: center;
+		gap: 6px;
+		margin-right: 4px;
+	}
+
+	#addElementControls label {
+		color: #FFF;
+		font-size: 13px;
+	}
+
+	#addElementSlot {
+		height: 30px;
+		max-width: 120px;
+	}
+
+	#addElementColorSwatch {
+		width: 20px;
+		height: 20px;
+		border: 1px solid #FFF8;
+		display: inline-block;
+		vertical-align: middle;
+	}
 	
 	.tFadeOut{
 		animation-duration: 1s;
@@ -523,6 +548,7 @@
 		position: absolute;
 		width:100%;
 		height:100%;
+		overflow: hidden;
 	}
 	.crop-target {
 		position: absolute;
@@ -530,6 +556,7 @@
 		top: 0;
 		width: 100%;
 		height: 100%;
+		overflow: hidden;
 		pointer-events: none;
 		z-index: 0;
 	}
@@ -1100,7 +1127,7 @@
 	  background: #f8f9fa;
 	  border-radius: 10px;
 	  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-	  padding: 15px;
+	  padding: 0 15px 15px 15px;
 	  width: 420px;
 	  max-width: 90vw; /* Prevent horizontal overflow */
 	  max-height: 80vh; /* Prevent vertical overflow */
@@ -1110,6 +1137,36 @@
 	  top: 63px; /* Keep current positioning */
 	  left: 5;
 	  color: black;
+	}
+
+	.settings-titlebar {
+	  align-items: center;
+	  background: #e8ebef;
+	  border-bottom: 1px solid #d1d5db;
+	  border-radius: 10px 10px 0 0;
+	  cursor: move;
+	  display: flex;
+	  font-weight: bold;
+	  justify-content: space-between;
+	  margin: 0 -15px 15px -15px;
+	  padding: 8px 12px;
+	  position: sticky;
+	  top: 0;
+	  z-index: 2;
+	}
+
+	.settings-titlebar-actions {
+	  display: flex;
+	  gap: 6px;
+	}
+
+	.settings-titlebar button {
+	  background: #fff;
+	  border: 1px solid #c9ced6;
+	  border-radius: 4px;
+	  color: #222;
+	  cursor: pointer;
+	  padding: 3px 8px;
 	}
 	/* Make scrollbars more visually appealing */
 	.settings::-webkit-scrollbar {
@@ -1159,6 +1216,8 @@
 	  flex: 1;
 	  display: flex;
 	  align-items: center;
+	  flex-wrap: wrap;
+	  gap: 5px;
 	}
 
 	.settings input[type="text"],
@@ -1194,6 +1253,48 @@
 
 	.settings button.search-btn:hover {
 	  background: #e0e0e0;
+	}
+
+	.settings button.upload-btn,
+	.settings button.recent-upload-btn {
+	  border: 1px solid #ccc;
+	  border-radius: 4px;
+	  cursor: pointer;
+	  margin-left: 5px;
+	  padding: 6px 10px;
+	}
+
+	.settings button.upload-btn {
+	  background: #667eea;
+	  color: white;
+	}
+
+	.settings button.recent-upload-btn {
+	  background: #f8f8f8;
+	}
+
+	.recent-upload-list {
+	  display: flex;
+	  flex-wrap: wrap;
+	  gap: 6px;
+	  margin: -2px 0 8px 120px;
+	  max-height: 130px;
+	  overflow-y: auto;
+	}
+
+	.recent-upload-list img {
+	  border: 1px solid #ddd;
+	  border-radius: 4px;
+	  cursor: pointer;
+	  height: 60px;
+	  object-fit: cover;
+	  width: 80px;
+	}
+
+	.recent-upload-empty {
+	  color: #666;
+	  font-size: 13px;
+	  padding: 4px 0;
 	}
 
 	.settings button.action-btn {
@@ -1253,11 +1354,14 @@
 	}
 
 	.footer-buttons {
+	  background: #f8f9fa;
+	  bottom: -15px;
 	  display: flex;
 	  justify-content: flex-end;
-	  margin-top: 0;
-	  padding-top: 0;
+	  margin: 10px 0 0 0;
+	  padding: 10px 0;
 	  border-top: 0;
+	  position: sticky;
 	}
 	</style>
 </head>
@@ -1283,7 +1387,12 @@
 			<button onclick="closeScene();">❌ Close</button>
 		</div>
 		<div id="containerMenu2" class="hidden">
-			<button onclick="addElement();">➕ Add Element to Layout</button>
+			<span id="addElementControls">
+				<label for="addElementSlot">Slot</label>
+				<select id="addElementSlot" onchange="updateAddElementSlotPicker();"></select>
+				<span id="addElementColorSwatch" title="Selected slot color"></span>
+				<button onclick="addElementFromPicker();">➕ Add Element to Layout</button>
+			</span>
 			<button onclick="saveScene(false, event);">💾 Save Layout</button>
 			<button onclick="saveScene(true, event);">💾<span style="position:relative;right:12px;top:2px;width:12px;display: inline-block;">💾</span>Duplicate Layout</button>
 			<button onclick="setobsSceneName();" title="When this layout is triggered, OBS will change to the specified scene as well">Link OBS Scene</button>
@@ -1309,7 +1418,7 @@
 	<div id="welcomeWindow">
 		<div class="center-content">
 			<div class="title"><h1 class="main-heading">Mixer App</h1><h2>Video chat with custom <b>layouts</b></h2></div>
-			
+
 			<label for="roomname"><input name="roomname"  autocorrect="off"  autocapitalize="off" id="roomname" type="text" placeholder="Room Name" /></label>
 			<font class="tooltip">
 				<button onclick="randomRoomName();" class="randomRoomName"></button><span class="tooltiptext">Generate a random room name</span>
@@ -1491,8 +1600,8 @@
 		<div class="modal-content">
 			<span class="close-btn">&times;</span>
 			<h2>Search Tenor GIFs</h2>
-			<input type="text" id="searchQuery" placeholder="Search for GIFs..." style="width:80%">
-			<button id="searchButton">Search</button>
+			<input type="text" id="searchQuery" placeholder="Search Tenor GIFs..." style="width:80%">
+			<button id="searchButton">Search GIFs</button>
 			<div id="searchResults"></div>
 			<button class='close-btn'>Close</button>
 		</div>
@@ -1579,18 +1688,27 @@
 	}
 	
 	var CtrlPressed = false;
+	function configureLayoutEditorInteractions(snapEnabled){
+		var grid = snapEnabled ? [10, 10] : [1, 1];
+		$(function(){
+			$(".draggable").draggable({
+				cancel: ".settings, .settings *, button, input, select, textarea, label",
+				grid: grid,
+				handle: "h3.ui-widget-header",
+				snap: snapEnabled
+			});
+			$(".resizable").resizable({ snap: snapEnabled, grid: grid });
+			$(".settings").draggable({
+				containment: "window",
+				handle: ".settings-titlebar"
+			});
+		});
+	}
 	document.addEventListener("keydown", event => {
 		if ((event.ctrlKey) || (event.metaKey)) { // detect if CTRL is pressed
 			if (!CtrlPressed){
 				CtrlPressed = true;
-				$(function(){
-				//	$(".draggable").unbind();
-					$(".draggable").draggable({ snap: false , grid: [ 1,1 ] });
-				});
-				$(function(){
-					//$(".resizable").unbind();
-					$(".resizable").resizable({ snap: false , grid: [ 1,1 ] });
-				});
+				configureLayoutEditorInteractions(false);
 				//errorlog("CtrlPressed :"+CtrlPressed);
 			}
 		}
@@ -1601,14 +1719,7 @@
 		//
 		} else if (CtrlPressed){
 			CtrlPressed = false;
-			$(function(){
-			//	$(".draggable").unbind();
-				$(".draggable").draggable({ snap: true  , grid: [ 10,10 ] });
-			});
-			$(function(){
-				//$(".resizable").unbind();
-				$(".resizable").resizable({ snap: true , grid: [ 10, 10] });
-			});
+			configureLayoutEditorInteractions(true);
 			//errorlog("CtrlPressed :"+CtrlPressed);
 		}
 	});
@@ -1903,7 +2014,13 @@
 					hyperlink = "http://" + hyperlink;
 				}
 				var display = url.length > 35 ? url.substring(0, 35) + "..." : url;
-				result += '<a href="' + sanitize(hyperlink) + '" title="Click to open the link in a new tab" target="_blank" rel="noopener noreferrer">' + sanitize(display) + "</a>";
+				var anchor = document.createElement("a");
+				anchor.href = hyperlink;
+				anchor.title = "Click to open the link in a new tab";
+				anchor.target = "_blank";
+				anchor.rel = "noopener noreferrer";
+				anchor.textContent = display;
+				result += anchor.outerHTML;
 			} else {
 				result += sanitize(match[0]);
 			}
@@ -2460,6 +2577,78 @@
 		if (slotValue > slotsNeeded){
 			slotsNeeded = slotValue;
 		}
+	}
+
+	function getUsedWidgetSlots(){
+		var usedSlots = new Set();
+		document.querySelectorAll("#canvas .widget").forEach(function(widget){
+			var slotValue = parseInt(widget.slot);
+			if (isFinite(slotValue) && slotValue >= 0){
+				usedSlots.add(slotValue);
+			}
+		});
+		return usedSlots;
+	}
+
+	function findNextAvailableWidgetSlot(startAt){
+		var usedSlots = getUsedWidgetSlots();
+		var candidate = parseInt(startAt);
+		if (!isFinite(candidate) || candidate < 0){
+			candidate = 0;
+		}
+		while (usedSlots.has(candidate)){
+			candidate += 1;
+		}
+		return candidate;
+	}
+
+	function updateAddElementSlotPicker(){
+		var select = document.getElementById("addElementSlot");
+		if (!select){
+			return;
+		}
+		var previousValue = parseInt(select.value);
+		var usedSlots = getUsedWidgetSlots();
+		var highestSlot = Math.max(slotsNeeded - 1, 3);
+		usedSlots.forEach(function(slotValue){
+			if (slotValue > highestSlot){
+				highestSlot = slotValue;
+			}
+		});
+		highestSlot += 1;
+		select.innerHTML = "";
+		for (var slot = 0; slot <= highestSlot; slot++){
+			var option = document.createElement("option");
+			var slotColor = getSlotColorForSlot(slot + 1);
+			option.value = slot+"";
+			option.innerText = "Slot "+(slot + 1);
+			option.style.color = slotColor;
+			option.style.fontWeight = "600";
+			if (usedSlots.has(slot)){
+				option.disabled = true;
+				option.innerText += " (used)";
+			}
+			select.appendChild(option);
+		}
+		if (isFinite(previousValue) && !usedSlots.has(previousValue)){
+			select.value = previousValue+"";
+		} else {
+			select.value = findNextAvailableWidgetSlot(0)+"";
+		}
+		var swatch = document.getElementById("addElementColorSwatch");
+		if (swatch){
+			swatch.style.backgroundColor = getSlotColorForSlot(parseInt(select.value) + 1);
+			swatch.title = "Selected color for Slot "+(parseInt(select.value) + 1);
+		}
+	}
+
+	function addElementFromPicker(){
+		var select = document.getElementById("addElementSlot");
+		var slot = select ? parseInt(select.value) : false;
+		if (!isFinite(slot)){
+			slot = false;
+		}
+		addElement(false, false, slot);
 	}
 	
 	
@@ -3178,7 +3367,7 @@
 	function createIframeURL(){
 		var additional = ""; // guest/scene links also
 		if (password){
-			additional = "&password="+password;
+			additional = "&password="+encodeURIComponent(password);
 		}
 		
 		sceneBroadcastBaseParams = additional;
@@ -3240,7 +3429,7 @@
 		
 		var additional = ""; // guest/scene links also
 		if (password){
-			additional = "&password="+password;
+			additional = "&password="+encodeURIComponent(password);
 		}
 		
 		document.title = "Mixer: "+roomname;
@@ -3646,11 +3835,7 @@
 				
 				if (e.data.action && (e.data.action == "director-share")){
 					if (!e.data.value && e.data.streamID){
-						for (var i in guestPositions){
-							if (guestPositions[i] === e.data.streamID){
-								delete guestPositions[i];
-							}
-						}
+						clearMixerStreamPreviewState(e.data.streamID);
 						if (updateOnSlotChange){
 							remoteActivate(false, lastLayoutRaw);
 						}
@@ -3849,11 +4034,11 @@
 				ele.title = "Copy link to clipboard";
 				ele.onclick = function(evt){copyFunction(inviteURL, evt);};
 			} else if (document.getElementById("obfuscateInvites").checked){
-				ele.innerHTML = inviteURL;
+				ele.textContent = inviteURL;
 				ele.onclick = function(evt){copyFunction(inviteURL, evt);};
 				ele.title = "Copy link to clipboard";
 			} else if (ele.tagName == "I"){
-				ele.innerHTML = "URL + ?room="+roomname+additional+additionalParams;
+				ele.textContent = "URL + ?room="+roomname+additional+additionalParams;
 			}
 		});
 	
@@ -4362,23 +4547,56 @@
 		
 	}
 	
+	function getLayoutWidgetsByLayer(){
+		return Array.from(document.querySelectorAll("#canvas .widget")).map(function(widget, index){
+			var layer = parseInt(widget.zIndex);
+			if (!isFinite(layer)){
+				layer = 0;
+			}
+			return {widget: widget, index: index, layer: layer};
+		}).sort(function(a, b){
+			if (a.layer === b.layer){
+				return a.index - b.index;
+			}
+			return a.layer - b.layer;
+		});
+	}
+
+	function setWidgetLayer(widget, layer){
+		widget.zIndex = layer;
+		widget.style.opacity = layer > 0 ? "0.9" : "1.0";
+		if (widget.parent){
+			widget.parent.style.zIndex = layer;
+		}
+		widget.dimensions = updateSize(widget);
+	}
+
+	function normalizeWidgetLayers(){
+		getLayoutWidgetsByLayer().forEach(function(item, index){
+			setWidgetLayer(item.widget, index);
+		});
+	}
+
+	function getTopWidgetLayer(){
+		var topLayer = 0;
+		getLayoutWidgetsByLayer().forEach(function(item){
+			if (item.layer > topLayer){
+				topLayer = item.layer;
+			}
+		});
+		return topLayer;
+	}
+
 	function pullUp(event){
-		this.parentNode.zIndex = parseInt(this.parentNode.zIndex || 0) + 1;
-		this.parentNode.style.opacity = "0.9";
-		this.parentNode.parent.style.zIndex=this.parentNode.zIndex;
-		this.parentNode.dimensions = updateSize(this.parentNode);
+		var widget = this.parentNode;
+		setWidgetLayer(widget, getTopWidgetLayer() + 1);
+		normalizeWidgetLayers();
 	} 
 	
 	function pushDown(event){
-		this.parentNode.zIndex = parseInt(this.parentNode.zIndex || 0) - 1;
-		if (this.parentNode.zIndex<0){
-			this.parentNode.zIndex=0;
-			this.parentNode.style.opacity = "1.0";
-		} else {
-			this.parentNode.style.opacity = "0.9";
-		}
-		this.parentNode.parent.style.zIndex=this.parentNode.zIndex;
-		this.parentNode.dimensions = updateSize(this.parentNode);
+		var widget = this.parentNode;
+		setWidgetLayer(widget, -1);
+		normalizeWidgetLayers();
 	}
 	
 	function updateSize(supercontainer){
@@ -4616,17 +4834,13 @@
 				updateSize(this);
 			}
 			
-			$(function(){
-				$(".draggable").draggable({ snap: true  , grid: [ 10,10 ] });
-			});
-			$(function(){
-				$(".resizable").resizable({ snap: true , grid: [ 10, 10] });
-			});
+			configureLayoutEditorInteractions(!CtrlPressed);
 		}
 		reportSlotFixes(slotFixes, "layout load");
+		updateAddElementSlotPicker();
    }
 	
-	function addElement(x=false,y=false){
+	function addElement(x=false,y=false, requestedSlot=false){
 	
 		var eles = document.querySelectorAll(".widget");
 		
@@ -4641,14 +4855,17 @@
 			}
 		}
 		
-		indexs.sort(function(a,b){return a-b;});
-		var slot = 0;
-		
-		for (var i=0;i<indexs.length;i++){
-			if (slot!=indexs[i]){
-				break;
-			} else {
-				slot+=1;
+		var slot = parseInt(requestedSlot);
+		var usedSlots = getUsedWidgetSlots();
+		if (!isFinite(slot) || slot < 0 || usedSlots.has(slot)){
+			indexs.sort(function(a,b){return a-b;});
+			slot = 0;
+			for (var i=0;i<indexs.length;i++){
+				if (slot!=indexs[i]){
+					break;
+				} else {
+					slot+=1;
+				}
 			}
 		}
 		
@@ -4669,8 +4886,9 @@
 		container.className = "widget ui-widget-content";
 		containerSuper.className = "draggable resizable";
 		container.slot = slot;
+		container.cover = true;
 		
-		container.zIndex = 10;
+		container.zIndex = getTopWidgetLayer() + 1;
 		
 		var yoffset = 20*(slot+1);
 		var xoffset =  20*(slot+1);
@@ -4723,12 +4941,8 @@
 			updateSize(this);
 		}
 		
-		$(function(){
-			$(".draggable").draggable({ snap: true  , grid: [ 10,10 ] });
-		});
-		$(function(){
-			$(".resizable").resizable({ snap: true , grid: [ 10, 10] });
-		});
+		configureLayoutEditorInteractions(!CtrlPressed);
+		updateAddElementSlotPicker();
 		
 		requestFramesBySlot();
     }
@@ -4741,6 +4955,21 @@
 			container.cropTarget = cropTarget;
 		}
 		return container.cropTarget;
+	}
+
+	function applyEditorBackgroundPreview(container, cropTarget){
+		var previewSource = container.backgroundMedia || cropTarget.dataset.snapshotFrame || "";
+		if (previewSource){
+			cropTarget.style.backgroundImage = "url("+JSON.stringify(previewSource)+")";
+			cropTarget.style.backgroundSize = container.cover ? "cover" : "contain";
+			cropTarget.style.backgroundPosition = "center";
+			cropTarget.style.backgroundRepeat = "no-repeat";
+		} else {
+			cropTarget.style.backgroundImage = "";
+			cropTarget.style.backgroundSize = "";
+			cropTarget.style.backgroundPosition = "";
+			cropTarget.style.backgroundRepeat = "";
+		}
 	}
 	
 	function updateElementStyle(container) {
@@ -4792,6 +5021,7 @@
 
 		var cropTarget = ensureCropTarget(container);
 		var hasCrop = container.cropTop || container.cropRight || container.cropBottom || container.cropLeft;
+		applyEditorBackgroundPreview(container, cropTarget);
 
 		// Apply the additional style properties
 		if (margin) {
@@ -5147,6 +5377,86 @@
 		} else if (widget) {
 			widget.remove();
 		}
+		updateAddElementSlotPicker();
+	}
+
+	var mixerRecentUploadsKey = "mixerRecentUploads";
+
+	function getMixerRecentUploads(){
+		try {
+			var uploads = JSON.parse(localStorage.getItem(mixerRecentUploadsKey) || "[]");
+			if (!Array.isArray(uploads)){
+				return [];
+			}
+			return uploads.filter(function(item){
+				return item && item.url;
+			});
+		} catch(e){
+			return [];
+		}
+	}
+
+	function saveMixerRecentUpload(url, kind){
+		if (!url){
+			return;
+		}
+		var uploads = getMixerRecentUploads().filter(function(item){
+			return item.url !== url;
+		});
+		uploads.unshift({
+			url: url,
+			kind: kind || "media",
+			added: Date.now()
+		});
+		try {
+			localStorage.setItem(mixerRecentUploadsKey, JSON.stringify(uploads.slice(0, 24)));
+		} catch(e){}
+	}
+
+	function applyMediaURLToInput(targetField, url){
+		if (!targetField || !url){
+			return;
+		}
+		targetField.value = url;
+		targetField.dispatchEvent(new Event("change", { bubbles: true }));
+		targetField.classList.remove("updated");
+		setTimeout(function(field) {
+			field.classList.add("updated");
+		}, 10, targetField);
+	}
+
+	function renderRecentUploadList(container, targetField){
+		if (!container || !targetField){
+			return;
+		}
+		container.innerHTML = "";
+		var uploads = getMixerRecentUploads();
+		if (!uploads.length){
+			var empty = document.createElement("div");
+			empty.className = "recent-upload-empty";
+			empty.innerText = "No recent uploads saved in this browser.";
+			container.appendChild(empty);
+			return;
+		}
+		uploads.forEach(function(item){
+			var img = document.createElement("img");
+			img.src = item.url;
+			img.alt = "Recent upload";
+			img.title = item.url;
+			img.dataset.url = item.url;
+			img.onclick = function(){
+				applyMediaURLToInput(targetField, this.dataset.url);
+			};
+			container.appendChild(img);
+		});
+	}
+
+	function toggleRecentUploadList(container, targetField){
+		if (!container){
+			return;
+		}
+		renderRecentUploadList(container, targetField);
+		container.classList.toggle("hidden");
 	}
 	
 	function openMediaSearch(targetFieldId) {
@@ -5221,17 +5531,7 @@
 							return;
 						}
 						
-						targetField.value = this.dataset.url;
-						
-						// Trigger the change event to update the parent property
-						const e = new Event("change");
-						targetField.dispatchEvent(e);
-						
-						// Highlight the updated field
-						targetField.classList.remove("updated");
-						setTimeout(function() {
-							targetField.classList.add("updated");
-						}, 10);
+						applyMediaURLToInput(targetField, this.dataset.url);
 						
 						// Close the modal
 						mediaModal.classList.add("hidden");
@@ -5253,6 +5553,7 @@ function settings() {
   
   if (parent.setting) {
     parent.setting.classList.toggle("hidden");
+    configureLayoutEditorInteractions(!CtrlPressed);
     return;
   }
   
@@ -5264,6 +5565,13 @@ function settings() {
   
   // Build settings UI
   setEle.innerHTML = `
+    <div class="settings-titlebar">
+      <span>Element Settings</span>
+      <span class="settings-titlebar-actions">
+        <button class="settings-done" type="button">Done</button>
+        <button class="settings-close" type="button">Hide</button>
+      </span>
+    </div>
     <div class="tab-container">
       <div class="tab active" data-tab="basic">Basic</div>
       <div class="tab" data-tab="appearance">Appearance</div>
@@ -5284,13 +5592,15 @@ function settings() {
           <div class="settings-label" title="Set a background image for this space">Background Image</div>
           <div class="settings-field">
             <input id="backgroundImageURL" placeholder="URL" style="width: 100%;">
-            <button class="search-btn" title="Search for GIFs">🔍</button>
-            <button class="upload-btn" id="uploadBackgroundBtn" title="Upload an image" style="background: #667eea; color: white; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer; margin-left: 5px;">Upload</button>
+            <button class="search-btn" title="Search Tenor GIFs">🔍</button>
+            <button class="upload-btn" id="uploadBackgroundBtn" title="Upload and immediately use this image">Upload and Use</button>
+            <button class="recent-upload-btn" data-upload-target="background" type="button" title="Use a recent upload saved in this browser">Recent</button>
           </div>
         </div>
+        <div class="hidden recent-upload-list" data-upload-list="background"></div>
         
         <div class="settings-row">
-          <button class="gallery-btn">Select a background image from our gallery</button>
+          <button class="gallery-btn">Select a bundled background image</button>
         </div>
         
         <div class="hidden" id="imageCarousel"></div>
@@ -5299,10 +5609,12 @@ function settings() {
           <div class="settings-label" title="Add an image overlay; it would make sense if its a transparent image">Overlay Image</div>
           <div class="settings-field">
             <input id="foregroundImageURL" placeholder="URL" style="width: 100%;">
-            <button class="search-btn" title="Search for GIFs">🔍</button>
-            <button class="upload-btn" id="uploadForegroundBtn" title="Upload an image" style="background: #667eea; color: white; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer; margin-left: 5px;">Upload</button>
+            <button class="search-btn" title="Search Tenor GIFs">🔍</button>
+            <button class="upload-btn" id="uploadForegroundBtn" title="Upload and immediately use this overlay image">Upload and Use</button>
+            <button class="recent-upload-btn" data-upload-target="foreground" type="button" title="Use a recent upload saved in this browser">Recent</button>
           </div>
         </div>
+        <div class="hidden recent-upload-list" data-upload-list="foreground"></div>
         
         <div class="settings-row">
           <div class="settings-label" title="If the specified stream is connected, and both it and this element are unassigned, load that stream here.">Default Stream ID</div>
@@ -5456,7 +5768,7 @@ function settings() {
     </div>
     
     <div class="footer-buttons">
-      <button class="action-btn">Save</button>
+      <button class="action-btn">Done</button>
     </div>
   `;
   
@@ -5545,12 +5857,25 @@ function settings() {
   
   setEle.querySelector('#backgroundImageURL').onchange = function() {
     parent.backgroundMedia = this.value;
+    updateElementStyle(parent);
   };
   
   setEle.querySelector('#foregroundImageURL').onchange = function() {
     parent.foregroundMedia = this.value;
   };
   
+  function applyUploadedMedia(inputSelector, url, kind) {
+    const input = setEle.querySelector(inputSelector);
+    if (input) {
+      saveMixerRecentUpload(url, kind);
+      applyMediaURLToInput(input, url);
+      const list = setEle.querySelector('[data-upload-list="' + kind + '"]');
+      if (list && !list.classList.contains("hidden")) {
+        renderRecentUploadList(list, input);
+      }
+    }
+  }
+
   // Add upload button handlers
   const uploadBackgroundBtn = setEle.querySelector('#uploadBackgroundBtn');
   if (uploadBackgroundBtn) {
@@ -5571,11 +5896,7 @@ function settings() {
           return;
         }
         if (event.data && event.data.type === 'media-uploaded') {
-          const backgroundInput = setEle.querySelector('#backgroundImageURL');
-          if (backgroundInput) {
-            backgroundInput.value = event.data.url;
-            backgroundInput.dispatchEvent(new Event('change', { bubbles: true }));
-          }
+          applyUploadedMedia('#backgroundImageURL', event.data.url, 'background');
           cleanup();
         }
       };
@@ -5607,11 +5928,7 @@ function settings() {
           return;
         }
         if (event.data && event.data.type === 'media-uploaded') {
-          const foregroundInput = setEle.querySelector('#foregroundImageURL');
-          if (foregroundInput) {
-            foregroundInput.value = event.data.url;
-            foregroundInput.dispatchEvent(new Event('change', { bubbles: true }));
-          }
+          applyUploadedMedia('#foregroundImageURL', event.data.url, 'foreground');
           cleanup();
         }
       };
@@ -5665,6 +5982,7 @@ function settings() {
 
   setEle.querySelector('#coverMedia').onchange = function() {
     parent.cover = this.checked;
+    updateElementStyle(parent);
   };
   
   animatedCheck.onchange = function() {
@@ -5745,13 +6063,7 @@ function settings() {
           img.style.cursor = 'pointer';
           carousel.appendChild(img);
           img.onclick = function(){
-            setEle.querySelector('#backgroundImageURL').value = this.dataset.url;
-            setEle.querySelector('#backgroundImageURL').classList.remove("updated");
-            setTimeout(function(button){
-              button.classList.add("updated");
-            }, 10, setEle.querySelector('#backgroundImageURL'));
-            const e = new Event("change");
-            setEle.querySelector('#backgroundImageURL').dispatchEvent(e);
+            applyMediaURLToInput(setEle.querySelector('#backgroundImageURL'), this.dataset.url);
           }
         });
       })
@@ -5770,14 +6082,36 @@ function settings() {
       openMediaSearch(setEle.querySelector('#foregroundImageURL'));
     };
   }
+
+  var recentUploadButtons = setEle.querySelectorAll('.recent-upload-btn');
+  if (recentUploadButtons[0]) {
+    recentUploadButtons[0].onclick = function() {
+      toggleRecentUploadList(
+        setEle.querySelector('[data-upload-list="background"]'),
+        setEle.querySelector('#backgroundImageURL')
+      );
+    };
+  }
+  if (recentUploadButtons[1]) {
+    recentUploadButtons[1].onclick = function() {
+      toggleRecentUploadList(
+        setEle.querySelector('[data-upload-list="foreground"]'),
+        setEle.querySelector('#foregroundImageURL')
+      );
+    };
+  }
   
-  // Save button
-  setEle.querySelector('.action-btn').onclick = function() {
+  function closeSettingsPanel() {
     setEle.classList.add("hidden");
     updateElementStyle(parent);
   };
+
+  setEle.querySelector('.settings-close').onclick = closeSettingsPanel;
+  setEle.querySelector('.settings-done').onclick = closeSettingsPanel;
+  setEle.querySelector('.action-btn').onclick = closeSettingsPanel;
   
   setEle.classList.remove("hidden");
+  configureLayoutEditorInteractions(!CtrlPressed);
   
 	setTimeout(function() {
 	  const rect = setEle.getBoundingClientRect();
@@ -6180,6 +6514,48 @@ function settings() {
 	var layoutFrames = {}; // Store frames by slot ID (not index)
 	var frameRequestTimer = null;
 
+	function clearFrameFromElement(element) {
+	  var cropTarget = ensureCropTarget(element);
+	  delete cropTarget.dataset.snapshotFrame;
+	  cropTarget.style.backgroundBlendMode = '';
+	  updateElementStyle(element);
+	}
+
+	function clearMixerStreamPreviewState(streamID) {
+	  if (!streamID) {
+	    return;
+	  }
+	  var clearedSlots = [];
+	  for (var slotId in guestPositions) {
+	    if (guestPositions[slotId] === streamID) {
+	      clearedSlots.push(parseInt(slotId) - 1);
+	      delete guestPositions[slotId];
+	    }
+	  }
+	  clearedSlots.forEach(function(slotId) {
+	    if (isFinite(slotId)) {
+	      delete layoutFrames[slotId];
+	      updateElementWithFrame(slotId, false);
+	    }
+	  });
+
+	  var thing = document.getElementById("sid_" + streamID);
+	  if (thing && thing.dataset && thing.dataset.slot) {
+	    var placeholder = document.querySelector("[data-slot='" + thing.dataset.slot + "']");
+	    if (placeholder) {
+	      placeholder.style.display = "block";
+	      placeholder.classList.remove("hidden");
+	      placeholder.classList.add("empty");
+	    }
+	    delete thing.dataset.slot;
+	    thing.classList.add("disconnected");
+	    thing.title = "Not currently connected, but can still be placed";
+	    if (document.getElementById("col2")) {
+	      document.getElementById("col2").insertBefore(thing, document.getElementById("delete"));
+	    }
+	  }
+	}
+
 	function requestFramesBySlot() {
 	  if (!iframe || !iframe.contentWindow) return;
 	  
@@ -6212,7 +6588,11 @@ function settings() {
 	  var eles = document.querySelectorAll(".widget");
 	  for (var i = 0; i < eles.length; i++) {
 		if ("slot" in eles[i] && parseInt(eles[i].slot) === parseInt(slotId)) {
-		  applyFrameToElement(eles[i], frameData);
+		  if (frameData) {
+		    applyFrameToElement(eles[i], frameData);
+		  } else {
+		    clearFrameFromElement(eles[i]);
+		  }
 		}
 	  }
 	}
@@ -6220,10 +6600,7 @@ function settings() {
 	function applyFrameToElement(element, frameData) {
 	  //var opacity = (element.frameOpacity || 30) / 100;
 	  var cropTarget = ensureCropTarget(element);
-	  cropTarget.style.backgroundImage = `url(${frameData})`;
-	  cropTarget.style.backgroundSize = element.cover ? 'cover' : 'contain';
-	  cropTarget.style.backgroundPosition = 'center';
-	  cropTarget.style.backgroundRepeat = 'no-repeat';
+	  cropTarget.dataset.snapshotFrame = frameData;
 	  cropTarget.style.backgroundBlendMode = 'luminosity';
 	  
 	  updateElementStyle(element);

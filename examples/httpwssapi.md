@@ -152,10 +152,13 @@ These commands target specific guests when you are the director.
 | `soloChatBidirectional` | Guest ID/slot | N/A | Two-way private chat |
 | `speaker` | Guest ID/slot | N/A | Toggle guest's speaker |
 | `display` | Guest ID/slot | N/A | Toggle guest's display |
+| `rotate` | Guest ID/slot | `true`, `false`, `90`, `180`, `270` | Rotate guest video. `true` advances +90 degrees; `false` resets rotation. |
 | `forceKeyframe` | Guest ID/slot | N/A | Fix video artifacts for guest |
 | `soloVideo` | Guest ID/slot | N/A | Highlight specific guest's video |
 | `volume` | Guest ID/slot | `0` to `200` | Set guest's microphone volume |
 | `mixorder` | Guest ID/slot | `-1` or `1` | Change guest's position in mixer |
+
+`rotate` is a director-side guest command. It is not exposed as a standalone untargeted local command on a guest page using `?push=...&api=...`.
 
 ## Target Parameter Explanation
 

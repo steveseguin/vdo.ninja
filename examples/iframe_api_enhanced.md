@@ -116,6 +116,27 @@ iframe.contentWindow.postMessage({
     value: false 
 }, "*");
 
+// Rotate guest video by +90 degrees
+iframe.contentWindow.postMessage({
+    action: "rotate",
+    target: "1",
+    value: true
+}, "*");
+
+// Set guest video rotation explicitly
+iframe.contentWindow.postMessage({
+    action: "rotate",
+    target: "streamID123",
+    value: 180
+}, "*");
+
+// Reset guest video rotation
+iframe.contentWindow.postMessage({
+    action: "rotate",
+    target: "1",
+    value: false
+}, "*");
+
 // Add guest to scene
 iframe.contentWindow.postMessage({ 
     action: "addScene", 
@@ -199,8 +220,8 @@ The `targetGuest` function provides another way to control guests:
 iframe.contentWindow.postMessage({
     function: "targetGuest",
     target: "1",      // Guest slot or stream ID
-    action: "mic",    // Action to perform
-    value: "toggle"   // Value (optional)
+    action: "rotate", // Action to perform
+    value: true       // true=+90, false=reset, or 90/180/270
 }, "*");
 ```
 
@@ -216,6 +237,8 @@ iframe.contentWindow.postMessage({
     value2: "abs"
 }, "*");
 ```
+
+`rotate` is not a top-level `commands` action. Use `action:"rotate"` with a guest `target`, or `function:"targetGuest"`.
 
 ### Advanced DOM Manipulation
 

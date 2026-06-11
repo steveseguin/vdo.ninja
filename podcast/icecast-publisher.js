@@ -88,6 +88,10 @@ function isBareIpTarget(target) {
   return isIPv4Target(target) && !target.port && target.pathname === '/';
 }
 
+function isHttpsPage() {
+  return typeof window !== 'undefined' && window.location?.protocol === 'https:';
+}
+
 export class IcecastPublisher extends EventTarget {
   constructor({ audioContext = null, getParticipants = null } = {}) {
     super();
@@ -713,6 +717,10 @@ export class IcecastPublisher extends EventTarget {
 
   async openUploadWithFallback(uploadStream) {
     if (this.config.relayUrl) {
+      if (this.shouldSkipDirectUpload()) {
+        this.emitStatus('connecting', 'Using Icecast relay.');
+        return this.openRelayUpload(uploadStream);
+      }
       const [directBody, relayBody] = uploadStream.tee();
       const directAbortController = new AbortController();
       let directTimedOut = false;
@@ -758,6 +766,15 @@ export class IcecastPublisher extends EventTarget {
     return this.openDirectUpload(uploadStream).then(response => this.waitForUploadCompletion(response));
   }
 
+  shouldSkipDirectUpload() {
+    try {
+      const target = new URL(this.config.targetUrl);
+      return target.protocol === 'http:' && isHttpsPage();
+    } catch (error) {
+      return false;
+    }
+  }
+
   openDirectUpload(body, signal = this.uploadAbortController?.signal) {
     return fetch(this.config.targetUrl, {
       method: 'PUT',
@@ -775,15 +792,35 @@ export class IcecastPublisher extends EventTarget {
     });
   }
 
-  openRelayUpload(body) {
+  async openRelayUpload(body) {
     if (typeof WebSocket !== 'undefined') {
-      return this.openRelayWebSocket(body);
+      const [socketBody, fetchBody] = body.tee();
+      let socketReady = false;
+      try {
+        return await this.openRelayWebSocket(socketBody, {
+          onReady: () => {
+            socketReady = true;
+            fetchBody.cancel('relay socket active').catch(() => {});
+          }
+        });
+      } catch (error) {
+        if (socketReady || this.stopping) {
+          if (!fetchBody.locked) {
+            fetchBody.cancel('relay socket failed').catch(() => {});
+          }
+          throw error;
+        }
+        this.emitStatus('connecting', 'Relay socket failed; using relay upload.', {
+          fallbackError: error?.message || 'relay socket failed'
+        });
+        return this.openRelayFetch(fetchBody);
+      }
     }
     return this.openRelayFetch(body);
   }
 
-  openRelayFetch(body) {
-    return fetch(this.config.relayUrl, {
+  async openRelayFetch(body) {
+    const response = await fetch(this.config.relayUrl, {
       method: 'POST',
       mode: 'cors',
       cache: 'no-store',
@@ -791,15 +828,31 @@ export class IcecastPublisher extends EventTarget {
       body,
       duplex: 'half',
       signal: this.uploadAbortController?.signal
-    }).then(response => {
-      if (!response.ok) {
-        throw new Error(`Icecast relay rejected the stream (${response.status}).`);
-      }
-      return this.waitForUploadCompletion(response);
     });
+    if (!response.ok) {
+      let relayMessage = '';
+      try {
+        const bodyText = await response.text();
+        if (bodyText) {
+          try {
+            relayMessage = JSON.parse(bodyText).error || bodyText;
+          } catch (error) {
+            relayMessage = bodyText;
+          }
+        }
+      } catch (error) {
+        relayMessage = '';
+      }
+      throw new Error(
+        relayMessage
+          ? `Icecast relay rejected the stream (${response.status}): ${relayMessage}`
+          : `Icecast relay rejected the stream (${response.status}).`
+      );
+    }
+    return this.waitForUploadCompletion(response);
   }
 
-  openRelayWebSocket(body) {
+  openRelayWebSocket(body, { onReady = null } = {}) {
     const socketUrl = new URL(this.config.relayUrl, window.location.href);
     socketUrl.protocol = socketUrl.protocol === 'https:' ? 'wss:' : 'ws:';
     const signal = this.uploadAbortController?.signal;
@@ -899,6 +952,13 @@ export class IcecastPublisher extends EventTarget {
             activeClosed = false;
             activeCloseError = null;
             this.relayReady = true;
+            if (typeof onReady === 'function') {
+              try {
+                onReady();
+              } catch (error) {
+                console.warn('Icecast relay ready callback failed', error);
+              }
+            }
             this.emitStatus('live', 'Icecast relay connected.');
             finish(resolveSocket, socket);
           }
@@ -992,9 +1052,15 @@ export class IcecastPublisher extends EventTarget {
         })
         .catch(error => {
           if (this.isExpectedStopError(error)) {
+            if (reader) {
+              reader.cancel('stopping').catch(() => {});
+            }
             closeSocket(activeSocket, 1000, 'stopping');
             settle(resolve, new Response('', { status: 200 }));
             return;
+          }
+          if (reader) {
+            reader.cancel('relay failed').catch(() => {});
           }
           closeSocket(activeSocket, 4000, 'relay failed');
           settle(reject, error);

@@ -6566,8 +6566,8 @@ ul#audioSource3{
 }
 
 .darktheme #grabDirectorSoloLink {
-	background-color: var(--discord-grey-3);
-	border: 1px solid var(--discord-grey-8);
+	background-color: var(--discord-grey-1);
+	border: 1px solid #4a4d55;
 }
 #refreshVideoButton > i{
 	cursor: pointer;
@@ -6579,10 +6579,16 @@ ul#audioSource3{
 	margin-top: 10px;
 }
 #grabDirectorSoloLink {
+	box-sizing: border-box;
 	display: inline-block;
-	font-size: 16px;
-	padding: 2px 6px;
+	font-size: 12px;
+	line-height: 1.35;
+	padding: 3px 6px;
 	width: 100%;
+	max-width: 100%;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
 	outline: 0;
 	border-radius: 4px;
 	background-color: var(--lighttheme-1);
@@ -7553,11 +7559,32 @@ ul#audioSource3 input:checked + label {
     background-color: var(--accent-hover-color) !important;
 }
 
-/* 16) Solo link accent harmonization */
-a.soloLink:link, a.soloLink:visited { color: var(--a-link); }
-.darktheme a.soloLink:link, .darktheme a.soloLink:visited { color: var(--a-dark-link); }
-a.soloLink:hover { color: var(--a-hover); }
-.darktheme a.soloLink:hover { color: var(--a-dark-hover); }
+/* 16) Solo link readability */
+#grabDirectorSoloLink,
+a.soloLink:link,
+a.soloLink:visited {
+	color: #26313d;
+	text-shadow: none;
+}
+a.soloLink:link,
+a.soloLink:visited {
+	font-size: 1em;
+	font-weight: 600;
+}
+#grabDirectorSoloLink:hover,
+a.soloLink:hover {
+	color: var(--a-hover);
+}
+.darktheme #grabDirectorSoloLink,
+.darktheme a.soloLink:link,
+.darktheme a.soloLink:visited {
+	color: var(--discord-text);
+	text-shadow: none;
+}
+.darktheme #grabDirectorSoloLink:hover,
+.darktheme a.soloLink:hover {
+	color: var(--a-dark-hover);
+}
 
 /* 10) Header glass — subtle and safe */
 #header {

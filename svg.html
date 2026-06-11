@@ -1,0 +1,812 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="SVG Tweak - Interactive SVG Editor with drag, resize, and live preview capabilities">
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMiAzMiI+CiAgPHJlY3Qgd2lkdGg9IjMyIiBoZWlnaHQ9IjMyIiBmaWxsPSIjNGE5MGUyIi8+CiAgPGNpcmNsZSBjeD0iMTYiIGN5PSIxNiIgcj0iMTIiIGZpbGw9IiNmZmYiLz4KICA8Y2lyY2xlIGN4PSIxNiIgY3k9IjE2IiByPSI4IiBmaWxsPSIjNGE5MGUyIi8+Cjwvc3ZnPg==">
+    <meta name="theme-color" content="#0066ff">
+    <title>SVG Tweak</title>
+    <style>
+        :root {
+            --primary-color: #0066ff;
+            --primary-color-alpha: #0066ff33;
+            --border-color: #ccc;
+            --bg-color: #f5f5f5;
+            --spacing: 20px;
+            --border-radius: 4px;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            margin: 0;
+            padding: var(--spacing);
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            color: #333;
+            line-height: 1.5;
+        }
+
+        .container {
+            display: flex;
+            flex-direction: column;
+            gap: var(--spacing);
+            height: calc(100vh - 40px);
+            max-width: 1920px;
+            margin: 0 auto;
+        }
+
+        #preview {
+            flex: 2;
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius);
+            padding: var(--spacing);
+            overflow: auto;
+            background: var(--bg-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.05);
+            transition: background-color 0.2s ease;
+            position: relative;
+        }
+
+        #preview:hover {
+            background: #fafafa;
+        }
+
+        #svg-container {
+            position: relative;
+            display: inline-block;
+        }
+
+        #canvas-boundary {
+            position: absolute;
+            border: 1px dashed #666;
+            pointer-events: none;
+            transition: all 0.2s ease;
+            box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.05);
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        #editor {
+            flex: 1;
+            min-height: 200px;
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius);
+            padding: var(--spacing);
+            overflow: auto;
+            resize: none;
+            font-family: 'SF Mono', Monaco, Menlo, Consolas, 'Liberation Mono', Courier, monospace;
+            font-size: 14px;
+            line-height: 1.6;
+            white-space: pre;
+            tab-size: 2;
+            background: #fff;
+            transition: border-color 0.2s ease;
+        }
+
+        #editor:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px var(--primary-color-alpha);
+        }
+
+        #preview svg {
+            max-width: 100%;
+            max-height: 100%;
+            transition: transform 0.2s ease;
+            display: block;
+        }
+
+        .draggable {
+            cursor: move;
+            transition: transform 0.1s ease;
+        }
+
+        .selected {
+            outline: 2px solid var(--primary-color);
+            outline-offset: 2px;
+        }
+
+        ::selection {
+            background: var(--primary-color-alpha);
+        }
+
+        .controls {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-bottom: 10px;
+        }
+
+        .control-group {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        input[type="number"] {
+            width: 80px;
+            padding: 4px 8px;
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius);
+        }
+
+        input[type="range"] {
+            width: 100px;
+        }
+
+        button {
+            padding: 5px 10px;
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius);
+            background: white;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        button:hover {
+            background: #f0f0f0;
+            border-color: #999;
+        }
+
+        label {
+            font-size: 14px;
+        }
+
+        .footer {
+            text-align: center;
+            font-size: 12px;
+            margin-top: 10px;
+            color: #666;
+        }
+
+        .footer a {
+            color: var(--primary-color);
+            text-decoration: none;
+        }
+
+        .footer a:hover {
+            text-decoration: underline;
+        }
+
+        @media (min-width: 768px) {
+            #preview {
+                flex: 3;
+            }
+            
+            #editor {
+                flex: 1;
+            }
+
+            .controls {
+                flex-direction: row;
+            }
+        }
+
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --bg-color: #1a1a1a;
+                --border-color: #333;
+            }
+            
+            body {
+                background: #121212;
+                color: #fff;
+            }
+            
+            #editor {
+                background: #1e1e1e;
+                color: #fff;
+            }
+            
+            #preview:hover {
+                background: #222;
+            }
+
+            button {
+                background: #2a2a2a;
+                color: #fff;
+            }
+
+            button:hover {
+                background: #3a3a3a;
+            }
+
+            input {
+                background: #2a2a2a;
+                color: #fff;
+            }
+
+            #canvas-boundary {
+                border-color: #666;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="controls">
+            <div class="control-group">
+                <label for="canvas-width">Canvas:</label>
+                <input type="number" id="canvas-width" min="10" value="200" aria-label="Canvas width">
+                ×
+                <input type="number" id="canvas-height" min="10" value="200" aria-label="Canvas height">
+            </div>
+            <div class="control-group">
+                <label for="svg-scale">Scale:</label>
+                <input type="range" id="svg-scale" min="0.5" max="3" step="0.1" value="1">
+                <span id="scale-value">100%</span>
+            </div>
+            <button id="center-view">🎯Center View</button>
+            <button id="fit-to-content">🪟Fit to Content</button>
+			<div class="control-group">
+                <button id="export-svg">💾Export SVG</button>
+            </div>
+			<div class="control-group">
+				<button id="export-png">🖼️Export PNG</button>
+				<input type="number" id="export-width" min="1" value="800" aria-label="Export width">
+				<span>×</span>
+				<input type="number" id="export-height" min="1" value="800" aria-label="Export height">
+			</div>
+			
+        </div>
+        <div id="preview" role="region" aria-label="SVG Preview">
+        </div>
+        <textarea id="editor" spellcheck="false" aria-label="SVG Code Editor"></textarea>
+        <div class="footer">
+            <a href="https://svgtweak.com">SVGTweak.com</a> | <a href="https://github.com/steveseguin/svg-tweak/" target="_blank">Open Source on GitHub</a> | Community contributions welcome!
+        </div>
+    </div>
+    <script>
+const editor = document.getElementById('editor');
+const preview = document.getElementById('preview');
+const canvasWidthInput = document.getElementById('canvas-width');
+const canvasHeightInput = document.getElementById('canvas-height');
+const svgScaleInput = document.getElementById('svg-scale');
+const scaleValueSpan = document.getElementById('scale-value');
+const centerViewBtn = document.getElementById('center-view');
+const fitToContentBtn = document.getElementById('fit-to-content');
+let inspectorPanel = null;
+let inspectorVisible = false;
+let undoStack = [];
+const MAX_UNDO_STEPS = 20;
+let dragElement = null;
+let selectedElement = null;
+let initialX, initialY, elementInitialX, elementInitialY;
+let svgScale = 1;
+let svgContainer = null;
+let canvasBoundary = null;
+
+function updatePreview() {
+	try {
+		preview.innerHTML = '';
+		svgContainer = document.createElement('div');
+		svgContainer.id = 'svg-container';
+		preview.appendChild(svgContainer);
+		svgContainer.innerHTML = editor.value;
+		const svg = svgContainer.querySelector('svg');
+		if (svg) {
+			canvasBoundary = document.createElement('div');
+			canvasBoundary.id = 'canvas-boundary';
+			svgContainer.insertBefore(canvasBoundary, svg);
+			svgContainer.style.transformOrigin = 'top left';
+			svgContainer.style.transform = `scale(${svgScale})`;
+			let viewBoxWidth, viewBoxHeight;
+			if (svg.getAttribute('viewBox')) {
+				const [x, y, width, height] = svg.getAttribute('viewBox').split(/\s+/).map(parseFloat);
+				viewBoxWidth = width;
+				viewBoxHeight = height;
+			} else {
+				viewBoxWidth = parseFloat(svg.getAttribute('width') || 200);
+				viewBoxHeight = parseFloat(svg.getAttribute('height') || 200);
+			}
+			svg.setAttribute('width', viewBoxWidth);
+			svg.setAttribute('height', viewBoxHeight);
+			canvasWidthInput.value = viewBoxWidth;
+			canvasHeightInput.value = viewBoxHeight;
+			updateFavicon(svg);
+		}
+		makeElementsInteractive();
+		if (selectedElement) {
+			const elementId = selectedElement.id || '';
+			const newElement = svgContainer.querySelector(elementId ? `#${elementId}` : selectedElement.tagName);
+			if (newElement) {
+				selectElement(newElement);
+			}
+		}
+	} catch (e) {
+		console.error('Invalid SVG:', e);
+	}
+}
+
+function handleKeyDown(e) {
+	if (selectedElement && (e.key === 'Delete' || e.key === 'Backspace')) {
+		e.preventDefault();
+		deleteSelectedElement();
+	}
+	if ((e.ctrlKey || e.metaKey) && e.key === 'z') {
+		e.preventDefault();
+		undo();
+	}
+}
+
+function deleteSelectedElement() {
+	if (!selectedElement) return;
+	saveStateForUndo();
+	const parent = selectedElement.parentNode;
+	parent.removeChild(selectedElement);
+	updateSVGText();
+	selectedElement = null;
+}
+
+function saveStateForUndo() {
+	const svg = svgContainer.querySelector('svg');
+	if (svg) {
+		const serializer = new XMLSerializer();
+		const svgString = serializer.serializeToString(svg);
+		undoStack.push(svgString);
+		if (undoStack.length > MAX_UNDO_STEPS) {
+			undoStack.shift();
+		}
+	}
+}
+
+function undo() {
+	if (undoStack.length === 0) return;
+	const lastState = undoStack.pop();
+	editor.value = lastState;
+	updatePreview();
+}
+
+function updateFavicon(svg) {
+	const svgClone = svg.cloneNode(true);
+	svgClone.style.transform = '';
+	if (!svgClone.getAttribute('viewBox') && svgClone.getAttribute('width') && svgClone.getAttribute('height')) {
+		svgClone.setAttribute('viewBox', `0 0 ${svgClone.getAttribute('width')} ${svgClone.getAttribute('height')}`);
+	}
+	const existingFavicons = document.querySelectorAll('link[rel="icon"]');
+	existingFavicons.forEach(favicon => {
+		document.head.removeChild(favicon);
+	});
+	const serializer = new XMLSerializer();
+	let svgString = serializer.serializeToString(svgClone);
+	if (!svgString.includes('xmlns=')) {
+		svgString = svgString.replace('<svg', '<svg xmlns="http://www.w3.org/2000/svg"');
+	}
+	const svgBlob = new Blob([svgString], {
+		type: 'image/svg+xml'
+	});
+	const url = URL.createObjectURL(svgBlob);
+	const faviconLink = document.createElement('link');
+	faviconLink.rel = 'icon';
+	faviconLink.type = 'image/svg+xml';
+	faviconLink.href = url;
+	document.head.appendChild(faviconLink);
+	setTimeout(() => URL.revokeObjectURL(url), 5000);
+}
+
+function updateCanvasBoundary() {
+	const width = parseInt(canvasWidthInput.value);
+	const height = parseInt(canvasHeightInput.value);
+	const svg = svgContainer.querySelector('svg');
+	if (svg) {
+		svg.setAttribute('viewBox', `0 0 ${width} ${height}`);
+		svg.setAttribute('width', width);
+		svg.setAttribute('height', height);
+		saveStateForUndo();
+		updateSVGText();
+		updateFavicon(svg);
+	}
+}
+
+function updateScale() {
+	svgScale = parseFloat(svgScaleInput.value);
+	scaleValueSpan.textContent = `${Math.round(svgScale * 100)}%`;
+	if (svgContainer) {
+		svgContainer.style.transform = `scale(${svgScale})`;
+	}
+}
+
+function centerView() {
+	preview.scrollTo({
+		top: (preview.scrollHeight - preview.clientHeight) / 2,
+		left: (preview.scrollWidth - preview.clientWidth) / 2,
+		behavior: 'smooth'
+	});
+}
+
+function fitToContent() {
+	const svg = svgContainer.querySelector('svg');
+	if (!svg) return;
+	const elements = Array.from(svg.querySelectorAll('*')).filter(el => el.tagName !== 'svg');
+	if (elements.length === 0) return;
+	let minX = Infinity,
+		minY = Infinity,
+		maxX = -Infinity,
+		maxY = -Infinity;
+	elements.forEach(el => {
+		const bbox = el.getBBox();
+		minX = Math.min(minX, bbox.x);
+		minY = Math.min(minY, bbox.y);
+		maxX = Math.max(maxX, bbox.x + bbox.width);
+		maxY = Math.max(maxY, bbox.y + bbox.height);
+	});
+	const padding = 10;
+	minX -= padding;
+	minY -= padding;
+	maxX += padding;
+	maxY += padding;
+	const width = Math.max(1, maxX - minX);
+	const height = Math.max(1, maxY - minY);
+	svg.setAttribute('viewBox', `${minX} ${minY} ${width} ${height}`);
+	svg.setAttribute('width', width);
+	svg.setAttribute('height', height);
+	canvasWidthInput.value = Math.round(width);
+	canvasHeightInput.value = Math.round(height);
+	updateSVGText();
+	updateFavicon(svg);
+	centerView();
+}
+
+function makeElementsInteractive() {
+	const svg = svgContainer.querySelector('svg');
+	if (!svg) return;
+	const elements = svg.querySelectorAll('*');
+	elements.forEach(el => {
+		if (el.tagName !== 'svg') {
+			el.classList.add('draggable');
+			el.addEventListener('mousedown', startDrag);
+			el.addEventListener('click', handleElementClick);
+		}
+	});
+}
+
+function handleElementClick(e) {
+	e.stopPropagation();
+	const element = e.target;
+	selectElement(element);
+	highlightCodeForElement(element);
+}
+
+function selectElement(element) {
+	if (selectedElement) {
+		selectedElement.classList.remove('selected');
+	}
+	selectedElement = element;
+	element.classList.add('selected');
+}
+preview.onclick = function(e) {
+	if (!svgContainer.contains(e.target) || e.target === canvasBoundary) {
+		if (selectedElement) {
+			selectedElement.classList.remove('selected');
+			selectedElement = null;
+		}
+	}
+};
+
+function highlightCodeForElement(element) {
+	const serializer = new XMLSerializer();
+	const elementString = serializer.serializeToString(element);
+	const text = editor.value;
+	const start = text.indexOf(elementString);
+	if (start !== -1) {
+		editor.focus();
+		editor.setSelectionRange(start, start + elementString.length);
+	}
+}
+editor.addEventListener('select', () => {
+	const selection = editor.value.substring(editor.selectionStart, editor.selectionEnd);
+	if (selection) {
+		try {
+			const parser = new DOMParser();
+			const doc = parser.parseFromString(selection, 'image/svg+xml');
+			const element = doc.documentElement;
+			if (element.tagName !== 'parsererror') {
+				const previewElement = svgContainer.querySelector(element.tagName);
+				if (previewElement) {
+					selectElement(previewElement);
+				}
+			}
+		} catch (e) {
+			console.error('Invalid selection:', e);
+		}
+	}
+});
+
+function getElementSize(el) {
+	switch (el.tagName.toLowerCase()) {
+		case 'rect':
+			return {
+				width: parseFloat(el.getAttribute('width') || 0),
+					height: parseFloat(el.getAttribute('height') || 0)
+			};
+		case 'circle':
+			return {
+				r: parseFloat(el.getAttribute('r') || 0)
+			};
+		case 'ellipse':
+			return {
+				rx: parseFloat(el.getAttribute('rx') || 0),
+					ry: parseFloat(el.getAttribute('ry') || 0)
+			};
+		case 'text':
+			return {
+				fontSize: parseFloat(getComputedStyle(el).fontSize)
+			};
+	}
+	return null;
+}
+
+function updateElementSize(el, factor) {
+	saveStateForUndo();
+	const size = getElementSize(el);
+	if (!size) return;
+	switch (el.tagName.toLowerCase()) {
+		case 'rect':
+			el.setAttribute('width', size.width * factor);
+			el.setAttribute('height', size.height * factor);
+			break;
+		case 'circle':
+			el.setAttribute('r', size.r * factor);
+			break;
+		case 'ellipse':
+			el.setAttribute('rx', size.rx * factor);
+			el.setAttribute('ry', size.ry * factor);
+			break;
+		case 'text':
+			const newSize = size.fontSize * factor;
+			el.setAttribute('font-size', `${newSize}px`);
+			break;
+	}
+	updateSVGText();
+}
+preview.addEventListener('wheel', (e) => {
+	if (selectedElement) {
+		e.preventDefault();
+		const factor = e.deltaY > 0 ? 0.9 : 1.1;
+		updateElementSize(selectedElement, factor);
+	}
+});
+
+function getElementPosition(el) {
+	switch (el.tagName.toLowerCase()) {
+		case 'rect':
+		case 'text':
+			return {
+				x: parseFloat(el.getAttribute('x') || 0),
+					y: parseFloat(el.getAttribute('y') || 0)
+			};
+		case 'circle':
+		case 'ellipse':
+			return {
+				x: parseFloat(el.getAttribute('cx') || 0),
+					y: parseFloat(el.getAttribute('cy') || 0)
+			};
+		case 'line':
+			return {
+				x1: parseFloat(el.getAttribute('x1') || 0),
+					y1: parseFloat(el.getAttribute('y1') || 0),
+					x2: parseFloat(el.getAttribute('x2') || 0),
+					y2: parseFloat(el.getAttribute('y2') || 0)
+			};
+		case 'polygon':
+		case 'polyline':
+			const points = el.getAttribute('points').split(/[\s,]+/).map(parseFloat);
+			return {
+				points
+			};
+		case 'path':
+			return {
+				d: el.getAttribute('d')
+			};
+		default:
+			const bbox = el.getBBox();
+			return {
+				x: bbox.x, y: bbox.y
+			};
+	}
+}
+
+function updateElementPosition(el, dx, dy) {
+	switch (el.tagName.toLowerCase()) {
+		case 'rect':
+		case 'text':
+			el.setAttribute('x', parseFloat(el.getAttribute('x') || 0) + dx);
+			el.setAttribute('y', parseFloat(el.getAttribute('y') || 0) + dy);
+			break;
+		case 'circle':
+		case 'ellipse':
+			el.setAttribute('cx', parseFloat(el.getAttribute('cx') || 0) + dx);
+			el.setAttribute('cy', parseFloat(el.getAttribute('cy') || 0) + dy);
+			break;
+		case 'line':
+			el.setAttribute('x1', parseFloat(el.getAttribute('x1') || 0) + dx);
+			el.setAttribute('y1', parseFloat(el.getAttribute('y1') || 0) + dy);
+			el.setAttribute('x2', parseFloat(el.getAttribute('x2') || 0) + dx);
+			el.setAttribute('y2', parseFloat(el.getAttribute('y2') || 0) + dy);
+			break;
+		case 'polygon':
+		case 'polyline':
+			const points = el.getAttribute('points').split(/[\s,]+/).map(parseFloat);
+			const newPoints = [];
+			for (let i = 0; i < points.length; i += 2) {
+				newPoints.push(points[i] + dx);
+				newPoints.push(points[i + 1] + dy);
+			}
+			el.setAttribute('points', newPoints.join(' '));
+			break;
+		case 'path':
+			const currentTransform = el.getAttribute('transform') || '';
+			const translate = `translate(${dx},${dy})`;
+			if (!currentTransform) {
+				el.setAttribute('transform', translate);
+			} else {
+				const match = currentTransform.match(/translate\(([-\d.]+),([-\d.]+)\)/);
+				if (match) {
+					const [_, tx, ty] = match;
+					el.setAttribute('transform', `translate(${parseFloat(tx) + dx},${parseFloat(ty) + dy})`);
+				} else {
+					el.setAttribute('transform', `${currentTransform} ${translate}`);
+				}
+			}
+			break;
+	}
+}
+
+function startDrag(e) {
+	e.stopPropagation();
+	dragElement = e.target;
+	selectElement(dragElement);
+	saveStateForUndo();
+	highlightCodeForElement(dragElement);
+	const svgElement = dragElement.ownerSVGElement;
+	const pt = svgElement.createSVGPoint();
+	pt.x = e.clientX;
+	pt.y = e.clientY;
+	const svgP = pt.matrixTransform(svgElement.getScreenCTM().inverse());
+	initialX = svgP.x;
+	initialY = svgP.y;
+	const pos = getElementPosition(dragElement);
+	if ('x' in pos) {
+		elementInitialX = pos.x;
+		elementInitialY = pos.y;
+	} else if ('cx' in pos) {
+		elementInitialX = pos.x;
+		elementInitialY = pos.y;
+	}
+	document.addEventListener('mousemove', drag);
+	document.addEventListener('mouseup', endDrag);
+}
+const exportPngBtn = document.getElementById('export-png');
+const exportWidthInput = document.getElementById('export-width');
+const exportHeightInput = document.getElementById('export-height');
+const exportSvgBtn = document.getElementById('export-svg');
+
+function exportToSvg() {
+    const svg = svgContainer.querySelector('svg');
+    if (!svg) return;
+    
+    const serializer = new XMLSerializer();
+    let svgString = serializer.serializeToString(svg);
+    
+    // Ensure the SVG has the correct namespace
+    if (!svgString.includes('xmlns=')) {
+        svgString = svgString.replace('<svg', '<svg xmlns="http://www.w3.org/2000/svg"');
+    }
+    
+    // Create SVG blob and download
+    const svgBlob = new Blob([svgString], {
+        type: 'image/svg+xml'
+    });
+    const url = URL.createObjectURL(svgBlob);
+    const downloadLink = document.createElement('a');
+    downloadLink.href = url;
+    downloadLink.download = 'export.svg';
+    document.body.appendChild(downloadLink);
+    downloadLink.click();
+    document.body.removeChild(downloadLink);
+    URL.revokeObjectURL(url);
+}
+function exportToPng() {
+	const svg = svgContainer.querySelector('svg');
+	if (!svg) return;
+	const exportWidth = parseInt(exportWidthInput.value) || 800;
+	const exportHeight = parseInt(exportHeightInput.value) || 800;
+	const canvas = document.createElement('canvas');
+	canvas.width = exportWidth;
+	canvas.height = exportHeight;
+	const ctx = canvas.getContext('2d');
+	const img = new Image();
+	const serializer = new XMLSerializer();
+	let svgString = serializer.serializeToString(svg);
+	if (!svgString.includes('xmlns=')) {
+		svgString = svgString.replace('<svg', '<svg xmlns="http://www.w3.org/2000/svg"');
+	}
+	const svgBlob = new Blob([svgString], {
+		type: 'image/svg+xml'
+	});
+	const url = URL.createObjectURL(svgBlob);
+	img.onload = function() {
+		ctx.clearRect(0, 0, canvas.width, canvas.height);
+		const svgWidth = parseFloat(svg.getAttribute('width')) || 200;
+		const svgHeight = parseFloat(svg.getAttribute('height')) || 200;
+		const scale = Math.min(exportWidth / svgWidth, exportHeight / svgHeight);
+		const x = (exportWidth - svgWidth * scale) / 2;
+		const y = (exportHeight - svgHeight * scale) / 2;
+		ctx.drawImage(img, x, y, svgWidth * scale, svgHeight * scale);
+		const pngDataUrl = canvas.toDataURL('image/png');
+		const downloadLink = document.createElement('a');
+		downloadLink.href = pngDataUrl;
+		downloadLink.download = 'svg-export.png';
+		document.body.appendChild(downloadLink);
+		downloadLink.click();
+		document.body.removeChild(downloadLink);
+		URL.revokeObjectURL(url);
+	};
+	img.src = url;
+}
+exportPngBtn.addEventListener('click', exportToPng);
+exportSvgBtn.addEventListener('click', exportToSvg);
+
+function drag(e) {
+	if (!dragElement) return;
+	const svgElement = dragElement.ownerSVGElement;
+	const pt = svgElement.createSVGPoint();
+	pt.x = e.clientX;
+	pt.y = e.clientY;
+	const svgP = pt.matrixTransform(svgElement.getScreenCTM().inverse());
+	const pos = getElementPosition(dragElement);
+	const currentX = ('x' in pos) ? pos.x : (pos.cx || 0);
+	const currentY = ('y' in pos) ? pos.y : (pos.cy || 0);
+	const dx = svgP.x - initialX;
+	const dy = svgP.y - initialY;
+	updateElementPosition(dragElement, dx, dy);
+	updateSVGText();
+	initialX = svgP.x;
+	initialY = svgP.y;
+}
+
+function updateSVGText() {
+	const svg = svgContainer.querySelector('svg');
+	if (svg) {
+		const serializer = new XMLSerializer();
+		const svgString = serializer.serializeToString(svg);
+		editor.value = svgString;
+		updateFavicon(svg);
+	}
+}
+
+function endDrag() {
+	dragElement = null;
+	document.removeEventListener('mousemove', drag);
+	document.removeEventListener('mouseup', endDrag);
+}
+editor.addEventListener('input', function() {
+	saveStateForUndo();
+	updatePreview();
+});
+document.addEventListener('keydown', handleKeyDown);
+canvasWidthInput.addEventListener('change', updateCanvasBoundary);
+canvasHeightInput.addEventListener('change', updateCanvasBoundary);
+svgScaleInput.addEventListener('input', updateScale);
+centerViewBtn.addEventListener('click', centerView);
+fitToContentBtn.addEventListener('click', fitToContent);
+editor.value = `<svg viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg" width="400" height="400">
+  <rect x="6" y="137" width="256" height="256" fill="blue" class="draggable"/>
+  <circle cx="281" cy="120" r="112" fill="red" class="draggable selected"/>
+  <text x="22" y="369" fill="green" class="draggable" font-size="88px">Drag me!</text>
+</svg>`;
+updatePreview();
+centerView();
+    </script>
+</body>
+</html>

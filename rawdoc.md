@@ -675,6 +675,7 @@ Please report bugs. It's a first release, using the alpha version of VDO.Ninja, 
     * [\&hideplaybutton](advanced-settings/mixer-scene-parameters/and-hideplaybutton.md)
     * [\&motiondetection](advanced-settings/mixer-scene-parameters/and-motiondetection-alpha.md)
     * [\&scene](advanced-settings/view-parameters/scene.md)
+    * [\&scenerestore](advanced-settings/mixer-scene-parameters/and-scenerestore.md)
     * [\&scenetype](advanced-settings/mixer-scene-parameters/scenetype.md)
     * [\&autoadd](newly-added-parameters/and-autoadd.md)
     * [\&hiddenscenebitrate](newly-added-parameters/and-hiddenscenebitrate.md)
@@ -4357,6 +4358,41 @@ You have to add them to [`&scene`](../view-parameters/scene.md) or [`&room`](../
 You have to add them to [`&scene`](../view-parameters/scene.md) or [`&view`](../view-parameters/view.md) URLs.
 
 <table><thead><tr><th width="150">Parameter</th><th>Explanation</th></tr></thead><tbody><tr><td><a href="../view-parameters/scene.md"><code>&#x26;scene</code></a></td><td>Defines the link to be treated like a scene</td></tr><tr><td><a href="scenetype.md"><code>&#x26;scenetype</code></a></td><td>Shows only the last added video to a scene</td></tr><tr><td><a href="../../newly-added-parameters/and-autoadd.md"><code>&#x26;autoadd</code></a></td><td>Auto-adds the specified stream IDs to the scene</td></tr><tr><td><a href="../../newly-added-parameters/and-hiddenscenebitrate.md"><code>&#x26;hiddenscenebitrate</code></a></td><td>Can be used to force videos not added yet to a scene to run at the specified bitrate</td></tr><tr><td><a href="../../newly-added-parameters/and-preloadbitrate.md"><code>&#x26;preloadbitrate</code></a></td><td>Can be used to change the pre-load target bitrate for scenes</td></tr><tr><td><a href="../newly-added-parameters/and-waitimage.md"><code>&#x26;waitimage</code></a></td><td>You can add a custom image which shows up while waiting for the <a href="../view-parameters/scene.md"><code>&#x26;scene</code></a> or <a href="../view-parameters/view.md"><code>&#x26;view</code></a> link</td></tr><tr><td><a href="../newly-added-parameters/and-waitmessage.md"><code>&#x26;waitmessage</code></a></td><td>You can add a custom message which shows up while waiting for the <a href="../view-parameters/scene.md"><code>&#x26;scene</code></a> or <a href="../view-parameters/view.md"><code>&#x26;view</code></a> link</td></tr><tr><td><a href="../newly-added-parameters/and-waittimeout.md"><code>&#x26;waittimeout</code></a></td><td>Specifies a delay for <a href="../newly-added-parameters/and-waitimage.md"><code>&#x26;waitimage</code></a> and <a href="../newly-added-parameters/and-waitmessage.md"><code>&#x26;waitmessage</code></a> while waiting for the <a href="../view-parameters/scene.md"><code>&#x26;scene</code></a> or <a href="../view-parameters/view.md"><code>&#x26;view</code></a> link</td></tr></tbody></table>
+---
+description: Restores a guest's selected scene assignments after reconnecting
+---
+
+# &scenerestore
+
+Director Option! ([`&director`](../../viewers-settings/director.md), [`&room`](../../general-settings/room.md))
+
+## Details
+
+Add `&scenerestore` to the director URL to let the main director restore a guest's manual scene assignment after that guest disconnects and rejoins.
+
+Example:
+
+```
+https://vdo.ninja/?director=ROOMNAME&scenerestore
+```
+
+This is useful when guests are manually assigned to scene outputs such as `&scene=1`, `&scene=2`, or `&scene=3`, and a guest drops because of a poor connection.
+
+When enabled, the main director creates a temporary restore lease when a guest is placed into a scene. If that guest reconnects with the matching restore token while the lease is still active, the director can reapply the previous scene selection.
+
+The lease auto-renews while the guest remains connected, so long-running sessions continue to be restorable. After a disconnect, or after the last scene action for that guest, the lease expires after 15 minutes. If the director hangs up, disconnects, or otherwise revokes the guest, the lease expires immediately.
+
+`&scenerestore` is opt-in. It does not bypass room authentication, director approval, queue/hold modes, or the normal director trust checks.
+
+## Related
+
+{% content-ref url="../view-parameters/scene.md" %}
+[scene.md](../view-parameters/scene.md)
+{% endcontent-ref %}
+
+{% content-ref url="scenetype.md" %}
+[scenetype.md](scenetype.md)
+{% endcontent-ref %}
 ---
 description: Shows only the last added video to a scene
 ---

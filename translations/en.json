@@ -245,6 +245,7 @@
     "allow-effects-invite": "Allow video effects to be used",
     "hide-mic-selection": "Force Default Microphone",
     "hide-screen-share": "Hide Screenshare Option",
+    "hide-local-share": "Hide local share",
     "obfuscate_url": "Obfuscate the Invite URL",
     "add-a-password-to-stream": " Add a password:",
     "interview-paramaters": "Two-way chat",

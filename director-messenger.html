@@ -483,10 +483,10 @@
 			<h2>Send message</h2>
 			<div class="composer">
 				<div class="selected-target">Sending to: <strong id="selectedTarget">Pick a guest</strong></div>
-				<textarea id="messageInput" placeholder="Type a note for the selected guest. Press Enter+Shift to send."></textarea>
+				<textarea id="messageInput" autocomplete="off" placeholder="Type a note for the selected guest. Press Enter+Shift to send."></textarea>
 				<div class="actions">
 					<div class="left">
-						<label><input type="checkbox" id="pinToggle" /> Pin for guest</label>
+						<label><input type="checkbox" id="pinToggle" autocomplete="off" /> Pin for guest</label>
 						<span id="statusHint"></span>
 					</div>
 					<button id="sendBtn">Send</button>

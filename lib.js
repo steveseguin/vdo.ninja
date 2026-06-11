@@ -189,7 +189,7 @@ function getTranslation(key) {
 		return miscTranslations[key];
 	} else {
 		warnlog("misc translation not found");
-		return key.replaceAll("-", " "); //
+		return key.replace(/-/g, " "); //
 	}
 
 }
@@ -372,10 +372,11 @@ function mergeFragmentParams(queryParams) {
 	if (!fragString) {
 		return queryParams; // no fragment, return as-is
 	}
+	fragString = fragString.replace(/^\?+/, "");
+	fragString = fragString.replace(/^&+/, "");
 	fragString = fragString.replace(/\?\?/g, "?");
 	fragString = fragString.replace(/\?/g, "&");
-	fragString = fragString.replace(/\&/, "?");
-	var fragParams = new URLSearchParams(fragString);
+	var fragParams = new URLSearchParams("?" + fragString);
 
 	// Build result: fragment params first, then query params (skip conflicts)
 	var result = new URLSearchParams();
@@ -3426,7 +3427,7 @@ function convertShortcodes(string) {
 	if (string.split(":").length > 2) {
 		for (var i in emojiShortCodes) {
 			if (string.includes(i)) {
-				string = string.replaceAll(i, emojiShortCodes[i]);
+				string = string.split(i).join(emojiShortCodes[i]);
 			}
 		}
 	}
@@ -7025,6 +7026,50 @@ function updateMixer(e = false) {
 	}
 }
 
+function getLayoutTransitionStyle(animated, properties) {
+	var duration = parseInt(animated);
+	if (!duration || duration < 0 || !properties || !properties.length) {
+		return "";
+	}
+	return properties.map(function (property) {
+		return property + " " + duration + "ms ease-in-out 0s";
+	}).join(", ");
+}
+
+function applyLayoutTransition(element, animated, skipAnimation, properties) {
+	if (!element) {
+		return;
+	}
+	element.style.transition = (!skipAnimation && animated) ? getLayoutTransitionStyle(animated, properties) : "";
+}
+
+function applyLayoutTextOverlayStyles(textOverlay, textConfig, animated, skipAnimation) {
+	if (!textOverlay || !textConfig) {
+		return;
+	}
+	applyLayoutTransition(textOverlay, animated, skipAnimation, ["font-size", "top", "background-color", "padding"]);
+	textOverlay.innerText = textConfig.text;
+	textOverlay.style.color = textConfig.textColor || "#ffffff";
+	textOverlay.style.fontSize = textConfig.fontSize || "24px";
+	textOverlay.style.fontFamily = textConfig.fontFamily || "Arial, sans-serif";
+	textOverlay.style.position = "absolute";
+	textOverlay.style.width = "100%";
+	textOverlay.style.textAlign = "center";
+	textOverlay.style.zIndex = "10";
+	textOverlay.style.top = textConfig.textPosition || "50%";
+	textOverlay.style.transform = "translateY(-50%)";
+
+	if (textConfig.textBackground) {
+		textOverlay.style.backgroundColor = textConfig.textBackground;
+		textOverlay.style.padding = "10px";
+		textOverlay.style.textShadow = "";
+	} else {
+		textOverlay.style.backgroundColor = "transparent";
+		textOverlay.style.padding = "";
+		textOverlay.style.textShadow = "1px 1px 2px rgba(0,0,0,0.8)";
+	}
+}
+
 function updateMixerRun(e = false) {
 	// this is the main auto-mixing code.  It's a giant function that runs when there are changes to screensize, video track statuses, etc.
 	try {
@@ -8798,18 +8843,21 @@ function updateMixerRun(e = false) {
 		if (!session.waitImageTimeoutObject) {
 			session.waitImageTimeoutObject = setTimeout(function () {
 				session.waitImageTimeoutObject = true;
-				if (!document.getElementById("retryimage")) {
+				var retryImage = getById("retryimage");
+				if (!retryImage) {
 					playarea.innerHTML += '<img id="retryimage"/>';
-					getById("retryimage").src = decodeURIComponent(session.waitImage);
-					getById("retryimage").onerror = function () {
+					retryImage = getById("retryimage");
+					retryImage.src = decodeURIComponent(session.waitImage);
+					retryImage.onerror = function () {
 						this.style.display = "none";
 					};
-
-					if (session.cover) {
-						getById("retryimage").style.objectFit = "cover";
-					}
+				} else if (retryImage.parentNode !== playarea) {
+					playarea.appendChild(retryImage);
 				}
-				getById("retryimage").style.display = "block";
+				if (session.cover || session.noSignalPattern) {
+					retryImage.style.objectFit = "cover";
+				}
+				retryImage.style.display = "block";
 			}, session.waitImageTimeout);
 		}
 	} else if (session.waitImage) {
@@ -8865,6 +8913,7 @@ function updateMixerRun(e = false) {
 			var foregroundMedia = session.defaultOverlayMedia || false;
 			var animated = session.animatedMoves || 0;
 			var textOverlay = false;
+			var textOverlayConfig = false;
 			if (!borderOffset) {
 				borderColor = "#0000";
 			}
@@ -8934,28 +8983,14 @@ function updateMixerRun(e = false) {
 						textOverlay = vid.container.textOverlay;
 					}
 
-					textOverlay.innerText = layout[vid.dataset.sid].text;
-					textOverlay.style.color = layout[vid.dataset.sid].textColor || "#ffffff";
-					textOverlay.style.fontSize = layout[vid.dataset.sid].fontSize || "24px";
-					textOverlay.style.fontFamily = layout[vid.dataset.sid].fontFamily || "Arial, sans-serif";
-					textOverlay.style.position = "absolute";
-					textOverlay.style.width = "100%";
-					textOverlay.style.textAlign = "center";
-					textOverlay.style.zIndex = "10";
-
-					// Position the text
-					const textPosition = layout[vid.dataset.sid].textPosition || "50%";
-					textOverlay.style.top = textPosition;
-					textOverlay.style.transform = "translateY(-50%)";
-
-					// Add background if specified
-					if (layout[vid.dataset.sid].textBackground) {
-						textOverlay.style.backgroundColor = layout[vid.dataset.sid].textBackground;
-						textOverlay.style.padding = "10px";
-					} else {
-						textOverlay.style.backgroundColor = "transparent";
-						textOverlay.style.textShadow = "1px 1px 2px rgba(0,0,0,0.8)";
-					}
+					textOverlayConfig = {
+						text: layout[vid.dataset.sid].text,
+						textColor: layout[vid.dataset.sid].textColor,
+						fontSize: layout[vid.dataset.sid].fontSize,
+						fontFamily: layout[vid.dataset.sid].fontFamily,
+						textPosition: layout[vid.dataset.sid].textPosition,
+						textBackground: layout[vid.dataset.sid].textBackground
+					};
 				} else if (vid.container && vid.container.textOverlay) {
 					vid.container.textOverlay.remove();
 					delete vid.container.textOverlay;
@@ -9056,6 +9091,7 @@ function updateMixerRun(e = false) {
 			} else {
 				container.style.transition = "";
 			}
+			applyLayoutTextOverlayStyles(textOverlay, textOverlayConfig, animated, skipAnimation);
 
 			if (layout) {
 				//////////////////  NOT ANIMATED - CONTAINER ; width/height/z-index/cover///////////////
@@ -9204,6 +9240,10 @@ function updateMixerRun(e = false) {
 
 			if (textOverlay && !container.textOverlay) {
 				container.appendChild(textOverlay);
+				container.textOverlay = textOverlay;
+			} else if (textOverlay && textOverlay.parentNode !== container) {
+				container.appendChild(textOverlay);
+				container.textOverlay = textOverlay;
 			}
 
 			if ("rotated" in vid && vid.rotated !== false) {
@@ -9548,6 +9588,7 @@ function updateMixerRun(e = false) {
 					holder.appendChild(label);
 				}
 
+				applyLayoutTransition(label, animated, skipAnimation, ["font-size", "padding", "background-color"]);
 				if (fontsize) {
 					if (session.labelsize) {
 						fontsize = (fontsize * session.labelsize) / 100;
@@ -9646,6 +9687,7 @@ function updateMixerRun(e = false) {
 							holder.labelContainer.appendChild(holder.label);
 						}
 						// Apply font size adjustments as before
+						applyLayoutTransition(holder.label, animated, skipAnimation, ["font-size", "padding", "background-color"]);
 						if (fontsize) {
 							if (session.labelsize) {
 								fontsize = (fontsize * session.labelsize) / 100;
@@ -10041,7 +10083,7 @@ function miniTranslate(ele, ident = false, direct = false) {
 			return;
 		} else {
 			if (!(ident in miscTranslations)) {
-				var value = ident.replaceAll("-", " "); // lets use the key as the translation
+				var value = ident.replace(/-/g, " "); // lets use the key as the translation
 			} else {
 				var value = miscTranslations[ident]; // lets use a miscellaneous translation as backup?
 			}
@@ -16685,7 +16727,7 @@ function printValues(obj, sort = false) {
 					}
 				}
 
-				stat = stat.replaceAll("_", " ");
+				stat = stat.replace(/_/g, " ");
 				stat = stat.trim();
 
 				if (hint) {
@@ -17216,7 +17258,7 @@ function printMyStats(menu, screenshare = false) {
 					value = "<b style='color:pink;'>" + value + "</b>";
 				}
 
-				stat = stat.replaceAll("_", " ");
+				stat = stat.replace(/_/g, " ");
 
 				if (hint) {
 					menu.innerHTML += "<li style='cursor:help;' title='" + hint + "'><span>" + stat + "</span><span>" + value + unit + "</span></li>";
@@ -18250,6 +18292,21 @@ function postMessageIframe(iFrameEle, message) {
 	}
 }
 
+function updateSpeakerMutedOutputHints() {
+	var hints = ["speakerMutedOutputHint", "speakerMutedOutputHint3"];
+	for (var i = 0; i < hints.length; i++) {
+		var hint = getById(hints[i]);
+		if (!hint) {
+			continue;
+		}
+		if (session.speakerMuted) {
+			hint.classList.remove("hidden");
+		} else {
+			hint.classList.add("hidden");
+		}
+	}
+}
+
 function toggleSpeakerMute(apply = false) {
 	if (session.ignoreNextSpeakerToggle) {
 		session.ignoreNextSpeakerToggle = false;
@@ -18359,6 +18416,7 @@ function toggleSpeakerMute(apply = false) {
 	if (iOS || iPad) {
 		resetupAudioOut();
 	}
+	updateSpeakerMutedOutputHints();
 }
 
 const SPEAKER_VOLUME_HOLD_DELAY = 400;
@@ -19714,6 +19772,7 @@ async function toggleSettings(forceShow = false) {
 	// For forceShow, if already open just update devices
 	if (toggleSettingsState && forceShow) {
 		await enumerateDevices().then(gotDevices2);
+		updateSpeakerMutedOutputHints();
 		return;
 	}
 
@@ -19768,6 +19827,7 @@ async function showSettings() {
 	popupSelector.style.display = "inline-block";
 	settingsButton.classList.add("brown");
 	settingsButton.ariaPressed = "true";
+	updateSpeakerMutedOutputHints();
 
 	loadContentEffectsImages();
 
@@ -20863,6 +20923,13 @@ async function directHangup(ele, event) {
 		log(msg);
 		log(ele.dataset.UUID);
 		var targetUUID = ele.dataset.UUID;
+		try {
+			if (session.revokeSceneRestoreLeaseForUUID) {
+				session.revokeSceneRestoreLeaseForUUID(targetUUID);
+			}
+		} catch (e) {
+			errorlog(e);
+		}
 		session.sendRequest(msg, targetUUID);
 		pokeIframeAPI("hungup", "directing", targetUUID);
 		//session.anysend(msg); // send to everyone in the room, so they know if they are on air or not.
@@ -21164,6 +21231,13 @@ function directEnable(ele, event, director = false) {
 		if (session.pcs[uuid].scene === scene) {
 			session.sendMessage(msg, uuid);
 		}
+	}
+	try {
+		if (!director && session.updateSceneRestoreLeaseFromElement) {
+			session.updateSceneRestoreLeaseFromElement(ele);
+		}
+	} catch (e) {
+		errorlog(e);
 	}
 	syncDirectorState(ele);
 
@@ -22462,6 +22536,58 @@ function blindAllGuests(ele, event = false) {
 	return msg.displayMute;
 }
 
+function setRemoteMuteForGuest(UUID, muted) {
+	if (!UUID || !session.rpcs || !(UUID in session.rpcs)) {
+		return false;
+	}
+	if (UUID.indexOf("_screen") >= 0 || session.directorList.indexOf(UUID) >= 0 || session.rpcs[UUID].director || session.rpcs[UUID].pseudoguest) {
+		return false;
+	}
+	var ele = document.querySelector('[data-action-type="mute-guest"][data--u-u-i-d="' + UUID + '"]');
+	if (!ele) {
+		return false;
+	}
+	var currentMuted = parseInt(ele.value) === 1;
+	if (currentMuted === muted) {
+		return false;
+	}
+	remoteMute(ele, false);
+	return true;
+}
+
+function muteAllGuests(ele, event = false) {
+	if (!session.director) {
+		if (!session.cleanOutput) {
+			warnUser("Only a director can mute other guests");
+		}
+		return;
+	}
+
+	log("mute all guests");
+	if (!event || !(event.ctrlKey || event.metaKey)) {
+		if (ele.value == 1) {
+			ele.value = 0;
+			ele.classList.remove("pressed");
+			ele.ariaPressed = "false";
+			ele.classList.remove("red");
+			ele.innerHTML = '<i class="toggleSize las la-users"></i>';
+		} else {
+			ele.value = 1;
+			ele.classList.add("pressed");
+			ele.ariaPressed = "true";
+			ele.classList.add("red");
+			ele.innerHTML = '<i class="toggleSize las la-user-slash"></i>';
+		}
+	}
+
+	session.directorMuteAllGuests = ele.value == 1;
+	for (var UUID in session.rpcs) {
+		setRemoteMuteForGuest(UUID, session.directorMuteAllGuests);
+	}
+	syncDirectorState(ele);
+	return session.directorMuteAllGuests;
+}
+
 function remoteDisplayMute(ele, event = false) {
 	log("display mute");
 	if (!event || !(event.ctrlKey || event.metaKey)) {
@@ -22885,37 +23011,131 @@ function clearDirectorSettings() {
 	removeStorage("directorWebsiteShare");
 }
 
-function saveDirectorSettings() {
+var directorSettingsRestoring = 0;
+var directorSettingsTrustedEvent = 0;
+var directorSettingsTrustedInput = null;
+
+function isDirectorSettingInput(input) {
+	return !!(
+		input &&
+		input.dataset &&
+		"param" in input.dataset &&
+		input.closest &&
+		input.closest("#customizeLinks1, #customizeLinks3, #directorLinks1, #directorLinks2")
+	);
+}
+
+function getDirectorSettingContainerName(input) {
+	var container = input && input.closest ? input.closest("#customizeLinks1, #customizeLinks3, #directorLinks1, #directorLinks2") : null;
+	return container ? container.id : false;
+}
+
+function readDirectorSettingInputValue(input) {
+	if (input.type === "checkbox" || input.type === "radio") {
+		return input.checked;
+	}
+	return input.value;
+}
+
+function applyDirectorSettingInputValue(input, value) {
+	if (input.type === "checkbox" || input.type === "radio") {
+		input.checked = !!value;
+	} else {
+		input.value = value || "";
+	}
+}
+
+function getStoredDirectorSettings() {
+	var settings = getStorage("directorCustomize");
+	if (!settings || typeof settings !== "object") {
+		return {};
+	}
+	return JSON.parse(JSON.stringify(settings));
+}
+
+function getStoredDirectorInputValue(input, settings = null) {
+	var containerName = getDirectorSettingContainerName(input);
+	var param = input && input.dataset ? input.dataset.param : undefined;
+	settings = settings || getStoredDirectorSettings();
+	if (containerName && settings[containerName] && typeof settings[containerName] === "object" && param in settings[containerName]) {
+		return settings[containerName][param];
+	}
+	return undefined;
+}
+
+function restoreDirectorSettingInput(input) {
+	if (!isDirectorSettingInput(input)) {
+		return;
+	}
+	var storedValue = getStoredDirectorInputValue(input);
+	if (typeof storedValue !== "undefined") {
+		applyDirectorSettingInputValue(input, storedValue);
+	} else if (input.type === "checkbox" || input.type === "radio") {
+		input.checked = input.defaultChecked;
+	} else {
+		input.value = input.defaultValue || "";
+	}
+}
+
+function canApplyDirectorSettingChange(input, intent = {}) {
+	if (!isDirectorSettingInput(input)) {
+		return true;
+	}
+	return !!(directorSettingsRestoring || directorSettingsTrustedEvent || intent.trusted || (intent.event && intent.event.isTrusted));
+}
+
+function captureDirectorSettingIntent(input, intent = {}) {
+	return {
+		trusted: canApplyDirectorSettingChange(input, intent),
+		changedInput: input
+	};
+}
+
+function handleSyntheticDirectorSettingInput(event) {
+	if (event && event.isTrusted && isDirectorSettingInput(event.target)) {
+		directorSettingsTrustedEvent++;
+		directorSettingsTrustedInput = event.target;
+		setTimeout(function () {
+			directorSettingsTrustedEvent = Math.max(0, directorSettingsTrustedEvent - 1);
+			if (!directorSettingsTrustedEvent) {
+				directorSettingsTrustedInput = null;
+			}
+		}, 0);
+	} else if (event && isDirectorSettingInput(event.target)) {
+		restoreDirectorSettingInput(event.target);
+	}
+}
+
+if (typeof document !== "undefined") {
+	document.addEventListener("change", handleSyntheticDirectorSettingInput, true);
+	document.addEventListener("input", handleSyntheticDirectorSettingInput, true);
+}
+
+function saveDirectorSettings(intent = {}) {
+	if (directorSettingsRestoring) {
+		return;
+	}
 	//console.warn("Saving");
-	var settings = {};
+	var storedSettings = getStoredDirectorSettings();
+	var settings = storedSettings;
 
 	if (getById("customizeLinks").classList.contains("hidden")) {
 		settings.customizeLinks = true;
+	} else {
+		delete settings.customizeLinks;
 	}
 
-	var customizeLinks1 = getById("customizeLinks1").querySelectorAll("input");
-	settings.customizeLinks1 = {};
-	for (var i = 0; i < customizeLinks1.length; i++) {
-		settings.customizeLinks1[customizeLinks1[i].dataset.param] = customizeLinks1[i].checked;
-	}
+	var changedInput = intent.changedInput || directorSettingsTrustedInput;
+	var trusted = !!(intent.trusted || directorSettingsTrustedEvent);
 
-	var customizeLinks3 = getById("customizeLinks3").querySelectorAll("input");
-	settings.customizeLinks3 = {};
-	for (var i = 0; i < customizeLinks3.length; i++) {
-		settings.customizeLinks3[customizeLinks3[i].dataset.param] = customizeLinks3[i].checked;
-	}
+	["customizeLinks1", "customizeLinks3", "directorLinks1", "directorLinks2"].forEach(function (containerName) {
+		settings[containerName] = settings[containerName] && typeof settings[containerName] === "object" ? settings[containerName] : {};
 
-	var directorLinks1 = getById("directorLinks1").querySelectorAll("input");
-	settings.directorLinks1 = {};
-	for (var i = 0; i < directorLinks1.length; i++) {
-		settings.directorLinks1[directorLinks1[i].dataset.param] = directorLinks1[i].checked;
-	}
+		if (trusted && changedInput && getDirectorSettingContainerName(changedInput) === containerName) {
+			settings[containerName][changedInput.dataset.param] = readDirectorSettingInputValue(changedInput);
+		}
+	});
 
-	var directorLinks2 = getById("directorLinks2").querySelectorAll("input");
-	settings.directorLinks2 = {};
-	for (var i = 0; i < directorLinks2.length; i++) {
-		settings.directorLinks2[directorLinks2[i].dataset.param] = directorLinks2[i].checked;
-	}
 	setStorage("directorCustomize", settings);
 }
 
@@ -22926,70 +23146,75 @@ function loadDirectorSettings() {
 		return;
 	}
 
-	if (settings.customizeLinks && !session.cleanDirector && !session.cleanOutput) {
-		try {
-			hideDirectorinvites(getById("directorLinksButton"), false);
-		} catch (e) {
-			errorlog(e);
+	directorSettingsRestoring++;
+	try {
+		if (settings.customizeLinks && !session.cleanDirector && !session.cleanOutput) {
+			try {
+				hideDirectorinvites(getById("directorLinksButton"), false);
+			} catch (e) {
+				errorlog(e);
+			}
 		}
-	}
 
-	if (settings.customizeLinks1) {
-		var customizeLinks1 = getById("customizeLinks1");
-		Object.keys(settings.customizeLinks1).forEach((key, index) => {
-			try {
-				if (settings.customizeLinks1[key]) {
-					customizeLinks1.querySelector('[data-param="' + key + '"]').checked = settings.customizeLinks1[key];
-					customizeLinks1.querySelector('[data-param="' + key + '"]').onchange();
+		if (settings.customizeLinks1) {
+			var customizeLinks1 = getById("customizeLinks1");
+			Object.keys(settings.customizeLinks1).forEach((key, index) => {
+				try {
+					if (settings.customizeLinks1[key]) {
+						customizeLinks1.querySelector('[data-param="' + key + '"]').checked = settings.customizeLinks1[key];
+						customizeLinks1.querySelector('[data-param="' + key + '"]').onchange();
+					}
+				} catch (e) {
+					errorlog(e);
 				}
-			} catch (e) {
-				errorlog(e);
-			}
-		});
-	}
+			});
+		}
 
-	if (settings.customizeLinks3) {
-		var customizeLinks3 = getById("customizeLinks3");
-		Object.keys(settings.customizeLinks3).forEach((key, index) => {
-			try {
-				if (settings.customizeLinks3[key]) {
-					customizeLinks3.querySelector('[data-param="' + key + '"]').checked = settings.customizeLinks3[key];
-					customizeLinks3.querySelector('[data-param="' + key + '"]').onchange();
+		if (settings.customizeLinks3) {
+			var customizeLinks3 = getById("customizeLinks3");
+			Object.keys(settings.customizeLinks3).forEach((key, index) => {
+				try {
+					if (settings.customizeLinks3[key]) {
+						customizeLinks3.querySelector('[data-param="' + key + '"]').checked = settings.customizeLinks3[key];
+						customizeLinks3.querySelector('[data-param="' + key + '"]').onchange();
+					}
+				} catch (e) {
+					errorlog(e);
 				}
-			} catch (e) {
-				errorlog(e);
-			}
-		});
-	}
+			});
+		}
 
-	if (settings.directorLinks1) {
-		var directorLinks1 = getById("directorLinks1");
-		Object.keys(settings.directorLinks1).forEach((key, index) => {
-			try {
-				if (key in settings.directorLinks1) {
-					directorLinks1.querySelector('[data-param="' + key + '"]').checked = settings.directorLinks1[key];
-					directorLinks1.querySelector('[data-param="' + key + '"]').onchange();
+		if (settings.directorLinks1) {
+			var directorLinks1 = getById("directorLinks1");
+			Object.keys(settings.directorLinks1).forEach((key, index) => {
+				try {
+					if (key in settings.directorLinks1) {
+						directorLinks1.querySelector('[data-param="' + key + '"]').checked = settings.directorLinks1[key];
+						directorLinks1.querySelector('[data-param="' + key + '"]').onchange();
+					}
+				} catch (e) {
+					errorlog("key :" + key);
+					errorlog(e);
 				}
-			} catch (e) {
-				errorlog("key :" + key);
-				errorlog(e);
-			}
-		});
-	}
+			});
+		}
 
-	if (settings.directorLinks2) {
-		var directorLinks2 = getById("directorLinks2");
-		Object.keys(settings.directorLinks2).forEach((key, index) => {
-			try {
-				if (key in settings.directorLinks2) {
-					directorLinks2.querySelector('[data-param="' + key + '"]').checked = settings.directorLinks2[key];
-					directorLinks2.querySelector('[data-param="' + key + '"]').onchange();
+		if (settings.directorLinks2) {
+			var directorLinks2 = getById("directorLinks2");
+			Object.keys(settings.directorLinks2).forEach((key, index) => {
+				try {
+					if (key in settings.directorLinks2) {
+						directorLinks2.querySelector('[data-param="' + key + '"]').checked = settings.directorLinks2[key];
+						directorLinks2.querySelector('[data-param="' + key + '"]').onchange();
+					}
+				} catch (e) {
+					errorlog("key :" + key);
+					errorlog(e);
 				}
-			} catch (e) {
-				errorlog("key :" + key);
-				errorlog(e);
-			}
-		});
+			});
+		}
+	} finally {
+		directorSettingsRestoring--;
 	}
 }
 
@@ -23787,7 +24012,7 @@ function selectTipAmount(btn, UUID) {
 
 	var amount = parseFloat(btn.dataset.amount);
 	var peer = session.rpcs[UUID] || session.pcs[UUID];
-	var currency = peer?.tipCurrency || session.tipCurrency || "USD";
+	var currency = (peer && peer.tipCurrency) || session.tipCurrency || "USD";
 	var currencySymbol = getTipCurrencySymbol(currency);
 
 	document.getElementById('tipSelectedAmount_' + UUID).textContent = currencySymbol + amount.toFixed(2);
@@ -23805,7 +24030,7 @@ function selectTipAmount(btn, UUID) {
 function customTipAmount(UUID, value) {
 	var amount = parseFloat(value);
 	var peer = session.rpcs[UUID] || session.pcs[UUID];
-	var currency = peer?.tipCurrency || session.tipCurrency || "USD";
+	var currency = (peer && peer.tipCurrency) || session.tipCurrency || "USD";
 	var currencySymbol = getTipCurrencySymbol(currency);
 
 	// Deselect preset buttons
@@ -23849,8 +24074,10 @@ async function confirmTip(UUID) {
 	var tipServer = peer.tipServer || session.tipServer || "https://ninjabacker.com";
 	var amount = stripeData.selectedAmount;
 	var currency = peer.tipCurrency || session.tipCurrency || "USD";
-	var tipperName = document.getElementById('tipName_' + UUID)?.value || "Anonymous";
-	var message = document.getElementById('tipMessageInput_' + UUID)?.value || "";
+	var tipNameInput = document.getElementById('tipName_' + UUID);
+	var tipMessageInput = document.getElementById('tipMessageInput_' + UUID);
+	var tipperName = (tipNameInput && tipNameInput.value) || "Anonymous";
+	var message = (tipMessageInput && tipMessageInput.value) || "";
 	var performerUsername = peer.tipId || peer.streamID;
 
 	var submitBtn = document.getElementById('tipConfirmBtn_' + UUID);
@@ -24926,6 +25153,38 @@ function getCloudflareInviteParam() {
 	}
 
 	return "&cftoken=" + encodeURIComponent(token);
+}
+
+function normalizeInviteCamValue(value) {
+	var raw = String(value || "").trim();
+	if (!raw) {
+		return "";
+	}
+	var parts = raw.split(".");
+	var room = (parts.shift() || "").replace(/[^a-zA-Z0-9_-]/g, "").slice(0, 80);
+	var token = parts.join(".").replace(/[^a-zA-Z0-9_-]/g, "");
+	if (!room) {
+		return "";
+	}
+	if (token) {
+		return room + "." + token;
+	}
+	return room;
+}
+
+function getInviteCamWssFromValue(value) {
+	var invitecam = normalizeInviteCamValue(value);
+	if (!invitecam) {
+		return "";
+	}
+	var parts = invitecam.split(".");
+	var room = parts.shift();
+	var token = parts.join(".");
+	var wss = "wss.invite.cam/api/room/" + encodeURIComponent(room) + "/vdoninja";
+	if (token) {
+		wss += "/" + encodeURIComponent("viewer:0:" + token);
+	}
+	return wss;
 }
 
 function soloLinkGenerator(streamID, scene = true) {
@@ -27239,11 +27498,23 @@ async function joinRoom(roomname) {
 	if (roomname.length) {
 		roomname = sanitizeRoomName(roomname);
 		log("Join room: " + roomname);
+		var authJoinGate = session.authMode && window.vdoAuth && session.joiningRoom === false;
+		if (authJoinGate) {
+			session.joiningRoom = true;
+		}
 
 		// In auth mode, use auth-aware room joining
 		if (session.authMode && window.vdoAuth) {
-			const hasAccess = await window.vdoAuth.joinRoom(roomname);
+			let hasAccess = false;
+			try {
+				hasAccess = await window.vdoAuth.joinRoom(roomname);
+			} catch (e) {
+				errorlog(e);
+			}
 			if (!hasAccess) {
+				if (authJoinGate) {
+					session.joiningRoom = false;
+				}
 				return; // Access denied or auth required
 			}
 			// Room ID might have changed if it was an alias
@@ -27251,7 +27522,7 @@ async function joinRoom(roomname) {
 		}
 
 		updateVolume(false); // chance of a race condition, but unlikely and not a big deal if so.
-		session.joinRoom(roomname).then(
+		Promise.resolve(session.joinRoom(roomname)).then(
 			function (response) {
 				// callback from server; we've joined the room. Just the listing is returned
 
@@ -27402,6 +27673,8 @@ async function joinRoom(roomname) {
 				}
 			},
 			function (error) {
+				session.joiningRoom = false;
+				errorlog(error);
 				return {};
 			}
 		);
@@ -27483,7 +27756,8 @@ async function createRoom(roomname = false, reload = false) {
 			// Pre-join SSO room setup (optional)
 			try {
 				var ssoBox = getById('useSSOForRoom');
-				if (ssoBox && ssoBox.checked) {
+				var ssoSupported = window.vdoAuth && (typeof window.vdoAuth.isSupported !== "function" || window.vdoAuth.isSupported());
+				if (ssoBox && ssoBox.checked && ssoSupported) {
 					// Enable auth mode for this room
 					session.authMode = true;
 					updateURL("auth");
@@ -27516,6 +27790,11 @@ async function createRoom(roomname = false, reload = false) {
 					// If guests must sign in (authenticated/allowlist), mark as requireAuth for UX
 					if (accessMode === 'authenticated' || accessMode === 'allowlist') {
 						session.requireAuth = true;
+					}
+				} else if (ssoBox && ssoBox.checked) {
+					ssoBox.checked = false;
+					if (typeof toggleSSOOptions === "function") {
+						toggleSSOOptions(false);
 					}
 				}
 			} catch (e) { errorlog(e); }
@@ -27953,7 +28232,27 @@ function toggleCoDirector_transfer(ele) {
 	session.codirector_transfer = ele.checked;
 }
 
+function buildExternalCoDirectorInviteURL() {
+	if (!urlParams.has("codirectorinvitetemplate")) {
+		return "";
+	}
+
+	var inviteTemplate = String(urlParams.get("codirectorinvitetemplate") || "").trim();
+	if (!/^https?:\/\//i.test(inviteTemplate)) {
+		return "";
+	}
+
+	return inviteTemplate
+		.replace(/\{room\}/g, encodeURIComponent(session.roomid || ""))
+		.replace(/\{codirector\}/g, encodeURIComponent(session.directorPassword || ""));
+}
+
 function buildCoDirectorInviteURL() {
+	var externalInviteURL = buildExternalCoDirectorInviteURL();
+	if (externalInviteURL) {
+		return externalInviteURL;
+	}
+
 	var token = "";
 	if (session.token) {
 		token += "&token=" + session.token;
@@ -28197,6 +28496,13 @@ async function createRoomCallback(passAdd, passAdd2) {
 		}
 	}
 
+	var sceneWss = wss;
+	if (session.sceneWSS) {
+		sceneWss = "&wss2=" + session.sceneWSS;
+	} else if (session.invitecam) {
+		sceneWss = "&invitecam=" + encodeURIComponent(session.invitecam);
+	}
+
 	var queue = "";
 	if (session.queue) {
 		queue = "&queue";
@@ -28277,12 +28583,6 @@ async function createRoomCallback(passAdd, passAdd2) {
 	}
 
 	session.director = true;
-	try {
-		if (sessionStorage.getItem('vdo_sso_disabled_notice') === '1') {
-			sessionStorage.removeItem('vdo_sso_disabled_notice');
-			warnUser("SSO has been disabled for this director room. New guest links will not include SSO, and previous SSO guest invites may not work with this room.", 6000);
-		}
-	} catch (e) {}
 	session.pendingJoinRequests = [];
 	session.pendingJoinPrompted = new Set([]);
 	updateJoinRequestPanel(false);
@@ -28369,9 +28669,9 @@ async function createRoomCallback(passAdd, passAdd2) {
 					if (session.universalViewToken) {
 						// Update scene link with universal token
 						var sceneAuthParams = "&universaltoken=" + session.universalViewToken;
-						getById("director_block_3").dataset.raw = "https://" + location.host + location.pathname + "?scene&room=" + session.roomid + codecGroupFlag + passAdd2 + wss + token + sceneAuthParams + roomKeyParam;
-						getById("director_block_3").href = "https://" + location.host + location.pathname + "?scene&room=" + session.roomid + codecGroupFlag + passAdd2 + wss + token + sceneAuthParams + roomKeyParam;
-						getById("director_block_3").innerText = "https://" + location.host + location.pathname + "?scene&room=" + session.roomid + codecGroupFlag + passAdd2 + wss + token + sceneAuthParams + roomKeyParam;
+						getById("director_block_3").dataset.raw = "https://" + location.host + location.pathname + "?scene&room=" + session.roomid + codecGroupFlag + passAdd2 + sceneWss + token + sceneAuthParams + roomKeyParam;
+						getById("director_block_3").href = "https://" + location.host + location.pathname + "?scene&room=" + session.roomid + codecGroupFlag + passAdd2 + sceneWss + token + sceneAuthParams + roomKeyParam;
+						getById("director_block_3").innerText = "https://" + location.host + location.pathname + "?scene&room=" + session.roomid + codecGroupFlag + passAdd2 + sceneWss + token + sceneAuthParams + roomKeyParam;
 
 					// Update all solo links
 					updateAllSoloLinks();
@@ -28393,9 +28693,9 @@ async function createRoomCallback(passAdd, passAdd2) {
 		sceneAuthParams = authParams;
 	}
 
-	getById("director_block_3").dataset.raw = "https://" + location.host + location.pathname + "?scene&room=" + session.roomid + codecGroupFlag + passAdd2 + wss + token + sceneAuthParams + roomKeyParam;
-	getById("director_block_3").href = "https://" + location.host + location.pathname + "?scene&room=" + session.roomid + codecGroupFlag + passAdd2 + wss + token + sceneAuthParams + roomKeyParam;
-	getById("director_block_3").innerText = "https://" + location.host + location.pathname + "?scene&room=" + session.roomid + codecGroupFlag + passAdd2 + wss + token + sceneAuthParams + roomKeyParam;
+	getById("director_block_3").dataset.raw = "https://" + location.host + location.pathname + "?scene&room=" + session.roomid + codecGroupFlag + passAdd2 + sceneWss + token + sceneAuthParams + roomKeyParam;
+	getById("director_block_3").href = "https://" + location.host + location.pathname + "?scene&room=" + session.roomid + codecGroupFlag + passAdd2 + sceneWss + token + sceneAuthParams + roomKeyParam;
+	getById("director_block_3").innerText = "https://" + location.host + location.pathname + "?scene&room=" + session.roomid + codecGroupFlag + passAdd2 + sceneWss + token + sceneAuthParams + roomKeyParam;
 
 	if (session.cleanDirector == false && session.cleanOutput == false) {
 		getById("roomHeader").style.display = "";
@@ -28508,6 +28808,9 @@ async function createRoomCallback(passAdd, passAdd2) {
 	} else {
 		getById("highlightDirector").dataset.sid = session.streamID;
 	}
+	if (getById("highlightMuteFollow")) {
+		getById("highlightMuteFollow").checked = !!session.highlightMuteFollow;
+	}
 
 	setTimeout(() => {
 		loadDirectorSettings();
@@ -28613,6 +28916,64 @@ function getDirectorSettings(scene = false) {
 		}
 	}
 	return settings;
+}
+
+function getHighlightMuteFollowTarget() {
+	var eles = document.querySelectorAll('[data-action-type="solo-video"]');
+	for (var i = 0; i < eles.length; i++) {
+		var ele = eles[i];
+		var active = false;
+		if (ele.value == 1) {
+			active = true;
+		} else if (ele.classList && ele.classList.contains("pressed")) {
+			active = true;
+		} else if (ele.nodeName && ele.nodeName.toLowerCase() === "input" && ele.checked) {
+			active = true;
+		}
+		if (active && ele.dataset && ele.dataset.sid) {
+			return ele.dataset.sid;
+		}
+	}
+	return false;
+}
+
+function applyHighlightMuteFollow(targetSid = null, onlyUUID = false) {
+	if (!session.highlightMuteFollow || !session.rpcs) {
+		return false;
+	}
+	if (targetSid === null) {
+		targetSid = getHighlightMuteFollowTarget();
+		if (targetSid === false && session.highlightMuteFollowTargetSid) {
+			targetSid = session.highlightMuteFollowTargetSid;
+		}
+	} else {
+		session.highlightMuteFollowTargetSid = targetSid || false;
+	}
+	if (!targetSid) {
+		return false;
+	}
+	var changed = false;
+	for (var UUID in session.rpcs) {
+		if (onlyUUID && UUID !== onlyUUID) {
+			continue;
+		}
+		if (!session.rpcs[UUID] || !session.rpcs[UUID].streamID) {
+			continue;
+		}
+		changed = setRemoteMuteForGuest(UUID, session.rpcs[UUID].streamID !== targetSid) || changed;
+	}
+	return changed;
+}
+
+function toggleHighlightMuteFollow(ele) {
+	session.highlightMuteFollow = !!(ele && ele.checked);
+	if (!session.highlightMuteFollow) {
+		session.highlightMuteFollowTargetSid = false;
+	}
+	if (session.highlightMuteFollow) {
+		applyHighlightMuteFollow(getHighlightMuteFollowTarget());
+	}
+	return session.highlightMuteFollow;
 }
 
 function normalizeLayoutStateValue(state) {
@@ -28727,6 +29088,9 @@ function requestInfocus(ele, evt = null, value = null) {
 	}
 
 	syncDirectorState(ele);
+	if ("infocus" in actionMsg) {
+		applyHighlightMuteFollow(actionMsg.infocus);
+	}
 
 	if (ele.value == 1) {
 		return true;
@@ -29937,7 +30301,6 @@ function createControlBox(UUID, soloLink, streamID, slot_init = false) {
 		ele.dataset.sid = streamID;
 	});
 
-
 	var buttons = "";
 	if (session.slotmode && slot_init !== 0) { // slot_init === 0 means guest explicitly opted out of slots
 		var biggestSlot = 0;
@@ -30161,6 +30524,20 @@ function createControlBox(UUID, soloLink, streamID, slot_init = false) {
 	initSceneList(UUID);
 	syncSceneState(streamID);
 	syncOtherState(streamID);
+	try {
+		if (session.requestSceneRestoreIdentity) {
+			session.requestSceneRestoreIdentity(UUID);
+		}
+		if (session.applySceneRestoreForUUID) {
+			session.applySceneRestoreForUUID(UUID);
+		}
+		if (session.directorMuteAllGuests) {
+			setRemoteMuteForGuest(UUID, true);
+		}
+		applyHighlightMuteFollow(null, UUID);
+	} catch (e) {
+		errorlog(e);
+	}
 
 	pokeIframeAPI("control-box", true, UUID);
 
@@ -33183,7 +33560,8 @@ function renderMeshVisualization() {
 	svg.style.display = "block";
 
 	// Filter problems only?
-	var filterProblems = document.getElementById("meshFilterProblems")?.checked || false;
+	var meshFilterProblems = document.getElementById("meshFilterProblems");
+	var filterProblems = (meshFilterProblems && meshFilterProblems.checked) || false;
 
 	// Calculate node positions based on layout mode
 	var nodePositions = {};
@@ -36924,6 +37302,65 @@ function sendMediaDevices(UUID) {
 	});
 }
 
+function sendMediaDeviceChangeAck(UUID, kind, ok, deviceId = false, error = false) {
+	if (!UUID) {
+		return;
+	}
+	try {
+		var data = {};
+		data.UUID = UUID;
+		data.mediaDeviceChange = {
+			kind: kind,
+			ok: !!ok,
+			deviceId: deviceId || false,
+			error: error || false
+		};
+		session.sendMessage(data, data.UUID);
+		if (ok) {
+			sendMediaDevices(UUID);
+		}
+	} catch (e) {
+		errorlog(e);
+	}
+}
+
+function mediaDeviceChangeLiveError(kind) {
+	try {
+		if (kind === "camera") {
+			if (!session.streamSrc || !session.streamSrc.getVideoTracks || !session.streamSrc.getVideoTracks().some(track => track && track.readyState === "live")) {
+				return "Camera did not produce a live track";
+			}
+		}
+		if (kind === "microphone") {
+			if (!session.streamSrc || !session.streamSrc.getAudioTracks || !session.streamSrc.getAudioTracks().some(track => track && track.readyState === "live")) {
+				return "Microphone did not produce a live track";
+			}
+		}
+	} catch (e) {
+		return "Device change could not be verified";
+	}
+	return false;
+}
+
+function acknowledgeMediaDeviceChange(runChange, UUID, kind, deviceId) {
+	try {
+		var result = runChange();
+		if (!UUID) {
+			return;
+		}
+		Promise.resolve(result)
+			.then(function () {
+				var liveError = mediaDeviceChangeLiveError(kind);
+				sendMediaDeviceChangeAck(UUID, kind, !liveError, deviceId, liveError);
+			})
+			.catch(function (e) {
+				sendMediaDeviceChangeAck(UUID, kind, false, deviceId, e && e.message ? e.message : "Device change failed");
+			});
+	} catch (e) {
+		sendMediaDeviceChangeAck(UUID, kind, false, deviceId, e && e.message ? e.message : "Device change failed");
+	}
+}
+
 function changeVideoDevice(index, quality = 0) {
 	enumerateDevices()
 		.then(gotDevices2)
@@ -36964,28 +37401,37 @@ function changeVideoDeviceById(deviceId, UUID = false) {
 				if (document.getElementById("videoSource3").selectedIndex === index) {
 					//  this is just refreshing the device.
 					activatedPreview = false;
-					grabVideo(0, "videosource", "#videoSource3", UUID);
+					acknowledgeMediaDeviceChange(function () {
+						return grabVideo(0, "videosource", "#videoSource3", UUID);
+					}, UUID, "camera", deviceId);
 				} else if (UUID && !session.consent) {
 					window.focus();
 					confirmAlt("Allow the director to change your video device to:\n\n" + opts[index].text + " ?").then(res => {
 						if (res) {
 							document.getElementById("videoSource3").selectedIndex = index;
 							activatedPreview = false;
-							grabVideo(0, "videosource", "#videoSource3", UUID);
+							acknowledgeMediaDeviceChange(function () {
+								return grabVideo(0, "videosource", "#videoSource3", UUID);
+							}, UUID, "camera", deviceId);
 						} else {
 							try {
 								var data = {};
 								data.UUID = UUID;
 								data.rejected = "changeCamera";
 								session.sendMessage(data, data.UUID);
+								sendMediaDeviceChangeAck(UUID, "camera", false, deviceId, "Guest rejected camera change");
 							} catch (e) { }
 						}
 					});
 				} else {
 					document.getElementById("videoSource3").selectedIndex = index;
 					activatedPreview = false;
-					grabVideo(0, "videosource", "#videoSource3", UUID);
+					acknowledgeMediaDeviceChange(function () {
+						return grabVideo(0, "videosource", "#videoSource3", UUID);
+					}, UUID, "camera", deviceId);
 				}
+			} else {
+				sendMediaDeviceChangeAck(UUID, "camera", false, deviceId, "Camera not found");
 			}
 		});
 }
@@ -37011,7 +37457,9 @@ function changeAudioDeviceById(deviceId, UUID = false) {
 					//  this is just refreshing the device.
 					activatedPreview = false;
 					//grabAudio("#audioSource3", UUID);
-					grabAudio("#audioSource3", null, false, UUID);
+					acknowledgeMediaDeviceChange(function () {
+						return grabAudio("#audioSource3", null, false, UUID);
+					}, UUID, "microphone", deviceId);
 				} else if (UUID && !session.consent) {
 					window.focus();
 					confirmAlt("Allow the director to change your audio mic source?").then(res => {
@@ -37026,7 +37474,9 @@ function changeAudioDeviceById(deviceId, UUID = false) {
 								}
 							}
 							activatedPreview = false;
-							grabAudio("#audioSource3", null, false, UUID);
+							acknowledgeMediaDeviceChange(function () {
+								return grabAudio("#audioSource3", null, false, UUID);
+							}, UUID, "microphone", deviceId);
 							//	});
 						} else {
 							try {
@@ -37034,6 +37484,7 @@ function changeAudioDeviceById(deviceId, UUID = false) {
 								data.UUID = UUID;
 								data.rejected = "changeMicrophone";
 								session.sendMessage(data, data.UUID);
+								sendMediaDeviceChangeAck(UUID, "microphone", false, deviceId, "Guest rejected microphone change");
 							} catch (e) { }
 						}
 					});
@@ -37048,9 +37499,13 @@ function changeAudioDeviceById(deviceId, UUID = false) {
 						}
 					}
 					activatedPreview = false;
-					grabAudio("#audioSource3", null, false, UUID);
+					acknowledgeMediaDeviceChange(function () {
+						return grabAudio("#audioSource3", null, false, UUID);
+					}, UUID, "microphone", deviceId);
 					//	});
 				}
+			} else {
+				sendMediaDeviceChangeAck(UUID, "microphone", false, deviceId, "Microphone not found");
 			}
 		});
 }
@@ -37078,6 +37533,7 @@ function changeAudioOutputDeviceById(deviceId, UUID = false) {
 						session.sink = deviceId;
 						saveSettings();
 						resetupAudioOut();
+						sendMediaDeviceChangeAck(UUID, "speaker", true, deviceId);
 					} else if (UUID && !session.consent) {
 						// UUID just lets us inform the requester
 						window.focus();
@@ -37093,12 +37549,14 @@ function changeAudioOutputDeviceById(deviceId, UUID = false) {
 								data.UUID = UUID;
 								sendMediaDevices(data.UUID);
 								session.sendMessage(data, data.UUID);
+								sendMediaDeviceChangeAck(UUID, "speaker", true, deviceId);
 							} else {
 								try {
 									var data = {};
 									data.UUID = UUID;
 									data.rejected = "changeSpeaker";
 									session.sendMessage(data, data.UUID);
+									sendMediaDeviceChangeAck(UUID, "speaker", false, deviceId, "Guest rejected speaker change");
 								} catch (e) { }
 							}
 						});
@@ -37109,13 +37567,17 @@ function changeAudioOutputDeviceById(deviceId, UUID = false) {
 						session.sink = deviceId;
 						saveSettings();
 						resetupAudioOut();
+						sendMediaDeviceChangeAck(UUID, "speaker", true, deviceId);
 					}
+				} else {
+					sendMediaDeviceChangeAck(UUID, "speaker", false, deviceId, "Speaker not found");
 				}
 			});
 	} else {
 		session.sink = deviceId;
 		saveSettings();
 		resetupAudioOut();
+		sendMediaDeviceChangeAck(UUID, "speaker", true, deviceId);
 	}
 }
 
@@ -46871,7 +47333,7 @@ function listCameraSettings() {
 
 // Audio settings application
 function applySavedAudioSettings(track0) {
-	if (!track0?.getSettings) return;
+	if (!track0 || !track0.getSettings) return;
 
 	log("applySavedAudioSettings");
 	session.currentAudioConstraints = track0.getSettings();
@@ -46880,7 +47342,7 @@ function applySavedAudioSettings(track0) {
 	if (!deviceId) return;
 
 	const audioSettings = getStorage("audio_" + deviceId);
-	if (!audioSettings?.deviceId) return;
+	if (!audioSettings || !audioSettings.deviceId) return;
 
 	const constraints = {};
 	const allowedProps = ["autoGainControl", "echoCancellation", "noiseSuppression"];
@@ -46902,17 +47364,62 @@ function applySavedAudioSettings(track0) {
 		.catch(e => errorlog("Failed to reset to audio defaults: " + (e && e.message ? e.message : e)));
 }
 
+function isMixedImageCaptureConstraintError(error) {
+	return !!(error && error.message && error.message.indexOf("Mixing ImageCapture and non-ImageCapture constraints") !== -1);
+}
+
+async function applyVideoConstraintsSafely(track0, constraints) {
+	await track0.applyConstraints({ advanced: [constraints] }).catch(async error => {
+		if (!isMixedImageCaptureConstraintError(error)) {
+			throw error;
+		}
+
+		const mediaConstraintKeys = {
+			width: true,
+			height: true,
+			frameRate: true,
+			aspectRatio: true,
+			facingMode: true,
+			resizeMode: true
+		};
+		const mediaConstraints = {};
+		const cameraControlConstraints = {};
+
+		for (const key in constraints) {
+			if (mediaConstraintKeys[key]) {
+				mediaConstraints[key] = constraints[key];
+			} else {
+				cameraControlConstraints[key] = constraints[key];
+			}
+		}
+
+		const hasMediaConstraints = Object.keys(mediaConstraints).length > 0;
+		const hasCameraControlConstraints = Object.keys(cameraControlConstraints).length > 0;
+		if (!hasMediaConstraints || !hasCameraControlConstraints) {
+			throw error;
+		}
+
+		if (hasMediaConstraints) {
+			await track0.applyConstraints({ advanced: [mediaConstraints] });
+		}
+		if (hasCameraControlConstraints) {
+			await track0.applyConstraints({ advanced: [cameraControlConstraints] });
+		}
+	});
+}
+
 // Video settings application
 function applySavedVideoSettings(track0) {
-	if (!track0?.getSettings) return;
+	if (!track0 || !track0.getSettings) return;
 
 	session.currentCameraConstraints = track0.getSettings();
 
 	// Handle mobile orientation
 	if (session.mobile) {
-		const isPortrait = (screen?.orientation?.type?.includes("portrait")) ||
+		const screenOrientationType = (typeof screen !== "undefined" && screen.orientation && screen.orientation.type) || "";
+		const isPortrait = (screenOrientationType && screenOrientationType.includes("portrait")) ||
 			window.matchMedia("(orientation: portrait)").matches;
-		if (!isPortrait && session.currentCameraConstraints?.aspectRatio) {
+		if (!isPortrait && session.currentCameraConstraints && session.currentCameraConstraints.aspectRatio) {
 			session.currentCameraConstraints.aspectRatio = 1 / session.currentCameraConstraints.aspectRatio;
 		}
 	}
@@ -46921,7 +47428,7 @@ function applySavedVideoSettings(track0) {
 	if (!deviceId) return;
 
 	const cameraSettings = getStorage("camera_" + deviceId);
-	if (!cameraSettings?.current) return;
+	if (!cameraSettings || !cameraSettings.current) return;
 
 	const constraints = {};
 	const skipProps = ["groupId"];
@@ -46955,7 +47462,7 @@ function applySavedVideoSettings(track0) {
 	warnlog(constraints);
 	if (!Object.keys(constraints).length) return;
 
-	track0.applyConstraints({ advanced: [constraints] })
+	applyVideoConstraintsSafely(track0, constraints)
 		.then(() => warnlog("video settings updated for deviceId:" + deviceId))
 		.catch(e => errorlog("Failed to reset to defaults: " + (e && e.message ? e.message : e)));
 }
@@ -46982,7 +47489,7 @@ async function updateCameraConstraints(constraint, value = null, ctrl = false, U
 	updateCameraConstraintsNext = false;
 
 	try {
-		const track0 = session.streamSrc?.getVideoTracks()?.[0];
+		const track0 = (session.streamSrc && session.streamSrc.getVideoTracks && session.streamSrc.getVideoTracks()[0]) || null;
 
 		if (!track0 || track0.readyState !== "live" || !track0.enabled) {
 			if (!save) {
@@ -47034,7 +47541,7 @@ async function updateCameraConstraints(constraint, value = null, ctrl = false, U
 		log(constraints);
 
 		// Apply constraints
-		await track0.applyConstraints({ advanced: [constraints] })
+		await applyVideoConstraintsSafely(track0, constraints)
 			.then(() => {
 				log("applied constraint");
 
@@ -47075,20 +47582,20 @@ async function buildConstraints(constraint, value, ctrl, track0) {
 	switch (constraint) {
 		case "width":
 			constraints.width = value;
-			if (current?.frameRate) constraints.frameRate = current.frameRate;
-			if (!ctrl && current?.height) constraints.height = current.height;
+			if (current && current.frameRate) constraints.frameRate = current.frameRate;
+			if (!ctrl && current && current.height) constraints.height = current.height;
 			break;
 
 		case "height":
 			constraints.height = value;
-			if (current?.frameRate) constraints.frameRate = current.frameRate;
-			if (!ctrl && current?.width) constraints.width = current.width;
+			if (current && current.frameRate) constraints.frameRate = current.frameRate;
+			if (!ctrl && current && current.width) constraints.width = current.width;
 			break;
 
 		case "frameRate":
 			if (!ctrl) {
 				constraints.frameRate = value;
-				if (current?.height && current?.width) {
+				if (current && current.height && current.width) {
 					constraints.height = current.height;
 					constraints.width = current.width;
 				}
@@ -47146,9 +47653,10 @@ async function buildConstraints(constraint, value, ctrl, track0) {
 
 		case "aspectRatio":
 			constraints[constraint] = value;
-			if (current?.frameRate) constraints.frameRate = current.frameRate;
+			if (current && current.frameRate) constraints.frameRate = current.frameRate;
 			if (session.mobile) {
-				const isPortrait = (screen?.orientation?.type?.includes("portrait")) ||
+				const screenOrientationType = (typeof screen !== "undefined" && screen.orientation && screen.orientation.type) || "";
+				const isPortrait = (screenOrientationType && screenOrientationType.includes("portrait")) ||
 					window.matchMedia("(orientation: portrait)").matches;
 				if (isPortrait && constraints.aspectRatio) {
 					constraints.aspectRatio = 1 / constraints.aspectRatio;
@@ -47167,12 +47675,12 @@ async function buildConstraints(constraint, value, ctrl, track0) {
 function buildManualModeConstraints(constraint, value, dependentProp, current) {
 	const constraints = { [constraint]: value };
 
-	if (current?.height && current?.width) {
+	if (current && current.height && current.width) {
 		constraints.height = current.height;
 		constraints.width = current.width;
 	}
 
-	if (current?.[dependentProp]) {
+	if (current && current[dependentProp]) {
 		constraints[dependentProp] = current[dependentProp];
 	}
 
@@ -47183,14 +47691,14 @@ function buildManualModeConstraints(constraint, value, dependentProp, current) {
 function buildWhiteBalanceConstraints(constraint, value, current) {
 	const constraints = { [constraint]: value };
 
-	if (current?.height && current?.width) {
+	if (current && current.height && current.width) {
 		constraints.height = current.height;
 		constraints.width = current.width;
 	}
 
-	const colorTempConstraints = session.cameraConstraints?.colorTemperature;
-	if (colorTempConstraints?.max && colorTempConstraints?.min) {
-		if (current?.colorTemperature) {
+	const colorTempConstraints = session.cameraConstraints && session.cameraConstraints.colorTemperature;
+	if (colorTempConstraints && colorTempConstraints.max && colorTempConstraints.min) {
+		if (current && current.colorTemperature) {
 			constraints.colorTemperature = current.colorTemperature;
 		} else if (5000 >= colorTempConstraints.min && 5000 <= colorTempConstraints.max) {
 			constraints.colorTemperature = 5000;
@@ -47204,7 +47712,7 @@ function buildWhiteBalanceConstraints(constraint, value, current) {
 
 // Helper to apply current setting
 async function applyCurrentSetting(track0, prop, current) {
-	if (!current?.[prop]) return;
+	if (!current || !current[prop]) return;
 
 	const tempConstraints = { [prop]: current[prop] };
 	await track0.applyConstraints({ advanced: [tempConstraints] });
@@ -47213,7 +47721,8 @@ async function applyCurrentSetting(track0, prop, current) {
 
 // Helper to adjust constraints for mobile orientation
 function adjustConstraintsForMobileOrientation(constraints) {
-	const isPortrait = (screen?.orientation?.type?.includes("portrait")) ||
+	const screenOrientationType = (typeof screen !== "undefined" && screen.orientation && screen.orientation.type) || "";
+	const isPortrait = (screenOrientationType && screenOrientationType.includes("portrait")) ||
 		window.matchMedia("(orientation: portrait)").matches;
 
 	if (!isPortrait) return;
@@ -47223,13 +47732,13 @@ function adjustConstraintsForMobileOrientation(constraints) {
 	} else if (constraints.width) {
 		constraints.height = constraints.width;
 		delete constraints.width;
-		if (!constraints.aspectRatio && session.currentCameraConstraints?.height) {
+		if (!constraints.aspectRatio && session.currentCameraConstraints && session.currentCameraConstraints.height) {
 			constraints.width = session.currentCameraConstraints.height;
 		}
 	} else if (constraints.height) {
 		constraints.width = constraints.height;
 		delete constraints.height;
-		if (!constraints.aspectRatio && session.currentCameraConstraints?.width) {
+		if (!constraints.aspectRatio && session.currentCameraConstraints && session.currentCameraConstraints.width) {
 			constraints.height = session.currentCameraConstraints.width;
 		}
 	}
@@ -47425,7 +47934,7 @@ async function tapToFocus(x, y, force = false) {
 session.remoteFocus = async function (focusDistance, absolute = false) {
 	try {
 		var track0 = session.streamSrc.getVideoTracks()[0];
-		if (!track0?.getCapabilities) return;
+		if (!track0 || !track0.getCapabilities) return;
 
 		var capabilities = track0.getCapabilities();
 		if (!capabilities.focusDistance) {
@@ -47482,7 +47991,7 @@ session.setRemoteAutofocus = async function (enabled) {
 session.remoteZoom = async function (zoom, absolute = false) {
 	try {
 		var track0 = session.streamSrc.getVideoTracks()[0];
-		if (!track0?.getCapabilities) return;
+		if (!track0 || !track0.getCapabilities) return;
 
 		var capabilities = track0.getCapabilities();
 		if (!capabilities.zoom) {
@@ -47531,7 +48040,7 @@ session.remoteZoom = async function (zoom, absolute = false) {
 session.remotePan = async function (pan, absolute = false) {
 	try {
 		var track0 = session.streamSrc.getVideoTracks()[0];
-		if (!track0?.getCapabilities) return;
+		if (!track0 || !track0.getCapabilities) return;
 
 		var capabilities = track0.getCapabilities();
 		if (!capabilities.pan) {
@@ -47581,7 +48090,7 @@ session.remotePan = async function (pan, absolute = false) {
 session.remoteTilt = async function (tilt, absolute = false) {
 	try {
 		var track0 = session.streamSrc.getVideoTracks()[0];
-		if (!track0?.getCapabilities) return;
+		if (!track0 || !track0.getCapabilities) return;
 
 		var capabilities = track0.getCapabilities();
 		if (!capabilities.tilt) {
@@ -47631,7 +48140,7 @@ session.remoteTilt = async function (tilt, absolute = false) {
 session.remoteExposure = async function (exposure, absolute = false) {
 	try {
 		var track0 = session.streamSrc.getVideoTracks()[0];
-		if (!track0?.getCapabilities) return;
+		if (!track0 || !track0.getCapabilities) return;
 
 		var capabilities = track0.getCapabilities();
 		var settings = track0.getSettings();
@@ -49094,28 +49603,43 @@ function generateQRPage() {
 	}
 }
 
-async function updateLinkWelcome(arg, input) {
+async function updateLinkWelcome(arg, input, intent = {}) {
+	intent = captureDirectorSettingIntent(input, intent);
+	if (!intent.trusted) {
+		restoreDirectorSettingInput(input);
+		return false;
+	}
 	if (input.checked) {
 		var response = await promptAlt("Enter the message you'd like the guests to see");
 		response = encodeURIComponent(response);
 		var param = input.dataset.param.split("=")[0];
 		input.dataset.param = param + "=" + response;
 	}
-	updateLink(arg, input);
+	return updateLink(arg, input, false, intent);
 }
 
-function updateLinkWebP(arg, input) {
+function updateLinkWebP(arg, input, intent = {}) {
+	intent = captureDirectorSettingIntent(input, intent);
+	if (!intent.trusted) {
+		restoreDirectorSettingInput(input);
+		return false;
+	}
 	if (input.checked) {
 		if (!(getById("director_block_" + arg).dataset.raw.includes("&broadcast") || getById("director_block_" + arg).dataset.raw.includes("?broadcast"))) {
 			getById("broadcastSlider").checked = true;
-			updateLink(arg, getById("broadcastSlider"));
+			updateLink(arg, getById("broadcastSlider"), false, intent);
 		}
 	}
-	updateLink(arg, input);
+	return updateLink(arg, input, false, intent);
 }
 
 var soloLinkAppended = "";
-function updateLink(arg, input, solo = false) {
+function updateLink(arg, input, solo = false, intent = {}) {
+	intent = captureDirectorSettingIntent(input, intent);
+	if (!intent.trusted) {
+		restoreDirectorSettingInput(input);
+		return false;
+	}
 	log("updateLink: " + input.dataset.param);
 	if (input.checked) {
 		getById("director_block_" + arg).dataset.raw += input.dataset.param;
@@ -49171,7 +49695,8 @@ function updateLink(arg, input, solo = false) {
 		updateAllSoloLinks();
 	}
 
-	saveDirectorSettings();
+	saveDirectorSettings(intent);
+	return true;
 }
 
 function changeURL(changeURL) {
@@ -49189,7 +49714,12 @@ function changeURL(changeURL) {
 	}
 }
 
-function updateLinkInverse(arg, input) {
+function updateLinkInverse(arg, input, intent = {}) {
+	intent = captureDirectorSettingIntent(input, intent);
+	if (!intent.trusted) {
+		restoreDirectorSettingInput(input);
+		return false;
+	}
 	log("updateLinkInverse");
 	log(input.dataset.param);
 	if (!input.checked) {
@@ -49216,9 +49746,16 @@ function updateLinkInverse(arg, input) {
 		getById("director_block_" + arg).href = string;
 		getById("director_block_" + arg).innerText = string;
 	}
+	saveDirectorSettings(intent);
+	return true;
 }
 
-function updateLinkScene(arg, input) {
+function updateLinkScene(arg, input, intent = {}) {
+	intent = captureDirectorSettingIntent(input, intent);
+	if (!intent.trusted) {
+		restoreDirectorSettingInput(input);
+		return false;
+	}
 	log("updateLinkScene");
 	var string = getById("director_block_" + arg).dataset.raw || "";
 
@@ -49235,6 +49772,8 @@ function updateLinkScene(arg, input) {
 
 	getById("director_block_" + arg).href = string;
 	getById("director_block_" + arg).innerText = string;
+	saveDirectorSettings(intent);
+	return true;
 }
 
 function fullscreenPageToggle(state = null) {
@@ -50905,9 +51444,12 @@ async function createPopoutChat() {
 	async function generateSecureUrl(params) {
 		const ENCRYPTION_KEY = 'your32characterlongencryptionkey!!';
 
-		const filteredParams = Object.fromEntries(
-			Object.entries(params).filter(([_, v]) => v != null && v !== undefined)
-		);
+		const filteredParams = {};
+		Object.entries(params).forEach(function(entry) {
+			if (entry[1] != null && entry[1] !== undefined) {
+				filteredParams[entry[0]] = entry[1];
+			}
+		});
 		const paramsString = JSON.stringify(filteredParams);
 		const encrypted = encrypt(paramsString, ENCRYPTION_KEY);
 		return `./popout.html?id=${session.broadcastChannelID}&data=${encodeURIComponent(encrypted)}`;
@@ -51512,7 +52054,7 @@ function setHotKeyAuto(hotkeyInput) {
 	var key = "";
 
 	if (hotkeyInput) {
-		const modifiers = hotkeyInput.replaceAll(" ", "+").split("+");
+		const modifiers = hotkeyInput.replace(/ /g, "+").split("+");
 		modifiers.forEach(modifier => {
 			const trimmedModifier = modifier.trim().toLowerCase();
 			if (trimmedModifier === "control") {
@@ -66746,4 +67288,1608 @@ async function handleAccessRequest(userId, action) {
 	} catch (e) {
 		console.error('Failed to handle access request:', e);
 	}
+}
+
+var VDO_ICECAST_SETTINGS_KEY = "vdoNinja.icecastSettings";
+var VDO_ICECAST_DEFAULT_RELAY_URL = "https://vdo-ninja-icecast-relay.vdo.workers.dev/publish";
+var VDO_ICECAST_DEFAULT_AUDIO_BITRATE = 128000;
+var VDO_ICECAST_DEFAULT_TIMESLICE_MS = 1000;
+var VDO_ICECAST_DIRECT_FALLBACK_MS = 5000;
+var VDO_ICECAST_RELAY_BUFFER_LIMIT = 512 * 1024;
+var VDO_ICECAST_RELAY_ROTATE_MS = 24000;
+var VDO_ICECAST_LOCAL_FLAGS = ["icecastpush", "icecastlocal", "icecastmic"];
+var VDO_ICECAST_REMOTE_FLAGS = ["icecastview", "icecastremote", "icecastfromview"];
+var VDO_ICECAST_LEGACY_FLAGS = ["icecast", "icecastout"];
+
+var VDO_ICECAST_MIME_OPTIONS = [
+	{ value: "audio/aac", label: "AAC / ADTS" },
+	{ value: "audio/webm;codecs=opus", label: "WebM / Opus" },
+	{ value: "audio/ogg;codecs=opus", label: "Ogg / Opus" },
+	{ value: "audio/webm", label: "WebM" },
+	{ value: "audio/ogg", label: "Ogg" }
+];
+
+function vdoIcecastDelay(ms) {
+	return new Promise(function(resolve) {
+		setTimeout(resolve, ms);
+	});
+}
+
+function vdoIcecastCreateAbortError(message) {
+	if (typeof DOMException === "function") {
+		return new DOMException(message || "aborted", "AbortError");
+	}
+	var error = new Error(message || "aborted");
+	error.name = "AbortError";
+	return error;
+}
+
+function vdoIcecastCleanHeaderValue(value) {
+	return (value || "").toString().replace(/[\r\n]/g, " ").trim();
+}
+
+function vdoIcecastBasicAuth(username, password) {
+	return "Basic " + btoa((username || "source") + ":" + (password || ""));
+}
+
+function vdoIcecastIsAacMimeType(type) {
+	return (type || "").toLowerCase().indexOf("audio/aac") !== -1;
+}
+
+function vdoIcecastIsIPv4Target(target) {
+	return /^\d{1,3}(?:\.\d{1,3}){3}$/.test(target.hostname);
+}
+
+function vdoIcecastIsBareIpTarget(target) {
+	return vdoIcecastIsIPv4Target(target) && !target.port && target.pathname === "/";
+}
+
+function vdoIcecastIsHttpsPage() {
+	return typeof window !== "undefined" && window.location && window.location.protocol === "https:";
+}
+
+function vdoIcecastGetSupportedRecorderMimeType(preferredType) {
+	if (typeof MediaRecorder === "undefined" || typeof MediaRecorder.isTypeSupported !== "function") {
+		return "";
+	}
+	var candidates = [];
+	if (preferredType) {
+		candidates.push(preferredType);
+	}
+	VDO_ICECAST_MIME_OPTIONS.forEach(function(option) {
+		if (!vdoIcecastIsAacMimeType(option.value) && candidates.indexOf(option.value) === -1) {
+			candidates.push(option.value);
+		}
+	});
+	return candidates.find(function(type) {
+		return MediaRecorder.isTypeSupported(type);
+	}) || "";
+}
+
+async function vdoIcecastGetAacEncoderConfig(audioContext, audioBitsPerSecond) {
+	if (
+		typeof AudioEncoder === "undefined" ||
+		typeof AudioEncoder.isConfigSupported !== "function" ||
+		typeof MediaStreamTrackProcessor === "undefined"
+	) {
+		return null;
+	}
+	var config = {
+		codec: "mp4a.40.2",
+		sampleRate: (audioContext && audioContext.sampleRate) || 48000,
+		numberOfChannels: 2,
+		bitrate: audioBitsPerSecond || VDO_ICECAST_DEFAULT_AUDIO_BITRATE,
+		aac: { format: "adts" }
+	};
+	try {
+		var support = await AudioEncoder.isConfigSupported(config);
+		return support.supported ? support.config : null;
+	} catch (error) {
+		return null;
+	}
+}
+
+function vdoIcecastNormalizeMimeType(value) {
+	var normalized = (value || "").toString().trim().toLowerCase();
+	if (!normalized || normalized === "aac") {
+		return "audio/aac";
+	}
+	if (normalized === "opus" || normalized === "webm-opus" || normalized === "webm") {
+		return "audio/webm;codecs=opus";
+	}
+	if (normalized === "ogg-opus" || normalized === "ogg") {
+		return "audio/ogg;codecs=opus";
+	}
+	if (normalized.indexOf("audio/") === 0) {
+		return value;
+	}
+	return "audio/aac";
+}
+
+function vdoIcecastNormalizeMount(value) {
+	return (value || "").toString().trim().replace(/^\/+/, "");
+}
+
+function vdoIcecastBuildTargetUrl(settings) {
+	var targetUrl = ((settings && settings.targetUrl) || "").trim();
+	var mount = vdoIcecastNormalizeMount(settings && settings.mount);
+	if (!targetUrl || !mount) {
+		return targetUrl;
+	}
+	try {
+		var target = new URL(targetUrl);
+		target.pathname = "/" + mount;
+		target.search = "";
+		target.hash = "";
+		return target.toString();
+	} catch (error) {
+		return targetUrl;
+	}
+}
+
+function vdoIcecastReadUrlParam(names) {
+	names = Array.isArray(names) ? names : [names];
+	for (var i = 0; i < names.length; i++) {
+		try {
+			if (typeof urlParams !== "undefined" && urlParams && urlParams.has(names[i])) {
+				return urlParams.get(names[i]) || "";
+			}
+		} catch (error) {
+			//
+		}
+	}
+	return "";
+}
+
+function vdoIcecastUrlHasAny(names) {
+	names = Array.isArray(names) ? names : [names];
+	for (var i = 0; i < names.length; i++) {
+		try {
+			if (typeof urlParams !== "undefined" && urlParams && urlParams.has(names[i])) {
+				return true;
+			}
+		} catch (error) {
+			//
+		}
+	}
+	return false;
+}
+
+function vdoIcecastGetMode() {
+	var hasExplicitLocal = vdoIcecastUrlHasAny(VDO_ICECAST_LOCAL_FLAGS);
+	var hasExplicitRemote = vdoIcecastUrlHasAny(VDO_ICECAST_REMOTE_FLAGS);
+	if (hasExplicitLocal && hasExplicitRemote) {
+		return "ambiguous";
+	}
+	if (hasExplicitLocal) {
+		return "local";
+	}
+	if (hasExplicitRemote) {
+		return "remote";
+	}
+	if (!vdoIcecastUrlHasAny(VDO_ICECAST_LEGACY_FLAGS)) {
+		return "";
+	}
+	var hasLocalSource = vdoIcecastUrlHasAny(["push", "p"]);
+	var hasRemoteSource = vdoIcecastUrlHasAny(["view", "v", "streamid", "pull"]);
+	if (hasLocalSource && !hasRemoteSource && !vdoIcecastUrlHasAny(["room", "r", "director", "dir"])) {
+		return "local";
+	}
+	if (hasRemoteSource && !hasLocalSource) {
+		return "remote";
+	}
+	return "ambiguous";
+}
+
+function vdoIcecastTruthyParam(value, defaultValue) {
+	if (value === "" || value === null || typeof value === "undefined") {
+		return Boolean(defaultValue);
+	}
+	var normalized = value.toString().trim().toLowerCase();
+	return ["0", "false", "off", "no"].indexOf(normalized) === -1;
+}
+
+function vdoIcecastNormalizeAudioBitrate(value) {
+	var parsed = parseInt(value, 10);
+	if (!isFinite(parsed) || parsed <= 0) {
+		return VDO_ICECAST_DEFAULT_AUDIO_BITRATE;
+	}
+	if (parsed < 1000) {
+		return parsed * 1000;
+	}
+	return parsed;
+}
+
+function vdoIcecastReadStoredSettings() {
+	try {
+		var raw = localStorage.getItem(VDO_ICECAST_SETTINGS_KEY);
+		if (!raw) {
+			return {};
+		}
+		var parsed = JSON.parse(raw);
+		return parsed && typeof parsed === "object" ? parsed : {};
+	} catch (error) {
+		console.warn("Unable to read Icecast settings", error);
+		return {};
+	}
+}
+
+function vdoIcecastWriteStoredSettings(settings) {
+	try {
+		localStorage.setItem(VDO_ICECAST_SETTINGS_KEY, JSON.stringify(settings || {}));
+	} catch (error) {
+		console.warn("Unable to store Icecast settings", error);
+	}
+}
+
+function vdoIcecastReadConfig() {
+	var stored = vdoIcecastReadStoredSettings();
+	var targetFromUrl = vdoIcecastReadUrlParam(["icecasttarget", "icecasturl", "icecastsource"]);
+	var serverFromUrl = vdoIcecastReadUrlParam(["icecastserver", "icecasthost"]);
+	var mountFromUrl = vdoIcecastReadUrlParam(["icecastmount", "icecastmountpoint"]);
+	var targetUrl = targetFromUrl || vdoIcecastBuildTargetUrl({ targetUrl: serverFromUrl, mount: mountFromUrl });
+	var hasUrlCredentials = vdoIcecastUrlHasAny(["icecastpass", "icecastpassword", "icecastsourcepassword"]);
+	var hasUrlTarget = Boolean(targetUrl);
+
+	if (!targetUrl) {
+		targetUrl = vdoIcecastBuildTargetUrl(stored) || stored.targetUrl || "";
+	}
+
+	var username = vdoIcecastReadUrlParam(["icecastuser", "icecastusername"]) || stored.username || "source";
+	var password = vdoIcecastReadUrlParam(["icecastpass", "icecastpassword", "icecastsourcepassword"]);
+	if (!password) {
+		password = stored.password || "";
+	}
+	var format = vdoIcecastReadUrlParam(["icecastformat", "icecastmime", "icecasttype"]) || stored.mimeType || "audio/aac";
+	var relayUrl = vdoIcecastReadUrlParam(["icecastrelay", "icecastrelayurl"]);
+	if (!relayUrl && stored.relayUrl) {
+		relayUrl = stored.relayUrl;
+	}
+	if (!relayUrl) {
+		relayUrl = VDO_ICECAST_DEFAULT_RELAY_URL;
+	}
+	if (["0", "false", "off", "no", "direct", "none"].indexOf(relayUrl.toString().toLowerCase()) !== -1) {
+		relayUrl = "";
+	}
+	var relayToken = vdoIcecastReadUrlParam(["icecastrelaytoken"]) || stored.relayToken || "";
+	var bitrate = vdoIcecastReadUrlParam(["icecastbitrate", "icecastab"]) || stored.audioBitsPerSecond || VDO_ICECAST_DEFAULT_AUDIO_BITRATE;
+	var name = vdoIcecastReadUrlParam(["icecastname"]) || (stored.metadata && stored.metadata.name) || stored.name || "VDO.Ninja Live";
+	var genre = vdoIcecastReadUrlParam(["icecastgenre"]) || (stored.metadata && stored.metadata.genre) || stored.genre || "Live";
+	var description = vdoIcecastReadUrlParam(["icecastdescription", "icecastdesc"]) || (stored.metadata && stored.metadata.description) || "";
+	var publicValue = vdoIcecastReadUrlParam(["icecastpublic"]);
+	var isPublic = publicValue ? vdoIcecastTruthyParam(publicValue, false) : Boolean((stored.metadata && stored.metadata.public) || stored.public);
+
+	return {
+		config: {
+			targetUrl: targetUrl,
+			username: username,
+			password: password,
+			mimeType: vdoIcecastNormalizeMimeType(format),
+			audioBitsPerSecond: vdoIcecastNormalizeAudioBitrate(bitrate),
+			relayUrl: relayUrl,
+			relayToken: relayToken,
+			metadata: {
+				name: name,
+				genre: genre,
+				description: description,
+				public: isPublic
+			}
+		},
+		isComplete: Boolean(targetUrl && password),
+		hasUrlConfig: Boolean(hasUrlTarget && hasUrlCredentials)
+	};
+}
+
+class VDOIcecastPublisher extends EventTarget {
+	constructor(options) {
+		super();
+		options = options || {};
+		this.audioContext = options.audioContext || null;
+		this.destination = null;
+		this.masterGain = null;
+		this.sourceNode = null;
+		this.sourceStream = null;
+		this.sourceEndedHandlers = [];
+		this.mediaRecorder = null;
+		this.audioEncoder = null;
+		this.trackProcessor = null;
+		this.trackReader = null;
+		this.encoderPumpPromise = null;
+		this.uploadAbortController = null;
+		this.uploadPromise = null;
+		this.streamController = null;
+		this.pendingWrites = 0;
+		this.closeRequested = false;
+		this.live = false;
+		this.stopping = false;
+		this.startedAt = 0;
+		this.bytesSent = 0;
+		this.relayBytesSent = 0;
+		this.relayStarted = false;
+		this.relayReady = false;
+		this.config = null;
+	}
+
+	isLive() {
+		return this.live;
+	}
+
+	setAudioContext(audioContext) {
+		this.audioContext = audioContext;
+	}
+
+	emitStatus(state, message, details) {
+		this.dispatchEvent(
+			new CustomEvent("status", {
+				detail: {
+					state: state,
+					message: message,
+					bytesSent: this.bytesSent,
+					startedAt: this.startedAt,
+					...(details || {})
+				}
+			})
+		);
+	}
+
+	emitProgress() {
+		this.dispatchEvent(
+			new CustomEvent("progress", {
+				detail: {
+					bytesSent: this.bytesSent,
+					startedAt: this.startedAt
+				}
+			})
+		);
+	}
+
+	isExpectedStopError(error) {
+		var message = ((error && error.message) || "").toLowerCase();
+		return this.stopping || this.closeRequested || (error && error.name === "AbortError") || message.indexOf("aborted") !== -1;
+	}
+
+	async ensureAudioContext() {
+		if (!this.audioContext) {
+			var AudioCtx = window.AudioContext || window.webkitAudioContext;
+			if (!AudioCtx) {
+				throw new Error("AudioContext is not supported.");
+			}
+			this.audioContext = new AudioCtx();
+		}
+		if (this.audioContext.state === "suspended" && typeof this.audioContext.resume === "function") {
+			await this.audioContext.resume();
+		}
+		return this.audioContext;
+	}
+
+	async resolveEncoder(preferredType, audioContext, audioBitsPerSecond) {
+		var candidates = [];
+		if (preferredType) {
+			candidates.push(preferredType);
+		}
+		VDO_ICECAST_MIME_OPTIONS.forEach(function(option) {
+			if (candidates.indexOf(option.value) === -1) {
+				candidates.push(option.value);
+			}
+		});
+
+		for (var i = 0; i < candidates.length; i++) {
+			var candidate = candidates[i];
+			if (vdoIcecastIsAacMimeType(candidate)) {
+				var encoderConfig = await vdoIcecastGetAacEncoderConfig(audioContext, audioBitsPerSecond);
+				if (encoderConfig) {
+					return {
+						mode: "webcodecs-aac",
+						mimeType: "audio/aac",
+						encoderConfig: encoderConfig
+					};
+				}
+				continue;
+			}
+			var mimeType = vdoIcecastGetSupportedRecorderMimeType(candidate);
+			if (mimeType) {
+				return {
+					mode: "mediarecorder",
+					mimeType: mimeType
+				};
+			}
+		}
+		return null;
+	}
+
+	validateConfig(config) {
+		if (!config || !config.sourceStream || !config.sourceStream.getAudioTracks || !config.sourceStream.getAudioTracks().length) {
+			throw new Error("An audio stream is required.");
+		}
+		if (!config.targetUrl) {
+			throw new Error("Icecast URL is required.");
+		}
+		if (!config.password) {
+			throw new Error("Icecast source password is required.");
+		}
+		try {
+			var target = new URL(config.targetUrl);
+			if (["http:", "https:"].indexOf(target.protocol) === -1) {
+				throw new Error("Icecast URL must use HTTP or HTTPS.");
+			}
+			if (target.pathname.toLowerCase().indexOf("/listen/") === 0) {
+				throw new Error("Use the Icecast source URL, not the public listener URL.");
+			}
+			if (vdoIcecastIsBareIpTarget(target)) {
+				throw new Error("Use the full Icecast source URL, including port or AzuraCast ingest path.");
+			}
+			if (config.relayUrl && vdoIcecastIsIPv4Target(target)) {
+				throw new Error("Use a DNS source URL with the relay; bare IP Icecast targets are not supported.");
+			}
+		} catch (error) {
+			throw new Error((error && error.message) || "Invalid Icecast URL.");
+		}
+		if (config.relayUrl) {
+			try {
+				var relay = new URL(config.relayUrl);
+				if (["http:", "https:"].indexOf(relay.protocol) === -1) {
+					throw new Error("Relay URL must use HTTP or HTTPS.");
+				}
+			} catch (error) {
+				throw new Error((error && error.message) || "Invalid relay URL.");
+			}
+		}
+	}
+
+	async start(config) {
+		if (this.live) {
+			throw new Error("Icecast publishing is already running.");
+		}
+		if (typeof ReadableStream === "undefined") {
+			throw new Error("Streaming uploads are not supported in this browser.");
+		}
+		this.validateConfig(config);
+
+		var audioContext = await this.ensureAudioContext();
+		var audioBitsPerSecond = Number.isFinite(config.audioBitsPerSecond)
+			? Math.max(16000, config.audioBitsPerSecond)
+			: VDO_ICECAST_DEFAULT_AUDIO_BITRATE;
+		var encoder = await this.resolveEncoder(config.mimeType || "audio/aac", audioContext, audioBitsPerSecond);
+		if (!encoder) {
+			throw new Error("No supported Icecast audio encoder was found.");
+		}
+
+		this.config = {
+			...config,
+			username: config.username || "source",
+			mimeType: encoder.mimeType,
+			encoderMode: encoder.mode,
+			encoderConfig: encoder.encoderConfig || null,
+			timesliceMs: Number.isFinite(config.timesliceMs) ? Math.max(250, config.timesliceMs) : VDO_ICECAST_DEFAULT_TIMESLICE_MS,
+			audioBitsPerSecond: audioBitsPerSecond
+		};
+
+		this.destination = audioContext.createMediaStreamDestination();
+		this.masterGain = audioContext.createGain();
+		this.masterGain.gain.value = 1;
+		this.masterGain.connect(this.destination);
+		this.connectSourceStream(config.sourceStream);
+
+		this.bytesSent = 0;
+		this.relayBytesSent = 0;
+		this.relayStarted = false;
+		this.relayReady = false;
+		this.startedAt = Date.now();
+		this.closeRequested = false;
+		this.pendingWrites = 0;
+		this.stopping = false;
+		this.live = true;
+
+		var uploadStream = this.createUploadStream();
+		this.uploadAbortController = new AbortController();
+		try {
+			if (this.config.encoderMode === "webcodecs-aac") {
+				await this.startAacEncoder();
+			} else {
+				this.startMediaRecorder();
+			}
+		} catch (error) {
+			await this.stop({ quiet: true });
+			throw error;
+		}
+
+		this.uploadPromise = this.openUploadWithFallback(uploadStream)
+			.then(function(response) {
+				if (this.live && !this.stopping && !this.closeRequested) {
+					throw new Error("Icecast connection ended.");
+				}
+				return response;
+			}.bind(this))
+			.catch(function(error) {
+				if (!this.isExpectedStopError(error)) {
+					this.live = false;
+					this.dispatchEvent(new CustomEvent("error", { detail: error }));
+					this.emitStatus("error", (error && error.message) || "Icecast publish failed.");
+					this.stop({ quiet: true }).catch(function(stopError) {
+						console.warn("Icecast stop after upload error failed", stopError);
+					});
+				}
+				throw error;
+			}.bind(this));
+		this.emitStatus("live", "Icecast live.", { mimeType: this.config.mimeType });
+	}
+
+	connectSourceStream(stream) {
+		this.sourceStream = stream;
+		this.sourceNode = this.audioContext.createMediaStreamSource(stream);
+		this.sourceNode.connect(this.masterGain);
+		this.sourceEndedHandlers = [];
+		var tracks = stream.getAudioTracks ? stream.getAudioTracks() : [];
+		tracks.forEach(function(track) {
+			var endedHandler = function() {
+				var liveTracks = this.sourceStream && this.sourceStream.getAudioTracks
+					? this.sourceStream.getAudioTracks().filter(function(candidate) {
+						return candidate.readyState !== "ended";
+					})
+					: [];
+				if (!liveTracks.length && this.live) {
+					this.emitStatus("error", "Icecast source audio ended.");
+					this.stop({ quiet: true }).catch(function(error) {
+						console.warn("Icecast stop after source ended failed", error);
+					});
+				}
+			}.bind(this);
+			track.addEventListener("ended", endedHandler);
+			this.sourceEndedHandlers.push({ track: track, endedHandler: endedHandler });
+		}.bind(this));
+	}
+
+	startMediaRecorder() {
+		this.mediaRecorder = new MediaRecorder(this.destination.stream, {
+			mimeType: this.config.mimeType,
+			audioBitsPerSecond: this.config.audioBitsPerSecond
+		});
+		this.mediaRecorder.ondataavailable = function(event) {
+			if (event.data && event.data.size > 0) {
+				this.enqueueBlob(event.data);
+			}
+		}.bind(this);
+		this.mediaRecorder.onerror = function(event) {
+			var error = (event && event.error) || event;
+			this.dispatchEvent(new CustomEvent("error", { detail: error }));
+			this.emitStatus("error", (error && error.message) || "Icecast recorder failed.");
+			this.stop({ quiet: true }).catch(function(stopError) {
+				console.warn("Icecast stop after recorder error failed", stopError);
+			});
+		}.bind(this);
+		this.mediaRecorder.onstop = function() {
+			this.requestStreamClose();
+		}.bind(this);
+		this.mediaRecorder.start(this.config.timesliceMs);
+	}
+
+	async startAacEncoder() {
+		var track = this.destination && this.destination.stream && this.destination.stream.getAudioTracks
+			? this.destination.stream.getAudioTracks()[0]
+			: null;
+		if (!track) {
+			throw new Error("Unable to create an AAC audio track.");
+		}
+		this.trackProcessor = new MediaStreamTrackProcessor({ track: track });
+		this.trackReader = this.trackProcessor.readable.getReader();
+		this.audioEncoder = new AudioEncoder({
+			output: function(chunk) {
+				this.enqueueEncodedChunk(chunk);
+			}.bind(this),
+			error: function(error) {
+				this.handleEncoderError(error);
+			}.bind(this)
+		});
+		this.audioEncoder.configure(this.config.encoderConfig);
+		this.encoderPumpPromise = this.pumpAacEncoder();
+	}
+
+	async pumpAacEncoder() {
+		try {
+			while (!this.closeRequested && !this.stopping && this.trackReader) {
+				var result = await this.trackReader.read();
+				if (result.done) {
+					break;
+				}
+				this.encodeAudioData(result.value);
+				if (this.audioEncoder && this.audioEncoder.encodeQueueSize > 8) {
+					await vdoIcecastDelay(10);
+				}
+			}
+			if (this.audioEncoder && this.audioEncoder.state !== "closed") {
+				await this.audioEncoder.flush();
+			}
+		} catch (error) {
+			if (!this.isExpectedStopError(error)) {
+				this.handleEncoderError(error);
+			}
+		} finally {
+			if (this.audioEncoder && this.audioEncoder.state !== "closed") {
+				try {
+					this.audioEncoder.close();
+				} catch (error) {
+					if (!this.isExpectedStopError(error)) {
+						console.warn("Icecast AAC encoder close failed", error);
+					}
+				}
+			}
+			this.audioEncoder = null;
+			this.trackReader = null;
+			this.trackProcessor = null;
+			this.requestStreamClose();
+		}
+	}
+
+	encodeAudioData(audioData) {
+		try {
+			if (this.audioEncoder && this.audioEncoder.state === "configured" && !this.closeRequested) {
+				this.audioEncoder.encode(audioData);
+			}
+		} catch (error) {
+			this.handleEncoderError(error);
+		} finally {
+			try {
+				audioData.close();
+			} catch (error) {
+				if (!this.isExpectedStopError(error)) {
+					console.warn("Icecast AudioData close failed", error);
+				}
+			}
+		}
+	}
+
+	enqueueEncodedChunk(chunk) {
+		if (!this.streamController || this.closeRequested) {
+			return;
+		}
+		try {
+			var data = new Uint8Array(chunk.byteLength);
+			chunk.copyTo(data);
+			this.streamController.enqueue(data);
+			this.bytesSent += data.byteLength;
+			this.emitProgress();
+		} catch (error) {
+			if (!this.isExpectedStopError(error)) {
+				this.handleEncoderError(error);
+			}
+		}
+	}
+
+	handleEncoderError(error) {
+		if (this.isExpectedStopError(error)) {
+			return;
+		}
+		this.dispatchEvent(new CustomEvent("error", { detail: error }));
+		this.emitStatus("error", (error && error.message) || "Icecast audio encoder failed.");
+		this.stop({ quiet: true }).catch(function(stopError) {
+			console.warn("Icecast stop after encoder error failed", stopError);
+		});
+	}
+
+	async stop(options) {
+		options = options || {};
+		var quiet = Boolean(options.quiet);
+		if (!this.live && !this.mediaRecorder && !this.audioEncoder && !this.encoderPumpPromise) {
+			return;
+		}
+		this.stopping = true;
+		this.closeRequested = true;
+		var uploadPromise = this.uploadPromise;
+		var uploadSettled = uploadPromise
+			? uploadPromise.catch(function(error) {
+				if (!quiet && !this.isExpectedStopError(error)) {
+					console.warn("Icecast upload ended with error", error);
+				}
+			}.bind(this))
+			: Promise.resolve();
+		var encoderPromise = this.encoderPumpPromise;
+		var encoderSettled = encoderPromise
+			? encoderPromise.catch(function(error) {
+				if (!quiet && !this.isExpectedStopError(error)) {
+					console.warn("Icecast encoder ended with error", error);
+				}
+			}.bind(this))
+			: Promise.resolve();
+
+		if (this.mediaRecorder && this.mediaRecorder.state !== "inactive") {
+			try {
+				this.mediaRecorder.stop();
+			} catch (error) {
+				console.warn("Icecast MediaRecorder stop failed", error);
+				this.requestStreamClose();
+			}
+		} else if (this.trackReader) {
+			try {
+				await Promise.race([this.trackReader.cancel("stopping"), vdoIcecastDelay(1000)]);
+			} catch (error) {
+				if (!quiet && !this.isExpectedStopError(error)) {
+					console.warn("Icecast AAC reader cancel failed", error);
+				}
+			}
+		} else {
+			this.requestStreamClose();
+		}
+
+		if (this.uploadAbortController) {
+			try {
+				this.uploadAbortController.abort("publisher stopped");
+			} catch (error) {
+				if (!quiet) {
+					console.warn("Icecast upload abort failed", error);
+				}
+			}
+		}
+
+		this.disconnectSource();
+		try {
+			if (this.masterGain) {
+				this.masterGain.disconnect();
+			}
+		} catch (error) {
+			if (!quiet) {
+				console.warn("Icecast mix disconnect failed", error);
+			}
+		}
+		await Promise.all([uploadSettled, encoderSettled]);
+		this.mediaRecorder = null;
+		this.encoderPumpPromise = null;
+		this.uploadAbortController = null;
+		this.uploadPromise = null;
+		this.destination = null;
+		this.masterGain = null;
+		this.streamController = null;
+		this.pendingWrites = 0;
+		this.closeRequested = false;
+		this.live = false;
+		this.relayStarted = false;
+		this.relayReady = false;
+		this.stopping = false;
+		this.config = null;
+		if (!quiet) {
+			this.emitStatus("idle", "Icecast idle.");
+		}
+	}
+
+	disconnectSource() {
+		if (this.sourceNode) {
+			try {
+				this.sourceNode.disconnect();
+			} catch (error) {
+				console.warn("Icecast source disconnect failed", error);
+			}
+		}
+		this.sourceEndedHandlers.forEach(function(entry) {
+			try {
+				entry.track.removeEventListener("ended", entry.endedHandler);
+			} catch (error) {
+				console.warn("Icecast source listener cleanup failed", error);
+			}
+		});
+		this.sourceEndedHandlers = [];
+		this.sourceNode = null;
+		this.sourceStream = null;
+	}
+
+	createUploadStream() {
+		return new ReadableStream({
+			start: function(controller) {
+				this.streamController = controller;
+			}.bind(this),
+			cancel: function() {
+				this.streamController = null;
+			}.bind(this)
+		});
+	}
+
+	enqueueBlob(blob) {
+		if (!this.streamController || this.closeRequested) {
+			return;
+		}
+		this.pendingWrites += 1;
+		blob
+			.arrayBuffer()
+			.then(function(buffer) {
+				if (!this.streamController || this.closeRequested) {
+					return;
+				}
+				var chunk = new Uint8Array(buffer);
+				this.streamController.enqueue(chunk);
+				this.bytesSent += chunk.byteLength;
+				this.emitProgress();
+			}.bind(this))
+			.catch(function(error) {
+				if (!this.stopping) {
+					this.dispatchEvent(new CustomEvent("error", { detail: error }));
+					this.emitStatus("error", (error && error.message) || "Failed to prepare Icecast audio chunk.");
+				}
+			}.bind(this))
+			.finally(function() {
+				this.pendingWrites -= 1;
+				this.closeStreamIfReady();
+			}.bind(this));
+	}
+
+	requestStreamClose() {
+		this.closeRequested = true;
+		this.closeStreamIfReady();
+	}
+
+	closeStreamIfReady() {
+		if (!this.closeRequested || this.pendingWrites > 0 || !this.streamController) {
+			return;
+		}
+		try {
+			this.streamController.close();
+		} catch (error) {
+			console.warn("Icecast stream close failed", error);
+		}
+		this.streamController = null;
+	}
+
+	buildDirectHeaders() {
+		var headers = new Headers();
+		headers.set("Authorization", vdoIcecastBasicAuth(this.config.username, this.config.password));
+		headers.set("Content-Type", this.config.mimeType);
+		this.applyIcecastMetadataHeaders(headers);
+		return headers;
+	}
+
+	buildRelayHeaders() {
+		var headers = new Headers();
+		headers.set("Content-Type", this.config.mimeType);
+		headers.set("X-Icecast-Target", this.config.targetUrl);
+		headers.set("X-Icecast-Username", this.config.username || "source");
+		headers.set("X-Icecast-Password", this.config.password || "");
+		headers.set("X-Icecast-Content-Type", this.config.mimeType);
+		if (this.config.relayToken) {
+			headers.set("X-Icecast-Relay-Token", this.config.relayToken);
+		}
+		this.applyIcecastMetadataHeaders(headers, "X-Icecast-");
+		return headers;
+	}
+
+	buildRelayStartMessage() {
+		var metadata = this.config.metadata || {};
+		return {
+			targetUrl: this.config.targetUrl,
+			username: this.config.username || "source",
+			password: this.config.password || "",
+			relayToken: this.config.relayToken || "",
+			contentType: this.config.mimeType,
+			metadata: {
+				name: metadata.name || "",
+				description: metadata.description || "",
+				genre: metadata.genre || "",
+				url: metadata.url || "",
+				public: Boolean(metadata.public),
+				bitrate: metadata.bitrate || Math.round((this.config.audioBitsPerSecond || VDO_ICECAST_DEFAULT_AUDIO_BITRATE) / 1000).toString()
+			}
+		};
+	}
+
+	applyIcecastMetadataHeaders(headers, prefix) {
+		prefix = prefix || "";
+		var metadata = this.config.metadata || {};
+		var pairs = {
+			Name: metadata.name,
+			Description: metadata.description,
+			Genre: metadata.genre,
+			Url: metadata.url,
+			Public: metadata.public ? "1" : "0",
+			Bitrate: metadata.bitrate || Math.round((this.config.audioBitsPerSecond || VDO_ICECAST_DEFAULT_AUDIO_BITRATE) / 1000).toString()
+		};
+		Object.keys(pairs).forEach(function(key) {
+			var clean = vdoIcecastCleanHeaderValue(pairs[key]);
+			if (clean) {
+				headers.set(prefix + "Ice-" + key, clean);
+			}
+		});
+	}
+
+	async openUploadWithFallback(uploadStream) {
+		if (this.config.relayUrl) {
+			if (this.shouldSkipDirectUpload()) {
+				this.emitStatus("connecting", "Using Icecast relay.");
+				return this.openRelayUpload(uploadStream);
+			}
+			var streams = uploadStream.tee();
+			var directBody = streams[0];
+			var relayBody = streams[1];
+			var directAbortController = new AbortController();
+			var directTimedOut = false;
+			var fallbackTimer = setTimeout(function() {
+				directTimedOut = true;
+				directAbortController.abort("direct connection timed out");
+			}, VDO_ICECAST_DIRECT_FALLBACK_MS);
+			var stopSignal = this.uploadAbortController && this.uploadAbortController.signal;
+			var abortDirectOnStop = function() {
+				directAbortController.abort("publisher stopped");
+			};
+			if (stopSignal) {
+				if (stopSignal.aborted) {
+					abortDirectOnStop();
+				} else {
+					stopSignal.addEventListener("abort", abortDirectOnStop, { once: true });
+				}
+			}
+			try {
+				this.emitStatus("connecting", "Connecting directly to Icecast.");
+				var response = await this.openDirectUpload(directBody, directAbortController.signal);
+				clearTimeout(fallbackTimer);
+				relayBody.cancel("direct connection active").catch(function() {});
+				return this.waitForUploadCompletion(response);
+			} catch (error) {
+				clearTimeout(fallbackTimer);
+				directAbortController.abort("direct connection failed");
+				if (!directBody.locked) {
+					directBody.cancel("direct connection failed").catch(function() {});
+				}
+				if (this.stopping) {
+					throw error;
+				}
+				this.emitStatus("connecting", directTimedOut ? "Direct publish timed out; using relay." : "Direct publish failed; using relay.", {
+					fallbackError: (error && error.message) || "direct failed"
+				});
+				return this.openRelayUpload(relayBody);
+			} finally {
+				if (stopSignal) {
+					stopSignal.removeEventListener("abort", abortDirectOnStop);
+				}
+			}
+		}
+		this.emitStatus("connecting", "Connecting directly to Icecast.");
+		return this.openDirectUpload(uploadStream).then(function(response) {
+			return this.waitForUploadCompletion(response);
+		}.bind(this));
+	}
+
+	shouldSkipDirectUpload() {
+		try {
+			var target = new URL(this.config.targetUrl);
+			return target.protocol === "http:" && vdoIcecastIsHttpsPage();
+		} catch (error) {
+			return false;
+		}
+	}
+
+	openDirectUpload(body, signal) {
+		return fetch(this.config.targetUrl, {
+			method: "PUT",
+			mode: "cors",
+			cache: "no-store",
+			headers: this.buildDirectHeaders(),
+			body: body,
+			duplex: "half",
+			signal: signal || (this.uploadAbortController && this.uploadAbortController.signal)
+		}).then(function(response) {
+			if (!response.ok) {
+				throw new Error("Icecast rejected the stream (" + response.status + ").");
+			}
+			return response;
+		});
+	}
+
+	async openRelayUpload(body) {
+		if (typeof WebSocket !== "undefined") {
+			var streams = body.tee();
+			var socketBody = streams[0];
+			var fetchBody = streams[1];
+			var socketReady = false;
+			try {
+				return await this.openRelayWebSocket(socketBody, {
+					onReady: function() {
+						socketReady = true;
+						fetchBody.cancel("relay socket active").catch(function() {});
+					}
+				});
+			} catch (error) {
+				if (socketReady || this.stopping) {
+					if (!fetchBody.locked) {
+						fetchBody.cancel("relay socket failed").catch(function() {});
+					}
+					throw error;
+				}
+				this.emitStatus("connecting", "Relay socket failed; using relay upload.", {
+					fallbackError: (error && error.message) || "relay socket failed"
+				});
+				return this.openRelayFetch(fetchBody);
+			}
+		}
+		return this.openRelayFetch(body);
+	}
+
+	async openRelayFetch(body) {
+		var response = await fetch(this.config.relayUrl, {
+			method: "POST",
+			mode: "cors",
+			cache: "no-store",
+			headers: this.buildRelayHeaders(),
+			body: body,
+			duplex: "half",
+			signal: this.uploadAbortController && this.uploadAbortController.signal
+		});
+		if (!response.ok) {
+			var relayMessage = "";
+			try {
+				var bodyText = await response.text();
+				if (bodyText) {
+					try {
+						relayMessage = JSON.parse(bodyText).error || bodyText;
+					} catch (error) {
+						relayMessage = bodyText;
+					}
+				}
+			} catch (error) {
+				relayMessage = "";
+			}
+			throw new Error(
+				relayMessage
+					? "Icecast relay rejected the stream (" + response.status + "): " + relayMessage
+					: "Icecast relay rejected the stream (" + response.status + ")."
+			);
+		}
+		return this.waitForUploadCompletion(response);
+	}
+
+	openRelayWebSocket(body, options) {
+		options = options || {};
+		var socketUrl = new URL(this.config.relayUrl, window.location.href);
+		socketUrl.protocol = socketUrl.protocol === "https:" ? "wss:" : "ws:";
+		var signal = this.uploadAbortController && this.uploadAbortController.signal;
+		var reader = null;
+		var settled = false;
+		var activeSocket = null;
+		var activeClosed = false;
+		var activeCloseError = null;
+		var abortHandler = null;
+
+		return new Promise(function(resolve, reject) {
+			var cleanup = function() {
+				if (signal && abortHandler) {
+					signal.removeEventListener("abort", abortHandler);
+					abortHandler = null;
+				}
+			};
+			var settle = function(callback, value) {
+				if (settled) {
+					return;
+				}
+				settled = true;
+				cleanup();
+				callback(value);
+			};
+			var closeSocket = function(socket, code, reason) {
+				try {
+					if (socket && (socket.readyState === WebSocket.OPEN || socket.readyState === WebSocket.CONNECTING)) {
+						socket.close(code || 1000, reason || "stopping");
+					}
+				} catch (error) {
+					if (!this.isExpectedStopError(error)) {
+						console.warn("Icecast relay socket close failed", error);
+					}
+				}
+			}.bind(this);
+			abortHandler = function() {
+				if (reader) {
+					reader.cancel("stopping").catch(function() {});
+				}
+				closeSocket(activeSocket, 1000, "stopping");
+				settle(resolve, new Response("", { status: 200 }));
+			};
+			if (signal) {
+				if (signal.aborted) {
+					abortHandler();
+					return;
+				}
+				signal.addEventListener("abort", abortHandler, { once: true });
+			}
+
+			var connectSocket = function() {
+				return new Promise(function(resolveSocket, rejectSocket) {
+					var socket = new WebSocket(socketUrl.toString());
+					var accepted = false;
+					var finished = false;
+					socket.binaryType = "arraybuffer";
+					var finish = function(callback, value) {
+						if (finished) {
+							return;
+						}
+						finished = true;
+						callback(value);
+					};
+					socket.addEventListener("open", function() {
+						try {
+							socket.send(JSON.stringify(this.buildRelayStartMessage()));
+						} catch (error) {
+							finish(rejectSocket, error);
+							closeSocket(socket, 4000, "relay failed");
+						}
+					}.bind(this));
+					socket.addEventListener("message", function(event) {
+						if (typeof event.data !== "string") {
+							return;
+						}
+						var message;
+						try {
+							message = JSON.parse(event.data);
+						} catch (error) {
+							return;
+						}
+						if (message && message.type === "error") {
+							var error = new Error(message.error || "Icecast relay failed.");
+							if (accepted) {
+								activeClosed = true;
+								activeCloseError = error;
+								closeSocket(socket, 4000, "relay failed");
+							} else {
+								finish(rejectSocket, error);
+								closeSocket(socket, 4000, "relay failed");
+							}
+						} else if (message && message.type === "started") {
+							this.relayStarted = true;
+						} else if (message && message.type === "ready") {
+							accepted = true;
+							activeSocket = socket;
+							activeClosed = false;
+							activeCloseError = null;
+							this.relayReady = true;
+							if (typeof options.onReady === "function") {
+								try {
+									options.onReady();
+								} catch (error) {
+									console.warn("Icecast relay ready callback failed", error);
+								}
+							}
+							this.emitStatus("live", "Icecast relay connected.");
+							finish(resolveSocket, socket);
+						}
+					}.bind(this));
+					socket.addEventListener("error", function() {
+						var error = new Error("Icecast relay socket failed.");
+						if (accepted && activeSocket === socket) {
+							activeClosed = true;
+							activeCloseError = error;
+							return;
+						}
+						finish(rejectSocket, error);
+					});
+					socket.addEventListener("close", function(event) {
+						if (activeSocket !== socket) {
+							return;
+						}
+						activeClosed = true;
+						activeCloseError = event.code === 1000 ? null : new Error(event.reason || "Icecast relay socket closed (" + event.code + ").");
+					});
+				}.bind(this));
+			}.bind(this);
+
+			var connectWithRetry = async function() {
+				var lastError = null;
+				for (var attempt = 0; attempt < 8; attempt += 1) {
+					if (signal && signal.aborted) {
+						throw vdoIcecastCreateAbortError("publisher stopped");
+					}
+					try {
+						return await connectSocket();
+					} catch (error) {
+						lastError = error;
+						await vdoIcecastDelay(500);
+					}
+				}
+				throw lastError || new Error("Icecast relay socket failed.");
+			};
+
+			var rotateSocket = async function(currentSocket) {
+				if (activeSocket === currentSocket) {
+					activeSocket = null;
+				}
+				closeSocket(currentSocket, 1000, "rotate");
+				this.relayReady = false;
+				await vdoIcecastDelay(700);
+				return connectWithRetry();
+			}.bind(this);
+
+			var pump = async function() {
+				reader = body.getReader();
+				var socket = await connectWithRetry();
+				var socketOpenedAt = Date.now();
+				while (true) {
+					if (signal && signal.aborted) {
+						throw vdoIcecastCreateAbortError("publisher stopped");
+					}
+					if (activeClosed) {
+						var reconnectError = activeCloseError;
+						activeClosed = false;
+						activeCloseError = null;
+						this.relayReady = false;
+						if (reconnectError) {
+							console.warn("Icecast relay reconnecting after upstream close", reconnectError);
+						}
+						socket = await connectWithRetry();
+						socketOpenedAt = Date.now();
+					}
+					if (Date.now() - socketOpenedAt > VDO_ICECAST_RELAY_ROTATE_MS) {
+						socket = await rotateSocket(socket);
+						socketOpenedAt = Date.now();
+					}
+					var result = await reader.read();
+					if (result.done) {
+						closeSocket(socket, 1000, "complete");
+						return;
+					}
+					await this.waitForWebSocketBackpressure(socket, signal);
+					if (socket.readyState !== WebSocket.OPEN) {
+						activeClosed = true;
+						activeCloseError = null;
+						continue;
+					}
+					socket.send(result.value);
+					this.relayBytesSent += (result.value && (result.value.byteLength || result.value.length)) || 0;
+				}
+			}.bind(this);
+
+			pump()
+				.then(function() {
+					settle(resolve, new Response("", { status: 200 }));
+				})
+				.catch(function(error) {
+					if (this.isExpectedStopError(error)) {
+						if (reader) {
+							reader.cancel("stopping").catch(function() {});
+						}
+						closeSocket(activeSocket, 1000, "stopping");
+						settle(resolve, new Response("", { status: 200 }));
+						return;
+					}
+					if (reader) {
+						reader.cancel("relay failed").catch(function() {});
+					}
+					closeSocket(activeSocket, 4000, "relay failed");
+					settle(reject, error);
+				}.bind(this));
+		}.bind(this));
+	}
+
+	async waitForWebSocketBackpressure(socket, signal) {
+		while (socket.bufferedAmount > VDO_ICECAST_RELAY_BUFFER_LIMIT) {
+			if (signal && signal.aborted) {
+				throw vdoIcecastCreateAbortError("publisher stopped");
+			}
+			if (socket.readyState !== WebSocket.OPEN) {
+				throw new Error("Icecast relay socket closed.");
+			}
+			await vdoIcecastDelay(25);
+		}
+	}
+
+	async waitForUploadCompletion(response) {
+		if (response && typeof response.text === "function") {
+			await response.text();
+		}
+		return response;
+	}
+}
+
+function vdoIcecastFormatBytes(bytes) {
+	bytes = Number(bytes) || 0;
+	if (bytes < 1024) {
+		return bytes + " B";
+	}
+	var units = ["KB", "MB", "GB"];
+	var value = bytes / 1024;
+	var index = 0;
+	while (value >= 1024 && index < units.length - 1) {
+		value /= 1024;
+		index += 1;
+	}
+	return value.toFixed(value >= 10 ? 1 : 2) + " " + units[index];
+}
+
+function vdoIcecastFindSourceStream(mode) {
+	mode = mode || vdoIcecastGetMode();
+	if (mode === "local") {
+		var localStream = session && (session.streamSrc || session.streamSrcClone);
+		if (localStream && localStream.getAudioTracks && localStream.getAudioTracks().some(function(track) { return track.readyState !== "ended"; })) {
+			return { stream: localStream, label: session.label || session.streamID || "Local stream" };
+		}
+		return null;
+	}
+	if (mode !== "remote") {
+		return { error: "Choose &icecastpush for local audio or &icecastview for received audio." };
+	}
+	var requested = vdoIcecastReadUrlParam(["icecaststream", "icecastsid"]) || vdoIcecastReadUrlParam(["view", "v", "streamid", "pull"]);
+	var viewSet = [];
+	if (requested) {
+		viewSet = requested.split(",").map(function(item) {
+			return item.trim();
+		}).filter(Boolean);
+	}
+	if (session && session.rpcs) {
+		var uuids = Object.keys(session.rpcs);
+		for (var i = 0; i < uuids.length; i++) {
+			var rpc = session.rpcs[uuids[i]];
+			if (!rpc) {
+				continue;
+			}
+			if (viewSet.length && viewSet.indexOf(rpc.streamID || "") === -1 && viewSet.indexOf(uuids[i]) === -1) {
+				continue;
+			}
+			var stream = rpc.streamSrc || rpc.stream || (rpc.videoElement && rpc.videoElement.srcObject) || null;
+			if (stream && stream.getAudioTracks && stream.getAudioTracks().some(function(track) { return track.readyState !== "ended"; })) {
+				return { stream: stream, label: rpc.label || rpc.streamID || uuids[i] };
+			}
+		}
+		if (!viewSet.length) {
+			var candidates = [];
+			for (var j = 0; j < uuids.length; j++) {
+				var fallbackRpc = session.rpcs[uuids[j]];
+				var fallbackStream = fallbackRpc && (fallbackRpc.streamSrc || fallbackRpc.stream || (fallbackRpc.videoElement && fallbackRpc.videoElement.srcObject));
+				if (fallbackStream && fallbackStream.getAudioTracks && fallbackStream.getAudioTracks().some(function(track) { return track.readyState !== "ended"; })) {
+					candidates.push({ stream: fallbackStream, label: fallbackRpc.label || fallbackRpc.streamID || uuids[j] });
+				}
+			}
+			if (candidates.length === 1) {
+				return candidates[0];
+			}
+			if (candidates.length > 1) {
+				return { error: "Multiple received audio streams found. Add &icecaststream=STREAM_ID to choose one." };
+			}
+		}
+	}
+	return null;
+}
+
+function vdoIcecastEnsurePanel() {
+	var panel = document.getElementById("vdo-icecast-panel");
+	if (panel) {
+		return panel;
+	}
+	var style = document.createElement("style");
+	style.id = "vdo-icecast-style";
+	style.textContent = "\
+#vdo-icecast-panel{position:fixed;right:14px;bottom:14px;z-index:2147483000;width:min(360px,calc(100vw - 28px));box-sizing:border-box;background:#111923;color:#fff;border:1px solid #334155;border-radius:8px;box-shadow:0 16px 40px #0008;font:14px/1.35 Arial,Helvetica,sans-serif;padding:12px;}\
+#vdo-icecast-panel[data-state='hidden']{display:none;}\
+#vdo-icecast-panel [hidden]{display:none!important;}\
+#vdo-icecast-panel h3{margin:0 0 8px 0;font-size:16px;color:#fff;}\
+#vdo-icecast-panel p{margin:0 0 10px 0;color:#cbd5e1;}\
+#vdo-icecast-panel label{display:block;margin:7px 0;color:#e5e7eb;font-size:12px;}\
+#vdo-icecast-panel input,#vdo-icecast-panel select{width:100%;box-sizing:border-box;margin-top:3px;padding:7px;border-radius:4px;border:1px solid #475569;background:#0b1120;color:#fff;}\
+#vdo-icecast-panel .vdo-icecast-actions{display:flex;gap:8px;align-items:center;margin-top:10px;}\
+#vdo-icecast-panel button{border:0;border-radius:4px;background:#27803d;color:#fff;padding:8px 10px;cursor:pointer;}\
+#vdo-icecast-panel button.secondary{background:#334155;}\
+#vdo-icecast-panel button:disabled{opacity:.55;cursor:not-allowed;}\
+#vdo-icecast-status{margin-top:8px;color:#cbd5e1;font-size:12px;}\
+#vdo-icecast-status[data-state='error']{color:#fecaca;}\
+#vdo-icecast-status[data-state='live'],#vdo-icecast-status[data-state='ready']{color:#bbf7d0;}\
+";
+	document.head.appendChild(style);
+
+	panel = document.createElement("div");
+	panel.id = "vdo-icecast-panel";
+	panel.innerHTML = '\
+<h3>Icecast / AzuraCast</h3>\
+<p id="vdo-icecast-description">Publish this VDO.Ninja audio to an Icecast-compatible source endpoint.</p>\
+<div id="vdo-icecast-form" hidden>\
+	<label>Source URL<input id="vdo-icecast-target" type="url" placeholder="https://radio.example.com:8000/stream" autocomplete="off"></label>\
+	<label>Username<input id="vdo-icecast-username" type="text" placeholder="source" autocomplete="username"></label>\
+	<label>Password<input id="vdo-icecast-password" type="password" placeholder="Source password" autocomplete="off"></label>\
+	<label>Format<select id="vdo-icecast-format"><option value="audio/aac">AAC / ADTS</option><option value="audio/webm;codecs=opus">WebM / Opus</option><option value="audio/ogg;codecs=opus">Ogg / Opus</option></select></label>\
+</div>\
+<div class="vdo-icecast-actions">\
+	<button id="vdo-icecast-start" type="button">Start Icecast</button>\
+	<button id="vdo-icecast-settings" type="button" class="secondary">Settings</button>\
+	<button id="vdo-icecast-stop" type="button" class="secondary" hidden>Stop</button>\
+</div>\
+<div id="vdo-icecast-status" data-state="idle">Idle</div>';
+	document.body.appendChild(panel);
+	return panel;
+}
+
+function vdoIcecastSetStatus(message, state) {
+	var panel = vdoIcecastEnsurePanel();
+	var status = panel.querySelector("#vdo-icecast-status");
+	if (status) {
+		status.textContent = message || "Idle";
+		status.dataset.state = state || "idle";
+	}
+}
+
+function vdoIcecastPopulateForm(config) {
+	var panel = vdoIcecastEnsurePanel();
+	var target = panel.querySelector("#vdo-icecast-target");
+	var username = panel.querySelector("#vdo-icecast-username");
+	var password = panel.querySelector("#vdo-icecast-password");
+	var format = panel.querySelector("#vdo-icecast-format");
+	if (target) {
+		target.value = config.targetUrl || "";
+	}
+	if (username) {
+		username.value = config.username || "source";
+	}
+	if (password) {
+		password.value = config.password || "";
+	}
+	if (format) {
+		format.value = vdoIcecastNormalizeMimeType(config.mimeType);
+	}
+}
+
+function vdoIcecastConfigFromForm() {
+	var panel = vdoIcecastEnsurePanel();
+	var current = vdoIcecastReadConfig().config;
+	var target = panel.querySelector("#vdo-icecast-target");
+	var username = panel.querySelector("#vdo-icecast-username");
+	var password = panel.querySelector("#vdo-icecast-password");
+	var format = panel.querySelector("#vdo-icecast-format");
+	var next = {
+		...current,
+		targetUrl: target ? target.value.trim() : current.targetUrl,
+		username: (username && username.value.trim()) || "source",
+		password: password ? password.value : current.password,
+		mimeType: format ? format.value : current.mimeType
+	};
+	vdoIcecastWriteStoredSettings(next);
+	return next;
+}
+
+function vdoIcecastUpdateButtons(live, busy) {
+	var panel = vdoIcecastEnsurePanel();
+	var start = panel.querySelector("#vdo-icecast-start");
+	var stop = panel.querySelector("#vdo-icecast-stop");
+	var settings = panel.querySelector("#vdo-icecast-settings");
+	if (start) {
+		start.hidden = Boolean(live);
+		start.disabled = Boolean(busy);
+		start.textContent = busy ? "Starting..." : "Start Icecast";
+	}
+	if (stop) {
+		stop.hidden = !live;
+		stop.disabled = Boolean(busy);
+	}
+	if (settings) {
+		settings.disabled = Boolean(live || busy);
+	}
+}
+
+function vdoIcecastControllerStart(config) {
+	var controller = window.vdoIcecastController;
+	if (!controller) {
+		return;
+	}
+	if (controller.publisher && controller.publisher.isLive()) {
+		return;
+	}
+	config = config || vdoIcecastConfigFromForm();
+	var source = vdoIcecastFindSourceStream(controller.mode);
+	if (source && source.error) {
+		vdoIcecastSetStatus(source.error, "error");
+		vdoIcecastUpdateButtons(false, false);
+		return;
+	}
+	if (!source) {
+		vdoIcecastSetStatus(controller.mode === "local" ? "Waiting for local VDO.Ninja audio..." : "Waiting for received VDO.Ninja audio...", "pending");
+		clearTimeout(controller.waitTimer);
+		controller.waitTimer = setTimeout(function() {
+			vdoIcecastControllerStart(config);
+		}, 1000);
+		return;
+	}
+	controller.busy = true;
+	vdoIcecastUpdateButtons(false, true);
+	config.sourceStream = source.stream;
+	controller.publisher
+		.start(config)
+		.then(function() {
+			controller.busy = false;
+			vdoIcecastUpdateButtons(true, false);
+			vdoIcecastSetStatus("Icecast live from " + source.label + ".", "live");
+		})
+		.catch(function(error) {
+			controller.busy = false;
+			vdoIcecastUpdateButtons(false, false);
+			vdoIcecastSetStatus((error && error.message) || "Unable to start Icecast.", "error");
+			console.error("Failed to start Icecast publisher", error);
+		});
+}
+
+function setupVDOIcecast() {
+	var mode = vdoIcecastGetMode();
+	if (!mode) {
+		return;
+	}
+	if (window.vdoIcecastController) {
+		return;
+	}
+	var read = vdoIcecastReadConfig();
+	var panel = vdoIcecastEnsurePanel();
+	var publisher = new VDOIcecastPublisher({
+		audioContext: session && (session.audioCtx || session.audioCtxOutbound) || null
+	});
+	window.vdoIcecastController = {
+		publisher: publisher,
+		busy: false,
+		waitTimer: null,
+		mode: mode
+	};
+	publisher.addEventListener("status", function(event) {
+		var detail = event.detail || {};
+		vdoIcecastSetStatus(detail.message || "Icecast idle.", detail.state || "idle");
+	});
+	publisher.addEventListener("progress", function(event) {
+		var detail = event.detail || {};
+		if (!publisher.isLive()) {
+			return;
+		}
+		vdoIcecastSetStatus("Live " + vdoIcecastFormatBytes(detail.bytesSent || 0), "live");
+	});
+	publisher.addEventListener("error", function(event) {
+		var error = event.detail;
+		vdoIcecastUpdateButtons(false, false);
+		vdoIcecastSetStatus((error && error.message) || "Icecast publish failed.", "error");
+	});
+
+	vdoIcecastPopulateForm(read.config);
+	var form = panel.querySelector("#vdo-icecast-form");
+	var start = panel.querySelector("#vdo-icecast-start");
+	var stop = panel.querySelector("#vdo-icecast-stop");
+	var settings = panel.querySelector("#vdo-icecast-settings");
+	var description = panel.querySelector("#vdo-icecast-description");
+	if (description) {
+		description.textContent = mode === "local"
+			? "Publishing this tab's local VDO.Ninja source audio to an Icecast-compatible source endpoint."
+			: mode === "remote"
+				? "Relaying received VDO.Ninja audio from this tab to an Icecast-compatible source endpoint."
+				: "Icecast mode is ambiguous.";
+	}
+	if (mode === "ambiguous") {
+		vdoIcecastSetStatus("Use &icecastpush for local audio or &icecastview for received audio.", "error");
+		vdoIcecastUpdateButtons(false, false);
+		return;
+	}
+	if (form && !read.isComplete) {
+		form.hidden = false;
+		vdoIcecastSetStatus("Enter Icecast source settings to start.", "pending");
+	} else {
+		vdoIcecastSetStatus("Icecast ready.", "ready");
+	}
+	if (start) {
+		start.onclick = function() {
+			vdoIcecastControllerStart(vdoIcecastConfigFromForm());
+		};
+	}
+	if (stop) {
+		stop.onclick = function() {
+			var controller = window.vdoIcecastController;
+			if (!controller || !controller.publisher) {
+				return;
+			}
+			clearTimeout(controller.waitTimer);
+			controller.busy = true;
+			vdoIcecastUpdateButtons(true, true);
+			controller.publisher.stop().finally(function() {
+				controller.busy = false;
+				vdoIcecastUpdateButtons(false, false);
+			});
+		};
+	}
+	if (settings) {
+		settings.onclick = function() {
+			if (form) {
+				form.hidden = !form.hidden;
+			}
+		};
+	}
+	vdoIcecastUpdateButtons(false, false);
+	if (read.isComplete && vdoIcecastTruthyParam(vdoIcecastReadUrlParam(["icecastauto", "icecastautostart"]), false)) {
+		vdoIcecastControllerStart(read.config);
+	}
+}
+
+window.VDOIcecastPublisher = VDOIcecastPublisher;
+window.setupVDOIcecast = setupVDOIcecast;
+
+if (typeof window !== "undefined") {
+	window.addEventListener("load", function() {
+		setTimeout(setupVDOIcecast, 500);
+	});
 }

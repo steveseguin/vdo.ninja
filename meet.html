@@ -1706,10 +1706,10 @@
 			text += possible.charAt(Math.floor(Math.random() * possible.length));
 		}
 		try{
-			text = text.replaceAll('AD', 'vDAv'); // avoiding adblockers
-			text = text.replaceAll('Ad', 'vdAv');
-			text = text.replaceAll('ad', 'vdav');
-			text = text.replaceAll('aD', 'vDav');
+			text = text.replace(/AD/g, 'vDAv'); // avoiding adblockers
+			text = text.replace(/Ad/g, 'vdAv');
+			text = text.replace(/ad/g, 'vdav');
+			text = text.replace(/aD/g, 'vDav');
 		} catch(e){errorlog(e);}
 		
 		log(text);

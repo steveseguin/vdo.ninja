@@ -1408,6 +1408,7 @@ function getNoteNameFromNumber(noteNumber) {
               <option value="soloChatBidirectional">soloChatBidirectional</option>
               <option value="speaker">speaker (toggle)</option>
               <option value="display">display (toggle)</option>
+              <option value="rotate">rotate (+90/reset/90/180/270)</option>
               <option value="forceKeyframe">forceKeyframe (rainbow fix)</option>
               <option value="soloVideo">soloVideo (highlight)</option>
               <option value="addScene">addScene</option>
@@ -3094,6 +3095,8 @@ function createGuestControls() {
     { name: "Two-way Solo Chat", action: "soloChatBidirectional", type: "toggle" },
     { name: "Toggle Speaker", action: "speaker", type: "toggle" },
     { name: "Toggle Display", action: "display", type: "toggle" },
+    { name: "Rotate +90", action: "rotate", value: true, type: "toggle" },
+    { name: "Reset Rotation", action: "rotate", value: false, type: "toggle" },
     { name: "Fix Rainbow", action: "forceKeyframe", type: "toggle" },
     { name: "Highlight", action: "soloVideo", type: "toggle" },
     { name: "Add to Scene 1", action: "addScene", value: 1, type: "toggle" },

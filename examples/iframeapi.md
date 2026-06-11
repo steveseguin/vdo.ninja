@@ -790,6 +790,11 @@ iframe.contentWindow.postMessage({
 }, "*");
 ```
 
+Notes:
+- Sending `getLoudness: true` returns an immediate snapshot reply (includes `cib` if provided).
+- Ongoing updates are pushed as regular loudness events and may include `action: "loudness"`.
+- Do not rely on `cib` for continuous loudness updates; handle any message containing `loudness`.
+
 ### `getStreamIDs` - List Stream IDs
 Gets a list of all connected stream IDs.
 ```javascript
@@ -816,6 +821,13 @@ iframe.contentWindow.postMessage({
     cib: "callback-id"
 }, "*");
 ```
+
+For chunked viewer sync tools, each remote stream entry now includes:
+- `chunkedBufferDefault`
+- `chunkedBufferOverride`
+- `chunkedBufferRequested`
+- `chunkedBufferCeil`
+- `chunkedBufferAdaptive`
 
 ### `getGuestList` - Get Guest List
 Gets a list of all connected guests.
@@ -1004,6 +1016,17 @@ iframe.contentWindow.postMessage({
 }, "*");
 ```
 
+For fixed external-audio sync workflows, launch the viewer with:
+```text
+?noaudio&chunkbufferadaptive=0&chunkbufferceil=180000
+```
+
+Notes:
+- `chunkbufferadaptive=0` keeps the requested target fixed instead of letting the viewer auto-raise it.
+- `chunkbufferceil=180000` allows up to 3 minutes of chunked video delay.
+- `noaudio` is recommended when the real music audio is being handled in OBS, NINJAM, or another app.
+- See `examples/music-sync-buffer-demo.html` for a musician-focused example that calculates delay from BPM and bars, then drives `setBufferDelay` over the iframe API.
+
 ### `automixer` - Automixer Control
 Controls the automatic mixer behavior.
 ```javascript
@@ -1081,6 +1104,34 @@ iframe.contentWindow.postMessage({
     target: "optional-target"
 }, "*");
 ```
+
+Director-targeted guest actions use the same `action` format with a `target`:
+```javascript
+// Rotate guest in slot 1 by +90 degrees
+iframe.contentWindow.postMessage({
+    action: "rotate",
+    target: "1",
+    value: true
+}, "*");
+
+// Set a specific guest rotation by stream ID
+iframe.contentWindow.postMessage({
+    action: "rotate",
+    target: "streamID123",
+    value: 180
+}, "*");
+
+// Reset guest rotation
+iframe.contentWindow.postMessage({
+    action: "rotate",
+    target: "1",
+    value: false
+}, "*");
+```
+
+Notes:
+- Guest-targeted `action` calls like `rotate` require director or co-director privileges for that room.
+- `rotate` is not a standalone untargeted local iframe command on a guest page; it is a targeted guest-control action.
 
 ## Response Handling
 

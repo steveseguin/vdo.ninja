@@ -1,0 +1,1548 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hire a Freelancer - VDO.Ninja</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"/>
+	
+	<link rel="shortcut icon" href="data:image/x-icon;," type="image/x-icon" />
+	<link id="favicon1" rel="icon" type="image/png" sizes="32x32" href="./media/favicon-32x32.png" />
+	<link id="favicon2" rel="icon" type="image/png" sizes="16x16" href="./media/favicon-16x16.png" />
+	<link id="favicon3" rel="icon" href="./media/favicon.ico" />
+	<link id="thumbnailUrl" itemprop="thumbnailUrl" href="./media/vdoNinja_logo_full.png" />
+	<link rel="alternate" type="text/markdown" href="/rawdoc.md" title="Developer and User Documentation">
+	
+    <style>
+        :root {
+            --primary-color: #00e676;
+            --primary-dark: #00c853;
+            --background: #0d1117;
+            --background-card: #161b22;
+            --background-light: #21262d;
+            --text-primary: #c9d1d9;
+            --text-secondary: #8b949e;
+            --border-color: #30363d;
+            --error-color: #f85149;
+            --success-color: #3fb950;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background-color: var(--background);
+            color: var(--text-primary);
+            line-height: 1.6;
+            font-size: 16px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        /* Header */
+        header {
+            background: var(--background-card);
+            border-bottom: 1px solid var(--border-color);
+            padding: 1rem 0;
+        }
+
+        header .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            text-decoration: none;
+            color: var(--text-primary);
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+
+        .logo span {
+            color: var(--primary-color);
+        }
+
+        /* Hero */
+        .hero {
+            text-align: center;
+            padding: 4rem 0 3rem;
+            background: linear-gradient(180deg, var(--background-card) 0%, var(--background) 100%);
+        }
+
+        .hero h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .hero h1 span {
+            color: var(--primary-color);
+        }
+
+        .hero p {
+            color: var(--text-secondary);
+            font-size: 1.2rem;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* Hero Image */
+        .hero-image {
+            margin-top: 2rem;
+            border-radius: 12px;
+            overflow: hidden;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+        }
+
+        .hero-image img {
+            width: 100%;
+            height: auto;
+            display: block;
+            opacity: 0.85;
+        }
+
+        /* Disclaimer */
+        .disclaimer {
+            background: var(--background-card);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin: 2rem auto;
+            max-width: 800px;
+        }
+
+        .disclaimer h3 {
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+            font-size: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .disclaimer h3 i {
+            color: var(--text-secondary);
+        }
+
+        .disclaimer p {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            margin: 0;
+        }
+
+        .disclaimer a {
+            color: var(--primary-color);
+            text-decoration: none;
+        }
+
+        .disclaimer a:hover {
+            text-decoration: underline;
+        }
+
+        /* Services Grid */
+        .services-section {
+            padding: 3rem 0;
+        }
+
+        .services-section h2 {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 1.5rem;
+        }
+
+        /* Service Card */
+        .service-card {
+            background: var(--background-card);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            overflow: hidden;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .service-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+        }
+
+        .service-card-header {
+            padding: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .service-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: var(--primary-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            color: black;
+            font-size: 1.2rem;
+        }
+
+        .service-avatar-img {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .service-card-header h3 {
+            font-size: 1.1rem;
+            margin-bottom: 0.25rem;
+        }
+
+        .service-discord {
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+
+        .discord-icon {
+            width: 1.2rem;
+            height: 1.2rem;
+            opacity: 0.7;
+        }
+
+        .service-card-body {
+            padding: 1.5rem;
+        }
+
+        .platform-badge {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            margin-right: 0.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .platform-badge.vdo {
+            background: rgba(0, 230, 118, 0.15);
+            color: var(--primary-color);
+        }
+
+        .platform-badge.ssn {
+            background: rgba(157, 70, 255, 0.15);
+            color: #9d46ff;
+        }
+
+        /* Filter Tabs */
+        .filter-tabs {
+            display: flex;
+            justify-content: center;
+            gap: 0.5rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .filter-tab {
+            padding: 0.6rem 1.25rem;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            cursor: pointer;
+            border: 1px solid var(--border-color);
+            background: var(--background-card);
+            color: var(--text-secondary);
+            transition: all 0.2s;
+        }
+
+        .filter-tab:hover {
+            border-color: var(--primary-color);
+            color: var(--text-primary);
+        }
+
+        .filter-tab.active {
+            background: var(--primary-color);
+            color: black;
+            border-color: var(--primary-color);
+        }
+
+        .filter-tab.active.ssn-tab {
+            background: #9d46ff;
+            border-color: #9d46ff;
+        }
+
+        .service-types {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin: 1rem 0;
+        }
+
+        .service-type-tag {
+            background: var(--background-light);
+            padding: 0.25rem 0.75rem;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+        }
+
+        .service-description {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+        }
+
+        .service-card-footer {
+            padding: 1rem 1.5rem;
+            background: var(--background-light);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .btn {
+            padding: 0.5rem 1.25rem;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            cursor: pointer;
+            text-decoration: none;
+            border: none;
+            transition: background-color 0.2s;
+        }
+
+        .btn-primary {
+            background: var(--primary-color);
+            color: black;
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-dark);
+        }
+
+        /* Empty State */
+        .services-empty {
+            text-align: center;
+            padding: 4rem 2rem;
+            color: var(--text-secondary);
+            grid-column: 1 / -1;
+        }
+
+        .services-empty h3 {
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+        }
+
+        /* Submit Section */
+        .submit-section {
+            padding: 3rem 0;
+            background: var(--background-card);
+            border-top: 1px solid var(--border-color);
+        }
+
+        .submit-section h2 {
+            text-align: center;
+            margin-bottom: 0.5rem;
+        }
+
+        .submit-section > .container > p {
+            text-align: center;
+            color: var(--text-secondary);
+            margin-bottom: 2rem;
+        }
+
+        .submit-toggle {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .submission-form-wrapper {
+            display: none;
+            max-width: 700px;
+            margin: 0 auto;
+            background: var(--background);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 2rem;
+        }
+
+        .submission-form-wrapper.active {
+            display: block;
+        }
+
+        .form-section {
+            margin-bottom: 2rem;
+        }
+
+        .form-section h3 {
+            font-size: 1.1rem;
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.25rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 0.75rem;
+            background: var(--background-light);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            color: var(--text-primary);
+            font-size: 1rem;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--primary-color);
+        }
+
+        .form-group textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        .form-group small {
+            display: block;
+            margin-top: 0.25rem;
+            color: var(--text-secondary);
+            font-size: 0.8rem;
+        }
+
+        .required {
+            color: var(--error-color);
+        }
+
+        .checkbox-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.75rem;
+        }
+
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            background: var(--background-light);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            cursor: pointer;
+        }
+
+        .checkbox-item:hover {
+            border-color: var(--primary-color);
+        }
+
+        .checkbox-item input {
+            width: auto;
+        }
+
+        .multi-input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .multi-input-row {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .multi-input-row input {
+            flex: 1;
+        }
+
+        .remove-btn {
+            width: 40px;
+            background: var(--error-color);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 1.2rem;
+        }
+
+        .upload-btn {
+            width: 40px;
+            background: transparent;
+            border: 1px solid var(--primary-color);
+            color: var(--primary-color);
+            border-radius: 6px;
+            cursor: pointer;
+        }
+
+        .upload-btn:hover {
+            background: var(--primary-color);
+            color: black;
+        }
+
+        .add-input-btn {
+            align-self: flex-start;
+            padding: 0.5rem 1rem;
+            background: transparent;
+            border: 1px dashed var(--border-color);
+            border-radius: 6px;
+            color: var(--text-secondary);
+            cursor: pointer;
+        }
+
+        .add-input-btn:hover {
+            border-color: var(--primary-color);
+            color: var(--primary-color);
+        }
+
+        .terms-section {
+            background: var(--background-light);
+            padding: 1.5rem;
+            border-radius: 8px;
+        }
+
+        .terms-section ul {
+            margin: 1rem 0;
+            padding-left: 1.5rem;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        .terms-section li {
+            margin-bottom: 0.5rem;
+        }
+
+        .terms-checkbox {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.75rem;
+            padding: 1rem;
+            background: var(--background);
+            border-radius: 6px;
+        }
+
+        .terms-checkbox input {
+            margin-top: 0.25rem;
+        }
+
+        .submit-form-btn {
+            width: 100%;
+            padding: 1rem;
+            font-size: 1.1rem;
+        }
+
+        .submit-form-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .form-message {
+            padding: 1rem;
+            border-radius: 6px;
+            margin-bottom: 1.5rem;
+            display: none;
+        }
+
+        .form-message.success {
+            display: block;
+            background: rgba(63, 185, 80, 0.15);
+            border: 1px solid var(--success-color);
+            color: var(--success-color);
+        }
+
+        .form-message.error {
+            display: block;
+            background: rgba(248, 81, 73, 0.15);
+            border: 1px solid var(--error-color);
+            color: var(--error-color);
+        }
+
+        /* Discord Auth */
+        .discord-auth-section {
+            background: linear-gradient(135deg, rgba(88, 101, 242, 0.1) 0%, rgba(114, 137, 218, 0.15) 100%);
+            border: 1px solid rgba(88, 101, 242, 0.3);
+            border-radius: 8px;
+            padding: 1.5rem;
+            text-align: center;
+        }
+
+        .discord-auth-section h3 {
+            border: none;
+            justify-content: center;
+        }
+
+        .discord-auth-section h3 i {
+            color: #5865F2;
+        }
+
+        .discord-btn {
+            background: #5865F2;
+            color: white;
+            padding: 0.75rem 1.5rem;
+            font-size: 1rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .discord-btn:hover {
+            background: #4752C4;
+        }
+
+        .discord-connected {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
+            padding: 1rem;
+            background: var(--background-light);
+            border-radius: 8px;
+        }
+
+        .discord-avatar-preview {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            border: 2px solid #5865F2;
+        }
+
+        .discord-user-info {
+            text-align: left;
+        }
+
+        .discord-username-display {
+            font-weight: 600;
+        }
+
+        .btn-link {
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            cursor: pointer;
+            text-decoration: underline;
+            font-size: 0.85rem;
+            padding: 0;
+        }
+
+        .btn-link:hover {
+            color: var(--error-color);
+        }
+
+        /* Reveal Links */
+        .service-socials {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .reveal-link {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 36px;
+            height: 36px;
+            background: var(--background);
+            border: 1px solid var(--border-color);
+            border-radius: 50%;
+            cursor: pointer;
+            transition: border-color 0.2s;
+        }
+
+        .reveal-link:hover {
+            border-color: var(--primary-color);
+        }
+
+        .reveal-link img {
+            width: 18px;
+            height: 18px;
+            opacity: 0.7;
+        }
+
+        .reveal-link.revealed {
+            background: transparent;
+            border: none;
+            width: auto;
+            height: auto;
+        }
+
+        .reveal-link.revealed a {
+            color: var(--primary-color);
+            text-decoration: none;
+            font-size: 0.85rem;
+            word-break: break-all;
+        }
+
+        .reveal-link.revealed a:hover {
+            text-decoration: underline;
+        }
+
+        /* FAQ Section */
+        .faq-section {
+            padding: 3rem 0;
+            background: var(--background);
+        }
+
+        .faq-section h2 {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .accordion {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .accordion-item {
+            background: var(--background-card);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            overflow: hidden;
+        }
+
+        .accordion-header {
+            width: 100%;
+            padding: 1.25rem 1.5rem;
+            background: none;
+            border: none;
+            color: var(--text-primary);
+            font-size: 1rem;
+            font-weight: 500;
+            text-align: left;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: background-color 0.2s;
+        }
+
+        .accordion-header:hover {
+            background: var(--background-light);
+        }
+
+        .accordion-icon {
+            width: 20px;
+            height: 20px;
+            position: relative;
+            flex-shrink: 0;
+        }
+
+        .accordion-icon::before,
+        .accordion-icon::after {
+            content: '';
+            position: absolute;
+            background: var(--text-secondary);
+            transition: transform 0.3s;
+        }
+
+        .accordion-icon::before {
+            width: 100%;
+            height: 2px;
+            top: 50%;
+            left: 0;
+            transform: translateY(-50%);
+        }
+
+        .accordion-icon::after {
+            width: 2px;
+            height: 100%;
+            left: 50%;
+            top: 0;
+            transform: translateX(-50%);
+        }
+
+        .accordion-item.active .accordion-icon::after {
+            transform: translateX(-50%) rotate(90deg);
+        }
+
+        .accordion-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out;
+        }
+
+        .accordion-item.active .accordion-content {
+            max-height: 500px;
+        }
+
+        .accordion-content p,
+        .accordion-content ul {
+            padding: 0 1.5rem 1.25rem;
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            line-height: 1.6;
+        }
+
+        .accordion-content ul {
+            padding-left: 3rem;
+        }
+
+        .accordion-content li {
+            margin-bottom: 0.5rem;
+        }
+
+        .accordion-content a {
+            color: var(--primary-color);
+            text-decoration: none;
+        }
+
+        .accordion-content a:hover {
+            text-decoration: underline;
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 2rem;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            border-top: 1px solid var(--border-color);
+        }
+
+        footer a {
+            color: var(--primary-color);
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <a href="https://vdo.ninja" class="logo">
+                <span>VDO.Ninja</span>
+            </a>
+        </div>
+    </header>
+
+    <section class="hero">
+        <div class="container">
+            <h1>Hire a <span>Freelancer</span></h1>
+            <p>Find talented creators and developers for custom solutions, integrations, and streaming services</p>
+            <div class="hero-image">
+                <img src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=800&q=80" alt="Freelancers collaborating on creative projects">
+            </div>
+        </div>
+    </section>
+
+    <div class="container">
+        <div class="disclaimer">
+            <h3><i class="fas fa-exclamation-triangle"></i> Important Notice</h3>
+            <p>These listings are user-submitted and community-provided. VDO.Ninja does not validate, endorse, or guarantee these services. Users engage with freelancers at their own risk.</p>
+            <p style="margin-top: 0.5rem;">To report bad actors or concerns, contact <a href="mailto:steve@seguin.email">steve@seguin.email</a> or reach out on our <a href="https://discord.vdo.ninja" target="_blank" rel="noopener">Discord server</a>. Note that we can only remove listings; we take no responsibility for disputes or issues between parties.</p>
+        </div>
+    </div>
+
+    <section class="services-section">
+        <div class="container">
+            <h2>Available Services</h2>
+            <div class="filter-tabs">
+                <button class="filter-tab active" data-filter="vdo">VDO.Ninja</button>
+                <button class="filter-tab ssn-tab" data-filter="ssn">Social Stream Ninja</button>
+                <button class="filter-tab" data-filter="all">All Services</button>
+            </div>
+            <div id="services-grid" class="services-grid">
+                <!-- Services loaded by JS -->
+            </div>
+        </div>
+    </section>
+
+    <section class="submit-section">
+        <div class="container">
+            <h2>Offer Your Services</h2>
+            <p>Are you a developer or creator? List your services here!</p>
+
+            <div class="submit-toggle">
+                <button id="submit-toggle-btn" class="btn btn-primary">Submit Your Listing</button>
+            </div>
+
+            <div id="submission-form-wrapper" class="submission-form-wrapper">
+                <div id="form-message" class="form-message"></div>
+
+                <form id="service-form">
+                    <!-- Discord Sign-in -->
+                    <div class="form-section discord-auth-section">
+                        <h3><i class="fab fa-discord"></i> Connect Your Discord</h3>
+                        <p>Sign in with Discord to automatically fill your profile info.</p>
+
+                        <div id="discord-auth-container">
+                            <button type="button" id="discord-signin-btn" class="btn discord-btn">
+                                <i class="fab fa-discord"></i> Sign in with Discord
+                            </button>
+                        </div>
+
+                        <div id="discord-connected" class="discord-connected" style="display: none;">
+                            <img id="discord-avatar-preview" src="" alt="Avatar" class="discord-avatar-preview">
+                            <div class="discord-user-info">
+                                <span id="discord-username-display" class="discord-username-display"></span>
+                                <button type="button" id="discord-disconnect-btn" class="btn-link">Disconnect</button>
+                            </div>
+                        </div>
+
+                        <input type="hidden" id="discord-id" name="discord-id">
+                        <input type="hidden" id="discord-avatar" name="discord-avatar">
+                    </div>
+
+                    <!-- Basic Info -->
+                    <div class="form-section">
+                        <h3>Basic Information</h3>
+
+                        <div class="form-group">
+                            <label for="name">Display Name <span class="required">*</span></label>
+                            <input type="text" id="name" name="name" required placeholder="Your name or business name">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="discord">Discord Username <span class="required">*</span></label>
+                            <input type="text" id="discord" name="discord" required placeholder="username">
+                            <small>This will be displayed publicly for clients to contact you</small>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="description">Description <span class="required">*</span></label>
+                            <textarea id="description" name="description" required placeholder="Describe your services and experience..."></textarea>
+                        </div>
+                    </div>
+
+                    <!-- Platforms -->
+                    <div class="form-section">
+                        <h3>Platforms <span class="required">*</span></h3>
+                        <div class="checkbox-group">
+                            <label class="checkbox-item">
+                                <input type="checkbox" name="platform-vdo" value="vdo">
+                                <span>VDO.Ninja</span>
+                            </label>
+                            <label class="checkbox-item">
+                                <input type="checkbox" name="platform-ssn" value="ssn">
+                                <span>Social Stream Ninja</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Service Types -->
+                    <div class="form-section">
+                        <h3>Service Types <span class="required">*</span></h3>
+                        <div class="checkbox-group">
+                            <label class="checkbox-item">
+                                <input type="checkbox" name="service-overlays" value="Custom Overlays">
+                                <span>Custom Overlays</span>
+                            </label>
+                            <label class="checkbox-item">
+                                <input type="checkbox" name="service-automation" value="Automation/Bots">
+                                <span>Automation/Bots</span>
+                            </label>
+                            <label class="checkbox-item">
+                                <input type="checkbox" name="service-setup" value="Stream Setup">
+                                <span>Stream Setup</span>
+                            </label>
+                            <label class="checkbox-item">
+                                <input type="checkbox" name="service-whitelabel" value="White-labeling">
+                                <span>White-labeling</span>
+                            </label>
+                            <label class="checkbox-item">
+                                <input type="checkbox" name="service-video" value="Video Engineering">
+                                <span>Video Engineering</span>
+                            </label>
+                            <label class="checkbox-item">
+                                <input type="checkbox" name="service-consulting" value="Consulting/Training">
+                                <span>Consulting/Training</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Social Links -->
+                    <div class="form-section">
+                        <h3>Social & Contact Links <span class="required">*</span></h3>
+                        <div class="multi-input-group">
+                            <div class="multi-input-row">
+                                <input type="url" class="social-input" placeholder="https://...">
+                            </div>
+                            <button type="button" class="add-input-btn" data-input-class="social-input" data-placeholder="https://...">+ Add Another</button>
+                        </div>
+                    </div>
+
+                    <!-- Portfolio -->
+                    <div class="form-section">
+                        <h3>Portfolio Images (Optional)</h3>
+                        <small style="color: var(--text-secondary); display: block; margin-bottom: 0.75rem;">Images must be uploaded using the upload button</small>
+                        <div class="multi-input-group" id="portfolio-group">
+                            <div class="multi-input-row">
+                                <input type="url" class="portfolio-input" placeholder="Click upload button to add image" readonly>
+                                <button type="button" class="upload-btn" title="Upload an image"><i class="fas fa-upload"></i></button>
+                            </div>
+                            <button type="button" class="add-input-btn" data-input-class="portfolio-input" data-placeholder="Click upload button to add image" data-with-upload="true">+ Add Another</button>
+                        </div>
+                    </div>
+
+                    <!-- Payment Links -->
+                    <div class="form-section">
+                        <h3>Payment Links (Optional)</h3>
+                        <div class="multi-input-group">
+                            <div class="multi-input-row">
+                                <input type="url" class="payment-input" placeholder="https://paypal.me/...">
+                            </div>
+                            <button type="button" class="add-input-btn" data-input-class="payment-input" data-placeholder="https://...">+ Add Another</button>
+                        </div>
+                    </div>
+
+                    <!-- Terms -->
+                    <div class="form-section">
+                        <div class="terms-section">
+                            <h4>Terms & Conditions</h4>
+                            <ul>
+                                <li>This is a community directory, not an endorsement or partnership</li>
+                                <li>My listing may be removed at any time without notice or reason</li>
+                                <li>I am solely responsible for all agreements, disputes, and transactions with clients</li>
+                                <li>I will not use this platform to promote services that compete with VDO.Ninja or SocialStream.Ninja</li>
+                                <li>VDO.Ninja and Social Stream Ninja bear no liability for any claims, damages, or losses arising from services listed here</li>
+                                <li>Submissions require manual approval and may be rejected without explanation</li>
+                            </ul>
+                            <div class="terms-checkbox">
+                                <input type="checkbox" id="agree-terms" name="agree-terms" required>
+                                <label for="agree-terms">I agree to the terms above <span class="required">*</span></label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <button type="submit" id="submit-btn" class="btn btn-primary submit-form-btn" disabled>Submit for Review</button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ Section -->
+    <section class="faq-section">
+        <div class="container">
+            <h2>Frequently Asked Questions</h2>
+
+            <div class="accordion">
+                <div class="accordion-item">
+                    <button class="accordion-header">
+                        How does this directory work?
+                        <span class="accordion-icon"></span>
+                    </button>
+                    <div class="accordion-content">
+                        <p>This is a community directory where freelancers can advertise their services related to VDO.Ninja and Social Stream Ninja.</p>
+                        <ul>
+                            <li>Freelancers submit their information through the form above</li>
+                            <li>Submissions are reviewed manually before being listed</li>
+                            <li>Clients browse listings and contact freelancers directly</li>
+                            <li>All transactions happen directly between parties - we are not involved</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="accordion-item">
+                    <button class="accordion-header">
+                        Is there a fee to list my services?
+                        <span class="accordion-icon"></span>
+                    </button>
+                    <div class="accordion-content">
+                        <p>No, listing your services is completely free. This is a community resource to help connect skilled developers and creators with people who need their services.</p>
+                    </div>
+                </div>
+
+                <div class="accordion-item">
+                    <button class="accordion-header">
+                        What services can I offer?
+                        <span class="accordion-icon"></span>
+                    </button>
+                    <div class="accordion-content">
+                        <p>You can offer any services related to VDO.Ninja or Social Stream Ninja, including:</p>
+                        <ul>
+                            <li>Custom overlay design and development</li>
+                            <li>Bot and automation development</li>
+                            <li>Stream setup and configuration</li>
+                            <li>White-labeling and custom deployments</li>
+                            <li>Video engineering and production</li>
+                            <li>Training and consulting</li>
+                        </ul>
+                        <p>Services that directly compete with VDO.Ninja or Social Stream Ninja core functionality are not permitted.</p>
+                    </div>
+                </div>
+
+                <div class="accordion-item">
+                    <button class="accordion-header">
+                        How long until my listing appears?
+                        <span class="accordion-icon"></span>
+                    </button>
+                    <div class="accordion-content">
+                        <p>Submissions are reviewed manually, typically within a few days. Your listing will appear on this page once approved. There is no notification system, so check back periodically.</p>
+                    </div>
+                </div>
+
+                <div class="accordion-item">
+                    <button class="accordion-header">
+                        How do I update or remove my listing?
+                        <span class="accordion-icon"></span>
+                    </button>
+                    <div class="accordion-content">
+                        <p>To update or remove your listing, please reach out on the <a href="https://discord.vdo.ninja" target="_blank">Discord server</a> or email <a href="mailto:steve@seguin.email">steve@seguin.email</a> and request the change.</p>
+                    </div>
+                </div>
+
+                <div class="accordion-item">
+                    <button class="accordion-header">
+                        What if I have a dispute with a freelancer or client?
+                        <span class="accordion-icon"></span>
+                    </button>
+                    <div class="accordion-content">
+                        <p>VDO.Ninja and Social Stream Ninja are not involved in any transactions or agreements between freelancers and clients. We cannot mediate disputes, issue refunds, or take responsibility for the quality of services provided.</p>
+                        <p>If you believe a listing is fraudulent or a freelancer is acting in bad faith, you can report it to us and we may remove the listing at our discretion. However, we cannot assist with resolving disputes or recovering payments.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <p>&copy; 2025 VDO.Ninja. <a href="https://github.com/steveseguin/vdo.ninja" target="_blank">Open Source</a> by Steve Seguin.</p>
+    </footer>
+
+    <script>
+    (function() {
+        'use strict';
+
+        // Same webhook/gist as SSN - shared listings
+        const WEBHOOK_URL = 'https://freelance.vdo.workers.dev';
+        const GIST_URL = 'https://gist.githubusercontent.com/steveseguin/3642a19e9ed4b16571906cdb2e216a45/raw/services.json';
+
+        let services = [];
+        let currentFilter = 'vdo'; // Default to VDO.Ninja
+
+        document.addEventListener('DOMContentLoaded', function() {
+            loadServices();
+            initFormToggle();
+            initForm();
+            initMultiInputs();
+            initDiscordAuth();
+            initFilterTabs();
+            initAccordion();
+        });
+
+        function initAccordion() {
+            document.querySelectorAll('.accordion-header').forEach(header => {
+                header.addEventListener('click', () => {
+                    header.parentElement.classList.toggle('active');
+                });
+            });
+        }
+
+        async function loadServices() {
+            try {
+                const response = await fetch(GIST_URL + '?t=' + Date.now());
+                const data = await response.json();
+                services = data.services || [];
+                renderServices();
+            } catch (e) {
+                console.error('Failed to load services:', e);
+                renderEmpty();
+            }
+        }
+
+        function renderServices() {
+            const grid = document.getElementById('services-grid');
+            if (!grid) return;
+
+            // Filter based on current selection
+            let filtered;
+            if (currentFilter === 'all') {
+                filtered = services;
+            } else {
+                filtered = services.filter(s => s.platforms && s.platforms.includes(currentFilter));
+            }
+
+            if (filtered.length === 0) {
+                renderEmpty();
+                return;
+            }
+
+            grid.innerHTML = filtered.map(s => createCard(s)).join('');
+
+            // Reveal link handlers - show full URL on click
+            document.querySelectorAll('.reveal-link').forEach(span => {
+                span.addEventListener('click', function() {
+                    if (this.classList.contains('revealed')) return;
+                    const encodedUrl = this.dataset.url;
+                    const url = atob(encodedUrl);
+                    this.classList.add('revealed');
+                    this.innerHTML = `<a href="${escapeHtml(url)}" target="_blank" rel="noopener nofollow">${escapeHtml(url)}</a>`;
+                });
+            });
+        }
+
+        function createCard(service) {
+            const initials = service.name ? service.name.split(' ').map(w => w[0]).join('').substring(0, 2).toUpperCase() : '?';
+
+            const avatarHtml = service.avatarUrl
+                ? `<img src="${escapeHtml(service.avatarUrl)}" alt="" class="service-avatar-img">`
+                : `<div class="service-avatar">${initials}</div>`;
+
+            const platforms = (service.platforms || []).map(p =>
+                `<span class="platform-badge ${p}">${p === 'vdo' ? 'VDO.Ninja' : 'SSN'}</span>`
+            ).join('');
+
+            const types = (service.serviceTypes || []).map(t =>
+                `<span class="service-type-tag">${escapeHtml(t)}</span>`
+            ).join('');
+
+            const socials = createSocialLinks(service.socials || {});
+
+            return `
+                <div class="service-card">
+                    <div class="service-card-header">
+                        ${avatarHtml}
+                        <div>
+                            <h3>${escapeHtml(service.name)}</h3>
+                            <div class="service-discord"><img src="https://socialstream.ninja/icons/discord.svg" alt="Discord" class="discord-icon"> ${escapeHtml(service.discord || '')}</div>
+                        </div>
+                    </div>
+                    <div class="service-card-body">
+                        <div>${platforms}</div>
+                        <div class="service-types">${types}</div>
+                        <p class="service-description">${escapeHtml(service.description || '')}</p>
+                    </div>
+                    <div class="service-card-footer">
+                        <div class="service-socials">${socials}</div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function createSocialLinks(socials) {
+            const links = [];
+            const iconBase = 'https://socialstream.ninja/icons/';
+
+            if (socials.discord) links.push(revealLink('Discord', socials.discord, iconBase + 'discord.svg'));
+            if (socials.twitter) links.push(revealLink('Twitter', socials.twitter, iconBase + 'x.svg'));
+            if (socials.website) links.push(revealLink('Website', socials.website, iconBase + 'link.svg'));
+
+            return links.join('');
+        }
+
+        function revealLink(label, url, icon) {
+            return `<span class="reveal-link" data-url="${btoa(url)}" title="Click to reveal ${label}">
+                <img src="${icon}" alt="${label}">
+            </span>`;
+        }
+
+        function renderEmpty() {
+            const grid = document.getElementById('services-grid');
+            if (grid) {
+                grid.innerHTML = `<div class="services-empty"><h3>No Services Listed Yet</h3><p>Be the first to offer your services!</p></div>`;
+            }
+        }
+
+        function initFormToggle() {
+            const btn = document.getElementById('submit-toggle-btn');
+            const form = document.getElementById('submission-form-wrapper');
+            if (btn && form) {
+                btn.addEventListener('click', () => {
+                    form.classList.toggle('active');
+                    btn.textContent = form.classList.contains('active') ? 'Hide Form' : 'Submit Your Listing';
+                });
+            }
+        }
+
+        function initForm() {
+            const form = document.getElementById('service-form');
+            const terms = document.getElementById('agree-terms');
+            const submitBtn = document.getElementById('submit-btn');
+
+            if (terms && submitBtn) {
+                terms.addEventListener('change', () => submitBtn.disabled = !terms.checked);
+            }
+
+            if (form) {
+                form.addEventListener('submit', async (e) => {
+                    e.preventDefault();
+                    await submitForm(form);
+                });
+            }
+        }
+
+        // Sanitize text input - remove potentially dangerous characters
+        function sanitizeText(text) {
+            if (!text) return '';
+            // Remove null bytes and control characters except newlines/tabs
+            return text
+                .replace(/[\x00-\x08\x0B\x0C\x0E-\x1F\x7F]/g, '')
+                .replace(/[<>]/g, '') // Remove angle brackets
+                .trim();
+        }
+
+        // Check if text contains URLs/links
+        function containsLinks(text) {
+            const urlPatterns = [
+                /https?:\/\//i,
+                /www\./i,
+                /\.[a-z]{2,}\/\S/i, // domain.tld/path
+                /discord\.(gg|com\/invite)/i,
+                /t\.me\//i,
+                /bit\.ly/i
+            ];
+            return urlPatterns.some(pattern => pattern.test(text));
+        }
+
+        async function submitForm(form) {
+            const fd = new FormData(form);
+
+            const name = sanitizeText(fd.get('name'));
+            const discord = sanitizeText(fd.get('discord'));
+            const discordId = fd.get('discord-id') || '';
+            const discordAvatar = fd.get('discord-avatar') || '';
+            const description = sanitizeText(fd.get('description'));
+
+            // Validate name (alphanumeric, spaces, basic punctuation)
+            if (!/^[\w\s\-'.&]+$/i.test(name)) {
+                return showMessage('error', 'Name contains invalid characters. Use letters, numbers, spaces, and basic punctuation only.');
+            }
+
+            // Validate discord username (alphanumeric, underscores, periods)
+            if (!/^[\w.]+$/i.test(discord)) {
+                return showMessage('error', 'Discord username contains invalid characters.');
+            }
+
+            // Check for links in description
+            if (containsLinks(description)) {
+                return showMessage('error', 'Description cannot contain links. Please use the Social & Contact Links section for URLs.');
+            }
+
+            const platforms = [];
+            if (fd.get('platform-vdo')) platforms.push('VDO.Ninja');
+            if (fd.get('platform-ssn')) platforms.push('Social Stream Ninja');
+
+            const serviceTypes = [];
+            document.querySelectorAll('input[name^="service-"]:checked').forEach(cb => serviceTypes.push(cb.value));
+
+            const socials = [];
+            document.querySelectorAll('.social-input').forEach(i => { if (i.value.trim()) socials.push(i.value.trim()); });
+
+            const portfolio = [];
+            const allowedImageHosts = ['fileuploads.socialstream.ninja', 'fileuploads.vdo.ninja'];
+            let hasInvalidPortfolio = false;
+            document.querySelectorAll('.portfolio-input').forEach(input => {
+                const url = input.value.trim();
+                if (url) {
+                    try {
+                        const hostname = new URL(url).hostname;
+                        if (allowedImageHosts.includes(hostname)) {
+                            portfolio.push(url);
+                        } else {
+                            hasInvalidPortfolio = true;
+                        }
+                    } catch {
+                        hasInvalidPortfolio = true;
+                    }
+                }
+            });
+
+            if (hasInvalidPortfolio) {
+                return showMessage('error', 'Portfolio images must be uploaded using the upload button. External image URLs are not allowed.');
+            }
+
+            const payments = [];
+            document.querySelectorAll('.payment-input').forEach(i => { if (i.value.trim()) payments.push(i.value.trim()); });
+
+            if (!name || !discord || !description) return showMessage('error', 'Please fill required fields.');
+            if (platforms.length === 0) return showMessage('error', 'Select at least one platform.');
+            if (serviceTypes.length === 0) return showMessage('error', 'Select at least one service type.');
+            if (socials.length === 0) return showMessage('error', 'Provide at least one contact link.');
+
+            const fields = [
+                { name: 'Name', value: name, inline: true },
+                { name: 'Discord', value: discord, inline: true },
+                { name: 'Platforms', value: platforms.join(', '), inline: false },
+                { name: 'Service Types', value: serviceTypes.join(', '), inline: false },
+                { name: 'Description', value: description.substring(0, 1000), inline: false },
+                { name: 'Social Links', value: socials.join('\n') || 'None', inline: false },
+                { name: 'Portfolio URLs', value: portfolio.join('\n') || 'None', inline: false },
+                { name: 'Payment Links', value: payments.join('\n') || 'None', inline: false }
+            ];
+
+            if (discordId) fields.push({ name: 'Discord ID', value: discordId, inline: true });
+            if (discordAvatar) fields.push({ name: 'Avatar URL', value: discordAvatar, inline: true });
+
+            const payload = {
+                username: 'Services Submission (VDO.Ninja)',
+                embeds: [{
+                    title: 'New Freelancer Submission',
+                    color: 0x00e676,
+                    thumbnail: discordAvatar ? { url: discordAvatar } : undefined,
+                    fields: fields,
+                    timestamp: new Date().toISOString()
+                }]
+            };
+
+            try {
+                const res = await fetch(WEBHOOK_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                if (res.ok) {
+                    showMessage('success', 'Your submission has been received! Reviews may take some time and you may not be notified of approval or rejection.');
+                    form.reset();
+                    document.getElementById('submit-btn').disabled = true;
+                } else {
+                    throw new Error();
+                }
+            } catch (e) {
+                showMessage('error', 'Failed to submit. Please try again.');
+            }
+        }
+
+        function showMessage(type, msg) {
+            const el = document.getElementById('form-message');
+            if (el) {
+                el.className = 'form-message ' + type;
+                el.textContent = msg;
+                el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+        }
+
+        function initMultiInputs() {
+            document.querySelectorAll('.add-input-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const group = btn.closest('.multi-input-group');
+                    const cls = btn.dataset.inputClass;
+                    const ph = btn.dataset.placeholder || '';
+                    const withUpload = btn.dataset.withUpload === 'true';
+
+                    const row = document.createElement('div');
+                    row.className = 'multi-input-row';
+                    const isPortfolio = cls === 'portfolio-input';
+                    row.innerHTML = `
+                        <input type="url" class="${cls}" placeholder="${ph}" ${isPortfolio ? 'readonly' : ''}>
+                        ${withUpload ? '<button type="button" class="upload-btn" title="Upload"><i class="fas fa-upload"></i></button>' : ''}
+                        <button type="button" class="remove-btn">&times;</button>
+                    `;
+
+                    group.insertBefore(row, btn);
+                    row.querySelector('.remove-btn').addEventListener('click', () => row.remove());
+
+                    if (withUpload) {
+                        row.querySelector('.upload-btn').addEventListener('click', () => openUpload(row.querySelector('input')));
+                    }
+                });
+            });
+
+            document.querySelectorAll('.upload-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const input = btn.closest('.multi-input-row').querySelector('input');
+                    openUpload(input);
+                });
+            });
+        }
+
+        function openUpload(input) {
+            window.open('https://fileuploads.vdo.ninja/popup/upload', 'upload', 'width=640,height=640');
+            window.addEventListener('message', function handler(e) {
+                if (e.origin !== 'https://fileuploads.vdo.ninja' && e.origin !== 'https://fileuploads.socialstream.ninja') return;
+                if (e.data && e.data.type === 'media-uploaded') {
+                    input.value = e.data.url;
+                    window.removeEventListener('message', handler);
+                }
+            });
+        }
+
+        function initDiscordAuth() {
+            const signinBtn = document.getElementById('discord-signin-btn');
+            const disconnectBtn = document.getElementById('discord-disconnect-btn');
+            const authContainer = document.getElementById('discord-auth-container');
+            const connectedContainer = document.getElementById('discord-connected');
+
+            if (signinBtn) {
+                signinBtn.addEventListener('click', () => {
+                    window.open('https://auth.vdo.ninja/auth/discord/services', 'discordAuth', 'width=500,height=700');
+
+                    window.addEventListener('message', function handler(e) {
+                        if (e.origin !== 'https://auth.vdo.ninja' && e.origin !== 'https://auth.socialstream.ninja') return;
+
+                        if (e.data.type === 'discord-auth-success') {
+                            document.getElementById('discord-id').value = e.data.id;
+                            document.getElementById('discord-avatar').value = e.data.avatar;
+                            document.getElementById('discord').value = e.data.username;
+
+                            const nameInput = document.getElementById('name');
+                            if (nameInput && !nameInput.value && e.data.globalName) {
+                                nameInput.value = e.data.globalName;
+                            }
+
+                            document.getElementById('discord-avatar-preview').src = e.data.avatar;
+                            document.getElementById('discord-username-display').textContent = e.data.username;
+
+                            authContainer.style.display = 'none';
+                            connectedContainer.style.display = 'flex';
+                            document.getElementById('discord').readOnly = true;
+
+                            window.removeEventListener('message', handler);
+                        }
+                    });
+                });
+            }
+
+            if (disconnectBtn) {
+                disconnectBtn.addEventListener('click', () => {
+                    document.getElementById('discord-id').value = '';
+                    document.getElementById('discord-avatar').value = '';
+                    document.getElementById('discord').value = '';
+                    document.getElementById('discord').readOnly = false;
+                    authContainer.style.display = 'block';
+                    connectedContainer.style.display = 'none';
+                });
+            }
+        }
+
+        function initFilterTabs() {
+            const tabs = document.querySelectorAll('.filter-tab');
+            tabs.forEach(tab => {
+                tab.addEventListener('click', () => {
+                    tabs.forEach(t => t.classList.remove('active'));
+                    tab.classList.add('active');
+                    currentFilter = tab.dataset.filter;
+                    renderServices();
+                });
+            });
+        }
+
+        function escapeHtml(text) {
+            if (!text) return '';
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+    })();
+    </script>
+</body>
+</html>

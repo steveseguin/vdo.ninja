@@ -2339,6 +2339,12 @@ async function main() {
 	if (session.directorBlindButton) {
 		getById("blindAllGuests").classList.remove("hidden");
 	}
+	if (urlParams.has("muteall") || urlParams.has("muteallguests") || urlParams.has("muteguests")) {
+		session.directorMuteAllButton = true;
+	}
+	if (session.directorMuteAllButton) {
+		getById("muteAllGuests").classList.remove("hidden");
+	}
 
 	if (urlParams.has("dpi") || urlParams.has("dpr") || urlParams.has("sharper") || urlParams.has("sharpen")) {
 		session.devicePixelRatio = urlParams.get("dpi") || urlParams.get("dpr") || 2.0;
@@ -2868,6 +2874,10 @@ async function main() {
 	} // .. but requires openscene to be set on the target scene.
 	if (urlParams.has("openscene")  || urlParams.has("openscenes")) {
 		session.openscene = true;
+	}
+
+	if (urlParams.has("scenerestore")) {
+		session.sceneRestore = true;
 	}
 
 	if (urlParams.has("solo")) {
@@ -4184,8 +4194,8 @@ async function main() {
 		// the streams we want to view; if set, but let blank, we will request no streams to watch.
 		session.view = urlParams.get("streamid") || urlParams.get("view") || urlParams.get("v") || urlParams.get("V") || urlParams.get("pull") || null; // this value can be comma seperated for multiple streams to pull
 
-		const dmcaBlockedViewIDs = ["PeSVkZT"]; // add/remove blocked IDs here.  FEB 10th 2026
-		if ((session.view || "").split(",").map(v => v.trim()).some(v => dmcaBlockedViewIDs.indexOf(v) !== -1)) { warnUser("This stream is not available due to a DMCA request."); return; }
+		const dmcaBlockedViewIDs = []; // add/remove blocked IDs here.
+		if ((session.view || "").split(",").map(function (v) { return v.trim(); }).some(function (v) { return dmcaBlockedViewIDs.indexOf(v) !== -1; })) { warnUser("This stream is not available due to a DMCA request."); return; }
 
 		getById("headphonesDiv2").classList.remove("hidden");
 		getById("headphonesDiv").classList.remove("hidden");
@@ -4541,6 +4551,15 @@ async function main() {
 	if (urlParams.has("automute") || urlParams.has("am")) {
 		session.automute = urlParams.get("automute") || true;
 		session.micIsolatedAutoMute = []; // default auto mutes
+	}
+
+	if (urlParams.has("highlightmute") || urlParams.has("hmute") || urlParams.has("mutefollowhighlight") || urlParams.has("mfh")) {
+		var highlightMuteFollow = urlParams.get("highlightmute") || urlParams.get("hmute") || urlParams.get("mutefollowhighlight") || urlParams.get("mfh") || true;
+		if (["false", "0", "no", "off"].includes((highlightMuteFollow + "").toLowerCase())) {
+			session.highlightMuteFollow = false;
+		} else {
+			session.highlightMuteFollow = true;
+		}
 	}
 	
 	if (urlParams.has("noobsstream")){
@@ -7161,14 +7180,6 @@ async function main() {
 		}
 	}
 	
-	if (window.vdoAuth){
-		if (session.streamID) {
-		  await window.vdoAuth.assignStream();
-		}
-		getById("mainmenu").classList.remove("hidden2");
-		getById("header").classList.remove("hidden2");
-	}
-	
 	if (session.roomid || urlParams.has("roomid") || urlParams.has("r") || urlParams.has("room") || filename || session.permaid !== false) {
 		var roomid = "";
 		if (urlParams.has("room")) {
@@ -7204,6 +7215,11 @@ async function main() {
 			document.getElementById("webcamquality").elements.namedItem("resolution").value = session.quality_wb || 0;
 			document.getElementById("webcamquality3").elements.namedItem("resolution").value = session.quality_wb || 0;
 		} catch(e){}
+	}
+
+	if (window.vdoAuth){
+		getById("mainmenu").classList.remove("hidden2");
+		getById("header").classList.remove("hidden2");
 	}
 
 	if (session.permaid === false && session.roomid === false && session.view === false && session.effect === false && session.director === false) {
@@ -7445,6 +7461,28 @@ async function main() {
 			session.wss = "wss://audience.vdo.ninja/listen/" + session.audience;
 		} else {
 			session.wss = "wss://audience.vdo.ninja/publish/" + session.audience;
+		}
+	}
+
+	if (urlParams.has("scenewss2")) {
+		session.sceneWSS = urlParams.get("scenewss2") || "";
+		if (session.sceneWSS && !session.sceneWSS.startsWith("wss://")) {
+			session.sceneWSS = "wss://" + session.sceneWSS;
+		}
+		if (session.scene !== false && !session.wssSetViaUrl && session.sceneWSS) {
+			session.wss = session.sceneWSS;
+			session.wssSetViaUrl = true;
+		}
+	}
+
+	if (urlParams.has("invitecam") && typeof normalizeInviteCamValue === "function" && typeof getInviteCamWssFromValue === "function") {
+		session.invitecam = normalizeInviteCamValue(urlParams.get("invitecam"));
+		if (session.scene !== false && !session.wssSetViaUrl && session.invitecam) {
+			var inviteCamWss = getInviteCamWssFromValue(session.invitecam);
+			if (inviteCamWss) {
+				session.wss = inviteCamWss;
+				session.wssSetViaUrl = true;
+			}
 		}
 	}
 
@@ -8110,6 +8148,20 @@ async function main() {
 	if (urlParams.has("waitimage")) {
 		session.waitImage = urlParams.get("waitimage") || false;
 	}
+	if ((urlParams.has("nosignal") || urlParams.has("nosignalpattern")) && !session.waitImage) {
+		var noSignalPattern = (urlParams.get("nosignalpattern") || urlParams.get("nosignal") || "1").toLowerCase();
+		if (!["0", "false", "off"].includes(noSignalPattern)) {
+			session.noSignalPattern = noSignalPattern;
+			if (["2", "clean", "plain", "unbranded"].includes(noSignalPattern)) {
+				session.waitImage = "./media/no-signal-clean.svg";
+			} else if (["3", "clock", "standby"].includes(noSignalPattern)) {
+				session.waitImage = "./media/no-signal-clock.svg";
+			} else {
+				session.waitImage = "./media/no-signal.svg";
+			}
+			session.waitImageTimeout = 0;
+		}
+	}
 
 	if ((((session.view!==false) || session.whepInput || session.whipView) && session.roomid === false) || (session.waitImage && session.scene !== false)) {
 		getById("container-4").className = "column columnfade";
@@ -8149,7 +8201,7 @@ async function main() {
 									this.style.display = "none";
 								};
 
-								if (session.cover) {
+								if (session.cover || session.noSignalPattern) {
 									getById("retryimage").style.objectFit = "cover";
 								}
 							} else if (!session.cleanOutput) {
@@ -8163,7 +8215,9 @@ async function main() {
 							if (urlParams.has("waitmessage")) {
 								getById("mainmenu").innerHTML += '<div id="retrymessage"></div>';
 								getById("retrymessage").innerText = urlParams.get("waitmessage");
-								getById("retrySpinner").title = urlParams.get("waitmessage");
+								if (getById("retrySpinner")) {
+									getById("retrySpinner").title = urlParams.get("waitmessage");
+								}
 							}
 						}
 					}
@@ -8385,6 +8439,53 @@ async function main() {
 
 	//  Please contact steve on discord.vdo.ninja if you'd like this iFRAME tweaked, expanded, etc -- it's updated based on user request
 
+	function postIframeAPIResponse(key, value, cib = null) {
+		try {
+			var response = {};
+			response[key] = value;
+			response.cib = cib || null;
+			parent.postMessage(response, session.iframetarget);
+		} catch (e) {
+			errorlog(e);
+		}
+	}
+
+	function resolveIframeGuestTarget(data) {
+		var target = false;
+		if (data.UUID) {
+			target = data.UUID;
+		} else if ("target" in data) {
+			target = data.target;
+		} else if ("streamID" in data) {
+			target = data.streamID;
+		} else if ("value" in data) {
+			target = data.value;
+		}
+		var UUID = false;
+		if (target && session.rpcs && session.rpcs[target]) {
+			UUID = target;
+		}
+		if (!UUID && target && typeof resolveTargetGuestUUID === "function") {
+			UUID = resolveTargetGuestUUID(target);
+		}
+		if (!UUID && target && session.rpcs) {
+			for (var rpcUUID in session.rpcs) {
+				if (session.rpcs[rpcUUID] && session.rpcs[rpcUUID].streamID == target) {
+					UUID = rpcUUID;
+					break;
+				}
+			}
+		}
+		if (!UUID || !session.rpcs || !session.rpcs[UUID]) {
+			return false;
+		}
+		return {
+			UUID: UUID,
+			streamID: session.rpcs[UUID].streamID || false,
+			target: target
+		};
+	}
+
 	session.remoteInterfaceAPI = function (e) {
 		// iFRAME api support
 		if (!e.data || typeof e.data !== "object") {
@@ -8409,6 +8510,201 @@ async function main() {
 					ret = publishScreen();
 				} else if (e.data.function === "targetGuest") {
 					ret = targetGuest(e.data.target, e.data.action, e.data.value, e.data.value2 || null);
+				} else if (e.data.function === "getGuestMediaDevices") {
+					var guestTarget = resolveIframeGuestTarget(e.data);
+					if (!guestTarget) {
+						postIframeAPIResponse(
+							"guestMediaDevices",
+							{
+								ok: false,
+								error: "Guest not found",
+								target: e.data.target || e.data.streamID || e.data.UUID || false
+							},
+							e.data.cib || null
+						);
+						return;
+					}
+					session.iframeMediaDeviceRequests = session.iframeMediaDeviceRequests || {};
+					if (session.iframeMediaDeviceRequests[guestTarget.UUID] && session.iframeMediaDeviceRequests[guestTarget.UUID].timer) {
+						clearTimeout(session.iframeMediaDeviceRequests[guestTarget.UUID].timer);
+					}
+					session.iframeMediaDeviceRequests[guestTarget.UUID] = {
+						cib: e.data.cib || null,
+						target: e.data.target || guestTarget.streamID || guestTarget.UUID,
+						streamID: guestTarget.streamID,
+						timer: setTimeout(function (UUID) {
+							var request = session.iframeMediaDeviceRequests && session.iframeMediaDeviceRequests[UUID];
+							if (!request) {
+								return;
+							}
+							delete session.iframeMediaDeviceRequests[UUID];
+							postIframeAPIResponse(
+								"guestMediaDevices",
+								{
+									ok: false,
+									error: "Timed out waiting for guest devices",
+									target: request.target || false,
+									UUID: UUID,
+									streamID: request.streamID || false,
+									devices: []
+								},
+								request.cib || null
+							);
+						}, 5500, guestTarget.UUID)
+					};
+					var sentDeviceRequest = session.sendRequest({ getAudioSettings: true, getVideoSettings: true }, guestTarget.UUID);
+					if (!sentDeviceRequest) {
+						clearTimeout(session.iframeMediaDeviceRequests[guestTarget.UUID].timer);
+						delete session.iframeMediaDeviceRequests[guestTarget.UUID];
+						postIframeAPIResponse(
+							"guestMediaDevices",
+							{
+								ok: false,
+								error: "Unable to request guest devices",
+								target: e.data.target || guestTarget.streamID || guestTarget.UUID,
+								UUID: guestTarget.UUID,
+								streamID: guestTarget.streamID || false,
+								devices: []
+							},
+							e.data.cib || null
+						);
+					}
+					return;
+				} else if (e.data.function === "setGuestMediaDevice") {
+					var guestDeviceTarget = resolveIframeGuestTarget(e.data);
+					if (!guestDeviceTarget) {
+						postIframeAPIResponse(
+							"guestMediaDeviceChange",
+							{
+								ok: false,
+								error: "Guest not found",
+								target: e.data.target || e.data.streamID || e.data.UUID || false
+							},
+							e.data.cib || null
+						);
+						return;
+					}
+					var kind = String(e.data.kind || e.data.deviceKind || "").toLowerCase();
+					var deviceId = "deviceId" in e.data ? e.data.deviceId : e.data.value;
+					var request = { UUID: guestDeviceTarget.UUID };
+					var normalizedKind = false;
+					if (kind === "camera" || kind === "video" || kind === "videoinput") {
+						request.changeCamera = deviceId;
+						normalizedKind = "camera";
+					} else if (kind === "microphone" || kind === "mic" || kind === "audio" || kind === "audioinput") {
+						request.changeMicrophone = deviceId;
+						normalizedKind = "microphone";
+					} else if (kind === "speaker" || kind === "output" || kind === "audiooutput") {
+						request.changeSpeaker = deviceId;
+						normalizedKind = "speaker";
+					}
+					if (!normalizedKind || typeof deviceId === "undefined") {
+						postIframeAPIResponse(
+							"guestMediaDeviceChange",
+							{
+								ok: false,
+								error: "Missing device kind or ID",
+								target: e.data.target || guestDeviceTarget.streamID || guestDeviceTarget.UUID,
+								UUID: guestDeviceTarget.UUID,
+								streamID: guestDeviceTarget.streamID || false
+							},
+							e.data.cib || null
+						);
+						return;
+					}
+					session.iframeMediaDeviceChangeRequests = session.iframeMediaDeviceChangeRequests || {};
+					var deviceChangeKey = guestDeviceTarget.UUID + ":" + normalizedKind;
+					if (session.iframeMediaDeviceChangeRequests[deviceChangeKey] && session.iframeMediaDeviceChangeRequests[deviceChangeKey].timer) {
+						clearTimeout(session.iframeMediaDeviceChangeRequests[deviceChangeKey].timer);
+					}
+					session.iframeMediaDeviceChangeRequests[deviceChangeKey] = {
+						cib: e.data.cib || null,
+						target: e.data.target || guestDeviceTarget.streamID || guestDeviceTarget.UUID,
+						streamID: guestDeviceTarget.streamID,
+						kind: normalizedKind,
+						deviceId: deviceId,
+						timer: setTimeout(function (changeKey) {
+							var request = session.iframeMediaDeviceChangeRequests && session.iframeMediaDeviceChangeRequests[changeKey];
+							if (!request) {
+								return;
+							}
+							delete session.iframeMediaDeviceChangeRequests[changeKey];
+							postIframeAPIResponse(
+								"guestMediaDeviceChange",
+								{
+									ok: false,
+									error: "Timed out waiting for guest device change",
+									target: request.target || false,
+									UUID: guestDeviceTarget.UUID,
+									streamID: request.streamID || false,
+									kind: request.kind,
+									deviceId: request.deviceId
+								},
+								request.cib || null
+							);
+						}, 8500, deviceChangeKey)
+					};
+					var sentChangeRequest = session.sendRequest(request, guestDeviceTarget.UUID);
+					if (!sentChangeRequest) {
+						clearTimeout(session.iframeMediaDeviceChangeRequests[deviceChangeKey].timer);
+						delete session.iframeMediaDeviceChangeRequests[deviceChangeKey];
+						postIframeAPIResponse(
+							"guestMediaDeviceChange",
+							{
+								ok: false,
+								error: "Unable to send device change",
+								target: e.data.target || guestDeviceTarget.streamID || guestDeviceTarget.UUID,
+								UUID: guestDeviceTarget.UUID,
+								streamID: guestDeviceTarget.streamID || false,
+								kind: normalizedKind,
+								deviceId: deviceId
+							},
+							e.data.cib || null
+						);
+					}
+					return;
+				} else if (e.data.function === "activateQueuedGuest") {
+					var queuedGuestTarget = resolveIframeGuestTarget(e.data);
+					if (!queuedGuestTarget) {
+						postIframeAPIResponse(
+							"queuedGuestActivation",
+							{
+								ok: false,
+								error: "Guest not found",
+								target: e.data.target || e.data.streamID || e.data.UUID || false
+							},
+							e.data.cib || null
+						);
+						return;
+					}
+					var safeQueuedUUID = typeof CSS !== "undefined" && CSS.escape ? CSS.escape(queuedGuestTarget.UUID) : queuedGuestTarget.UUID;
+					var queueButton = document.querySelector('[data-action-type="remove-queue"][data--u-u-i-d="' + safeQueuedUUID + '"]');
+					if (queueButton && typeof remoteRemoveQueue === "function") {
+						remoteRemoveQueue(queueButton);
+						postIframeAPIResponse(
+							"queuedGuestActivation",
+							{
+								ok: true,
+								target: e.data.target || queuedGuestTarget.streamID || queuedGuestTarget.UUID,
+								UUID: queuedGuestTarget.UUID,
+								streamID: queuedGuestTarget.streamID || false
+							},
+							e.data.cib || null
+						);
+					} else {
+						postIframeAPIResponse(
+							"queuedGuestActivation",
+							{
+								ok: false,
+								error: "Activate button not found",
+								target: e.data.target || queuedGuestTarget.streamID || queuedGuestTarget.UUID,
+								UUID: queuedGuestTarget.UUID,
+								streamID: queuedGuestTarget.streamID || false
+							},
+							e.data.cib || null
+						);
+					}
+					return;
 				} else if (e.data.function === "commands" && e.data.action && Commands[e.data.action]) {
 					ret = Commands[e.data.action](e.data.value, e.data.value2 || null);
 				} else if (e.data.function === "routeMessage") {
@@ -8591,8 +8887,9 @@ async function main() {
 		
 		if (e.data.getSnapshotBySlot || e.data.getSnapshotByStreamID) {
 		  let videoElement = false;
+		  const currentSlotsForSnapshot = session.currentSlots || {};
 		  
-		  let streamID = ("getSnapshotBySlot" in e.data) ? session.currentSlots[parseInt(e.data.getSnapshotBySlot) || 0] : e.data.getSnapshotByStreamID;
+		  let streamID = ("getSnapshotBySlot" in e.data) ? currentSlotsForSnapshot[parseInt(e.data.getSnapshotBySlot) || 0] : e.data.getSnapshotByStreamID;
 		  
 		  let UUID = false;
 		  if (streamID){
@@ -8603,54 +8900,104 @@ async function main() {
 				  break;
 				}
 			  }
+			  if (!videoElement && session.streamID) {
+				if (streamID == session.streamID && session.videoElement) {
+				  UUID = session.UUID || "local";
+				  videoElement = session.videoElement;
+				} else if ((streamID == session.streamID + ":s" || streamID == session.streamID + ":screen") && (session.screenShareElement || session.screenShareState)) {
+				  UUID = (session.UUID || "local") + "_screen";
+				  videoElement = session.screenShareElement || session.videoElement;
+				}
+			  }
 		  }
 		  
 		  if (streamID && videoElement && videoElement.srcObject) {
 			const videoTrack = videoElement.srcObject.getVideoTracks()[0];
 			
 			if (videoTrack) {
-			  const processor = new MediaStreamTrackProcessor({ track: videoTrack });
-			  const reader = processor.readable.getReader();
+			  const format = typeof session.sendframes === "string" ? session.sendframes : "png";
+			  const currentSlots = session.currentSlots || {};
+			  const slot = parseInt(Object.keys(currentSlots).find(key => currentSlots[key] === streamID)) || 0;
+			  const postFrame = function(imageData) {
+				parent.postMessage({
+				  type: 'frame',
+				  frame: imageData,
+				  UUID: UUID,
+				  streamID: streamID,
+				  trackID: videoTrack.id,
+				  kind: videoTrack.kind,
+				  format: format,
+				  slot: slot,
+				  cib: e.data.cib || null
+				}, session.iframetarget);
+			  };
+			  const drawVideoElementFrame = function() {
+				const width = videoElement.videoWidth || videoElement.clientWidth || 320;
+				const height = videoElement.videoHeight || videoElement.clientHeight || 180;
+				if (!width || !height) {
+				  return false;
+				}
+				try {
+				  const fallbackCanvas = document.createElement("canvas");
+				  const fallbackCtx = fallbackCanvas.getContext("2d", { willReadFrequently: true });
+				  fallbackCanvas.width = width;
+				  fallbackCanvas.height = height;
+				  fallbackCtx.drawImage(videoElement, 0, 0, width, height);
+				  postFrame(fallbackCanvas.toDataURL(`image/${format}`, 0.8));
+				  return true;
+				} catch (error) {
+				  console.error("Error drawing fallback video frame:", error);
+				  return false;
+				}
+			  };
 			  
-			  const canvas = document.createElement("canvas");
-			  const ctx = canvas.getContext("2d", { willReadFrequently: true });
-			  
-			  try {
-				reader.read().then(({ done, value: frame }) => {
-				  if (!done && frame) {
-					canvas.width = frame.displayWidth;
-					canvas.height = frame.displayHeight;
-					ctx.drawImage(frame, 0, 0);
-					
-					const format = typeof session.sendframes === "string" ? session.sendframes : "png";
-					const imageData = canvas.toDataURL(`image/${format}`, 0.8);
-					
-					parent.postMessage({
-					  type: 'frame',
-					  frame: imageData,
-					  UUID: UUID,
-					  streamID: streamID,
-					  trackID: videoTrack.id,
-					  kind: videoTrack.kind,
-					  format: format,
-					  slot: parseInt(Object.keys(session.currentSlots).find(key => session.currentSlots[key] === streamID)) || 0,
-					  cib: e.data.cib || null
-					}, session.iframetarget);
-					
-					// Proper cleanup
-					frame.close();
-					reader.cancel();
-					
-					// Remove canvas from DOM if it was added
+			  if (typeof MediaStreamTrackProcessor === "function") {
+				try {
+				  const processor = new MediaStreamTrackProcessor({ track: videoTrack });
+				  const reader = processor.readable.getReader();
+				  const canvas = document.createElement("canvas");
+				  const ctx = canvas.getContext("2d", { willReadFrequently: true });
+				  let frameSent = false;
+				  const fallbackTimer = setTimeout(function() {
+					if (!frameSent) {
+					  frameSent = drawVideoElementFrame();
+					}
+				  }, 800);
+
+				  reader.read().then(({ done, value: frame }) => {
+					if (!done && frame) {
+					  clearTimeout(fallbackTimer);
+					  canvas.width = frame.displayWidth;
+					  canvas.height = frame.displayHeight;
+					  ctx.drawImage(frame, 0, 0);
+					  if (!frameSent) {
+						postFrame(canvas.toDataURL(`image/${format}`, 0.8));
+						frameSent = true;
+					  }
+					  frame.close();
+					  reader.cancel();
+					} else {
+					  clearTimeout(fallbackTimer);
+					  if (!frameSent) {
+						frameSent = drawVideoElementFrame();
+					  }
+					}
 					if (canvas.parentNode) {
 					  canvas.parentNode.removeChild(canvas);
 					}
-				  }
-				}).catch(error => {
-				  console.error("Error processing image frame:", error);
-				});
-			  } catch (error) {
-				console.error("Error setting up frame capture:", error);
+				  }).catch(error => {
+					clearTimeout(fallbackTimer);
+					console.error("Error processing image frame:", error);
+					if (!frameSent) {
+					  frameSent = drawVideoElementFrame();
+					}
+				  });
+				} catch (error) {
+				  console.error("Error setting up frame capture:", error);
+				  drawVideoElementFrame();
+				}
+			  } else {
+				drawVideoElementFrame();
 			  }
 			}
 		  }

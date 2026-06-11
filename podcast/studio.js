@@ -7,10 +7,11 @@ import {
   bridgeLegacyMeters,
   monitorTrackLevel,
 } from '../core/index.js';
-import { IcecastPublisher, ICECAST_MIME_OPTIONS } from './icecast-publisher.js?v=2';
+import { IcecastPublisher, ICECAST_MIME_OPTIONS } from './icecast-publisher.js?v=3';
 
 const STUDIO_ROOT_ID = 'podcast-root';
 const ROSTER_REFRESH_MS = 1500;
+const HOST_MIC_READY_TIMEOUT_MS = 12000;
 const PREFLIGHT_STORAGE_KEY = 'podcastStudio.preflightState';
 const PREFLIGHT_CACHE_MS = 6 * 60 * 60 * 1000;
 const PREFLIGHT_MIN_MANDATORY_MS = 5 * 60 * 1000;
@@ -20,7 +21,7 @@ const CLOUD_STATUS_STALE_MS = 30 * 60 * 1000;
 const DISK_RECORDING_STORAGE_KEY = 'podcastStudio.diskRecordingState';
 const CAPTURE_MODE_STORAGE_KEY = 'podcastStudio.captureMode';
 const ICECAST_SETTINGS_STORAGE_KEY = 'podcastStudio.icecastSettings';
-const ICECAST_SETTINGS_VERSION = 2;
+const ICECAST_SETTINGS_VERSION = 3;
 const DEFAULT_ICECAST_MIME_TYPE = ICECAST_MIME_OPTIONS[0].value;
 const DEFAULT_ICECAST_RELAY_URL = 'https://vdo-ninja-icecast-relay.vdo.workers.dev/publish';
 const DISK_DB_NAME = 'podcastStudio.disk';
@@ -654,6 +655,20 @@ function readIcecastSettings() {
     if (version < ICECAST_SETTINGS_VERSION && (!settings.mimeType || settings.mimeType === 'audio/webm;codecs=opus' || settings.mimeType === 'audio/webm')) {
       settings.mimeType = DEFAULT_ICECAST_MIME_TYPE;
     }
+    if (version < 3 && !settings.mount && settings.targetUrl) {
+      try {
+        const target = new URL(settings.targetUrl);
+        if (target.pathname && target.pathname !== '/') {
+          settings.mount = decodeURIComponent(target.pathname.replace(/^\/+/, ''));
+          target.pathname = '/';
+          target.search = '';
+          target.hash = '';
+          settings.targetUrl = target.toString();
+        }
+      } catch (error) {
+        console.warn('Unable to migrate Icecast mountpoint setting', error);
+      }
+    }
     settings.version = ICECAST_SETTINGS_VERSION;
     return settings;
   } catch (error) {
@@ -671,6 +686,27 @@ function writeIcecastSettings(settings) {
     window.localStorage.setItem(ICECAST_SETTINGS_STORAGE_KEY, JSON.stringify(safeSettings));
   } catch (error) {
     console.warn('Unable to store Icecast settings', error);
+  }
+}
+
+function normalizeIcecastMount(value) {
+  return (value || '').toString().trim().replace(/^\/+/, '');
+}
+
+function buildIcecastTargetUrl(settings = {}) {
+  const targetUrl = (settings.targetUrl || '').trim();
+  const mount = normalizeIcecastMount(settings.mount);
+  if (!targetUrl || !mount) {
+    return targetUrl;
+  }
+  try {
+    const target = new URL(targetUrl);
+    target.pathname = `/${mount}`;
+    target.search = '';
+    target.hash = '';
+    return target.toString();
+  } catch (error) {
+    return targetUrl;
   }
 }
 
@@ -1462,6 +1498,9 @@ class PodcastStudioApp {
     this.virtualParticipants = new Map();
     this.hostMic = null;
     this.hostMicMeter = null;
+    this.hostMicMeterTrack = null;
+    this.hostMicPublishGeneration = 0;
+    this.hostMicCancelWatchdog = null;
     this.hostMicButton = null;
     this.hostMicStatusNode = null;
     this.hostMicErrorNode = null;
@@ -1557,6 +1596,7 @@ class PodcastStudioApp {
     this.icecastSettingsPanel = null;
     this.icecastStatusNode = null;
     this.icecastTargetInput = null;
+    this.icecastMountInput = null;
     this.icecastUsernameInput = null;
     this.icecastPasswordInput = null;
     this.icecastMimeSelect = null;
@@ -1788,7 +1828,7 @@ class PodcastStudioApp {
     }
 
     if (options.guestRecordBackup?.checked) {
-      params.set('autorecordlocal', '-128');
+      params.set('autorecordlocal', '0');
       summary.push('Audio backup');
     } else {
       params.delete('autorecordlocal');
@@ -1873,6 +1913,203 @@ class PodcastStudioApp {
     }
   }
 
+  getPublishedHostMicStream() {
+    const candidates = [
+      this.session?.streamSrc || null,
+      this.session?.videoElement?.srcObject || null,
+    ];
+    for (const stream of candidates) {
+      const audioTracks = stream?.getAudioTracks?.() || [];
+      if (audioTracks.some((track) => track && track.readyState !== 'ended')) {
+        return stream;
+      }
+    }
+    return null;
+  }
+
+  async waitForPublishedHostMicStream(timeoutMs = HOST_MIC_READY_TIMEOUT_MS) {
+    const started = Date.now();
+    while (Date.now() - started < timeoutMs) {
+      const stream = this.getPublishedHostMicStream();
+      const track = stream?.getAudioTracks?.().find((candidate) => candidate && candidate.readyState !== 'ended');
+      if (stream && track) {
+        return { stream, track };
+      }
+      await new Promise((resolve) => setTimeout(resolve, 100));
+    }
+    throw new Error('Timed out waiting for the director microphone to publish.');
+  }
+
+  ensureLegacyHostMicButton() {
+    if (document.getElementById('press2talk')) {
+      return true;
+    }
+    const miniPerformer = document.getElementById('miniPerformer');
+    if (!miniPerformer || typeof window.press2talk !== 'function') {
+      return false;
+    }
+    const button = document.createElement('button');
+    button.id = 'press2talk';
+    button.type = 'button';
+    button.className = 'float';
+    button.dataset.enabled = 'false';
+    button.addEventListener('click', (event) => {
+      event.preventDefault();
+      event.stopPropagation();
+      window.press2talk(true);
+    });
+    miniPerformer.appendChild(button);
+    return true;
+  }
+
+  async waitForLegacyHostMicControl(timeoutMs = HOST_MIC_READY_TIMEOUT_MS) {
+    const started = Date.now();
+    while (Date.now() - started < timeoutMs) {
+      if (typeof window.press2talk === 'function' && this.ensureLegacyHostMicButton()) {
+        return;
+      }
+      await new Promise((resolve) => setTimeout(resolve, 100));
+    }
+    throw new Error('Director microphone controls are not ready yet.');
+  }
+
+  stopLegacyHostMicTracks() {
+    if (!this.session) {
+      return;
+    }
+    const streams = [
+      this.session.streamSrc || null,
+      this.session.streamSrcClone || null,
+      this.session.videoElement?.srcObject || null,
+    ];
+    streams.forEach((stream) => {
+      stream?.getTracks?.().forEach((track) => {
+        try {
+          stream.removeTrack?.(track);
+          track.stop();
+        } catch (error) {
+          console.warn('Failed to stop host mic track', error);
+        }
+      });
+    });
+    try {
+      this.session.sendMessage?.({ videoMuted: true, virtualHangup: true });
+    } catch (error) {
+      console.warn('Failed to notify guests that host mic stopped', error);
+    }
+    if (typeof window.pokeIframeAPI === 'function') {
+      window.pokeIframeAPI('director-share', false, false, this.session.streamID);
+    }
+    if (typeof window.pokeIframeAPI === 'function') {
+      window.pokeIframeAPI('seeding', false, false, this.session.streamID);
+    }
+    if (typeof window.pokeAPI === 'function') {
+      window.pokeAPI('seeding', false);
+    }
+    this.session.directorEnabledPPT = false;
+    this.session.seeding = false;
+  }
+
+  armLegacyHostMicCancelWatchdog(generation) {
+    if (this.hostMicCancelWatchdog) {
+      clearInterval(this.hostMicCancelWatchdog);
+      this.hostMicCancelWatchdog = null;
+    }
+    const started = Date.now();
+    this.hostMicCancelWatchdog = setInterval(() => {
+      if (this.hostMicPublishGeneration !== generation || Date.now() - started > HOST_MIC_READY_TIMEOUT_MS * 2) {
+        clearInterval(this.hostMicCancelWatchdog);
+        this.hostMicCancelWatchdog = null;
+        return;
+      }
+      const stream = this.getPublishedHostMicStream();
+      if (stream || this.session?.directorEnabledPPT || this.session?.seeding) {
+        this.stopLegacyHostMicTracks();
+        this.ensureLegacyHostMicButton();
+      }
+    }, 100);
+  }
+
+  cancelPendingLegacyHostMicPublish(generation = this.hostMicPublishGeneration) {
+    if (generation !== this.hostMicPublishGeneration) {
+      return;
+    }
+    this.hostMicPublishGeneration += 1;
+    const cancelledGeneration = this.hostMicPublishGeneration;
+    if (typeof window.getUserMediaRequestID === 'number') {
+      window.getUserMediaRequestID += 1;
+    }
+    this.stopLegacyHostMicTracks();
+    this.ensureLegacyHostMicButton();
+    this.armLegacyHostMicCancelWatchdog(cancelledGeneration);
+  }
+
+  async syncHostMicParticipant(stream, track) {
+    if (!stream || !track) {
+      return null;
+    }
+    const label = this.session?.label ? `${this.session.label} (Host)` : 'Host Mic';
+    const participant = {
+      uuid: 'host-mic',
+      label,
+      stream,
+      streamID: this.session?.streamID || 'host-mic',
+      status: 'connected',
+      audioLevel: this.meterValues.get('host-mic') || 0,
+      isLocal: true,
+      kind: 'local',
+      role: 'host-mic',
+    };
+    if (this.hostMic?.track !== track) {
+      track.addEventListener('ended', () => {
+        if (this.hostMic?.track === track && !this.hostMicBusy) {
+          this.disableHostMic();
+        }
+      }, { once: true });
+    }
+    this.hostMic = {
+      active: true,
+      stream,
+      track,
+      uuid: participant.uuid,
+      label: participant.label,
+      streamID: participant.streamID,
+      participant,
+      legacy: true,
+    };
+    try {
+      this.session?.sendMessage?.({ virtualHangup: false });
+    } catch (error) {
+      console.warn('Failed to notify guests that host mic resumed', error);
+    }
+    this.virtualParticipants.set(participant.uuid, participant);
+    this.hostMicMuted = Boolean(this.session?.muted || track.enabled === false);
+    if (this.hostMicMeter && this.hostMicMeterTrack !== track) {
+      try {
+        this.hostMicMeter.disconnect({ stopTrack: false });
+      } catch (error) {
+        console.warn('Failed to disconnect stale host mic meter', error);
+      }
+      this.hostMicMeter = null;
+      this.hostMicMeterTrack = null;
+    }
+    if (this.audioContext && track && !this.hostMicMeter) {
+      try {
+        this.hostMicMeter = await monitorTrackLevel(this.audioContext, track, {
+          uuid: participant.uuid,
+          trackType: 'audio',
+          metadata: { label: participant.label, source: 'host' },
+        });
+        this.hostMicMeterTrack = track;
+      } catch (error) {
+        console.warn('Failed to attach host mic meter', error);
+      }
+    }
+    this.updateHostMicUI();
+    this.refreshRoster();
+    return participant;
+  }
+
   setHostMicError(message) {
     if (this.hostMicErrorNode) {
       this.hostMicErrorNode.textContent = message || '';
@@ -1922,13 +2159,23 @@ class PodcastStudioApp {
     }
   }
 
-  handleHostMuteToggle() {
+  async handleHostMuteToggle() {
     if (!this.hostMic?.active) {
       return;
     }
-    this.hostMicMuted = !this.hostMicMuted;
-    if (this.hostMic.track) {
-      this.hostMic.track.enabled = !this.hostMicMuted;
+    if (typeof window.toggleMute === 'function' && this.session?.directorEnabledPPT) {
+      window.toggleMute(false);
+      this.hostMicMuted = Boolean(this.session?.muted);
+    } else {
+      this.hostMicMuted = !this.hostMicMuted;
+      if (this.hostMic.track) {
+        this.hostMic.track.enabled = !this.hostMicMuted;
+      }
+    }
+    const stream = this.getPublishedHostMicStream();
+    const track = stream?.getAudioTracks?.().find((candidate) => candidate && candidate.readyState !== 'ended') || this.hostMic.track;
+    if (stream && track) {
+      await this.syncHostMicParticipant(stream, track);
     }
     this.updateHostMuteUI();
   }
@@ -1952,70 +2199,41 @@ class PodcastStudioApp {
       this.updateHostMicUI();
       return;
     }
-    if (!(navigator.mediaDevices && navigator.mediaDevices.getUserMedia)) {
-      this.setHostMicError('Browser does not support microphone capture.');
-      return;
-    }
     this.hostMicBusy = true;
     this.setHostMicError('');
     this.updateHostMicUI();
+    const publishGeneration = this.hostMicPublishGeneration + 1;
+    this.hostMicPublishGeneration = publishGeneration;
+    if (this.hostMicCancelWatchdog) {
+      clearInterval(this.hostMicCancelWatchdog);
+      this.hostMicCancelWatchdog = null;
+    }
+    let startedLegacyPublish = false;
     try {
       await this.ensureAudioContextResumed();
-      const stream = await navigator.mediaDevices.getUserMedia({ audio: true, video: false });
-      const [track] = stream.getAudioTracks();
-      if (!track) {
-        throw new Error('No audio track available.');
-      }
-      const label = this.session?.label ? `${this.session.label} (Host)` : 'Host Mic';
-      const participant = {
-        uuid: 'host-mic',
-        label,
-        stream,
-        streamID: 'host-mic',
-        status: 'connected',
-        audioLevel: 0,
-        isLocal: true,
-        kind: 'local',
-        role: 'host-mic',
-      };
-      track.addEventListener('ended', () => {
-        if (this.hostMic?.track === track) {
-          this.disableHostMic();
+      let stream = this.getPublishedHostMicStream();
+      let track = stream?.getAudioTracks?.().find((candidate) => candidate && candidate.readyState !== 'ended') || null;
+      if (!stream || !track) {
+        if (this.session) {
+          this.session.directorEnabledPPT = false;
         }
-      });
-      this.hostMic = {
-        active: true,
-        stream,
-        track,
-        uuid: participant.uuid,
-        label: participant.label,
-        streamID: participant.streamID,
-        participant,
-      };
-      this.virtualParticipants.set(participant.uuid, participant);
-      if (this.audioContext && track) {
-        try {
-          this.hostMicMeter = await monitorTrackLevel(this.audioContext, track, {
-            uuid: participant.uuid,
-            trackType: 'audio',
-            metadata: { label: participant.label, source: 'host' },
-          });
-        } catch (error) {
-          console.warn('Failed to attach host mic meter', error);
+        await this.waitForLegacyHostMicControl();
+        if (typeof window.press2talk !== 'function') {
+          throw new Error('Director microphone publisher is unavailable.');
         }
+        startedLegacyPublish = true;
+        await window.press2talk(true);
+        const published = await this.waitForPublishedHostMicStream();
+        stream = published.stream;
+        track = published.track;
       }
-      this.updateHostMicUI();
-      this.refreshRoster();
+      await this.syncHostMicParticipant(stream, track);
     } catch (error) {
       console.error('Failed to enable host microphone', error);
-      this.setHostMicError(error?.message || 'Unable to access microphone.');
-      if (this.hostMic?.stream) {
-        try {
-          this.hostMic.stream.getTracks().forEach((mediaTrack) => mediaTrack.stop());
-        } catch (stopError) {
-          console.warn('Failed to stop host mic stream after error', stopError);
-        }
+      if (startedLegacyPublish) {
+        this.cancelPendingLegacyHostMicPublish(publishGeneration);
       }
+      this.setHostMicError(error?.message || 'Unable to access microphone.');
       this.hostMic = null;
       this.virtualParticipants.delete('host-mic');
       this.updateHostMicUI();
@@ -2041,8 +2259,11 @@ class PodcastStudioApp {
           console.warn('Failed to disconnect host mic meter', error);
         }
         this.hostMicMeter = null;
+        this.hostMicMeterTrack = null;
       }
-      if (this.hostMic?.stream) {
+      if (this.hostMic?.legacy) {
+        this.cancelPendingLegacyHostMicPublish();
+      } else if (this.hostMic?.stream) {
         this.hostMic.stream.getTracks().forEach((track) => {
           try {
             track.stop();
@@ -2428,6 +2649,7 @@ class PodcastStudioApp {
 
   collectIcecastSettingsFromForm() {
     const targetUrl = (this.icecastTargetInput?.value || '').trim();
+    const mount = normalizeIcecastMount(this.icecastMountInput?.value || '');
     const username = (this.icecastUsernameInput?.value || 'source').trim() || 'source';
     const password = this.icecastPasswordInput?.value || '';
     const mimeType = this.icecastMimeSelect?.value || ICECAST_MIME_OPTIONS[0].value;
@@ -2436,6 +2658,7 @@ class PodcastStudioApp {
     const genre = (this.icecastGenreInput?.value || '').trim();
     return {
       targetUrl,
+      mount,
       username,
       password,
       mimeType,
@@ -2456,7 +2679,7 @@ class PodcastStudioApp {
     writeIcecastSettings(storedSettings);
     return {
       relayUrl,
-      targetUrl: storedSettings.targetUrl,
+      targetUrl: buildIcecastTargetUrl(storedSettings),
       username: storedSettings.username,
       password: storedSettings.password,
       relayToken,
@@ -2495,6 +2718,7 @@ class PodcastStudioApp {
     }
     [
       this.icecastTargetInput,
+      this.icecastMountInput,
       this.icecastUsernameInput,
       this.icecastPasswordInput,
       this.icecastMimeSelect,
@@ -2900,11 +3124,20 @@ class PodcastStudioApp {
     };
     this.icecastTargetInput = createElement('input', 'icecast-config__input', {
       type: 'url',
-      placeholder: 'https://radio.example.com/radio/8000/',
+      placeholder: 'http://icecast.example.com:8000/',
       value: icecastSettings.targetUrl || '',
       autocomplete: 'off',
       spellcheck: 'false',
-      title: 'Icecast or AzuraCast source ingest URL, not the public listener URL.',
+      title: 'Icecast or AzuraCast source server URL, including port.',
+    });
+    this.icecastMountInput = createElement('input', 'icecast-config__input', {
+      type: 'text',
+      placeholder: 'stream',
+      value: icecastSettings.mount || '',
+      autocomplete: 'off',
+      autocapitalize: 'none',
+      spellcheck: 'false',
+      title: 'Icecast source mountpoint, without the leading slash.',
     });
     this.icecastUsernameInput = createElement('input', 'icecast-config__input', {
       type: 'text',
@@ -2954,7 +3187,8 @@ class PodcastStudioApp {
     icecastToggles.append(publicLabel);
 
     icecastBody.append(
-      createIcecastField('Source URL', this.icecastTargetInput, 'Recommended: allow VDO.Ninja in the Icecast/AzuraCast CORS settings for the best direct publishing path.'),
+      createIcecastField('Source URL', this.icecastTargetInput, 'Use the source server URL, including port. DNS names work best with the relay.'),
+      createIcecastField('Mountpoint', this.icecastMountInput, 'For BUTT-style settings, enter the mountpoint here, for example: stream.'),
       createIcecastField('Username', this.icecastUsernameInput),
       createIcecastField('Password', this.icecastPasswordInput),
       createIcecastField('Format', this.icecastMimeSelect),
@@ -2964,6 +3198,7 @@ class PodcastStudioApp {
     );
     [
       this.icecastTargetInput,
+      this.icecastMountInput,
       this.icecastUsernameInput,
       this.icecastPasswordInput,
       this.icecastMimeSelect,

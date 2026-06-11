@@ -1,0 +1,231 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>VDO.Ninja Live Studio</title>
+		<link rel="icon" href="../media/favicon.ico" />
+		<link rel="stylesheet" href="../lineawesome/css/line-awesome.min.css" />
+		<link rel="stylesheet" href="./styles.css" />
+	</head>
+	<body>
+		<div id="studio-root" class="studio-shell" data-state="setup">
+			<section class="room-gate" data-view="setup">
+				<form class="room-gate__panel" id="room-form" autocomplete="off">
+					<div class="room-gate__brand">
+						<span class="brand-mark">VDO</span>
+						<span>Live Studio</span>
+					</div>
+					<h1>Video Producer</h1>
+					<label>
+						<span>Room name</span>
+						<input id="room-name" name="room" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="my-show-room" required />
+					</label>
+					<label>
+						<span>Password</span>
+						<input id="room-password" name="password" autocomplete="off" placeholder="optional; leave blank for open invite" />
+					</label>
+					<div class="room-gate__actions">
+						<button type="button" id="random-room" class="button button--secondary">Random</button>
+						<button type="submit" class="button button--primary">Enter Studio</button>
+					</div>
+				</form>
+			</section>
+
+			<section class="studio-workspace" data-view="studio" aria-label="Live studio workspace">
+				<header class="topbar">
+					<div class="topbar__identity">
+						<div class="brand-mark">VDO</div>
+						<div>
+							<div class="topbar__title">Live Studio</div>
+							<button type="button" id="room-copy" class="topbar__room" title="Copy the room name"></button>
+						</div>
+					</div>
+					<div class="topbar__status">
+						<span class="status-pill" id="connection-status" data-state="idle">Starting</span>
+						<button type="button" id="refresh-state" class="icon-button" title="Refresh source list" aria-label="Refresh source list"><i class="las la-sync"></i></button>
+					</div>
+				</header>
+
+				<aside class="scenes-panel" aria-label="Scenes">
+					<div class="panel-heading">
+						<h2>Scenes</h2>
+						<div class="panel-heading__actions">
+							<button type="button" id="import-template" class="button button--secondary button--compact">Import</button>
+							<button type="button" id="export-template" class="button button--secondary button--compact">Export</button>
+							<button type="button" id="add-scene" class="button button--secondary button--compact" title="Create a scene from the current program">New</button>
+						</div>
+						<input id="template-file" class="hidden" type="file" accept="application/json,.json" />
+					</div>
+					<div id="scene-list" class="scene-list" aria-live="polite"></div>
+				</aside>
+
+				<main class="program-panel">
+					<div class="program-toolbar">
+						<div>
+							<div class="program-toolbar__label">Program</div>
+							<label class="scene-name-label" for="active-scene-title">Scene name</label>
+							<input id="active-scene-title" class="scene-name-input" value="Scene" maxlength="48" autocomplete="off" />
+						</div>
+						<div class="program-toolbar__actions">
+							<button type="button" class="icon-button" id="move-scene-up" title="Move scene up" aria-label="Move scene up"><i class="las la-arrow-up"></i></button>
+							<button type="button" class="icon-button" id="move-scene-down" title="Move scene down" aria-label="Move scene down"><i class="las la-arrow-down"></i></button>
+							<button type="button" class="button button--secondary" id="duplicate-scene">Duplicate</button>
+							<button type="button" class="button button--secondary" id="delete-scene">Delete</button>
+							<button type="button" class="button button--primary" id="go-live" title="Apply the selected scene to the program preview and scene links">Update Scene</button>
+						</div>
+					</div>
+
+					<section class="stage-shell">
+						<div class="stage-aspect" id="stage" data-testid="stage-drop-target">
+							<iframe id="director-frame" title="VDO.Ninja program preview" allow="autoplay; camera; microphone; fullscreen; picture-in-picture; display-capture; screen-wake-lock; accelerometer; midi; geolocation; clipboard-write"></iframe>
+							<div id="stage-bg" class="stage-bg"></div>
+							<div id="stage-overlay" class="stage-overlay" aria-label="Layout editor surface"></div>
+							<div class="stage-empty" id="stage-empty">No sources on stage</div>
+						</div>
+						<div class="box-inspector" id="box-inspector" data-empty="true" aria-label="Selected source controls">
+							<div class="box-inspector__summary">
+								<span class="box-inspector__eyebrow">Selected source</span>
+								<strong id="box-inspector-title">No source selected</strong>
+							</div>
+							<div class="box-inspector__actions">
+								<button type="button" class="icon-button" id="box-backward" title="Send backward" aria-label="Send backward"><i class="las la-step-backward"></i></button>
+								<button type="button" class="icon-button" id="box-forward" title="Bring forward" aria-label="Bring forward"><i class="las la-step-forward"></i></button>
+								<button type="button" class="button button--secondary" id="box-fit-toggle">Fit</button>
+								<button type="button" class="button button--secondary" id="box-reset">Reset</button>
+								<button type="button" class="button button--danger" id="box-remove">Remove</button>
+							</div>
+							<div class="box-inspector__fields">
+								<label><span>X</span><input id="box-x" type="number" min="0" max="100" step="0.1" autocomplete="off" /></label>
+								<label><span>Y</span><input id="box-y" type="number" min="0" max="100" step="0.1" autocomplete="off" /></label>
+								<label><span>W</span><input id="box-w" type="number" min="7" max="100" step="0.1" autocomplete="off" /></label>
+								<label><span>H</span><input id="box-h" type="number" min="8" max="100" step="0.1" autocomplete="off" /></label>
+							</div>
+						</div>
+					</section>
+
+					<section class="layout-strip" aria-label="Layout presets">
+						<button type="button" class="layout-preset" data-preset="solo">
+							<span class="preset-icon preset-icon--solo"></span>
+							<span>Solo</span>
+						</button>
+						<button type="button" class="layout-preset" data-preset="duo">
+							<span class="preset-icon preset-icon--duo"></span>
+							<span>Side by Side</span>
+						</button>
+						<button type="button" class="layout-preset" data-preset="pip">
+							<span class="preset-icon preset-icon--pip"></span>
+							<span>Picture</span>
+						</button>
+						<button type="button" class="layout-preset" data-preset="screen">
+							<span class="preset-icon preset-icon--screen"></span>
+							<span>Screen</span>
+						</button>
+						<button type="button" class="layout-preset" data-preset="spotlight">
+							<span class="preset-icon preset-icon--spotlight"></span>
+							<span>Spotlight</span>
+						</button>
+						<button type="button" class="layout-preset" data-preset="grid">
+							<span class="preset-icon preset-icon--grid"></span>
+							<span>Grid</span>
+						</button>
+						<button type="button" class="layout-preset" data-preset="nine">
+							<span class="preset-icon preset-icon--nine"></span>
+							<span>9 Grid</span>
+						</button>
+						<button type="button" class="layout-preset" data-preset="rows">
+							<span class="preset-icon preset-icon--rows"></span>
+							<span>Rows</span>
+						</button>
+						<button type="button" class="layout-preset" data-preset="vertical">
+							<span class="preset-icon preset-icon--vertical"></span>
+							<span>Vertical</span>
+						</button>
+					</section>
+				</main>
+
+				<aside class="control-panel" aria-label="Studio controls">
+					<nav class="tabs" aria-label="Control tabs">
+						<button type="button" class="tab-button" data-tab="sources" aria-selected="true">Guests</button>
+						<button type="button" class="tab-button" data-tab="design">Design</button>
+						<button type="button" class="tab-button" data-tab="output">Output</button>
+					</nav>
+
+					<section class="tab-panel" data-panel="sources">
+						<div class="panel-heading">
+							<h2>Guests</h2>
+							<div class="guest-actions">
+								<button type="button" id="toggle-join-sound" class="button button--secondary button--compact" aria-pressed="false">Sound Off</button>
+								<button type="button" id="add-samples" class="button button--secondary button--compact">Samples</button>
+								<button type="button" id="add-placeholder" class="icon-button" title="Add guest slot" aria-label="Add guest slot"><i class="las la-plus-square"></i></button>
+							</div>
+						</div>
+						<label class="field-row field-row--stacked invite-card">
+							<span>Guest invite</span>
+							<div class="copy-row">
+								<input id="invite-link" readonly />
+								<button type="button" class="icon-button" id="copy-invite" title="Copy invite link" aria-label="Copy invite link"><i class="las la-copy"></i></button>
+							</div>
+						</label>
+						<label class="field-row field-row--stacked password-card" id="password-card" data-empty="true">
+							<span>Room password</span>
+							<div class="copy-row">
+								<input id="room-password-display" readonly />
+								<button type="button" class="icon-button" id="copy-password" title="Copy room password" aria-label="Copy room password"><i class="las la-key"></i></button>
+							</div>
+						</label>
+						<div id="source-list" class="source-list" aria-live="polite"></div>
+					</section>
+
+					<section class="tab-panel hidden" data-panel="design">
+						<div class="panel-heading">
+							<h2>Design</h2>
+						</div>
+						<label class="field-row">
+							<span>Preview background</span>
+							<input type="color" id="brand-background" value="#05070d" autocomplete="off" />
+						</label>
+						<label class="field-row">
+							<span>Corner radius</span>
+							<input type="range" id="brand-radius" min="0" max="32" value="10" />
+						</label>
+						<label class="check-row">
+							<input type="checkbox" id="brand-labels" checked autocomplete="off" />
+							<span>Show editor labels</span>
+						</label>
+					</section>
+
+					<section class="tab-panel hidden" data-panel="output">
+						<div class="panel-heading">
+							<h2>Output</h2>
+						</div>
+						<div class="output-status" id="output-status" data-state="idle">
+							<div class="output-status__label">Output state</div>
+							<div class="output-status__value">No output window opened</div>
+						</div>
+						<label class="field-row field-row--stacked">
+							<span>Scene link</span>
+							<div class="copy-row">
+								<input id="scene-link" readonly />
+								<button type="button" class="icon-button" id="copy-scene" title="Copy scene link" aria-label="Copy scene link"><i class="las la-copy"></i></button>
+							</div>
+						</label>
+						<label class="field-row field-row--stacked">
+							<span>WHIP endpoint</span>
+							<input id="whip-endpoint" autocomplete="off" placeholder="https://example.com/whip/..." />
+						</label>
+						<div class="output-actions">
+							<button type="button" class="button button--secondary" id="open-scene">Open Scene Link</button>
+							<button type="button" class="button button--secondary" id="record-scene">Open Recorder</button>
+							<button type="button" class="button button--secondary" id="open-meshcast">Open Meshcast</button>
+							<button type="button" class="button button--primary" id="publish-whip">Open WHIP Publisher</button>
+						</div>
+					</section>
+				</aside>
+			</section>
+		</div>
+
+		<div id="toast" class="toast" role="status" aria-live="polite"></div>
+		<script type="module" src="./app.js"></script>
+	</body>
+</html>

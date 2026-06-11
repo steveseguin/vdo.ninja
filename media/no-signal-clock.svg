@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1920 1080" preserveAspectRatio="xMidYMid slice">
+	<defs>
+		<pattern id="grid" width="96" height="96" patternUnits="userSpaceOnUse">
+			<path d="M 96 0 L 0 0 0 96" fill="none" stroke="#244057" stroke-width="3" opacity=".42"/>
+			<path d="M 48 0 L 48 96 M 0 48 L 96 48" fill="none" stroke="#244057" stroke-width="1" opacity=".28"/>
+		</pattern>
+	</defs>
+	<rect width="1920" height="1080" fill="#061018"/>
+	<rect width="1920" height="1080" fill="url(#grid)"/>
+	<rect x="0" y="0" width="1920" height="64" fill="#101820"/>
+	<rect x="0" y="1016" width="1920" height="64" fill="#101820"/>
+	<rect x="120" y="132" width="1680" height="530" fill="#050505" stroke="#f7f7f7" stroke-width="8"/>
+	<rect x="148" y="160" width="232" height="474" fill="#c8c8c8"/>
+	<rect x="380" y="160" width="232" height="474" fill="#f2e800"/>
+	<rect x="612" y="160" width="232" height="474" fill="#00d7ff"/>
+	<rect x="844" y="160" width="232" height="474" fill="#00c853"/>
+	<rect x="1076" y="160" width="232" height="474" fill="#d800ff"/>
+	<rect x="1308" y="160" width="232" height="474" fill="#f0182d"/>
+	<rect x="1540" y="160" width="232" height="474" fill="#003bd1"/>
+	<rect x="120" y="690" width="1680" height="190" fill="#050505" stroke="#f7f7f7" stroke-width="8"/>
+	<text x="960" y="798" fill="#f8f8f8" font-family="Arial, Helvetica, sans-serif" font-size="88" font-weight="700" text-anchor="middle" letter-spacing="6">NO SIGNAL</text>
+	<text x="960" y="850" fill="#a9bac8" font-family="Arial, Helvetica, sans-serif" font-size="30" text-anchor="middle" letter-spacing="10">STANDBY</text>
+	<circle cx="1670" cy="792" r="68" fill="#101820" stroke="#f8f8f8" stroke-width="6"/>
+	<g stroke="#f8f8f8" stroke-linecap="round" transform="translate(1670 792)">
+		<line y1="-50" y2="-58" stroke-width="5"/>
+		<line x1="50" x2="58" stroke-width="5"/>
+		<line y1="50" y2="58" stroke-width="5"/>
+		<line x1="-50" x2="-58" stroke-width="5"/>
+		<line y1="0" y2="-38" stroke-width="8">
+			<animateTransform attributeName="transform" type="rotate" from="0" to="360" dur="3600s" repeatCount="indefinite"/>
+		</line>
+		<line y1="0" y2="-52" stroke="#f0182d" stroke-width="3">
+			<animateTransform attributeName="transform" type="rotate" from="0" to="360" dur="60s" repeatCount="indefinite"/>
+		</line>
+		<circle r="6" fill="#f8f8f8" stroke="none"/>
+	</g>
+	<circle cx="160" cy="38" r="12" fill="#f0182d">
+		<animate attributeName="opacity" values="1;.25;1" dur="1s" repeatCount="indefinite"/>
+	</circle>
+	<text x="190" y="50" fill="#f8f8f8" font-family="Arial, Helvetica, sans-serif" font-size="34" font-weight="700">OFF AIR</text>
+</svg>
