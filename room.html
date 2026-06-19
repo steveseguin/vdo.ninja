@@ -145,8 +145,20 @@
 			<div id="head7" class="hidden" data-translate="director-muted-you">The director has muted you.</div>
 			<div id="head8" class="hidden" data-translate="director-video-muted-you">The director has disabled your camera temporarily.</div>
 		</div>
+		<div id="whepShareStatus" class="message-card info hidden" role="status" aria-live="polite" aria-atomic="true">
+			<button id="whepShareDismiss" type="button" class="whep-share-dismiss" onclick="dismissWhepShareStatus(event)" title="Hide WHEP share status" aria-label="Hide WHEP share status">x</button>
+			<h1>WHEP share active</h1>
+			<p id="whepShareDescription">Advertising a WHEP source to room peers via the data channel.</p>
+			<div class="whep-share-row">
+				<input id="whepShareLink" type="text" readonly aria-label="Shared WHEP URL" />
+				<button id="whepShareCopy" onclick="copyFunction(getById('whepShareLink'), event)">Copy</button>
+				<a id="whepShareOpen" href="#" target="_blank" rel="noopener">Open</a>
+			</div>
+			<p id="whepShareTokenNote" class="whep-share-note hidden">Auth token: set</p>
+			<p id="whepShareDataOnly" class="whep-share-note hidden">Data-only mode: no local camera or mic is being published.</p>
+		</div>
 		<div id="controlButtons" class="hidden">
-            <div class="controlPositioning">
+	            <div class="controlPositioning">
                 <div id="obsState" class="hidden" >ACTIVE</div>
                 <div id="chatModule" class="hidden">
                     <a target="popup" id="popOutChat" onclick="createPopoutChat();"><i class="las la-external-link-alt"></i></a>
@@ -181,6 +193,23 @@
                     <div id="chatbutton" title="Toggle the Chat" alt="Toggle the Chat" aria-label="Text chat" onmousedown="event.preventDefault(); event.stopPropagation();"  onclick="toggleChat()"  tabindex="2" role="button" aria-pressed="false" onkeyup="enterPressedClick(event,this);"  class="hidden float" style="cursor: pointer;" >
                         <i id="chattoggle" class="toggleSize las la-comment-alt"></i>
                         <div id="chatNotification"></div>
+                    </div>
+                    <div
+                        id="chatlitebutton"
+                        title="Toggle Social Stream Lite overlay (SHIFT-click setup, ALT/CTRL-click TTS)"
+                        alt="Toggle Social Stream Lite overlay"
+                        aria-label="Social Stream Lite overlay"
+                        onmousedown="event.preventDefault(); event.stopPropagation();"
+                        oncontextmenu="event.preventDefault(); openChatLiteSettings(); return false;"
+                        onclick="toggleChatLiteOverlay(event)"
+                        tabindex="2"
+                        role="button"
+                        aria-pressed="false"
+                        onkeyup="enterPressedClick(event,this);"
+                        class="hidden float"
+                        style="cursor: pointer;"
+                    >
+                        <i id="chatlitetoggle" class="toggleSize las la-broadcast-tower"></i>
                     </div>
                     <div id="mutespeakerbutton" onmousedown="handleSpeakerButtonMouseDown(event)" alt="Toggle the speaker output." aria-label="Mute Speaker output" title="Mute the Speaker (ALT + A)" onclick="toggleSpeakerMute()"  tabindex="2" role="button" aria-pressed="false" onkeyup="enterPressedClick(event,this);"  class="hidden float" style="cursor: pointer;" >
                         <i id="mutespeakertoggle" class="toggleSize las la-volume-up" style="position: relative; top: 0.5px;"></i>
@@ -245,12 +274,15 @@
                     <div id="pptbackbutton" onmousedown="event.preventDefault(); event.stopPropagation();" title="Go back a slide" aria-label="Back a slide" alt="Go back a slide" tabindex="2" role="button" aria-pressed="false" onkeyup="enterPressedClick(event,this);" onclick="gobackSlide()" class="hidden float red" style="cursor: pointer;">
                         <i class="toggleSize las la-chevron-left" style="position: relative; right: 1px;" aria-hidden="true"></i>
                     </div>
-                    <div id="pptnextbutton" onmousedown="event.preventDefault(); event.stopPropagation();" title="Next slide" aria-label="Next slide" alt="Next slide" tabindex="2" role="button" aria-pressed="false" onkeyup="enterPressedClick(event,this);" onclick="nextSlide()" class="hidden float" style="cursor: pointer;">
+                    <div id="pptnextbutton" onmousedown="event.preventDefault(); event.stopPropagation();" title="Next slide" aria-label="Next slide" alt="Next slide" tabindex="2" role="button" aria-pressed="false" onkeyup="enterPressedClick(event,this);" onclick="nextSlide()" class="hidden float green" style="cursor: pointer;">
                         <i class="toggleSize las la-chevron-right" style="position: relative; right: 1px;" aria-hidden="true"></i>
                     </div>
                     
                     <div id="recordLocalbutton" onmousedown="event.preventDefault(); event.stopPropagation();"  data-state="0" title="Record your stream to disk" aria-label="Record your stream to disk" alt="Record your stream to disk" tabindex="2" role="button" aria-pressed="false" onkeyup="enterPressedClick(event,this);" onclick="recordLocalVideoToggle();" class="hidden float" style="cursor: pointer;">
                         <i class="toggleSize las la-dot-circle" style="position: relative;" aria-hidden="true"></i>
+                    </div>
+                    <div id="sessionMarkerButton" onmousedown="event.preventDefault(); event.stopPropagation();" title="Drop a session marker" aria-label="Drop a session marker" tabindex="2" role="button" aria-pressed="false" onkeyup="enterPressedClick(event,this);" onclick="dropSessionMarker();" class="hidden float" style="cursor: pointer;">
+                        <i class="toggleSize las la-map-marker-alt" style="position: relative;" aria-hidden="true"></i>
                     </div>
                     <div id="recordLocalScreenbutton" onmousedown="event.preventDefault(); event.stopPropagation();"  data-state="0" title="Stop screen share recording" aria-label="Stop screen share recording" alt="Stop screen recording" tabindex="2" role="button" aria-pressed="false" onkeyup="enterPressedClick(event,this);" onclick="recordLocalScreenStopRecord();" class="hidden float" style="cursor: pointer;">
                         <small>Stop<br>Screen<br>Record</small>
@@ -263,8 +295,15 @@
                     </div>
                 </div>
             </div>
-		</div>
-		<span id="miniTaskBar" style="float: right; bottom: 0px;right:0; position:fixed; display:flex;">
+			</div>
+			<div id="joinRequestPanel" class="hidden">
+				<div class="joinRequestHeader">
+					<strong>Pending Join Requests</strong>
+					<button type="button" onclick="toggleJoinRequestPanel(false)">Close</button>
+				</div>
+				<div id="joinRequestList"></div>
+			</div>
+			<span id="miniTaskBar" style="float: right; bottom: 0px;right:0; position:fixed; display:flex;">
 			<div id="closedList_connectUsers" class="hidden"  onclick="getById('connectUsers').classList.remove('hidden');getById('closedList_connectUsers').classList.add('hidden');">
 				<i class="las la-theater-masks"></i>
 			</div>
@@ -328,11 +367,11 @@
 								<button onclick="getById('videoname1').value = session.generateRandomString();getById('securityLevelRoom').style.display='none';" title="Generate a random room name" class="randomRoomName"><i class="las la-random"></i></button>
 								<div id="securityLevelRoom" style="display:none;margin-top:3px;position:relative;top:3px;font-size:0.8em;"></div>
 							</th>
-							
-						</tr><tr>
-						
-							<th style="text-align:right;" class="labelLarge">
-								<b>
+
+								</tr><tr>
+
+									<th style="text-align:right;" class="labelLarge">
+									<b>
 									<span data-translate="password-input-field">Password</span>: 
 								</b>
 							</th>
@@ -343,12 +382,12 @@
 										<span data-translate="password-input-field">Password</span>: 
 									</b>
 								</div>
-								<input type="text" autocorrect="off" autocapitalize="none" id="passwordRoom" placeholder="Optional room password here" onkeydown="checkStrengthRoom(event, 'securityLevelRoom');" onchange="checkStrengthRoom(event, 'securityLevelRoom');"  onkeyup="enterPressed(event, createRoom);" style="max-width: 431px;width: 100%;font-size: 110%; padding: 5px;" />
-							</th>
-						
-						</tr><tr >
-						
-							<th style="text-align:right; padding: 5px; padding-top: 20px;">
+									<input type="text" autocorrect="off" autocapitalize="none" id="passwordRoom" placeholder="Optional room password here" onkeydown="checkStrengthRoom(event, 'securityLevelRoom');" onchange="checkStrengthRoom(event, 'securityLevelRoom');"  onkeyup="enterPressed(event, createRoom);" style="max-width: 431px;width: 100%;font-size: 110%; padding: 5px;" />
+								</th>
+
+								</tr><tr >
+
+								<th style="text-align:right; padding: 5px; padding-top: 20px;">
 								<input id="broadcastFlag" type="checkbox" title="For large group rooms, this option can reduce the load on remote guests substantially" />
 							</th><th style="text-align:left;; padding-top: 20px;">
 							<b>
@@ -951,12 +990,12 @@
 				<i style="margin-top:30px;font-size:560%;overflow:hidden;" class="largeDarkIcon las la-broadcast-tower"></i>
 				<div class="container-inner">
 					<br />
-					<div id="previewWhepSource"></div>
-					<br />
 					<span data-translate="enter-the-whep-URL-you-wish-to-share">Enter the WHEP URL you wish to share.</span><br /><br />
-					<input type="text" autocorrect="off" id="whepURL" autocapitalize="none" style="margin:10px; border:2px solid; padding:10px; width:400px;" title="Enter an HTTPS URL" multiple/><br />
-					<button onclick="previewIframe(getById('whepURL').value);" >Preview WHEP Stream</button> 
-					<button onclick="this.innerHTML = 'Update'; session.publishIFrame(getById('iframeURL').value);" >Start Sharing</button><br />
+					<input type="url" inputmode="url" spellcheck="false" autocorrect="off" id="whepURL" autocapitalize="none" style="margin:10px; border:2px solid; padding:10px; width:400px;" title="Enter an HTTPS URL" placeholder="https://example.com/path/whep" aria-describedby="whepURLHelp whepPreviewState" oninput="handleWhepUrlInputChange(event)" /><br />
+					<button id="whepPreviewToggle" onclick="toggleWhepTestPreview(event)" aria-pressed="false">Start Test Preview</button>
+					<button id="whepShareStart" onclick="startWhepSharingFromInput(event)" >Start Sharing</button><br />
+					<p id="whepURLHelp" class="whep-share-inline-note">Use https:// URLs. http://localhost is allowed for local testing.</p>
+					<p id="whepPreviewState" class="whep-share-inline-note">Test preview is off.</p>
 					<div class="message-card info">
 						<h1>Usage information</h1>
 						<p></p>
@@ -2122,6 +2161,12 @@
 					</a>
 				</li>
 				<li class="context-menu__item">
+					<a href="#" class="context-menu__link" data-action="DrawOnVideo">
+						<i class="las la-pencil-alt"></i>
+						<span data-translate="draw-on-video">Toggle draw mode</span>
+					</a>
+				</li>
+				<li class="context-menu__item">
 					<a href="#" class="context-menu__link" data-action="ShowStats">
 						<i class="las la-external-link"></i>
 						<span data-translate="show-video-stats">Show Stats</span>
@@ -2251,7 +2296,7 @@
 				<span style="margin: 5px 0 0 0;display:block">	
 					<button data-action-type="remote-global-record" title="Record all the guests" onclick="remoteGlobalRecordStart();">
 						<i class="las la-compact-disc"></i>
-						<span data-translate="remote-global-record">Remote record - start all</span>
+						<span data-translate="remote-global-record-start">Remote record - start all</span>
 					</button>
 					<button data-action-type="remote-global-record" title="Record all the guests" onclick="remoteGlobalRecordStop();">
 						<i class="las la-square"></i>
@@ -2269,8 +2314,8 @@
 				<span></span>
 				<h3 data-translate="buffer-settings">Buffer Settings</h3><br />
 				<div>
-					<span data-translate="change-playout-buffer">Buffer (ms): </span><input style='margin-left: 3px;padding: 2px;width: 60px;' type='number' min='0' max='15000' /><br />
-					<input type='range' min='0' max='15000' /><br />
+					<span data-translate="change-playout-buffer">Buffer (ms): </span><input style='margin-left: 3px;padding: 2px;width: 60px;' type='number' min='0' max='180000' /><br />
+					<input type='range' min='0' max='180000' /><br />
 				</div>
 			</div>
 		</div>
@@ -2509,21 +2554,25 @@
 			<br />
 			<ul id="languagesList" style="list-style-type: none; margin: 0;">
 				<li><a onclick="changeLg('en');toggle(document.getElementById('languages'));" style="cursor: pointer;">English</a></li>
-				<li><a onclick="changeLg('ru');toggle(document.getElementById('languages'));" style="cursor: pointer;" data-tz="Europe/Moscow">Russian</a></li>
-				<li><a onclick="changeLg('fr');toggle(document.getElementById('languages'));" style="cursor: pointer;" data-tz="Europe/Paris">French</a></li>
-				<li><a onclick="changeLg('pt');toggle(document.getElementById('languages'));" style="cursor: pointer;" data-tz="Europe/Lisbon;">Portuguese (Europe)</a></li>
-				<li><a onclick="changeLg('pt-br');toggle(document.getElementById('languages'));" style="cursor: pointer;" data-tz="America/Araguaina">Portuguese (Brazil)</a></li>
-				<li><a onclick="changeLg('it');toggle(document.getElementById('languages'));" style="cursor: pointer;" data-tz="Europe/Rome">Italian</a></li>
-				<li><a onclick="changeLg('de');toggle(document.getElementById('languages'));" style="cursor: pointer;" data-tz="Europe/Berlin">German</a></li>
-				<li><a onclick="changeLg('es');toggle(document.getElementById('languages'));" style="cursor: pointer;" data-tz="Europe/Madrid">Spanish</a></li>
-				<li><a onclick="changeLg('nl');toggle(document.getElementById('languages'));" style="cursor: pointer;" data-tz="Europe/Amsterdam">Dutch</a></li>
-				<li><a onclick="changeLg('tr');toggle(document.getElementById('languages'));" style="cursor: pointer;" data-tz="Europe/Istanbul">Turkish</a></li>
-				<li><a onclick="changeLg('ja');toggle(document.getElementById('languages'));" style="cursor: pointer;" data-tz="Asia/Tokyo">Japanese</a></li>
-				<li><a onclick="changeLg('cn');toggle(document.getElementById('languages'));" style="cursor: pointer;" data-tz="Asia/China">Chinese (中文)</a></li>
-				<li><a onclick="changeLg('cs');toggle(document.getElementById('languages'));" style="cursor: pointer;" data-tz="Europe/Prague">Czech</a></li>
-				<li><a onclick="changeLg('uk');toggle(document.getElementById('languages'));" style="cursor: pointer;" data-tz="Europe/Ukraine">Ukrainian</a></li>
-				<li><a onclick="changeLg('eu');toggle(document.getElementById('languages'));" style="cursor: pointer;" data-tz="Europe/Euskara">Basque</a></li>
-				<li><a onclick="changeLg('pig');toggle(document.getElementById('languages'));" style="cursor: pointer;">Pig Latin</a></li>
+				<li><a onclick="changeLg('de');toggle(document.getElementById('languages'));" style="cursor: pointer;" data-tz="Europe/Berlin">Deutsch</a></li>
+				<li><a onclick="changeLg('fr');toggle(document.getElementById('languages'));" style="cursor: pointer;" data-tz="Europe/Paris">français</a></li>
+				<li><a onclick="changeLg('it');toggle(document.getElementById('languages'));" style="cursor: pointer;" data-tz="Europe/Rome">italiano</a></li>
+				<li><a onclick="changeLg('es');toggle(document.getElementById('languages'));" style="cursor: pointer;" data-tz="Europe/Madrid">español - España</a></li>
+				<li><a onclick="changeLg('pl');toggle(document.getElementById('languages'));" style="cursor: pointer;" data-tz="Europe/Warsaw">polski</a></li>
+				<li><a onclick="changeLg('pt');toggle(document.getElementById('languages'));" style="cursor: pointer;" data-tz="Europe/Lisbon;">português do Portugal</a></li>
+				<li><a onclick="changeLg('pt-br');toggle(document.getElementById('languages'));" style="cursor: pointer;" data-tz="America/Araguaina">português do Brasil</a></li>
+				<li><a onclick="changeLg('nl');toggle(document.getElementById('languages'));" style="cursor: pointer;" data-tz="Europe/Amsterdam">Nederlands</a></li>
+				<li><a onclick="changeLg('tr');toggle(document.getElementById('languages'));" style="cursor: pointer;" data-tz="Europe/Istanbul">Türkçe</a></li>
+				<li><a onclick="changeLg('ja');toggle(document.getElementById('languages'));" style="cursor: pointer;" data-tz="Asia/Tokyo">日本語</a></li>
+				<li><a onclick="changeLg('ar');toggle(document.getElementById('languages'));" style="cursor: pointer;" data-rtl="true" data-tz="Asia/Arabic">العربية</a></li>
+				<li><a onclick="changeLg('cn');toggle(document.getElementById('languages'));" style="cursor: pointer;" data-tz="Asia/China">简体中文 (中国大陆)</a></li>
+				<li><a onclick="changeLg('cs');toggle(document.getElementById('languages'));" style="cursor: pointer;" data-tz="Europe/Prague">čeština</a></li>
+				<li><a onclick="changeLg('ru');toggle(document.getElementById('languages'));" style="cursor: pointer;" data-tz="Europe/Moscow">русский</a></li>
+				<li><a onclick="changeLg('uk');toggle(document.getElementById('languages'));" style="cursor: pointer;" data-tz="Europe/Ukraine">українська</a></li>
+				<li><a onclick="changeLg('eu');toggle(document.getElementById('languages'));" style="cursor: pointer;" data-tz="Europe/Euskara">euskara</a></li>
+				<li><a onclick="changeLg('kr');toggle(document.getElementById('languages'));" style="cursor: pointer;" data-tz="Asia/Korea">한국어</a></li>
+				<li><a onclick="changeLg('pig');toggle(document.getElementById('languages'));" style="cursor: pointer;">Igpay Atinlay</a></li>
+				<li><a onclick="changeLg('hi');toggle(document.getElementById('languages'));" style="cursor: pointer;" data-tz="Asia/India">हिन्दी</a></li>
 			</ul>
 			<br style="line-height: 0.3;" />
 			<i class="las la-exclamation-circle"></i><a href="https://github.com/steveseguin/vdoninja/tree/master/translations" target="_blank" rel="noopener noreferrer" data-translate='add-more-here'>Add More Here!</a>

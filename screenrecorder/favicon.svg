@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="VDO Ninja Screen Recorder">
+  <rect width="64" height="64" rx="14" fill="#0b1218"/>
+  <rect x="4" y="4" width="56" height="56" rx="12" fill="none" stroke="#263844" stroke-width="2"/>
+  <path d="M14 16 L26 48 L32 31 L38 48 L50 16" fill="none" stroke="#58d05f" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="49" cy="49" r="7" fill="#4cb6ff"/>
+  <circle cx="49" cy="49" r="3" fill="#0b1218"/>
+</svg>

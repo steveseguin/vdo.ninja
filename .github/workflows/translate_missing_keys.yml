@@ -1,0 +1,73 @@
+name: Translate missing keys
+
+on:
+  workflow_dispatch:
+    inputs:
+      target_languages:
+        description: "Comma-separated language codes, or all"
+        required: true
+        default: "all"
+      max_keys:
+        description: "Maximum missing keys to fill in this run"
+        required: true
+        default: "50"
+      models:
+        description: "Comma-separated OpenCode Zen model fallback chain"
+        required: true
+        default: "deepseek-v4-flash-free,nemotron-3-super-free,big-pickle,minimax-m2.7"
+      dry_run:
+        description: "Run without writing translation files"
+        required: true
+        type: boolean
+        default: false
+      preview_api_in_dry_run:
+        description: "During dry runs, call the translation API and print a small validated sample"
+        required: true
+        type: boolean
+        default: false
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  translate:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Translate missing keys
+        env:
+          OC_API_KEY: ${{ secrets.OC_API_KEY }}
+          TRANSLATION_API_PROVIDER: opencode
+          TRANSLATION_API_URL: https://opencode.ai/zen/v1/chat/completions
+          TRANSLATION_MODELS: ${{ inputs.models }}
+          TARGET_LANGUAGES: ${{ inputs.target_languages }}
+          MAX_TRANSLATION_KEYS: ${{ inputs.max_keys }}
+          DRY_RUN: ${{ inputs.dry_run && '1' || '0' }}
+          PREVIEW_API_IN_DRY_RUN: ${{ inputs.preview_api_in_dry_run && '1' || '0' }}
+        run: node .github/ci-translateMissingKeys.js
+
+      - name: Create draft pull request
+        if: ${{ !inputs.dry_run }}
+        uses: peter-evans/create-pull-request@v6
+        with:
+          commit-message: "Generate missing translations"
+          branch: generated_missing_translations
+          delete-branch: true
+          title: "[VDONinja Bot] Generated missing translations"
+          body: |
+            Generated missing translation keys using OpenCode Zen.
+
+            - Model chain: `${{ inputs.models }}`
+            - Target languages: `${{ inputs.target_languages }}`
+            - Maximum keys: `${{ inputs.max_keys }}`
+          labels: i18n
+          draft: true

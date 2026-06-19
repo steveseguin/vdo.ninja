@@ -8,12 +8,38 @@
 		<link id="favicon1" rel="icon" type="image/png" sizes="32x32" href="./media/favicon-32x32.png" />
 		<link id="favicon2" rel="icon" type="image/png" sizes="16x16" href="./media/favicon-16x16.png" />
 		<link id="favicon3" rel="icon" href="./media/favicon.ico" />
+		<link id="thumbnailUrl" itemprop="thumbnailUrl" href="./media/vdoNinja_logo_full.png" />
 		<link rel="alternate" type="text/markdown" href="/rawdoc.md" title="Developer and User Documentation">
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<meta name="robots" content="index, follow" />
+		<meta name="author" content="Steve Seguin" />
+		<meta name="copyright" content="&copy; 2024 Steve Seguin" />
+		<meta name="license" content="https://github.com/steveseguin/vdo.ninja/LICENSE.md" />
+		<meta name="sourcecode" content="https://github.com/steveseguin/vdo.ninja" />
+		<meta name="theme-color" content="#0f131d" />
+		<link rel="canonical" href="https://vdo.ninja/speedtest.html" />
 		<title>VDON Speed Test</title>
+		<meta id="metaTitle" name="title" content="VDON Speed Test" />
+		<meta name="description" content="Use the VDO.Ninja WebRTC speed test to measure bitrate, packet loss, and buffer delay before your live production." />
+
+		<meta name="twitter:card" content="summary_large_image">
+		<meta name="twitter:creator" content="@SteveSeguin">
+		<meta name="twitter:title" content="VDON Speed Test">
+		<meta name="twitter:description" content="Measure WebRTC bitrate, packet loss, and delay to validate stream quality with VDO.Ninja.">
+		<meta name="twitter:image" content="https://vdo.ninja/media/vdoNinja_logo_full.png">
+
+		<meta property="og:type" content="website">
+		<meta property="og:url" content="https://vdo.ninja/speedtest.html">
+		<meta property="og:title" content="VDON Speed Test">
+		<meta property="og:description" content="Use the VDO.Ninja WebRTC speed test to measure bitrate, packet loss, and buffer delay before your live production.">
+		<meta property="og:image" content="https://vdo.ninja/media/vdoNinja_logo_full.png">
+		<meta property="og:image:width" content="1200">
+		<meta property="og:image:height" content="630">
+		<meta property="og:site_name" content="VDO.Ninja">
 	</head>
-	<body onload="loadIframe();">
-		<h1>
+	<body onload="applySpeedtestBranding(); loadIframe();">
+		<div id="mainapp">
+		<h1 id="speedtest-title">
 			VDO.Ninja's video streaming quality test
 		</h1>
 		<div id="container">
@@ -41,8 +67,8 @@
 			<h2>Log <i class="las la-clipboard"></i></h2>
 			<ul></ul>
 		</div>
-		<div id="explanation">
-			<h2>How to use</h2>
+			<div id="explanation">
+				<h2>How to use</h2>
 			<ol>
 				<li>Select your camera.</li>
 				<li>Hit start</li>
@@ -62,18 +88,18 @@
 					Good packet loss will not exceed 0.1% and bad packet loss will exceed 1%. You can try testing against different global regions with the drop-down menu below.
 				</li>
 				<li>
-					Check out <a href="https://youtu.be/je2ljlvLzlY" target="_blank" style='color:#DEF;'>this Youtube video</a> for more details and solutions to reduce packet loss if suffering from any.
+					Check out <a href="https://youtu.be/je2ljlvLzlY" target="_blank">this Youtube video</a> for more details and solutions to reduce packet loss if suffering from any.
 				</li>
 			</ol>
 			<h2>Unsupervised guest check option</h2>
-			<span  style="margin:5px;line-height:32px;font-size:110%;">
-				You can also use <a target="_blank" style="color: #CCC;" id="checklink" href='./check.html'>this tool</a> to have a guest perform a system and connection test, with those results being available to you via a result's page for up to a week.<br />
-				You can either ask the remote guest to send you the link to their results page when they complete the test, or you can use <i style="color: #CCF;" >check.html?id=xxx</i> to pre-assign the test ID (ie: xxx), which will have the results then be available at <i style="color: #CCF;" >results.html?id=xxx</i>.
-				<br />If you have questions, <a href="https://discord.vdo.ninja" style="color: #CCC;" target="_blank">join the Discord here</a>.
-			</span>
+			<div class="guest-check">
+				You can also use <a target="_blank" id="checklink" href='./check.html'>this tool</a> to have a guest perform a system and connection test, with those results being available to you via a result's page for up to a week.<br />
+				You can either ask the remote guest to send you the link to their results page when they complete the test, or you can use <code>check.html?id=xxx</code> to pre-assign the test ID (ie: xxx), which will have the results then be available at <code>results.html?id=xxx</code>.
+				<br />If you have questions, <a href="https://discord.vdo.ninja" target="_blank">join the Discord here</a>.
+			</div>
 			<br />
 			<h3>More testing options below</h3>
-			<div id="screen" style="color: #CCC; margin:10px 0;"><a href="./speedtest?screen" style="color: #CCC;">Test screen-sharing performance here</a></div>
+			<div id="screen"><a href="./speedtest?screen">Test screen-sharing performance here</a></div>
 			<div id="remote"></div>
 			<br />
 			Testing location: <select name="turnlist" id="turnlist" onchange="reloadTurn();" title="Select an exact location to test against">
@@ -93,9 +119,15 @@
 			  <option value="sing1">Singapore</option>
 			  <option value="ind1">Mumbai, India</option>
 			  <option value="pol1">Warsaw, Poland</option>
-			</select>
-			<br /><br /><br />
-		</div>
+				</select>
+				<br /><br /><br />
+			</div>
+			<div id="speedtest-legal-footer" aria-label="Legal links">
+				<a href="https://docs.vdo.ninja/help/privacy-and-security-details/vdo.ninja-terms-of-service" target="_blank" rel="noopener" title="Opens in new window">Terms of Service</a>
+				<span class="divider" aria-hidden="true">|</span>
+				<a href="https://docs.vdo.ninja/help/privacy-and-security-details/vdo.ninja-privacy-policy" target="_blank" rel="noopener" title="Opens in new window">Privacy Policy</a>
+			</div>
+			</div>
 		
 
 		<script>
@@ -104,7 +136,17 @@
 				var raw = navigator.userAgent.match(/Chrom(e|ium)\/([0-9]+)\./);
 				return raw ? parseInt(raw[2], 10) : false;
 			}
-			
+
+			function applySpeedtestBranding() {
+				var hostname = window.location.hostname.toLowerCase();
+				if ((hostname === "rtc.ninja") || (hostname === "www.rtc.ninja")) {
+					var heading = document.getElementById("speedtest-title");
+					if (heading) {
+						heading.textContent = "Video streaming test";
+					}
+				}
+			}
+				
 			//if (!getChromiumVersion()){
 			//	alert("This speedtest is optimized for Chromium-based browsers; graphs will not work for Firefox or Safari browsers.");
 			//}
@@ -133,6 +175,67 @@
 			var encoder = "";
 			var Round_Trip_Time_ms = "";
 			var recordResults = false;
+			var speedtestPublisherParams = [
+				"quality", "width", "w", "height", "h", "aspectratio", "ar",
+				"frameRate", "fr", "fps", "maxframerate", "mfr", "mfps",
+				"screensharefps", "ssfps", "screensharequality", "ssq",
+				"codec", "codecs", "videocodec", "h264profile",
+				"videobitrate", "bitrate", "vb",
+				"outboundvideobitrate", "outboundbitrate", "ovb",
+				"maxvideobitrate", "maxbitrate", "maxvb", "mvb",
+				"keyframeinterval", "keyframerate", "keyframe", "fki",
+				"contenthint", "contenttype", "content", "hint",
+				"screensharecontenthint", "sscontenthint", "screensharecontenttype", "sscontent", "sshint"
+			];
+			var speedtestViewerParams = [
+				"codec", "codecs", "videocodec",
+				"videobitrate", "bitrate", "vb",
+				"maxvideobitrate", "maxbitrate", "maxvb", "mvb"
+			];
+			var speedtestParamAliases = [
+				{ alias: "q", target: "quality", conflicts: ["quality"] },
+				{ alias: "resolution", target: "quality", conflicts: ["quality"] },
+				{ alias: "framerate", target: "fr", conflicts: ["frameRate", "fr", "fps"] },
+				{ alias: "targetbitrate", target: "bitrate", conflicts: ["videobitrate", "bitrate", "vb"] },
+				{ alias: "targetvideobitrate", target: "bitrate", conflicts: ["videobitrate", "bitrate", "vb"] }
+			];
+			
+			function hasAddedParam(addedParams, params) {
+				for (var i = 0; i < params.length; i++) {
+					if (addedParams[params[i]]) {
+						return true;
+					}
+				}
+				return false;
+			}
+			
+			function hasUrlParam(params) {
+				for (var i = 0; i < params.length; i++) {
+					if (urlParams.has(params[i])) {
+						return true;
+					}
+				}
+				return false;
+			}
+			
+			function appendSpeedtestParams(srcString, allowedParams) {
+				var addedParams = {};
+				for (var i = 0; i < allowedParams.length; i++) {
+					var param = allowedParams[i];
+					if (urlParams.has(param)) {
+						srcString += "&" + encodeURIComponent(param) + "=" + encodeURIComponent(urlParams.get(param) || "");
+						addedParams[param] = true;
+					}
+				}
+				for (var j = 0; j < speedtestParamAliases.length; j++) {
+					var alias = speedtestParamAliases[j];
+					if (allowedParams.indexOf(alias.target) >= 0 && !hasAddedParam(addedParams, alias.conflicts) && urlParams.has(alias.alias)) {
+						srcString += "&" + encodeURIComponent(alias.target) + "=" + encodeURIComponent(urlParams.get(alias.alias) || "");
+						addedParams[alias.target] = true;
+					}
+				}
+				return srcString;
+			}
 			
 			function copyFunction(copyText) {
 				alert("Log copied to the clipboard.");
@@ -236,7 +339,9 @@
 				iframe.allowfullscreen ="true";
 
 				//iframe.allow = "autoplay";
-				var srcString =	"./?push=" + streamID + "&cleanish&privacy&"+testType+"&audiodevice=0&fullscreen&transparent&remote&speedtest="+zone;
+				var srcString =	"./?push=" + streamID + "&cleanish&privacy";
+				srcString = appendSpeedtestParams(srcString, speedtestPublisherParams);
+				srcString += "&"+testType+"&audiodevice=0&fullscreen&transparent&darkmode&remote&speedtest="+zone;
 				
 				if (urlParams.has("turn")) {
 					srcString = srcString + "&turn=" + urlParams.get("turn");
@@ -281,6 +386,7 @@
 				iframe.allow = "autoplay";
 				// I've removed &privacy from the view link, and left it just on the push link. This hopefully solves compatibility issues
 				var srcString = "./?view=" + streamID + "&cleanish&noaudio&scale=0&speedtest="+zone; // No TURN servers set on the reciever. Don't want to query for TURN servers needlessly.
+				srcString = appendSpeedtestParams(srcString, speedtestViewerParams);
 
 				if (urlParams.has("turn")) {
 					srcString = srcString + "&turn=" + urlParams.get("turn");
@@ -490,7 +596,8 @@
 			var testType= "webcam&css=speedtest.css";
 			if (urlParams.has("screen") || urlParams.has("ss") || urlParams.has("screenshare") || urlParams.has("screentest")) {
 				document.getElementById("screen").innerHTML = '<a href="./speedtest" style="color: #CCC;">Test webcam-streaming performance here</a>';
-				testType = "quality=0&screenshare&css=speedtest.css"
+				var screenQuality = hasUrlParam(["quality", "q", "resolution", "width", "w", "height", "h", "screensharequality", "ssq"]) ? "" : "quality=0&";
+				testType = screenQuality + "screenshare&css=speedtest.css"
 				document.getElementById("checklink").href = "./check.html?screen";
 			}
 			

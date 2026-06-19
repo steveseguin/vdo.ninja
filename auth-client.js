@@ -8,6 +8,7 @@ session.authMode = false;
 session.requireAuth = false;
 session.authToken = null;
 session.authUser = null;
+session.authImplicitRoomSecret = null;
 session.authStreamMapping = {};
 session.handleToStream = {};
 
@@ -28,7 +29,7 @@ async function initAuthentication() {
   }
   
   // Check URL parameters
-  if (urlParams.has("auth") || urlParams.has("requireauth")) {
+  if (urlParams.has("auth") || urlParams.has("requireauth") || urlParams.has("authtoken")) {
     session.authMode = true;
     session.requireAuth = urlParams.has("requireauth");
     
@@ -91,6 +92,8 @@ async function initAuthentication() {
 function showAuthUI(options = {}) {
   const authContainer = document.createElement('div');
   authContainer.id = 'auth-container';
+  const isDirectorAuthURL = session.director || urlParams.has("director") || urlParams.has("dir");
+  const canDisableSSO = isDirectorAuthURL && session.authMode && !session.universalToken && !session.decrypted && !options.hideDisableSSO;
   authContainer.innerHTML = `
     <div class="auth-modal">
       <h2>Sign in to VDO.Ninja</h2>
@@ -112,6 +115,7 @@ function showAuthUI(options = {}) {
       </div>
       
       ${(!session.requireAuth && !options.requireAuth) ? '<button onclick="skipAuth()" class="skip-auth">Continue without signing in</button>' : ''}
+      ${canDisableSSO ? '<div style="display:flex; align-items:center; gap:0.75rem; margin:1rem 0 0.25rem 0; color:var(--text-color-secondary, #aaa); font-size:0.8rem;"><span style="flex:1; border-top:1px solid var(--border-color, #444);"></span><span>or</span><span style="flex:1; border-top:1px solid var(--border-color, #444);"></span></div><button onclick="disableDirectorSSO()" class="skip-auth" style="margin-top:0.5rem;">Enter room without SSO</button><p style="font-size:0.78rem; line-height:1.35; opacity:0.85; margin:0.5rem 0 0 0;">Disables SSO for this director room. New guest links will not include SSO; older SSO guest invites may not join this room.</p>' : ''}
     </div>
   `;
   
@@ -131,6 +135,102 @@ function skipAuth() {
     authContainer.remove();
   }
   session.authSkipped = true;
+}
+
+// Disable SSO for a director URL and reload into the normal room path.
+function disableDirectorSSO() {
+  if (!session.director && !urlParams.has("director") && !urlParams.has("dir")) {
+    return;
+  }
+  session.authSkipped = true;
+  session.authMode = false;
+  session.requireAuth = false;
+  session.authImplicitRoomSecret = null;
+  session.universalToken = null;
+  session.universalViewToken = null;
+  session.pendingRoomSettings = null;
+  session.roomAlias = null;
+  session.realRoomId = null;
+  session.defaultPassword = session.sitePassword;
+  session.password = session.sitePassword;
+  session.hash = false;
+  try {
+    sessionStorage.removeItem('vdo_pending_room_settings');
+    sessionStorage.removeItem('vdo_pending_room_settings_recover');
+    sessionStorage.setItem('vdo_sso_disabled_notice', '1');
+  } catch (e) {}
+
+  try {
+    const authParams = ["auth", "requireauth", "authtoken", "universaltoken"];
+    const url = new URL(window.location.href);
+    authParams.forEach(param => url.searchParams.delete(param));
+    if (url.hash) {
+      var hashString = url.hash.slice(1);
+      var hashPrefix = hashString.charAt(0) === "?" ? "?" : "";
+      if (hashPrefix) {
+        hashString = hashString.slice(1);
+      }
+      hashString = hashString.replace(/\?\?/g, "?").replace(/\?/g, "&").replace(/^&/, "");
+      var hashParams = new URLSearchParams(hashString);
+      authParams.forEach(param => hashParams.delete(param));
+      var cleanHash = hashParams.toString();
+      url.hash = cleanHash ? (hashPrefix || "?") + cleanHash : "";
+    }
+    try {
+      window.removeEventListener("beforeunload", confirmUnload);
+    } catch (e2) {}
+    window.location.replace(url.toString());
+  } catch (e) {
+    try {
+      window.removeEventListener("beforeunload", confirmUnload);
+    } catch (e2) {}
+    window.location.reload();
+  }
+}
+
+// Sign out of SSO
+function ssoSignOut() {
+  session.authToken = null;
+  session.authUser = null;
+  session.authMode = false;
+  session.requireAuth = false;
+  session.authImplicitRoomSecret = null;
+  session.universalViewToken = null;
+  session.universalToken = null;
+  session.userHandle = null;
+  if (session.originalStreamID) {
+    session.streamID = session.originalStreamID;
+  }
+  session.originalStreamID = null;
+  session.authStreamAssigned = false;
+  session.streamSecret = null;
+  // Clear auth-derived room secret state so future joins use normal defaults.
+  session.defaultPassword = session.sitePassword;
+  session.password = session.sitePassword;
+  if ((session.password === undefined) || (session.password === null)) {
+    session.password = session.defaultPassword;
+  }
+  if ((session.password === undefined) || (session.password === null)) {
+    session.password = false;
+  }
+  session.hash = false;
+  session.roomAlias = null;
+  session.realRoomId = null;
+  session.pendingRoomSettings = null;
+  try {
+    sessionStorage.removeItem('vdo_pending_room_settings');
+    sessionStorage.removeItem('vdo_pending_room_settings_recover');
+  } catch (e) {}
+  var passwordInput = document.getElementById('passwordRoom');
+  if (passwordInput) {
+    passwordInput.value = '';
+  }
+  updateStreamIDDisplay();
+  localStorage.removeItem('vdo_auth_token');
+  var btn = document.getElementById('ssoSignOutBtn');
+  if (btn) { btn.style.display = 'none'; }
+  var display = document.getElementById('user-info-display');
+  if (display) { display.remove(); }
 }
 
 // Populate user info from auth token
@@ -165,6 +265,10 @@ async function populateUserInfo() {
       
       // Show user info in UI
       showUserInfo(userInfo);
+
+      // Show sign-out button
+      var btn = document.getElementById('ssoSignOutBtn');
+      if (btn) { btn.style.display = ''; }
     }
   } catch (e) {
     console.error("Failed to get user info:", e);
@@ -181,13 +285,26 @@ function showUserInfo(userInfo) {
   const userDisplay = document.createElement('div');
   userDisplay.id = 'user-info-display';
   userDisplay.className = 'user-info-display';
-  userDisplay.innerHTML = `
-    <img src="${userInfo.avatar || './media/default-avatar.png'}" alt="${userInfo.displayName}">
-    <div class="user-details">
-      <div class="user-name">${userInfo.displayName}</div>
-      <div class="user-handle">${userInfo.userHandle}</div>
-    </div>
-  `;
+
+  const img = document.createElement('img');
+  img.src = userInfo.avatar || './media/default-avatar.png';
+  img.alt = userInfo.displayName || '';
+
+  const details = document.createElement('div');
+  details.className = 'user-details';
+
+  const nameDiv = document.createElement('div');
+  nameDiv.className = 'user-name';
+  nameDiv.textContent = userInfo.displayName || '';
+
+  const handleDiv = document.createElement('div');
+  handleDiv.className = 'user-handle';
+  handleDiv.textContent = userInfo.userHandle || '';
+
+  details.appendChild(nameDiv);
+  details.appendChild(handleDiv);
+  userDisplay.appendChild(img);
+  userDisplay.appendChild(details);
   
   // Add to appropriate location based on current view
   const targetElement = document.querySelector('.header-container') || document.querySelector('.container');
@@ -412,6 +529,31 @@ async function joinRoomWithAuth(roomIdOrAlias) {
         if (result.valid) {
           // Universal token is valid, bypass normal auth
           session.roomid = roomIdOrAlias;
+          // Still need the room secret for handshake-level access
+          try {
+            const secretResp = await fetch(`${AUTH_SERVICE_URL}/api/room/secret/${roomIdOrAlias}`, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ universalToken: session.universalToken })
+            });
+            if (!secretResp.ok) {
+              console.error('Failed to fetch room secret:', secretResp.status);
+              return false;
+            }
+            const secretData = await secretResp.json();
+            if (!secretData.roomPassword) {
+              console.error('Missing room secret in response');
+              return false;
+            }
+            session.authImplicitRoomSecret = secretData.roomPassword;
+            session.password = secretData.roomPassword;
+            // Keep auth room secrets implicit so generated URLs do not expose them.
+            session.defaultPassword = secretData.roomPassword;
+            session.hash = false;
+          } catch (e2) {
+            console.error('Failed to fetch room secret:', e2);
+            return false;
+          }
           return true;
         }
       }
@@ -462,7 +604,42 @@ async function joinRoomWithAuth(roomIdOrAlias) {
   
   session.roomAlias = roomInfo.alias;
   session.realRoomId = roomInfo.roomId;
-  
+
+  // Fetch room secret to enforce SSO access at the handshake level
+  let roomSecretApplied = false;
+  try {
+    const headers = { 'Content-Type': 'application/json' };
+    if (session.authToken) {
+      headers['Authorization'] = `Bearer ${session.authToken}`;
+    }
+    const secretResp = await fetch(`${AUTH_SERVICE_URL}/api/room/secret/${roomIdOrAlias}`, {
+      method: 'POST',
+      headers: headers,
+      body: JSON.stringify({ universalToken: session.universalToken || null })
+    });
+    if (!secretResp.ok) {
+      console.error('Failed to fetch room secret:', secretResp.status);
+    } else {
+      const secretData = await secretResp.json();
+      if (secretData.roomPassword) {
+        session.authImplicitRoomSecret = secretData.roomPassword;
+        session.password = secretData.roomPassword;
+        // Keep auth room secrets implicit so generated URLs do not expose them.
+        session.defaultPassword = secretData.roomPassword;
+        session.hash = false;
+        roomSecretApplied = true;
+      } else {
+        console.error('Missing room secret in response');
+      }
+    }
+  } catch (e) {
+    console.error('Failed to fetch room secret:', e);
+  }
+
+  if (!roomSecretApplied && (roomInfo.requiresAuth || session.universalToken)) {
+    return false;
+  }
+
   return true;
 }
 
@@ -470,16 +647,28 @@ async function joinRoomWithAuth(roomIdOrAlias) {
 function showAccessDeniedUI(roomInfo) {
   const modal = document.createElement('div');
   modal.id = 'auth-container';
-  modal.innerHTML = `
-    <div class="auth-modal access-denied-modal">
-      <h3>Access Denied</h3>
-      <p>${roomInfo.denialReason}</p>
-      ${roomInfo.requestAccessUrl ? 
-        `<button onclick="requestRoomAccess('${roomInfo.roomId}')">Request Access</button>` : 
-        '<button onclick="window.location.reload()">Go Back</button>'
-      }
-    </div>
-  `;
+  const inner = document.createElement('div');
+  inner.className = 'auth-modal access-denied-modal';
+
+  const h3 = document.createElement('h3');
+  h3.textContent = 'Access Denied';
+
+  const p = document.createElement('p');
+  p.textContent = roomInfo.denialReason || '';
+
+  const btn = document.createElement('button');
+  if (roomInfo.requestAccessUrl) {
+    btn.textContent = 'Request Access';
+    btn.onclick = () => requestRoomAccess(roomInfo.roomId);
+  } else {
+    btn.textContent = 'Go Back';
+    btn.onclick = () => window.location.reload();
+  }
+
+  inner.appendChild(h3);
+  inner.appendChild(p);
+  inner.appendChild(btn);
+  modal.appendChild(inner);
   
   document.body.appendChild(modal);
 }
@@ -711,20 +900,6 @@ async function createUniversalToken() {
 
 // Update all solo link displays with new token
 function updateAllSoloLinks() {
-  // Update all solo link inputs and displays
-  document.querySelectorAll('[data-sololink]').forEach(ele => {
-    const uuid = ele.getAttribute('data--u-u-i-d');
-    if (uuid && session.rpcs[uuid]) {
-      const soloLink = soloLinkGenerator(session.rpcs[uuid].streamID, false);
-      if (ele.tagName === 'INPUT') {
-        ele.value = soloLink;
-      } else if (ele.tagName === 'A') {
-        ele.href = soloLink;
-        ele.innerText = soloLink;
-      }
-    }
-  });
-  
   // Update director's own solo link if present
   const directorLink = document.querySelector('#grabDirectorSoloLink');
   if (directorLink && session.streamID) {

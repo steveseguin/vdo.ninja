@@ -1,0 +1,299 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>VDO.Ninja Screen Recorder | Record Tutorials with Webcam Overlay</title>
+  <meta name="description" content="VDO.Ninja Screen Recorder is a Chrome-first tool for recording screen, window, or tab tutorials with webcam overlay, microphone cleanup, and experimental smart editing options.">
+  <meta name="keywords" content="VDO.Ninja, screen recorder, webcam overlay, tutorial recorder, browser recording, Chrome recorder, transcription, silence skip">
+  <meta name="author" content="Steve Seguin">
+  <meta name="robots" content="index, follow">
+  <meta name="theme-color" content="#0b1218">
+  <link rel="canonical" href="https://vdo.ninja/screenrecorder">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="VDO.Ninja Screen Recorder">
+  <meta property="og:description" content="Record tutorials from your screen with webcam overlay and experimental smart editing features.">
+  <meta property="og:url" content="https://vdo.ninja/screenrecorder">
+  <meta property="og:site_name" content="VDO.Ninja">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="VDO.Ninja Screen Recorder">
+  <meta name="twitter:description" content="Screen, webcam, and mic recording for quick tutorial creation.">
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <link rel="shortcut icon" href="favicon.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "SoftwareApplication",
+      "name": "VDO.Ninja Screen Recorder",
+      "applicationCategory": "MultimediaApplication",
+      "operatingSystem": "Chrome Desktop",
+      "url": "https://vdo.ninja/screenrecorder",
+      "description": "Screen recorder with webcam overlay and experimental speech-aware editing features.",
+      "creator": {
+        "@type": "Person",
+        "name": "Steve Seguin"
+      }
+    }
+  </script>
+</head>
+<body>
+  <main class="shell">
+    <header class="topbar">
+      <div class="brand">
+        <div class="brand-mark" aria-hidden="true">VDO</div>
+        <div>
+          <p class="eyebrow">Standalone VDO.Ninja Utility</p>
+          <h1>VDO.Ninja Screen Recorder</h1>
+          <p class="subhead">Create quick tutorials with a polished webcam overlay.</p>
+        </div>
+      </div>
+      <div class="status-strip">
+        <span id="statusPill" class="pill pill-idle">Idle</span>
+        <span id="timerText" class="timer">00:00</span>
+      </div>
+    </header>
+
+    <section class="layout">
+      <aside class="panel controls">
+        <h2>Recording Setup</h2>
+
+        <label class="row">
+          <span>Countdown</span>
+          <select id="countdownSeconds">
+            <option value="0">Off</option>
+            <option value="3" selected>3 seconds</option>
+            <option value="5">5 seconds</option>
+          </select>
+        </label>
+
+        <label class="row">
+          <span>Webcam Shape</span>
+          <select id="webcamShape">
+            <option value="rounded" selected>Rounded Card</option>
+            <option value="rounded-square">Rounded Square Card</option>
+            <option value="circle">Circle Bubble</option>
+          </select>
+        </label>
+
+        <label class="row">
+          <span>Webcam Size</span>
+          <input id="webcamSize" type="range" min="8" max="42" value="28">
+        </label>
+
+        <label class="row">
+          <span>Webcam Border</span>
+          <select id="webcamBorder">
+            <option value="green" selected>Green (Default)</option>
+            <option value="blue">Blue</option>
+            <option value="white">White</option>
+            <option value="none">None</option>
+          </select>
+        </label>
+
+        <label class="row">
+          <span>Aspect Ratio</span>
+          <select id="aspectRatio">
+            <option value="16:9" selected>16:9 Landscape</option>
+            <option value="9:16">9:16 Portrait</option>
+            <option value="1:1">1:1 Square</option>
+          </select>
+        </label>
+
+        <label class="row">
+          <span>Output Resolution</span>
+          <select id="outputResolution">
+            <option value="1280x720">HD 720p</option>
+            <option value="1920x1080" selected>Full HD 1080p</option>
+            <option value="2560x1440">QHD 1440p</option>
+            <option value="3840x2160">UHD 4K (Experimental)</option>
+          </select>
+        </label>
+
+        <label class="row">
+          <span>Recording Quality</span>
+          <select id="recordingQuality">
+            <option value="smaller">Smaller File</option>
+            <option value="balanced" selected>Balanced</option>
+            <option value="high">High Detail</option>
+            <option value="master">Archive / Master</option>
+          </select>
+        </label>
+
+        <label class="row">
+          <span>Video Codec</span>
+          <select id="recordingCodec">
+            <option value="auto" selected>Auto (Stable)</option>
+            <option value="vp8">VP8 WebM</option>
+            <option value="vp9">VP9 WebM</option>
+            <option value="h264">H.264 / MP4</option>
+          </select>
+        </label>
+        <p id="outputQualityHint" class="hint hint-compact">Full HD 1080p at about 18.0 Mbps video target bitrate.</p>
+
+        <div class="toggle-grid">
+          <label><input id="includeWebcam" type="checkbox" checked> Webcam</label>
+          <label><input id="includeMic" type="checkbox" checked> Microphone</label>
+          <label><input id="includeSystemAudio" type="checkbox"> System Audio</label>
+          <label><input id="showCropGuides" type="checkbox"> Show Crop Guides</label>
+          <div class="toggle-help-row">
+            <label><input id="faceCrop" type="checkbox"> Auto Face Crop (Exp)</label>
+            <button id="faceCropInfoBtn" class="help-dot" type="button" aria-label="Auto Face Crop help" title="Auto Face Crop help">?</button>
+            <span class="help-tooltip" role="tooltip">Enable Webcam, then toggle Auto Face Crop. Requires browser FaceDetector support (best on Chromium browsers).</span>
+          </div>
+        </div>
+        <p id="faceCropStatus" class="hint hint-compact">Enable Webcam and Auto Face Crop for experimental face-focused framing.</p>
+
+        <h3>Input Devices</h3>
+        <div class="row row-button">
+          <span>Detected Devices</span>
+          <button id="refreshDevicesBtn" class="btn btn-muted btn-inline" type="button">Refresh</button>
+        </div>
+
+        <label class="row">
+          <span>Camera</span>
+          <select id="cameraDevice">
+            <option value="">Default camera</option>
+          </select>
+        </label>
+
+        <label class="row">
+          <span>Microphone</span>
+          <select id="micDevice">
+            <option value="">Default microphone</option>
+          </select>
+        </label>
+
+        <div id="micLevelRow" class="mic-level-row" style="display:none">
+          <span>Mic Level</span>
+          <div class="mic-level-track">
+            <div id="micLevelBar" class="mic-level-bar"></div>
+          </div>
+        </div>
+
+        <p id="deviceHint" class="hint hint-compact">If names are missing, click Refresh and allow access.</p>
+
+        <h3>Mic Processing</h3>
+        <div class="toggle-grid">
+          <label><input id="voiceIsolation" type="checkbox" checked> Voice Isolation</label>
+          <label><input id="autoGainControl" type="checkbox" checked> Auto Gain</label>
+          <label><input id="noiseSuppression" type="checkbox"> Noise Suppression</label>
+          <label><input id="echoCancellation" type="checkbox" checked> Echo Cancellation</label>
+          <label><input id="micCompressor" type="checkbox" checked> Vocal Compressor</label>
+          <label><input id="bassBoost250" type="checkbox"> 250 Hz Warmth Boost (+6 dB)</label>
+        </div>
+        <p class="hint hint-compact">Voice Isolation is preferred when supported. Use the 250 Hz boost to add warmth to thinner voices.</p>
+
+        <h3>Experimental Editing</h3>
+        <div class="toggle-grid toggle-grid-emphasis">
+          <label id="autoSkipSilenceLabel" class="toggle-option">
+            <span class="toggle-option-main">
+              <input id="autoSkipSilence" type="checkbox">
+              <span>Auto Skip Silence</span>
+            </span>
+            <span id="autoSkipSilenceState" class="toggle-state toggle-state-off">Off</span>
+          </label>
+          <label id="enableTranscriptionLabel" class="toggle-option">
+            <span class="toggle-option-main">
+              <input id="enableTranscription" type="checkbox">
+              <span>Live Transcription</span>
+            </span>
+            <span id="enableTranscriptionState" class="toggle-state toggle-state-off">Off</span>
+          </label>
+        </div>
+        <p id="smartEditStatus" class="hint hint-compact smart-edit-status" aria-live="polite">No smart editing tools armed.</p>
+
+        <label class="row">
+          <span>Silence Window</span>
+          <select id="silenceSeconds">
+            <option value="1.5">1.5 seconds</option>
+            <option value="2" selected>2 seconds</option>
+            <option value="2.5">2.5 seconds</option>
+            <option value="3">3 seconds</option>
+          </select>
+        </label>
+
+        <label class="row">
+          <span>Silence Threshold <strong id="silenceThresholdValue">-47 dB</strong></span>
+          <input id="silenceThreshold" type="range" min="-65" max="-35" value="-47">
+        </label>
+
+        <label class="row">
+          <span>Transcript Language</span>
+          <select id="transcriptionLang">
+            <option value="en-US" selected>English (US)</option>
+            <option value="en-GB">English (UK)</option>
+            <option value="es-ES">Spanish</option>
+            <option value="fr-FR">French</option>
+            <option value="de-DE">German</option>
+          </select>
+        </label>
+
+        <p id="supportHint" class="hint">Move webcam by dragging it in the preview.</p>
+      </aside>
+
+      <section class="panel preview-area">
+        <div class="preview-frame">
+          <canvas id="previewCanvas" width="1280" height="720" aria-label="Recording Preview"></canvas>
+          <div id="countdownOverlay" class="countdown hidden">3</div>
+        </div>
+        <div class="preview-toolbar">
+          <div class="preview-modes">
+            <button id="showScreenBtn" class="btn btn-muted btn-inline mode-btn mode-active" type="button">Screen + Camera</button>
+            <button id="showCameraBtn" class="btn btn-muted btn-inline mode-btn" type="button">Camera Fullscreen</button>
+          </div>
+          <div class="actions">
+            <button id="startBtn" class="btn btn-primary">Start Recording</button>
+            <button id="switchSourceBtn" class="btn btn-muted" disabled>Switch Source</button>
+            <button id="pauseBtn" class="btn btn-muted" disabled>Pause</button>
+            <button id="markerBtn" class="btn btn-muted" type="button" disabled title="Add a cut marker (M)">Marker</button>
+            <button id="restartBtn" class="btn btn-muted" disabled>Restart Take</button>
+            <button id="stopBtn" class="btn btn-danger" disabled>Stop</button>
+          </div>
+        </div>
+        <p class="hint">Tip: capture a single tab for best browser audio reliability. Chromium desktop has the broadest feature support.</p>
+        <p id="mobileWarning" class="hint" style="display:none;color:#f4a623;font-weight:bold;">Note: Screen recording is not supported on mobile browsers (iOS/Android). This is a browser limitation — mobile browsers do not provide the getDisplayMedia API needed for screen capture. Please use a desktop/laptop browser instead.</p>
+
+        <section id="downloadsPanel" class="downloads hidden">
+          <h2>Exports</h2>
+          <ul id="downloadList"></ul>
+        </section>
+      </section>
+    </section>
+
+    <section id="transcriptPanel" class="panel transcript hidden">
+      <div class="transcript-head">
+        <h2>Transcript</h2>
+        <button id="downloadTranscriptBtn" class="btn btn-muted" disabled>Download .txt</button>
+      </div>
+      <p class="hint">Experimental transcription. If auto-skip silence is enabled, pauses are removed during recording.</p>
+      <div id="transcriptFeed" class="transcript-feed"></div>
+    </section>
+
+  </main>
+
+
+  <div id="faceCropHelpModal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="faceCropHelpTitle">
+    <div class="modal-card">
+      <div class="modal-head">
+        <h2 id="faceCropHelpTitle">Auto Face Crop Help</h2>
+        <button id="faceCropHelpClose" class="btn btn-muted btn-inline" type="button">Close</button>
+      </div>
+      <p class="modal-copy">Auto Face Crop attempts to keep your face centered in the webcam overlay during preview and recording.</p>
+      <ol class="modal-steps">
+        <li>Turn on <strong>Webcam</strong>.</li>
+        <li>Enable <strong>Auto Face Crop (Exp)</strong>.</li>
+        <li>Click <strong>Prepare Sources</strong>, allow camera access, then choose your display source.</li>
+      </ol>
+      <p class="modal-copy">If Auto Face Crop is disabled, your browser likely does not expose FaceDetector for this page. Use a current Chromium browser for the best chance of support.</p>
+    </div>
+  </div>
+  <script type="module" src="app.js"></script>
+</body>
+</html>
+
+
+

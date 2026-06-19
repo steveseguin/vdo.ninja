@@ -312,6 +312,73 @@ function guestTargetedAPI(target) {
             },
             result: value => ({ "action": "muteScene", target, value })
         },
+        ptzZoom: {
+            options: [0.1, -0.1],
+            labels: ["Zoom +", "Zoom -"],
+            input: {
+                title: "ptzZoom",
+                type: "range",
+                min: -1,
+                max: 1,
+                step: 0.01,
+                value: 0
+            },
+            result: value => ({ "action": "ptzZoom", target, value: parseFloat(value) || 0 })
+        },
+        ptzPan: {
+            options: [-0.1, 0.1],
+            labels: ["Pan Left", "Pan Right"],
+            input: {
+                title: "ptzPan",
+                type: "range",
+                min: -1,
+                max: 1,
+                step: 0.01,
+                value: 0
+            },
+            result: value => ({ "action": "ptzPan", target, value: parseFloat(value) || 0 })
+        },
+        ptzTilt: {
+            options: [0.1, -0.1],
+            labels: ["Tilt Up", "Tilt Down"],
+            input: {
+                title: "ptzTilt",
+                type: "range",
+                min: -1,
+                max: 1,
+                step: 0.01,
+                value: 0
+            },
+            result: value => ({ "action": "ptzTilt", target, value: parseFloat(value) || 0 })
+        },
+        ptzFocus: {
+            options: [0.1, -0.1],
+            labels: ["Focus +", "Focus -"],
+            input: {
+                title: "ptzFocus",
+                type: "range",
+                min: -1,
+                max: 1,
+                step: 0.01,
+                value: 0
+            },
+            result: value => ({ "action": "ptzFocus", target, value: parseFloat(value) || 0 })
+        },
+        ptzAutofocus: {
+            options: [true, false],
+            labels: ["Autofocus On", "Autofocus Off"],
+            result: value => ({ "action": "ptzAutofocus", target, value })
+        },
+        remoteMirror: {
+            options: [true, false, "toggle"],
+            labels: ["Mirror On", "Mirror Off", "Mirror Toggle"],
+            result: value => ({ "action": "remoteMirror", target, value })
+        },
+        remoteRotate: {
+            options: [true, false, 90, 180, 270],
+            labels: ["Rotate +90", "Reset Rotation", "Set 90", "Set 180", "Set 270"],
+            result: value => ({ "action": "remoteRotate", target, value })
+        },
         volume: {
             input: {
                 title: "volume",

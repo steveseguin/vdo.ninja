@@ -16,7 +16,7 @@
 		
 		</script>
 		<script>
-			if (window.location.search.includes('podcast')) {
+			if (new URLSearchParams(window.location.search).has('podcast')) {
 				document.write('<style>#directorlayout,#controlButtons{display:none!important}</style>');
 			}
 		</script>
@@ -48,7 +48,7 @@
 		
 		<meta name="msapplication-TileColor" content="#da532c" />
 		<meta name="theme-color" content="#0f131d" />
-		<link rel="stylesheet" href="./main.css?ver=4035" />
+		<link rel="stylesheet" href="./main.css?ver=4040" />
 		<script type="text/javascript" crossorigin="anonymous" src="./thirdparty/adapter.js"></script>
 		
 		<link rel="shortcut icon" href="data:image/x-icon;," type="image/x-icon" />
@@ -91,7 +91,7 @@
 		</span>
 		<script type="text/javascript" crossorigin="anonymous"  src="./thirdparty/CodecsHandler.js?ver=29"></script>
 		<script type="text/javascript" crossorigin="anonymous" src="./thirdparty/aes.js"></script>
-		<script type="text/javascript" crossorigin="anonymous" src="./webrtc.js?ver=912"></script>
+		<script type="text/javascript" crossorigin="anonymous" src="./webrtc.js?ver=933"></script>
 		<input id="zoomSlider" type="range" style="display: none;" />
 		<span id="electronDragZone" style="display:none;pointer-events: none; z-index:-10; position:absolute;top:0;left:0;width:100%;height:2%;min-height:20px;"></span>
 		<div id="header">
@@ -184,6 +184,18 @@
 			<div class="resizer"></div>
 		</div>
 		<div id="activeShares"></div>
+		<div id="whepShareStatus" class="message-card info hidden" role="status" aria-live="polite" aria-atomic="true">
+			<button id="whepShareDismiss" type="button" class="whep-share-dismiss" onclick="dismissWhepShareStatus(event)" title="Hide WHEP share status" aria-label="Hide WHEP share status">x</button>
+			<h1>WHEP share active</h1>
+			<p id="whepShareDescription">Advertising a WHEP source to room peers via the data channel.</p>
+			<div class="whep-share-row">
+				<input id="whepShareLink" type="text" readonly aria-label="Shared WHEP URL" />
+				<button id="whepShareCopy" onclick="copyFunction(getById('whepShareLink'), event)">Copy</button>
+				<a id="whepShareOpen" href="#" target="_blank" rel="noopener">Open</a>
+			</div>
+			<p id="whepShareTokenNote" class="whep-share-note hidden">Auth token: set</p>
+			<p id="whepShareDataOnly" class="whep-share-note hidden">Data-only mode: no local camera or mic is being published.</p>
+		</div>
 		<div id="controlButtons" class="hidden">
 			<div class="controlPositioning">
                 <div id="subControlButtons">
@@ -210,6 +222,23 @@
                     <div id="chatbutton" title="Toggle the Chat" alt="Toggle the Chat" aria-label="Text chat" onmousedown="event.preventDefault(); event.stopPropagation();"  onclick="toggleChat()"  tabindex="2" role="button" aria-pressed="false" onkeyup="enterPressedClick(event,this);"  class="hidden float" style="cursor: pointer;" >
                         <i id="chattoggle" class="toggleSize las la-comment-alt"></i>
                         <div id="chatNotification"></div>
+                    </div>
+                    <div
+                        id="chatlitebutton"
+                        title="Toggle Social Stream Lite overlay (SHIFT-click setup, ALT/CTRL-click TTS)"
+                        alt="Toggle Social Stream Lite overlay"
+                        aria-label="Social Stream Lite overlay"
+                        onmousedown="event.preventDefault(); event.stopPropagation();"
+                        oncontextmenu="event.preventDefault(); openChatLiteSettings(); return false;"
+                        onclick="toggleChatLiteOverlay(event)"
+                        tabindex="2"
+                        role="button"
+                        aria-pressed="false"
+                        onkeyup="enterPressedClick(event,this);"
+                        class="hidden float"
+                        style="cursor: pointer;"
+                    >
+                        <i id="chatlitetoggle" class="toggleSize las la-broadcast-tower"></i>
                     </div>
                     <div id="mutespeakerbutton" onmousedown="handleSpeakerButtonMouseDown(event)" alt="Toggle the speaker output." aria-label="Mute Speaker output" title="Mute the Speaker (ALT + A)" onclick="toggleSpeakerMute()"  tabindex="2" role="button" aria-pressed="false" onkeyup="enterPressedClick(event,this);"  class="hidden float" style="cursor: pointer;" >
                         <i id="mutespeakertoggle" class="toggleSize las la-volume-up" style="position: relative; top: 0.5px;"></i>
@@ -278,12 +307,15 @@
                     <div id="pptbackbutton" onmousedown="event.preventDefault(); event.stopPropagation();" title="Go back a slide" aria-label="Back a slide" alt="Go back a slide" tabindex="2" role="button" aria-pressed="false" onkeyup="enterPressedClick(event,this);" onclick="gobackSlide()" class="hidden float red" style="cursor: pointer;">
                         <i class="toggleSize las la-chevron-left" style="position: relative; right: 1px;" aria-hidden="true"></i>
                     </div>
-                    <div id="pptnextbutton" onmousedown="event.preventDefault(); event.stopPropagation();" title="Next slide" aria-label="Next slide" alt="Next slide" tabindex="2" role="button" aria-pressed="false" onkeyup="enterPressedClick(event,this);" onclick="nextSlide()" class="hidden float" style="cursor: pointer;">
+                    <div id="pptnextbutton" onmousedown="event.preventDefault(); event.stopPropagation();" title="Next slide" aria-label="Next slide" alt="Next slide" tabindex="2" role="button" aria-pressed="false" onkeyup="enterPressedClick(event,this);" onclick="nextSlide()" class="hidden float green" style="cursor: pointer;">
                         <i class="toggleSize las la-chevron-right" style="position: relative; right: 1px;" aria-hidden="true"></i>
                     </div>
                     
                     <div id="recordLocalbutton" onmousedown="event.preventDefault(); event.stopPropagation();"  data-state="0" title="Record your stream to disk" aria-label="Record your stream to disk" alt="Record your stream to disk" tabindex="2" role="button" aria-pressed="false" onkeyup="enterPressedClick(event,this);" onclick="recordLocalVideoToggle();" class="hidden float" style="cursor: pointer;">
                         <i class="toggleSize las la-dot-circle" style="position: relative;" aria-hidden="true"></i>
+                    </div>
+                    <div id="sessionMarkerButton" onmousedown="event.preventDefault(); event.stopPropagation();" title="Drop a session marker" aria-label="Drop a session marker" tabindex="2" role="button" aria-pressed="false" onkeyup="enterPressedClick(event,this);" onclick="dropSessionMarker();" class="hidden float" style="cursor: pointer;">
+                        <i class="toggleSize las la-map-marker-alt" style="position: relative;" aria-hidden="true"></i>
                     </div>
                     <div id="recordLocalScreenbutton" onmousedown="event.preventDefault(); event.stopPropagation();"  data-state="0" title="Stop screen share recording" aria-label="Stop screen share recording" alt="Stop screen recording" tabindex="2" role="button" aria-pressed="false" onkeyup="enterPressedClick(event,this);" onclick="recordLocalScreenStopRecord();" class="hidden float" style="cursor: pointer;">
                         <small>Stop<br>Screen<br>Record</small>
@@ -296,8 +328,15 @@
                     </div>
                 </div>
             </div>
-		</div>
-		<span id="miniTaskBar" style="float: right; bottom: 0px;right:0; position:fixed; display:flex;">
+			</div>
+			<div id="joinRequestPanel" class="hidden">
+				<div class="joinRequestHeader">
+					<strong>Pending Join Requests</strong>
+					<button type="button" onclick="toggleJoinRequestPanel(false)">Close</button>
+				</div>
+				<div id="joinRequestList"></div>
+			</div>
+			<span id="miniTaskBar" style="float: right; bottom: 0px;right:0; position:fixed; display:flex;">
 			<div id="closedList_connectUsers" class="hidden"  onclick="getById('connectUsers').classList.remove('hidden');getById('closedList_connectUsers').classList.add('hidden');">
 				<i class="las la-theater-masks"></i>
 			</div>
@@ -366,10 +405,10 @@
 									<div id="securityLevelRoom" style="display:none;margin-top:3px;position:relative;top:3px;font-size:0.8em;"></div>
 								</th>
 							</tr>
-							<tr>
-								<th style="text-align:right;" class="labelLarge">
-									<b>
-										<span data-translate="password-input-field">Password</span>: 
+								<tr>
+									<th style="text-align:right;" class="labelLarge">
+										<b>
+											<span data-translate="password-input-field">Password</span>:
 									</b>
 								</th>
 								<th class="labelSmall"></th>
@@ -379,10 +418,11 @@
 											<span data-translate="password-input-field">Password</span>: 
 										</b>
 									</div>
-									<input type="text" autocorrect="off" autocapitalize="none" id="passwordRoom" placeholder="Optional room password here" onkeydown="checkStrengthRoom(event, 'securityLevelRoom');" onchange="checkStrengthRoom(event, 'securityLevelRoom');"  onkeyup="enterPressed(event, createRoom);" style="max-width: 431px;width: 100%;font-size: 110%; padding: 5px;" />
-								</th>
-							</tr>
-							<tr >
+										<input type="text" autocorrect="off" autocapitalize="none" id="passwordRoom" placeholder="Optional room password here" onkeydown="checkStrengthRoom(event, 'securityLevelRoom');" onchange="checkStrengthRoom(event, 'securityLevelRoom');"  onkeyup="enterPressed(event, createRoom);" style="max-width: 431px;width: 100%;font-size: 110%; padding: 5px;" />
+										<div id="passwordRoomSSONote" style="display:none; margin-top:6px; font-size:0.85em; opacity:0.9;">SSO rooms use a managed room secret. Manual room password is disabled.</div>
+									</th>
+								</tr>
+								<tr >
 							
 								<th style="text-align:right; padding: 5px; padding-top: 20px;">
 									<input id="broadcastFlag" type="checkbox" title="For large group rooms, this option can reduce the load on remote guests substantially" />
@@ -421,16 +461,16 @@
 							</tr>
 							<tr>
 								<th style="text-align:right; padding: 5px; vertical-align: top;">
-									<input id="useSSOForRoom" type="checkbox" onchange="toggleSSOOptions(this.checked)" title="Use SSO to manage access for this room. You will be asked to sign in.">
+									<input id="useSSOForRoom" type="checkbox" autocomplete="off" onchange="toggleSSOOptions(this.checked)" title="Use SSO to manage access for this room. You will be asked to sign in.">
 								</th>
 								<th style="text-align:left;">
 									<b>
 										<span title="Use SSO to manage access for this room. As director, you will sign in first; guest access can be Public, Require SSO, or Allowlist.">Use SSO for this room</span>
 									</b>
-									<div id="ssoOptions" class="sso-options-panel" style="display:none;">
-										<div style="margin-bottom:6px; font-weight:600;">Guest access:</div>
-										<label style="display:block; margin:4px 0;">
-											<input type="radio" name="ssoAccessMode" value="public" checked onclick="document.getElementById('preAllowlistRow').style.display='none'">
+										<div id="ssoOptions" class="sso-options-panel" style="display:none;">
+											<div style="margin-bottom:6px; font-weight:600;">Guest access:</div>
+											<label style="display:block; margin:4px 0;">
+												<input type="radio" name="ssoAccessMode" value="public" checked onclick="document.getElementById('preAllowlistRow').style.display='none'">
 											<span>Public (no sign-in required for guests)</span>
 										</label>
 										<label style="display:block; margin:4px 0;">
@@ -444,16 +484,26 @@
 										<div id="preAllowlistRow" style="display:none; margin-top:8px;">
 											<label for="preAllowlistCSV" style="display:block; margin-bottom:4px;">Allowed list (comma-separated; use @handle or email:*@domain.com)</label>
 											<input id="preAllowlistCSV" type="text" class="sso-options-input" placeholder="@alice, email:*@company.com">
+											</div>
+											<div class="sso-options-note">You can change these later in Room Settings.</div>
 										</div>
-										<div class="sso-options-note">You can change these later in Room Settings.</div>
-									</div>
-								</th>
-							</tr>
-							</table>
-							<button onclick="createRoom()"  class="gobutton gowebcam" style="width: 470px;display: block;margin: 20px auto;" alt="Enter the room as the group's director" title="You'll enter as the room's director">
+										</th>
+									</tr>
+									<tr>
+										<th style="text-align:right; padding: 5px;">
+											<input id="requireApprovalForRoom" type="checkbox" autocomplete="off" title="Require the director to approve guests before they can join this room.">
+										</th>
+										<th style="text-align:left;">
+											<b>
+												<span title="Require the director to approve guests before they can join this room.">Require director approval before guests can join</span>
+											</b>
+										</th>
+									</tr>
+									</table>
+							<button onclick="createRoom()"  class="gobutton gowebcam" style="width: 480px;display: block;margin: 20px auto;" alt="Enter the room as the group's director" title="You'll enter as the room's director">
 								<span data-translate="enter-the-rooms-control">Enter the room's Control Center in the director's role</span>
 							</button>
-							<button class="roomnotes" style="display: block;display: block;margin: auto;" onclick="toggle(document.getElementById('roomnotes'),this);">
+							<button class="roomnotes roomnotes-toggle" style="display: block;margin: auto;" onclick="toggle(document.getElementById('roomnotes'),this);">
 								<span data-translate="show-tips">Show me some tips..</span>
 							</button>
 							
@@ -464,19 +514,19 @@
 									<li>Disabling video sharing between guests will improve performance</li>
 									<li>Invite only guests to the room that you trust.</li>
 									<li>The "Recording" option is considered experimental.</li>
-									<li><a href="https://params.vdo.ninja" style="color:black;"><u>Advanced URL parameters</u></a> are available to customize rooms.</li>
+									<li><a href="https://params.vdo.ninja"><u>Advanced URL parameters</u></a> are available to customize rooms.</li>
 								</span>
 							</ul>
 						</span>
 						
 						<span class="section hidden" id="lastSavedRoom">
 							<label>A previous session was found using room: <b id="lastSavedRoomName">*UNDEFINED*</b></label>
-							<button id="goToLastSavedRoom" style="width: 470px;display: block;margin:5px auto;" class="gobutton gowebcam" alt="Enter the room with the previous room settings" title="Enter director room with previous settings">Load the previous session</button>
+							<button id="goToLastSavedRoom" style="width: 480px;display: block;margin:5px auto;" class="gobutton gowebcam" alt="Enter the room with the previous room settings" title="Enter director room with previous settings">Load the previous session</button>
 						</span>
 						
 						<span class="section">
 							<i data-translate="looking-to-just-chat-and-not-direct">Looking to just chat and not direct?</i>
-							<button onclick="jumptoroom2()" class="gobutton gowebcam" style="width: 470px;display: block;margin: 5px auto" alt="Enter the room as the group's director" title="You'll enter as the room's director">
+							<button onclick="jumptoroom2()" class="gobutton gowebcam" style="width: 480px;display: block;margin: 5px auto" alt="Enter the room as the group's director" title="You'll enter as the room's director">
 								<span data-translate="join-the-room-basic">Join the room as a Participant, rather than a director</span>
 							</button>
 						</span>
@@ -637,6 +687,7 @@
 						<select id="effectSelector" alt="Digital video effect options" onchange="effectsDynamicallyUpdate(event, this);">
 							<option value="0" data-translate="no-effects-applied">No effects applied</option>
 							<option value="3" data-translate="blurred-background">Blurred background</option>
+							<option value="16">Background transparent</option>
 							<option value="13" class="hidden" disabled data-translate="blurred-background-2">Blurred background 2 🧪</option>
 							<option value="4" data-translate="digital-greenscreen">Digital greenscreen</option>    
 							<option value="5" data-translate="virtual-background">Virtual background</option>
@@ -1114,20 +1165,20 @@
 				<i style="margin-top:30px;font-size:600%;overflow:hidden;" class="largeDarkIcon las la-broadcast-tower"></i>
 			</div>
 			
-			<div id="container-16" class="column columnfade pointer card hidden" style=" overflow-y: auto;">
-				<h2><span data-translate="share-whepsrc">Share via WHEP</span></h2>
-				<i style="margin-top:30px;font-size:560%;overflow:hidden;" class="largeDarkIcon las la-broadcast-tower"></i>
-				<div class="container-inner">
-					<br />
-					<div id="previewWhepSource"></div>
-					<br />
-					<span data-translate="enter-the-whep-URL-you-wish-to-share">Enter the WHEP URL you wish to share.</span><br /><br />
-					<input type="text" autocorrect="off" id="whepURL" autocapitalize="none" style="margin:10px; border:2px solid; padding:10px; width:400px;" title="Enter an HTTPS URL" multiple/><br />
-					<button onclick="previewIframe(getById('whepURL').value);" >Preview WHEP Stream</button> 
-					<button onclick="this.innerHTML = 'Update'; session.publishIFrame(getById('whepURL').value);" >Start Sharing</button><br />
-					<div class="message-card info">
-						<h1>Usage information</h1>
-						<p></p>
+				<div id="container-16" class="column columnfade pointer card hidden" style=" overflow-y: auto;">
+					<h2><span data-translate="share-whepsrc">Share via WHEP</span></h2>
+					<i style="margin-top:30px;font-size:560%;overflow:hidden;" class="largeDarkIcon las la-broadcast-tower"></i>
+					<div class="container-inner">
+						<br />
+						<span data-translate="enter-the-whep-URL-you-wish-to-share">Enter the WHEP URL you wish to share.</span><br /><br />
+						<input type="url" inputmode="url" spellcheck="false" autocorrect="off" id="whepURL" autocapitalize="none" style="margin:10px; border:2px solid; padding:10px; width:400px;" title="Enter an HTTPS URL" placeholder="https://example.com/path/whep" aria-describedby="whepURLHelp whepPreviewState" oninput="handleWhepUrlInputChange(event)" /><br />
+						<button id="whepPreviewToggle" onclick="toggleWhepTestPreview(event)" aria-pressed="false">Start Test Preview</button>
+						<button id="whepShareStart" onclick="startWhepSharingFromInput(event)" >Start Sharing</button><br />
+						<p id="whepURLHelp" class="whep-share-inline-note">Use https:// URLs. http://localhost is allowed for local testing.</p>
+						<p id="whepPreviewState" class="whep-share-inline-note">Test preview is off.</p>
+						<div class="message-card info">
+							<h1>Usage information</h1>
+							<p></p>
 						<ul style="text-align: left;">
 						<li>WHEP sources are expected to support multiple viewers; simulcasting will be used if possible.</li>
 						<li>Remote URLs must allows cross-origin requests (CORS), along with having SSL (https).</li>
@@ -1179,7 +1230,7 @@
 								<span style="color:#daad09;">Welcome to VDO Ninja! We've rebranded!  Nothing else is changing and we're staying 100% free.</span>
 							</h4>
 							<br />
-							<span title="Made in Canada">❄️</span> Site last updated on January 18th. ToS also updated; <a target="_blank" href="https://github.com/steveseguin/vdo.ninja/commit/ee803984d4b1f7fc9174c4ddd92e172007150adc">changes here</a>. Development <a target="_blank" title="Open a page with recent VDO.Ninja development and feature updates" href="https://updates.vdo.ninja/">updates are here.</a> 
+							<span title="Made in Canada">🌱</span> Site last updated on May 10th. Development <a target="_blank" title="Open a page with recent VDO.Ninja development and feature updates" href="https://updates.vdo.ninja/">updates are here.</a> 
 							<br />
 							<br />
 							<h3>
@@ -1270,7 +1321,7 @@
 					<span>
 				</div>
 			</div><div class='directorContainer' id="customizeLinks" style='display:none;margin-top:0;padding-top:15px'>
-				<div class='directorBlock' id="customizeLinks1" style='display:none;margin-top:0;padding-bottom:0;'>
+				<div class='directorBlock director-customizer-scroll' id="customizeLinks1" style='display:none;margin-top:0;padding-bottom:0;'>
 					<div style="display:inline-block;margin-top: 12px;   position: relative;  margin-right:10px;">
 						<label class="switch" title="Disables Echo Cancellation and improves audio quality">
 						<input type="checkbox" data-param="&s" onchange="updateLink(1,this);">
@@ -1321,6 +1372,12 @@
 						  <span class="slider"></span>
 						</label>
 						<span data-translate="show-welcome-message">Show welcome message</span>
+						<br />
+						<label class="switch" title="Show fullscreen button on the guest control bar">
+						  <input type="checkbox" data-param="&fsb" onchange="updateLink(1,this);">
+						  <span class="slider"></span>
+						</label>
+						<span data-translate="show-fullscreen-button">Show fullscreen button</span>
 						
 					</div>
 					<div  style="display:inline-block;margin-top: 12px; position: relative; margin-right:10px;">
@@ -1353,6 +1410,24 @@
 						  <span class="slider"></span>
 						</label>
 						<span data-translate="hide-setting-buttons">Hide settings button</span>
+						<br />
+						<label class="switch" title="Hide file sharing from guests">
+						  <input type="checkbox" data-param="&nofileshare" onchange="updateLink(1,this);">
+						  <span class="slider"></span>
+						</label>
+						<span data-translate="hide-file-sharing">Hide file sharing</span>
+						<br />
+						<label class="switch" title="Hide screen share controls and tiles">
+						  <input type="checkbox" data-param="&hidescreenshare" onchange="updateLink(1,this);">
+						  <span class="slider"></span>
+						</label>
+						<span data-translate="hide-screen-share">Hide screen share</span>
+						<br />
+						<label class="switch" title="Allow the guest to select an avatar image for when they hide their camera">
+						  <input type="checkbox" data-param="&avatar" onchange="updateLink(1,this);">
+						  <span class="slider"></span>
+						</label>
+						<span data-translate="avatar-selection">Can select an Avatar image</span>
 						<br />
 						<label class="switch" title="Allow the guests to pick a virtual backscreen effect">
 						  <input type="checkbox" data-param="&effects" onchange="updateLink(1,this);">
@@ -1419,14 +1494,32 @@
 						</label>
 						<span data-translate="prefix-screenshare">Prefix screenshare IDs</span>	
 						<br />
-						<label class="switch" title="Allow the guest to select an avatar image for when they hide their camera">
-						  <input type="checkbox" data-param="&avatar" onchange="updateLink(1,this);">
+						<label class="switch" title="Bias screen shares toward sharper text">
+						  <input type="checkbox" data-param="&sharperscreen" onchange="updateLink(1,this);">
 						  <span class="slider"></span>
 						</label>
-						<span data-translate="avatar-selection">Can select an Avatar image</span>
+						<span data-translate="sharper-screen-share">Sharper screen share</span>
+						<br />
+						<label class="switch" title="Request a higher screen-share bitrate">
+						  <input type="checkbox" data-param="&screensharebitrate=3500" onchange="updateLink(1,this);">
+						  <span class="slider"></span>
+						</label>
+						<span data-translate="screen-share-bitrate">Screen share bitrate</span>
+						<br />
+						<label class="switch" title="Request 30 FPS for screen share">
+						  <input type="checkbox" data-param="&screensharefps=30" onchange="updateLink(1,this);">
+						  <span class="slider"></span>
+						</label>
+						<span data-translate="screen-share-30fps">30 FPS screen share</span>
+						<br />
+						<label class="switch" title="Show only the screen share feed">
+						  <input type="checkbox" data-param="&screensharevideoonly" onchange="updateLink(1,this);">
+						  <span class="slider"></span>
+						</label>
+						<span data-translate="screen-share-only">Screen share only</span>
 					</div>
 					<div  style="display:inline-block;margin-top: 12px; position: relative; ">
-						
+
 						<label class="switch" title="Use Meshcast servers to restream video data from this guest to its viewers, reducing the CPU and upload load in some cases. Will increase latency a bit.">
 						  <input type="checkbox" data-param="&meshcast" onchange="updateLink(1,this);">
 						  <span class="slider"></span>
@@ -1449,6 +1542,13 @@
 						<span data-translate="rule-of-thirds">Show rule-of-thirds grid</span>
 						
 						<br />
+						<label class="switch" title="Guests receive only the director">
+						  <input type="checkbox" data-param="&directoronly" onchange="updateLink(1,this);">
+						  <span class="slider"></span>
+						</label>
+						<span data-translate="director-only-guests">Director-only guests</span>
+
+						<br />
 						<label class="switch" title="The guest can only see the Director's video, if provided">
 						  <input type="checkbox" data-param="&broadcast" id="broadcastSlider" onchange="updateLink(1,this);">
 						  <span class="slider"></span>
@@ -1467,6 +1567,18 @@
 						</label>
 						<span data-translate="unmute-by-director-only">Muted; director can unmute</span>
 						<br />
+						<label class="switch" title="Let the guest choose audio-only joining">
+						  <input type="checkbox" data-param="&miconlyoption" onchange="updateLink(1,this);">
+						  <span class="slider"></span>
+						</label>
+						<span data-translate="mic-only-option">Mic-only option</span>
+						<br />
+						<label class="switch" title="Guest camera starts muted">
+						  <input type="checkbox" data-param="&videomute" onchange="updateLink(1,this);">
+						  <span class="slider"></span>
+						</label>
+						<span data-translate="camera-muted-on-join">Camera muted on join</span>
+						<br />
 						<label class="switch" title="The guest will not be asked for a video device on connection">
 						  <input type="checkbox" id="vd0toggle" data-param="&vd=0" onchange="if(getById('vd1toggle').checked){getById('vd1toggle').checked=false;updateLink(1,getById('vd1toggle'));} updateLink(1,this);">
 						  <span class="slider"></span>
@@ -1479,7 +1591,7 @@
 						</label>
 						<span data-translate="obfuscate-link">Obfuscate with Invite.cam</span>
 					</div>
-				</div><div class='directorBlock' id="customizeLinks3" style='display:none;margin-top:5px;padding-bottom:0;'>
+				</div><div class='directorBlock director-customizer-scroll' id="customizeLinks3" style='display:none;margin-top:5px;padding-bottom:0;'>
 					<div  style="display:inline-block; position: relative; margin-right:10px; ">
 						<div style="display:inline-block;margin-top: 12px; position: relative; margin-right:10px; ">
 						
@@ -1489,21 +1601,28 @@
 							</label>
 							<span data-translate="hide-audio-only-sources">Hide audio-only sources</span>
 							<br />
-							
+
+							<label class="switch" title="Hide screen share tiles">
+							<input type="checkbox" data-param="&hidescreenshare" onchange="updateLink(3,this, true);">
+							<span class="slider"></span>
+							</label>
+							<span data-translate="hide-screen-share">Hide screen share</span>
+							<br />
+
 							<label class="switch" title="Enable 8-channel audio output into OBS Studio, if 7.1-channel audio support is also enabled in OBS">
 						    <input type="checkbox" data-param="&channels" onchange="updateLink(3,this, true);">
 							  <span class="slider"></span>
 							</label>
 							🎛️ <span data-translate="enable-8-channel-audio">8-channel output</span>
 							<br />
-							
+
 							<label class="switch">
 								<input type="checkbox" data-param="&s" onchange="updateLink(3,this, true);">
 								<span class="slider"></span>
 							</label><span class="tooltip" style='cursor: help;position:relative;bottom:2px;font-family:"Noto Color Emoji", "Apple Color Emoji", "Segoe UI Emoji", Times, Symbola, Aegyptus, Code2000, Code2001, Code2002, Musica, serif, LastResort;'>⚠<span class="tooltiptext" style="width: 10em;">This can cause audio clicking issues</span></span> 
 							<span data-translate="pro-audio-mode">Pro-audio mode</span>
 							<br />
-							
+
 							<label class="switch">
 								<input type="checkbox" id="codech264toggle" data-param="&codec=h264" onchange="updateLink(3,this, true);">
 								<span class="slider"></span>
@@ -1539,6 +1658,13 @@
 							  <span class="slider"></span>
 							</label>
 							<span data-translate="animate-mixing">Animate mixing</span>
+							<br />
+
+							<label class="switch" title="Use square video corners">
+							  <input type="checkbox" data-param="&rounded=0" onchange="updateLink(3,this, true);">
+							  <span class="slider"></span>
+							</label>
+							<span data-translate="square-corners">Square corners</span>
 							
 						</div>
 						
@@ -1550,6 +1676,13 @@
 							<span data-translate="show-display-names">Show display names</span>
 							<br />
 							
+							<label class="switch" title="Sort scene tiles by display name">
+							  <input type="checkbox" data-param="&orderby=label" onchange="updateLink(3,this, true);">
+							  <span class="slider"></span>
+							</label>
+							<span data-translate="sort-by-name">Sort by name</span>
+							<br />
+
 							<label class="switch" title="Add a 10px margin around all video elements">
 							  <input type="checkbox" data-param="&margin" onchange="updateLink(3,this);">
 							  <span class="slider"></span>
@@ -1589,6 +1722,13 @@
 							<span data-translate="show-director">Include Director</span>
 							<br />
 							
+							<label class="switch" title="Hide tally indicators">
+							  <input type="checkbox" data-param="&tallyoff" onchange="updateLink(3,this, true);">
+							  <span class="slider"></span>
+							</label>
+							<span data-translate="hide-tally">Hide tally</span>
+							<br />
+
 							<label class="switch" title="Have the videos fit their respective areas, even if it means cropping a bit">
 							  <input type="checkbox" data-param="&cover" onchange="updateLink(3,this, true);">
 							  <span class="slider"></span>
@@ -1839,6 +1979,10 @@
 						<button data-action-type="recorder-remote" title="The Remote Guest will record their local stream to their local drive. *experimental*" onclick="requestVideoRecord(this)">
 							<i class="las la-compact-disc"></i>
 							<span data-translate="record-remote"> Record Remote</span>
+						</button>
+						<button data-action-type="restart-whip" class="hidden" title="Restart WHIP publishing connection (e.g., to Meshcast/MediaMTX)" onclick="restartWhipDirector(this)">
+							<i class="las la-broadcast-tower"></i>
+							<span data-translate="restart-whip">Restart WHIP</span>
 						</button>
 						<button data-action-type="recorder-google-drive-remote" title="The Remote Guest will record their local stream and upload it to your Google Drive. *experimental*" onclick="requestGoogleDriveRecord(this, null, null, event)">
 							<i class="las la-compact-disc"></i>
@@ -2239,6 +2383,7 @@
 						<select id="effectSelector3" onchange="effectsDynamicallyUpdate(event, this);">
 							<option value="0" data-translate="no-effects-applied">No effects applied</option>
 							<option value="3" data-translate="blurred-background">Blurred background</option>
+							<option value="16">Background transparent</option>
 							<option value="13" class="hidden" disabled data-translate="blurred-background-2">Blurred background 2 🧪</option>
 							<option value="4" data-translate="digital-greenscreen">Digital greenscreen</option>    
 							<option value="5" data-translate="virtual-background">Virtual background</option>
@@ -2319,8 +2464,10 @@
 				
 				<button id='advancedOptionsGeneral' onclick="toggleUserUser(this);" >
 				<i class="las la-user-cog" style="position:relative;"></i> <b><span data-translate="user">User</span></b></button>
-				
-				
+
+				<button id='ssoSignOutBtn' onclick="ssoSignOut();" class="advancedToggle" style="display:none;" title="Sign out of SSO">
+				<i class="las la-sign-out-alt" style="position:relative;"></i> <b>Sign Out</b></button>
+
 				<span id="popupSelector_constraints_audio" class="popupSelector_constraints" style="display: none;">
 				
 				</span>
@@ -2531,7 +2678,7 @@
 				</li>
 				<li class="context-menu__item">
 					<a href="#" class="context-menu__link" data-action="DrawOnVideo">
-						<i class="las la-external-link"></i>
+						<i class="las la-pencil-alt"></i>
 						<span data-translate="draw-on-video">Toggle draw mode</span>
 					</a>
 				</li>
@@ -2571,13 +2718,13 @@
 								<span data-translate="remote-hangup-connection">Remote Hang-up</span>
 							</a>
 						</li>
-						<li class="context-menu__item" id="RemoteReloadContextOption">
-							<a href="#" class="context-menu__link action" data-action="RemoteReload">
-								<i class="las la-sync"></i>
-								<span data-translate="remote-reload-connection">Remote Reload Page</span>
-							</a>
-						</li>
 					</ul>
+				</li>
+				<li class="context-menu__item hidden" id="RemoteReloadContextOption">
+					<a href="#" class="context-menu__link action" data-action="RemoteReload">
+						<i class="las la-sync"></i>
+						<span data-translate="remote-reload-connection">Remote Reload Page</span>
+					</a>
 				</li>
 				<li class="context-menu__item">
 					<a href="#" class="context-menu__link" data-action="ChangeBuffer">
@@ -2652,6 +2799,10 @@
                                 <input id="codirectorSettings_approvepopup" style="width: 15px; height: 15px; margin:10px;" name="codirectorSettings_approvepopup"  data-action-type="approve_popup" type="checkbox" onchange="toggleApprovalPopup(this);" />
                                 <label for="codirectorSettings_approvepopup" title="Show an approval popup to directors/co-directors when a guest is held">Show approval popup for held guests</label>
                             </div>
+                            <div>
+                                <input id="codirectorSettings_noclaim" style="width: 15px; height: 15px; margin:10px;" name="codirectorSettings_noclaim" data-action-type="codirector_noclaim" type="checkbox" onchange="toggleCoDirector_noClaim(this);" />
+                                <label for="codirectorSettings_noclaim" title="Adds &noclaim so the co-director link will not try to claim the room">Non-claiming co-director link</label>
+                            </div>
                             
 						<div style="display:none;">
 							<input id="codirectorSettings_changeurl" style="width: 15px; height: 15px; margin:10px; " name="codirectorSettings_changeurl"  data-action-type="codirector_changeurl" type="checkbox" onchange="toggleCoDirector_changeurl(this);" />
@@ -2685,7 +2836,7 @@
 				<span style="margin: 5px 0 0 0;display:block">	
 					<button data-action-type="remote-global-record" title="Record all the guests" onclick="remoteGlobalRecordStart();">
 						<i class="las la-compact-disc"></i>
-						<span data-translate="remote-global-record">Remote record - start all</span>
+						<span data-translate="remote-global-record-start">Remote record - start all</span>
 					</button>
 					<button data-action-type="remote-global-record" title="Record all the guests" onclick="remoteGlobalRecordStop();">
 						<i class="las la-square"></i>
@@ -2740,8 +2891,8 @@
 				<span></span>
 				<h3 data-translate="buffer-settings">Buffer Settings</h3><br />
 				<div>
-					<span data-translate="change-playout-buffer">Buffer (ms): </span><input data-buffer-value='0' style='margin-left: 3px;padding: 2px;width: 60px;' type='number' min='0' max='120000' /><br />
-					<input type='range' min='0' max='10000' data-buffer-value='0' /><br />
+					<span data-translate="change-playout-buffer" title="Local to this browser and selected remote stream. Normal WebRTC buffering is browser-limited; chunked mode uses a separate buffer.">Buffer (ms): </span><input data-buffer-value='0' title="Local to this browser and selected remote stream. Normal WebRTC buffering is browser-limited; chunked mode uses a separate buffer." style='margin-left: 3px;padding: 2px;width: 60px;' type='number' min='0' max='180000' /><br />
+					<input type='range' min='0' max='180000' data-buffer-value='0' title="Local to this browser and selected remote stream. Normal WebRTC buffering is browser-limited; chunked mode uses a separate buffer." /><br />
 				</div>
 			</div>
 		</div>
@@ -3035,23 +3186,25 @@
 			<br />
 			<ul id="languagesList" style="list-style-type: none; margin: 0;">
 				<li><a onclick="changeLg('en',false, true);toggle(document.getElementById('languages'));" style="cursor: pointer;">English</a></li>
-				<li><a onclick="changeLg('de',false, true);toggle(document.getElementById('languages'));" style="cursor: pointer;" data-tz="Europe/Berlin">German</a></li>
-				<li><a onclick="changeLg('fr',false, true);toggle(document.getElementById('languages'));" style="cursor: pointer;" data-tz="Europe/Paris">French</a></li>
-				<li><a onclick="changeLg('it',false, true);toggle(document.getElementById('languages'));" style="cursor: pointer;" data-tz="Europe/Rome">Italian</a></li>
-				<li><a onclick="changeLg('es',false, true);toggle(document.getElementById('languages'));" style="cursor: pointer;" data-tz="Europe/Madrid">Spanish</a></li>
-				<li><a onclick="changeLg('pl',false, true);toggle(document.getElementById('languages'));" style="cursor: pointer;" data-tz="Europe/Warsaw">Polish</a></li>
-				<li><a onclick="changeLg('pt',false, true);toggle(document.getElementById('languages'));" style="cursor: pointer;" data-tz="Europe/Lisbon;">Portuguese (Europe)</a></li>
-				<li><a onclick="changeLg('pt-br',false, true);toggle(document.getElementById('languages'));" style="cursor: pointer;" data-tz="America/Araguaina">Portuguese (Brazil)</a></li>
-				<li><a onclick="changeLg('nl',false, true);toggle(document.getElementById('languages'));" style="cursor: pointer;" data-tz="Europe/Amsterdam">Dutch</a></li>
-				<li><a onclick="changeLg('tr',false, true);toggle(document.getElementById('languages'));" style="cursor: pointer;" data-tz="Europe/Istanbul">Turkish</a></li>
-				<li><a onclick="changeLg('ja',false, true);toggle(document.getElementById('languages'));" style="cursor: pointer;" data-tz="Asia/Tokyo">Japanese</a></li>
-				<li><a onclick="changeLg('ar', true, true);toggle(document.getElementById('languages'));" style="cursor: pointer;" data-rtl="true" data-tz="Asia/Arabic">Arabic</a></li>
-				<li><a onclick="changeLg('cn',false, true);toggle(document.getElementById('languages'));" style="cursor: pointer;" data-tz="Asia/China">Chinese (中文)</a></li>
-				<li><a onclick="changeLg('cs',false, true);toggle(document.getElementById('languages'));" style="cursor: pointer;" data-tz="Europe/Prague">Czech</a></li>
-				<li><a onclick="changeLg('ru',false, true);toggle(document.getElementById('languages'));" style="cursor: pointer;" data-tz="Europe/Moscow">Russian</a></li>
-				<li><a onclick="changeLg('uk',false, true);toggle(document.getElementById('languages'));" style="cursor: pointer;" data-tz="Europe/Ukraine">Ukrainian</a></li>
-				<li><a onclick="changeLg('eu',false, true);toggle(document.getElementById('languages'));" style="cursor: pointer;" data-tz="Europe/Euskara">Basque</a></li>
-				<li><a onclick="changeLg('pig',false, true);toggle(document.getElementById('languages'));" style="cursor: pointer;">Pig Latin</a></li>
+				<li><a onclick="changeLg('de',false, true);toggle(document.getElementById('languages'));" style="cursor: pointer;" data-tz="Europe/Berlin">Deutsch</a></li>
+				<li><a onclick="changeLg('fr',false, true);toggle(document.getElementById('languages'));" style="cursor: pointer;" data-tz="Europe/Paris">français</a></li>
+				<li><a onclick="changeLg('it',false, true);toggle(document.getElementById('languages'));" style="cursor: pointer;" data-tz="Europe/Rome">italiano</a></li>
+				<li><a onclick="changeLg('es',false, true);toggle(document.getElementById('languages'));" style="cursor: pointer;" data-tz="Europe/Madrid">español - España</a></li>
+				<li><a onclick="changeLg('pl',false, true);toggle(document.getElementById('languages'));" style="cursor: pointer;" data-tz="Europe/Warsaw">polski</a></li>
+				<li><a onclick="changeLg('pt',false, true);toggle(document.getElementById('languages'));" style="cursor: pointer;" data-tz="Europe/Lisbon;">português do Portugal</a></li>
+				<li><a onclick="changeLg('pt-br',false, true);toggle(document.getElementById('languages'));" style="cursor: pointer;" data-tz="America/Araguaina">português do Brasil</a></li>
+				<li><a onclick="changeLg('nl',false, true);toggle(document.getElementById('languages'));" style="cursor: pointer;" data-tz="Europe/Amsterdam">Nederlands</a></li>
+				<li><a onclick="changeLg('tr',false, true);toggle(document.getElementById('languages'));" style="cursor: pointer;" data-tz="Europe/Istanbul">Türkçe</a></li>
+				<li><a onclick="changeLg('ja',false, true);toggle(document.getElementById('languages'));" style="cursor: pointer;" data-tz="Asia/Tokyo">日本語</a></li>
+				<li><a onclick="changeLg('ar', true, true);toggle(document.getElementById('languages'));" style="cursor: pointer;" data-rtl="true" data-tz="Asia/Arabic">العربية</a></li>
+				<li><a onclick="changeLg('cn',false, true);toggle(document.getElementById('languages'));" style="cursor: pointer;" data-tz="Asia/China">简体中文 (中国大陆)</a></li>
+				<li><a onclick="changeLg('cs',false, true);toggle(document.getElementById('languages'));" style="cursor: pointer;" data-tz="Europe/Prague">čeština</a></li>
+				<li><a onclick="changeLg('ru',false, true);toggle(document.getElementById('languages'));" style="cursor: pointer;" data-tz="Europe/Moscow">русский</a></li>
+				<li><a onclick="changeLg('uk',false, true);toggle(document.getElementById('languages'));" style="cursor: pointer;" data-tz="Europe/Ukraine">українська</a></li>
+				<li><a onclick="changeLg('eu',false, true);toggle(document.getElementById('languages'));" style="cursor: pointer;" data-tz="Europe/Euskara">euskara</a></li>
+				<li><a onclick="changeLg('kr',false, true);toggle(document.getElementById('languages'));" style="cursor: pointer;" data-tz="Asia/Korea">한국어</a></li>
+				<li><a onclick="changeLg('pig',false, true);toggle(document.getElementById('languages'));" style="cursor: pointer;">Igpay Atinlay</a></li>
+				<li><a onclick="changeLg('hi',false, true);toggle(document.getElementById('languages'));" style="cursor: pointer;" data-tz="Asia/India">हिन्दी</a></li>
 			</ul>
 			<span style="display:block;height:0;width:0;padding:0;margin:0;"></span>
 			<i class="las la-exclamation-circle"></i><a href="https://github.com/steveseguin/vdoninja/tree/master/translations" target="_blank" rel="noopener noreferrer" data-translate='add-more-here'>Add More Here!</a>
@@ -3104,7 +3257,7 @@
 			// if (!window.location.search){document.body.innerHTML = "";} // uncomment this line, if you wish to try it.
 			
 			var session = WebRTC.Media; // session is a required global variable if configuring manually. Run before loading main.js but after webrtc.js.
-			session.version = "29.0"; // updated: default 1080p now + tweaked outbound bandwidth logic
+			session.version = "30.1"; // added director claim-time room admission controls (cap + bypass key + approval queue)
 			session.streamID = session.generateStreamID(); // randomly generates a streamID for this session. You can set your own programmatically if needed
 			
 			session.defaultPassword = "someEncryptionKey123"; // Change this password if self-deploying for added security/privacy
@@ -3231,29 +3384,61 @@
 		</script>
 		
 		<!-- Authentication client -->
-		<script type="text/javascript" crossorigin="anonymous" src="./auth-client.js?v=2"></script>
+		<script type="text/javascript" crossorigin="anonymous" src="./auth-client.js?v=7"></script>
 
-		<script type="text/javascript">
-			function toggleSSOOptions(enabled){
-				var box = document.getElementById('ssoOptions');
-				if (!box) return;
-				box.style.display = enabled ? 'block' : 'none';
-				var listRow = document.getElementById('preAllowlistRow');
-				if (!enabled) { if (listRow) listRow.style.display='none'; return; }
-				// Ensure allowlist row reflects current selection
-				try {
-					var selected = document.querySelector('input[name="ssoAccessMode"]:checked');
+				<script type="text/javascript">
+					function toggleSSOOptions(enabled){
+						var box = document.getElementById('ssoOptions');
+					if (!box) return;
+					box.style.display = enabled ? 'block' : 'none';
+					var passwordInput = document.getElementById('passwordRoom');
+					if (passwordInput) {
+						if (enabled) {
+							passwordInput.value = '';
+							passwordInput.disabled = true;
+						} else {
+							passwordInput.disabled = false;
+						}
+					}
+					var passwordNote = document.getElementById('passwordRoomSSONote');
+					if (passwordNote) {
+						passwordNote.style.display = enabled ? 'block' : 'none';
+					}
+					var listRow = document.getElementById('preAllowlistRow');
+					if (!enabled) { if (listRow) listRow.style.display='none'; return; }
+					// Ensure allowlist row reflects current selection
+					try {
+						var selected = document.querySelector('input[name="ssoAccessMode"]:checked');
 					if (selected && selected.value === 'allowlist') {
 						if (listRow) listRow.style.display='block';
 					} else {
 						if (listRow) listRow.style.display='none';
 					}
-				} catch(e){}
-			}
-		</script>
+					} catch(e){}
+				}
+					(function initSSOOptionsState(){
+						var ssoToggle = document.getElementById('useSSOForRoom');
+						if (ssoToggle) {
+							try {
+								var params = new URLSearchParams(window.location.search);
+								ssoToggle.checked = params.has('auth') || params.has('requireauth');
+							} catch (e) {
+								ssoToggle.checked = false;
+							}
+							toggleSSOOptions(!!ssoToggle.checked);
+						}
+					})();
+					(function initRoomApprovalState(){
+						var roomApprovalToggle = document.getElementById('requireApprovalForRoom');
+						if (!roomApprovalToggle) return;
+						try {
+							roomApprovalToggle.checked = new URLSearchParams(window.location.search).has('requireapproval');
+						} catch (e) {}
+					})();
+				</script>
 
-		<script type="text/javascript" crossorigin="anonymous" id="lib-js" src="./lib.js?ver=1376"></script>
-		<script type="text/javascript" crossorigin="anonymous" id="main-js" src="./main.js?ver=1040"></script>
+		<script type="text/javascript" crossorigin="anonymous" id="lib-js" src="./lib.js?ver=1415"></script>
+		<script type="text/javascript" crossorigin="anonymous" id="main-js" src="./main.js?ver=1063"></script>
 		<script type="module" src="./podcast/bootstrap.js"></script>
 		
 	</body>

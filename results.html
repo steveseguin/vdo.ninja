@@ -9,41 +9,44 @@
 		<title>VDON Speed Test</title>
 		<style>
 			:root {
-			  --primary-bg: #333;
-			  --secondary-bg: #444;
-			  --card-bg: #3a3a3a;
-			  --text-color: white;
-			  --accent-color: #4296f5;
-			  --accent-hover: #2979e2;
-			  --success-color: #60ff60;
-			  --warning-color: #f3f304;
-			  --error-color: #fb4949;
-			  --border-color: #666;
+			  --bg-color: #1a1a1a;
+			  --text-color: #e2e8f0;
+			  --accent-color: #60a5fa;
+			  --success-color: #22c55e;
+			  --warning-color: #eab308;
+			  --error-color: #ef4444;
+			  --card-bg: #1e293b44;
+			  --border-color: #334155;
 			}
 
 			body {
 			  text-align: center;
-			  background: var(--primary-bg);
-			  font-family: 'Noto Sans', sans-serif;
+			  background: var(--bg-color);
+			  font-family: system-ui, -apple-system, sans-serif;
 			  color: var(--text-color);
 			  margin: 0;
-			  padding: 0;
+			  padding: 20px;
 			  line-height: 1.6;
 			}
 
-			h1, h2, h3 {
-			  margin-top: 1rem;
-			  margin-bottom: 1rem;
+			h1 {
+			  font-weight: 500;
+			  margin-bottom: 30px;
+			  font-size: 1.75rem;
+			  color: #f8fafc;
 			}
 
 			h2 {
 			  width: 760px;
 			  max-width: 90%;
-			  margin: auto;
+			  margin: 2rem auto;
+			  font-weight: 400;
+			  font-size: 1rem;
+			  color: #94a3b8;
 			}
 
 			a {
-			  color: white;
+			  color: var(--accent-color);
 			  text-decoration: none;
 			}
 
@@ -54,148 +57,109 @@
 			#mainapp {
 			  max-width: 1200px;
 			  margin: 0 auto;
-			  padding: 1rem;
 			}
 
 			#container {
-			  background: var(--secondary-bg);
-			  border-radius: 8px;
-			  padding: 1.5rem;
+			  background: var(--card-bg);
+			  border-radius: 2px;
+			  padding: 2rem;
 			  margin: 1.5rem auto;
-			  max-width: 900px;
-			  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+			  max-width: 800px;
+			  border: 1px solid var(--border-color);
 			}
 
 			#graphs {
 			  display: flex;
 			  flex-wrap: wrap;
 			  justify-content: center;
-			  gap: 1.5rem;
+			  gap: 20px;
 			  margin: 2rem auto;
-			  max-width: 1100px;
+			  max-width: 1000px;
+			  border-top: 1px solid var(--border-color);
+			  border-bottom: 1px solid var(--border-color);
+			  padding: 2rem 0;
 			}
 
 			.graph {
-			  background: var(--card-bg);
-			  border-radius: 8px;
-			  padding: 0;
-			  width: 300px;
-			  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+			  flex: 1;
+			  min-width: 250px;
+			  border-radius: 2px;
+			  padding: 15px;
 			}
 
 			.graph h3 {
-			  margin-top: 0;
-			  margin-bottom: 0.5rem;
+			  margin: 0 0 10px 0;
+			  font-size: 0.8rem;
+			  color: #64748b;
+			  text-transform: uppercase;
+			  letter-spacing: 0.05em;
 			}
 
 			.graph span {
 			  display: block;
-			  font-size: 1.5rem;
-			  font-weight: bold;
-			  margin-bottom: 0.5rem;
+			  font-size: 1.25rem;
+			  font-weight: 600;
+			  margin-bottom: 10px;
+			  color: #f1f5f9;
 			}
 
 			canvas {
 			  width: 100%;
-			  height: 100px;
-			  background-color: rgba(0, 0, 0, 0.2);
-			  border-radius: 4px;
+			  height: 120px;
+			  background-color: #0f172a;
+			  border-radius: 0;
+			  border: 1px solid #1e293b;
 			}
 
 			#details {
-			  background: var(--secondary-bg);
-			  border-radius: 8px;
-			  padding: 1.5rem;
+			  background: var(--card-bg);
+			  border-radius: 2px;
+			  padding: 2rem;
 			  margin: 1.5rem auto;
-			  max-width: 900px;
+			  max-width: 800px;
 			  text-align: left;
-			  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+			  border: 1px solid var(--border-color);
 			}
 
 			button {
-			  background-color: var(--accent-color);
-			  color: white;
-			  border: none;
-			  border-radius: 4px;
-			  padding: 10px 15px;
+			  background-color: #334155;
+			  color: #f1f5f9;
+			  border: 1px solid #475569;
+			  border-radius: 2px;
+			  padding: 8px 16px;
 			  cursor: pointer;
-			  transition: background-color 0.3s;
+			  font-weight: 500;
+			  transition: all 0.15s ease;
 			}
 
 			button:hover {
-			  background-color: var(--accent-hover);
+			  background-color: #475569;
+			  border-color: #64748b;
 			}
 
 			.hidden {
 			  display: none !important;
 			}
 
-			#detailed-info {
-			  margin-top: 30px;
-			  padding: 20px;
-			  border-top: 1px solid var(--border-color);
-			  background: rgba(0, 0, 0, 0.1);
-			  border-radius: 0 0 8px 8px;
+			.success { color: var(--success-color); }
+			.warning { color: var(--warning-color); }
+			.error { color: var(--error-color); }
+
+			.loading-text {
+			  color: var(--accent-color);
+			  font-weight: 500;
+			  animation: pulse 1.5s infinite;
 			}
 
-			.info-buttons {
-			  display: flex;
-			  flex-wrap: wrap;
-			  gap: 15px;
-			  justify-content: center;
-			  margin-top: 15px;
+			@keyframes pulse {
+			  0% { opacity: 0.6; }
+			  50% { opacity: 1; }
+			  100% { opacity: 0.6; }
 			}
 
-			.info-buttons button {
-			  background-color: var(--accent-color);
-			  color: white;
-			  border: none;
-			  border-radius: 4px;
-			  padding: 10px 15px;
-			  cursor: pointer;
-			  font-size: 14px;
-			  transition: background-color 0.3s;
-			}
-
-			.info-buttons button:hover {
-			  background-color: var(--accent-hover);
-			}
-
-			.success {
-			  color: var(--success-color);
-			}
-
-			.warning {
-			  color: var(--warning-color);
-			}
-
-			.error {
-			  color: var(--error-color);
-			}
-
-			/* Blink animation for loading text */
-			@keyframes fadein {
-			  0%   {opacity: 0.5;}
-			  100% {opacity: 1;}
-			}
-
-			blink {
-			  animation: blink 1s step-end infinite;
-			}
-
-			@keyframes blink {
-			  50% { opacity: 0; }
-			}
-
-			/* Make design responsive */
 			@media (max-width: 768px) {
-			  #graphs {
-				flex-direction: column;
-				align-items: center;
-			  }
-			  
 			  .graph {
-				width: 90%;
+				width: 100%;
 			  }
 			}
 		</style>
@@ -206,7 +170,7 @@
 				Video and stream quality check results
 			</h1>
 			<div id="container">
-				<h3><blink><span style='color:#85c0ff'>RESULTS ARE LOADING...</span></blink><h3>
+				<h3 class="loading-text">RESULTS ARE LOADING...<h3>
 			</div>
 			<div id="graphs">
 				<div class="graph">
@@ -336,6 +300,12 @@
 			if (urlParams.has("id")) {
 				streamID = urlParams.get("id");
 			}
+
+			function escapeHTML(value) {
+				const div = document.createElement("div");
+				div.textContent = value == null ? "" : String(value);
+				return div.innerHTML;
+			}
 		
 			var bitrate = {
 				element: "bitrate-graph",
@@ -382,6 +352,9 @@
 				  document.getElementById("container").innerHTML = "<h3>Quality Test Results</h3>";
 				  
 				  arr.forEach(data => {
+					if (!data || typeof data !== "object") {
+					  return;
+					}
 					if ("bitrate" in data) {
 					  updateData("bitrate", data.bitrate);
 					  if (data.bitrate !== null) {
@@ -422,8 +395,10 @@
 					}
 					
 					if (data.codecs) {
-						var videoCodecs = Object.keys(data.codecs.video).join(', ');
-						var audioCodecs = Object.keys(data.codecs.audio).join(', ');
+						var videoCodecData = data.codecs.video || {};
+						var audioCodecData = data.codecs.audio || {};
+						var videoCodecs = Object.keys(videoCodecData).map(escapeHTML).join(', ');
+						var audioCodecs = Object.keys(audioCodecData).map(escapeHTML).join(', ');
 						
 						if (videoCodecs) {
 							document.getElementById("details").innerHTML += "<br /><b>Supported video codecs:</b> " + videoCodecs + "<br />";
@@ -433,15 +408,15 @@
 						}
 						
 						// Check for optimal codecs
-						if (data.codecs.video.h264 || data.codecs.video.vp9) {
+						if (videoCodecData.h264 || videoCodecData.vp9) {
 							document.getElementById("details").innerHTML += "<small><i>(Good codec support for streaming)</i></small><br />";
-						} else if (!data.codecs.video.h264) {
+						} else if (!videoCodecData.h264) {
 							document.getElementById("details").innerHTML += "<small><i>(H.264 codec support not detected, which may limit compatibility)</i></small><br />";
 						}
 					}
 
 					if (data.userRegion) {
-						document.getElementById("details").innerHTML += "<br /><b>User region:</b> " + data.userRegion + "<br />";
+						document.getElementById("details").innerHTML += "<br /><b>User region:</b> " + escapeHTML(data.userRegion) + "<br />";
 					}
 					
 					if (("hostMode" in data) && ("srflxMode" in data)){
@@ -482,8 +457,9 @@
 					}
 					if ("info" in data){
 						if (data.info.Browser){
-							document.getElementById("details").innerHTML += "<br /><b>Browser used:</b> "+data.info.Browser+"<br />";
-							if (!data.info.Browser.startsWith("Chromium")){
+							var browserName = String(data.info.Browser);
+							document.getElementById("details").innerHTML += "<br /><b>Browser used:</b> "+escapeHTML(browserName)+"<br />";
+							if (!browserName.startsWith("Chromium")){
 								document.getElementById("details").innerHTML += "<h3>A Chromium-based browser is recommended.</h3>";
 							} 
 						}
@@ -493,38 +469,41 @@
 							}
 						}
 						if (data.info.platform){
-							document.getElementById("details").innerHTML += "<br /><b>Platform (os):</b> "+data.info.platform+"<br />";
-							if (data.info.platform.toLowerCase() == "macintel"){
+							var platformName = String(data.info.platform);
+							document.getElementById("details").innerHTML += "<br /><b>Platform (os):</b> "+escapeHTML(platformName)+"<br />";
+							if (platformName.toLowerCase() == "macintel"){
 								document.getElementById("details").innerHTML += "<i>(Intel or Apple Silicon)</i><br />";
 							}
 						}
 						if (data.info.gpGPU){
-							document.getElementById("details").innerHTML += "<br /><b>GPU:</b> "+data.info.gpGPU+"<br />";
+							document.getElementById("details").innerHTML += "<br /><b>GPU:</b> "+escapeHTML(data.info.gpGPU)+"<br />";
 						}
 						if (data.info.CPU){
-							document.getElementById("details").innerHTML += "<br /><b>CPU:</b> "+data.info.CPU+"<br />";
+							document.getElementById("details").innerHTML += "<br /><b>CPU:</b> "+escapeHTML(data.info.CPU)+"<br />";
 						}
 						
 						if (data.info.conn_type){
-							document.getElementById("details").innerHTML += "<br /><b>Connection type:</b> "+data.info.conn_type+"<br />";
-							if (data.info.conn_type == "wifi"){
+							var connectionType = String(data.info.conn_type);
+							document.getElementById("details").innerHTML += "<br /><b>Connection type:</b> "+escapeHTML(connectionType)+"<br />";
+							if (connectionType == "wifi"){
 								document.getElementById("details").innerHTML += "<h3>Avoid using WiFi if at all possible</h3>";
 							}
 							
 						}
 					}
 					if (data.encoder){
-						if (data.encoder.toLowerCase() == "libvpx"){
+						var encoderName = String(data.encoder);
+						if (encoderName.toLowerCase() == "libvpx"){
 							document.getElementById("details").innerHTML += "<br /><b>Default video codec used:</b> VP8<br />";
 						} else {
-							document.getElementById("details").innerHTML += "<br /><b>Default video codec used:</b> "+data.encoder.toUpperCase()+"<br />";
+							document.getElementById("details").innerHTML += "<br /><b>Default video codec used:</b> "+escapeHTML(encoderName.toUpperCase())+"<br />";
 						}
 					}
 				});
 				// container
 				
 				if (maxResolution){
-					document.getElementById("details").innerHTML += "<br /><b>Highest video resolution reached:</b> "+maxResolution+"<br />";
+					document.getElementById("details").innerHTML += "<br /><b>Highest video resolution reached:</b> "+escapeHTML(maxResolution)+"<br />";
 				}
 				
 				
@@ -583,20 +562,26 @@
 					  " occurrences of packet loss > 2%<br><small><i>(Spikes in packet loss can cause video freezes or audio dropouts even if average packet loss is low)</i></small></div>";
 				  }
 				  
-				  // Render the codec details button (original code)
-				  if (arr.some(data => data.codecs || data.detectedCodecs)) {
-					document.getElementById("details").innerHTML += `<br />
-					  <button id="view-codec-details" onclick="viewCodecDetails('${streamID}')">View Codec Support Details</button>
-					`;
+				  // Render the codec details button
+				  if (arr.some(data => data && (data.codecs || data.detectedCodecs))) {
+					const details = document.getElementById("details");
+					const button = document.createElement("button");
+					button.id = "view-codec-details";
+					button.textContent = "View Codec Support Details";
+					button.addEventListener("click", function () {
+					  window.viewCodecDetails(streamID);
+					});
+					details.appendChild(document.createElement("br"));
+					details.appendChild(button);
 					
 					window.viewCodecDetails = function(resultsId) {
-					  window.open(`./codecs.html?results=${resultsId}`, '_blank');
+					  window.open(`./codecs.html?results=${encodeURIComponent(resultsId)}`, '_blank');
 					};
 				  }
 				}
 			
 			var xmlhttp = new XMLHttpRequest();
-			var url = "https://record.vdo.workers.dev/?name="+streamID;
+			var url = "https://record.vdo.workers.dev/?name="+encodeURIComponent(streamID);
 
 			xmlhttp.onreadystatechange = function() {
 				if (this.readyState == 4 && this.status == 200) {
@@ -650,7 +635,7 @@
 					stat.data = 0;
 				}
 
-				var text = (canvas.previousElementSibling.innerHTML = stat.data);
+				var text = (canvas.previousElementSibling.textContent = stat.data);
 
 				var height = context.canvas.height;
 				var width = context.canvas.width;

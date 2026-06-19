@@ -5,12 +5,25 @@ on:
     branches:
       - develop
     paths:
+      - ".github/ci-checkTranslationKeys.js"
+      - ".github/ci-validateTranslations.js"
+      - "index.html"
+      - "main.js"
+      - "translations/translate.js"
       - "translations/*.json"
   pull_request:
     branches:
       - develop
     paths:
+      - ".github/ci-checkTranslationKeys.js"
+      - ".github/ci-validateTranslations.js"
+      - "index.html"
+      - "main.js"
+      - "translations/translate.js"
       - "translations/*.json"
+
+permissions:
+  contents: read
 
 jobs:
   validate:
@@ -27,3 +40,6 @@ jobs:
 
       - name: Validate translations
         run: node .github/ci-validateTranslations.js
+
+      - name: Check translation keys
+        run: node .github/ci-checkTranslationKeys.js

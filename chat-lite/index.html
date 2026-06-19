@@ -1,0 +1,117 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Social Stream Ninja Lite</title>
+  <link rel="stylesheet" href="./styles.css" />
+</head>
+<body>
+  <main class="layout">
+    <header class="masthead">
+      <div class="masthead__title"><span style="color:#eaeafc">Social Stream Ninja</span> <span style="font-weight:400">Lite</span></div>
+      <p class="masthead__subtitle">Lightweight web-first control panel for relaying chats to overlays.</p>
+    </header>
+
+    <nav class="mobile-nav" aria-label="Primary sections">
+      <button type="button" class="mobile-nav__btn is-active" data-mobile-nav-target="session" aria-pressed="true">Session</button>
+      <button type="button" class="mobile-nav__btn" data-mobile-nav-target="sources" aria-pressed="false">Sources</button>
+      <button type="button" class="mobile-nav__btn" data-mobile-nav-target="activity" aria-pressed="false">Activity</button>
+    </nav>
+
+    <section id="session" class="card session" aria-labelledby="session-heading">
+      <div class="card__header">
+        <h2 id="session-heading">Chat Overlay Link</h2>
+        <div class="card__header-controls">
+          <span id="session-indicator" class="status-indicator" data-state="idle">
+            <span class="sr-only">Session idle</span>
+          </span>
+          <button type="button" id="session-options-toggle" class="icon-button" aria-expanded="false" aria-controls="session-advanced">
+            <span class="sr-only">Show session options</span>
+            <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+              <path d="M12 8.5a3.5 3.5 0 1 1 0 7 3.5 3.5 0 0 1 0-7zm9.46 3-1.07-.83a7.07 7.07 0 0 0 0-1.34l1.07-.83a1 1 0 0 0 .24-1.3l-1.9-3.3a1 1 0 0 0-1.25-.44l-1.26.5a7.13 7.13 0 0 0-1.16-.67l-.19-1.35a1 1 0 0 0-1-.86h-3.8a1 1 0 0 0-1 .86l-.19 1.35a7.13 7.13 0 0 0-1.16.67l-1.26-.5a1 1 0 0 0-1.25.44l-1.9 3.3a1 1 0 0 0 .24 1.3l1.07.83a6.8 6.8 0 0 0 0 1.34l-1.07.83a1 1 0 0 0-.24 1.3l1.9 3.3a1 1 0 0 0 1.25.44l1.26-.5c.37.26.76.49 1.16.67l.19 1.35a1 1 0 0 0 1 .86h3.8a1 1 0 0 0 1-.86l.19-1.35a7.13 7.13 0 0 0 1.16-.67l1.26.5a1 1 0 0 0 1.25-.44l1.9-3.3a1 1 0 0 0-.24-1.3z" />
+            </svg>
+          </button>
+        </div>
+      </div>
+      <div class="session__content">
+        <div class="session__link-row">
+          <a id="session-open" class="btn" href="#" target="_blank" rel="noopener">Open chat overlay</a>
+          <button type="button" id="session-copy" class="btn btn--ghost">Copy link</button>
+          <button type="button" id="session-test" class="btn btn--ghost">Send test message</button>
+        </div>
+        <div class="session__status-row">
+          <output id="session-status" class="session__status" role="status" aria-live="polite" hidden></output>
+        </div>
+        <div id="session-advanced" class="session__advanced" hidden>
+          <label class="field">
+            <span class="field__label">Custom Session ID</span>
+            <input id="session-id" name="session" type="text" autocomplete="off" spellcheck="false" placeholder="Enter a custom session ID" />
+          </label>
+          <div class="session__actions">
+            <button type="button" id="session-apply" class="btn">Save session ID</button>
+          </div>
+          <fieldset class="session__toggle-group">
+            <legend>Quick overlay tweaks</legend>
+            <label class="session__toggle" for="session-opt-transparent">
+              <input type="checkbox" id="session-opt-transparent" />
+              <span>Transparent background</span>
+            </label>
+            <label class="session__toggle" for="session-opt-noavatar">
+              <input type="checkbox" id="session-opt-noavatar" />
+              <span>Hide viewer avatars</span>
+            </label>
+            <label class="session__toggle" for="session-opt-reverse">
+              <input type="checkbox" id="session-opt-reverse" />
+              <span>Newest messages at the top</span>
+            </label>
+            <p class="session__toggle-note">Looking for deeper overlay controls? The standalone app and browser extension include far more customization options.</p>
+          </fieldset>
+        </div>
+      </div>
+    </section>
+
+    <section id="sources" class="card sources" aria-labelledby="sources-heading">
+      <div class="card__header">
+        <h2 id="sources-heading">Sources</h2>
+      </div>
+      <div id="source-list" class="sources__grid" role="list"></div>
+      <p class="sources__footnote">Need additional platforms? Use the SSN WebSocket source card with your existing Social Stream session ID, or use the full standalone app.</p>
+    </section>
+
+    <section id="activity" class="card activity" aria-labelledby="activity-heading">
+      <div class="card__header">
+        <h2 id="activity-heading">Activity</h2>
+        <div class="activity__controls" role="group" aria-label="Activity controls">
+          <button type="button" id="activity-fullscreen" class="btn btn--ghost" aria-pressed="false" data-state="enter">Full screen</button>
+          <label class="activity-toggle" for="activity-filter-donations">
+            <input type="checkbox" id="activity-filter-donations" />
+            <span>Donations only</span>
+          </label>
+          <label class="activity-toggle" for="activity-toggle-tts">
+            <input type="checkbox" id="activity-toggle-tts" />
+            <span>Text-to-speech</span>
+          </label>
+          <button type="button" id="activity-clear" class="btn btn--ghost">Clear</button>
+          <div class="activity-menu">
+            <button type="button" id="activity-menu-toggle" class="icon-button activity-menu__toggle" aria-haspopup="true" aria-expanded="false" aria-controls="activity-menu" title="More options">
+              <span class="sr-only">Activity options</span>
+              <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                <path d="M4 6h16a1 1 0 1 0 0-2H4a1 1 0 0 0 0 2zm16 5H4a1 1 0 1 0 0 2h16a1 1 0 1 0 0-2zm0 7H4a1 1 0 0 0 0 2h16a1 1 0 0 0 0-2z" />
+              </svg>
+            </button>
+            <div id="activity-menu" class="activity-menu__panel" role="menu" hidden tabindex="-1">
+              <button type="button" id="activity-popout" class="activity-menu__item" role="menuitem">Pop out activity feed</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div id="activity-log" class="activity__log" aria-live="polite"></div>
+    </section>
+  </main>
+
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
+  <script type="module" src="./app.js"></script>
+</body>
+</html>

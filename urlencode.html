@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>URL Encoder - VDO.Ninja</title>
+
+	<!-- SEO Meta Tags -->
+	<meta name="description" content="URL encoding tool for VDO.Ninja parameters. Encode website URLs for use with &website, &iframe, and &css parameters.">
+	<meta name="keywords" content="VDO.Ninja, URL encoder, WebRTC, live streaming, OBS, website sharing, iframe">
+	<meta name="author" content="VDO.Ninja">
+	<meta name="robots" content="index, follow">
+
+	<!-- Open Graph / Facebook -->
+	<meta property="og:type" content="website">
+	<meta property="og:url" content="https://vdo.ninja/urlencode">
+	<meta property="og:title" content="URL Encoder - VDO.Ninja">
+	<meta property="og:description" content="URL encoding tool for VDO.Ninja parameters. Encode website URLs for use with &website, &iframe, and &css parameters.">
+	<meta property="og:image" content="https://vdo.ninja/media/vdoNinja_logo_full.png">
+	<meta property="og:site_name" content="VDO.Ninja">
+
+	<!-- Twitter -->
+	<meta name="twitter:card" content="summary_large_image">
+	<meta name="twitter:url" content="https://vdo.ninja/urlencode">
+	<meta name="twitter:title" content="URL Encoder - VDO.Ninja">
+	<meta name="twitter:description" content="URL encoding tool for VDO.Ninja parameters. Encode website URLs for use with &website, &iframe, and &css parameters.">
+	<meta name="twitter:image" content="https://vdo.ninja/media/vdoNinja_logo_full.png">
+
+	<!-- Favicon -->
+	<link rel="shortcut icon" href="data:image/x-icon;," type="image/x-icon">
+	<link rel="icon" type="image/png" sizes="32x32" href="./media/favicon-32x32.png">
+	<link rel="icon" type="image/png" sizes="16x16" href="./media/favicon-16x16.png">
+	<link rel="icon" href="./media/favicon.ico">
+
+	<!-- Canonical URL -->
+	<link rel="canonical" href="https://vdo.ninja/urlencode">
+
+	<style>
+		* {
+			box-sizing: border-box;
+		}
+		body {
+			font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+			background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+			color: #e0e0e0;
+			min-height: 100vh;
+			margin: 0;
+			padding: 20px;
+		}
+		.container {
+			max-width: 800px;
+			margin: 0 auto;
+		}
+		h1 {
+			text-align: center;
+			color: #fff;
+			margin-bottom: 10px;
+		}
+		.subtitle {
+			text-align: center;
+			color: #888;
+			margin-bottom: 30px;
+		}
+		.card {
+			background: rgba(255, 255, 255, 0.05);
+			border-radius: 12px;
+			padding: 25px;
+			margin-bottom: 20px;
+			border: 1px solid rgba(255, 255, 255, 0.1);
+		}
+		label {
+			display: block;
+			margin-bottom: 8px;
+			font-weight: 500;
+			color: #aaa;
+		}
+		textarea, input[type="text"] {
+			width: 100%;
+			padding: 12px;
+			border: 2px solid rgba(255, 255, 255, 0.1);
+			border-radius: 8px;
+			background: rgba(0, 0, 0, 0.3);
+			color: #fff;
+			font-size: 14px;
+			font-family: 'Consolas', 'Monaco', monospace;
+			resize: vertical;
+		}
+		textarea:focus, input[type="text"]:focus {
+			outline: none;
+			border-color: #4a9eff;
+		}
+		.button-row {
+			display: flex;
+			gap: 10px;
+			margin: 15px 0;
+			flex-wrap: wrap;
+		}
+		button {
+			padding: 12px 24px;
+			border: none;
+			border-radius: 8px;
+			cursor: pointer;
+			font-size: 14px;
+			font-weight: 600;
+			transition: all 0.2s;
+		}
+		.btn-primary {
+			background: linear-gradient(135deg, #4a9eff 0%, #6c5ce7 100%);
+			color: white;
+		}
+		.btn-primary:hover {
+			transform: translateY(-2px);
+			box-shadow: 0 5px 20px rgba(74, 158, 255, 0.4);
+		}
+		.btn-secondary {
+			background: rgba(255, 255, 255, 0.1);
+			color: #fff;
+		}
+		.btn-secondary:hover {
+			background: rgba(255, 255, 255, 0.2);
+		}
+		.btn-copy {
+			background: #27ae60;
+			color: white;
+		}
+		.btn-copy:hover {
+			background: #2ecc71;
+		}
+		.output-wrapper {
+			position: relative;
+		}
+		.copy-feedback {
+			position: absolute;
+			top: 50%;
+			left: 50%;
+			transform: translate(-50%, -50%);
+			background: #27ae60;
+			color: white;
+			padding: 8px 16px;
+			border-radius: 6px;
+			opacity: 0;
+			transition: opacity 0.3s;
+			pointer-events: none;
+		}
+		.copy-feedback.show {
+			opacity: 1;
+		}
+		h3 {
+			color: #fff;
+			margin-top: 0;
+			margin-bottom: 15px;
+			font-size: 16px;
+		}
+		.examples {
+			display: grid;
+			gap: 15px;
+		}
+		.example {
+			background: rgba(0, 0, 0, 0.2);
+			border-radius: 8px;
+			padding: 15px;
+			border-left: 3px solid #4a9eff;
+		}
+		.example-title {
+			font-weight: 600;
+			color: #4a9eff;
+			margin-bottom: 8px;
+			font-size: 14px;
+		}
+		.example-input {
+			font-size: 12px;
+			color: #888;
+			margin-bottom: 5px;
+			word-break: break-all;
+		}
+		.example-output {
+			font-family: 'Consolas', 'Monaco', monospace;
+			font-size: 12px;
+			color: #6c5ce7;
+			word-break: break-all;
+			background: rgba(0, 0, 0, 0.3);
+			padding: 8px;
+			border-radius: 4px;
+			margin-top: 8px;
+		}
+		.example-full {
+			font-family: 'Consolas', 'Monaco', monospace;
+			font-size: 11px;
+			color: #27ae60;
+			word-break: break-all;
+			margin-top: 8px;
+			padding: 8px;
+			background: rgba(39, 174, 96, 0.1);
+			border-radius: 4px;
+		}
+		.arrow {
+			color: #666;
+			margin: 5px 0;
+		}
+		.info {
+			background: rgba(74, 158, 255, 0.1);
+			border: 1px solid rgba(74, 158, 255, 0.3);
+			border-radius: 8px;
+			padding: 15px;
+			margin-top: 15px;
+			font-size: 13px;
+			line-height: 1.6;
+		}
+		.info code {
+			background: rgba(0, 0, 0, 0.3);
+			padding: 2px 6px;
+			border-radius: 4px;
+			font-family: 'Consolas', 'Monaco', monospace;
+		}
+		a {
+			color: #4a9eff;
+		}
+		a:hover {
+			color: #6cb5ff;
+		}
+		.footer {
+			text-align: center;
+			padding: 30px 20px;
+			color: #666;
+			font-size: 13px;
+		}
+		.footer a {
+			color: #888;
+			text-decoration: none;
+			margin: 0 10px;
+		}
+		.footer a:hover {
+			color: #4a9eff;
+		}
+		.docs-links {
+			display: flex;
+			flex-wrap: wrap;
+			gap: 10px;
+			margin-top: 15px;
+		}
+		.docs-links a {
+			background: rgba(74, 158, 255, 0.1);
+			padding: 8px 14px;
+			border-radius: 6px;
+			text-decoration: none;
+			font-size: 13px;
+			transition: all 0.2s;
+		}
+		.docs-links a:hover {
+			background: rgba(74, 158, 255, 0.2);
+		}
+		.header-links {
+			text-align: center;
+			margin-bottom: 20px;
+		}
+		.header-links a {
+			margin: 0 15px;
+			font-size: 14px;
+			text-decoration: none;
+		}
+	</style>
+</head>
+<body>
+	<div class="container">
+		<h1>URL Encoder</h1>
+		<p class="subtitle">Encode URLs for use with VDO.Ninja parameters</p>
+
+		<div class="header-links">
+			<a href="https://vdo.ninja" title="VDO.Ninja Home">Home</a>
+			<a href="https://docs.vdo.ninja" target="_blank" title="Documentation">Docs</a>
+			<a href="https://discord.vdo.ninja" target="_blank" title="Discord Community">Discord</a>
+			<a href="https://reddit.com/r/vdoninja" target="_blank" title="Reddit Community">Reddit</a>
+		</div>
+
+		<div class="card">
+			<label for="input">URL or text to encode:</label>
+			<textarea id="input" rows="3" placeholder="https://www.youtube.com/live_chat?is_popout=1&v=VIDEO_ID"></textarea>
+
+			<div class="button-row">
+				<button class="btn-primary" onclick="encode()">Encode</button>
+				<button class="btn-secondary" onclick="decode()">Decode</button>
+				<button class="btn-secondary" onclick="clearAll()">Clear</button>
+			</div>
+
+			<label for="output">Encoded result:</label>
+			<div class="output-wrapper">
+				<textarea id="output" rows="3" readonly placeholder="Encoded URL will appear here..."></textarea>
+				<div class="copy-feedback" id="copyFeedback">Copied!</div>
+			</div>
+
+			<div class="button-row">
+				<button class="btn-copy" onclick="copyOutput()">Copy to Clipboard</button>
+				<button class="btn-secondary" onclick="copyAsParam()">Copy as &website= param</button>
+			</div>
+
+			<div class="info">
+				<strong>Usage:</strong> Paste your URL above, click Encode, then use the result with VDO.Ninja parameters like <code>&website=</code>, <code>&iframe=</code>, or <code>&css=</code>.
+				<div class="docs-links">
+					<a href="https://docs.vdo.ninja/source-settings/and-website" target="_blank">&website docs</a>
+					<a href="https://docs.vdo.ninja/advanced-settings/design-parameters/css" target="_blank">&css docs</a>
+					<a href="https://docs.vdo.ninja/getting-started/the-power-of-the-url-parameter" target="_blank">URL parameters guide</a>
+				</div>
+			</div>
+		</div>
+
+		<div class="card">
+			<h3>Example Parameters</h3>
+			<div class="examples">
+				<div class="example">
+					<div class="example-title">YouTube Live Chat</div>
+					<div class="example-input">https://www.youtube.com/live_chat?is_popout=1&v=07n5Cy1HtXA</div>
+					<div class="arrow">Encoded:</div>
+					<div class="example-output">https%3A%2F%2Fwww.youtube.com%2Flive_chat%3Fis_popout%3D1%26v%3D07n5Cy1HtXA</div>
+					<div class="example-full">&website=https%3A%2F%2Fwww.youtube.com%2Flive_chat%3Fis_popout%3D1%26v%3D07n5Cy1HtXA</div>
+				</div>
+
+				<div class="example">
+					<div class="example-title">Twitch Chat Embed</div>
+					<div class="example-input">https://www.twitch.tv/embed/CHANNEL/chat?parent=vdo.ninja</div>
+					<div class="arrow">Encoded:</div>
+					<div class="example-output">https%3A%2F%2Fwww.twitch.tv%2Fembed%2FCHANNEL%2Fchat%3Fparent%3Dvdo.ninja</div>
+					<div class="example-full">&website=https%3A%2F%2Fwww.twitch.tv%2Fembed%2FCHANNEL%2Fchat%3Fparent%3Dvdo.ninja</div>
+				</div>
+
+				<div class="example">
+					<div class="example-title">Custom CSS URL</div>
+					<div class="example-input">https://example.com/styles/custom.css?v=2</div>
+					<div class="arrow">Encoded:</div>
+					<div class="example-output">https%3A%2F%2Fexample.com%2Fstyles%2Fcustom.css%3Fv%3D2</div>
+					<div class="example-full">&css=https%3A%2F%2Fexample.com%2Fstyles%2Fcustom.css%3Fv%3D2</div>
+				</div>
+
+				<div class="example">
+					<div class="example-title">Streamlabs Alert Box</div>
+					<div class="example-input">https://streamlabs.com/alert-box/v3/YOUR_TOKEN</div>
+					<div class="arrow">Encoded:</div>
+					<div class="example-output">https%3A%2F%2Fstreamlabs.com%2Falert-box%2Fv3%2FYOUR_TOKEN</div>
+					<div class="example-full">&website=https%3A%2F%2Fstreamlabs.com%2Falert-box%2Fv3%2FYOUR_TOKEN</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="card">
+			<h3>Full URL Builder</h3>
+			<label for="streamId">Stream ID (for push URL):</label>
+			<input type="text" id="streamId" placeholder="myStreamID" style="margin-bottom: 15px;">
+
+			<label for="websiteUrl">Website URL to share:</label>
+			<input type="text" id="websiteUrl" placeholder="https://example.com">
+
+			<div class="button-row">
+				<button class="btn-primary" onclick="buildUrl()">Build Full URL</button>
+			</div>
+
+			<label for="fullUrl">Complete VDO.Ninja URL:</label>
+			<div class="output-wrapper">
+				<textarea id="fullUrl" rows="2" readonly placeholder="Full URL will appear here..."></textarea>
+			</div>
+			<div class="button-row">
+				<button class="btn-copy" onclick="copyFullUrl()">Copy Full URL</button>
+			</div>
+		</div>
+
+		<div class="card">
+			<h3>Documentation</h3>
+			<p style="color: #888; font-size: 14px; margin-bottom: 15px;">Learn more about VDO.Ninja parameters and features:</p>
+			<div class="docs-links">
+				<a href="https://docs.vdo.ninja/source-settings/and-website" target="_blank">&website parameter</a>
+				<a href="https://docs.vdo.ninja/advanced-settings/design-parameters/css" target="_blank">&css parameter</a>
+				<a href="https://docs.vdo.ninja/advanced-settings/design-parameters/and-base64css" target="_blank">&base64css parameter</a>
+				<a href="https://docs.vdo.ninja/getting-started/the-power-of-the-url-parameter" target="_blank">URL parameters guide</a>
+				<a href="https://docs.vdo.ninja/guides/how-to-get-permanent-links" target="_blank">Permanent links guide</a>
+				<a href="https://docs.vdo.ninja" target="_blank">Full documentation</a>
+			</div>
+		</div>
+	</div>
+
+	<footer class="footer">
+		<a href="https://vdo.ninja">VDO.Ninja</a>
+		<a href="https://docs.vdo.ninja" target="_blank">Documentation</a>
+		<a href="https://github.com/steveseguin/vdo.ninja" target="_blank">GitHub</a>
+		<a href="https://discord.vdo.ninja" target="_blank">Discord</a>
+		<p style="margin-top: 15px;">&copy; VDO.Ninja - Free and open-source</p>
+	</footer>
+
+	<script>
+		function encode() {
+			const input = document.getElementById('input').value;
+			const encoded = encodeURIComponent(input);
+			document.getElementById('output').value = encoded;
+		}
+
+		function decode() {
+			const input = document.getElementById('input').value;
+			try {
+				const decoded = decodeURIComponent(input);
+				document.getElementById('output').value = decoded;
+			} catch (e) {
+				document.getElementById('output').value = 'Error: Invalid encoded string';
+			}
+		}
+
+		function clearAll() {
+			document.getElementById('input').value = '';
+			document.getElementById('output').value = '';
+		}
+
+		function copyOutput() {
+			const output = document.getElementById('output');
+			navigator.clipboard.writeText(output.value).then(() => {
+				showCopyFeedback();
+			});
+		}
+
+		function copyAsParam() {
+			const output = document.getElementById('output').value;
+			if (output) {
+				navigator.clipboard.writeText('&website=' + output).then(() => {
+					showCopyFeedback();
+				});
+			}
+		}
+
+		function showCopyFeedback() {
+			const feedback = document.getElementById('copyFeedback');
+			feedback.classList.add('show');
+			setTimeout(() => {
+				feedback.classList.remove('show');
+			}, 1500);
+		}
+
+		function buildUrl() {
+			const streamId = document.getElementById('streamId').value || 'myStreamID';
+			const websiteUrl = document.getElementById('websiteUrl').value;
+
+			if (!websiteUrl) {
+				document.getElementById('fullUrl').value = 'Please enter a website URL';
+				return;
+			}
+
+			const encodedStreamId = encodeURIComponent(streamId);
+			const encoded = encodeURIComponent(websiteUrl);
+			const fullUrl = `https://vdo.ninja/?push=${encodedStreamId}&website=${encoded}&autostart`;
+			document.getElementById('fullUrl').value = fullUrl;
+		}
+
+		function copyFullUrl() {
+			const fullUrl = document.getElementById('fullUrl');
+			if (fullUrl.value && !fullUrl.value.startsWith('Please')) {
+				navigator.clipboard.writeText(fullUrl.value).then(() => {
+					showCopyFeedback();
+				});
+			}
+		}
+
+		// Allow Enter key to trigger encode
+		document.getElementById('input').addEventListener('keydown', function(e) {
+			if (e.key === 'Enter' && !e.shiftKey) {
+				e.preventDefault();
+				encode();
+			}
+		});
+	</script>
+</body>
+</html>

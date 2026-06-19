@@ -1,0 +1,1933 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<title>VDO.Ninja PTZ Controller</title>
+	<meta
+		name="description"
+		content="Control compatible PTZ cameras in VDO.Ninja with fullscreen preview, remote camera refresh, presets, talkback, and sender recovery tools."
+	/>
+	<meta
+		name="keywords"
+		content="VDO.Ninja, PTZ controller, remote camera control, pan tilt zoom, talkback, livestream camera"
+	/>
+	<meta name="robots" content="index,follow,max-image-preview:large" />
+	<meta name="theme-color" content="#0f172a" />
+	<meta property="og:type" content="website" />
+	<meta property="og:title" content="VDO.Ninja PTZ Controller" />
+	<meta
+		property="og:description"
+		content="Fullscreen PTZ control surface for VDO.Ninja with presets, preview transforms, talkback, and remote camera recovery tools."
+	/>
+	<meta property="og:site_name" content="VDO.Ninja" />
+	<meta property="og:image" content="https://vdo.ninja/media/icon-512x512.png" />
+	<meta name="twitter:card" content="summary_large_image" />
+	<meta name="twitter:title" content="VDO.Ninja PTZ Controller" />
+	<meta
+		name="twitter:description"
+		content="Remote PTZ camera control for VDO.Ninja with fullscreen preview, presets, two-way audio, and recovery actions."
+	/>
+	<meta name="twitter:image" content="https://vdo.ninja/media/icon-512x512.png" />
+	<link rel="icon" href="/media/favicon.ico" sizes="any" />
+	<link rel="icon" type="image/png" sizes="32x32" href="/media/favicon-32x32.png" />
+	<link rel="icon" type="image/png" sizes="16x16" href="/media/favicon-16x16.png" />
+	<link rel="apple-touch-icon" href="/media/icon-192x192.png" />
+		<style>
+			:root {
+				--bg: #0f172a;
+				--panel: #111827;
+				--panel-2: #1f2937;
+				--text: #e5e7eb;
+				--muted: #9ca3af;
+				--accent: #22c55e;
+				--accent-2: #14b8a6;
+				--danger: #ef4444;
+				--border: #374151;
+				--input: #0b1220;
+				--stage-overlay-alpha: 0.72;
+			}
+
+		* {
+			box-sizing: border-box;
+		}
+
+		body {
+			margin: 0;
+			font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+			background: radial-gradient(circle at top right, #1e293b 0%, var(--bg) 45%);
+			color: var(--text);
+		}
+
+		main {
+			max-width: 1280px;
+			margin: 0 auto;
+			padding: 16px;
+			display: grid;
+			gap: 12px;
+		}
+
+		.panel {
+			background: linear-gradient(160deg, rgba(255, 255, 255, 0.02), rgba(255, 255, 255, 0));
+			background-color: var(--panel);
+			border: 1px solid var(--border);
+			border-radius: 12px;
+			padding: 12px;
+		}
+
+		h1 {
+			margin: 0 0 6px;
+			font-size: 1.35rem;
+		}
+
+		p {
+			margin: 0;
+			color: var(--muted);
+		}
+
+		.grid {
+			display: grid;
+			gap: 10px;
+			grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+		}
+
+			label {
+				display: grid;
+				gap: 6px;
+				font-size: 0.9rem;
+				color: #d1d5db;
+			}
+
+			.checkline {
+				display: flex;
+				align-items: center;
+				gap: 8px;
+				font-size: 0.88rem;
+				color: #d1d5db;
+			}
+
+		input[type="text"],
+		input[type="number"],
+		select {
+			width: 100%;
+			padding: 8px 10px;
+			border-radius: 8px;
+			border: 1px solid var(--border);
+			background: var(--input);
+			color: var(--text);
+		}
+
+		input[type="range"] {
+			width: 100%;
+		}
+
+		.row {
+			display: flex;
+			flex-wrap: wrap;
+			gap: 8px;
+			align-items: center;
+		}
+
+		.sender-row {
+			align-items: flex-start;
+		}
+
+		.template-line {
+			display: block;
+			flex: 1 1 320px;
+			min-width: 0;
+			padding: 7px 9px;
+			border-radius: 8px;
+			border: 1px solid rgba(71, 85, 105, 0.75);
+			background: #0b1220;
+			color: #cbd5e1;
+			font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+			font-size: 0.76rem;
+			line-height: 1.25;
+			overflow-wrap: anywhere;
+		}
+
+		.template-line.placeholder {
+			color: var(--muted);
+			font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+			font-size: 0.8rem;
+		}
+
+		button {
+			border: 1px solid var(--border);
+			background: var(--panel-2);
+			color: var(--text);
+			padding: 8px 10px;
+			border-radius: 8px;
+			cursor: pointer;
+			font-weight: 600;
+		}
+
+		button.primary {
+			background: linear-gradient(140deg, var(--accent), var(--accent-2));
+			color: #04130b;
+			border-color: #0e8f4e;
+		}
+
+		button.danger {
+			background: #3b1113;
+			border-color: #7f1d1d;
+			color: #fecaca;
+		}
+
+		button:active {
+			transform: translateY(1px);
+		}
+
+		button:disabled {
+			opacity: 0.45;
+			cursor: not-allowed;
+			transform: none;
+		}
+
+		.status {
+			min-height: 1.4rem;
+			font-size: 0.9rem;
+			color: #cbd5e1;
+		}
+
+		.status.error {
+			color: #fca5a5;
+		}
+
+		.layout {
+			display: grid;
+			gap: 12px;
+			grid-template-columns: minmax(320px, 420px) 1fr;
+		}
+
+			.controls {
+				display: grid;
+				gap: 10px;
+				transition: opacity 0.2s ease;
+			}
+
+		.control-card {
+			border: 1px solid var(--border);
+			background: #0c1424;
+			border-radius: 10px;
+			padding: 10px;
+		}
+
+		.control-title {
+			font-size: 0.86rem;
+			color: #93c5fd;
+			text-transform: uppercase;
+			letter-spacing: 0.06em;
+			margin-bottom: 8px;
+		}
+
+		.pad {
+			display: grid;
+			grid-template-columns: 1fr 1fr 1fr;
+			gap: 8px;
+		}
+
+		.pad button {
+			min-height: 44px;
+		}
+
+		.pad .spacer {
+			visibility: hidden;
+		}
+
+		.split {
+			display: grid;
+			grid-template-columns: 1fr 1fr;
+			gap: 8px;
+		}
+
+		.preset-grid {
+			display: grid;
+			grid-template-columns: repeat(4, 1fr);
+			gap: 6px;
+		}
+
+		.value {
+			font-size: 0.8rem;
+			color: var(--muted);
+		}
+
+		.pad-surface {
+			height: 120px;
+			border: 1px dashed #475569;
+			border-radius: 10px;
+			display: grid;
+			place-items: center;
+			color: #cbd5e1;
+			background: #0b1220;
+			user-select: none;
+			touch-action: none;
+		}
+
+			.preview-panel {
+				padding: 8px;
+			}
+
+			.preview-stage {
+				position: relative;
+				width: 100%;
+				height: 100%;
+				min-height: 620px;
+				border: 1px solid var(--border);
+				border-radius: 10px;
+				background: #000;
+				overflow: hidden;
+			}
+
+			.preview-transform {
+				width: 100%;
+				height: 100%;
+				transform-origin: center center;
+				transition: transform 0.15s ease;
+			}
+
+			.preview-transform iframe {
+				width: 100%;
+				height: 100%;
+				min-height: 0;
+				border: 0;
+				border-radius: 0;
+				background: #000;
+			}
+
+			.preview-pad-overlay {
+				position: absolute;
+				inset: 0;
+				display: flex;
+				align-items: end;
+				justify-content: center;
+				padding: 12px;
+				font-size: 0.8rem;
+				letter-spacing: 0.02em;
+				color: rgba(229, 231, 235, 0.85);
+				background: linear-gradient(to top, rgba(2, 6, 23, 0.45), rgba(2, 6, 23, 0) 30%);
+				user-select: none;
+				touch-action: none;
+				pointer-events: none;
+				opacity: 0;
+				transition: opacity 0.15s ease;
+			}
+
+			.preview-pad-overlay.enabled {
+				pointer-events: auto;
+				opacity: 1;
+				cursor: grab;
+			}
+
+			.preview-pad-overlay.enabled:active {
+				cursor: grabbing;
+			}
+
+			.layout.controls-collapsed {
+				grid-template-columns: 1fr;
+			}
+
+			.layout.controls-collapsed .controls {
+				display: none;
+			}
+
+			.controls.overlay-hidden {
+				opacity: 0;
+				pointer-events: none;
+			}
+
+			body.stage-mode {
+				overflow: hidden;
+			}
+
+			body.stage-mode main {
+				max-width: none;
+				padding: 0;
+				gap: 0;
+				height: 100vh;
+			}
+
+			body.stage-mode #introPanel,
+			body.stage-mode #setupPanel,
+			body.stage-mode #helpPanel {
+				display: none;
+			}
+
+			body.stage-mode #layoutSection {
+				grid-template-columns: 1fr;
+				gap: 0;
+				height: 100vh;
+			}
+
+			body.stage-mode .preview-panel {
+				padding: 0;
+				border: 0;
+				border-radius: 0;
+				background: #000;
+			}
+
+			body.stage-mode .preview-stage {
+				min-height: 0;
+				height: 100vh;
+				border: 0;
+				border-radius: 0;
+			}
+
+			body.stage-mode #controlsColumn {
+				position: fixed;
+				top: 12px;
+				left: 12px;
+				width: min(420px, calc(100vw - 24px));
+				max-height: calc(100vh - 24px);
+				overflow: auto;
+				padding: 10px;
+				border: 1px solid rgba(148, 163, 184, 0.25);
+				border-radius: 12px;
+				background: rgba(7, 15, 30, var(--stage-overlay-alpha));
+				backdrop-filter: blur(8px);
+				z-index: 20;
+			}
+
+			body.stage-mode.stage-solid-controls #controlsColumn {
+				background: #0c1424;
+				backdrop-filter: none;
+			}
+
+			body.stage-mode #controlsColumn .control-card {
+				background: rgba(12, 20, 36, 0.72);
+			}
+
+			body.stage-mode #controlsColumn button {
+				background: rgba(31, 41, 55, 0.72);
+			}
+
+			.small {
+				font-size: 0.8rem;
+				color: var(--muted);
+			}
+
+		details {
+			font-size: 0.9rem;
+			color: #d1d5db;
+		}
+
+			@media (max-width: 980px) {
+				.layout {
+					grid-template-columns: 1fr;
+				}
+				.preview-stage {
+					min-height: 380px;
+				}
+				.sender-row button {
+					width: 100%;
+				}
+			}
+		</style>
+	</head>
+	<body>
+		<main>
+			<section class="panel" id="introPanel">
+				<h1>Standalone PTZ Controller</h1>
+				<p>Dedicated control interface that does not modify the default VDO.Ninja UI.</p>
+			</section>
+
+			<section class="panel" id="setupPanel">
+				<div class="grid">
+				<label>
+					Viewer URL or Stream ID
+					<input id="viewInput" type="text" placeholder="https://vdo.ninja/?view=STREAMID or STREAMID" />
+				</label>
+				<label>
+					Target Stream ID / UUID
+					<input id="targetInput" type="text" placeholder="Optional; auto-uses ?view when possible" />
+				</label>
+				<label>
+					Remote Token
+					<input id="remoteInput" type="text" placeholder="Optional; required for &remote token control" />
+				</label>
+				<label>
+					Options
+					<select id="embedPreset">
+						<option value="light">Lightweight embed (recommended)</option>
+						<option value="raw">Use URL exactly as provided</option>
+					</select>
+				</label>
+			</div>
+				<div class="row" style="margin-top:8px;">
+					<label class="checkline">
+						<input id="muteViewerAudioToggle" type="checkbox" />
+						Mute embed audio (&noaudio)
+					</label>
+					<label class="checkline">
+						<input id="senderNoPreviewToggle" type="checkbox" checked />
+						Include &nopreview in sender template
+					</label>
+					<label class="checkline">
+						<input id="senderNoVideoInToggle" type="checkbox" />
+						Sender: No incoming video (&novideo)
+					</label>
+					<label class="checkline">
+						<input id="talkbackToggle" type="checkbox" />
+						Enable controller microphone talkback (two-way audio)
+					</label>
+					<div class="small">Talkback uses the generated sender link and will ask this controller page for microphone access.</div>
+				</div>
+				<div class="row" style="margin-top:10px;">
+					<button id="connectBtn" class="primary">Connect Viewer</button>
+					<button id="reloadBtn">Reload</button>
+					<button id="togglePreviewBtn">Toggle Preview</button>
+					<button id="toggleControlsBtn">Hide Controls Pane</button>
+					<button id="stageModeBtn">Stage Mode</button>
+					<button id="fullscreenBtn">PTZ Fullscreen</button>
+					<span class="small">If keyboard shortcuts do not respond, click anywhere on this page first.</span>
+				</div>
+				<div class="row sender-row" style="margin-top:8px;">
+					<button id="copySenderUrlBtn">Copy Sender Link</button>
+					<span id="senderTemplateLine" class="template-line placeholder">Paste a viewer URL or stream ID to generate a sender link.</span>
+				</div>
+				<div id="statusLine" class="status" style="margin-top:8px;">Idle.</div>
+			</section>
+
+			<section class="layout" id="layoutSection">
+				<div class="controls" id="controlsColumn">
+					<div class="control-card">
+						<div class="control-title">Stage + Preview</div>
+						<div class="split">
+							<button id="mirrorPreviewBtn">Mirror Preview</button>
+							<button id="rotatePreviewBtn">Rotate +90</button>
+							<button id="rotatePreviewBackBtn">Rotate -90</button>
+							<button id="resetPreviewTransformBtn">Reset View</button>
+						</div>
+						<div class="split" style="margin-top:8px;">
+							<button id="mirrorRemoteBtn">Mirror Remote</button>
+							<button id="rotateRemoteBtn">Rotate Remote +90</button>
+							<button id="rotateRemoteResetBtn">Reset Remote Rotation</button>
+						</div>
+						<div class="row" style="margin-top:8px;">
+							<label class="checkline">
+								<input id="previewPadToggle" type="checkbox" />
+								Use preview area for drag/wheel PTZF
+							</label>
+						</div>
+						<div class="grid" style="margin-top:8px;">
+							<label class="checkline">
+								<input id="overlayTransparentToggle" type="checkbox" checked />
+								Transparent stage overlay
+							</label>
+							<label class="checkline">
+								<input id="overlayAutoHideToggle" type="checkbox" />
+								Auto-hide overlay when idle
+							</label>
+							<label>
+								Overlay Opacity
+								<input id="overlayOpacityInput" type="range" min="0.3" max="0.95" step="0.05" value="0.72" />
+							</label>
+						</div>
+					</div>
+
+					<div class="control-card">
+						<div class="control-title">Step + Repeat</div>
+					<div class="grid">
+						<label>
+							Base Step (default 0.005)
+							<input id="baseStepInput" type="number" min="0.001" max="1" step="0.001" value="0.005" />
+						</label>
+						<label>
+							Repeat Interval (ms)
+							<input id="repeatInput" type="number" min="40" max="500" step="10" value="120" />
+						</label>
+					</div>
+					<div class="row" style="margin-top:8px;">
+						<label style="display:flex;align-items:center;gap:8px;">
+							<input id="fineToggle" type="checkbox" />
+							Force fine mode (Alt equivalent)
+						</label>
+						<label style="display:flex;align-items:center;gap:8px;">
+							<input id="panInvertToggle" type="checkbox" checked />
+							Invert pan
+						</label>
+						<label style="display:flex;align-items:center;gap:8px;">
+							<input id="tiltInvertToggle" type="checkbox" />
+							Invert tilt
+						</label>
+					</div>
+				</div>
+
+				<div class="control-card">
+					<div class="control-title">Pan / Tilt</div>
+					<div class="pad">
+						<button class="spacer" disabled>.</button>
+						<button data-hold-control="tilt" data-dir="1">Tilt Up</button>
+						<button class="spacer" disabled>.</button>
+						<button data-hold-control="pan" data-dir="-1">Pan Left</button>
+						<button data-home="1">Home</button>
+						<button data-hold-control="pan" data-dir="1">Pan Right</button>
+						<button class="spacer" disabled>.</button>
+						<button data-hold-control="tilt" data-dir="-1">Tilt Down</button>
+						<button class="spacer" disabled>.</button>
+					</div>
+				</div>
+
+				<div class="control-card">
+					<div class="control-title">Zoom / Focus</div>
+					<div class="split">
+						<button data-hold-control="zoom" data-dir="1">Zoom +</button>
+						<button data-hold-control="zoom" data-dir="-1">Zoom -</button>
+						<button data-hold-control="focus" data-dir="1">Focus +</button>
+						<button data-hold-control="focus" data-dir="-1">Focus -</button>
+					</div>
+					<div class="row" style="margin-top:8px;">
+						<button id="autofocusBtn">Reset Autofocus</button>
+					</div>
+				</div>
+
+				<div class="control-card">
+					<div class="control-title">Camera Recovery</div>
+					<div class="split">
+						<button id="refreshCameraBtn">Refresh Camera</button>
+						<button id="recoverStreamBtn">Refresh Camera + Link</button>
+					</div>
+					<div class="row" style="margin-top:8px;">
+						<span class="small">Remote recovery still requires valid <code>&amp;remote</code> authorization on the sender.</span>
+					</div>
+				</div>
+
+				<div class="control-card">
+					<div class="control-title">Presets</div>
+					<div class="preset-grid">
+						<button data-preset-recall="1">Recall 1</button>
+						<button data-preset-recall="2">Recall 2</button>
+						<button data-preset-recall="3">Recall 3</button>
+						<button data-home="1">Recall Home</button>
+						<button data-preset-save="1">Save 1</button>
+						<button data-preset-save="2">Save 2</button>
+						<button data-preset-save="3">Save 3</button>
+						<div class="small" style="align-self:center;">0 = home. Shift+1/2/3 = save.</div>
+					</div>
+				</div>
+
+				<div class="control-card">
+					<div class="control-title">Drag + Wheel Surface</div>
+					<div id="dragPad" class="pad-surface">Drag here for pan/tilt</div>
+					<div id="wheelPad" class="pad-surface" style="margin-top:8px;">Scroll here for PTZ/focus (Shift/Ctrl modifiers supported)</div>
+				</div>
+
+				<div class="control-card">
+					<div class="control-title">Absolute Position</div>
+					<label>
+						Pan <span id="panAbsValue" class="value">0.00</span>
+						<input id="panAbs" type="range" min="-1" max="1" step="0.01" value="0" />
+					</label>
+					<label>
+						Tilt <span id="tiltAbsValue" class="value">0.00</span>
+						<input id="tiltAbs" type="range" min="-1" max="1" step="0.01" value="0" />
+					</label>
+					<label>
+						Zoom <span id="zoomAbsValue" class="value">0.00</span>
+						<input id="zoomAbs" type="range" min="0" max="1" step="0.01" value="0" />
+					</label>
+					<label>
+						Focus <span id="focusAbsValue" class="value">0.50</span>
+						<input id="focusAbs" type="range" min="0" max="1" step="0.01" value="0.5" />
+					</label>
+					<div class="row">
+						<button id="applyAbsBtn">Apply All Absolute</button>
+					</div>
+				</div>
+			</div>
+
+				<div class="panel preview-panel" id="previewPanel">
+					<div class="row" style="margin-bottom:8px;">
+						<button id="previewFullscreenBtn">Feed Fullscreen</button>
+					</div>
+					<div class="preview-stage" id="previewStage">
+						<div id="previewTransform" class="preview-transform">
+							<iframe id="viewerFrame" allow="autoplay;camera;microphone;fullscreen;picture-in-picture;display-capture;"></iframe>
+						</div>
+						<div id="previewPadOverlay" class="preview-pad-overlay">Drag for pan/tilt. Scroll for zoom/focus.</div>
+					</div>
+				</div>
+			</section>
+
+			<section class="panel" id="helpPanel">
+				<details>
+					<summary>Keyboard shortcuts</summary>
+					<p class="small">
+						Arrows = pan/tilt, +/- = zoom, Ctrl/Cmd + +/- = focus, 1/2/3 or Numpad 1/2/3 = preset recall, Shift+1/2/3 = preset save, Numpad 0 / 0 = home.
+						Hold Alt for fine steps. P = toggle preview drag/wheel overlay. M = mirror preview, R / Shift+R = rotate preview, F = stage mode toggle.
+						A = reset autofocus. Ctrl/Cmd+M = mirror remote, Ctrl/Cmd+R = rotate remote, Ctrl/Cmd+Shift+R = reset remote rotation.
+						Use the camera recovery card to refresh the sender camera or request its available camera list without opening the director UI.
+						Use "Invert pan" or "Invert tilt" if your camera responds opposite to expected direction.
+					</p>
+				</details>
+			</section>
+		</main>
+
+	<script>
+		(function () {
+			"use strict";
+
+			var state = {
+				altDown: false,
+				activeKeyIntervals: {},
+				activePointerInterval: null,
+				previewHidden: false,
+				stageMode: false,
+				controlsCollapsed: false,
+				overlayAutoHide: false,
+				overlayVisible: true,
+				overlayHideTimer: null,
+				previewMirror: false,
+				previewRotation: 0,
+				inferredTarget: "",
+				remoteFlagPresent: false,
+				drag: {
+					active: false,
+					pointerId: null,
+					lastX: 0,
+					lastY: 0,
+					accX: 0,
+					accY: 0
+				},
+				remoteMirror: false,
+				copyButtonTimer: null,
+				talkbackID: Math.random().toString(36).substring(2, 10),
+				talkbackActive: false,
+				peerConnected: false,
+				pendingPreset: null
+			};
+
+			var refs = {
+				viewInput: document.getElementById("viewInput"),
+				targetInput: document.getElementById("targetInput"),
+				remoteInput: document.getElementById("remoteInput"),
+				embedPreset: document.getElementById("embedPreset"),
+				muteViewerAudioToggle: document.getElementById("muteViewerAudioToggle"),
+				senderNoPreviewToggle: document.getElementById("senderNoPreviewToggle"),
+				senderNoVideoInToggle: document.getElementById("senderNoVideoInToggle"),
+				talkbackToggle: document.getElementById("talkbackToggle"),
+				copySenderUrlBtn: document.getElementById("copySenderUrlBtn"),
+				senderTemplateLine: document.getElementById("senderTemplateLine"),
+				baseStepInput: document.getElementById("baseStepInput"),
+				repeatInput: document.getElementById("repeatInput"),
+				fineToggle: document.getElementById("fineToggle"),
+				panInvertToggle: document.getElementById("panInvertToggle"),
+				tiltInvertToggle: document.getElementById("tiltInvertToggle"),
+				layoutSection: document.getElementById("layoutSection"),
+				controlsColumn: document.getElementById("controlsColumn"),
+				toggleControlsBtn: document.getElementById("toggleControlsBtn"),
+				stageModeBtn: document.getElementById("stageModeBtn"),
+				fullscreenBtn: document.getElementById("fullscreenBtn"),
+				previewFullscreenBtn: document.getElementById("previewFullscreenBtn"),
+				previewStage: document.getElementById("previewStage"),
+				mirrorPreviewBtn: document.getElementById("mirrorPreviewBtn"),
+				rotatePreviewBtn: document.getElementById("rotatePreviewBtn"),
+				rotatePreviewBackBtn: document.getElementById("rotatePreviewBackBtn"),
+				resetPreviewTransformBtn: document.getElementById("resetPreviewTransformBtn"),
+				mirrorRemoteBtn: document.getElementById("mirrorRemoteBtn"),
+				rotateRemoteBtn: document.getElementById("rotateRemoteBtn"),
+				rotateRemoteResetBtn: document.getElementById("rotateRemoteResetBtn"),
+				previewPadToggle: document.getElementById("previewPadToggle"),
+				overlayTransparentToggle: document.getElementById("overlayTransparentToggle"),
+				overlayAutoHideToggle: document.getElementById("overlayAutoHideToggle"),
+				overlayOpacityInput: document.getElementById("overlayOpacityInput"),
+				previewTransform: document.getElementById("previewTransform"),
+				previewPadOverlay: document.getElementById("previewPadOverlay"),
+				viewerFrame: document.getElementById("viewerFrame"),
+				previewPanel: document.getElementById("previewPanel"),
+				statusLine: document.getElementById("statusLine"),
+				connectBtn: document.getElementById("connectBtn"),
+				reloadBtn: document.getElementById("reloadBtn"),
+				togglePreviewBtn: document.getElementById("togglePreviewBtn"),
+				autofocusBtn: document.getElementById("autofocusBtn"),
+				refreshCameraBtn: document.getElementById("refreshCameraBtn"),
+				recoverStreamBtn: document.getElementById("recoverStreamBtn"),
+				dragPad: document.getElementById("dragPad"),
+				wheelPad: document.getElementById("wheelPad"),
+				panAbs: document.getElementById("panAbs"),
+				tiltAbs: document.getElementById("tiltAbs"),
+				zoomAbs: document.getElementById("zoomAbs"),
+				focusAbs: document.getElementById("focusAbs"),
+				panAbsValue: document.getElementById("panAbsValue"),
+				tiltAbsValue: document.getElementById("tiltAbsValue"),
+				zoomAbsValue: document.getElementById("zoomAbsValue"),
+				focusAbsValue: document.getElementById("focusAbsValue"),
+				applyAbsBtn: document.getElementById("applyAbsBtn")
+			};
+
+			var HOME_ABS_STATE = {
+				pan: 0,
+				tilt: 0,
+				zoom: 0,
+				focus: 0.5
+			};
+
+			function setStatus(msg, isError) {
+				refs.statusLine.textContent = msg;
+				refs.statusLine.classList.toggle("error", !!isError);
+			}
+
+			function normalizeQuarterRotation(value) {
+				var n = parseInt(value, 10);
+				if (isNaN(n)) {
+					n = 0;
+				}
+				n %= 360;
+				if (n < 0) {
+					n += 360;
+				}
+				n = Math.round(n / 90) * 90;
+				if (n >= 360) {
+					n -= 360;
+				}
+				return n;
+			}
+
+			function updatePreviewTransformUI() {
+				refs.mirrorPreviewBtn.textContent = state.previewMirror ? "Unmirror Preview" : "Mirror Preview";
+				refs.resetPreviewTransformBtn.disabled = !state.previewMirror && state.previewRotation === 0;
+			}
+
+			function applyPreviewTransform() {
+				var transform = "rotate(" + state.previewRotation + "deg)";
+				if (state.previewMirror) {
+					transform += " scaleX(-1)";
+				}
+				refs.previewTransform.style.transform = transform;
+				updatePreviewTransformUI();
+			}
+
+			function togglePreviewMirror() {
+				state.previewMirror = !state.previewMirror;
+				applyPreviewTransform();
+			}
+
+			function rotatePreview(delta) {
+				state.previewRotation = normalizeQuarterRotation(state.previewRotation + delta);
+				applyPreviewTransform();
+			}
+
+			function resetPreviewTransform() {
+				state.previewMirror = false;
+				state.previewRotation = 0;
+				applyPreviewTransform();
+			}
+
+			function updateRemoteMirrorUI() {
+				refs.mirrorRemoteBtn.textContent = state.remoteMirror ? "Unmirror Remote" : "Mirror Remote";
+			}
+
+			function toggleRemoteMirror() {
+				var nextState = !state.remoteMirror;
+				if (sendTargetAction("remoteMirror", nextState)) {
+					state.remoteMirror = nextState;
+					updateRemoteMirrorUI();
+				}
+			}
+
+			function stepRemoteRotate() {
+				sendTargetAction("remoteRotate", true);
+			}
+
+			function resetRemoteRotate() {
+				sendTargetAction("remoteRotate", false);
+			}
+
+			function setControlsCollapsed(collapsed) {
+				state.controlsCollapsed = !!collapsed;
+				refs.layoutSection.classList.toggle("controls-collapsed", state.controlsCollapsed);
+				refs.toggleControlsBtn.textContent = state.controlsCollapsed ? "Show Controls Pane" : "Hide Controls Pane";
+			}
+
+			function setOverlayVisible(visible) {
+				state.overlayVisible = !!visible;
+				if (!state.stageMode) {
+					refs.controlsColumn.classList.remove("overlay-hidden");
+					return;
+				}
+				refs.controlsColumn.classList.toggle("overlay-hidden", !state.overlayVisible);
+			}
+
+			function clearOverlayHideTimer() {
+				if (state.overlayHideTimer) {
+					clearTimeout(state.overlayHideTimer);
+					state.overlayHideTimer = null;
+				}
+			}
+
+			function markStageActivity() {
+				if (!state.stageMode || !state.overlayAutoHide) {
+					return;
+				}
+				setOverlayVisible(true);
+				clearOverlayHideTimer();
+				state.overlayHideTimer = setTimeout(function () {
+					setOverlayVisible(false);
+				}, 1800);
+			}
+
+			function applyOverlaySettings() {
+				var opacity = parseFloat(refs.overlayOpacityInput.value);
+				if (isNaN(opacity)) {
+					opacity = 0.72;
+				}
+				opacity = Math.max(0.3, Math.min(0.95, opacity));
+				document.documentElement.style.setProperty("--stage-overlay-alpha", opacity.toFixed(2));
+				document.body.classList.toggle("stage-solid-controls", !refs.overlayTransparentToggle.checked);
+				state.overlayAutoHide = !!refs.overlayAutoHideToggle.checked;
+				if (!state.overlayAutoHide) {
+					clearOverlayHideTimer();
+					setOverlayVisible(true);
+				} else {
+					markStageActivity();
+				}
+			}
+
+			function setStageMode(enabled) {
+				state.stageMode = !!enabled;
+				document.body.classList.toggle("stage-mode", state.stageMode);
+				if (state.stageMode && state.controlsCollapsed) {
+					setControlsCollapsed(false);
+				}
+				if (!state.stageMode) {
+					clearOverlayHideTimer();
+					setOverlayVisible(true);
+				} else if (state.overlayAutoHide) {
+					markStageActivity();
+				}
+				refs.stageModeBtn.textContent = state.stageMode ? "Exit Stage Mode" : "Stage Mode";
+			}
+
+			function toggleBrowserFullscreen() {
+				var isFullscreen = !!document.fullscreenElement;
+				if (isFullscreen) {
+					document.exitFullscreen().catch(function () {});
+					return;
+				}
+				document.documentElement.requestFullscreen().catch(function () {
+					setStatus("Fullscreen request was blocked by the browser.", true);
+				});
+			}
+
+			function setPreviewPadEnabled(enabled) {
+				var active = !!enabled;
+				refs.previewPadOverlay.classList.toggle("enabled", active);
+				refs.previewPadToggle.checked = active;
+			}
+
+			function getRepeatMs() {
+				var ms = parseInt(refs.repeatInput.value, 10);
+				if (isNaN(ms)) {
+					return 120;
+				}
+				return Math.max(40, Math.min(500, ms));
+			}
+
+			function getBaseStep() {
+				var step = parseFloat(refs.baseStepInput.value);
+				if (isNaN(step)) {
+					step = 0.005;
+				}
+				return Math.max(0.001, Math.min(1, step));
+			}
+
+			function isFineMode(event) {
+				return !!(refs.fineToggle.checked || state.altDown || (event && event.altKey));
+			}
+
+			function getStep(event) {
+				var step = getBaseStep();
+				if (isFineMode(event)) {
+					step *= 0.25;
+				}
+				return step;
+			}
+
+			function applyPanDirection(direction) {
+				if (!direction) {
+					return direction;
+				}
+				if (refs.panInvertToggle && refs.panInvertToggle.checked) {
+					return -direction;
+				}
+				return direction;
+			}
+
+			function applyTiltDirection(direction) {
+				if (!direction) {
+					return direction;
+				}
+				if (refs.tiltInvertToggle && refs.tiltInvertToggle.checked) {
+					return -direction;
+				}
+				return direction;
+			}
+
+			function normalizeTarget() {
+				var target = refs.targetInput.value.trim();
+				if (target) {
+					return target;
+				}
+				if (state.inferredTarget) {
+					return state.inferredTarget;
+				}
+				return "1";
+			}
+
+			function storageKey() {
+				var remote = refs.remoteInput.value.trim() || (state.remoteFlagPresent ? "remote" : "none");
+				var target = refs.targetInput.value.trim() || getTemplateTarget() || state.inferredTarget || "1";
+				return "vdoninja_ptz_presets_" + remote + "_" + target;
+			}
+
+			function getTemplateTarget() {
+				var explicitTarget = refs.targetInput.value.trim();
+				if (explicitTarget) {
+					return explicitTarget;
+				}
+				var parsedView = parseViewerInput(refs.viewInput.value);
+				if (parsedView) {
+					var viewValue = parsedView.searchParams.get("view") || parsedView.searchParams.get("v");
+					if (viewValue) {
+						return viewValue.split(",")[0].trim();
+					}
+				}
+				if (state.inferredTarget) {
+					return state.inferredTarget;
+				}
+				return "";
+			}
+
+			function buildSenderTemplateUrl() {
+				var target = getTemplateTarget();
+				if (!target) {
+					return "";
+				}
+				var senderUrl = new URL("/", window.location.origin);
+				senderUrl.searchParams.set("push", target);
+				senderUrl.searchParams.set("ptz", "");
+				var remote = refs.remoteInput.value.trim();
+				if (remote || state.remoteFlagPresent) {
+					senderUrl.searchParams.set("remote", remote);
+				}
+				if (refs.senderNoPreviewToggle.checked) {
+					senderUrl.searchParams.set("nopreview", "");
+				}
+				if (refs.senderNoVideoInToggle.checked) {
+					senderUrl.searchParams.set("novideo", "");
+				}
+				if (refs.talkbackToggle.checked) {
+					senderUrl.searchParams.set("view", state.talkbackID);
+				}
+				return senderUrl.toString();
+			}
+
+			function refreshSenderTemplate() {
+				var senderTemplate = buildSenderTemplateUrl();
+				if (senderTemplate) {
+					refs.senderTemplateLine.textContent = senderTemplate;
+					refs.senderTemplateLine.classList.remove("placeholder");
+					refs.copySenderUrlBtn.disabled = false;
+				} else {
+					refs.senderTemplateLine.textContent = "Paste a viewer URL or stream ID to generate a sender link.";
+					refs.senderTemplateLine.classList.add("placeholder");
+					refs.copySenderUrlBtn.disabled = true;
+				}
+			}
+
+			function flashCopyButton(label) {
+				if (state.copyButtonTimer) {
+					clearTimeout(state.copyButtonTimer);
+				}
+				refs.copySenderUrlBtn.textContent = label;
+				state.copyButtonTimer = setTimeout(function () {
+					refs.copySenderUrlBtn.textContent = "Copy Sender Link";
+					state.copyButtonTimer = null;
+				}, 1400);
+			}
+
+			function loadPresets() {
+				try {
+					var raw = localStorage.getItem(storageKey());
+					var presets = raw ? JSON.parse(raw) : {};
+					if (!presets || typeof presets !== "object") {
+						return {};
+					}
+					if ("home" in presets) {
+						delete presets.home;
+					}
+					return presets;
+				} catch (e) {
+					return {};
+				}
+			}
+
+			function savePresets(presets) {
+				try {
+					if (!presets || typeof presets !== "object") {
+						presets = {};
+					}
+					if ("home" in presets) {
+						delete presets.home;
+					}
+					localStorage.setItem(storageKey(), JSON.stringify(presets || {}));
+				} catch (e) {
+					setStatus("Failed to save presets in localStorage.", true);
+				}
+			}
+
+			function savePreset(slot) {
+				var presets = loadPresets();
+				presets[slot] = getCurrentAbsState();
+				savePresets(presets);
+				setStatus("Saved preset " + slot + ".");
+			}
+
+			function recallPreset(slot) {
+				var presets = loadPresets();
+				if (!presets[slot]) {
+					setStatus("Preset " + slot + " is not saved yet.", true);
+					return;
+				}
+				if (!state.peerConnected) {
+					state.pendingPreset = { state: presets[slot], label: slot };
+					setStatus("Peer not connected yet. Preset " + slot + " queued and will apply when ready.");
+					return;
+				}
+				applyAbsoluteState(presets[slot]);
+				setStatus("Recalled preset " + slot + ".");
+			}
+
+			function resetAutofocus() {
+				if (sendTargetAction("ptzAutofocus", true)) {
+					setStatus("Autofocus reset requested.");
+				}
+			}
+
+			function refreshRemoteCamera() {
+				if (sendTargetAction("refreshVideo", true)) {
+					setStatus("Requested remote camera refresh.");
+				}
+			}
+
+			function recoverRemoteStream() {
+				if (sendTargetAction("refreshAll", true)) {
+					setStatus("Requested remote camera + connection recovery.");
+				}
+			}
+
+			function hasQueryKey(rawQuery, key) {
+				if (!rawQuery) {
+					return false;
+				}
+				var pattern = new RegExp("(?:^|[?&])" + key + "(?:=|&|$)", "i");
+				return pattern.test(rawQuery);
+			}
+
+			function isLikelyFullUrl(input) {
+				var raw = (input || "").trim();
+				if (!raw) {
+					return false;
+				}
+				if (/^[a-z][a-z0-9+.-]*:\/\//i.test(raw) || raw.startsWith("//")) {
+					return true;
+				}
+				return /^[a-z0-9.-]+\.[a-z]{2,}(?:[/:?#]|$)/i.test(raw);
+			}
+
+			function mergeOuterParamsIntoViewerUrl(viewerUrl, outerParams) {
+				if (!viewerUrl || !outerParams) {
+					return viewerUrl;
+				}
+				var blocked = {
+					url: true,
+					view: true,
+					target: true,
+					mode: true
+				};
+				outerParams.forEach(function (value, key) {
+					if (blocked[key]) {
+						return;
+					}
+					if (!viewerUrl.searchParams.has(key)) {
+						viewerUrl.searchParams.set(key, value);
+					}
+				});
+				return viewerUrl;
+			}
+
+			function parseViewerInput(raw) {
+				var input = (raw || "").trim();
+				if (!input) {
+					return null;
+				}
+
+				try {
+					if (/^[a-z][a-z0-9+.-]*:\/\//i.test(input) || input.startsWith("/") || input.startsWith("./") || input.startsWith("../") || input.includes(".html")) {
+						return new URL(input, window.location.href);
+					}
+					if (input.startsWith("//")) {
+						return new URL(window.location.protocol + input, window.location.href);
+					}
+					if (/^[a-z0-9.-]+\.[a-z]{2,}(?:[/:?#]|$)/i.test(input)) {
+						return new URL("https://" + input.replace(/^\/+/, ""), window.location.href);
+					}
+					if (input.startsWith("?")) {
+						return new URL(input, window.location.href);
+					}
+					if (input.includes("=") && !input.includes(" ")) {
+						return new URL("?" + input.replace(/^\?/, ""), window.location.href);
+					}
+				} catch (e) {
+					return null;
+				}
+
+				var url = new URL("./", window.location.href);
+				url.searchParams.set("view", input);
+				return url;
+			}
+
+			function buildViewerUrl() {
+				var parsed = parseViewerInput(refs.viewInput.value);
+				if (!parsed) {
+					return null;
+				}
+
+				var remote = refs.remoteInput.value.trim();
+				var preset = refs.embedPreset.value;
+
+				if (remote) {
+					parsed.searchParams.set("remote", remote);
+				} else if (state.remoteFlagPresent && !parsed.searchParams.has("remote")) {
+					parsed.searchParams.set("remote", "");
+				}
+
+				if (preset === "light") {
+					if (!parsed.searchParams.has("cleanoutput") && !parsed.searchParams.has("clean")) {
+						parsed.searchParams.set("cleanoutput", "");
+					}
+					if (refs.muteViewerAudioToggle.checked && !parsed.searchParams.has("noaudio")) {
+						parsed.searchParams.set("noaudio", "");
+					}
+					if (!parsed.searchParams.has("autoplay")) {
+						parsed.searchParams.set("autoplay", "");
+					}
+				}
+
+				var viewParam = parsed.searchParams.get("view") || parsed.searchParams.get("v");
+				if (viewParam && !refs.targetInput.value.trim()) {
+					state.inferredTarget = viewParam.split(",")[0].trim();
+				}
+				refreshSenderTemplate();
+
+				return parsed.toString();
+			}
+
+			function postToViewer(payload) {
+				if (!refs.viewerFrame.contentWindow) {
+					setStatus("Viewer iframe not ready. Connect first.", true);
+					return false;
+				}
+				refs.viewerFrame.contentWindow.postMessage(payload, "*");
+				return true;
+			}
+
+			function sendTargetAction(action, value, value2) {
+				var payload = {
+					function: "targetGuest",
+					target: normalizeTarget(),
+					action: action
+				};
+
+				if (typeof value !== "undefined" && value !== null) {
+					payload.value = value;
+				}
+				if (typeof value2 !== "undefined" && value2 !== null) {
+					payload.value2 = value2;
+				}
+
+				var ok = postToViewer(payload);
+				if (ok) {
+					setStatus("Sent " + action + " to " + payload.target + ".");
+				}
+				return ok;
+			}
+
+			function sendRelative(control, direction, event) {
+				var mappedDirection = control === "pan" ? applyPanDirection(direction) : (control === "tilt" ? applyTiltDirection(direction) : direction);
+				var step = getStep(event) * mappedDirection;
+				if (control === "pan") {
+					sendTargetAction("ptzPan", step);
+					refs.panAbs.value = Math.max(-1, Math.min(1, parseFloat(refs.panAbs.value) + step));
+				} else if (control === "tilt") {
+					sendTargetAction("ptzTilt", step);
+					refs.tiltAbs.value = Math.max(-1, Math.min(1, parseFloat(refs.tiltAbs.value) + step));
+				} else if (control === "zoom") {
+					sendTargetAction("ptzZoom", step);
+					refs.zoomAbs.value = Math.max(0, Math.min(1, parseFloat(refs.zoomAbs.value) + step));
+				} else if (control === "focus") {
+					sendTargetAction("ptzFocus", step);
+					refs.focusAbs.value = Math.max(0, Math.min(1, parseFloat(refs.focusAbs.value) + step));
+				}
+				updateAbsLabels();
+			}
+
+			function updateAbsLabels() {
+				refs.panAbsValue.textContent = parseFloat(refs.panAbs.value).toFixed(2);
+				refs.tiltAbsValue.textContent = parseFloat(refs.tiltAbs.value).toFixed(2);
+				refs.zoomAbsValue.textContent = parseFloat(refs.zoomAbs.value).toFixed(2);
+				refs.focusAbsValue.textContent = parseFloat(refs.focusAbs.value).toFixed(2);
+			}
+
+			function getCurrentAbsState() {
+				return {
+					pan: parseFloat(refs.panAbs.value),
+					tilt: parseFloat(refs.tiltAbs.value),
+					zoom: parseFloat(refs.zoomAbs.value),
+					focus: parseFloat(refs.focusAbs.value)
+				};
+			}
+
+			function applyAbsoluteState(ptz) {
+				if (!ptz) {
+					return;
+				}
+				if (typeof ptz.pan === "number") {
+					refs.panAbs.value = ptz.pan;
+					sendTargetAction("ptzPan", ptz.pan, "abs");
+				}
+				if (typeof ptz.tilt === "number") {
+					refs.tiltAbs.value = ptz.tilt;
+					sendTargetAction("ptzTilt", ptz.tilt, "abs");
+				}
+				if (typeof ptz.zoom === "number") {
+					refs.zoomAbs.value = ptz.zoom;
+					sendTargetAction("ptzZoom", ptz.zoom, "abs");
+				}
+				if (typeof ptz.focus === "number") {
+					sendTargetAction("ptzAutofocus", false);
+					refs.focusAbs.value = ptz.focus;
+					sendTargetAction("ptzFocus", ptz.focus, "abs");
+				}
+				updateAbsLabels();
+			}
+
+			function recallHome() {
+				if (!state.peerConnected) {
+					state.pendingPreset = { state: HOME_ABS_STATE, label: "home" };
+					setStatus("Peer not connected yet. Home position queued and will apply when ready.");
+					return;
+				}
+				applyAbsoluteState(HOME_ABS_STATE);
+				setStatus("Recalled home position (0).");
+			}
+
+			function syncTalkbackFrame() {
+				var tb = document.getElementById("talkbackFrame");
+				if (!refs.talkbackToggle.checked) {
+					if (tb) {
+						tb.src = "about:blank";
+					}
+					state.talkbackActive = false;
+					return false;
+				}
+
+				var talkbackUrl = new URL("/", window.location.origin);
+				talkbackUrl.searchParams.set("push", state.talkbackID);
+				talkbackUrl.searchParams.set("novideo", "");
+				talkbackUrl.searchParams.set("autoplay", "");
+				talkbackUrl.searchParams.set("cleanoutput", "");
+
+				if (!tb) {
+					tb = document.createElement("iframe");
+					tb.id = "talkbackFrame";
+					tb.style.display = "none";
+					tb.allow = "autoplay;microphone;";
+					document.body.appendChild(tb);
+				}
+				tb.src = talkbackUrl.toString();
+				state.talkbackActive = true;
+				return true;
+			}
+
+			function connectViewer() {
+				var url = buildViewerUrl();
+				if (!url) {
+					setStatus("Enter a valid viewer URL or stream ID first.", true);
+					return;
+				}
+				state.peerConnected = false;
+				state.pendingPreset = null;
+				refs.viewerFrame.src = url;
+
+				// Try to unlock audio
+				try {
+					var audio = new Audio();
+					audio.muted = true;
+					audio.play().then(function() {
+						audio.pause();
+					}).catch(function(){});
+				} catch(e){}
+
+				if (syncTalkbackFrame()) {
+					setStatus("Connecting viewer and talkback. Use the generated sender link for two-way audio.");
+				} else {
+					setStatus("Connecting iframe viewer...");
+				}
+			}
+
+			function onPeerConnected() {
+				if (state.peerConnected) {
+					return;
+				}
+				state.peerConnected = true;
+				setStatus("Peer connected. PTZ controls are ready.");
+				if (state.pendingPreset) {
+					var pending = state.pendingPreset;
+					state.pendingPreset = null;
+					applyAbsoluteState(pending.state);
+					setStatus("Applied queued preset " + pending.label + ".");
+				}
+			}
+
+			function handleViewerMessage(event) {
+				if (!event || !event.data || typeof event.data !== "object") {
+					return;
+				}
+				if (refs.viewerFrame && refs.viewerFrame.contentWindow && event.source && event.source !== refs.viewerFrame.contentWindow) {
+					return;
+				}
+
+				if (event.data.action === "new-stream-added" || event.data.action === "new-video-track-added" || event.data.action === "new-audio-track-added") {
+					onPeerConnected();
+				}
+
+				if (event.data.remoteStats && event.data.streamID) {
+					onPeerConnected();
+				}
+
+				if (event.data.action === "rejected") {
+					if (event.data.value === "refreshVideo") {
+						setStatus("The sender rejected the camera refresh request.", true);
+					} else if (event.data.value === "refreshAll") {
+						setStatus("The sender rejected the camera recovery request.", true);
+					}
+				}
+			}
+
+			function clearPointerHold() {
+				if (state.activePointerInterval) {
+					clearInterval(state.activePointerInterval);
+					state.activePointerInterval = null;
+				}
+			}
+
+			function clearAllKeyHolds() {
+				Object.keys(state.activeKeyIntervals).forEach(function (code) {
+					clearInterval(state.activeKeyIntervals[code]);
+				});
+				state.activeKeyIntervals = {};
+			}
+
+			function startPointerHold(control, direction, event) {
+				clearPointerHold();
+				sendRelative(control, direction, event);
+				state.activePointerInterval = setInterval(function () {
+					sendRelative(control, direction, event);
+				}, getRepeatMs());
+			}
+
+			function handleKeyboardDown(event) {
+				if (event.key === "Alt") {
+					state.altDown = true;
+				}
+
+				var tag = (event.target && event.target.tagName) ? event.target.tagName.toLowerCase() : "";
+				if (tag === "input" || tag === "textarea" || tag === "select") {
+					return;
+				}
+
+				var code = event.code;
+				var ctrlOrMeta = event.ctrlKey || event.metaKey;
+				var key = event.key;
+
+				if (!ctrlOrMeta && (key === "m" || key === "M")) {
+					event.preventDefault();
+					togglePreviewMirror();
+					return;
+				}
+				if (ctrlOrMeta && (key === "m" || key === "M")) {
+					event.preventDefault();
+					toggleRemoteMirror();
+					return;
+				}
+				if (!ctrlOrMeta && (key === "r" || key === "R")) {
+					event.preventDefault();
+					rotatePreview(event.shiftKey ? -90 : 90);
+					return;
+				}
+				if (ctrlOrMeta && (key === "r" || key === "R")) {
+					event.preventDefault();
+					if (event.shiftKey) {
+						resetRemoteRotate();
+					} else {
+						stepRemoteRotate();
+					}
+					return;
+				}
+				if (!ctrlOrMeta && (key === "f" || key === "F")) {
+					event.preventDefault();
+					setStageMode(!state.stageMode);
+					return;
+				}
+				if (!ctrlOrMeta && (key === "p" || key === "P")) {
+					event.preventDefault();
+					setPreviewPadEnabled(!refs.previewPadToggle.checked);
+					setStatus(refs.previewPadToggle.checked ? "Preview drag/wheel PTZF enabled." : "Preview drag/wheel PTZF disabled.");
+					return;
+				}
+				if (!ctrlOrMeta && (key === "a" || key === "A")) {
+					event.preventDefault();
+					resetAutofocus();
+					return;
+				}
+
+				if (code === "Numpad0" || key === "0") {
+					event.preventDefault();
+					recallHome();
+					return;
+				}
+				if (code === "Digit1" || code === "Digit2" || code === "Digit3" || code === "Numpad1" || code === "Numpad2" || code === "Numpad3" || key === "1" || key === "2" || key === "3") {
+					event.preventDefault();
+					var slot = "";
+					if (code === "Digit1" || code === "Numpad1" || key === "1") {
+						slot = "1";
+					} else if (code === "Digit2" || code === "Numpad2" || key === "2") {
+						slot = "2";
+					} else {
+						slot = "3";
+					}
+					if (event.shiftKey && code.indexOf("Digit") === 0) {
+						savePreset(slot);
+					} else {
+						recallPreset(slot);
+					}
+					return;
+				}
+
+				var control = null;
+				var dir = 0;
+
+				if (key === "ArrowLeft") {
+					control = "pan";
+					dir = -1;
+				} else if (key === "ArrowRight") {
+					control = "pan";
+					dir = 1;
+				} else if (key === "ArrowUp") {
+					control = "tilt";
+					dir = 1;
+				} else if (key === "ArrowDown") {
+					control = "tilt";
+					dir = -1;
+				} else if (code === "NumpadAdd" || code === "Equal" || code === "NumpadEqual") {
+					control = ctrlOrMeta ? "focus" : "zoom";
+					dir = 1;
+				} else if (code === "NumpadSubtract" || code === "Minus") {
+					control = ctrlOrMeta ? "focus" : "zoom";
+					dir = -1;
+				}
+
+				if (!control) {
+					return;
+				}
+
+				event.preventDefault();
+				if (state.activeKeyIntervals[code]) {
+					return;
+				}
+
+				sendRelative(control, dir, event);
+				state.activeKeyIntervals[code] = setInterval(function () {
+					sendRelative(control, dir, event);
+				}, getRepeatMs());
+			}
+
+			function handleKeyboardUp(event) {
+				if (event.key === "Alt") {
+					state.altDown = false;
+				}
+				if (state.activeKeyIntervals[event.code]) {
+					clearInterval(state.activeKeyIntervals[event.code]);
+					delete state.activeKeyIntervals[event.code];
+				}
+			}
+
+			function bindDragSurface(surface) {
+				if (!surface) {
+					return;
+				}
+				var threshold = 18;
+
+				surface.addEventListener("pointerdown", function (event) {
+					markStageActivity();
+					state.drag.active = true;
+					state.drag.pointerId = event.pointerId;
+					state.drag.lastX = event.clientX;
+					state.drag.lastY = event.clientY;
+					state.drag.accX = 0;
+					state.drag.accY = 0;
+					if (surface.setPointerCapture) {
+						surface.setPointerCapture(event.pointerId);
+					}
+				});
+
+				surface.addEventListener("pointermove", function (event) {
+					if (!state.drag.active || event.pointerId !== state.drag.pointerId) {
+						return;
+					}
+					markStageActivity();
+
+					var dx = event.clientX - state.drag.lastX;
+					var dy = event.clientY - state.drag.lastY;
+					state.drag.lastX = event.clientX;
+					state.drag.lastY = event.clientY;
+					state.drag.accX += dx;
+					state.drag.accY += dy;
+
+					while (Math.abs(state.drag.accX) >= threshold) {
+						sendRelative("pan", state.drag.accX > 0 ? -1 : 1, event);
+						state.drag.accX += state.drag.accX > 0 ? -threshold : threshold;
+					}
+					while (Math.abs(state.drag.accY) >= threshold) {
+						sendRelative("tilt", state.drag.accY > 0 ? 1 : -1, event);
+						state.drag.accY += state.drag.accY > 0 ? -threshold : threshold;
+					}
+				});
+
+				function endDrag(event) {
+					if (event.pointerId !== state.drag.pointerId) {
+						return;
+					}
+					state.drag.active = false;
+					state.drag.pointerId = null;
+					state.drag.accX = 0;
+					state.drag.accY = 0;
+				}
+
+				surface.addEventListener("pointerup", endDrag);
+				surface.addEventListener("pointercancel", endDrag);
+			}
+
+			function bindWheelSurface(surface) {
+				if (!surface) {
+					return;
+				}
+				surface.addEventListener("wheel", function (event) {
+					event.preventDefault();
+					markStageActivity();
+					var dir = event.deltaY > 0 ? -1 : 1;
+					if (event.ctrlKey || event.metaKey) {
+						if (event.shiftKey) {
+							sendRelative("tilt", dir, event);
+						} else {
+							sendRelative("focus", dir, event);
+						}
+					} else if (event.shiftKey) {
+						sendRelative("pan", dir, event);
+					} else {
+						sendRelative("zoom", dir, event);
+					}
+				}, { passive: false });
+			}
+
+			function setupDragPad() {
+				bindDragSurface(refs.dragPad);
+				bindDragSurface(refs.previewPadOverlay);
+			}
+
+			function setupWheelPad() {
+				bindWheelSurface(refs.wheelPad);
+				bindWheelSurface(refs.previewPadOverlay);
+			}
+
+			function bindUI() {
+				refs.connectBtn.addEventListener("click", connectViewer);
+				refs.reloadBtn.addEventListener("click", function () {
+					if (refs.viewerFrame.src) {
+						state.peerConnected = false;
+						state.pendingPreset = null;
+						refs.viewerFrame.src = refs.viewerFrame.src;
+						setStatus("Viewer reloading...");
+						try {
+							var audio = new Audio();
+							audio.muted = true;
+							audio.play().then(function() {
+								audio.pause();
+							}).catch(function(){});
+						} catch(e){}
+					}
+				});
+				refs.togglePreviewBtn.addEventListener("click", function () {
+					state.previewHidden = !state.previewHidden;
+					refs.previewPanel.style.display = state.previewHidden ? "none" : "";
+				});
+				refs.toggleControlsBtn.addEventListener("click", function () {
+					setControlsCollapsed(!state.controlsCollapsed);
+				});
+				refs.stageModeBtn.addEventListener("click", function () {
+					setStageMode(!state.stageMode);
+				});
+				refs.fullscreenBtn.addEventListener("click", toggleBrowserFullscreen);
+				refs.previewFullscreenBtn.addEventListener("click", function () {
+					if (refs.previewStage.requestFullscreen) {
+						refs.previewStage.requestFullscreen();
+					} else if (refs.previewStage.webkitRequestFullscreen) {
+						refs.previewStage.webkitRequestFullscreen();
+					} else if (refs.previewStage.msRequestFullscreen) {
+						refs.previewStage.msRequestFullscreen();
+					}
+				});
+				refs.copySenderUrlBtn.addEventListener("click", function () {
+					var senderTemplate = buildSenderTemplateUrl();
+					if (!senderTemplate) {
+						setStatus("Set a stream ID or viewer URL first to build a sender template.", true);
+						return;
+					}
+					navigator.clipboard.writeText(senderTemplate).then(function () {
+						flashCopyButton("Copied");
+						setStatus("Sender URL template copied to clipboard.");
+					}).catch(function () {
+						flashCopyButton("Copy failed");
+						setStatus("Could not access clipboard. Sender template is shown below.", true);
+					});
+				});
+				refs.mirrorPreviewBtn.addEventListener("click", togglePreviewMirror);
+				refs.rotatePreviewBtn.addEventListener("click", function () {
+					rotatePreview(90);
+				});
+				refs.rotatePreviewBackBtn.addEventListener("click", function () {
+					rotatePreview(-90);
+				});
+				refs.resetPreviewTransformBtn.addEventListener("click", resetPreviewTransform);
+				refs.mirrorRemoteBtn.addEventListener("click", toggleRemoteMirror);
+				refs.rotateRemoteBtn.addEventListener("click", stepRemoteRotate);
+				refs.rotateRemoteResetBtn.addEventListener("click", resetRemoteRotate);
+				refs.refreshCameraBtn.addEventListener("click", refreshRemoteCamera);
+				refs.recoverStreamBtn.addEventListener("click", recoverRemoteStream);
+				refs.previewPadToggle.addEventListener("change", function () {
+					setPreviewPadEnabled(refs.previewPadToggle.checked);
+				});
+				refs.overlayTransparentToggle.addEventListener("change", applyOverlaySettings);
+				refs.overlayAutoHideToggle.addEventListener("change", applyOverlaySettings);
+				refs.overlayOpacityInput.addEventListener("input", applyOverlaySettings);
+				refs.previewPanel.addEventListener("pointermove", markStageActivity);
+				refs.previewPanel.addEventListener("pointerdown", markStageActivity);
+				refs.previewPanel.addEventListener("wheel", markStageActivity, { passive: true });
+				document.addEventListener("pointermove", markStageActivity, { passive: true });
+				document.addEventListener("keydown", markStageActivity);
+
+				refs.viewerFrame.addEventListener("load", function () {
+					setStatus("Viewer iframe loaded. Waiting for peer connection...");
+				});
+
+				document.querySelectorAll("[data-hold-control]").forEach(function (button) {
+					button.addEventListener("pointerdown", function (event) {
+						event.preventDefault();
+						var control = button.dataset.holdControl;
+						var dir = parseInt(button.dataset.dir, 10) || 0;
+						startPointerHold(control, dir, event);
+					});
+					["pointerup", "pointercancel", "pointerleave"].forEach(function (evt) {
+						button.addEventListener(evt, clearPointerHold);
+					});
+				});
+
+				refs.autofocusBtn.addEventListener("click", resetAutofocus);
+
+				document.querySelectorAll("[data-preset-save]").forEach(function (button) {
+					button.addEventListener("click", function () {
+						savePreset(button.dataset.presetSave);
+					});
+				});
+
+				document.querySelectorAll("[data-preset-recall]").forEach(function (button) {
+					button.addEventListener("click", function () {
+						recallPreset(button.dataset.presetRecall);
+					});
+				});
+
+				document.querySelectorAll("[data-home]").forEach(function (button) {
+					button.addEventListener("click", recallHome);
+				});
+
+				refs.panAbs.addEventListener("input", updateAbsLabels);
+				refs.tiltAbs.addEventListener("input", updateAbsLabels);
+				refs.zoomAbs.addEventListener("input", updateAbsLabels);
+				refs.focusAbs.addEventListener("input", updateAbsLabels);
+
+				refs.applyAbsBtn.addEventListener("click", function () {
+					applyAbsoluteState(getCurrentAbsState());
+				});
+
+				refs.targetInput.addEventListener("change", function () {
+					setStatus("Target set to " + normalizeTarget() + ".");
+					refreshSenderTemplate();
+				});
+				refs.viewInput.addEventListener("input", refreshSenderTemplate);
+				refs.remoteInput.addEventListener("input", refreshSenderTemplate);
+				refs.senderNoPreviewToggle.addEventListener("change", refreshSenderTemplate);
+				refs.senderNoVideoInToggle.addEventListener("change", refreshSenderTemplate);
+				refs.talkbackToggle.addEventListener("change", function () {
+					refreshSenderTemplate();
+					if (refs.talkbackToggle.checked) {
+						if (refs.viewerFrame.getAttribute("src")) {
+							syncTalkbackFrame();
+							setStatus("Talkback enabled. Use the generated sender link and allow microphone access here.");
+						} else {
+							setStatus("Talkback enabled. Use the generated sender link, then connect the viewer to start two-way audio.");
+						}
+					} else {
+						syncTalkbackFrame();
+						setStatus("Talkback disabled.");
+					}
+				});
+				refs.muteViewerAudioToggle.addEventListener("change", function () {
+					setStatus(refs.muteViewerAudioToggle.checked ? "Embed audio will be muted in light mode." : "Embed audio stays enabled in light mode.");
+				});
+				refs.panInvertToggle.addEventListener("change", function () {
+					setStatus(refs.panInvertToggle.checked ? "Pan direction set to inverted." : "Pan direction set to normal.");
+				});
+				refs.tiltInvertToggle.addEventListener("change", function () {
+					setStatus(refs.tiltInvertToggle.checked ? "Tilt direction set to inverted." : "Tilt direction set to normal.");
+				});
+
+				window.addEventListener("blur", function () {
+					clearPointerHold();
+					clearAllKeyHolds();
+					state.altDown = false;
+				});
+
+				window.addEventListener("message", handleViewerMessage);
+				document.addEventListener("keydown", handleKeyboardDown);
+				document.addEventListener("keyup", handleKeyboardUp);
+			}
+
+			function hydrateFromQuery() {
+				var rawQuery = window.location.search || "";
+				var params = new URLSearchParams(rawQuery);
+				var view = params.get("url") || params.get("view") || "";
+				var remote = params.get("remote");
+				var target = params.get("target") || "";
+				var mode = params.get("mode") || "";
+				var stage = params.get("stage");
+				var previewPad = params.get("previewpad");
+				var panInvert = params.get("paninvert");
+				if (panInvert === null) {
+					panInvert = params.get("invertpan");
+				}
+				var tiltInvert = params.get("tiltinvert");
+				if (tiltInvert === null) {
+					tiltInvert = params.get("inverttilt");
+				}
+				var talkback = params.get("talkback");
+				var novideo = params.get("novideo");
+				var mirrorPreview = params.get("mirrorpreview");
+				var rotatePreview = params.get("rotatepreview");
+				var overlayAutoHide = params.get("overlayautohide");
+				var overlayOpacity = params.get("overlayopacity");
+				var overlayTransparent = params.get("overlaytransparent");
+				state.remoteFlagPresent = hasQueryKey(rawQuery, "remote");
+				if (hasQueryKey(rawQuery, "noaudio")) {
+					refs.muteViewerAudioToggle.checked = true;
+				}
+				if (hasQueryKey(rawQuery, "nopreview")) {
+					refs.senderNoPreviewToggle.checked = true;
+				}
+
+				if (view) {
+					var normalizedView = view;
+					if (isLikelyFullUrl(view)) {
+						var parsedViewUrl = parseViewerInput(view);
+						if (parsedViewUrl) {
+							mergeOuterParamsIntoViewerUrl(parsedViewUrl, params);
+							normalizedView = parsedViewUrl.toString();
+							if (parsedViewUrl.searchParams.has("remote")) {
+								state.remoteFlagPresent = true;
+							}
+							if (parsedViewUrl.searchParams.has("noaudio")) {
+								refs.muteViewerAudioToggle.checked = true;
+							}
+						}
+					}
+					refs.viewInput.value = normalizedView;
+				}
+				if (remote !== null && remote !== "") {
+					refs.remoteInput.value = remote;
+				}
+				if (target) {
+					refs.targetInput.value = target;
+				}
+				if (mode === "raw") {
+					refs.embedPreset.value = "raw";
+				}
+				if (previewPad !== null) {
+					setPreviewPadEnabled(!(previewPad === "0" || previewPad === "false" || previewPad === "off"));
+				}
+				if (panInvert !== null) {
+					refs.panInvertToggle.checked = !(panInvert === "0" || panInvert === "false" || panInvert === "off");
+				}
+				if (tiltInvert !== null) {
+					refs.tiltInvertToggle.checked = !(tiltInvert === "0" || tiltInvert === "false" || tiltInvert === "off");
+				}
+				if (talkback !== null) {
+					refs.talkbackToggle.checked = !(talkback === "0" || talkback === "false" || talkback === "off");
+				}
+				if (novideo !== null) {
+					refs.senderNoVideoInToggle.checked = !(novideo === "0" || novideo === "false" || novideo === "off");
+				}
+				if (mirrorPreview !== null) {
+					state.previewMirror = !(mirrorPreview === "0" || mirrorPreview === "false" || mirrorPreview === "off");
+				}
+				if (rotatePreview !== null && rotatePreview !== "") {
+					state.previewRotation = normalizeQuarterRotation(rotatePreview);
+				}
+				if (overlayAutoHide !== null) {
+					refs.overlayAutoHideToggle.checked = !(overlayAutoHide === "0" || overlayAutoHide === "false" || overlayAutoHide === "off");
+				}
+				if (overlayOpacity !== null && overlayOpacity !== "") {
+					var parsedOpacity = parseFloat(overlayOpacity);
+					if (!isNaN(parsedOpacity)) {
+						refs.overlayOpacityInput.value = Math.max(0.3, Math.min(0.95, parsedOpacity));
+					}
+				}
+				if (overlayTransparent !== null) {
+					refs.overlayTransparentToggle.checked = !(overlayTransparent === "0" || overlayTransparent === "false" || overlayTransparent === "off");
+				}
+				if (stage !== null && !(stage === "0" || stage === "false" || stage === "off")) {
+					setStageMode(true);
+				}
+				applyOverlaySettings();
+				applyPreviewTransform();
+				refreshSenderTemplate();
+
+				if (view) {
+					connectViewer();
+				}
+			}
+
+			applyOverlaySettings();
+			applyPreviewTransform();
+			updateRemoteMirrorUI();
+			setPreviewPadEnabled(true);
+			setControlsCollapsed(false);
+			updateAbsLabels();
+			setupDragPad();
+			setupWheelPad();
+			bindUI();
+			hydrateFromQuery();
+		})();
+	</script>
+</body>
+</html>

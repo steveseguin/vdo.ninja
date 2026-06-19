@@ -4,6 +4,9 @@
 	<title>VDO.Ninja IFRAME API - Interactive Developer Console</title>
 	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
 	<meta content="text/html;charset=utf-8" http-equiv="Content-Type" />
+	<link rel="icon" type="image/png" sizes="32x32" href="./media/favicon-32x32.png" />
+	<link rel="icon" type="image/png" sizes="16x16" href="./media/favicon-16x16.png" />
+	<link rel="icon" href="./media/favicon.ico" />
 	<link rel="stylesheet" href="./iframe.css" />
 	<script src="iframe-examples.js"></script>
 	<script>
@@ -12,6 +15,52 @@
 	const ActiveConnections = new Map(); // Track active connections by streamID
 	const MessageHistory = [];
 	const MAX_HISTORY = 100;
+
+		function supportsCredentiallessIframe() {
+			try {
+				if (typeof HTMLIFrameElement === "undefined" || !("credentialless" in HTMLIFrameElement.prototype)) {
+					return false;
+				}
+			} catch (e) {
+				return false;
+			}
+			return true;
+		}
+
+		function isFirefoxFamilyBrowser() {
+			const ua = navigator.userAgent || "";
+			return /\bfirefox\/|\bfxios\/|\bwaterfox\/|\blibrewolf\/|\biceweasel\/|\bzen\b/i.test(ua);
+		}
+
+		function shouldUseCredentiallessIframe() {
+			return supportsCredentiallessIframe() && !isFirefoxFamilyBrowser();
+		}
+
+		function buildIframeAllowPermissions(useCredentialless) {
+			const permissions = [
+				"encrypted-media",
+				"sync-xhr",
+				"usb",
+				"web-share",
+				"midi *",
+				"geolocation",
+				"camera *",
+				"microphone *",
+				"fullscreen",
+				"picture-in-picture",
+				"display-capture",
+				"accelerometer",
+				"autoplay",
+				"gyroscope",
+				"screen-wake-lock"
+			];
+
+			if (useCredentialless) {
+				permissions.splice(5, 0, "cross-origin-isolated");
+			}
+
+			return permissions.join(";") + ";";
+		}
 
 	/**
 	 * Main function to load and initialize a VDO.Ninja iframe
@@ -27,12 +76,13 @@
 		}
 
 		// Process and validate the iframe URL
-		var iframesrc = document.getElementById("viewlink").value;
+		var iframesrc = (document.getElementById("viewlink").value || "").trim();
 		if (!(iframesrc.startsWith("?") || iframesrc.startsWith("&") || iframesrc.startsWith("http"))) {
 			if (iframesrc.split(".").length > 1) {
 				iframesrc = "https://" + iframesrc;
 			}
 		}
+		iframesrc = normalizeIframeUrl(iframesrc);
 
 		// Create main container elements
 		var container = document.getElementById("container");
@@ -46,15 +96,22 @@
 	/**
 	 * Creates the complete iframe example structure
 	 */
-	function createIframeExample(exampleId, iframesrc) {
-		// Create iframe with proper permissions
-		var iframe = newElement("iframe", {
-			allow: "document-domain;encrypted-media;sync-xhr;usb;web-share;cross-origin-isolated;midi *;geolocation;camera *;microphone *;fullscreen;picture-in-picture;display-capture;accelerometer;autoplay;gyroscope;screen-wake-lock;",
-			src: addUrlParams(iframesrc, ["cleanoutput", "transparent", "hidemenu"])
-		});
-		iframe.setAttribute("allowtransparency", "true");
-		iframe.setAttribute("crossorigin", "anonymous");
-		iframe.setAttribute("credentialless", "true");
+		function createIframeExample(exampleId, iframesrc) {
+			const useCredentialless = shouldUseCredentiallessIframe();
+
+			// Create iframe with proper permissions
+			var iframe = newElement("iframe", {
+				allow: buildIframeAllowPermissions(useCredentialless),
+				src: addUrlParams(iframesrc, ["cleanoutput", "transparent", "hidemenu"])
+			});
+			iframe.setAttribute("allowtransparency", "true");
+			if (useCredentialless) {
+				iframe.setAttribute("crossorigin", "anonymous");
+				iframe.setAttribute("credentialless", "true");
+			} else {
+				iframe.removeAttribute("credentialless");
+				iframe.removeAttribute("crossorigin");
+			}
 
 		// Create UI structure
 		var container = newElement("div", { id: exampleId, classList: "iframe-example" });
@@ -178,6 +235,8 @@
 				<button onclick="postToFrame('${exampleId}', { mic: 'toggle' })">🎤 Toggle Mic</button>
 				<button onclick="postToFrame('${exampleId}', { camera: 'toggle' })">📹 Toggle Camera</button>
 				<button onclick="postToFrame('${exampleId}', { speaker: 'toggle' })">🔊 Toggle Speaker</button>
+				<button onclick="postToFrame('${exampleId}', { getLoudness: true })">📈 Start Loudness</button>
+				<button onclick="postToFrame('${exampleId}', { getLoudness: false })">⏹️ Stop Loudness</button>
 				<button onclick="postToFrame('${exampleId}', { getStreamIDs: true })">📋 List Streams</button>
 				<button onclick="postToFrame('${exampleId}', { getStats: true })">📊 Get Stats</button>
 				<button onclick="postToFrame('${exampleId}', { getDeviceList: true })">🎛️ List Devices</button>
@@ -332,7 +391,7 @@
 	function categorizeCommands(api) {
 		const categories = {
 			'Audio Controls': ['mic', 'mute', 'speaker', 'volume', 'panning', 'audiobitrate', 'targetAudioBitrate', 'PPT'],
-			'Video Controls': ['camera', 'bitrate', 'targetBitrate', 'scale', 'keyframe', 'forceKeyframe'],
+			'Video Controls': ['camera', 'bitrate', 'targetBitrate', 'scale', 'keyframe', 'forceKeyframe', 'ptzZoom', 'ptzPan', 'ptzTilt', 'ptzFocus', 'ptzAutofocus', 'remoteMirror', 'remoteRotate'],
 			'Recording': ['record'],
 			'Communication': ['sendChat', 'sendMessage', 'sendRequest'],
 			'System': ['reload', 'close', 'hangup'],
@@ -423,6 +482,7 @@
 		section.innerHTML = `
 			<h3>🎯 Target Guest Commands</h3>
 			<p><em>Directors can target commands to individual guests</em></p>
+			<p class="help-text"><em>Includes PTZF and remote transform actions: <code>ptzZoom</code>, <code>ptzPan</code>, <code>ptzTilt</code>, <code>ptzFocus</code>, <code>ptzAutofocus</code>, <code>remoteMirror</code>, <code>remoteRotate</code>.</em></p>
 		`;
 
 		var targetType = newElement("select", {
@@ -534,6 +594,12 @@
 		let formatted = "";
 
 		// Handle specific message types
+		// Loudness updates can arrive with action:"loudness", so handle this first.
+		if (data.loudness) {
+			handleLoudnessMessage(data.loudness, exampleId);
+			return;
+		}
+
 		if (data.action) {
 			handleActionMessage(data, exampleId);
 			return;
@@ -551,11 +617,6 @@
 
 		if (data.deviceList) {
 			handleDeviceListMessage(data.deviceList, exampleId);
-			return;
-		}
-
-		if (data.loudness) {
-			handleLoudnessMessage(data.loudness, exampleId);
 			return;
 		}
 
@@ -938,6 +999,31 @@
 	 */
 	function generateId() {
 		return Math.random().toString(36).replace(/[^a-z]+/g, '').substr(0, 10);
+	}
+
+	/**
+	 * Normalizes absolute iframe URLs to avoid mixed-content redirects.
+	 * Example: https://vdo.ninja/alpha -> https://vdo.ninja/alpha/
+	 */
+	function normalizeIframeUrl(inputUrl) {
+		const value = (inputUrl || "").trim();
+		if (!/^https?:\/\//i.test(value)) {
+			return value;
+		}
+
+		try {
+			const parsed = new URL(value);
+			if (!parsed.search && !parsed.hash) {
+				const path = parsed.pathname || "/";
+				const lastSegment = path.substring(path.lastIndexOf("/") + 1);
+				if (path !== "/" && !path.endsWith("/") && !lastSegment.includes(".")) {
+					parsed.pathname = path + "/";
+				}
+			}
+			return parsed.toString();
+		} catch (e) {
+			return value;
+		}
 	}
 
 	/**

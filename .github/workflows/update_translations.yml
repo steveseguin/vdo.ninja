@@ -9,11 +9,17 @@ on:
     paths:
       - 'index.html'
       - 'main.js'
+      - 'translations/translate.js'
+      - '.github/ci-translateMissingKeys.js'
     branches:
       - master
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
@@ -24,16 +30,30 @@ jobs:
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
-        - uses: actions/checkout@v2
-        - uses: actions/setup-node@v2
+        - uses: actions/checkout@v4
+        - uses: actions/setup-node@v4
           with:
-            node-version: '14'
-        - run: npm install jsdom && npm install axios
-        - run: node .github/ci-generateTranslations.js
+            node-version: '20'
+        - name: Generate missing translations
+          env:
+            OC_API_KEY: ${{ secrets.OC_API_KEY }}
+            TRANSLATION_API_PROVIDER: opencode
+            TRANSLATION_API_URL: https://opencode.ai/zen/v1/chat/completions
+            TRANSLATION_MODELS: deepseek-v4-flash-free,nemotron-3-super-free,big-pickle,minimax-m2.7
+            TARGET_LANGUAGES: all
+            MAX_TRANSLATION_KEYS: "50"
+          run: node .github/ci-translateMissingKeys.js
         - name: Create Pull Request
-          uses: peter-evans/create-pull-request@v3
+          uses: peter-evans/create-pull-request@v6
           with:
-            commit-message: Generated updated translations
+            commit-message: Generated missing translations
             branch: generated_translations
-            title: "[VDONinja Bot] Updated translations"
+            title: "[VDONinja Bot] Generated missing translations"
+            body: |
+              Generated missing translation keys using OpenCode Zen.
+
+              - Model chain: `deepseek-v4-flash-free,nemotron-3-super-free,big-pickle,minimax-m2.7`
+              - Target languages: `all`
+              - Maximum keys: `50`
             labels: i18n
+            draft: true

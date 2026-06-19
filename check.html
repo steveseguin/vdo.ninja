@@ -1,126 +1,81 @@
 <html>
 	<head>
 		<link rel="stylesheet" href="./lineawesome/css/line-awesome.min.css" />
-		<link rel="stylesheet" href="./speedtest.css?ver=1" />
+		<link rel="stylesheet" href="./check.css?ver=1" />
 		<meta charset="utf8" />
+		<link rel="shortcut icon" href="data:image/x-icon;," type="image/x-icon" />
+		<link id="favicon1" rel="icon" type="image/png" sizes="32x32" href="./media/favicon-32x32.png" />
+		<link id="favicon2" rel="icon" type="image/png" sizes="16x16" href="./media/favicon-16x16.png" />
+		<link id="favicon3" rel="icon" href="./media/favicon.ico" />
+		<link id="thumbnailUrl" itemprop="thumbnailUrl" href="./media/vdoNinja_logo_full.png" />
+		<link rel="alternate" type="text/markdown" href="/rawdoc.md" title="Developer and User Documentation">
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<meta name="robots" content="index, follow" />
+		<meta name="author" content="Steve Seguin" />
+		<meta name="copyright" content="&copy; 2024 Steve Seguin" />
+		<meta name="license" content="https://github.com/steveseguin/vdo.ninja/LICENSE.md" />
+		<meta name="sourcecode" content="https://github.com/steveseguin/vdo.ninja" />
+		<meta name="theme-color" content="#0f131d" />
+		<link rel="canonical" href="https://vdo.ninja/check.html" />
 		<title>VDON Stream Test</title>
-		<style>
-			.fullscreen { 
-				width:100%;
-				height: calc(100% - 35px);
-				position:absolute;
-				left:0;
-				display:block;
-				background-color: #444;
-				color:white;
-				margin: auto;
-				padding-top: 35px;
-				transition: all ease-in 1s;
-				animation-name: fadein;
-				animation-duration: .3s;
-			}
-			
-			@keyframes fadein {
-			  0%   {opacity: 0.5;}
-			  100% {opacity: 1;}
-			}
-			a {
-				color: white;
-			}
-			#controls button {
-				cursor: pointer;
-				display: inline;
-				padding: 20px;
-			}
-			.hidden {
-				display:none!important;
-			}
-			body {
-				text-align: center;
-				height:unset;
-				background: #444;
-				font-family: 'Noto Sans', sans-serif;
-				color:white;
-			}
-			h2 {
-				width: 760px;
-				margin: auto;
-				max-width: 90%;
-			}
-			
-			li {
-				text-align: left;
-			}
-			
-			button{
-				margin: 50px auto;
-				font-size: 120%;
-				padding: 20px 30px;
-				cursor:pointer;
-			}
-		</style>
+		<meta id="metaTitle" name="title" content="VDON Stream Test" />
+		<meta name="description" content="Run a VDO.Ninja preflight test for camera, microphone, bandwidth, and WebRTC connection quality before joining a live room." />
+
+		<meta name="twitter:card" content="summary_large_image">
+		<meta name="twitter:creator" content="@SteveSeguin">
+		<meta name="twitter:title" content="VDON Stream Test">
+		<meta name="twitter:description" content="Check your camera, microphone, and WebRTC network performance before you go live on VDO.Ninja.">
+		<meta name="twitter:image" content="https://vdo.ninja/media/vdoNinja_logo_full.png">
+
+		<meta property="og:type" content="website">
+		<meta property="og:url" content="https://vdo.ninja/check.html">
+		<meta property="og:title" content="VDON Stream Test">
+		<meta property="og:description" content="Run a VDO.Ninja preflight test for camera, microphone, bandwidth, and WebRTC connection quality before joining a live room.">
+		<meta property="og:image" content="https://vdo.ninja/media/vdoNinja_logo_full.png">
+		<meta property="og:image:width" content="1200">
+		<meta property="og:image:height" content="630">
+		<meta property="og:site_name" content="VDO.Ninja">
+
 	</head>
 	<body>
 		<div class="fullscreen" id="page1">
-			<h1>
-				Welcome
-			</h1>
-			<br />
+			<h1>Welcome</h1>
 			<h2>
-				This application will access your camera and complete a video test stream.
-				<br />
-				
-				<br />
-				The full test will take a few minutes to complete.<br />
-				<button onclick="next1();">Continue</button>⭐⭐⭐⭐
-				
+				<p>This application will access your camera and complete a video test stream.</p>
+				<p>The full test will take a few minutes to complete.</p>
+				<button onclick="next1();">Continue</button>
 			</h2>
 		</div>
 		<div class="fullscreen hidden" id="page2">
-			<h1>
-				Please note, for best results:<br />
-			</h1>
-			<br />
+			<h1>Please note, for best results:</h1>
 			<h2>
-				
-				<li>Connect your computer to a wired connection, instead of Wi-Fi</li><br />
-				<li>Have no other applications open while running this test</li><br />
-				<li>If using a laptop, connect your laptop to a power outlet</li><br />
-				🌠<button onclick="next2();">Continue</button>⭐⭐⭐
-				
+				<ul>
+					<li>Connect your computer to a wired connection, instead of Wi-Fi</li>
+					<li>Have no other applications open while running this test</li>
+					<li>If using a laptop, connect your laptop to a power outlet</li>
+				</ul>
+				<button onclick="next2();">Continue</button>
 			</h2>
 		</div>
 		
 		<div class="fullscreen hidden" id="page2a">
-			
-			<h1>
-				This first step will measure your network bandwidth<br />
-			</h1>
-			<br />
+			<h1>This first step will measure your network bandwidth</h1>
 			<h2>
-				We will test against Cloudflare's speed test servers.<br /><br />
-				It will take a minute to complete once started.<br />
-				
-				<br />
+				<p>We will test against Cloudflare's speed test servers.</p>
+				<p>It will take a minute to complete once started.</p>
 				<div id="cloudflareresults">
-					🌠🌠<button id="cloudflare" disabled>Loading Files</button>⭐⭐
+					<button id="cloudflare" disabled>Loading Files</button>
 				</div>
-				
 			</h2>
 		</div>
 		
 		<div class="fullscreen hidden" id="page3">
-			
 			<h2>
-				The next step will access your camera and microphone.<br /><br />
-				<br />
-				Accept the camera and microphone permissions if prompted.<br /><br />
+				<p>The next step will access your camera and microphone.</p>
+				<p>Accept the camera and microphone permissions if prompted.</p>
 				<small><i>No one will be able to see your video or audio, other than you.</i></small>
-				<br /><br />
-				<img src='./media/accept.png'/><br />
-				🌠🌠🌠<button onclick="next3();">Continue</button>⭐
-				
+				<p><img src='./media/accept.png'/></p>
+				<button onclick="next3();">Continue</button>
 			</h2>
 		</div>
 		<div id="mainapp" class="hidden">
@@ -542,9 +497,9 @@
 				region = urlParams.get("region");
 			}
 			
-			var testType= "webcam&quality=0&css=speedtest.css";
+			var testType= "webcam&quality=0&css=check.css";
 			if (urlParams.has("screen") || urlParams.has("ss") || urlParams.has("screenshare") || urlParams.has("screentest")) {
-				testType = "quality=0&screenshare&css=speedtest.css"
+				testType = "quality=0&screenshare&css=check.css"
 			}
 			
 			<!-- <option selected value="">Automatic</option> -->

@@ -739,7 +739,7 @@
 		setProgress(30);
 		
 		// Fetch the results data
-		const response = await fetch(`https://record.vdo.workers.dev/?name=${resultsId}`);
+		const response = await fetch(`https://record.vdo.workers.dev/?name=${encodeURIComponent(resultsId)}`);
 		
 		if (!response.ok) {
 		  throw new Error(`Failed to load results (${response.status})`);
@@ -773,7 +773,10 @@
 		if (container) {
 		  const backLink = dom.create('div');
 		  backLink.className = 'back-link';
-		  backLink.innerHTML = `<a href="./results?id=${resultsId}">← Back to Test Results</a>`;
+		  const link = dom.create('a');
+		  link.href = `./results?id=${encodeURIComponent(resultsId)}`;
+		  link.textContent = '← Back to Test Results';
+		  backLink.appendChild(link);
 		  container.insertBefore(backLink, container.firstChild);
 		  
 		  // Add notification that we're viewing remote data
@@ -829,6 +832,9 @@
 	  
 	  // Look for codec information in the results
 	  for (const item of results) {
+		if (!item || typeof item !== 'object') {
+		  continue;
+		}
 		// Look for detectedCodecs data (if it exists in the logged data)
 		if (item.detectedCodecs) {
 		  // Copy the codec information
@@ -928,6 +934,10 @@
       output.appendChild(logEntry);
       output.scrollTop = output.scrollHeight;
     }
+
+	function appendOutputText(message) {
+	  dom.get('output').appendChild(document.createTextNode(message));
+	}
     
 // Create a codec item element with more detailed information
 function createCodecItem(codec, info) {
@@ -987,6 +997,11 @@ function createCodecItem(codec, info) {
   // Create the details container for more specific information
   const details = dom.create('div');
   details.className = 'details';
+  const appendDetail = (label, value) => {
+    const row = dom.create('div');
+    row.textContent = label ? `${label}: ${value}` : value;
+    details.appendChild(row);
+  };
   
   // Add more specific hardware acceleration info
   if (info.webcodecConfig && info.webcodecConfig.encoder && info.webcodecConfig.encoder.hardwareAcceleration === 'prefer-hardware') {
@@ -1012,19 +1027,19 @@ function createCodecItem(codec, info) {
   
   // Add special details if available
   if (info.profile) {
-    details.innerHTML += `<div>Profile: ${info.profile}</div>`;
+    appendDetail('Profile', info.profile);
   }
   
   if (info.resolutionLimit) {
-    details.innerHTML += `<div>Resolution Limit: ${info.resolutionLimit}</div>`;
+    appendDetail('Resolution Limit', info.resolutionLimit);
   }
   
   if (info.details) {
-    details.innerHTML += `<div>${info.details}</div>`;
+    appendDetail('', info.details);
   }
   
   if (info.scalabilityModes && info.scalabilityModes.length) {
-    details.innerHTML += `<div>SVC Modes: ${info.scalabilityModes.join(', ')}</div>`;
+    appendDetail('SVC Modes', info.scalabilityModes.join(', '));
   }
   
   item.appendChild(codecName);
@@ -1742,22 +1757,22 @@ function createCodecItem(codec, info) {
         });
       }
       
-		dom.get('output').innerHTML += '\n--- DETECTION SUMMARY ---\n';
-		dom.get('output').innerHTML += `Video Codecs: ${videoCodecs.join(', ')}\n`;
-		dom.get('output').innerHTML += `Audio Codecs: ${audioCodecs.join(', ')}\n`;
+		appendOutputText('\n--- DETECTION SUMMARY ---\n');
+		appendOutputText(`Video Codecs: ${videoCodecs.join(', ')}\n`);
+		appendOutputText(`Audio Codecs: ${audioCodecs.join(', ')}\n`);
 
 		// Log hardware accelerated codecs
 		const hwCodecs = videoCodecs.filter(codec => codecData.video[codec].hardwareAccelerated);
-		dom.get('output').innerHTML += `Hardware Accelerated: ${hwCodecs.join(', ')}\n`;
+		appendOutputText(`Hardware Accelerated: ${hwCodecs.join(', ')}\n`);
 
 		// Add H.264 profile information
 		const h264Codecs = videoCodecs.filter(codec => 
 		  codec.toLowerCase().includes('h264') || codec.toLowerCase().includes('avc'));
 		if (h264Codecs.length > 0) {
-		  dom.get('output').innerHTML += '\n--- H.264 PROFILES ---\n';
+		  appendOutputText('\n--- H.264 PROFILES ---\n');
 		  h264Codecs.forEach(codec => {
 			const profile = codecData.video[codec].profile || 'Unknown';
-			dom.get('output').innerHTML += `${codec}: profile-level-id=${profile}\n`;
+			appendOutputText(`${codec}: profile-level-id=${profile}\n`);
 		  });
 		}
     }

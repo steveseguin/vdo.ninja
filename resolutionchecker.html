@@ -1,0 +1,1666 @@
+<!DOCTYPE html>
+<html lang="en">
+		<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+		<meta name="robots" content="index, follow" />
+		<meta name="author" content="Steve Seguin" />
+		<meta name="copyright" content="&copy; 2026 Steve Seguin" />
+		<meta name="license" content="https://github.com/steveseguin/vdo.ninja/LICENSE.md" />
+		<meta name="sourcecode" content="https://github.com/steveseguin/vdo.ninja" />
+		<meta name="theme-color" content="#0c0f14" />
+
+		<title>VDON Resolution & FPS Checker</title>
+		<meta name="title" content="VDON Resolution & FPS Checker" />
+		<meta name="description" content="Check what your webcam actually captures. Probe resolutions, measure true frame rate, and run a WebRTC H264 / VP8 loopback right in your browser." />
+
+		<link rel="canonical" href="https://vdo.ninja/resolutionchecker.html" />
+		<link rel="shortcut icon" href="data:image/x-icon;," type="image/x-icon" />
+		<link rel="icon" type="image/png" sizes="32x32" href="./media/favicon-32x32.png" />
+		<link rel="icon" type="image/png" sizes="16x16" href="./media/favicon-16x16.png" />
+		<link rel="icon" href="./media/favicon.ico" />
+		<link itemprop="thumbnailUrl" href="./media/vdoNinja_logo_full.png" />
+
+		<meta name="twitter:card" content="summary_large_image" />
+		<meta name="twitter:creator" content="@SteveSeguin" />
+		<meta name="twitter:title" content="VDON Resolution & FPS Checker" />
+		<meta name="twitter:description" content="Probe webcam resolutions and measure real frame rate, plus WebRTC H264 / VP8 loopback." />
+		<meta name="twitter:image" content="https://vdo.ninja/media/vdoNinja_logo_full.png" />
+
+		<meta property="og:type" content="website" />
+		<meta property="og:url" content="https://vdo.ninja/resolutionchecker.html" />
+		<meta property="og:title" content="VDON Resolution & FPS Checker" />
+		<meta property="og:description" content="Probe webcam resolutions and measure real frame rate plus WebRTC H264 / VP8 loopback in your browser." />
+		<meta property="og:image" content="https://vdo.ninja/media/vdoNinja_logo_full.png" />
+		<meta property="og:image:width" content="1200" />
+		<meta property="og:image:height" content="630" />
+		<meta property="og:site_name" content="VDO.Ninja" />
+
+		<style>
+			:root {
+				--bg: #0c0f14;
+				--panel: #151923;
+				--panel-2: #1b2029;
+				--border: #262c38;
+				--text: #e7eaf0;
+				--muted: #8a94a6;
+				--accent: #6ea8ff;
+				--good: #6fe8a5;
+				--warn: #f5c86b;
+				--danger: #f48a8a;
+				--mono: ui-monospace, "SF Mono", Consolas, "Cascadia Mono", monospace;
+			}
+
+			*, *::before, *::after { box-sizing: border-box; }
+
+			html, body {
+				margin: 0;
+				min-height: 100%;
+				background: var(--bg);
+				color: var(--text);
+				font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+				line-height: 1.5;
+				-webkit-font-smoothing: antialiased;
+			}
+
+			body {
+				padding: 16px;
+				font-size: 15px;
+			}
+
+			.shell {
+				max-width: 900px;
+				margin: 0 auto;
+				display: grid;
+				gap: 14px;
+			}
+
+			header { display: grid; gap: 10px; }
+
+			header h1 {
+				margin: 0;
+				font-size: 20px;
+				font-weight: 600;
+				letter-spacing: -0.01em;
+			}
+
+			.picker { display: grid; gap: 6px; }
+
+			.picker > label {
+				font-size: 11px;
+				font-weight: 600;
+				letter-spacing: 0.06em;
+				text-transform: uppercase;
+				color: var(--muted);
+			}
+
+			select {
+				width: 100%;
+				height: 44px;
+				padding: 8px 12px;
+				background: var(--panel);
+				border: 1px solid var(--border);
+				border-radius: 6px;
+				outline: none;
+				font-size: 16px;
+				font-family: inherit;
+				color: var(--text);
+			}
+
+			select:focus { border-color: var(--accent); }
+
+			.status {
+				display: flex;
+				align-items: center;
+				gap: 10px;
+				flex-wrap: wrap;
+				min-height: 24px;
+				font-size: 13px;
+				color: var(--muted);
+			}
+
+			.status-pill {
+				display: inline-flex;
+				align-items: center;
+				padding: 3px 10px;
+				border-radius: 4px;
+				font-size: 12px;
+				border: 1px solid var(--border);
+				background: var(--panel);
+				color: var(--text);
+				font-family: var(--mono);
+			}
+
+			.status-pill.good { color: var(--good); border-color: rgba(111, 232, 165, 0.3); }
+			.status-pill.fail { color: var(--danger); border-color: rgba(244, 138, 138, 0.3); }
+			.status-pill.warn { color: var(--warn); border-color: rgba(245, 200, 107, 0.3); }
+			.status-pill.busy { color: var(--accent); border-color: rgba(110, 168, 255, 0.3); }
+
+			.table-wrap {
+				overflow: auto;
+				border-radius: 8px;
+				border: 1px solid var(--border);
+				-webkit-overflow-scrolling: touch;
+				background: var(--panel);
+			}
+
+			table {
+				width: 100%;
+				border-collapse: collapse;
+				font-size: 13px;
+			}
+
+			th, td {
+				padding: 10px 12px;
+				vertical-align: top;
+				border-bottom: 1px solid var(--border);
+				text-align: left;
+				white-space: nowrap;
+			}
+
+			tbody tr:last-child td { border-bottom: none; }
+
+			th {
+				background: var(--panel-2);
+				color: var(--muted);
+				font-size: 11px;
+				font-weight: 600;
+				text-transform: uppercase;
+				letter-spacing: 0.06em;
+			}
+
+			td small {
+				display: block;
+				margin-top: 3px;
+				color: var(--muted);
+				font-size: 11px;
+				font-family: var(--mono);
+			}
+
+			.cell-good { color: var(--good); }
+			.cell-fail { color: var(--danger); }
+			.cell-warn { color: var(--warn); }
+
+			.offscreen {
+				position: fixed;
+				left: -9999px;
+				top: 0;
+				width: 320px;
+				height: 180px;
+				pointer-events: none;
+			}
+
+			.offscreen video, .offscreen canvas {
+				width: 320px;
+				height: 180px;
+				display: block;
+			}
+
+			.hidden { display: none; }
+
+			@media (min-width: 640px) {
+				body { padding: 24px; }
+			}
+		</style>
+
+	</head>
+	<body>
+		<div class="shell">
+			<header>
+				<h1>Resolution Checker</h1>
+				<div class="picker">
+					<label for="cameraSelect">Camera</label>
+					<select id="cameraSelect" aria-label="Camera"></select>
+				</div>
+				<div class="status">
+					<span id="statusPill" class="status-pill warn">Idle</span>
+					<span id="summaryText"></span>
+				</div>
+			</header>
+
+			<div class="table-wrap">
+				<table id="resultsTable">
+					<thead>
+						<tr>
+							<th>Mode</th>
+							<th>Capture</th>
+							<th>FPS</th>
+							<th>H264</th>
+							<th>VP8</th>
+						</tr>
+					</thead>
+					<tbody id="resultsBody">
+						<tr><td colspan="5">Pick a camera to begin.</td></tr>
+					</tbody>
+				</table>
+			</div>
+
+			<div class="offscreen" aria-hidden="true">
+				<video id="localVideo" autoplay muted playsinline></video>
+				<canvas id="localCanvas"></canvas>
+				<video id="remoteVideo" autoplay muted playsinline></video>
+				<canvas id="remoteCanvas"></canvas>
+			</div>
+
+			<div class="hidden" aria-hidden="true">
+				<input id="durationInput" type="number" value="1400" />
+				<input id="customWidth" type="number" value="1920" />
+				<input id="customHeight" type="number" value="1080" />
+				<input id="customFps" type="number" value="60" />
+				<input id="customWidthInline" type="number" value="1920" />
+				<input id="customHeightInline" type="number" value="1080" />
+				<input id="customFpsInline" type="number" value="60" />
+				<input id="codecH264" type="checkbox" checked />
+				<input id="codecVP8" type="checkbox" checked />
+				<button id="unlockButton" type="button"></button>
+				<button id="refreshButton" type="button"></button>
+				<button id="addCustomButton" type="button"></button>
+				<button id="addInlineButton" type="button"></button>
+				<button id="copyButton" type="button"></button>
+				<button id="runButton" type="button"></button>
+				<button id="stopButton" type="button"></button>
+				<pre id="capabilitiesOutput"></pre>
+				<div id="codecSupport"></div>
+				<dl id="browserStats"></dl>
+				<dl id="lastResultStats"></dl>
+				<dl id="localStats"></dl>
+				<dl id="remoteStats"></dl>
+				<div id="presetList"></div>
+				<pre id="logOutput"></pre>
+			</div>
+		</div>
+		<script>
+			(function () {
+				const DEFAULT_PRESETS = [
+					{ width: 640, height: 480, fps: 30, selected: true },
+					{ width: 1280, height: 720, fps: 30, selected: true },
+					{ width: 1280, height: 720, fps: 60, selected: true },
+					{ width: 1920, height: 1080, fps: 30, selected: true },
+					{ width: 1920, height: 1080, fps: 60, selected: true },
+					{ width: 2560, height: 1440, fps: 30, selected: false },
+					{ width: 2560, height: 1440, fps: 60, selected: false },
+					{ width: 3840, height: 2160, fps: 30, selected: false },
+					{ width: 3840, height: 2160, fps: 60, selected: false }
+				];
+
+				const urlParams = new URLSearchParams(window.location.search);
+				const state = {
+					running: false,
+					stopRequested: false,
+					results: [],
+					devices: [],
+					presets: [],
+					selectedDeviceId: "",
+					selectedDeviceLabel: "",
+					previewStream: null,
+					liveCapabilities: null,
+					liveSettings: null,
+					liveMeasurement: null,
+					lastLoopback: null,
+					availableCodecs: [],
+					lastRunFinishedAt: "",
+					pageErrors: []
+				};
+
+				window.resolutionCheckerState = state;
+				window.addEventListener("error", function (event) {
+					state.pageErrors.push(event.message || "Unknown page error");
+				});
+
+				const elements = {
+					cameraSelect: document.getElementById("cameraSelect"),
+					durationInput: document.getElementById("durationInput"),
+					customWidth: document.getElementById("customWidth"),
+					customHeight: document.getElementById("customHeight"),
+					customFps: document.getElementById("customFps"),
+					customWidthInline: document.getElementById("customWidthInline"),
+					customHeightInline: document.getElementById("customHeightInline"),
+					customFpsInline: document.getElementById("customFpsInline"),
+					codecH264: document.getElementById("codecH264"),
+					codecVP8: document.getElementById("codecVP8"),
+					unlockButton: document.getElementById("unlockButton"),
+					refreshButton: document.getElementById("refreshButton"),
+					addCustomButton: document.getElementById("addCustomButton"),
+					addInlineButton: document.getElementById("addInlineButton"),
+					copyButton: document.getElementById("copyButton"),
+					runButton: document.getElementById("runButton"),
+					stopButton: document.getElementById("stopButton"),
+					statusPill: document.getElementById("statusPill"),
+					summaryText: document.getElementById("summaryText"),
+					capabilitiesOutput: document.getElementById("capabilitiesOutput"),
+					codecSupport: document.getElementById("codecSupport"),
+					browserStats: document.getElementById("browserStats"),
+					lastResultStats: document.getElementById("lastResultStats"),
+					localVideo: document.getElementById("localVideo"),
+					localCanvas: document.getElementById("localCanvas"),
+					localStats: document.getElementById("localStats"),
+					remoteVideo: document.getElementById("remoteVideo"),
+					remoteCanvas: document.getElementById("remoteCanvas"),
+					remoteStats: document.getElementById("remoteStats"),
+					presetList: document.getElementById("presetList"),
+					resultsBody: document.getElementById("resultsBody"),
+					logOutput: document.getElementById("logOutput")
+				};
+
+				function escapeHtml(value) {
+					return String(value || "").replace(/[&<>"']/g, function (char) {
+						return {
+							"&": "&amp;",
+							"<": "&lt;",
+							">": "&gt;",
+							'"': "&quot;",
+							"'": "&#39;"
+						}[char];
+					});
+				}
+
+				function round(value, digits) {
+					if (!Number.isFinite(value)) {
+						return 0;
+					}
+					const precision = Math.pow(10, digits || 2);
+					return Math.round(value * precision) / precision;
+				}
+
+				function formatNumber(value, digits) {
+					if (!Number.isFinite(value)) {
+						return "-";
+					}
+					return round(value, digits).toFixed(digits == null ? 2 : digits).replace(/\.00$/, "");
+				}
+
+				function formatPreset(preset) {
+					return preset.width + "x" + preset.height + " @ " + formatNumber(preset.fps, 2) + " fps";
+				}
+
+				function presetKey(width, height, fps) {
+					return String(width) + "x" + String(height) + "@" + String(round(fps, 2));
+				}
+
+				function parsePresetString(value) {
+					const match = String(value || "").trim().match(/^(\d+)x(\d+)x(\d+(?:\.\d+)?)$/i);
+					if (!match) {
+						return null;
+					}
+					return {
+						width: parseInt(match[1], 10),
+						height: parseInt(match[2], 10),
+						fps: parseFloat(match[3]),
+						selected: true
+					};
+				}
+
+				function clonePreset(preset) {
+					return {
+						width: preset.width,
+						height: preset.height,
+						fps: preset.fps,
+						selected: !!preset.selected,
+						key: preset.key || presetKey(preset.width, preset.height, preset.fps)
+					};
+				}
+
+				function log(message) {
+					const timestamp = new Date().toLocaleTimeString();
+					elements.logOutput.textContent = "[" + timestamp + "] " + message + "\n" + elements.logOutput.textContent;
+				}
+
+				function setStatus(text, tone) {
+					elements.statusPill.textContent = text;
+					elements.statusPill.className = "status-pill " + (tone || "warn");
+				}
+
+				function getSelectedCodecs() {
+					const codecs = [];
+					if (elements.codecH264.checked) {
+						codecs.push("h264");
+					}
+					if (elements.codecVP8.checked) {
+						codecs.push("vp8");
+					}
+					return codecs;
+				}
+
+				function readDurationMs() {
+					const value = parseInt(elements.durationInput.value || "1400", 10);
+					return Math.min(10000, Math.max(250, value || 1400));
+				}
+
+				function selectedPresetCount() {
+					let total = 0;
+					for (let i = 0; i < state.presets.length; i += 1) {
+						if (state.presets[i].selected) {
+							total += 1;
+						}
+					}
+					return total;
+				}
+
+				function updateBrowserStats() {
+					const codecs = getSelectedCodecs();
+					const browserLines = [
+						"<dt>Browser</dt><dd>" + escapeHtml(navigator.userAgent) + "</dd>",
+						"<dt>Camera</dt><dd>" + escapeHtml(state.selectedDeviceLabel || "None selected") + "</dd>",
+						"<dt>Presets</dt><dd>" + selectedPresetCount() + " selected</dd>",
+						"<dt>Codecs</dt><dd>" + escapeHtml(codecs.length ? codecs.join(", ").toUpperCase() : "none") + "</dd>"
+					];
+					elements.browserStats.innerHTML = browserLines.join("");
+				}
+
+				function escapeLine(value) {
+					return String(value || "").replace(/\s+/g, " ").trim();
+				}
+
+				function formatCapabilityRange(value) {
+					if (value == null) {
+						return "-";
+					}
+					if (typeof value === "number") {
+						return String(value);
+					}
+					if (Array.isArray(value)) {
+						return JSON.stringify(value);
+					}
+					if (typeof value === "object") {
+						const min = value.min != null ? value.min : "?";
+						const max = value.max != null ? value.max : "?";
+						const step = value.step != null ? " step " + value.step : "";
+						return String(min) + " - " + String(max) + step;
+					}
+					return String(value);
+				}
+
+				function summarizeCapabilities(capabilities, settings) {
+					const lines = [];
+					if (!capabilities) {
+						return "Capabilities unavailable for this browser or device.";
+					}
+					if (capabilities.width) {
+						lines.push("width: " + formatCapabilityRange(capabilities.width));
+					}
+					if (capabilities.height) {
+						lines.push("height: " + formatCapabilityRange(capabilities.height));
+					}
+					if (capabilities.frameRate) {
+						lines.push("frameRate: " + formatCapabilityRange(capabilities.frameRate));
+					}
+					if (capabilities.aspectRatio) {
+						lines.push("aspectRatio: " + formatCapabilityRange(capabilities.aspectRatio));
+					}
+					if (capabilities.facingMode) {
+						lines.push("facingMode: " + JSON.stringify(capabilities.facingMode));
+					}
+					if (capabilities.resizeMode) {
+						lines.push("resizeMode: " + JSON.stringify(capabilities.resizeMode));
+					}
+					if (capabilities.zoom) {
+						lines.push("zoom: " + formatCapabilityRange(capabilities.zoom));
+					}
+					if (settings) {
+						lines.push("");
+						lines.push("current settings:");
+						lines.push("  width: " + (settings.width || "-"));
+						lines.push("  height: " + (settings.height || "-"));
+						lines.push("  frameRate: " + formatNumber(settings.frameRate, 2));
+						lines.push("  deviceId: " + escapeLine(settings.deviceId || "-"));
+					}
+					return lines.join("\n");
+				}
+
+				function sanitizeSettings(settings) {
+					if (!settings) {
+						return {};
+					}
+					return {
+						width: settings.width || 0,
+						height: settings.height || 0,
+						frameRate: Number(settings.frameRate || 0),
+						deviceId: settings.deviceId || "",
+						facingMode: settings.facingMode || "",
+						resizeMode: settings.resizeMode || ""
+					};
+				}
+
+				function serializeError(error) {
+					if (!error) {
+						return { name: "Error", message: "Unknown error" };
+					}
+					return {
+						name: error.name || "Error",
+						message: error.message || String(error),
+						constraint: error.constraint || ""
+					};
+				}
+
+				function errorSummary(error) {
+					if (!error) {
+						return "failed";
+					}
+					return [error.name, error.message].filter(Boolean).join(": ");
+				}
+
+				function summarizeMode(settings) {
+					if (!settings) {
+						return "-";
+					}
+					return (
+						(settings.width || "-") +
+						"x" +
+						(settings.height || "-") +
+						" @ " +
+						formatNumber(settings.frameRate, 2) +
+						" fps"
+					);
+				}
+
+				function summarizeLoopbackShort(result) {
+					if (!result) {
+						return "-";
+					}
+					if (result.unsupported) {
+						return "unsupported";
+					}
+					if (!result.success) {
+						return errorSummary(result.error);
+					}
+					return (
+						(result.receiver && result.receiver.frameWidth ? result.receiver.frameWidth : result.remoteWidth || "-") +
+						"x" +
+						(result.receiver && result.receiver.frameHeight ? result.receiver.frameHeight : result.remoteHeight || "-") +
+						" @ " +
+						formatNumber(result.measurement && result.measurement.measuredFps, 2) +
+						" fps"
+					);
+				}
+
+				function renderLastResult(result) {
+					if (!result) {
+						elements.lastResultStats.innerHTML =
+							"<dt>Last run</dt><dd>-</dd><dt>Capture</dt><dd>-</dd><dt>H264</dt><dd>-</dd><dt>VP8</dt><dd>-</dd>";
+						return;
+					}
+					const capture = result.capture && result.capture.success
+						? summarizeMode(result.capture.settings) + " / " + formatNumber(result.capture.measurement.measuredFps, 2) + " fps"
+						: errorSummary(result.capture && result.capture.error);
+					const h264 = summarizeLoopbackShort(result.loopback && result.loopback.h264);
+					const vp8 = summarizeLoopbackShort(result.loopback && result.loopback.vp8);
+					elements.lastResultStats.innerHTML = [
+						"<dt>Last run</dt><dd>" + escapeHtml(formatPreset(result.requested)) + "</dd>",
+						"<dt>Capture</dt><dd>" + escapeHtml(capture) + "</dd>",
+						"<dt>H264</dt><dd>" + escapeHtml(h264) + "</dd>",
+						"<dt>VP8</dt><dd>" + escapeHtml(vp8) + "</dd>"
+					].join("");
+				}
+
+				function getCodecCapabilities(codecKey) {
+					if (!window.RTCRtpSender || typeof RTCRtpSender.getCapabilities !== "function") {
+						return [];
+					}
+					const caps = RTCRtpSender.getCapabilities("video");
+					if (!caps || !Array.isArray(caps.codecs)) {
+						return [];
+					}
+					const mime = codecKey === "h264" ? "video/h264" : "video/vp8";
+					return caps.codecs.filter(function (codec) {
+						return codec && codec.mimeType && codec.mimeType.toLowerCase() === mime;
+					});
+				}
+
+				function renderCodecSupport() {
+					const html = [];
+					for (let i = 0; i < state.availableCodecs.length; i += 1) {
+						const codec = state.availableCodecs[i];
+						const className = codec.supported ? "available" : "unavailable";
+						const count = codec.count ? " (" + codec.count + ")" : "";
+						html.push(
+							'<span class="codec-pill ' +
+								className +
+								'">' +
+								escapeHtml(codec.label) +
+								count +
+								"</span>"
+						);
+					}
+					if (!html.length) {
+						html.push('<span class="codec-pill unavailable">RTCRtpSender.getCapabilities unavailable</span>');
+					}
+					elements.codecSupport.innerHTML = html.join("");
+				}
+
+				function detectCodecSupport() {
+					state.availableCodecs = [
+						{ key: "h264", label: "H264", count: getCodecCapabilities("h264").length, supported: getCodecCapabilities("h264").length > 0 },
+						{ key: "vp8", label: "VP8", count: getCodecCapabilities("vp8").length, supported: getCodecCapabilities("vp8").length > 0 }
+					];
+					renderCodecSupport();
+				}
+
+				function renderPresetList() {
+					const html = [];
+					for (let i = 0; i < state.presets.length; i += 1) {
+						const preset = state.presets[i];
+						html.push(
+							'<label class="preset-item">' +
+								'<span>' +
+								escapeHtml(formatPreset(preset)) +
+								"</span>" +
+								'<input type="checkbox" data-preset-key="' +
+								escapeHtml(preset.key) +
+								'" ' +
+								(preset.selected ? "checked" : "") +
+								" />" +
+								"</label>"
+						);
+					}
+					elements.presetList.innerHTML = html.join("");
+					const checkboxes = elements.presetList.querySelectorAll("input[data-preset-key]");
+					for (let i = 0; i < checkboxes.length; i += 1) {
+						checkboxes[i].addEventListener("change", function (event) {
+							const key = event.target.getAttribute("data-preset-key");
+							for (let j = 0; j < state.presets.length; j += 1) {
+								if (state.presets[j].key === key) {
+									state.presets[j].selected = !!event.target.checked;
+									break;
+								}
+							}
+							updateBrowserStats();
+						});
+					}
+					updateBrowserStats();
+				}
+
+				function addPreset(width, height, fps, selected) {
+					const parsedWidth = parseInt(width, 10);
+					const parsedHeight = parseInt(height, 10);
+					const parsedFps = parseFloat(fps);
+					if (!parsedWidth || !parsedHeight || !parsedFps) {
+						return false;
+					}
+					const key = presetKey(parsedWidth, parsedHeight, parsedFps);
+					for (let i = 0; i < state.presets.length; i += 1) {
+						if (state.presets[i].key === key) {
+							state.presets[i].selected = true;
+							renderPresetList();
+							return true;
+						}
+					}
+					state.presets.push({
+						width: parsedWidth,
+						height: parsedHeight,
+						fps: parsedFps,
+						selected: selected !== false,
+						key: key
+					});
+					state.presets.sort(function (left, right) {
+						if (left.width !== right.width) {
+							return left.width - right.width;
+						}
+						if (left.height !== right.height) {
+							return left.height - right.height;
+						}
+						return left.fps - right.fps;
+					});
+					renderPresetList();
+					return true;
+				}
+
+				function renderLocalStats(mode, measurement, matched) {
+					elements.localStats.innerHTML = [
+						"<dt>Mode</dt><dd>" + escapeHtml(mode || "-") + "</dd>",
+						"<dt>Measured</dt><dd>" + escapeHtml(measurement ? formatNumber(measurement.measuredFps, 2) + " fps" : "-") + "</dd>",
+						"<dt>Canvas</dt><dd>" + escapeHtml(measurement ? formatNumber(measurement.canvasDrawFps, 2) + " fps" : "-") + "</dd>",
+						"<dt>Match</dt><dd>" + escapeHtml(matched ? "within tolerance" : "below requested or unknown") + "</dd>"
+					].join("");
+				}
+
+				function renderRemoteStats(result) {
+					if (!result) {
+						elements.remoteStats.innerHTML =
+							"<dt>Codec</dt><dd>-</dd><dt>Received</dt><dd>-</dd><dt>Measured</dt><dd>-</dd><dt>Notes</dt><dd>-</dd>";
+						return;
+					}
+					const notes = [];
+					if (result.actualCodec && result.requestedCodec && result.actualCodec.toLowerCase().indexOf(result.requestedCodec.toLowerCase()) === -1) {
+						notes.push("Negotiated " + result.actualCodec);
+					}
+					if (result.note) {
+						notes.push(result.note);
+					}
+					elements.remoteStats.innerHTML = [
+						"<dt>Codec</dt><dd>" + escapeHtml(result.actualCodec || result.requestedCodec || "-") + "</dd>",
+						"<dt>Received</dt><dd>" + escapeHtml(result.remoteWidth && result.remoteHeight ? result.remoteWidth + "x" + result.remoteHeight : "-") + "</dd>",
+						"<dt>Measured</dt><dd>" + escapeHtml(result.measurement ? formatNumber(result.measurement.measuredFps, 2) + " fps" : "-") + "</dd>",
+						"<dt>Notes</dt><dd>" + escapeHtml(notes.join(" | ") || "-") + "</dd>"
+					].join("");
+				}
+
+				function formatMeasurementCell(value) {
+					if (!Number.isFinite(value)) {
+						return "-";
+					}
+					return escapeHtml(formatNumber(value, 2) + " fps");
+				}
+
+				function formatCaptureCell(item) {
+					if (!item.capture) {
+						return "-";
+					}
+					if (!item.capture.success) {
+						return '<span class="cell-fail">' + escapeHtml(errorSummary(item.capture.error)) + "</span>";
+					}
+					const className = item.capture.matched ? "cell-good" : "cell-warn";
+					const fallback = item.capture.usedDeviceFallback ? " / deviceId fallback" : "";
+					return (
+						'<span class="' +
+						className +
+						'">' +
+						escapeHtml(summarizeMode(item.capture.settings)) +
+						"</span>" +
+						"<small>" +
+						escapeHtml(item.capture.matched ? "exact settings matched" : "settings opened but differ from request") +
+						escapeHtml(fallback) +
+						"</small>"
+					);
+				}
+
+				function formatLoopbackCell(result) {
+					if (!result) {
+						return "-";
+					}
+					if (result.unsupported) {
+						return '<span class="cell-warn">unsupported</span><small>' + escapeHtml(result.note || "") + "</small>";
+					}
+					if (!result.success) {
+						return '<span class="cell-fail">' + escapeHtml(errorSummary(result.error)) + "</span>";
+					}
+					const className = result.matchedResolution ? "cell-good" : "cell-warn";
+					const codecLabel = result.actualCodec || result.requestedCodec || "";
+					return (
+						'<span class="' +
+						className +
+						'">' +
+						escapeHtml((result.remoteWidth || result.receiver.frameWidth || "-") + "x" + (result.remoteHeight || result.receiver.frameHeight || "-")) +
+						"</span>" +
+						"<small>" +
+						escapeHtml(codecLabel) +
+						" / " +
+						escapeHtml(formatNumber(result.measurement && result.measurement.measuredFps, 2) + " fps") +
+						"</small>"
+					);
+				}
+
+				function renderSummary() {
+					if (!state.results.length) {
+						elements.summaryText.textContent = "No tests run yet.";
+						return;
+					}
+					let captureOk = 0;
+					let h264Ok = 0;
+					let vp8Ok = 0;
+					for (let i = 0; i < state.results.length; i += 1) {
+						const item = state.results[i];
+						if (item.capture && item.capture.success) {
+							captureOk += 1;
+						}
+						if (item.loopback && item.loopback.h264 && item.loopback.h264.success) {
+							h264Ok += 1;
+						}
+						if (item.loopback && item.loopback.vp8 && item.loopback.vp8.success) {
+							vp8Ok += 1;
+						}
+					}
+					elements.summaryText.textContent =
+						"Capture " +
+						captureOk +
+						"/" +
+						state.results.length +
+						", H264 " +
+						h264Ok +
+						"/" +
+						state.results.length +
+						", VP8 " +
+						vp8Ok +
+						"/" +
+						state.results.length +
+						(state.lastRunFinishedAt ? " | Last finished: " + state.lastRunFinishedAt : "");
+				}
+
+				function clearVideo(video) {
+					try {
+						video.pause();
+					} catch (error) {}
+					video.srcObject = null;
+				}
+
+				function clearCanvas(canvas) {
+					const ctx = canvas.getContext("2d");
+					ctx.clearRect(0, 0, canvas.width || canvas.clientWidth || 1, canvas.height || canvas.clientHeight || 1);
+				}
+
+				function stopStream(stream) {
+					if (!stream) {
+						return;
+					}
+					const tracks = stream.getTracks();
+					for (let i = 0; i < tracks.length; i += 1) {
+						try {
+							tracks[i].stop();
+						} catch (error) {}
+					}
+				}
+
+				function stopPreviewStream() {
+					if (state.previewStream) {
+						stopStream(state.previewStream);
+						state.previewStream = null;
+					}
+					clearVideo(elements.localVideo);
+				}
+
+				async function attachStream(video, stream) {
+					video.srcObject = stream;
+					try {
+						await video.play();
+					} catch (error) {}
+					await waitForVideoReady(video, 5000);
+				}
+
+				function waitForVideoReady(video, timeoutMs) {
+					return new Promise(function (resolve, reject) {
+						if (video.readyState >= 2 && video.videoWidth && video.videoHeight) {
+							resolve();
+							return;
+						}
+						let settled = false;
+						const timeout = setTimeout(function () {
+							if (settled) {
+								return;
+							}
+							settled = true;
+							cleanup();
+							reject(new Error("Timed out waiting for video to start"));
+						}, timeoutMs || 5000);
+
+						function done() {
+							if (settled) {
+								return;
+							}
+							if (video.readyState >= 2 && video.videoWidth && video.videoHeight) {
+								settled = true;
+								cleanup();
+								resolve();
+							}
+						}
+
+						function cleanup() {
+							clearTimeout(timeout);
+							video.removeEventListener("loadedmetadata", done);
+							video.removeEventListener("canplay", done);
+							video.removeEventListener("playing", done);
+						}
+
+						video.addEventListener("loadedmetadata", done);
+						video.addEventListener("canplay", done);
+						video.addEventListener("playing", done);
+						done();
+					});
+				}
+
+				function readPlaybackFrameCount(video) {
+					if (typeof video.getVideoPlaybackQuality === "function") {
+						const quality = video.getVideoPlaybackQuality();
+						if (quality && Number.isFinite(quality.totalVideoFrames)) {
+							return quality.totalVideoFrames;
+						}
+					}
+					if (Number.isFinite(video.webkitDecodedFrameCount)) {
+						return video.webkitDecodedFrameCount;
+					}
+					return 0;
+				}
+
+				function measureVideo(video, canvas, durationMs) {
+					return new Promise(function (resolve) {
+						const ctx = canvas.getContext("2d", { alpha: false, desynchronized: true });
+						let finished = false;
+						let lastPresented = null;
+						let callbackId = 0;
+						let startAt = 0;
+						let drawCount = 0;
+						let frameCount = 0;
+						const fallbackStartFrames = readPlaybackFrameCount(video);
+						const fallbackStartTime = performance.now();
+
+						function finish(now) {
+							if (finished) {
+								return;
+							}
+							finished = true;
+							if (typeof video.cancelVideoFrameCallback === "function" && callbackId) {
+								try {
+									video.cancelVideoFrameCallback(callbackId);
+								} catch (error) {}
+							}
+							const elapsed = Math.max((now || performance.now()) - (startAt || fallbackStartTime), 1);
+							if (!frameCount) {
+								const fallbackEndFrames = readPlaybackFrameCount(video);
+								frameCount = Math.max(frameCount, fallbackEndFrames - fallbackStartFrames);
+							}
+							resolve({
+								elapsedMs: round(elapsed, 2),
+								measuredFps: round((frameCount * 1000) / elapsed, 2),
+								canvasDrawFps: round((drawCount * 1000) / elapsed, 2),
+								frameCount: frameCount,
+								drawCount: drawCount,
+								videoWidth: video.videoWidth || 0,
+								videoHeight: video.videoHeight || 0
+							});
+						}
+
+						function drawFrame() {
+							if (!video.videoWidth || !video.videoHeight) {
+								return;
+							}
+							if (canvas.width !== video.videoWidth || canvas.height !== video.videoHeight) {
+								canvas.width = video.videoWidth;
+								canvas.height = video.videoHeight;
+							}
+							ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+							drawCount += 1;
+						}
+
+						if (typeof video.requestVideoFrameCallback === "function") {
+							callbackId = video.requestVideoFrameCallback(function step(now, metadata) {
+								if (!startAt) {
+									startAt = now;
+								}
+								if (metadata && Number.isFinite(metadata.presentedFrames)) {
+									if (lastPresented == null) {
+										frameCount += 1;
+									} else {
+										frameCount += Math.max(1, metadata.presentedFrames - lastPresented);
+									}
+									lastPresented = metadata.presentedFrames;
+								} else {
+									frameCount += 1;
+								}
+								drawFrame();
+								if (state.stopRequested || now - startAt >= durationMs) {
+									finish(now);
+									return;
+								}
+								callbackId = video.requestVideoFrameCallback(step);
+							});
+							setTimeout(function () {
+								finish();
+							}, durationMs + 2000);
+							return;
+						}
+
+						function fallbackLoop() {
+							if (finished) {
+								return;
+							}
+							drawFrame();
+							if (state.stopRequested || performance.now() - fallbackStartTime >= durationMs) {
+								finish();
+								return;
+							}
+							requestAnimationFrame(fallbackLoop);
+						}
+
+						requestAnimationFrame(fallbackLoop);
+						setTimeout(function () {
+							finish();
+						}, durationMs + 2000);
+					});
+				}
+
+				function captureMatched(settings, preset) {
+					if (!settings) {
+						return false;
+					}
+					const widthOk = Math.abs((settings.width || 0) - preset.width) <= 2;
+					const heightOk = Math.abs((settings.height || 0) - preset.height) <= 2;
+					const fpsTolerance = Math.max(1.2, preset.fps * 0.08);
+					const fpsOk = Math.abs((settings.frameRate || 0) - preset.fps) <= fpsTolerance;
+					return widthOk && heightOk && fpsOk;
+				}
+
+				function measurementMatched(measurement, preset) {
+					if (!measurement) {
+						return false;
+					}
+					const fpsTolerance = Math.max(2.5, preset.fps * 0.12);
+					return Math.abs((measurement.measuredFps || 0) - preset.fps) <= fpsTolerance;
+				}
+
+				async function collectVideoStats(pc, kind) {
+					const report = await pc.getStats();
+					let target = null;
+					report.forEach(function (stat) {
+						if (stat.type !== kind || stat.kind !== "video") {
+							return;
+						}
+						if (!target) {
+							target = stat;
+							return;
+						}
+						const currentBytes = stat.bytesSent || stat.bytesReceived || 0;
+						const bestBytes = target.bytesSent || target.bytesReceived || 0;
+						if (currentBytes > bestBytes) {
+							target = stat;
+						}
+					});
+					let codec = null;
+					if (target && target.codecId) {
+						report.forEach(function (stat) {
+							if (stat.id === target.codecId) {
+								codec = stat;
+							}
+						});
+					}
+					return {
+						frameWidth: target && target.frameWidth ? target.frameWidth : 0,
+						frameHeight: target && target.frameHeight ? target.frameHeight : 0,
+						framesPerSecond: target && Number.isFinite(target.framesPerSecond) ? target.framesPerSecond : 0,
+						framesEncoded: target && Number.isFinite(target.framesEncoded) ? target.framesEncoded : 0,
+						framesDecoded: target && Number.isFinite(target.framesDecoded) ? target.framesDecoded : 0,
+						encoderImplementation: target && target.encoderImplementation ? target.encoderImplementation : "",
+						packetsSent: target && Number.isFinite(target.packetsSent) ? target.packetsSent : 0,
+						packetsReceived: target && Number.isFinite(target.packetsReceived) ? target.packetsReceived : 0,
+						bytesSent: target && Number.isFinite(target.bytesSent) ? target.bytesSent : 0,
+						bytesReceived: target && Number.isFinite(target.bytesReceived) ? target.bytesReceived : 0,
+						mimeType: codec && codec.mimeType ? codec.mimeType : "",
+						sdpFmtpLine: codec && codec.sdpFmtpLine ? codec.sdpFmtpLine : "",
+						qualityLimitationReason: target && target.qualityLimitationReason ? target.qualityLimitationReason : ""
+					};
+				}
+
+				async function requestPreviewStream(deviceId) {
+					let constraints = { video: deviceId ? { deviceId: { exact: deviceId } } : true, audio: false };
+					try {
+						return await navigator.mediaDevices.getUserMedia(constraints);
+					} catch (error) {
+						if (!deviceId) {
+							throw error;
+						}
+						const fallback = { video: { deviceId: deviceId }, audio: false };
+						return navigator.mediaDevices.getUserMedia(fallback);
+					}
+				}
+
+				async function requestExactTestStream(deviceId, preset) {
+					const videoConstraints = {
+						width: { exact: preset.width },
+						height: { exact: preset.height },
+						frameRate: { exact: preset.fps }
+					};
+					if (deviceId) {
+						videoConstraints.deviceId = { exact: deviceId };
+					}
+					try {
+						return {
+							stream: await navigator.mediaDevices.getUserMedia({ video: videoConstraints, audio: false }),
+							usedDeviceFallback: false
+						};
+					} catch (error) {
+						if (!deviceId) {
+							throw error;
+						}
+						const fallbackConstraints = {
+							width: { exact: preset.width },
+							height: { exact: preset.height },
+							frameRate: { exact: preset.fps },
+							deviceId: deviceId
+						};
+						return {
+							stream: await navigator.mediaDevices.getUserMedia({ video: fallbackConstraints, audio: false }),
+							usedDeviceFallback: true
+						};
+					}
+				}
+
+				async function refreshSelectedCameraInfo() {
+					if (state.running) {
+						return;
+					}
+					stopPreviewStream();
+					clearCanvas(elements.localCanvas);
+					renderLocalStats("-", null, false);
+					if (!state.selectedDeviceId) {
+						state.liveCapabilities = null;
+						state.liveSettings = null;
+						state.liveMeasurement = null;
+						elements.capabilitiesOutput.textContent = "Waiting for camera selection.";
+						updateBrowserStats();
+						return;
+					}
+					setStatus("Inspecting selected camera", "busy");
+					try {
+						const stream = await requestPreviewStream(state.selectedDeviceId);
+						state.previewStream = stream;
+						await attachStream(elements.localVideo, stream);
+						const track = stream.getVideoTracks()[0];
+						state.liveCapabilities = track && track.getCapabilities ? track.getCapabilities() : null;
+						state.liveSettings = sanitizeSettings(track && track.getSettings ? track.getSettings() : null);
+						state.liveMeasurement = await measureVideo(elements.localVideo, elements.localCanvas, Math.min(900, readDurationMs()));
+						elements.capabilitiesOutput.textContent = summarizeCapabilities(state.liveCapabilities, state.liveSettings);
+						renderLocalStats(summarizeMode(state.liveSettings), state.liveMeasurement, true);
+						setStatus("Idle", "warn");
+					} catch (error) {
+						elements.capabilitiesOutput.textContent = "Failed to inspect camera: " + errorSummary(error);
+						setStatus("Camera inspection failed", "fail");
+						log("Preview probe failed: " + errorSummary(error));
+					}
+					updateBrowserStats();
+				}
+
+				function queueIceCandidate(target, pendingList, candidate) {
+					if (!candidate) {
+						return;
+					}
+					if (target.remoteDescription) {
+						target.addIceCandidate(candidate).catch(function () {});
+					} else {
+						pendingList.push(candidate);
+					}
+				}
+
+				async function flushCandidates(target, pendingList) {
+					while (pendingList.length) {
+						const candidate = pendingList.shift();
+						try {
+							await target.addIceCandidate(candidate);
+						} catch (error) {}
+					}
+				}
+
+				async function waitForConnection(pc, timeoutMs) {
+					const started = performance.now();
+					while (performance.now() - started < timeoutMs) {
+						if (pc.connectionState === "connected" || pc.iceConnectionState === "connected" || pc.iceConnectionState === "completed") {
+							return true;
+						}
+						await new Promise(function (resolve) {
+							setTimeout(resolve, 80);
+						});
+					}
+					return false;
+				}
+
+				async function runLoopback(stream, preset, codecKey, durationMs) {
+					const codecCapabilities = getCodecCapabilities(codecKey);
+					if (!codecCapabilities.length) {
+						return {
+							requestedCodec: codecKey.toUpperCase(),
+							unsupported: true,
+							success: false,
+							note: "Codec not exposed by RTCRtpSender.getCapabilities"
+						};
+					}
+
+					const pc1 = new RTCPeerConnection();
+					const pc2 = new RTCPeerConnection();
+					const pendingForPc1 = [];
+					const pendingForPc2 = [];
+					let remoteStream = null;
+
+					try {
+						clearVideo(elements.remoteVideo);
+						clearCanvas(elements.remoteCanvas);
+						renderRemoteStats(null);
+
+						pc1.onicecandidate = function (event) {
+							queueIceCandidate(pc2, pendingForPc2, event.candidate);
+						};
+						pc2.onicecandidate = function (event) {
+							queueIceCandidate(pc1, pendingForPc1, event.candidate);
+						};
+
+						pc2.ontrack = async function (event) {
+							remoteStream = event.streams && event.streams[0] ? event.streams[0] : new MediaStream([event.track]);
+							try {
+								await attachStream(elements.remoteVideo, remoteStream);
+							} catch (error) {}
+						};
+
+						const track = stream.getVideoTracks()[0];
+						const transceiver = pc1.addTransceiver(track, {
+							direction: "sendonly",
+							streams: [stream]
+						});
+
+						if (transceiver && typeof transceiver.setCodecPreferences === "function") {
+							transceiver.setCodecPreferences(codecCapabilities);
+						}
+
+						const offer = await pc1.createOffer();
+						await pc1.setLocalDescription(offer);
+						await pc2.setRemoteDescription(offer);
+						await flushCandidates(pc2, pendingForPc2);
+
+						const answer = await pc2.createAnswer();
+						await pc2.setLocalDescription(answer);
+						await pc1.setRemoteDescription(answer);
+						await flushCandidates(pc1, pendingForPc1);
+
+						await waitForConnection(pc1, 6000);
+						await waitForVideoReady(elements.remoteVideo, 6000);
+						await new Promise(function (resolve) {
+							setTimeout(resolve, 250);
+						});
+
+						const measurement = await measureVideo(elements.remoteVideo, elements.remoteCanvas, durationMs);
+						const sender = await collectVideoStats(pc1, "outbound-rtp");
+						const receiver = await collectVideoStats(pc2, "inbound-rtp");
+						const actualCodec = sender.mimeType || receiver.mimeType || "";
+						const note = [];
+						if (sender.qualityLimitationReason) {
+							note.push("quality limitation: " + sender.qualityLimitationReason);
+						}
+						const result = {
+							requestedCodec: codecKey.toUpperCase(),
+							actualCodec: actualCodec,
+							success: true,
+							unsupported: false,
+							note: note.join(" | "),
+							sender: sender,
+							receiver: receiver,
+							measurement: measurement,
+							remoteWidth: elements.remoteVideo.videoWidth || receiver.frameWidth || 0,
+							remoteHeight: elements.remoteVideo.videoHeight || receiver.frameHeight || 0,
+							matchedResolution:
+								Math.abs((receiver.frameWidth || elements.remoteVideo.videoWidth || 0) - preset.width) <= 2 &&
+								Math.abs((receiver.frameHeight || elements.remoteVideo.videoHeight || 0) - preset.height) <= 2
+						};
+						renderRemoteStats(result);
+						return result;
+					} catch (error) {
+						const failed = {
+							requestedCodec: codecKey.toUpperCase(),
+							actualCodec: "",
+							success: false,
+							unsupported: false,
+							error: serializeError(error)
+						};
+						renderRemoteStats(failed);
+						return failed;
+					} finally {
+						try {
+							pc1.close();
+						} catch (error) {}
+						try {
+							pc2.close();
+						} catch (error) {}
+						if (remoteStream) {
+							stopStream(remoteStream);
+						}
+					}
+				}
+
+				function renderResults() {
+					if (!state.results.length) {
+						elements.resultsBody.innerHTML = '<tr><td colspan="5">Pick a camera to begin.</td></tr>';
+						renderLastResult(null);
+						return;
+					}
+
+					const rows = [];
+					for (let i = 0; i < state.results.length; i += 1) {
+						const item = state.results[i];
+						rows.push(
+							"<tr>" +
+								"<td>" + escapeHtml(formatPreset(item.requested)) + "</td>" +
+								"<td>" + formatCaptureCell(item) + "</td>" +
+								"<td>" + formatMeasurementCell(item.capture && item.capture.measurement ? item.capture.measurement.measuredFps : null) + "</td>" +
+								"<td>" + formatLoopbackCell(item.loopback ? item.loopback.h264 : null) + "</td>" +
+								"<td>" + formatLoopbackCell(item.loopback ? item.loopback.vp8 : null) + "</td>" +
+							"</tr>"
+						);
+					}
+					elements.resultsBody.innerHTML = rows.join("");
+					renderLastResult(state.results[state.results.length - 1]);
+					renderSummary();
+				}
+
+				async function enumerateCameras() {
+					if (!navigator.mediaDevices || typeof navigator.mediaDevices.enumerateDevices !== "function") {
+						throw new Error("MediaDevices.enumerateDevices is unavailable");
+					}
+					const devices = await navigator.mediaDevices.enumerateDevices();
+					state.devices = devices.filter(function (device) {
+						return device.kind === "videoinput";
+					});
+					if (!state.devices.length) {
+						elements.cameraSelect.innerHTML = '<option value="">No video inputs found</option>';
+						state.selectedDeviceId = "";
+						state.selectedDeviceLabel = "";
+						updateBrowserStats();
+						return;
+					}
+					const previous = state.selectedDeviceId;
+					const options = [];
+					for (let i = 0; i < state.devices.length; i += 1) {
+						const device = state.devices[i];
+						const label = device.label || "Camera " + (i + 1);
+						options.push('<option value="' + escapeHtml(device.deviceId) + '">' + escapeHtml(label) + "</option>");
+					}
+					elements.cameraSelect.innerHTML = options.join("");
+					if (previous && state.devices.some(function (device) { return device.deviceId === previous; })) {
+						elements.cameraSelect.value = previous;
+					}
+					state.selectedDeviceId = elements.cameraSelect.value || state.devices[0].deviceId;
+					elements.cameraSelect.value = state.selectedDeviceId;
+					state.selectedDeviceLabel = findSelectedDeviceLabel();
+					updateBrowserStats();
+				}
+
+				function findSelectedDeviceLabel() {
+					for (let i = 0; i < state.devices.length; i += 1) {
+						if (state.devices[i].deviceId === state.selectedDeviceId) {
+							return state.devices[i].label || "Camera " + (i + 1);
+						}
+					}
+					return "";
+				}
+
+				async function unlockDevices() {
+					if (!navigator.mediaDevices || typeof navigator.mediaDevices.getUserMedia !== "function") {
+						throw new Error("getUserMedia is unavailable");
+					}
+					let tempStream = null;
+					try {
+						tempStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: false });
+					} finally {
+						stopStream(tempStream);
+					}
+					await enumerateCameras();
+					await refreshSelectedCameraInfo();
+				}
+
+				async function runPreset(result, codecs, durationMs) {
+					let stream = null;
+					clearVideo(elements.remoteVideo);
+					clearCanvas(elements.remoteCanvas);
+					try {
+						log("Opening " + formatPreset(result.requested));
+						const response = await requestExactTestStream(state.selectedDeviceId, result.requested);
+						stream = response.stream;
+						await attachStream(elements.localVideo, stream);
+						const track = stream.getVideoTracks()[0];
+						const settings = sanitizeSettings(track && track.getSettings ? track.getSettings() : {});
+						const measurement = await measureVideo(elements.localVideo, elements.localCanvas, durationMs);
+						const matched = captureMatched(settings, result.requested) && measurementMatched(measurement, result.requested);
+						result.capture = {
+							success: true,
+							settings: settings,
+							measurement: measurement,
+							matched: matched,
+							usedDeviceFallback: response.usedDeviceFallback
+						};
+						renderLocalStats(summarizeMode(settings), measurement, matched);
+						if (response.usedDeviceFallback) {
+							result.notes.push("Exact deviceId failed; plain deviceId fallback was used.");
+						}
+						renderResults();
+
+						for (let i = 0; i < codecs.length; i += 1) {
+							if (state.stopRequested) {
+								break;
+							}
+							const codecKey = codecs[i];
+							setStatus("Loopback " + codecKey.toUpperCase() + " for " + formatPreset(result.requested), "busy");
+							log("Loopback " + codecKey.toUpperCase() + " for " + formatPreset(result.requested));
+							const loopbackResult = await runLoopback(stream, result.requested, codecKey, durationMs);
+							result.loopback[codecKey] = loopbackResult;
+							state.lastLoopback = loopbackResult;
+							renderResults();
+						}
+					} catch (error) {
+						result.capture = {
+							success: false,
+							error: serializeError(error)
+						};
+						renderLocalStats("-", null, false);
+						log("Capture failed for " + formatPreset(result.requested) + ": " + errorSummary(error));
+						renderResults();
+					} finally {
+						stopStream(stream);
+						clearVideo(elements.remoteVideo);
+					}
+				}
+
+				async function runSelectedTests() {
+					if (state.running) {
+						return;
+					}
+					if (!state.selectedDeviceId) {
+						setStatus("Select a camera first", "fail");
+						return;
+					}
+					const codecs = getSelectedCodecs();
+					if (!codecs.length) {
+						setStatus("Select at least one codec", "fail");
+						return;
+					}
+					const presets = state.presets.filter(function (preset) {
+						return preset.selected;
+					});
+					if (!presets.length) {
+						setStatus("Select at least one preset", "fail");
+						return;
+					}
+
+					state.running = true;
+					state.stopRequested = false;
+					state.results = [];
+					state.lastLoopback = null;
+					state.lastRunFinishedAt = "";
+					stopPreviewStream();
+					renderResults();
+					updateBrowserStats();
+					setStatus("Running", "busy");
+					log("Starting run on " + (state.selectedDeviceLabel || "selected camera"));
+
+					const durationMs = readDurationMs();
+					for (let i = 0; i < presets.length; i += 1) {
+						if (state.stopRequested) {
+							break;
+						}
+						const preset = clonePreset(presets[i]);
+						const result = {
+							requested: preset,
+							startedAt: new Date().toLocaleTimeString(),
+							capture: null,
+							loopback: {},
+							notes: []
+						};
+						state.results.push(result);
+						renderResults();
+						setStatus("Capture " + formatPreset(preset), "busy");
+						await runPreset(result, codecs, durationMs);
+					}
+
+					state.running = false;
+					state.lastRunFinishedAt = new Date().toLocaleTimeString();
+					if (state.stopRequested) {
+						setStatus("Stopped", "warn");
+						log("Run stopped.");
+					} else {
+						setStatus("Run complete", "good");
+						log("Run complete.");
+					}
+					state.stopRequested = false;
+					renderResults();
+				}
+
+				async function copyResults() {
+					const payload = {
+						camera: state.selectedDeviceLabel,
+						deviceId: state.selectedDeviceId,
+						durationMs: readDurationMs(),
+						codecs: getSelectedCodecs(),
+						availableCodecs: state.availableCodecs,
+						results: state.results,
+						exportedAt: new Date().toISOString()
+					};
+					const json = JSON.stringify(payload, null, 2);
+					try {
+						await navigator.clipboard.writeText(json);
+						log("Copied JSON summary to clipboard.");
+						setStatus("Copied JSON", "good");
+					} catch (error) {
+						log("Clipboard copy failed: " + errorSummary(error));
+						setStatus("Copy failed", "fail");
+					}
+				}
+
+				function syncCustomInputs(source, targetA, targetB) {
+					targetA.value = source.value;
+					targetB.value = source.value;
+				}
+
+				function addCustomFromInputs() {
+					const width = elements.customWidth.value || elements.customWidthInline.value;
+					const height = elements.customHeight.value || elements.customHeightInline.value;
+					const fps = elements.customFps.value || elements.customFpsInline.value;
+					if (addPreset(width, height, fps, true)) {
+						log("Added preset " + width + "x" + height + " @ " + fps + " fps");
+					}
+				}
+
+				function initializePresets() {
+					state.presets = DEFAULT_PRESETS.map(function (preset) {
+						return clonePreset(preset);
+					});
+					const testsParam = urlParams.get("tests");
+					if (testsParam) {
+						for (let i = 0; i < state.presets.length; i += 1) {
+							state.presets[i].selected = false;
+						}
+						const testValues = testsParam.split(",");
+						for (let i = 0; i < testValues.length; i += 1) {
+							const parsed = parsePresetString(testValues[i]);
+							if (parsed) {
+								addPreset(parsed.width, parsed.height, parsed.fps, true);
+							}
+						}
+					}
+					renderPresetList();
+				}
+
+				function initializeCodecSelection() {
+					const codecParam = (urlParams.get("codecs") || "").toLowerCase();
+					if (!codecParam) {
+						return;
+					}
+					elements.codecH264.checked = codecParam.indexOf("h264") !== -1;
+					elements.codecVP8.checked = codecParam.indexOf("vp8") !== -1;
+				}
+
+				async function initialize() {
+					const durationParam = parseInt(urlParams.get("duration") || "", 10);
+					if (durationParam) {
+						elements.durationInput.value = String(Math.min(10000, Math.max(250, durationParam)));
+					}
+
+					initializePresets();
+					initializeCodecSelection();
+					detectCodecSupport();
+					updateBrowserStats();
+
+					elements.cameraSelect.addEventListener("change", function () {
+						state.selectedDeviceId = elements.cameraSelect.value;
+						state.selectedDeviceLabel = findSelectedDeviceLabel();
+						updateBrowserStats();
+						if (state.selectedDeviceId) {
+							runSelectedTests();
+						}
+					});
+					elements.unlockButton.addEventListener("click", async function () {
+						try {
+							await unlockDevices();
+						} catch (error) {
+							setStatus("Unlock failed", "fail");
+							log("Unlock failed: " + errorSummary(error));
+						}
+					});
+					elements.refreshButton.addEventListener("click", async function () {
+						try {
+							await enumerateCameras();
+							await refreshSelectedCameraInfo();
+						} catch (error) {
+							setStatus("Refresh failed", "fail");
+							log("Refresh failed: " + errorSummary(error));
+						}
+					});
+					elements.runButton.addEventListener("click", function () {
+						runSelectedTests();
+					});
+					elements.stopButton.addEventListener("click", function () {
+						state.stopRequested = true;
+					});
+					elements.copyButton.addEventListener("click", function () {
+						copyResults();
+					});
+					elements.addCustomButton.addEventListener("click", addCustomFromInputs);
+					elements.addInlineButton.addEventListener("click", addCustomFromInputs);
+
+					elements.customWidth.addEventListener("input", function () {
+						syncCustomInputs(elements.customWidth, elements.customWidthInline, elements.customWidth);
+					});
+					elements.customHeight.addEventListener("input", function () {
+						syncCustomInputs(elements.customHeight, elements.customHeightInline, elements.customHeight);
+					});
+					elements.customFps.addEventListener("input", function () {
+						syncCustomInputs(elements.customFps, elements.customFpsInline, elements.customFps);
+					});
+					elements.customWidthInline.addEventListener("input", function () {
+						elements.customWidth.value = elements.customWidthInline.value;
+					});
+					elements.customHeightInline.addEventListener("input", function () {
+						elements.customHeight.value = elements.customHeightInline.value;
+					});
+					elements.customFpsInline.addEventListener("input", function () {
+						elements.customFps.value = elements.customFpsInline.value;
+					});
+					elements.codecH264.addEventListener("change", updateBrowserStats);
+					elements.codecVP8.addEventListener("change", updateBrowserStats);
+					elements.durationInput.addEventListener("change", updateBrowserStats);
+
+					if (navigator.mediaDevices && "addEventListener" in navigator.mediaDevices) {
+						navigator.mediaDevices.addEventListener("devicechange", async function () {
+							try {
+								await enumerateCameras();
+							} catch (error) {}
+						});
+					}
+
+					try {
+						await unlockDevices();
+					} catch (error) {
+						try {
+							await enumerateCameras();
+						} catch (innerError) {
+							setStatus("Camera access not ready", "warn");
+							log("Initial camera probe skipped: " + errorSummary(innerError));
+						}
+					}
+
+					window.runResolutionChecker = runSelectedTests;
+
+					if (urlParams.get("autorun") === "1") {
+						setTimeout(function () {
+							runSelectedTests();
+						}, 250);
+					} else if (state.selectedDeviceId) {
+						runSelectedTests();
+					}
+				}
+
+				initialize();
+			})();
+		</script>
+	</body>
+</html>

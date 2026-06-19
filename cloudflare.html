@@ -1,263 +1,692 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Generate Cloudflare Auth</title>
-	<style>
-		body {
-			font-family: Arial, sans-serif;
-			font-family: Arial, sans-serif;
-			background-color: #f5f5f5;
-			margin: 0;
-			padding: 0;
-			
-			background-color: #f0f0f0;
-			  background-image: 
-				linear-gradient(to right, #e0e0e0 1px, transparent 1px),
-				linear-gradient(to bottom, #e0e0e0 1px, transparent 1px);
-			  background-size: 10px 10px;
-			  backdrop-filter: blur(3px);
-			}
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Validate a Cloudflare Stream API token and generate an encrypted cftoken parameter for VDO.Ninja.">
+    <title>Cloudflare Token Helper | VDO.Ninja</title>
+    <link rel="icon" href="/media/favicon.ico" sizes="any">
+    <link rel="icon" type="image/png" sizes="32x32" href="/media/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/media/favicon-16x16.png">
+    <style>
+        :root {
+            --page-bg: #edf2f7;
+            --panel-bg: rgba(255, 255, 255, 0.92);
+            --panel-border: rgba(15, 23, 42, 0.08);
+            --text: #14213d;
+            --muted: #52607a;
+            --primary: #1d4ed8;
+            --primary-hover: #1e40af;
+            --success-bg: #e8f8ef;
+            --success-border: #8fd19e;
+            --success-text: #166534;
+            --warning-bg: #fff7db;
+            --warning-border: #f2c96d;
+            --warning-text: #8a5a00;
+            --error-bg: #feebee;
+            --error-border: #f3a7af;
+            --error-text: #b42318;
+            --info-bg: #e8f1ff;
+            --info-border: #9ebeff;
+            --info-text: #1e3a8a;
+            --shadow: 0 18px 45px rgba(15, 23, 42, 0.12);
+        }
 
-		h1 {
-			color: #333;
-			margin-bottom: 20px;
-		}
+        * {
+            box-sizing: border-box;
+        }
 
-		form {
-			background-color: #fff;
-			border-radius: 8px;
-			padding: 20px;
-			box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.1);
-			width: 300px;
-		}
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            color: var(--text);
+            background:
+                radial-gradient(circle at top left, rgba(59, 130, 246, 0.12), transparent 35%),
+                linear-gradient(to right, rgba(148, 163, 184, 0.16) 1px, transparent 1px),
+                linear-gradient(to bottom, rgba(148, 163, 184, 0.16) 1px, transparent 1px),
+                var(--page-bg);
+            background-size: auto, 18px 18px, 18px 18px, auto;
+        }
 
-		label {
-			display: block;
-			margin-bottom: 5px;
-			color: #555;
-		}
+        a {
+            color: var(--primary);
+        }
 
-		input[type="text"],
-		input[type="password"],
-		input[type="number"] {
-			width: 93%;
-			padding: 8px;
-			margin-bottom: 15px;
-			border: 1px solid #ccc;
-			border-radius: 4px;
-		}
-		input[type="number"] {
-			max-width:80px;
-		}
+        a:hover {
+            color: var(--primary-hover);
+        }
 
-		button {
-			background-color: #007bff;
-			color: #fff;
-			padding: 10px 20px;
-			border: none;
-			border-radius: 4px;
-			cursor: pointer;
-		}
+        .page {
+            display: grid;
+            grid-template-columns: minmax(320px, 520px) minmax(320px, 1fr);
+            gap: 28px;
+            min-height: 100vh;
+            padding: 28px;
+            align-items: start;
+        }
 
-		button:hover {
-			background-color: #0056b3;
-		}
+        .panel {
+            background: var(--panel-bg);
+            border: 1px solid var(--panel-border);
+            border-radius: 18px;
+            box-shadow: var(--shadow);
+            backdrop-filter: blur(8px);
+        }
 
-		textarea {
-			width: 100%;
-			padding: 8px;
-			border: 1px solid #ccc;
-			border-radius: 4px;
-			resize: vertical;
-			max-width: 500px;
-			min-height: 100px;
-		}
-		
-		.section{
-			max-width:700px;
-			padding: 20px;
-			overflow: auto;
-			
-		}
-		.main {
-			height: 100vh;
-			display: flex;
-			flex-direction: column;
-			align-items: center;
-			flex-wrap: wrap;
-			align-content: space-around;
-			justify-content: center;
-		}
-		.secondary {
-			padding: 50px;
-			display: flex;
-			flex-direction: column;
-			align-items: center;
-			flex-wrap: wrap;
-			align-content: space-around;
-			justify-content: center;
-			max-width:1200px;
-			margin:auto;
-		}
-	</style>
+        .tool-panel {
+            padding: 28px;
+            position: sticky;
+            top: 24px;
+        }
+
+        .content-panel {
+            padding: 28px 30px;
+        }
+
+        h1,
+        h2,
+        h3 {
+            margin-top: 0;
+        }
+
+        h1 {
+            margin-bottom: 12px;
+            font-size: 2rem;
+        }
+
+        h2 {
+            margin-top: 28px;
+            margin-bottom: 12px;
+            font-size: 1.3rem;
+        }
+
+        h3 {
+            margin-top: 18px;
+            margin-bottom: 8px;
+            font-size: 1rem;
+        }
+
+        p,
+        li {
+            color: var(--muted);
+            line-height: 1.55;
+        }
+
+        .intro {
+            margin-bottom: 20px;
+        }
+
+        .form-card {
+            background: rgba(248, 250, 252, 0.9);
+            border: 1px solid rgba(15, 23, 42, 0.08);
+            border-radius: 14px;
+            padding: 18px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 6px;
+            font-weight: 600;
+            color: var(--text);
+        }
+
+        .field-note {
+            margin-top: -8px;
+            margin-bottom: 14px;
+            font-size: 0.9rem;
+            color: var(--muted);
+        }
+
+        input[type="text"],
+        input[type="password"],
+        input[type="number"],
+        textarea {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid rgba(15, 23, 42, 0.14);
+            border-radius: 10px;
+            font: inherit;
+            color: var(--text);
+            background: #fff;
+        }
+
+        input[type="number"] {
+            max-width: 140px;
+        }
+
+        textarea {
+            min-height: 132px;
+            resize: vertical;
+        }
+
+        .actions,
+        .response-actions {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-top: 16px;
+        }
+
+        button {
+            border: none;
+            border-radius: 999px;
+            padding: 11px 18px;
+            font: inherit;
+            font-weight: 700;
+            cursor: pointer;
+            transition: transform 0.12s ease, background 0.12s ease, opacity 0.12s ease;
+        }
+
+        button:hover:not(:disabled) {
+            transform: translateY(-1px);
+        }
+
+        button:disabled {
+            cursor: wait;
+            opacity: 0.7;
+        }
+
+        .primary-button {
+            background: var(--primary);
+            color: #fff;
+        }
+
+        .primary-button:hover:not(:disabled) {
+            background: var(--primary-hover);
+        }
+
+        .secondary-button {
+            background: rgba(29, 78, 216, 0.1);
+            color: var(--primary);
+        }
+
+        .secondary-button:hover:not(:disabled) {
+            background: rgba(29, 78, 216, 0.16);
+        }
+
+        .ghost-button {
+            background: rgba(15, 23, 42, 0.08);
+            color: var(--text);
+        }
+
+        .status {
+            margin-top: 18px;
+            padding: 14px 16px;
+            border-radius: 12px;
+            border: 1px solid transparent;
+        }
+
+        .status.hidden,
+        .meta.hidden {
+            display: none;
+        }
+
+        .status strong {
+            display: block;
+            margin-bottom: 6px;
+        }
+
+        .status.success {
+            background: var(--success-bg);
+            border-color: var(--success-border);
+            color: var(--success-text);
+        }
+
+        .status.warning {
+            background: var(--warning-bg);
+            border-color: var(--warning-border);
+            color: var(--warning-text);
+        }
+
+        .status.error {
+            background: var(--error-bg);
+            border-color: var(--error-border);
+            color: var(--error-text);
+        }
+
+        .status.info {
+            background: var(--info-bg);
+            border-color: var(--info-border);
+            color: var(--info-text);
+        }
+
+        .meta {
+            margin-top: 14px;
+            padding: 14px 16px;
+            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.7);
+            border: 1px solid rgba(15, 23, 42, 0.08);
+        }
+
+        .meta ul {
+            margin: 0;
+            padding-left: 18px;
+        }
+
+        .meta li + li {
+            margin-top: 6px;
+        }
+
+        .output-label {
+            margin-top: 20px;
+            margin-bottom: 8px;
+        }
+
+        .hint {
+            margin-top: 14px;
+            font-size: 0.92rem;
+        }
+
+        .section-card {
+            background: rgba(248, 250, 252, 0.72);
+            border-radius: 14px;
+            padding: 18px 18px 8px;
+            border: 1px solid rgba(15, 23, 42, 0.06);
+        }
+
+        code {
+            font-family: Consolas, monospace;
+            font-size: 0.95em;
+        }
+
+        @media (max-width: 980px) {
+            .page {
+                grid-template-columns: 1fr;
+            }
+
+            .tool-panel {
+                position: static;
+            }
+        }
+    </style>
 </head>
 <body>
-	<div class='main'>
-		<h1>Generate Cloudflare Auth for VDO.Ninja</h1>
-		<form id="postForm">
-			<label for="userId">Cloudflare Account ID:</label>
-			<input type="text" id="userId" name="userId" autocomplete="userId" required>
-			<br><br>
-			<label for="accessToken">Cloudflare Stream Access Token:</label>
-			<input type="password" id="accessToken" autocomplete="accessToken" name="accessToken" required>
-			<br><br>
-			<label for="expiration">Hours until expiration</label>
-			<input min="0" type="number" id="expiration" name="expiration" placeholder="optional">
-			<br><br>
-			<button type="button" id="submitButton">Generate</button>
-		</form>
-		<br><br>
-		<label for="response">Generated URL parameter to add to VDO.Ninja:</label>
-		<textarea id="response" rows="5" cols="50" readonly placeholder="Use this parameter with your VDO.Ninja links in place of &meshcast"></textarea>
-		
-		<div class="section">
-			<h2>
-				What you can do with Cloudflare + VDO.Ninja?
-			</h2>
-			<h3>Meshcast-alternative</h3>
-			<p>Instead of using Meshcast to broadcast video from director to guest, or guest to scene, you can use Cloudflare instead.</p>
-			<p>Meshcast, or any compatible WHIP/WHEP service, can help reduce CPU and network load of guests by offloading distribution to a server, compared to using the peer-to-peer default of VDO.Ninja
-			<p>VDO.Ninja has built-in support for Cloudflare's WHIP/WHEP, so setup and use is relatively easy.</p>
-			<h3>Isolated guest recording remotely via WHEP</h3>
-			<p>You can record the streams of each guest via WHEP remotely, without transcoding and without additional load on the guests.</p>
-			<p>This offers a redundant backup for your recordings, but also makes it easier to do higher quality VODs edits after the live ends.</p>
-			<p>Raspberry.Ninja offers WHEP recording, via GStreamer for example, but FFMpeg builds may also support direct WHEP recording</p>
-			<h3>Pricing</h3>
-			<p>Cloudflare has decent pricing, however it's a bit obsecure at times what the limits actually are.</p>
-			<h3>MediaMTX</h3>
-			<p>If you prefer rolling your own SFU service, VDO.Ninja supports MediaMTX. (open-source!)</p>
-			<p>Just add <b>&mediamtx=yourdomain.com</b> to your VDO.Ninja publishing URLs to have it use your own MediaMTX server.
-		</div>
-	</div>
-	<div class='secondary'>
-		<h2>
-			How it works?
-		</h2>
-		<p>When used with VDO.Ninja, video is published to Cloudflare via WHIP, and the WHEP playback URL is distributed to viewers. Unless otherwise specified, viewers will use the WHEP URL as the source of media from the publisher, instead of using the normal peer-to-peer mode. This has the effect of reducing the CPU and network load when sharing media with multiple videos, as instead of distributing media via peer-to-peer, the media is distributed via a server. This approach does have some downsides also, so its not normally advisable unless desired or needed.</p>
-		<h2>
-			Why do I need a special URL parameter?
-		</h2>
-		<p>The reason we need a special generated URL parameter is because Cloudflare requires user accounts, unlike Meshcast. While you can generate WHIP URLs within your Cloudflare dashboard, and use them on VDO.Ninja links using &whipout, you'd need to create one per guest. Instead here, we're using our Cloudflare credentials to automatically create unique WHIP ingest URLs on demand for each guest, so you can get away with one-invite link for all your guests.</p>
-		<p>Since it's not advisable to share your Cloudflare credentials, particularly with random guests, this page will encrypt your credentials into URL-friendly parameter.  Only the VDO.Ninja servers knows the decryption key, which limits what guest can do with the encrypted key. You can delete or restrict the credentials provided to VDO.Ninja from your Cloudflare dashboard, allowing you to limit or revoke any trust provided to VDO.Ninja.</p>
-		<h2>
-			Where to get my Cloudflare account ID and token?
-		</h2>
-		
-		<p>The Cloudflare account ID can be found on the right-hand side of the Workers & Pages (Overview) page, or it can be found on the right-lower side of any of your Website (domain) overview pages.</p>
-		<p>
-			As for the API token, you'll need to create it, with limited permissions.
-			<ul>
-				<li>Go to <a href='https://dash.cloudflare.com/profile/api-tokens' target="_blank">https://dash.cloudflare.com/profile/api-tokens</a></li>
-				<li>Click to Create Token (API Tokens)</li>
-				<li>Click Get started with the Create Custom Token option</li>
-				<li>Provide a token name, and for the permissions select Account -> Stream -> <b>Edit</b> (not Read)</li>
-				<li>You can define a time-to-live (TTL), if you wish for the token to auto-expire.</li>
-			</ul>
-			You should now have access to both access token and account ID.
-		</p>
-		<h2>
-			Can I self-host or hard-code my Cloudflare credentials?
-		</h2>
-		<p>Yes, the code is open-sourced and it can be self-hosted, however please be aware there is limited support for those self-hosting.</p>
-		<h2>
-			Does VDO.Ninja track me or store my private information?
-		</h2>
-		<p>Please refer to the <a href='https://docs.vdo.ninja/help/privacy-and-security-details'>privacy policy</a>, although the short answer is no. I can't say the same for Cloudflare, so please refer to their terms of service.
-	</div>
+    <div class="page">
+        <section class="panel tool-panel">
+            <h1>Cloudflare Token Helper</h1>
+            <p class="intro">
+                Validate a Cloudflare API token, confirm it can access Stream live inputs for the selected account,
+                and then generate an encrypted <code>&amp;cftoken=</code> parameter for VDO.Ninja.
+            </p>
+
+            <div class="form-card">
+                <label for="userId">Cloudflare Account ID</label>
+                <input type="text" id="userId" name="userId" autocomplete="userId" spellcheck="false" required>
+                <p class="field-note">Example: <code>ee168fc4abe50941832645a0a4fd1adf</code></p>
+
+                <label for="accessToken">Cloudflare API Token</label>
+                <input type="password" id="accessToken" autocomplete="accessToken" name="accessToken" required>
+                <p class="field-note">Use a token with <code>Account -&gt; Stream -&gt; Edit</code>.</p>
+
+                <label for="expiration">Hours Until Expiration</label>
+                <input min="0" type="number" id="expiration" name="expiration" placeholder="Optional">
+                <p class="field-note">Optional wrapper expiry for the generated <code>cftoken</code>.</p>
+
+                <div class="actions">
+                    <button type="button" id="validateButton" class="secondary-button">Validate Token</button>
+                    <button type="button" id="submitButton" class="primary-button">Generate cftoken</button>
+                </div>
+
+                <p class="hint">
+                    Validation checks token status first, then confirms the account can access Cloudflare Stream live inputs.
+                </p>
+            </div>
+
+            <div id="statusBanner" class="status hidden" role="status" aria-live="polite"></div>
+            <div id="validationMeta" class="meta hidden"></div>
+
+            <label for="response" class="output-label">Generated URL Parameter</label>
+            <textarea id="response" rows="5" readonly placeholder="Use this with your VDO.Ninja links in place of &amp;meshcast"></textarea>
+
+            <div class="response-actions">
+                <button type="button" id="copyButton" class="ghost-button" disabled>Copy</button>
+            </div>
+        </section>
+
+        <section class="panel content-panel">
+            <div class="section-card">
+                <h2>Why This Exists</h2>
+                <p>
+                    Cloudflare can create unique WHIP ingest endpoints for each participant, but doing that manually is tedious.
+                    This helper encrypts your Cloudflare credentials into a short URL-safe parameter that VDO.Ninja can use to
+                    create live inputs on demand.
+                </p>
+                <p>
+                    The token helper does not replace your Cloudflare permissions. If the API token is inactive, expired,
+                    scoped incorrectly, or pointed at the wrong account, validation will now tell you that before you send links out.
+                </p>
+            </div>
+
+            <div class="section-card">
+                <h2>What Validation Checks</h2>
+                <h3>1. Token status</h3>
+                <p>
+                    Cloudflare can mark a token as valid but not usable yet if it has a future <code>not_before</code> time.
+                    Validation reports that directly.
+                </p>
+
+                <h3>2. Stream account access</h3>
+                <p>
+                    The helper also checks the selected account's live input list and reports the current live input count.
+                    That catches the common failures: wrong account ID, missing Stream scope, or an unusable token.
+                </p>
+
+                <h3>3. Better troubleshooting</h3>
+                <p>
+                    If publish fails later, <code>cloudflare.vdo.ninja</code> now returns the actual Cloudflare API error instead of a generic
+                    JavaScript null-property failure.
+                </p>
+            </div>
+
+            <div class="section-card">
+                <h2>Setup Notes</h2>
+                <p>The Cloudflare account ID is shown in the dashboard on the relevant account overview pages.</p>
+                <p>
+                    Create an API token from
+                    <a href="https://dash.cloudflare.com/profile/api-tokens" target="_blank" rel="noopener noreferrer">Cloudflare API Tokens</a>
+                    and grant <code>Account -&gt; Stream -&gt; Edit</code>.
+                </p>
+                <p>
+                    If you want to inspect Stream live inputs directly, use the
+                    <a href="https://dash.cloudflare.com" target="_blank" rel="noopener noreferrer">Cloudflare dashboard</a>
+                    and open <code>Stream -&gt; Live inputs</code>.
+                </p>
+            </div>
+
+            <div class="section-card">
+                <h2>Useful Cloudflare Stream Notes</h2>
+                <p>
+                    The Stream live inputs API can list how many live inputs already exist, which is useful when cleaning up stale test inputs.
+                </p>
+                <p>
+                    Cloudflare also added API support to disable and re-enable live inputs, so you can pause an input without deleting it.
+                </p>
+                <p>
+                    References:
+                    <a href="https://developers.cloudflare.com/stream/get-started/" target="_blank" rel="noopener noreferrer">Start a live stream</a>,
+                    <a href="https://developers.cloudflare.com/api/resources/stream/subresources/live_inputs/" target="_blank" rel="noopener noreferrer">Live inputs API</a>,
+                    <a href="https://developers.cloudflare.com/changelog/post/2026-02-24-disable-live-inputs/" target="_blank" rel="noopener noreferrer">Disable or enable live inputs</a>
+                </p>
+            </div>
+        </section>
+    </div>
+
     <script>
-		function removeStorage(cname){
-			localStorage.removeItem(cname);
-		}
+        let lastValidation = null;
 
-		function clearStorage(){
-			localStorage.clear();
-			if (!session.cleanOutput){
-				warnUser("The local storage and saved settings have been cleared", 1000);
-			}
-		}
-
-		function setStorage(cname, cvalue, hours=9999){ // not actually a cookie
-			var now = new Date();
-			var item = {
-				value: cvalue,
-				expiry: now.getTime() + (hours * 60 * 60 * 1000),
-			};
-			try{
-				localStorage.setItem(cname, JSON.stringify(item));
-			}catch(e){errorlog(e);}
-		}
-
-		function getStorage(cname) {
-			try {
-				var itemStr = localStorage.getItem(cname);
-			} catch(e){
-				errorlog(e);
-				return;
-			}
-			if (!itemStr) {
-				return "";
-			}
-			var item = JSON.parse(itemStr);
-			var now = new Date();
-			if (now.getTime() > item.expiry) {
-				localStorage.removeItem(cname);
-				return "";
-			}
-			return item.value;
-		}
-		
-		document.getElementById("accessToken").value = getStorage("accessToken") || "";
-		document.getElementById("userId").value = getStorage("userId") || "";
-		document.getElementById("expiration").value = getStorage("expiration") || "";
-
-        document.getElementById("submitButton").addEventListener("click", async function () {
-		
-            const accessToken = document.getElementById("accessToken").value;
-            const userId = document.getElementById("userId").value;
-			const expiration = document.getElementById("expiration").value;
-
-            if (!accessToken || !userId) {
-                alert("Access Token and User ID are required.");
-                return;
-            }
-			
-            const data = {
-                accessToken: accessToken,
-                userId: userId,
-				expiration: Math.round(expiration*60)
+        function setStorage(name, value, hours) {
+            const now = new Date();
+            const item = {
+                value: value,
+                expiry: now.getTime() + ((hours || 9999) * 60 * 60 * 1000)
             };
+            localStorage.setItem(name, JSON.stringify(item));
+        }
+
+        function getStorage(name) {
+            const itemStr = localStorage.getItem(name);
+            if (!itemStr) {
+                return "";
+            }
 
             try {
-                const response = await fetch("https://cloudflare.vdo.ninja/encode/", {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json"
-                    },
-                    body: JSON.stringify(data)
-                });
-
-                const responseData = await response.text();
-				console.log(responseData);
-				
-				setStorage("accessToken",accessToken);
-				setStorage("userId", userId);
-				setStorage("expiration", expiration);
-
-				document.getElementById("response").value = "&cftoken="+encodeURIComponent(responseData);
+                const item = JSON.parse(itemStr);
+                if (Date.now() > item.expiry) {
+                    localStorage.removeItem(name);
+                    return "";
+                }
+                return item.value || "";
             } catch (error) {
-                console.error("Error:", error);
-                document.getElementById("response").value = "An error occurred.";
+                localStorage.removeItem(name);
+                return "";
             }
+        }
+
+        function getFormData() {
+            return {
+                accessToken: (document.getElementById("accessToken").value || "").trim(),
+                userId: (document.getElementById("userId").value || "").trim(),
+                expiration: (document.getElementById("expiration").value || "").trim()
+            };
+        }
+
+        function saveFields(data) {
+            setStorage("accessToken", data.accessToken);
+            setStorage("userId", data.userId);
+            setStorage("expiration", data.expiration);
+        }
+
+        function setBusy(button, label, busy) {
+            if (!button.dataset.defaultLabel) {
+                button.dataset.defaultLabel = button.textContent;
+            }
+            button.disabled = busy;
+            button.textContent = busy ? label : button.dataset.defaultLabel;
+        }
+
+        function formatDate(value) {
+            if (!value) {
+                return null;
+            }
+
+            const date = new Date(value);
+            if (Number.isNaN(date.getTime())) {
+                return value;
+            }
+
+            return date.toLocaleString(undefined, {
+                dateStyle: "medium",
+                timeStyle: "short"
+            });
+        }
+
+        function setStatus(kind, title, lines) {
+            const banner = document.getElementById("statusBanner");
+            banner.className = `status ${kind}`;
+            let html = `<strong>${title}</strong>`;
+            if (lines && lines.length) {
+                html += lines.map((line) => `<div>${line}</div>`).join("");
+            }
+            banner.innerHTML = html;
+        }
+
+        function renderMeta(items) {
+            const meta = document.getElementById("validationMeta");
+            if (!items || !items.length) {
+                meta.className = "meta hidden";
+                meta.innerHTML = "";
+                return;
+            }
+
+            meta.className = "meta";
+            meta.innerHTML = `<ul>${items.map((item) => `<li>${item}</li>`).join("")}</ul>`;
+        }
+
+        function resetValidationState() {
+            lastValidation = null;
+            renderMeta([]);
+        }
+
+        function buildValidationMeta(validation) {
+            const items = [];
+            if (validation.token && validation.token.status) {
+                items.push(`Token status: ${validation.token.status}`);
+            }
+            if (validation.token && validation.token.notBefore) {
+                items.push(`Token not before: ${formatDate(validation.token.notBefore)}`);
+            }
+            if (validation.token && validation.token.expiresOn) {
+                items.push(`Token expires: ${formatDate(validation.token.expiresOn)}`);
+            }
+            if (validation.account && validation.account.id) {
+                items.push(`Account ID: ${validation.account.id}`);
+            }
+            if (validation.accountChecked) {
+                const total = validation.account && validation.account.liveInputsTotal;
+                items.push(`Existing live inputs in account: ${typeof total === "number" ? total : "unknown"}`);
+            }
+            if (validation.token && validation.token.scope) {
+                items.push(`Verification endpoint used: ${validation.token.scope}`);
+            }
+            return items;
+        }
+
+        function renderValidation(validation) {
+            const metaItems = buildValidationMeta(validation);
+            renderMeta(metaItems);
+
+            if (validation.ok && validation.canUseNow) {
+                const lines = [];
+                if (validation.accountChecked && validation.account && typeof validation.account.liveInputsTotal === "number") {
+                    lines.push(`Cloudflare Stream access is working. Live inputs currently in the account: ${validation.account.liveInputsTotal}.`);
+                }
+                setStatus("success", "Token is active and Stream access check passed.", lines);
+                return;
+            }
+
+            if (validation.warnings && validation.warnings.length && (!validation.errors || !validation.errors.length)) {
+                setStatus("warning", "Token generated later may work, but it is not fully usable right now.", validation.warnings);
+                return;
+            }
+
+            const lines = [];
+            if (validation.errors) {
+                validation.errors.forEach((item) => lines.push(item));
+            }
+            if (validation.warnings) {
+                validation.warnings.forEach((item) => lines.push(item));
+            }
+            setStatus("error", "Validation failed.", lines.length ? lines : ["Cloudflare rejected the token or account settings."]);
+        }
+
+        async function postJson(url, payload) {
+            const response = await fetch(url, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(payload)
+            });
+
+            const text = await response.text();
+            let json = null;
+            try {
+                json = JSON.parse(text);
+            } catch (error) {
+                json = null;
+            }
+
+            return {
+                ok: response.ok,
+                status: response.status,
+                text: text,
+                json: json
+            };
+        }
+
+        async function validateToken() {
+            const validateButton = document.getElementById("validateButton");
+            const data = getFormData();
+
+            if (!data.accessToken || !data.userId) {
+                setStatus("error", "Cloudflare API token and account ID are required.", []);
+                renderMeta([]);
+                return null;
+            }
+
+            saveFields(data);
+            setBusy(validateButton, "Validating...", true);
+            setStatus("info", "Checking Cloudflare token and Stream access...", []);
+
+            try {
+                const result = await postJson("https://cloudflare.vdo.ninja/validate/", data);
+                if (!result.json) {
+                    throw new Error(result.text || `Validation failed with HTTP ${result.status}`);
+                }
+
+                lastValidation = result.json;
+                renderValidation(result.json);
+                return result.json;
+            } catch (error) {
+                resetValidationState();
+                setStatus("error", "Validation request failed.", [error.message || "Unknown error"]);
+                return null;
+            } finally {
+                setBusy(validateButton, "Validating...", false);
+            }
+        }
+
+        async function generateToken() {
+            const submitButton = document.getElementById("submitButton");
+            const responseField = document.getElementById("response");
+            const copyButton = document.getElementById("copyButton");
+            const data = getFormData();
+
+            if (!data.accessToken || !data.userId) {
+                setStatus("error", "Cloudflare API token and account ID are required.", []);
+                return;
+            }
+
+            saveFields(data);
+            setBusy(submitButton, "Generating...", true);
+
+            try {
+                if (!lastValidation) {
+                    await validateToken();
+                }
+
+                const result = await postJson("https://cloudflare.vdo.ninja/encode/", data);
+                if (!result.ok) {
+                    throw new Error(result.text || `Generation failed with HTTP ${result.status}`);
+                }
+
+                responseField.value = `&cftoken=${encodeURIComponent(result.text)}`;
+                copyButton.disabled = false;
+
+                if (lastValidation && lastValidation.ok && lastValidation.canUseNow) {
+                    setStatus("success", "Encrypted cftoken generated.", ["Validation already passed for this token and account."]);
+                } else if (lastValidation && lastValidation.warnings && lastValidation.warnings.length) {
+                    setStatus("warning", "Encrypted cftoken generated, but validation still shows a timing or availability warning.", lastValidation.warnings);
+                } else if (lastValidation && lastValidation.errors && lastValidation.errors.length) {
+                    setStatus("warning", "Encrypted cftoken generated, but validation still shows an account or permission problem.", lastValidation.errors);
+                } else {
+                    setStatus("info", "Encrypted cftoken generated.", ["Run validation before sharing the link if you want to confirm token timing and Stream access."]);
+                }
+            } catch (error) {
+                setStatus("error", "Could not generate cftoken.", [error.message || "Unknown error"]);
+            } finally {
+                setBusy(submitButton, "Generating...", false);
+            }
+        }
+
+        async function copyResponse() {
+            const responseField = document.getElementById("response");
+            if (!responseField.value) {
+                return;
+            }
+
+            try {
+                await navigator.clipboard.writeText(responseField.value);
+                setStatus("success", "Copied.", ["The generated cftoken parameter is now in your clipboard."]);
+            } catch (error) {
+                responseField.select();
+                document.execCommand("copy");
+                setStatus("success", "Copied.", ["The generated cftoken parameter is now in your clipboard."]);
+            }
+        }
+
+        document.getElementById("accessToken").value = getStorage("accessToken");
+        document.getElementById("userId").value = getStorage("userId");
+        document.getElementById("expiration").value = getStorage("expiration");
+
+        document.getElementById("validateButton").addEventListener("click", validateToken);
+        document.getElementById("submitButton").addEventListener("click", generateToken);
+        document.getElementById("copyButton").addEventListener("click", copyResponse);
+
+        ["accessToken", "userId", "expiration"].forEach((id) => {
+            document.getElementById(id).addEventListener("input", () => {
+                resetValidationState();
+            });
         });
     </script>
 </body>
