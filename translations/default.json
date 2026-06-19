@@ -27,7 +27,7 @@
   "here-you-can-pre-generate": "Here you can pre-generate a reusable Browser Source link and a related guest invite link.",
   "generate-invite-link": "GENERATE THE INVITE LINK",
   "advanced-paramaters": "Advanced Options:",
-  "unlock-video-bitrate": "Unlock Video Bitrate (20-Mbps)",
+  "unlock-video-bitrate": "Unlock Video Bitrate (20-Mbit/s)",
   "force-vp9-video-codec": "Force VP9 Video Codec (less artifacting)",
   "enable-stereo-and-pro": "Enable Stereo and Pro HD Audio",
   "video-resolution": "Video Resolution: ",
