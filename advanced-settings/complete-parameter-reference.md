@@ -229,7 +229,7 @@ If you are self-hosting VDO.Ninja, often these URL parameters can be hard-coded 
 | `highlightmute`   | `hmute`, `mutefollowhighlight`, `mfh` | Boolean | Mutes non-highlighted guests when Highlight changes |
 | `hidemouse`       | See `nocursor`      | -          | -                         |
 | `hidesolo`        | `hs`                | Boolean    | -                         |
-| `hidescreenshare` | `hidess`, `sshide`  | Boolean    | Hides screen share option |
+| `hidescreenshare` | `screensharehide`, `hidess`, `sshide` | Boolean | Hides local screen-share preview |
 | `hint`            | See `contenthint`   | -          | -                         |
 | `holdercolor`     | `videobg`, `videobgcolor`, `videobackground`, `videobackgroundcolor`, `holderbg`, `holderbgcolor` | Color code | Sets the video holder background color |
 | `host`            | -                   | Boolean    | -                         |
@@ -368,6 +368,7 @@ If you are self-hosting VDO.Ninja, often these URL parameters can be hard-coded 
 | `nopush`             | `noseed`                             | Boolean         | -                                 |
 | `noremb`             | -                                    | Boolean         | -                                 |
 | `noscale`            | `noscaling`                          | Boolean         | Disables scaling                  |
+| `noscreenshare`      | `noscreenshares`, `noscreen`, `noscreens` | Boolean    | Disables incoming screen-share playback |
 | `nosettings`         | `ns`                                 | Boolean         | Hides settings                    |
 | `nostats`            | -                                    | Boolean         | Hides statistics                  |
 | `notios`             | -                                    | Boolean         | -                                 |

@@ -4,23 +4,54 @@ description: Labels, audio filters, type, bitrate, quality etc.
 
 # Screen-share Parameters
 
-Screen-share Parameters are separated in [general options](./#general-options), [source side](./#source-side-options) (push) options and [viewer side](./#viewer-side-options) (view) options.
+Screen-share parameters are separated by where they are applied:
+
+* **Source side** options belong on publisher links, such as [`&push`](../../source-settings/push.md), guest invite links, or room participants who will share a screen.
+* **Viewer side** options belong on receive links, such as [`&view`](../view-parameters/view.md) or [`&scene`](../view-parameters/scene.md), and control how incoming screen shares are requested or displayed.
+
+Use [`&screensharehide`](../../newly-added-parameters/and-screensharehide.md) when the screen-sharing publisher should not see their own local screen-share preview. Use [`&noscreenshare`](and-noscreenshare.md) when a viewer or scene link should not load incoming screen shares.
 
 ## General options
 
-You can add them to both, source ([`&push`](../../source-settings/push.md)) and viewer ([`&view`](../view-parameters/view.md) or [`&scene`](../view-parameters/scene.md)) sides.
-
-<table><thead><tr><th width="150">Parameter</th><th>Explanation</th></tr></thead><tbody><tr><td><a href="../../newly-added-parameters/and-screensharestereo.md"><code>&#x26;screensharestereo</code></a></td><td>Sets the audio mode for screen-shares to stereo and changes default audio settings to improve audio quality</td></tr></tbody></table>
+| Parameter | Explanation |
+| --- | --- |
+| [`&screensharestereo`](../../newly-added-parameters/and-screensharestereo.md) | Sets the audio mode for screen-shares to stereo and changes default audio settings to improve audio quality |
 
 ## Source side options
 
-You can add them to both, source ([`&push`](../../source-settings/push.md)) and viewer ([`&view`](../view-parameters/view.md) or [`&scene`](../view-parameters/scene.md)) sides.
+| Parameter | Explanation |
+| --- | --- |
+| [`&screenshare`](../../source-settings/screenshare.md) | Disables camera-sharing as an option |
+| [`&screenshare2`](../../newly-added-parameters/and-screenshare2.md) | Shows the "Share your Screen" button before asking the user to select screen-share options |
+| [`&screenshareaec`](../../newly-added-parameters/and-screenshareaec.md) | Turns automatic echo cancellation for screen-shares on or off |
+| [`&screenshareautogain`](../../newly-added-parameters/and-screenshareautogain.md) | Turns audio auto-normalization for screen-shares on or off |
+| [`&screensharecursor`](../../source-settings/cursor.md) | Attempts to show the mouse cursor on screen shares |
+| [`&screensharedenoise`](../../newly-added-parameters/and-screensharedenoise.md) | Turns audio noise reduction for screen-shares on or off |
+| [`&screensharefps`](../../source-settings/screensharefps.md) | Sets a target FPS for a screen share |
+| [`&screensharehide`](../../newly-added-parameters/and-screensharehide.md) | Hides the publisher's local screen-share preview window |
+| [`&screenshareid`](../../source-settings/screenshareid.md) | Pre-sets the stream ID for a secondary screen-share stream |
+| [`&screensharelabel`](../../newly-added-parameters/and-screensharelabel.md) | Gives the screen-share stream the same label as the guest |
+| [`&screensharequality`](../../source-settings/screensharequality.md) | Sets a custom screen-share quality |
+| [`&screensharecontenthint`](and-screensharecontenthint.md) | `=motion` prioritizes frame rate; `=detail` prioritizes resolution |
+| [`&screenshareaspectratio`](and-screenshareaspectratio.md) | Changes the screen-share aspect ratio on the publisher side |
+| [`&screensharetype`](../../newly-added-parameters/and-screensharetype.md) | Defines how a guest's webcam and screen share interact in a room |
+| [`&smallshare`](and-smallshare.md) | Makes the screen share behave like a webcam share |
+| [`&screensharevideoonly`](../../newly-added-parameters/and-screensharevideoonly.md) | Disables the option to select audio when screen sharing |
+| [`&screensharebutton`](../settings-parameters/and-screensharebutton.md) | Forces the screen-share button to appear for guests |
+| [`&suppresslocalaudio`](and-suppresslocalaudio.md) | Disables local audio playback of a Chrome tab while screen-sharing it |
+| [`&prefercurrenttab`](and-prefercurrenttab.md) | Makes the current tab the default screen-share source |
+| [`&selfbrowsersurface`](and-selfbrowsersurface.md) | Excludes the current tab as a screen-share source option |
+| [`&systemaudio`](and-systemaudio.md) | Excludes system audio as an audio source when display sharing |
+| [`&displaysurface`](and-displaysurface.md) | Pre-selects display-share rather than tab-share when screen-sharing |
+| [`&screenwhep`](and-screenwhep.md) | Chooses whether screen-shares prefer WHEP relays or stay P2P |
+| [`&screensharestyle`](and-screensharestyle.md) | Selects a screen-share layout style preset |
 
-<table><thead><tr><th width="150">Parameter</th><th>Explanation</th></tr></thead><tbody><tr><td><a href="../../source-settings/screenshare.md"><code>&#x26;screenshare</code></a></td><td>Disables camera-sharing as an option</td></tr><tr><td><a href="../../newly-added-parameters/and-screenshare2.md"><code>&#x26;screenshare2</code></a></td><td>Will show the "Share your Screen" button before asking the user to select screenshare options</td></tr><tr><td><a href="../../newly-added-parameters/and-screenshareaec.md"><code>&#x26;screenshareaec</code></a></td><td>Turns automatic echo-cancellation filter for screen-shares ON or OFF</td></tr><tr><td><a href="../../newly-added-parameters/and-screenshareautogain.md"><code>&#x26;screenshareautogain</code></a></td><td>Turns audio auto-normalization filter for screen-shares ON or OFF</td></tr><tr><td><a href="../../source-settings/cursor.md"><code>&#x26;screensharecursor</code></a></td><td>Attempts to show the mouse cursor on screen shares</td></tr><tr><td><a href="../../newly-added-parameters/and-screensharedenoise.md"><code>&#x26;screensharedenoise</code></a></td><td>Turns audio noise reduction filter for screen-shares ON or OFF</td></tr><tr><td><a href="../../source-settings/screensharefps.md"><code>&#x26;screensharefps</code></a></td><td>Set a target FPS for your screenshare (secondary stream)</td></tr><tr><td><a href="../../newly-added-parameters/and-screensharehide.md"><code>&#x26;screensharehide</code></a></td><td>Hides the local screen-share sub-window that appears when screen sharing in a room</td></tr><tr><td><a href="../../source-settings/screenshareid.md"><code>&#x26;screenshareid</code></a></td><td>Pre-sets the screenshare stream id for a screen share if its a secondary stream</td></tr><tr><td><a href="../../newly-added-parameters/and-screensharelabel.md"><code>&#x26;screensharelabel</code></a></td><td>The screen-share of the guest will have the same label as the guest</td></tr><tr><td><a href="../../source-settings/screensharequality.md"><code>&#x26;screensharequality</code></a></td><td>Set a custom screenshare quality</td></tr><tr><td><a href="and-screensharecontenthint.md"><code>&#x26;screensharecontenthint</code></a></td><td><code>=motion</code> prioritizes screen-share frame rate; <code>=detail</code> prioritizes screen-share resolution</td></tr><tr><td><a href="and-screenshareaspectratio.md"><code>&#x26;screenshareaspectrati</code></a></td><td>Changes the screen-share aspect ratio on the publisher side</td></tr><tr><td><a href="../../newly-added-parameters/and-screensharestereo.md"><code>&#x26;screensharestereo</code></a></td><td>Sets the audio mode for screen-shares to stereo and changes default audio settings to improve audio quality</td></tr><tr><td><a href="../../newly-added-parameters/and-screensharetype.md"><code>&#x26;screensharetype</code></a></td><td>Defines how webcam and screenshare of a guest in a room interacts which each other</td></tr><tr><td><a href="and-smallshare.md"><code>&#x26;smallshare</code></a></td><td>Makes the screen share behave like a webcam share</td></tr><tr><td><a href="../../newly-added-parameters/and-screensharevideoonly.md"><code>&#x26;screensharevideoonly</code></a></td><td>Lets you disable the option to select audio when screen sharing</td></tr><tr><td><a href="../settings-parameters/and-screensharebutton.md"><code>&#x26;screensharebutton</code></a></td><td>Forces the screen-share button to appear for guests</td></tr><tr><td><a href="and-suppresslocalaudio.md"><code>&#x26;suppresslocalaudio</code></a></td><td>Will disable local audio playback of a Chrome tab while screen-sharing it</td></tr><tr><td><a href="and-prefercurrenttab.md"><code>&#x26;prefercurrenttab</code></a></td><td>Will have the current tab as the default screen-share source</td></tr><tr><td><a href="and-selfbrowsersurface.md"><code>&#x26;selfbrowsersurface</code></a></td><td>Excludes the current tab as a screen-share source option</td></tr><tr><td><a href="and-systemaudio.md"><code>&#x26;systemaudio</code></a></td><td>Excludes the system-audio as an audio source when display sharing</td></tr><tr><td><a href="and-displaysurface.md"><code>&#x26;displaysurface</code></a></td><td>Will pre-select display-share, rather than tab-share, when screen-sharing</td></tr><tr><td><a href="and-screenwhep.md"><code>&#x26;screenwhep</code></a></td><td>Choose whether screen-shares prefer WHEP relays or stay P2P</td></tr><tr><td><a href="and-screensharestyle.md"><code>&#x26;screensharestyle</code></a></td><td>Select a screen-share layout style preset (numeric; 1 is default)</td></tr></tbody></table>
+## Viewer side options
 
-## **Viewer side options**
-
-You have to add them to the viewer side ([`&view`](../view-parameters/view.md) or [`&scene`](../view-parameters/scene.md)).
-
-<table><thead><tr><th width="150">Parameter</th><th>Explanation</th></tr></thead><tbody><tr><td><a href="../../newly-added-parameters/and-screensharebitrate.md"><code>&#x26;screensharebitrate</code></a></td><td>Lets you manually set the video bitrate for screen-shares</td></tr><tr><td><a href="and-sharperscreen.md"><code>&#x26;sharperscreen</code></a></td><td>Sets <a href="../view-parameters/scale.md"><code>&#x26;scale=100</code></a>, but only for screen-shares</td></tr><tr><td><a href="../../parameters-only-on-beta/and-sspaused.md"><code>&#x26;sspaused</code></a></td><td>Starts any screen-share paused</td></tr></tbody></table>
-<table><thead><tr><th width="150">Parameter</th><th>Explanation</th></tr></thead><tbody><tr><td><a href="../../newly-added-parameters/and-screensharebitrate.md"><code>&#x26;screensharebitrate</code></a></td><td>Lets you manually set the video bitrate for screen-shares</td></tr><tr><td><a href="and-sharperscreen.md"><code>&#x26;sharperscreen</code></a></td><td>Sets <a href="../view-parameters/scale.md"><code>&#x26;scale=100</code></a>, but only for screen-shares</td></tr><tr><td><a href="../../parameters-only-on-beta/and-sspaused.md"><code>&#x26;sspaused</code></a></td><td>Starts any screen-share paused</td></tr><tr><td><a href="and-allowscreenmedia.md"><code>&#x26;allowscreenvideo</code></a><br><a href="and-allowscreenmedia.md"><code>&#x26;allowscreenaudio</code></a></td><td>Force-enable or block screen-share video/audio tracks on a viewer link</td></tr></tbody></table>
+| Parameter | Explanation |
+| --- | --- |
+| [`&screensharebitrate`](../../newly-added-parameters/and-screensharebitrate.md) | Manually sets the video bitrate for incoming screen shares |
+| [`&sharperscreen`](and-sharperscreen.md) | Sets [`&scale=100`](../view-parameters/scale.md), but only for screen-shares |
+| [`&sspaused`](../../parameters-only-on-beta/and-sspaused.md) | Starts incoming screen shares paused |
+| [`&allowscreenvideo`](and-allowscreenmedia.md)<br>[`&allowscreenaudio`](and-allowscreenmedia.md) | Force-enables or blocks incoming screen-share video/audio tracks on a viewer link |
+| [`&noscreenshare`](and-noscreenshare.md) | Prevents viewer and scene links from loading incoming screen shares |

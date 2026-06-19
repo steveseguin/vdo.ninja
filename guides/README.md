@@ -30,6 +30,7 @@ This section collects practical VDO.Ninja guides for OBS Studio, remote guest wo
 * [use-vdo.ninja-as-a-webcam-for-google-hangouts-zoom-and-more.md](use-vdo.ninja-as-a-webcam-for-google-hangouts-zoom-and-more.md "mention")
 * [capturing-without-browser-sources.md](capturing-without-browser-sources.md "mention")
 * [how-do-i-control-bitrate-quality.md](how-do-i-control-bitrate-quality.md "mention")
+* [green-room-and-guest-approval-options.md](green-room-and-guest-approval-options.md "mention")
 * [how-to-selectively-allow-access.md](how-to-selectively-allow-access.md "mention")
 * [sso-and-signed-in-access.md](sso-and-signed-in-access.md "mention")
 * [how-to-send-the-audio-video-output-of-one-obs-to-another-obs-using-vdo.ninja.md](how-to-send-the-audio-video-output-of-one-obs-to-another-obs-using-vdo.ninja.md "mention")
