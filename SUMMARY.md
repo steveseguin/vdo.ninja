@@ -70,7 +70,7 @@
   * [How to use VDO.Ninja as a webcam for Google Hangouts, Zoom, and more](guides/use-vdo.ninja-as-a-webcam-for-google-hangouts-zoom-and-more.md)
   * [How to capture without browser sources](guides/capturing-without-browser-sources.md)
   * [How to control bitrate/quality](guides/how-do-i-control-bitrate-quality.md)
-  * [Green room and guest approval options](guides/green-room-and-guest-approval-options.md)
+  * [Green rooms and guest waiting options](guides/green-room-and-guest-approval-options.md)
   * [How to selectively allow access](guides/how-to-selectively-allow-access.md)
   * [SSO and signed-in access](guides/sso-and-signed-in-access.md)
   * [Stream Scheduling and Promotion](guides/stream-scheduling-and-promotion.md)
