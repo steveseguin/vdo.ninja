@@ -37,21 +37,17 @@ This is why a 720p30 feed at 2500 to 4000-kbps can sometimes look better than a 
 
 H.264 video depends on keyframes and predicted frames. If a predicted frame is damaged, later frames can also look wrong until the decoder receives a clean reference again.
 
-WebRTC can use packet retransmits, decoder error handling, and keyframe requests. These help, but they are time-limited. If the packet arrives too late for low-latency playback, the frame may still be dropped or displayed damaged.
+WebRTC already requests a fresh keyframe automatically whenever it detects loss or corruption, so it recovers on its own much of the time. That recovery is time-limited, though: if a packet arrives too late for low-latency playback, the frame may still be dropped or shown damaged.
 
-A shorter keyframe interval can reduce how long visible damage lasts:
+If damage lingers for several seconds after a dropout instead of clearing quickly, you can force a periodic keyframe. `&keyframe` is a **viewer-side** option: you put it on the OBS/view link, and it asks the remote phone to send keyframes at that interval.
 
 ```text
 &keyframe=2000
 ```
 
-or:
+Do not treat this as a default quality setting. A keyframe is the largest frame type, so forcing them often spends bandwidth and sends big bursts that are themselves vulnerable to loss. On a weak uplink, too-frequent keyframes can make congestion and loss worse, not better.
 
-```text
-&keyframe=1000
-```
-
-The tradeoff is bandwidth. More keyframes means more large frames. On a weak uplink, too many keyframes can make congestion worse.
+Use it only as a targeted fix for lingering damage, and start at `&keyframe=2000`. Drop to `&keyframe=1000` only if 2000 still does not clear damage fast enough and you have confirmed the bond has bandwidth headroom to spare. Values under about 1000 ms cause a steep quality drop and may not work at all.
 
 ## Bonding is not one single thing
 
@@ -146,10 +142,10 @@ https://vdo.ninja/?push=STREAMID&q=1&fps=30&codec=h264&outboundvideobitrate=2500
 OBS/view link:
 
 ```text
-https://vdo.ninja/?view=STREAMID&bitrate=2500&buffer=500&keyframe=2000
+https://vdo.ninja/?view=STREAMID&bitrate=2500&buffer=500
 ```
 
-This gives up some sharpness so the stream has more room to survive loss and jitter.
+This gives up some sharpness so the stream has more room to survive loss and jitter. If you find that damage lingers for seconds after a dropout, add `&keyframe=2000` to this view link (see [Why H.264 damage can linger](#why-h-264-damage-can-linger)).
 
 ### Option 2: Higher-quality WebRTC when the bond is clean
 
@@ -164,10 +160,10 @@ https://vdo.ninja/?push=STREAMID&q=0&fps=30&codec=h264&outboundvideobitrate=4000
 OBS/view link:
 
 ```text
-https://vdo.ninja/?view=STREAMID&bitrate=4000&buffer=1000&keyframe=2000
+https://vdo.ninja/?view=STREAMID&bitrate=4000&buffer=1000
 ```
 
-If this is stable, you can test higher bitrates. If the stream starts smearing, freezing, or dropping to very low bitrate, reduce the target before raising it again.
+If this is stable, you can test higher bitrates. If the stream starts smearing, freezing, or dropping to very low bitrate, reduce the target before raising it again. As above, only add `&keyframe=2000` to the view link if post-dropout damage is slow to clear.
 
 ### Option 3: More receive-side buffer for OBS
 
