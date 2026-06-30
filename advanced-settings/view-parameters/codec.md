@@ -104,6 +104,8 @@ VP8 generally uses more CPU than H264, but not by a lot. Maybe there's a 5 to 15
 
 VP8 is highly compatible these days between devices and browsers.
 
+If you are testing short random packet loss, VP8 is also the best first codec to pair with [`&vred`](vred.md). That combination asks WebRTC negotiation to prefer video RED. It is still browser-controlled and should be compared against the same link without `&vred`.
+
 ### **VP9**
 
 VP9 offers better compression than VP8, but it is also more CPU-intensive to use. It might use 25 to 30% more CPU than H264, but can offer potentially a cleaner image than VP8 or H264, especially with screen-shares.
@@ -172,6 +174,10 @@ I've created this page to help you list what encoders are available on your syst
 
 {% content-ref url="webp.md" %}
 [webp.md](webp.md)
+{% endcontent-ref %}
+
+{% content-ref url="vred.md" %}
+[vred.md](vred.md)
 {% endcontent-ref %}
 
 {% content-ref url="../recording-parameters/and-recordcodec.md" %}

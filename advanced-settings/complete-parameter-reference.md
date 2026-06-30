@@ -420,11 +420,13 @@ If you are self-hosting VDO.Ninja, often these URL parameters can be hard-coded 
 | `postinterval`    | -                      | Integer        | -                       |
 | `ppt`             | -                      | Boolean/String | Push-to-talk settings   |
 | `pptcontrols`     | `slides`, `powerpoint` | Boolean        | -                       |
+| `prefervideocodec`| -                      | String         | Publisher-side preferred video codec order |
 | `preloadbitrate`  | -                      | Integer        | -                       |
 | `private`         | See `privacy`          | -              | -                       |
 | `privacy`         | `private`, `relay`     | Boolean        | Enables privacy mode    |
 | `prompt`          | -                      | Boolean        | -                       |
 | `proxy`           | -                      | Boolean        | -                       |
+| `pvred`           | -                      | Boolean        | Publisher-side video RED negotiation preference |
 | `push`            | `id`, `permaid`        | String         | Sets stream ID          |
 | `pusheffectsdata` | -                      | Boolean        | -                       |
 | `pushloudness`    | `getloudness`          | Boolean        | Enables continuous IFRAME loudness events (`action: "loudness"`). |
@@ -592,7 +594,7 @@ If you are self-hosting VDO.Ninja, often these URL parameters can be hard-coded 
 | `virtualeffects` | -                                     | Boolean                                  | -                          |
 | `vdo`            | See `videodevice`                     | -                                        | -                          |
 | `volume`         | `vol`                                 | 0-100                                    | Sets volume level          |
-| `vred`           | -                                     | Boolean                                  | -                          |
+| `vred`           | -                                     | Boolean                                  | Viewer-side video RED negotiation preference |
 | `vw`             | See `viewwidth`                       | -                                        | -                          |
 
 ### W

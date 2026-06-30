@@ -49,6 +49,7 @@ Sometimes two peers just can't get a good connection, while with other peers the
 * Using [`&chunked`](../newly-added-parameters/and-chunked.md) mode on the sender side can enable an alternative way of sending video data, but this option is only supported by Chrome and other Chromium-based browsers. It is also fairly CPU intensive and may require some tweaking of bitrates and buffers to work well for your situation.
 * For a structured recovery workflow including retry controls, auto-relay, mesh fallback, and director-side mitigations, see [Handling Guest Disconnects and Connection Recovery](../guides/handling-guest-disconnects-and-connection-recovery.md).
 * Try using [`&codec=av1`](../advanced-settings/view-parameters/codec.md#av1) on the viewer side. This will not solve packet loss issues, but the AV1 codec is more efficient than the default codecs, and so it may offer better video quality despite the packet loss.
+* For short random video packet loss, you can test [`&codec=vp8&vred`](../advanced-settings/view-parameters/vred.md) on the viewer side. This asks WebRTC negotiation to prefer video RED, but it does not force a fixed FEC percentage and the browser still decides whether repair packets are sent.
 * Try adding [`&buffer=500`](../advanced-settings/view-parameters/buffer.md) to the viewer link, as this might allow more time for lost packets to arrive.
 * Reduce the bitrate of your video streams. If your connection can only handle 30 Mbps in and 10 Mbps out, trying to push it to do more will cause network thrashing and packet loss. In this case, try to ensure that your connection's upload and download links are not saturated by more than 80% of their tested max capacity. Leaving some headroom will reduce latency and packet loss, ultimately leading to better quality.
 * Consider using Meshcast or a WHIP/WHEP server-based SFU provider, and use that with VDO.Ninja instead of a direct peer-to-peer connection. I have a [guide for setting up Cloudflare](https://cloudflare.vdo.ninja/) to be used in this regard, but any WHIP+WHEP SFU can work. This can provide more advanced buffering and SVC options not available with direct browser-to-browser options.
@@ -60,6 +61,10 @@ Sometimes two peers just can't get a good connection, while with other peers the
 * Turning down the audio bitrate ([`&audiobitrate=128`](../advanced-settings/view-parameters/audiobitrate.md)) will be less prone to clicking issues versus something high, like 256 kbps. The default is 32 kbps.
 * You can add [`&enhance`](../advanced-settings/view-parameters/enhance.md) on the viewer side to try to prioritize the audio over the video. This might help with audio clicking issues.
 * Using [`&audiocodec=red`](../advanced-settings/audio-parameters/minptime-1.md#red) on the viewer side can increase the amount of error correction data being sent, reducing packet loss. This will double the audio bandwidth, but that should not be an issue for most modern connections.
+
+{% content-ref url="../advanced-settings/view-parameters/vred.md" %}
+[vred.md](../advanced-settings/view-parameters/vred.md)
+{% endcontent-ref %}
 
 ### YouTube video guide on packet loss + VDO.Ninja
 

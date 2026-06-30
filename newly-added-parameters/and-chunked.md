@@ -128,6 +128,12 @@ Notes:
 * Supports chunk-level recovery options such as parity FEC and NACK-based retransmits
 * Can be relayed without transcoding in supported workflows
 
+### Compared with normal WebRTC RED
+
+Normal WebRTC video can be tested with [`&codec=vp8&vred`](../advanced-settings/view-parameters/vred.md), but that only asks browser negotiation to prefer video RED. It does not force a fixed repair percentage or parity rate.
+
+Chunked mode is different: `&chunkfec` is VDO.Ninja-controlled parity for chunk payloads, and `&chunknack=1` enables selective retransmission of missing chunks. This makes chunked mode the better fit when you specifically need URL-controlled recovery behavior and can tolerate added delay.
+
 ### Recording with chunked mode
 
 Chunked mode can be useful when the recording path can tolerate more delay than the live conversation path.

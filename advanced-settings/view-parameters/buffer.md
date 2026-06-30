@@ -40,6 +40,8 @@ Using `&buffer` with `&chunked` mode can improve quality, however more than a fe
 
 `&buffer=200` can help reduce video problems, such as frame jitter, with 200-ms of added delay.
 
+If the issue is short random packet loss rather than jitter, [`&codec=vp8&vred`](vred.md) is another advanced normal-WebRTC experiment to compare. It does not replace buffering; it only asks negotiation to prefer video RED when the browser supports it.
+
 {% hint style="warning" %}
 * This feature will only work if playing the video in Chrome or Chromium-based browsers of around version 80 and newer.
 * OBS v27.1.3 or older (on PC) uses v75 though, so you will need to update to OBS 27.2 or newer to use it there.
@@ -77,4 +79,8 @@ The option to right click a remote video and add/adjust the [`&buffer`](buffer.m
 
 {% content-ref url="sync.md" %}
 [sync.md](sync.md)
+{% endcontent-ref %}
+
+{% content-ref url="vred.md" %}
+[vred.md](vred.md)
 {% endcontent-ref %}

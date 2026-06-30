@@ -14,6 +14,8 @@ VDO.Ninja's normal media path is WebRTC. WebRTC is built for low latency, so it 
 
 Use the [Mobile Uplink Packet Flow Lab](https://vdo.ninja/misc/mobile-uplink-packet-flow.html) to visualize the tradeoffs between plain WebRTC, buffered WebRTC, chunked/WebCodecs, SRT, RTMP, and different bonded-network paths.
 
+Use the [Unstable Connection Builder](https://vdo.ninja/misc/unstable-connection-builder.html) to generate matching push/view URLs for normal WebRTC, chunked/WebCodecs, audio recovery, Meshcast, relay tests, and local iframe simulation.
+
 ![Packet-flow lab showing chunked mode over a bonded Starlink and 5G service](../.gitbook/assets/mobile-uplink-packet-flow-lab.png)
 
 ## Why a high bitrate can still look bad
@@ -181,7 +183,51 @@ or:
 
 This is added to the OBS/view link. It can give WebRTC more time to smooth jitter and receive a recovery keyframe. It is still browser-managed WebRTC buffering, so it is not the same as a dedicated contribution buffer. Very large WebRTC buffers are not a good fit for most browser-source workflows.
 
-### Option 4: Chunked/WebCodecs mode
+### Option 4: Advanced normal-WebRTC reliability knobs
+
+Use this when you need to stay on the normal low-latency WebRTC media path, but the link has short random packet loss or jitter. These settings do not turn WebRTC into SRT, and they cannot hide multi-second outages, but they can make a marginal mobile uplink more stable.
+
+Phone/push link:
+
+```text
+https://vdo.ninja/?push=STREAMID&q=1&fps=24&width=1280&height=720&outboundvideobitrate=2500&maxvideobitrate=2500&maxbandwidth=70&contenthint=motion
+```
+
+OBS/view link:
+
+```text
+https://vdo.ninja/?view=STREAMID&codec=vp8&vred&videobitrate=2500&buffer=500&audiobuffer=120&degrade=maintain-framerate&keyframe=3000
+```
+
+What to test:
+
+* `&buffer=500` or `&buffer=1000` is usually the first WebRTC knob for jitter. It gives late packets and keyframe recovery a little more time before playback needs the frame.
+* `&codec=vp8&vred` asks WebRTC negotiation to prefer VP8 with RED support. RED is useful to test for short random loss, but the browser still decides whether to send redundancy or FEC packets. It is not a fixed FEC percentage that VDO.Ninja can force from JavaScript.
+* Test VP8 first when experimenting with RED/FEC. Chromium's WebRTC stack has code paths that disable RED+ULPFEC combinations in some cases, including payloads such as H.264 when NACK is enabled. H.264 may still be the better practical choice on phones when hardware encoding, battery, heat, or compatibility matter more than experimenting with RED.
+* Keep NACK, PLI, and congestion control enabled. Do not add `&nonack`, `&nopli`, or `&noremb` when the goal is reliability.
+* `&maxbandwidth=70` leaves about 30% headroom against the estimated available sender bandwidth. On unstable mobile links, leaving headroom can look better than chasing the highest possible bitrate.
+* `&degrade=maintain-framerate` asks the sender to preserve frame rate and reduce resolution first when constrained. This is often better for motion. For screen sharing or text, `&degrade=maintain-resolution` may be better, but it can make motion less smooth.
+* `&keyframe=3000` is still only a recovery aid for lingering damage. If keyframes make the link bursty, remove it or raise the interval.
+
+Browser support and limits:
+
+* WebRTC capabilities are browser-specific. The WebRTC specification includes RTX, RED, and FEC entries in RTP codec capabilities when a browser supports them, but pages need to work from the browser's advertised capabilities rather than assume every engine exposes the same set.
+* Modern browsers support codec preference APIs, but older OBS Browser Source / CEF builds, old mobile browsers, and some embedded browsers can lag behind current Chrome or Firefox.
+* `jitterBufferTarget`, the newer receiver-side buffer API, is marked by MDN as limited availability and is capped at 4000 ms. VDO.Ninja only applies it when the browser exposes it; otherwise it falls back to older browser delay hints where available.
+* If you need several seconds of repair time, use chunked/WebCodecs, SRT, RTMP, or a proper bonded/smoothing path instead of trying to make normal WebRTC buffer indefinitely.
+
+Best fit:
+
+* short random packet loss: try VP8 + RED, keep NACK/PLI on, and leave bitrate headroom;
+* high jitter or packet reordering: increase `&buffer` first;
+* burst loss or handoffs: use a bonded path with smoothing/redundancy, or move to chunked/SRT/RTMP with more latency;
+* phone heat or hardware encoder stability: H.264 at a lower bitrate may beat VP8 even if VP8 is better for RED testing.
+
+{% content-ref url="../advanced-settings/view-parameters/vred.md" %}
+[vred.md](../advanced-settings/view-parameters/vred.md)
+{% endcontent-ref %}
+
+### Option 5: Chunked/WebCodecs mode
 
 Use this when OBS can tolerate more delay and you want a more buffered, recovery-oriented VDO.Ninja path.
 
@@ -201,7 +247,7 @@ Chunked mode is JavaScript-powered and uses encoded chunks over data channels. I
 
 Use Chromium-based browsers for this path.
 
-### Option 5: SRT or RTMP through a relay
+### Option 6: SRT or RTMP through a relay
 
 Use this when the cleanest program feed matters more than sub-second latency.
 
@@ -251,6 +297,18 @@ Do not judge by speed test alone. Watch packet loss, jitter, recovery time, and 
 [and-outboundvideobitrate.md](../advanced-settings/video-bitrate-parameters/and-outboundvideobitrate.md)
 {% endcontent-ref %}
 
+{% content-ref url="../advanced-settings/video-bitrate-parameters/and-maxvideobitrate.md" %}
+[and-maxvideobitrate.md](../advanced-settings/video-bitrate-parameters/and-maxvideobitrate.md)
+{% endcontent-ref %}
+
+{% content-ref url="../advanced-settings/video-bitrate-parameters/and-maxbandwidth.md" %}
+[and-maxbandwidth.md](../advanced-settings/video-bitrate-parameters/and-maxbandwidth.md)
+{% endcontent-ref %}
+
+{% content-ref url="../advanced-settings/view-parameters/codec.md" %}
+[codec.md](../advanced-settings/view-parameters/codec.md)
+{% endcontent-ref %}
+
 {% content-ref url="../advanced-settings/view-parameters/buffer.md" %}
 [buffer.md](../advanced-settings/view-parameters/buffer.md)
 {% endcontent-ref %}
@@ -283,3 +341,8 @@ Do not judge by speed test alone. Watch packet loss, jitter, recovery time, and 
 * [Peplink SpeedFusion Bonding & Failover Technology](https://www.peplink.com/technology/speedfusion-bonding-technology/)
 * [Haivision SRT introduction](https://doc.haivision.com/SRT/1.5.3/Haivision/introduction-to-srt)
 * [Adobe RTMP Chunk Stream specification](https://ossrs.net/lts/en-us/assets/files/rtmp_specification_1.0-25a467618b92a3115bc97d4b0038b0ff.pdf)
+* [W3C WebRTC RTP parameters and capabilities](https://www.w3.org/TR/webrtc/#rtcrtpparameters)
+* [MDN RTCRtpTransceiver.setCodecPreferences](https://developer.mozilla.org/en-US/docs/Web/API/RTCRtpTransceiver/setCodecPreferences)
+* [MDN RTCRtpReceiver.jitterBufferTarget](https://developer.mozilla.org/en-US/docs/Web/API/RTCRtpReceiver/jitterBufferTarget)
+* [WebRTC RFC 8854: Forward Error Correction Requirements](https://www.rfc-editor.org/info/rfc8854/)
+* [Chromium WebRTC RED/ULPFEC sender logic](https://chromium.googlesource.com/external/webrtc/+/master/call/rtp_video_sender.cc)
