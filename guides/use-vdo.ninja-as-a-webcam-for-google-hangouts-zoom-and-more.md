@@ -142,3 +142,7 @@ If you need to increase the video quality from the defaults, all of that is cove
 {% content-ref url="how-do-i-control-bitrate-quality.md" %}
 [how-do-i-control-bitrate-quality.md](how-do-i-control-bitrate-quality.md)
 {% endcontent-ref %}
+
+## Related
+
+If your physical webcam is also needed directly in OBS, VDO.Ninja, Chrome, or the video-call app, see [Camera already in use by OBS or VDO.Ninja](../common-errors-and-known-issues/cant-load-camera-both-in-obs-and-vdon.md).

@@ -40,6 +40,8 @@ The virtual camera functionality (built into OBS 26+ or available via plugins) f
    * Turn off "Use hardware acceleration when available"
    * **This resolves \~70% of browser-related Virtual Camera issues**
 
+If OBS and VDO.Ninja both need access to the same physical webcam, see [Camera already in use by OBS or VDO.Ninja](cant-load-camera-both-in-obs-and-vdon.md).
+
 ### **Virtual Camera Not Appearing**
 
 1. **Check Registry for remnants:**

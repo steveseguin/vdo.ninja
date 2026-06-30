@@ -172,6 +172,10 @@ Your OBS audio mix is feeding return audio back into the room. Revisit your moni
 
 Try forcing the sender link with `&framerate=30` or `&framerate=60`, depending on your OBS output.
 
+## Related
+
+If the OBS scene uses a physical webcam and VDO.Ninja also needs that same camera, see [Camera already in use by OBS or VDO.Ninja](../common-errors-and-known-issues/cant-load-camera-both-in-obs-and-vdon.md).
+
 ## Summary
 
 If your goal is to get an OBS-built shot into VDO.Ninja, use OBS Virtual Camera for video and a virtual audio cable for audio first. It is the most broadly compatible and production-friendly workflow.

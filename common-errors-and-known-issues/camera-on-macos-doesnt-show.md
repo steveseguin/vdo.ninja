@@ -42,7 +42,7 @@ Sometimes, a simple restart of Chrome can resolve the issue:
 Ensure no other application is using the camera:
 
 * Close any other applications that might be using the camera (e.g., Zoom, Skype, Discord).
-* A camera can only be used by one application at a time, so closing other applications may help
+* A camera can only be used by one application at a time, so closing other applications may help. If OBS and VDO.Ninja both need the same physical webcam, see [Camera already in use by OBS or VDO.Ninja](cant-load-camera-both-in-obs-and-vdon.md).
 
 #### 6. Reset Chrome Settings
 
@@ -95,6 +95,7 @@ Firefox or Safari or another Chromium-based browser might work, if Chrome does n
 If your camera works with OBS, perhaps use that to load the camera and then use the OBS Virtual Camera as the camera source.
 
 * Some cameras are only compatible with OBS, and may not work with the browser
+* If this is to let OBS and VDO.Ninja share the same camera, see [Camera already in use by OBS or VDO.Ninja](cant-load-camera-both-in-obs-and-vdon.md).
 
 #### 14. Some virtual camera drivers on macOS are limited to 1080p30
 
@@ -106,6 +107,5 @@ Many virtual camera drivers on macOS are limited to 1080p30, and in fact, may on
 #### 15. Try on a Windows PC or an iOS 17 device that has USB 3.0
 
 While a last resort, changing host hardware may work. Windows is popular with live streaming applications due to greater software and hardware compatibly, and if compelled to keep in the Apple ecosystem, you may find your device works with newer iPhones / iPads, which have a USB 3.0 port.
-
 
 

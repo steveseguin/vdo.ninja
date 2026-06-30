@@ -18,7 +18,7 @@ If it fails only within VDO.Ninja, make sure you've enabled the Camera and Micro
 
 ### Close other apps or restart the computer
 
-Sometimes another app is using the camera, and closing all other apps or restarting the operating system can fix it up. You cannot use your camera in OBS and in Chrome at the same time, for example.
+Sometimes another app is using the camera, and closing all other apps or restarting the operating system can fix it up. You cannot use your camera in OBS and in Chrome at the same time, for example. If you need both, see [Camera already in use by OBS or VDO.Ninja](cant-load-camera-both-in-obs-and-vdon.md).
 
 ### Force close the camera app
 

@@ -20,7 +20,7 @@ If the problem isn't resolved, you can still reload the camera with the refresh 
 
 The director of a room can also refresh a camera remotely of a guest, when it freezes, via the video settings of the guest.
 
-If it's a common occurrence, you can load the camera into OBS or SnapCamera and then bring the video into VDO.Ninja as a virtual camera device. While VDO.Ninja does try to automatically reconnect devices when they become disconnected, it sometimes isn't alerted by the browser that the camera has glitched. OBS or Snapcamera might handle these conditions better.
+If it's a common occurrence, you can load the camera into OBS or SnapCamera and then bring the video into VDO.Ninja as a virtual camera device. While VDO.Ninja does try to automatically reconnect devices when they become disconnected, it sometimes isn't alerted by the browser that the camera has glitched. OBS or Snapcamera might handle these conditions better. If using OBS for this, see [Camera already in use by OBS or VDO.Ninja](cant-load-camera-both-in-obs-and-vdon.md).
 
 Another reason for a camera freezing randomly is that it may be a bad USB 3.0 cable or a USB 3.0 hub that is overloaded with other USB devices already. Plug any camera directly into the back of the computer, on a dedicated USB 3.0 port, with a high quality USB 3.0 or better cable. Unplug other unneeded USB devices.
 

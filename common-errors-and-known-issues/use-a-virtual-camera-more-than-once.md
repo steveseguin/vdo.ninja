@@ -8,6 +8,8 @@ description: Using Smartphone as Virtual Camera with VDO.Ninja across multiple a
 
 When using your smartphone as a camera via VDO.Ninja, you may want to use the camera feed in multiple applications simultaneously. By default, most video inputs can only be accessed by one application at a time.
 
+If the conflict is specifically between OBS and VDO.Ninja/Chrome trying to open the same physical webcam, see [Camera already in use by OBS or VDO.Ninja](cant-load-camera-both-in-obs-and-vdon.md).
+
 ### Solutions
 
 #### 1. OBS Studio Virtual Camera with Multiple VDO.Ninja Streams

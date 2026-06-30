@@ -31,3 +31,7 @@ If we use the following VDO.Ninja URL as a dock source, we can have VDO.Ninja au
 ![Dockable VDO.NInja, with automatic virtual webcam sharing as an option.](<../.gitbook/assets/image (96) (1).png>)
 
 ![](<../.gitbook/assets/image (88).png>)
+
+## Related
+
+If OBS and the VDO.Ninja dock or browser source are competing for the same physical webcam, see [Camera already in use by OBS or VDO.Ninja](../common-errors-and-known-issues/cant-load-camera-both-in-obs-and-vdon.md).
