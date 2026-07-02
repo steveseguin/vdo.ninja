@@ -1905,14 +1905,14 @@ export declare class ImageSegmenterResult {
      * confidence, usually in the [0, 1] range.
      * @export
      */
-    confidenceMasks?: MPMask[] | undefined, 
+    confidenceMasks?: MPMask[] | undefined,
     /**
      * A category mask represented as a `Uint8ClampedArray` or
      * `WebGLTexture`-backed `MPImage` where each pixel represents the class
      * which the pixel in the original image was predicted to belong to.
      * @export
      */
-    categoryMask?: MPMask | undefined, 
+    categoryMask?: MPMask | undefined,
     /**
      * The quality scores of the result masks, in the range of [0, 1].
      * Defaults to `1` if the model doesn't output quality scores. Each
@@ -2117,14 +2117,14 @@ export declare class InteractiveSegmenterResult {
      * confidence, usually in the [0, 1] range.
      * @export
      */
-    confidenceMasks?: MPMask[] | undefined, 
+    confidenceMasks?: MPMask[] | undefined,
     /**
      * A category mask represented as a `Uint8ClampedArray` or
      * `WebGLTexture`-backed `MPImage` where each pixel represents the class
      * which the pixel in the original image was predicted to belong to.
      * @export
      */
-    categoryMask?: MPMask | undefined, 
+    categoryMask?: MPMask | undefined,
     /**
      * The quality scores of the result masks, in the range of [0, 1].
      * Defaults to `1` if the model doesn't output quality scores. Each
@@ -2743,12 +2743,12 @@ export declare class PoseLandmarkerResult {
      * Pose landmarks of detected poses.
      * @export
      */
-    landmarks: NormalizedLandmark[][], 
+    landmarks: NormalizedLandmark[][],
     /**
      * Pose landmarks in world coordinates of detected poses.
      * @export
      */
-    worldLandmarks: Landmark[][], 
+    worldLandmarks: Landmark[][],
     /**
      * Segmentation mask for the detected pose.
      * @export
