@@ -47,5 +47,39 @@
   "record": "Record",
   "volume": "Volume",
   "open-in-new-tab": "Open in new Tab",
-  "copy-to-clipboard": "Copy to Clipboard"
+  "copy-to-clipboard": "Copy to Clipboard",
+  "innerHTML": {
+    "clean-obs-output": "Clean OBS output",
+    "hide-video-controls": "Hide video controls",
+    "show-muted-status": "Show muted status",
+    "show-speaker-outline": "Show speaker outline",
+    "video-only": "Video only",
+    "audio-only": "Audio only",
+    "exclude-director-audio": "Exclude director audio",
+    "exclude-director-video": "Exclude director video",
+    "randomize-tile-order": "Randomize tile order",
+    "add-jitter-buffer": "Add jitter buffer",
+    "four-three-scene-mode": "4:3 scene mode",
+    "square-scene-mode": "Square scene mode"
+  },
+  "titles": {
+    "add-a-small-playback-buffer-to-smooth-jitter": "Add a small playback buffer to smooth jitter",
+    "disable-audio-playback-for-this-scene": "Disable audio playback for this scene",
+    "disable-video-playback-for-this-scene": "Disable video playback for this scene",
+    "exclude-the-director-s-audio-from-this-scene": "Exclude the director's audio from this scene",
+    "exclude-the-director-s-video-from-this-scene": "Exclude the director's video from this scene",
+    "hide-own-screen-share-preview": "Hide own screen-share preview",
+    "hide-own-share-preview": "Hide own share preview",
+    "hide-the-video-control-bar": "Hide the video control bar",
+    "keep-the-scene-output-clean-for-obs": "Keep the scene output clean for OBS",
+    "mute-all-guests-in-room-toggle-": "Mute all guests in room (toggle)",
+    "optimize-the-scene-for-4-3-video": "Optimize the scene for 4:3 video",
+    "optimize-the-scene-for-square-video": "Optimize the scene for square video",
+    "randomize-the-order-videos-load-into-the-scene": "Randomize the order videos load into the scene",
+    "show-a-green-outline-around-active-speakers": "Show a green outline around active speakers",
+    "show-a-muted-status-icon-on-remote-tiles": "Show a muted status icon on remote tiles",
+    "start-stop-google-drive-recording-for-all-guests": "Start/stop Google Drive recording for all guests",
+    "when-enabled-highlight-will-unmute-the-highlighted-guest-and-mute-the-other-guests-manual-unmute-changes-can-still-be-made-afterwards-": "When enabled, Highlight will unmute the highlighted guest and mute the other guests. Manual unmute changes can still be made afterwards."
+  },
+  "placeholders": {}
 }
