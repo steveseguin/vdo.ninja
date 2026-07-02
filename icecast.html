@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Icecast / AzuraCast Link Generator - VDO.Ninja</title>
+	<meta name="description" content="Generate a VDO.Ninja audio-only viewer link that publishes received WebRTC audio to Icecast and AzuraCast source endpoints.">
+	<meta name="keywords" content="Icecast, AzuraCast, VDO.Ninja, WebRTC audio, internet radio, source client, browser audio publishing">
+	<meta name="author" content="Steve Seguin">
+	<meta name="theme-color" content="#101520">
+	<link rel="canonical" href="https://vdo.ninja/icecast">
+
+	<meta name="twitter:card" content="summary_large_image">
+	<meta name="twitter:creator" content="@SteveSeguin">
+	<meta name="twitter:url" content="https://vdo.ninja/icecast">
+	<meta name="twitter:title" content="Icecast / AzuraCast Link Generator - VDO.Ninja">
+	<meta name="twitter:description" content="Publish VDO.Ninja viewer audio to Icecast-compatible radio servers directly from a browser tab.">
+	<meta name="twitter:image" content="https://vdo.ninja/media/vdoNinja_logo_full.png">
+
+	<meta property="og:type" content="website">
+	<meta property="og:url" content="https://vdo.ninja/icecast">
+	<meta property="og:title" content="Icecast / AzuraCast Link Generator - VDO.Ninja">
+	<meta property="og:description" content="Generate an audio-only VDO.Ninja viewer link that relays received WebRTC audio into Icecast or AzuraCast.">
+	<meta property="og:image" content="https://vdo.ninja/media/vdoNinja_logo_full.png">
+	<meta property="og:image:width" content="1200">
+	<meta property="og:image:height" content="630">
+	<meta property="og:site_name" content="VDO.Ninja">
+
+	<link rel="shortcut icon" href="data:image/x-icon;," type="image/x-icon">
+	<link id="favicon1" rel="icon" type="image/png" sizes="32x32" href="./media/favicon-32x32.png">
+	<link id="favicon2" rel="icon" type="image/png" sizes="16x16" href="./media/favicon-16x16.png">
+	<link id="favicon3" rel="icon" href="./media/favicon.ico">
+	<style>
+		:root {
+			color-scheme: dark;
+			--bg: #101520;
+			--panel: #172033;
+			--panel-2: #202c44;
+			--text: #f8fafc;
+			--muted: #b8c2d6;
+			--line: #33415f;
+			--accent: #54b948;
+			--warn: #fbbf24;
+		}
+
+		* {
+			box-sizing: border-box;
+		}
+
+		body {
+			margin: 0;
+			min-height: 100vh;
+			font-family: Arial, Helvetica, sans-serif;
+			background: linear-gradient(180deg, #111827 0%, var(--bg) 100%);
+			color: var(--text);
+		}
+
+		header {
+			padding: 18px 22px;
+			background: #0b1020;
+			border-bottom: 1px solid var(--line);
+			letter-spacing: .04em;
+			font-weight: 700;
+		}
+
+		main {
+			width: min(1040px, calc(100vw - 28px));
+			margin: 24px auto 40px;
+		}
+
+		h1 {
+			margin: 0 0 8px;
+			font-size: 28px;
+		}
+
+		p {
+			color: var(--muted);
+			line-height: 1.45;
+		}
+
+		.grid {
+			display: grid;
+			grid-template-columns: repeat(2, minmax(0, 1fr));
+			gap: 16px;
+			margin-top: 20px;
+		}
+
+		section {
+			background: var(--panel);
+			border: 1px solid var(--line);
+			border-radius: 8px;
+			padding: 18px;
+		}
+
+		section.full {
+			grid-column: 1 / -1;
+		}
+
+		h2 {
+			margin: 0 0 14px;
+			font-size: 18px;
+		}
+
+		label {
+			display: block;
+			margin: 12px 0;
+			color: var(--text);
+			font-size: 13px;
+		}
+
+		input,
+		select,
+		textarea {
+			display: block;
+			width: 100%;
+			margin-top: 5px;
+			padding: 10px;
+			border: 1px solid #4b5d80;
+			border-radius: 5px;
+			background: #0f172a;
+			color: var(--text);
+			font: inherit;
+		}
+
+		textarea {
+			min-height: 86px;
+			resize: vertical;
+		}
+
+		.inline {
+			display: flex;
+			align-items: center;
+			gap: 10px;
+			margin: 10px 0;
+			color: var(--muted);
+		}
+
+		.inline input {
+			width: auto;
+			margin: 0;
+		}
+
+		.actions {
+			display: flex;
+			flex-wrap: wrap;
+			gap: 10px;
+			margin-top: 14px;
+		}
+
+		button,
+		a.button {
+			border: 0;
+			border-radius: 5px;
+			background: var(--accent);
+			color: white;
+			padding: 10px 14px;
+			font-weight: 700;
+			text-decoration: none;
+			cursor: pointer;
+		}
+
+		button.secondary,
+		a.secondary {
+			background: var(--panel-2);
+		}
+
+		.note {
+			border-left: 4px solid var(--warn);
+			background: rgba(251, 191, 36, .12);
+			padding: 10px 12px;
+			color: #fde68a;
+			font-size: 13px;
+			line-height: 1.45;
+			border-radius: 0 6px 6px 0;
+		}
+
+		.status {
+			margin-top: 10px;
+			color: var(--muted);
+			font-size: 13px;
+		}
+
+		@media (max-width: 800px) {
+			.grid {
+				grid-template-columns: 1fr;
+			}
+		}
+	</style>
+</head>
+<body>
+	<header>VDO.Ninja Icecast / AzuraCast setup</header>
+	<main>
+		<h1>Publish VDO.Ninja audio to Icecast</h1>
+		<p>Use this helper to generate a VDO.Ninja audio source link with Icecast publishing enabled. The browser tab captures or receives the audio and publishes it to Icecast/AzuraCast, so keep the tab open while live.</p>
+
+		<div class="grid">
+			<section>
+				<h2>VDO Source</h2>
+				<label>
+					Publishing mode
+					<select id="vdoMode">
+						<option value="push" selected>Publish local audio with &amp;push</option>
+						<option value="view">Relay an existing VDO.Ninja stream with &amp;view</option>
+					</select>
+				</label>
+				<label>
+					Stream ID or VDO.Ninja push/view URL
+					<input id="vdoSource" type="text" placeholder="FUSION_ONLINE" autocomplete="off">
+				</label>
+				<label class="inline">
+					<input id="audioonly" type="checkbox" checked>
+					Publish local audio only with &amp;audioonly
+				</label>
+				<label class="inline">
+					<input id="novideo" type="checkbox" checked>
+					Relay receive audio only with &amp;novideo
+				</label>
+				<label class="inline">
+					<input id="proaudio" type="checkbox" checked>
+					Enable &amp;proaudio
+				</label>
+			</section>
+
+			<section>
+				<h2>Icecast Source</h2>
+				<label>
+					Source URL / server
+					<input id="icecastServer" type="url" placeholder="https://radio.example.com:8000/" autocomplete="off">
+				</label>
+				<label>
+					Mountpoint
+					<input id="icecastMount" type="text" placeholder="stream" autocomplete="off">
+				</label>
+				<label>
+					Username
+					<input id="icecastUsername" type="text" placeholder="source" autocomplete="username">
+				</label>
+				<label>
+					Password
+					<input id="icecastPassword" type="password" placeholder="Source password" autocomplete="off">
+				</label>
+			</section>
+
+			<section>
+				<h2>Format</h2>
+				<label>
+					Audio format
+					<select id="icecastFormat">
+						<option value="audio/aac">AAC / ADTS</option>
+						<option value="audio/webm;codecs=opus">WebM / Opus</option>
+						<option value="audio/ogg;codecs=opus">Ogg / Opus</option>
+					</select>
+				</label>
+				<label>
+					Audio bitrate
+					<select id="icecastBitrate">
+						<option value="64000">64 kbps</option>
+						<option value="128000" selected>128 kbps</option>
+						<option value="192000">192 kbps</option>
+						<option value="256000">256 kbps</option>
+					</select>
+				</label>
+				<label>
+					Stream name
+					<input id="icecastName" type="text" placeholder="VDO.Ninja Live" autocomplete="off">
+				</label>
+				<label>
+					Genre
+					<input id="icecastGenre" type="text" placeholder="Live" autocomplete="off">
+				</label>
+				<label>
+					Relay URL (optional)
+					<input id="icecastRelay" type="url" placeholder="https://vdo-ninja-icecast-relay.vdo.workers.dev/publish" autocomplete="off">
+				</label>
+				<label>
+					Relay token (optional)
+					<input id="icecastRelayToken" type="password" placeholder="Only needed for private relays" autocomplete="off">
+				</label>
+			</section>
+
+			<section>
+				<h2>Launch Mode</h2>
+				<label class="inline">
+					<input id="autoStart" type="checkbox" checked>
+					Start Icecast automatically when audio connects
+				</label>
+				<label class="inline">
+					<input id="saveLocal" type="checkbox" checked>
+					Save source credentials in this browser
+				</label>
+				<label class="inline">
+					<input id="includeCredentials" type="checkbox">
+					Include source credentials in the generated URL
+				</label>
+				<div class="note">Including credentials in the URL is portable, but exposes the source password in browser history and screenshots.</div>
+			</section>
+
+			<section class="full">
+				<h2>Generated URL</h2>
+				<textarea id="outputUrl" readonly></textarea>
+				<div class="actions">
+					<button id="generateButton" type="button">Generate</button>
+					<button id="copyButton" type="button" class="secondary">Copy</button>
+					<a id="openButton" class="button secondary" href="#" target="_blank" rel="noopener">Open</a>
+				</div>
+				<div id="status" class="status">Enter a VDO source and Icecast source details.</div>
+			</section>
+		</div>
+	</main>
+
+	<script>
+		const SETTINGS_KEY = "vdoNinja.icecastSettings";
+		const fieldIds = [
+			"vdoMode",
+			"vdoSource",
+			"icecastServer",
+			"icecastMount",
+			"icecastUsername",
+			"icecastPassword",
+			"icecastFormat",
+			"icecastBitrate",
+			"icecastName",
+			"icecastGenre",
+			"icecastRelay",
+			"icecastRelayToken",
+			"audioonly",
+			"novideo",
+			"proaudio",
+			"autoStart",
+			"saveLocal",
+			"includeCredentials"
+		];
+
+		function $(id) {
+			return document.getElementById(id);
+		}
+
+		function getBaseUrl() {
+			const path = window.location.pathname.replace(/\/icecast(?:\.html?)?$/i, "/");
+			return window.location.origin + path;
+		}
+
+		function normalizeMount(value) {
+			return (value || "").trim().replace(/^\/+/, "");
+		}
+
+		function buildTargetUrl(server, mount) {
+			if (!server) {
+				return "";
+			}
+			const cleanMount = normalizeMount(mount);
+			if (!cleanMount) {
+				return server.trim();
+			}
+			try {
+				const target = new URL(server.trim());
+				target.pathname = "/" + cleanMount;
+				target.search = "";
+				target.hash = "";
+				return target.toString();
+			} catch (error) {
+				return server.trim();
+			}
+		}
+
+		function extractStreamId(value) {
+			const raw = (value || "").trim();
+			if (!raw) {
+				return "";
+			}
+			try {
+				const parsed = new URL(raw);
+				const params = new URLSearchParams(parsed.search);
+				return params.get("push") || params.get("p") || params.get("view") || params.get("v") || params.get("streamid") || params.get("pull") || raw;
+			} catch (error) {
+				return raw;
+			}
+		}
+
+		function extractMode(value) {
+			const raw = (value || "").trim();
+			if (!raw) {
+				return "";
+			}
+			try {
+				const parsed = new URL(raw);
+				const params = new URLSearchParams(parsed.search);
+				if (params.has("push") || params.has("p")) {
+					return "push";
+				}
+				if (params.has("view") || params.has("v") || params.has("streamid") || params.has("pull")) {
+					return "view";
+				}
+			} catch (error) {}
+			return "";
+		}
+
+		function readSavedSettings() {
+			try {
+				const parsed = JSON.parse(localStorage.getItem(SETTINGS_KEY) || "{}");
+				return parsed && typeof parsed === "object" ? parsed : {};
+			} catch (error) {
+				return {};
+			}
+		}
+
+		function loadFields() {
+			const saved = readSavedSettings();
+			$("icecastServer").value = saved.serverUrl || saved.targetUrl || "";
+			$("icecastMount").value = saved.mount || "";
+			$("icecastUsername").value = saved.username || "source";
+			$("icecastPassword").value = saved.password || "";
+			$("icecastFormat").value = saved.mimeType || "audio/aac";
+			$("icecastBitrate").value = saved.audioBitsPerSecond || "128000";
+			$("icecastName").value = (saved.metadata && saved.metadata.name) || saved.name || "";
+			$("icecastGenre").value = (saved.metadata && saved.metadata.genre) || saved.genre || "";
+			$("icecastRelay").value = saved.relayUrl || "";
+			$("icecastRelayToken").value = saved.relayToken || "";
+			try {
+				const lastSource = localStorage.getItem("vdoNinja.icecastSource") || "";
+				const lastMode = localStorage.getItem("vdoNinja.icecastMode") || "";
+				if (lastSource) {
+					$("vdoSource").value = lastSource;
+				}
+				if (lastMode === "push" || lastMode === "view") {
+					$("vdoMode").value = lastMode;
+				}
+			} catch (error) {}
+		}
+
+		function saveFields(targetUrl) {
+			if (!$("saveLocal").checked) {
+				return;
+			}
+			const settings = {
+				serverUrl: $("icecastServer").value.trim(),
+				targetUrl,
+				mount: normalizeMount($("icecastMount").value),
+				username: $("icecastUsername").value.trim() || "source",
+				password: $("icecastPassword").value,
+				mimeType: $("icecastFormat").value,
+				audioBitsPerSecond: parseInt($("icecastBitrate").value, 10) || 128000,
+				relayUrl: $("icecastRelay").value.trim(),
+				relayToken: $("icecastRelayToken").value,
+				metadata: {
+					name: $("icecastName").value.trim() || "VDO.Ninja Live",
+					genre: $("icecastGenre").value.trim() || "Live"
+				},
+				updatedAt: Date.now()
+			};
+			localStorage.setItem(SETTINGS_KEY, JSON.stringify(settings));
+			localStorage.setItem("vdoNinja.icecastSource", $("vdoSource").value.trim());
+			localStorage.setItem("vdoNinja.icecastMode", $("vdoMode").value || "push");
+		}
+
+		function generateUrl() {
+			const streamId = extractStreamId($("vdoSource").value);
+			const sourceMode = $("vdoMode").value || extractMode($("vdoSource").value) || "push";
+			const targetUrl = buildTargetUrl($("icecastServer").value, $("icecastMount").value);
+			const password = $("icecastPassword").value;
+			if (!streamId) {
+				$("status").textContent = "Enter a VDO.Ninja stream ID or view URL.";
+				return "";
+			}
+			if (!targetUrl || !password) {
+				$("status").textContent = "Enter the Icecast source URL and password.";
+				return "";
+			}
+			saveFields(targetUrl);
+			const params = new URLSearchParams();
+			if (sourceMode === "view") {
+				params.set("view", streamId);
+				if ($("novideo").checked) {
+					params.set("novideo", "");
+				}
+			} else {
+				params.set("push", streamId);
+				if ($("audioonly").checked) {
+					params.set("audioonly", "");
+				}
+			}
+			if ($("proaudio").checked) {
+				params.set("proaudio", "");
+			}
+			params.set(sourceMode === "view" ? "icecastview" : "icecastpush", "");
+			if ($("autoStart").checked) {
+				params.set("icecastauto", "1");
+			}
+			if ($("includeCredentials").checked) {
+				params.set("icecasttarget", targetUrl);
+				params.set("icecastuser", $("icecastUsername").value.trim() || "source");
+				params.set("icecastpass", password);
+				params.set("icecastformat", $("icecastFormat").value);
+				params.set("icecastbitrate", $("icecastBitrate").value);
+				const name = $("icecastName").value.trim();
+				const genre = $("icecastGenre").value.trim();
+				if (name) {
+					params.set("icecastname", name);
+				}
+				if (genre) {
+					params.set("icecastgenre", genre);
+				}
+				if ($("icecastRelay").value.trim()) {
+					params.set("icecastrelay", $("icecastRelay").value.trim());
+				}
+				if ($("icecastRelayToken").value) {
+					params.set("icecastrelaytoken", $("icecastRelayToken").value);
+				}
+			}
+			const url = getBaseUrl() + "?" + params.toString().replace(/=(&|$)/g, "$1");
+			$("outputUrl").value = url;
+			$("openButton").href = url;
+			if ($("includeCredentials").checked) {
+				$("status").textContent = "Generated a portable URL with credentials included.";
+			} else if ($("saveLocal").checked) {
+				$("status").textContent = sourceMode === "view"
+					? "Generated relay URL. Credentials were saved in this browser."
+					: "Generated source publishing URL. Credentials were saved in this browser.";
+			} else {
+				$("status").textContent = "Generated URL. The VDO page will prompt because credentials were not saved or included.";
+			}
+			return url;
+		}
+
+		function copyUrl() {
+			const url = $("outputUrl").value || generateUrl();
+			if (!url) {
+				return;
+			}
+			navigator.clipboard.writeText(url).then(() => {
+				$("status").textContent = "Copied.";
+			}).catch(() => {
+				$("outputUrl").focus();
+				$("outputUrl").select();
+				$("status").textContent = "Select and copy the generated URL.";
+			});
+		}
+
+		function updateModeFromSource() {
+			const mode = extractMode($("vdoSource").value);
+			if (mode) {
+				$("vdoMode").value = mode;
+			}
+		}
+
+		document.addEventListener("DOMContentLoaded", () => {
+			loadFields();
+			$("generateButton").addEventListener("click", generateUrl);
+			$("copyButton").addEventListener("click", copyUrl);
+			$("vdoSource").addEventListener("input", updateModeFromSource);
+			$("openButton").addEventListener("click", event => {
+				if (!$("outputUrl").value && !generateUrl()) {
+					event.preventDefault();
+				}
+			});
+			fieldIds.forEach(id => {
+				const field = $(id);
+				if (field) {
+					field.addEventListener("change", generateUrl);
+				}
+			});
+			generateUrl();
+		});
+	</script>
+</body>
+</html>

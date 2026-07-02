@@ -589,49 +589,49 @@
 						<label for="changeText">
 							<i class="las la-upload"></i>
 						</label>
-						<input type="text" id="changeText1" class="inputfield changeText" placeholder="WHIP Publishing URL" />
+						<input type="text" id="changeText1" class="inputfield changeText" autocomplete="off" placeholder="WHIP Publishing URL" />
 						<button  onclick="gohere1();" class="gobutton" id="gobutton1">GO</button>
 					</div>
 					<div >
 						<div class="inputCombo" style="margin: 10px 0px 10px 10px;">
-							<input type="password" id="changeText1a" class="inputfield changeText" placeholder="🗝️ Authentication Bearer Token (optional)" />
+							<input type="password" id="changeText1a" class="inputfield changeText" autocomplete="off" placeholder="🗝️ Authentication Bearer Token (optional)" />
 							<div class="details">⚙️</div>
 						</div>
 						<h3 class="advanced">Advanced options</h3>
 						<div class="inputComboGrid" id="advanced" style="margin: 10px 0px 10px 10px;">
-							<select style="border-radius:10px;margin-right:5px;width:unset!important;" class="changeText" id="whipoutaudiobitrate"  title="Which audio bitrate target would you prefer? 128-kbps is fine for music." >
+							<select style="border-radius:10px;margin-right:5px;width:unset!important;" class="changeText" id="whipoutaudiobitrate" autocomplete="off" title="Which audio bitrate target would you prefer? 128-kbps is fine for music." >
 								<option value="0" selected>🎙️Default Audio Bitrate</option>
 								<option value="32">🎙️32-kbps</option>
 								<option value="64">🎙️64-kbps</option>
 								<option value="128">🎙️128-kbps</option>
 								<option value="256">🎙️256-kbps</option>
 							</select >
-							<select style="border-radius:10px;margin-right:5px;width:unset!important;" class="changeText" id="vbrcbr"  title="Whether the audio bitrate with be constant or variable" >
+							<select style="border-radius:10px;margin-right:5px;width:unset!important;" class="changeText" id="vbrcbr" autocomplete="off" title="Whether the audio bitrate with be constant or variable" >
 								<option value="cbr" selected>🎙️CBR</option>
 								<option value="vbr">🎙️VBR</option>
 							</select >
-							<select style="border-radius:10px;margin-right:5px;width:unset!important;" class="changeText" id="denoise" onchange="checkStereo()" title="Turn off to improve clarity, but you'll hear any background noise" >
+							<select style="border-radius:10px;margin-right:5px;width:unset!important;" class="changeText" id="denoise" autocomplete="off" onchange="checkStereo()" title="Turn off to improve clarity, but you'll hear any background noise" >
 								<option value="0" selected>🎙️Denoise Off</option>
 								<option value="1">🎙️Denoise On</option>
 							</select >
-							<select style="border-radius:10px;margin-right:5px;width:unset!important;" class="changeText" id="autogain" onchange="checkStereo()" title="Auto-controls the input volume; turn off to manage that yourself." >
+							<select style="border-radius:10px;margin-right:5px;width:unset!important;" class="changeText" id="autogain" autocomplete="off" onchange="checkStereo()" title="Auto-controls the input volume; turn off to manage that yourself." >
 								<option value="0" selected>🎙️Auto Gain Off</option>
 								<option value="1">🎙️Auto Gain On</option>
 							</select >
-							<select style="border-radius:10px;margin-right:5px;width:unset!important;" class="changeText" id="stereo"  title="Stereo is available only if auto-gain and noise-reduction is off." >
+							<select style="border-radius:10px;margin-right:5px;width:unset!important;" class="changeText" id="stereo" autocomplete="off" title="Stereo is available only if auto-gain and noise-reduction is off." >
 								<option value="1" selected>🎙️Stereo</option>
 								<option value="0">🎙️Mono</option>
 							</select >
 						</div>
 						<div class="inputComboGrid" id="advanced2" style="margin: 10px 0px 10px 10px;">
-							<select style="border-radius:10px;margin-right:5px;width:unset!important;" class="changeText" id="bitrateGroupFlag" title="Which video bitrate target would you prefer?" >
+							<select style="border-radius:10px;margin-right:5px;width:unset!important;" class="changeText" id="bitrateGroupFlag" autocomplete="off" title="Which video bitrate target would you prefer?" >
 								<option value="0" selected>🎦Default Video Bitrate</option>
 								<option value="500">🎦500-kbps</option>
 								<option value="2500">🎦2500-kbps</option>
 								<option value="6000">🎦6000-kbps</option>
 								<option value="20000">🎦20000-kbps</option>
 							</select >
-							<select style="border-radius:10px;margin-right:5px;width:unset!important;" class="changeText"  id="codecGroupFlag" onchange="updateSVC();" title="Which video codec would you prefer to be used if available?" >
+							<select style="border-radius:10px;margin-right:5px;width:unset!important;" class="changeText"  id="codecGroupFlag" autocomplete="off" onchange="updateSVC();" title="Which video codec would you prefer to be used if available?" >
 								<option value="default" selected>🎦OpenH264</option>
 								<option id="av1codec" value="av1">🎦AV1</option>
 								<option value="vp9">🎦VP9</option>
@@ -639,21 +639,21 @@
 								<option value="h264">🎦H264</option>
 								<option id="h265codec" value="h265">🎦H265</option>
 							</select >
-							<select style="border-radius:10px;margin-right:5px;width:unset!important;" class="changeText" id="svcGroupFlag" title="Which scalable video coding do you want to use?" >
+							<select style="border-radius:10px;margin-right:5px;width:unset!important;" class="changeText" id="svcGroupFlag" autocomplete="off" title="Which scalable video coding do you want to use?" >
 								<option value="0" selected>🎦 SVC Off</option>
 							</select >
-							<select style="border-radius:10px;margin-right:5px;width:unset!important;" class="changeText" id="e2eeGroupFlag1" title="E2EE uses insertable streams; not everthing supports this" >
+							<select style="border-radius:10px;margin-right:5px;width:unset!important;" class="changeText" id="e2eeGroupFlag1" autocomplete="off" title="E2EE uses insertable streams; not everthing supports this" >
 								<option value="0" selected>🔑 E2EE Off</option>
 								<option value="1">🔑 E2EE On</option>
 							</select >
 						</div>
 						<div class="inputComboGrid" id="advanced2a" style="margin: 10px 0px 10px 10px;">
-							<select style="border-radius:10px;margin-right:5px;width:unset!important;" class="changeText" id="keyFrameRateFlag" title="Tries to force a minimum keyframe rate internal. This may hurt quality as the method of triggering a keyframe from the browser may cause a flicker or a few blurry frames. Without it though, viewers may not be able to load the video promptly." >
+							<select style="border-radius:10px;margin-right:5px;width:unset!important;" class="changeText" id="keyFrameRateFlag" autocomplete="off" title="Tries to force a minimum keyframe rate internal. This may hurt quality as the method of triggering a keyframe from the browser may cause a flicker or a few blurry frames. Without it though, viewers may not be able to load the video promptly." >
 								<option value="0" selected>🎦 Force Keyframes Interval: Off</option>
 								<option value="2000">🎦 Force Keyframes Interval: 2s</option>
 								<option value="6000">🎦 Force Keyframes Interval: 6s</option>
 							</select >
-							<select style="border-radius:10px;margin-right:5px;width:unset!important;" class="changeText" id="whipwaitFlag" title="Time to wait for ICE candidates before sending the offer. Needed if you whip server is behind a firewall.">
+							<select style="border-radius:10px;margin-right:5px;width:unset!important;" class="changeText" id="whipwaitFlag" autocomplete="off" title="Time to wait for ICE candidates before sending the offer. Needed if you whip server is behind a firewall.">
 								<option value="0">⌛Do not wait for ICE candidates</option>
 								<option selected value="200">⌛Wait 200-ms for ICE candidates</option>
 								<option value="500">⌛Wait 500-ms for ICE candidates</option>
@@ -671,7 +671,7 @@
 							<label for="changeText">
 								<i class="las la-play"></i>
 							</label>
-							<input type="text" id="changeText2" class="inputfield changeText" 
+							<input type="text" id="changeText2" class="inputfield changeText" autocomplete="off"
 								placeholder="Create a unique stream token (alphanumeric, case-sensitive, max 50 chars)" />
 							<button onclick="gohere2();" class="gobutton" id="gobutton2">GO</button>
 							<button onclick="generateNewToken();" class="genbutton" title="Generate random token"><i class="las la-random"></i></button>
@@ -750,7 +750,7 @@
 							<label for="changeText">
 								<i class="las la-upload"></i>
 							</label>
-							<input type="password" id="changeText1t" autocomplete="changeText1twitcha" class="inputfield changeText" 
+							<input type="password" id="changeText1t" autocomplete="off" class="inputfield changeText"
 								placeholder="Enter your Twitch stream token here" />
 							<button onclick="gohere1t();" class="gobutton" id="gobutton1t">GO</button>
 						</div>
@@ -802,34 +802,34 @@
 						<label for="changeText">
 						<i class="las la-play"></i>
 						</label>
-						<input type="text" id="changeText3" class="inputfield changeText"  placeholder="WHEP Play URL" />
+						<input type="text" id="changeText3" class="inputfield changeText" autocomplete="off"  placeholder="WHEP Play URL" />
 						<button  onclick="gohere3();"  class="gobutton" id="gobutton3">GO</button>
 					</div>
 					<div class="inputCombo" style="margin: 10px 0px 10px 10px;">
-						<input type="password" id="changeText3a" class="inputfield changeText" placeholder="🗝️ Authentication Bearer Token (optional)" />
+						<input type="password" id="changeText3a" class="inputfield changeText" autocomplete="off" placeholder="🗝️ Authentication Bearer Token (optional)" />
 						<div class="details">⚙️</div>
 					</div>
 					<h3 class="advanced">Advanced options</h3>
 					<div class="inputComboGrid" id="advancedwhep" style="margin: 10px 0px 10px 10px;">
-						<select style="border-radius:10px;margin-right:5px;width:unset!important;" class="changeText" id="whepbuffer"  title="Adding a playback buffer can help reduce frame loss or jitter" >
+						<select style="border-radius:10px;margin-right:5px;width:unset!important;" class="changeText" id="whepbuffer" autocomplete="off" title="Adding a playback buffer can help reduce frame loss or jitter" >
 							<option value="0" selected>⌛No added playback buffer</option>
 							<option value="500">⌛500-ms added</option>
 							<option value="1000">⌛1000-ms added</option>
 							<option value="2000">⌛2000-ms added</option>
 							<option value="3000">⌛3000-ms added</option>
 						</select >
-						<select style="border-radius:10px;margin-right:5px;width:unset!important;" class="changeText" id="whepicewait"  title="Adding a playback buffer can help reduce frame loss or jitter" >
+						<select style="border-radius:10px;margin-right:5px;width:unset!important;" class="changeText" id="whepicewait" autocomplete="off" title="Adding a playback buffer can help reduce frame loss or jitter" >
 							<option value="0">⌛Do not wait for ICE candidates</option>
 							<option value="500">⌛Wait 500-ms for ICE candidates</option>
 							<option value="1000">⌛Wait 1000-ms for ICE candidates</option>
 							<option value="2000" selected>⌛Wait 2000-ms for ICE candidates</option>
 							<option value="5000">⌛Wait 5000-ms for ICE candidates</option>
 						</select >
-						<select style="border-radius:10px;margin-right:5px;width:unset!important;" class="changeText" id="e2eeGroupFlag2" title="E2EE uses insertable streams; not everthing supports this" >
+						<select style="border-radius:10px;margin-right:5px;width:unset!important;" class="changeText" id="e2eeGroupFlag2" autocomplete="off" title="E2EE uses insertable streams; not everthing supports this" >
 							<option value="0" selected>🔑 E2EE Off</option>
 							<option value="1">🔑 E2EE On</option>
 						</select >
-						<select style="border-radius:10px;margin-right:5px;width:unset!important;" class="changeText" id="stereowhep"  title="Stereo is available only if auto-gain and noise-reduction is off." >
+						<select style="border-radius:10px;margin-right:5px;width:unset!important;" class="changeText" id="stereowhep" autocomplete="off" title="Stereo is available only if auto-gain and noise-reduction is off." >
 							<option value="1" selected>🎙️Stereo</option>
 							<option value="0">🎙️Mono</option>
 						</select>
@@ -843,7 +843,7 @@
 						<label for="changeText">
 							<i class="las la-broadcast-tower"></i>
 						</label>
-						<input type="text" id="changeText4" class="inputfield changeText"  oninput="change4()" onchange="change4()" placeholder="The WHEP Token you wish to use goes here" />
+						<input type="text" id="changeText4" class="inputfield changeText" autocomplete="off" oninput="change4()" onchange="change4()" placeholder="The WHEP Token you wish to use goes here" />
 						<button  onclick="gohere4();"  class="gobutton" id="gobutton4"  onclick="gohere4();" >GO</button>
 						
 					</div>

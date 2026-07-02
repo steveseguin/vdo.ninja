@@ -1,0 +1,1454 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="SVG Tweak - a fast, no-install SVG editor for importing, editing, and exporting SVGs while preserving source classes and markup.">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMiAzMiI+CiAgPHJlY3Qgd2lkdGg9IjMyIiBoZWlnaHQ9IjMyIiBmaWxsPSIjNGE5MGUyIi8+CiAgPGNpcmNsZSBjeD0iMTYiIGN5PSIxNiIgcj0iMTIiIGZpbGw9IiNmZmYiLz4KICA8Y2lyY2xlIGN4PSIxNiIgY3k9IjE2IiByPSI4IiBmaWxsPSIjNGE5MGUyIi8+Cjwvc3ZnPg==">
+  <meta name="theme-color" content="#0066ff">
+  <title>SVG Tweak - import, edit, export SVGs</title>
+  <style>
+    :root {
+      --accent: #0066ff;
+      --accent-soft: #0066ff22;
+      --bg: #eef1f5;
+      --panel: #ffffff;
+      --panel-2: #f4f6f9;
+      --text: #1f2430;
+      --muted: #6b7280;
+      --border: #d6dbe2;
+      --shadow: 0 6px 20px rgba(20, 30, 60, 0.12);
+      --radius: 8px;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root:not([data-theme]) {
+        --bg: #0f1115;
+        --panel: #171a21;
+        --panel-2: #1e222b;
+        --text: #e6e8ec;
+        --muted: #9aa3b2;
+        --border: #2a2f3a;
+        --accent-soft: #0066ff44;
+        --shadow: 0 6px 20px rgba(0, 0, 0, 0.5);
+      }
+    }
+
+    :root[data-theme="dark"] {
+      --bg: #0f1115;
+      --panel: #171a21;
+      --panel-2: #1e222b;
+      --text: #e6e8ec;
+      --muted: #9aa3b2;
+      --border: #2a2f3a;
+      --accent-soft: #0066ff44;
+      --shadow: 0 6px 20px rgba(0, 0, 0, 0.5);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      color: var(--text);
+      background: var(--bg);
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .app {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      height: 100vh;
+      max-width: 1920px;
+      margin: 0 auto;
+      padding: 8px;
+    }
+
+    /* ---------- Toolbar ---------- */
+    .toolbar {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-wrap: wrap;
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 6px 8px;
+    }
+
+    .brand {
+      font-weight: 700;
+      font-size: 0.98rem;
+      padding: 0 6px;
+      white-space: nowrap;
+    }
+    .brand .tagline {
+      font-weight: 400;
+      color: var(--muted);
+      font-size: 0.8rem;
+      margin-left: 6px;
+    }
+
+    .spacer { flex: 1 1 auto; }
+    .sep {
+      width: 1px;
+      align-self: stretch;
+      background: var(--border);
+      margin: 2px 4px;
+    }
+
+    button,
+    .btn {
+      font: inherit;
+      font-size: 0.85rem;
+      color: var(--text);
+      background: var(--panel-2);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 6px 10px;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: background 0.15s ease, border-color 0.15s ease, transform 0.05s ease;
+    }
+    button:hover, .btn:hover { background: var(--accent-soft); border-color: var(--accent); }
+    button:active { transform: translateY(1px); }
+    button:focus-visible, .btn:focus-visible,
+    input:focus-visible, select:focus-visible {
+      outline: 2px solid var(--accent);
+      outline-offset: 1px;
+    }
+    button.primary { background: var(--accent); color: #fff; border-color: var(--accent); }
+    button.primary:hover { filter: brightness(1.08); }
+    button.icon { padding: 6px 8px; }
+
+    label.field {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 0.82rem;
+      color: var(--muted);
+      white-space: nowrap;
+    }
+
+    input[type="number"], input[type="text"] {
+      width: 64px;
+      padding: 5px 6px;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      background: var(--panel);
+      color: var(--text);
+      font: inherit;
+      font-size: 0.82rem;
+    }
+    input[type="range"] { width: 110px; accent-color: var(--accent); }
+    input[type="color"] {
+      width: 30px; height: 28px; padding: 0;
+      border: 1px solid var(--border); border-radius: 6px;
+      background: var(--panel); cursor: pointer;
+    }
+    input[type="checkbox"] { accent-color: var(--accent); cursor: pointer; }
+
+    /* ---------- Dropdown menus ---------- */
+    .menu { position: relative; display: inline-block; }
+    .menu-list {
+      display: none;
+      position: absolute;
+      top: calc(100% + 4px);
+      left: 0;
+      min-width: 190px;
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 5px;
+      z-index: 50;
+    }
+    .menu.open .menu-list { display: block; }
+    .menu-list button {
+      display: flex;
+      width: 100%;
+      text-align: left;
+      background: transparent;
+      border: none;
+      border-radius: 6px;
+      padding: 8px 10px;
+      gap: 8px;
+    }
+    .menu-list button:hover { background: var(--accent-soft); }
+    .menu-list .menu-sep { height: 1px; background: var(--border); margin: 5px 4px; }
+    .menu-list small { display: block; color: var(--muted); font-size: 0.72rem; }
+
+    .zoom { display: inline-flex; align-items: center; gap: 6px; }
+    #zoom-val { font-size: 0.78rem; color: var(--muted); width: 40px; text-align: right; }
+
+    /* ---------- Inspector ---------- */
+    .inspector {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 6px 10px;
+      animation: slideDown 0.12s ease;
+    }
+    @keyframes slideDown { from { opacity: 0; transform: translateY(-4px); } to { opacity: 1; transform: none; } }
+    .inspector .tag {
+      font-family: 'SF Mono', Monaco, Consolas, monospace;
+      font-size: 0.78rem;
+      background: var(--accent-soft);
+      color: var(--accent);
+      padding: 3px 8px;
+      border-radius: 5px;
+      text-transform: lowercase;
+    }
+    .inspector .group { display: inline-flex; align-items: center; gap: 5px; font-size: 0.8rem; color: var(--muted); }
+
+    /* ---------- Preview ---------- */
+    #preview {
+      flex: 1 1 auto;
+      min-height: 0;
+      position: relative;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: var(--panel-2);
+      overflow: auto;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.06);
+    }
+    #preview.dragover { outline: 2px dashed var(--accent); outline-offset: -6px; }
+
+    #svg-container {
+      position: relative;
+      flex: 0 0 auto;
+    }
+    #svg-container.checker {
+      background-image:
+        linear-gradient(45deg, #bbb 25%, transparent 25%),
+        linear-gradient(-45deg, #bbb 25%, transparent 25%),
+        linear-gradient(45deg, transparent 75%, #bbb 75%),
+        linear-gradient(-45deg, transparent 75%, #bbb 75%);
+      background-size: 20px 20px;
+      background-position: 0 0, 0 10px, 10px -10px, -10px 0;
+      background-color: #fff;
+    }
+
+    #canvas-boundary {
+      position: absolute;
+      inset: 0;
+      border: 1px dashed var(--muted);
+      pointer-events: none;
+    }
+
+    #preview svg { display: block; width: 100%; height: 100%; }
+
+    [data-svg-tweak-draggable="true"] { cursor: move; }
+    [data-svg-tweak-selected="true"] { outline: 1.5px solid var(--accent); outline-offset: 2px; }
+
+    .empty-hint {
+      color: var(--muted);
+      font-size: 0.9rem;
+      text-align: center;
+      padding: 20px;
+    }
+
+    /* ---------- Editor ---------- */
+    #editor {
+      height: 26vh;
+      min-height: 110px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 12px;
+      overflow: auto;
+      resize: vertical;
+      font-family: 'SF Mono', Monaco, Menlo, Consolas, 'Liberation Mono', monospace;
+      font-size: 13px;
+      line-height: 1.6;
+      white-space: pre;
+      tab-size: 2;
+      background: var(--panel);
+      color: var(--text);
+    }
+    #editor:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-soft); }
+
+    .footer { text-align: center; font-size: 0.75rem; color: var(--muted); padding: 2px 0 4px; }
+    .footer a { color: var(--accent); text-decoration: none; }
+    .footer a:hover { text-decoration: underline; }
+
+    ::selection { background: var(--accent-soft); }
+
+    /* ---------- Modals ---------- */
+    .modal {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 1000;
+      background: rgba(0, 0, 0, 0.5);
+      align-items: flex-start;
+      justify-content: center;
+    }
+    .modal.open { display: flex; }
+    .modal-content {
+      background: var(--panel);
+      color: var(--text);
+      margin: 8vh 16px;
+      padding: 18px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      width: 100%;
+      max-width: 560px;
+      max-height: 84vh;
+      overflow: auto;
+      box-shadow: var(--shadow);
+    }
+    .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; }
+    .modal-header h3 { font-size: 1.05rem; }
+    .modal .close { font-size: 26px; line-height: 1; color: var(--muted); cursor: pointer; background: none; border: none; padding: 0 4px; }
+    .modal .close:hover { color: var(--text); }
+    .modal-body textarea {
+      width: 100%; height: 160px;
+      font-family: 'SF Mono', Monaco, Consolas, monospace; font-size: 12px;
+      padding: 10px; margin-bottom: 12px;
+      border: 1px solid var(--border); border-radius: 6px;
+      background: var(--panel-2); color: var(--text); resize: vertical;
+    }
+    .modal-row { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-bottom: 12px; }
+    .modal-row label.field { color: var(--text); }
+
+    #stl-converter-modal .modal-content { max-width: 1000px; height: 90vh; max-height: 90vh; margin: 5vh auto; padding: 0; display: flex; flex-direction: column; }
+    #stl-converter-modal .modal-header { padding: 12px 16px; margin: 0; border-bottom: 1px solid var(--border); }
+    #stl-converter-iframe { flex: 1; width: 100%; border: none; }
+
+    kbd {
+      background: var(--panel-2); color: var(--text);
+      border: 1px solid var(--border); border-bottom-width: 2px;
+      padding: 2px 7px; border-radius: 5px; font-size: 12px;
+      font-family: 'SF Mono', Monaco, Consolas, monospace;
+    }
+    .shortcuts-table { width: 100%; border-collapse: collapse; font-size: 0.88rem; }
+    .shortcuts-table td { padding: 7px 4px; border-bottom: 1px solid var(--border); }
+    .shortcuts-table tr:last-child td { border-bottom: none; }
+
+    /* ---------- Toast ---------- */
+    #toast {
+      position: fixed;
+      left: 50%;
+      bottom: 26px;
+      transform: translateX(-50%) translateY(20px);
+      background: #1f2430;
+      color: #fff;
+      padding: 10px 18px;
+      border-radius: 8px;
+      font-size: 0.85rem;
+      box-shadow: var(--shadow);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.2s ease, transform 0.2s ease;
+      z-index: 2000;
+    }
+    #toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+    @media (max-width: 640px) {
+      .brand .tagline { display: none; }
+      #editor { height: 22vh; }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <header class="toolbar" role="toolbar" aria-label="Editor toolbar">
+      <div class="brand">SVG&nbsp;Tweak<span class="tagline">Paste · Drag · Export</span></div>
+
+      <button id="import-btn" title="Import an SVG or image file">📂 Import</button>
+
+      <div class="menu" id="export-menu">
+        <button class="menu-trigger" aria-haspopup="true" title="Export &amp; convert">⬇ Export ▾</button>
+        <div class="menu-list" role="menu">
+          <button data-export="svg">SVG file <small>vector .svg download</small></button>
+          <button data-export="png">PNG image… <small>raster, transparent option</small></button>
+          <button data-export="jpeg">JPEG image… <small>raster with background</small></button>
+          <div class="menu-sep"></div>
+          <button data-export="copy">Copy SVG code</button>
+          <button data-export="copypng">Copy PNG to clipboard</button>
+          <button data-export="base64">Base64 data URL</button>
+          <button data-export="favicon">Favicon &lt;link&gt;</button>
+          <button data-export="img">&lt;img&gt; tag</button>
+          <div class="menu-sep"></div>
+          <button data-export="stl">Convert to 3D / STL…</button>
+        </div>
+      </div>
+
+      <div class="menu" id="add-menu">
+        <button class="menu-trigger" aria-haspopup="true" title="Add a shape">➕ Add ▾</button>
+        <div class="menu-list" role="menu">
+          <button data-shape="rect">▭ Rectangle</button>
+          <button data-shape="circle">● Circle</button>
+          <button data-shape="ellipse">⬭ Ellipse</button>
+          <button data-shape="line">╱ Line</button>
+          <button data-shape="text">𝐓 Text</button>
+        </div>
+      </div>
+
+      <button id="undo-btn" title="Undo (Ctrl+Z)">↩ Undo</button>
+
+      <span class="sep"></span>
+
+      <button id="fit-btn" title="Fit drawing to the view">🔍 Fit</button>
+      <button id="center-btn" title="Re-center the view">🎯 Center</button>
+      <label class="field zoom">
+        <input type="range" id="zoom" min="0.2" max="5" step="0.05" value="1" aria-label="Zoom">
+        <span id="zoom-val">100%</span>
+      </label>
+      <button id="checker-btn" class="icon" title="Toggle transparency checkerboard">🏁</button>
+
+      <span class="sep"></span>
+
+      <label class="field">Canvas
+        <input type="number" id="canvas-width" min="1" value="400" aria-label="Canvas width">×
+        <input type="number" id="canvas-height" min="1" value="400" aria-label="Canvas height">
+      </label>
+      <button id="fit-content-btn" title="Crop the canvas tightly around the drawing">⤧ Crop</button>
+
+      <span class="spacer"></span>
+
+      <button id="theme-btn" class="icon" title="Theme: auto / light / dark">🌓</button>
+      <button id="shortcuts-btn" class="icon" title="Keyboard shortcuts">⌨️</button>
+    </header>
+
+    <div id="inspector" class="inspector" hidden>
+      <span id="insp-tag" class="tag">rect</span>
+      <span class="group">Fill
+        <input type="color" id="insp-fill" aria-label="Fill color">
+        <label class="field" style="gap:3px"><input type="checkbox" id="insp-fill-none"> none</label>
+      </span>
+      <span class="group">Stroke
+        <input type="color" id="insp-stroke" aria-label="Stroke color">
+        <input type="number" id="insp-stroke-w" min="0" step="0.5" value="0" style="width:54px" aria-label="Stroke width">
+      </span>
+      <span class="group">Opacity
+        <input type="range" id="insp-opacity" min="0" max="1" step="0.05" value="1" style="width:80px" aria-label="Opacity">
+      </span>
+      <span class="sep"></span>
+      <button id="insp-center" title="Center in canvas">⊹ Center</button>
+      <button id="insp-front" title="Bring to front">⬆ Front</button>
+      <button id="insp-back" title="Send to back">⬇ Back</button>
+      <button id="insp-dup" title="Duplicate (Ctrl+D)">⧉ Duplicate</button>
+      <button id="insp-del" title="Delete (Del)">🗑 Delete</button>
+    </div>
+
+    <div id="preview" role="region" aria-label="SVG preview"></div>
+
+    <textarea id="editor" spellcheck="false" aria-label="SVG source code" placeholder="Paste or type SVG here…"></textarea>
+
+    <div class="footer">
+      <a href="https://vdo.ninja/svg">vdo.ninja/svg</a> ·
+      <a href="https://github.com/steveseguin/svg-tweak/" target="_blank" rel="noopener">Open source on GitHub</a> ·
+      contributions welcome
+    </div>
+  </div>
+
+  <input type="file" id="file-input" accept=".svg,image/svg+xml,image/*" hidden>
+
+  <!-- Text-output export modal (base64 / favicon / img / copy) -->
+  <div id="export-modal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 id="modal-title">Export</h3>
+        <button class="close" data-close aria-label="Close">&times;</button>
+      </div>
+      <div class="modal-body">
+        <textarea id="export-output" readonly></textarea>
+        <button id="copy-output" class="primary">Copy to clipboard</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Raster (PNG/JPEG) export modal -->
+  <div id="image-modal" class="modal">
+    <div class="modal-content" style="max-width:420px">
+      <div class="modal-header">
+        <h3 id="image-modal-title">Export PNG</h3>
+        <button class="close" data-close aria-label="Close">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="modal-row">
+          <label class="field">Width <input type="number" id="img-width" min="1" value="800"></label>
+          <label class="field">Height <input type="number" id="img-height" min="1" value="800"></label>
+          <button id="img-lock" class="icon" title="Lock aspect ratio" aria-pressed="true">🔗</button>
+        </div>
+        <div class="modal-row" id="img-bg-row">
+          <label class="field"><input type="checkbox" id="img-transparent" checked> Transparent background</label>
+          <label class="field">Color <input type="color" id="img-bg" value="#ffffff"></label>
+        </div>
+        <div class="modal-row" id="img-quality-row" hidden>
+          <label class="field">Quality <input type="range" id="img-quality" min="0.3" max="1" step="0.05" value="0.92"></label>
+          <span id="img-quality-val" style="color:var(--muted);font-size:.8rem">92%</span>
+        </div>
+        <div class="modal-row">
+          <button id="img-download" class="primary">Download</button>
+          <button id="img-copy">Copy to clipboard</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Shortcuts modal -->
+  <div id="shortcuts-modal" class="modal">
+    <div class="modal-content" style="max-width:460px">
+      <div class="modal-header">
+        <h3>Keyboard shortcuts</h3>
+        <button class="close" data-close aria-label="Close">&times;</button>
+      </div>
+      <div class="modal-body">
+        <table class="shortcuts-table">
+          <tr><td><kbd>Ctrl</kbd>+<kbd>Z</kbd></td><td>Undo</td></tr>
+          <tr><td><kbd>Ctrl</kbd>+<kbd>D</kbd></td><td>Duplicate selected element</td></tr>
+          <tr><td><kbd>Delete</kbd> / <kbd>Backspace</kbd></td><td>Delete selected element</td></tr>
+          <tr><td><kbd>↑</kbd> <kbd>↓</kbd> <kbd>←</kbd> <kbd>→</kbd></td><td>Nudge selected (<kbd>Shift</kbd> = ×10)</td></tr>
+          <tr><td><kbd>Esc</kbd></td><td>Deselect</td></tr>
+          <tr><td><kbd>Scroll</kbd></td><td>Resize selected element</td></tr>
+          <tr><td><kbd>Click</kbd> / <kbd>Drag</kbd></td><td>Select / move element</td></tr>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- STL converter modal -->
+  <div id="stl-converter-modal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3>SVG → STL converter</h3>
+        <button class="close" data-close aria-label="Close">&times;</button>
+      </div>
+      <iframe id="stl-converter-iframe" title="SVG to STL converter"></iframe>
+    </div>
+  </div>
+
+  <div id="toast" role="status" aria-live="polite"></div>
+
+  <script>
+  'use strict';
+
+  const SVG_NS = 'http://www.w3.org/2000/svg';
+  const STORAGE_DOC = 'svgtweak:doc';
+  const STORAGE_THEME = 'svgtweak:theme';
+  const MAX_UNDO = 80;
+  const PALETTE = ['#0066ff', '#e53935', '#43a047', '#fb8c00', '#8e24aa', '#00acc1', '#f4c20d'];
+
+  const DEFAULT_SVG =
+`<svg viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg" width="400" height="400">
+  <rect x="40" y="150" width="200" height="200" rx="14" fill="#0066ff"/>
+  <circle cx="285" cy="125" r="100" fill="#e53935"/>
+  <text x="40" y="382" fill="#43a047" font-size="60" font-family="system-ui, sans-serif">Drag me!</text>
+</svg>`;
+
+  // ---------- Elements ----------
+  const editor = document.getElementById('editor');
+  const preview = document.getElementById('preview');
+  const canvasWidthInput = document.getElementById('canvas-width');
+  const canvasHeightInput = document.getElementById('canvas-height');
+  const zoomInput = document.getElementById('zoom');
+  const zoomVal = document.getElementById('zoom-val');
+  const inspector = document.getElementById('inspector');
+
+  // ---------- State ----------
+  let svgContainer = null;
+  let canvasBoundary = null;
+  let selectedElement = null;
+  let dragElement = null;
+  let dragRecorded = false;
+  let dragStartPoint = null;
+  let userZoom = 1;
+  let fitScale = 1;
+  let checker = false;
+
+  // ---------- Toast ----------
+  const toastEl = document.getElementById('toast');
+  let toastTimer = null;
+  function toast(msg) {
+    toastEl.textContent = msg;
+    toastEl.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => toastEl.classList.remove('show'), 1800);
+  }
+
+  // ---------- Undo history (coalesced) ----------
+  const undoStack = [];
+  let lastValue = '';
+  let typingTimer = null;
+  let groupActive = false;
+  let groupTimer = null;
+
+  function pushUndo(v) {
+    if (typeof v !== 'string') return;
+    if (undoStack[undoStack.length - 1] === v) return;
+    undoStack.push(v);
+    if (undoStack.length > MAX_UNDO) undoStack.shift();
+  }
+  function flushTyping() {
+    if (typingTimer) {
+      clearTimeout(typingTimer);
+      typingTimer = null;
+      pushUndo(lastValue);
+      lastValue = editor.value;
+    }
+  }
+  function beginAction() { flushTyping(); pushUndo(lastValue); }
+  function endAction() { lastValue = editor.value; }
+  // Group rapid repeated changes (wheel resize, nudges, colour sliders) into one undo step.
+  function groupedAction(mutator) {
+    if (!groupActive) { beginAction(); groupActive = true; }
+    clearTimeout(groupTimer);
+    groupTimer = setTimeout(() => { groupActive = false; endAction(); }, 450);
+    mutator();
+  }
+  function undo() {
+    flushTyping();
+    if (undoStack.length === 0) { toast('Nothing to undo'); return; }
+    const prev = undoStack.pop();
+    editor.value = prev;
+    lastValue = prev;
+    deselect();
+    updatePreview();
+    schedulePersist();
+  }
+
+  // ---------- Persistence ----------
+  let persistTimer = null;
+  function schedulePersist() {
+    clearTimeout(persistTimer);
+    persistTimer = setTimeout(() => {
+      try { localStorage.setItem(STORAGE_DOC, editor.value); } catch (e) { /* quota / private mode */ }
+    }, 400);
+  }
+
+  // ---------- Clean serialization (strip editor-only artifacts) ----------
+  function stripSvgTweakAttrs(root) {
+    if (!root) return;
+    root.removeAttribute('data-svg-tweak-draggable');
+    root.removeAttribute('data-svg-tweak-selected');
+    root.querySelectorAll('[data-svg-tweak-draggable], [data-svg-tweak-selected]').forEach(el => {
+      el.removeAttribute('data-svg-tweak-draggable');
+      el.removeAttribute('data-svg-tweak-selected');
+    });
+  }
+  function getCleanSvg() {
+    const svg = svgContainer && svgContainer.querySelector('svg');
+    if (!svg) return null;
+    const clone = svg.cloneNode(true);
+    stripSvgTweakAttrs(clone);
+    return clone;
+  }
+  function getSvgString() {
+    const clone = getCleanSvg();
+    if (!clone) return null;
+    let s = new XMLSerializer().serializeToString(clone);
+    if (!s.includes('xmlns=')) s = s.replace('<svg', '<svg xmlns="http://www.w3.org/2000/svg"');
+    return s;
+  }
+
+  // ---------- Geometry helpers ----------
+  function num(v, d = 0) { const n = parseFloat(v); return Number.isFinite(n) ? n : d; }
+  function getViewBoxDims(svg) {
+    const vb = svg.getAttribute('viewBox');
+    if (vb) {
+      const p = vb.split(/[\s,]+/).map(parseFloat);
+      if (p.length === 4 && p.every(Number.isFinite)) return { x: p[0], y: p[1], w: p[2], h: p[3] };
+    }
+    return { x: 0, y: 0, w: num(svg.getAttribute('width'), 200), h: num(svg.getAttribute('height'), 200) };
+  }
+  function rand(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
+  function svgEl(tag, attrs) {
+    const el = document.createElementNS(SVG_NS, tag);
+    for (const k in attrs) el.setAttribute(k, attrs[k]);
+    return el;
+  }
+
+  // ---------- Preview rendering ----------
+  function updatePreview() {
+    try {
+      preview.innerHTML = '';
+      svgContainer = document.createElement('div');
+      svgContainer.id = 'svg-container';
+      if (checker) svgContainer.classList.add('checker');
+      preview.appendChild(svgContainer);
+      svgContainer.innerHTML = editor.value;
+
+      const svg = svgContainer.querySelector('svg');
+      if (!svg) {
+        svgContainer.innerHTML = '<div class="empty-hint">No valid &lt;svg&gt; yet — paste SVG markup, Import a file, or use Add ➕.</div>';
+        inspector.hidden = true;
+        return;
+      }
+
+      // Normalise size: keep a viewBox so the drawing scales cleanly.
+      const dims = getViewBoxDims(svg);
+      if (!svg.getAttribute('viewBox')) svg.setAttribute('viewBox', `0 0 ${dims.w} ${dims.h}`);
+      svg.setAttribute('width', dims.w);
+      svg.setAttribute('height', dims.h);
+      canvasWidthInput.value = Math.round(dims.w);
+      canvasHeightInput.value = Math.round(dims.h);
+
+      canvasBoundary = document.createElement('div');
+      canvasBoundary.id = 'canvas-boundary';
+      svgContainer.insertBefore(canvasBoundary, svg);
+
+      makeAllInteractive();
+      computeFit();
+      applyTransform();
+      scheduleFavicon();
+
+      // Try to keep the current selection across a re-render (without moving the
+      // editor caret — updatePreview runs on every keystroke).
+      if (selectedElement) {
+        const id = selectedElement.id;
+        const match = id ? svgContainer.querySelector('#' + CSS.escape(id)) : null;
+        selectedElement = null;
+        if (match) select(match, true);
+        else inspector.hidden = true;
+      }
+    } catch (e) {
+      console.error('Invalid SVG:', e);
+    }
+  }
+
+  function computeFit() {
+    const svg = svgContainer && svgContainer.querySelector('svg');
+    if (!svg) { fitScale = 1; return; }
+    const d = getViewBoxDims(svg);
+    const availW = Math.max(20, preview.clientWidth - 40);
+    const availH = Math.max(20, preview.clientHeight - 40);
+    let f = Math.min(availW / d.w, availH / d.h);
+    if (!Number.isFinite(f) || f <= 0) f = 1;
+    fitScale = Math.max(0.05, Math.min(50, f));
+  }
+  // Size the container in real pixels (so layout/scroll/centering behave) and let the
+  // SVG fill it via its viewBox. Tiny icons scale up, huge drawings scale down to fit.
+  function applyTransform() {
+    const svg = svgContainer && svgContainer.querySelector('svg');
+    if (!svg) return;
+    const d = getViewBoxDims(svg);
+    const scale = fitScale * userZoom;
+    svgContainer.style.width = Math.max(1, d.w * scale) + 'px';
+    svgContainer.style.height = Math.max(1, d.h * scale) + 'px';
+  }
+
+  // ---------- Favicon (live preview in the browser tab) ----------
+  let faviconTimer = null;
+  function scheduleFavicon() { clearTimeout(faviconTimer); faviconTimer = setTimeout(updateFavicon, 300); }
+  function updateFavicon() {
+    const clone = getCleanSvg();
+    if (!clone) return;
+    if (!clone.getAttribute('viewBox') && clone.getAttribute('width') && clone.getAttribute('height')) {
+      clone.setAttribute('viewBox', `0 0 ${clone.getAttribute('width')} ${clone.getAttribute('height')}`);
+    }
+    let s = new XMLSerializer().serializeToString(clone);
+    if (!s.includes('xmlns=')) s = s.replace('<svg', '<svg xmlns="http://www.w3.org/2000/svg"');
+    const url = URL.createObjectURL(new Blob([s], { type: 'image/svg+xml' }));
+    document.querySelectorAll('link[rel="icon"]').forEach(l => l.remove());
+    const link = document.createElement('link');
+    link.rel = 'icon';
+    link.type = 'image/svg+xml';
+    link.href = url;
+    document.head.appendChild(link);
+    setTimeout(() => URL.revokeObjectURL(url), 5000);
+  }
+
+  // ---------- Interactivity ----------
+  function makeAllInteractive() {
+    const svg = svgContainer.querySelector('svg');
+    if (!svg) return;
+    svg.querySelectorAll('*').forEach(el => {
+      if (el.tagName.toLowerCase() !== 'svg') makeInteractive(el);
+    });
+  }
+  function makeInteractive(el) {
+    el.setAttribute('data-svg-tweak-draggable', 'true');
+    el.addEventListener('mousedown', startDrag);
+    el.addEventListener('touchstart', startDrag, { passive: true });
+    el.addEventListener('click', onElementClick);
+  }
+  function onElementClick(e) {
+    e.stopPropagation();
+    select(e.target);
+  }
+  function select(el, silent) {
+    if (selectedElement) selectedElement.removeAttribute('data-svg-tweak-selected');
+    selectedElement = el;
+    el.setAttribute('data-svg-tweak-selected', 'true');
+    syncInspector();
+    if (!silent) highlightCode(el);
+  }
+  function deselect() {
+    if (selectedElement) selectedElement.removeAttribute('data-svg-tweak-selected');
+    selectedElement = null;
+    inspector.hidden = true;
+  }
+  preview.addEventListener('click', (e) => {
+    if (!svgContainer) return;
+    const el = e.target.closest && e.target.closest('svg > *');
+    if (!el || el === canvasBoundary || el.tagName.toLowerCase() === 'svg') deselect();
+  });
+
+  function highlightCode(el) {
+    const clone = el.cloneNode(true);
+    stripSvgTweakAttrs(clone);
+    const s = new XMLSerializer().serializeToString(clone);
+    const start = editor.value.indexOf(s);
+    if (start !== -1) {
+      editor.setSelectionRange(start, start + s.length);
+    }
+  }
+
+  // ---------- Inspector ----------
+  const inspTag = document.getElementById('insp-tag');
+  const inspFill = document.getElementById('insp-fill');
+  const inspFillNone = document.getElementById('insp-fill-none');
+  const inspStroke = document.getElementById('insp-stroke');
+  const inspStrokeW = document.getElementById('insp-stroke-w');
+  const inspOpacity = document.getElementById('insp-opacity');
+
+  function cssColorToHex(c) {
+    if (!c || c === 'none' || c === 'transparent') return '#000000';
+    c = String(c).trim();
+    if (/^#[0-9a-fA-F]{6}$/.test(c)) return c.toLowerCase();
+    if (/^#[0-9a-fA-F]{3}$/.test(c)) return '#' + c.slice(1).split('').map(x => x + x).join('').toLowerCase();
+    let ctx = null;
+    try { ctx = document.createElement('canvas').getContext('2d'); } catch (e) { ctx = null; }
+    if (!ctx) return '#000000';
+    ctx.fillStyle = '#000000';
+    try { ctx.fillStyle = c; } catch (e) { return '#000000'; }
+    const v = ctx.fillStyle;
+    if (v[0] === '#') return v;
+    const m = v.match(/[\d.]+/g);
+    if (m) return '#' + m.slice(0, 3).map(n => Math.round(+n).toString(16).padStart(2, '0')).join('');
+    return '#000000';
+  }
+  function effective(el, attr) {
+    return el.getAttribute(attr) ?? getComputedStyle(el)[attr];
+  }
+  function syncInspector() {
+    if (!selectedElement) { inspector.hidden = true; return; }
+    inspector.hidden = false;
+    inspTag.textContent = selectedElement.tagName.toLowerCase();
+    const fill = effective(selectedElement, 'fill');
+    inspFillNone.checked = (fill === 'none');
+    inspFill.value = cssColorToHex(fill === 'none' ? '#000000' : fill);
+    inspFill.disabled = inspFillNone.checked;
+    const stroke = selectedElement.getAttribute('stroke');
+    inspStroke.value = cssColorToHex(stroke && stroke !== 'none' ? stroke : '#000000');
+    inspStrokeW.value = stroke && stroke !== 'none' ? num(selectedElement.getAttribute('stroke-width'), 1) : 0;
+    inspOpacity.value = num(effective(selectedElement, 'opacity'), 1);
+  }
+  function applyAttr(name, value) {
+    if (!selectedElement) return;
+    if (value === null) selectedElement.removeAttribute(name);
+    else selectedElement.setAttribute(name, value);
+    updateSVGText();
+  }
+  inspFill.addEventListener('input', () => groupedAction(() => applyAttr('fill', inspFill.value)));
+  inspFillNone.addEventListener('change', () => {
+    beginAction();
+    if (inspFillNone.checked) { applyAttr('fill', 'none'); inspFill.disabled = true; }
+    else { applyAttr('fill', inspFill.value); inspFill.disabled = false; }
+    endAction();
+  });
+  inspStroke.addEventListener('input', () => groupedAction(() => {
+    applyAttr('stroke', inspStroke.value);
+    if (num(inspStrokeW.value, 0) === 0) { inspStrokeW.value = 2; applyAttr('stroke-width', 2); }
+  }));
+  inspStrokeW.addEventListener('input', () => groupedAction(() => {
+    const w = num(inspStrokeW.value, 0);
+    if (w <= 0) { applyAttr('stroke', null); applyAttr('stroke-width', null); }
+    else { if (!selectedElement.getAttribute('stroke')) applyAttr('stroke', inspStroke.value); applyAttr('stroke-width', w); }
+  }));
+  inspOpacity.addEventListener('input', () => groupedAction(() => applyAttr('opacity', inspOpacity.value)));
+
+  document.getElementById('insp-center').addEventListener('click', centerSelected);
+  document.getElementById('insp-front').addEventListener('click', () => reorder(true));
+  document.getElementById('insp-back').addEventListener('click', () => reorder(false));
+  document.getElementById('insp-dup').addEventListener('click', duplicateSelected);
+  document.getElementById('insp-del').addEventListener('click', deleteSelected);
+
+  // ---------- Element editing ops ----------
+  function deleteSelected() {
+    if (!selectedElement) return;
+    beginAction();
+    const el = selectedElement;
+    deselect();
+    el.remove();
+    updateSVGText();
+    endAction();
+    toast('Deleted');
+  }
+  function duplicateSelected() {
+    if (!selectedElement) return;
+    const svg = svgContainer.querySelector('svg');
+    beginAction();
+    const clone = selectedElement.cloneNode(true);
+    clone.removeAttribute('data-svg-tweak-selected');
+    svg.appendChild(clone);
+    makeInteractive(clone);
+    updateElementPosition(clone, 12, 12);
+    select(clone);
+    updateSVGText();
+    endAction();
+    toast('Duplicated');
+  }
+  function reorder(toFront) {
+    if (!selectedElement) return;
+    const svg = svgContainer.querySelector('svg');
+    beginAction();
+    if (toFront) svg.appendChild(selectedElement);
+    else svg.insertBefore(selectedElement, svg.firstChild);
+    updateSVGText();
+    endAction();
+  }
+  function centerSelected() {
+    if (!selectedElement) return;
+    const svg = svgContainer.querySelector('svg');
+    const d = getViewBoxDims(svg);
+    let bbox;
+    try { bbox = selectedElement.getBBox(); } catch (e) { return; }
+    const dx = (d.x + d.w / 2) - (bbox.x + bbox.width / 2);
+    const dy = (d.y + d.h / 2) - (bbox.y + bbox.height / 2);
+    beginAction();
+    updateElementPosition(selectedElement, dx, dy);
+    updateSVGText();
+    endAction();
+  }
+  function addShape(type) {
+    const svg = svgContainer && svgContainer.querySelector('svg');
+    if (!svg) { toast('Add an <svg> first'); return; }
+    beginAction();
+    const d = getViewBoxDims(svg);
+    const cx = d.x + d.w / 2, cy = d.y + d.h / 2;
+    const s = Math.max(8, Math.min(d.w, d.h) * 0.3);
+    const color = rand(PALETTE);
+    let el;
+    switch (type) {
+      case 'rect': el = svgEl('rect', { x: cx - s / 2, y: cy - s / 2, width: s, height: s, rx: Math.round(s * 0.06), fill: color }); break;
+      case 'circle': el = svgEl('circle', { cx, cy, r: s / 2, fill: color }); break;
+      case 'ellipse': el = svgEl('ellipse', { cx, cy, rx: s / 2, ry: s / 3, fill: color }); break;
+      case 'line': el = svgEl('line', { x1: cx - s / 2, y1: cy, x2: cx + s / 2, y2: cy, stroke: color, 'stroke-width': Math.max(1, s * 0.06), 'stroke-linecap': 'round' }); break;
+      case 'text': el = svgEl('text', { x: cx, y: cy, fill: color, 'font-size': Math.max(10, Math.round(s * 0.5)), 'font-family': 'system-ui, sans-serif', 'text-anchor': 'middle' }); el.textContent = 'Text'; break;
+      default: endAction(); return;
+    }
+    svg.appendChild(el);
+    makeInteractive(el);
+    select(el);
+    updateSVGText();
+    endAction();
+    toast('Added ' + type);
+  }
+
+  // ---------- Position / size maths ----------
+  function getElementPosition(el) {
+    switch (el.tagName.toLowerCase()) {
+      case 'rect': case 'text': case 'image': case 'use':
+        return { x: num(el.getAttribute('x')), y: num(el.getAttribute('y')) };
+      case 'circle': case 'ellipse':
+        return { cx: num(el.getAttribute('cx')), cy: num(el.getAttribute('cy')) };
+      case 'line':
+        return { x1: num(el.getAttribute('x1')), y1: num(el.getAttribute('y1')) };
+      default:
+        return null;
+    }
+  }
+  function updateElementPosition(el, dx, dy) {
+    switch (el.tagName.toLowerCase()) {
+      case 'rect': case 'text': case 'image': case 'use':
+        el.setAttribute('x', num(el.getAttribute('x')) + dx);
+        el.setAttribute('y', num(el.getAttribute('y')) + dy);
+        break;
+      case 'circle': case 'ellipse':
+        el.setAttribute('cx', num(el.getAttribute('cx')) + dx);
+        el.setAttribute('cy', num(el.getAttribute('cy')) + dy);
+        break;
+      case 'line':
+        el.setAttribute('x1', num(el.getAttribute('x1')) + dx);
+        el.setAttribute('y1', num(el.getAttribute('y1')) + dy);
+        el.setAttribute('x2', num(el.getAttribute('x2')) + dx);
+        el.setAttribute('y2', num(el.getAttribute('y2')) + dy);
+        break;
+      case 'polygon': case 'polyline': {
+        const pts = (el.getAttribute('points') || '').split(/[\s,]+/).filter(s => s).map(parseFloat);
+        for (let i = 0; i + 1 < pts.length; i += 2) { pts[i] += dx; pts[i + 1] += dy; }
+        el.setAttribute('points', pts.join(' '));
+        break;
+      }
+      default: {
+        // path & anything else: shift via a translate() in the transform.
+        const t = el.getAttribute('transform') || '';
+        const m = t.match(/translate\(\s*([-\d.]+)[ ,]+([-\d.]+)\s*\)/);
+        if (m) {
+          el.setAttribute('transform', t.replace(m[0], `translate(${num(m[1]) + dx},${num(m[2]) + dy})`));
+        } else {
+          el.setAttribute('transform', `translate(${dx},${dy}) ${t}`.trim());
+        }
+      }
+    }
+  }
+  function getElementSize(el) {
+    switch (el.tagName.toLowerCase()) {
+      case 'rect': return { width: num(el.getAttribute('width')), height: num(el.getAttribute('height')) };
+      case 'circle': return { r: num(el.getAttribute('r')) };
+      case 'ellipse': return { rx: num(el.getAttribute('rx')), ry: num(el.getAttribute('ry')) };
+      case 'text': return { fontSize: num(getComputedStyle(el).fontSize, 16) };
+      default: return null;
+    }
+  }
+  function updateElementSize(el, factor) {
+    const size = getElementSize(el);
+    if (!size) return;
+    switch (el.tagName.toLowerCase()) {
+      case 'rect': el.setAttribute('width', size.width * factor); el.setAttribute('height', size.height * factor); break;
+      case 'circle': el.setAttribute('r', size.r * factor); break;
+      case 'ellipse': el.setAttribute('rx', size.rx * factor); el.setAttribute('ry', size.ry * factor); break;
+      case 'text': el.setAttribute('font-size', size.fontSize * factor); break;
+    }
+    updateSVGText();
+  }
+
+  // ---------- Drag (mouse + touch) ----------
+  function pointerPos(e) { return (e.touches && e.touches[0]) ? e.touches[0] : e; }
+  function toSvgPoint(svg, clientX, clientY) {
+    const pt = svg.createSVGPoint();
+    pt.x = clientX; pt.y = clientY;
+    return pt.matrixTransform(svg.getScreenCTM().inverse());
+  }
+  function startDrag(e) {
+    e.stopPropagation();
+    dragElement = e.currentTarget;
+    select(dragElement);
+    dragRecorded = false;
+    const svg = dragElement.ownerSVGElement;
+    if (!svg) return;
+    const p = pointerPos(e);
+    dragStartPoint = toSvgPoint(svg, p.clientX, p.clientY);
+    document.addEventListener('mousemove', drag);
+    document.addEventListener('mouseup', endDrag);
+    document.addEventListener('touchmove', drag, { passive: false });
+    document.addEventListener('touchend', endDrag);
+  }
+  function drag(e) {
+    if (!dragElement) return;
+    if (e.cancelable) e.preventDefault();
+    if (!dragRecorded) { beginAction(); dragRecorded = true; }
+    const svg = dragElement.ownerSVGElement;
+    const p = pointerPos(e);
+    const cur = toSvgPoint(svg, p.clientX, p.clientY);
+    updateElementPosition(dragElement, cur.x - dragStartPoint.x, cur.y - dragStartPoint.y);
+    updateSVGText();
+    dragStartPoint = cur;
+  }
+  function endDrag() {
+    if (dragRecorded) endAction();
+    dragElement = null;
+    document.removeEventListener('mousemove', drag);
+    document.removeEventListener('mouseup', endDrag);
+    document.removeEventListener('touchmove', drag);
+    document.removeEventListener('touchend', endDrag);
+  }
+  preview.addEventListener('wheel', (e) => {
+    if (!selectedElement || !getElementSize(selectedElement)) return;
+    e.preventDefault();
+    const factor = e.deltaY > 0 ? 0.9 : 1.1;
+    groupedAction(() => { updateElementSize(selectedElement, factor); syncInspector(); });
+  }, { passive: false });
+
+  // ---------- Sync DOM -> editor text ----------
+  function updateSVGText() {
+    const s = getSvgString();
+    if (s == null) return;
+    editor.value = s;
+    scheduleFavicon();
+    schedulePersist();
+  }
+
+  // ---------- Canvas size / zoom / view ----------
+  function updateCanvasSize() {
+    const svg = svgContainer && svgContainer.querySelector('svg');
+    if (!svg) return;
+    const w = Math.max(1, num(canvasWidthInput.value, 200));
+    const h = Math.max(1, num(canvasHeightInput.value, 200));
+    beginAction();
+    svg.setAttribute('viewBox', `0 0 ${w} ${h}`);
+    svg.setAttribute('width', w);
+    svg.setAttribute('height', h);
+    updateSVGText();
+    endAction();
+    computeFit();
+    applyTransform();
+  }
+  function updateZoom() {
+    userZoom = num(zoomInput.value, 1);
+    zoomVal.textContent = Math.round(userZoom * 100) + '%';
+    applyTransform();
+  }
+  function centerView() {
+    if (typeof preview.scrollTo !== 'function') return;
+    preview.scrollTo({
+      top: (preview.scrollHeight - preview.clientHeight) / 2,
+      left: (preview.scrollWidth - preview.clientWidth) / 2,
+      behavior: 'smooth'
+    });
+  }
+  function fitView() { userZoom = 1; zoomInput.value = 1; updateZoom(); centerView(); }
+  function cropToContent() {
+    const svg = svgContainer && svgContainer.querySelector('svg');
+    if (!svg) return;
+    const els = Array.from(svg.querySelectorAll('*')).filter(el => el.tagName.toLowerCase() !== 'svg');
+    if (!els.length) return;
+    let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
+    els.forEach(el => {
+      let b; try { b = el.getBBox(); } catch (e) { return; }
+      if (!b || (b.width === 0 && b.height === 0)) return;
+      minX = Math.min(minX, b.x); minY = Math.min(minY, b.y);
+      maxX = Math.max(maxX, b.x + b.width); maxY = Math.max(maxY, b.y + b.height);
+    });
+    if (!Number.isFinite(minX)) return;
+    const pad = 8;
+    minX -= pad; minY -= pad; maxX += pad; maxY += pad;
+    const w = Math.max(1, maxX - minX), h = Math.max(1, maxY - minY);
+    beginAction();
+    svg.setAttribute('viewBox', `${minX} ${minY} ${w} ${h}`);
+    svg.setAttribute('width', w);
+    svg.setAttribute('height', h);
+    canvasWidthInput.value = Math.round(w);
+    canvasHeightInput.value = Math.round(h);
+    updateSVGText();
+    endAction();
+    computeFit(); applyTransform(); centerView();
+    toast('Cropped to content');
+  }
+
+  // ---------- Keyboard ----------
+  function onKeyDown(e) {
+    if ((e.ctrlKey || e.metaKey) && (e.key === 'z' || e.key === 'Z')) { e.preventDefault(); undo(); return; }
+    if (e.key === 'Escape') { deselect(); return; }
+    const ae = document.activeElement;
+    const typing = ae && (ae.tagName === 'INPUT' || ae.tagName === 'TEXTAREA' || ae.isContentEditable);
+    if (typing) return;
+    if ((e.ctrlKey || e.metaKey) && (e.key === 'd' || e.key === 'D')) {
+      if (selectedElement) { e.preventDefault(); duplicateSelected(); }
+      return;
+    }
+    if (!selectedElement) return;
+    if (e.key === 'Delete' || e.key === 'Backspace') { e.preventDefault(); deleteSelected(); return; }
+    if (e.key.startsWith('Arrow')) {
+      e.preventDefault();
+      const step = e.shiftKey ? 10 : 1;
+      let dx = 0, dy = 0;
+      if (e.key === 'ArrowUp') dy = -step; else if (e.key === 'ArrowDown') dy = step;
+      else if (e.key === 'ArrowLeft') dx = -step; else dx = step;
+      groupedAction(() => { updateElementPosition(selectedElement, dx, dy); updateSVGText(); });
+    }
+  }
+
+  // ---------- Import ----------
+  const fileInput = document.getElementById('file-input');
+  document.getElementById('import-btn').addEventListener('click', () => fileInput.click());
+  fileInput.addEventListener('change', () => { if (fileInput.files[0]) importFile(fileInput.files[0]); fileInput.value = ''; });
+
+  function loadSvgText(text) {
+    beginAction();
+    editor.value = text;
+    deselect();
+    updatePreview();
+    endAction();
+    schedulePersist();
+  }
+  function importFile(file) {
+    const isSvg = file.type === 'image/svg+xml' || /\.svg$/i.test(file.name);
+    const reader = new FileReader();
+    reader.onload = () => {
+      if (isSvg) {
+        loadSvgText(String(reader.result).trim());
+        toast('Imported ' + file.name);
+      } else if (file.type.startsWith('image/')) {
+        const img = new Image();
+        img.onload = () => {
+          const w = img.naturalWidth || 300, h = img.naturalHeight || 300;
+          loadSvgText(`<svg viewBox="0 0 ${w} ${h}" xmlns="http://www.w3.org/2000/svg" width="${w}" height="${h}">\n  <image href="${reader.result}" width="${w}" height="${h}"/>\n</svg>`);
+          toast('Imported image as SVG');
+        };
+        img.onerror = () => toast('Could not read that image');
+        img.src = reader.result;
+      } else {
+        toast('Unsupported file type');
+      }
+    };
+    if (isSvg) reader.readAsText(file); else reader.readAsDataURL(file);
+  }
+  // Drag & drop onto the preview
+  preview.addEventListener('dragover', (e) => { e.preventDefault(); preview.classList.add('dragover'); });
+  preview.addEventListener('dragleave', () => preview.classList.remove('dragover'));
+  preview.addEventListener('drop', (e) => {
+    e.preventDefault();
+    preview.classList.remove('dragover');
+    if (e.dataTransfer.files && e.dataTransfer.files[0]) importFile(e.dataTransfer.files[0]);
+  });
+
+  // ---------- Exports ----------
+  function download(blobOrUrl, filename) {
+    const url = typeof blobOrUrl === 'string' ? blobOrUrl : URL.createObjectURL(blobOrUrl);
+    const a = document.createElement('a');
+    a.href = url; a.download = filename;
+    document.body.appendChild(a); a.click(); a.remove();
+    if (typeof blobOrUrl !== 'string') setTimeout(() => URL.revokeObjectURL(url), 1000);
+  }
+  function svgToBase64(s) { return 'data:image/svg+xml;base64,' + btoa(unescape(encodeURIComponent(s))); }
+
+  function exportSvgFile() {
+    const s = getSvgString(); if (!s) return;
+    download(new Blob([s], { type: 'image/svg+xml' }), 'drawing.svg');
+    toast('SVG downloaded');
+  }
+  async function copySvgCode() {
+    const s = getSvgString(); if (!s) return;
+    await copyText(s); toast('SVG code copied');
+  }
+  async function copyText(text) {
+    try { await navigator.clipboard.writeText(text); }
+    catch (e) {
+      const ta = document.getElementById('export-output');
+      ta.value = text; ta.select(); document.execCommand('copy');
+    }
+  }
+
+  // Text-output modal
+  const exportModal = document.getElementById('export-modal');
+  const exportOutput = document.getElementById('export-output');
+  function showTextModal(title, content) {
+    document.getElementById('modal-title').textContent = title;
+    exportOutput.value = content;
+    openModal(exportModal);
+  }
+  document.getElementById('copy-output').addEventListener('click', async () => {
+    await copyText(exportOutput.value);
+    toast('Copied');
+  });
+
+  // Raster (PNG/JPEG) modal
+  const imageModal = document.getElementById('image-modal');
+  const imgWidth = document.getElementById('img-width');
+  const imgHeight = document.getElementById('img-height');
+  const imgLock = document.getElementById('img-lock');
+  const imgTransparent = document.getElementById('img-transparent');
+  const imgBg = document.getElementById('img-bg');
+  const imgQualityRow = document.getElementById('img-quality-row');
+  const imgBgRow = document.getElementById('img-bg-row');
+  const imgQuality = document.getElementById('img-quality');
+  const imgQualityVal = document.getElementById('img-quality-val');
+  let imageFormat = 'png';
+  let imgAspect = 1;
+  let lockAspect = true;
+
+  function openImageModal(format) {
+    imageFormat = format;
+    const svg = svgContainer && svgContainer.querySelector('svg');
+    if (!svg) { toast('Nothing to export'); return; }
+    const d = getViewBoxDims(svg);
+    imgAspect = d.w / d.h || 1;
+    const base = Math.max(d.w, d.h) >= 64 ? Math.round(d.w) : 800;
+    imgWidth.value = base;
+    imgHeight.value = Math.round(base / imgAspect);
+    document.getElementById('image-modal-title').textContent = 'Export ' + format.toUpperCase();
+    const isJpeg = format === 'jpeg';
+    imgQualityRow.hidden = !isJpeg;
+    imgTransparent.disabled = isJpeg;
+    if (isJpeg) imgTransparent.checked = false;
+    else imgTransparent.checked = true;
+    openModal(imageModal);
+  }
+  imgLock.addEventListener('click', () => { lockAspect = !lockAspect; imgLock.setAttribute('aria-pressed', lockAspect); imgLock.style.opacity = lockAspect ? '1' : '0.45'; });
+  imgWidth.addEventListener('input', () => { if (lockAspect) imgHeight.value = Math.max(1, Math.round(num(imgWidth.value, 1) / imgAspect)); });
+  imgHeight.addEventListener('input', () => { if (lockAspect) imgWidth.value = Math.max(1, Math.round(num(imgHeight.value, 1) * imgAspect)); });
+  imgQuality.addEventListener('input', () => imgQualityVal.textContent = Math.round(num(imgQuality.value, 0.92) * 100) + '%');
+
+  function rasterize() {
+    return new Promise((resolve, reject) => {
+      const svg = svgContainer && svgContainer.querySelector('svg');
+      const s = getSvgString();
+      if (!svg || !s) { reject(new Error('no svg')); return; }
+      const d = getViewBoxDims(svg);
+      const w = Math.max(1, Math.round(num(imgWidth.value, d.w)));
+      const h = Math.max(1, Math.round(num(imgHeight.value, d.h)));
+      const canvas = document.createElement('canvas');
+      canvas.width = w; canvas.height = h;
+      const ctx = canvas.getContext('2d');
+      if (!(imageFormat === 'png' && imgTransparent.checked)) {
+        ctx.fillStyle = imgBg.value; ctx.fillRect(0, 0, w, h);
+      }
+      const url = URL.createObjectURL(new Blob([s], { type: 'image/svg+xml' }));
+      const img = new Image();
+      img.onload = () => {
+        const scale = Math.min(w / d.w, h / d.h);
+        const dw = d.w * scale, dh = d.h * scale;
+        ctx.drawImage(img, (w - dw) / 2, (h - dh) / 2, dw, dh);
+        URL.revokeObjectURL(url);
+        resolve(canvas);
+      };
+      img.onerror = (e) => { URL.revokeObjectURL(url); reject(e); };
+      img.src = url;
+    });
+  }
+  document.getElementById('img-download').addEventListener('click', async () => {
+    try {
+      const canvas = await rasterize();
+      const mime = imageFormat === 'jpeg' ? 'image/jpeg' : 'image/png';
+      const q = imageFormat === 'jpeg' ? num(imgQuality.value, 0.92) : undefined;
+      canvas.toBlob((blob) => {
+        download(blob, 'drawing.' + (imageFormat === 'jpeg' ? 'jpg' : 'png'));
+        toast(imageFormat.toUpperCase() + ' downloaded');
+        closeModal(imageModal);
+      }, mime, q);
+    } catch (e) { toast('Export failed'); }
+  });
+  document.getElementById('img-copy').addEventListener('click', async () => {
+    try {
+      const canvas = await rasterize();
+      canvas.toBlob(async (blob) => {
+        try {
+          await navigator.clipboard.write([new ClipboardItem({ [blob.type]: blob })]);
+          toast('Image copied to clipboard');
+          closeModal(imageModal);
+        } catch (e) { toast('Clipboard image not supported — use Download'); }
+      }, 'image/png');
+    } catch (e) { toast('Export failed'); }
+  });
+
+  async function copyPngQuick() {
+    imageFormat = 'png';
+    const svg = svgContainer && svgContainer.querySelector('svg');
+    if (!svg) { toast('Nothing to copy'); return; }
+    const d = getViewBoxDims(svg);
+    imgWidth.value = Math.max(64, Math.round(d.w));
+    imgHeight.value = Math.max(64, Math.round(d.h));
+    imgTransparent.checked = true;
+    try {
+      const canvas = await rasterize();
+      canvas.toBlob(async (blob) => {
+        try { await navigator.clipboard.write([new ClipboardItem({ [blob.type]: blob })]); toast('PNG copied to clipboard'); }
+        catch (e) { toast('Clipboard image not supported'); }
+      }, 'image/png');
+    } catch (e) { toast('Copy failed'); }
+  }
+
+  function runExport(kind) {
+    switch (kind) {
+      case 'svg': exportSvgFile(); break;
+      case 'png': openImageModal('png'); break;
+      case 'jpeg': openImageModal('jpeg'); break;
+      case 'copy': copySvgCode(); break;
+      case 'copypng': copyPngQuick(); break;
+      case 'base64': { const s = getSvgString(); if (s) showTextModal('Base64 data URL', svgToBase64(s)); break; }
+      case 'favicon': { const s = getSvgString(); if (s) showTextModal('Favicon link tag', `<link rel="icon" type="image/svg+xml" href="${svgToBase64(s)}">`); break; }
+      case 'img': { const s = getSvgString(); if (s) showTextModal('<img> tag', `<img src="${svgToBase64(s)}" alt="SVG image">`); break; }
+      case 'stl': openStl(); break;
+    }
+  }
+
+  // ---------- STL converter ----------
+  const stlModal = document.getElementById('stl-converter-modal');
+  const stlIframe = document.getElementById('stl-converter-iframe');
+  function openStl() {
+    if (!stlIframe.src || stlIframe.src === 'about:blank') stlIframe.src = 'svg2stl.html?embedded=true';
+    openModal(stlModal);
+    const s = getSvgString();
+    stlIframe.onload = () => {
+      if (s) setTimeout(() => stlIframe.contentWindow.postMessage({ type: 'svgData', content: s }, '*'), 400);
+    };
+    // If already loaded, push immediately too.
+    if (s && stlIframe.contentWindow) {
+      setTimeout(() => { try { stlIframe.contentWindow.postMessage({ type: 'svgData', content: s }, '*'); } catch (e) {} }, 500);
+    }
+  }
+
+  // ---------- Modals (generic) ----------
+  function openModal(m) { m.classList.add('open'); }
+  function closeModal(m) { m.classList.remove('open'); }
+  document.querySelectorAll('.modal').forEach(m => {
+    m.addEventListener('click', (e) => {
+      if (e.target === m || (e.target.dataset && 'close' in e.target.dataset)) closeModal(m);
+    });
+  });
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape') document.querySelectorAll('.modal.open').forEach(closeModal); });
+
+  // ---------- Dropdown menus ----------
+  function closeMenus() { document.querySelectorAll('.menu.open').forEach(m => m.classList.remove('open')); }
+  document.querySelectorAll('.menu-trigger').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const menu = btn.parentElement;
+      const isOpen = menu.classList.contains('open');
+      closeMenus();
+      if (!isOpen) menu.classList.add('open');
+    });
+  });
+  document.addEventListener('click', closeMenus);
+  document.querySelectorAll('[data-export]').forEach(b => b.addEventListener('click', () => runExport(b.dataset.export)));
+  document.querySelectorAll('[data-shape]').forEach(b => b.addEventListener('click', () => addShape(b.dataset.shape)));
+
+  // ---------- Checkerboard / transparency ----------
+  document.getElementById('checker-btn').addEventListener('click', () => {
+    checker = !checker;
+    if (svgContainer) svgContainer.classList.toggle('checker', checker);
+    document.getElementById('checker-btn').style.background = checker ? 'var(--accent-soft)' : '';
+  });
+
+  // ---------- Theme ----------
+  const themeBtn = document.getElementById('theme-btn');
+  function applyTheme(t) {
+    if (t === 'auto') document.documentElement.removeAttribute('data-theme');
+    else document.documentElement.setAttribute('data-theme', t);
+    themeBtn.textContent = t === 'dark' ? '🌙' : (t === 'light' ? '☀️' : '🌓');
+    themeBtn.title = 'Theme: ' + t + ' (click to change)';
+  }
+  let theme = 'auto';
+  try { theme = localStorage.getItem(STORAGE_THEME) || 'auto'; } catch (e) {}
+  applyTheme(theme);
+  themeBtn.addEventListener('click', () => {
+    theme = theme === 'auto' ? 'light' : (theme === 'light' ? 'dark' : 'auto');
+    try { localStorage.setItem(STORAGE_THEME, theme); } catch (e) {}
+    applyTheme(theme);
+  });
+
+  // ---------- Wire up static controls ----------
+  document.getElementById('undo-btn').addEventListener('click', undo);
+  document.getElementById('fit-btn').addEventListener('click', fitView);
+  document.getElementById('center-btn').addEventListener('click', centerView);
+  document.getElementById('fit-content-btn').addEventListener('click', cropToContent);
+  document.getElementById('shortcuts-btn').addEventListener('click', () => openModal(document.getElementById('shortcuts-modal')));
+  canvasWidthInput.addEventListener('change', updateCanvasSize);
+  canvasHeightInput.addEventListener('change', updateCanvasSize);
+  zoomInput.addEventListener('input', updateZoom);
+  editor.addEventListener('input', () => {
+    clearTimeout(typingTimer);
+    typingTimer = setTimeout(() => { typingTimer = null; pushUndo(lastValue); lastValue = editor.value; }, 500);
+    updatePreview();
+    schedulePersist();
+  });
+  document.addEventListener('keydown', onKeyDown);
+
+  let resizeTimer = null;
+  window.addEventListener('resize', () => {
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(() => { computeFit(); applyTransform(); }, 150);
+  });
+
+  // ---------- Boot ----------
+  let initial = DEFAULT_SVG;
+  try { const saved = localStorage.getItem(STORAGE_DOC); if (saved && saved.trim()) initial = saved; } catch (e) {}
+  editor.value = initial;
+  lastValue = initial;
+  updatePreview();
+  centerView();
+  </script>
+</body>
+</html>

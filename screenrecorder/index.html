@@ -98,6 +98,7 @@
           <span>Aspect Ratio</span>
           <select id="aspectRatio">
             <option value="16:9" selected>16:9 Landscape</option>
+            <option value="source">Match Selected Source</option>
             <option value="9:16">9:16 Portrait</option>
             <option value="1:1">1:1 Square</option>
           </select>
@@ -106,6 +107,7 @@
         <label class="row">
           <span>Output Resolution</span>
           <select id="outputResolution">
+            <option value="source">Match Source Size</option>
             <option value="1280x720">HD 720p</option>
             <option value="1920x1080" selected>Full HD 1080p</option>
             <option value="2560x1440">QHD 1440p</option>
@@ -166,13 +168,6 @@
             <option value="">Default microphone</option>
           </select>
         </label>
-
-        <div id="micLevelRow" class="mic-level-row" style="display:none">
-          <span>Mic Level</span>
-          <div class="mic-level-track">
-            <div id="micLevelBar" class="mic-level-bar"></div>
-          </div>
-        </div>
 
         <p id="deviceHint" class="hint hint-compact">If names are missing, click Refresh and allow access.</p>
 
@@ -240,6 +235,12 @@
           <canvas id="previewCanvas" width="1280" height="720" aria-label="Recording Preview"></canvas>
           <div id="countdownOverlay" class="countdown hidden">3</div>
         </div>
+        <div id="micLevelRow" class="mic-level-row" style="display:none">
+          <span>Mic Level</span>
+          <div class="mic-level-track">
+            <div id="micLevelBar" class="mic-level-bar"></div>
+          </div>
+        </div>
         <div class="preview-toolbar">
           <div class="preview-modes">
             <button id="showScreenBtn" class="btn btn-muted btn-inline mode-btn mode-active" type="button">Screen + Camera</button>
@@ -294,6 +295,5 @@
   <script type="module" src="app.js"></script>
 </body>
 </html>
-
 
 

@@ -1,5 +1,7 @@
 <html>
 <head>
+	<meta name="description" content="Use the IFRAME API to add or remove pre-defined stream IDs from a scene and manage their mic state." />
+	<link rel="canonical" href="https://vdo.ninja/examples/addtoscene.html" />
 	<title>Add to Scene Controller - VDO.Ninja</title>
 	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
 	<meta content="text/html;charset=utf-8" http-equiv="Content-Type" />
@@ -36,12 +38,12 @@
 	</style>
 	<script>
 
-	function loadIframe(){ 
-		
+	function loadIframe(){
+
 		document.getElementById("container").innerHTML = "";
-		
-		
-		
+
+
+
 		var iframe = document.createElement("iframe");
 		var iframeContainer = document.createElement("div");
 		iframe.allow = "autoplay;camera;microphone;fullscreen;picture-in-picture;display-capture;";
@@ -49,7 +51,7 @@
 		iframe.src =  "../?dir=teststeve123&password=1234";
 		iframeContainer.appendChild(iframe);
 		document.getElementById("container").appendChild(iframeContainer);
-		
+
 		var listOfStreamIDs = [
 			"1234_pov",
 			"2345_pov",
@@ -57,16 +59,16 @@
 			"4567_pov",
 			"5678_pov"
 			];
-		
-		
+
+
 		for (var i=0;i<listOfStreamIDs.length;i++){
-		
+
 			var button = document.createElement("a");
 			button.innerHTML = "Invite "+listOfStreamIDs[i];
 			button.target = "_blank";
 			button.href = "../?room=teststeve123&password=1234&broadcast&transparent&autostart&nmb&nvb&gain=0&webcam&l=stevetest&push="+listOfStreamIDs[i];
 			iframeContainer.appendChild(button);
-			
+
 			var button = document.createElement("button");
 			button.innerHTML = "TOGGLE "+listOfStreamIDs[i];
 			button.dataset.sid = listOfStreamIDs[i];
@@ -81,13 +83,13 @@
 					  value: true,
 					  target: this.dataset.sid
 				  }, '*');
-			
+
 			}; // target can be a stream ID or * for all.
 			iframeContainer.appendChild(button);
 		}
-		
-		
-		
+
+
+
 		////////////  LISTEN FOR EVENTS
 
 		var eventMethod = window.addEventListener ? "addEventListener" : "attachEvent";
@@ -96,24 +98,24 @@
 
 
 		/// If you have a routing system setup, you could have just one global listener for all iframes instead.
-		
+
 		eventer(messageEvent, function (e) {
 			if (e.source != iframe.contentWindow){return} // reject messages send from other iframes
-			
-			
+
+
 			if ("action" in e.data){
 				var outputWindow = document.createElement("div");
 				outputWindow.innerHTML = "event: "+e.data.action+"<br />";
 				outputWindow.style.border="1px dotted black";
 				iframeContainer.appendChild(outputWindow);
 			}
-			
-			
+
+
 			if ("streamIDs" in e.data){
 				var outputWindow = document.createElement("div");
 				outputWindow.innerHTML = "streamID list:<br />";
 				for (var key in e.data.streamIDs) {
-					outputWindow.innerHTML += "streamID: " +  key + ", label:"+e.data.streamIDs[key] + "\n";          
+					outputWindow.innerHTML += "streamID: " +  key + ", label:"+e.data.streamIDs[key] + "\n";
 				}
 				outputWindow.style.border="1px dotted black";
 				iframeContainer.appendChild(outputWindow);
@@ -136,10 +138,10 @@
 	<br />
 	<br />
 	Scene=1 link: <a target="_blank" href="https://vdo.ninja/?scene=1&room=teststeve123&password=1234">https://vdo.ninja/?scene=1&room=teststeve123&password=1234</a>
-	
-	
-	
-	
+
+
+
+
 </div>
 </body>
 </html>

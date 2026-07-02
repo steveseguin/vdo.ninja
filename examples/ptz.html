@@ -1,5 +1,7 @@
 <html>
-<head><title>PTZ Remote Controller</title>
+<head>
+	<meta name="description" content="Pan, tilt, and zoom a remote camera by sending PTZ commands over the data channel." />
+	<link rel="canonical" href="https://vdo.ninja/examples/ptz.html" /><title>PTZ Remote - VDO.Ninja</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
 <meta content="text/html;charset=utf-8" http-equiv="Content-Type" />
 <style>
@@ -86,6 +88,8 @@ span {
 	<br>
 	<br>
 	notes: Make sure the remote sender adds <b>&ptz</b> and <b>&remote</b> to their URL, otherwise PTZ remote control will not be allowed.
+	<br>
+	Chrome blocks PTZ controls when the sender (push) page is not visible on screen; keep it in a visible tab/window or a small always-on-top window while testing.
 </div>
 <script>
 var iframe;
@@ -130,28 +134,28 @@ if (urlParams.has("view") || urlParams.has("v")){
 }
 
 
-function loadIframes(){ 
+function loadIframes(){
 
 	var iframesrc = document.getElementById("viewlink").value;
-	
+
 	document.getElementById("viewlink").parentNode.parentNode.removeChild(document.getElementById("viewlink").parentNode);
 	document.getElementById("container1").style.display="inline-block";
 	document.getElementById("container2").style.display="inline-block";
-	
+
 	//
-	
-	
+
+
 	var params = window.location.search || "";
-		
+
 	if (iframesrc.includes("?")){
 		params = params.slice(1);
 		iframesrc = iframesrc + "&" + params
 	} else {
 		iframesrc = iframesrc + params
 	}
-	
+
 	console.log(iframesrc);
-	
+
 	iframe = document.createElement("iframe");
 	iframe.allow = "encrypted-media;sync-xhr;usb;web-share;cross-origin-isolated;accelerometer;midi;geolocation;autoplay;camera;microphone;fullscreen;picture-in-picture;display-capture;gyroscope;";
 	iframe.src = iframesrc;

@@ -1,0 +1,550 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+		<meta name="description" content="VDO.Ninja browser port connectivity check for HTTPS, WSS, and optional TURN TCP/UDP." />
+		<meta name="theme-color" content="#0f131d" />
+		<meta property="og:type" content="website" />
+		<meta property="og:title" content="VDO.Ninja Port Test" />
+		<meta property="og:description" content="Simple pass/fail port connectivity test for VDO.Ninja links." />
+		<meta property="og:url" content="https://vdo.ninja/portscan.html" />
+		<meta property="og:image" content="https://vdo.ninja/media/vdoNinja_logo_full.png" />
+		<meta name="twitter:card" content="summary_large_image" />
+		<meta name="twitter:title" content="VDO.Ninja Port Test" />
+		<meta name="twitter:description" content="Simple pass/fail port connectivity test for VDO.Ninja links." />
+		<meta name="twitter:image" content="https://vdo.ninja/media/vdoNinja_logo_full.png" />
+		<link rel="icon" type="image/png" sizes="32x32" href="./media/favicon-32x32.png" />
+		<link rel="icon" type="image/png" sizes="16x16" href="./media/favicon-16x16.png" />
+		<link rel="icon" href="./media/favicon.ico" />
+		<title>VDO.Ninja Port Test</title>
+		<style>
+			:root {
+				--bg: #f4f7fb;
+				--card: #ffffff;
+				--text: #16202b;
+				--muted: #4f5b6a;
+				--line: #d9e1eb;
+				--pass-bg: #eafaf0;
+				--pass-text: #0e7a3c;
+				--fail-bg: #fff1f2;
+				--fail-text: #b42318;
+				--btn: #0f172a;
+				--btn-text: #ffffff;
+			}
+			* {
+				box-sizing: border-box;
+			}
+			body {
+				margin: 0;
+				font-family: Verdana, Tahoma, sans-serif;
+				background: var(--bg);
+				color: var(--text);
+			}
+			main {
+				max-width: 680px;
+				margin: 36px auto;
+				padding: 0 16px 40px;
+			}
+			.card {
+				background: var(--card);
+				border: 1px solid var(--line);
+				border-radius: 12px;
+				padding: 20px;
+				box-shadow: 0 8px 28px rgba(15, 23, 42, 0.06);
+			}
+			h1 {
+				margin: 0 0 8px;
+				font-size: 28px;
+				line-height: 1.2;
+			}
+			p {
+				margin: 8px 0 0;
+				color: var(--muted);
+				line-height: 1.45;
+			}
+			#runBtn {
+				margin-top: 16px;
+				appearance: none;
+				border: 0;
+				border-radius: 9px;
+				padding: 11px 16px;
+				background: var(--btn);
+				color: var(--btn-text);
+				font-size: 15px;
+				font-weight: 700;
+				cursor: pointer;
+			}
+			#resultBox {
+				margin-top: 16px;
+				border-radius: 10px;
+				padding: 12px 14px;
+				font-weight: 700;
+				border: 1px solid var(--line);
+			}
+			#resultBox.pass {
+				background: var(--pass-bg);
+				color: var(--pass-text);
+				border-color: #b8eac8;
+			}
+			#resultBox.fail {
+				background: var(--fail-bg);
+				color: var(--fail-text);
+				border-color: #f7c9cf;
+			}
+			#summary {
+				margin-top: 8px;
+				font-size: 14px;
+				font-weight: 600;
+				color: #233041;
+			}
+			#failedWrap {
+				margin-top: 16px;
+				padding: 12px 14px;
+				border: 1px solid #f7c9cf;
+				background: #fff8f8;
+				border-radius: 10px;
+			}
+			h2 {
+				margin: 0 0 8px;
+				font-size: 18px;
+				color: #8a1f17;
+			}
+			ul {
+				margin: 0;
+				padding-left: 18px;
+			}
+			li {
+				margin: 6px 0;
+				line-height: 1.35;
+			}
+		</style>
+	</head>
+	<body>
+		<main>
+			<section class="card">
+				<h1>Port Test</h1>
+				<p>Click Run Port Test. You will get PASS or FAIL.</p>
+				<button id="runBtn" type="button">Run Port Test</button>
+				<div id="resultBox">Ready.</div>
+				<div id="summary"></div>
+				<div id="failedWrap" hidden>
+					<h2>Failed checks</h2>
+					<ul id="failedList"></ul>
+				</div>
+			</section>
+		</main>
+		<script>
+			(function () {
+				"use strict";
+
+				var defaults = {
+					host: "ports.vdo.ninja",
+					turnhost: "",
+					wss: "443,4334",
+					https: "443",
+					http: "",
+					turntcp: "",
+					turnudp: "",
+					wspath: "/ws",
+					timeout: 7000,
+					concurrency: 6,
+					maxports: 1000,
+					autorun: false,
+				};
+
+				var runBtn = document.getElementById("runBtn");
+				var resultBox = document.getElementById("resultBox");
+				var summary = document.getElementById("summary");
+				var failedWrap = document.getElementById("failedWrap");
+				var failedList = document.getElementById("failedList");
+
+				var config = parseConfig();
+
+				runBtn.addEventListener("click", function () {
+					runScan(config).catch(function () {
+						setResult("FAIL", "Scan stopped unexpectedly.", true);
+						runBtn.disabled = false;
+					});
+				});
+
+				if (config.autorun) {
+					runScan(config).catch(function () {});
+				}
+
+				function parseConfig() {
+					var params = new URLSearchParams(window.location.search);
+					return {
+						host: cleanHost(params.get("host")) || defaults.host,
+						turnhost: cleanHost(params.get("turnhost")) || "",
+						wss: params.get("wss") || defaults.wss,
+						https: params.get("https") || defaults.https,
+						http: params.get("http") || defaults.http,
+						turntcp: params.get("turntcp") || params.get("turn") || defaults.turntcp,
+						turnudp: params.get("turnudp") || defaults.turnudp,
+						wspath: normalizePath(params.get("wspath") || defaults.wspath),
+						turnuser: params.get("turnuser") || "",
+						turnpass: params.get("turnpass") || "",
+						timeout: clampInt(params.get("timeout"), 1200, 30000, defaults.timeout),
+						concurrency: clampInt(params.get("concurrency"), 1, 24, defaults.concurrency),
+						maxports: clampInt(params.get("maxports"), 1, 5000, defaults.maxports),
+						autorun: parseBool(params.get("autorun")),
+					};
+				}
+
+				function cleanHost(value) {
+					if (!value) return "";
+					return String(value).replace(/^\s+|\s+$/g, "").replace(/^https?:\/\//i, "").replace(/\/.*$/, "");
+				}
+
+				function normalizePath(value) {
+					if (!value) return "/";
+					var p = String(value).trim();
+					if (!p.startsWith("/")) p = "/" + p;
+					return p;
+				}
+
+				function clampInt(value, min, max, fallback) {
+					var n = parseInt(value, 10);
+					if (!Number.isFinite(n)) return fallback;
+					if (n < min) return min;
+					if (n > max) return max;
+					return n;
+				}
+
+				function parseBool(value) {
+					if (value === null || value === undefined) return false;
+					var v = String(value).toLowerCase();
+					return v === "1" || v === "true" || v === "yes" || v === "on";
+				}
+
+				function parsePorts(input, maxCount) {
+					if (!input) return [];
+					var out = [];
+					var seen = Object.create(null);
+					var tokens = String(input)
+						.split(",")
+						.map(function (x) {
+							return x.trim();
+						})
+						.filter(Boolean);
+
+					for (var i = 0; i < tokens.length; i++) {
+						var token = tokens[i];
+						var range = token.match(/^(\d{1,5})-(\d{1,5})$/);
+						if (range) {
+							var start = parseInt(range[1], 10);
+							var end = parseInt(range[2], 10);
+							if (start > end) {
+								var temp = start;
+								start = end;
+								end = temp;
+							}
+							start = Math.max(1, start);
+							end = Math.min(65535, end);
+							for (var p = start; p <= end; p++) {
+								if (!seen[p]) {
+									seen[p] = true;
+									out.push(p);
+									if (out.length >= maxCount) return out;
+								}
+							}
+							continue;
+						}
+						if (/^\d{1,5}$/.test(token)) {
+							var port = parseInt(token, 10);
+							if (port >= 1 && port <= 65535 && !seen[port]) {
+								seen[port] = true;
+								out.push(port);
+								if (out.length >= maxCount) return out;
+							}
+						}
+					}
+					return out;
+				}
+
+				async function runScan(cfg) {
+					runBtn.disabled = true;
+					setResult("Running...", "Testing ports now.", false);
+					failedWrap.hidden = true;
+					failedList.innerHTML = "";
+
+					var checks = [];
+					var wssPorts = parsePorts(cfg.wss, cfg.maxports);
+					var httpsPorts = parsePorts(cfg.https, cfg.maxports);
+					var httpPorts = parsePorts(cfg.http, cfg.maxports);
+					var turnTcpPorts = parsePorts(cfg.turntcp, cfg.maxports);
+					var turnUdpPorts = parsePorts(cfg.turnudp, cfg.maxports);
+
+					for (var i = 0; i < httpsPorts.length; i++) {
+						checks.push({
+							type: "HTTPS",
+							port: httpsPorts[i],
+							run: testHttps.bind(null, cfg.host, httpsPorts[i], cfg.timeout),
+						});
+					}
+					for (var j = 0; j < wssPorts.length; j++) {
+						checks.push({
+							type: "WSS",
+							port: wssPorts[j],
+							run: testWss.bind(null, cfg, wssPorts[j]),
+						});
+					}
+					for (var k = 0; k < httpPorts.length; k++) {
+						checks.push({
+							type: "HTTP",
+							port: httpPorts[k],
+							run: testHttp.bind(null, cfg.host, httpPorts[k], cfg.timeout),
+						});
+					}
+					for (var m = 0; m < turnTcpPorts.length; m++) {
+						checks.push({
+							type: "TURN/TCP",
+							port: turnTcpPorts[m],
+							run: testTurnTransport.bind(null, cfg, turnTcpPorts[m], "tcp"),
+						});
+					}
+					for (var t = 0; t < turnUdpPorts.length; t++) {
+						checks.push({
+							type: "TURN/UDP",
+							port: turnUdpPorts[t],
+							run: testTurnTransport.bind(null, cfg, turnUdpPorts[t], "udp"),
+						});
+					}
+
+					if (!checks.length) {
+						setResult("FAIL", "No ports configured.", true);
+						runBtn.disabled = false;
+						return;
+					}
+
+					var results = await runWithConcurrency(checks, cfg.concurrency);
+					var failResults = [];
+					var passCount = 0;
+
+					for (var n = 0; n < results.length; n++) {
+						var r = results[n];
+						if (r.status === "ok") {
+							passCount++;
+						} else if (r.status === "fail") {
+							failResults.push(r);
+						}
+					}
+
+					if (!failResults.length) {
+						setResult("PASS", passCount + " checks passed.", false);
+					} else {
+						setResult("FAIL", failResults.length + " checks failed.", true);
+						failedWrap.hidden = false;
+						for (var q = 0; q < failResults.length; q++) {
+							var item = failResults[q];
+							appendFailed(item.type + " " + item.port + ": " + item.message);
+						}
+					}
+
+					runBtn.disabled = false;
+				}
+
+				function setResult(label, line, failed) {
+					resultBox.textContent = label;
+					resultBox.classList.remove("pass", "fail");
+					if (label === "PASS") {
+						resultBox.classList.add("pass");
+					} else if (label === "FAIL") {
+						resultBox.classList.add("fail");
+					}
+					summary.textContent = line;
+					if (!failed) {
+						failedWrap.hidden = true;
+					}
+				}
+
+				function appendFailed(text) {
+					var li = document.createElement("li");
+					li.textContent = text;
+					failedList.appendChild(li);
+				}
+
+				async function runWithConcurrency(items, concurrency) {
+					var results = new Array(items.length);
+					var nextIndex = 0;
+
+					async function worker() {
+						while (true) {
+							var idx = nextIndex++;
+							if (idx >= items.length) break;
+							try {
+								results[idx] = await items[idx].run();
+							} catch (err) {
+								results[idx] = {
+									type: items[idx].type,
+									port: items[idx].port,
+									status: "fail",
+									message: "No response",
+								};
+							}
+						}
+					}
+
+					var workers = [];
+					var count = Math.max(1, Math.min(concurrency, items.length));
+					for (var i = 0; i < count; i++) workers.push(worker());
+					await Promise.all(workers);
+					return results;
+				}
+
+				async function testHttps(host, port, timeoutMs) {
+					try {
+						await fetchWithTimeout("https://" + host + ":" + port + "/", timeoutMs, "no-cors");
+						return { type: "HTTPS", port: port, status: "ok", message: "ok" };
+					} catch (err) {
+						return { type: "HTTPS", port: port, status: "fail", message: "No response" };
+					}
+				}
+
+				async function testHttp(host, port, timeoutMs) {
+					if (window.location.protocol === "https:") {
+						return { type: "HTTP", port: port, status: "skip", message: "Skipped" };
+					}
+					try {
+						await fetchWithTimeout("http://" + host + ":" + port + "/", timeoutMs, "no-cors");
+						return { type: "HTTP", port: port, status: "ok", message: "ok" };
+					} catch (err) {
+						return { type: "HTTP", port: port, status: "fail", message: "No response" };
+					}
+				}
+
+				async function testWss(cfg, port) {
+					var ok = await openWebSocket(cfg.host, port, cfg.wspath, cfg.timeout);
+					if (!ok && cfg.wspath !== "/") {
+						ok = await openWebSocket(cfg.host, port, "/", Math.min(cfg.timeout, 4000));
+					}
+
+					if (ok) {
+						return { type: "WSS", port: port, status: "ok", message: "ok" };
+					}
+
+					return { type: "WSS", port: port, status: "fail", message: "WebSocket did not open" };
+				}
+
+				function openWebSocket(host, port, path, timeoutMs) {
+					return new Promise(function (resolve) {
+						var ws;
+						var done = false;
+						var timer = setTimeout(function () {
+							finish(false);
+						}, timeoutMs);
+
+						function finish(ok) {
+							if (done) return;
+							done = true;
+							clearTimeout(timer);
+							if (ws && ws.readyState === WebSocket.OPEN) {
+								try {
+									ws.close(1000, "scan");
+								} catch (e) {}
+							}
+							resolve(ok);
+						}
+
+						try {
+							ws = new WebSocket("wss://" + host + ":" + port + path);
+						} catch (err) {
+							finish(false);
+							return;
+						}
+
+						ws.onopen = function () {
+							finish(true);
+						};
+						ws.onerror = function () {
+							finish(false);
+						};
+						ws.onclose = function () {
+							if (!done) finish(false);
+						};
+					});
+				}
+
+				async function testTurnTransport(cfg, port, transport) {
+					var turnType = transport === "udp" ? "TURN/UDP" : "TURN/TCP";
+					var turnHost = cfg.turnhost || cfg.host;
+					if (!cfg.turnuser || !cfg.turnpass) {
+						return { type: turnType, port: port, status: "skip", message: "Missing credentials" };
+					}
+					if (!window.RTCPeerConnection) {
+						return { type: turnType, port: port, status: "skip", message: "WebRTC unavailable" };
+					}
+
+					var res = await turnProbe(turnHost, port, cfg.turnuser, cfg.turnpass, cfg.timeout, transport);
+					if (res.ok) {
+						return { type: turnType, port: port, status: "ok", message: "ok" };
+					}
+					return { type: turnType, port: port, status: "fail", message: "TURN relay not available" };
+				}
+
+				function turnProbe(host, port, user, pass, timeoutMs, transport) {
+					var transportMode = transport === "udp" ? "udp" : "tcp";
+					return new Promise(function (resolve) {
+						var pc = new RTCPeerConnection({
+							iceServers: [
+								{
+									urls: ["turn:" + host + ":" + port + "?transport=" + transportMode],
+									username: user,
+									credential: pass,
+								},
+							],
+							iceTransportPolicy: "relay",
+						});
+
+						var done = false;
+						var timer = setTimeout(function () {
+							finish(false);
+						}, timeoutMs);
+
+						function finish(ok) {
+							if (done) return;
+							done = true;
+							clearTimeout(timer);
+							try {
+								pc.close();
+							} catch (e) {}
+							resolve({ ok: ok });
+						}
+
+						pc.onicecandidate = function (event) {
+							if (!event.candidate) return;
+							var c = String(event.candidate.candidate || "").toLowerCase();
+							if (c.indexOf(" typ relay ") !== -1 && c.indexOf(" " + transportMode + " ") !== -1) {
+								finish(true);
+							}
+						};
+
+						pc.createDataChannel("scan");
+						pc.createOffer()
+							.then(function (offer) {
+								return pc.setLocalDescription(offer);
+							})
+							.catch(function () {
+								finish(false);
+							});
+					});
+				}
+
+				function fetchWithTimeout(url, timeoutMs, mode) {
+					var controller = new AbortController();
+					var timer = setTimeout(function () {
+						controller.abort();
+					}, timeoutMs);
+					return fetch(url, {
+						mode: mode || "no-cors",
+						cache: "no-store",
+						signal: controller.signal,
+					}).finally(function () {
+						clearTimeout(timer);
+					});
+				}
+			})();
+		</script>
+	</body>
+</html>

@@ -695,7 +695,8 @@
 				talkbackID: Math.random().toString(36).substring(2, 10),
 				talkbackActive: false,
 				peerConnected: false,
-				pendingPreset: null
+				pendingPreset: null,
+				presetRecallTimers: []
 			};
 
 			var refs = {
@@ -1289,28 +1290,46 @@
 				};
 			}
 
+			function clearPresetRecallTimers() {
+				while (state.presetRecallTimers.length) {
+					clearTimeout(state.presetRecallTimers.pop());
+				}
+			}
+
+			function sendPresetActions(actions) {
+				clearPresetRecallTimers();
+				actions.forEach(function (action, index) {
+					var timer = setTimeout(function () {
+						sendTargetAction(action[0], action[1], action[2]);
+					}, index * 180);
+					state.presetRecallTimers.push(timer);
+				});
+			}
+
 			function applyAbsoluteState(ptz) {
 				if (!ptz) {
 					return;
 				}
+				var actions = [];
 				if (typeof ptz.pan === "number") {
 					refs.panAbs.value = ptz.pan;
-					sendTargetAction("ptzPan", ptz.pan, "abs");
+					actions.push(["ptzPan", ptz.pan, "abs"]);
 				}
 				if (typeof ptz.tilt === "number") {
 					refs.tiltAbs.value = ptz.tilt;
-					sendTargetAction("ptzTilt", ptz.tilt, "abs");
+					actions.push(["ptzTilt", ptz.tilt, "abs"]);
 				}
 				if (typeof ptz.zoom === "number") {
 					refs.zoomAbs.value = ptz.zoom;
-					sendTargetAction("ptzZoom", ptz.zoom, "abs");
+					actions.push(["ptzZoom", ptz.zoom, "abs"]);
 				}
 				if (typeof ptz.focus === "number") {
-					sendTargetAction("ptzAutofocus", false);
 					refs.focusAbs.value = ptz.focus;
-					sendTargetAction("ptzFocus", ptz.focus, "abs");
+					actions.push(["ptzAutofocus", false]);
+					actions.push(["ptzFocus", ptz.focus, "abs"]);
 				}
 				updateAbsLabels();
+				sendPresetActions(actions);
 			}
 
 			function recallHome() {

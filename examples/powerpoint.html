@@ -1,5 +1,7 @@
 <html>
-<head><title>PowerPoint Remote Controller</title>
+<head>
+	<meta name="description" content="Flip through slides remotely while embedding a live view of the deck." />
+	<link rel="canonical" href="https://vdo.ninja/examples/powerpoint.html" /><title>PowerPoint Remote - VDO.Ninja</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
 <meta content="text/html;charset=utf-8" http-equiv="Content-Type" />
 <style>
@@ -75,7 +77,7 @@ function nextSlide(){
 		iframe.contentWindow.postMessage({"sendRawMIDI":{data:[176, 110, 11]}}, '*');
 		/// OR AS OF V22.12 YOU CAN DO:
 		//iframe.contentWindow.postMessage({"nextSlide":true}, '*');
-		
+
 	}
 }
 
@@ -111,20 +113,20 @@ if (room){
 	loadIframes(room);
 }
 
-function loadIframes(roomname=false){ 
+function loadIframes(roomname=false){
 
 	if (!roomname){
 		roomname = document.getElementById("viewlink").value;
 	}
-	
+
 	document.getElementById("viewlink").parentNode.parentNode.removeChild(document.getElementById("viewlink").parentNode);
 	document.getElementById("container1").style.display="inline-block";
 	document.getElementById("container2").style.display="inline-block";
-	
+
 	var path = window.location.host+window.location.pathname.split("/").slice(0,-1).join("/");
-	
+
 	var room1 = "https://"+path+"/../?room="+roomname+"&push="+roomname+"_controller&webcam&autostart&minipreview";
-	
+
 	iframe = document.createElement("iframe");
 	iframe.allow = "document-domain;encrypted-media;sync-xhr;usb;web-share;cross-origin-isolated;accelerometer;midi;geolocation;autoplay;camera;microphone;fullscreen;picture-in-picture;display-capture;";
 	iframe.src = room1;

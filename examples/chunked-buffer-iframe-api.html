@@ -1,0 +1,869 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta name="description" content="Drive chunked receiver buffering through the IFRAME API, with a synthetic impairment tool to mimic late delivery and underbuffering." />
+	<link rel="canonical" href="https://vdo.ninja/examples/chunked-buffer-iframe-api.html" />
+	<meta property="og:type" content="website" />
+	<meta property="og:site_name" content="VDO.Ninja" />
+	<meta property="og:url" content="https://vdo.ninja/examples/chunked-buffer-iframe-api.html" />
+	<meta property="og:title" content="Chunked Buffer via IFRAME API - VDO.Ninja" />
+	<meta property="og:description" content="Drive chunked receiver buffering through the IFRAME API, with a synthetic impairment tool to mimic late delivery and underbuffering." />
+	<meta property="og:image" content="https://vdo.ninja/media/vdoNinja_logo_full.png" />
+	<meta name="twitter:card" content="summary_large_image" />
+	<meta name="twitter:title" content="Chunked Buffer via IFRAME API - VDO.Ninja" />
+	<meta name="twitter:description" content="Drive chunked receiver buffering through the IFRAME API, with a synthetic impairment tool to mimic late delivery and underbuffering." />
+	<meta name="twitter:image" content="https://vdo.ninja/media/vdoNinja_logo_full.png" />
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Chunked Buffer via IFRAME API - VDO.Ninja</title>
+	<style>
+		:root {
+			--bg: #09111c;
+			--panel: rgba(10, 20, 32, 0.9);
+			--panel-border: rgba(135, 184, 255, 0.22);
+			--text: #e9f1ff;
+			--muted: #9eb0c8;
+			--accent: #7cf3c8;
+			--accent-2: #7db8ff;
+			--danger: #ff7b7b;
+			--code: #081018;
+			--shadow: 0 18px 50px rgba(0, 0, 0, 0.35);
+		}
+
+		* {
+			box-sizing: border-box;
+		}
+
+		html,
+		body {
+			margin: 0;
+			min-height: 100%;
+			background:
+				radial-gradient(circle at top left, rgba(125, 184, 255, 0.18), transparent 32%),
+				radial-gradient(circle at top right, rgba(124, 243, 200, 0.14), transparent 28%),
+				linear-gradient(180deg, #0c1726 0%, #09111c 100%);
+			color: var(--text);
+			font: 15px/1.45 Consolas, "SFMono-Regular", Menlo, Monaco, monospace;
+		}
+
+		body {
+			padding: 24px;
+		}
+
+		main {
+			display: grid;
+			grid-template-columns: minmax(320px, 460px) minmax(0, 1fr);
+			gap: 18px;
+			align-items: start;
+		}
+
+		.panel {
+			background: var(--panel);
+			border: 1px solid var(--panel-border);
+			border-radius: 18px;
+			box-shadow: var(--shadow);
+			backdrop-filter: blur(10px);
+		}
+
+		.sidebar {
+			display: grid;
+			gap: 18px;
+		}
+
+		section {
+			padding: 18px;
+		}
+
+		.eyebrow {
+			color: var(--accent);
+			text-transform: uppercase;
+			letter-spacing: 0.18em;
+			font-size: 11px;
+			margin: 0 0 12px;
+		}
+
+		h1,
+		h2 {
+			margin: 0 0 10px;
+			font-weight: 700;
+		}
+
+		h1 {
+			font-size: 27px;
+			line-height: 1.15;
+		}
+
+		h2 {
+			font-size: 16px;
+		}
+
+		p {
+			margin: 0 0 12px;
+			color: var(--muted);
+		}
+
+		label {
+			display: block;
+			margin: 0 0 8px;
+			font-size: 12px;
+			letter-spacing: 0.08em;
+			text-transform: uppercase;
+			color: var(--muted);
+		}
+
+		input,
+		textarea,
+		select,
+		button {
+			width: 100%;
+			border-radius: 12px;
+			border: 1px solid rgba(125, 184, 255, 0.25);
+			background: rgba(6, 12, 20, 0.92);
+			color: var(--text);
+			padding: 11px 12px;
+			font: inherit;
+		}
+
+		textarea {
+			min-height: 88px;
+			resize: vertical;
+		}
+
+		button {
+			cursor: pointer;
+			background: linear-gradient(135deg, rgba(124, 243, 200, 0.16), rgba(125, 184, 255, 0.18));
+			transition: transform 120ms ease, border-color 120ms ease;
+		}
+
+		button:hover {
+			transform: translateY(-1px);
+			border-color: rgba(124, 243, 200, 0.45);
+		}
+
+		.row {
+			display: grid;
+			grid-template-columns: repeat(2, minmax(0, 1fr));
+			gap: 10px;
+			margin-bottom: 10px;
+		}
+
+		.stack {
+			display: grid;
+			gap: 10px;
+		}
+
+		.status-grid {
+			display: grid;
+			grid-template-columns: repeat(2, minmax(0, 1fr));
+			gap: 10px;
+		}
+
+		.stat {
+			padding: 12px;
+			border-radius: 12px;
+			background: rgba(255, 255, 255, 0.03);
+			border: 1px solid rgba(255, 255, 255, 0.06);
+		}
+
+		.stat strong {
+			display: block;
+			font-size: 12px;
+			color: var(--muted);
+			margin-bottom: 6px;
+		}
+
+		.stat span {
+			font-size: 16px;
+			color: var(--text);
+		}
+
+		.note {
+			padding: 12px 14px;
+			border-left: 3px solid var(--accent-2);
+			background: rgba(125, 184, 255, 0.08);
+			color: var(--text);
+		}
+
+		pre {
+			margin: 0;
+			padding: 14px;
+			border-radius: 14px;
+			background: var(--code);
+			border: 1px solid rgba(255, 255, 255, 0.08);
+			overflow: auto;
+			white-space: pre-wrap;
+			word-break: break-word;
+		}
+
+		table {
+			width: 100%;
+			border-collapse: collapse;
+			font-size: 13px;
+		}
+
+		th,
+		td {
+			padding: 10px 8px;
+			border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+			text-align: left;
+			vertical-align: top;
+		}
+
+		th {
+			color: var(--muted);
+			font-size: 12px;
+			text-transform: uppercase;
+			letter-spacing: 0.06em;
+		}
+
+		.muted {
+			color: var(--muted);
+		}
+
+		.good {
+			color: var(--accent);
+		}
+
+		.bad {
+			color: var(--danger);
+		}
+
+		.viewer-shell {
+			padding: 18px;
+			min-height: calc(100vh - 48px);
+			display: grid;
+			grid-template-rows: auto minmax(540px, 1fr);
+			gap: 16px;
+		}
+
+		iframe {
+			width: 100%;
+			height: 100%;
+			border: 0;
+			border-radius: 16px;
+			background: #000;
+		}
+
+		a {
+			color: var(--accent);
+		}
+
+		@media (max-width: 1100px) {
+			main {
+				grid-template-columns: 1fr;
+			}
+
+			.viewer-shell {
+				min-height: auto;
+			}
+
+			iframe {
+				min-height: 70vh;
+			}
+		}
+	</style>
+</head>
+<body>
+	<main>
+		<div class="sidebar">
+			<section class="panel">
+				<p class="eyebrow">Developer Demo</p>
+				<h1>Chunked Buffer Iframe API</h1>
+				<p>This page embeds a VDO.Ninja viewer in a real iframe and sends <code>setBufferDelay</code> messages from the parent page.</p>
+				<div class="note">
+					Use <code>UUID</code> or <code>UUID: "*"</code> for connected chunked peers. The default message updates <code>session.buffer</code>, while each peer keeps its own requested base in <code>session.rpcs[uuid].buffer</code>.
+				</div>
+			</section>
+
+			<section class="panel">
+				<h2>Viewer Setup</h2>
+				<div class="stack">
+					<div>
+						<label for="room">Room</label>
+						<input id="room" type="text">
+					</div>
+					<div>
+						<label for="viewer-params">Viewer Params</label>
+						<textarea id="viewer-params">scene&autostart&label=ChunkedIframeDemo&chunkbufferceil=12000</textarea>
+					</div>
+					<div class="row">
+						<button id="reload-viewer" type="button">Reload Viewer</button>
+						<button id="refresh-state" type="button">Refresh State</button>
+					</div>
+					<div class="row">
+						<button id="open-synthetic" type="button">Open Synthetic Publisher</button>
+						<button id="open-camera" type="button">Open Camera Publisher</button>
+					</div>
+				</div>
+			</section>
+
+			<section class="panel">
+				<h2>Buffer Commands</h2>
+				<div class="stack">
+					<div>
+						<label for="delay-ms">Delay (ms)</label>
+						<input id="delay-ms" type="number" min="0" step="50" value="1500">
+					</div>
+					<div>
+						<label for="uuid-select">Peer UUID</label>
+						<select id="uuid-select">
+							<option value="">No peers yet</option>
+						</select>
+					</div>
+					<div class="row">
+						<button id="send-default" type="button">Send Default</button>
+						<button id="send-selected" type="button">Send Selected UUID</button>
+					</div>
+					<div class="row">
+						<button id="send-all" type="button">Send UUID: *</button>
+						<button id="copy-selected" type="button">Copy UUID</button>
+					</div>
+				</div>
+			</section>
+
+			<section class="panel">
+				<h2>Synthetic Impairment</h2>
+				<p>Demo-only receiver impairment. This wraps the active chunked playback path inside the iframe and can delay or drop completed frames to mimic late delivery and underbuffering.</p>
+				<div class="stack">
+					<div class="row">
+						<div>
+							<label for="impair-delay-ms">Delay Per Frame (ms)</label>
+							<input id="impair-delay-ms" type="number" min="0" step="50" value="0">
+						</div>
+						<div>
+							<label for="impair-drop-every">Drop Every N Frames</label>
+							<input id="impair-drop-every" type="number" min="0" step="1" value="0">
+						</div>
+					</div>
+					<div class="row">
+						<div>
+							<label for="impair-burst-every">Burst Every N Frames</label>
+							<input id="impair-burst-every" type="number" min="0" step="1" value="0">
+						</div>
+						<div>
+							<label for="impair-burst-delay-ms">Burst Delay (ms)</label>
+							<input id="impair-burst-delay-ms" type="number" min="0" step="50" value="0">
+						</div>
+					</div>
+					<div class="row">
+						<button id="apply-impairment-selected" type="button">Impair Selected UUID</button>
+						<button id="apply-impairment-all" type="button">Impair All Peers</button>
+					</div>
+					<div class="row">
+						<button id="preset-underbuffer" type="button">Preset: Underbuffer</button>
+						<button id="clear-impairment" type="button">Clear Impairment</button>
+					</div>
+				</div>
+				<div style="margin-top: 12px;">
+					<label for="impairment-status">Impairment Status</label>
+					<pre id="impairment-status">No synthetic impairment active.</pre>
+				</div>
+			</section>
+
+			<section class="panel">
+				<h2>Live State</h2>
+				<div class="status-grid">
+					<div class="stat">
+						<strong>Iframe Listener</strong>
+						<span id="listener-state">Unknown</span>
+					</div>
+					<div class="stat">
+						<strong>session.buffer</strong>
+						<span id="session-buffer">n/a</span>
+					</div>
+					<div class="stat">
+						<strong>session.chunkbuffer</strong>
+						<span id="chunkbuffer-state">n/a</span>
+					</div>
+					<div class="stat">
+						<strong>Peers</strong>
+						<span id="peer-count">0</span>
+					</div>
+				</div>
+				<div style="margin-top: 12px;">
+					<label for="last-command">Last Parent Message</label>
+					<pre id="last-command">No message sent yet.</pre>
+				</div>
+			</section>
+
+			<section class="panel">
+				<h2>Implementation Notes</h2>
+				<p>The two most useful values to watch are:</p>
+				<p><code>session.rpcs[uuid].buffer</code> = requested base buffer for that peer.</p>
+				<p><code>stats.chunked_mode_video.buffer_buffer</code> = live effective target after any adaptive logic.</p>
+				<div class="note">
+					If you want deterministic QA, disable or stub the adaptive buffer helper in a dedicated test harness. For real integrations, leave adaptation on and observe both the requested base and the effective target.
+				</div>
+			</section>
+
+			<section class="panel">
+				<h2>Code Snippet</h2>
+				<pre id="code-snippet"></pre>
+			</section>
+		</div>
+
+		<div class="viewer-shell panel">
+			<section style="padding: 0;">
+				<div style="padding: 18px 18px 0;">
+					<p class="eyebrow">Embedded Viewer</p>
+					<p class="muted">Messages are sent from this parent page into the iframe below.</p>
+				</div>
+				<div style="padding: 0 18px 18px;">
+					<iframe id="viewer-frame" name="viewer-frame" allow="autoplay; camera; microphone"></iframe>
+				</div>
+			</section>
+
+			<section style="padding-top: 0;">
+				<h2>Connected Peers</h2>
+				<table>
+					<thead>
+						<tr>
+							<th>UUID</th>
+							<th>Label / Stream</th>
+							<th>Requested Base</th>
+							<th>Effective Target</th>
+							<th>Buffer Level</th>
+							<th>Rebuffering</th>
+							<th>Synthetic Impairment</th>
+						</tr>
+					</thead>
+					<tbody id="peer-table">
+						<tr>
+							<td colspan="7" class="muted">Load the viewer and open a chunked publisher to populate peer stats.</td>
+						</tr>
+					</tbody>
+				</table>
+			</section>
+		</div>
+	</main>
+
+	<script>
+	(function () {
+		function uid(prefix) {
+			return prefix + "_" + Date.now().toString(36) + "_" + Math.random().toString(36).slice(2, 8);
+		}
+
+		function readSearchParam(name, fallback) {
+			var params = new URLSearchParams(window.location.search);
+			return params.get(name) || fallback;
+		}
+
+		var roomInput = document.getElementById("room");
+		var viewerParamsInput = document.getElementById("viewer-params");
+		var delayInput = document.getElementById("delay-ms");
+		var uuidSelect = document.getElementById("uuid-select");
+		var viewerFrame = document.getElementById("viewer-frame");
+		var peerTable = document.getElementById("peer-table");
+		var listenerState = document.getElementById("listener-state");
+		var sessionBuffer = document.getElementById("session-buffer");
+		var chunkbufferState = document.getElementById("chunkbuffer-state");
+		var peerCount = document.getElementById("peer-count");
+		var lastCommand = document.getElementById("last-command");
+		var codeSnippet = document.getElementById("code-snippet");
+		var impairmentStatus = document.getElementById("impairment-status");
+		var impairDelayInput = document.getElementById("impair-delay-ms");
+		var impairDropEveryInput = document.getElementById("impair-drop-every");
+		var impairBurstEveryInput = document.getElementById("impair-burst-every");
+		var impairBurstDelayInput = document.getElementById("impair-burst-delay-ms");
+
+		roomInput.value = readSearchParam("room", uid("chunkdemo"));
+		viewerParamsInput.value = readSearchParam("viewerParams", viewerParamsInput.value);
+
+		function buildViewerUrl() {
+			var room = encodeURIComponent(roomInput.value.trim());
+			var extra = viewerParamsInput.value.trim();
+			if (extra) {
+				return "../index.html?room=" + room + "&" + extra;
+			}
+			return "../index.html?room=" + room;
+		}
+
+		function buildPublisherUrl(testMedia) {
+			var room = encodeURIComponent(roomInput.value.trim());
+			var pushId = encodeURIComponent(uid(testMedia ? "synthetic" : "camera"));
+			var params = [
+				"push=" + pushId,
+				"room=" + room,
+				"webcam",
+				"autostart",
+				"chunked=1800",
+				"label=ChunkedBufferPublisher"
+			];
+			if (testMedia) {
+				params.push("testmedia=1");
+				params.push("testwidth=640");
+				params.push("testheight=360");
+				params.push("testfps=15");
+			}
+			return "../index.html?" + params.join("&");
+		}
+
+		function getViewerWindow() {
+			if (!viewerFrame || !viewerFrame.contentWindow) {
+				return null;
+			}
+			return viewerFrame.contentWindow;
+		}
+
+		function ensureImpairmentTools(targetWindow) {
+			if (!targetWindow || targetWindow.__demoInstallChunkedImpairment) {
+				return;
+			}
+
+			targetWindow.__demoChunkedImpairmentConfig = null;
+			targetWindow.__demoChunkedImpairmentTimer = null;
+
+			targetWindow.__demoWrapChunkedFile = function (file) {
+				if (!file || typeof file.processFrame !== "function" || file.__demoImpairmentWrapped) {
+					return;
+				}
+				file.__demoImpairmentWrapped = true;
+				file.__demoOriginalProcessFrame = file.processFrame;
+				file.__demoImpairmentState = { seen: 0, delayed: 0, dropped: 0 };
+				file.processFrame = async function (dataFrame) {
+					var config = targetWindow.__demoChunkedImpairmentConfig;
+					var original = file.__demoOriginalProcessFrame;
+					if (!config || !config.enabled || typeof original !== "function") {
+						return original.call(file, dataFrame);
+					}
+
+					var targets = config.targets || ["*"];
+					var targetMatch = targets.indexOf("*") !== -1 || targets.indexOf(file.UUID) !== -1;
+					if (!targetMatch) {
+						return original.call(file, dataFrame);
+					}
+
+					var isVideoFrame = dataFrame && (dataFrame.type === "key" || dataFrame.type === "delta" || dataFrame.type === "video");
+					if (config.videoOnly && !isVideoFrame) {
+						return original.call(file, dataFrame);
+					}
+
+					file.__demoImpairmentState.seen += 1;
+					if (config.dropEvery > 0 && file.__demoImpairmentState.seen % config.dropEvery === 0) {
+						file.__demoImpairmentState.dropped += 1;
+						return;
+					}
+
+					var extraDelay = config.delayMs;
+					if (config.burstEvery > 0 && file.__demoImpairmentState.seen % config.burstEvery === 0) {
+						extraDelay += config.burstDelayMs;
+					}
+
+					if (extraDelay > 0) {
+						file.__demoImpairmentState.delayed += 1;
+						await new Promise(function (resolve) {
+							setTimeout(resolve, extraDelay);
+						});
+					}
+
+					return original.call(file, dataFrame);
+				};
+			};
+
+			targetWindow.__demoApplyChunkedImpairmentHooks = function () {
+				var rpcs = targetWindow.session && targetWindow.session.rpcs ? targetWindow.session.rpcs : {};
+				for (var uuid in rpcs) {
+					var rpc = rpcs[uuid];
+					if (!rpc || !Array.isArray(rpc.chunkedChannels)) {
+						continue;
+					}
+					for (var i = 0; i < rpc.chunkedChannels.length; i++) {
+						targetWindow.__demoWrapChunkedFile(rpc.chunkedChannels[i]);
+					}
+				}
+			};
+
+			targetWindow.__demoInstallChunkedImpairment = function (config) {
+				targetWindow.__demoChunkedImpairmentConfig = {
+					enabled: true,
+					delayMs: Math.max(0, parseInt(config.delayMs, 10) || 0),
+					burstEvery: Math.max(0, parseInt(config.burstEvery, 10) || 0),
+					burstDelayMs: Math.max(0, parseInt(config.burstDelayMs, 10) || 0),
+					dropEvery: Math.max(0, parseInt(config.dropEvery, 10) || 0),
+					videoOnly: config.videoOnly !== false,
+					targets: Array.isArray(config.targets) && config.targets.length ? config.targets.slice() : ["*"]
+				};
+				targetWindow.__demoApplyChunkedImpairmentHooks();
+				if (targetWindow.__demoChunkedImpairmentTimer) {
+					clearInterval(targetWindow.__demoChunkedImpairmentTimer);
+				}
+				targetWindow.__demoChunkedImpairmentTimer = setInterval(targetWindow.__demoApplyChunkedImpairmentHooks, 250);
+			};
+
+			targetWindow.__demoClearChunkedImpairment = function () {
+				if (targetWindow.__demoChunkedImpairmentTimer) {
+					clearInterval(targetWindow.__demoChunkedImpairmentTimer);
+					targetWindow.__demoChunkedImpairmentTimer = null;
+				}
+				targetWindow.__demoChunkedImpairmentConfig = null;
+				var rpcs = targetWindow.session && targetWindow.session.rpcs ? targetWindow.session.rpcs : {};
+				for (var uuid in rpcs) {
+					var rpc = rpcs[uuid];
+					if (!rpc || !Array.isArray(rpc.chunkedChannels)) {
+						continue;
+					}
+					for (var i = 0; i < rpc.chunkedChannels.length; i++) {
+						var file = rpc.chunkedChannels[i];
+						if (file && file.__demoImpairmentWrapped && typeof file.__demoOriginalProcessFrame === "function") {
+							file.processFrame = file.__demoOriginalProcessFrame;
+							file.__demoImpairmentWrapped = false;
+						}
+					}
+				}
+			};
+		}
+
+		function applyImpairment(targets) {
+			var targetWindow = getViewerWindow();
+			if (!targetWindow || !targetWindow.session) {
+				impairmentStatus.textContent = "Viewer iframe is not ready yet.";
+				return;
+			}
+			ensureImpairmentTools(targetWindow);
+			targetWindow.__demoInstallChunkedImpairment({
+				delayMs: parseInt(impairDelayInput.value, 10) || 0,
+				burstEvery: parseInt(impairBurstEveryInput.value, 10) || 0,
+				burstDelayMs: parseInt(impairBurstDelayInput.value, 10) || 0,
+				dropEvery: parseInt(impairDropEveryInput.value, 10) || 0,
+				targets: targets
+			});
+			refreshState();
+		}
+
+		function clearImpairment() {
+			var targetWindow = getViewerWindow();
+			if (!targetWindow || !targetWindow.session) {
+				impairmentStatus.textContent = "Viewer iframe is not ready yet.";
+				return;
+			}
+			ensureImpairmentTools(targetWindow);
+			targetWindow.__demoClearChunkedImpairment();
+			refreshState();
+		}
+
+		function postToViewer(payload) {
+			var targetWindow = getViewerWindow();
+			if (!targetWindow) {
+				lastCommand.textContent = "Viewer iframe is not ready yet.";
+				return;
+			}
+			targetWindow.postMessage(payload, "*");
+			lastCommand.textContent = JSON.stringify(payload, null, 2);
+			refreshState();
+		}
+
+		function formatValue(value) {
+			if (value === false || value === null || typeof value === "undefined" || value === "") {
+				return "n/a";
+			}
+			return String(value);
+		}
+
+		function renderPeers(peers) {
+			if (!peers.length) {
+				peerTable.innerHTML = '<tr><td colspan="7" class="muted">No active peers yet.</td></tr>';
+				uuidSelect.innerHTML = '<option value="">No peers yet</option>';
+				return;
+			}
+
+			peerTable.innerHTML = peers.map(function (peer) {
+				var labelBits = [];
+				if (peer.label) {
+					labelBits.push(peer.label);
+				}
+				if (peer.streamID) {
+					labelBits.push(peer.streamID);
+				}
+				var impairmentText = "<span class=\"muted\">none</span>";
+				if (peer.impairment) {
+					impairmentText = "seen=" + peer.impairment.seen +
+						"<br>delayed=" + peer.impairment.delayed +
+						"<br>dropped=" + peer.impairment.dropped;
+				}
+				return [
+					"<tr>",
+					"<td><code>" + peer.uuid + "</code></td>",
+					"<td>" + (labelBits.length ? labelBits.join("<br>") : "<span class=\"muted\">n/a</span>") + "</td>",
+					"<td>" + formatValue(peer.rpcBuffer) + "</td>",
+					"<td>" + formatValue(peer.effectiveBuffer) + "</td>",
+					"<td>" + formatValue(peer.bufferLevel) + "</td>",
+					"<td>" + (peer.rebuffering === null ? "n/a" : (peer.rebuffering ? "<span class=\"bad\">true</span>" : "<span class=\"good\">false</span>")) + "</td>",
+					"<td>" + impairmentText + "</td>",
+					"</tr>"
+				].join("");
+			}).join("");
+
+			var current = uuidSelect.value;
+			uuidSelect.innerHTML = peers.map(function (peer) {
+				return '<option value="' + peer.uuid + '">' + peer.uuid + (peer.label ? " (" + peer.label + ")" : "") + "</option>";
+			}).join("");
+			if (current && peers.some(function (peer) { return peer.uuid === current; })) {
+				uuidSelect.value = current;
+			}
+		}
+
+		function updateCodeSnippet() {
+			var delay = parseInt(delayInput.value, 10) || 0;
+			var uuid = uuidSelect.value || "replace-with-peer-uuid";
+			var lines = [
+				'const iframe = document.getElementById("viewer-frame");',
+				"",
+				"// Set the default buffer value stored on the embedded viewer",
+				'iframe.contentWindow.postMessage({ setBufferDelay: ' + delay + ' }, "*");',
+				"",
+				"// Retarget one active peer",
+				'iframe.contentWindow.postMessage({ setBufferDelay: ' + delay + ', UUID: "' + uuid + '" }, "*");',
+				"",
+				"// Retarget all active peers",
+				'iframe.contentWindow.postMessage({ setBufferDelay: ' + delay + ', UUID: "*" }, "*");'
+			];
+			codeSnippet.textContent = lines.join("\n");
+		}
+
+		function refreshState() {
+			var targetWindow = getViewerWindow();
+			if (!targetWindow || !targetWindow.session) {
+				listenerState.textContent = "Viewer loading";
+				listenerState.className = "";
+				sessionBuffer.textContent = "n/a";
+				chunkbufferState.textContent = "n/a";
+				peerCount.textContent = "0";
+				impairmentStatus.textContent = "No synthetic impairment active.";
+				renderPeers([]);
+				return;
+			}
+
+			try {
+				var viewerSession = targetWindow.session;
+				var peers = [];
+				var rpcs = viewerSession.rpcs || {};
+				for (var uuid in rpcs) {
+					var rpc = rpcs[uuid];
+					if (!rpc) {
+						continue;
+					}
+					var stats = (rpc.stats || {}).chunked_mode_video || null;
+					var impairment = null;
+					if (Array.isArray(rpc.chunkedChannels)) {
+						for (var i = 0; i < rpc.chunkedChannels.length; i++) {
+							var file = rpc.chunkedChannels[i];
+							if (file && file.__demoImpairmentState) {
+								impairment = {
+									seen: file.__demoImpairmentState.seen || 0,
+									delayed: file.__demoImpairmentState.delayed || 0,
+									dropped: file.__demoImpairmentState.dropped || 0
+								};
+								break;
+							}
+						}
+					}
+					peers.push({
+						uuid: uuid,
+						label: rpc.label || null,
+						streamID: rpc.streamID || null,
+						rpcBuffer: rpc.buffer,
+						effectiveBuffer: stats && typeof stats.buffer_buffer === "number" ? stats.buffer_buffer : null,
+						bufferLevel: stats && typeof stats.buffer_level === "number" ? stats.buffer_level : null,
+						rebuffering: stats ? !!stats.rebuffering : null,
+						impairment: impairment
+					});
+				}
+
+				listenerState.textContent = typeof targetWindow.onmessage === "function" ? "Active" : "Missing";
+				listenerState.className = typeof targetWindow.onmessage === "function" ? "good" : "bad";
+				sessionBuffer.textContent = formatValue(viewerSession.buffer);
+				chunkbufferState.textContent = formatValue(viewerSession.chunkbuffer);
+				peerCount.textContent = String(peers.length);
+				if (targetWindow.__demoChunkedImpairmentConfig) {
+					impairmentStatus.textContent = JSON.stringify(targetWindow.__demoChunkedImpairmentConfig, null, 2);
+				} else {
+					impairmentStatus.textContent = "No synthetic impairment active.";
+				}
+				renderPeers(peers);
+				updateCodeSnippet();
+			} catch (error) {
+				listenerState.textContent = "Cross-origin or unavailable";
+				listenerState.className = "bad";
+				sessionBuffer.textContent = "n/a";
+				chunkbufferState.textContent = "n/a";
+				peerCount.textContent = "0";
+				impairmentStatus.textContent = "Viewer state unavailable.";
+				renderPeers([]);
+			}
+		}
+
+		function loadViewer() {
+			viewerFrame.src = buildViewerUrl();
+			lastCommand.textContent = "Viewer reloaded with:\n" + viewerFrame.src;
+			setTimeout(refreshState, 1000);
+		}
+
+		document.getElementById("reload-viewer").addEventListener("click", loadViewer);
+		document.getElementById("refresh-state").addEventListener("click", refreshState);
+		document.getElementById("open-synthetic").addEventListener("click", function () {
+			window.open(buildPublisherUrl(true), "_blank", "noopener");
+		});
+		document.getElementById("open-camera").addEventListener("click", function () {
+			window.open(buildPublisherUrl(false), "_blank", "noopener");
+		});
+		document.getElementById("send-default").addEventListener("click", function () {
+			postToViewer({ setBufferDelay: parseInt(delayInput.value, 10) || 0 });
+		});
+		document.getElementById("send-selected").addEventListener("click", function () {
+			if (!uuidSelect.value) {
+				lastCommand.textContent = "Select a peer UUID first.";
+				return;
+			}
+			postToViewer({ setBufferDelay: parseInt(delayInput.value, 10) || 0, UUID: uuidSelect.value });
+		});
+		document.getElementById("send-all").addEventListener("click", function () {
+			postToViewer({ setBufferDelay: parseInt(delayInput.value, 10) || 0, UUID: "*" });
+		});
+		document.getElementById("apply-impairment-selected").addEventListener("click", function () {
+			if (!uuidSelect.value) {
+				impairmentStatus.textContent = "Select a peer UUID first.";
+				return;
+			}
+			applyImpairment([uuidSelect.value]);
+		});
+		document.getElementById("apply-impairment-all").addEventListener("click", function () {
+			applyImpairment(["*"]);
+		});
+		document.getElementById("preset-underbuffer").addEventListener("click", function () {
+			impairDelayInput.value = "1200";
+			impairDropEveryInput.value = "0";
+			impairBurstEveryInput.value = "0";
+			impairBurstDelayInput.value = "0";
+			if (uuidSelect.value) {
+				applyImpairment([uuidSelect.value]);
+			} else {
+				applyImpairment(["*"]);
+			}
+		});
+		document.getElementById("clear-impairment").addEventListener("click", function () {
+			clearImpairment();
+		});
+		document.getElementById("copy-selected").addEventListener("click", function () {
+			if (!uuidSelect.value) {
+				lastCommand.textContent = "No peer UUID selected.";
+				return;
+			}
+			navigator.clipboard.writeText(uuidSelect.value).then(function () {
+				lastCommand.textContent = "Copied UUID:\n" + uuidSelect.value;
+			}).catch(function () {
+				lastCommand.textContent = "Clipboard write failed.\nUUID: " + uuidSelect.value;
+			});
+		});
+		delayInput.addEventListener("input", updateCodeSnippet);
+		uuidSelect.addEventListener("change", updateCodeSnippet);
+		viewerFrame.addEventListener("load", function () {
+			setTimeout(refreshState, 900);
+		});
+
+		updateCodeSnippet();
+		loadViewer();
+		setInterval(refreshState, 1000);
+	})();
+	</script>
+</body>
+</html>

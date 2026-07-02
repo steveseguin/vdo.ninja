@@ -1,9 +1,21 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+	<meta name="description" content="Manual message relay between two peers with testing and compression controls." />
+	<link rel="canonical" href="https://vdo.ninja/examples/wireless.html" />
+	<meta property="og:type" content="website" />
+	<meta property="og:site_name" content="VDO.Ninja" />
+	<meta property="og:url" content="https://vdo.ninja/examples/wireless.html" />
+	<meta property="og:title" content="Wireless Relay Lab - VDO.Ninja" />
+	<meta property="og:description" content="Manual message relay between two peers with testing and compression controls." />
+	<meta property="og:image" content="https://vdo.ninja/media/vdoNinja_logo_full.png" />
+	<meta name="twitter:card" content="summary_large_image" />
+	<meta name="twitter:title" content="Wireless Relay Lab - VDO.Ninja" />
+	<meta name="twitter:description" content="Manual message relay between two peers with testing and compression controls." />
+	<meta name="twitter:image" content="https://vdo.ninja/media/vdoNinja_logo_full.png" />
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Manual Message Relay with Compression</title>
+    <title>Wireless Relay Lab - VDO.Ninja</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -13,54 +25,54 @@
             flex-direction: column;
             height: 100vh;
         }
-        
+
         .container {
             display: flex;
             flex-direction: column;
             height: 100%;
         }
-        
+
         .iframe-container {
             flex: 1;
             display: flex;
         }
-        
+
         .iframe-half {
             flex: 1;
             position: relative;
             border-right: 2px solid #ccc;
         }
-        
+
         .iframe-half:last-child {
             border-right: none;
         }
-        
+
         iframe {
             width: 100%;
             height: 100%;
             border: none;
         }
-        
+
         .controls {
             background: #f0f0f0;
             padding: 15px;
             border-top: 1px solid #ccc;
         }
-        
+
         .control-group {
             margin-bottom: 15px;
         }
-        
+
         .control-group:last-child {
             margin-bottom: 0;
         }
-        
+
         label {
             display: block;
             margin-bottom: 5px;
             font-weight: bold;
         }
-        
+
         textarea {
             width: 100%;
             height: 60px;
@@ -69,7 +81,7 @@
             box-sizing: border-box;
             margin-bottom: 5px;
         }
-        
+
         button {
             padding: 8px 15px;
             background: #4285f4;
@@ -79,17 +91,17 @@
             cursor: pointer;
             margin-right: 5px;
         }
-        
+
         button:hover {
             background: #3367d6;
         }
-        
+
         .status {
             margin-top: 5px;
             font-size: 0.9em;
             color: #666;
         }
-        
+
         .debug-output {
             margin-top: 10px;
             border: 1px solid #ddd;
@@ -100,11 +112,11 @@
             overflow-y: auto;
             background: #f9f9f9;
         }
-		
+
 		.debug-output > div {
 			margin: 10px 0;
 		}
-        
+
         .connection-status {
             padding: 8px;
             margin-bottom: 10px;
@@ -121,23 +133,23 @@
         .compression-toggle {
             margin-top: 10px;
         }
-        
+
         .transfer-buttons {
             display: flex;
             justify-content: center;
             padding: 10px 0;
             background: #e0e0e0;
         }
-        
+
         .transfer-btn {
             background: #ff5722;
             margin: 0 10px;
         }
-        
+
         .transfer-btn:hover {
             background: #e64a19;
         }
-        
+
         .iframe-label {
             position: absolute;
             top: 0;
@@ -148,19 +160,19 @@
             font-size: 12px;
             z-index: 10;
         }
-        
+
         .auto-transfer {
             background: #4caf50;
         }
-        
+
         .auto-transfer:hover {
             background: #388e3c;
         }
-        
+
         .auto-transfer-active {
             background: #f44336;
         }
-        
+
         .auto-transfer-active:hover {
             background: #d32f2f;
         }
@@ -178,18 +190,18 @@
                 <!-- Right iframe will be added here via JS -->
             </div>
         </div>
-        
+
         <div class="transfer-buttons">
             <button id="leftToRight" class="transfer-btn">Transfer Left → Right</button>
             <button id="autoTransfer" class="auto-transfer">Enable Auto Transfer</button>
             <button id="rightToLeft" class="transfer-btn">Transfer Right → Left</button>
         </div>
-        
+
         <div class="controls">
             <div class="connection-status" id="connectionStatus">
                 Connection Status: Waiting for connections...
             </div>
-            
+
             <div class="control-group">
                 <label for="outputArea">Outgoing messages:</label>
                 <textarea id="outputArea" readonly></textarea>
@@ -497,34 +509,34 @@ function compressSDP(sdp) {
         const iceUfragMatch = sdp.match(/a=ice-ufrag:([^\r\n]+)/);
         const icePwdMatch = sdp.match(/a=ice-pwd:([^\r\n]+)/);
         const fingerprintMatch = sdp.match(/a=fingerprint:sha-256 ([^\r\n]+)/);
-        
+
         if (!iceUfragMatch || !icePwdMatch || !fingerprintMatch) {
             updateDebugOutput("SDP missing required fields");
             throw new Error("SDP missing required fields");
         }
-        
+
         const iceUfrag = iceUfragMatch[1];
         const icePwd = icePwdMatch[1];
         const fingerprint = fingerprintMatch[1].replace(/:/g, '');
         const isOffer = sdp.match(/a=setup:actpass/) !== null;
-        
+
         // Extract host and srflx candidates only (UDP IPv4 only)
         const candidateRegex = /a=candidate:([^\r\n]+)/g;
         let candidateMatch;
         let hostCandidates = [];
         let srflxCandidates = [];
-        
+
         while ((candidateMatch = candidateRegex.exec(sdp)) !== null) {
             const parts = candidateMatch[1].split(' ');
-            
+
             // Skip non-UDP, IPv6, mDNS, TCP and relay candidates
-            if (parts[2].toLowerCase() !== 'udp' || 
-                parts[4].includes(':') || 
+            if (parts[2].toLowerCase() !== 'udp' ||
+                parts[4].includes(':') ||
                 parts[4].includes('.local') ||
                 parts[7] === 'relay') {
                 continue;
             }
-            
+
             // Create compact representation of candidate
             const foundation = parts[0];
             const component = parts[1];
@@ -532,39 +544,39 @@ function compressSDP(sdp) {
             const ip = compressIP(parts[4]);
             const port = parts[5];
             const type = parts[7];
-            
+
             // Format: foundation|component|priority|ip|port
             let candidateStr = `${foundation}|${component}|${priority}|${ip}|${port}`;
-            
+
             // Add related address info for srflx candidates
             if (type === 'srflx') {
                 const rAddrIndex = parts.indexOf('raddr');
                 const rPortIndex = parts.indexOf('rport');
-                
+
                 if (rAddrIndex !== -1 && rPortIndex !== -1 &&
                     rAddrIndex + 1 < parts.length && rPortIndex + 1 < parts.length) {
                     const relatedIP = compressIP(parts[rAddrIndex + 1]);
                     candidateStr += `|${relatedIP}|${parts[rPortIndex + 1]}`;
                 }
-                
+
                 srflxCandidates.push(candidateStr);
             } else if (type === 'host') {
                 hostCandidates.push(candidateStr);
             }
         }
-        
+
         // Compress fingerprint using hexToCompact
         const compactFingerprint = hexToCompact(fingerprint);
-        
+
         // Create string format: C2|o/a|ufrag|pwd|fingerprint|host1^host2^...|srflx1^srflx2^...
         let result = `C2|${isOffer ? 'o' : 'a'}|${iceUfrag}|${icePwd}|${compactFingerprint}`;
-        
+
         // Add host candidates
         result += '|' + hostCandidates.join('^');
-        
+
         // Add srflx candidates
         result += '|' + srflxCandidates.join('^');
-        
+
         return result;
     } catch (e) {
         console.error("Error in compressSDP:", e);
@@ -578,7 +590,7 @@ function decompressSDP(compressed) {
         if (typeof compressed !== 'string') {
             compressed = JSON.stringify(compressed);
         }
-        
+
         // Handle old format
         if (compressed.startsWith('{') && compressed.endsWith('}')) {
             try {
@@ -590,24 +602,24 @@ function decompressSDP(compressed) {
                 updateDebugOutput(`Not valid JSON format: ${e.message}`);
             }
         }
-        
+
         // Handle old C1 format
         if (compressed.startsWith('C1|')) {
             return decompressOldSDP(compressed);
         }
-        
+
         // Parse the new C2 string format
         // C2|o/a|ufrag|pwd|fingerprint|host1^host2^...|srflx1^srflx2^...
         const parts = compressed.split('|');
-        
+
         if (parts[0] !== 'C2' || parts.length < 6) {
             throw new Error('Invalid compressed SDP format');
         }
-        
+
         const isOffer = parts[1] === 'o';
         const iceUfrag = parts[2];
         const icePwd = parts[3];
-        
+
         // Decompress fingerprint if it doesn't contain colons
         let fingerprint = parts[4];
         if (fingerprint.indexOf(':') === -1) {
@@ -618,7 +630,7 @@ function decompressSDP(compressed) {
             // Format with colons
             fingerprint = fingerprint.match(/.{2}/g).join(':').toUpperCase();
         }
-        
+
         // Build the basic SDP structure
         let sdpLines = [
             'v=0',
@@ -639,54 +651,54 @@ function decompressSDP(compressed) {
             'a=sctp-port:5000',
             'a=max-message-size:262144'
         ];
-        
+
         // Add host candidates
         if (parts[5] && parts[5] !== '') {
             const hostCandidates = parts[5].split('^');
             for (const candidateStr of hostCandidates) {
                 if (!candidateStr) continue;
-                
+
                 const candParts = candidateStr.split('|');
                 if (candParts.length < 5) continue;
-                
+
                 const foundation = candParts[0];
                 const component = candParts[1];
                 const priority = compactToPriority(candParts[2]).toString();
                 const ip = decompressIP(candParts[3]);
                 const port = candParts[4];
-                
+
                 sdpLines.push(`a=candidate:${foundation} ${component} udp ${priority} ${ip} ${port} typ host generation 0`);
             }
         }
-        
+
         // Add srflx candidates
         if (parts[6] && parts[6] !== '') {
             const srflxCandidates = parts[6].split('^');
             for (const candidateStr of srflxCandidates) {
                 if (!candidateStr) continue;
-                
+
                 const candParts = candidateStr.split('|');
                 if (candParts.length < 5) continue;
-                
+
                 const foundation = candParts[0];
                 const component = candParts[1];
                 const priority = compactToPriority(candParts[2]).toString();
                 const ip = decompressIP(candParts[3]);
                 const port = candParts[4];
-                
+
                 let candLine = `a=candidate:${foundation} ${component} udp ${priority} ${ip} ${port} typ srflx`;
-                
+
                 // Add raddr/rport if available
                 if (candParts.length >= 7) {
                     const relatedIP = decompressIP(candParts[5]);
                     candLine += ` raddr ${relatedIP} rport ${candParts[6]}`;
                 }
-                
+
                 candLine += ' generation 0';
                 sdpLines.push(candLine);
             }
         }
-        
+
         // Join with proper line endings
         const result = sdpLines.join('\r\n') + '\r\n';
         return result;
@@ -700,16 +712,16 @@ function decompressSDP(compressed) {
 function decompressOldSDP(compressed) {
     try {
         const parts = compressed.split('|');
-        
+
         const isOffer = parts[1] === 'o';
         const iceUfrag = parts[2];
         const icePwd = parts[3];
         let fingerprint = parts[4];
-        
+
         if (fingerprint.indexOf(':') === -1) {
             fingerprint = fingerprint.match(/.{2}/g).join(':').toUpperCase();
         }
-        
+
         let sdpLines = [
             'v=0',
             'o=- ' + Math.floor(Date.now()) + ' 2 IN IP4 127.0.0.1',
@@ -729,7 +741,7 @@ function decompressOldSDP(compressed) {
             'a=sctp-port:5000',
             'a=max-message-size:262144'
         ];
-        
+
         return sdpLines.join('\r\n') + '\r\n';
     } catch (e) {
         console.error("Error in decompressOldSDP:", e);
@@ -744,12 +756,12 @@ function decompressJSONSDP(jsonData) {
         const isOffer = jsonData.t === 'o';
         const iceUfrag = jsonData.u;
         const icePwd = jsonData.p;
-        
+
         let fingerprint = jsonData.f;
         if (fingerprint.indexOf(':') === -1) {
             fingerprint = fingerprint.match(/.{2}/g).join(':').toUpperCase();
         }
-        
+
         let sdpLines = [
             'v=0',
             'o=- ' + Math.floor(Date.now()) + ' 2 IN IP4 127.0.0.1',
@@ -769,7 +781,7 @@ function decompressJSONSDP(jsonData) {
             'a=sctp-port:5000',
             'a=max-message-size:262144'
         ];
-        
+
         // Add candidates if they exist
         if (jsonData.c && Array.isArray(jsonData.c)) {
             sdpLines = sdpLines.concat(jsonData.c);
@@ -787,7 +799,7 @@ function decompressJSONSDP(jsonData) {
                     sdpLines.push(`a=candidate:${c.f} ${c.c} udp ${c.p} ${c.i} ${c.o} typ host generation 0`);
                 }
             }
-            
+
             // Add srflx candidates from s array if it exists
             if (jsonData.s && Array.isArray(jsonData.s)) {
                 for (const c of jsonData.s) {
@@ -813,7 +825,7 @@ function decompressJSONSDP(jsonData) {
                 }
             }
         }
-        
+
         return sdpLines.join('\r\n') + '\r\n';
     } catch (e) {
         console.error("Error in decompressJSONSDP:", e);
@@ -826,25 +838,25 @@ function decompressJSONSDP(jsonData) {
 function compressICECandidates(candidates) {
     try {
         if (!candidates || !candidates.length) return "";
-        
+
         // Filter for valid candidates - only UDP IPv4 host and srflx
         const validCandidates = candidates.filter(c => {
             if (!c || !c.candidate) return false;
-            
+
             const parts = c.candidate.split(' ');
-            return parts.length >= 8 && 
-                   parts[2].toLowerCase() === 'udp' && 
-                   !parts[4].includes(':') && 
+            return parts.length >= 8 &&
+                   parts[2].toLowerCase() === 'udp' &&
+                   !parts[4].includes(':') &&
                    !parts[4].includes('.local') &&
                    (parts[7] === 'host' || parts[7] === 'srflx');
         });
-        
+
         if (!validCandidates.length) return "";
-        
+
         // Separate host and srflx candidates
         const hostCandidates = [];
         const srflxCandidates = [];
-        
+
         validCandidates.forEach(c => {
             const parts = c.candidate.split(' ');
             const foundation = parts[0].replace('candidate:', '');
@@ -853,38 +865,38 @@ function compressICECandidates(candidates) {
             const ip = parts[4];
             const port = parts[5];
             const type = parts[7];
-            
+
             // Format: foundation,component,priority,ip,port
             let candidateStr = `${foundation},${component},${priority},${ip},${port}`;
-            
+
             // Add related address info for srflx candidates
             if (type === 'srflx') {
                 const rAddrIndex = parts.indexOf('raddr');
                 const rPortIndex = parts.indexOf('rport');
-                
+
                 if (rAddrIndex !== -1 && rPortIndex !== -1 &&
                     rAddrIndex + 1 < parts.length && rPortIndex + 1 < parts.length) {
                     candidateStr += `,${parts[rAddrIndex + 1]},${parts[rPortIndex + 1]}`;
                 }
-                
+
                 srflxCandidates.push(candidateStr);
             } else if (type === 'host') {
                 hostCandidates.push(candidateStr);
             }
         });
-        
+
         // Format: 'h:' + hosts joined by ^ + '|s:' + srflx joined by ^
         let result = '';
-        
+
         if (hostCandidates.length > 0) {
             result += 'h:' + hostCandidates.join('^');
         }
-        
+
         if (srflxCandidates.length > 0) {
             if (result) result += '|';
             result += 's:' + srflxCandidates.join('^');
         }
-        
+
         return result;
     } catch (e) {
         console.error("Error compressing ICE candidates:", e);
@@ -897,21 +909,21 @@ function compressICECandidates(candidates) {
 function decompressICECandidates(compressed) {
     try {
         if (!compressed) return [];
-        
+
         const candidates = [];
-        
+
         // Handle the old format for backward compatibility
         if (compressed.includes(',') && !compressed.includes('h:') && !compressed.includes('s:')) {
             return decompressOldICEFormat(compressed);
         }
-        
+
         const sections = compressed.split('|');
-        
+
         for (const section of sections) {
             if (!section) continue;
-            
+
             let type, candidateStrs;
-            
+
             if (section.startsWith('h:')) {
                 type = 'host';
                 candidateStrs = section.substring(2).split('^');
@@ -923,29 +935,29 @@ function decompressICECandidates(compressed) {
                 updateDebugOutput(`Unexpected section format: ${section}`);
                 continue;
             }
-            
+
             for (const candidateStr of candidateStrs) {
                 if (!candidateStr) continue;
-                
+
                 const parts = candidateStr.split(',');
                 if (parts.length < 5) continue;
-                
+
                 const foundation = parts[0];
                 const component = parts[1];
                 const priority = compactToPriority(parts[2]);
                 const ip = parts[3];
                 const port = parts[4];
-                
+
                 let candidateLine = `candidate:${foundation} ${component} UDP ${priority} ${ip} ${port} typ ${type}`;
-                
+
                 // Add raddr/rport for srflx if available
                 if (type === 'srflx' && parts.length >= 7) {
                     candidateLine += ` raddr ${parts[5]} rport ${parts[6]}`;
                 }
-                
+
                 // Add generation
                 candidateLine += ' generation 0';
-                
+
                 candidates.push({
                     candidate: candidateLine,
                     sdpMid: "0",
@@ -953,7 +965,7 @@ function decompressICECandidates(compressed) {
                 });
             }
         }
-        
+
         return candidates;
     } catch (e) {
         console.error("Error decompressing ICE candidates:", e);
@@ -966,7 +978,7 @@ function decompressICECandidates(compressed) {
 function decompressOldICEFormat(compressed) {
     try {
         const candidates = [];
-        
+
         const oldCandidates = compressed.split('/');
         for (const c of oldCandidates) {
             const parts = c.split(',');
@@ -974,7 +986,7 @@ function decompressOldICEFormat(compressed) {
                 updateDebugOutput(`Skipping incomplete candidate data: ${c}`);
                 continue;
             }
-            
+
             const foundation = parts[0];
             const component = parts[1];
             const protocol = parts[2] === 'u' ? 'UDP' : 'TCP';
@@ -982,7 +994,7 @@ function decompressOldICEFormat(compressed) {
             const ip = parts[4];
             const port = parts[5];
             const typeCode = parts[6];
-            
+
             let type = 'host';
             switch(typeCode) {
                 case 'h': type = 'host'; break;
@@ -990,28 +1002,28 @@ function decompressOldICEFormat(compressed) {
                 case 'r': type = 'relay'; break;
                 default: type = 'host';
             }
-            
+
             // Skip relay candidates - we don't want them
             if (type === 'relay') continue;
-            
+
             // Build candidate line
             let candidateLine = `candidate:${foundation} ${component} ${protocol} ${priority} ${ip} ${port} typ ${type}`;
-            
+
             // Add raddr/rport if available for srflx candidates
             if (type === 'srflx' && parts.length >= 9) {
                 candidateLine += ` raddr ${parts[7]} rport ${parts[8]}`;
             }
-            
-            // Add generation 
+
+            // Add generation
             candidateLine += ' generation 0';
-            
+
             candidates.push({
                 candidate: candidateLine,
                 sdpMid: "0",
                 sdpMLineIndex: 0
             });
         }
-        
+
         return candidates;
     } catch (e) {
         console.error("Error decompressing old ICE format:", e);
@@ -1030,7 +1042,7 @@ function compressMessage(message) {
         } else {
             parsedMsg = message;
         }
-        
+
         // For SDP offers/answers with descriptions
         if (parsedMsg.description && parsedMsg.description.sdp) {
             // Extract key fields
@@ -1038,7 +1050,7 @@ function compressMessage(message) {
             if (from) {
                 myUUID = from;
             }
-            
+
             // Compress SDP with candidates preserved
             return JSON.stringify({
                 type: "O",
@@ -1046,35 +1058,35 @@ function compressMessage(message) {
                 sdp: compressSDP(parsedMsg.description.sdp)
             });
         }
-        
+
         // For ICE candidates
         else if (parsedMsg.candidates && parsedMsg.candidates.length) {
-			
+
 			return null;
-			
+
             // Extract key fields
             const { UUID, type, from, session } = parsedMsg;
             if (from) {
                 myUUID = from;
             }
-            
+
             // Compress candidates - only keep UDP IPv4 host and srflx candidates
             const validCandidates = parsedMsg.candidates.filter(c => {
                 if (!c || !c.candidate) return false;
-                
+
                 const parts = c.candidate.split(' ');
-                return parts.length >= 8 && 
-                       parts[2].toLowerCase() === 'udp' && 
-                       !parts[4].includes(':') && 
+                return parts.length >= 8 &&
+                       parts[2].toLowerCase() === 'udp' &&
+                       !parts[4].includes(':') &&
                        !parts[4].includes('.local') &&
                        (parts[7] === 'host' || parts[7] === 'srflx');
             });
-            
+
             // Skip empty candidate sets
             if (!validCandidates.length) {
                 return null; // Skip this message completely
             }
-            
+
             // Create compact message
             return JSON.stringify({
                 type: "C",
@@ -1082,7 +1094,7 @@ function compressMessage(message) {
                 cand: compressICECandidates(validCandidates)
             });
         }
-        
+
         // For basic messages (join, play, etc.)
         else if (parsedMsg.request) {
             // Extract key fields and create compact message
@@ -1095,7 +1107,7 @@ function compressMessage(message) {
                 req: request || null
             });
         }
-        
+
         // If we don't recognize the format, return the original message
         updateDebugOutput("Unknown message format, using original");
         return typeof message === 'string' ? message : JSON.stringify(message);
@@ -1116,7 +1128,7 @@ function decompressMessage(message) {
         } else {
             parsedMsg = message;
         }
-        
+
         // Check if it's our compressed format
         if (parsedMsg.type) {
             // SDP offer/answer message
@@ -1125,7 +1137,7 @@ function decompressMessage(message) {
                     // Determine if it's an offer or answer based on first character of SDP
                     let isOffer = false;
                     const sdpData = parsedMsg.sdp;
-                    
+
                     if (typeof sdpData === 'string') {
                         if (sdpData.startsWith('C1|')) {
                             isOffer = sdpData.split('|')[1] === 'o';
@@ -1142,7 +1154,7 @@ function decompressMessage(message) {
                     } else if (typeof sdpData === 'object') {
                         isOffer = sdpData.t === 'o';
                     }
-                    
+
                     // Build original format
                     const result = {
                         UUID: myUUID,
@@ -1154,9 +1166,9 @@ function decompressMessage(message) {
                         from: "remote",
                         roomid: "default"
                     };
-                    
+
                     if (parsedMsg.ses) result.session = parsedMsg.ses;
-                    
+
                     return JSON.stringify(result);
                 } catch (e) {
                     console.error("Error decompressing SDP:", e);
@@ -1169,13 +1181,13 @@ function decompressMessage(message) {
                 try {
                     // Decompress candidates
                     const candidates = decompressICECandidates(parsedMsg.cand || "");
-                    
+
                     // Skip if no valid candidates
                     if (!candidates || candidates.length === 0) {
                         updateDebugOutput("No valid candidates after decompression, skipping");
                         return null;
                     }
-                    
+
                     // Build original format
                     const result = {
                         UUID: myUUID,
@@ -1184,9 +1196,9 @@ function decompressMessage(message) {
                         roomid: "default",
                         type: "remote"
                     };
-                    
+
                     if (parsedMsg.ses) result.session = parsedMsg.ses;
-                    
+
                     return JSON.stringify(result);
                 } catch (e) {
                     console.error("Error decompressing candidates:", e);
@@ -1203,11 +1215,11 @@ function decompressMessage(message) {
                     from: "remote",
                     roomid: "default"
                 };
-                
+
                 return JSON.stringify(result);
             }
         }
-        
+
         // If it's not our compressed format, return it unchanged
         return typeof message === 'string' ? message : JSON.stringify(message);
     } catch (e) {
@@ -1232,7 +1244,7 @@ function decompressMessage(message) {
         let compressionEnabled = true;
         let autoTransferEnabled = false;
         let messageBuffers = { left: [], right: [] };
-        
+
         // Parse URL parameters
         var urlEdited = window.location.search.replace(/\?\?/g, "?");
         urlEdited = urlEdited.replace(/\?/g, "&");
@@ -1242,9 +1254,9 @@ function decompressMessage(message) {
             console.warn(window.location.search + " changed to " + urlEdited);
             window.history.pushState({path: urlEdited.toString()}, '', urlEdited.toString());
         }
-        
+
         var urlParams = new URLSearchParams(urlEdited);
-        
+
         // Get room ID
         if (urlParams.has("room")) {
             roomid = urlParams.get("room");
@@ -1253,19 +1265,19 @@ function decompressMessage(message) {
         // Helper functions
         function updateDebugOutput(message) {
             if (!debugMode) return;
-            
+
             const debugEl = document.getElementById("debugOutput");
             const timestamp = new Date().toLocaleTimeString();
             debugEl.innerHTML += `<div>${timestamp}: ${message}</div>`;
             debugEl.scrollTop = debugEl.scrollHeight;
         }
-        
+
         function updateConnectionStatus() {
             const statusEl = document.getElementById("connectionStatus");
-            
+
             const leftActive = Object.values(connectionStates.left).filter(s => s !== "completed" && s !== "failed").length;
             const rightActive = Object.values(connectionStates.right).filter(s => s !== "completed" && s !== "failed").length;
-            
+
             if (leftActive > 0 || rightActive > 0) {
                 statusEl.innerHTML = `Connection Status: Left (${leftActive} active) | Right (${rightActive} active)`;
             } else {
@@ -1277,22 +1289,22 @@ function decompressMessage(message) {
     try {
         // Check if it's a JSON string
         let parsedMsg = typeof message === 'string' ? JSON.parse(message) : message;
-        
+
         // Handle both packed and unpacked messages
         let innerMessage = parsedMsg;
         if (parsedMsg.m) {
             // This is a packed message from the queue
             innerMessage = JSON.parse(parsedMsg.m);
         }
-        
+
         // Check if it's a basic command type with request property
         if (innerMessage.type === "B" && innerMessage.req) {
             const command = innerMessage.req;
-            
+
             // Handle specifically joinroom and play commands
             if (command === "joinroom" || command === "play") {
                 updateDebugOutput(`Auto-relaying '${command}' command from ${sourceSide}`);
-                
+
                 // Create the original format message for both sides
                 const relayMessage = JSON.stringify({
                     request: command,
@@ -1300,17 +1312,17 @@ function decompressMessage(message) {
                     from: "remote",
                     roomid: "default"
                 });
-                
+
                if (iframes.left && iframes.left.contentWindow ) {
 					iframes.left.contentWindow.postMessage({"function":"routeMessage", "value": relayMessage}, '*');
 					updateDebugOutput(`Auto-relayed '${command}' to left iframe`);
 				}
-                
+
                 // Return true to indicate we handled it
                 return true;
             }
         }
-        
+
         // Not a command we auto-relay
         return false;
     } catch (e) {
@@ -1327,7 +1339,7 @@ function manualSend(message, side) {
             try {
                 const lastMsg = JSON.parse(messageQueues[side][messageQueues[side].length - 1]);
                 const newMsg = JSON.parse(message);
-                
+
                 // Compare stringified versions to detect duplicates
                 if (JSON.stringify(lastMsg.m) === JSON.stringify(newMsg)) {
                     return;
@@ -1336,25 +1348,25 @@ function manualSend(message, side) {
                 // Continue if parsing fails
             }
         }
-        
+
         // Extract UUID from original message for tracking
         let uuid = null;
         try {
             const parsedMsg = JSON.parse(message);
             uuid = parsedMsg.UUID;
-            
+
             if (uuid) {
                 // Update connection state
                 if (!connectionStates[side][uuid]) {
                     connectionStates[side][uuid] = "initializing";
                     updateConnectionStatus();
                 }
-                
+
                 // If this is a new connection and we're not processing one already
                 if (!currentConnectionIds[side] && uuid) {
                     currentConnectionIds[side] = uuid;
                     updateConnectionStatus();
-                    
+
                     // Set timeout for connection
                     if (processingTimeouts[side]) clearTimeout(processingTimeouts[side]);
                     processingTimeouts[side] = setTimeout(() => {
@@ -1369,42 +1381,42 @@ function manualSend(message, side) {
         } catch (e) {
             updateDebugOutput(`Error parsing message for UUID (${side}): ${e.message}`);
         }
-        
+
         let compressedMessage = message;
         let originalLength = message.length;
         let compressionRatio = "0%";
-        
+
         // Compress the message if enabled
         if (compressionEnabled) {
             try {
                 const compressed = compressMessage(message);
-				
+
 				console.info(compressed);
-                
+
                 // Skip if compression returned null
                 if (compressed === null) {
                     updateDebugOutput(`Compression returned null, skipping message (${side})`);
                     return;
                 }
-                
+
                 compressedMessage = compressed;
                 compressionRatio = ((compressedMessage.length / originalLength) * 100).toFixed(1) + "%";
-                
+
                 // Check if this is a command we should auto-relay
                 try {
                     const parsedCompressed = JSON.parse(compressedMessage);
                     if (handleAutoRelay(parsedCompressed, side)) {
                         // We handled it with auto-relay, so no need to add to queue
                         updateDebugOutput(`Auto-relayed command from ${side}, not adding to queue`);
-                        
+
                         // Update compression stats display anyway
-                        document.getElementById("compressionStats").textContent = 
+                        document.getElementById("compressionStats").textContent =
                             `Compression: ${originalLength} → ${compressedMessage.length} bytes (${compressionRatio})`;
-                        
+
                         // Update status
                         const statusEl = document.getElementById("outputStatus");
                         statusEl.textContent = `${side.toUpperCase()}: Auto-relayed command - ${new Date().toLocaleTimeString()}`;
-                        
+
                         return; // Exit early since we handled the command
                     }
                 } catch (e) {
@@ -1417,46 +1429,46 @@ function manualSend(message, side) {
             }
         } else {
             compressionRatio = "100% (disabled)";
-            
+
             // Even if compression is disabled, check if we can auto-relay
             try {
                 if (handleAutoRelay(message, side)) {
                     // We handled it with auto-relay, so no need to add to queue
                     updateDebugOutput(`Auto-relayed command from ${side}, not adding to queue (compression disabled)`);
-                    
+
                     // Update compression stats display anyway
-                    document.getElementById("compressionStats").textContent = 
+                    document.getElementById("compressionStats").textContent =
                         `Compression: ${originalLength} bytes (disabled)`;
-                    
+
                     // Update status
                     const statusEl = document.getElementById("outputStatus");
                     statusEl.textContent = `${side.toUpperCase()}: Auto-relayed command - ${new Date().toLocaleTimeString()}`;
-                    
+
                     return; // Exit early since we handled the command
                 }
             } catch (e) {
                 updateDebugOutput(`Error checking for auto-relay: ${e.message}`);
             }
         }
-        
+
         // Update compression stats display
-        document.getElementById("compressionStats").textContent = 
+        document.getElementById("compressionStats").textContent =
             `Compression: ${originalLength} → ${compressedMessage.length} bytes (${compressionRatio})`;
-        
+
         const msg = {m: compressedMessage, t: Date.now()};
         const packed = JSON.stringify(msg);
-        
+
         // Add to message queue
         messageQueues[side].push(packed);
-        
+
         // Add to buffer for auto-transfer if enabled
         if (autoTransferEnabled) {
             // Store in the buffer
             messageBuffers[side].push(packed);
-            
+
             // Determine the target side
             const targetSide = side === 'left' ? 'right' : 'left';
-            
+
             // Use setTimeout to ensure messages are processed in the correct order
             setTimeout(() => {
                 try {
@@ -1466,11 +1478,11 @@ function manualSend(message, side) {
                 }
             }, 100);
         }
-        
+
         // Update status
         const statusEl = document.getElementById("outputStatus");
         statusEl.textContent = `${side.toUpperCase()}: Message added to queue (${messageQueues[side].length} pending) - ${new Date().toLocaleTimeString()}`;
-        
+
         // Update the output area if it's currently empty
         const outputArea = document.getElementById("outputArea");
         if (outputArea.value === "") {
@@ -1483,7 +1495,7 @@ function manualSend(message, side) {
 
         function processIncomingMessage(input, targetSide) {
             const statusEl = document.getElementById("outputStatus");
-            
+
             try {
                 const msg = JSON.parse(input);
                 if (!msg.t || !msg.m) {
@@ -1491,15 +1503,15 @@ function manualSend(message, side) {
                     updateDebugOutput("Invalid message format: missing t or m property");
                     return;
                 }
-                
+
                 // Don't be too strict about message age
                 if (Date.now() - msg.t > 1200000) { // 20 minutes
                     updateDebugOutput("Message is old (>20 minutes) but processing anyway");
                 }
-                
+
                 let decompressedMessage = msg.m;
                 let skipMessage = false;
-                
+
                 // Try to decompress if needed and enabled
                 if (compressionEnabled) {
                     try {
@@ -1507,11 +1519,11 @@ function manualSend(message, side) {
                         let parsedIncoming;
                         try {
                             parsedIncoming = JSON.parse(msg.m);
-                            
+
                             // Look for our signature
                             if (parsedIncoming.type && ['O', 'C', 'B'].includes(parsedIncoming.type)) {
                               //  updateDebugOutput(`Detected compressed message type: ${parsedIncoming.type}`);
-                                
+
                                 // Skip empty candidate sets completely
                                 if (parsedIncoming.type === 'C' && (!parsedIncoming.cand || parsedIncoming.cand === '')) {
                                     updateDebugOutput("Skipping empty candidate set");
@@ -1519,18 +1531,18 @@ function manualSend(message, side) {
                                     statusEl.textContent = "Skipped empty candidate message - " + new Date().toLocaleTimeString();
                                     return;
                                 }
-                                
+
                                 // Decompress
                                 let decompressed = decompressMessage(msg.m);
-                                
-                                // Skip if decompression returned null 
+
+                                // Skip if decompression returned null
                                 if (decompressed === null) {
                                     updateDebugOutput("Skipping null decompressed message");
                                     skipMessage = true;
                                     statusEl.textContent = "Skipped empty message - " + new Date().toLocaleTimeString();
                                     return;
                                 }
-                                
+
                                 // Modify the UUID based on target side before sending
                                 try {
                                     let parsedDecompressed = JSON.parse(decompressed);
@@ -1541,7 +1553,7 @@ function manualSend(message, side) {
                                 } catch (uuidErr) {
                                     updateDebugOutput(`Error modifying UUID: ${uuidErr.message}`);
                                 }
-                                
+
                                 decompressedMessage = decompressed;
                              //   updateDebugOutput(`Successfully decompressed message: ${decompressedMessage.substring(0, 50)}...`);
                             }
@@ -1553,7 +1565,7 @@ function manualSend(message, side) {
                         updateDebugOutput(`Error checking compression format: ${e.message}`);
                     }
                 }
-                
+
                 if (!skipMessage && iframes[targetSide] && iframes[targetSide].contentWindow) {
                     // Send the message to the target iframe
                     updateDebugOutput(`Sending to ${targetSide} iframe: ${decompressedMessage}`);
@@ -1569,14 +1581,14 @@ function manualSend(message, side) {
                 updateDebugOutput(`Error processing message: ${e.message}`);
             }
         }
-        
+
         function transferMessage(targetSide, message) {
 			try {
 				// Check if this is a message we should auto-relay
 				try {
 					const msgObj = JSON.parse(message);
 					const sourceSide = targetSide === 'left' ? 'right' : 'left';
-					
+
 					if (handleAutoRelay(msgObj, sourceSide)) {
 						// We handled it with auto-relay, so just remove from queue
 						if (sourceSide === 'left' && messageQueues.left.length > 0) {
@@ -1584,27 +1596,27 @@ function manualSend(message, side) {
 						} else if (sourceSide === 'right' && messageQueues.right.length > 0) {
 							messageQueues.right.shift();
 						}
-						
+
 						// Update display
 						const outputArea = document.getElementById("outputArea");
 						outputArea.value = "";
-						
+
 						return; // Exit early since we handled the command
 					}
 				} catch (e) {
 					updateDebugOutput(`Error checking for auto-relay during transfer: ${e.message}`);
 				}
-				
+
 				// Otherwise, process normally
 				processIncomingMessage(message, targetSide);
-				
+
 				// Remove from the queue after successful transfer
 				if (targetSide === 'right' && messageQueues.left.length > 0) {
 					messageQueues.left.shift();
 				} else if (targetSide === 'left' && messageQueues.right.length > 0) {
 					messageQueues.right.shift();
 				}
-				
+
 				// Update display
 				const outputArea = document.getElementById("outputArea");
 				outputArea.value = "";
@@ -1612,11 +1624,11 @@ function manualSend(message, side) {
 				updateDebugOutput(`Error transferring message: ${e.message}`);
 			}
 		}
-        
+
         // Function to toggle auto transfer
         function toggleAutoTransfer() {
             autoTransferEnabled = !autoTransferEnabled;
-            
+
             const btn = document.getElementById("autoTransfer");
             if (autoTransferEnabled) {
                 btn.textContent = "Disable Auto Transfer";
@@ -1636,27 +1648,27 @@ function manualSend(message, side) {
             iframes.left.allow = "autoplay;camera;microphone;fullscreen;picture-in-picture;display-capture;";
             iframes.left.src = "../?bypass&waitice&password=false&room=default&push=local&s&debug";
             document.getElementById("iframe-left").appendChild(iframes.left);
-            
+
             // Create and add right iframe with a slight delay to prevent initialization conflicts
             setTimeout(() => {
                 iframes.right = document.createElement("iframe");
                 iframes.right.allow = "autoplay;camera;microphone;fullscreen;picture-in-picture;display-capture;";
                 iframes.right.src = "../?bypass&waitice&password=false&room=default&push=local&solo";
                 document.getElementById("iframe-right").appendChild(iframes.right);
-                
+
                 updateDebugOutput("Both iframes initialized");
             }, 500);
-            
+
             // Setup debug toggle
             document.getElementById("debugToggle").addEventListener("click", function() {
                 debugMode = !debugMode;
                 document.getElementById("debugOutput").style.display = debugMode ? "block" : "none";
             });
-            
+
             // Setup compression toggle
             document.getElementById("enableCompression").addEventListener("change", function() {
                 compressionEnabled = this.checked;
-                
+
                 // Clear any previous messageQueue when changing compression mode
                 // to avoid mixing compressed and uncompressed messages
                 if (messageQueues.left.length > 0 || messageQueues.right.length > 0) {
@@ -1671,18 +1683,18 @@ function manualSend(message, side) {
                         return;
                     }
                 }
-                
+
                 compressionEnabled = this.checked;
                // updateDebugOutput(`Compression ${compressionEnabled ? 'enabled' : 'disabled'}`);
             });
-            
+
             // Setup manual transfer buttons
             document.getElementById("leftToRight").addEventListener("click", function() {
                 if (messageQueues.left.length > 0) {
                     const message = messageQueues.left[0];
                     transferMessage('right', message);
                  //   updateDebugOutput("Manually transferred message from left to right");
-                    
+
                     // Update output area to show next message if available
                     if (messageQueues.left.length > 0) {
                         document.getElementById("outputArea").value = `[LEFT] ${messageQueues.left[0]}`;
@@ -1693,13 +1705,13 @@ function manualSend(message, side) {
                 //    updateDebugOutput("No messages in left queue to transfer");
                 }
             });
-            
+
             document.getElementById("rightToLeft").addEventListener("click", function() {
                 if (messageQueues.right.length > 0) {
                     const message = messageQueues.right[0];
                     transferMessage('left', message);
                 //    updateDebugOutput("Manually transferred message from right to left");
-                    
+
                     // Update output area to show next message if available
                     if (messageQueues.right.length > 0) {
                         document.getElementById("outputArea").value = `[RIGHT] ${messageQueues.right[0]}`;
@@ -1710,10 +1722,10 @@ function manualSend(message, side) {
                //     updateDebugOutput("No messages in right queue to transfer");
                 }
             });
-            
+
             // Setup auto transfer toggle
             document.getElementById("autoTransfer").addEventListener("click", toggleAutoTransfer);
-            
+
             // Set up the message event handler for iframe communication
             window.addEventListener("message", function(e) {
                 // Check if message is from one of our iframes
@@ -1727,7 +1739,7 @@ function manualSend(message, side) {
                     }
                 }
             });
-            
+
             // Enable debug mode by default for easier troubleshooting
             debugMode = true;
             document.getElementById("debugOutput").style.display = "block";

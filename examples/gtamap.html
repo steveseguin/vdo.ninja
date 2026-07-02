@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta name="description" content="Circular Grand-Theft-Auto-style mini-map overlay rendered with Leaflet, ready to composite over a live VDO.Ninja feed." />
+	<link rel="canonical" href="https://vdo.ninja/examples/gtamap.html" />
+	<meta property="og:type" content="website" />
+	<meta property="og:site_name" content="VDO.Ninja" />
+	<meta property="og:url" content="https://vdo.ninja/examples/gtamap.html" />
+	<meta property="og:title" content="GTA-Style Mini-Map - VDO.Ninja" />
+	<meta property="og:description" content="Circular Grand-Theft-Auto-style mini-map overlay rendered with Leaflet, ready to composite over a live VDO.Ninja feed." />
+	<meta property="og:image" content="https://vdo.ninja/media/vdoNinja_logo_full.png" />
+	<meta name="twitter:card" content="summary_large_image" />
+	<meta name="twitter:title" content="GTA-Style Mini-Map - VDO.Ninja" />
+	<meta name="twitter:description" content="Circular Grand-Theft-Auto-style mini-map overlay rendered with Leaflet, ready to composite over a live VDO.Ninja feed." />
+	<meta name="twitter:image" content="https://vdo.ninja/media/vdoNinja_logo_full.png" />
+<title>GTA-Style Mini-Map - VDO.Ninja</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<style>
+* {
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
+}
+
+body {
+	background: transparent;
+	overflow: hidden;
+	font-family: 'Pricedown', 'Impact', 'Arial Black', sans-serif;
+}
+
+#vdoninja {
+	width: 100%;
+	height: 100%;
+	position: absolute;
+	top: 0;
+	left: 0;
+	border: 0;
+}
+
+#container {
+	width: 100%;
+	height: 100%;
+	position: absolute;
+	top: 0;
+	left: 0;
+}
+
+#minimap-wrapper {
+	position: fixed;
+	bottom: 30px;
+	left: 30px;
+	z-index: 1000;
+}
+
+#minimap-frame {
+	position: relative;
+	width: 280px;
+	height: 280px;
+}
+
+/* Circular clip for the map */
+#map-clip {
+	width: 260px;
+	height: 260px;
+	border-radius: 50%;
+	overflow: hidden;
+	position: absolute;
+	top: 10px;
+	left: 10px;
+	z-index: 10;
+	box-shadow:
+		0 0 0 3px #000,
+		0 0 0 5px rgba(255, 200, 50, 0.8),
+		0 0 0 7px #000,
+		0 0 20px rgba(0, 0, 0, 0.8);
+}
+
+#map {
+	width: 400px;
+	height: 400px;
+	position: absolute;
+	top: -70px;
+	left: -70px;
+	transform-origin: center center;
+}
+
+/* Player arrow marker - always centered */
+#player-marker {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	z-index: 100;
+	width: 24px;
+	height: 24px;
+	pointer-events: none;
+}
+
+#player-marker svg {
+	width: 24px;
+	height: 24px;
+	filter: drop-shadow(0 0 3px rgba(0,0,0,0.9));
+}
+
+/* Compass indicators */
+.compass-label {
+	position: absolute;
+	color: #fff;
+	font-size: 11px;
+	font-weight: bold;
+	text-shadow: 0 0 4px #000, 0 0 4px #000;
+	z-index: 50;
+	pointer-events: none;
+	letter-spacing: 1px;
+}
+
+#compass-n { top: -2px; left: 50%; transform: translateX(-50%); color: #ffc832; }
+#compass-s { bottom: -2px; left: 50%; transform: translateX(-50%); }
+#compass-e { right: -2px; top: 50%; transform: translateY(-50%); }
+#compass-w { left: -2px; top: 50%; transform: translateY(-50%); }
+
+/* Speed/info HUD */
+#hud-info {
+	position: absolute;
+	bottom: -8px;
+	left: 50%;
+	transform: translateX(-50%);
+	background: rgba(0, 0, 0, 0.75);
+	color: #fff;
+	padding: 3px 18px;
+	border-radius: 3px;
+	font-size: 13px;
+	font-family: 'Segoe UI', 'Arial', sans-serif;
+	font-weight: 600;
+	letter-spacing: 1px;
+	z-index: 200;
+	white-space: nowrap;
+	border: 1px solid rgba(255, 200, 50, 0.3);
+	text-shadow: 0 0 4px #000;
+}
+
+/* Street name bar (GTA style) */
+#street-bar {
+	position: absolute;
+	bottom: -30px;
+	left: 0;
+	right: 0;
+	text-align: center;
+	z-index: 200;
+}
+
+#street-name {
+	background: rgba(0, 0, 0, 0.7);
+	color: #c8d4e0;
+	padding: 2px 16px;
+	font-size: 11px;
+	font-family: 'Segoe UI', 'Arial', sans-serif;
+	letter-spacing: 2px;
+	text-transform: uppercase;
+	display: inline-block;
+	border: 1px solid rgba(255, 200, 50, 0.15);
+}
+
+/* Outer glow ring */
+#minimap-frame::before {
+	content: '';
+	position: absolute;
+	top: 5px;
+	left: 5px;
+	width: 270px;
+	height: 270px;
+	border-radius: 50%;
+	border: 2px solid rgba(255, 200, 50, 0.15);
+	z-index: 5;
+	pointer-events: none;
+}
+
+/* Hide Leaflet controls and attribution inside minimap */
+#map .leaflet-control-container { display: none !important; }
+#map .leaflet-control-attribution { display: none !important; }
+
+/* Waiting indicator */
+#waiting {
+	position: fixed;
+	bottom: 130px;
+	left: 55px;
+	color: rgba(255, 200, 50, 0.9);
+	font-size: 12px;
+	font-family: 'Segoe UI', 'Arial', sans-serif;
+	letter-spacing: 1px;
+	z-index: 1000;
+	text-shadow: 0 0 6px #000;
+	animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+	0%, 100% { opacity: 0.5; }
+	50% { opacity: 1; }
+}
+
+/* Optional: dim vignette on map edges */
+#map-clip::after {
+	content: '';
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	border-radius: 50%;
+	box-shadow: inset 0 0 40px rgba(0, 0, 0, 0.6);
+	z-index: 20;
+	pointer-events: none;
+}
+</style>
+</head>
+<body>
+<div id="container"></div>
+
+<div id="minimap-wrapper">
+	<div id="minimap-frame">
+		<div id="map-clip">
+			<div id="map"></div>
+			<div id="player-marker">
+				<svg viewBox="0 0 24 24">
+					<polygon points="12,2 4,20 12,16 20,20" fill="#ffc832" stroke="#000" stroke-width="1.5" stroke-linejoin="round"/>
+				</svg>
+			</div>
+		</div>
+		<span class="compass-label" id="compass-n">N</span>
+		<span class="compass-label" id="compass-s">S</span>
+		<span class="compass-label" id="compass-e">E</span>
+		<span class="compass-label" id="compass-w">W</span>
+		<div id="hud-info">-- km/h</div>
+		<div id="street-bar">
+			<span id="street-name">AWAITING GPS</span>
+		</div>
+	</div>
+</div>
+
+<div id="waiting">WAITING FOR GPS SIGNAL...</div>
+
+<script>
+(function() {
+
+	// ---- Configuration ----
+	var MAP_ZOOM = 17;          // Higher = more zoomed in. 15-18 work well for city driving
+	var ROTATE_MAP = true;      // Rotate map based on heading (true = GTA style, north not always up)
+	var SPEED_UNIT = "km/h";    // "km/h", "mph", or "m/s"
+	var SMOOTH_PAN = true;      // Smooth animation when position updates
+
+	// Parse URL params for config overrides
+	var params = new URLSearchParams(window.location.search);
+	if (params.has("zoom")) MAP_ZOOM = parseInt(params.get("zoom")) || MAP_ZOOM;
+	if (params.has("rotate")) ROTATE_MAP = params.get("rotate") !== "0";
+	if (params.has("unit")) SPEED_UNIT = params.get("unit");
+	if (params.has("smooth")) SMOOTH_PAN = params.get("smooth") !== "0";
+
+	// ---- Map Setup ----
+	// CartoDB Dark Matter - free, no API key, perfect dark theme for GTA look
+	var darkTileURL = "https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png";
+
+	var map = L.map("map", {
+		center: [37.7749, -122.4194], // Default: San Francisco
+		zoom: MAP_ZOOM,
+		zoomControl: false,
+		attributionControl: false,
+		dragging: false,
+		scrollWheelZoom: false,
+		doubleClickZoom: false,
+		boxZoom: false,
+		keyboard: false,
+		touchZoom: false
+	});
+
+	L.tileLayer(darkTileURL, {
+		subdomains: "abcd",
+		maxZoom: 20,
+		detectRetina: true
+	}).addTo(map);
+
+	var currentHeading = 0;
+	var lastLat = null;
+	var lastLon = null;
+	var prevLat = null;
+	var prevLon = null;
+	var gotFirstFix = false;
+
+	// ---- Heading Calculation ----
+	function calcBearing(lat1, lon1, lat2, lon2) {
+		var dLon = (lon2 - lon1) * Math.PI / 180;
+		var y = Math.sin(dLon) * Math.cos(lat2 * Math.PI / 180);
+		var x = Math.cos(lat1 * Math.PI / 180) * Math.sin(lat2 * Math.PI / 180) -
+			Math.sin(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) * Math.cos(dLon);
+		var brng = Math.atan2(y, x) * 180 / Math.PI;
+		return (brng + 360) % 360;
+	}
+
+	function distanceMeters(lat1, lon1, lat2, lon2) {
+		var R = 6371000;
+		var dLat = (lat2 - lat1) * Math.PI / 180;
+		var dLon = (lon2 - lon1) * Math.PI / 180;
+		var a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+			Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+			Math.sin(dLon / 2) * Math.sin(dLon / 2);
+		return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+	}
+
+	// ---- Speed Formatting ----
+	function formatSpeed(speedMs) {
+		if (speedMs == null || isNaN(speedMs) || speedMs < 0) speedMs = 0;
+		switch (SPEED_UNIT) {
+			case "mph": return Math.round(speedMs * 2.23694) + " mph";
+			case "m/s": return speedMs.toFixed(1) + " m/s";
+			default:    return Math.round(speedMs * 3.6) + " km/h";
+		}
+	}
+
+	// ---- Reverse Geocode for Street Name ----
+	var lastGeocode = 0;
+	var streetEl = document.getElementById("street-name");
+
+	function reverseGeocode(lat, lon) {
+		var now = Date.now();
+		if (now - lastGeocode < 5000) return; // Rate limit: once per 5s
+		lastGeocode = now;
+
+		var url = "https://nominatim.openstreetmap.org/reverse?format=json&lat=" +
+			lat + "&lon=" + lon + "&zoom=18&addressdetails=1";
+
+		fetch(url, { headers: { "Accept-Language": "en" } })
+			.then(function(r) { return r.json(); })
+			.then(function(data) {
+				if (data && data.address) {
+					var road = data.address.road || data.address.pedestrian || data.address.path || "";
+					var area = data.address.neighbourhood || data.address.suburb || data.address.city_district || "";
+					if (road && area) {
+						streetEl.textContent = road + " - " + area;
+					} else if (road) {
+						streetEl.textContent = road;
+					} else if (area) {
+						streetEl.textContent = area;
+					}
+				}
+			})
+			.catch(function() {});
+	}
+
+	// ---- Update Map Position ----
+	function updatePosition(lat, lon, speed, heading) {
+		if (!gotFirstFix) {
+			gotFirstFix = true;
+			document.getElementById("waiting").style.display = "none";
+		}
+
+		// Update speed display
+		document.getElementById("hud-info").textContent = formatSpeed(speed);
+
+		// Calculate heading from movement if not provided and we have previous position
+		if (heading == null && prevLat != null) {
+			var d = distanceMeters(prevLat, prevLon, lat, lon);
+			if (d > 2) { // Only update heading if moved > 2m to avoid jitter
+				heading = calcBearing(prevLat, prevLon, lat, lon);
+			} else {
+				heading = currentHeading;
+			}
+		}
+
+		if (heading != null) {
+			currentHeading = heading;
+		}
+
+		prevLat = lastLat;
+		prevLon = lastLon;
+		lastLat = lat;
+		lastLon = lon;
+
+		// Pan map to new position
+		if (SMOOTH_PAN) {
+			map.panTo([lat, lon], { animate: true, duration: 0.8, easeLinearity: 0.5 });
+		} else {
+			map.setView([lat, lon], MAP_ZOOM, { animate: false });
+		}
+
+		// Rotate map if enabled (GTA style - map rotates, player arrow stays up)
+		if (ROTATE_MAP) {
+			var mapEl = document.getElementById("map");
+			mapEl.style.transform = "rotate(" + (-currentHeading) + "deg)";
+
+			// Counter-rotate compass labels
+			var labels = ["compass-n", "compass-s", "compass-e", "compass-w"];
+			var baseAngles = [0, 180, 90, 270];
+			for (var i = 0; i < labels.length; i++) {
+				var el = document.getElementById(labels[i]);
+				var angle = (baseAngles[i] - currentHeading + 360) % 360;
+				var rad = (angle - 90) * Math.PI / 180;
+				var cx = 140, cy = 140, r = 135;
+				var px = cx + r * Math.cos(rad);
+				var py = cy + r * Math.sin(rad);
+				el.style.top = py + "px";
+				el.style.left = px + "px";
+				el.style.bottom = "auto";
+				el.style.right = "auto";
+				el.style.transform = "translate(-50%, -50%)";
+			}
+		}
+
+		reverseGeocode(lat, lon);
+	}
+
+	// ---- VDO.Ninja Integration ----
+	function loadIframe(url) {
+		var iframe = document.createElement("iframe");
+		iframe.allow = "autoplay;camera;microphone;fullscreen;picture-in-picture;";
+		iframe.src = url || ("../" + window.location.search);
+		iframe.id = "vdoninja";
+		iframe.style.cssText = "width:100%;height:100%;border:0;position:absolute;top:0;left:0;";
+		document.getElementById("container").appendChild(iframe);
+
+		window.addEventListener("message", function(e) {
+			if (e.source !== iframe.contentWindow) return;
+
+			if ("sensors" in e.data && e.data.sensors.pos) {
+				var pos = e.data.sensors.pos;
+				var lat = pos.lat;
+				var lon = pos.lon;
+				var speed = pos.speed || 0;
+				var heading = (pos.heading != null && !isNaN(pos.heading)) ? pos.heading : null;
+
+				if (lat != null && lon != null) {
+					updatePosition(lat, lon, speed, heading);
+				}
+			}
+		});
+	}
+
+	// ---- Standalone Demo Mode ----
+	// If ?demo is set, simulate driving around San Francisco
+	if (params.has("demo")) {
+		document.getElementById("waiting").style.display = "none";
+
+		// A rough loop around SF streets
+		var route = [
+			[37.7749, -122.4194],
+			[37.7752, -122.4180],
+			[37.7758, -122.4165],
+			[37.7770, -122.4150],
+			[37.7780, -122.4138],
+			[37.7790, -122.4125],
+			[37.7795, -122.4110],
+			[37.7790, -122.4095],
+			[37.7782, -122.4080],
+			[37.7770, -122.4070],
+			[37.7758, -122.4060],
+			[37.7745, -122.4055],
+			[37.7732, -122.4060],
+			[37.7720, -122.4070],
+			[37.7712, -122.4085],
+			[37.7708, -122.4100],
+			[37.7710, -122.4118],
+			[37.7715, -122.4135],
+			[37.7722, -122.4150],
+			[37.7730, -122.4165],
+			[37.7738, -122.4178],
+			[37.7745, -122.4190],
+		];
+		var idx = 0;
+		var subStep = 0;
+		var subSteps = 8;
+
+		function demoTick() {
+			var nextIdx = (idx + 1) % route.length;
+			var t = subStep / subSteps;
+			var lat = route[idx][0] + (route[nextIdx][0] - route[idx][0]) * t;
+			var lon = route[idx][1] + (route[nextIdx][1] - route[idx][1]) * t;
+			// Add slight random jitter for realism
+			lat += (Math.random() - 0.5) * 0.00005;
+			lon += (Math.random() - 0.5) * 0.00005;
+			var speed = 8 + Math.random() * 7; // 8-15 m/s (~30-55 km/h)
+			updatePosition(lat, lon, speed, null);
+			subStep++;
+			if (subStep >= subSteps) {
+				subStep = 0;
+				idx = nextIdx;
+			}
+		}
+		demoTick();
+		setInterval(demoTick, 800);
+	} else {
+		loadIframe("../" + window.location.search);
+	}
+
+})();
+</script>
+</body>
+</html>

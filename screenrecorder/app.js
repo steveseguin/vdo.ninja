@@ -96,6 +96,8 @@ const OUTPUT_RESOLUTION_BASE = {
   "2560x1440": { w: 2560, h: 1440, label: "QHD 1440p" },
   "3840x2160": { w: 3840, h: 2160, label: "UHD 4K" }
 };
+const SOURCE_MATCH_VALUE = "source";
+const ASPECT_RATIO_VALUES = ["16:9", "9:16", "1:1", SOURCE_MATCH_VALUE];
 
 function resolveResolutionForAspect(baseKey, aspect) {
   const base = OUTPUT_RESOLUTION_BASE[baseKey] || OUTPUT_RESOLUTION_BASE["1920x1080"];
@@ -106,6 +108,51 @@ function resolveResolutionForAspect(baseKey, aspect) {
     return { width: base.h, height: base.h, label: base.label + " Square" };
   }
   return { width: base.w, height: base.h, label: base.label };
+}
+
+function resolveResolutionForSourceAspect(baseKey, sourceSize) {
+  const base = OUTPUT_RESOLUTION_BASE[baseKey] || OUTPUT_RESOLUTION_BASE["1920x1080"];
+  const aspect = getSizeAspectRatio(sourceSize) || 16 / 9;
+  const shortEdge = base.h;
+  let width;
+  let height;
+
+  if (aspect >= 1) {
+    width = shortEdge * aspect;
+    height = shortEdge;
+  } else {
+    width = shortEdge;
+    height = shortEdge / aspect;
+  }
+
+  return {
+    width: normalizeCanvasDimension(width),
+    height: normalizeCanvasDimension(height),
+    label: base.label + " Source Aspect"
+  };
+}
+
+function resolveSourceResolution(sourceSize) {
+  if (!sourceSize?.width || !sourceSize?.height) {
+    return { ...resolveResolutionForAspect("1920x1080", "16:9"), label: "Source Size" };
+  }
+
+  return {
+    width: Math.max(2, Math.round(sourceSize.width)),
+    height: Math.max(2, Math.round(sourceSize.height)),
+    label: "Source " + Math.round(sourceSize.width) + "x" + Math.round(sourceSize.height)
+  };
+}
+
+function normalizeCanvasDimension(value) {
+  const rounded = Math.max(2, Math.round(Number(value) || 2));
+  return rounded % 2 === 0 ? rounded : rounded + 1;
+}
+
+function getSizeAspectRatio(size) {
+  const width = Number(size?.width) || 0;
+  const height = Number(size?.height) || 0;
+  return width > 0 && height > 0 ? width / height : 0;
 }
 
 const RECORDING_QUALITY_PRESETS = {
@@ -502,6 +549,10 @@ const state = {
   pendingInputChangeApply: false,
   displayVideo: createVideoElement(),
   webcamVideo: createVideoElement(),
+  displaySourceSize: {
+    width: 0,
+    height: 0
+  },
   mimeType: "",
   previewMode: "screen",
   renderClock: {
@@ -859,13 +910,16 @@ function loadSettingsFromStorage() {
     el[id].value = String(parsed[id]);
   }
 
-  if (typeof parsed.aspectRatio === "string" && ["16:9", "9:16", "1:1"].includes(parsed.aspectRatio)) {
+  if (typeof parsed.aspectRatio === "string" && ASPECT_RATIO_VALUES.includes(parsed.aspectRatio)) {
     el.aspectRatio.value = parsed.aspectRatio;
   } else {
     el.aspectRatio.value = "16:9";
   }
 
-  if (typeof parsed.outputResolution === "string" && OUTPUT_RESOLUTION_BASE[parsed.outputResolution]) {
+  if (
+    typeof parsed.outputResolution === "string" &&
+    (OUTPUT_RESOLUTION_BASE[parsed.outputResolution] || parsed.outputResolution === SOURCE_MATCH_VALUE)
+  ) {
     el.outputResolution.value = parsed.outputResolution;
   } else {
     el.outputResolution.value = "1920x1080";
@@ -1241,6 +1295,7 @@ function clearRunAnalysisState() {
 function getInputSignature(options) {
   return JSON.stringify({
     outputResolution: options.outputResolution,
+    aspectRatio: options.aspectRatio,
     includeWebcam: options.includeWebcam,
     includeMic: options.includeMic,
     includeSystemAudio: options.includeSystemAudio,
@@ -1268,23 +1323,40 @@ function didDisplayCaptureSelectionChange(previousOptions, nextOptions) {
   }
   return (
     Boolean(previousOptions.includeSystemAudio) !== Boolean(nextOptions.includeSystemAudio) ||
+    didConstrainedDisplaySizeChange(previousOptions, nextOptions)
+  );
+}
+
+function didConstrainedDisplaySizeChange(previousOptions, nextOptions) {
+  if (shouldUseSourceNativeDisplayConstraints(previousOptions) || shouldUseSourceNativeDisplayConstraints(nextOptions)) {
+    return false;
+  }
+
+  return (
     String(previousOptions.outputResolution || "") !== String(nextOptions.outputResolution || "") ||
     String(previousOptions.aspectRatio || "") !== String(nextOptions.aspectRatio || "")
   );
 }
 
+function shouldUseSourceNativeDisplayConstraints(options) {
+  return options?.aspectRatio === SOURCE_MATCH_VALUE || options?.outputResolution === SOURCE_MATCH_VALUE;
+}
+
 function buildDisplayConstraints(options, { includeExtended = true } = {}) {
-  const outputPreset = getOutputResolutionPreset(options.outputResolution);
   const constraints = {
     video: {
-      width: { ideal: outputPreset.width },
-      height: { ideal: outputPreset.height },
-      aspectRatio: { ideal: outputPreset.width / outputPreset.height },
       frameRate: { ideal: 30, max: 30 },
       cursor: "always"
     },
     audio: options.includeSystemAudio
   };
+
+  if (!shouldUseSourceNativeDisplayConstraints(options)) {
+    const outputPreset = getOutputResolutionPreset(options.outputResolution);
+    constraints.video.width = { ideal: outputPreset.width };
+    constraints.video.height = { ideal: outputPreset.height };
+    constraints.video.aspectRatio = { ideal: outputPreset.width / outputPreset.height };
+  }
 
   if (includeExtended && isChromiumFamilyBrowser) {
     constraints.systemAudio = options.includeSystemAudio ? "include" : "exclude";
@@ -1328,7 +1400,50 @@ async function refreshDisplayCapture(options) {
   state.displayStream = nextDisplayStream;
   state.displayVideo.srcObject = new MediaStream(state.displayStream.getVideoTracks());
   await safePlay(state.displayVideo);
+  applySourceMatchedOutputIfNeeded(options);
   stopStream(previousDisplayStream);
+}
+
+function getCurrentDisplaySourceSize() {
+  const displayTrack = state.displayStream?.getVideoTracks?.()[0] || null;
+  const settings = displayTrack?.getSettings?.() || {};
+  const width = Number(state.displayVideo?.videoWidth) || Number(settings.width) || 0;
+  const height = Number(state.displayVideo?.videoHeight) || Number(settings.height) || 0;
+
+  if (!width || !height) {
+    return { width: 0, height: 0 };
+  }
+
+  return { width, height };
+}
+
+function refreshDisplaySourceSize() {
+  const sourceSize = getCurrentDisplaySourceSize();
+  if (sourceSize.width && sourceSize.height) {
+    state.displaySourceSize = sourceSize;
+  }
+  return state.displaySourceSize;
+}
+
+function canResizeOutputCanvas() {
+  return (
+    state.phase !== "recording" &&
+    state.phase !== "paused" &&
+    !state.isRecordingStarting &&
+    !state.isRestarting &&
+    !isRecorderOutputCanvasActive()
+  );
+}
+
+function applySourceMatchedOutputIfNeeded(options, { redraw = true } = {}) {
+  refreshDisplaySourceSize();
+  if (!shouldUseSourceNativeDisplayConstraints(options) || !canResizeOutputCanvas()) {
+    return false;
+  }
+
+  applyOutputResolutionSelection({ redraw });
+  updateOutputQualityHint();
+  return true;
 }
 
 async function switchDisplaySource() {
@@ -1379,6 +1494,7 @@ async function switchDisplaySource() {
   state.displayStream = nextDisplayStream;
   state.displayVideo.srcObject = new MediaStream(state.displayStream.getVideoTracks());
   await safePlay(state.displayVideo);
+  const resizedForSource = applySourceMatchedOutputIfNeeded(options);
   stopStream(previousDisplayStream);
 
   // Reconnect display audio in the mix graph if recording
@@ -1402,7 +1518,10 @@ async function switchDisplaySource() {
     }
   }
 
-  el.supportHint.textContent = "Display source switched.";
+  const preset = getOutputResolutionPreset(el.outputResolution.value);
+  el.supportHint.textContent = resizedForSource
+    ? "Display source switched. Output set to " + preset.label + "."
+    : "Display source switched.";
 }
 
 async function switchWebcamSource(deviceId) {
@@ -2421,6 +2540,10 @@ async function teardownSession({ keepDownloads }) {
   state.preparedInputSignature = "";
   state.applyingInputChanges = false;
   state.pendingInputChangeApply = false;
+  state.displaySourceSize = {
+    width: 0,
+    height: 0
+  };
 
   state.displayVideo.srcObject = null;
   state.webcamVideo.srcObject = null;
@@ -3328,12 +3451,20 @@ function getOptions() {
   };
 }
 
-function getOutputResolutionPreset(value) {
-  const aspect = el.aspectRatio ? el.aspectRatio.value : "16:9";
-  if (OUTPUT_RESOLUTION_BASE[value]) {
-    return resolveResolutionForAspect(value, aspect);
+function getOutputResolutionPreset(value, aspectValue = el.aspectRatio ? el.aspectRatio.value : "16:9") {
+  const sourceSize = refreshDisplaySourceSize();
+
+  if (value === SOURCE_MATCH_VALUE) {
+    return resolveSourceResolution(sourceSize);
   }
-  return resolveResolutionForAspect("1920x1080", aspect);
+
+  if (OUTPUT_RESOLUTION_BASE[value]) {
+    if (aspectValue === SOURCE_MATCH_VALUE) {
+      return resolveResolutionForSourceAspect(value, sourceSize);
+    }
+    return resolveResolutionForAspect(value, aspectValue);
+  }
+  return resolveResolutionForAspect("1920x1080", aspectValue);
 }
 
 function getRecordingQualityPreset(value) {

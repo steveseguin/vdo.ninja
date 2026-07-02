@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1920 1080" preserveAspectRatio="xMidYMid slice">
+	<rect width="1920" height="1080" fill="#050505"/>
+	<rect x="0" y="0" width="274.286" height="720" fill="#c8c8c8"/>
+	<rect x="274.286" y="0" width="274.286" height="720" fill="#f2e800"/>
+	<rect x="548.572" y="0" width="274.286" height="720" fill="#00d7ff"/>
+	<rect x="822.858" y="0" width="274.286" height="720" fill="#00c853"/>
+	<rect x="1097.144" y="0" width="274.286" height="720" fill="#d800ff"/>
+	<rect x="1371.43" y="0" width="274.286" height="720" fill="#f0182d"/>
+	<rect x="1645.716" y="0" width="274.284" height="720" fill="#003bd1"/>
+	<rect x="0" y="720" width="274.286" height="180" fill="#003bd1"/>
+	<rect x="274.286" y="720" width="274.286" height="180" fill="#111"/>
+	<rect x="548.572" y="720" width="274.286" height="180" fill="#d800ff"/>
+	<rect x="822.858" y="720" width="274.286" height="180" fill="#111"/>
+	<rect x="1097.144" y="720" width="274.286" height="180" fill="#00d7ff"/>
+	<rect x="1371.43" y="720" width="274.286" height="180" fill="#111"/>
+	<rect x="1645.716" y="720" width="274.284" height="180" fill="#c8c8c8"/>
+	<rect x="0" y="900" width="480" height="180" fill="#07114f"/>
+	<rect x="480" y="900" width="480" height="180" fill="#fff"/>
+	<rect x="960" y="900" width="240" height="180" fill="#32004e"/>
+	<rect x="1200" y="900" width="240" height="180" fill="#050505"/>
+	<rect x="1440" y="900" width="120" height="180" fill="#151515"/>
+	<rect x="1560" y="900" width="120" height="180" fill="#242424"/>
+	<rect x="1680" y="900" width="120" height="180" fill="#333"/>
+	<rect x="1800" y="900" width="120" height="180" fill="#050505"/>
+	<rect x="610" y="405" width="700" height="235" rx="18" fill="#050505" opacity=".9"/>
+	<text x="960" y="555" fill="#f8f8f8" font-family="Arial, Helvetica, sans-serif" font-size="118" font-weight="700" text-anchor="middle" letter-spacing="3">NO SIGNAL</text>
+</svg>

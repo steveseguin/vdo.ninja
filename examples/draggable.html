@@ -1,5 +1,19 @@
 <html>
-<head><title>Draggable Multi-View - VDO.Ninja</title>
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<meta name="description" content="Arrange several viewer windows manually by dragging and resizing thumbnails." />
+	<link rel="canonical" href="https://vdo.ninja/examples/draggable.html" />
+	<meta property="og:type" content="website" />
+	<meta property="og:site_name" content="VDO.Ninja" />
+	<meta property="og:url" content="https://vdo.ninja/examples/draggable.html" />
+	<meta property="og:title" content="Draggable Multi-View - VDO.Ninja" />
+	<meta property="og:description" content="Arrange several viewer windows manually by dragging and resizing thumbnails." />
+	<meta property="og:image" content="https://vdo.ninja/media/vdoNinja_logo_full.png" />
+	<meta name="twitter:card" content="summary_large_image" />
+	<meta name="twitter:title" content="Draggable Multi-View - VDO.Ninja" />
+	<meta name="twitter:description" content="Arrange several viewer windows manually by dragging and resizing thumbnails." />
+	<meta name="twitter:image" content="https://vdo.ninja/media/vdoNinja_logo_full.png" /><title>Draggable Multi-View - VDO.Ninja</title>
 <style>
 body{
 	padding:0;
@@ -32,7 +46,7 @@ button{
 	padding:5px;
 	margin:5px;
 	position:relative;
-	
+
 }
 
 .menu {
@@ -153,7 +167,7 @@ function initDragElement(popup){
 	  header.parentPopup = popup;
 	  header.onmousedown = dragMouseDown;
 	}
-  
+
 
   function dragMouseDown(e) {
     elmnt = this.parentPopup;
@@ -182,7 +196,7 @@ function initDragElement(popup){
     // set the element's new position:
     elmnt.style.top = elmnt.offsetTop - pos2 + "px";
     elmnt.style.left = elmnt.offsetLeft - pos1 + "px";
-	
+
 	iframe.style.top = elmnt.offsetTop - pos2 + "px";
 	iframe.style.left = elmnt.offsetLeft - pos1 + "px";
   }
@@ -202,7 +216,7 @@ function initDragElement(popup){
 
     return null;
   }
-  
+
   function getIFrame(element) {
     var headerItems = element.getElementsByTagName("iframe");
 
@@ -237,7 +251,7 @@ function initResizeElement(p) {
     p.appendChild(both);
     both.addEventListener("mousedown", initDrag, false);
     both.parentPopup = p;
-  
+
 
   function initDrag(e) {
     element = this.parentPopup;
@@ -262,10 +276,10 @@ function initResizeElement(p) {
 		stopDrag(e);
 		return false;
 	}
-  
+
     element.style.width = startWidth + e.clientX - startX + "px";
     element.style.height = startHeight + e.clientY - startY + "px";
-	
+
 	iframe.style.width = startWidth + e.clientX - startX + "px";
 	iframe.style.height = startHeight + e.clientY - startY + "px";
   }
@@ -285,7 +299,7 @@ function initResizeElement(p) {
     return null;
   }
 }
-  
+
 function loadIframe(){
 
 	var iframeContainer = document.createElement("div");
@@ -293,18 +307,18 @@ function loadIframe(){
 	iframeContainer.style.zIndex = "" + ++currentZIndex;
 	iframeContainer.style.width="325px";
 	iframeContainer.style.height="420px";
-	
+
 	var button = document.createElement("button");
 	button.innerHTML = "Move";
 	button.className = "popup-header menu";
 	iframeContainer.appendChild(button);
-	
+
 	var button = document.createElement("button");
 	button.innerHTML = "Close";
 	button.className = "menu close";
 	button.onclick = function(){iframe.contentWindow.postMessage({"close":true}, '*');iframe.parentNode.parentNode.removeChild(iframeContainer);}
 	iframeContainer.appendChild(button);
-	
+
 	var button = document.createElement("button");
 	button.innerHTML = "Reload";
 	button.className = "menu reload";
@@ -316,14 +330,14 @@ function loadIframe(){
 	iframe.src = document.getElementById("viewlink").value || "https://vdo.ninja";
 	iframe.style.width="325px";
 	iframe.style.height="420px";
-	
+
 	iframeContainer.appendChild(iframe);
-	
+
 	document.getElementById("container").appendChild(iframeContainer);
 
 	initDragElement(iframeContainer);
 	initResizeElement(iframeContainer);
-	
+
 }
 
 </script>

@@ -1,0 +1,238 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<meta name="description" content="A lightweight VDO.Ninja tabletop room for maps, dice, tokens, and live video sessions." />
+		<title>VDO.Ninja Tabletop</title>
+		<link rel="icon" href="../media/favicon.ico" />
+		<link rel="stylesheet" href="../lineawesome/css/line-awesome.min.css" />
+		<link rel="stylesheet" href="./styles.css" />
+	</head>
+	<body>
+		<div id="app" class="tabletop-shell" data-state="setup" data-role="player">
+			<section class="setup-view" data-view="setup">
+				<form id="setup-form" class="setup-panel" autocomplete="off">
+					<div class="brand-row">
+						<span class="brand-mark">VDO</span>
+						<span>Tabletop</span>
+					</div>
+					<h1>Start A Tabletop Room</h1>
+					<div class="setup-field">
+						<label for="room-input">Room</label>
+						<span class="room-input-row">
+							<input id="room-input" name="room" placeholder="campaign-room" autocomplete="off" autocapitalize="off" spellcheck="false" required />
+							<button type="button" class="icon-button room-random-button" id="random-room" title="Generate a random room name" aria-label="Generate random room name"><i class="las la-random"></i></button>
+						</span>
+					</div>
+					<label>
+						<span>Name</span>
+						<input id="name-input" name="name" placeholder="Player name" autocomplete="name" maxlength="40" />
+					</label>
+					<label>
+						<span>Password</span>
+						<input id="password-input" name="password" placeholder="optional" autocomplete="off" />
+					</label>
+					<div class="role-control" role="group" aria-label="Role">
+						<label>
+							<input type="radio" name="role" value="gm" id="role-gm" checked />
+							<span>GM</span>
+						</label>
+						<label>
+							<input type="radio" name="role" value="player" id="role-player" />
+							<span>Player</span>
+						</label>
+					</div>
+					<div class="setup-actions">
+						<button type="submit" class="button button--primary">Enter Room</button>
+					</div>
+				</form>
+			</section>
+
+			<section class="workspace" data-view="room" aria-label="Tabletop workspace">
+				<header class="topbar">
+					<div class="topbar__identity">
+						<span class="brand-mark">VDO</span>
+						<div>
+							<div class="topbar__title">Tabletop</div>
+							<button type="button" id="copy-room" class="link-button" title="Copy room invite"></button>
+						</div>
+					</div>
+					<div class="topbar__controls">
+						<span id="sync-status" class="status-pill" data-state="idle">Offline</span>
+						<button type="button" class="button button--secondary" id="snapshot-request">Sync</button>
+						<button type="button" class="button button--secondary" id="export-state">Export</button>
+						<button type="button" class="button button--secondary" id="import-state">Import</button>
+						<button type="button" class="button button--primary" id="publish-board">Publish Board</button>
+						<input type="file" id="import-file" class="hidden" accept="application/json,.json" />
+					</div>
+				</header>
+
+				<aside class="left-panel" aria-label="Scenes and video">
+					<section class="panel">
+						<div class="panel-heading">
+							<h2>Scenes</h2>
+							<div>
+								<button type="button" class="icon-button" id="add-scene" title="New scene" aria-label="New scene"><i class="las la-plus"></i></button>
+								<button type="button" class="icon-button" id="duplicate-scene" title="Duplicate scene" aria-label="Duplicate scene"><i class="las la-copy"></i></button>
+							</div>
+						</div>
+						<div id="scene-list" class="scene-list"></div>
+						<label class="field-row field-row--stacked">
+							<span>Scene name</span>
+							<input id="scene-name" maxlength="60" autocomplete="off" />
+						</label>
+						<div class="two-actions">
+							<button type="button" class="button button--secondary" id="delete-scene">Delete</button>
+							<button type="button" class="button button--secondary" id="clear-scene" title="Clear drawn strokes and text">Clear Marks</button>
+						</div>
+					</section>
+
+					<section class="panel video-panel">
+						<div class="panel-heading">
+							<h2>Video Room</h2>
+							<button type="button" class="icon-button" id="toggle-video-room" title="Show or hide video room" aria-label="Show or hide video room"><i class="las la-video"></i></button>
+						</div>
+						<iframe id="vdo-frame" title="VDO.Ninja room" allow="autoplay; camera; microphone; fullscreen; picture-in-picture; display-capture; screen-wake-lock; clipboard-write"></iframe>
+					</section>
+				</aside>
+
+				<main class="board-panel">
+					<div class="tool-strip" role="toolbar" aria-label="Board tools">
+						<button type="button" class="tool-button" data-tool="select" title="Select"><i class="las la-mouse-pointer"></i><span>Select</span></button>
+						<button type="button" class="tool-button" data-tool="pan" title="Pan"><i class="las la-hand-paper"></i><span>Pan</span></button>
+						<button type="button" class="tool-button" data-tool="draw" title="Draw"><i class="las la-pen"></i><span>Draw</span></button>
+						<button type="button" class="tool-button" data-tool="erase" title="Erase"><i class="las la-eraser"></i><span>Erase</span></button>
+						<button type="button" class="tool-button" data-tool="text" title="Text"><i class="las la-font"></i><span>Text</span></button>
+						<button type="button" class="tool-button" data-tool="measure" title="Measure"><i class="las la-ruler"></i><span>Measure</span></button>
+						<button type="button" class="tool-button" data-tool="fog" title="Reveal fog-of-war"><i class="las la-eye"></i><span>Reveal</span></button>
+						<button type="button" class="tool-button" data-tool="ping" title="Ping"><i class="las la-bullseye"></i><span>Ping</span></button>
+						<span class="tool-divider"></span>
+						<label class="compact-field" title="Draw color">
+							<span>Color</span>
+							<input id="draw-color" type="color" value="#f97316" />
+						</label>
+						<label class="compact-field" title="Brush size">
+							<span>Size</span>
+							<input id="brush-size" type="range" min="2" max="36" value="8" />
+						</label>
+					</div>
+					<div id="board-drop-target" class="board-shell" data-testid="board-drop-target">
+						<canvas id="board-canvas" aria-label="Shared tabletop board"></canvas>
+						<div id="board-hud" class="board-hud"></div>
+						<div id="measurement-label" class="measurement-label hidden"></div>
+					</div>
+					<div class="board-footer">
+						<span id="board-coordinates">0, 0</span>
+						<span id="board-tip">Drop a map image onto the board or use Assets.</span>
+						<span id="board-output-link" class="board-output-link"></span>
+					</div>
+				</main>
+
+				<aside class="right-panel" aria-label="Tabletop controls">
+					<nav class="tabs" aria-label="Control panels">
+						<button type="button" class="tab-button" data-tab="assets" aria-selected="true">Assets</button>
+						<button type="button" class="tab-button" data-tab="tokens">Tokens</button>
+						<button type="button" class="tab-button" data-tab="dice">Dice</button>
+						<button type="button" class="tab-button" data-tab="initiative">Turns</button>
+						<button type="button" class="tab-button" data-tab="handouts">Handouts</button>
+						<button type="button" class="tab-button" data-tab="settings">Settings</button>
+					</nav>
+
+					<section class="tab-panel" data-panel="assets">
+						<div class="panel-heading">
+							<h2>Assets</h2>
+						</div>
+						<div class="asset-actions">
+							<button type="button" class="button button--secondary" id="map-file-button">Map</button>
+							<button type="button" class="button button--secondary" id="token-file-button">Token</button>
+							<input type="file" id="map-file" class="hidden" accept="image/*" />
+							<input type="file" id="token-file" class="hidden" accept="image/*" />
+						</div>
+						<div id="asset-list" class="asset-list"></div>
+					</section>
+
+					<section class="tab-panel hidden" data-panel="tokens">
+						<div class="panel-heading">
+							<h2>Tokens</h2>
+						</div>
+						<div id="token-list" class="token-list"></div>
+						<div class="token-editor" id="token-editor" data-empty="true">
+							<label class="field-row"><span>Name</span><input id="token-name" maxlength="48" /></label>
+							<label class="field-row"><span>Owner</span><input id="token-owner" maxlength="40" placeholder="blank = GM" /></label>
+							<label class="field-row"><span>HP</span><input id="token-hp" type="number" min="0" max="999" /></label>
+							<label class="check-row"><input id="token-hidden" type="checkbox" /><span>Hidden from players</span></label>
+							<label class="check-row"><input id="token-locked" type="checkbox" /><span>Locked</span></label>
+							<div class="two-actions">
+								<button type="button" class="button button--secondary" id="add-selected-to-initiative">Add Turn</button>
+								<button type="button" class="button button--danger" id="delete-token">Delete</button>
+							</div>
+						</div>
+					</section>
+
+					<section class="tab-panel hidden" data-panel="dice">
+						<div class="panel-heading">
+							<h2>Dice</h2>
+						</div>
+						<form id="roll-form" class="roll-form" autocomplete="off">
+							<input id="roll-input" placeholder="1d20+5, adv, 4d6kh3" value="1d20" />
+							<button type="submit" class="button button--primary">Roll</button>
+						</form>
+						<div class="quick-rolls">
+							<button type="button" data-roll="1d20">d20</button>
+							<button type="button" data-roll="adv">Adv</button>
+							<button type="button" data-roll="dis">Dis</button>
+							<button type="button" data-roll="2d6">2d6</button>
+							<button type="button" data-roll="1d100">d100</button>
+						</div>
+						<label class="check-row"><input id="private-roll" type="checkbox" /><span>Private local roll</span></label>
+						<div id="roll-log" class="roll-log"></div>
+					</section>
+
+					<section class="tab-panel hidden" data-panel="initiative">
+						<div class="panel-heading">
+							<h2>Initiative</h2>
+							<div>
+								<button type="button" class="icon-button" id="prev-turn" title="Previous turn" aria-label="Previous turn"><i class="las la-angle-left"></i></button>
+								<button type="button" class="icon-button" id="next-turn" title="Next turn" aria-label="Next turn"><i class="las la-angle-right"></i></button>
+							</div>
+						</div>
+						<div id="initiative-list" class="initiative-list"></div>
+					</section>
+
+					<section class="tab-panel hidden" data-panel="handouts">
+						<div class="panel-heading">
+							<h2>Handouts</h2>
+							<button type="button" class="icon-button" id="add-handout" title="Add handout" aria-label="Add handout"><i class="las la-plus"></i></button>
+						</div>
+						<input type="file" id="handout-file" class="hidden" accept="image/*,text/plain,.md,.txt" />
+						<div id="handout-list" class="handout-list"></div>
+					</section>
+
+					<section class="tab-panel hidden" data-panel="settings">
+						<div class="panel-heading">
+							<h2>Settings</h2>
+						</div>
+						<label class="check-row"><input id="grid-enabled" type="checkbox" checked /><span>Show grid</span></label>
+						<label class="field-row"><span>Grid size</span><input id="grid-size" type="range" min="24" max="120" value="64" /></label>
+						<label class="field-row"><span>Grid opacity</span><input id="grid-opacity" type="range" min="0" max="100" value="35" /></label>
+						<label class="check-row"><input id="players-can-draw" type="checkbox" /><span>Players can draw</span></label>
+						<label class="check-row"><input id="players-can-create" type="checkbox" /><span>Players can create tokens</span></label>
+						<label class="check-row"><input id="players-can-move-owned" type="checkbox" checked /><span>Players can move owned tokens</span></label>
+						<label class="check-row"><input id="players-can-ping" type="checkbox" checked /><span>Players can ping</span></label>
+					</section>
+				</aside>
+			</section>
+		</div>
+
+		<div id="toast" class="toast" data-show="false"></div>
+		<div id="handout-modal" class="modal-backdrop hidden" role="dialog" aria-modal="true" aria-label="Handout">
+			<div class="handout-modal">
+				<button type="button" id="close-handout" class="icon-button handout-close" title="Close" aria-label="Close"><i class="las la-times"></i></button>
+				<h2 id="handout-title"></h2>
+				<div id="handout-body" class="handout-body"></div>
+			</div>
+		</div>
+		<script src="./app.js" defer></script>
+	</body>
+</html>

@@ -9,4 +9,5 @@ CLAUDE.md
 cf/
 wrangler.toml
 package.json
+!thirdparty/mediapipe/tasks-vision/package.json
 docs.md

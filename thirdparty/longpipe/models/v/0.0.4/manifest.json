@@ -1,0 +1,117 @@
+{
+  "generated": "2026-06-08T21:41:05+00:00",
+  "files": [
+    {
+      "name": "model_large.bin",
+      "size": 13466052,
+      "sha256": "e4761fcefab7c157891fb903184da64cc7e8a6c86a0a09387b3d701ca9fd4c72",
+      "dtype": "f32",
+      "kind": "tier",
+      "hasGru": false
+    },
+    {
+      "name": "model_large.f16.bin",
+      "size": 6736478,
+      "sha256": "674455a2d5fd455689cdeb4a3fc9df0d557220cebb5e9a3fa0cc26d31f855b32",
+      "dtype": "f16",
+      "kind": "tier",
+      "hasGru": false
+    },
+    {
+      "name": "model_medium.bin",
+      "size": 13464692,
+      "sha256": "808c5d36dc3206d59c8bc3cb3ec3cd9634926876eeecf43fc59d71d341635db2",
+      "dtype": "f32",
+      "kind": "tier",
+      "hasGru": false
+    },
+    {
+      "name": "model_medium.f16.bin",
+      "size": 6735706,
+      "sha256": "32ddce98c46ee001a707f4dd280c10f9efa9838c7233c9ec87f94e231675f820",
+      "dtype": "f16",
+      "kind": "tier",
+      "hasGru": false
+    },
+    {
+      "name": "model_small.bin",
+      "size": 3819012,
+      "sha256": "0765283f0f885bd105459399f6f59609c402f76866361e908aff66257c501683",
+      "dtype": "f32",
+      "kind": "tier",
+      "hasGru": false
+    },
+    {
+      "name": "model_small.f16.bin",
+      "size": 1911922,
+      "sha256": "fb49522a6a448a17f5b5a0f4687471fc6831192d7c615c82eca27d37f4cfe49c",
+      "dtype": "f16",
+      "kind": "tier",
+      "hasGru": false
+    },
+    {
+      "name": "model_xl.bin",
+      "size": 48909012,
+      "sha256": "a4dd0ea14229a8e422bfb604437c3bd9217a45865d00263ca875fff36c19386b",
+      "dtype": "f32",
+      "kind": "tier",
+      "hasGru": false
+    },
+    {
+      "name": "model_xl.f16.bin",
+      "size": 24459942,
+      "sha256": "806c538d0c0f57134912402894aa0ba498ffd9f6757d7aa08714c72535a6efe6",
+      "dtype": "f16",
+      "kind": "tier",
+      "hasGru": false
+    },
+    {
+      "name": "model_xs.bin",
+      "size": 3886904,
+      "sha256": "23c5dd9b256444fb0a6ce0a51d69bb8ddf82d3fe7f1946b1df9793235b234910",
+      "dtype": "f32",
+      "kind": "tier",
+      "hasGru": false
+    },
+    {
+      "name": "model_xs.f16.bin",
+      "size": 1945946,
+      "sha256": "87a6741f0c1fbce38fc39f3e2718949a2edc835b5ed02cec2241cbf82a3bb6b7",
+      "dtype": "f16",
+      "kind": "tier",
+      "hasGru": false
+    },
+    {
+      "name": "dfn.wasm",
+      "size": 406259,
+      "sha256": "bb06861ecb54e94c178c80225c99c4b13aa6113943aa2f5c782b341d5ed27998",
+      "dtype": "-",
+      "kind": "audio-wasm",
+      "hasGru": false
+    },
+    {
+      "name": "rnnoise.wasm",
+      "size": 134856,
+      "sha256": "c2b6449c5f3d3136c9819dd23211907233b6cfd2b2195082463ba26c879e1910",
+      "dtype": "-",
+      "kind": "audio-wasm",
+      "hasGru": false
+    },
+    {
+      "name": "dfn_weights.pack",
+      "size": 13817933,
+      "sha256": "d862ec5889934f16ff83992980c2981a4c67c60fac06dbab9840ea46672a1228",
+      "dtype": "-",
+      "kind": "audio-weights",
+      "hasGru": false
+    },
+    {
+      "name": "dfn_weights_int8.pack",
+      "size": 7950596,
+      "sha256": "57ddb56075bd48ce28876aa3295fbd13f6ee0c5dc50100df2a1af526b1f5f71e",
+      "dtype": "-",
+      "kind": "audio-weights",
+      "hasGru": false
+    }
+  ]
+}

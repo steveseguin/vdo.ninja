@@ -1,5 +1,8 @@
 <html>
 <head>
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<meta name="description" content="Trigger branded overlays and nameplates from connection metadata." />
+	<link rel="canonical" href="https://vdo.ninja/examples/custom_overlay.html" />
 <title>Dynamic Overlay Frame - VDO.Ninja</title>
 <meta charset="UTF-8">
 <style>
@@ -97,16 +100,16 @@ var overlay = document.getElementById("overlay");
 var iframe = document.getElementById("vdoninja");
 var label = document.getElementById("label");
 
-function loadIframe(url){ 
-	
+function loadIframe(url){
+
 	iframe.allow = "autoplay;camera;microphone;fullscreen;picture-in-picture;";
 
 	if (url==""){
 		url="./";
 	}
-	
+
 	iframe.src = url;
-	
+
 	var eventMethod = window.addEventListener ? "addEventListener" : "attachEvent";
 	var eventer = window[eventMethod];
 	var messageEvent = eventMethod === "attachEvent" ? "onmessage" : "message";
@@ -115,7 +118,7 @@ function loadIframe(url){
 		if (e.source != iframe.contentWindow){return} // reject messages send from other iframes
 		console.log(e.data);
 		if (!e.data.action || !("value" in e.data)){return;}
-		
+
 		if (e.data.action=="view-connection-info"){
 			if (e.data.value.label){
 				overlay.style.backgroundImage = "url(../media/overlay2.png)";
@@ -132,7 +135,7 @@ function loadIframe(url){
 				label.innerText = "";
 			}
 		}
-		
+
 	});
 }
 

@@ -311,15 +311,15 @@
 
             <div class="form-card">
                 <label for="userId">Cloudflare Account ID</label>
-                <input type="text" id="userId" name="userId" autocomplete="userId" spellcheck="false" required>
+                <input type="text" id="userId" name="userId" autocomplete="off" spellcheck="false" required>
                 <p class="field-note">Example: <code>ee168fc4abe50941832645a0a4fd1adf</code></p>
 
                 <label for="accessToken">Cloudflare API Token</label>
-                <input type="password" id="accessToken" autocomplete="accessToken" name="accessToken" required>
+                <input type="password" id="accessToken" autocomplete="off" name="accessToken" required>
                 <p class="field-note">Use a token with <code>Account -&gt; Stream -&gt; Edit</code>.</p>
 
                 <label for="expiration">Hours Until Expiration</label>
-                <input min="0" type="number" id="expiration" name="expiration" placeholder="Optional">
+                <input min="0" type="number" id="expiration" name="expiration" autocomplete="off" placeholder="Optional">
                 <p class="field-note">Optional wrapper expiry for the generated <code>cftoken</code>.</p>
 
                 <div class="actions">

@@ -1,15 +1,17 @@
 <html>
 	<head>
+	<meta name="description" content="Monospaced stacked chat overlay tuned for big on-screen shoutouts." />
+	<link rel="canonical" href="https://vdo.ninja/examples/chat.html" />
 		<meta charset="utf8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
-		<title>OBSN Chat Overlay</title>
+		<title>Chat Shout Overlay - VDO.Ninja</title>
 		<style>
-		
+
 			@font-face {
 			  font-family: 'Cousine';
 			  src: url('fonts/Cousine-Bold.ttf') format('truetype');
 			}
-		
+
 			body {
 				margin:0;
 				padding:0 10px;
@@ -25,7 +27,7 @@
 
 			div {
 				margin:0;
-				background-color: black; 
+				background-color: black;
 				padding: 8px 8px 0px 8px;
 				color: white;
 				font-family: Cousine, monospace;
@@ -41,9 +43,9 @@
 				hyphens: auto;
 				display:inline-block;
 			}
-			
-			
-			
+
+
+
 			a {
 				color:white;
 				font-size:1.2em;
@@ -56,8 +58,8 @@
 			}
 			</style>
 		<script>
-		
-		
+
+
 			(function (w) {
 				w.URLSearchParams =
 					w.URLSearchParams ||
@@ -77,45 +79,45 @@
 					};
 			})(window);
 			var urlParams = new URLSearchParams(window.location.search);
-			
+
 
 			function loadIframe() {
-				
+
 				var iframe = document.createElement("iframe");
 
 				var view= "";
 				if (urlParams.has("view")) {
 					view = "&view="+(urlParams.get("view") || "");
-				} 
+				}
 				var room="";
 				if (urlParams.has("room")) {
 					room = "&room="+urlParams.get("room");
 				}
-				
+
 				var password="";
 				if (urlParams.has("password")) {
 					password = "&password="+urlParams.get("password");
 				}
-				
+
 				iframe.allow = "autoplay";
 				var srcString = "./?novideo&noaudio&label=chatOverlay&scene"+room+view+password;
-				
+
 				iframe.src = srcString;
 				iframe.style.width="0";
 				iframe.style.height="0";
 				iframe.style.border="0";
-				
+
 				document.body.appendChild(iframe);
 
 				////////////  LISTEN FOR EVENTS
-	
+
 				var eventMethod = window.addEventListener ? "addEventListener" : "attachEvent";
 				var eventer = window[eventMethod];
 				var messageEvent = eventMethod === "attachEvent" ? "onmessage" : "message";
 
 
 				/// If you have a routing system setup, you could have just one global listener for all iframes instead.
-				
+
 				eventer(messageEvent, function (e) {
 					if (e.source != iframe.contentWindow){return} // reject messages send from other iframes
 

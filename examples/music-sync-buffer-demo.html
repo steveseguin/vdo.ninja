@@ -1,0 +1,911 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta name="description" content="Deliberately delay incoming video so it lines up with externally-played music for NINJAM-style or loop-based sessions." />
+	<link rel="canonical" href="https://vdo.ninja/examples/music-sync-buffer-demo.html" />
+	<meta property="og:type" content="website" />
+	<meta property="og:site_name" content="VDO.Ninja" />
+	<meta property="og:url" content="https://vdo.ninja/examples/music-sync-buffer-demo.html" />
+	<meta property="og:title" content="Music Sync Buffer - VDO.Ninja" />
+	<meta property="og:description" content="Deliberately delay incoming video so it lines up with externally-played music for NINJAM-style or loop-based sessions." />
+	<meta property="og:image" content="https://vdo.ninja/media/vdoNinja_logo_full.png" />
+	<meta name="twitter:card" content="summary_large_image" />
+	<meta name="twitter:title" content="Music Sync Buffer - VDO.Ninja" />
+	<meta name="twitter:description" content="Deliberately delay incoming video so it lines up with externally-played music for NINJAM-style or loop-based sessions." />
+	<meta name="twitter:image" content="https://vdo.ninja/media/vdoNinja_logo_full.png" />
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Music Sync Buffer - VDO.Ninja</title>
+	<link rel="shortcut icon" href="data:image/x-icon;," type="image/x-icon">
+	<link rel="icon" type="image/png" sizes="32x32" href="../media/favicon-32x32.png">
+	<link rel="icon" type="image/png" sizes="16x16" href="../media/favicon-16x16.png">
+	<link rel="icon" href="../media/favicon.ico">
+	<style>
+		:root {
+			--bg: #101318;
+			--panel: #171c24;
+			--panel-2: #1f2631;
+			--border: rgba(255, 255, 255, 0.08);
+			--text: #eef2f7;
+			--muted: #aab6c8;
+			--accent: #ffb44a;
+			--accent-2: #6ec8ff;
+			--good: #88f0b8;
+			--bad: #ff8787;
+			--shadow: 0 14px 40px rgba(0, 0, 0, 0.28);
+		}
+
+		* {
+			box-sizing: border-box;
+		}
+
+		html,
+		body {
+			margin: 0;
+			min-height: 100%;
+			background:
+				radial-gradient(circle at top left, rgba(255, 180, 74, 0.12), transparent 32%),
+				radial-gradient(circle at top right, rgba(110, 200, 255, 0.12), transparent 28%),
+				linear-gradient(180deg, #11151b 0%, #0c1015 100%);
+			color: var(--text);
+			font: 15px/1.45 "Segoe UI", system-ui, sans-serif;
+		}
+
+		body {
+			padding: 24px;
+		}
+
+		main {
+			display: grid;
+			grid-template-columns: minmax(360px, 430px) minmax(0, 1fr);
+			gap: 18px;
+			align-items: start;
+		}
+
+		.panel {
+			background: linear-gradient(180deg, rgba(31, 38, 49, 0.95), rgba(23, 28, 36, 0.98));
+			border: 1px solid var(--border);
+			border-radius: 18px;
+			box-shadow: var(--shadow);
+		}
+
+		.sidebar {
+			display: grid;
+			gap: 18px;
+		}
+
+		section {
+			padding: 18px;
+		}
+
+		.eyebrow {
+			margin: 0 0 10px;
+			color: var(--accent);
+			text-transform: uppercase;
+			letter-spacing: 0.16em;
+			font-size: 11px;
+			font-weight: 700;
+		}
+
+		h1,
+		h2 {
+			margin: 0 0 10px;
+			font-weight: 700;
+		}
+
+		h1 {
+			font-size: 28px;
+			line-height: 1.08;
+		}
+
+		h2 {
+			font-size: 17px;
+		}
+
+		p {
+			margin: 0 0 12px;
+			color: var(--muted);
+		}
+
+		label {
+			display: block;
+			margin: 0 0 8px;
+			font-size: 12px;
+			font-weight: 700;
+			letter-spacing: 0.08em;
+			text-transform: uppercase;
+			color: var(--muted);
+		}
+
+		input,
+		select,
+		textarea,
+		button {
+			width: 100%;
+			border-radius: 12px;
+			border: 1px solid rgba(255, 255, 255, 0.1);
+			background: rgba(8, 11, 16, 0.85);
+			color: var(--text);
+			padding: 11px 12px;
+			font: inherit;
+		}
+
+		textarea {
+			min-height: 88px;
+			resize: vertical;
+		}
+
+		button {
+			cursor: pointer;
+			background: linear-gradient(135deg, rgba(255, 180, 74, 0.15), rgba(110, 200, 255, 0.18));
+			transition: transform 120ms ease, border-color 120ms ease;
+		}
+
+		button:hover {
+			transform: translateY(-1px);
+			border-color: rgba(255, 180, 74, 0.34);
+		}
+
+		.stack {
+			display: grid;
+			gap: 10px;
+		}
+
+		.row {
+			display: grid;
+			grid-template-columns: repeat(2, minmax(0, 1fr));
+			gap: 10px;
+		}
+
+		.row-4 {
+			display: grid;
+			grid-template-columns: repeat(4, minmax(0, 1fr));
+			gap: 10px;
+		}
+
+		.big-readout {
+			padding: 16px;
+			border-radius: 16px;
+			background: linear-gradient(135deg, rgba(255, 180, 74, 0.15), rgba(110, 200, 255, 0.1));
+			border: 1px solid rgba(255, 255, 255, 0.09);
+		}
+
+		.big-readout strong {
+			display: block;
+			font-size: 12px;
+			text-transform: uppercase;
+			letter-spacing: 0.08em;
+			color: var(--muted);
+			margin-bottom: 8px;
+		}
+
+		.big-readout span {
+			display: block;
+			font-size: 34px;
+			font-weight: 700;
+			line-height: 1;
+			margin-bottom: 6px;
+		}
+
+		.big-readout small {
+			display: block;
+			color: var(--muted);
+		}
+
+		.status-grid {
+			display: grid;
+			grid-template-columns: repeat(2, minmax(0, 1fr));
+			gap: 10px;
+		}
+
+		.stat {
+			padding: 12px;
+			border-radius: 12px;
+			background: rgba(255, 255, 255, 0.03);
+			border: 1px solid rgba(255, 255, 255, 0.06);
+		}
+
+		.stat strong {
+			display: block;
+			font-size: 12px;
+			color: var(--muted);
+			margin-bottom: 6px;
+			text-transform: uppercase;
+			letter-spacing: 0.06em;
+		}
+
+		.stat span {
+			font-size: 17px;
+		}
+
+		.note {
+			padding: 12px 14px;
+			border-left: 3px solid var(--accent);
+			background: rgba(255, 180, 74, 0.1);
+		}
+
+		.good {
+			color: var(--good);
+		}
+
+		.bad {
+			color: var(--bad);
+		}
+
+		pre {
+			margin: 0;
+			padding: 14px;
+			border-radius: 14px;
+			background: rgba(7, 9, 14, 0.95);
+			border: 1px solid rgba(255, 255, 255, 0.08);
+			overflow: auto;
+			white-space: pre-wrap;
+			word-break: break-word;
+			font: 13px/1.45 Consolas, "SFMono-Regular", monospace;
+		}
+
+		.viewer-shell {
+			padding: 18px;
+			display: grid;
+			grid-template-rows: auto minmax(520px, 1fr) auto;
+			gap: 16px;
+			min-height: calc(100vh - 48px);
+		}
+
+		iframe {
+			width: 100%;
+			height: 100%;
+			border: 0;
+			border-radius: 16px;
+			background: #000;
+		}
+
+		table {
+			width: 100%;
+			border-collapse: collapse;
+			font-size: 13px;
+		}
+
+		th,
+		td {
+			padding: 10px 8px;
+			border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+			text-align: left;
+			vertical-align: top;
+		}
+
+		th {
+			font-size: 11px;
+			text-transform: uppercase;
+			letter-spacing: 0.08em;
+			color: var(--muted);
+		}
+
+		.muted {
+			color: var(--muted);
+		}
+
+		a {
+			color: var(--accent);
+		}
+
+		@media (max-width: 1180px) {
+			main {
+				grid-template-columns: 1fr;
+			}
+
+			.viewer-shell {
+				min-height: auto;
+			}
+
+			iframe {
+				min-height: 70vh;
+			}
+
+			.row-4 {
+				grid-template-columns: repeat(2, minmax(0, 1fr));
+			}
+		}
+	</style>
+</head>
+<body>
+	<main>
+		<div class="sidebar">
+			<section class="panel">
+				<p class="eyebrow">Music Sync</p>
+				<h1>Delayed Video For External Music Audio</h1>
+				<p>This demo is for NINJAM-style or loop-based music sessions where the audio is handled outside VDO.Ninja and the video needs deliberate chunked delay to line up.</p>
+				<div class="note">
+					Use <code>noaudio</code> when the real audio is coming from OBS or another app. This demo is about delaying video, not long-delay audio playback inside VDO.Ninja.
+				</div>
+			</section>
+
+			<section class="panel">
+				<h2>Viewer Setup</h2>
+				<div class="stack">
+					<div>
+						<label for="room">Room</label>
+						<input id="room" type="text">
+					</div>
+					<div>
+						<label for="viewer-params">Viewer Params</label>
+						<textarea id="viewer-params">scene&autostart&cleanoutput&label=MusicSyncViewer&noaudio&chunkbufferadaptive=0&chunkbufferceil=180000</textarea>
+					</div>
+					<div class="row">
+						<button id="reload-viewer" type="button">Load Viewer</button>
+						<button id="refresh-state" type="button">Refresh State</button>
+					</div>
+					<div class="row">
+						<button id="open-synthetic" type="button">Open Synthetic Publisher</button>
+						<button id="open-camera" type="button">Open Camera Publisher</button>
+					</div>
+					<div>
+						<label for="viewer-url">Viewer URL</label>
+						<pre id="viewer-url">Not loaded yet.</pre>
+					</div>
+				</div>
+			</section>
+
+			<section class="panel">
+				<h2>Delay Calculator</h2>
+				<div class="row">
+					<div>
+						<label for="bpm">BPM</label>
+						<input id="bpm" type="number" min="1" step="0.1" value="120">
+					</div>
+					<div>
+						<label for="beats-per-bar">Beats Per Bar</label>
+						<input id="beats-per-bar" type="number" min="1" step="1" value="4">
+					</div>
+				</div>
+				<div class="row">
+					<div>
+						<label for="bars-delayed">Bars Delayed</label>
+						<input id="bars-delayed" type="number" min="0" step="0.25" value="4">
+					</div>
+					<div>
+						<label for="offset-ms">Extra Offset (ms)</label>
+						<input id="offset-ms" type="number" step="1" value="0">
+					</div>
+				</div>
+				<div class="row">
+					<div>
+						<label for="video-fps">Video FPS</label>
+						<input id="video-fps" type="number" min="1" step="0.01" value="30">
+					</div>
+					<div>
+						<label for="stream-select">Target Stream</label>
+						<select id="stream-select">
+							<option value="">No remote streams yet</option>
+						</select>
+					</div>
+				</div>
+				<div class="big-readout" style="margin: 12px 0;">
+					<strong>Calculated Delay</strong>
+					<span id="delay-readout">8000 ms</span>
+					<small id="delay-subreadout">4.00 bars, 240 frames at 30 fps</small>
+				</div>
+				<div class="row">
+					<button id="apply-default" type="button">Apply As Default</button>
+					<button id="apply-selected" type="button">Apply To Selected Stream</button>
+				</div>
+				<div class="row">
+					<button id="apply-all" type="button">Apply To All Streams</button>
+					<button id="copy-snippet" type="button">Copy Snippet</button>
+				</div>
+				<div class="row-4" style="margin-top: 10px;">
+					<button id="nudge-minus-frame" type="button">-1 Frame</button>
+					<button id="nudge-plus-frame" type="button">+1 Frame</button>
+					<button id="nudge-minus-100" type="button">-100 ms</button>
+					<button id="nudge-plus-100" type="button">+100 ms</button>
+				</div>
+			</section>
+
+			<section class="panel">
+				<h2>Selected Stream Status</h2>
+				<div class="status-grid">
+					<div class="stat">
+						<strong>Requested Default</strong>
+						<span id="requested-default">n/a</span>
+					</div>
+					<div class="stat">
+						<strong>Requested Override</strong>
+						<span id="requested-override">n/a</span>
+					</div>
+					<div class="stat">
+						<strong>Target</strong>
+						<span id="target-now">n/a</span>
+					</div>
+					<div class="stat">
+						<strong>Current</strong>
+						<span id="current-now">n/a</span>
+					</div>
+					<div class="stat">
+						<strong>Buffer Ceiling</strong>
+						<span id="buffer-ceiling">n/a</span>
+					</div>
+					<div class="stat">
+						<strong>Fixed Buffer Mode</strong>
+						<span id="buffer-mode">n/a</span>
+					</div>
+					<div class="stat">
+						<strong>Last Chunk TS</strong>
+						<span id="last-frame-ts">n/a</span>
+					</div>
+					<div class="stat">
+						<strong>Last Chunk Kind</strong>
+						<span id="last-frame-kind">waiting</span>
+					</div>
+				</div>
+				<div style="margin-top: 12px;">
+					<label for="sync-status">Sync Status</label>
+					<pre id="sync-status">Load the viewer, then join a remote stream to see live target/current buffer data.</pre>
+				</div>
+			</section>
+
+			<section class="panel">
+				<h2>Developer Snippet</h2>
+				<pre id="code-snippet"></pre>
+			</section>
+		</div>
+
+		<div class="viewer-shell panel">
+			<section style="padding: 0;">
+				<div style="padding: 18px 18px 0;">
+					<p class="eyebrow">Embedded Viewer</p>
+					<p class="muted">This page only uses iframe <code>postMessage</code> calls and callback replies. It does not reach into private iframe state.</p>
+				</div>
+				<div style="padding: 0 18px 18px;">
+					<iframe id="viewer-frame" name="viewer-frame" allow="autoplay; camera; microphone"></iframe>
+				</div>
+			</section>
+
+			<section style="padding-top: 0;">
+				<h2>Remote Streams</h2>
+				<table>
+					<thead>
+						<tr>
+							<th>Stream</th>
+							<th>Requested</th>
+							<th>Target</th>
+							<th>Current</th>
+							<th>Status</th>
+						</tr>
+					</thead>
+					<tbody id="stream-table">
+						<tr>
+							<td colspan="5" class="muted">No remote streams yet.</td>
+						</tr>
+					</tbody>
+				</table>
+			</section>
+
+			<section style="padding-top: 0;">
+				<h2>Notes</h2>
+				<p class="muted">Recommended for musician sync tools:</p>
+				<p class="muted"><code>chunkbufferadaptive=0</code> keeps the requested target fixed instead of letting the viewer drift.</p>
+				<p class="muted"><code>chunkbufferceil=180000</code> allows up to 3 minutes of video buffering.</p>
+				<p class="muted"><code>noaudio</code> avoids pretending VDO.Ninja chunked audio is the long-delay path.</p>
+				<p class="muted"><code>setBufferDelay</code> drives the same internal playout target as <code>&buffer=</code>. It does not, by itself, enable the RTT-compensated <code>&buffer2</code> behavior.</p>
+				<p class="muted">If you want <code>buffer2</code>-style RTT compensation in this demo, add <code>buffer2=0</code> to the viewer params before loading the iframe. The buttons will still update the numeric delay target afterward.</p>
+				<p class="muted">For per-frame timing, listen for iframe messages with <code>action: "chunked-inbound"</code> or <code>"chunked-outbound"</code>. Their payload exposes <code>value.ts</code> and <code>value.type</code>.</p>
+			</section>
+		</div>
+	</main>
+
+	<script>
+	(function () {
+		function uid(prefix) {
+			return prefix + "_" + Date.now().toString(36) + "_" + Math.random().toString(36).slice(2, 8);
+		}
+
+		function formatMs(value) {
+			if (value === false || value === null || value === undefined || value === "n/a") {
+				return "n/a";
+			}
+			return Math.round(Number(value) || 0) + " ms";
+		}
+
+		function readSearchParam(name, fallback) {
+			var params = new URLSearchParams(window.location.search);
+			return params.get(name) || fallback;
+		}
+
+		var roomInput = document.getElementById("room");
+		var viewerParamsInput = document.getElementById("viewer-params");
+		var bpmInput = document.getElementById("bpm");
+		var beatsPerBarInput = document.getElementById("beats-per-bar");
+		var barsDelayedInput = document.getElementById("bars-delayed");
+		var offsetMsInput = document.getElementById("offset-ms");
+		var videoFpsInput = document.getElementById("video-fps");
+		var streamSelect = document.getElementById("stream-select");
+		var delayReadout = document.getElementById("delay-readout");
+		var delaySubreadout = document.getElementById("delay-subreadout");
+		var viewerFrame = document.getElementById("viewer-frame");
+		var streamTable = document.getElementById("stream-table");
+		var viewerUrlPre = document.getElementById("viewer-url");
+		var requestedDefaultEl = document.getElementById("requested-default");
+		var requestedOverrideEl = document.getElementById("requested-override");
+		var targetNowEl = document.getElementById("target-now");
+		var currentNowEl = document.getElementById("current-now");
+		var bufferCeilingEl = document.getElementById("buffer-ceiling");
+		var bufferModeEl = document.getElementById("buffer-mode");
+		var lastFrameTsEl = document.getElementById("last-frame-ts");
+		var lastFrameKindEl = document.getElementById("last-frame-kind");
+		var syncStatus = document.getElementById("sync-status");
+		var codeSnippet = document.getElementById("code-snippet");
+
+		roomInput.value = readSearchParam("room", uid("musicsync"));
+		viewerParamsInput.value = readSearchParam("viewerParams", viewerParamsInput.value);
+
+		var pendingCallbacks = {};
+		var stateCache = {
+			detailedState: {},
+			stats: {},
+			lastSelectedStream: "",
+			chunkEvents: {}
+		};
+
+		function buildViewerUrl() {
+			var room = encodeURIComponent(roomInput.value.trim());
+			var extra = viewerParamsInput.value.trim();
+			if (extra) {
+				return "../index.html?room=" + room + "&" + extra;
+			}
+			return "../index.html?room=" + room;
+		}
+
+		function buildPublisherUrl(testMedia) {
+			var room = encodeURIComponent(roomInput.value.trim());
+			var pushId = encodeURIComponent(uid(testMedia ? "musicdemo" : "musiccam"));
+			var params = [
+				"push=" + pushId,
+				"room=" + room,
+				"webcam",
+				"autostart",
+				"chunked=1800",
+				"label=MusicSyncPublisher"
+			];
+			if (testMedia) {
+				params.push("testmedia=1");
+				params.push("testwidth=640");
+				params.push("testheight=360");
+				params.push("testfps=30");
+			}
+			return "../index.html?" + params.join("&");
+		}
+
+		function renderChunkEvent(streamID) {
+			var eventData = streamID ? stateCache.chunkEvents[streamID] || null : null;
+			if (!eventData) {
+				lastFrameTsEl.textContent = "n/a";
+				lastFrameKindEl.textContent = "waiting";
+				return "Last chunk: waiting";
+			}
+			var ts = typeof eventData.ts === "number" && Number.isFinite(eventData.ts) ? eventData.ts : null;
+			lastFrameTsEl.textContent = ts !== null ? formatMs(ts) : "n/a";
+			lastFrameKindEl.textContent = eventData.type + " (" + eventData.direction + ")";
+			return "Last chunk: " + (ts !== null ? formatMs(ts) : "n/a") + " as " + eventData.type + " (" + eventData.direction + ")";
+		}
+
+		function getViewerWindow() {
+			return viewerFrame && viewerFrame.contentWindow ? viewerFrame.contentWindow : null;
+		}
+
+		function postToViewer(message) {
+			var target = getViewerWindow();
+			if (!target) {
+				throw new Error("Viewer iframe is not ready");
+			}
+			target.postMessage(message, "*");
+		}
+
+		function postToViewerWithCallback(message, timeoutMs) {
+			var timeout = timeoutMs || 5000;
+			return new Promise(function (resolve, reject) {
+				var cib = uid("cib");
+				var timer = setTimeout(function () {
+					delete pendingCallbacks[cib];
+					reject(new Error("Timed out waiting for iframe callback"));
+				}, timeout);
+				pendingCallbacks[cib] = {
+					resolve: resolve,
+					reject: reject,
+					timer: timer
+				};
+				postToViewer(Object.assign({}, message, { cib: cib }));
+			});
+		}
+
+		window.addEventListener("message", function (event) {
+			var data = event.data;
+			if (!data || typeof data !== "object") {
+				return;
+			}
+			var chunkStreamID = data.streamID || (data.value && data.value.streamID) || null;
+			if (event.source === getViewerWindow() && (data.action === "chunked-inbound" || data.action === "chunked-outbound") && data.value && chunkStreamID) {
+				stateCache.chunkEvents[chunkStreamID] = {
+					ts: typeof data.value.ts === "number" ? data.value.ts : Number(data.value.ts),
+					type: data.value.type || "unknown",
+					direction: data.action === "chunked-inbound" ? "inbound" : "outbound"
+				};
+				if (chunkStreamID === streamSelect.value) {
+					renderChunkEvent(chunkStreamID);
+				}
+				return;
+			}
+			if (!data.cib || !pendingCallbacks[data.cib]) {
+				return;
+			}
+			var pending = pendingCallbacks[data.cib];
+			clearTimeout(pending.timer);
+			delete pendingCallbacks[data.cib];
+			pending.resolve(data);
+		});
+
+		function calculateDelayMs() {
+			var bpm = parseFloat(bpmInput.value) || 0;
+			var beatsPerBar = parseFloat(beatsPerBarInput.value) || 0;
+			var barsDelayed = parseFloat(barsDelayedInput.value) || 0;
+			var offsetMs = parseFloat(offsetMsInput.value) || 0;
+			if (!(bpm > 0) || !(beatsPerBar > 0) || !(barsDelayed >= 0)) {
+				return 0;
+			}
+			var msPerBeat = 60000 / bpm;
+			return Math.max(0, Math.round(barsDelayed * beatsPerBar * msPerBeat + offsetMs));
+		}
+
+		function updateDelayReadout() {
+			var delayMs = calculateDelayMs();
+			var barsDelayed = parseFloat(barsDelayedInput.value) || 0;
+			var fps = parseFloat(videoFpsInput.value) || 30;
+			var frames = fps > 0 ? delayMs / (1000 / fps) : 0;
+			delayReadout.textContent = delayMs + " ms";
+			delaySubreadout.textContent = barsDelayed.toFixed(2) + " bars, " + Math.round(frames) + " frames at " + fps + " fps";
+
+			var selectedStream = streamSelect.value ? '"' + streamSelect.value + '"' : '"streamID123"';
+			codeSnippet.textContent = [
+				"const delayMs = " + delayMs + ";",
+				"",
+				"// Default for streams inheriting the viewer default",
+				'iframe.contentWindow.postMessage({ setBufferDelay: delayMs }, "*");',
+				"",
+				"// Or target one specific stream",
+				'iframe.contentWindow.postMessage({ setBufferDelay: delayMs, streamID: ' + selectedStream + ' }, "*");'
+			].join("\n");
+		}
+
+		function setStatus(message) {
+			syncStatus.textContent = message;
+		}
+
+		function getRemoteStreams() {
+			var streams = [];
+			var detailedState = stateCache.detailedState || {};
+			for (var streamID in detailedState) {
+				if (!Object.prototype.hasOwnProperty.call(detailedState, streamID)) {
+					continue;
+				}
+				var item = detailedState[streamID];
+				if (!item || item.localStream) {
+					continue;
+				}
+				streams.push(item);
+			}
+			streams.sort(function (a, b) {
+				return String(a.label || a.streamID).localeCompare(String(b.label || b.streamID));
+			});
+			return streams;
+		}
+
+		function renderStreamSelect(streams) {
+			var previous = streamSelect.value || stateCache.lastSelectedStream;
+			streamSelect.innerHTML = "";
+			if (!streams.length) {
+				var empty = document.createElement("option");
+				empty.value = "";
+				empty.textContent = "No remote streams yet";
+				streamSelect.appendChild(empty);
+				stateCache.lastSelectedStream = "";
+				return;
+			}
+			streams.forEach(function (item) {
+				var option = document.createElement("option");
+				option.value = item.streamID;
+				option.textContent = (item.label ? item.label + " " : "") + "(" + item.streamID + ")";
+				if (item.streamID === previous) {
+					option.selected = true;
+				}
+				streamSelect.appendChild(option);
+			});
+			if (!streamSelect.value && streams.length) {
+				streamSelect.value = streams[0].streamID;
+			}
+			stateCache.lastSelectedStream = streamSelect.value;
+		}
+
+		function renderTable(streams) {
+			if (!streams.length) {
+				streamTable.innerHTML = '<tr><td colspan="5" class="muted">No remote streams yet.</td></tr>';
+				return;
+			}
+
+			var inbound = (stateCache.stats && stateCache.stats.inbound) || {};
+			var rows = streams.map(function (item) {
+				var stats = inbound[item.streamID] || {};
+				var chunkStats = stats.chunked_mode_video || {};
+				var requested = item.chunkedBufferOverride !== false ? item.chunkedBufferOverride : item.chunkedBufferDefault;
+				var status = chunkStats.rebuffering ? '<span class="bad">rebuffering</span>' : '<span class="good">steady</span>';
+				return [
+					"<tr>",
+					"<td><strong>" + (item.label || "Unnamed") + "</strong><br><span class=\"muted\">" + item.streamID + "</span></td>",
+					"<td>" + formatMs(requested) + "</td>",
+					"<td>" + formatMs(chunkStats.buffer_buffer) + "</td>",
+					"<td>" + formatMs(chunkStats.buffer_level) + "</td>",
+					"<td>" + status + "</td>",
+					"</tr>"
+				].join("");
+			});
+			streamTable.innerHTML = rows.join("");
+		}
+
+		function renderSelectedStatus(streams) {
+			var selectedStream = streamSelect.value;
+			var selected = streams.find(function (item) {
+				return item.streamID === selectedStream;
+			}) || streams[0] || null;
+			var inbound = (stateCache.stats && stateCache.stats.inbound) || {};
+			var stats = selected ? inbound[selected.streamID] || {} : {};
+			var chunkStats = stats.chunked_mode_video || {};
+
+			if (!selected) {
+				requestedDefaultEl.textContent = "n/a";
+				requestedOverrideEl.textContent = "n/a";
+				targetNowEl.textContent = "n/a";
+				currentNowEl.textContent = "n/a";
+				bufferCeilingEl.textContent = "n/a";
+				bufferModeEl.textContent = "n/a";
+				renderChunkEvent(null);
+				setStatus("Load the viewer, then join a remote stream to see live target/current buffer data.");
+				return;
+			}
+
+			requestedDefaultEl.textContent = formatMs(selected.chunkedBufferDefault);
+			requestedOverrideEl.textContent = selected.chunkedBufferOverride === false ? "inheriting default" : formatMs(selected.chunkedBufferOverride);
+			targetNowEl.textContent = formatMs(chunkStats.buffer_buffer);
+			currentNowEl.textContent = formatMs(chunkStats.buffer_level);
+			bufferCeilingEl.textContent = selected.chunkedBufferCeil === false ? "default" : formatMs(selected.chunkedBufferCeil);
+			bufferModeEl.textContent = selected.chunkedBufferAdaptive ? "adaptive" : "fixed";
+			var chunkMessage = renderChunkEvent(selected.streamID);
+
+			var statusParts = [];
+			statusParts.push("Selected stream: " + (selected.label || selected.streamID));
+			statusParts.push("Requested default: " + formatMs(selected.chunkedBufferDefault));
+			statusParts.push("Requested override: " + (selected.chunkedBufferOverride === false ? "none" : formatMs(selected.chunkedBufferOverride)));
+			statusParts.push("Target now: " + formatMs(chunkStats.buffer_buffer));
+			statusParts.push("Current now: " + formatMs(chunkStats.buffer_level));
+			statusParts.push("State: " + (chunkStats.rebuffering ? "rebuffering" : "steady"));
+			statusParts.push(chunkMessage);
+			setStatus(statusParts.join("\n"));
+		}
+
+		function renderState() {
+			var streams = getRemoteStreams();
+			renderStreamSelect(streams);
+			renderTable(streams);
+			renderSelectedStatus(streams);
+			updateDelayReadout();
+		}
+
+		async function refreshState() {
+			var target = getViewerWindow();
+			if (!target) {
+				return;
+			}
+			try {
+				var responses = await Promise.all([
+					postToViewerWithCallback({ getDetailedState: true }, 5000),
+					postToViewerWithCallback({ getStats: true }, 5000)
+				]);
+				stateCache.detailedState = responses[0].detailedState || {};
+				stateCache.stats = responses[1].stats || {};
+				renderState();
+			} catch (err) {
+				setStatus("Viewer did not answer yet. If it just loaded, wait a moment and refresh again.\n\n" + err.message);
+			}
+		}
+
+		function loadViewer() {
+			var url = buildViewerUrl();
+			viewerFrame.src = url;
+			viewerUrlPre.textContent = url;
+			setStatus("Loading viewer...");
+			setTimeout(refreshState, 1500);
+			setTimeout(refreshState, 3000);
+		}
+
+		function openPublisher(testMedia) {
+			window.open(buildPublisherUrl(testMedia), "_blank", "noopener,noreferrer");
+		}
+
+		function sendBufferDelay(mode) {
+			var delayMs = calculateDelayMs();
+			var payload = { setBufferDelay: delayMs };
+			if (mode === "selected" && streamSelect.value) {
+				payload.streamID = streamSelect.value;
+			} else if (mode === "all") {
+				payload.UUID = "*";
+			}
+			postToViewer(payload);
+			setStatus("Sent " + JSON.stringify(payload, null, 2));
+			setTimeout(refreshState, 300);
+			setTimeout(refreshState, 1200);
+		}
+
+		function nudgeOffset(delta) {
+			var current = parseFloat(offsetMsInput.value) || 0;
+			offsetMsInput.value = String(Math.round(current + delta));
+			updateDelayReadout();
+		}
+
+		document.getElementById("reload-viewer").addEventListener("click", loadViewer);
+		document.getElementById("refresh-state").addEventListener("click", refreshState);
+		document.getElementById("open-synthetic").addEventListener("click", function () {
+			openPublisher(true);
+		});
+		document.getElementById("open-camera").addEventListener("click", function () {
+			openPublisher(false);
+		});
+		document.getElementById("apply-default").addEventListener("click", function () {
+			sendBufferDelay("default");
+		});
+		document.getElementById("apply-selected").addEventListener("click", function () {
+			sendBufferDelay("selected");
+		});
+		document.getElementById("apply-all").addEventListener("click", function () {
+			sendBufferDelay("all");
+		});
+		document.getElementById("copy-snippet").addEventListener("click", async function () {
+			try {
+				await navigator.clipboard.writeText(codeSnippet.textContent);
+				setStatus("Copied the current iframe snippet to the clipboard.");
+			} catch (err) {
+				setStatus("Could not copy the snippet automatically.\n\n" + err.message);
+			}
+		});
+		document.getElementById("nudge-minus-frame").addEventListener("click", function () {
+			var fps = parseFloat(videoFpsInput.value) || 30;
+			nudgeOffset(-(1000 / fps));
+		});
+		document.getElementById("nudge-plus-frame").addEventListener("click", function () {
+			var fps = parseFloat(videoFpsInput.value) || 30;
+			nudgeOffset(1000 / fps);
+		});
+		document.getElementById("nudge-minus-100").addEventListener("click", function () {
+			nudgeOffset(-100);
+		});
+		document.getElementById("nudge-plus-100").addEventListener("click", function () {
+			nudgeOffset(100);
+		});
+		streamSelect.addEventListener("change", function () {
+			stateCache.lastSelectedStream = streamSelect.value;
+			renderState();
+		});
+
+		[bpmInput, beatsPerBarInput, barsDelayedInput, offsetMsInput, videoFpsInput].forEach(function (input) {
+			input.addEventListener("input", updateDelayReadout);
+			input.addEventListener("change", updateDelayReadout);
+		});
+
+		viewerFrame.addEventListener("load", function () {
+			setTimeout(refreshState, 1200);
+			setTimeout(refreshState, 2500);
+		});
+
+		updateDelayReadout();
+		loadViewer();
+		setInterval(refreshState, 1500);
+	})();
+	</script>
+</body>
+</html>

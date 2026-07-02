@@ -1,5 +1,7 @@
 <html>
-<head><title>SocialStream + Video</title>
+<head>
+	<meta name="description" content="Switch between multiple social chat integrations alongside a VDO.Ninja feed." />
+	<link rel="canonical" href="https://vdo.ninja/examples/socal.html" /><title>SocialStream Hub - VDO.Ninja</title>
 <meta name="viewport" content="width=device-width, initial-scale=0.7, maximum-scale=1.0, user-scalable=yes" />
 <meta content="text/html;charset=utf-8" http-equiv="Content-Type" />
 <style>
@@ -38,7 +40,7 @@ h1{
 #container2{
 	width:100vw;
 	height:100vh;
-	position: fixed; 
+	position: fixed;
 	top: 0;
 	left:0;
 	display:none;
@@ -47,7 +49,7 @@ h1{
 #container1{
 	width:100vw;
 	height:100vh;
-	position: fixed; 
+	position: fixed;
 	top: 0;
 	left:0;
 	display:none;
@@ -56,7 +58,7 @@ iframe{
 	width:100vw;
 	height:100vh;
 }
-	
+
 @media screen and (orientation:portrait) {
 	#container2{
 	}
@@ -82,8 +84,8 @@ iframe{
 <div id="container1" ></div>
 <div id="selectChatSource">
 	<h1>Which social integration are you adding?</h1>
-	
-	
+
+
 </div>
 <div id="clean">
 	<h1>Use VDO.Ninja and SocialStream chat at the same time</h1>
@@ -138,37 +140,37 @@ if (getStorage("vdoNinjaSocialStreamURL")){
 	document.getElementById("viewlink").value = getStorage("vdoNinjaSocialStreamURL");
 }
 
-function loadIframes(url=false){ 
+function loadIframes(url=false){
 
 	var roomname = document.getElementById("viewlink").value;
 	var room2 = document.getElementById("social").value;
-	
+
 	document.getElementById("clean").parentNode.removeChild(document.getElementById("clean"));
 	document.getElementById("container1").style.display="inline-block";
 	document.getElementById("container2").style.display="inline-block";
-	
+
 	var path = window.location.host+window.location.pathname.split("/").slice(0,-1).join("/");
 	path = path.replace("/examples","");
-	
+
 	if (roomname.startsWith("https://")){
 		var room1 = roomname;
 	} else {
 		var room1 = "https://"+path+"/?push="+roomname+"&webcam&autostart&vd=front&ad=1&transparent&noheader";
 	}
-	
+
 	var iframe = document.createElement("iframe");
 	iframe.allow = "autoplay;camera;microphone;fullscreen;picture-in-picture;";
 	iframe.src = room1;
 	var iframeContainer = document.createElement("div");
 	iframeContainer.appendChild(iframe);
 	document.getElementById("container1").appendChild(iframeContainer);
-	
-	
+
+
 	setStorage("SocialStreamChatLink", room2);
 
 	setStorage("vdoNinjaSocialStreamURL", room1);
-	
-	
+
+
 	setTimeout(function(){
 		var iframe = document.createElement("iframe");
 		iframe.allow = "autoplay;camera;microphone;fullscreen;picture-in-picture;";
@@ -177,7 +179,7 @@ function loadIframes(url=false){
 		iframeContainer.appendChild(iframe);
 		document.getElementById("container2").appendChild(iframeContainer);
 	},3000);
-	
+
 }
 
 </script>

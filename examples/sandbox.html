@@ -1,9 +1,21 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+	<meta name="description" content="All-in-one playground for experimenting with the VDO.Ninja developer API." />
+	<link rel="canonical" href="https://vdo.ninja/examples/sandbox.html" />
+	<meta property="og:type" content="website" />
+	<meta property="og:site_name" content="VDO.Ninja" />
+	<meta property="og:url" content="https://vdo.ninja/examples/sandbox.html" />
+	<meta property="og:title" content="Developer API Sandbox - VDO.Ninja" />
+	<meta property="og:description" content="All-in-one playground for experimenting with the VDO.Ninja developer API." />
+	<meta property="og:image" content="https://vdo.ninja/media/vdoNinja_logo_full.png" />
+	<meta name="twitter:card" content="summary_large_image" />
+	<meta name="twitter:title" content="Developer API Sandbox - VDO.Ninja" />
+	<meta name="twitter:description" content="All-in-one playground for experimenting with the VDO.Ninja developer API." />
+	<meta name="twitter:image" content="https://vdo.ninja/media/vdoNinja_logo_full.png" />
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>VDO.Ninja Developer API Sandbox</title>
+  <title>Developer API Sandbox - VDO.Ninja</title>
   <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <style>
     :root {
@@ -1408,6 +1420,7 @@ function getNoteNameFromNumber(noteNumber) {
               <option value="soloChatBidirectional">soloChatBidirectional</option>
               <option value="speaker">speaker (toggle)</option>
               <option value="display">display (toggle)</option>
+              <option value="rotate">rotate (+90/reset/90/180/270)</option>
               <option value="forceKeyframe">forceKeyframe (rainbow fix)</option>
               <option value="soloVideo">soloVideo (highlight)</option>
               <option value="addScene">addScene</option>
@@ -3094,6 +3107,8 @@ function createGuestControls() {
     { name: "Two-way Solo Chat", action: "soloChatBidirectional", type: "toggle" },
     { name: "Toggle Speaker", action: "speaker", type: "toggle" },
     { name: "Toggle Display", action: "display", type: "toggle" },
+    { name: "Rotate +90", action: "rotate", value: true, type: "toggle" },
+    { name: "Reset Rotation", action: "rotate", value: false, type: "toggle" },
     { name: "Fix Rainbow", action: "forceKeyframe", type: "toggle" },
     { name: "Highlight", action: "soloVideo", type: "toggle" },
     { name: "Add to Scene 1", action: "addScene", value: 1, type: "toggle" },

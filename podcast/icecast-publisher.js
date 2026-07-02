@@ -2,7 +2,6 @@ const DEFAULT_TIMESLICE_MS = 1000;
 const DIRECT_FALLBACK_WINDOW_MS = 5000;
 const DEFAULT_AUDIO_BITRATE = 128000;
 const RELAY_WEBSOCKET_BUFFER_LIMIT = 512 * 1024;
-const RELAY_WEBSOCKET_ROTATE_MS = 24000;
 
 export const ICECAST_MIME_OPTIONS = [
   { value: 'audio/aac', label: 'AAC / ADTS', extension: 'aac' },
@@ -88,6 +87,10 @@ function isBareIpTarget(target) {
   return isIPv4Target(target) && !target.port && target.pathname === '/';
 }
 
+function isHttpsPage() {
+  return typeof window !== 'undefined' && window.location?.protocol === 'https:';
+}
+
 export class IcecastPublisher extends EventTarget {
   constructor({ audioContext = null, getParticipants = null } = {}) {
     super();
@@ -111,9 +114,6 @@ export class IcecastPublisher extends EventTarget {
     this.stopping = false;
     this.startedAt = 0;
     this.bytesSent = 0;
-    this.relayBytesSent = 0;
-    this.relayStarted = false;
-    this.relayReady = false;
     this.config = null;
   }
 
@@ -271,9 +271,6 @@ export class IcecastPublisher extends EventTarget {
     this.masterGain.gain.value = 1;
     this.masterGain.connect(this.destination);
     this.bytesSent = 0;
-    this.relayBytesSent = 0;
-    this.relayStarted = false;
-    this.relayReady = false;
     this.startedAt = Date.now();
     this.closeRequested = false;
     this.pendingWrites = 0;
@@ -514,8 +511,6 @@ export class IcecastPublisher extends EventTarget {
     this.uploadAbortController = null;
     this.uploadPromise = null;
     this.streamController = null;
-    this.relayStarted = false;
-    this.relayReady = false;
     this.stopping = false;
     this.config = null;
     if (!quiet) {
@@ -713,6 +708,10 @@ export class IcecastPublisher extends EventTarget {
 
   async openUploadWithFallback(uploadStream) {
     if (this.config.relayUrl) {
+      if (this.shouldSkipDirectUpload()) {
+        this.emitStatus('connecting', 'Using Icecast relay.');
+        return this.openRelayUpload(uploadStream);
+      }
       const [directBody, relayBody] = uploadStream.tee();
       const directAbortController = new AbortController();
       let directTimedOut = false;
@@ -758,6 +757,15 @@ export class IcecastPublisher extends EventTarget {
     return this.openDirectUpload(uploadStream).then(response => this.waitForUploadCompletion(response));
   }
 
+  shouldSkipDirectUpload() {
+    try {
+      const target = new URL(this.config.targetUrl);
+      return target.protocol === 'http:' && isHttpsPage();
+    } catch (error) {
+      return false;
+    }
+  }
+
   openDirectUpload(body, signal = this.uploadAbortController?.signal) {
     return fetch(this.config.targetUrl, {
       method: 'PUT',
@@ -775,15 +783,35 @@ export class IcecastPublisher extends EventTarget {
     });
   }
 
-  openRelayUpload(body) {
+  async openRelayUpload(body) {
     if (typeof WebSocket !== 'undefined') {
-      return this.openRelayWebSocket(body);
+      const [socketBody, fetchBody] = body.tee();
+      let socketReady = false;
+      try {
+        return await this.openRelayWebSocket(socketBody, {
+          onReady: () => {
+            socketReady = true;
+            fetchBody.cancel('relay socket active').catch(() => {});
+          }
+        });
+      } catch (error) {
+        if (socketReady || this.stopping) {
+          if (!fetchBody.locked) {
+            fetchBody.cancel('relay socket failed').catch(() => {});
+          }
+          throw error;
+        }
+        this.emitStatus('connecting', 'Relay socket failed; using relay upload.', {
+          fallbackError: error?.message || 'relay socket failed'
+        });
+        return this.openRelayFetch(fetchBody);
+      }
     }
     return this.openRelayFetch(body);
   }
 
-  openRelayFetch(body) {
-    return fetch(this.config.relayUrl, {
+  async openRelayFetch(body) {
+    const response = await fetch(this.config.relayUrl, {
       method: 'POST',
       mode: 'cors',
       cache: 'no-store',
@@ -791,15 +819,31 @@ export class IcecastPublisher extends EventTarget {
       body,
       duplex: 'half',
       signal: this.uploadAbortController?.signal
-    }).then(response => {
-      if (!response.ok) {
-        throw new Error(`Icecast relay rejected the stream (${response.status}).`);
-      }
-      return this.waitForUploadCompletion(response);
     });
+    if (!response.ok) {
+      let relayMessage = '';
+      try {
+        const bodyText = await response.text();
+        if (bodyText) {
+          try {
+            relayMessage = JSON.parse(bodyText).error || bodyText;
+          } catch (error) {
+            relayMessage = bodyText;
+          }
+        }
+      } catch (error) {
+        relayMessage = '';
+      }
+      throw new Error(
+        relayMessage
+          ? `Icecast relay rejected the stream (${response.status}): ${relayMessage}`
+          : `Icecast relay rejected the stream (${response.status}).`
+      );
+    }
+    return this.waitForUploadCompletion(response);
   }
 
-  openRelayWebSocket(body) {
+  openRelayWebSocket(body, { onReady = null } = {}) {
     const socketUrl = new URL(this.config.relayUrl, window.location.href);
     socketUrl.protocol = socketUrl.protocol === 'https:' ? 'wss:' : 'ws:';
     const signal = this.uploadAbortController?.signal;
@@ -891,14 +935,18 @@ export class IcecastPublisher extends EventTarget {
               finish(rejectSocket, error);
               closeSocket(socket, 4000, 'relay failed');
             }
-          } else if (message?.type === 'started') {
-            this.relayStarted = true;
           } else if (message?.type === 'ready') {
             accepted = true;
             activeSocket = socket;
             activeClosed = false;
             activeCloseError = null;
-            this.relayReady = true;
+            if (typeof onReady === 'function') {
+              try {
+                onReady();
+              } catch (error) {
+                console.warn('Icecast relay ready callback failed', error);
+              }
+            }
             this.emitStatus('live', 'Icecast relay connected.');
             finish(resolveSocket, socket);
           }
@@ -937,20 +985,9 @@ export class IcecastPublisher extends EventTarget {
         throw lastError || new Error('Icecast relay socket failed.');
       };
 
-      const rotateSocket = async (currentSocket) => {
-        if (activeSocket === currentSocket) {
-          activeSocket = null;
-        }
-        closeSocket(currentSocket, 1000, 'rotate');
-        this.relayReady = false;
-        await delay(700);
-        return connectWithRetry();
-      };
-
       const pump = async () => {
         reader = body.getReader();
         let socket = await connectWithRetry();
-        let socketOpenedAt = Date.now();
         while (true) {
           if (signal?.aborted) {
             throw createAbortError('publisher stopped');
@@ -959,16 +996,10 @@ export class IcecastPublisher extends EventTarget {
             const reconnectError = activeCloseError;
             activeClosed = false;
             activeCloseError = null;
-            this.relayReady = false;
             if (reconnectError) {
               console.warn('Icecast relay reconnecting after upstream close', reconnectError);
             }
             socket = await connectWithRetry();
-            socketOpenedAt = Date.now();
-          }
-          if (Date.now() - socketOpenedAt > RELAY_WEBSOCKET_ROTATE_MS) {
-            socket = await rotateSocket(socket);
-            socketOpenedAt = Date.now();
           }
           const { done, value } = await reader.read();
           if (done) {
@@ -982,7 +1013,6 @@ export class IcecastPublisher extends EventTarget {
             continue;
           }
           socket.send(value);
-          this.relayBytesSent += value?.byteLength || value?.length || 0;
         }
       };
 
@@ -992,9 +1022,15 @@ export class IcecastPublisher extends EventTarget {
         })
         .catch(error => {
           if (this.isExpectedStopError(error)) {
+            if (reader) {
+              reader.cancel('stopping').catch(() => {});
+            }
             closeSocket(activeSocket, 1000, 'stopping');
             settle(resolve, new Response('', { status: 200 }));
             return;
+          }
+          if (reader) {
+            reader.cancel('relay failed').catch(() => {});
           }
           closeSocket(activeSocket, 4000, 'relay failed');
           settle(reject, error);

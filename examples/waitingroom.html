@@ -1,5 +1,9 @@
 <html>
-<head><title>Waiting Room Overlay - VDO.Ninja</title>
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<meta name="description" content="Show a standby message until the remote feed connects and starts playing." />
+	<link rel="canonical" href="https://vdo.ninja/examples/waitingroom.html" /><title>Waiting Room Overlay - VDO.Ninja</title>
 <style>
 body{
 	padding:0;
@@ -25,7 +29,7 @@ iframe {
 	position:absolute;
 	top:0;
 	left:0;
-	
+
 }
 
 #overlay{
@@ -58,31 +62,31 @@ iframe {
 	<div id="container"></div>
 <script>
 
-function loadIframe(url=false){ 
-	
+function loadIframe(url=false){
+
 	if (url){
 		var iframesrc = url;
 	} else {
 		var iframesrc = document.getElementById("viewlink").value;
 	}
-	
+
 	if (iframesrc==""){
 		iframesrc="../";
 	}
-	
+
 	var params = window.location.search || "";
-		
+
 	if (params.startsWith("?")){
 		params = params.slice(1);
 		iframesrc = iframesrc + "&" + params
 	} else {
 		iframesrc = iframesrc + params
 	}
-	
+
 	var iframe = document.createElement("iframe");
 	iframe.allow = "document-domain;encrypted-media;sync-xhr;usb;web-share;cross-origin-isolated;accelerometer;midi;geolocation;autoplay;camera;microphone;fullscreen;picture-in-picture;display-capture;";
 	iframe.src = iframesrc;
-	
+
 	document.getElementById("container").appendChild(iframe);
 	var outputWindow = document.getElementById("overlay");
 
@@ -92,24 +96,24 @@ function loadIframe(url=false){
 	var eventer = window[eventMethod];
 	var messageEvent = eventMethod === "attachEvent" ? "onmessage" : "message";
 	var waiting = null;
-	
+
 	eventer(messageEvent, function (e) {
 		if (e.source != iframe.contentWindow){return} // reject messages send from other iframes
 		console.warn(e.data);
 		if ("action" in e.data){
-		
+
 			if (e.data.action == "joining-room"){
-				outputWindow.innerHTML = "JOINING ROOM";   
+				outputWindow.innerHTML = "JOINING ROOM";
 				waiting = setTimeout(function(){
-					outputWindow.innerHTML = "Waiting for the director to join";   
+					outputWindow.innerHTML = "Waiting for the director to join";
 					outputWindow.classList.remove("hidden");
 				},1000);
 			} else if (e.data.action == "director-connected"){
 				clearTimeout(waiting);
-				outputWindow.innerHTML = "";   
+				outputWindow.innerHTML = "";
 				outputWindow.classList.add("hidden");
 			}
-			
+
 		}
 	});
 }

@@ -1,17 +1,17 @@
 <!--
   VDO.Ninja Connected Label Overlay
   Description: Displays the label of the first connected peer in an overlay for OBS Studio
-  
+
   Parameters:
     &room=xx        - Comma-separated room IDs to connect to
     &password=pp    - Optional password for the rooms
     &view=xxxx      - Optional view parameter
-  
-  Usage: 
+
+  Usage:
     - Add as a browser source in OBS Studio
     - Can be hosted locally: file:///C:/Users/steve/Code/vdoninja/examples/labelonly.html?view=steve123
     - Or online: https://vdo.ninja/examples/labelonly.html?view=steve123
-  
+
   Styling:
     - Modify the #labelDisplay CSS styles to customize appearance
     - Background, text color, font size and animations can be adjusted
@@ -19,9 +19,11 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+	<meta name="description" content="Show only the connected guest's label as a minimal lower-third element." />
+	<link rel="canonical" href="https://vdo.ninja/examples/labelonly.html" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
     <meta charset="UTF-8">
-    <title>VDO.Ninja - Connected Label</title>
+    <title>Label Only Overlay - VDO.Ninja</title>
     <style>
         body, html {
             margin: 0;
@@ -34,20 +36,20 @@
             background-color: transparent;
             width: 100%;
         }
-        
+
         .electronDraggable {
             -webkit-app-region: drag;
         }
-        
+
         body > div {
             -webkit-app-region: no-drag;
         }
-        
+
         .hidden {
             display: none;
             opacity: 0;
         }
-        
+
         #labelDisplay {
             font-size: 48px;
             font-weight: bold;
@@ -62,7 +64,7 @@
             opacity: 0;
             transform: translateY(20px);
         }
-        
+
         #labelDisplay.visible {
             opacity: 1;
             transform: translateY(0);
@@ -86,7 +88,7 @@
         const roomID = urlParams.get("room") ? ("&scene&room="+urlParams.get("room")) : "";
         const password = urlParams.get("password") ? ("&password="+urlParams.get("password")) : "";
         const view = urlParams.get("view") ? ("&view="+urlParams.get("view")) : "";
-        
+
         let iframes = [];
         let connectedPeers = {};
         let currentDisplayedLabel = null;
@@ -94,19 +96,19 @@
         function updateLabelDisplay() {
             const labelDisplay = getById("labelDisplay");
             const peerKeys = Object.keys(connectedPeers);
-            
+
             if (peerKeys.length > 0) {
                 const firstPeer = peerKeys[0];
                 const label = connectedPeers[firstPeer];
-                
+
                 if (label !== currentDisplayedLabel) {
                     currentDisplayedLabel = label;
                     labelDisplay.textContent = currentDisplayedLabel;
                     labelDisplay.classList.remove("hidden");
-                    
+
                     // Force repaint
                     void labelDisplay.offsetWidth;
-                    
+
                     labelDisplay.classList.add("visible");
                 }
             } else {
@@ -133,12 +135,12 @@
 
             window.addEventListener("message", function(e) {
                 if (e.source !== iframe.contentWindow) return;
-                
+
                 if ("action" in e.data && e.data.UUID) {
                     if (e.data.action === "push-connection" && "value" in e.data && !e.data.value) {
                         delete connectedPeers[e.data.UUID];
                         updateLabelDisplay();
-                    } else if ((e.data.action === "push-connection-info" || e.data.action === "view-connection-info") 
+                    } else if ((e.data.action === "push-connection-info" || e.data.action === "view-connection-info")
                              && e.data.value && e.data.value.label) {
                         connectedPeers[e.data.UUID] = e.data.value.label;
                         updateLabelDisplay();
