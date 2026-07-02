@@ -1,6 +1,17 @@
 
 <html>
 <head>
+	<link rel="canonical" href="https://vdo.ninja/examples/simplelink.html" />
+	<meta property="og:type" content="website" />
+	<meta property="og:site_name" content="VDO.Ninja" />
+	<meta property="og:url" content="https://vdo.ninja/examples/simplelink.html" />
+	<meta property="og:title" content="Simple Link Generator - VDO.Ninja" />
+	<meta property="og:description" content="Generate publish, view, and scene links with common VDO.Ninja parameters." />
+	<meta property="og:image" content="https://vdo.ninja/media/vdoNinja_logo_full.png" />
+	<meta name="twitter:card" content="summary_large_image" />
+	<meta name="twitter:title" content="Simple Link Generator - VDO.Ninja" />
+	<meta name="twitter:description" content="Generate publish, view, and scene links with common VDO.Ninja parameters." />
+	<meta name="twitter:image" content="https://vdo.ninja/media/vdoNinja_logo_full.png" />
 	<meta charset="utf8" />
 	<meta name="viewport" content="width=device-width, initial-scale=1" />
 	<meta content="text/html;charset=utf-8" http-equiv="Content-Type" />
@@ -14,7 +25,7 @@
 	<link rel="me" href="https://vdo.ninja/about" />
 
 	<!-- Primary Meta Tags -->
-	<title>Simple Link Generator</title>
+	<title>Simple Link Generator - VDO.Ninja</title>
 	<meta id="metaTitle" name="title" content="VDO.Ninja" />
 	<meta name="description" content="Bring live video from your smartphone, computer, or friends directly into your Studio. 100% free." />
 	<meta name="author" content="Steve Seguin" />
@@ -42,7 +53,7 @@
             max-width: 1200px;
             margin: 0 auto;
         }
-		
+
 		.main-title {
             color: var(--text-color);
             text-align: center;
@@ -199,7 +210,7 @@
             body {
                 padding: 10px;
             }
-            
+
             .card {
                 padding: 12px;
                 margin: 10px 0;
@@ -231,7 +242,7 @@
             background: var(--highlight-color);
             border-color: var(--highlight-color);
         }
-		
+
     </style>
 </head>
 <body>
@@ -241,12 +252,12 @@
         <h2>🎥 Select Video Input Device</h2>
         <div id="videoInputs"></div>
     </div>
-    
+
     <div class="card">
         <h2>🎤 Select Audio Input Device</h2>
         <div id="audioInputs"></div>
     </div>
-    
+
     <div class="card">
         <h2>⚙️ Options</h2>
         <div class="options">
@@ -338,7 +349,7 @@
             if (prevSelected) {
                 prevSelected.classList.remove('selected');
             }
-            
+
             if (element === prevSelected) {
                 selectedVideo = null;
             } else {
@@ -349,7 +360,7 @@
 
 		function generateUrl() {
             const url = new URL(baseUrl);
-            
+
             if (selectedVideo === null) {
                 url.searchParams.set('vd', '0');
             } else if (selectedVideo) {
@@ -375,7 +386,7 @@
                     url.searchParams.set(broadcastMode, '');
                 }
             }
-            
+
             if (password) url.searchParams.set('pw', password);
             if (streamId) url.searchParams.set('id', streamId);
             if (autostart) url.searchParams.set('as', '');
@@ -410,7 +421,7 @@
                 console.warn("Permission request failed:", e);
             }
         }
-		
+
 		document.getElementById('generatedUrl').onclick = function() {
             if (this.value) {
                 navigator.clipboard.writeText(this.value).then(() => {

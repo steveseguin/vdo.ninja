@@ -1,8 +1,20 @@
 <html>
 <head>
-<title>
-	Remote control interface using VDO.Ninja's iframe API
-</title>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<meta name="description" content="Lightweight interface that tunnels OBS websocket control through VDO.Ninja." />
+	<link rel="canonical" href="https://vdo.ninja/examples/obsremote.html" />
+	<meta property="og:type" content="website" />
+	<meta property="og:site_name" content="VDO.Ninja" />
+	<meta property="og:url" content="https://vdo.ninja/examples/obsremote.html" />
+	<meta property="og:title" content="OBS Remote Mini - VDO.Ninja" />
+	<meta property="og:description" content="Lightweight interface that tunnels OBS websocket control through VDO.Ninja." />
+	<meta property="og:image" content="https://vdo.ninja/media/vdoNinja_logo_full.png" />
+	<meta name="twitter:card" content="summary_large_image" />
+	<meta name="twitter:title" content="OBS Remote Mini - VDO.Ninja" />
+	<meta name="twitter:description" content="Lightweight interface that tunnels OBS websocket control through VDO.Ninja." />
+	<meta name="twitter:image" content="https://vdo.ninja/media/vdoNinja_logo_full.png" />
+<title>OBS Remote Mini - VDO.Ninja</title>
 <style>
 #debugRemoteOBSControl{
 	font-size:50%;
@@ -34,15 +46,15 @@ a {
 		<span style="font-size:117%"><i class="las la-key" style="margin: 10px;"></i>Remote OBS passcode:</span>
 		<input id="obsRemotePasswordinput" style="margin:0 10px;display:inline-block;padding: 8px 10px 6px 10px;" onchange="changeremote()" oninput="changeremote()" placeholder="Enter the remote OBS password here" />
 	</div>
-	
+
 	Put the following link into OBS with permissions set to allow for scene changes:<br ><a href="" id="putintoOBSlink" style="margin: 10px 0;" target="_blank"></a>
-	
+
 	<small style="margin: 20px 0 0 0;display:block;" >
 		See the <a href="https://docs.vdo.ninja/advanced-settings/upcoming-parameters/and-obs" style="cursor:pointer;" target="_blank">documentation</a> for the built-in OBS control options inside VDO.Ninja
 	</small>
 	<div id="debugRemoteOBSControl" class="hidden">
 	</div>
-	
+
 </div>
 <script>
 
@@ -52,7 +64,7 @@ var charactersLength = characters.length;
 for (var i = 0; i < 12; i++) {
 	sessionID += characters.charAt(Math.floor(Math.random() * charactersLength));
 }
-	
+
 (function(w) {
 	w.URLSearchParams = w.URLSearchParams || function(searchString) {
 		var self = this;
@@ -106,7 +118,7 @@ iframeContainer.style.height = "20px";
 iframeContainer.style.overflow = "hidden";
 document.body.appendChild(iframeContainer);
 
-	 
+
 ////////////  LISTEN FOR EVENTS
 
 var eventMethod = window.addEventListener ? "addEventListener" : "attachEvent";
@@ -127,13 +139,13 @@ eventer(messageEvent, function (e) {
 					document.querySelectorAll("[data-system='"+e.data.UUID+"']").forEach(ele=>{
 						ele.remove();
 					});
-					
+
 				}
 			}
 		}
 	}
 });
-	
+
 var session = {};
 session.pcs = {}
 
@@ -158,15 +170,15 @@ function sendMessage(msg){
 
 function manageSceneState(data, UUID){ // incoming obs details
 	var processNeeded = false
-	
+
 	if (!(UUID in session.pcs)){ // re-using vdo.ninja state structures, to make code functions available as simply copy/paste
 		session.pcs[UUID] = {};
 		session.pcs[UUID].obsState = {};
 	}
-	
+
 	try{
 		if (data.obsState){
-			if ("sourceActive" in data.obsState){  
+			if ("sourceActive" in data.obsState){
 				processNeeded=true;
 				session.pcs[UUID].obsState.sourceActive = data.obsState.sourceActive;
 			}
@@ -174,19 +186,19 @@ function manageSceneState(data, UUID){ // incoming obs details
 				processNeeded=true;
 				session.pcs[UUID].obsState.visibility = data.obsState.visibility;
 			}
-			if ("details" in data.obsState){   
+			if ("details" in data.obsState){
 				processNeeded=true;
 				session.pcs[UUID].obsState.details = data.obsState.details;
 			}
-			if ("streaming" in data.obsState){  
+			if ("streaming" in data.obsState){
 				processNeeded=true;
 				session.pcs[UUID].obsState.streaming = data.obsState.streaming;
 			}
-			if ("recording" in data.obsState){  
+			if ("recording" in data.obsState){
 				processNeeded=true;
 				session.pcs[UUID].obsState.recording = data.obsState.recording;
 			}
-			if ("virtualcam" in data.obsState){  
+			if ("virtualcam" in data.obsState){
 				processNeeded=true;
 				session.pcs[UUID].obsState.virtualcam = data.obsState.virtualcam;
 			}
@@ -194,17 +206,17 @@ function manageSceneState(data, UUID){ // incoming obs details
 	} catch(e){
 		errorlog(e);
 	}
-	
+
 	if (!processNeeded){
 		return;
 	}
-	
+
 	try {
 		var control = 0;
 		if (session.pcs[UUID].obsState && session.pcs[UUID].obsState.details){
 			control =  parseInt(session.pcs[UUID].obsState.details.controlLevel) || 0; //0 for NONE, 1 for READ_OBS (OBS data), 2 for READ_USER (User data), 3 for BASIC, 4 for ADVANCED and 5 for ALL
 		}
-		
+
 		var multi = false;
 		getById("obsControlButtons").querySelectorAll("[data-system]").forEach(ele=>{
 			if (ele.dataset.system in session.pcs){
@@ -215,7 +227,7 @@ function manageSceneState(data, UUID){ // incoming obs details
 				ele.remove();
 			}
 		});
-		
+
 		getById("obsSceneNames").querySelectorAll("[data-system]").forEach(ele=>{
 			if (ele.dataset.system in session.pcs){
 				if (ele.dataset.system !==UUID){
@@ -225,7 +237,7 @@ function manageSceneState(data, UUID){ // incoming obs details
 				ele.remove();
 			}
 		});
-		
+
 		if (control==0){
 			var obsControlButtonsBox = getById("obsControlButtons").querySelector("[data-system='"+UUID+"']");
 			if (obsControlButtonsBox){
@@ -240,9 +252,9 @@ function manageSceneState(data, UUID){ // incoming obs details
 			}
 			return;
 		}
-		
+
 		getById("obsControlHelp").classList.add("hidden");
-		
+
 		var obsControlButtonsBox = getById("obsControlButtons").querySelector("[data-system='"+UUID+"']");
 		if (!obsControlButtonsBox){
 			obsControlButtonsBox = document.createElement("div");
@@ -251,18 +263,18 @@ function manageSceneState(data, UUID){ // incoming obs details
 		} else {
 			obsControlButtonsBox.innerHTML = "";
 		}
-		
+
 		if (multi){
 			var h3 = document.createElement("h3");
 			h3.innerText = "OBS instance: " + (session.pcs[UUID].label || session.pcs[UUID].scene || UUID);
 			obsControlButtonsBox.appendChild(h3);
 		}
-		
+
 		if (session.pcs[UUID].obsState && ("streaming" in session.pcs[UUID].obsState)){
-			
+
 			var controlButton = document.createElement("button");
 			controlButton.dataset.UUID = UUID;
-			
+
 			if (session.pcs[UUID].obsState.streaming){
 				controlButton.classList.add("pressed");
 				controlButton.ariaPressed = "true";
@@ -288,7 +300,7 @@ function manageSceneState(data, UUID){ // incoming obs details
 					} else {
 						msg.remote = getById("obsRemotePassword").value || false;
 					}
-					
+
 					sendMessage(msg);
 					log("action request: "+this.dataset.obsAction);
 				}
@@ -296,10 +308,10 @@ function manageSceneState(data, UUID){ // incoming obs details
 			obsControlButtonsBox.appendChild(controlButton);
 		}
 		if (session.pcs[UUID].obsState && ("recording" in session.pcs[UUID].obsState)){
-			
+
 			var controlButton = document.createElement("button");
 			controlButton.dataset.UUID = UUID;
-			
+
 			if (session.pcs[UUID].obsState.recording){
 				controlButton.classList.add("pressed");
 				controlButton.ariaPressed = "true";
@@ -325,7 +337,7 @@ function manageSceneState(data, UUID){ // incoming obs details
 					} else {
 						msg.remote = getById("obsRemotePassword").value || false;
 					}
-					
+
 					sendMessage(msg);
 					log("action request: "+this.dataset.obsAction);
 				}
@@ -333,11 +345,11 @@ function manageSceneState(data, UUID){ // incoming obs details
 			obsControlButtonsBox.appendChild(controlButton);
 		}
 		if (session.pcs[UUID].obsState && ("virtualcam" in session.pcs[UUID].obsState)){
-			
+
 			var controlButton = document.createElement("button");
-			
+
 			controlButton.dataset.UUID = UUID;
-			
+
 			if (session.pcs[UUID].obsState.virtualcam){
 				controlButton.classList.add("pressed");
 				controlButton.ariaPressed = "true";
@@ -347,7 +359,7 @@ function manageSceneState(data, UUID){ // incoming obs details
 				controlButton.dataset.obsAction = "startVirtualcam";
 				controlButton.innerText = "💻 start virtualcam";
 			}
-			
+
 			if (control<5){
 				controlButton.disabled = true;
 				controlButton.style.cursor = "not-allowed";
@@ -363,7 +375,7 @@ function manageSceneState(data, UUID){ // incoming obs details
 					} else {
 						msg.remote = getById("obsRemotePassword").value || false;
 					}
-					
+
 					sendMessage(msg);
 					log("action request: "+this.dataset.obsAction);
 				}
@@ -371,8 +383,8 @@ function manageSceneState(data, UUID){ // incoming obs details
 			obsControlButtonsBox.appendChild(controlButton);
 		}
 	} catch(e){errorlog(e);} // just in case the client has disconnected.
-	
-	
+
+
 	if (control<2){
 		var obsSceneNamesBox = getById("obsSceneNames").querySelector("[data-system='"+UUID+"']");
 		if (obsSceneNamesBox){
@@ -380,7 +392,7 @@ function manageSceneState(data, UUID){ // incoming obs details
 		}
 		return;
 	}
-	
+
 	var obsSceneNamesBox = getById("obsSceneNames").querySelectorAll("div[data-system='"+UUID+"']");
 	if (!obsSceneNamesBox.length){
 		obsSceneNamesBox = document.createElement("div");
@@ -390,18 +402,18 @@ function manageSceneState(data, UUID){ // incoming obs details
 		obsSceneNamesBox = obsSceneNamesBox[0];
 		obsSceneNamesBox.innerHTML = "";
 	}
-	
+
 	if (multi){
 		var h3 = document.createElement("h3");
 		h3.innerText = "OBS instance: " + (session.pcs[UUID].label || session.pcs[UUID].scene || UUID);
 		obsSceneNamesBox.appendChild(h3);
 	}
-	
+
 	if (session.pcs[UUID].obsState.details){
 		var details = session.pcs[UUID].obsState.details;
 		if (details.scenes){
 			details.scenes.forEach(scene=>{
-				
+
 				var sceneButton = document.createElement("button");
 				sceneButton.dataset.obsScene = scene;
 				sceneButton.dataset.UUID = UUID;
@@ -425,7 +437,7 @@ function manageSceneState(data, UUID){ // incoming obs details
 						} else {
 							msg.remote = getById("obsRemotePassword").value || false;
 						}
-						
+
 						sendMessage(msg);
 						log("scene change request: "+this.dataset.obsScene);
 					};

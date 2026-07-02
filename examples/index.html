@@ -3,7 +3,31 @@
 <head>
 	<meta charset="utf-8" />
 	<meta name="viewport" content="width=device-width, initial-scale=1" />
-	<title>VDO.Ninja Examples Catalog</title>
+	<title>VDO.Ninja Examples &amp; Experiments Catalog</title>
+	<meta name="description" content="A catalog of 60+ open-source VDO.Ninja examples: OBS overlays, IFRAME API remote control, chat integrations, data channels, sensors, WebXR, and developer SDK samples. Free to open and remix." />
+	<meta name="keywords" content="VDO.Ninja, examples, IFRAME API, OBS overlay, WebRTC, browser source, chat overlay, PTZ, data channel, SDK, WebXR" />
+	<meta name="author" content="Steve Seguin" />
+	<meta name="theme-color" content="#0f131d" />
+	<link rel="canonical" href="https://vdo.ninja/examples/" />
+
+	<!-- Open Graph -->
+	<meta property="og:type" content="website" />
+	<meta property="og:site_name" content="VDO.Ninja" />
+	<meta property="og:url" content="https://vdo.ninja/examples/" />
+	<meta property="og:title" content="VDO.Ninja Examples &amp; Experiments Catalog" />
+	<meta property="og:description" content="60+ open-source demos for embedding, automating, and customizing VDO.Ninja — overlays, remote control, chat, data channels, sensors, WebXR, and SDK samples." />
+	<meta property="og:image" content="https://vdo.ninja/media/vdoNinja_logo_full.png" />
+	<meta property="og:image:width" content="1200" />
+	<meta property="og:image:height" content="630" />
+
+	<!-- Twitter -->
+	<meta name="twitter:card" content="summary_large_image" />
+	<meta name="twitter:creator" content="@SteveSeguin" />
+	<meta name="twitter:title" content="VDO.Ninja Examples &amp; Experiments Catalog" />
+	<meta name="twitter:description" content="60+ open-source demos for embedding, automating, and customizing VDO.Ninja." />
+	<meta name="twitter:image" content="https://vdo.ninja/media/vdoNinja_logo_full.png" />
+
+	<link rel="icon" href="../media/favicon.ico" />
 	<link rel="stylesheet" href="https://vdo.ninja/main.css" />
 	<style>
 		:root {
@@ -75,10 +99,40 @@
 			line-height: 1.6;
 		}
 
+		.toc {
+			margin: 20px 0 0;
+			padding: 0;
+			list-style: none;
+			display: flex;
+			flex-wrap: wrap;
+			gap: 8px;
+		}
+
+		.toc a {
+			display: inline-block;
+			padding: 6px 12px;
+			font-size: 0.85rem;
+			border-radius: 999px;
+			background: var(--card-bg);
+			border: 1px solid var(--card-border);
+			color: var(--text-muted);
+		}
+
+		.toc a:hover,
+		.toc a:focus-visible {
+			text-decoration: none;
+			color: #f5f6f8;
+			border-color: rgba(255, 255, 255, 0.2);
+		}
+
 		#example-groups {
 			display: flex;
 			flex-direction: column;
 			gap: 48px;
+		}
+
+		.group {
+			scroll-margin-top: 16px;
 		}
 
 		.group h2 {
@@ -149,6 +203,14 @@
 			color: var(--accent);
 		}
 
+		.page-footer {
+			margin-top: 56px;
+			padding-top: 24px;
+			border-top: 1px solid var(--card-border);
+			color: var(--text-muted);
+			line-height: 1.6;
+		}
+
 		@media (max-width: 720px) {
 			.container {
 				padding: 28px 18px 48px;
@@ -172,327 +234,451 @@
 		<section class="page-header">
 			<h1>Examples &amp; Experiments</h1>
 			<p>These demos explore different ways to embed, automate, and customize VDO.Ninja. Every page is optional,
-				URL-driven, and kept separate from the core experience, so feel free to remix them for your own
-				workflows.</p>
-			<p>Most pages expect you to launch them with live push/view links or room IDs. Look at the comments or
-				top-of-page instructions for required parameters, or tweak the URL to try different behaviours.</p>
+				URL-driven, and kept separate from the core experience &mdash; so feel free to open, read the source, and
+				remix them for your own workflows.</p>
+			<p>Most pages expect you to launch them with live push/view links or room IDs. Look for the on-page notes or
+				top-of-file comments for the required parameters, or tweak the URL to try different behaviours.</p>
+			<nav aria-label="Example categories">
+				<ul class="toc" id="toc"></ul>
+			</nav>
 		</section>
 		<div id="example-groups"></div>
+		<footer class="page-footer">
+			<p>Source for every demo lives in the
+				<a href="https://github.com/steveseguin/vdo.ninja/tree/master/examples">VDO.Ninja repository</a>.
+				Found a bug or built something cool? Contributions are welcome.</p>
+		</footer>
 	</main>
 	<script>
 		const exampleGroups = [
 			{
+				id: "remote-control",
 				name: "Remote Control & Automation",
 				description: "Control rooms, scenes, or devices remotely using the IFRAME API, data channels, and postMessage hooks.",
 				items: [
 					{
 						href: "addtoscene.html",
 						title: "Add to Scene Controller",
-						summary: "Use the IFRAME API to add or remove pre-defined stream IDs from a scene and manage their mic state."
+						summary: "Use the IFRAME API to add or remove pre-defined stream IDs from a scene and manage their mic state.",
+						tags: ["IFRAME API", "Scenes"]
 					},
 					{
 						href: "bigmutebutton.html",
 						title: "Big Mute Button Remote",
-						summary: "Mobile-friendly remote that lets talent toggle their microphone with oversized controls."
+						summary: "Mobile-friendly remote that lets talent toggle their microphone with oversized controls.",
+						tags: ["Remote", "Mobile", "Audio"]
 					},
 					{
 						href: "control.html",
 						title: "Legacy Layout Console",
-						summary: "Send quick layout macros to the director scene to demo the classic control surface."
+						summary: "Send quick layout macros to the director scene to demo the classic control surface.",
+						tags: ["postMessage", "Legacy"]
 					},
 					{
 						href: "custom_video_switcher.html",
 						title: "Custom Video Switcher",
-						summary: "Swap between preset stream IDs in a manual scene using targeted postMessage commands."
+						summary: "Swap between preset stream IDs in a manual scene using targeted postMessage commands.",
+						tags: ["postMessage", "Switcher"]
 					},
 					{
 						href: "esports.html",
 						title: "Esports POV Toggler",
-						summary: "Showcase multiple POV feeds with buttons to reveal each player or clear the scene."
+						summary: "Showcase multiple POV feeds with buttons to reveal each player or clear the scene.",
+						tags: ["Switcher", "Multi-POV"]
 					},
 					{
 						href: "muteguestiframe.html",
 						title: "Mute Guest via IFRAME",
-						summary: "Remotely toggle speaker and mic states for a specific stream ID inside an embedded scene."
+						summary: "Remotely toggle speaker and mic states for a specific stream ID inside an embedded scene.",
+						tags: ["IFRAME API", "Audio"]
 					},
 					{
 						href: "obsremote.html",
 						title: "OBS Remote Mini",
-						summary: "Lightweight interface that tunnels OBS websocket control through VDO.Ninja."
+						summary: "Lightweight interface that tunnels OBS websocket control through VDO.Ninja.",
+						tags: ["OBS", "WebSocket"]
 					},
 					{
 						href: "obs_remote/index.html",
 						title: "OBS Remote Dashboard",
-						summary: "Full-featured OBS controller with previews and macros, proxied through VDO.Ninja."
+						summary: "Full-featured OBS controller with previews and macros, proxied through VDO.Ninja.",
+						tags: ["OBS", "Dashboard"]
 					},
 					{
 						href: "powerpoint.html",
 						title: "PowerPoint Remote",
-						summary: "Flip through slides remotely while embedding a live view of the deck."
+						summary: "Flip through slides remotely while embedding a live view of the deck.",
+						tags: ["Remote", "Slides"]
 					},
 					{
 						href: "ptz.html",
 						title: "PTZ Remote",
-						summary: "Pan, tilt, and zoom a remote camera by sending PTZ commands over the data channel."
+						summary: "Pan, tilt, and zoom a remote camera by sending PTZ commands over the data channel.",
+						tags: ["PTZ", "Data Channel"]
 					},
 					{
 						href: "remoteapi.html",
 						title: "Remote API Playground",
-						summary: "Retro-themed sandbox for experimenting with remote control actions and macros."
+						summary: "Retro-themed sandbox for experimenting with remote control actions and macros.",
+						tags: ["Remote API", "Sandbox"]
 					},
 					{
 						href: "slidingzoom.html",
 						title: "Sliding Zoom Controller",
-						summary: "Touch-friendly slider that adjusts zoom levels via VDO.Ninja PTZ hooks."
+						summary: "Touch-friendly slider that adjusts zoom levels via VDO.Ninja PTZ hooks.",
+						tags: ["PTZ", "Mobile"]
 					},
 					{
 						href: "switchmics.html",
 						title: "Switch Mics",
-						summary: "Toggle mute on two remote guests with single-click controls for quick audio checks."
+						summary: "Toggle mute on two remote guests with single-click controls for quick audio checks.",
+						tags: ["Remote", "Audio"]
 					},
 					{
 						href: "teleprompt.html",
 						title: "Teleprompt Controller",
-						summary: "Producer-facing interface to push script text and settings to the teleprompter view."
+						summary: "Producer-facing interface to push script text and settings to the teleprompter view.",
+						tags: ["Teleprompter", "Producer"]
 					}
 				]
 			},
 			{
+				id: "overlays",
 				name: "Production Overlays & Layouts",
 				description: "Browser sources and layouts you can drop into OBS, a switcher, or a director tab.",
 				items: [
 					{
 						href: "chat.html",
 						title: "Chat Shout Overlay",
-						summary: "Monospaced stacked chat overlay tuned for big on-screen shoutouts."
+						summary: "Monospaced stacked chat overlay tuned for big on-screen shoutouts.",
+						tags: ["Overlay", "Chat", "OBS"]
 					},
 					{
 						href: "chatoverlay.html",
 						title: "Clean Chat Overlay",
-						summary: "Modern chat overlay for OBS with avatars, styling toggles, and sanitised content."
+						summary: "Modern chat overlay for OBS with avatars, styling toggles, and sanitised content.",
+						tags: ["Overlay", "Chat", "OBS"]
 					},
 					{
 						href: "custom_labels.html",
 						title: "Custom Labels Overlay",
-						summary: "Display lower-third labels that update automatically as guests join with custom names."
+						summary: "Display lower-third labels that update automatically as guests join with custom names.",
+						tags: ["Overlay", "Labels"]
 					},
 					{
 						href: "custom_overlay.html",
 						title: "Dynamic Overlay Frame",
-						summary: "Trigger branded overlays and nameplates from connection metadata."
+						summary: "Trigger branded overlays and nameplates from connection metadata.",
+						tags: ["Overlay", "Branding"]
 					},
 					{
 						href: "draggable.html",
 						title: "Draggable Multi-View",
-						summary: "Arrange several viewer windows manually by dragging and resizing thumbnails."
+						summary: "Arrange several viewer windows manually by dragging and resizing thumbnails.",
+						tags: ["Layout", "Multi-View"]
 					},
 					{
 						href: "dual.html",
 						title: "Dual View Layout",
-						summary: "Display two guests side-by-side using the dual director layout logic."
+						summary: "Display two guests side-by-side using the dual director layout logic.",
+						tags: ["Layout"]
 					},
 					{
 						href: "gamecontroller.html",
 						title: "Controller Visualizer",
-						summary: "Render HID and gamepad events as an overlay-friendly controller graphic."
+						summary: "Render HID and gamepad events as an overlay-friendly controller graphic.",
+						tags: ["Overlay", "Gamepad", "HID"]
 					},
 					{
 						href: "grid.html",
 						title: "Grid Builder",
-						summary: "Drop arbitrary URLs into a responsive iframe grid for multi-angle monitoring."
+						summary: "Drop arbitrary URLs into a responsive iframe grid for multi-angle monitoring.",
+						tags: ["Layout", "Multi-View"]
+					},
+					{
+						href: "gtamap.html",
+						title: "GTA-Style Mini-Map",
+						summary: "Circular Grand-Theft-Auto-style mini-map overlay rendered with Leaflet, ready to composite over a live feed.",
+						tags: ["Overlay", "Map", "Leaflet"]
 					},
 					{
 						href: "labelonly.html",
 						title: "Label Only Overlay",
-						summary: "Show only the connected guest's label as a minimal lower-third element."
+						summary: "Show only the connected guest's label as a minimal lower-third element.",
+						tags: ["Overlay", "Labels"]
 					},
 					{
 						href: "mixer.html",
 						title: "Mixer Sandbox",
-						summary: "Try the manual scene mixer by dragging streams into layout slots."
+						summary: "Try the manual scene mixer by dragging streams into layout slots.",
+						tags: ["Layout", "Mixer"]
 					},
 					{
 						href: "multi.html",
 						title: "Multi-Room Monitor",
-						summary: "Open multiple director rooms in one tab using the ?rooms= list parameter."
+						summary: "Open multiple director rooms in one tab using the ?rooms= list parameter.",
+						tags: ["Layout", "Multi-Room"]
 					},
 					{
 						href: "overlay.html",
 						title: "Overlay Helper",
-						summary: "Combine a VDO.Ninja feed with an external overlay page inside one source."
+						summary: "Combine a VDO.Ninja feed with an external overlay page inside one source.",
+						tags: ["Overlay", "Compositing"]
 					},
 					{
 						href: "rotated.html",
 						title: "Rotated Scene Output",
-						summary: "Rotate the scene output for portrait monitors or tall confidence displays."
+						summary: "Rotate the scene output for portrait monitors or tall confidence displays.",
+						tags: ["Layout", "Rotation"]
 					},
 					{
 						href: "sensoroverlay.html",
 						title: "Sensor Data Overlay",
-						summary: "Render live speed and telemetry data over an incoming video feed."
+						summary: "Render live speed and telemetry data over an incoming video feed.",
+						tags: ["Overlay", "Sensors"]
 					},
 					{
 						href: "status.html",
 						title: "Status Ticker",
-						summary: "Ticker-style overlay for status updates pulled from chat events."
+						summary: "Ticker-style overlay for status updates pulled from chat events.",
+						tags: ["Overlay", "Chat"]
 					},
 					{
 						href: "teleprompter.html",
 						title: "Teleprompter Display",
-						summary: "Talent-facing teleprompter view that mirrors incoming script text."
+						summary: "Talent-facing teleprompter view that mirrors incoming script text.",
+						tags: ["Teleprompter", "Talent"]
 					},
 					{
 						href: "waitingroom.html",
 						title: "Waiting Room Overlay",
-						summary: "Show a standby message until the remote feed connects and starts playing."
+						summary: "Show a standby message until the remote feed connects and starts playing.",
+						tags: ["Overlay", "Standby"]
 					}
 				]
 			},
 			{
+				id: "social",
 				name: "Social & Platform Integrations",
 				description: "Pair VDO.Ninja streams with third-party chat or engagement widgets.",
 				items: [
 					{
 						href: "kick.html",
 						title: "Kick + Video",
-						summary: "Combine a Kick chat embed with a VDO.Ninja source in one window."
+						summary: "Combine a Kick chat embed with a VDO.Ninja source in one window.",
+						tags: ["Chat", "Kick"]
 					},
 					{
 						href: "socal.html",
 						title: "SocialStream Hub",
-						summary: "Switch between multiple social chat integrations alongside a VDO.Ninja feed."
+						summary: "Switch between multiple social chat integrations alongside a VDO.Ninja feed.",
+						tags: ["Chat", "Social"]
 					},
 					{
 						href: "twitch.html",
 						title: "Twitch + Video",
-						summary: "Embed Twitch chat next to a VDO.Ninja feed for streamers."
+						summary: "Embed Twitch chat next to a VDO.Ninja feed for streamers.",
+						tags: ["Chat", "Twitch"]
 					},
 					{
 						href: "youtube.html",
 						title: "YouTube Chat + Video",
-						summary: "Co-host YouTube live chat with a VDO.Ninja guest feed."
+						summary: "Co-host YouTube live chat with a VDO.Ninja guest feed.",
+						tags: ["Chat", "YouTube"]
 					}
 				]
 			},
 			{
+				id: "data",
 				name: "Data, Sensors & Messaging",
 				description: "Examples that push telemetry, sensor readings, or custom data through VDO.Ninja.",
 				items: [
 					{
 						href: "datachannel-pubsub.html",
 						title: "DataChannel Pub/Sub",
-						summary: "Publish structured messages and subscribe to updates over VDO.Ninja data channels."
+						summary: "Publish structured messages and subscribe to updates over VDO.Ninja data channels.",
+						tags: ["Data Channel", "Pub/Sub"]
 					},
 					{
 						href: "p2p.html",
 						title: "P2P Data Tunnel",
-						summary: "Use paired iframes to pass arbitrary data peer-to-peer via VDO.Ninja."
+						summary: "Use paired iframes to pass arbitrary data peer-to-peer via VDO.Ninja.",
+						tags: ["Data Channel", "P2P"]
 					},
 					{
 						href: "sensors.html",
 						title: "Sensors Dashboard",
-						summary: "Capture mobile sensor readings and video, rendering telemetry on canvas."
+						summary: "Capture mobile sensor readings and video, rendering telemetry on canvas.",
+						tags: ["Sensors", "Mobile", "Canvas"]
 					},
 					{
 						href: "rip.html",
 						title: "RIP Canvas Relay",
-						summary: "Capture a remote view to a hidden canvas for further processing or mixing."
+						summary: "Capture a remote view to a hidden canvas for further processing or mixing.",
+						tags: ["Canvas", "Capture"]
 					},
 					{
 						href: "wireless.html",
 						title: "Wireless Relay Lab",
-						summary: "Manual message relay between two peers with testing and compression controls."
+						summary: "Manual message relay between two peers with testing and compression controls.",
+						tags: ["Data Channel", "Relay"]
 					}
 				]
 			},
 			{
+				id: "buffering",
+				name: "Buffering & Timing",
+				description: "Control receiver-side buffering and deliberately delay video to line up with external audio or slow links.",
+				items: [
+					{
+						href: "chunked-buffer-iframe-api.html",
+						title: "Chunked Buffer via IFRAME API",
+						summary: "Drive chunked receiver buffering through the IFRAME API, with a synthetic impairment tool to mimic late delivery and underbuffering.",
+						tags: ["IFRAME API", "Buffering"]
+					},
+					{
+						href: "music-sync-buffer-demo.html",
+						title: "Music Sync Buffer",
+						summary: "Deliberately delay incoming video so it lines up with externally-played music for NINJAM-style or loop-based sessions.",
+						tags: ["Buffering", "Music Sync"]
+					}
+				]
+			},
+			{
+				id: "developer",
 				name: "Developer & SDK Samples",
 				description: "Deeper dives into the SDK, automation helpers, and hardware integrations.",
 				items: [
 					{
 						href: "dynamic-viewer.html",
 						title: "Dynamic Viewer SDK",
-						summary: "UI-driven sample that adds and removes views dynamically with the SDK helpers."
+						summary: "UI-driven sample that adds and removes views dynamically with the SDK helpers.",
+						tags: ["SDK", "Viewer"]
 					},
 					{
 						href: "googleai.html",
 						title: "Gemini Vision Chat",
-						summary: "Integrate Google Gemini live video analysis with a VDO.Ninja feed."
+						summary: "Integrate Google Gemini live video analysis with a VDO.Ninja feed.",
+						tags: ["AI", "Gemini", "Vision"]
 					},
 					{
 						href: "iframe.inbound-stats.html",
 						title: "IFRAME Inbound Stats",
-						summary: "Request inbound stats over the IFRAME API and log them for inspection."
+						summary: "Request inbound stats over the IFRAME API and log them for inspection.",
+						tags: ["IFRAME API", "Stats"]
 					},
 					{
 						href: "iframe.outbound-stats.html",
 						title: "IFRAME Outbound Stats",
-						summary: "Collect outbound stats from an embedded iframe for monitoring."
+						summary: "Collect outbound stats from an embedded iframe for monitoring.",
+						tags: ["IFRAME API", "Stats"]
 					},
 					{
 						href: "midi.html",
 						title: "MIDI Controller",
-						summary: "Map MIDI inputs to VDO.Ninja events and test hotkey commands."
+						summary: "Map MIDI inputs to VDO.Ninja events and test hotkey commands.",
+						tags: ["MIDI", "Control"]
 					},
 					{
 						href: "sandbox.html",
 						title: "Developer API Sandbox",
-						summary: "All-in-one playground for experimenting with the VDO.Ninja developer API."
+						summary: "All-in-one playground for experimenting with the VDO.Ninja developer API.",
+						tags: ["SDK", "Sandbox"]
 					},
 					{
 						href: "simple-iframe-replacement.html",
 						title: "DataChannel Replacement",
-						summary: "Shows how to replace hidden iframes with the DataChannel SDK."
+						summary: "Shows how to replace hidden iframes with the DataChannel SDK.",
+						tags: ["Data Channel", "SDK"]
 					},
 					{
 						href: "turn-only-example.html",
 						title: "TURN Only Example",
-						summary: "Demonstrates forcing TURN-only routing and inspecting connection details."
+						summary: "Demonstrates forcing TURN-only routing and inspecting connection details.",
+						tags: ["SDK", "TURN"]
 					},
 					{
 						href: "webhid.html",
 						title: "WebHID Demo",
-						summary: "Connect WebHID devices such as a StreamDeck and forward events through VDO.Ninja."
+						summary: "Connect WebHID devices such as a StreamDeck and forward events through VDO.Ninja.",
+						tags: ["WebHID", "StreamDeck"]
 					}
 				]
 			},
 			{
+				id: "immersive",
+				name: "Immersive & Spatial",
+				description: "Experimental WebXR demos that carry augmented-reality camera and 6DoF pose data over VDO.Ninja.",
+				items: [
+					{
+						href: "webxr-ar-sender.html",
+						title: "WebXR AR Sender",
+						summary: "Stream your phone camera plus 6DoF AR pose data (ARCore / ARKit) into VDO.Ninja.",
+						tags: ["WebXR", "AR", "Mobile"]
+					},
+					{
+						href: "webxr-ar-receiver.html",
+						title: "WebXR AR Receiver",
+						summary: "Receive a WebXR AR feed and render 6DoF-tracked 3D content over the incoming video.",
+						tags: ["WebXR", "AR", "3D"]
+					}
+				]
+			},
+			{
+				id: "utilities",
 				name: "Utilities & Helpers",
 				description: "Small helpers for link generation, diagnostics, or local capture workflows.",
 				items: [
 					{
 						href: "changepass.html",
 						title: "Password Hasher",
-						summary: "Prompt-driven tool that creates salted room hashes for invite links."
+						summary: "Prompt-driven tool that creates salted room hashes for invite links.",
+						tags: ["Utility", "Hashing"]
 					},
 					{
 						href: "noisegate.html",
 						title: "Noise Gate Converter",
-						summary: "Convert classic OBS noise gate settings into the modern \"My Gate\" format."
+						summary: "Convert classic OBS noise gate settings into the modern \"My Gate\" format.",
+						tags: ["Utility", "Audio"]
 					},
 					{
 						href: "simplelink.html",
 						title: "Simple Link Generator",
-						summary: "Generate publish, view, and scene links with common parameters."
+						summary: "Generate publish, view, and scene links with common parameters.",
+						tags: ["Utility", "Generator"]
 					},
 					{
 						href: "zoom.html",
 						title: "Zoom Capture Helper",
-						summary: "Local capture preview that goes fullscreen for easy window capture."
+						summary: "Local capture preview that goes fullscreen for easy window capture.",
+						tags: ["Utility", "Capture"]
 					}
 				]
 			}
 		];
 
 		const groupsRoot = document.getElementById("example-groups");
+		const toc = document.getElementById("toc");
 
 		for (const group of exampleGroups) {
 			const section = document.createElement("section");
 			section.className = "group";
+			if (group.id) {
+				section.id = group.id;
+			}
 
 			const heading = document.createElement("h2");
 			heading.textContent = group.name;
 			section.appendChild(heading);
+
+			if (group.id) {
+				const tocItem = document.createElement("li");
+				const tocLink = document.createElement("a");
+				tocLink.href = "#" + group.id;
+				tocLink.textContent = group.name;
+				tocItem.appendChild(tocLink);
+				toc.appendChild(tocItem);
+			}
 
 			if (group.description) {
 				const desc = document.createElement("p");

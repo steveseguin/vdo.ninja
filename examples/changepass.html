@@ -1,4 +1,32 @@
-<html><body><script>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<title>Password Hasher - VDO.Ninja</title>
+	<meta name="description" content="Prompt-driven tool that creates the salted password hash VDO.Ninja uses in invite links." />
+	<link rel="canonical" href="https://vdo.ninja/examples/changepass.html" />
+	<style>
+		body { margin: 0; min-height: 100vh; display: flex; align-items: center; justify-content: center;
+			background: #0f131d; color: #f5f6f8; font-family: "Segoe UI", system-ui, sans-serif; }
+		main { max-width: 30rem; padding: 2rem; text-align: center; }
+		h1 { margin: 0 0 .5rem; font-size: 1.4rem; }
+		p { color: #c2cad8; line-height: 1.6; margin: 0 0 1.25rem; }
+		code { background: #1c2333; padding: .1rem .35rem; border-radius: 4px; }
+		button { padding: .6rem 1.2rem; font-size: 1rem; cursor: pointer; color: #f5f6f8;
+			border: 1px solid rgba(255,255,255,.2); border-radius: 8px; background: #1c2333; }
+		button:hover { border-color: rgba(255,255,255,.45); }
+	</style>
+</head>
+<body>
+<main>
+	<h1>Password Hasher</h1>
+	<p>Turns a room password into the salted hash VDO.Ninja expects in a
+		<code>&amp;password=</code> link. Hashing happens entirely in your browser (SHA-256, salted with
+		the current domain) &mdash; nothing is sent anywhere.</p>
+	<button type="button" onclick="runHasher()">Enter a password</button>
+</main>
+<script>
 var generateHash = function (str, length=false){
 	var buffer = new TextEncoder("utf-8").encode(str);
 	return crypto.subtle.digest("SHA-256", buffer).then(
@@ -17,21 +45,27 @@ function toHexString(byteArray){
 		return ('0' + (byte & 0xFF).toString(16)).slice(-2);
 	}).join('');
 }
-var password = prompt("Please enter the password");
-password = password.trim();
-password = encodeURIComponent(password);
 
-var salt = location.hostname;
+function runHasher(){
+	var password = prompt("Please enter the password");
+		if (password === null){ return; } // user cancelled
+	password = password.trim();
+	password = encodeURIComponent(password);
 
-if (location.hostname == "steveseguin.github.io"){ // allows github to be a backup ; passwords will still work
-	salt = "vdo.ninja";
-} else if (["vdo.ninja","rtc.ninja","versus.cam","socialstream.ninja"].includes(location.hostname.split(".").slice(-2).join("."))){ 
-	salt = location.hostname.split(".").slice(-2).join("."); // official sub-domains will retain their passwords
+	var salt = location.hostname;
+
+	if (location.hostname == "steveseguin.github.io"){ // allows github to be a backup ; passwords will still work
+		salt = "vdo.ninja";
+	} else if (["vdo.ninja","rtc.ninja","versus.cam","socialstream.ninja"].includes(location.hostname.split(".").slice(-2).join("."))){
+		salt = location.hostname.split(".").slice(-2).join("."); // official sub-domains will retain their passwords
+	}
+
+	// Million to one error with a hash length of 4, and still decent security if using a long randomized password.
+	// For more security, you can use a hash length of just 2 rather than 4; VDO.Ninja v27.10 and newer supports 1,2,3,4,5, or 6 hash lengths.
+	generateHash(password + salt, 4).then(function(hash) {
+		alert("hash value: "+hash)
+	});
 }
-
-// Million to one error with a hash length of 4, and still decent security if using a long randomized password.
-// For more security, you can use a hash length of just 2 rather than 4; VDO.Ninja v27.10 and newer supports 1,2,3,4,5, or 6 hash lengths.
-generateHash(password + salt, 4).then(function(hash) { 
-	alert("hash value: "+hash)
-});
-</script></body></html>
+</script>
+</body>
+</html>

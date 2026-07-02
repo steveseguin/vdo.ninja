@@ -96,6 +96,7 @@ let pointerState = null;
 let selectedTokenId = null;
 let currentStroke = null;
 let currentMeasurement = null;
+let lastAcceptedSnapshotTimestamp = 0;
 
 const clientId = getOrCreateClientId();
 
@@ -270,9 +271,7 @@ function enterRoom() {
 	state.role = roleGm.checked ? "gm" : "player";
 	loadSavedState(state.room);
 	state.room = sanitizeRoom(roomInput.value || state.room);
-	state.password = passwordInput.value || state.password || "";
-	state.role = roleGm.checked ? "gm" : "player";
-	state.playerName = sanitizeName(nameInput.value) || state.playerName || (state.role === "gm" ? "GM" : "Player");
+	lastAcceptedSnapshotTimestamp = 0;
 	state.players[clientId] = { id: clientId, name: state.playerName, role: state.role, updatedAt: Date.now() };
 	app.dataset.state = "room";
 	app.dataset.role = state.role;
@@ -494,7 +493,60 @@ function broadcastSnapshot(reason = "snapshot", targetUuid = null) {
 }
 
 function getPublicState() {
+	const publicState = clone(state);
+	const visibleAssetIds = {};
+	const hiddenAssetIds = {};
+
+	publicState.rolls = publicState.rolls.filter(roll => !roll.privateRoll);
+	publicState.scenes = publicState.scenes.map(scene => {
+		const publicScene = { ...scene };
+		if (publicScene.mapAssetId) {
+			visibleAssetIds[publicScene.mapAssetId] = true;
+		}
+		publicScene.tokens = publicScene.tokens.filter(token => {
+			if (token.hidden) {
+				if (token.assetId) {
+					hiddenAssetIds[token.assetId] = true;
+				}
+				return false;
+			}
+			if (token.assetId) {
+				visibleAssetIds[token.assetId] = true;
+			}
+			return true;
+		});
+		return publicScene;
+	});
+	publicState.initiative.entries = publicState.initiative.entries.filter(entry => {
+		return publicState.scenes.some(scene => scene.tokens.some(token => token.id === entry.tokenId));
+	});
+	publicState.initiative.activeIndex = Math.min(publicState.initiative.activeIndex, Math.max(0, publicState.initiative.entries.length - 1));
+
+	const assets = publicState.assets && typeof publicState.assets === "object" ? publicState.assets : {};
+	publicState.assets = {};
+	Object.keys(assets).forEach(assetId => {
+		if (!hiddenAssetIds[assetId] || visibleAssetIds[assetId]) {
+			publicState.assets[assetId] = assets[assetId];
+		}
+	});
+	return publicState;
+}
+
+function getExportState() {
 	return clone(state);
+}
+
+function canAcceptSnapshot(envelope) {
+	if (!envelope || envelope.authorRole !== "gm" || !envelope.authorId) {
+		return false;
+	}
+	if (envelope.timestamp && lastAcceptedSnapshotTimestamp && envelope.timestamp < lastAcceptedSnapshotTimestamp) {
+		return false;
+	}
+	if (envelope.timestamp) {
+		lastAcceptedSnapshotTimestamp = envelope.timestamp;
+	}
+	return true;
 }
 
 function requestSnapshot(options = {}) {
@@ -530,7 +582,7 @@ function handleTransportMessage(message, source) {
 	}
 
 	if (envelope.type === "snapshot") {
-		if (state.role !== "gm" && envelope.payload && envelope.payload.state) {
+		if (state.role !== "gm" && envelope.payload && envelope.payload.state && canAcceptSnapshot(envelope)) {
 			const localRole = state.role;
 			const localName = state.playerName;
 			const localPassword = state.password;
@@ -1358,7 +1410,7 @@ function showHandout(handoutId) {
 }
 
 function exportState() {
-	const blob = new Blob([JSON.stringify(getPublicState(), null, "\t")], { type: "application/json" });
+	const blob = new Blob([JSON.stringify(getExportState(), null, "\t")], { type: "application/json" });
 	const link = document.createElement("a");
 	link.href = URL.createObjectURL(blob);
 	link.download = `${state.room || "tabletop"}-tabletop.json`;

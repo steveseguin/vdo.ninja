@@ -1,5 +1,7 @@
 <html>
-<head><title>Toggle Two Mutes Controller</title>
+<head>
+	<meta name="description" content="Toggle mute on two remote guests with single-click controls for quick audio checks." />
+	<link rel="canonical" href="https://vdo.ninja/examples/switchmics.html" /><title>Switch Mics - VDO.Ninja</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
 <meta content="text/html;charset=utf-8" http-equiv="Content-Type" />
 <style>
@@ -129,7 +131,7 @@ if (urlParams.get("a")){
 		var path = "vdo.ninja";
 	}
 	document.getElementById("viewlinka").value = "https://"+path+"/?push="+urlParams.get("a");
-	
+
 	if (urlParams.get("la")){
 		var labelA = urlParams.get("la");
 		document.getElementById("viewlinka").value += "&label="+encodeURIComponent(labelA);
@@ -144,7 +146,7 @@ if (urlParams.get("b")){
 		var path = "vdo.ninja";
 	}
 	document.getElementById("viewlinkb").value = "https://"+path+"/?push="+urlParams.get("b");
-	
+
 	if (urlParams.get("lb")){
 		var labelB = urlParams.get("lb");
 		document.getElementById("viewlinkb").value += "&label="+encodeURIComponent(labelB);
@@ -154,37 +156,37 @@ if (urlParams.get("b")){
 
 var iframeb = null;
 var iframea = null;
-function loadIframes(){ 
+function loadIframes(){
 
 	var iframesrca = document.getElementById("viewlinka").value;
 	var iframesrcb = document.getElementById("viewlinkb").value;
-	
+
 	document.getElementById("deleteme").remove()
 	delete document.getElementById("deleteme");
 	document.getElementById("container1").style.display="flex";
 	document.getElementById("container2").style.display="inline-block";
-	
+
 	var params = window.location.search || "";
-		
+
 	if (iframesrca.includes("?")){
 		params = params.slice(1);
 		iframesrca = iframesrca + "&" + params
 	} else {
 		iframesrca = iframesrca + params
 	}
-	
+
 	if (iframesrcb.includes("?")){
 		params = params.slice(1);
 		iframesrcb = iframesrcb + "&" + params
 	} else {
 		iframesrcb = iframesrcb + params
 	}
-	
+
 	iframea = document.createElement("iframe");
 	iframea.allow = "encrypted-media;sync-xhr;usb;web-share;cross-origin-isolated;accelerometer;midi;geolocation;autoplay;camera;microphone;fullscreen;picture-in-picture;display-capture;gyroscope;";
 	iframea.src = iframesrca;
 	document.getElementById("container1").appendChild(iframea);
-	
+
 	iframeb = document.createElement("iframe");
 	iframeb.allow = "encrypted-media;sync-xhr;usb;web-share;cross-origin-isolated;accelerometer;midi;geolocation;autoplay;camera;microphone;fullscreen;picture-in-picture;display-capture;gyroscope;";
 	iframeb.src = iframesrcb;

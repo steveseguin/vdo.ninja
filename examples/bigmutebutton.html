@@ -1,5 +1,7 @@
 <html>
-<head><title>Big Mute Button Remote - VDO.Ninja</title>
+<head>
+	<meta name="description" content="Mobile-friendly remote that lets talent toggle their microphone with oversized controls." />
+	<link rel="canonical" href="https://vdo.ninja/examples/bigmutebutton.html" /><title>Big Mute Button Remote - VDO.Ninja</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
 <meta content="text/html;charset=utf-8" http-equiv="Content-Type" />
 <style>
@@ -72,35 +74,35 @@ window.addEventListener("orientationchange", function() {
 
 
 
-function loadIframes(url=false){ 
+function loadIframes(url=false){
 
 	var streamID = document.getElementById("viewlink").value;
 	https://vdo.ninja/?label&webcam&cleanoutput&ad=1&vd=1
-	
+
 	var path = "vdo.ninja"; //window.location.host+window.location.pathname.split("/").slice(0,-1).join("/");
 	var streamSrc = "https://"+path+"/?push="+streamID+"&label&webcam&cleanoutput&ad=1&vd=1";
-	
+
 	document.getElementById("clean").parentNode.removeChild(document.getElementById("clean"));
-	
+
 	var iframe = document.createElement("iframe");
 	iframe.allow = "autoplay;camera;microphone;fullscreen;picture-in-picture;";
 	iframe.src = streamSrc;
 	document.body.appendChild(iframe);
-	
+
 	function sendSelfCommand(action, value=null){
 		iframe.contentWindow.postMessage({"target":null, "action":action, "value":value}, '*');
 	}
-	
-	
-	
+
+
+
 	var button = document.createElement("button");
 	button.id = "toggleMute";
 	button.innerHTML = "Mute";
 	button.dataset.value = "true";
 	document.body.appendChild(button);
-	
+
 	button.onclick = function(){
-		
+
 		if (this.dataset.value=="true"){
 			this.dataset.value = "false";
 			this.classList.add("pressed");
@@ -113,7 +115,7 @@ function loadIframes(url=false){
 			sendSelfCommand("mic",true);
 		}
 	}
-	
+
 }
 
 </script>

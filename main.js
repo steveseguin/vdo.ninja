@@ -2345,6 +2345,12 @@ async function main() {
 	if (session.directorMuteAllButton) {
 		getById("muteAllGuests").classList.remove("hidden");
 	}
+	if (urlParams.has("gdriveall") || urlParams.has("gdriverecordall")) {
+		session.directorGdriveAllButton = true;
+	}
+	if (session.directorGdriveAllButton) {
+		getById("gdriveAllGuests").classList.remove("hidden");
+	}
 
 	if (urlParams.has("dpi") || urlParams.has("dpr") || urlParams.has("sharper") || urlParams.has("sharpen")) {
 		session.devicePixelRatio = urlParams.get("dpi") || urlParams.get("dpr") || 2.0;
@@ -2397,78 +2403,6 @@ async function main() {
 		} else {
 			session.chatbutton = true;
 			getById("chatbutton").classList.remove("hidden");
-		}
-	}
-
-	if (urlParams.has("chatlite") || urlParams.has("ssnlite") || urlParams.has("socialstreamlite")) {
-		session.chatLiteEnabled = urlParams.get("chatlite") || urlParams.get("ssnlite") || urlParams.get("socialstreamlite") || true;
-		const normalizedChatLiteEnabled = typeof session.chatLiteEnabled === "string" ? session.chatLiteEnabled.trim().toLowerCase() : session.chatLiteEnabled;
-		if (normalizedChatLiteEnabled === "false" || normalizedChatLiteEnabled === "0" || normalizedChatLiteEnabled === "no" || normalizedChatLiteEnabled === "off") {
-			session.chatLiteEnabled = false;
-		} else {
-			session.chatLiteEnabled = true;
-			session.chatLiteButton = true;
-		}
-	}
-
-	if (urlParams.has("chatlitebutton") || urlParams.has("ssnchatbutton")) {
-		session.chatLiteButton = urlParams.get("chatlitebutton") || urlParams.get("ssnchatbutton") || true;
-		const normalizedChatLiteButton = typeof session.chatLiteButton === "string" ? session.chatLiteButton.trim().toLowerCase() : session.chatLiteButton;
-		if (normalizedChatLiteButton === "false" || normalizedChatLiteButton === "0" || normalizedChatLiteButton === "no" || normalizedChatLiteButton === "off") {
-			session.chatLiteButton = false;
-		} else {
-			session.chatLiteButton = true;
-		}
-	}
-
-	if (urlParams.has("chatlitesession") || urlParams.has("ssnsession")) {
-		session.chatLiteSession = urlParams.get("chatlitesession") || urlParams.get("ssnsession") || "";
-		if (session.chatLiteSession) {
-			try {
-				session.chatLiteSession = sanitizeStreamID(session.chatLiteSession) || session.chatLiteSession;
-			} catch (e) {}
-		}
-	}
-
-	if (urlParams.has("chatliteprofile")) {
-		session.chatLiteProfile = urlParams.get("chatliteprofile") || "";
-	}
-
-	if (urlParams.has("chatliteposition")) {
-		session.chatLitePosition = urlParams.get("chatliteposition") || "";
-	}
-
-	if (urlParams.has("chatlitemax")) {
-		session.chatLiteMax = parseInt(urlParams.get("chatlitemax")) || "";
-	}
-
-	if (urlParams.has("chatlitetransparent")) {
-		session.chatLiteTransparent = urlParams.get("chatlitetransparent") || true;
-		const normalizedChatLiteTransparent = typeof session.chatLiteTransparent === "string" ? session.chatLiteTransparent.trim().toLowerCase() : session.chatLiteTransparent;
-		if (normalizedChatLiteTransparent === "false" || normalizedChatLiteTransparent === "0" || normalizedChatLiteTransparent === "no" || normalizedChatLiteTransparent === "off") {
-			session.chatLiteTransparent = false;
-		} else {
-			session.chatLiteTransparent = true;
-		}
-	}
-
-	if (urlParams.has("chatlitenoavatar") || urlParams.has("chatlitehideavatar")) {
-		session.chatLiteNoAvatar = true;
-	}
-
-	if (urlParams.has("chatliteconfig")) {
-		session.chatLiteAutoConfig = true;
-		session.chatLiteButton = true;
-	}
-
-	if (urlParams.has("chatlitetts")) {
-		session.chatLiteTtsMode = (urlParams.get("chatlitetts") || "").toLowerCase().trim();
-	}
-
-	if (session.chatLiteButton) {
-		const chatLiteButton = getById("chatlitebutton");
-		if (chatLiteButton) {
-			chatLiteButton.classList.remove("hidden");
 		}
 	}
 
@@ -7374,8 +7308,10 @@ async function main() {
 		}
 	} else if (urlParams.has("backgroundblur") || urlParams.has("bgblur")) {
 		session.effect = "3";
-		if (urlParams.get("backgroundblur") || urlParams.get("bgblur")){
-			session.effectValue_default = parseFloat(urlParams.get("backgroundblur") || urlParams.get("bgblur")) || 10;
+		var backgroundBlurValue = urlParams.has("backgroundblur") ? urlParams.get("backgroundblur") : urlParams.get("bgblur");
+		if (backgroundBlurValue !== null && backgroundBlurValue !== ""){
+			backgroundBlurValue = parseFloat(backgroundBlurValue);
+			session.effectValue_default = isNaN(backgroundBlurValue) ? 2 : backgroundBlurValue;
 		}
 	} else if (urlParams.has("greenscreen")) {
 		session.effect = "4";
@@ -7464,6 +7400,9 @@ async function main() {
 		}
 	}
 
+	// Scene-link-only WSS override. This lets directors generate scene links that
+	// use a different websocket than the director page. On scene/view pages it can
+	// become the active WSS, but only if normal &wss/&wss2 did not already win.
 	if (urlParams.has("scenewss2")) {
 		session.sceneWSS = urlParams.get("scenewss2") || "";
 		if (session.sceneWSS && !session.sceneWSS.startsWith("wss://")) {
@@ -7475,6 +7414,11 @@ async function main() {
 		}
 	}
 
+	// invite.cam integration: &invitecam=<room>.<view-token> is an invite.cam-only
+	// shorthand for stable OBS scene links. Director pages may already use &wss2
+	// for their own control connection, but we still store session.invitecam so
+	// lib.js can preserve it in generated scene links. Do not fuck with this
+	// unless invite.cam director -> scene link -> OBS reload has been tested.
 	if (urlParams.has("invitecam") && typeof normalizeInviteCamValue === "function" && typeof getInviteCamWssFromValue === "function") {
 		session.invitecam = normalizeInviteCamValue(urlParams.get("invitecam"));
 		if (session.scene !== false && !session.wssSetViaUrl && session.invitecam) {
@@ -7554,7 +7498,7 @@ async function main() {
 			session.effectValue = 5;
 			session.effect = "3";
 		} else if (session.effect === "3") {
-			session.effectValue = 10;
+			session.effectValue = 2;
 		} else if (session.effect === "7") {
 			session.effectValue = session.effectValue || 1;
 		} else if (["15", "14"].includes(session.effect)) {
@@ -8298,7 +8242,16 @@ async function main() {
 	}, 50);
 
 	if (session.effect == "3" || session.effect == "4" || session.effect == "5" || session.effect == "16") {
-		longpipeHandlesEffect(session.effect) ? loadLongpipe() : attemptSegmentationEffectModelLoad();
+		var canUseLongpipe =
+			typeof longpipeHandlesEffect === "function" &&
+			typeof loadLongpipe === "function" &&
+			longpipeHandlesEffect(session.effect);
+
+		if (canUseLongpipe) {
+			loadLongpipe();
+		} else {
+			attemptSegmentationEffectModelLoad();
+		}
 	} else if (session.effect == "6") {
 		loadTensorflowJS();
 	} else if (session.effect == "9") {
@@ -8489,7 +8442,7 @@ async function main() {
 		};
 	}
 
-	session.remoteInterfaceAPI = function (e) {
+	session.remoteInterfaceAPI = async function (e) {
 		// iFRAME api support
 		if (!e.data || typeof e.data !== "object") {
 			warnlog(e);
@@ -8512,7 +8465,7 @@ async function main() {
 				} else if (e.data.function === "publishScreen") {
 					ret = publishScreen();
 				} else if (e.data.function === "targetGuest") {
-					ret = targetGuest(e.data.target, e.data.action, e.data.value, e.data.value2 || null);
+					ret = targetGuest(e.data.target, e.data.action, e.data.value, ("value2" in e.data) ? e.data.value2 : null);
 				} else if (e.data.function === "getGuestMediaDevices") {
 					var guestTarget = resolveIframeGuestTarget(e.data);
 					if (!guestTarget) {
@@ -8682,6 +8635,20 @@ async function main() {
 					}
 					var safeQueuedUUID = typeof CSS !== "undefined" && CSS.escape ? CSS.escape(queuedGuestTarget.UUID) : queuedGuestTarget.UUID;
 					var queueButton = document.querySelector('[data-action-type="remove-queue"][data--u-u-i-d="' + safeQueuedUUID + '"]');
+					if (queueButton && queueButton.classList && queueButton.classList.contains("hidden")) {
+						postIframeAPIResponse(
+							"queuedGuestActivation",
+							{
+								ok: false,
+								error: "Guest is not queued",
+								target: e.data.target || queuedGuestTarget.streamID || queuedGuestTarget.UUID,
+								UUID: queuedGuestTarget.UUID,
+								streamID: queuedGuestTarget.streamID || false
+							},
+							e.data.cib || null
+						);
+						return;
+					}
 					if (queueButton && typeof remoteRemoveQueue === "function") {
 						remoteRemoveQueue(queueButton);
 						postIframeAPIResponse(
@@ -8709,7 +8676,7 @@ async function main() {
 					}
 					return;
 				} else if (e.data.function === "commands" && e.data.action && Commands[e.data.action]) {
-					ret = Commands[e.data.action](e.data.value, e.data.value2 || null);
+					ret = Commands[e.data.action](e.data.value, ("value2" in e.data) ? e.data.value2 : null);
 				} else if (e.data.function === "routeMessage") {
 					try {
 						session.ws.onmessage({ data: e.data.value });
@@ -9227,6 +9194,7 @@ async function main() {
 		if ("audiobitrate" in e.data) {
 			// changes the audio bitrate of a specific or all inbound media tracks. kbps
 			var lock = true;
+			var audioBitrate = parseInt(e.data.audiobitrate);
 			if ("lock" in e.data) {
 				// since this is the iframe API, we're going to assume the default is manual over-ride. VDO.Ninja's automixer logic won't override a locked bitrate.
 				lock = e.data.lock;
@@ -9238,17 +9206,17 @@ async function main() {
 						if ("target" in e.data) {
 							if (session.rpcs[i].streamID == e.data.target || e.data.target == "*") {
 								// specify a stream ID or let it apply to all videos
-								session.requestAudioRateLimit(parseInt(e.data.bitrate), i, lock);
+								session.requestAudioRateLimit(audioBitrate, i, lock);
 							}
 						} else if (e.data.UUID && e.data.UUID === i) {
-							session.requestAudioRateLimit(parseInt(e.data.bitrate), i, lock);
+							session.requestAudioRateLimit(audioBitrate, i, lock);
 						} else if (e.data.streamID) {
 							if (session.rpcs[i].streamID == e.data.streamID) {
 								// specify a stream ID or let it apply to all videos
-								session.requestAudioRateLimit(parseInt(e.data.bitrate), i, lock);
+								session.requestAudioRateLimit(audioBitrate, i, lock);
 							}
 						} else {
-							session.requestAudioRateLimit(parseInt(e.data.bitrate), i, lock); // bitrate = 0 pauses the video
+							session.requestAudioRateLimit(audioBitrate, i, lock); // bitrate = 0 pauses the audio
 						}
 					}
 				} catch (e) {
@@ -9942,10 +9910,33 @@ async function main() {
 
 		if ("action" in e.data && e.data.action != "null") {
 			///////////////  reuse the Companion API
-			var resp = processMessage(e.data); // reuse the companion API
-			if (resp !== null) {
-				log(resp);
-				parent.postMessage(resp, session.iframetarget, null, null, e.data.cib);
+			try {
+				var resp = await processMessage(e.data); // reuse the companion API
+				if (resp !== null) {
+					if (typeof e.data.cib !== "undefined") {
+						if (resp && typeof resp === "object" && !Array.isArray(resp)) {
+							resp.cib = e.data.cib;
+						} else {
+							resp = { action: e.data.action || null, result: resp, cib: e.data.cib };
+						}
+					}
+					log(resp);
+					parent.postMessage(resp, session.iframetarget);
+				}
+			} catch (err) {
+				errorlog(err);
+				if (typeof e.data.cib !== "undefined") {
+					parent.postMessage(
+						{
+							action: e.data.action || null,
+							error: true,
+							result: false,
+							message: err && err.message ? err.message : "processMessage failed",
+							cib: e.data.cib
+						},
+						session.iframetarget
+					);
+				}
 			}
 		} else if ("target" in e.data) {
 			log(e.data);
@@ -10619,16 +10610,6 @@ async function main() {
 			}
 		}
 	});
-
-	setTimeout(function () {
-		try {
-			if (typeof initChatLiteIntegration === "function") {
-				initChatLiteIntegration();
-			}
-		} catch (e) {
-			errorlog(e);
-		}
-	}, 250);
 
 	try {
 		navigator.serviceWorker

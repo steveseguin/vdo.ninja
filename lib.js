@@ -8,214 +8,6 @@
  */
 /*jshint esversion: 6 */
 
-const USE_LONGPIPE = true;
-const LONGPIPE_MODULE_URL = "./thirdparty/longpipe/longpipe.mjs";
-const LONGPIPE_WEIGHTS_BASE_URL = "./thirdparty/longpipe/models/v/0.0.4/";
-const LONGPIPE_PRESETS = {
-	xs: { model: "xs", dtype: "f16", resolution: { w: 384, h: 216 }, skipFrames: 2 },
-	small: { model: "small", dtype: "f16", resolution: { w: 384, h: 216 }, skipFrames: 1 },
-	medium: { model: "medium", dtype: "f16", resolution: { w: 512, h: 288 }, skipFrames: 1 },
-	large: { model: "large", dtype: "f32", resolution: { w: 640, h: 360 }, skipFrames: 0 },
-	xl: { model: "xl", dtype: "f32", resolution: { w: 1280, h: 720 }, skipFrames: 0 }
-};
-const LONGPIPE_PRESET_ALIASES = {
-	fast: "xs",
-	balanced: "medium",
-	quality: "xl"
-};
-
-let EffectsPipeline = null;
-let longpipeRuntimeDisabled = false;
-
-function getLongpipeUrlParam(names) {
-	try {
-		if (typeof urlParams === "undefined" || !urlParams) return false;
-		for (var i = 0; i < names.length; i++) {
-			if (urlParams.has(names[i])) {
-				return (urlParams.get(names[i]) || "").toLowerCase();
-			}
-		}
-	} catch (e) {}
-	return false;
-}
-
-function hasLongpipeUrlParam(names) {
-	try {
-		if (typeof urlParams === "undefined" || !urlParams) return false;
-		for (var i = 0; i < names.length; i++) {
-			if (urlParams.has(names[i])) return true;
-		}
-	} catch (e) {}
-	return false;
-}
-
-function cloneLongpipePreset(preset) {
-	return {
-		model: preset.model,
-		dtype: preset.dtype,
-		resolution: { w: preset.resolution.w, h: preset.resolution.h },
-		skipFrames: preset.skipFrames
-	};
-}
-
-function getLongpipeCaptureQualityTier() {
-	try {
-		var quality = false;
-		if (session.quality !== false && typeof session.quality !== "undefined") {
-			quality = session.quality;
-		} else if (session.roomid && session.quality_room !== false && typeof session.quality_room !== "undefined") {
-			quality = session.quality_room;
-		} else if (session.quality_wb !== false && typeof session.quality_wb !== "undefined") {
-			quality = session.quality_wb;
-		}
-		quality = parseInt(quality);
-		return isNaN(quality) ? 1 : quality;
-	} catch (e) {
-		return 1;
-	}
-}
-
-function getLongpipePerformanceTier() {
-	try {
-		if (typeof session.quality_wb === "number") return session.quality_wb;
-		return judgePerformance();
-	} catch (e) {
-		return 1;
-	}
-}
-
-function hasLongpipeHighEndGpu() {
-	try {
-		if (typeof gpgpuSupport !== "string") return false;
-		var gpu = gpgpuSupport.toLowerCase();
-		return gpu.indexOf("nvidia") >= 0 ||
-			gpu.indexOf("geforce") >= 0 ||
-			gpu.indexOf("rtx") >= 0 ||
-			gpu.indexOf("gtx") >= 0 ||
-			gpu.indexOf("quadro") >= 0 ||
-			gpu.indexOf("radeon") >= 0 ||
-			gpu.indexOf("amd") >= 0 ||
-			gpu.indexOf("intel(r) arc") >= 0 ||
-			gpu.indexOf("apple") >= 0;
-	} catch (e) {
-		return false;
-	}
-}
-
-function getLongpipePresetName() {
-	if (hasLongpipeUrlParam(["longpipeauto", "lpauto"])) return "auto";
-	var requested = getLongpipeUrlParam(["longpipepreset", "lppreset", "lpmodel"]);
-	if (requested) {
-		if (requested === "auto") return "auto";
-		if (requested in LONGPIPE_PRESET_ALIASES) requested = LONGPIPE_PRESET_ALIASES[requested];
-		if (requested in LONGPIPE_PRESETS) return requested;
-		warnlog("Ignoring unknown segmentation preset: " + requested);
-	}
-
-	var captureTier = getLongpipeCaptureQualityTier();
-	var performanceTier = getLongpipePerformanceTier();
-	var highEndGpu = hasLongpipeHighEndGpu();
-
-	if (captureTier >= 2) return highEndGpu && !session.mobile ? "small" : "xs";
-	if (session.mobile) return performanceTier <= 0 && captureTier <= 0 ? "medium" : "small";
-	if (performanceTier >= 2) return "small";
-	if (highEndGpu) {
-		if (captureTier < 0) return "large";
-		return "medium";
-	}
-	return "medium";
-}
-
-function getLongpipePreset() {
-	var presetName = getLongpipePresetName();
-	if (presetName === "auto") return "auto";
-	return cloneLongpipePreset(LONGPIPE_PRESETS[presetName] || LONGPIPE_PRESETS.medium);
-}
-
-function shouldUseLongpipeAdaptive(preset) {
-	if (hasLongpipeUrlParam(["nolongpipeadaptive", "nolpadaptive"])) return false;
-	return preset === "auto" && hasLongpipeUrlParam(["longpipeadaptive", "lpadaptive"]);
-}
-
-function longpipeEnabled() {
-	return USE_LONGPIPE && !longpipeRuntimeDisabled;
-}
-
-function disableLongpipe(reason, rerender) {
-	if (longpipeRuntimeDisabled) return;
-	if (typeof rerender === "undefined") rerender = true;
-	longpipeRuntimeDisabled = true;
-	EffectsPipeline = null;
-	try {
-		if (session.longpipe) {
-			session.longpipe.destroy();
-			session.longpipe = null;
-		}
-	} catch (e) {}
-	errorlog("Segmentation engine failed; falling back to TFLite: " + reason);
-	if (rerender && (session.effect == "3" || session.effect == "4" || session.effect == "5")) {
-		try {
-			attemptSegmentationEffectModelLoad();
-		} catch (e) {
-			errorlog(e);
-		}
-		try {
-			updateRenderOutpipe();
-		} catch (e) {
-			errorlog(e);
-		}
-	}
-}
-
-function getLongpipeOptions() {
-	var preset = getLongpipePreset();
-	return {
-		background: effectToLongpipeBg(),
-		weightsBaseUrl: LONGPIPE_WEIGHTS_BASE_URL,
-		preset: preset,
-		adaptive: shouldUseLongpipeAdaptive(preset),
-		audio: "passthrough",
-		debug: hasLongpipeUrlParam(["longpipedebug", "lpdebug"]),
-		onError: function (event) {
-			var message = event && event.message ? event.message : event;
-			errorlog("Segmentation engine error: " + message);
-		}
-	};
-}
-
-async function loadLongpipe() {
-	if (!longpipeEnabled()) return;
-	if (EffectsPipeline) return;
-	try {
-		({ EffectsPipeline } = await import(LONGPIPE_MODULE_URL));
-		if (session.effect == "3" || session.effect == "4" || session.effect == "5" || session.effect == "16") {
-			updateRenderOutpipe();
-		}
-	} catch (e) {
-		disableLongpipe(e);
-	}
-}
-
-function longpipeHandlesEffect(effect) {
-	return longpipeEnabled() && effect !== "16";
-}
-
-function needsSegmentationRebuild(from, to) {
-	if (!["3", "4", "5", "16"].includes(from)) return true;
-	if (!longpipeEnabled()) return false;
-	return longpipeHandlesEffect(from) !== longpipeHandlesEffect(to);
-}
-
-function effectToLongpipeBg() {
-	if (session.effect == "3") {
-		var strength = session.effectValue ? parseFloat(session.effectValue) / 20 : 0.5;
-		return { blur: { strength: strength } };
-	}
-	if (session.effect == "4") return { color: "#00ff00" };
-	if (session.effect == "5") return session.effectsImage && session.effectsImage.src ? session.effectsImage.src : "blur";
-	return "blur";
-}
-
 ///// For the debug output, uncomment this section.
 /*
 let lastLogTime = performance.now(); // Initialize with the current time
@@ -341,6 +133,9 @@ var miscTranslations = {
 	"headphones-tip": "<i>Tip:</i> Use headphones to avoid audio echo issues.",
 	"camera-tip-c922": "<i>Tip:</i> To achieve 60-fps with a C922 webcam, low-light compensation needs to be turned off, exposure set to auto, and 720p used.",
 	"camera-tip-camlink": "<i>Tip:</i> A Cam Link may glitch green/purple if accessed elsewhere while already in use.",
+	"camera-in-use": "Error: Could not start video source.\n\nTypically this means the camera is already in use elsewhere. Most webcams can only be accessed by one program at a time.\n\nTry a different camera or perhaps try re-plugging in the device.",
+	"camera-in-use-obs-guide": "If you are also using OBS with VDO.Ninja, this guide may help:",
+	"camera-in-use-obs-guide-link": "Camera already in use by OBS or VDO.Ninja",
 	"samsung-a-series": "Samsung A-series phones may have issues with Chrome; if so, try Firefox Mobile instead or switch video codecs.",
 	"screen-permissions-denied": "Permission to capture denied. Ensure your browser has screen record system permissions\n\n1.On your Mac, choose Apple menu  > System Preferences, click Security & Privacy , then click Privacy.\n2.Select Screen Recording.\n3.Select the checkbox next to your browser to allow it to record your screen.",
 	"change-audio-output-device": "Audio could not be captured.\n\nIf you need audio, please make sure you have an audio output device available.\n\nSome gaming headsets (ie: Logitech/Corsair) also may need to be set to 2-channel output to work, as <a target='_blank' href='https://docs.vdo.ninja/common-errors-and-known-issues/surround-sound-error-when-screen-sharing-with-usb-headset'>surround sound drivers may cause problems</a>",
@@ -400,6 +195,35 @@ function getTranslation(key) {
 		return key.replace(/-/g, " "); //
 	}
 
+}
+
+function getCameraInUseWarning() {
+	var message = getTranslation("camera-in-use");
+	var host = ((window.location && window.location.hostname) || "").toLowerCase();
+
+	if (
+		host === "vdo.ninja" &&
+		session.director &&
+		!session.cleanOutput &&
+		!session.cleanViewer &&
+		!session.cleanDirector &&
+		!session.hidehome &&
+		!session.hidesololinks &&
+		!urlParams.has("hidemenu") &&
+		!urlParams.has("hm") &&
+		!urlParams.has("hideheader") &&
+		!urlParams.has("noheader") &&
+		!urlParams.has("hh")
+	) {
+		message +=
+			"\n\n" +
+			getTranslation("camera-in-use-obs-guide") +
+			"\n<a target='_blank' rel='noopener' href='https://docs.vdo.ninja/common-errors-and-known-issues/cant-load-camera-both-in-obs-and-vdon'>" +
+			getTranslation("camera-in-use-obs-guide-link") +
+			"</a>";
+	}
+
+	return message;
 }
 
 // Extract hostname from TURN server URL for QoS tracking
@@ -1262,6 +1086,54 @@ function playAllVideos() {
 		} catch (e) {
 			errorlog(e);
 		}
+	}
+}
+
+function nudgeIncomingAudioPlayback(UUID, force) {
+	try {
+		if (!session.rpcs || !(UUID in session.rpcs)) {
+			return;
+		}
+		if (!force && !session.firstPlayTriggered) {
+			return;
+		}
+
+		var rpc = session.rpcs[UUID];
+		if (!rpc.videoElement) {
+			return;
+		}
+		if (rpc.videoElement.usermuted === 1 || rpc.videoElement.usermuted === 2) {
+			return;
+		}
+		if (checkMuteState(UUID)) {
+			return;
+		}
+
+		var hasAudioTrack = false;
+		if (rpc.videoElement.srcObject && rpc.videoElement.srcObject.getAudioTracks && rpc.videoElement.srcObject.getAudioTracks().length) {
+			hasAudioTrack = true;
+		} else if (rpc.streamSrc && rpc.streamSrc.getAudioTracks && rpc.streamSrc.getAudioTracks().length) {
+			hasAudioTrack = true;
+		}
+		if (!hasAudioTrack) {
+			return;
+		}
+
+		if (session.audioCtx && session.audioCtx.state == "suspended" && session.audioCtx.resume) {
+			var resumePromise = session.audioCtx.resume();
+			if (resumePromise && resumePromise.catch) {
+				resumePromise.catch(warnlog);
+			}
+		}
+
+		if (rpc.videoElement.play) {
+			var playPromise = rpc.videoElement.play();
+			if (playPromise && playPromise.catch) {
+				playPromise.catch(warnlog);
+			}
+		}
+	} catch (e) {
+		warnlog(e);
 	}
 }
 
@@ -7986,7 +7858,15 @@ function updateMixerRun(e = false) {
 						continue;
 					}
 
-					if (session.style && session.style >= 2) {
+					var optimizeZeroNoVideoTrack = false;
+					try {
+						optimizeZeroNoVideoTrack = session.optimize === 0 && session.scene !== false && session.rpcs[i].videoElement.srcObject && (session.rpcs[i].videoElement.srcObject.getVideoTracks().length == 0 || session.rpcs[i].videoMuted);
+					} catch (e) {
+						errorlog(e);
+					}
+					if (optimizeZeroNoVideoTrack) {
+						doNotPush = true;
+					} else if (session.style && session.style >= 2) {
 						if (session.rpcs[i].videoElement.srcObject && (session.rpcs[i].videoElement.srcObject.getVideoTracks().length == 0 || session.rpcs[i].videoMuted)) {
 							if (session.rpcs[i].videoElement.style.display == "none") {
 								// currently this is considered the state of scenes.  pertty dumb on my part.
@@ -12972,6 +12852,39 @@ function applyEffects(track) {
 	// video only please. do not touch audio.  Run update Render Outpipe () instead of this directly.
 	log("applyEffects()");
 
+	function getSafeEffectsCanvasTrack() {
+		try {
+			session.canvasCtx.filter = "none";
+			session.canvasCtx.globalCompositeOperation = "copy";
+			session.canvasCtx.fillStyle = "black";
+			session.canvasCtx.fillRect(0, 0, session.canvas.width, session.canvas.height);
+			session.canvasCtx.globalCompositeOperation = "source-over";
+		} catch (e0) {
+			errorlog(e0);
+		}
+		try {
+			var canvasTracks = session.canvas.captureStream().getVideoTracks();
+			if (canvasTracks && canvasTracks[0]) {
+				return canvasTracks[0];
+			}
+		} catch (e) {
+			errorlog(e);
+		}
+		try {
+			var mutedClone = track.clone();
+			mutedClone.enabled = false;
+			return mutedClone;
+		} catch (e2) {
+			errorlog(e2);
+		}
+		try {
+			track.enabled = false;
+		} catch (e3) {
+			errorlog(e3);
+		}
+		return track;
+	}
+
 	if (session.effect == "0" || !session.effect) {
 		// auto align face
 		return track;
@@ -13032,23 +12945,60 @@ function applyEffects(track) {
 
 		if (longpipeHandlesEffect(session.effect)) {
 			if (EffectsPipeline) {
-				if (session.longpipe) { session.longpipe.destroy(); session.longpipe = null; }
+				if (session.longpipe && session.longpipeSourceTrackId === track.id) {
+					if (session.longpipe.readyForPublish) {
+						try {
+							var backgroundUpdate = session.longpipe.setBackground(effectToLongpipeBg());
+							if (backgroundUpdate && backgroundUpdate.catch) {
+								backgroundUpdate.catch(errorlog);
+							}
+						} catch (e) {
+							errorlog(e);
+						}
+						try {
+							var longpipeTracks = session.longpipe.stream.getVideoTracks();
+							if (longpipeTracks && longpipeTracks[0]) {
+								return longpipeTracks[0];
+							}
+						} catch (e2) {
+							errorlog(e2);
+						}
+					}
+					return getSafeEffectsCanvasTrack();
+				}
+				if (session.longpipe) { destroyLongpipePipeline(); }
 				try {
 					session.longpipe = new EffectsPipeline(session.canvasSource.srcObject, getLongpipeOptions());
+					session.longpipeSourceTrackId = track.id;
+					session.longpipe.readyForPublish = false;
 				} catch (e) {
 					disableLongpipe(e, false);
 					TFLiteWorker();
-					return track;
+					return getSafeEffectsCanvasTrack();
 				}
 
-				session.longpipe.ready.catch(function (e) {
+				var pendingLongpipe = session.longpipe;
+				session.longpipe.ready.then(function () {
+					if (session.longpipe === pendingLongpipe) {
+						pendingLongpipe.readyForPublish = true;
+						updateRenderOutpipe();
+					}
+				}).catch(function (e) {
 					disableLongpipe(e);
 				});
 
-				return session.longpipe.stream.getVideoTracks()[0];
+				return getSafeEffectsCanvasTrack();
 			}
 			// loadLongpipe() is still in-flight; it will call updateRenderOutpipe() when ready
-			return track;
+			try {
+				var longpipeLoad = loadLongpipe();
+				if (longpipeLoad && longpipeLoad.catch) {
+					longpipeLoad.catch(errorlog);
+				}
+			} catch (e) {
+				errorlog(e);
+			}
+			return getSafeEffectsCanvasTrack();
 		} else {
 			TFLiteWorker();
 		}
@@ -13792,11 +13742,11 @@ function MediaPipeSelfieWorker() {
 					} catch (e) { }
 				}
 			} else if (session.effect == "3") {
-				if (session.effectValue) {
-					session.canvasCtx.filter = "blur(" + parseInt(session.effectValue) * 2 + "px)";
-				} else {
-					session.canvasCtx.filter = "blur(4px)";
+				var blurEffectValue = parseFloat(session.effectValue);
+				if (isNaN(blurEffectValue)) {
+					blurEffectValue = 2;
 				}
+				session.canvasCtx.filter = "blur(" + blurEffectValue * 2 + "px)";
 				session.canvasCtx.drawImage(frameSource, 0, 0);
 				session.canvasCtx.filter = "none";
 			}
@@ -13948,7 +13898,7 @@ function TFLiteWorker() {
 	async function process() {
 		if (!(session.effect == "3" || session.effect == "4" || session.effect == "5" || session.effect == "16")) {
 			//session.tfliteModule.looping=false;
-			errorlog("shouldn't happen");
+			errorlog("TFLite segmentation processor invoked for unsupported effect: " + session.effect);
 			return;
 		}
 
@@ -14036,11 +13986,11 @@ function TFLiteWorker() {
 				}
 			} else if (session.effect == "3") {
 				// BLUR
-				if (session.effectValue) {
-					session.canvasCtx.filter = "blur(" + parseInt(session.effectValue) * 2 + "px)";
-				} else {
-					session.canvasCtx.filter = "blur(4px)"; // Does not work on Safari
+				var blurEffectValue2 = parseFloat(session.effectValue);
+				if (isNaN(blurEffectValue2)) {
+					blurEffectValue2 = 2;
 				}
+				session.canvasCtx.filter = "blur(" + blurEffectValue2 * 2 + "px)"; // Does not work on Safari
 				session.canvasCtx.drawImage(frameSource, 0, 0);
 				session.canvasCtx.filter = "none";
 			} else {
@@ -14081,7 +14031,7 @@ function TFLiteWorker() {
 
 	async function processiOS() {
 		if (!(session.effect == "3" || session.effect == "4" || session.effect == "5" || session.effect == "16")) {
-			errorlog("shouldn't happen");
+			errorlog("TFLite iOS segmentation processor invoked for unsupported effect: " + session.effect);
 			//session.tfliteModule.looping=false;
 			return;
 		}
@@ -18443,7 +18393,7 @@ function toggleMute(apply = false, event = false) {
 				track.enabled = false;
 			});
 		}
-		if ((window.obsstudio || session.mobile) && session.videoElement && session.videoElement.srcObject) {
+		if (session.videoElement && session.videoElement.srcObject) {
 			session.videoElement.srcObject.getAudioTracks().forEach(track => {
 				track.enabled = false;
 			});
@@ -18633,6 +18583,9 @@ function toggleSpeakerMute(apply = false) {
 
 	for (var UUID in session.rpcs) {
 		applyMuteState(UUID);
+		if (!session.speakerMuted) {
+			nudgeIncomingAudioPlayback(UUID, true);
+		}
 		postMessageIframe(session.rpcs[UUID].iframeEle, { mute: session.speakerMuted });
 	}
 
@@ -19341,326 +19294,6 @@ function toggleChat(event = null) {
 		chatModule.classList.add("hidden");
 	}
 	updateMessages();
-}
-
-let chatLiteOverlayFrame = null;
-let chatLiteSessionStorageListenerBound = false;
-const chatLiteLegacySessionStorageKey = "chatLiteSessionId";
-const chatLiteSessionStorageKeyBase = "ssn-lite::session.currentId";
-let chatLiteSessionSyncScope = "";
-
-function normalizeChatLiteBoolean(value, fallback = true) {
-	if (value === undefined || value === null || value === "") {
-		return fallback;
-	}
-	if (value === false) {
-		return false;
-	}
-	if (typeof value === "string") {
-		const normalized = value.trim().toLowerCase();
-		if (!normalized) {
-			return fallback;
-		}
-		if (["0", "false", "off", "no"].includes(normalized)) {
-			return false;
-		}
-	}
-	return true;
-}
-
-function getChatLiteSyncScope() {
-	if (chatLiteSessionSyncScope) {
-		return chatLiteSessionSyncScope;
-	}
-	chatLiteSessionSyncScope = `vdo-${Math.random().toString(36).slice(2, 8)}${Date.now().toString(36)}`;
-	return chatLiteSessionSyncScope;
-}
-
-function getChatLiteSessionStorageKey() {
-	return `${chatLiteSessionStorageKeyBase}.${getChatLiteSyncScope()}`;
-}
-
-function getChatLiteSessionId() {
-	if (session.chatLiteSession) {
-		return session.chatLiteSession;
-	}
-	const chatLiteSessionStorageKey = getChatLiteSessionStorageKey();
-	const liteSession = getChatLiteSessionFromLiteStorage(chatLiteSessionStorageKey);
-	if (liteSession) {
-		session.chatLiteSession = liteSession;
-		setStorage(chatLiteLegacySessionStorageKey, session.chatLiteSession, 9999);
-		return session.chatLiteSession;
-	}
-	const persisted = getStorage(chatLiteLegacySessionStorageKey);
-	if (persisted) {
-		session.chatLiteSession = persisted;
-		setChatLiteSessionInLiteStorage(session.chatLiteSession, chatLiteSessionStorageKey);
-		return session.chatLiteSession;
-	}
-	const seed = session.streamID || `${Math.random().toString(36).slice(2, 8)}${Date.now().toString(36)}`;
-	session.chatLiteSession = seed;
-	setStorage(chatLiteLegacySessionStorageKey, session.chatLiteSession, 9999);
-	setChatLiteSessionInLiteStorage(session.chatLiteSession, chatLiteSessionStorageKey);
-	return session.chatLiteSession;
-}
-
-function handleChatLiteSessionStorageChange(event) {
-	if (!event || !event.key) {
-		return;
-	}
-	const chatLiteSessionStorageKey = getChatLiteSessionStorageKey();
-	if (event.key !== chatLiteSessionStorageKey) {
-		return;
-	}
-
-	const persisted = parseChatLiteSessionStorageValue(event.newValue) || getChatLiteSessionFromLiteStorage(chatLiteSessionStorageKey);
-	if (!persisted || persisted === session.chatLiteSession) {
-		return;
-	}
-
-	session.chatLiteSession = persisted;
-	setStorage(chatLiteLegacySessionStorageKey, session.chatLiteSession, 9999);
-	if (session.chatLiteVisible && chatLiteOverlayFrame && document.body.contains(chatLiteOverlayFrame)) {
-		const desiredSrc = getChatLiteOverlayUrl();
-		if (chatLiteOverlayFrame.src !== desiredSrc) {
-			chatLiteOverlayFrame.src = desiredSrc;
-		}
-	}
-}
-
-function parseChatLiteSessionStorageValue(rawValue) {
-	if (typeof rawValue !== "string" || !rawValue) {
-		return "";
-	}
-	try {
-		const parsed = JSON.parse(rawValue);
-		if (typeof parsed === "string") {
-			return parsed.trim();
-		}
-	} catch (e) {}
-	return "";
-}
-
-function getChatLiteSessionFromLiteStorage(storageKey = getChatLiteSessionStorageKey()) {
-	try {
-		const raw = localStorage.getItem(storageKey);
-		return parseChatLiteSessionStorageValue(raw);
-	} catch (e) {
-		return "";
-	}
-}
-
-function setChatLiteSessionInLiteStorage(value, storageKey = getChatLiteSessionStorageKey()) {
-	if (!value) {
-		return;
-	}
-	try {
-		localStorage.setItem(storageKey, JSON.stringify(value));
-	} catch (e) {}
-}
-
-function getChatLiteOverlayUrl() {
-	const overlayUrl = new URL("./chat-lite/index.html", window.location.href);
-	overlayUrl.searchParams.set("view", "activity");
-	overlayUrl.searchParams.set("embed", "1");
-	overlayUrl.searchParams.set("session", getChatLiteSessionId());
-	overlayUrl.searchParams.set("syncscope", getChatLiteSyncScope());
-	overlayUrl.searchParams.set("transparent", session.chatLiteTransparent ? "1" : "0");
-	if (session.chatLiteNoAvatar) {
-		overlayUrl.searchParams.set("noavatar", "1");
-	}
-	if (session.chatLiteProfile) {
-		overlayUrl.searchParams.set("profile", session.chatLiteProfile);
-	}
-	if (session.chatLiteMax) {
-		overlayUrl.searchParams.set("max", session.chatLiteMax);
-	}
-	if (session.chatLitePosition) {
-		overlayUrl.searchParams.set("position", session.chatLitePosition);
-	}
-	return overlayUrl.toString();
-}
-
-function setChatLiteButtonState(active = false) {
-	const button = getById("chatlitebutton");
-	if (!button) {
-		return;
-	}
-	button.ariaPressed = active ? "true" : "false";
-	if (active) {
-		button.classList.add("red");
-	} else {
-		button.classList.remove("red");
-	}
-}
-
-function ensureChatLiteOverlayFrame() {
-	if (chatLiteOverlayFrame && document.body.contains(chatLiteOverlayFrame)) {
-		return chatLiteOverlayFrame;
-	}
-	chatLiteOverlayFrame = document.getElementById("chatLiteOverlayFrame");
-	if (!chatLiteOverlayFrame) {
-		chatLiteOverlayFrame = document.createElement("iframe");
-		chatLiteOverlayFrame.id = "chatLiteOverlayFrame";
-		chatLiteOverlayFrame.title = "Social Stream Lite Overlay";
-		chatLiteOverlayFrame.setAttribute("aria-hidden", "true");
-		chatLiteOverlayFrame.style.display = "none";
-		chatLiteOverlayFrame.tabIndex = -1;
-		document.body.appendChild(chatLiteOverlayFrame);
-	}
-	return chatLiteOverlayFrame;
-}
-
-function openChatLiteSettings() {
-	const settingsUrl = new URL("./chat-lite/index.html", window.location.href);
-	settingsUrl.searchParams.set("session", getChatLiteSessionId());
-	settingsUrl.searchParams.set("syncscope", getChatLiteSyncScope());
-	if (session.chatLiteProfile) {
-		settingsUrl.searchParams.set("profile", session.chatLiteProfile);
-	}
-	const popup = window.open(settingsUrl.toString(), "chatLiteSetup", "width=980,height=860,resizable=yes,scrollbars=yes");
-	if (!popup && !session.cleanOutput) {
-		const safeUrl = escapeHtml(settingsUrl.toString());
-		warnUser(`Popup blocked.<br /><br /><a target="_blank" rel="noopener" href="${safeUrl}" onclick="closeModal()">Open Chat Lite setup</a>`, false, false);
-	}
-}
-
-function showChatLiteOverlay() {
-	const frame = ensureChatLiteOverlayFrame();
-	const desiredSrc = getChatLiteOverlayUrl();
-	if (frame.src !== desiredSrc) {
-		frame.src = desiredSrc;
-	}
-	frame.style.display = "block";
-	session.chatLiteVisible = true;
-	setStorage("chatLiteVisible", true, 9999);
-	setChatLiteButtonState(true);
-}
-
-function hideChatLiteOverlay() {
-	const frame = ensureChatLiteOverlayFrame();
-	frame.style.display = "none";
-	session.chatLiteVisible = false;
-	setStorage("chatLiteVisible", false, 9999);
-	setChatLiteButtonState(false);
-}
-
-function toggleChatLiteOverlay(event = null) {
-	if (event && event.shiftKey) {
-		openChatLiteSettings();
-		return;
-	}
-	if (event && (event.altKey || event.ctrlKey || event.metaKey)) {
-		toggleChatLiteTTS();
-		return;
-	}
-	if (!session.chatLiteButton && !session.chatLiteEnabled) {
-		session.chatLiteButton = true;
-	}
-	if (session.chatLiteVisible) {
-		hideChatLiteOverlay();
-	} else {
-		showChatLiteOverlay();
-	}
-}
-
-function toggleChatLiteTTS(forceValue = null) {
-	const key = "ssn-lite::activity.tts.enabled";
-	let current = false;
-	try {
-		const raw = localStorage.getItem(key);
-		current = raw ? Boolean(JSON.parse(raw)) : false;
-	} catch (e) {}
-	const nextValue = forceValue === null ? !current : Boolean(forceValue);
-	try {
-		localStorage.setItem(key, JSON.stringify(nextValue));
-	} catch (e) {}
-	if (!session.cleanOutput) {
-		warnUser(`Social Stream Lite TTS ${nextValue ? "enabled" : "disabled"}`, 1500);
-	}
-	return nextValue;
-}
-
-function initChatLiteIntegration() {
-	if (typeof session.chatLiteButton === "undefined") {
-		session.chatLiteButton = false;
-	}
-	if (typeof session.chatLiteEnabled === "undefined") {
-		session.chatLiteEnabled = false;
-	}
-	if (typeof session.chatLiteVisible === "undefined") {
-		session.chatLiteVisible = false;
-	}
-	if (typeof session.chatLiteTransparent === "undefined") {
-		session.chatLiteTransparent = true;
-	}
-	if (typeof session.chatLiteNoAvatar === "undefined") {
-		session.chatLiteNoAvatar = false;
-	}
-	if (typeof session.chatLiteAutoConfig === "undefined") {
-		session.chatLiteAutoConfig = false;
-	}
-	if (typeof session.chatLiteTtsMode === "undefined") {
-		session.chatLiteTtsMode = "";
-	}
-
-	if (!chatLiteSessionStorageListenerBound && typeof window !== "undefined" && window.addEventListener) {
-		window.addEventListener("storage", handleChatLiteSessionStorageChange, false);
-		chatLiteSessionStorageListenerBound = true;
-	}
-
-	const button = getById("chatlitebutton");
-	if (!button) {
-		return;
-	}
-
-	let hasChatLiteEnabledParam = false;
-	let hasChatLiteButtonParam = false;
-	let hasChatLiteStateParam = false;
-	try {
-		const search = (typeof window !== "undefined" && window.location && window.location.search) ? window.location.search : "";
-		const chatLiteUrlParams = new URLSearchParams(search);
-		hasChatLiteEnabledParam = chatLiteUrlParams.has("chatlite") || chatLiteUrlParams.has("ssnlite") || chatLiteUrlParams.has("socialstreamlite");
-		hasChatLiteButtonParam = chatLiteUrlParams.has("chatlitebutton") || chatLiteUrlParams.has("ssnchatbutton") || chatLiteUrlParams.has("chatliteconfig");
-		hasChatLiteStateParam = hasChatLiteEnabledParam || hasChatLiteButtonParam;
-	} catch (e) {}
-
-	const hasExplicitChatLiteDisable = hasChatLiteEnabledParam && !session.chatLiteEnabled;
-	if (!hasChatLiteButtonParam && !hasExplicitChatLiteDisable) {
-		const persistedButton = getStorage("chatLiteButton");
-		if (persistedButton !== "") {
-			session.chatLiteButton = normalizeChatLiteBoolean(persistedButton, session.chatLiteButton);
-		}
-	}
-
-	if (hasChatLiteStateParam && !hasExplicitChatLiteDisable && (session.chatLiteEnabled || session.chatLiteButton || session.chatLiteAutoConfig)) {
-		const persistedVisible = getStorage("chatLiteVisible");
-		if (persistedVisible !== "") {
-			session.chatLiteVisible = normalizeChatLiteBoolean(persistedVisible, session.chatLiteVisible);
-		}
-	}
-
-	if (session.chatLiteEnabled) {
-		session.chatLiteButton = true;
-	}
-
-	if (session.chatLiteButton) {
-		button.classList.remove("hidden");
-	}
-
-	setStorage("chatLiteButton", session.chatLiteButton, 9999);
-
-	if (session.chatLiteEnabled || session.chatLiteVisible) {
-		showChatLiteOverlay();
-	}
-
-	if (session.chatLiteTtsMode) {
-		toggleChatLiteTTS(session.chatLiteTtsMode === "all" || session.chatLiteTtsMode === "donations" || session.chatLiteTtsMode === "on");
-	}
-
-	if (session.chatLiteAutoConfig) {
-		setTimeout(() => openChatLiteSettings(), 1200);
-	}
 }
 
 function toggleDirectFeedback(event = null) {
@@ -21550,6 +21183,7 @@ function getDetailedState(sid = false) {
 			}
 			let item = {};
 			item.streamID = session.rpcs[UUID].streamID;
+			item.UUID = UUID;
 			item.label = session.rpcs[UUID].label;
 			item.group = session.rpcs[UUID].group;
 			item.chunkedBufferDefault = chunkedBufferDefault;
@@ -21748,6 +21382,10 @@ function getDetailedState(sid = false) {
 	streamList[session.streamID].position = null;
 	streamList[session.streamID].meshcast = session.meshcast;
 	streamList[session.streamID].layout = session.layout;
+	streamList[session.streamID].slotmode = session.slotmode || false;
+	streamList[session.streamID].ptz = !!session.ptz;
+	streamList[session.streamID].ptzSlider = !!session.ptzSlider;
+	streamList[session.streamID].remote = !!session.remote;
 
 	try {
 		if (session.streamID && session.slotmode) {
@@ -22765,7 +22403,7 @@ function blindAllGuests(ele, event = false) {
 	return msg.displayMute;
 }
 
-function setRemoteMuteForGuest(UUID, muted) {
+function setRemoteMuteForGuest(UUID, muted, source) {
 	if (!UUID || !session.rpcs || !(UUID in session.rpcs)) {
 		return false;
 	}
@@ -22780,7 +22418,7 @@ function setRemoteMuteForGuest(UUID, muted) {
 	if (currentMuted === muted) {
 		return false;
 	}
-	remoteMute(ele, false);
+	remoteMute(ele, false, false, source);
 	return true;
 }
 
@@ -22870,9 +22508,14 @@ function remoteLowerhands(UUID) {
 	return true;
 }
 
-function remoteMute(ele, event = false, skipSend = false) {
+function remoteMute(ele, event = false, skipSend = false, source = false) {
 	log("mute");
 	var val = parseInt(ele.value) || 0;
+	try {
+		if (session.highlightMuteFollowMuted && source !== "highlightMuteFollow" && ele.dataset && ele.dataset.UUID) {
+			delete session.highlightMuteFollowMuted[ele.dataset.UUID];
+		}
+	} catch (e0) {}
 	if (!event || !(event.ctrlKey || event.metaKey)) {
 		if (val == 1) {
 			ele.value = 0;
@@ -25384,14 +25027,20 @@ function getCloudflareInviteParam() {
 	return "&cftoken=" + encodeURIComponent(token);
 }
 
+// invite.cam integration: app.invite.cam passes &invitecam=<room>.<view-token>
+// to VDO director URLs. The room is before the first dot; the token is the rest.
+// Future AI/dev: do not fuck with this path or "simplify" it into generic wss2
+// without testing invite.cam director -> scene link -> OBS reload end-to-end.
 function normalizeInviteCamValue(value) {
 	var raw = String(value || "").trim();
 	if (!raw) {
 		return "";
 	}
-	var parts = raw.split(".");
-	var room = (parts.shift() || "").replace(/[^a-zA-Z0-9_-]/g, "").slice(0, 80);
-	var token = parts.join(".").replace(/[^a-zA-Z0-9_-]/g, "");
+	var separator = raw.indexOf(".");
+	var roomPart = separator === -1 ? raw : raw.slice(0, separator);
+	var tokenPart = separator === -1 ? "" : raw.slice(separator + 1);
+	var room = roomPart.replace(/[^a-zA-Z0-9_-]/g, "").slice(0, 80);
+	var token = tokenPart.replace(/[^a-zA-Z0-9._-]/g, "");
 	if (!room) {
 		return "";
 	}
@@ -26689,9 +26338,7 @@ function requestChangeMicPanning(value, UUID, track = 0) {
 }
 function createStopFunction(webAudio) {
 	return function () {
-		// Prevent multiple calls
-		if (webAudio.stopped) {
-			errorlog("Trying to stop webaudio more than once");
+		if (!webAudio || webAudio.stopped) {
 			return;
 		}
 		webAudio.stopped = true;
@@ -28727,8 +28374,11 @@ async function createRoomCallback(passAdd, passAdd2) {
 
 	var sceneWss = wss;
 	if (session.sceneWSS) {
-		sceneWss = "&wss2=" + session.sceneWSS;
+		// &scenewss2 is an explicit scene-link WSS override and wins over invitecam.
+		sceneWss = "&wss2=" + encodeURIComponent(session.sceneWSS);
 	} else if (session.invitecam) {
+		// Preserve the invite.cam shorthand in generated scene links. Scene/view pages
+		// expand it back to the invite.cam WSS endpoint when they load.
 		sceneWss = "&invitecam=" + encodeURIComponent(session.invitecam);
 	}
 
@@ -29170,6 +28820,9 @@ function applyHighlightMuteFollow(targetSid = null, onlyUUID = false) {
 	if (!session.highlightMuteFollow || !session.rpcs) {
 		return false;
 	}
+	if (!session.highlightMuteFollowMuted) {
+		session.highlightMuteFollowMuted = {};
+	}
 	if (targetSid === null) {
 		targetSid = getHighlightMuteFollowTarget();
 		if (targetSid === false && session.highlightMuteFollowTargetSid) {
@@ -29179,7 +28832,20 @@ function applyHighlightMuteFollow(targetSid = null, onlyUUID = false) {
 		session.highlightMuteFollowTargetSid = targetSid || false;
 	}
 	if (!targetSid) {
-		return false;
+		var cleared = false;
+		for (var mutedUUID in session.highlightMuteFollowMuted) {
+			if (onlyUUID && mutedUUID !== onlyUUID) {
+				continue;
+			}
+			if (session.highlightMuteFollowMuted[mutedUUID]) {
+				cleared = setRemoteMuteForGuest(mutedUUID, false, "highlightMuteFollow") || cleared;
+			}
+			delete session.highlightMuteFollowMuted[mutedUUID];
+		}
+		if (!onlyUUID) {
+			session.highlightMuteFollowMuted = {};
+		}
+		return cleared;
 	}
 	var changed = false;
 	for (var UUID in session.rpcs) {
@@ -29189,15 +28855,33 @@ function applyHighlightMuteFollow(targetSid = null, onlyUUID = false) {
 		if (!session.rpcs[UUID] || !session.rpcs[UUID].streamID) {
 			continue;
 		}
-		changed = setRemoteMuteForGuest(UUID, session.rpcs[UUID].streamID !== targetSid) || changed;
+		if (session.rpcs[UUID].streamID !== targetSid) {
+			var ele = document.querySelector('[data-action-type="mute-guest"][data--u-u-i-d="' + UUID + '"]');
+			var alreadyMuted = ele && parseInt(ele.value) === 1;
+			if (!alreadyMuted) {
+				var mutedChanged = setRemoteMuteForGuest(UUID, true, "highlightMuteFollow");
+				if (mutedChanged) {
+					session.highlightMuteFollowMuted[UUID] = true;
+					changed = true;
+				}
+			}
+		} else if (session.highlightMuteFollowMuted[UUID]) {
+			changed = setRemoteMuteForGuest(UUID, false, "highlightMuteFollow") || changed;
+			delete session.highlightMuteFollowMuted[UUID];
+		}
 	}
 	return changed;
 }
 
 function toggleHighlightMuteFollow(ele) {
-	session.highlightMuteFollow = !!(ele && ele.checked);
+	var enabled = !!(ele && ele.checked);
+	if (session.highlightMuteFollow && !enabled) {
+		applyHighlightMuteFollow(false);
+	}
+	session.highlightMuteFollow = enabled;
 	if (!session.highlightMuteFollow) {
 		session.highlightMuteFollowTargetSid = false;
+		session.highlightMuteFollowMuted = {};
 	}
 	if (session.highlightMuteFollow) {
 		applyHighlightMuteFollow(getHighlightMuteFollowTarget());
@@ -38652,7 +38336,7 @@ async function grabVideo(quality = 0, eleName = "previewWebcam", selector = "sel
 									if (iOS) {
 										warnUser("An error occured. Closing existing tabs in Safari may solve this issue.");
 									} else {
-										warnUser("Error: Could not start video source.\n\nTypically this means the Camera is already be in use elsewhere. Most webcams can only be accessed by one program at a time.\n\nTry a different camera or perhaps try re-plugging in the device.");
+										warnUser(getCameraInUseWarning(), false, false);
 									}
 								}
 								activatedPreview = true;
@@ -44361,6 +44045,7 @@ async function requestGoogleDriveRecord(ele, state = null, bitrate = null, event
 		session.sendRequest(msg, msg.UUID);
 		ele.classList.remove("pressed");
 		ele.ariaPressed = "false";
+		updateGoogleDriveAllGuestsButtonState();
 	} else if (state == null || state) {
 		if (!(session.gdrive && session.gdrive.accessToken)) {
 			session.gdrive = setupGoogleDriveUploader();
@@ -44411,6 +44096,7 @@ async function requestGoogleDriveRecord(ele, state = null, bitrate = null, event
 				ele.classList.add("pressed");
 				ele.ariaPressed = "true";
 				ele.classList.remove("armed");
+				updateGoogleDriveAllGuestsButtonState();
 			} else {
 				ele.classList.remove("armed");
 				return;
@@ -44421,6 +44107,7 @@ async function requestGoogleDriveRecord(ele, state = null, bitrate = null, event
 			ele.classList.add("pressed");
 			ele.ariaPressed = "true";
 			ele.classList.remove("armed");
+			updateGoogleDriveAllGuestsButtonState();
 		}
 
 		pokeIframeAPI("request-video-record", msg.requestVideoRecord, UUID);
@@ -44495,6 +44182,170 @@ async function multiGdriveRecord() {
 
 		pokeIframeAPI("request-video-record", true, UUID);
 	}
+}
+
+function getRemoteGoogleDriveRecordButtons(activeOnly) {
+	var buttons = document.querySelectorAll('[data-action-type="recorder-google-drive-remote"]');
+	var targets = [];
+	for (var i = 0; i < buttons.length; i++) {
+		var button = buttons[i];
+		if (!button.dataset || !button.dataset.UUID) {
+			continue;
+		}
+		if (activeOnly && !button.classList.contains("pressed")) {
+			continue;
+		}
+		if (!activeOnly && button.classList.contains("pressed")) {
+			continue;
+		}
+		targets.push(button);
+	}
+	return targets;
+}
+
+async function ensureGoogleDriveRecordAccess() {
+	if (session.gdrive && session.gdrive.accessToken) {
+		return true;
+	}
+	session.gdrive = setupGoogleDriveUploader();
+	if (session.gdrive && session.gdrive.promise) {
+		try {
+			if (typeof session.gdrive.ensureInitialized === "function") {
+				await session.gdrive.ensureInitialized();
+			}
+			if (typeof session.gdrive.requestAccessToken === "function") {
+				session.gdrive.requestAccessToken();
+			}
+			await session.gdrive.promise;
+		} catch (e) {
+			errorlog(e);
+			return false;
+		}
+	}
+	return !!(session.gdrive && session.gdrive.accessToken);
+}
+
+function buildGoogleDriveRemoteRecordingFilename(UUID, batchTimestamp, index) {
+	var filename = UUID;
+	if (session.rpcs[UUID]) {
+		filename = buildRecordingFilenameBase(session.rpcs[UUID].label, session.rpcs[UUID].streamID, UUID, 55);
+	} else {
+		filename = buildRecordingFilenameBase(UUID, false, "recording", 55);
+	}
+	filename += "_" + batchTimestamp + "_" + (index + 1).toString();
+	if (SafariVersion) {
+		filename += ".mp4";
+	} else {
+		filename += ".webm";
+	}
+	return filename;
+}
+
+function sendGoogleDriveRecordStart(button, uploadLink, recordConfig) {
+	var UUID = button.dataset.UUID || null;
+	var msg = {};
+	msg.requestVideoRecord = true;
+	msg.googleDriveRecord = uploadLink;
+	msg.UUID = UUID;
+	msg.value = recordConfig.bitrate;
+	msg.recordConfig = recordConfig;
+	session.sendRequest(msg, msg.UUID);
+	button.classList.add("pressed");
+	button.classList.remove("armed");
+	button.ariaPressed = "true";
+	updateGoogleDriveAllGuestsButtonState();
+	pokeIframeAPI("request-video-record", true, UUID);
+}
+
+function setGoogleDriveAllGuestsButtonState(active) {
+	var ele = document.getElementById("gdriveAllGuests");
+	if (!ele) {
+		return;
+	}
+	if (active) {
+		ele.value = 1;
+		ele.classList.add("pressed");
+		ele.classList.add("red");
+		ele.ariaPressed = "true";
+		ele.innerHTML = '<i class="toggleSize las la-stop-circle"></i>';
+	} else {
+		ele.value = 0;
+		ele.classList.remove("pressed");
+		ele.classList.remove("red");
+		ele.ariaPressed = "false";
+		ele.innerHTML = '<i class="toggleSize las la-cloud-upload-alt"></i>';
+	}
+}
+
+function updateGoogleDriveAllGuestsButtonState() {
+	setGoogleDriveAllGuestsButtonState(getRemoteGoogleDriveRecordButtons(true).length > 0);
+}
+
+async function remoteGlobalGdriveRecordToggle(ele) {
+	if (getRemoteGoogleDriveRecordButtons(true).length > 0) {
+		remoteGlobalGdriveRecordStop(ele);
+		return;
+	}
+	await remoteGlobalGdriveRecordStart(ele);
+}
+
+async function remoteGlobalGdriveRecordStart(ele) {
+	var targets = getRemoteGoogleDriveRecordButtons(false);
+	if (!targets.length) {
+		setGoogleDriveAllGuestsButtonState(false);
+		return;
+	}
+	window.focus();
+	var response = await promptRecordingOptions(getTranslation("what-bitrate-gdrive"));
+	if (!response) {
+		updateGoogleDriveAllGuestsButtonState();
+		return;
+	}
+	var hasAccess = await ensureGoogleDriveRecordAccess();
+	if (!hasAccess) {
+		updateGoogleDriveAllGuestsButtonState();
+		return;
+	}
+
+	var requests = [];
+	var batchTimestamp = Date.now().toString();
+	for (var i = 0; i < targets.length; i++) {
+		var button = targets[i];
+		var UUID = button.dataset.UUID || null;
+		var filename = buildGoogleDriveRemoteRecordingFilename(UUID, batchTimestamp, i);
+		try {
+			var uploadLink = await session.gdrive.startResumableUpload(filename);
+			if (uploadLink) {
+				requests.push({
+					button: button,
+					uploadLink: uploadLink
+				});
+			}
+		} catch (e) {
+			errorlog(e);
+		}
+	}
+
+	if (!requests.length) {
+		updateGoogleDriveAllGuestsButtonState();
+		if (!session.cleanOutput) {
+			warnUser("No Google Drive recordings were started.");
+		}
+		return;
+	}
+
+	for (var j = 0; j < requests.length; j++) {
+		sendGoogleDriveRecordStart(requests[j].button, requests[j].uploadLink, response);
+	}
+	setGoogleDriveAllGuestsButtonState(true);
+}
+
+function remoteGlobalGdriveRecordStop(ele) {
+	var targets = getRemoteGoogleDriveRecordButtons(true);
+	for (var i = 0; i < targets.length; i++) {
+		requestGoogleDriveRecord(targets[i], false);
+	}
+	setGoogleDriveAllGuestsButtonState(false);
 }
 
 async function requestVideoRecord(ele, state = null, bitrate = null) {
@@ -47700,6 +47551,47 @@ function applySavedVideoSettings(track0) {
 var updateCameraConstraintsBusy = false;
 var updateCameraConstraintsNext = false;
 
+function queueUpdateCameraConstraints(args) {
+	if (!updateCameraConstraintsNext) {
+		updateCameraConstraintsNext = [];
+	}
+
+	var constraint = args[0];
+	for (var i = updateCameraConstraintsNext.length - 1; i >= 0; i--) {
+		if (updateCameraConstraintsNext[i][0] === constraint) {
+			updateCameraConstraintsNext[i] = args;
+			return;
+		}
+	}
+	updateCameraConstraintsNext.push(args);
+}
+
+function clearUpdateCameraConstraintsQueue() {
+	updateCameraConstraintsNext = false;
+}
+
+function finishUpdateCameraConstraints(value) {
+	if (updateCameraConstraintsNext && updateCameraConstraintsNext.length) {
+		setTimeout(function () {
+			if (!updateCameraConstraintsNext || !updateCameraConstraintsNext.length) {
+				updateCameraConstraintsBusy = false;
+				updateCameraConstraintsNext = false;
+				return;
+			}
+			var next = updateCameraConstraintsNext.shift();
+			if (!updateCameraConstraintsNext.length) {
+				updateCameraConstraintsNext = false;
+			}
+			updateCameraConstraintsBusy = false;
+			updateCameraConstraints(next[0], next[1], next[2], next[3], next[4]);
+		}, 30);
+	} else {
+		updateCameraConstraintsBusy = false;
+		updateCameraConstraintsNext = false;
+	}
+	return value;
+}
+
 // Main camera constraints update function
 async function updateCameraConstraints(constraint, value = null, ctrl = false, UUID = false, save = true) {
 	if (constraint === "zoom" && value === 0) {
@@ -47710,12 +47602,11 @@ async function updateCameraConstraints(constraint, value = null, ctrl = false, U
 	log("updateCameraConstraintsBusy?");
 
 	if (updateCameraConstraintsBusy) {
-		updateCameraConstraintsNext = [constraint, value, ctrl, UUID, save];
+		queueUpdateCameraConstraints([constraint, value, ctrl, UUID, save]);
 		return;
 	}
 
 	updateCameraConstraintsBusy = true;
-	updateCameraConstraintsNext = false;
 
 	try {
 		const track0 = (session.streamSrc && session.streamSrc.getVideoTracks && session.streamSrc.getVideoTracks()[0]) || null;
@@ -47723,10 +47614,10 @@ async function updateCameraConstraints(constraint, value = null, ctrl = false, U
 		if (!track0 || track0.readyState !== "live" || !track0.enabled) {
 			if (!save) {
 				errorlog("TRACK IS NOT ENABLED");
-				updateCameraConstraintsBusy = false;
-				updateCameraConstraintsNext = false;
 			}
-			return;
+			clearUpdateCameraConstraintsQueue();
+			updateCameraConstraintsBusy = false;
+			return false;
 		}
 
 		// Parse value
@@ -47779,10 +47670,7 @@ async function updateCameraConstraints(constraint, value = null, ctrl = false, U
 				}
 
 				if (updateCameraConstraintsNext) {
-					setTimeout(() => {
-						updateCameraConstraintsBusy = false;
-						updateCameraConstraints(...updateCameraConstraintsNext);
-					}, 30);
+					finishUpdateCameraConstraints();
 				} else {
 					updateCameraConstraintsBusy = false;
 				}
@@ -47791,14 +47679,12 @@ async function updateCameraConstraints(constraint, value = null, ctrl = false, U
 				errorlog(e.message);
 				errorlog("couldn't save defaults");
 				window.focus();
-				updateCameraConstraintsBusy = false;
-				updateCameraConstraintsNext = false;
+				finishUpdateCameraConstraints(e);
 			});
 
 	} catch (e) {
 		errorlog(e);
-		updateCameraConstraintsBusy = false;
-		updateCameraConstraintsNext = false;
+		finishUpdateCameraConstraints(e);
 		return e;
 	}
 }
@@ -55681,7 +55567,7 @@ function remoteGlobalRecordStop() {
 }
 session.onTrack = function (event, UUID) {
 	if (session.badStreamList.includes(session.rpcs[UUID].streamID)) {
-		errorlog("new connection is contained in badStreamList 2! This shouldn't happen");
+		errorlog("Blocked inbound track for stream listed in badStreamList");
 		// we will have none of this.
 		return;
 	}
@@ -56411,6 +56297,88 @@ function getRenderedRemoteElement(UUID) {
 	return rpc.videoElement || false;
 }
 
+function syncOptimizeZeroActivatedSceneStream(UUID) {
+	if (session.optimize !== 0 || !session.activatedStreams || !session.activatedStreams.size || !session.rpcs || !session.rpcs[UUID]) {
+		return;
+	}
+
+	var rpc = session.rpcs[UUID];
+	var streamID = rpc.streamID || false;
+	var videoElement = rpc.videoElement || false;
+	if (!streamID || !videoElement || !session.activatedStreams.has(streamID)) {
+		return;
+	}
+
+	var srcObject = videoElement.srcObject || false;
+	var hasAudioTrack = false;
+	var hasVideoTrack = false;
+	if (srcObject) {
+		try {
+			hasAudioTrack = !!srcObject.getAudioTracks().length;
+			hasVideoTrack = !!srcObject.getVideoTracks().length;
+		} catch (e) {
+			errorlog(e);
+		}
+	}
+	if (!hasAudioTrack && !hasVideoTrack) {
+		return;
+	}
+
+	if (session.activatedStreamsQueue[streamID]) {
+		var msgs = session.activatedStreamsQueue[streamID];
+		var validDisplayMsg = false;
+		var now = Date.now();
+		delete session.activatedStreamsQueue[streamID];
+		msgs.forEach(msgWithTime => {
+			if (
+				msgWithTime &&
+				msgWithTime.time &&
+				msgWithTime.time > now - 10000 &&
+				msgWithTime.msg &&
+				msgWithTime.msg.action == "display" &&
+				msgWithTime.msg.value == 1 &&
+				msgWithTime.msg.target === streamID &&
+				msgWithTime.msg.scene === session.scene
+			) {
+				validDisplayMsg = msgWithTime.msg;
+			}
+		});
+
+		if (!validDisplayMsg) {
+			session.activatedStreams.delete(streamID);
+			rpc.mutedStateScene = true;
+			applyMuteState(UUID);
+			if (videoElement.style.display && videoElement.style.display !== "none") {
+				videoElement.style.display = "none";
+				updateMixer();
+			}
+			return;
+		}
+	}
+
+	rpc.mutedStateScene = false;
+	applyMuteState(UUID);
+
+	if (hasVideoTrack) {
+		if (videoElement.style.display !== "block") {
+			session.directorActions({
+				scene: session.scene + "",
+				action: "display",
+				value: 1,
+				target: streamID
+			});
+		} else {
+			session.sceneSync(UUID);
+			updateMixer();
+		}
+	} else if (rpc.settings && rpc.settings.video === false) {
+		if (videoElement.style.display && videoElement.style.display !== "none") {
+			videoElement.style.display = "none";
+			updateMixer();
+		}
+	}
+}
+
 function resolveMediaContextElement(mediaElement) {
 	if (mediaElement && mediaElement.proxyVideoElement) {
 		return mediaElement.proxyVideoElement;
@@ -56496,20 +56464,7 @@ function updateIncomingVideoElement(UUID, video = true, audio = true) {
 			}
 		}
 	}
-	if ((session.optimize === 0) && session.activatedStreams.size && session.rpcs[UUID] && session.rpcs[UUID].streamID) {
-		if (session.activatedStreams.has(session.rpcs[UUID].streamID)) {
-			if (session.activatedStreamsQueue[session.rpcs[UUID].streamID]) {
-				let msgs = session.activatedStreamsQueue[session.rpcs[UUID].streamID];
-				delete session.activatedStreamsQueue[session.rpcs[UUID].streamID];
-				msgs.forEach(msgWithTime => {
-					log(msgWithTime);
-					if (msgWithTime.time && (msgWithTime.time > Date.now() - 10000)) {
-						session.directorActions(msgWithTime.msg);
-					}
-				});
-			}
-		}
-	}
+	syncOptimizeZeroActivatedSceneStream(UUID);
 }
 
 function getLoudnessCallbackID() {
@@ -56672,6 +56627,7 @@ function updateIncomingAudioElement(UUID) {
 			if (!added) {
 				session.rpcs[UUID].videoElement.srcObject.addTrack(track);
 				mediaAudioTrackUpdated(UUID, session.rpcs[UUID].streamID);
+				nudgeIncomingAudioPlayback(UUID);
 			}
 		} else {
 			session.rpcs[UUID].videoElement.srcObject.getAudioTracks().forEach(trk => {
@@ -56693,6 +56649,7 @@ function updateIncomingAudioElement(UUID) {
 			if (!added) {
 				session.rpcs[UUID].videoElement.srcObject.addTrack(trk);
 				mediaAudioTrackUpdated(UUID, session.rpcs[UUID].streamID);
+				nudgeIncomingAudioPlayback(UUID);
 			}
 		});
 		tracks.forEach(trk => {
@@ -56704,7 +56661,7 @@ function updateIncomingAudioElement(UUID) {
 			});
 			if (!added) {
 				// not expected. so lets delete.
-				warnlog("this shouldn't happen that often, audio track orphaned. removing it");
+				warnlog("Removing unexpected orphaned audio track from remote stream");
 				session.rpcs[UUID].videoElement.srcObject.removeTrack(trk);
 			}
 		});
@@ -58147,6 +58104,10 @@ async function effectsDynamicallyUpdate(event, ele) {
 	getById("selectEffectAmount").style.display = "none";
 	getById("selectEffectAmount3").style.display = "none";
 
+	if (session.longpipe && !isLongpipeBackedEffect(session.effect)) {
+		destroyLongpipePipeline();
+	}
+
 	if (session.effect === "1") {
 		updateRenderOutpipe();
 		return;
@@ -58228,8 +58189,7 @@ async function effectsDynamicallyUpdate(event, ele) {
 	} else if (session.effect === "3" || session.effect === "4" || session.effect === "16") {
 		if (needsSegmentationRebuild(lastEffectValue, session.effect)) {
 			if (session.longpipe && !longpipeHandlesEffect(session.effect)) {
-				session.longpipe.destroy();
-				session.longpipe = null;
+				destroyLongpipePipeline();
 			}
 			longpipeHandlesEffect(session.effect) ? loadLongpipe() : attemptSegmentationEffectModelLoad();
 			if (!longpipeEnabled() && !(session.tfliteModule && session.tfliteModule.looping)) {
@@ -58257,8 +58217,7 @@ async function effectsDynamicallyUpdate(event, ele) {
 	} else if (session.effect === "5") {
 		if (needsSegmentationRebuild(lastEffectValue, session.effect)) {
 			if (session.longpipe && !longpipeHandlesEffect(session.effect)) {
-				session.longpipe.destroy();
-				session.longpipe = null;
+				destroyLongpipePipeline();
 			}
 			longpipeHandlesEffect(session.effect) ? loadLongpipe() : attemptSegmentationEffectModelLoad();
 			if (!longpipeEnabled() && !(session.tfliteModule && session.tfliteModule.looping)) {
@@ -58675,6 +58634,251 @@ function loadTensorflowJS() {
 	document.head.appendChild(script);
 }
 
+var USE_LONGPIPE = true;
+var LONGPIPE_MODULE_URL = "./thirdparty/longpipe/longpipe.mjs";
+var LONGPIPE_WEIGHTS_BASE_URL = "./thirdparty/longpipe/models/v/0.0.4/";
+var LONGPIPE_PRESETS = {
+	xs: { model: "xs", dtype: "f16", resolution: { w: 384, h: 216 }, skipFrames: 2 },
+	small: { model: "small", dtype: "f16", resolution: { w: 384, h: 216 }, skipFrames: 1 },
+	medium: { model: "medium", dtype: "f16", resolution: { w: 512, h: 288 }, skipFrames: 1 },
+	large: { model: "large", dtype: "f32", resolution: { w: 640, h: 360 }, skipFrames: 0 },
+	xl: { model: "xl", dtype: "f32", resolution: { w: 1280, h: 720 }, skipFrames: 0 }
+};
+var LONGPIPE_PRESET_ALIASES = {
+	fast: "xs",
+	balanced: "medium",
+	quality: "xl"
+};
+var EffectsPipeline = null;
+var loadLongpipePromise = null;
+var longpipeRuntimeDisabled = false;
+
+function getLongpipeUrlParam(names) {
+	try {
+		if (typeof urlParams === "undefined" || !urlParams) return false;
+		for (var i = 0; i < names.length; i++) {
+			if (urlParams.has(names[i])) {
+				return (urlParams.get(names[i]) || "").toLowerCase();
+			}
+		}
+	} catch (e) {}
+	return false;
+}
+
+function hasLongpipeUrlParam(names) {
+	try {
+		if (typeof urlParams === "undefined" || !urlParams) return false;
+		for (var i = 0; i < names.length; i++) {
+			if (urlParams.has(names[i])) return true;
+		}
+	} catch (e) {}
+	return false;
+}
+
+function cloneLongpipePreset(preset) {
+	return {
+		model: preset.model,
+		dtype: preset.dtype,
+		resolution: { w: preset.resolution.w, h: preset.resolution.h },
+		skipFrames: preset.skipFrames
+	};
+}
+
+function getLongpipeCaptureQualityTier() {
+	try {
+		var quality = false;
+		if (session.quality !== false && typeof session.quality !== "undefined") {
+			quality = session.quality;
+		} else if (session.roomid && session.quality_room !== false && typeof session.quality_room !== "undefined") {
+			quality = session.quality_room;
+		} else if (session.quality_wb !== false && typeof session.quality_wb !== "undefined") {
+			quality = session.quality_wb;
+		}
+		quality = parseInt(quality);
+		return isNaN(quality) ? 1 : quality;
+	} catch (e) {
+		return 1;
+	}
+}
+
+function getLongpipePerformanceTier() {
+	try {
+		if (typeof session.quality_wb === "number") return session.quality_wb;
+		return judgePerformance();
+	} catch (e) {
+		return 1;
+	}
+}
+
+function hasLongpipeHighEndGpu() {
+	try {
+		if (typeof gpgpuSupport !== "string") return false;
+		var gpu = gpgpuSupport.toLowerCase();
+		return gpu.indexOf("nvidia") >= 0 ||
+			gpu.indexOf("geforce") >= 0 ||
+			gpu.indexOf("rtx") >= 0 ||
+			gpu.indexOf("gtx") >= 0 ||
+			gpu.indexOf("quadro") >= 0 ||
+			gpu.indexOf("radeon") >= 0 ||
+			gpu.indexOf("amd") >= 0 ||
+			gpu.indexOf("intel(r) arc") >= 0 ||
+			gpu.indexOf("apple") >= 0;
+	} catch (e) {
+		return false;
+	}
+}
+
+function getLongpipePresetName() {
+	if (hasLongpipeUrlParam(["longpipeauto", "lpauto"])) return "auto";
+	var requested = getLongpipeUrlParam(["longpipepreset", "lppreset", "lpmodel"]);
+	if (requested) {
+		if (requested === "auto") return "auto";
+		if (requested in LONGPIPE_PRESET_ALIASES) requested = LONGPIPE_PRESET_ALIASES[requested];
+		if (requested in LONGPIPE_PRESETS) return requested;
+		warnlog("Ignoring unknown segmentation preset: " + requested);
+	}
+
+	var captureTier = getLongpipeCaptureQualityTier();
+	var performanceTier = getLongpipePerformanceTier();
+	var highEndGpu = hasLongpipeHighEndGpu();
+
+	if (captureTier >= 2) return highEndGpu && !session.mobile ? "small" : "xs";
+	if (session.mobile) return performanceTier <= 0 && captureTier <= 0 ? "medium" : "small";
+	if (performanceTier >= 2) return "small";
+	if (highEndGpu) {
+		if (captureTier < 0) return "large";
+		return "medium";
+	}
+	return "medium";
+}
+
+function getLongpipePreset() {
+	var presetName = getLongpipePresetName();
+	if (presetName === "auto") return "auto";
+	return cloneLongpipePreset(LONGPIPE_PRESETS[presetName] || LONGPIPE_PRESETS.medium);
+}
+
+function shouldUseLongpipeAdaptive(preset) {
+	if (hasLongpipeUrlParam(["nolongpipeadaptive", "nolpadaptive"])) return false;
+	return preset === "auto" && hasLongpipeUrlParam(["longpipeadaptive", "lpadaptive"]);
+}
+
+function longpipeEnabled() {
+	return USE_LONGPIPE && !longpipeRuntimeDisabled;
+}
+
+function disableLongpipe(reason, rerender) {
+	if (longpipeRuntimeDisabled) return;
+	if (typeof rerender === "undefined") rerender = true;
+	longpipeRuntimeDisabled = true;
+	EffectsPipeline = null;
+	loadLongpipePromise = null;
+	try {
+		if (session.longpipe) {
+			destroyLongpipePipeline();
+		}
+	} catch (e) {}
+	errorlog("Segmentation engine failed; falling back to TFLite: " + reason);
+	if (rerender && (session.effect == "3" || session.effect == "4" || session.effect == "5")) {
+		try {
+			attemptSegmentationEffectModelLoad();
+		} catch (e) {
+			errorlog(e);
+		}
+		try {
+			updateRenderOutpipe();
+		} catch (e) {
+			errorlog(e);
+		}
+	}
+}
+
+function getLongpipeOptions() {
+	var preset = getLongpipePreset();
+	return {
+		background: effectToLongpipeBg(),
+		weightsBaseUrl: LONGPIPE_WEIGHTS_BASE_URL,
+		preset: preset,
+		adaptive: shouldUseLongpipeAdaptive(preset),
+		audio: "passthrough",
+		debug: hasLongpipeUrlParam(["longpipedebug", "lpdebug"]),
+		onError: function (event) {
+			var message = event && event.message ? event.message : event;
+			errorlog("Segmentation engine error: " + message);
+		}
+	};
+}
+
+async function loadLongpipe() {
+	if (!longpipeEnabled()) return;
+	if (EffectsPipeline) return EffectsPipeline;
+	if (loadLongpipePromise) return loadLongpipePromise;
+	loadLongpipePromise = import(LONGPIPE_MODULE_URL).then(function (module) {
+		var ImportedEffectsPipeline = module && module.EffectsPipeline;
+		loadLongpipePromise = null;
+		if (!longpipeEnabled()) {
+			return;
+		}
+		EffectsPipeline = ImportedEffectsPipeline;
+		if (typeof EffectsPipeline !== "function") {
+			disableLongpipe("EffectsPipeline export missing");
+			return;
+		}
+		if (session.effect == "3" || session.effect == "4" || session.effect == "5" || session.effect == "16") {
+			updateRenderOutpipe();
+		}
+		return EffectsPipeline;
+	}).catch(function (e) {
+		loadLongpipePromise = null;
+		disableLongpipe(e);
+	});
+	return loadLongpipePromise;
+}
+
+function isLongpipeBackedEffect(effect) {
+	return effect === "3" || effect === "3a" || effect === "4" || effect === "5";
+}
+
+function longpipeHandlesEffect(effect) {
+	return longpipeEnabled() && isLongpipeBackedEffect(effect);
+}
+
+function destroyLongpipePipeline() {
+	try {
+		if (session.longpipe) {
+			session.longpipe.destroy();
+			session.longpipe = null;
+		}
+		session.longpipeSourceTrackId = false;
+	} catch (e) {
+		errorlog(e);
+	}
+}
+
+function needsSegmentationRebuild(from, to) {
+	if (!["3", "4", "5", "16"].includes(from)) return true;
+	if (!longpipeEnabled()) return false;
+	return longpipeHandlesEffect(from) !== longpipeHandlesEffect(to);
+}
+
+function effectToLongpipeBg() {
+	if (session.effect == "3") {
+		var effectValue = parseFloat(session.effectValue);
+		if (isNaN(effectValue)) {
+			effectValue = 2;
+		}
+		return { blur: { strength: effectValue / 20 } };
+	}
+	if (session.effect == "4") return { color: "#00ff00" };
+	if (session.effect == "5") {
+		if (session.effectsImage && session.effectsImage.complete && session.effectsImage.naturalWidth) {
+			return session.effectsImage;
+		}
+		return session.effectsImage && session.effectsImage.src ? session.effectsImage.src : "blur";
+	}
+	return "blur";
+}
+
 var MEDIAPIPE_SELFIE_SEGMENTER = {
 	moduleUrl: "./thirdparty/mediapipe/tasks-vision/vision_bundle.mjs",
 	wasmRoot: "./thirdparty/mediapipe/tasks-vision/wasm",
@@ -58833,6 +59037,12 @@ async function changeEffectsImage(ev, ele) {
 		};
 		ele.parentNode.parentNode.insertBefore(session.effectsImage, ele.parentNode);
 		session.effectsImage.onload = () => {
+			if (longpipeHandlesEffect(session.effect) && session.longpipe && session.effect == "5") {
+				var backgroundUpdate = session.longpipe.setBackground(effectToLongpipeBg());
+				if (backgroundUpdate && backgroundUpdate.catch) {
+					backgroundUpdate.catch(errorlog);
+				}
+			}
 			URL.revokeObjectURL(session.effectsImage.src); // no longer needed, free memory
 		};
 		session.effectsImage.src = URL.createObjectURL(ele.files[0]); // set src to blob url
@@ -58844,8 +59054,11 @@ async function changeEffectsImage(ev, ele) {
 		session.effectsImage = ele;
 		session.effectsImage.classList.add("selectedContentEffectsImage");
 	}
-	if (longpipeHandlesEffect(session.effect) && session.longpipe && session.effect == "5") {
-		session.longpipe.setBackground(session.effectsImage.src);
+	if (longpipeHandlesEffect(session.effect) && session.longpipe && session.effect == "5" && session.effectsImage.complete && session.effectsImage.naturalWidth) {
+		var backgroundUpdate = session.longpipe.setBackground(effectToLongpipeBg());
+		if (backgroundUpdate && backgroundUpdate.catch) {
+			backgroundUpdate.catch(errorlog);
+		}
 	}
 }
 
@@ -61141,6 +61354,84 @@ function whipClient() {
 	var socket = null;
 	var connecting = false;
 	var failedCount = 0;
+	var pendingWhipIce = {};
+	var pendingWhipIceTTL = 5000;
+	var pendingWhipIceMaxPerStream = 50;
+
+	function findWhipRpcByStreamID(streamID) {
+		if (!streamID) {
+			return false;
+		}
+		return Object.keys(session.rpcs).find(function (uuid) {
+			return session.rpcs[uuid] && session.rpcs[uuid].streamID === streamID;
+		});
+	}
+
+	function prunePendingWhipIce(streamID) {
+		var now = Date.now();
+		var streamIDs = streamID ? [streamID] : Object.keys(pendingWhipIce);
+		streamIDs.forEach(function (sid) {
+			if (!pendingWhipIce[sid]) {
+				return;
+			}
+			pendingWhipIce[sid] = pendingWhipIce[sid].filter(function (item) {
+				return item && item.ts && (now - item.ts <= pendingWhipIceTTL);
+			});
+			if (!pendingWhipIce[sid].length) {
+				delete pendingWhipIce[sid];
+			}
+		});
+	}
+
+	function queueIncomingWhipIce(data) {
+		if (!data || !data.streamID) {
+			return false;
+		}
+		prunePendingWhipIce();
+		if (!pendingWhipIce[data.streamID]) {
+			pendingWhipIce[data.streamID] = [];
+		}
+		if (pendingWhipIce[data.streamID].length >= pendingWhipIceMaxPerStream) {
+			pendingWhipIce[data.streamID].shift();
+		}
+		pendingWhipIce[data.streamID].push({
+			data: data,
+			ts: Date.now()
+		});
+		log("Queued WHIP ICE before peer was ready: " + data.streamID);
+		return true;
+	}
+
+	async function drainIncomingWhipIce(streamID) {
+		if (!streamID || !pendingWhipIce[streamID]) {
+			return 0;
+		}
+		var UUID = findWhipRpcByStreamID(streamID);
+		if (!UUID || !session.rpcs[UUID] || !session.rpcs[UUID].remoteDescription) {
+			prunePendingWhipIce(streamID);
+			return 0;
+		}
+		var queue = pendingWhipIce[streamID];
+		delete pendingWhipIce[streamID];
+		var now = Date.now();
+		var drained = 0;
+		for (var i = 0; i < queue.length; i++) {
+			var item = queue[i];
+			if (!item || !item.data || now - item.ts > pendingWhipIceTTL) {
+				continue;
+			}
+			if (item.data.type === "end-of-candidates") {
+				await handleIncomingWhipEndOfCandidates(streamID);
+			} else {
+				await handleIncomingIceCandidate(item.data);
+			}
+			drained += 1;
+		}
+		if (drained) {
+			log("Drained queued WHIP ICE for stream: " + streamID);
+		}
+		return drained;
+	}
 
 	function connect() {
 		clearTimeout(connecting);
@@ -61217,6 +61508,7 @@ function whipClient() {
 					}
 					try {
 						var resp = await processWhipIn(data, sendTrickle);
+						await drainIncomingWhipIce(data.streamID);
 					} catch (e) {
 						var resp = e && (e.message || e.toString());
 					}
@@ -61233,11 +61525,11 @@ function whipClient() {
 					}
 				} else if (data.type === "candidate") {
 					if (data.candidate && data.streamID) {
-						await handleIncomingIceCandidate(data);
+						await handleIncomingIceCandidate(data, queueIncomingWhipIce);
 					}
 				} else if (data.type === "end-of-candidates") {
 					if (data.streamID) {
-						await handleIncomingWhipEndOfCandidates(data.streamID);
+						await handleIncomingWhipEndOfCandidates(data.streamID, queueIncomingWhipIce);
 					}
 				} else if (data.type == "delete") {
 					warnlog("WHIP publisher is actively disconnecting");
@@ -61471,10 +61763,15 @@ async function processWhipIn(data, sendTrickle) {
 
 	return sdpAnswer; // return SDP answer for the remote WHIP request
 }
-async function handleIncomingIceCandidate(data) {
+async function handleIncomingIceCandidate(data, queueIfNotReady) {
 	const UUID = Object.keys(session.rpcs).find(uuid => session.rpcs[uuid].streamID === data.streamID);
 	if (UUID && session.rpcs[UUID]) {
 		try {
+			if (!session.rpcs[UUID].remoteDescription) {
+				if (queueIfNotReady && queueIfNotReady(data)) {
+					return;
+				}
+			}
 			let candidate = data.candidate;
 			if (typeof candidate === "string") {
 				candidate = { candidate: candidate };
@@ -61492,17 +61789,28 @@ async function handleIncomingIceCandidate(data) {
 			errorlog("Error adding incoming ICE candidate: ", e);
 		}
 	} else {
+		if (queueIfNotReady && queueIfNotReady(data)) {
+			return;
+		}
 		warnlog("Received ICE candidate for unknown stream: " + data.streamID);
 	}
 }
-async function handleIncomingWhipEndOfCandidates(streamID) {
+async function handleIncomingWhipEndOfCandidates(streamID, queueIfNotReady) {
 	const UUID = Object.keys(session.rpcs).find(uuid => session.rpcs[uuid].streamID === streamID);
 	if (!(UUID && session.rpcs[UUID])) {
+		if (queueIfNotReady && queueIfNotReady({ type: "end-of-candidates", streamID: streamID })) {
+			return;
+		}
 		warnlog("Received end-of-candidates for unknown stream: " + streamID);
 		return;
 	}
 
 	try {
+		if (!session.rpcs[UUID].remoteDescription) {
+			if (queueIfNotReady && queueIfNotReady({ type: "end-of-candidates", streamID: streamID })) {
+				return;
+			}
+		}
 		await session.rpcs[UUID].addIceCandidate({ candidate: "" });
 		log("Applied end-of-candidates for stream: " + streamID);
 	} catch (e) {
@@ -61923,9 +62231,12 @@ async function whepIn(whepInput = false, whepInputToken = false, UUID = false) {
 	var responseLocation = false;
 	var acceptPatch = false;
 	var eTag = false;
-	var icePwd = false;
-	var iceUfrag = false;
+	var localIceCredentials = false;
 	var tricklePatchDisabledReason = false;
+	var iceGatheringComplete = false;
+	var whepEndOfCandidatesSent = false;
+	var whepHttpSessionEpoch = 0;
+	var whepPatchTrickleDisabledByUser = false;
 	// var reconnect = null;
 	//var maxRetries = 5;
 	//var delay = 2000;
@@ -61941,193 +62252,302 @@ async function whepIn(whepInput = false, whepInputToken = false, UUID = false) {
 	}
 	whepInputToken = whepInputToken || session.whepInputToken;
 
-		function hasListValue(list, value) {
-			if (!list || (value === null) || (typeof value === "undefined")) {
-				return false;
+	try {
+		if (typeof urlParams !== "undefined" && urlParams && urlParams.has) {
+			if (urlParams.has("nowheptrickle")) {
+				whepPatchTrickleDisabledByUser = true;
+			} else if (urlParams.has("wheptrickle")) {
+				var whepTrickleValue = (urlParams.get("wheptrickle") || "").toLowerCase();
+				if (whepTrickleValue === "0" || whepTrickleValue === "false" || whepTrickleValue === "off") {
+					whepPatchTrickleDisabledByUser = true;
+				}
 			}
+		}
+	} catch (e) {}
+
+	function resetWhepHttpSessionState() {
+		whepHttpSessionEpoch += 1;
+		candidates = [];
+		responseLocation = false;
+		acceptPatch = false;
+		eTag = false;
+		localIceCredentials = false;
+		tricklePatchDisabledReason = false;
+		iceGatheringComplete = false;
+		whepEndOfCandidatesSent = false;
+	}
+
+	function hasListValue(list, value) {
+		if (!list || value === null || typeof value === "undefined") {
+			return false;
+		}
 		if (typeof list.includes === "function") {
 			return list.includes(value);
 		}
 		if (typeof list.indexOf === "function") {
 			return list.indexOf(value) !== -1;
-			}
+		}
+		return false;
+	}
+
+	function supportsTrickleIcePatch(acceptPatchHeader) {
+		if (!acceptPatchHeader || typeof acceptPatchHeader !== "string") {
+			return false;
+		}
+		return acceptPatchHeader
+			.split(",")
+			.map(item => item.trim().toLowerCase().split(";")[0].trim())
+			.includes("application/trickle-ice-sdpfrag");
+	}
+
+	function disableWhepPatchTrickle(reason) {
+		if (tricklePatchDisabledReason === reason) {
+			return;
+		}
+
+		tricklePatchDisabledReason = reason || "disabled";
+		candidates = [];
+
+		if (reason === "missing-etag") {
+			warnlog("WHEP endpoint omitted ETag for this session; disabling trickle ICE PATCH fallback.");
+		} else if (reason === "etag-mismatch") {
+			warnlog("WHEP endpoint rejected the PATCH ETag; disabling trickle ICE for this session.");
+		} else if (reason === "precondition-required") {
+			warnlog("WHEP endpoint requires conditional PATCH requests; disabling trickle ICE for this session.");
+		} else if (reason === "unsupported") {
+			warnlog("WHEP endpoint does not appear to support trickle ICE PATCH; disabling trickle ICE for this session.");
+		} else if (reason === "patch-error") {
+			warnlog("WHEP endpoint rejected a trickle ICE PATCH request; disabling trickle ICE for this session.");
+		}
+	}
+
+	function canTrickleViaPatch() {
+		if (whepPatchTrickleDisabledByUser) {
+			return false;
+		}
+		if (tricklePatchDisabledReason) {
+			return false;
+		}
+		if (!supportsTrickleIcePatch(acceptPatch)) {
+			return false;
+		}
+		if (!eTag) {
+			return false;
+		}
+		var sdpMeta = getLocalTrickleSectionMetadata();
+		if (!sdpMeta || !sdpMeta.firstMediaSection) {
+			return false;
+		}
+		return !!getIceCredentialsForSection(sdpMeta.firstMediaSection, sdpMeta);
+	}
+
+	function normalizeCandidateLineForPatch(candidate) {
+		if (!candidate || !candidate.candidate) {
 			return false;
 		}
 
-		function supportsTrickleIcePatch(acceptPatchHeader) {
-			if (!acceptPatchHeader || typeof acceptPatchHeader !== "string") {
-				return false;
-			}
-			return acceptPatchHeader
-				.split(",")
-				.map(item => item.trim().toLowerCase().split(";")[0].trim())
-				.includes("application/trickle-ice-sdpfrag");
+		if (candidate.candidate.startsWith("a=")) {
+			return candidate.candidate;
 		}
 
-		function disableWhepPatchTrickle(reason) {
-			if (tricklePatchDisabledReason === reason) {
+		return "a=" + candidate.candidate;
+	}
+
+	function extractTrickleSectionMetadata(referenceSdp) {
+		const lines = (referenceSdp || "").split(/\r\n|\n/);
+		const mediaSections = [];
+		let bundleMids = [];
+		let currentSection = null;
+		let sessionIceUfrag = false;
+		let sessionIcePwd = false;
+
+		lines.forEach(line => {
+			if (!line) {
 				return;
 			}
 
-			tricklePatchDisabledReason = reason || "disabled";
-			candidates = [];
-
-			if (reason === "missing-etag") {
-				warnlog("WHEP endpoint omitted ETag for this session; disabling trickle ICE PATCH fallback.");
-			} else if (reason === "etag-mismatch") {
-				warnlog("WHEP endpoint rejected the PATCH ETag; disabling trickle ICE for this session.");
-			} else if (reason === "precondition-required") {
-				warnlog("WHEP endpoint requires conditional PATCH requests; disabling trickle ICE for this session.");
-			}
-		}
-
-		function canTrickleViaPatch() {
-			if (tricklePatchDisabledReason) {
-				return false;
-			}
-			if (!supportsTrickleIcePatch(acceptPatch)) {
-				return false;
-			}
-			return !!(eTag && icePwd && iceUfrag);
-		}
-
-		function normalizeCandidateLineForPatch(candidate) {
-			if (!candidate || !candidate.candidate) {
-				return false;
+			if (line.startsWith("a=group:BUNDLE")) {
+				bundleMids = line.substring("a=group:BUNDLE".length).trim().split(/\s+/).filter(Boolean);
+				return;
 			}
 
-			if (candidate.candidate.startsWith("a=")) {
-				return candidate.candidate;
+			if (line.startsWith("m=")) {
+				currentSection = {
+					index: mediaSections.length,
+					mLine: line,
+					mid: null,
+					iceUfrag: false,
+					icePwd: false
+				};
+				mediaSections.push(currentSection);
+				return;
 			}
 
-			return "a=" + candidate.candidate;
-		}
-
-		function extractTrickleSectionMetadata(referenceSdp) {
-			const lines = (referenceSdp || "").split(/\r\n|\n/);
-			const mediaSections = [];
-			let bundleMids = [];
-			let currentSection = null;
-
-			lines.forEach(line => {
-				if (!line) {
-					return;
-				}
-
-				if (line.startsWith("a=group:BUNDLE")) {
-					bundleMids = line.substring("a=group:BUNDLE".length).trim().split(/\s+/).filter(Boolean);
-					return;
-				}
-
-				if (line.startsWith("m=")) {
-					currentSection = {
-						index: mediaSections.length,
-						mLine: line,
-						mid: null
-					};
-					mediaSections.push(currentSection);
-					return;
-				}
-
-				if (currentSection && line.startsWith("a=mid:")) {
-					currentSection.mid = line.substring("a=mid:".length).trim();
-				}
-			});
-
-			const byMid = {};
-			mediaSections.forEach(section => {
-				if (section.mid !== null) {
-					byMid[section.mid] = section;
-				}
-			});
-
-			if (!bundleMids.length) {
-				bundleMids = mediaSections.map(section => section.mid).filter(Boolean);
+			if (currentSection && line.startsWith("a=mid:")) {
+				currentSection.mid = line.substring("a=mid:".length).trim();
+				return;
 			}
 
-			return {
-				bundleMids: bundleMids,
-				mediaSections: mediaSections,
-				byMid: byMid,
-				firstMediaSection: mediaSections[0] || null
-			};
-		}
-
-		function buildTrickleIcePatchFragment(candidateList, includeEndOfCandidates = true) {
-			let referenceSdp = "";
-			try {
-				if (session.rpcs[UUID] && session.rpcs[UUID].whep && session.rpcs[UUID].whep.localDescription) {
-					referenceSdp = session.rpcs[UUID].whep.localDescription.sdp || "";
-				}
-			} catch (e) {}
-
-			const sdpMeta = extractTrickleSectionMetadata(referenceSdp);
-			if (!sdpMeta.firstMediaSection) {
-				return "";
-			}
-
-			const sections = new Map();
-			(candidateList || []).forEach(candidate => {
-				const candidateLine = normalizeCandidateLineForPatch(candidate);
-				if (!candidateLine) {
-					return;
-				}
-
-				let section = null;
-				if (candidate.sdpMid !== null && typeof candidate.sdpMid !== "undefined" && `${candidate.sdpMid}` in sdpMeta.byMid) {
-					section = sdpMeta.byMid[`${candidate.sdpMid}`];
-				} else if (
-					candidate.sdpMLineIndex !== null &&
-					typeof candidate.sdpMLineIndex !== "undefined" &&
-					sdpMeta.mediaSections[candidate.sdpMLineIndex]
-				) {
-					section = sdpMeta.mediaSections[candidate.sdpMLineIndex];
+			if (line.startsWith("a=ice-ufrag:")) {
+				if (currentSection) {
+					currentSection.iceUfrag = line.substring("a=ice-ufrag:".length).trim();
 				} else {
-					section = sdpMeta.firstMediaSection;
+					sessionIceUfrag = line.substring("a=ice-ufrag:".length).trim();
 				}
+				return;
+			}
 
-				const key = `${section.index}:${section.mid !== null ? section.mid : ""}`;
-				if (!sections.has(key)) {
-					sections.set(key, {
-						section: section,
-						candidates: []
-					});
+			if (line.startsWith("a=ice-pwd:")) {
+				if (currentSection) {
+					currentSection.icePwd = line.substring("a=ice-pwd:".length).trim();
+				} else {
+					sessionIcePwd = line.substring("a=ice-pwd:".length).trim();
 				}
-				sections.get(key).candidates.push(candidateLine);
-			});
+			}
+		});
 
-			if (!sections.size && includeEndOfCandidates) {
-				const section = sdpMeta.firstMediaSection;
-				sections.set(`${section.index}:${section.mid !== null ? section.mid : ""}`, {
+		const byMid = {};
+		mediaSections.forEach(section => {
+			if (section.mid !== null) {
+				byMid[section.mid] = section;
+			}
+		});
+
+		if (!bundleMids.length) {
+			bundleMids = mediaSections.map(section => section.mid).filter(Boolean);
+		}
+
+		return {
+			bundleMids: bundleMids,
+			mediaSections: mediaSections,
+			byMid: byMid,
+			sessionIceUfrag: sessionIceUfrag,
+			sessionIcePwd: sessionIcePwd,
+			firstMediaSection: mediaSections[0] || null
+		};
+	}
+
+	function getLocalTrickleSectionMetadata() {
+		let referenceSdp = "";
+		try {
+			if (session.rpcs[UUID] && session.rpcs[UUID].whep && session.rpcs[UUID].whep.localDescription) {
+				referenceSdp = session.rpcs[UUID].whep.localDescription.sdp || "";
+			}
+		} catch (e) {}
+
+		localIceCredentials = extractTrickleSectionMetadata(referenceSdp);
+		return localIceCredentials;
+	}
+
+	function getIceCredentialsForSection(section, sdpMeta) {
+		if (!section || !sdpMeta) {
+			return false;
+		}
+		const ufrag = section.iceUfrag || sdpMeta.sessionIceUfrag || false;
+		const pwd = section.icePwd || sdpMeta.sessionIcePwd || false;
+		if (!ufrag || !pwd) {
+			return false;
+		}
+		return {
+			ufrag: ufrag,
+			pwd: pwd
+		};
+	}
+
+	function resolveWhepSessionLocation(locationHeader) {
+		if (!locationHeader) {
+			return false;
+		}
+		try {
+			if (typeof completeLocationURL === "function") {
+				return completeLocationURL(whepInput, locationHeader);
+			}
+		} catch (e) {
+			errorlog(e);
+		}
+		try {
+			return new URL(locationHeader, whepInput).href;
+		} catch (e) {}
+		return locationHeader;
+	}
+
+	function buildTrickleIcePatchFragment(candidateList, includeEndOfCandidates) {
+		if (typeof includeEndOfCandidates === "undefined") {
+			includeEndOfCandidates = true;
+		}
+
+		const sdpMeta = getLocalTrickleSectionMetadata();
+		if (!sdpMeta.firstMediaSection) {
+			return "";
+		}
+
+		const sections = new Map();
+		(candidateList || []).forEach(candidate => {
+			const candidateLine = normalizeCandidateLineForPatch(candidate);
+			if (!candidateLine) {
+				return;
+			}
+
+			let section = null;
+			if (candidate.sdpMid !== null && typeof candidate.sdpMid !== "undefined" && `${candidate.sdpMid}` in sdpMeta.byMid) {
+				section = sdpMeta.byMid[`${candidate.sdpMid}`];
+			} else if (
+				candidate.sdpMLineIndex !== null &&
+				typeof candidate.sdpMLineIndex !== "undefined" &&
+				sdpMeta.mediaSections[candidate.sdpMLineIndex]
+			) {
+				section = sdpMeta.mediaSections[candidate.sdpMLineIndex];
+			} else {
+				section = sdpMeta.firstMediaSection;
+			}
+
+			const key = `${section.index}:${section.mid !== null ? section.mid : ""}`;
+			if (!sections.has(key)) {
+				sections.set(key, {
 					section: section,
 					candidates: []
 				});
 			}
+			sections.get(key).candidates.push(candidateLine);
+		});
 
-			const lines = [];
-			if (sdpMeta.bundleMids.length) {
-				lines.push("a=group:BUNDLE " + sdpMeta.bundleMids.join(" "));
-			}
-
-			Array.from(sections.values())
-				.sort((left, right) => left.section.index - right.section.index)
-				.forEach((entry, index, values) => {
-					lines.push(entry.section.mLine);
-					if (entry.section.mid !== null && typeof entry.section.mid !== "undefined") {
-						lines.push("a=mid:" + entry.section.mid);
-					}
-					lines.push("a=ice-ufrag:" + iceUfrag);
-					lines.push("a=ice-pwd:" + icePwd);
-					entry.candidates.forEach(candidateLine => {
-						lines.push(candidateLine);
-					});
-					if (includeEndOfCandidates && index === values.length - 1) {
-						lines.push("a=end-of-candidates");
-					}
-				});
-
-			return lines.length ? lines.join("\r\n") + "\r\n" : "";
+		if (!sections.size && includeEndOfCandidates) {
+			const section = sdpMeta.firstMediaSection;
+			sections.set(`${section.index}:${section.mid !== null ? section.mid : ""}`, {
+				section: section,
+				candidates: []
+			});
 		}
+
+		const lines = [];
+		if (sdpMeta.bundleMids.length) {
+			lines.push("a=group:BUNDLE " + sdpMeta.bundleMids.join(" "));
+		}
+
+		const values = Array.from(sections.values()).sort((left, right) => left.section.index - right.section.index);
+		for (let i = 0; i < values.length; i++) {
+			const entry = values[i];
+			const credentials = getIceCredentialsForSection(entry.section, sdpMeta);
+			if (!credentials) {
+				warnlog("Unable to build WHEP trickle ICE PATCH: missing local ICE credentials.");
+				return "";
+			}
+			lines.push(entry.section.mLine);
+			if (entry.section.mid !== null && typeof entry.section.mid !== "undefined") {
+				lines.push("a=mid:" + entry.section.mid);
+			}
+			lines.push("a=ice-ufrag:" + credentials.ufrag);
+			lines.push("a=ice-pwd:" + credentials.pwd);
+			entry.candidates.forEach(candidateLine => {
+				lines.push(candidateLine);
+			});
+			if (includeEndOfCandidates && i === values.length - 1) {
+				lines.push("a=end-of-candidates");
+			}
+		}
+
+		return lines.length ? lines.join("\r\n") + "\r\n" : "";
+	}
 
 	function getWhepAudioRecoveryState(targetUUID) {
 		try {
@@ -62713,6 +63133,8 @@ async function whepIn(whepInput = false, whepInputToken = false, UUID = false) {
 	async function whepConnect() {
 		//return new Promise((resolve, reject) => {
 		try {
+			resetWhepHttpSessionState();
+
 			if (!(UUID in session.rpcs)) {
 				session.rpcs[UUID] = {};
 			}
@@ -62864,11 +63286,18 @@ async function whepIn(whepInput = false, whepInputToken = false, UUID = false) {
 
 			if (event.candidate == null) {
 				warnlog("END OF ICE CANDIDATES");
+				iceGatheringComplete = true;
 				if (session.rpcs[UUID].whep.iceCompletedCallback) {
 					session.rpcs[UUID].whep.iceCompletedCallback();
+				} else if (canTrickleViaPatch() && !whepEndOfCandidatesSent) {
+					var endOfCandidatesPatch = buildTrickleIcePatchFragment([], true);
+					if (endOfCandidatesPatch) {
+						whepEndOfCandidatesSent = true;
+						ajax(endOfCandidatesPatch, "trickle-ice-sdpfrag", false, { "if-match": eTag });
+					}
 				}
 				return;
-				} else if (canTrickleViaPatch() && event.candidate && !session.rpcs[UUID].whep.iceCompletedCallback) {
+			} else if (canTrickleViaPatch() && event.candidate && !session.rpcs[UUID].whep.iceCompletedCallback) {
 				// "left over" candidates not sent with the SDP offer
 				log("Send patch request with ice candidate");
 
@@ -62888,7 +63317,7 @@ async function whepIn(whepInput = false, whepInputToken = false, UUID = false) {
 				}
 
 				if (event.candidate.candidate) {
-					const patchCandidate = buildTrickleIcePatchFragment([event.candidate], true);
+					const patchCandidate = buildTrickleIcePatchFragment([event.candidate], false);
 					if (patchCandidate) {
 						ajax(patchCandidate, "trickle-ice-sdpfrag", false, { "if-match": eTag });
 					}
@@ -63084,6 +63513,7 @@ async function whepIn(whepInput = false, whepInputToken = false, UUID = false) {
 				})
 				.then(async function () {
 					//log(session.rpcs[UUID].whep.localDescription);
+					getLocalTrickleSectionMetadata();
 
 					try {
 						if (session.whepWait) {
@@ -63125,48 +63555,37 @@ async function whepIn(whepInput = false, whepInputToken = false, UUID = false) {
 		//log(dataPayload);
 		try {
 			var xhttp = new XMLHttpRequest();
+			var requestEpoch = whepHttpSessionEpoch;
 			xhttp.onreadystatechange = function () {
+				if (this.readyState == 4 && requestEpoch !== whepHttpSessionEpoch) {
+					return;
+				}
 				if (this.readyState == 4 && (this.status == 200 || this.status == 201)) {
 					try {
 						// 200 not in spec (meant to be an options response), but I want to be flexible
-							let responseHeaders = xhttp.getAllResponseHeaders() || "";
-							let responseHeadersLower = responseHeaders.toLowerCase();
-							var contentType = false;
-							if (responseHeadersLower.indexOf("content-type") >= 0) {
-								contentType = this.getResponseHeader("content-type");
-							}
-							if (responseHeadersLower.indexOf("location") >= 0) {
-								responseLocation = this.getResponseHeader("location");
-							}
-							if (responseHeadersLower.indexOf("accept-patch") >= 0) {
-								acceptPatch = this.getResponseHeader("accept-patch");
-							}
-							if (responseHeadersLower.indexOf("etag") >= 0) {
-								eTag = this.getResponseHeader("etag");
-							}
-							if (supportsTrickleIcePatch(acceptPatch) && !eTag) {
-								disableWhepPatchTrickle("missing-etag");
-							}
-						if (responseLocation && !(responseLocation.startsWith("http://") || responseLocation.startsWith("https://"))) {
-							let requestURL = new URL(whepInput); // Replace 'yourRequestURL' with the URL you posted to.
-							let protocol = requestURL.protocol;
-							let hostname = requestURL.hostname;
-							let port = requestURL.port || (protocol === "https:" ? "443" : "80"); // Default port based on protocol
-							responseLocation = `${protocol}//${hostname}:${port}${responseLocation}`;
+						let responseHeaders = xhttp.getAllResponseHeaders() || "";
+						let responseHeadersLower = responseHeaders.toLowerCase();
+						var contentType = false;
+						if (responseHeadersLower.indexOf("content-type") >= 0) {
+							contentType = this.getResponseHeader("content-type");
+						}
+						if (responseHeadersLower.indexOf("location") >= 0) {
+							responseLocation = resolveWhepSessionLocation(this.getResponseHeader("location"));
+						}
+						if (responseHeadersLower.indexOf("accept-patch") >= 0) {
+							acceptPatch = this.getResponseHeader("accept-patch");
+						}
+						if (responseHeadersLower.indexOf("etag") >= 0) {
+							eTag = this.getResponseHeader("etag");
+						}
+						if (supportsTrickleIcePatch(acceptPatch) && !eTag) {
+							disableWhepPatchTrickle("missing-etag");
 						}
 						if (contentType && contentType.startsWith("application/sdp")) {
 							var description = {};
 							description.sdp = this.responseText;
 							description.type = "answer";
 							warnlog("Processing answer:");
-							iceUfrag = description.sdp.match(/a=ice-ufrag:(.*)\r\n/);
-							if (iceUfrag) {
-								iceUfrag = iceUfrag[1];
-							}
-							icePwd = description.sdp.match(/a=ice-pwd:(.*)\r\n/);
-							if (icePwd) {
-								icePwd = icePwd[1];
-							}
 							if (session.localNetworkOnly) {
 								description.sdp = filterSDPLAN(description.sdp);
 							}
@@ -63183,14 +63602,18 @@ async function whepIn(whepInput = false, whepInputToken = false, UUID = false) {
 								.catch(function (e) {
 									log(e);
 									requestingStream = false;
-							});
+								});
 							// the request is done, but lets handle any old ice candidates
-								if (canTrickleViaPatch() && candidates.length && !session.rpcs[UUID].whep.iceCompletedCallback) {
+							if (canTrickleViaPatch() && candidates.length && !session.rpcs[UUID].whep.iceCompletedCallback) {
 								// "left over" candidates not sent with the SDP offer
 								log("Send patch request with ice candidates");
-								let patchCandidates = buildTrickleIcePatchFragment(candidates, true);
+								var includeEndOfCandidates = iceGatheringComplete && !whepEndOfCandidatesSent;
+								let patchCandidates = buildTrickleIcePatchFragment(candidates, includeEndOfCandidates);
 								candidates = [];
 								if (patchCandidates) {
+									if (includeEndOfCandidates) {
+										whepEndOfCandidatesSent = true;
+									}
 									ajax(patchCandidates, "trickle-ice-sdpfrag", false, { "if-match": eTag });
 								}
 							} else {
@@ -63228,12 +63651,24 @@ async function whepIn(whepInput = false, whepInputToken = false, UUID = false) {
 					if (this.status == 432) {
 					} else if (this.status == 405) {
 						// GET, HEAD or PUT not allowed atm
+						if (type === "trickle-ice-sdpfrag") {
+							disableWhepPatchTrickle("unsupported");
+						}
 					} else if (this.status == 501) {
+						if (type === "trickle-ice-sdpfrag") {
+							disableWhepPatchTrickle("unsupported");
+						}
 					} else if (this.status == 412) {
 						// etag trickle did not match
 						disableWhepPatchTrickle("etag-mismatch");
+					} else if (this.status == 422) {
+						if (type === "trickle-ice-sdpfrag") {
+							disableWhepPatchTrickle("unsupported");
+						}
 					} else if (this.status == 428) {
 						disableWhepPatchTrickle("precondition-required");
+					} else if (type === "trickle-ice-sdpfrag" && this.status >= 400) {
+						disableWhepPatchTrickle("patch-error");
 					}
 					if (!this.status || this.status >= 400) {
 						if (type === "sdp") {
@@ -63263,6 +63698,9 @@ async function whepIn(whepInput = false, whepInputToken = false, UUID = false) {
 				});
 			}
 			xhttp.onerror = function (e) {
+				if (requestEpoch !== whepHttpSessionEpoch) {
+					return;
+				}
 				errorlog(e);
 				requestingStream = false;
 				if (!session.cleanOutput) {
@@ -63615,8 +64053,21 @@ function pokeDiscord(action, data = {}) {
 	}, 60000);
 }
 
+function escapeApiSelectorValue(value) {
+	value = value + "";
+	if (typeof CSS !== "undefined" && CSS.escape) {
+		return CSS.escape(value);
+	}
+	return value.replace(/\\/g, "\\\\").replace(/"/g, '\\"');
+}
+
 function getGuestTarget(type, id) {
-	var element = document.querySelector('[data-sid="' + id + '"][data-action-type="' + type + '"], [data-sid="' + id + '"] [data-action-type="' + type + '"]'); // data-sid="P5MQpia"
+	var safeId = escapeApiSelectorValue(id);
+	var element = document.querySelector('[data-sid="' + safeId + '"][data-action-type="' + type + '"], [data-sid="' + safeId + '"] [data-action-type="' + type + '"]'); // data-sid="P5MQpia"
+	if (!element && session.rpcs && session.rpcs[id]) {
+		var safeUUID = escapeApiSelectorValue(id);
+		element = document.querySelector('[data--u-u-i-d="' + safeUUID + '"][data-action-type="' + type + '"], [data--u-u-i-d="' + safeUUID + '"] [data-action-type="' + type + '"]');
+	}
 	if (!element) {
 		return getRightOrderedElement('[data--u-u-i-d] [data-action-type="' + type + '"]', id);
 	}
@@ -63624,16 +64075,28 @@ function getGuestTarget(type, id) {
 }
 
 function getGuestTargetScene(scene, id) {
-	var element = document.querySelector('[data-action-type="addToScene"][data-scene="' + scene + '"][data-sid="' + id + '"], [data-sid="' + id + '"] [data-action-type="addToScene"][data-scene="' + scene + '"]'); // data-sid="P5MQpia"
+	var safeScene = escapeApiSelectorValue(scene);
+	var safeId = escapeApiSelectorValue(id);
+	var element = document.querySelector('[data-action-type="addToScene"][data-scene="' + safeScene + '"][data-sid="' + safeId + '"], [data-sid="' + safeId + '"] [data-action-type="addToScene"][data-scene="' + safeScene + '"]'); // data-sid="P5MQpia"
+	if (!element && session.rpcs && session.rpcs[id]) {
+		var safeUUID = escapeApiSelectorValue(id);
+		element = document.querySelector('[data-action-type="addToScene"][data-scene="' + safeScene + '"][data--u-u-i-d="' + safeUUID + '"], [data--u-u-i-d="' + safeUUID + '"] [data-action-type="addToScene"][data-scene="' + safeScene + '"]');
+	}
 	if (!element) {
-		return getRightOrderedElement('[data-action-type="addToScene"][data-scene="' + scene + '"][data--u-u-i-d]', id);
+		return getRightOrderedElement('[data-action-type="addToScene"][data-scene="' + safeScene + '"][data--u-u-i-d]', id);
 	}
 	return element;
 }
 function getGuestTargetGroup(group, id) {
-	var element = document.querySelector('[data-action-type="toggle-group"][data-group="' + group + '"][data-sid="' + id + '"], [data-sid="' + id + '"] [data-action-type="toggle-group"][data-group="' + group + '"]'); // data-sid="P5MQpia"
+	var safeGroup = escapeApiSelectorValue(group);
+	var safeId = escapeApiSelectorValue(id);
+	var element = document.querySelector('[data-action-type="toggle-group"][data-group="' + safeGroup + '"][data-sid="' + safeId + '"], [data-sid="' + safeId + '"] [data-action-type="toggle-group"][data-group="' + safeGroup + '"]'); // data-sid="P5MQpia"
+	if (!element && session.rpcs && session.rpcs[id]) {
+		var safeUUID = escapeApiSelectorValue(id);
+		element = document.querySelector('[data-action-type="toggle-group"][data-group="' + safeGroup + '"][data--u-u-i-d="' + safeUUID + '"], [data--u-u-i-d="' + safeUUID + '"] [data-action-type="toggle-group"][data-group="' + safeGroup + '"]');
+	}
 	if (!element) {
-		return getRightOrderedElement('[data-action-type="toggle-group"][data-group="' + group + '"][data--u-u-i-d]', id);
+		return getRightOrderedElement('[data-action-type="toggle-group"][data-group="' + safeGroup + '"][data--u-u-i-d]', id);
 	}
 	return element;
 }
@@ -63682,6 +64145,33 @@ function resolveTargetGuestUUID(target) {
 	return false;
 }
 
+function parseExplicitApiBoolean(value) {
+	if (value === true || value === "true" || value === 1 || value === "1" || value === "on") {
+		return true;
+	}
+	if (value === false || value === "false" || value === 0 || value === "0" || value === "off") {
+		return false;
+	}
+	return null;
+}
+
+function setGuestSceneState(element, enabled) {
+	if (!element) {
+		return false;
+	}
+	enabled = !!enabled;
+	var current = parseInt(element.value) === 1;
+	if (current === enabled) {
+		try {
+			syncDirectorState(element);
+		} catch (e) {
+			errorlog(e);
+		}
+		return enabled;
+	}
+	return directEnable(element, true);
+}
+
 async function targetGuest(target, action, value = null, value2 = null) {
 	if (target) {
 		if ((target == (parseInt(target) + "")) && (target < 100)) {
@@ -63693,14 +64183,33 @@ async function targetGuest(target, action, value = null, value2 = null) {
 	warnlog("target " + target);
 	warnlog("action " + action);
 	warnlog("value " + value);
-	if ((action == 0) || (action == "forward") || (action == "transfer")) {
+	if (action == "activateQueuedGuest" || action == "removeQueue" || action == "removeQueuedGuest") {
+		var queuedUUID = resolveTargetGuestUUID(target);
+		if (!queuedUUID) {
+			return false;
+		}
+		var safeQueuedUUID = escapeApiSelectorValue(queuedUUID);
+		var queueButton = document.querySelector('[data-action-type="remove-queue"][data--u-u-i-d="' + safeQueuedUUID + '"]');
+		if (queueButton && queueButton.classList && queueButton.classList.contains("hidden")) {
+			return false;
+		}
+		if (queueButton && typeof remoteRemoveQueue === "function") {
+			remoteRemoveQueue(queueButton);
+			return {
+				UUID: queuedUUID,
+				streamID: session.rpcs[queuedUUID] && session.rpcs[queuedUUID].streamID ? session.rpcs[queuedUUID].streamID : false,
+				activated: true
+			};
+		}
+		return false;
+	} else if ((action == 0) || (action == "forward") || (action == "transfer")) {
 		var element = getGuestTarget("forward", target);
 		if (element) {
 			return await directMigrate(element, true, value); // if value is set, it will auto transfer the guest to that room.
 		} else {
 			return false;
 		}
-	} else if ((action == 1) || (action == "addScene")) {
+	} else if ((action == 1) || (action == "addScene") || (action == "setScene")) {
 		var scene = 1;
 		if (value == "null" || value == null || value == "toggle") {
 			scene = 1;
@@ -63709,6 +64218,13 @@ async function targetGuest(target, action, value = null, value2 = null) {
 		}
 		var element = getGuestTargetScene(scene, target); // oscid/action/target/value   1/1/scene
 		if (element) {
+			var explicitSceneState = parseExplicitApiBoolean(value2);
+			if (action == "setScene" && explicitSceneState === null) {
+				explicitSceneState = parseExplicitApiBoolean(value);
+			}
+			if (explicitSceneState !== null) {
+				return setGuestSceneState(element, explicitSceneState);
+			}
 			if (value === true) {
 				element.value = 1;
 			} else if (value === false) {
@@ -64338,6 +64854,20 @@ function setupCommands() {
 		}
 		return session.videoMuted;
 	};
+	commands.muteAllGuests = function (value = null, value2 = null) {
+		if (!session.director) {
+			return false;
+		}
+		var ele = getById("muteAllGuests");
+		if (!ele) {
+			return false;
+		}
+		var requestedState = parseExplicitApiBoolean(value);
+		if (requestedState !== null) {
+			ele.value = requestedState ? 0 : 1;
+		}
+		return muteAllGuests(ele, false);
+	};
 	commands.video = function (value = null, value2 = null) {
 		if (value === true) {
 			// unmute
@@ -64434,6 +64964,11 @@ function setupCommands() {
 			} catch (e) {
 				errorlog(e);
 			}
+		}
+		try {
+			pokeAPI("details", getDetailedState());
+		} catch (e) {
+			errorlog(e);
 		}
 		return value;
 	};
@@ -64699,6 +65234,11 @@ function setupCommands() {
 
 		if (!value2) {
 			session.buffer = delay;
+			try {
+				pokeAPI("details", getDetailedState());
+			} catch (e) {
+				errorlog(e);
+			}
 			return true;
 		} else if (value2 === "*") {
 			for (var uuid in session.rpcs) {
@@ -64708,6 +65248,11 @@ function setupCommands() {
 					ele.value = delay;
 				});
 			}
+			try {
+				pokeAPI("details", getDetailedState());
+			} catch (e) {
+				errorlog(e);
+			}
 			return true;
 		} else if (value2 in session.rpcs) {
 			session.rpcs[value2].buffer = delay;
@@ -64715,6 +65260,11 @@ function setupCommands() {
 			document.querySelectorAll('#bufferSettings[data--u-u-i-d="' + value2 + '"] input[data-buffer-value]').forEach(ele => {
 				ele.value = delay;
 			});
+			try {
+				pokeAPI("details", getDetailedState(session.rpcs[value2].streamID));
+			} catch (e) {
+				errorlog(e);
+			}
 			return true;
 		} else if (value2) {
 			let UUID = Object.keys(session.rpcs).find(uuid => session.rpcs[uuid].streamID === value2);
@@ -64724,6 +65274,11 @@ function setupCommands() {
 				document.querySelectorAll('#bufferSettings[data--u-u-i-d="' + UUID + '"] input[data-buffer-value]').forEach(ele => {
 					ele.value = delay;
 				});
+				try {
+					pokeAPI("details", getDetailedState(session.rpcs[UUID].streamID));
+				} catch (e) {
+					errorlog(e);
+				}
 				return true;
 			} else {
 				errorlog("The stream ID specified does not exist: " + value2);
@@ -64981,6 +65536,7 @@ async function processMessage(data) {
 	// api.vdo.ninja/apikey/action/value
 	try {
 		warnlog(data);
+		var hasValue2 = "value2" in data;
 		if ("target" in data && data.target !== "null" && data.target !== null) {
 			if ("action" in data) {
 				if ("value" in data && data.value !== "null" && data.value !== null) {
@@ -64989,10 +65545,11 @@ async function processMessage(data) {
 					} else if (data.value == "false") {
 						data.value = false;
 					}
-					return await targetGuest(data.target, data.action, data.value, data.value2 || null);
-				} else {
-					return await targetGuest(data.target, data.action, null);
+					return await targetGuest(data.target, data.action, data.value, hasValue2 ? data.value2 : null);
+				} else if (hasValue2) {
+					return await targetGuest(data.target, data.action, null, data.value2);
 				}
+				return await targetGuest(data.target, data.action, null);
 			}
 		} else if ("action" in data && data.action !== "null" && data.action !== null) {
 			if (data.action in Commands) {
@@ -65002,14 +65559,24 @@ async function processMessage(data) {
 					} else if (data.value == "false") {
 						data.value = false;
 					}
-					return Commands[data.action](data.value, data.value2 || null);
-				} else {
-					return Commands[data.action]();
+					return Commands[data.action](data.value, hasValue2 ? data.value2 : null);
+				} else if (hasValue2) {
+					return Commands[data.action](null, data.value2);
 				}
+				return Commands[data.action]();
 			}
 		}
 	} catch (e) {
 		errorlog(e);
+		if (data && typeof data.cib !== "undefined") {
+			return {
+				action: data.action || null,
+				error: true,
+				result: false,
+				message: e && e.message ? e.message : "processMessage failed",
+				cib: data.cib
+			};
+		}
 	}
 	return null;
 }
@@ -67547,7 +68114,6 @@ var VDO_ICECAST_DEFAULT_AUDIO_BITRATE = 128000;
 var VDO_ICECAST_DEFAULT_TIMESLICE_MS = 1000;
 var VDO_ICECAST_DIRECT_FALLBACK_MS = 5000;
 var VDO_ICECAST_RELAY_BUFFER_LIMIT = 512 * 1024;
-var VDO_ICECAST_RELAY_ROTATE_MS = 24000;
 var VDO_ICECAST_LOCAL_FLAGS = ["icecastpush", "icecastlocal", "icecastmic"];
 var VDO_ICECAST_REMOTE_FLAGS = ["icecastview", "icecastremote", "icecastfromview"];
 var VDO_ICECAST_LEGACY_FLAGS = ["icecast", "icecastout"];
@@ -67855,9 +68421,6 @@ class VDOIcecastPublisher extends EventTarget {
 		this.stopping = false;
 		this.startedAt = 0;
 		this.bytesSent = 0;
-		this.relayBytesSent = 0;
-		this.relayStarted = false;
-		this.relayReady = false;
 		this.config = null;
 	}
 
@@ -68022,9 +68585,6 @@ class VDOIcecastPublisher extends EventTarget {
 		this.connectSourceStream(config.sourceStream);
 
 		this.bytesSent = 0;
-		this.relayBytesSent = 0;
-		this.relayStarted = false;
-		this.relayReady = false;
 		this.startedAt = Date.now();
 		this.closeRequested = false;
 		this.pendingWrites = 0;
@@ -68292,8 +68852,6 @@ class VDOIcecastPublisher extends EventTarget {
 		this.pendingWrites = 0;
 		this.closeRequested = false;
 		this.live = false;
-		this.relayStarted = false;
-		this.relayReady = false;
 		this.stopping = false;
 		this.config = null;
 		if (!quiet) {
@@ -68676,14 +69234,11 @@ class VDOIcecastPublisher extends EventTarget {
 								finish(rejectSocket, error);
 								closeSocket(socket, 4000, "relay failed");
 							}
-						} else if (message && message.type === "started") {
-							this.relayStarted = true;
 						} else if (message && message.type === "ready") {
 							accepted = true;
 							activeSocket = socket;
 							activeClosed = false;
 							activeCloseError = null;
-							this.relayReady = true;
 							if (typeof options.onReady === "function") {
 								try {
 									options.onReady();
@@ -68730,20 +69285,9 @@ class VDOIcecastPublisher extends EventTarget {
 				throw lastError || new Error("Icecast relay socket failed.");
 			};
 
-			var rotateSocket = async function(currentSocket) {
-				if (activeSocket === currentSocket) {
-					activeSocket = null;
-				}
-				closeSocket(currentSocket, 1000, "rotate");
-				this.relayReady = false;
-				await vdoIcecastDelay(700);
-				return connectWithRetry();
-			}.bind(this);
-
 			var pump = async function() {
 				reader = body.getReader();
 				var socket = await connectWithRetry();
-				var socketOpenedAt = Date.now();
 				while (true) {
 					if (signal && signal.aborted) {
 						throw vdoIcecastCreateAbortError("publisher stopped");
@@ -68752,16 +69296,10 @@ class VDOIcecastPublisher extends EventTarget {
 						var reconnectError = activeCloseError;
 						activeClosed = false;
 						activeCloseError = null;
-						this.relayReady = false;
 						if (reconnectError) {
 							console.warn("Icecast relay reconnecting after upstream close", reconnectError);
 						}
 						socket = await connectWithRetry();
-						socketOpenedAt = Date.now();
-					}
-					if (Date.now() - socketOpenedAt > VDO_ICECAST_RELAY_ROTATE_MS) {
-						socket = await rotateSocket(socket);
-						socketOpenedAt = Date.now();
 					}
 					var result = await reader.read();
 					if (result.done) {
@@ -68775,7 +69313,6 @@ class VDOIcecastPublisher extends EventTarget {
 						continue;
 					}
 					socket.send(result.value);
-					this.relayBytesSent += (result.value && (result.value.byteLength || result.value.length)) || 0;
 				}
 			}.bind(this);
 

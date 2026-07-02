@@ -1,5 +1,9 @@
 <html>
 <head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<meta name="description" content="Send quick layout macros to the director scene to demo the classic control surface." />
+	<link rel="canonical" href="https://vdo.ninja/examples/control.html" />
 	<title>Legacy Layout Console - VDO.Ninja</title>
 	<style>
 		body {
@@ -10,8 +14,8 @@
 			border:0;
 			overflow:hidden;
 		}
-		
-	
+
+
 	</style>
 </head>
 <body id="body">
@@ -27,7 +31,7 @@
 		var para = param.split('=')[0];
 		if (!(urlParams.has(para)) || (force)){
 			if (history.pushState){
-				
+
 				var arr = window.location.href.split('?');
 				var newurl;
 				if (arr.length > 1 && arr[1] !== '') {
@@ -35,13 +39,13 @@
 				} else {
 					newurl = window.location.href + '?' +param;
 				}
-				
+
 				window.history.pushState({path:newurl},'',newurl);
 			}
 		}
 	}
 
-	
+
 	(function (w) {
 		w.URLSearchParams = w.URLSearchParams || function (searchString) {
 			var self = this;
@@ -59,8 +63,8 @@
 
 	})(window);
 	var urlParams = new URLSearchParams(window.location.search);
-	
-	
+
+
 	function generateStreamID(){
 		var text = "";
 		var possible = "ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnpqrstuvwxyz23456789";
@@ -69,9 +73,9 @@
 		}
 		return text;
 	};
-	
+
 	var roomID = "undefined";
-	
+
 	if (urlParams.has("room")){
 		roomID = urlParams.get("room");
 	} else {
@@ -96,30 +100,30 @@
     });
 	
 	bodyElement.appendChild(linkWrapper);
-	
 
-	var socket = new WebSocket("wss://api.action.wtf:666"); // api.action.wtf has been deprecated. 
-		
+
+	var socket = new WebSocket("wss://api.action.wtf:666"); // api.action.wtf has been deprecated.
+
 	socket.onclose = function (){
 		setTimeout(function(){window.location.reload(true);},100);
 	};
-	
+
 	socket.onopen = function (){
 		socket.send(JSON.stringify({"join":roomID}));
 	}
-	
-	
+
+
 	socket.addEventListener('message', function (event) {
 		if (event.data){
 			var data = JSON.parse(event.data);
 			log(data);
 		}
 	});
-	
+
 	socket.onclose = function (){
 		setTimeout(function(){window.location.reload(true);},100);
 	};
-	
+
 	var counter=0;
 	function send(scene){
 		counter+=1;

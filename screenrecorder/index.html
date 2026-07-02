@@ -169,13 +169,6 @@
           </select>
         </label>
 
-        <div id="micLevelRow" class="mic-level-row" style="display:none">
-          <span>Mic Level</span>
-          <div class="mic-level-track">
-            <div id="micLevelBar" class="mic-level-bar"></div>
-          </div>
-        </div>
-
         <p id="deviceHint" class="hint hint-compact">If names are missing, click Refresh and allow access.</p>
 
         <h3>Mic Processing</h3>
@@ -241,6 +234,12 @@
         <div class="preview-frame">
           <canvas id="previewCanvas" width="1280" height="720" aria-label="Recording Preview"></canvas>
           <div id="countdownOverlay" class="countdown hidden">3</div>
+        </div>
+        <div id="micLevelRow" class="mic-level-row" style="display:none">
+          <span>Mic Level</span>
+          <div class="mic-level-track">
+            <div id="micLevelBar" class="mic-level-bar"></div>
+          </div>
         </div>
         <div class="preview-toolbar">
           <div class="preview-modes">

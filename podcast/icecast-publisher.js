@@ -2,7 +2,6 @@ const DEFAULT_TIMESLICE_MS = 1000;
 const DIRECT_FALLBACK_WINDOW_MS = 5000;
 const DEFAULT_AUDIO_BITRATE = 128000;
 const RELAY_WEBSOCKET_BUFFER_LIMIT = 512 * 1024;
-const RELAY_WEBSOCKET_ROTATE_MS = 24000;
 
 export const ICECAST_MIME_OPTIONS = [
   { value: 'audio/aac', label: 'AAC / ADTS', extension: 'aac' },
@@ -115,9 +114,6 @@ export class IcecastPublisher extends EventTarget {
     this.stopping = false;
     this.startedAt = 0;
     this.bytesSent = 0;
-    this.relayBytesSent = 0;
-    this.relayStarted = false;
-    this.relayReady = false;
     this.config = null;
   }
 
@@ -275,9 +271,6 @@ export class IcecastPublisher extends EventTarget {
     this.masterGain.gain.value = 1;
     this.masterGain.connect(this.destination);
     this.bytesSent = 0;
-    this.relayBytesSent = 0;
-    this.relayStarted = false;
-    this.relayReady = false;
     this.startedAt = Date.now();
     this.closeRequested = false;
     this.pendingWrites = 0;
@@ -518,8 +511,6 @@ export class IcecastPublisher extends EventTarget {
     this.uploadAbortController = null;
     this.uploadPromise = null;
     this.streamController = null;
-    this.relayStarted = false;
-    this.relayReady = false;
     this.stopping = false;
     this.config = null;
     if (!quiet) {
@@ -944,14 +935,11 @@ export class IcecastPublisher extends EventTarget {
               finish(rejectSocket, error);
               closeSocket(socket, 4000, 'relay failed');
             }
-          } else if (message?.type === 'started') {
-            this.relayStarted = true;
           } else if (message?.type === 'ready') {
             accepted = true;
             activeSocket = socket;
             activeClosed = false;
             activeCloseError = null;
-            this.relayReady = true;
             if (typeof onReady === 'function') {
               try {
                 onReady();
@@ -997,20 +985,9 @@ export class IcecastPublisher extends EventTarget {
         throw lastError || new Error('Icecast relay socket failed.');
       };
 
-      const rotateSocket = async (currentSocket) => {
-        if (activeSocket === currentSocket) {
-          activeSocket = null;
-        }
-        closeSocket(currentSocket, 1000, 'rotate');
-        this.relayReady = false;
-        await delay(700);
-        return connectWithRetry();
-      };
-
       const pump = async () => {
         reader = body.getReader();
         let socket = await connectWithRetry();
-        let socketOpenedAt = Date.now();
         while (true) {
           if (signal?.aborted) {
             throw createAbortError('publisher stopped');
@@ -1019,16 +996,10 @@ export class IcecastPublisher extends EventTarget {
             const reconnectError = activeCloseError;
             activeClosed = false;
             activeCloseError = null;
-            this.relayReady = false;
             if (reconnectError) {
               console.warn('Icecast relay reconnecting after upstream close', reconnectError);
             }
             socket = await connectWithRetry();
-            socketOpenedAt = Date.now();
-          }
-          if (Date.now() - socketOpenedAt > RELAY_WEBSOCKET_ROTATE_MS) {
-            socket = await rotateSocket(socket);
-            socketOpenedAt = Date.now();
           }
           const { done, value } = await reader.read();
           if (done) {
@@ -1042,7 +1013,6 @@ export class IcecastPublisher extends EventTarget {
             continue;
           }
           socket.send(value);
-          this.relayBytesSent += value?.byteLength || value?.length || 0;
         }
       };
 

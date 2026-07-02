@@ -1,5 +1,7 @@
 <html>
-<head><title>Kick + Video</title>
+<head>
+	<meta name="description" content="Combine a Kick chat embed with a VDO.Ninja source in one window." />
+	<link rel="canonical" href="https://vdo.ninja/examples/kick.html" /><title>Kick + Video - VDO.Ninja</title>
 <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0,user-scalable=no" />
 <meta content="text/html;charset=utf-8" http-equiv="Content-Type" />
 <style>
@@ -34,7 +36,7 @@ input{
 	z-index: 1000;
 	color:black;
 	display:block;
-	
+
 }
 #clean{
 	max-width:100%;
@@ -107,7 +109,7 @@ button {
 	#container1{
 		width: 50vw;height: 50vh; display:none;  top: 0; right: 0%; position: absolute;
 	}
-	
+
 }
 
 @media screen and (orientation:landscape) {
@@ -118,7 +120,7 @@ button {
 	#container1{
 		width: 50vw; height:100%; max-height: calc(100vh - 100px); display:none; position: fixed; top: 0; right: -10vw;
 	}
-	
+
 }
 .hide{
 	width: 1px!important;
@@ -139,10 +141,10 @@ button {
 	</div>
 	<div id="clean">
 		<h1>Use VDO.Ninja and Kick chat at the same time</h1>
-		
-		
-		
-		
+
+
+
+
 		VDO.Ninja Stream ID or URL:
 		<input placeholder="Enter a VDON stream ID or VDON URL" id="viewlink" type="text" />
 		Kick Username or URL:
@@ -224,33 +226,33 @@ var injectCSS = `
 
 injectCSS = encodeURIComponent(btoa(injectCSS));
 
-function loadIframes(url=false){ 
+function loadIframes(url=false){
 
 	var roomname = document.getElementById("viewlink").value;
 	var kick = document.getElementById("kick").value;
-	
+
 	document.getElementById("clean").parentNode.removeChild(document.getElementById("clean"));
 	document.getElementById("container1").style.display="inline-block";
 	document.getElementById("container2").style.display="inline-block";
-	
-	
+
+
 	var path = window.location.host+window.location.pathname.split("/").slice(0,-1).join("/");
 	path = path.replace("/examples","");
-	
+
 	if (roomname.startsWith("https://")){
 		var room1 = roomname;
 	} else {
 		var room1 = "https://"+path+"/?push="+roomname+"&webcam&autostart&vd=front&ad=1&transparent&noheader&fullscreen&cleanish&b64css="+injectCSS;
 	}
-	
+
 	var room2 = kick.startsWith("https://") ? kick : `https://kick.com/${kick}/chatroom`;
 
 	iframe = document.createElement("iframe");
 	iframe.allow = "autoplay;camera;microphone;fullscreen;picture-in-picture;";
 	iframe.src = room1;
-	
+
 	document.getElementById("container1").appendChild(iframe);
-	
+
 	////////////  LISTEN FOR EVENTS
 
 	var eventMethod = window.addEventListener ? "addEventListener" : "attachEvent";
@@ -259,17 +261,17 @@ function loadIframes(url=false){
 
 
 	/// If you have a routing system setup, you could have just one global listener for all iframes instead.
-	
+
 	eventer(messageEvent, function (e) {
 		if (e.source != iframe.contentWindow){return} // reject messages send from other iframes
 		console.warn(e.data);
-		
+
 		if ("action" in e.data){
 			if (e.data.action === "seeding-started"){
 				document.getElementById("controlbar").style.display="inline-flex";
 				document.getElementById("container1").classList.remove("loading");
 			}
-			
+
 			if (e.data.action === "settings-menu-state"){
 				if (e.data.value==true){
 					togglesettings.dataset.value = "true";
@@ -281,23 +283,23 @@ function loadIframes(url=false){
 					document.getElementById("container1").classList.remove("fullwindow");
 				}
 			}
-			
+
 		}
 	});
-	
-	
+
+
 	setStorage("kickChatLink", room2);
 
 	setStorage("vdoNinjaKickURL", room1);
-	
-	
+
+
 	setTimeout(function(){
 		var iframe2 = document.createElement("iframe");
 		iframe2.allow = "autoplay;camera;microphone;fullscreen;picture-in-picture;";
 		iframe2.src = room2;
 		document.getElementById("container2").appendChild(iframe2);
 	},1000);
-	
+
 }
 
 var hangup = document.getElementById("hangup");
@@ -355,7 +357,7 @@ hidepreview.onclick = function(){
 		document.getElementById("container1").classList.remove("hide");
 		document.getElementById("container2").classList.remove("fullwindow");
 	}
-	
+
 }
 
 </script>

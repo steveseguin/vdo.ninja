@@ -1,5 +1,7 @@
 <html>
-<head><title>overlay + Video</title>
+<head>
+	<meta name="description" content="Combine a VDO.Ninja feed with an external overlay page inside one source." />
+	<link rel="canonical" href="https://vdo.ninja/examples/overlay.html" /><title>Overlay Helper - VDO.Ninja</title>
 <meta name="viewport" content="width=device-width, initial-scale=0.7, maximum-scale=1.0, user-scalable=yes" />
 <meta content="text/html;charset=utf-8" http-equiv="Content-Type" />
 <style>
@@ -96,11 +98,11 @@ if (getStorage("vdoNinjaoverlayURL")){
 	document.getElementById("viewlink").value = getStorage("vdoNinjaoverlayURL");
 }
 
-function loadIframes(url=false){ 
+function loadIframes(url=false){
 
 	var roomname = document.getElementById("viewlink").value;
 	var overlay = document.getElementById("overlay").value;
-	
+
 	document.getElementById("clean").parentNode.removeChild(document.getElementById("clean"));
 
 	if (!roomname){
@@ -110,13 +112,13 @@ function loadIframes(url=false){
 	} else {
 		var room1 = "https://"+roomname;
 	}
-	
+
 	var iframe = document.createElement("iframe");
 	iframe.allow = "document-domain;encrypted-media;sync-xhr;usb;web-share;cross-origin-isolated;accelerometer;midi;geolocation;autoplay;camera;microphone;fullscreen;picture-in-picture;display-capture;";
 	iframe.src = room1;
 	document.body.appendChild(iframe);
-	
-	
+
+
 	if (!overlay){
 		var room2 = "./test_overlay";
 	} else if (overlay.startsWith("https://")){
@@ -124,7 +126,7 @@ function loadIframes(url=false){
 	} else {
 		var room2 = "https://"+overlay;
 	}
-	
+
 	var iframe = document.createElement("iframe");
 	iframe.allow = "document-domain;encrypted-media;sync-xhr;usb;web-share;cross-origin-isolated;accelerometer;midi;geolocation;autoplay;camera;microphone;fullscreen;picture-in-picture;display-capture;";
 	iframe.src = room2;

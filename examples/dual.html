@@ -1,5 +1,7 @@
 <html>
-<head><title>Dual Input</title>
+<head>
+	<meta name="description" content="Display two guests side-by-side using the dual director layout logic." />
+	<link rel="canonical" href="https://vdo.ninja/examples/dual.html" /><title>Dual View Layout - VDO.Ninja</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
 <meta content="text/html;charset=utf-8" http-equiv="Content-Type" />
 <style>
@@ -40,26 +42,26 @@ input{
 <input placeholder="Enter a Room name" id="viewlink" type="text" onchange="loadIframes()"/>
 <script>
 
-function loadIframes(url=false){ 
+function loadIframes(url=false){
 
 	var roomname = document.getElementById("viewlink").value;
-	
+
 	document.getElementById("viewlink").parentNode.removeChild(document.getElementById("viewlink"));
 	document.getElementById("container1").style.display="inline-block";
 	document.getElementById("container2").style.display="inline-block";
-	
+
 	var path = window.location.host+window.location.pathname.split("/").slice(0,-1).join("/");
-	
+
 	var room1 = "https://"+path+"/../?room="+roomname+"&push="+roomname+"_front&webcam&autostart&vd=front&ad=1&exclude="+roomname+"_rear";
 	var room2 = "https://"+path+"/../?room="+roomname+"&push="+roomname+"_rear&webcam&autostart&vd=back&ad=0&view&cleanoutput&nosettings&transparent";
-	
+
 	var iframe = document.createElement("iframe");
 	iframe.allow = "document-domain;encrypted-media;sync-xhr;usb;web-share;cross-origin-isolated;accelerometer;midi;geolocation;autoplay;camera;microphone;fullscreen;picture-in-picture;display-capture;";
 	iframe.src = room1;
 	var iframeContainer = document.createElement("div");
 	iframeContainer.appendChild(iframe);
 	document.getElementById("container1").appendChild(iframeContainer);
-	
+
 	setTimeout(function(){
 		var iframe = document.createElement("iframe");
 		iframe.allow = "autoplay;camera;microphone;fullscreen;picture-in-picture;";
@@ -68,7 +70,7 @@ function loadIframes(url=false){
 		iframeContainer.appendChild(iframe);
 		document.getElementById("container2").appendChild(iframeContainer);
 	},3000);
-	
+
 }
 
 </script>

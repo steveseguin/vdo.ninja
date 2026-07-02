@@ -1,5 +1,19 @@
 <html>
 <head>
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<title>Remote API Playground - VDO.Ninja</title>
+	<meta name="description" content="Retro-themed sandbox for experimenting with remote control actions and macros." />
+	<link rel="canonical" href="https://vdo.ninja/examples/remoteapi.html" />
+	<meta property="og:type" content="website" />
+	<meta property="og:site_name" content="VDO.Ninja" />
+	<meta property="og:url" content="https://vdo.ninja/examples/remoteapi.html" />
+	<meta property="og:title" content="Remote API Playground - VDO.Ninja" />
+	<meta property="og:description" content="Retro-themed sandbox for experimenting with remote control actions and macros." />
+	<meta property="og:image" content="https://vdo.ninja/media/vdoNinja_logo_full.png" />
+	<meta name="twitter:card" content="summary_large_image" />
+	<meta name="twitter:title" content="Remote API Playground - VDO.Ninja" />
+	<meta name="twitter:description" content="Retro-themed sandbox for experimenting with remote control actions and macros." />
+	<meta name="twitter:image" content="https://vdo.ninja/media/vdoNinja_logo_full.png" />
 	<meta charset="utf-8"/>
 	<link href="https://fonts.googleapis.com/css?family=Press+Start+2P" rel="stylesheet">
     <link href="./nes.min.css" rel="stylesheet" />
@@ -14,7 +28,7 @@
 			background-image: linear-gradient(to left, #e1c5d5, #ddc5da, #d8c6e0, #d1c7e5, #c8c9e9, #c1cded, #bad2f0, #b4d6f2, #b1ddf3, #b1e4f3, #b4eaf0, #bbf0ed);
 			width:100%;
 			height:100%;
-		} 
+		}
 
 		button {
 			margin:10px 3px;
@@ -26,7 +40,7 @@
 			line-height: inherit;
 			padding: 8px 12px;
 		}
-		
+
 		button:active{
 			background-color:#BBB;
 		}
@@ -76,7 +90,7 @@ window.onerror = function backupErr(errorMsg, url=false, lineNumber=false) {
 window.onbeforeunload = function() {
 	return "Dude, are you sure you want to leave? Think of the kittens!"; // prevents accidental page reloads.
 }
-	
+
 var WID = "testVDON";
 if (urlParams.has("api")){
 	WID = urlParams.get("api");
@@ -90,7 +104,7 @@ if (urlParams.has("api")){
 	WID = urlParams.get("wid");
 } else {
 	WID = generateStreamID(10);
-	
+
 	var href = window.location.href;
 	var arr = href.split('?');
 	var newurl;
@@ -101,7 +115,7 @@ if (urlParams.has("api")){
 	}
 
 	window.history.pushState({path: newurl.toString()}, '', newurl.toString());
-	
+
 }
 
 var path = "vdo.ninja";  //window.location.host+window.location.pathname.split("/").slice(0,-1).join("/");
@@ -133,7 +147,7 @@ var connecting = false;
 var failedCount = 0;
 
 
-	
+
 function connect(){
 	clearTimeout(connecting);
 	if (socket){
@@ -143,7 +157,7 @@ function connect(){
 		} catch(e){}
 	}
 	socket = new WebSocket("wss://api.vdo.ninja:443");
-	
+
 	socket.onclose = function (){
 		failedCount+=1;
 		clearTimeout(connecting);
@@ -164,7 +178,7 @@ function connect(){
 			connecting = setTimeout(function(){connect();},1);
 		}
 	}
-	
+
 }
 
 connect();
@@ -184,7 +198,7 @@ function sendMessage(msg){
 	} catch(e){
 		connecting = setTimeout(function(){connect();},100);
 	}
-	
+
 }
 
 
@@ -215,7 +229,7 @@ function ajax(data) {
   if ("target" in data){
 	target=data['target'];
   }
-  
+
   if (!action || !apiid){
 	alert("no action or api ID provided; request won't work");
   } else {
@@ -228,7 +242,7 @@ function ajax(data) {
 function loadSelfCommands(){
 	var commands = {}
 	commands.speaker = function(value){sendMessage(JSON.stringify({"action":"speaker","value":value}))};  // "speaker" also works in the same way
-	
+
 	commands.mic = function(value){sendMessage(JSON.stringify({"action":"mic","value":value}))};
 
 	commands.camera = function(value){sendMessage(JSON.stringify({"action":"camera","value":value}))};
@@ -240,9 +254,9 @@ function loadSelfCommands(){
 	commands.record = function(value){sendMessage(JSON.stringify({"action":"record","value":value}))};
 
 	commands.sayHello = function(value){sendMessage(JSON.stringify({"action":"sendChat","value":"Hello"}))};
-	
+
 	var target_self = document.getElementById("target_self");
-	
+
 	setTimeout(function(){
 		var hr = document.createElement("hr");
 		target_self.appendChild(hr);
@@ -254,14 +268,14 @@ function loadSelfCommands(){
 	for (var k in commands) {
 		setTimeout(function(k){
 			var button = document.createElement("button");
-			button.innerHTML = k + ":<br />TRUE"; 
+			button.innerHTML = k + ":<br />TRUE";
 			button.onclick = function(){commands[k](true);}
 			target_self.appendChild(button);
 		},0,k);
-		
+
 		setTimeout(function(k){
 			var button = document.createElement("button");
-			button.innerHTML = k + ":<br />FALSE"; 
+			button.innerHTML = k + ":<br />FALSE";
 			button.onclick = function(){commands[k](false);}
 			target_self.appendChild(button);
 		},0,k);
@@ -269,44 +283,44 @@ function loadSelfCommands(){
 		if (k=="mic" || k=="camera" || k=="record" || k=="speaker"){
 			setTimeout(function(k){
 				var button = document.createElement("button");
-				button.innerHTML = k + ":<br />TOGGLE"; 
+				button.innerHTML = k + ":<br />TOGGLE";
 				button.onclick = function(){commands[k]("toggle");}
 				target_self.appendChild(button);
 			},0,k);
-		} 
+		}
 
 		log(k);
 	} // list available commands to console
-	
+
 	commands.reload = function(){sendMessage(JSON.stringify({"action":"reload","value":true}))};
-	
+
 	commands.hangup = function(){sendMessage(JSON.stringify({"action":"hangup","value":true}))};
-	
+
 	k = "reload";
 	setTimeout(function(k){
 		var button = document.createElement("button");
-		button.innerHTML = k + ":<br />TRUE"; 
+		button.innerHTML = k + ":<br />TRUE";
 		button.onclick = function(){commands[k](true);}
 		target_self.appendChild(button);
 	},0,k);
-	
+
 	k = "hangup";
 	setTimeout(function(k){
 		var button = document.createElement("button");
-		button.innerHTML = k + ":<br />TRUE"; 
+		button.innerHTML = k + ":<br />TRUE";
 		button.onclick = function(){commands[k](true);}
 		target_self.appendChild(button);
 	},0,k);
-	
+
 	setTimeout(function(){
 		var button = document.createElement("button");
 		button.innerHTML = "Rainbow<br />Puke";
 		button.onclick = function(){sendMessage(JSON.stringify({"action":"forceKeyframe"}))}
 		target_self.appendChild(button);
 	},0);
-	
-	
-	
+
+
+
 	var commands2 = {}
 	commands2.speaker = function(value){ajax({"action":"speaker","value":value,"apiid":WID})};  // "speaker" also works in the same way
 	commands2.mic = function(value){ajax({"action":"mic","value":value,"apiid":WID})};  // "speaker" also works in the same way
@@ -314,7 +328,7 @@ function loadSelfCommands(){
 	commands2.bitrate = function(value){ajax({"action":"bitrate","value":value,"apiid":WID})};  // "speaker" also works in the same way
 	commands2.volume = function(value){ajax({"action":"volume","value":value,"apiid":WID})};  // "speaker" also works in the same way
 	commands2.record = function(value){ajax({"action":"record","value":value,"apiid":WID})};  // "speaker" also works in the same way
-	
+
 	setTimeout(function(){
 		var hr = document.createElement("hr");
 		target_self.appendChild(hr);
@@ -322,19 +336,19 @@ function loadSelfCommands(){
 		h3.innerText = "These are HTTP-based GET requests";
 		target_self.appendChild(h3);
 	},0);
-	
+
 	for (var k in commands2) {
-	
+
 		setTimeout(function(k){
 			var button = document.createElement("button");
-			button.innerHTML = k + ":<br />TRUE"; 
+			button.innerHTML = k + ":<br />TRUE";
 			button.onclick = function(){commands2[k](true);}
 			target_self.appendChild(button);
 		},0,k);
-		
+
 		setTimeout(function(k){
 			var button = document.createElement("button");
-			button.innerHTML = k + ":<br />FALSE"; 
+			button.innerHTML = k + ":<br />FALSE";
 			button.onclick = function(){commands2[k](false);}
 			target_self.appendChild(button);
 		},0,k);
@@ -342,24 +356,24 @@ function loadSelfCommands(){
 		if (k=="mic" || k=="camera" || k=="record" || k=="speaker"){
 			setTimeout(function(k){
 				var button = document.createElement("button");
-				button.innerHTML = k + ":<br />TOGGLE"; 
+				button.innerHTML = k + ":<br />TOGGLE";
 				button.onclick = function(){commands2[k]("toggle");}
 				target_self.appendChild(button);
 			},0,k);
-		} 
+		}
 		log(k);
-	} 
-	
+	}
+
 	setTimeout(function(WID){
 		var button = document.createElement("button");
 		button.innerHTML = "Rainbow<br />Puke"
 		button.onclick = function(){ajax({"action":"forceKeyframe","apiid":WID})}
 		target_self.appendChild(button);
 	},0,WID);
-	
-	
+
+
 	return commands;
-		
+
 }
 
 
@@ -368,109 +382,109 @@ function loadGuestCommands(guestid){
 	var container = document.createElement("div");
 	container.id = "guest_"+guestid+"_container";
 	document.body.appendChild(container);
-	
+
 	var hr = document.createElement("hr");
 	container.appendChild(hr);
 	var h3 = document.createElement("h3");
 	h3.innerText = "These target guest "+guestid+ " (if a director)";
 	container.appendChild(h3);
-	
+
 	var button = document.createElement("button");
 	button.innerHTML = "transfer popup";
-	button.onclick = function(){sendGuestCommand(guestid, "forward");};  
+	button.onclick = function(){sendGuestCommand(guestid, "forward");};
 	container.appendChild(button);
-	
+
 	var button = document.createElement("button");
 	button.innerHTML = "transfer to 'room321'";
-	button.onclick = function(){sendGuestCommand(guestid, "forward", 'room321');};  
+	button.onclick = function(){sendGuestCommand(guestid, "forward", 'room321');};
 	container.appendChild(button);
-	
+
 	var button = document.createElement("button");
 	button.innerHTML = "scene 1";
 	button.onclick = function(){sendGuestCommand(guestid, "addScene");};    /// SCENE 1 or specify a custom scene name as a value
 	container.appendChild(button);
-	
+
 	var button = document.createElement("button");
 	button.innerHTML = "mute in scene";
-	button.onclick = function(){sendGuestCommand(guestid, "muteScene");};  
+	button.onclick = function(){sendGuestCommand(guestid, "muteScene");};
 	container.appendChild(button);
-	
+
 	var button = document.createElement("button");
 	button.innerHTML = "mute everywhere";
-	button.onclick = function(){sendGuestCommand(guestid, "mic");};  
+	button.onclick = function(){sendGuestCommand(guestid, "mic");};
 	container.appendChild(button);
-	
+
 	var button = document.createElement("button");
 	button.innerHTML = "hang up";
-	button.onclick = function(){sendGuestCommand(guestid, "hangup");};  
+	button.onclick = function(){sendGuestCommand(guestid, "hangup");};
 	container.appendChild(button);
-	
+
 	var button = document.createElement("button");
 	button.innerHTML = "solo chat";
-	button.onclick = function(){sendGuestCommand(guestid, "soloChat");};  
+	button.onclick = function(){sendGuestCommand(guestid, "soloChat");};
 	container.appendChild(button);
-	
+
 	var button = document.createElement("button");
 	button.innerHTML = "remote speaker";
-	button.onclick = function(){sendGuestCommand(guestid, "speaker");};  
+	button.onclick = function(){sendGuestCommand(guestid, "speaker");};
 	container.appendChild(button);
-	
+
 	var button = document.createElement("button");
 	button.innerHTML = "remote display";
-	button.onclick = function(){sendGuestCommand(guestid, "display");};  
+	button.onclick = function(){sendGuestCommand(guestid, "display");};
 	container.appendChild(button);
-	
+
 	var button = document.createElement("button");
 	button.innerHTML = "rainbow puke fix";
-	button.onclick = function(){sendGuestCommand(guestid, "forceKeyframe");};  
+	button.onclick = function(){sendGuestCommand(guestid, "forceKeyframe");};
 	container.appendChild(button);
-	
+
 	var button = document.createElement("button");
 	button.innerHTML = "highlight";
-	button.onclick = function(){sendGuestCommand(guestid, "soloVideo");};  
+	button.onclick = function(){sendGuestCommand(guestid, "soloVideo");};
 	container.appendChild(button);
-	
+
 	var button = document.createElement("button");
 	button.innerHTML = "scene 2";
-	button.onclick = function(){sendGuestCommand(guestid, "addScene", 2);};  
+	button.onclick = function(){sendGuestCommand(guestid, "addScene", 2);};
 	container.appendChild(button);
-	
+
 	var button = document.createElement("button");
 	button.innerHTML = "scene 3";
-	button.onclick = function(){sendGuestCommand(guestid, "addScene", 3);};  
+	button.onclick = function(){sendGuestCommand(guestid, "addScene", 3);};
 	container.appendChild(button);
-	
+
 	var button = document.createElement("button");
 	button.innerHTML = "scene 4";
-	button.onclick = function(){sendGuestCommand(guestid, "addScene", 4);};  
+	button.onclick = function(){sendGuestCommand(guestid, "addScene", 4);};
 	container.appendChild(button);
-	
+
 	var button = document.createElement("button");
 	button.innerHTML = "scene 5";
-	button.onclick = function(){sendGuestCommand(guestid, "addScene", 5);};  
+	button.onclick = function(){sendGuestCommand(guestid, "addScene", 5);};
 	container.appendChild(button);
-	
+
 	var button = document.createElement("button");
 	button.innerHTML = "scene 6";
-	button.onclick = function(){sendGuestCommand(guestid, "addScene", 6);};  
+	button.onclick = function(){sendGuestCommand(guestid, "addScene", 6);};
 	container.appendChild(button);
-	
+
 	var button = document.createElement("button");
 	button.innerHTML = " scene 7";
-	button.onclick = function(){sendGuestCommand(guestid, "addScene", 7);};  
+	button.onclick = function(){sendGuestCommand(guestid, "addScene", 7);};
 	container.appendChild(button);
-	
+
 	var button = document.createElement("button");
 	button.innerHTML = "scene 8";
-	button.onclick = function(){sendGuestCommand(guestid, "addScene", 8);};  
+	button.onclick = function(){sendGuestCommand(guestid, "addScene", 8);};
 	container.appendChild(button);
-	
+
 	var button = document.createElement("button");
 	button.innerHTML = "scene 'test'";
 	button.onclick = function(){sendGuestCommand(guestid, "addScene", 'test');};   // specifying a custom scene; it needs to be active for this to work..
 	container.appendChild(button);
-	
-	
+
+
 	var input = document.createElement("label");
 	input.innerHTML = "mic volume:";
 	container.appendChild(input);
@@ -480,9 +494,9 @@ function loadGuestCommands(guestid){
 	input.min = 0;
 	input.max = 200;
 	input.value = 100;
-	input.onchange = function(){sendGuestCommand(guestid, "volume", this.value);};  
+	input.onchange = function(){sendGuestCommand(guestid, "volume", this.value);};
 	container.appendChild(input);
-		
+
 }
 
 loadSelfCommands();

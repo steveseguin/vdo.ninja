@@ -1,11 +1,36 @@
-<html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<title>P2P Data Tunnel - VDO.Ninja</title>
+	<meta name="description" content="Use paired iframes to pass arbitrary data peer-to-peer via VDO.Ninja." />
+	<link rel="canonical" href="https://vdo.ninja/examples/p2p.html" />
+	<style>
+		body { margin: 0; padding: 2rem; background: #0f131d; color: #f5f6f8; line-height: 1.6;
+			font-family: "Segoe UI", system-ui, sans-serif; }
+		main { max-width: 44rem; margin: 0 auto; }
+		h1 { font-size: 1.4rem; margin: 0 0 .5rem; }
+		p { color: #c2cad8; }
+		code { background: #1c2333; padding: .1rem .35rem; border-radius: 4px; }
+		#results { margin-top: 1rem; padding: 1rem; max-height: 300px; overflow: auto;
+			background: #1c2333; border: 1px solid rgba(255,255,255,.08); border-radius: 10px;
+			font-family: Consolas, monospace; font-size: .9rem; }
+	</style>
+</head>
 <body>
-<div id="results" style="overflow:scroll;max-height:300px;">
-  starting...
-</div>
+<main>
+	<h1>P2P Data Tunnel</h1>
+	<p>Opens two hidden VDO.Ninja iframes &mdash; one publishing, one viewing &mdash; and bounces
+		<code>ping</code>/<code>pong</code> messages between them over the peer-to-peer data channel.
+		Received messages are logged below; open the browser console to watch the full exchange.</p>
+	<div id="results">
+		starting...
+	</div>
+</main>
 <script> // https://jsfiddle.net/steveseguin/0t3ayvk8/31/
   var connectionID = Math.random()*100000001;
-  function RecvDataWindow(){ 
+  function RecvDataWindow(){
     var iframe = document.createElement("iframe");
     iframe.src = "https://vdo.ninja/beta/?view="+connectionID+"&cleanoutput";
     iframe.style.width = "0px";
@@ -15,14 +40,14 @@
     iframe.style.top = "-100px";
     iframe.id = "frame1"
     document.body.appendChild(iframe);
-    
+
     var eventMethod = window.addEventListener ? "addEventListener" : "attachEvent";
     var eventer = window[eventMethod];
     var messageEvent = eventMethod === "attachEvent" ? "onmessage" : "message";
-    
+
     eventer(messageEvent, function (e) {
       if (e.source != iframe.contentWindow){return} // reject messages send from other iframes
-      if ("dataReceived" in e.data){ // raw data 
+      if ("dataReceived" in e.data){ // raw data
         document.getElementById("results").innerHTML += e.data.dataReceived+"<br />";
         console.log(e.data);
         try {
@@ -56,7 +81,7 @@
 
     eventer(messageEvent, function (e) {
       if (e.source != iframe.contentWindow){return} // reject messages send from other iframes
-      if ("dataReceived" in e.data){ // raw data 
+      if ("dataReceived" in e.data){ // raw data
         console.log(e.data);
         document.getElementById("results").innerHTML += e.data.dataReceived+"<br />";
       }

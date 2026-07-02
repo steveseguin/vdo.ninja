@@ -1668,22 +1668,6 @@ button#press2talk{
 	position: relative;
 }
 
-#chatlitebutton {
-	position: relative;
-}
-
-#chatLiteOverlayFrame {
-	position: fixed;
-	left: 0;
-	top: 0;
-	width: 100vw;
-	height: 100vh;
-	border: 0;
-	background: transparent;
-	pointer-events: none;
-	z-index: 6;
-}
-
 button.btnArmTransferRoom{
 	width:auto;
 	margin-left: 2px;
@@ -2694,22 +2678,21 @@ label {
 	position: absolute;
 	content: '';
 	height: 7px;
-	width: 50px;
+	width: inherit;
 	background: #000;
 	left: 50%;
-	margin-left: -25px;
 	font-weight: bold;
 	transition: all .3s ease-in;
 }
 
 .inner:before {
 	top: 50%;
-	transform: translateY(-50%) rotate(45deg);
+	transform: translate(-50%, -50%) rotate(45deg);
 }
 
 .inner:after {
 	top: 50%;
-	transform: translateY(-50%) rotate(-45deg);
+	transform: translate(-50%, -50%) rotate(-45deg);
 }
 
 .outer:hover .labelclass {
@@ -2718,7 +2701,7 @@ label {
 
 .outer:hover .inner:before,
 .outer:hover .inner:after {
-	transform: translateY(-50%) rotate(0);
+	transform: translate(-50%, -50%) rotate(0);
 }
 
 .outer:hover .inner:before {
@@ -4242,16 +4225,23 @@ label {
 	overflow-y: scroll;
 	overscroll-behavior: contain;
 	scrollbar-gutter: stable;
-	scrollbar-width: thin;
-	scrollbar-color: rgba(255,255,255,.6) rgba(0,0,0,.2);
+	scrollbar-width: auto;
+	scrollbar-color: auto;
 	padding-bottom: 10px;
 }
 .directorBlock.director-customizer-scroll > div,
 .directorBlock.director-customizer-scroll > div > div {
 	vertical-align: top;
 }
+#customizeLinks1 > .guest-customizer-stretch {
+	min-height: 440px;
+}
+#customizeLinks3 > div > div {
+	min-width: 245px;
+}
 .directorBlock.director-customizer-scroll::-webkit-scrollbar {
 	width: 10px;
+	background: rgba(0,0,0,.18);
 }
 .directorBlock.director-customizer-scroll::-webkit-scrollbar-track {
 	background: rgba(0,0,0,.18);
@@ -7172,7 +7162,8 @@ body.darktheme ul#roomnotes {
 	content: "\f057"; }
 .la-sun:before {
 	content: "\f185"; }
-	
+.la-cloud-upload-alt:before {
+	content: "\f382"; }
 
 /* Minimal visual refresh overrides — non-invasive, CSS-only. */
 /* CHANGES BELOW MADE 2025-08-22 */

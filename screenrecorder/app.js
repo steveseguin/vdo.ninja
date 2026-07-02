@@ -1342,10 +1342,6 @@ function shouldUseSourceNativeDisplayConstraints(options) {
   return options?.aspectRatio === SOURCE_MATCH_VALUE || options?.outputResolution === SOURCE_MATCH_VALUE;
 }
 
-function shouldResizeOutputToDisplaySource(options) {
-  return options?.aspectRatio === SOURCE_MATCH_VALUE || options?.outputResolution === SOURCE_MATCH_VALUE;
-}
-
 function buildDisplayConstraints(options, { includeExtended = true } = {}) {
   const constraints = {
     video: {
@@ -1441,7 +1437,7 @@ function canResizeOutputCanvas() {
 
 function applySourceMatchedOutputIfNeeded(options, { redraw = true } = {}) {
   refreshDisplaySourceSize();
-  if (!shouldResizeOutputToDisplaySource(options) || !canResizeOutputCanvas()) {
+  if (!shouldUseSourceNativeDisplayConstraints(options) || !canResizeOutputCanvas()) {
     return false;
   }
 

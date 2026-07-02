@@ -233,19 +233,22 @@ strong {
 
 .mic-level-row {
   display: grid;
-  grid-template-columns: 1fr auto;
+  grid-template-columns: auto 1fr;
   align-items: center;
-  gap: 10px;
-  margin-bottom: 10px;
+  gap: 12px;
+  margin-top: 10px;
 }
 
 .mic-level-row > span {
-  font-size: 0.95rem;
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--muted);
 }
 
 .mic-level-track {
-  width: 176px;
-  height: 10px;
+  width: 100%;
+  height: 12px;
   border-radius: 6px;
   border: 1px solid var(--line);
   background: rgba(14, 22, 30, 0.92);

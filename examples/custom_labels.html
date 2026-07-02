@@ -1,5 +1,8 @@
 <html>
 <head>
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<meta name="description" content="Display lower-third labels that update automatically as guests join with custom names." />
+	<link rel="canonical" href="https://vdo.ninja/examples/custom_labels.html" />
 <title>Custom Labels Overlay - VDO.Ninja</title>
 <meta charset="UTF-8">
 <style>
@@ -65,16 +68,16 @@ const streamID = urlParams.get('view') || "testoverlay123";
 document.getElementById("invite").href = "https://vdo.ninja/?autostart&webcam&label&push="+streamID;
 document.getElementById("invite").innerText = "https://vdo.ninja/?autostart&webcam&label&push="+streamID
 
-function loadIframe(url){ 
-	
+function loadIframe(url){
+
 	iframe.allow = "autoplay;camera;microphone;fullscreen;picture-in-picture;";
 
 	if (url==""){
 		url="./";
 	}
-	
+
 	iframe.src = url;
-	
+
 	var eventMethod = window.addEventListener ? "addEventListener" : "attachEvent";
 	var eventer = window[eventMethod];
 	var messageEvent = eventMethod === "attachEvent" ? "onmessage" : "message";
@@ -83,7 +86,7 @@ function loadIframe(url){
 		if (e.source != iframe.contentWindow){return} // reject messages send from other iframes
 		console.log(e.data);
 		if (!e.data.action || !("value" in e.data)){return;}
-		
+
 		if (e.data.action=="view-connection-info"){
 			if (e.data.value.label){
 				label.innerText = e.data.value.label.replace("_"," ");

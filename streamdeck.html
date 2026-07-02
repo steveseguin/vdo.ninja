@@ -35,7 +35,7 @@
             color: #1e2937;
             margin-bottom: 10px;
         }
-		
+
 		h4, h3 {
 			display: inline;
 		}
@@ -232,7 +232,7 @@
             margin-left: 20px;
             margin-top: 10px;
         }
-		
+
 		.site-footer {
             background-color: #f0f0f0;
             color: #333;
@@ -434,17 +434,28 @@
                         <td><code>https://api.vdo.ninja/YOUR_UNIQUE_API_KEY/addScene/1/0</code></td>
                         <td>Toggle Guest 1 in/out of Scene 0 (Auto-Mix/Main Scene)</td>
                     </tr>
+                    <tr>
+                        <td>Assign Guest 1 to Slot 2</td>
+                        <td><code>https://api.vdo.ninja/YOUR_UNIQUE_API_KEY/setslot/1/2</code></td>
+                        <td>Move the current guest in source slot 1 to destination slot 2</td>
+                    </tr>
+                    <tr>
+                        <td>Mute All Guests</td>
+                        <td><code>https://api.vdo.ninja/YOUR_UNIQUE_API_KEY/muteAllGuests/true</code></td>
+                        <td>Mute every non-director guest using the director's existing mute-all behavior</td>
+                    </tr>
                      <tr>
                         <td>Hangup Guest 2</td>
                         <td><code>https://api.vdo.ninja/YOUR_UNIQUE_API_KEY/hangup/2/null</code></td>
                         <td>Disconnect guest in slot 2</td>
                     </tr>
                 </table>
-                
+
                 <div class="warning-box">
                     <span class="warning-icon">⚠️</span>
                     <strong>Crucial Reminder:</strong> Always replace `YOUR_UNIQUE_API_KEY` with your actual API key in all URLs you configure on your StreamDeck buttons! And ensure "Access in background" is checked for each "Website" action.
                 </div>
+                <p><strong>Slot controls:</strong> <code>setslot</code> requires slot controls on the director page. Open the director with <code>&amp;slotmode=1</code>, or use the mixer app URL such as <code>/mixer?director=ROOM&amp;api=YOUR_UNIQUE_API_KEY</code>.</p>
             </div>
         </div>
 
@@ -456,7 +467,7 @@
             <div class="step-content">
                 <p>VDO.Ninja offers many more API commands. For a comprehensive list, please refer to the official API documentation (often found on the Companion-Ninja GitHub or VDO.Ninja docs).</p>
                 <p>Here are a few more examples of what's possible:</p>
-                
+
                 <h4>Scene Management (Director)</h4>
                 <table class="command-table">
                     <tr>
@@ -493,7 +504,7 @@
                     </tr>
                 </table>
 
-                <h4>Camera Control (PTZ - for compatible cameras, target can be `null` for self or guest slot)</h4>
+                <h4>Camera Control (PTZ - compatible cameras only)</h4>
                 <table class="command-table">
                     <tr>
                         <th>Function (Self Camera)</th>
@@ -518,7 +529,7 @@
                 </table>
                 <div class="tip-box">
                     <span class="tip-icon">💡</span>
-                    <strong>Targeting Guests for PTZ:</strong> To control a guest's PTZ camera, replace `null` with their guest slot number. For example, to zoom Guest 1's camera in: <code>https://api.vdo.ninja/YOUR_UNIQUE_API_KEY/zoom/1/0.1</code>
+                    <strong>Targeting Guests for PTZ:</strong> Local camera commands use <code>zoom</code>, <code>pan</code>, <code>tilt</code>, and <code>focus</code>. Director guest camera commands use <code>ptzZoom</code>, <code>ptzPan</code>, <code>ptzTilt</code>, and <code>ptzFocus</code>. For example, to zoom Guest 1's camera in: <code>https://api.vdo.ninja/YOUR_UNIQUE_API_KEY/ptzZoom/1/0.1</code>. The controlled camera page or guest publisher should open with <code>&amp;ptz</code> and approve the browser PTZ prompt.
                 </div>
             </div>
         </div>
@@ -545,7 +556,7 @@
                         <div class="streamdeck-button">Raise Hand</div>
                     </div>
                 </div>
-                
+
                 <h4>Director Control Set (for managing a show with guests)</h4>
                 <div style="background: #f3f4f6; padding: 20px; border-radius: 8px; margin: 20px 0;">
                      <p><i>(These are visual examples of how your StreamDeck might look. Each is a "Website" action.)</i></p>

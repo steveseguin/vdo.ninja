@@ -1,5 +1,7 @@
 <html>
-<head><title>Basic IFRAME Inbound Stats sample</title>
+<head>
+	<meta name="description" content="Request inbound connection stats over the IFRAME API and log them for inspection." />
+	<link rel="canonical" href="https://vdo.ninja/examples/iframe.inbound-stats.html" /><title>IFRAME Inbound Stats - VDO.Ninja</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
 <meta content="text/html;charset=utf-8" http-equiv="Content-Type" />
 <style>
@@ -95,8 +97,8 @@ button {
             button.onclick = function () {
                 sendSelfCommand("getDetailedState", true);
             };
-			
-			
+
+
 			var button2 = document.createElement("button");
             button2.id = "getStats";
             button2.innerHTML = "Get Full Connection Stats";
@@ -122,7 +124,7 @@ button {
 				}
             }, false);
 
-           
+
         }
     </script>
 </body>

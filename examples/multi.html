@@ -1,5 +1,7 @@
 <html>
-<head><title>Multi-Room Monitor - VDO.Ninja</title>
+<head>
+	<meta name="description" content="Open multiple director rooms in one tab using the ?rooms= list parameter." />
+	<link rel="canonical" href="https://vdo.ninja/examples/multi.html" /><title>Multi-Room Monitor - VDO.Ninja</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
 <meta content="text/html;charset=utf-8" http-equiv="Content-Type" />
 <style>
@@ -62,7 +64,7 @@ var rooms = "";
 if (urlParams.has("rooms") || urlParams.has("room") || urlParams.has("r")){
 	rooms = urlParams.get("rooms") || urlParams.get("room") || urlParams.get("r");
 	rooms = rooms.split(",");
-	
+
 	if (password == null){
 		password = prompt("Enter the password for the rooms; leave blank for none");
 	}
@@ -90,21 +92,21 @@ if (urlParams.has("rooms") || urlParams.has("room") || urlParams.has("r")){
 	document.write("To use, comma separate the room names. ie: https://vdo.ninja/examples/multi?rooms=xxxx,yyy,ccc");
 }
 
-function loadIframes(url){ 
+function loadIframes(url){
 	var iframe = document.createElement("iframe");
 	iframe.allow = "autoplay;camera;microphone;fullscreen;picture-in-picture;";
-	
+
 	var params = window.location.search || "";
-		
+
 	if (params.startsWith("?")){
 		params = params.slice(1);
 		iframe.src = url + "&" + params
 	} else {
 		iframe.src = url + params
 	}
-	
+
 	document.body.appendChild(iframe);
-	
+
 }
 
 </script>

@@ -1,15 +1,17 @@
 <!DOCTYPE html>
 <html>
 	<head>
+	<meta name="description" content="Modern chat overlay for OBS with avatars, styling toggles, and sanitised content." />
+	<link rel="canonical" href="https://vdo.ninja/examples/chatoverlay.html" />
 		<meta charset="utf8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
-		<title>VDON Chat Overlay</title>
+		<title>Clean Chat Overlay - VDO.Ninja</title>
 		<style>
 			@font-face {
 			  font-family: 'Cousine';
 			  src: url('fonts/Cousine-Bold.ttf') format('truetype');
 			}
-		
+
 			body {
 				margin: 0;
 				padding: 0 10px;
@@ -26,7 +28,7 @@
 
 			#chat-overlay {
 				margin: 0;
-				background-color: black; 
+				background-color: black;
 				padding: 8px 8px 0px 8px;
 				color: white;
 				font-family: Cousine, monospace;
@@ -42,7 +44,7 @@
 				hyphens: auto;
 				display: inline-block;
 			}
-			
+
 			#chat-overlay:empty {
 				display:none!important;
 			}
@@ -112,7 +114,7 @@
 					};
 				};
 			})(window);
-			
+
 			var urlParams = new URLSearchParams(window.location.search);
 
 			function loadIframe() {
@@ -127,16 +129,16 @@
 
 				var iframe = document.createElement("iframe");
 				iframe.allow = "autoplay";
-				var srcString = "./?datamode&label=chatOverlay" + 
-					(room ? "&scene&room=" + room : "") + 
-					(view ? "&view=" + view : "") + 
+				var srcString = "./?datamode&label=chatOverlay" +
+					(room ? "&scene&room=" + room : "") +
+					(view ? "&view=" + view : "") +
 					(password ? "&password=" + password : "");
-				
+
 				iframe.src = srcString;
 				iframe.style.width = "0";
 				iframe.style.height = "0";
 				iframe.style.border = "0";
-				
+
 				document.body.appendChild(iframe);
 
 				var eventMethod = window.addEventListener ? "addEventListener" : "attachEvent";

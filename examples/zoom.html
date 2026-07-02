@@ -1,12 +1,28 @@
 
 <html>
-<head><style>
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<title>Zoom Capture Helper - VDO.Ninja</title>
+	<meta name="description" content="Local capture preview that goes fullscreen for easy window capture." />
+	<link rel="canonical" href="https://vdo.ninja/examples/zoom.html" />
+	<meta property="og:type" content="website" />
+	<meta property="og:site_name" content="VDO.Ninja" />
+	<meta property="og:url" content="https://vdo.ninja/examples/zoom.html" />
+	<meta property="og:title" content="Zoom Capture Helper - VDO.Ninja" />
+	<meta property="og:description" content="Local capture preview that goes fullscreen for easy window capture." />
+	<meta property="og:image" content="https://vdo.ninja/media/vdoNinja_logo_full.png" />
+	<meta name="twitter:card" content="summary_large_image" />
+	<meta name="twitter:title" content="Zoom Capture Helper - VDO.Ninja" />
+	<meta name="twitter:description" content="Local capture preview that goes fullscreen for easy window capture." />
+	<meta name="twitter:image" content="https://vdo.ninja/media/vdoNinja_logo_full.png" />
+	<style>
 span{margin:10px 0 0 0;display:block;} 
 body {
 	
 	background-color:#cdf;
 	padding:0;
-	width;100%;height:100%
+	width:100%;height:100%
 } 
 
 input{padding:5px;}
@@ -18,8 +34,9 @@ button {margin:10px 3px;}
 }
 
  </style></head>
-<body id="main" style="margin:5%;"
-<meta charset="utf-8"/>
+<body id="main" style="margin:5%;">
+<h1 style="font-family:'Segoe UI',system-ui,sans-serif;font-size:1.3rem;margin:0 0 .25rem;">Zoom Capture Helper</h1>
+<p style="font-family:'Segoe UI',system-ui,sans-serif;color:#243;max-width:44rem;margin:0 0 1rem;line-height:1.5;">Pick a camera and microphone to preview locally, then click <strong>FULL WINDOW</strong> to blow the video up full-screen for easy window or screen capture (e.g. into Zoom or OBS).</p>
 
 <video id="video" autoplay="true" muted="true" playsinline style='height:420px;background-color:black;display:block;margin:0 0 10px 0;'></video>
 <div id="devices">

@@ -7,7 +7,7 @@ import {
   bridgeLegacyMeters,
   monitorTrackLevel,
 } from '../core/index.js';
-import { IcecastPublisher, ICECAST_MIME_OPTIONS } from './icecast-publisher.js?v=3';
+import { IcecastPublisher, ICECAST_MIME_OPTIONS } from './icecast-publisher.js?v=4';
 
 const STUDIO_ROOT_ID = 'podcast-root';
 const ROSTER_REFRESH_MS = 1500;
@@ -67,7 +67,7 @@ function injectStylesheet() {
   const link = document.createElement('link');
   link.id = 'podcast-studio-style';
   link.rel = 'stylesheet';
-  link.href = new URL('./studio.css?v=15', import.meta.url).toString();
+  link.href = new URL('./studio.css?v=16', import.meta.url).toString();
   document.head.appendChild(link);
 }
 
@@ -1999,8 +1999,6 @@ class PodcastStudioApp {
     }
     if (typeof window.pokeIframeAPI === 'function') {
       window.pokeIframeAPI('director-share', false, false, this.session.streamID);
-    }
-    if (typeof window.pokeIframeAPI === 'function') {
       window.pokeIframeAPI('seeding', false, false, this.session.streamID);
     }
     if (typeof window.pokeAPI === 'function') {

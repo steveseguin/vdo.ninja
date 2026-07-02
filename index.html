@@ -48,7 +48,7 @@
 		
 		<meta name="msapplication-TileColor" content="#da532c" />
 		<meta name="theme-color" content="#0f131d" />
-		<link rel="stylesheet" href="./main.css?ver=4040" />
+		<link rel="stylesheet" href="./main.css?ver=4041" />
 		<script type="text/javascript" crossorigin="anonymous" src="./thirdparty/adapter.js"></script>
 		
 		<link rel="shortcut icon" href="data:image/x-icon;," type="image/x-icon" />
@@ -214,6 +214,10 @@
                     <div id="muteAllGuests" title="Mute all guests in room (toggle)" alt="Mute all guests in room (toggle)" aria-label="Mute all guests in room" onmousedown="event.preventDefault(); event.stopPropagation();"  onclick="muteAllGuests(this, event)"  tabindex="2" role="button" aria-pressed="false" onkeyup="enterPressedClick(event,this);"  class="hidden float" style="cursor: pointer;" >
                         <i class="toggleSize las la-users"></i>
                     </div>
+
+                    <div id="gdriveAllGuests" title="Start/stop Google Drive recording for all guests" alt="Start/stop Google Drive recording for all guests" aria-label="Start or stop Google Drive recording for all guests" onmousedown="event.preventDefault(); event.stopPropagation();"  onclick="remoteGlobalGdriveRecordToggle(this)"  tabindex="2" role="button" aria-pressed="false" onkeyup="enterPressedClick(event,this);"  class="hidden float" style="cursor: pointer;" >
+                        <i class="toggleSize las la-cloud-upload-alt"></i>
+                    </div>
                 
                     <div id="queuebutton" title="Load the next guest in queue" alt="Load the next guest in queue"  aria-label="Load next guest in queue" onmousedown="event.preventDefault(); event.stopPropagation();"  onclick="nextQueue()"  tabindex="2" role="button" aria-pressed="false" onkeyup="enterPressedClick(event,this);"  class="hidden float" style="cursor: pointer;" >
                         <i id="queuetoggle" class="toggleSize las la-stream"></i>
@@ -226,23 +230,6 @@
                     <div id="chatbutton" title="Toggle the Chat" alt="Toggle the Chat" aria-label="Text chat" onmousedown="event.preventDefault(); event.stopPropagation();"  onclick="toggleChat()"  tabindex="2" role="button" aria-pressed="false" onkeyup="enterPressedClick(event,this);"  class="hidden float" style="cursor: pointer;" >
                         <i id="chattoggle" class="toggleSize las la-comment-alt"></i>
                         <div id="chatNotification"></div>
-                    </div>
-                    <div
-                        id="chatlitebutton"
-                        title="Toggle Social Stream Lite overlay (SHIFT-click setup, ALT/CTRL-click TTS)"
-                        alt="Toggle Social Stream Lite overlay"
-                        aria-label="Social Stream Lite overlay"
-                        onmousedown="event.preventDefault(); event.stopPropagation();"
-                        oncontextmenu="event.preventDefault(); openChatLiteSettings(); return false;"
-                        onclick="toggleChatLiteOverlay(event)"
-                        tabindex="2"
-                        role="button"
-                        aria-pressed="false"
-                        onkeyup="enterPressedClick(event,this);"
-                        class="hidden float"
-                        style="cursor: pointer;"
-                    >
-                        <i id="chatlitetoggle" class="toggleSize las la-broadcast-tower"></i>
                     </div>
                     <div id="mutespeakerbutton" onmousedown="handleSpeakerButtonMouseDown(event)" alt="Toggle the speaker output." aria-label="Mute Speaker output" title="Mute the Speaker (ALT + A)" onclick="toggleSpeakerMute()"  tabindex="2" role="button" aria-pressed="false" onkeyup="enterPressedClick(event,this);"  class="hidden float" style="cursor: pointer;" >
                         <i id="mutespeakertoggle" class="toggleSize las la-volume-up" style="position: relative; top: 0.5px;"></i>
@@ -1329,8 +1316,8 @@
 					<span>
 				</div>
 			</div><div class='directorContainer' id="customizeLinks" style='display:none;margin-top:0;padding-top:15px'>
-				<div class='directorBlock director-customizer-scroll' id="customizeLinks1" style='display:none;margin-top:0;padding-bottom:0;'>
-					<div style="display:inline-block;margin-top: 12px;   position: relative;  margin-right:10px;">
+				<div class='directorBlock director-customizer-scroll' id="customizeLinks1" style='display:none;margin-top:5px;padding-bottom:0;'>
+					<div class="guest-customizer-stretch" style="display:inline-block;margin-top: 12px;   position: relative;  margin-right:10px;">
 						<label class="switch" title="Disables Echo Cancellation and improves audio quality">
 						<input type="checkbox" autocomplete="off" data-param="&s" onchange="updateLink(1,this);">
 						<span class="slider"></span>
@@ -1386,6 +1373,12 @@
 						  <span class="slider"></span>
 						</label>
 						<span data-translate="show-fullscreen-button">Show fullscreen button</span>
+						<br />
+						<label class="switch" title="Hide file sharing from guests">
+						  <input type="checkbox" autocomplete="off" data-param="&nofileshare" onchange="updateLink(1,this);">
+						  <span class="slider"></span>
+						</label>
+						<span data-translate="hide-file-sharing">Hide file sharing</span>
 						
 					</div>
 					<div  style="display:inline-block;margin-top: 12px; position: relative; margin-right:10px;">
@@ -1419,24 +1412,6 @@
 						</label>
 						<span data-translate="hide-setting-buttons">Hide settings button</span>
 						<br />
-						<label class="switch" title="Hide file sharing from guests">
-						  <input type="checkbox" autocomplete="off" data-param="&nofileshare" onchange="updateLink(1,this);">
-						  <span class="slider"></span>
-						</label>
-						<span data-translate="hide-file-sharing">Hide file sharing</span>
-						<br />
-						<label class="switch" title="Hide own screen-share preview">
-						  <input type="checkbox" autocomplete="off" data-param="&hidescreenshare" onchange="updateLink(1,this);">
-						  <span class="slider"></span>
-						</label>
-						<span data-translate="hide-local-share">Hide local share</span>
-						<br />
-						<label class="switch" title="Allow the guest to select an avatar image for when they hide their camera">
-						  <input type="checkbox" autocomplete="off" data-param="&avatar" onchange="updateLink(1,this);">
-						  <span class="slider"></span>
-						</label>
-						<span data-translate="avatar-selection">Can select an Avatar image</span>
-						<br />
 						<label class="switch" title="Allow the guests to pick a virtual backscreen effect">
 						  <input type="checkbox" autocomplete="off" data-param="&effects" onchange="updateLink(1,this);">
 						  <span class="slider"></span>
@@ -1457,9 +1432,27 @@
 						</label>
 						<span class="tooltip" style='cursor: help;position:relative;bottom:2px;font-family:"Noto Color Emoji", "Apple Color Emoji", "Segoe UI Emoji", Times, Symbola, Aegyptus, Code2000, Code2001, Code2002, Musica, serif, LastResort;'>⚠<span class="tooltiptext">Pretty experimental and limited browser support, though relatively low CPU usage.</span></span>
 						<span data-translate="chunked-mode">P2P Chunked-mode</span>
+						<br />
+						<label class="switch" title="Hide own screen-share preview">
+						  <input type="checkbox" autocomplete="off" data-param="&hidescreenshare" onchange="updateLink(1,this);">
+						  <span class="slider"></span>
+						</label>
+						<span data-translate="hide-local-share">Hide local share</span>
+						<br />
+						<label class="switch" title="Bias screen shares toward sharper text">
+						  <input type="checkbox" autocomplete="off" data-param="&sharperscreen" onchange="updateLink(1,this);">
+						  <span class="slider"></span>
+						</label>
+						<span data-translate="sharper-screen-share">Sharper screen share</span>
+						<br />
+						<label class="switch" title="Request a higher screen-share bitrate">
+						  <input type="checkbox" autocomplete="off" data-param="&screensharebitrate=3500" onchange="updateLink(1,this);">
+						  <span class="slider"></span>
+						</label>
+						<span data-translate="screen-share-bitrate">Screen share bitrate</span>
 						
 					</div>
-					<div  style="display:inline-block;margin-top: 12px; position: relative; margin-right:10px;">
+					<div class="guest-customizer-stretch" style="display:inline-block;margin-top: 12px; position: relative; margin-right:10px;">
 						<label class="switch" title="Increase video quality that guests in room see.">
 						  <input type="checkbox" autocomplete="off" data-param="&trb=2000" onchange="updateLink(1,this);">
 						  <span class="slider"></span>
@@ -1502,17 +1495,11 @@
 						</label>
 						<span data-translate="prefix-screenshare">Prefix screenshare IDs</span>	
 						<br />
-						<label class="switch" title="Bias screen shares toward sharper text">
-						  <input type="checkbox" autocomplete="off" data-param="&sharperscreen" onchange="updateLink(1,this);">
+						<label class="switch" title="Allow the guest to select an avatar image for when they hide their camera">
+						  <input type="checkbox" autocomplete="off" data-param="&avatar" onchange="updateLink(1,this);">
 						  <span class="slider"></span>
 						</label>
-						<span data-translate="sharper-screen-share">Sharper screen share</span>
-						<br />
-						<label class="switch" title="Request a higher screen-share bitrate">
-						  <input type="checkbox" autocomplete="off" data-param="&screensharebitrate=3500" onchange="updateLink(1,this);">
-						  <span class="slider"></span>
-						</label>
-						<span data-translate="screen-share-bitrate">Screen share bitrate</span>
+						<span data-translate="avatar-selection">Can select an Avatar image</span>
 						<br />
 						<label class="switch" title="Request 30 FPS for screen share">
 						  <input type="checkbox" autocomplete="off" data-param="&screensharefps=30" onchange="updateLink(1,this);">
@@ -1550,13 +1537,6 @@
 						<span data-translate="rule-of-thirds">Show rule-of-thirds grid</span>
 						
 						<br />
-						<label class="switch" title="Guests receive only the director">
-						  <input type="checkbox" autocomplete="off" data-param="&directoronly" onchange="updateLink(1,this);">
-						  <span class="slider"></span>
-						</label>
-						<span data-translate="director-only-guests">Director-only guests</span>
-
-						<br />
 						<label class="switch" title="The guest can only see the Director's video, if provided">
 						  <input type="checkbox" autocomplete="off" data-param="&broadcast" id="broadcastSlider" onchange="updateLink(1,this);">
 						  <span class="slider"></span>
@@ -1575,18 +1555,6 @@
 						</label>
 						<span data-translate="unmute-by-director-only">Muted; director can unmute</span>
 						<br />
-						<label class="switch" title="Let the guest choose audio-only joining">
-						  <input type="checkbox" autocomplete="off" data-param="&miconlyoption" onchange="updateLink(1,this);">
-						  <span class="slider"></span>
-						</label>
-						<span data-translate="mic-only-option">Mic-only option</span>
-						<br />
-						<label class="switch" title="Guest camera starts muted">
-						  <input type="checkbox" autocomplete="off" data-param="&videomute" onchange="updateLink(1,this);">
-						  <span class="slider"></span>
-						</label>
-						<span data-translate="camera-muted-on-join">Camera muted on join</span>
-						<br />
 						<label class="switch" title="The guest will not be asked for a video device on connection">
 						  <input type="checkbox" autocomplete="off" id="vd0toggle" data-param="&vd=0" onchange="if(getById('vd1toggle').checked){getById('vd1toggle').checked=false;updateLink(1,getById('vd1toggle'));} updateLink(1,this);">
 						  <span class="slider"></span>
@@ -1598,6 +1566,24 @@
 						  <span class="slider"></span>
 						</label>
 						<span data-translate="obfuscate-link">Obfuscate with Invite.cam</span>
+						<br />
+						<label class="switch" title="Guests receive only the director">
+						  <input type="checkbox" autocomplete="off" data-param="&directoronly" onchange="updateLink(1,this);">
+						  <span class="slider"></span>
+						</label>
+						<span data-translate="director-only-guests">Director-only guests</span>
+						<br />
+						<label class="switch" title="Let the guest choose audio-only joining">
+						  <input type="checkbox" autocomplete="off" data-param="&miconlyoption" onchange="updateLink(1,this);">
+						  <span class="slider"></span>
+						</label>
+						<span data-translate="mic-only-option">Mic-only option</span>
+						<br />
+						<label class="switch" title="Guest camera starts muted">
+						  <input type="checkbox" autocomplete="off" data-param="&videomute" onchange="updateLink(1,this);">
+						  <span class="slider"></span>
+						</label>
+						<span data-translate="camera-muted-on-join">Camera muted on join</span>
 					</div>
 				</div><div class='directorBlock director-customizer-scroll' id="customizeLinks3" style='display:none;margin-top:5px;padding-bottom:0;'>
 					<div  style="display:inline-block; position: relative; margin-right:10px; ">
@@ -1636,6 +1622,27 @@
 								<span class="slider"></span>
 							</label><span class="tooltip" style='cursor: help;position:relative;bottom:2px;font-family:"Noto Color Emoji", "Apple Color Emoji", "Segoe UI Emoji", Times, Symbola, Aegyptus, Code2000, Code2001, Code2002, Musica, serif, LastResort;'>💉<span class="tooltiptext" style="width: 10em; background-color: #77C"><span data-translate="this-can-reduce-packet-loss">Can reduce packet loss video corruption in OBS on PC</span></span></span> 
 							<span data-translate="use-h264-codec">Use H264 codec</span>
+							<br />
+
+							<label class="switch" title="Keep the scene output clean for OBS">
+								<input type="checkbox" autocomplete="off" data-param="&cleanoutput" onchange="updateLink(3,this, true);">
+								<span class="slider"></span>
+							</label>
+							<span data-translate="clean-obs-output">Clean OBS output</span>
+							<br />
+
+							<label class="switch" title="Hide the video control bar">
+								<input type="checkbox" autocomplete="off" data-param="&nocontrols" onchange="updateLink(3,this, true);">
+								<span class="slider"></span>
+							</label>
+							<span data-translate="hide-video-controls">Hide video controls</span>
+							<br />
+
+							<label class="switch" title="Show a muted status icon on remote tiles">
+								<input type="checkbox" autocomplete="off" data-param="&mutestatus" onchange="updateLink(3,this, true);">
+								<span class="slider"></span>
+							</label>
+							<span data-translate="show-muted-status">Show muted status</span>
 							
 						</div>
 						<div style="display:inline-block;margin-top: 12px; position: relative; margin-right:10px; ">
@@ -1673,6 +1680,27 @@
 							  <span class="slider"></span>
 							</label>
 							<span data-translate="square-corners">Square corners</span>
+							<br />
+
+							<label class="switch" title="Show a green outline around active speakers">
+							  <input type="checkbox" autocomplete="off" data-param="&meterstyle=2" onchange="updateLink(3,this, true);">
+							  <span class="slider"></span>
+							</label>
+							<span data-translate="show-speaker-outline">Show speaker outline</span>
+							<br />
+
+							<label class="switch" title="Disable audio playback for this scene">
+							  <input type="checkbox" autocomplete="off" data-param="&noaudio" onchange="updateLink(3,this, true);">
+							  <span class="slider"></span>
+							</label>
+							<span data-translate="video-only">Video only</span>
+							<br />
+
+							<label class="switch" title="Disable video playback for this scene">
+							  <input type="checkbox" autocomplete="off" data-param="&novideo" onchange="updateLink(3,this, true);">
+							  <span class="slider"></span>
+							</label>
+							<span data-translate="audio-only">Audio only</span>
 							
 						</div>
 						
@@ -1712,6 +1740,27 @@
 							</label>
 							<span class="tooltip" style='cursor: help;position:relative;bottom:2px;font-family:"Noto Color Emoji", "Apple Color Emoji", "Segoe UI Emoji", Times, Symbola, Aegyptus, Code2000, Code2001, Code2002, Musica, serif, LastResort;'>⚠<span class="tooltiptext">This can cause higher CPU load for everyone in the room</span></span>
 							<span data-translate="disable-downscaling">Increase sharpness</span>
+							<br />
+
+							<label class="switch" title="Exclude the director's audio from this scene">
+							  <input type="checkbox" autocomplete="off" data-param="&nodirectoraudio" onchange="updateLink(3,this, true);">
+							  <span class="slider"></span>
+							</label>
+							<span data-translate="exclude-director-audio">Exclude director audio</span>
+							<br />
+
+							<label class="switch" title="Exclude the director's video from this scene">
+							  <input type="checkbox" autocomplete="off" data-param="&nodirectorvideo" onchange="updateLink(3,this, true);">
+							  <span class="slider"></span>
+							</label>
+							<span data-translate="exclude-director-video">Exclude director video</span>
+							<br />
+
+							<label class="switch" title="Randomize the order videos load into the scene">
+							  <input type="checkbox" autocomplete="off" data-param="&randomize" onchange="updateLink(3,this, true);">
+							  <span class="slider"></span>
+							</label>
+							<span data-translate="randomize-tile-order">Randomize tile order</span>
 						</div>
 						
 						<div  style="display:inline-block;margin-top: 12px; position: relative; ">
@@ -1749,6 +1798,27 @@
 							  <span class="slider"></span>
 							</label>
 							<span data-translate="vertical-aspect-ratio">Vertical video mode</span>
+							<br />
+
+							<label class="switch" title="Add a small playback buffer to smooth jitter">
+							  <input type="checkbox" autocomplete="off" data-param="&buffer=500" onchange="updateLink(3,this, true);">
+							  <span class="slider"></span>
+							</label>
+							<span data-translate="add-jitter-buffer">Add jitter buffer</span>
+							<br />
+
+							<label class="switch" title="Optimize the scene for 4:3 video">
+							  <input type="checkbox" autocomplete="off" data-param="&43" onchange="updateLink(3,this, true);">
+							  <span class="slider"></span>
+							</label>
+							<span data-translate="four-three-scene-mode">4:3 scene mode</span>
+							<br />
+
+							<label class="switch" title="Optimize the scene for square video">
+							  <input type="checkbox" autocomplete="off" data-param="&square" onchange="updateLink(3,this, true);">
+							  <span class="slider"></span>
+							</label>
+							<span data-translate="square-scene-mode">Square scene mode</span>
 						</div>
 					</div>
 				</div>
@@ -3274,7 +3344,7 @@
 			// if (!window.location.search){document.body.innerHTML = "";} // uncomment this line, if you wish to try it.
 			
 			var session = WebRTC.Media; // session is a required global variable if configuring manually. Run before loading main.js but after webrtc.js.
-			session.version = "30.1"; // added director claim-time room admission controls (cap + bypass key + approval queue)
+			session.version = "30.2"; // added director claim-time room admission controls (cap + bypass key + approval queue)
 			session.streamID = session.generateStreamID(); // randomly generates a streamID for this session. You can set your own programmatically if needed
 			
 			session.defaultPassword = "someEncryptionKey123"; // Change this password if self-deploying for added security/privacy
@@ -3403,8 +3473,8 @@
 		<!-- Authentication client -->
 		<script type="text/javascript" crossorigin="anonymous" src="./auth-client.js?v=15"></script>
 
-		<script type="text/javascript" crossorigin="anonymous" id="lib-js" src="./lib.js?ver=14168"></script>
-		<script type="text/javascript" crossorigin="anonymous" id="main-js" src="./main.js?ver=1066"></script>
+		<script type="text/javascript" crossorigin="anonymous" id="lib-js" src="./lib.js?ver=14171"></script>
+		<script type="text/javascript" crossorigin="anonymous" id="main-js" src="./main.js?ver=1067"></script>
 		<script type="module" src="./podcast/bootstrap.js"></script>
 		
 	</body>

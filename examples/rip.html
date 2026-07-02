@@ -1,5 +1,9 @@
 <html>
-<head><title>RIP Canvas Relay - VDO.Ninja</title>
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<meta name="description" content="Capture a remote view to a hidden canvas for further processing or mixing." />
+	<link rel="canonical" href="https://vdo.ninja/examples/rip.html" /><title>RIP Canvas Relay - VDO.Ninja</title>
 <style>
 body{
 	padding:0;
@@ -57,22 +61,22 @@ function dosomething(){
 		mediastream = null;
 	}
 	video.load();
-	
+
 }
-function loadIframe(url=false){ 
-	
+function loadIframe(url=false){
+
 	if (url){
 		var iframesrc = url;
 	} else {
 		var iframesrc = document.getElementById("viewlink").value;
 	}
-	
+
 	iframe.allow = "autoplay;camera;microphone;fullscreen;picture-in-picture;";
 
 	if (iframesrc==""){
 		iframesrc="./";
 	}
-	
+
 	iframe.src = iframesrc;
 	document.body.appendChild(iframe);
 
