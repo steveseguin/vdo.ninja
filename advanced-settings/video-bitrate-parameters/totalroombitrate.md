@@ -23,17 +23,27 @@ Example: `&totalroombitrate=4000` or `&totalroombitrate=2000,1000`
 
 ## Details
 
-The total bitrate a guest in a room can view video streams with; their combined bitrate total of all inbound video streams.
+The total bitrate a guest in a room can view video streams with; their combined bitrate total of all inbound room video streams. This is commonly shortened to `&trb`.
 
 {% hint style="info" %}
 The default value is 500-kbps.
 {% endhint %}
 
-Split between the number of streams that guest is viewing.
+The value is split between the number of visible streams that guest is viewing.
 
 So for example, with 6-guests in a room, the default of 500-kbps will have each guest requesting 100-kbps from each other. 5 streams x 100-kbps.
 
-For guest-only conferencing rooms, VDO.Ninja may use automatic room-only tiers when no explicit total room bitrate is set. These tiers raise the default room budget for normal or stronger devices while keeping weaker mobile devices more protected. See [room-only-mobile-bitrate-tiers.md](../../guides/room-only-mobile-bitrate-tiers.md "mention") for the high-level guide.
+For guest-only conferencing rooms, VDO.Ninja may use automatic room-only tiers when no explicit total room bitrate is set and no director or scene viewer is connected. These tiers raise the default room budget for normal or stronger devices while keeping weaker mobile devices more protected. See [room-only-mobile-bitrate-tiers.md](../../guides/room-only-mobile-bitrate-tiers.md "mention") for the high-level guide.
+
+### Persistence
+
+The room name itself does not permanently save a `&totalroombitrate` value. To make a room consistently start at a higher bitrate, include the parameter in the links used to join the room.
+
+For example:
+
+`https://vdo.ninja/?director=RoomName&trb=4000`
+
+If several people might join first as director or host, each of their bookmarked links should include the same value.
 
 ### Two values
 
@@ -58,7 +68,7 @@ Consider using [`&broadcast`](../view-parameters/broadcast.md), combined with ei
 
 If the director joins the room, they automatically set the default total room bitrate for every guest that joins the room; guests will match the director's value. This feature may even override the URL-parameter that any guest might have added to their URL already, depending on version of VDO.Ninja. (still being tweaked based on user feedback)
 
-The director can also dynamically change their total room bitrate value using a slider that appears when pressing the room-settings button in the lower control bar. This will instantly change the total room bitrate value for all guests.
+The director can also dynamically change their total room bitrate value using a slider that appears when pressing the room-settings button in the lower control bar. This will instantly change the total room bitrate value for all guests in the active room, but it is not a permanent saved room setting after everyone leaves.
 
 ![The director can change the room's default TRB value dynamically](<../../.gitbook/assets/image (28) (1).png>)
 
