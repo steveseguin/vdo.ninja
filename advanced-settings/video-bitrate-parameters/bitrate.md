@@ -23,7 +23,7 @@ Example: `&videobitrate=6000`
 
 `&videobitrate` sets the target video bitrate of a video feed in a solo link or the video feeds in a scene.
 
-This parameter is only for scenes and solo links. Use [`&totalroombitrate`](totalroombitrate.md) for example to set up the video bitrate for guests in a room.
+For rooms, use [`&totalroombitrate`](totalroombitrate.md) / `&trb` when you specifically want to control guest-to-guest room viewing quality. If `&totalroombitrate` is not set on a room link, `&videobitrate` can be used as that guest's initial total room bitrate target.
 
 If the sender uses [`&outboundvideobitrate`](and-outboundvideobitrate.md), that sets the default target bitrate on the push side. A viewer-set `&videobitrate` overrides that default. A sender-side [`&maxvideobitrate`](and-maxvideobitrate.md) still caps the maximum bitrate, regardless of what the viewer requests.
 

@@ -130,7 +130,7 @@ If you are self-hosting VDO.Ninja, often these URL parameters can be hard-coded 
 | `contenthint`        | `contenttype`, `content`, `hint`                | String                | Sets content processing hint    |
 | `controlbarspace`    | -                                               | Boolean               | -                               |
 | `controls`           | `videocontrols`                                 | Boolean               | Shows video controls            |
-| `controlroombitrate` | `crb`                                           | Boolean               | -                               |
+| `controlroombitrate` | `crb`                                           | Boolean               | Lets a guest lower their own room receive bitrate from settings |
 | `cover`              | -                                               | Boolean               | Sets cover mode for video       |
 | `crop`               | -                                               | Integer (-100 to 100) | Sets video crop                 |
 | `css`                | -                                               | URL                   | Applies external CSS            |
@@ -333,7 +333,7 @@ If you are self-hosting VDO.Ninja, often these URL parameters can be hard-coded 
 | `mfh`                  | See `highlightmute`  | -                    | -                           |
 | `minipreview`          | `mini`               | Boolean/Integer      | Shows mini preview          |
 | `minipreviewoffset`    | `mpo`                | Integer (-20 to 120) | -                           |
-| `minroombitrate`       | `mrb`                | Integer              | -                           |
+| `minroombitrate`       | `mrb`                | Integer              | Per-visible-feed floor when splitting total room bitrate |
 | `mirror`               | -                    | Integer (0-3)        | Sets mirror mode            |
 | `mono`                 | -                    | Boolean              | Forces mono audio           |
 | `morescenes`           | -                    | Integer              | -                           |
@@ -467,7 +467,7 @@ If you are self-hosting VDO.Ninja, often these URL parameters can be hard-coded 
 | `retransmit`        | -                 | Boolean            | -                      |
 | `retrytimeout`      | -                 | Integer (min 5000) | -                      |
 | `room`              | `r`, `roomid`     | String             | Sets room ID           |
-| `roombitrate`       | `rbr`             | Integer            | Sets room bitrate      |
+| `roombitrate`       | `rbr`             | Integer            | Caps how much room guests can request from this publisher |
 | `roomcap`           | `rcap`            | Integer            | Claimed-room admission cap |
 | `roomkey`           | `rk`              | String             | Claimed-room bypass key |
 | `roomonlybitrate`   | See `roomtier2bitrate` | -              | -                      |
@@ -495,7 +495,7 @@ If you are self-hosting VDO.Ninja, often these URL parameters can be hard-coded 
 | `screenshare`            | `ss`                                       | Boolean/String           | Enables screen sharing        |
 | `screensharecontenthint` | `sscontenthint`, `sscontent`, `sshint`     | String                   | -                             |
 | `screenshareaec`         | `ssec`, `ssaec`                            | Boolean                  | Screen share audio settings   |
-| `screensharebitrate`     | `ssbitrate`                                | Integer                  | Sets screen share bitrate     |
+| `screensharebitrate`     | `ssbitrate`                                | Integer                  | Sets screen-share receive bitrate override |
 | `screensharecodec`       | -                                          | String                   | -                             |
 | `screensharefps`         | `ssfps`                                    | Integer                  | Sets screen share framerate   |
 | `screenshareid`          | `ssid`                                     | String                   | -                             |
@@ -553,8 +553,8 @@ If you are self-hosting VDO.Ninja, often these URL parameters can be hard-coded 
 | `timer`            | -                          | Integer (1-9) | Sets timer position          |
 | `to`               | See `tallyoff`             | -             | -                            |
 | `token`            | -                          | String        | Authentication token         |
-| `totalbitrate`     | `tb`                       | Integer       | -                            |
-| `totalroombitrate` | `trb`, `tb`                | Integer       | Sets total room bitrate      |
+| `totalbitrate`     | `tb`                       | Integer       | Shortcut that sets both total scene and total room bitrate flags |
+| `totalroombitrate` | `trb`                      | Integer       | Sets total guest-to-guest room viewing budget |
 | `transcript`       | `transcribe`, `trans`      | String        | -                            |
 | `transparent`      | `transparency`             | Boolean       | Makes background transparent |
 | `trb`              | See `totalroombitrate`     | -             | -                            |
