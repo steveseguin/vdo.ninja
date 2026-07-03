@@ -29,6 +29,7 @@ These options help with unstable peer-to-peer links and recovery behavior:
 - [`&chatlite`](../../newly-added-parameters/and-chatlite.md)
 - [`&chatlitebutton`](../../newly-added-parameters/and-chatlite.md) (alias: `&ssnchatbutton`)
 - [`&chatlitesession`](../../newly-added-parameters/and-chatlite.md) (alias: `&ssnsession`)
+- [`&chatliteprofile`](../../newly-added-parameters/and-chatlite.md), `&chatliteposition`, `&chatlitemax`, `&chatlitetransparent`, `&chatlitenoavatar`, `&chatliteconfig`, `&chatlitetts`
 
 ### Synthetic Test Media (Automation)
 

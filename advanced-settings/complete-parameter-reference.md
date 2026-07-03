@@ -99,6 +99,13 @@ If you are self-hosting VDO.Ninja, often these URL parameters can be hard-coded 
 | `chatlite`           | `ssnlite`, `socialstreamlite`                   | Boolean               | Enables Chat Lite integration   |
 | `chatlitebutton`     | `ssnchatbutton`                                 | Boolean               | Shows Chat Lite control button  |
 | `chatlitesession`    | `ssnsession`                                    | String                | Sets Chat Lite session ID       |
+| `chatliteprofile`    | -                                               | String                | Sets Chat Lite activity density/profile |
+| `chatliteposition`   | -                                               | String                | Positions Chat Lite activity overlay |
+| `chatlitemax`        | -                                               | Integer               | Sets Chat Lite retained/visible message limit |
+| `chatlitetransparent`| -                                               | Boolean               | Sets Chat Lite transparent embed background |
+| `chatlitenoavatar`   | `chatlitehideavatar`                            | Boolean               | Hides Chat Lite avatars         |
+| `chatliteconfig`     | -                                               | Boolean               | Auto-opens Chat Lite setup      |
+| `chatlitetts`        | -                                               | `all`, `on`, `donations`, `off` | Enables native Chat Lite TTS mode |
 | `chroma`             | -                                               | Color code            | Sets chroma key color           |
 | `chunked`            | `chunk`                                         | Integer               | Enables chunked/WebCodecs publishing; value sets target video bitrate |
 | `chunkedbuffer`      | `sendingbuffer`                                 | Integer               | Sets sender-side chunk backlog target |
