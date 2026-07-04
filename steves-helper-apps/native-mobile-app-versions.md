@@ -79,6 +79,10 @@ The iOS build approved on March 1, 2026 includes ultra-wide camera support in ad
 
 ## Related
 
+{% content-ref url="native-mobile-app.md" %}
+[native-mobile-app.md](native-mobile-app.md)
+{% endcontent-ref %}
+
 {% content-ref url="../guides/improving-quality-of-the-native-app.md" %}
 [improving-quality-of-the-native-app.md](../guides/improving-quality-of-the-native-app.md)
 {% endcontent-ref %}
