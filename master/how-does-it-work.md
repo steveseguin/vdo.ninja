@@ -6,6 +6,8 @@ description: Learn how VDO.Ninja works with WebRTC peer-to-peer streaming, push/
 
 VDO.Ninja harnesses the power of WebRTC, a technology that enables secure, real-time communication directly between web browsers. This peer-to-peer approach means most of the action happens right within your browser, ensuring low latency and high-quality video transmission. While VDO.Ninja does utilize servers for initial setup, the actual video data flows directly between devices, leading to a remarkably smooth experience.
 
+<figure><img src="../.gitbook/assets/docs-infographics/p2p-how-it-works.png" alt="Diagram showing a VDO.Ninja push source, setup-only signaling through the VDO.Ninja server, and direct peer-to-peer media to a view or OBS link"><figcaption><p>VDO.Ninja servers help peers find each other, but the live audio and video usually travel directly between browsers.</p></figcaption></figure>
+
 **Benefits of the Peer-to-Peer Approach**
 
 * **Ultra-Low Latency:** Experience minimal delays, making interactions feel natural and conversations flow seamlessly.

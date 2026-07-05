@@ -14,6 +14,8 @@ The room name itself does not permanently save this bitrate. To make a room star
 
 For guest-only room calls, VDO.Ninja may use higher automatic room-only bitrate tiers. These tiers are designed for conferencing-style rooms where there is no director or scene viewer connected to the guest. The normal room-only tier is 2000-kbps and the lower mobile/protected tier is 1500-kbps. These automatic tiers do not apply when an explicit room bitrate is set or when a director or scene viewer is connected. See [room-only-mobile-bitrate-tiers.md](room-only-mobile-bitrate-tiers.md "mention") for details.
 
+<figure><img src="../.gitbook/assets/docs-infographics/room-bitrate-budget.png" alt="Diagram showing total room bitrate as a shared budget split across one visible room feed or three visible room feeds"><figcaption><p>A total room bitrate is a shared room-viewing budget. More visible feeds means each feed gets a smaller share unless the total budget is raised.</p></figcaption></figure>
+
 ## Which room bitrate option should I use?
 
 | Goal | Parameter | Where to add it |

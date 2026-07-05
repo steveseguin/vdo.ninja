@@ -8,6 +8,8 @@ Packet loss is one of the main reasons VDO.Ninja streams look blocky, freeze, cl
 
 Packet loss can cause low quality video, audio distortion, clicking, and is the cause for numerous other video problems.
 
+<figure><img src="../.gitbook/assets/docs-infographics/packet-loss-triage.png" alt="Packet loss troubleshooting diagram showing the guest device, Wi-Fi router, internet path, viewer or OBS, and the first checks to try"><figcaption><p>Packet loss is usually caused by Wi-Fi, saturation, routing, relay, or firewall issues somewhere between the guest and the viewer.</p></figcaption></figure>
+
 Wi-Fi is often the main contributor to packet loss, but it's not the only cause. Still, eliminate Wi-Fi as a possible culprit by removing it from your setup and from the guest's setup.
 
 An Ethernet connection is highly recommended over Wi-Fi.

@@ -6,6 +6,8 @@ description: Troubleshooting guide for Video lag grows over time in VDO.Ninja an
 
 Video lag that goes over time typically hints at a CPU being overloaded; it might not be able to handle the capture resolution or the load required to encode video for several viewers at once.
 
+<figure><img src="../.gitbook/assets/docs-infographics/lag-builds-over-time.png" alt="Diagram showing camera frames entering an overloaded encoder or CPU, causing queued frames and growing video delay"><figcaption><p>If delay steadily grows, the sender may be creating video faster than the machine can encode and send it.</p></figcaption></figure>
+
 \
 Some users report this issue happens when using the Streamlabs Virtual Camera, but not when using their webcam or screen share. For others, it might commonly happen if using an older laptop, like an Intel-based Apple MacBook, where they thermal throttle performance after a short while.
 
@@ -40,4 +42,3 @@ For reference, these are the devices that get auto-detected by the Electron Capt
     "Blackmagic"
     "NDI Video
 ```
-

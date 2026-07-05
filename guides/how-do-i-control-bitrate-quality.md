@@ -4,6 +4,8 @@ description: Control VDO.Ninja bitrate and video quality using URL parameters fo
 
 # How to control bitrate/quality
 
+<figure><img src="../.gitbook/assets/docs-infographics/webrtc-quality-adaptation.png" alt="Infographic explaining how Chrome WebRTC adapts video quality by changing bitrate, resolution, and frame rate as network conditions change"><figcaption><p>WebRTC automatically ramps quality up and down. URL parameters can set targets or limits, but the browser still reacts to the live network.</p></figcaption></figure>
+
 ## Video Bitrate
 
 The bitrate controls are accessible via a URL parameter that can be added to the VIEW link.

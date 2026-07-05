@@ -6,6 +6,8 @@ description: How to capture application audio for VDO.Ninja on Windows and macOS
 
 This page contains the standard guide for capturing application-specific audio into VDO.Ninja, especially on Windows where app-specific audio routing is common. If you need to send game audio, music app audio, browser audio, or another desktop app into VDO.Ninja, this is the main guide. Less complex methods are being developed, with some current [alternative options listed here](#other-options).
 
+<figure><img src="../.gitbook/assets/docs-infographics/virtual-audio-cable-routing.png" alt="Diagram showing app audio routed into a virtual audio cable input, VDO.Ninja selecting the cable output as its microphone, and headphones kept separate to avoid feedback"><figcaption><p>A virtual audio cable should feed VDO.Ninja like a microphone input. Keep headphones and program audio out of that same cable unless you intentionally want to send them.</p></figcaption></figure>
+
 #### Guide: Routing a Windows application's audio to [VDO.Ninja](https://vdo.ninja/)
 
 (For macOS users, you can use [Loopback](https://rogueamoeba.com/loopback/) instead, or check out this list of free options: [https://docs.vdo.ninja/platform-specific-issues/macos#capturing-audio](https://docs.vdo.ninja/platform-specific-issues/macos#capturing-audio))

@@ -9,6 +9,8 @@ description: >-
 
 There's many reasons why one client might not be able to make a direct connection with another client, resulting in their connections being relayed thru a TURN server, or perhaps failing entirely. Being in relay mode can sometimes hurt quality, add latency, and use up limited Internet bandwidth.
 
+<figure><img src="../.gitbook/assets/docs-infographics/direct-vs-relay-paths.png" alt="Diagram comparing direct peer-to-peer media with a TURN relay fallback path that forwards media through a relay server"><figcaption><p>Direct peer-to-peer is the preferred path. TURN relay is a fallback when NAT, firewall, privacy, or network rules block the direct route.</p></figcaption></figure>
+
 Some common reasons, with some solutions, are listed below.
 
 ### Cellular connections

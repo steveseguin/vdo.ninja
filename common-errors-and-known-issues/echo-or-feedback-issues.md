@@ -19,6 +19,12 @@ Dealing with feedback is challenging, as the reasons are numerous, but not alway
 * Playing an IFrame within VDO.Ninja (website share) may not have that IFrame's audio cancelled out by the echo-cancellation features.
 * If only appearing in the OBS recording or stream, check to make sure you are not capturing the desktop's audio in OBS. This can happen if not using "Control audio via OBS" in the OBS Browser source, capturing a screen-share into OBS, or trying to record the director's room audio with OBS.
 
+#### Control Room plus OBS monitoring
+
+If the director hears doubled audio locally but the stream or recording sounds clean, check whether the Control Room tab and OBS are both monitoring the same VDO.Ninja audio to the same headphones. In that case, the director hears two local copies, while the program output may still contain only one clean copy.
+
+<figure><img src="../.gitbook/assets/docs-infographics/double-audio-monitoring-control-room-obs.png" alt="Diagram showing guest microphones feeding both the VDO.Ninja Control Room tab and an OBS scene browser source, causing the director headphones to hear two local copies while stream viewers hear one clean copy"><figcaption><p>Monitor in one place only, and avoid routing OBS program audio back into the same virtual audio cable used as a microphone input.</p></figcaption></figure>
+
 ![](<../.gitbook/assets/image (121) (1) (1) (1) (1).png>)
 
 #### Guests using external speakers without headphones

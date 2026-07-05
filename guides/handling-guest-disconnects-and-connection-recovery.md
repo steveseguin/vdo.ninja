@@ -6,6 +6,8 @@ description: Practical playbook for guest disconnects, retry behavior, and fallb
 
 When guests randomly disconnect, freeze, or reconnect in loops, there is rarely one single fix. This guide gives a layered approach so you can choose the least disruptive option first, then escalate only when needed.
 
+<figure><img src="../.gitbook/assets/docs-infographics/guest-disconnect-recovery-ladder.png" alt="Diagram showing a guest disconnect recovery ladder from retry tuning to network checks, fallback transport, and live-show operational fallback"><figcaption><p>Start with URL-only recovery controls, then escalate toward relay, Meshcast, WHIP/WHEP, or live-show operational fallbacks only when needed.</p></figcaption></figure>
+
 ## Fast checklist before going live
 
 1. Have guests use wired Ethernet where possible.

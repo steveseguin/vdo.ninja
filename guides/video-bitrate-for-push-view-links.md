@@ -21,6 +21,8 @@ There are five parameters we will take a look at:
 4. [\&videobitrate (\&vb)](../advanced-settings/video-bitrate-parameters/bitrate.md) -> view side
 5. [\&totalscenebitrate (\&tsb)](../advanced-settings/video-bitrate-parameters/and-totalscenebitrate.md) -> view side
 
+<figure><img src="../.gitbook/assets/docs-infographics/push-view-bitrate-roles.png" alt="Diagram showing that the push source link can set outgoing defaults and caps while the view or OBS link requests incoming bitrate"><figcaption><p>The source can set defaults and caps, but the view or OBS link usually requests the incoming bitrate.</p></figcaption></figure>
+
 ## On the source side ([\&push](../source-settings/push.md))
 
 ### The push link sets the default outgoing video bitrate target

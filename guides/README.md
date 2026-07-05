@@ -38,6 +38,7 @@ This section collects practical VDO.Ninja guides for OBS Studio, remote guest wo
 * [how-to-mirror-a-video-while-full-screen-for-ipads-and-teleprompters.md](how-to-mirror-a-video-while-full-screen-for-ipads-and-teleprompters.md "mention")
 * [how-to-get-permanent-links.md](how-to-get-permanent-links.md "mention")
 * [audio.md](audio.md "mention")
+* [phone-call-ins-with-vdo-ninja-and-virtual-audio-cables.md](phone-call-ins-with-vdo-ninja-and-virtual-audio-cables.md "mention")
 * [how-to-control-vdo.ninja-with-touch-portal.md](hotkey-support/how-to-control-vdo.ninja-with-touch-portal.md "mention")
 * [publish-from-obs-into-vdo.ninja.md](publish-from-obs-into-vdo.ninja.md "mention")
 * [screen-share-your-iphone-ipad.md](screen-share-your-iphone-ipad.md "mention")
