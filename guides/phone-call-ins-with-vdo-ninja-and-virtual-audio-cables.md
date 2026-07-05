@@ -112,6 +112,32 @@ https://vdo.ninja/?room=YourRoomName&label=Host&proaudio
 
 In that example, the selected microphone in VDO.Ninja should be the **Guest return mix** device, not the raw host microphone.
 
+## Experimental SIP call-in panel
+
+There is also an experimental browser-side SIP panel available with:
+
+```
+https://vdo.ninja/?room=YourRoomName&callin=sip
+```
+
+This is not a public polished phone bridge yet. It expects a bring-your-own SIP/PBX account that supports SIP over secure WebSockets (`wss://`) and WebRTC-compatible media. For example, an Asterisk/FreePBX setup would need WebRTC/PJSIP configured, a trusted TLS certificate, and a WSS endpoint reachable by the browser.
+
+The panel can register for incoming calls or place an outbound SIP call. The same mix-minus rule still applies internally: VDO.Ninja sends the caller a return mix of the host plus VDO.Ninja guests, while adding the caller audio to the VDO.Ninja outbound mix. Do not put SIP passwords in shared invite links unless you understand the risk.
+
+Useful experimental parameters:
+
+| Parameter | Purpose |
+| --- | --- |
+| `&callin=sip` | Shows the advanced SIP call-in panel. |
+| `&sipwss=wss://pbx.example.com:8089/ws` | Pre-fills the SIP WebSocket server. |
+| `&sipuri=sip:1001@example.com` | Pre-fills the SIP address/extension. |
+| `&sipuser=1001` | Pre-fills the auth username if different from the SIP URI user. |
+| `&siptarget=sip:1002@example.com` | Pre-fills the outbound dial target. |
+| `&sipauto=1` | Starts the SIP registration automatically when the page loads. |
+| `&sipautoanswer=1` | Answers incoming SIP calls automatically. |
+
+Twilio, SignalWire, Telnyx, and similar providers can be supported later, but they need provider-specific token or backend handling. A free hosted default is difficult because phone numbers and PSTN minutes have ongoing costs and abuse risk.
+
 ## Testing checklist
 
 Before going live, test with all three parties connected.
