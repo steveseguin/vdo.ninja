@@ -82,6 +82,7 @@
   * [How to capture an application's audio](guides/audio.md)
   * [Phone call-ins with VDO.Ninja and virtual audio cables](guides/phone-call-ins-with-vdo-ninja-and-virtual-audio-cables.md)
   * [Phone call-in provider options](guides/phone-call-in-provider-options.md)
+  * [SignalWire SIP call-in setup](guides/signalwire-sip-call-in-setup.md)
   * [Twilio phone call-in setup](guides/twilio-phone-call-in-setup.md)
   * [How to control VDO.Ninja with Touch Portal](guides/hotkey-support/how-to-control-vdo.ninja-with-touch-portal.md)
   * [How to publish from OBS into VDO.Ninja](guides/publish-from-obs-into-vdo.ninja.md)
