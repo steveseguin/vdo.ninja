@@ -122,7 +122,7 @@ https://vdo.ninja/?room=YourRoomName&callin=sip
 
 This is not a public polished phone bridge yet. It expects a bring-your-own SIP/PBX account that supports SIP over secure WebSockets (`wss://`) and WebRTC-compatible media. For example, an Asterisk/FreePBX setup would need WebRTC/PJSIP configured, a trusted TLS certificate, and a WSS endpoint reachable by the browser.
 
-The panel can register for incoming calls or place an outbound SIP call. The same mix-minus rule still applies internally: VDO.Ninja sends the caller a return mix of the host plus VDO.Ninja guests, while adding the caller audio to the VDO.Ninja outbound mix. Do not put SIP passwords in shared invite links unless you understand the risk.
+The panel can register for incoming calls or place an outbound SIP call. The same mix-minus rule still applies internally: VDO.Ninja sends the caller a return mix of the host plus VDO.Ninja guests, while adding the caller audio to the VDO.Ninja outbound mix. SIP passwords are entered manually in the panel; do not put SIP passwords in shared invite links.
 
 Useful experimental parameters:
 
