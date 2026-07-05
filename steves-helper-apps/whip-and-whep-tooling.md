@@ -12,6 +12,16 @@ WHIP is a bit like the classic RTMP publishing, but it's far more advanced, incl
 
 WHEP, on the other hand, is generally used to playback video using the same technology, rather to publish it. VDO.Ninja also supports WHEP playback and hosting, with advanced statistic panels, recording, and buffering options.&#x20;
 
+### Native mobile app WHIP publishing
+
+The VDO.Ninja native Android and iOS apps can also act as WHIP publishing clients. This is useful when you want a phone camera, Android USB camera, Android HDMI capture adapter, mobile screen share, or USB audio source to publish directly to a WHIP service.
+
+The destination does not need to be VDO.Ninja. In **WHIP only** mode, the app can publish to Meshcast, MediaMTX, Cloudflare Stream, a self-hosted WHIP/WHEP service, or another compatible WHIP ingest endpoint. In **Alongside VDO.Ninja** mode, the same source can publish to normal VDO.Ninja signaling and to WHIP at the same time.
+
+{% content-ref url="native-mobile-app.md" %}
+[native-mobile-app.md](native-mobile-app.md)
+{% endcontent-ref %}
+
 ### Our WHIP page for making WHIP / WHEP easy
 
 To make using WHIP and WHEP more accessible, VDO.Ninja has a hosted page with common tools for making use of it, such as publishing a video or screen share to Twitch.
