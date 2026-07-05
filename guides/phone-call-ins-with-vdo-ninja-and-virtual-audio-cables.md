@@ -136,7 +136,7 @@ Useful experimental parameters:
 | `&sipauto=1` | Starts the SIP registration automatically when the page loads. |
 | `&sipautoanswer=1` | Answers incoming SIP calls automatically. |
 
-Twilio, SignalWire, Telnyx, and similar providers can be supported later, but they need provider-specific token or backend handling. A free hosted default is difficult because phone numbers and PSTN minutes have ongoing costs and abuse risk.
+Twilio, SignalWire, Telnyx, and similar providers can be supported with provider-specific token or backend handling. A free hosted default is difficult because phone numbers and PSTN minutes have ongoing costs and abuse risk. For the experimental provider-backed path, see [Phone call-in provider options](phone-call-in-provider-options.md) and [Twilio phone call-in setup](twilio-phone-call-in-setup.md).
 
 ## Testing checklist
 
