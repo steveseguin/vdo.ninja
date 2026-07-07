@@ -1,0 +1,43 @@
+name: OpenSSF Criticality Score
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "22 4 * * 0"
+
+permissions: read-all
+
+jobs:
+  criticality-score:
+    name: OpenSSF Criticality Score
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Set up Go
+        uses: actions/setup-go@v6
+        with:
+          go-version: "stable"
+          cache: false
+
+      - name: Install Criticality Score
+        run: |
+          go install github.com/ossf/criticality_score/v2/cmd/criticality_score@latest
+          echo "$(go env GOPATH)/bin" >> "$GITHUB_PATH"
+
+      - name: Run Criticality Score
+        env:
+          GITHUB_AUTH_TOKEN: ${{ github.token }}
+          GITHUB_TOKEN: ${{ github.token }}
+        run: |
+          criticality_score -depsdev-disable -format json "https://github.com/${{ github.repository }}" | tee criticality-score.json
+
+          echo "## OpenSSF Criticality Score" >> "$GITHUB_STEP_SUMMARY"
+          echo '```json' >> "$GITHUB_STEP_SUMMARY"
+          cat criticality-score.json >> "$GITHUB_STEP_SUMMARY"
+          echo '```' >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Upload Criticality Score result
+        uses: actions/upload-artifact@v4
+        with:
+          name: criticality-score
+          path: criticality-score.json
