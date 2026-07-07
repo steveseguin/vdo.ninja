@@ -25,6 +25,7 @@ Each effect also has a dedicated URL parameter alias that can be used instead of
 | [`&chromakey`](and-chromakey.md)                       | Chroma key (remove green) | `&effects=14`     |
 | [`&chromakeybg`](and-chromakeybg.md)                   | Chroma key + background   | `&effects=15`     |
 | [`&facetracker`](and-facetracker.md) / `&facetracking` | Face tracker             | `&effects=1`      |
+| [`&autofacecrop`](and-autofacecrop.md) / `&facecrop`   | Auto face crop            | `&effects=facecrop` |
 | [`&overlayfx`](and-overlayfx.md)                       | Overlay image             | `&effects=overlay`|
 | [`&anonymousmask`](and-anonymousmask.md) / `&anonmask` | Anonymous mask           | `&effects=anon`   |
 | [`&dogface`](and-dogface.md) / `&dogears`              | Dog ears and nose         | `&effects=dog`    |
@@ -35,7 +36,7 @@ Aliases that accept a value (e.g. `&backgroundblur=5`, `&chromakey=30`, `&digita
 
 Example: `&effects=7` or `&effects=zoom`
 
-<table><thead><tr><th width="227">Value</th><th>Description</th></tr></thead><tbody><tr><td>(no value given)</td><td>Shows a "Digital Video Effects" panel when setting up devices</td></tr><tr><td><code>0</code> | <code>false</code> | <code>off</code></td><td>Disables effects</td></tr><tr><td><code>1</code> | <code>facetracking</code></td><td>Face tracker</td></tr><tr><td><code>-1</code></td><td>Flip image</td></tr><tr><td><code>2</code></td><td>Mirror image</td></tr><tr><td><code>-2</code></td><td>Flip + mirror image</td></tr><tr><td><code>3</code></td><td>Background blur</td></tr><tr><td><code>4</code></td><td>Virtual Greenscreen</td></tr><tr><td><code>5</code></td><td>Background replacement</td></tr><tr><td><code>6</code></td><td>Face mesh</td></tr><tr><td><code>7</code> | <code>digitalzoom</code></td><td>Zoom (software-based zoom)</td></tr><tr><td><code>8</code></td><td><a data-mention href="effects.md#and-effects-8">#and-effects-8</a></td></tr><tr><td><code>9</code></td><td>Face tracking</td></tr><tr><td><code>10</code></td><td>Face tracking</td></tr><tr><td><code>11</code> | <code>anon</code></td><td>Anonymous face mask</td></tr><tr><td><code>13</code></td><td>New experimental background blur effect; it's not supported by most browsers/systems and its in origin trial</td></tr><tr><td><code>14</code></td><td>Chroma key (remove green)</td></tr><tr><td><code>15</code></td><td>Chroma key with background image</td></tr><tr><td><code>16</code></td><td>Background transparent</td></tr><tr><td><code>overlay</code></td><td>Overlay image</td></tr><tr><td><code>dog</code></td><td>Dog ears and nose</td></tr></tbody></table>
+<table><thead><tr><th width="227">Value</th><th>Description</th></tr></thead><tbody><tr><td>(no value given)</td><td>Shows a "Digital Video Effects" panel when setting up devices</td></tr><tr><td><code>0</code> | <code>false</code> | <code>off</code></td><td>Disables effects</td></tr><tr><td><code>1</code> | <code>facetracking</code></td><td>Face tracker (legacy native FaceDetector auto-crop)</td></tr><tr><td><code>facecrop</code> | <code>autofacecrop</code></td><td>Auto face crop with native FaceDetector plus MediaPipe fallback</td></tr><tr><td><code>-1</code></td><td>Flip image</td></tr><tr><td><code>2</code></td><td>Mirror image</td></tr><tr><td><code>-2</code></td><td>Flip + mirror image</td></tr><tr><td><code>3</code></td><td>Background blur</td></tr><tr><td><code>4</code></td><td>Virtual Greenscreen</td></tr><tr><td><code>5</code></td><td>Background replacement</td></tr><tr><td><code>6</code></td><td>Face mesh overlay with bundled MediaPipe FaceLandmarker</td></tr><tr><td><code>7</code> | <code>digitalzoom</code></td><td>Zoom (software-based zoom)</td></tr><tr><td><code>8</code></td><td><a data-mention href="effects.md#and-effects-8">#and-effects-8</a></td></tr><tr><td><code>9</code></td><td>Legacy Jeeliz face-box sample effect</td></tr><tr><td><code>10</code></td><td>Legacy dog ears and nose alias</td></tr><tr><td><code>11</code> | <code>anon</code></td><td>Anonymous face mask</td></tr><tr><td><code>13</code></td><td>New experimental background blur effect; it's not supported by most browsers/systems and its in origin trial</td></tr><tr><td><code>14</code></td><td>Chroma key (remove green)</td></tr><tr><td><code>15</code></td><td>Chroma key with background image</td></tr><tr><td><code>16</code></td><td>Background transparent</td></tr><tr><td><code>overlay</code></td><td>Overlay image</td></tr><tr><td><code>dog</code></td><td>Dog ears and nose</td></tr></tbody></table>
 
 ## Details
 
@@ -68,6 +69,20 @@ Please do enable Webassembly-SIMD support under `chrome://flags/` if you'd like 
 `&effects=1` requires the use of the Chromium experimental face detection API, as I'm using the built-in browser face-tracking model for this. You can enable the API flag here: `chrome://flags/#enable-experimental-web-platform-features`\
 My hope is that this feature will eventually be enabled by default within Chromium, as loading a large ML model to do face detection otherwise is a bit heavy; you may need to enable this within the OBS CLI if wishing to use it there?
 {% endhint %}
+
+### `&effects=facecrop`
+
+`&effects=facecrop`, `&autofacecrop`, and `&facecrop` enable the newer auto face crop effect. It keeps the sender's face framed by cropping and panning the video through the existing canvas effects pipeline. It first tries the browser's native `FaceDetector` API and falls back to the bundled MediaPipe face detector model when available.
+
+This mode is separate from `&effects=1` for backwards compatibility. Existing `&facetracker`, `&facetracking`, and `&effects=1` links keep their original behavior.
+
+### `&effects=6`
+
+`&effects=6` and `&facemesh` render a face mesh overlay using the bundled MediaPipe FaceLandmarker model. The older TensorFlow.js face mesh path can still be requested with `&legacyfacemesh` or `&tfjsfacemesh`.
+
+### Legacy face effects
+
+`&effects=9` is a legacy Jeeliz sample effect that draws a face-tracking box. `&effects=10` is a legacy alias for the dog ears and nose effect. These values are kept for backwards compatibility.
 
 ### `&effects=8`
 
@@ -115,6 +130,10 @@ This `&effects=8` mode might also be helpful in solving issues with cameras disc
 
 {% content-ref url="and-facetracker.md" %}
 [and-facetracker.md](and-facetracker.md)
+{% endcontent-ref %}
+
+{% content-ref url="and-autofacecrop.md" %}
+[and-autofacecrop.md](and-autofacecrop.md)
 {% endcontent-ref %}
 
 {% content-ref url="and-overlayfx.md" %}

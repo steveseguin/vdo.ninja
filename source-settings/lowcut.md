@@ -8,8 +8,9 @@ Sender-Side Option! ([`&push`](push.md))
 
 ## Aliases
 
+* `&highpass`
 * `&lc`
-* `&higpass`
+* `&higpass` (legacy misspelling)
 
 ## Options
 

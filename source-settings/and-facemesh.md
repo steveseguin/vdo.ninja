@@ -8,10 +8,12 @@ Sender-Side Option! ([`&push`](push.md))
 
 ## Details
 
-`&facemesh` is a shortcut for [`&effects=6`](effects.md). It uses TensorFlow.js to render a face mesh overlay on the sender's video.
+`&facemesh` is a shortcut for [`&effects=6`](effects.md). It renders a face mesh overlay on the sender's video using the bundled MediaPipe FaceLandmarker model.
+
+The older TensorFlow.js face mesh path is still available with `&legacyfacemesh` or `&tfjsfacemesh`, but the default path no longer depends on the retired remote TFHub face mesh URLs.
 
 {% hint style="warning" %}
-This effect is slow to load as it downloads a TensorFlow.js model. Performance may vary by device.
+This effect loads a bundled machine-learning model. Performance may vary by device.
 {% endhint %}
 
 ## Related

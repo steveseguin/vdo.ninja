@@ -222,6 +222,7 @@
       * [\&chromakey](source-settings/and-chromakey.md)
       * [\&chromakeybg](source-settings/and-chromakeybg.md)
       * [\&facetracker](source-settings/and-facetracker.md)
+      * [\&autofacecrop](source-settings/and-autofacecrop.md)
       * [\&overlayfx](source-settings/and-overlayfx.md)
       * [\&anonymousmask](source-settings/and-anonymousmask.md)
       * [\&dogface](source-settings/and-dogface.md)

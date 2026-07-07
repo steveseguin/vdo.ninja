@@ -14,7 +14,7 @@ Example: `&noisegatesettings=10,25,3000`
 
 | Value                                   | Description                                                          |
 | --------------------------------------- | -------------------------------------------------------------------- |
-| (TargetGain,Threshold,GateOpenPosition) | see [Details](and-noisegatesettings.md#details) for more information |
+| (TargetGain,Threshold,StickinessMs)     | see [Details](and-noisegatesettings.md#details) for more information |
 | `10,25,3000`                            | example                                                              |
 
 ## Details
@@ -23,11 +23,10 @@ Example: `&noisegatesettings=10,25,3000`
 
 It takes a comma separated list:
 
-* First value is target volume (0 to 100), although 0 to 40 is probably the recommended range here.
-  * Since how we perceive loudness isn't linear, to have the audio become inaudible, you'll want to set this to 0 to 3. Setting it to 10 for example will leave it still quite audible, but just dampened.
+* First value is the closed-gate target gain as a percentage of normal volume. The code accepts 0 to 100. Use 0 to 40 for noticeable ducking; use 0 to 3 for near-mute. A value like 10 can still be audible, just dampened.
 * Second value is the threshold value where the gate is triggered if below it. \~ 100 is loudly speaking, \~ 20 is light background noise levels, and under 5 is quiet background levels.
-* Third value is how 'sticky' the gate-open position is, in milliseconds. Having this set to a few seconds should prevent someone from being cut off while speaking or if taking a short pause.
-  * You may want to try a value of 10 to 300 for this third value, if just testing or want a sharper cut off.&#x20;
+* Third value is how sticky the gate-open position is, in milliseconds. Having this set to a few seconds should prevent someone from being cut off while speaking or taking a short pause.
+  * The current implementation checks this in 100-ms steps, so use multiples of 100 ms. For example, `3000` means about 3 seconds; `300` means about 0.3 seconds.
 
 Example:\
 [`https://vdo.ninja/?noisegate&noisegatesettings=10,25,3000`](https://vdo.ninja/?noisegate\&noisegatesettings=10,25,3000)

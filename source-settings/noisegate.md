@@ -45,9 +45,9 @@ User feedback on this feature welcomed.
 
 It takes a comma separated list:
 
-* First value is target gain (0 to 100), although 0 to 40 is probably the recommended range here.
+* First value is the closed-gate target gain as a percentage of normal volume. The code accepts 0 to 100. Use 0 to 40 for noticeable ducking; use 0 to 3 for near-mute.
 * Second value is the threshold value where the gate is triggered if below it. \~ 100 is loudly speaking, \~ 20 is light background noise levels, and under 5 is quiet background levels.
-* Third value is how 'sticky' the gate-open position is, in milliseconds. Having this set to a few seconds should prevent someone from being cut off while speaking or if taking a short pause.
+* Third value is how sticky the gate-open position is, in milliseconds. The current implementation checks this in 100-ms steps, so use multiples of 100 ms. For example, `3000` means about 3 seconds.
 
 Example:\
 [`https://vdo.ninja/alpha/?noisegate&noisegatesettings=10,25,3000`](https://vdo.ninja/alpha/?noisegate\&noisegatesettings=10,25,3000)

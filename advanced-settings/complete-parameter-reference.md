@@ -294,7 +294,7 @@ If you are self-hosting VDO.Ninja, often these URL parameters can be hard-coded 
 | `limittotalbitrate` | `ltb`           | Number                                          | Sets bitrate limit            |
 | `locked`            | -               | Number/String (`portrait`,`landscape`,`square`) | Locks aspect ratio            |
 | `locksize`          | -               | Boolean                                         | -                             |
-| `lowcut`            | `lc`, `higpass` | Integer                                         | Sets low-cut filter frequency |
+| `lowcut`            | `lc`, `highpass`, `higpass` | Integer                                         | Sets low-cut filter frequency |
 | `lowlatency`        | `ll`, `ultralow` | Boolean                                        | Enables low-latency preset    |
 | `lowbitratescene`   | `cutscene`      | String                                          | -                             |
 | `lowmobilebitrate`  | -               | Integer                                         | Lower fallback mobile sender bitrate cap |
