@@ -1,32 +1,19 @@
-name: Validate translations
+name: CI Tests
 
 on:
   push:
     branches:
       - develop
-    paths:
-      - ".github/ci-checkTranslationKeys.js"
-      - ".github/ci-validateTranslations.js"
-      - "index.html"
-      - "main.js"
-      - "translations/translate.js"
-      - "translations/*.json"
   pull_request:
     branches:
       - develop
-    paths:
-      - ".github/ci-checkTranslationKeys.js"
-      - ".github/ci-validateTranslations.js"
-      - "index.html"
-      - "main.js"
-      - "translations/translate.js"
-      - "translations/*.json"
 
 permissions:
   contents: read
 
 jobs:
-  validate:
+  validation:
+    name: Translation validation
     runs-on: ubuntu-latest
 
     steps:

@@ -14,14 +14,14 @@ jobs:
 
     steps:
       - name: Set up Go
-        uses: actions/setup-go@v6
+        uses: actions/setup-go@924ae3a1cded613372ab5595356fb5720e22ba16 # v6
         with:
           go-version: "stable"
           cache: false
 
       - name: Install Criticality Score
         run: |
-          go install github.com/ossf/criticality_score/v2/cmd/criticality_score@latest
+          go install github.com/ossf/criticality_score/v2/cmd/criticality_score@7cacdd01ba2ffe980eda5ab80111f089df59de83 # v2.0.4
           echo "$(go env GOPATH)/bin" >> "$GITHUB_PATH"
 
       - name: Run Criticality Score
@@ -37,7 +37,7 @@ jobs:
           echo '```' >> "$GITHUB_STEP_SUMMARY"
 
       - name: Upload Criticality Score result
-        uses: actions/upload-artifact@v7
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
         with:
           name: criticality-score
           path: criticality-score.json
