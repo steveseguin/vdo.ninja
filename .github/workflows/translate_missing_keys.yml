@@ -37,10 +37,10 @@ jobs:
 
     steps:
       - name: Check out repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: Set up Node
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v6
         with:
           node-version: "20"
 
@@ -58,7 +58,7 @@ jobs:
 
       - name: Create draft pull request
         if: ${{ !inputs.dry_run }}
-        uses: peter-evans/create-pull-request@v6
+        uses: peter-evans/create-pull-request@v8
         with:
           commit-message: "Generate missing translations"
           branch: generated_missing_translations
