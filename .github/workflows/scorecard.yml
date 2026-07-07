@@ -7,20 +7,23 @@ on:
   push:
     branches: ["develop"]
 
-permissions:
-  security-events: write
-  id-token: write
-  contents: read
-  actions: read
+permissions: read-all
 
 jobs:
   scorecard:
     name: OpenSSF Scorecard
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      actions: read
+      security-events: write
+      id-token: write
 
     steps:
       - name: "Checkout repository"
         uses: actions/checkout@v4
+        with:
+          persist-credentials: false
 
       - name: "Run OSSF Scorecard Analysis"
         uses: ossf/scorecard-action@4eaacf0543bb3f2c246792bd56e8cdeffafb205a # v2.4.3
