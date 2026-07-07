@@ -1,2 +1,0 @@
-- name: OSSF Scorecard action
-  uses: ossf/scorecard-action@v2.4.3
