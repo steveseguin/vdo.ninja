@@ -78,6 +78,7 @@
   * [Stream Scheduling and Promotion](guides/stream-scheduling-and-promotion.md)
   * [How to send the audio/video output of one OBS to another OBS using VDO.Ninja](guides/how-to-send-the-audio-video-output-of-one-obs-to-another-obs-using-vdo.ninja.md)
   * [Active speaker layouts in OBS](guides/active-speaker-layouts-in-obs.md)
+  * [Active speaker, Highlight, and talking indicators](guides/active-speaker-highlight-and-talking-indicators.md)
   * [How to mirror a video while Full-Screen - For iPads and Teleprompters](guides/how-to-mirror-a-video-while-full-screen-for-ipads-and-teleprompters.md)
   * [How to capture an application's audio](guides/audio.md)
   * [Phone call-ins with VDO.Ninja and virtual audio cables](guides/phone-call-ins-with-vdo-ninja-and-virtual-audio-cables.md)
