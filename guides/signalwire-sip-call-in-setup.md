@@ -6,6 +6,8 @@ description: Set up SignalWire SIP-over-WSS for the experimental VDO.Ninja phone
 
 SignalWire is currently the most direct bring-your-own provider option for VDO.Ninja's browser-side SIP call-in panel. It supports SIP over secure WebSockets, which lets the browser register as a SIP endpoint without running your own PBX.
 
+Last reviewed: July 9, 2026.
+
 {% hint style="warning" %}
 This is experimental. Phone callers are mixed into the director/host audio and do not yet appear as normal guest tiles with full scene controls.
 {% endhint %}
@@ -19,6 +21,8 @@ The call path is:
 3. The VDO.Ninja director page registers to that SIP endpoint over `wss://`.
 4. VDO.Ninja answers the call in the browser.
 5. VDO.Ninja mixes the caller into the room and sends a mix-minus return feed back to the caller.
+
+<figure><img src="../.gitbook/assets/callin-signalwire-panel.png" alt="VDO.Ninja SignalWire SIP call-in panel with example WSS URL, SIP URI, auth username, blank password, dial target, and connect controls"><figcaption><p>The SignalWire mode is the generic SIP-over-WSS panel with SignalWire-specific defaults and wording.</p></figcaption></figure>
 
 ## Cost notes
 
@@ -105,6 +109,18 @@ Leave **Register for incoming calls** enabled. Enable **Auto-answer incoming cal
 
 Click **Connect**. The status should show that the SIP account registered.
 
+### Field meanings
+
+The **SIP WebSocket URL** is the secure WebSocket endpoint the browser connects to. It starts with `wss://`. It is not the same thing as the SIP address.
+
+The **SIP URI** is the callable SIP address for the endpoint, usually formatted like `sip:username@your-space.sip.signalwire.com`.
+
+The **Auth username** is the SIP credential username. In many setups it matches the `username` part of the SIP URI, but some providers let these differ.
+
+The **Password** is the SIP endpoint password only. Do not enter a SignalWire project token or account-level API token here.
+
+The **Dial target** is used only for outbound calls from the VDO.Ninja panel. For SignalWire, a normal phone number such as `+15551234567` is converted to a SIP target on the same domain.
+
 ## 5. Test before going live
 
 1. Join the VDO.Ninja room as director/host.
@@ -125,10 +141,14 @@ Click **Connect**. The status should show that the SIP account registered.
 | `&sipwss=wss://your-space.sip.signalwire.com` | Pre-fills the SIP WebSocket URL. |
 | `&sipuri=sip:vdo-callin@your-space.sip.signalwire.com` | Pre-fills the SIP URI. |
 | `&sipuser=vdo-callin` | Pre-fills the auth username. |
+| `&siptarget=+15551234567` | Pre-fills the outbound dial target. |
+| `&callinoutput=DeviceName` or `&sipoutput=DeviceName` | Routes the local caller monitor to a named output device when the browser supports it. |
 | `&sipauto=1` | Connects automatically when the page loads. |
 | `&sipautoanswer=1` | Answers incoming calls automatically. |
 
 Do not put the SIP password in the URL.
+
+The panel can optionally remember the SIP profile in this browser. If you enable **Remember password on this browser**, the password is saved in this browser's local storage. That is a convenience feature for a trusted production machine, not a secure vault. Do not use it on shared computers.
 
 ## Troubleshooting
 

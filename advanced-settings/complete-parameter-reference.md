@@ -17,6 +17,8 @@ If you are self-hosting VDO.Ninja, often these URL parameters can be hard-coded 
 | Parameter          | Aliases                               | Values                                          | Description                               |
 | ------------------ | ------------------------------------- | ----------------------------------------------- | ----------------------------------------- |
 | `action`           | -                                     | -                                               | -                                         |
+| `activehighlight`  | `activespeakerfeatured`               | `1`, `2`                                        | Automatically drives Highlight / Featured from the active speaker |
+| `activespeaker`    | `sas`, `speakerview`                  | `1`, `2`, `3`, `4`                              | Switches the scene/view based on the current active speaker |
 | `ad`               | See `audiodevice`                     | -                                               | -                                         |
 | `addstun`          | -                                     | String (format: username;password;url)          | Adds additional STUN server               |
 | `ado`              | See `audiodevice`                     | -                                               | -                                         |

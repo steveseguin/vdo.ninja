@@ -12,8 +12,9 @@ This guide explains the common ways to feature the current speaker, manually hig
 | --- | --- |
 | Automatically show only the current speaker | Use `&activespeaker=1` or `&activespeaker=3` on a scene/view link |
 | Automatically show all current speakers | Use `&activespeaker=2` or `&activespeaker=4` |
+| Automatically make the current speaker larger while others remain visible | Use `&activehighlight=2` or `&activespeakerfeatured` |
 | Manually feature one guest from the director room | Use the director Highlight / Featured control |
-| Keep one large active speaker plus smaller fixed guests | Use a large `&activespeaker` browser source plus separate `&solo` sources in OBS |
+| Build a fully custom OBS layout with fixed guest boxes | Use a large `&activespeaker` browser source plus separate `&solo` sources in OBS |
 | Add a green border or dot when guests talk | Use `&meterstyle=2`, `&meterstyle=3`, or `&meterstyle=4` with CSS |
 | Feature social chat messages | Use Social Stream Ninja; this is separate from VDO.Ninja guest video highlighting |
 
@@ -52,9 +53,39 @@ The delay is in milliseconds. This helps prevent rapid switching when people bri
 [and-activespeakerdelay.md](../advanced-settings/mixer-scene-parameters/and-activespeakerdelay.md)
 {% endcontent-ref %}
 
+## Automatic active speaker Highlight
+
+Use `&activehighlight=2` when you want VDO.Ninja to keep everyone in the scene, but automatically make the current speaker larger using the secondary Highlight / Featured layout.
+
+```text
+https://vdo.ninja/?room=ROOMNAME&scene=0&activehighlight=2&cleanoutput
+```
+
+`&activespeakerfeatured` is an alias for the same mode.
+
+```text
+https://vdo.ninja/?room=ROOMNAME&scene=0&activespeakerfeatured&cleanoutput
+```
+
+Options:
+
+| Mode | Behavior |
+| --- | --- |
+| `&activehighlight=2` | Uses the secondary Highlight / Featured mode, so the active speaker becomes larger while other guests remain visible |
+| `&activespeakerfeatured` | Alias for `&activehighlight=2` |
+| `&activehighlight=1` | Uses normal Highlight, which is closer to a full speaker focus mode |
+
+By itself, `&activehighlight=2` does not enable `&activespeaker`, so it does not hide non-speaking guests. If you combine it with `&activespeaker`, the normal active-speaker hide/show behavior still applies.
+
+You can also add `&activespeakerdelay` if speaker changes are happening too quickly.
+
+{% content-ref url="../advanced-settings/view-parameters/activehighlight.md" %}
+[activehighlight.md](../advanced-settings/view-parameters/activehighlight.md)
+{% endcontent-ref %}
+
 ## Large speaker plus smaller guests in OBS
 
-`&activespeaker` is designed to hide or remove non-active guests from the VDO.Ninja mixer. If you want the current speaker large while the other guests remain visible as smaller boxes, the most practical setup is a hybrid OBS layout:
+If you need exact positioning, crops, borders, or per-guest filters in OBS, use a hybrid OBS layout:
 
 1. Add one large OBS Browser Source for the automatic speaker view.
 2. Add each guest as a separate smaller OBS Browser Source using their solo link.
@@ -166,7 +197,7 @@ video[data-speaking="1"] {
 
 ## API-driven switching
 
-If you need a single VDO.Ninja scene that keeps everyone visible while dynamically moving the current speaker into a large top layer, use the API/loudness path or request a dedicated code feature.
+For most active-speaker Featured layouts, use `&activehighlight=2`. Use the API/loudness path only when you need custom rules, custom layout objects, or external production controls.
 
 Available building blocks:
 
@@ -174,7 +205,7 @@ Available building blocks:
 * The `layout` API can apply a custom layout object or switch predefined layouts.
 * The `soloVideo` / `highlight` API command can toggle Highlight for a guest.
 
-This is flexible, but it is more work than the OBS hybrid method. It usually requires a parent page, Stream Deck / Companion workflow, or custom script to decide who is loudest and then update the layout.
+This is flexible, but it is more work than the built-in `&activehighlight=2` mode. It usually requires a parent page, Stream Deck / Companion workflow, or custom script to decide who is loudest and then update the layout.
 
 {% content-ref url="iframe-api-documentation/iframe-api-basics.md" %}
 [iframe-api-basics.md](iframe-api-documentation/iframe-api-basics.md)
@@ -210,6 +241,5 @@ If the layout is switching too quickly:
 
 If you need the exact "current speaker large, everyone else still visible, all inside one VDO.Ninja scene link" behavior:
 
-* Use the OBS hybrid method today.
-* Use the API/loudness method for a custom build.
-* Consider requesting a native active-speaker layout mode if you need this as a simple URL flag.
+* Use `&activehighlight=2` or `&activespeakerfeatured`.
+* Use the OBS hybrid method only when you need custom per-source positioning or filters.

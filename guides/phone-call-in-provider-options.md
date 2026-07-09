@@ -8,6 +8,8 @@ Phone call-ins require a bridge between the public phone network and the browser
 
 The current recommended direction is bring-your-own provider. A free shared VDO.Ninja dial-in number may be tested later, but it is not the default recommendation yet because phone numbers and PSTN minutes create ongoing cost and abuse risk.
 
+Last reviewed: July 9, 2026.
+
 {% hint style="warning" %}
 The call-in feature is experimental. Phone callers are currently mixed into the director/host audio. They do not yet appear as normal VDO.Ninja guest tiles with scene membership, per-guest volume, or the full director control set.
 {% endhint %}
@@ -22,6 +24,16 @@ The call-in feature is experimental. Phone callers are currently mixed into the 
 | DIY PBX + SIP trunk | Cheapest/flexible, hardest setup | Users with FreePBX, Asterisk, VoIP.ms, IPComms, or another SIP trunk | `&callin=sip` |
 
 For a live production today, the non-native fallback is still the most reliable: use a phone app, softphone, hardware mixer, Voicemeeter, OBS monitoring, or virtual audio cables to create two mix-minus feeds. See [Phone call-ins with VDO.Ninja and virtual audio cables](phone-call-ins-with-vdo-ninja-and-virtual-audio-cables.md).
+
+## Current VDO.Ninja panel
+
+The experimental call-in panel appears when the director URL includes `&callin=sip`, `&callin=signalwire`, or `&callin=twilio`.
+
+<figure><img src="../.gitbook/assets/callin-signalwire-panel.png" alt="VDO.Ninja phone call-in panel in SignalWire mode with SIP WebSocket URL, SIP URI, auth username, password, dial target, and connect controls"><figcaption><p>SignalWire/SIP mode registers the browser as a SIP endpoint over secure WebSockets.</p></figcaption></figure>
+
+<figure><img src="../.gitbook/assets/callin-twilio-panel.png" alt="VDO.Ninja phone call-in panel in Twilio mode with Worker URL, access key, outbound test number, and start controls"><figcaption><p>Twilio mode requires a compatible backend that mints browser tokens and handles Twilio webhooks.</p></figcaption></figure>
+
+The screenshots above are intentionally using placeholder values. Do not put SIP passwords, Twilio API secrets, or provider account tokens in shared VDO.Ninja URLs.
 
 ## Option 1: SignalWire SIP-over-WSS
 
@@ -64,7 +76,8 @@ Telnyx is a good candidate for a future low-cost adapter. Telnyx has a WebRTC JS
 Practical status:
 
 * Telnyx can be attractive on price.
-* A proper VDO.Ninja integration likely needs a Telnyx WebRTC SDK/JWT flow or a provider-specific backend.
+* Telnyx's browser flow uses its WebRTC SDK with credential connections and generated login tokens/JWTs, so it is not the same as the current generic SIP-over-WSS form.
+* A proper VDO.Ninja integration likely needs a Telnyx-specific WebRTC SDK/JWT flow or a provider-specific backend.
 * Until that adapter exists, Telnyx should be treated as a future native option or used behind a DIY PBX/SIP bridge.
 
 ## Option 4: DIY PBX plus a cheap SIP trunk
@@ -117,7 +130,7 @@ Use the least powerful credential that can work:
 | SignalWire or Telnyx project API token | No | Backend or provider dashboard only. |
 | Temporary browser token/JWT | Yes | Short-lived and provider-scoped. |
 
-The current panel does not intentionally store SIP passwords long-term. If a future "remember this provider" option is added, it should be clearly opt-in and stored only in the local browser, with a warning that browser storage is convenience storage, not protection against XSS or a compromised machine.
+The current SIP panel can optionally remember a SIP profile in the local browser. Saving the SIP password is opt-in and should only be used on a trusted production machine. Browser local storage is convenience storage, not protection against XSS, browser profile compromise, or a shared computer.
 
 Do not put provider account secrets or SIP passwords in shared VDO.Ninja URLs.
 
@@ -143,9 +156,13 @@ The inbound-only design avoids outbound toll fraud, but it does not avoid inboun
 | `&callin=signalwire` | Show the same SIP-over-WSS panel with SignalWire-specific copy. |
 | `&callin=twilio` | Show the Twilio call-in adapter when available. |
 | `&callinapi=https://example.com` | Point the Twilio adapter at a compatible backend. |
+| `&callinoutput=DeviceName` or `&sipoutput=DeviceName` | Route the local call monitor to a named output device when supported by the browser. |
 | `&sipwss=wss://pbx.example.com:8089/ws` | Pre-fill the SIP WebSocket endpoint. |
 | `&sipuri=sip:1001@example.com` | Pre-fill the SIP URI. |
 | `&sipuser=1001` | Pre-fill the SIP auth username. |
+| `&siptarget=sip:1002@example.com` | Pre-fill the outbound SIP dial target. |
+| `&sipauto=1` | Register the SIP endpoint automatically when the page loads. |
+| `&sipautoanswer=1` | Automatically answer incoming SIP calls after registration. |
 
 Do not put provider account secrets or SIP passwords in shared URLs.
 

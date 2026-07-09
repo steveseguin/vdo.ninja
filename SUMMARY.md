@@ -343,6 +343,7 @@
     * [\&exclude](advanced-settings/view-parameters/and-exclude.md)
     * [\&layout](advanced-settings/mixer-scene-parameters/and-layout.md)
     * [\&activespeaker](advanced-settings/view-parameters/activespeaker.md)
+    * [\&activehighlight](advanced-settings/view-parameters/activehighlight.md)
     * [\&activespeakerdelay](advanced-settings/mixer-scene-parameters/and-activespeakerdelay.md)
     * [\&order](source-settings/order.md)
     * [\&slots](newly-added-parameters/and-slots.md)

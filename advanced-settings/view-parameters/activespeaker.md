@@ -26,7 +26,7 @@ Example: `&activespeaker=1`
 
 In all four cases, if someone else is talking/active, your local preview will become a [mini-preview](../../source-settings/and-minipreview.md) in the top right.
 
-
+If you want the active speaker to become larger while other guests remain visible, use [`&activehighlight=2`](activehighlight.md) or `&activespeakerfeatured` instead.
 
 ### Customize the delay on switching
 
@@ -42,6 +42,10 @@ If looking to add a green box around active speakers, or make it just easier to 
 
 {% content-ref url="../design-parameters/meterstyle.md" %}
 [meterstyle.md](../design-parameters/meterstyle.md)
+{% endcontent-ref %}
+
+{% content-ref url="activehighlight.md" %}
+[activehighlight.md](activehighlight.md)
 {% endcontent-ref %}
 
 {% content-ref url="../mixer-scene-parameters/and-motiondetection-alpha.md" %}
