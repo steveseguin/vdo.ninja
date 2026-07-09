@@ -79,6 +79,8 @@ By itself, `&activehighlight=2` does not enable `&activespeaker`, so it does not
 
 You can also add `&activespeakerdelay` if speaker changes are happening too quickly.
 
+This link still needs to receive and process guest audio, so do not add `&noaudio` or `&noap` to the same scene/view link. By default, it follows video-capable speakers, similar to `&activespeaker=3`, so audio-only sources do not take over the Featured layout.
+
 {% content-ref url="../advanced-settings/view-parameters/activehighlight.md" %}
 [activehighlight.md](../advanced-settings/view-parameters/activehighlight.md)
 {% endcontent-ref %}
