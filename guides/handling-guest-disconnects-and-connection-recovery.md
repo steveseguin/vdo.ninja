@@ -55,12 +55,13 @@ If room topology is large or network quality is inconsistent:
 
 When a specific guest-to-guest P2P edge fails during a live show:
 
-- Use **Mesh Network Debug** to inspect reported edges, but remember that its current merged green edge can hide a one-way audio failure.
+- Ask the publisher to speak, click **Refresh** in **Mesh Network Debug**, and inspect the separate publisher -> listener arrow. Orange can identify a one-way RTP stall even while ICE remains connected.
+- Select the affected arrow and use **Restart This ICE Path** before using guest-wide recovery actions.
 - For one-way audio, prefer the listener's per-guest **Mix** control over the bidirectional **Patch via Mix-Minus** edge action. Both require an existing director outbound audio sender and can duplicate audio if the direct path recovers.
-- Use **ICE Restart**, **Refresh Video**, **Refresh Mic**, or **Refresh All** actions per guest.
+- Use **Restart All ICE Paths**, **Refresh Video**, **Refresh Mic**, or **Refresh Guest Media + ICE** when broader per-guest recovery is needed.
 - If a guest is publishing via WHIP output, use **Restart WHIP** from director controls.
 
-See [Guest Audio Recovery and Mesh Debug](mesh-network-debug.md) for the current limitations and safe operating sequence. Avoid **Reconnect P2P** until its replacement-connection path is fixed.
+See [Guest Audio Recovery and Mesh Debug](mesh-network-debug.md) for the directional health indicators, targeted ICE restart, mix-minus fallback, and safe operating sequence.
 
 ## Broadcast-mode resiliency pattern
 

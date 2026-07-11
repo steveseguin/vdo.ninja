@@ -10,7 +10,7 @@ General Option! ([`&push`](../source-settings/push.md), [`&room`](room.md), [`&v
 
 Example: `&turn=steve;setupYourOwnPlease;turn:turn.vdo.ninja:443`
 
-<table><thead><tr><th width="283">Value</th><th>Description</th></tr></thead><tbody><tr><td>(user;pwd;turnserveraddress)</td><td>Set this TURN server to turnserveraddress with username user and password pwd</td></tr><tr><td><code>false</code> | <code>off</code></td><td>Disable the use of the TURN servers</td></tr></tbody></table>
+<table><thead><tr><th width="283">Value</th><th>Description</th></tr></thead><tbody><tr><td>(user;pwd;turnserveraddress)</td><td>Set this TURN server to turnserveraddress with username user and password pwd</td></tr><tr><td><code>false</code> | <code>off</code> | <code>0</code></td><td>Remove TURN servers from the connection configuration</td></tr><tr><td><code>nostun</code></td><td>Remove configured STUN and TURN servers; host candidates may still be available</td></tr></tbody></table>
 
 ## Details
 

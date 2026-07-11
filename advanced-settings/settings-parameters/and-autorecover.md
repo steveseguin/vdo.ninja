@@ -27,7 +27,7 @@ When enabled, this currently enables:
 - Adaptive disconnect timing
 - Automatic WHEP fallback signaling where WHIP/WHEP settings are available
 
-When disabled (`&autorecover=0`), those recovery assists are turned off.
+When disabled (`&autorecover=0`), those three opt-in assists are turned off. Baseline ICE recovery still runs, and the current large-room heuristic may still attempt TURN escalation on an individual failed path. Use `&turn=0` when a link must never use TURN.
 
 {% hint style="info" %}
 Do not combine `&autorecover=1` with `&autorelay=1`. The recovery bundle already enables the same relay-escalation behavior. Use `&autorelay=1` by itself only when you want that narrower behavior.

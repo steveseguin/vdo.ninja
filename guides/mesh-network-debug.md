@@ -22,13 +22,13 @@ If moving A from the shared Wi-Fi to a hotspot fixes the problem, suspect the lo
 
 Use the least disruptive action first:
 
-1. Open **Mesh Network Debug** and refresh its data.
-2. For a B to A failure, select **B** and use **ICE Restart**. Wait 5 to 10 seconds, then refresh the diagram.
-3. If it is still broken, use **ICE Restart** on **A**.
+1. Ask B to speak, open **Mesh Network Debug**, and click **Refresh** while B is speaking.
+2. Select the **B -> A** arrow. If audio was sent but not received, use **Restart This ICE Path**. Wait 5 to 10 seconds, then refresh while B speaks again.
+3. If it is still broken, select B and use **Restart All ICE Paths**. This broader action can briefly disturb B's other peer connections.
 4. If the show must continue, send B to A through A's **Mix** control.
 5. After the show, reload B and then A one at a time. If the problem returns, test both guest links with `&relay`.
 
-Use **Refresh Mic** on B only when nobody can hear B or B's local microphone meter has stopped. Use **Refresh All** only when restarting B's microphone, camera, and peer connections together is acceptable.
+Use **Refresh Mic** on B only when nobody can hear B or B's local microphone meter has stopped. Use **Refresh Guest Media + ICE** only when restarting B's microphone, camera, and peer connections together is acceptable.
 
 ## Open Mesh Network Debug
 
@@ -36,28 +36,29 @@ In the director control center, select the mesh/network icon beside the room nam
 
 <figure><img src="../.gitbook/assets/mesh-audio-recovery/mesh-debug-button.png" alt="Director control-center header with the Mesh Network Debug icon beside the room controls"><figcaption><p>Select the connected-nodes icon beside the room name to open Mesh Network Debug.</p></figcaption></figure>
 
-<figure><img src="../.gitbook/assets/mesh-audio-recovery/mesh-overview.png" alt="Mesh Network Debug showing the director and Guests A, B, and C connected by six green peer lines"><figcaption><p>A reviewed four-node test room. The six green lines mean that every merged peer connection reported connected; they do not prove that every audio direction is flowing.</p></figcaption></figure>
+<figure><img src="../.gitbook/assets/mesh-audio-recovery/mesh-overview.png" alt="Mesh Network Debug showing separate directional arrows between the director and Guests A, B, and C, with the Guest B to Guest A audio path orange"><figcaption><p>A reviewed, staged four-node example. Guest B to Guest A is orange because B sent audio packets while A received none; the reverse A to B arrow remains green.</p></figcaption></figure>
 
 ### Read the diagram
 
 | Display | Meaning |
 | --- | --- |
 | Blue-outlined circle | Director |
-| Green-outlined circle | Guest whose reported peer connections are connected |
-| Orange-outlined circle | Guest with a new, connecting, disconnected, or closed connection |
+| Green-outlined circle | Guest with no detected directional problem |
+| Orange-outlined circle | Guest with a degraded connection or an expected media stream stalled on arrival |
 | Red-outlined circle | Guest with a failed connection |
 | Gray-outlined circle | Guest that reported no connections |
 | Purple square | Scene or view-only connection |
-| Solid green line | Reported `RTCPeerConnection.connectionState` is connected |
-| Dashed orange line | Connecting, disconnected, new, or closed |
-| Dashed red line | Failed |
-| Cyan double-dashed line | Marked as patched through the director's mix-minus path |
-| Arrow | The tool saw only one publishing direction |
+| Solid green arrow | The directional path is connected and expected RTP reached the listener during the sample, or no media was expected |
+| Dashed orange arrow | The path is degraded, or the publisher sent expected RTP while the listener received none |
+| Dashed red arrow | Failed |
+| Dashed gray arrow | Media flow could not be verified during the sample |
+| Cyan double-dashed arrows | Peer pair marked as patched through the director's mix-minus path |
+| Arrow direction | Publisher -> listener; A -> B and B -> A are separate paths |
 
-Select a guest node to see its browser, TURN badge, reported connections, and recovery controls. Select a line to see the merged connection details and any edge actions.
+Select a guest node to see its browser, TURN badge, reported connections, and guest-wide recovery controls. Select an arrow to see its publisher, listener, sender and receiver packet deltas, candidate path, track state, and directional recovery action.
 
-{% hint style="warning" %}
-A green line proves only that the peer connection reports `connected`. It does not prove that audio is present, increasing, or audible. The current diagram merges A to B and B to A reports into one edge, so it can also hide which direction is bad.
+{% hint style="info" %}
+The tool samples RTP for about one second. Ask the publisher to speak while clicking **Refresh**. A quiet sender is shown as unverified instead of stalled. A green audio arrow confirms packets reached the listener's browser; it does not prove the track was audible through the listener's selected output device or Web Audio path.
 {% endhint %}
 
 ### Node recovery controls
@@ -66,28 +67,29 @@ A green line proves only that the peer connection reports `connected`. It does n
 | --- | --- | --- |
 | **Refresh Mic** | Re-captures the selected guest's microphone | Nobody can hear that guest, or their mic capture stopped |
 | **Refresh Video** | Re-captures the selected guest's camera | Camera is frozen or missing |
-| **ICE Restart** | Requests ICE restarts for all of that guest's P2P connections | A path is failed, disconnected, or stalled |
-| **Refresh All** | Refreshes mic, video, and ICE | Less targeted actions failed and a broad interruption is acceptable |
+| **Restart All ICE Paths** | Requests ICE restarts for all of that guest's P2P connections | A targeted path restart failed, or several paths are degraded |
+| **Refresh Guest Media + ICE** | Refreshes mic, video, and every ICE path | Less targeted actions failed and a broad interruption is acceptable |
 | **Restart WHIP** | Restarts that guest's WHIP output | Only for a guest publishing through WHIP/MediaMTX/Meshcast-compatible output |
 
-**ICE Restart is guest-wide, not edge-specific.** For a B to A failure, start with B because B is the publisher for the missing direction. It may briefly disturb B's other connections.
+These node actions are guest-wide. For one bad direction, use the arrow's **Restart This ICE Path** action first.
 
-<figure><img src="../.gitbook/assets/mesh-audio-recovery/mesh-node-recovery-controls.png" alt="Guest A node details with connection states and Refresh Video, Refresh Mic, ICE Restart, Refresh All, and Restart WHIP controls"><figcaption><p>Select a guest node to inspect its reported connections and open the guest-wide recovery actions.</p></figcaption></figure>
+<figure><img src="../.gitbook/assets/mesh-audio-recovery/mesh-node-recovery-controls.png" alt="Guest B node details showing directional connection reports and guest-wide Refresh Video, Refresh Mic, Restart All ICE Paths, Refresh Guest Media and ICE, and Restart WHIP controls"><figcaption><p>Select a guest node to inspect its reported directions and open the guest-wide recovery actions.</p></figcaption></figure>
 
 ## Reconnect peers safely
 
-The current **Reconnect P2P** edge button is not a complete reconnect. It tells one endpoint to close the matching peer connection, but it does not create a replacement connection afterward. Avoid that button in a live room until it is fixed.
+Select the affected arrow and use **Restart This ICE Path**. The command uses the peer key reported by that endpoint and calls `restartIce()` on only the selected publisher-to-listener connection. It does not close the connection or restart the publisher's other peer paths.
 
-<figure><img src="../.gitbook/assets/mesh-audio-recovery/mesh-edge-recovery-actions.png" alt="A staged failed connection showing the Reconnect P2P and Patch via Mix-Minus actions"><figcaption><p>A staged failed-edge example. Use the panel to identify the endpoints, but avoid Reconnect P2P until its replacement-connection path is fixed.</p></figcaption></figure>
+<figure><img src="../.gitbook/assets/mesh-audio-recovery/mesh-edge-recovery-actions.png" alt="Guest B to Guest A directional path showing connected ICE, stalled listener audio, 18 sent packets and zero received packets, Restart This ICE Path, and Patch Peer Pair via Mix-Minus"><figcaption><p>The B -> A panel distinguishes a connected ICE transport from stalled audio and exposes the targeted ICE restart.</p></figcaption></figure>
 
-Use this sequence instead:
+Recovery sequence:
 
-1. Select the sender node and click **ICE Restart**.
-2. Wait 5 to 10 seconds and click **Refresh** in the toolbar.
-3. Select the receiver node and click **ICE Restart** if needed.
-4. If media capture itself is broken, use **Refresh Mic** or **Refresh All** on the sender.
-5. If the path still does not return, have the sender reload their page. Reload the receiver next if required.
-6. Rejoin both affected guests with a TURN recovery or forced-relay option if the same pair fails again.
+1. Ask the sender to speak and click **Refresh**.
+2. Select the affected sender -> listener arrow and click **Restart This ICE Path**.
+3. Wait 5 to 10 seconds, ask the sender to speak, and click **Refresh** again.
+4. If the directional restart fails, select the sender node and click **Restart All ICE Paths**.
+5. If media capture itself is broken, use **Refresh Mic** or **Refresh Guest Media + ICE** on the sender.
+6. If the path still does not return, have the sender reload their page. Reload the receiver next if required.
+7. Rejoin both affected guests with a TURN recovery or forced-relay option if the same pair fails again.
 
 Do not use **Hangup** as a reconnect button. It intentionally removes the guest and requires them to join again.
 
@@ -126,14 +128,16 @@ This flag does not remove the normal guest-to-guest P2P audio paths. Test the co
 
 ## Patch via Mix-Minus in the mesh view
 
-When a guest-to-guest line reports `failed` or `disconnected`, selecting it exposes **Patch via Mix-Minus**. The toolbar's **Auto-Patch Failed** action applies the same operation to every failed or disconnected guest-to-guest edge.
+When a guest-to-guest arrow is failed, disconnected, or has verified stalled audio, selecting it exposes **Patch Peer Pair via Mix-Minus**. The toolbar's **Patch Audio Problems** action applies the same operation to affected guest pairs.
 
 Use an edge patch only when both directions are unusable or when a short-lived emergency bridge is more important than possible doubled audio. The current patch:
 
 * relays both directions through the director, even if only one direction failed;
 * leaves the original direct tracks in place;
-* marks the line cyan immediately without confirming that replacement audio reached either guest; and
+* marks both arrows cyan immediately without confirming that replacement audio reached either guest; and
 * does not reliably restore the director's original outbound audio track when **Remove Patch** is selected.
+
+**Unpatch Recovered** removes an automatic/manual pair patch only after both directional arrows report healthy. Have both guests speak and refresh before relying on that check.
 
 For a one-way B to A failure, prefer A's per-guest **Mix** panel and select only B.
 
@@ -150,6 +154,8 @@ For the complete opt-in recovery bundle, use this on both A and B:
 This enables adaptive disconnect timing, automatic TURN escalation, and WHEP fallback signaling when WHIP/WHEP settings exist. It keeps direct P2P as the first choice; TURN is used only after recovery escalates and only when usable TURN servers are configured.
 
 If you want only automatic TURN escalation without the rest of that bundle, use `&autorelay=1`. Do not combine it with `&autorecover=1`; `autorecover` already enables the same relay behavior.
+
+If a link must never use TURN, use `&turn=0`. The current large-room recovery heuristic can override `&autorelay=0`, while `&turn=0` removes TURN servers and makes relay escalation unavailable.
 
 ### Force TURN relay
 
@@ -196,7 +202,7 @@ Also record:
 * the browser and operating system for each guest;
 * whether the affected guests share a router, access point, extender, or VLAN;
 * whether the mesh node or edge shows host, server-reflexive, or TURN relay candidates;
-* whether **ICE Restart**, a page reload, `&relay`, or `&relay&tcp` changes the result; and
+* whether **Restart This ICE Path**, **Restart All ICE Paths**, a page reload, `&relay`, or `&relay&tcp` changes the result; and
 * a `chrome://webrtc-internals` dump from the listener when possible.
 
 If inbound audio bytes for B increase at A while B remains inaudible, investigate A's playback element, output device, mute state, and Web Audio path. If the bytes do not increase, investigate the B to A transport, sender track, and ICE route.
