@@ -1,136 +1,201 @@
 ---
-description: Visualize and troubleshoot P2P connections between guests in a room
+description: Diagnose one-way guest audio, use director custom mixes, inspect the P2P mesh, and recover peers safely
 ---
 
-# Mesh Network Debug
+# Recover Missing Guest-to-Guest Audio
 
-The Mesh Network Debug tool helps directors visualize and troubleshoot peer-to-peer (P2P) connections between guests in a room. When guests can't hear each other or connections fail, this tool provides visibility into what's happening and offers recovery options.
+VDO.Ninja rooms normally use separate peer-to-peer paths between participants. One direction can fail while every other direction keeps working. This guide shows directors how to identify that case, restore audio with a custom mix, inspect the Mesh Network Debug view, and rebuild the affected connection.
 
-## Accessing the Tool
+## Quick diagnosis: A cannot hear B, but C can
 
-As a director, click the mesh network icon in the header bar (next to the room name). This opens a full-screen visualization showing all guests and their connections.
+Suppose:
 
-## Understanding the Visualization
+* C can hear B.
+* A can hear C.
+* A cannot hear B.
 
-### Nodes
+B's microphone is working because C receives it. A's speaker output is working because A hears C. The fault is therefore specific to the **B to A path** or to playback of B's track at A. Refreshing B's microphone is unlikely to be the first useful action.
 
-Each circle represents a participant:
-- **Director** - shown with a special indicator
-- **Guests** - regular participants in the room
-- **Viewers/Scenes** - view-only participants
+If moving A from the shared Wi-Fi to a hotspot fixes the problem, suspect the local network path: an unusable LAN ICE candidate, access-point isolation, a guest Wi-Fi/VLAN rule, a local firewall, or a browser/network-interface interaction. A VPN is not a conclusive test because WebRTC may still select a direct LAN candidate or the VPN may not carry WebRTC UDP traffic.
 
-Node colors indicate health status:
-- **Green** - healthy, all connections working
-- **Orange** - degraded, some connections have issues
-- **Red** - failed, unable to connect
-- **Gray** - isolated, no connections established
+## Live-show recovery order
 
-### Connection Lines
+Use the least disruptive action first:
 
-Lines between nodes show P2P connections:
-- **Solid green** - connected and working
-- **Dashed orange** - connecting or degraded
-- **Dashed red** - failed connection
-- **Cyan double-dash** - patched via mix-minus (audio being relayed through director)
+1. Open **Mesh Network Debug** and refresh its data.
+2. For a B to A failure, select **B** and use **ICE Restart**. Wait 5 to 10 seconds, then refresh the diagram.
+3. If it is still broken, use **ICE Restart** on **A**.
+4. If the show must continue, send B to A through A's **Mix** control.
+5. After the show, reload B and then A one at a time. If the problem returns, test both guest links with `&relay`.
 
-Click on any node or connection line to see detailed information in the side panel.
+Use **Refresh Mic** on B only when nobody can hear B or B's local microphone meter has stopped. Use **Refresh All** only when restarting B's microphone, camera, and peer connections together is acceptable.
 
-## Node Details Panel
+## Open Mesh Network Debug
 
-When you click a node, you'll see:
-- **Stream ID** and UUID
-- **Browser** being used (Chrome, Firefox, Safari, etc.)
-- **TURN indicator** - shows if the guest is using a TURN relay server
-- **Health status**
-- **List of connections** to other participants
+In the director control center, select the mesh/network icon beside the room name. The full-screen Mesh Network Debug view opens and requests a connection map from each guest. Select **Refresh** after guests have finished joining or after any recovery action.
 
-### Recovery Actions
+<figure><img src="../.gitbook/assets/mesh-audio-recovery/mesh-debug-button.png" alt="Director control-center header with the Mesh Network Debug icon beside the room controls"><figcaption><p>Select the connected-nodes icon beside the room name to open Mesh Network Debug.</p></figcaption></figure>
 
-For guest nodes, you have several recovery options:
+<figure><img src="../.gitbook/assets/mesh-audio-recovery/mesh-overview.png" alt="Mesh Network Debug showing the director and Guests A, B, and C connected by six green peer lines"><figcaption><p>A reviewed four-node test room. The six green lines mean that every merged peer connection reported connected; they do not prove that every audio direction is flowing.</p></figcaption></figure>
 
-| Action | Description |
-|--------|-------------|
-| **Refresh Video** | Reinitializes the video track - use when video is frozen or black |
-| **Refresh Mic** | Reinitializes the audio track - use when audio stops working |
-| **ICE Restart** | Performs an ICE restart to re-establish the connection - use for degraded connections |
-| **Refresh All** | Full restart of audio, video, and ICE - nuclear option for stubborn issues |
-| **Restart WHIP** | Tells that guest to restart its WHIP publishing connection (useful for WHIP/MediaMTX path issues) |
+### Read the diagram
 
-## Connection Details Panel
+| Display | Meaning |
+| --- | --- |
+| Blue-outlined circle | Director |
+| Green-outlined circle | Guest whose reported peer connections are connected |
+| Orange-outlined circle | Guest with a new, connecting, disconnected, or closed connection |
+| Red-outlined circle | Guest with a failed connection |
+| Gray-outlined circle | Guest that reported no connections |
+| Purple square | Scene or view-only connection |
+| Solid green line | Reported `RTCPeerConnection.connectionState` is connected |
+| Dashed orange line | Connecting, disconnected, new, or closed |
+| Dashed red line | Failed |
+| Cyan double-dashed line | Marked as patched through the director's mix-minus path |
+| Arrow | The tool saw only one publishing direction |
 
-When you click a connection line, you'll see:
-- **Source and target** participants
-- **Connection state** (connected, failed, etc.)
-- **Candidate type** (host, relay, etc.)
-- **Bandwidth** being used
-- **NACK/PLI counts** - indicators of packet loss
+Select a guest node to see its browser, TURN badge, reported connections, and recovery controls. Select a line to see the merged connection details and any edge actions.
 
-### Patching Failed Connections
+{% hint style="warning" %}
+A green line proves only that the peer connection reports `connected`. It does not prove that audio is present, increasing, or audible. The current diagram merges A to B and B to A reports into one edge, so it can also hide which direction is bad.
+{% endhint %}
 
-When a P2P connection between two guests fails, they can't hear each other directly. The **Patch via Mix-Minus** feature solves this by routing their audio through the director.
+### Node recovery controls
 
-**How it works:**
-1. Guest A's audio goes to the director
-2. Director mixes and sends it to Guest B
-3. Guest B's audio goes to the director
-4. Director mixes and sends it to Guest A
+| Action | What it currently does | When to use it |
+| --- | --- | --- |
+| **Refresh Mic** | Re-captures the selected guest's microphone | Nobody can hear that guest, or their mic capture stopped |
+| **Refresh Video** | Re-captures the selected guest's camera | Camera is frozen or missing |
+| **ICE Restart** | Requests ICE restarts for all of that guest's P2P connections | A path is failed, disconnected, or stalled |
+| **Refresh All** | Refreshes mic, video, and ICE | Less targeted actions failed and a broad interruption is acceptable |
+| **Restart WHIP** | Restarts that guest's WHIP output | Only for a guest publishing through WHIP/MediaMTX/Meshcast-compatible output |
 
-This adds a small amount of latency but restores audio communication when direct P2P fails.
+**ICE Restart is guest-wide, not edge-specific.** For a B to A failure, start with B because B is the publisher for the missing direction. It may briefly disturb B's other connections.
 
-**To patch a failed connection:**
-1. Click on the failed (red) connection line
-2. Click **Patch via Mix-Minus** button
-3. The connection will show as cyan to indicate it's being relayed
+<figure><img src="../.gitbook/assets/mesh-audio-recovery/mesh-node-recovery-controls.png" alt="Guest A node details with connection states and Refresh Video, Refresh Mic, ICE Restart, Refresh All, and Restart WHIP controls"><figcaption><p>Select a guest node to inspect its reported connections and open the guest-wide recovery actions.</p></figcaption></figure>
 
-**To remove a patch:**
-1. Click the patched (cyan) connection
-2. Click **Remove Patch** button
+## Reconnect peers safely
 
-## Toolbar Options
+The current **Reconnect P2P** edge button is not a complete reconnect. It tells one endpoint to close the matching peer connection, but it does not create a replacement connection afterward. Avoid that button in a live room until it is fixed.
 
-| Button | Description |
-|--------|-------------|
-| **Refresh** | Re-queries all guests for current connection status |
-| **Layout** | Cycles between Circular, Grid, and Force-directed layouts |
-| **Auto-Patch Failed** | Automatically patches all failed guest-to-guest connections |
-| **Unpatch Recovered** | Removes patches for connections that have recovered to P2P |
-| **Problems only** | Filters view to show only problematic connections |
+<figure><img src="../.gitbook/assets/mesh-audio-recovery/mesh-edge-recovery-actions.png" alt="A staged failed connection showing the Reconnect P2P and Patch via Mix-Minus actions"><figcaption><p>A staged failed-edge example. Use the panel to identify the endpoints, but avoid Reconnect P2P until its replacement-connection path is fixed.</p></figcaption></figure>
 
-## Common Scenarios
+Use this sequence instead:
 
-### Guest can't hear another guest
+1. Select the sender node and click **ICE Restart**.
+2. Wait 5 to 10 seconds and click **Refresh** in the toolbar.
+3. Select the receiver node and click **ICE Restart** if needed.
+4. If media capture itself is broken, use **Refresh Mic** or **Refresh All** on the sender.
+5. If the path still does not return, have the sender reload their page. Reload the receiver next if required.
+6. Rejoin both affected guests with a TURN recovery or forced-relay option if the same pair fails again.
 
-1. Open Mesh Network Debug
-2. Look for red or orange connection lines between those guests
-3. If failed, try **ICE Restart** on both guests
-4. If still failing, use **Patch via Mix-Minus** to relay audio through director
+Do not use **Hangup** as a reconnect button. It intentionally removes the guest and requires them to join again.
 
-### Multiple guests having audio issues
+## Emergency audio patch: send B to A with Mix
 
-1. Click **Auto-Patch Failed** to patch all broken connections at once
-2. Later, click **Unpatch Recovered** to restore any connections that have healed
+The per-guest **Mix** control is the safest current fallback for a one-way failure because you can relay only the missing source to the listener.
 
-### WHIP publisher path is degraded
+1. In the director control center, find **A's** guest card. A is the listener who is missing audio.
+2. Expand **Additional Controls**.
+3. Scroll to **PGM / Mic** and select **Mix**.
+4. Under **Guests**, enable **B**.
+5. Disable **Director Mix** and leave other guests disabled unless A also needs those sources relayed.
+6. Ask A to confirm that B is audible.
 
-1. Click the affected guest node
-2. Use **Restart WHIP** to force that guest to re-establish WHIP publishing
-3. If needed, use **Refresh All** as a follow-up
+<figure><img src="../.gitbook/assets/mesh-audio-recovery/guest-custom-mix.png" alt="Guest A custom Mix with Director Mix and Guest C disabled and Guest B selected"><figcaption><p>Example B-to-A emergency route: open Guest A's Mix, disable Director Mix, select Guest B, and leave Guest C disabled.</p></figcaption></figure>
 
-### Guest showing TURN indicator
+The target guest is automatically excluded from their own return mix, which prevents A from hearing A through the director.
 
-A TURN indicator means the guest is using a relay server rather than direct P2P. This can indicate:
-- Restrictive firewall or corporate network
-- Symmetric NAT preventing direct connections
-- The connection may have higher latency
+{% hint style="warning" %}
+The normal direct guest-to-guest track is not removed. Include only the missing source. If the B to A direct path recovers while B is still selected in A's custom mix, A may hear B twice. Disable B in A's Mix panel when the direct path is stable again.
+{% endhint %}
 
-Consider having the guest try a different network or use `&relay` parameter if TURN is required.
+Closing the Mix menu only closes the menu; it does not disable the custom outbound mix. If the routing state becomes unclear, reload the affected guest connection or the director after the production.
 
-## Tips
+### Whole-room `&mixminus`
 
-- Refresh the visualization periodically during long sessions to get current status
-- Patched connections add latency - unpatch when P2P recovers
-- The tool is most useful when guests report they can't hear specific other guests
-- Force-directed layout can help visualize problem clusters in larger rooms
+For a planned director-hosted N-1 workflow, add `&mixminus` (or `&mm`) to the **director URL before joining**:
+
+`https://vdo.ninja/?director=ROOM&mixminus`
+
+The director then builds a custom return for every guest containing the director and the other guests, excluding the recipient. Do not add this flag only to guest links.
+
+This flag does not remove the normal guest-to-guest P2P audio paths. Test the complete routing before a production so direct and relayed copies do not create doubled audio.
+
+## Patch via Mix-Minus in the mesh view
+
+When a guest-to-guest line reports `failed` or `disconnected`, selecting it exposes **Patch via Mix-Minus**. The toolbar's **Auto-Patch Failed** action applies the same operation to every failed guest-to-guest edge.
+
+Use an edge patch only when both directions are unusable or when a short-lived emergency bridge is more important than possible doubled audio. The current patch:
+
+* relays both directions through the director, even if only one direction failed;
+* leaves the original direct tracks in place;
+* marks the line cyan immediately without confirming that replacement audio reached either guest; and
+* does not reliably restore the director's original outbound audio track when **Remove Patch** is selected.
+
+For a one-way B to A failure, prefer A's per-guest **Mix** panel and select only B.
+
+## Bypass a bad local path
+
+Apply connection flags to the **affected guest links**, not only to the director link.
+
+### Automatic recovery with TURN escalation
+
+Start with this on both A and B:
+
+`&autorecover=1&autorelay=1`
+
+This keeps direct P2P as the first choice and allows recovery to escalate to TURN.
+
+### Force TURN relay
+
+If the same pair continues to fail, test both guest links with:
+
+`&relay`
+
+Example:
+
+`https://vdo.ninja/?room=ROOM&relay`
+
+TURN usually adds latency and consumes relay bandwidth, but it bypasses the direct A to B LAN route. For an audio-only room, the bandwidth cost is comparatively small.
+
+If UDP itself appears blocked or unstable, test:
+
+`&relay&tcp`
+
+TCP can add more latency and should be a fallback, not the first test.
+
+### Other targeted checks
+
+* Test `&ipv6=0` on A and B if the router has unreliable IPv6. Current VDO.Ninja builds already prefer IPv4 by default, so treat this as a diagnostic test.
+* Disable guest-network or AP/client isolation on the Wi-Fi access point.
+* Confirm A and B are not separated by a mesh-node VLAN, extender guest mode, or a second router.
+* Mark the local network as trusted/private in the operating-system firewall, or temporarily test with the local firewall/security product disabled.
+* Try current Chrome/Edge and Firefox without extensions.
+* Test one device over Ethernet to the same main router.
+
+## What to record for a useful bug report
+
+Capture the direction, not just "audio failed":
+
+| Test | Result |
+| --- | --- |
+| A hears B | yes/no |
+| B hears A | yes/no |
+| A hears C | yes/no |
+| C hears A | yes/no |
+| B hears C | yes/no |
+| C hears B | yes/no |
+
+Also record:
+
+* the browser and operating system for each guest;
+* whether the affected guests share a router, access point, extender, or VLAN;
+* whether the mesh node or edge shows host, server-reflexive, or TURN relay candidates;
+* whether **ICE Restart**, a page reload, `&relay`, or `&relay&tcp` changes the result; and
+* a `chrome://webrtc-internals` dump from the listener when possible.
+
+If inbound audio bytes for B increase at A while B remains inaudible, investigate A's playback element, output device, mute state, and Web Audio path. If the bytes do not increase, investigate the B to A transport, sender track, and ICE route.
 
 ## Related
 
@@ -138,10 +203,10 @@ Consider having the guest try a different network or use `&relay` parameter if T
 [audio-over-vdo.ninja-isnt-working.md](../common-errors-and-known-issues/audio-over-vdo.ninja-isnt-working.md)
 {% endcontent-ref %}
 
-{% content-ref url="../common-errors-and-known-issues/mic-audio-dropping-out.md" %}
-[mic-audio-dropping-out.md](../common-errors-and-known-issues/mic-audio-dropping-out.md)
+{% content-ref url="../general-settings/and-relay.md" %}
+[and-relay.md](../general-settings/and-relay.md)
 {% endcontent-ref %}
 
-{% content-ref url="../common-errors-and-known-issues/relay-candidate-being-selected.md" %}
-[relay-candidate-being-selected.md](../common-errors-and-known-issues/relay-candidate-being-selected.md)
+{% content-ref url="handling-guest-disconnects-and-connection-recovery.md" %}
+[handling-guest-disconnects-and-connection-recovery.md](handling-guest-disconnects-and-connection-recovery.md)
 {% endcontent-ref %}
