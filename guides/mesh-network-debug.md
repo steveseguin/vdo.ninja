@@ -61,6 +61,8 @@ Select a guest node to see its browser, TURN badge, reported connections, and gu
 The tool samples RTP for about one second. Ask the publisher to speak while clicking **Refresh**. A quiet sender is shown as unverified instead of stalled. A green audio arrow confirms packets reached the listener's browser; it does not prove the track was audible through the listener's selected output device or Web Audio path.
 {% endhint %}
 
+After automatic recovery, select the affected arrow and check both fields. **ICE state: connected** confirms that PC recovered. **Candidate path: relay** confirms the selected candidate pair actually uses TURN; merely configuring or requesting relay is not proof. A connected host/server-reflexive path means the first normal restart recovered directly, which is also a successful result.
+
 ### Node recovery controls
 
 | Action | What it currently does | When to use it |
@@ -153,9 +155,9 @@ For the complete opt-in recovery bundle, use this on both A and B:
 
 This enables adaptive disconnect timing, automatic TURN escalation, and WHEP fallback signaling when WHIP/WHEP settings exist. It keeps direct P2P as the first choice; TURN is used only after recovery escalates and only when usable TURN servers are configured.
 
-If you want only automatic TURN escalation without the rest of that bundle, use `&autorelay=1`. Do not combine it with `&autorecover=1`; `autorecover` already enables the same relay behavior.
+Automatic TURN escalation is enabled by default. Direct P2P remains the first choice; on a hard failure VDO.Ninja attempts one normal ICE restart, waits the recovery window, and then makes one relay-eligible restart if the path is still not connected. `&autorelay=1` can make this explicit or override `&autorecover=0`.
 
-If a link must never use TURN, use `&turn=0`. The current large-room recovery heuristic can override `&autorelay=0`, while `&turn=0` removes TURN servers and makes relay escalation unavailable.
+Use `&autorelay=0`, `&autorelay=off`, `&autorelay=false`, or `&autorelay=no` to disable automatic forced-relay escalation regardless of room size. Use `&turn=0` when the link must not have TURN servers available to normal browser ICE selection either.
 
 ### Force TURN relay
 

@@ -30,7 +30,7 @@ This page is intentionally short to reduce stale or cached snippets.
   Recent chunked work includes `&chunkfec`, `&chunknack`, `&chunkbuffer`, `&chunkbufferfloor`, `&chunkbufferceil`, `&chunkjitterslack`, `&chunkadapt`, and `&chunkprofile` for opt-in reliability, buffering, and adaptation experiments.
 
 * **PTZ and recovery controls**
-  Added or expanded `&autorelay`, `&pendingicettl`, low-latency chunked presets, PTZ remote actions, and the dedicated PTZ control surface at [https://vdo.ninja/ptz.html](https://vdo.ninja/ptz.html).
+  Added or expanded `&autorelay`, `&pendingicettl`, low-latency chunked presets, PTZ remote actions, and the dedicated PTZ control surface at [https://vdo.ninja/ptz.html](https://vdo.ninja/ptz.html). Auto-relay now defaults on while keeping initial connections direct-first; a hard failure gets one normal restart before one relay-eligible restart.
 
 * **Standalone helper app growth**
   New public helper surfaces now include the standalone Screen Recorder, Game Capture app, Ninja OBS Plugin, and Ninja VST3 Plugin.

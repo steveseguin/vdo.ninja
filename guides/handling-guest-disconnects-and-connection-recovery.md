@@ -22,7 +22,8 @@ When guests randomly disconnect, freeze, or reconnect in loops, there is rarely 
 Use these on room/director/push/view links as needed:
 
 - `&autorecover=1` enables adaptive disconnect timing, TURN escalation, and eligible WHEP fallback signaling.
-- `&autorelay=1` enables only TURN escalation during recovery. It is already included by `&autorecover=1`, so do not combine them.
+- Automatic relay escalation is enabled by default: direct P2P is tried first, a hard failure gets one normal ICE restart, and only a still-failed path gets one relay-eligible restart after the recovery window.
+- `&autorelay=0`, `off`, `false`, or `no` disables forced-relay escalation. An explicit `&autorelay` value overrides the relay portion of `&autorecover` when both are present.
 - `&p2pfailtimeout=<ms>` sets recovery timing window (default `12000`, clamp `3000-45000`).
 - `&peerrecoversteps=<n>` sets retry depth (default `3`, clamp `1-6`).
 - `&pendingicettl=<ms>` controls queued ICE candidate retention (default `15000`, clamp `3000-60000`).

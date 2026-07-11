@@ -27,17 +27,17 @@ When enabled, this currently enables:
 - Adaptive disconnect timing
 - Automatic WHEP fallback signaling where WHIP/WHEP settings are available
 
-When disabled (`&autorecover=0`), those three opt-in assists are turned off. Baseline ICE recovery still runs, and the current large-room heuristic may still attempt TURN escalation on an individual failed path. Use `&turn=0` when a link must never use TURN.
+When disabled (`&autorecover=0`), those three assists are turned off. Baseline ICE recovery still runs. A later explicit `&autorelay=1` can re-enable only relay escalation because the dedicated flag is parsed after this bundle.
 
 {% hint style="info" %}
-Do not combine `&autorecover=1` with `&autorelay=1`. The recovery bundle already enables the same relay-escalation behavior. Use `&autorelay=1` by itself only when you want that narrower behavior.
+Auto-relay itself now defaults enabled, while adaptive disconnect timing and automatic WHEP fallback remain off by default. Use `&autorecover=1&autorelay=off` when you want those other bundle features without forced-relay escalation.
 {% endhint %}
 
 ## Details
 
 - Intended for links where guests may roam networks or experience intermittent P2P failures.
 - Best used with [`&p2pfailtimeout`](and-p2pfailtimeout.md) and [`&peerrecoversteps`](and-peerrecoversteps.md) to tune aggressiveness.
-- Keeps default behavior unchanged unless explicitly enabled.
+- Keeps direct P2P as the first connection path; the bundle changes recovery behavior only after a connection degrades or fails.
 
 ## Usage examples
 

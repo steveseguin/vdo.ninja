@@ -17,18 +17,20 @@ Examples:
 | Value | Description |
 | --- | --- |
 | `1`, `true`, `on`, `yes` | Enable relay escalation during auto-recovery |
-| `0`, `false`, `off`, `no` | Clear the explicit auto-relay opt-in; see the large-room caveat below |
+| `0`, `false`, `off`, `no` | Disable automatic forced-relay escalation |
 
 ## Details
 
-- Enables automatic TURN relay escalation as part of peer recovery attempts.
+- Automatic relay escalation is enabled by default. `&autorelay=1` can make that intent explicit or override an earlier `&autorecover=0`.
+- Direct P2P remains the initial behavior. The default ICE policy is `all`; this feature does not make new connections TURN-only.
+- On a hard connection failure, recovery first attempts one normal ICE restart. If the peer is still not connected after the recovery window, it makes one relay-eligible ICE restart.
 - Useful when direct P2P paths fail intermittently due to strict NAT/firewall/routing issues.
 - This does not force relay from the start like [`&relay`](../../general-settings/and-relay.md); it escalates when recovery logic decides it is needed.
-- Requires usable TURN servers. If no TURN servers are configured, this option has no effect.
-- [`&autorecover`](../settings-parameters/and-autorecover.md) already enables this behavior, so combining both flags is redundant.
+- Escalation exits without changing the PC when auto-relay is disabled, no TURN server is configured, or the PC is already relay-forced by [`&relay`](../../general-settings/and-relay.md) or privacy mode.
+- [`&autorecover`](../settings-parameters/and-autorecover.md) controls a broader recovery bundle. When both flags are present, the dedicated `&autorelay` value wins, so `&autorecover=1&autorelay=off` keeps the other bundle features while disabling forced relay.
 
 {% hint style="info" %}
-The current large-room heuristic may still escalate an individual failed path when a page has at least five incoming peers, even with `&autorelay=0`. If TURN must be prohibited, use `&turn=0` on that link. `&stunonly` filters relay candidates, but `&turn=0` also removes TURN servers from the connection configuration.
+`&autorelay=0`, `&autorelay=off`, `&autorelay=false`, and `&autorelay=no` all prevent automatic relay escalation regardless of room size. Use `&turn=0` when TURN servers and relay candidates must be removed entirely, including normal browser ICE selection under policy `all`.
 {% endhint %}
 
 ## Related

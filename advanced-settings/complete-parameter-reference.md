@@ -47,7 +47,7 @@ If you are self-hosting VDO.Ninja, often these URL parameters can be hard-coded 
 | `autorecover`      | -                                     | Boolean                                         | Enables connection-recovery bundle        |
 | `autoreload`       | -                                     | Integer (minutes)                               | Auto reloads page after specified minutes |
 | `autoreload24`     | -                                     | Time (HH:MM)                                    | Reloads at specified time                 |
-| `autorelay`        | -                                     | Boolean                                         | Enables relay escalation in recovery      |
+| `autorelay`        | -                                     | Boolean                                         | Controls relay escalation in recovery (default on) |
 | `autostart`        | `as`                                  | Boolean                                         | Auto starts session                       |
 | `autohide`         | -                                     | Boolean                                         | -                                         |
 | `autowhep`         | -                                     | Boolean                                         | Auto-derives WHEP share URL from WHIP output URL |
