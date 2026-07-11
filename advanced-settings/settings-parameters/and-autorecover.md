@@ -29,6 +29,10 @@ When enabled, this currently enables:
 
 When disabled (`&autorecover=0`), those recovery assists are turned off.
 
+{% hint style="info" %}
+Do not combine `&autorecover=1` with `&autorelay=1`. The recovery bundle already enables the same relay-escalation behavior. Use `&autorelay=1` by itself only when you want that narrower behavior.
+{% endhint %}
+
 ## Details
 
 - Intended for links where guests may roam networks or experience intermittent P2P failures.
@@ -53,4 +57,3 @@ When disabled (`&autorecover=0`), those recovery assists are turned off.
 {% content-ref url="../turn-and-stun-parameters/and-autorelay.md" %}
 [and-autorelay.md](../turn-and-stun-parameters/and-autorelay.md)
 {% endcontent-ref %}
-

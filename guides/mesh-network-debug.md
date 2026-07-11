@@ -93,7 +93,9 @@ Do not use **Hangup** as a reconnect button. It intentionally removes the guest 
 
 ## Emergency audio patch: send B to A with Mix
 
-The per-guest **Mix** control is the safest current fallback for a one-way failure because you can relay only the missing source to the listener.
+The per-guest **Mix** control is the most targeted current fallback for a one-way failure because you can relay only the missing source to the listener. It is still an emergency workaround, not a transparent replacement for the direct path.
+
+The director must already have an outbound P2P connection with an audio sender to the listener. The Mix control can be visible even when no replaceable outbound audio sender exists; in that case it cannot inject the relay. Test this workflow before relying on it live.
 
 1. In the director control center, find **A's** guest card. A is the listener who is missing audio.
 2. Expand **Additional Controls**.
@@ -107,10 +109,10 @@ The per-guest **Mix** control is the safest current fallback for a one-way failu
 The target guest is automatically excluded from their own return mix, which prevents A from hearing A through the director.
 
 {% hint style="warning" %}
-The normal direct guest-to-guest track is not removed. Include only the missing source. If the B to A direct path recovers while B is still selected in A's custom mix, A may hear B twice. Disable B in A's Mix panel when the direct path is stable again.
+The normal direct guest-to-guest track is not removed. Include only the missing source. If the B to A direct path recovers while B is still selected in A's custom mix, A may hear B twice. Uncheck B to stop relaying that source, then verify A's audio because the current control does not reliably restore the director's original outbound track.
 {% endhint %}
 
-Closing the Mix menu only closes the menu; it does not disable the custom outbound mix. If the routing state becomes unclear, reload the affected guest connection or the director after the production.
+Opening the Mix menu enables the custom mix and may immediately replace the director's outbound audio track with the currently selected sources. Closing the menu only hides it; it does not disable the custom mix. There is currently no reliable one-click reset to the original director track. If the routing state becomes unclear, reload the affected guest connection or the director after the production.
 
 ### Whole-room `&mixminus`
 
@@ -118,13 +120,13 @@ For a planned director-hosted N-1 workflow, add `&mixminus` (or `&mm`) to the **
 
 `https://vdo.ninja/?director=ROOM&mixminus`
 
-The director then builds a custom return for every guest containing the director and the other guests, excluding the recipient. Do not add this flag only to guest links.
+The director then attempts to build a custom return for every guest containing the director and the other guests, excluding the recipient. This still requires an active director audio context and outbound audio sender for each recipient. Do not add this flag only to guest links.
 
 This flag does not remove the normal guest-to-guest P2P audio paths. Test the complete routing before a production so direct and relayed copies do not create doubled audio.
 
 ## Patch via Mix-Minus in the mesh view
 
-When a guest-to-guest line reports `failed` or `disconnected`, selecting it exposes **Patch via Mix-Minus**. The toolbar's **Auto-Patch Failed** action applies the same operation to every failed guest-to-guest edge.
+When a guest-to-guest line reports `failed` or `disconnected`, selecting it exposes **Patch via Mix-Minus**. The toolbar's **Auto-Patch Failed** action applies the same operation to every failed or disconnected guest-to-guest edge.
 
 Use an edge patch only when both directions are unusable or when a short-lived emergency bridge is more important than possible doubled audio. The current patch:
 
@@ -141,11 +143,13 @@ Apply connection flags to the **affected guest links**, not only to the director
 
 ### Automatic recovery with TURN escalation
 
-Start with this on both A and B:
+For the complete opt-in recovery bundle, use this on both A and B:
 
-`&autorecover=1&autorelay=1`
+`&autorecover=1`
 
-This keeps direct P2P as the first choice and allows recovery to escalate to TURN.
+This enables adaptive disconnect timing, automatic TURN escalation, and WHEP fallback signaling when WHIP/WHEP settings exist. It keeps direct P2P as the first choice; TURN is used only after recovery escalates and only when usable TURN servers are configured.
+
+If you want only automatic TURN escalation without the rest of that bundle, use `&autorelay=1`. Do not combine it with `&autorecover=1`; `autorecover` already enables the same relay behavior.
 
 ### Force TURN relay
 

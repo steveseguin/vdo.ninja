@@ -25,6 +25,7 @@ Examples:
 - Useful when direct P2P paths fail intermittently due to strict NAT/firewall/routing issues.
 - This does not force relay from the start like [`&relay`](../../general-settings/and-relay.md); it escalates when recovery logic decides it is needed.
 - Requires usable TURN servers. If no TURN servers are configured, this option has no effect.
+- [`&autorecover`](../settings-parameters/and-autorecover.md) already enables this behavior, so combining both flags is redundant.
 
 {% hint style="info" %}
 Large rooms may still trigger relay escalation heuristics even without `&autorelay`, but enabling `&autorelay` makes this behavior explicit and predictable.
@@ -43,4 +44,3 @@ Large rooms may still trigger relay escalation heuristics even without `&autorel
 {% content-ref url="../../general-settings/and-relay.md" %}
 [and-relay.md](../../general-settings/and-relay.md)
 {% endcontent-ref %}
-

@@ -21,8 +21,8 @@ When guests randomly disconnect, freeze, or reconnect in loops, there is rarely 
 
 Use these on room/director/push/view links as needed:
 
-- `&autorecover=1` enables the recovery bundle.
-- `&autorelay=1` allows TURN escalation during recovery.
+- `&autorecover=1` enables adaptive disconnect timing, TURN escalation, and eligible WHEP fallback signaling.
+- `&autorelay=1` enables only TURN escalation during recovery. It is already included by `&autorecover=1`, so do not combine them.
 - `&p2pfailtimeout=<ms>` sets recovery timing window (default `12000`, clamp `3000-45000`).
 - `&peerrecoversteps=<n>` sets retry depth (default `3`, clamp `1-6`).
 - `&pendingicettl=<ms>` controls queued ICE candidate retention (default `15000`, clamp `3000-60000`).
@@ -32,7 +32,7 @@ Suggested presets:
 - Balanced:
   - `&autorecover=1&p2pfailtimeout=12000&peerrecoversteps=3&pendingicettl=15000`
 - Aggressive recovery:
-  - `&autorecover=1&autorelay=1&p2pfailtimeout=7000&peerrecoversteps=5&pendingicettl=20000`
+  - `&autorecover=1&p2pfailtimeout=7000&peerrecoversteps=5&pendingicettl=20000`
 - High-latency environments:
   - `&autorecover=1&p2pfailtimeout=18000&peerrecoversteps=4&pendingicettl=30000`
 
@@ -55,10 +55,12 @@ If room topology is large or network quality is inconsistent:
 
 When a specific guest-to-guest P2P edge fails during a live show:
 
-- Use **Mesh Network Debug** to identify failing edges.
-- Apply **Patch via Mix-Minus** to restore audio continuity for critical contributors.
+- Use **Mesh Network Debug** to inspect reported edges, but remember that its current merged green edge can hide a one-way audio failure.
+- For one-way audio, prefer the listener's per-guest **Mix** control over the bidirectional **Patch via Mix-Minus** edge action. Both require an existing director outbound audio sender and can duplicate audio if the direct path recovers.
 - Use **ICE Restart**, **Refresh Video**, **Refresh Mic**, or **Refresh All** actions per guest.
 - If a guest is publishing via WHIP output, use **Restart WHIP** from director controls.
+
+See [Guest Audio Recovery and Mesh Debug](mesh-network-debug.md) for the current limitations and safe operating sequence. Avoid **Reconnect P2P** until its replacement-connection path is fixed.
 
 ## Broadcast-mode resiliency pattern
 
