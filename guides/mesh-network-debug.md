@@ -71,11 +71,23 @@ After automatic recovery, select the affected arrow and check both fields. **ICE
 | **Refresh Video** | Re-captures the selected guest's camera | Camera is frozen or missing |
 | **Restart All ICE Paths** | Requests ICE restarts for all of that guest's P2P connections | A targeted path restart failed, or several paths are degraded |
 | **Refresh Guest Media + ICE** | Refreshes mic, video, and every ICE path | Less targeted actions failed and a broad interruption is acceptable |
-| **Restart WHIP** | Restarts that guest's WHIP output | Only for a guest publishing through WHIP/MediaMTX/Meshcast-compatible output |
+| **Restart Primary WHIP** | Asks the guest to rebuild its primary WHIP publisher | Only appears when the guest's current mesh report confirms that primary WHIP is enabled, configured, and restartable |
+| **Reconnect Local WHEP** | Rebuilds this director browser's local WHEP playback connection | A guest's **Local WHEP** status is failed, disconnected, or otherwise needs a fresh playback session |
 
-These node actions are guest-wide. For one bad direction, use the arrow's **Restart This ICE Path** action first.
+The media, ICE, and primary-WHIP actions affect the selected guest. **Reconnect Local WHEP** affects only the current director browser. For one bad P2P direction, use the arrow's **Restart This ICE Path** action first.
 
-<figure><img src="../.gitbook/assets/mesh-audio-recovery/mesh-node-recovery-controls.png" alt="Guest B node details showing directional connection reports and guest-wide Refresh Video, Refresh Mic, Restart All ICE Paths, Refresh Guest Media and ICE, and Restart WHIP controls"><figcaption><p>Select a guest node to inspect its reported directions and open the guest-wide recovery actions.</p></figcaption></figure>
+<figure><img src="../.gitbook/assets/mesh-audio-recovery/mesh-node-recovery-controls.png" alt="Guest B node details showing separate Primary WHIP, Screen WHIP, and Local WHEP states plus Restart Primary WHIP and Reconnect Local WHEP controls"><figcaption><p>Primary WHIP publishing and local WHEP playback are separate legs with separate recovery actions. Screen WHIP is also reported separately and is not restarted by the primary-WHIP action.</p></figcaption></figure>
+
+### WHIP versus WHEP recovery
+
+The publisher owns WHIP; the listener owns WHEP:
+
+`Guest media -> primary WHIP publisher -> media server -> local WHEP player -> director`
+
+- Use **Restart Primary WHIP** when the guest's primary publisher needs rebuilding. The command is sent to that guest and does not appear for a merely configured, unavailable, legacy, or screen-only WHIP path.
+- Use **Reconnect Local WHEP** when this director browser's WHEP player needs rebuilding. It runs locally and does not send a restart command to the publisher.
+- A **Screen WHIP** badge describes the separate screen publisher. **Restart Primary WHIP** does not restart it.
+- An explicit `&whepplay=` source has no VDO.Ninja guest publisher to command; only its local WHEP playback leg can be reconnected.
 
 ## Reconnect peers safely
 

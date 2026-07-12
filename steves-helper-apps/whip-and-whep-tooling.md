@@ -40,9 +40,9 @@ The alpha version of VDO.Ninja has the cutting edge available to it, often with 
 
 Check out the alpha version here: [https://vdo.ninja/alpha/whip](https://vdo.ninja/alpha/whip)
 
-### Director-side WHIP recovery control
+### Director-side WHIP and WHEP recovery controls
 
-In director views and Mesh Network Debug, guests publishing via WHIP can expose a **Restart WHIP** action. This lets the director trigger a WHIP reconnect for that guest without requiring a full guest page reload.
+Mesh Network Debug reports primary WHIP publishing, screen WHIP publishing, and local WHEP playback separately. **Restart Primary WHIP** appears only when the guest reports that its enabled primary WHIP publisher is actually restartable. It sends a command to that guest without requiring a full page reload. **Reconnect Local WHEP** instead rebuilds the current director browser's WHEP player and sends no command to the publisher. The primary action does not restart screen WHIP.
 
 ### WHIP ingest from OBS Studio or other
 

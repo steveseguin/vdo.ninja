@@ -60,7 +60,7 @@ When a specific guest-to-guest P2P edge fails during a live show:
 - Select the affected arrow and use **Restart This ICE Path** before using guest-wide recovery actions.
 - For one-way audio, prefer the listener's per-guest **Mix** control over the bidirectional **Patch via Mix-Minus** edge action. Both require an existing director outbound audio sender and can duplicate audio if the direct path recovers.
 - Use **Restart All ICE Paths**, **Refresh Video**, **Refresh Mic**, or **Refresh Guest Media + ICE** when broader per-guest recovery is needed.
-- If a guest is publishing via WHIP output, use **Restart WHIP** from director controls.
+- If Mesh Network Debug confirms that a guest's primary WHIP publisher is restartable, use **Restart Primary WHIP**. If only this director's WHEP playback leg failed, use **Reconnect Local WHEP** instead.
 
 See [Guest Audio Recovery and Mesh Debug](mesh-network-debug.md) for the directional health indicators, targeted ICE restart, mix-minus fallback, and safe operating sequence.
 
