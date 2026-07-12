@@ -12589,11 +12589,17 @@ General Option! ([`&push`](../source-settings/push.md), [`&room`](room.md), [`&v
 
 Example: `&turn=steve;setupYourOwnPlease;turn:turn.vdo.ninja:443`
 
+Multiple TURN servers can be provided by repeating the parameter:
+
+`&turn=user;password;turn:turn1.example.com:3478?transport=udp&turn=user;password;turn:turn2.example.com:443?transport=tcp`
+
 <table><thead><tr><th width="283">Value</th><th>Description</th></tr></thead><tbody><tr><td>(user;pwd;turnserveraddress)</td><td>Set this TURN server to turnserveraddress with username user and password pwd</td></tr><tr><td><code>false</code> | <code>off</code></td><td>Disable the use of the TURN servers</td></tr></tbody></table>
 
 ## Details
 
 Several TURN servers are provided by Steve for free, for now, and these are automatically selected based on your geographic location. You may wish to use your own privately hosted TURN server instead though, and the `&turn` is one flexible way to select it.
+
+When `&turn` is repeated, each custom server is added to the WebRTC ICE server configuration in URL order. This allows applications to provide fallback servers or multiple transports.
 
 ### Locations
 

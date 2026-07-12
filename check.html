@@ -1152,9 +1152,9 @@
 				//iframe.allow = "autoplay";
 				var srcString =	"./index.html?push=" + streamID + "&cleanoutput&privacy&"+testType+"&audiodevice=1&fullscreen&transparent&remote&maxbandwidth&speedtest="+zone;
 				
-				if (urlParams.has("turn")) {
-					srcString = srcString + "&turn=" + urlParams.get("turn");
-				}
+				urlParams.getAll("turn").forEach(function (turnvalue) {
+					srcString = srcString + "&turn=" + turnvalue;
+				});
 
 				// we are changing some text on page load, just to demonstrate what's possible.
 				iframe1.onload = function (e) {
@@ -1213,9 +1213,9 @@
 				iframe.allow = "autoplay";
 				var srcString = "./index.html?view=" + streamID + "&cleanoutput&privacy&noaudio&transparent&bitrate=6000&scale=100&speedtest="+zone; // No TURN servers set on the reciever. Don't want to query for TURN servers needlessly.
 
-				if (urlParams.has("turn")) {
-					srcString = srcString + "&turn=" + urlParams.get("turn");
-				}
+				urlParams.getAll("turn").forEach(function (turnvalue) {
+					srcString = srcString + "&turn=" + turnvalue;
+				});
 
 				if (urlParams.has("buffer")) {
 					srcString = srcString + "&buffer=" + urlParams.get("buffer");
