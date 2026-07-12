@@ -6791,7 +6791,8 @@ async function main() {
 	}
 
 	if (urlParams.has("turn")) {
-		var turnstring = urlParams.get("turn");
+		var turnstrings = urlParams.getAll("turn");
+		var turnstring = turnstrings[0];
 
 		if (turnstring == "twilio") {
 			// a sample function on loading remote credentials for TURN servers.
@@ -6848,25 +6849,26 @@ async function main() {
 			};
 		} else {
 			try {
-				//session.configuration = {iceServers: [], sdpSemantics: session.sdpSemantics};
-				turnstring = turnstring.split(";");
-				if (turnstring !== "false") {
-					// false disables the TURN server. Useful for debuggin
-					var turn = {};
-					if (turnstring.length == 3) {
-						turn.username = turnstring[0]; // myusername
-						turn.credential = turnstring[1]; //mypassword
-						turn.urls = [turnstring[2]]; //  ["turn:turn.obs.ninja:443"];
-					} else if (turnstring.length == 1) {
-						turn.urls = [turnstring[0]];
-					}
-					session.configuration = {
-						iceServers: session.stunServers,
-						sdpSemantics: session.sdpSemantics // future-proofing
-					};
+				session.configuration = {
+					iceServers: session.stunServers,
+					sdpSemantics: session.sdpSemantics // future-proofing
+				};
 
-					session.configuration.iceServers.push(turn);
-				}
+				turnstrings.forEach(function (turnvalue) {
+					if (turnvalue == "false") return; // false disables this TURN server. Useful for debugging
+
+					var turnparts = turnvalue.split(";");
+					var turn = {};
+					if (turnparts.length == 3) {
+						turn.username = turnparts[0]; // myusername
+						turn.credential = turnparts[1]; //mypassword
+						turn.urls = [turnparts[2]]; //  ["turn:turn.obs.ninja:443"];
+					} else if (turnparts.length == 1) {
+						turn.urls = [turnparts[0]];
+					}
+
+					if (turn.urls) session.configuration.iceServers.push(turn);
+				});
 			} catch (e) {
 				if (!session.cleanOutput) {
 					warnUser("TURN server parameters were wrong.");
