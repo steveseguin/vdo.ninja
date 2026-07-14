@@ -44,7 +44,7 @@ Other participants do not need an OpenAI account, API key, extension, applicatio
 
 Go to [vdo.ninja/translate.html](https://vdo.ninja/translate.html).
 
-If you are already in VDO.Ninja with translation enabled, open **Settings**, choose **User**, and click **Configure** beside the translation language. The setup page will remember the VDO.Ninja link you came from without placing that link in a server request.
+If you are already using the account-holder link, open **Settings**, choose **User**, and click **Configure** beside the translation language. The setup page will remember the VDO.Ninja link you came from without placing that link in a server request. Participants only see the language and Stop controls; they are not asked to configure an account.
 
 ### 2. Enter the account details
 
