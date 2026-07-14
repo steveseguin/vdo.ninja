@@ -63,6 +63,7 @@
   * [Hardware-accelerated video encoding](guides/hardware-accelerated-video-encoding.md)
   * [Audio Filters & Bitrate](guides/audio-filters.md)
   * [Audio-Reactive Avatars](guides/audio-reactive-avatars.md)
+  * [Live audio translation](guides/live-audio-translation.md)
   * [Options to record streams](guides/options-to-record-streams.md)
   * [Recording video with consistent results](guides/recording-video-with-consistent-results.md)
   * [Cloud Sync (Google Drive + Dropbox)](guides/cloud-sync-google-drive-and-dropbox.md)
