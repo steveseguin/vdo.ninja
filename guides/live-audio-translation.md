@@ -72,7 +72,7 @@ The generated link adds translation settings but not the API key. The key stays 
 
 ### 4. Make the participant link
 
-Paste the normal guest or participant invite into **Normal participant link**.
+Choose the participant's starting language, then paste the normal guest or participant invite into **Normal participant link**. Leave it on **Auto** when you want each participant's browser or operating-system language to be used.
 
 Copy the generated **Translation-ready participant link** and send it to the participants. It contains a preferred-language setting but no API key and no OpenAI account information.
 
