@@ -8,7 +8,7 @@ Phone call-ins require a bridge between the public phone network and the browser
 
 The current recommended direction is bring-your-own provider. A free shared VDO.Ninja dial-in number may be tested later, but it is not the default recommendation yet because phone numbers and PSTN minutes create ongoing cost and abuse risk.
 
-Last reviewed: July 9, 2026.
+Last reviewed: July 12, 2026.
 
 {% hint style="warning" %}
 The call-in feature is experimental. Phone callers are currently mixed into the director/host audio. They do not yet appear as normal VDO.Ninja guest tiles with scene membership, per-guest volume, or the full director control set.
@@ -34,6 +34,10 @@ The experimental call-in panel appears when the director URL includes `&callin=s
 <figure><img src="../.gitbook/assets/callin-twilio-panel.png" alt="VDO.Ninja phone call-in panel in Twilio mode with Worker URL, access key, outbound test number, and start controls"><figcaption><p>Twilio mode requires a compatible backend that mints browser tokens and handles Twilio webhooks.</p></figcaption></figure>
 
 The screenshots above are intentionally using placeholder values. Do not put SIP passwords, Twilio API secrets, or provider account tokens in shared VDO.Ninja URLs.
+
+The bell button controls a browser-local incoming ringtone. Choose the classic ring, bell, chime, a custom uploaded audio file, or silent mode. The ringtone is not sent into the room or returned to the caller.
+
+The upload button opens `fileuploads.vdo.ninja`. Uploaded audio is stored as a public media file by that service; only its HTTPS URL and your ringtone preference are saved in the current browser. Use a short file that you are comfortable hosting there.
 
 ## Option 1: SignalWire SIP-over-WSS
 
@@ -91,6 +95,10 @@ This is the most flexible route if you already know telephony:
 5. Enter the PBX WebSocket URL, SIP URI, auth username, and extension password.
 
 This is where VoIP.ms currently fits best. VoIP.ms is inexpensive and useful as a SIP trunk/DID provider, but the browser still needs a WebRTC/SIP-over-WSS endpoint. In practice, that usually means putting FreePBX, Asterisk, FreeSWITCH, or another PBX/SBC between VoIP.ms and VDO.Ninja.
+
+The PBX extension must be configured for WebRTC media, not only SIP over WSS. It needs DTLS-SRTP, ICE, AVPF, RTCP mux, and a DTLS fingerprint in its SDP offer. A normal extension may register and work in MicroSIP but fail when answered in Chrome or Edge with `488 Not Acceptable Here` because browsers will not accept plain RTP audio.
+
+Also note that trusting a PBX's HTTPS/WSS certificate fixes the signaling connection only. DTLS-SRTP and its fingerprint are a separate requirement for the call audio.
 
 ## Why a backend is needed
 

@@ -6,7 +6,7 @@ description: Set up SignalWire SIP-over-WSS for the experimental VDO.Ninja phone
 
 SignalWire is currently the most direct bring-your-own provider option for VDO.Ninja's browser-side SIP call-in panel. It supports SIP over secure WebSockets, which lets the browser register as a SIP endpoint without running your own PBX.
 
-Last reviewed: July 9, 2026.
+Last reviewed: July 12, 2026.
 
 {% hint style="warning" %}
 This is experimental. Phone callers are mixed into the director/host audio and do not yet appear as normal guest tiles with full scene controls.
@@ -44,6 +44,8 @@ your-space.sip.signalwire.com
 
 The exact Space name and SIP domain are shown in the SignalWire dashboard.
 
+This direct setup does not require FreePBX. SignalWire supplies the phone number, routing, and browser-compatible SIP endpoint. A PBX is optional if you want local extensions, queues, voicemail, or different billing/routing control.
+
 ## 2. Create a SIP endpoint
 
 In the SignalWire dashboard, create a SIP credential or SIP endpoint for VDO.Ninja.
@@ -58,6 +60,8 @@ Use a dedicated credential for this purpose:
 | Encryption | Required, if offered |
 
 Do not use your SignalWire project API token as the SIP password. The browser only needs the scoped SIP endpoint credential.
+
+**Using FreePBX:** If VDO.Ninja connects to FreePBX instead of directly to SignalWire, use a dedicated WebRTC-enabled PJSIP extension. An ordinary SIP extension can work in MicroSIP while still failing in Chrome or Edge.
 
 ## 3. Buy or route a phone number
 
@@ -80,6 +84,23 @@ If you are using a SignalWire XML/SWML/Call Flow style route, the route should d
 ```
 
 Use the current SignalWire dashboard/docs for the exact routing UI.
+
+### Optional path through FreePBX
+
+The alternate route is:
+
+    SignalWire number -> FreePBX SIP trunk -> WebRTC PJSIP extension -> VDO.Ninja
+
+The VDO.Ninja extension must offer browser-compatible secure media. In FreePBX, enable the equivalent of:
+
+* Media Encryption: **DTLS-SRTP**
+* ICE Support: **Yes**
+* AVPF: **Yes**
+* RTCP Mux: **Yes**
+* DTLS Setup: **Act/Pass**
+* DTLS Verify: **Fingerprint**
+
+The exact labels depend on the FreePBX/Asterisk version. A successful SIP-over-WSS registration only proves that signaling works. The call can still fail at Answer if the PBX's SDP offer does not include a DTLS fingerprint for secure browser audio.
 
 ## 4. Start VDO.Ninja
 
@@ -134,6 +155,14 @@ The **Dial target** is used only for outbound calls from the VDO.Ninja panel. Fo
 
 ## Useful parameters
 
+### Incoming ringtone
+
+Use the bell button in the call-in panel to choose the classic ring, bell, chime, a custom uploaded audio file, or silent mode. You can preview the selection and adjust its volume. These preferences stay in the current browser. The ringtone is local operator audio and is not mixed into the VDO.Ninja room or sent back to the caller. Auto-answered calls do not ring.
+
+The upload button opens `fileuploads.vdo.ninja`. Sign in there and upload a short audio file. The file is hosted as public media; VDO.Ninja stores only the returned HTTPS URL and selection in this browser. The ringtone menu does not store the audio file itself.
+
+When `&callinoutput=DeviceName` or `&sipoutput=DeviceName` is supported by the browser, the ringtone follows the same local output device as the caller monitor.
+
 | Parameter | Purpose |
 | --- | --- |
 | `&callin=signalwire` | Opens the call-in panel in SignalWire/SIP mode. |
@@ -157,6 +186,9 @@ The panel can optionally remember the SIP profile in this browser. If you enable
 | SIP registration fails | Wrong WSS URL, SIP URI, username, password, or SignalWire endpoint settings. |
 | Browser says the WebSocket URL is invalid | The URL must start with `wss://`, not `sip:`, `http:`, or `ws:`. |
 | Phone call never reaches VDO.Ninja | The SignalWire number is not routed to the SIP endpoint, or the VDO.Ninja page is not registered. |
+| Chrome reports `ERR_CERT_AUTHORITY_INVALID` for the PBX WSS URL | Install a trusted certificate, or visit the PBX HTTPS/WSS host and explicitly trust its local certificate before connecting. This only fixes SIP signaling, not media encryption. |
+| VDO.Ninja rings, but Answer immediately sends the caller to voicemail | Check the JsSIP log for `488 Not Acceptable Here` and `SDP without DTLS fingerprint`. Configure the FreePBX extension for WebRTC with DTLS-SRTP, ICE, AVPF, RTCP mux, and fingerprint verification. |
+| MicroSIP works but VDO.Ninja does not | MicroSIP can accept conventional SIP/RTP. Chrome and Edge require a WebRTC-compatible secure-media SDP offer, so use a WebRTC PJSIP extension for VDO.Ninja. |
 | Caller connects but no one hears them | Check browser microphone permissions, the VDO.Ninja outbound mix, and whether the caller audio track attached in the panel. |
 | Caller hears echo | The return mix includes the phone caller audio. Hang up and check the routing before going live. |
 
