@@ -1,16 +1,29 @@
 ---
-description: >-
-  Sending video with a transparent background, or with an alpha-channel (RGBA),
-  is possible, but rather limited at the moment
+description: Stream transparent video to VDO.Ninja using Spout2 and Game Capture, WebP mode, or chroma keying, including VTuber avatar output for OBS.
 ---
 
 # How to stream transparent video
 
-If you wanted to stream yourself with a transparent background, or use a WebM file as a transparent effects overlay, it's possible with VDO.Ninja, however a bit limited still.
+You can stream a transparent avatar, graphics source, or WebM overlay with VDO.Ninja, although the correct workflow depends on the sender and receiver.
 
-There's not many ways to bring transparent sources into the browser, nor are there many ways current to stream transparent video.
+The most practical high-frame-rate Windows workflow is a Spout2 source through Game Capture into the Ninja OBS Plugin. Browser-only workflows remain more limited.
 
-Lets list some of the methods that do work however:
+## Spout2 through Game Capture (Windows)
+
+Game Capture can receive transparent Spout2 output from VTube Studio, Warudo, VSeeFace, VNyan, and similar Windows avatar or graphics apps, then publish it through VDO.Ninja.
+
+1. Enable Spout or Spout2 output in the source app.
+2. In Game Capture, choose **Spout2 (avatar apps)** and select its sender.
+3. Choose **VP9 (OBS Alpha Preview)** and enable the alpha workflow.
+4. In OBS, add a **VDO.Ninja Source** with the [Ninja OBS Plugin](../steves-helper-apps/ninja-obs-plugin.md) and enable **Use Native Receiver (Experimental)**.
+
+This path sends separate VP9 color and alpha tracks. OBS Browser Sources and normal browser viewers do not composite the alpha track. If true VP9 alpha uses too much CPU, use **Alpha Background → Chroma background** with H.264/NVENC and remove that color with a chroma-key filter.
+
+Spout2 carries video only, so choose audio separately in Game Capture. If a sender appears black, set the source app and Game Capture to the same GPU in Windows Graphics settings.
+
+See [Using Game Capture and Spout2 with VDO.Ninja](using-game-capture-with-vdo.ninja.md) for the complete setup and troubleshooting guide.
+
+Other available methods are listed below.
 
 ## Webp-mode supports transparency
 
@@ -70,9 +83,9 @@ it will tell the browser to only select video codecs that can encode alpha chann
 
 At present, no codecs in Chrome seem to support alpha channels, but when that changes the feature will be automatically available for us.
 
-### Not many transparent sources
+### Browser capture limitations
 
-At present, virtual cameras and screen shares are likely to not include alpha channels, so while you might try to screen share the [Electron Capture app](../steves-helper-apps/electron-capture.md), which has a transparent background, you'll still have the captured video having a black background.
+Virtual cameras and browser screen sharing normally do not include alpha channels. For example, screen sharing the [Electron Capture app](../steves-helper-apps/electron-capture.md) may turn its transparent background black. On Windows, use the direct Spout2-to-Game-Capture workflow above when the source app supports Spout output.
 
 I'm hoping this isn't the case in the future with Chrome and other Chromium browsers, but I'm not entirely sure.
 

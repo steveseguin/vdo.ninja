@@ -112,7 +112,7 @@
   * [How to transfer guests to other rooms](getting-started/rooms/transfer-rooms.md)
   * [How to set up a simple chat room](guides/how-to-set-up-a-simple-chat-room.md)
   * [How to screen share in 1080p](guides/how-to-screen-share-in-1080p.md)
-  * [Using Game Capture with VDO.Ninja](guides/using-game-capture-with-vdo.ninja.md)
+  * [Using Game Capture and Spout2 with VDO.Ninja](guides/using-game-capture-with-vdo.ninja.md)
   * [How to control PowerPoint remotely with VDO.Ninja](guides/how-to-control-powerpoint-remotely-with-vdo.ninja.md)
   * [Using the VDO.Ninja native mobile app](steves-helper-apps/native-mobile-app.md)
   * [How to improve quality of the native app](guides/improving-quality-of-the-native-app.md)
