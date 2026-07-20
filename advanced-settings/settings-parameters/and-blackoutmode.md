@@ -65,5 +65,5 @@ When activated:
 
 * [`&mute`](../../source-settings/and-mute.md) - Mutes audio only
 * [`&videomute`](../../source-settings/and-videomute.md) - Mutes video only
-* [`&privacy`](../../turn-and-stun-parameters/and-privacy.md) - Enhanced privacy mode
+* [`&privacy`](../turn-and-stun-parameters/and-privacy.md) - Enhanced privacy mode
 * [`&hidemenu`](../design-parameters/and-hidemenu.md) - Hides interface elements

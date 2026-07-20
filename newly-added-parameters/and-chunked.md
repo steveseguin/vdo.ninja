@@ -315,8 +315,8 @@ Chunked recordings can be written directly from encoded chunks without a second 
 ## Compatibility notes
 
 * Chunked mode is primarily intended for recent Chromium-based browsers and runtimes.
-* Firefox and Safari/WebKit may fall back to regular media paths depending on WebCodecs and MediaStreamTrack processor/generator support.
-* iOS/iPadOS WebKit chunked mode is gated and only enabled when the required encoded WebCodecs support is present.
+* Firefox publishing is disabled and falls back to the regular media path.
+* Safari/WebKit publishing is capability-gated and only enabled when the required WebCodecs audio/video and worker track-processing APIs are present.
 * Browser codec support varies. If a requested `chunkcodec` fails, VDO.Ninja may fall back to another supported codec.
 * This path is more experimental than standard WebRTC RTP video. Test with the real browser/device/network mix before production use.
 

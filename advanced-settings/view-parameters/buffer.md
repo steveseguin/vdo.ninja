@@ -64,7 +64,7 @@ As well, the buffering works to buffer the stream, in a way similar to HLS or RT
 \
 The default chunked viewer buffer depends on how chunked mode is being used. Plain `&chunked` starts around 3000-ms if no profile or buffer override is used, while `&chunkprofile` presets use lower starting targets. For clearer control with chunked mode, use `&chunkbuffer`, `&chunkbufferfloor`, and `&chunkbufferceil`.
 
-Please refer to \&chunked mode for more details, but it could be an option for you if your goal is to improve the quality of streams when facing high-packet loss. It's only compatible with Chromium-based browsers; not Firefox or Safari as of yet.
+Please refer to \&chunked mode for more details, but it could be an option if your goal is to improve stream stability under high packet loss. Recent Chromium-based runtimes are the primary target. Firefox publishing is disabled, while Safari/WebKit publishing is enabled only when its complete WebCodecs and worker track-processing stack passes VDO.Ninja's capability checks.
 
 ## Update in [v23](../../releases/v23.md)
 

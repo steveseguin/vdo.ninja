@@ -35,4 +35,4 @@ Please refer to this guide for more details:\
 
 For Android users, downloading the VDO.Ninja APK file will let you screen share on Android, however you can't screen share via the browser on Android.
 
-The Android app is available here: [https://docs.vdo.ninja/getting-started/native-mobile-app-versions](https://docs.vdo.ninja/getting-started/native-mobile-app-versions)
+The Android app is available here: [https://docs.vdo.ninja/steves-helper-apps/native-mobile-app-versions](https://docs.vdo.ninja/steves-helper-apps/native-mobile-app-versions)

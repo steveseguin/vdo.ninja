@@ -116,7 +116,7 @@ For a Peplink/SpeedFusion-style router, prioritize Smoothing and Hot Failover fo
 
 Chunked mode adds VDO.Ninja-controlled buffering, indexed chunks, NACK retransmission, parity repair, and adaptation. It can absorb more loss than an extremely low-latency path, but it is not network bonding.
 
-Recent Chromium-based runtimes are the primary target. Current VDO.Ninja code disables chunked publishing on Firefox and only enables the Safari/WebKit sender on Safari 26 or newer when the required WebCodecs APIs are present. Test the exact device, OS, browser/app runtime, and OBS receiver before relying on it.
+Recent Chromium-based runtimes are the primary target. Current VDO.Ninja code disables chunked publishing on Firefox. Safari/WebKit publishing is capability-gated: it is enabled only when the complete WebCodecs audio/video stack and required worker track-processing APIs are present. Test the exact device, OS, browser/app runtime, and OBS receiver before relying on it.
 
 Experimental publisher/push link:
 

@@ -74,5 +74,5 @@ https://vdo.ninja/?director&room=roomname&audiobuffer=100
 
 * [`&buffer`](../view-parameters/buffer.md) - Video buffer control
 * [`&buffer2`](../video-parameters/and-buffer2.md) - Alternative buffer method
-* [`&audiolatency`](../newly-added-parameters/and-audiolatency.md) - Audio latency control
+* [`&audiolatency`](../../newly-added-parameters/and-audiolatency.md) - Audio latency control
 * [`&sync`](../view-parameters/sync.md) - Audio/video synchronization

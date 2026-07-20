@@ -12,10 +12,12 @@ Sending a 4K video feed with VDO.Ninja is very CPU intensive. Be prepared to use
 
 VDO.Ninja has 3 predefined [`&quality`](../advanced-settings/video-parameters/and-quality.md) levels:
 
-* `&quality=0` tries to do 1080p (1920x1080 @ 60fps).
-* `&quality=1` is the default. It tries to select 720p (1280x720 @ 30fps ) for both screen capture and webcam.
-* `&quality=2` tries to do 360p (640x360 @ 30 fps).
+* `&quality=0` targets 1080p (1920x1080).
+* `&quality=1` targets 720p (1280x720).
+* `&quality=2` targets 360p (640x360).
 * also there's `&quality=-1` , which will use the device's default resolution, but this could be anything, low or high, so it's a niche option.
+
+If `&quality` is omitted, VDO.Ninja chooses an initial tier based on the device and whether it is joining a room. Frame rate is device- and browser-dependent unless you set [`&fps`](../advanced-settings/video-parameters/and-fps.md) or [`&maxframerate`](../source-settings/and-maxframerate.md).
 
 By “trying”, I mean that if the resolution is not available, VDO.Ninja defaults to another resolution that the camera supports instead. This way, no errors are thrown and a compatible stream is sent, even if it’s not exactly what you might have desired.
 
@@ -33,7 +35,7 @@ For example then, [https://vdo.ninja/?push=inviteGuest123\&width=3840\&height=21
 
 If the guest does not support 4K, this will give an error to the guest, stating that the video device is over-constrained.&#x20;
 
-The default frame rate is 60-fps, although if their device does not support that, it will use a lower support frame rate. If you manually specify a frame rate, and the camera or display does not support it, it will also give an error.
+The available frame rate depends on the camera, capture type, browser, and encoder. If you strictly specify a frame rate that the source cannot provide, capture may fail; use `&maxframerate` when fallback is acceptable.
 
 ### Smartphones
 

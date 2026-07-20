@@ -22,9 +22,7 @@ Added a new floating picture in picture mode, so you can pop out the entire vide
 Or just right-click any video and select "Picture in picture all" from the context menu. This is available without any URL option.\
 ![](<../../.gitbook/assets/image (208).png>)
 
-This requires Chrome v115 right now; it might vanish in v116 due to it being in a `chrome field trial`, and so you might need to enable it via `chrome:flags` if it stops working.
-
-Update: Doesn't break the site if browser does not supported.
+This mode requires the [Document Picture-in-Picture API](https://developer.chrome.com/blog/new-in-chrome-116/), which shipped in Chrome 116. VDO.Ninja checks for the API before showing the dedicated button, so unsupported browsers continue without this mode.
 
 ## Related
 

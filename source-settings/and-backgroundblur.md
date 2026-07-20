@@ -33,6 +33,6 @@ If the user manually adjusts the blur amount via the slider during a session, th
 [effects.md](effects.md)
 {% endcontent-ref %}
 
-{% content-ref url="../../newly-added-parameters/and-effectvalue.md" %}
-[and-effectvalue.md](../../newly-added-parameters/and-effectvalue.md)
+{% content-ref url="../newly-added-parameters/and-effectvalue.md" %}
+[and-effectvalue.md](../newly-added-parameters/and-effectvalue.md)
 {% endcontent-ref %}

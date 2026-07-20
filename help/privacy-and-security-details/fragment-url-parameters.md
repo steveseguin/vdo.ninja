@@ -92,6 +92,6 @@ Some platforms and messaging apps may strip or modify the fragment portion when 
 [and-hash.md](../../newly-added-parameters/and-hash.md)
 {% endcontent-ref %}
 
-{% content-ref url="./" %}
-[Privacy and security details](./)
+{% content-ref url="../privacy-and-security-details.md" %}
+[Privacy and security details](../privacy-and-security-details.md)
 {% endcontent-ref %}

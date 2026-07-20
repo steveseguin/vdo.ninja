@@ -49,7 +49,7 @@ https://vdo.ninja/?push=streamID&focus=500
 
 #### **Related Parameters**
 
-* [`&autogain`](../audio-parameters/autogain.md) - Controls automatic gain (audio equivalent)
+* [`&autogain`](../../source-settings/autogain.md) - Controls automatic gain (audio equivalent)
 * [`&brightness`](and-brightness.md) - Adjusts camera brightness
 * [`&contrast`](and-contrast.md) - Adjusts camera contrast
 * [`&zoom`](../video-parameters/and-zoom.md) - Controls camera zoom level

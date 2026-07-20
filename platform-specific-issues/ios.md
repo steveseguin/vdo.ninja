@@ -4,19 +4,17 @@ description: "iOS-specific notes, limitations, and tips for using VDO.Ninja on i
 
 # iOS (iPhone/iPad)
 
-[VDO.Ninja](https://vdo.ninja/) has been tested with iOS v12 thru v17, but iOS v10 and under is strictly not supported. Older iPad and iPhone devices as a result are not compatible and likely never will be; an iPhone 5 for example will never be supported.
+[VDO.Ninja](https://vdo.ninja/) relies on the WebRTC and media-capture APIs supplied by the installed iOS/iPadOS browser engine. Use a current OS release whenever possible; older devices that cannot install a modern WebKit release may be unable to publish reliably.
 
-Please upgrade your iOS to at least v16 to avoid some critical bugs, although even newer is generally better.&#x20;
+Browser media capabilities change between OS updates. Test the exact device, camera, browser or native-app version, codec, and resolution before production use.
 
 ### 1080p mode
 
-H264 is the default video encoder on iOS, yet H264 only supports up to 720p30 on iOS 14 or older. On iOS 15 devices, H264 (the default codec used), supports 1080p30. A frame rate of 60-fps is still not supported though. Newer iOS devices may even support 1080p60 with certain cameras.
+Add [`&quality=0`](../advanced-settings/video-parameters/and-quality.md) to target 1920x1080. This is a non-strict resolution preset: the camera and browser may return a lower supported mode. Actual frame rate depends on the device, selected camera, browser engine, codec, lighting, temperature, and encoder load. Use [`&maxframerate`](../source-settings/and-maxframerate.md) when a lower fallback is acceptable; `&fps` is strict and can cause capture to fail when the requested mode is unavailable.
 
-Both new and old iOS devices support 1080p30 when using the VP8 codec, which uses software-encoding rather than hardware. You may need to manually specific [`&width`](../source-settings/and-width.md) and [`&height`](../source-settings/and-height.md) to access 1080p mode on iOS 14 and older, but you can use also [`&quality=0`](../advanced-settings/video-parameters/and-quality.md) on iOS 15 and newer.
+H.264 is generally the safest first choice on iPhone and iPad because it commonly has hardware acceleration. VP8, VP9, AV1, and HEVC availability varies by OS release and device hardware. Forcing a software codec can increase heat and reduce sustained performance. Leave codec selection at its default first, then test a forced codec only on the exact devices used for production.
 
-VP9 is supported on iOS 14, but you have to enable it as an experimental flag in the iOS Safari advanced settings. It supports 1080p, software-based encoding, and acts a lot like VP8. It generally is finicky, with low-frame rates being common, so use at your own risk.
-
-The AV1 video codec is now also supported with modern iOS versions and works quite well with newer iOS devices. You may need to enable this however in the experimental advanced settings though in your Safari settings.
+WebKit continues to add media support over time; see the official [Safari 18.4 media updates](https://webkit.org/blog/16574/webkit-features-in-safari-18-4/) and [Safari 26 WebRTC updates](https://webkit.org/blog/17333/webkit-features-in-safari-26-0/). These release notes describe available APIs, not a guarantee that every camera exposes every resolution, frame rate, or codec combination.
 
 ### External microphones and audio device support on iOS
 
@@ -38,11 +36,11 @@ Many cheap Amazon wireless Lightning-based lavalier microphones do not work with
 
 AirPods generally work, but can create clicking or distortion as a microphone — ensure they are fully charged for live production use.
 
-Since Apple does not allow third-party browser engines on iOS, Chrome and Firefox for iOS are essentially re-skinned Safari and offer no additional microphone compatibility.
+Changing browser apps often does not change microphone behavior because most iOS browsers use WebKit. Apple permits entitled alternative browser engines only in specific regions and configurations; see Apple's [alternative browser engine requirements](https://developer.apple.com/support/alternative-browser-engines/). Verify the actual engine before assuming Chrome or Firefox will provide different capture support.
 
 ### Low quality audio from iOS
 
-Audio quality from an iOS generally is pretty low quality. Disabling audio enhancements can sometimes help improve the clarity. It is recommended that the user be wearing headphones though to avoid any feedback issues.
+Audio quality on iOS can vary by device and input. Disabling audio enhancements can sometimes improve clarity when using a clean microphone signal. Wear headphones if echo cancellation is disabled to avoid feedback.
 
 iOS does not work with the volume visualizer meter; it causes clicking noises when used, so it has been disabled.
 
@@ -53,9 +51,9 @@ iOS does not work with the volume visualizer meter; it causes clicking noises wh
 * If your camera does not load or fails to load, fully close Safari / Chrome, and then try again. There seems to be an issue where old tabs or idle apps can block VDO.Ninja from accessing the camera.
 * Video shared by an iPhone/iPad to other guests in a group room may be choppy or of low-quality. This is intentional, as otherwise the iPhone would overheat or become too slow to use. Adding [`&forceios`](../advanced-settings/mobile-parameters/and-forceios.md) to the URL of a specific guest can force a different, smoother, behavior for them, but use it sparingly.
 
-### Limited browser features; no focus/exposure control
+### Limited and capability-dependent browser controls
 
-Safari on iOS does not yet support many features that VDO.Ninja would like to make use of. It lacks zoom, focus, screen-sharing, exposure, and many other advanced options. These are features Apple needs to enable and allow the browser to access.
+Zoom, focus, exposure, torch, external-camera, and screen-capture controls vary by iOS/iPadOS release and device. VDO.Ninja exposes camera controls only when the active video track reports the corresponding capability; their absence is not necessarily a VDO.Ninja error. Browser screen capture remains more limited than desktop capture, so test the native app when Safari cannot provide a required control.
 
 The native iOS app overcomes many of these browser limitations — see below.
 

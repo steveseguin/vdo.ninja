@@ -20,7 +20,7 @@ When dealing with a group scene link, you can use [`&bitrate`](../advanced-setti
 
 ## Resolution
 
-Camera resolution by default is captured at 1280x720. You can increase this by changing the quality setting when selecting your camera, or by adding `&quality=0` to the URL. The [`&quality`](../advanced-settings/video-parameters/and-quality.md) parameter acts as a preset, where \&quality=0 is preset for 1920x1080 @ 60-fps, `&quality=1` is 720p60, and `&quality=2` is a gentle 360p30.
+When `&quality` is omitted, VDO.Ninja selects an initial camera tier from the device type, available CPU cores, reported memory, and whether the guest is joining a room. The [`&quality`](../advanced-settings/video-parameters/and-quality.md) parameter overrides that choice with a non-strict resolution preset: `&quality=0` targets 1920x1080, `&quality=1` targets 1280x720, and `&quality=2` targets 640x360. The actual frame rate remains device- and browser-dependent unless a frame-rate parameter is also used.
 
 You can manually set the video resolution via the URL, using `&width=1920&height=1080`, and this might be helpful when dealing with non-standard aspect-ratios.
 

@@ -110,8 +110,8 @@ Turn your Raspberry Pi or Nvidia Jetson into a Ninja-cam with hardware-accelerat
 
 Mobile native app versions of VDO.Ninja can be found behind the link below. These are mainly backup options for when the browser-based versions fail to work or lack a certain feature due to system restrictions.
 
-{% content-ref url="getting-started/native-mobile-app-versions.md" %}
-[native-mobile-app-versions.md](getting-started/native-mobile-app-versions.md)
+{% content-ref url="steves-helper-apps/native-mobile-app-versions.md" %}
+[native-mobile-app-versions.md](steves-helper-apps/native-mobile-app-versions.md)
 {% endcontent-ref %}
 
 ## Social Stream

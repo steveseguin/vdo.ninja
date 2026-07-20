@@ -39,7 +39,7 @@ By adding `&scene` to a room URL, it tells VDO.Ninja that this is no [`&push`](.
     <img src="../../.gitbook/assets/image (1) (2) (1) (1) (2).png" alt="" data-size="original">
 * When using a scene, if you manually specify a video via the [`&view`](view.md) parameter, it automatically is added to the scene.
 * Audio of videos in scenes can be controlled by the director: volume and mute are options.
-* In [v17.2](broken-reference) of VDO.Ninja, if using [`&view`](view.md) in a scene link, the director won't be able to remotely control the scene. This applies to solo links.
+* Starting with [v17](../../releases/v17.md), using [`&view`](view.md) in a scene link prevents the director from remotely controlling that scene. This also applies to solo links.
 * In [v18](../../releases/v18/), you can create custom scenes, as per the video below.
 
 ### Let guests auto-join scenes

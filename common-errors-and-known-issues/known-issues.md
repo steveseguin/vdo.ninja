@@ -23,7 +23,7 @@ Many WebRTC issues that affect VDO.Ninja are documented by related services and 
 * [Twilio Video.js Common Issues](https://github.com/twilio/twilio-video.js/blob/master/COMMON_ISSUES.md)
 * [Twilio Voice JavaScript SDK Troubleshooting](https://support.twilio.com/hc/en-us/articles/223180908-Troubleshooting-Common-Problems-with-the-Twilio-Voice-JavaScript-SDK)
 * [WebRTC Samples Issues](https://github.com/webrtc/samples/issues)
-* [Chromium WebRTC Bug List](https://bugs.chromium.org/p/chromium/issues/list?q=webrtc%20type%3DBug\&can=2\&sort=-pri)
+* [Chromium WebRTC Bug List](https://issues.chromium.org/issues?q=status%3Aopen%20componentid%3A1223031)
 
 ### Common Issues and Solutions
 
@@ -36,7 +36,6 @@ Many WebRTC issues that affect VDO.Ninja are documented by related services and 
 | Corrupted video in OBS with packet loss | Change codec to vp9/h264, use Electron Capture app, or issue keyframes with the rainbow button                 |
 | Blank browser source in OBS             | Disable hardware acceleration or refer to the help guide                                                       |
 | Video camera freeze on Android 11       | Push app to background then foreground when camera loads or changes                                            |
-| Camera freezes in Chrome/Chromium v131  | Try alternative browser versions                                                                               |
 | Camlink freezing when already in use    | Ensure device isn't being used elsewhere before selecting                                                      |
 | USB 3.x video device issues             | Avoid USB hubs and use quality/short cables directly to computer                                               |
 | PTZ controls ignored in background tabs | Keep the sender tab/window visible; Chrome blocks PTZ changes when hidden. See [PTZ remote control](../guides/ptz-remote-control.md) |
@@ -55,12 +54,10 @@ Many WebRTC issues that affect VDO.Ninja are documented by related services and 
 
 **iOS/iPhone/iPad**
 
-* iOS 12+ required (older iPads may not work)
-* Safari 13 may sometimes not send audio
-* May need to close all other Safari tabs to access camera
-* Chrome only works on iOS 14.3+
-* Try "Capture for VDO.Ninja" app from App Store
-* USB audio devices have limited support in Safari; the [native iOS app](../steves-helper-apps/native-mobile-app-versions.md) has improved USB audio support
+* Use a current iOS/iPadOS release; older WebKit versions have media-capture and interruption bugs that cannot be fixed by VDO.Ninja.
+* Incoming calls, backgrounding, or another media app can suspend a browser session. Return to the page and reconnect if tracks do not resume.
+* If the camera remains unavailable, close other tabs or apps using it and fully restart the browser.
+* USB audio support remains device- and adapter-dependent in browsers; the [native iOS app](../steves-helper-apps/native-mobile-app-versions.md) has improved USB audio support.
 
 **Android**
 
@@ -90,7 +87,7 @@ Many WebRTC issues that affect VDO.Ninja are documented by related services and 
 ### Alternative Solutions
 
 * **Electron Capture App**: Often solves issues with browser sources, audio buffer limits, and browser extension conflicts
-* **Native iOS App**: "Capture for VDO.Ninja" available on App Store
+* **Native iOS App**: The VDO.Ninja app is available on the App Store and provides additional mobile capture controls
 * **Browser Selection**: Chromium-based browsers often have better performance than Safari or Firefox for certain use cases
 
 ### General Tips

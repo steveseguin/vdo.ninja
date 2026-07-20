@@ -91,7 +91,7 @@ Sensor data is transmitted as structured data containing:
 
 #### **Related Parameters**
 
-* [`&sensorfilter`](../settings-parameters/and-sensorfilter.md) - Filter specific sensors
+* [`&sensorfilter`](../advanced-settings/settings-parameters/and-sensorfilter.md) - Filter specific sensors
 * [`&remote`](../general-settings/remote.md) - Remote control features
 * [`&ptz`](ptz.md) - Pan-tilt-zoom control
 * [`&api`](../general-settings/api.md) - API for sensor data access

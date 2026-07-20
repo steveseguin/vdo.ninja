@@ -48,7 +48,7 @@ https://vdo.ninja/?room=roomname&nocontrolbarspace
 
 #### **Interaction with Other Parameters**
 
-* Disabled by default when using [`&autohide`](../newly-added-parameters/and-autohide.md)
+* Disabled by default when using [`&autohide`](../../parameters-only-on-beta/and-autohide.md)
 * Works with all control bar configurations
 * Affects both sender and viewer interfaces
 
@@ -67,7 +67,7 @@ https://vdo.ninja/?room=roomname&nocontrolbarspace
 
 #### **Related Parameters**
 
-* [`&autohide`](../newly-added-parameters/and-autohide.md) - Auto-hides controls
-* [`&nocontrols`](and-nocontrols.md) - Removes all controls
+* [`&autohide`](../../parameters-only-on-beta/and-autohide.md) - Auto-hides controls
+* [`&nocontrols`](../settings-parameters/and-nocontrols.md) - Removes all controls
 * [`&controlbar`](README.md) - Control bar options
 * [`&hidemenu`](../design-parameters/and-hidemenu.md) - Hides menu elements
