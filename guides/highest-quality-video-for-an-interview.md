@@ -76,7 +76,7 @@ As for laptops, ensure they are plugged in and are not overheating.
 
 ### Update your smartphone or change browsers
 
-Some smartphones will have limited functionality if using an older version of the operating system. This is especially true of iOS devices, where iOS 16 has several core improvements over iOS 16, for example.
+Some smartphones have limited functionality when using an older operating system. This is especially true of iOS devices, where newer releases include important WebRTC and media-capture fixes.
 
 Certain browsers, such as Firefox, should also be avoided in most cases. Chromium-based browsers will offer better control over video bitrates, with more options and features to use.
 
