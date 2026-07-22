@@ -1,31 +1,43 @@
 {
-  "name": "VDO.Ninja",
-  "short_name": "VDO.Ninja",
-  "description": "Bring live video from your smartphone, computer, or friends directly into your Studio. 100% free.",
+  "name": "Capturly Live",
+  "short_name": "Capturly Live",
+  "description": "Bring remote guests' live audio and video straight into your studio. Browser-based, peer-to-peer, no downloads.",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
-  "background_color": "#fff",
-  "theme_color": "#1a1a1a",
+  "background_color": "#020617",
+  "theme_color": "#0d2133",
   "orientation": "any",
   "icons": [
     {
       "src": "media/icon-144x144.png",
       "sizes": "144x144",
       "type": "image/png",
-      "purpose": "any monochrome"
+      "purpose": "any"
     },
     {
       "src": "media/icon-192x192.png",
       "sizes": "192x192",
       "type": "image/png",
-      "purpose": "any monochrome"
+      "purpose": "any"
     },
     {
       "src": "media/icon-512x512.png",
       "sizes": "512x512",
       "type": "image/png",
-      "purpose": "any monochrome"
+      "purpose": "any"
+    },
+    {
+      "src": "media/icon-192x192-maskable.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "media/icon-512x512-maskable.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
     }
   ]
 }

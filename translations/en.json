@@ -1,6 +1,6 @@
 {
   "innerHTML": {
-    "logo-header": "\n<font id=\"qos\" style=\"color: white;\">V</font>DO.Ninja \n",
+    "logo-header": "\n<font id=\"qos\" style=\"color: white;\">C</font>apturly Live \n",
     "copy-this-url": "Copy this URL into your \"browser source\"",
     "you-are-in-the-control-center": "Control center for room:",
     "joining-room": "You are in room",
@@ -271,7 +271,7 @@
     "publish-via-whip": "Publish via WHIP",
     "share-whepsrc": "Share via WHEP",
     "enter-the-whep-URL-you-wish-to-share": "Enter the WHEP URL you wish to share.",
-    "info-blob": "\n<h2>What is VDO.Ninja</h2>\n<br>\n<li>100% <b>free</b>; no downloads; no personal data collection; no sign-in</li>\n<li>Bring live video from your smartphone, remote computer, or friends directly into OBS or other studio software.</li>\n<li>We use cutting edge Peer-to-Peer forwarding technology that offers privacy and ultra-low latency</li>\n<br>\n<li>Youtube video \n<i class=\"lab la-youtube\"></i>\n<a href=\"https://www.youtube.com/watch?v=QaA_6aOP9z8&amp;list=PLWodc2tCfAH1WHjl4WAOOoRSscJ8CHACe&amp;index=1\" alt=\"Youtube video demoing VDO.Ninja\">Demoing it here</a>\n</li>\n<br><h3>\n   🛠 For support, see the <a href=\"https://www.reddit.com/r/VDONinja/\">sub-reddit <i class=\"lab la-reddit-alien\"></i></a> or join the <a href=\"https://discord.vdo.ninja/\">Discord <i class=\"lab la-discord\"></i></a>. The <a href=\"https://docs.vdo.ninja/\">documentation is here</a> and my personal email is <i>steve@seguin.email</i>\n</h3> \n\n",
+    "info-blob": "\n<h2>What is Capturly Live</h2><br><li>Bring remote guests' live audio and video straight into your studio — no downloads, no sign-in.</li><li>Runs entirely in the browser using peer-to-peer WebRTC for privacy and ultra-low latency.</li><li>Share an invite link, your guest opens it, and they're on the stream.</li><br><i><a href='https://docs.vdo.ninja/common-errors-and-known-issues/known-issues' target='_blank'><span style='color: red;'>Known issues:</span></a></i><br><li>If the video fails to load in OBS Studio, where the browser source remains blank, try disabling hardware-acceleration or <a href='https://docs.vdo.ninja/common-errors-and-known-issues/obs.ninja-doesnt-show-up-in-obs-or-is-choppy' target='_blank'>refer to this help guide</a> for more.</li><br><h3>🛠 For support, email <a href='mailto:support@capturly.app'>support@capturly.app</a> or visit <a href='https://capturly.app/contact' target='_blank'>capturly.app/contact</a>.</h3><br>Capturly Live is built on <a href='https://vdo.ninja' target='_blank'>VDO.Ninja</a> by Steve Seguin, licensed under the AGPL-3.0. The complete source code of this instance is available at <a href='https://github.com/Corey-Alan-Consulting/live.capturly.app' target='_blank'>github.com/Corey-Alan-Consulting/live.capturly.app</a>.\n",
     "guest-1": "Guest 1",
     "guest-2": "Guest 2",
     "guest-3": "Guest 3",
@@ -663,7 +663,7 @@
   },
   "miscellaneous": {
     "new-display-name": "Enter a new Display Name for this stream",
-    "submit-error-report": "Press OK to submit any error logs to VDO.Ninja. Error logs may contain private information.",
+    "submit-error-report": "Press OK to save the error log as a local file. Nothing is uploaded. Please email the file to support@capturly.app. Error logs may contain private information.",
     "director-redirect-1": "The director wishes to redirect you to the URL: ",
     "director-redirect-2": "\n\nPress OK to be redirected.",
     "audio-processing-disabled": "Audio processing is disabled with this guest. Can't mute or change volume",
@@ -731,8 +731,8 @@
     "android-no-screen-share": "Sorry, your mobile browser does not support screen-sharing.\n\nThe <a href='https://docs.vdo.ninja/getting-started/native-mobile-app-versions' target='_blank'>Android native app</a> does offer basic support for it though.",
     "no-screen-share-supported": "Sorry, your browser does not support screen-sharing.\n\nPlease use the desktop versions of Firefox or Chrome instead.",
     "speech-not-suppoted": "⚠ Speech Recognition is not supported by this browser",
-    "blue-yeti-tip": "<i>Tip:</i> Blue Yeti microphones may experience issues being overly loud. <a href='https://support.google.com/chrome/thread/7542181?hl=en&msgid=79691143'>Please see here</a> for a solution or disable auto-gain in VDO.Ninja.",
-    "site-not-responsive": "<h3>Notice: The system cannot be accessed or is currently slow to respond.</h3>\nIf a routing issue, try adding <i title='or try visiting https://proxy.vdo.ninja/'>&proxy</i> to the URL; you can also try <i>https://proxy.vdo.ninja</i> or a VPN if the service is blocked in your country.\n\nIf the main service is down, a backup version is also available here: <i>https://backup.vdo.ninja</i>\n\nContact steve@seguin.email for added help.\n\nThis service requires the use of Websockets over port 443.",
+    "blue-yeti-tip": "<i>Tip:</i> Blue Yeti microphones may experience issues being overly loud. <a href='https://support.google.com/chrome/thread/7542181?hl=en&msgid=79691143'>Please see here</a> for a solution or disable auto-gain in Capturly Live.",
+    "site-not-responsive": "<h3>Notice: The system cannot be accessed or is currently slow to respond.</h3>Please check your internet connection, or try again in a few minutes.\n\nIf the problem persists, contact <i>support@capturly.app</i>.",
     "no-audio-source-detected": "No Audio Source was detected.\n\nIf you were wanting to capture an Application's Audio, please see:\nhttps://docs.vdo.ninja/help/guides-and-how-tos#audio for some guides.",
     "viewer-count": "Total outbound p2p connections of this remote stream",
     "enter-url-for-widget": "Enter a URL for a page to embed as a sidebar",

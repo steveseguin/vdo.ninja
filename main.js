@@ -7158,7 +7158,7 @@ async function main() {
 
 	if (session.permaid === false && session.roomid === false && session.view === false && session.effect === false && session.director === false) {
 		session.effect = null;
-		getById("credits").innerHTML = "Version: " + session.version + ' <a href="https://github.com/steveseguin/vdoninja" aria-hidden="true" title="Source Code via Github">VDO.Ninja, by Steve Seguin</a> | ' + getById("credits").innerHTML;
+		getById("credits").innerHTML = "Version: " + session.version + ' Capturly Live, based on <a href="https://github.com/steveseguin/vdoninja" aria-hidden="true" title="Upstream project on Github">VDO.Ninja by Steve Seguin</a> | ' + getById("credits").innerHTML;
 	}
 
 	if (session.mobile && session.permaid === false && !session.roomid) {
