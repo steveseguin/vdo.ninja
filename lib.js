@@ -674,16 +674,18 @@ function submitDebugLog(msg = false) {
 	window.focus();
 	var res = confirm(getTranslation("submit-error-report"));
 	if (res) {
-		var request = new XMLHttpRequest();
-
+		// Capturly Live: error logs stay local — downloaded for the user to attach to a support email, never uploaded.
 		var recordResults = session.streamID + "_" + parseInt(Date.now());
-		request.open("POST", "https://reports.vdo.ninja/?name=" + recordResults); //  php, well, whatever.
+		var logBlob = new Blob([JSON.stringify(errorReport, null, 2)], { type: "application/json" });
+		var logLink = document.createElement("a");
+		logLink.href = URL.createObjectURL(logBlob);
+		logLink.download = "capturly-live-errorlog_" + recordResults + ".json";
+		logLink.click();
+		URL.revokeObjectURL(logLink.href);
 		if (!session.cleanOutput) {
-			warnUser("Report any details of your bug report to steve@seguin.email, along with the following link: <a target='_blank' onclick='copyFunction(this, event)' href='https://reports.vdo.ninja/?name=" + recordResults + "'>https://reports.vdo.ninja/?name=" + recordResults + "</a>", false, false);
+			warnUser("An error log file has been downloaded. Please email it to support@capturly.app along with any details of the problem.", false, false);
 		}
-		console.log("Report any details of your bug report to steve@seguin.email, along with the following ID: " + recordResults);
-
-		request.send(JSON.stringify(errorReport));
+		console.log("Email the downloaded error log to support@capturly.app, referencing ID: " + recordResults);
 		errorReport = [];
 		if (document.getElementById("reportbutton")) {
 			getById("reportbutton").classList.add("hidden");
