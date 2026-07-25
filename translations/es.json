@@ -316,7 +316,21 @@
     "names-and-labels-coming-soon": "\nLos nombres que identifican a los pares conectados serán una característica en una próxima versión.\n",
     "order-up": "<i class=\"las la-plus\"></i>",
     "links": "Enlaces",
-    "copy-solo-view-link": "Copiar enlace de vista individual"
+    "copy-solo-view-link": "Copiar enlace de vista individual",
+    "add-jitter-buffer": "Añadir búfer de jitter",
+    "audio-only": "Solo audio",
+    "clean-obs-output": "Salida limpia para OBS",
+    "exclude-director-audio": "Excluir audio del director",
+    "exclude-director-video": "Excluir video del director",
+    "four-three-scene-mode": "Modo de escena 4:3",
+    "hide-local-share": "Ocultar mi compartir",
+    "hide-video-controls": "Ocultar controles de video",
+    "randomize-tile-order": "Orden aleatorio de mosaicos",
+    "restart-whip": "Reiniciar WHIP",
+    "show-muted-status": "Mostrar estado de silencio",
+    "show-speaker-outline": "Mostrar contorno del orador",
+    "square-scene-mode": "Modo de escena cuadrada",
+    "video-only": "Solo video"
   },
   "titles": {
     "100": "100",
@@ -632,7 +646,24 @@
     "if-enabled-you-must-manually-add-a-video-to-a-scene-for-it-to-appear-": "Si está habilitado, debes añadir manualmente un video a una escena para que aparezca.",
     "set-to-default-audio-channel": "Establecer como Canal de Audio Predeterminado",
     "set-to-audio-channel-7": "Establecer en Canal de Audio 7",
-    "set-to-audio-channel-8": "Establecer en Canal de Audio 8"
+    "set-to-audio-channel-8": "Establecer en Canal de Audio 8",
+    "add-a-small-playback-buffer-to-smooth-jitter": "Añade un pequeño búfer de reproducción para suavizar el jitter",
+    "disable-audio-playback-for-this-scene": "Desactivar la reproducción de audio para esta escena",
+    "disable-video-playback-for-this-scene": "Desactivar la reproducción de video para esta escena",
+    "exclude-the-director-s-audio-from-this-scene": "Excluir el audio del director de esta escena",
+    "exclude-the-director-s-video-from-this-scene": "Excluir el video del director de esta escena",
+    "hide-own-screen-share-preview": "Ocultar la vista previa de tu pantalla compartida",
+    "hide-own-share-preview": "Ocultar la vista previa de tu compartición",
+    "hide-the-video-control-bar": "Ocultar la barra de control de video",
+    "keep-the-scene-output-clean-for-obs": "Mantener la salida de la escena limpia para OBS",
+    "mute-all-guests-in-room-toggle-": "Silenciar a todos los invitados de la sala (alternar)",
+    "optimize-the-scene-for-4-3-video": "Optimizar la escena para video 4:3",
+    "optimize-the-scene-for-square-video": "Optimizar la escena para video cuadrado",
+    "randomize-the-order-videos-load-into-the-scene": "Aleatorizar el orden en que los videos se cargan en la escena",
+    "show-a-green-outline-around-active-speakers": "Mostrar un contorno verde alrededor de los oradores activos",
+    "show-a-muted-status-icon-on-remote-tiles": "Mostrar un ícono de estado silenciado en los mosaicos remotos",
+    "start-stop-google-drive-recording-for-all-guests": "Iniciar/detener la grabación en Google Drive para todos los invitados",
+    "when-enabled-highlight-will-unmute-the-highlighted-guest-and-mute-the-other-guests-manual-unmute-changes-can-still-be-made-afterwards-": "Cuando está activado, Destacar activará el sonido del invitado destacado y silenciará a los demás invitados. Aún se pueden realizar cambios manuales de silencio después."
   },
   "placeholders": {
     "join-by-room-name-here": "Unirse por Nombre de Sala aquí",
@@ -761,6 +792,7 @@
     "what-bitrate-gdrive": "Este invitado remoto guardará la grabación directamente en su disco local, además de enviar una copia a tu Google Drive (carpeta de grabaciones).\n\n - Sin embargo, la grabación puede fallar, ¡así que ten grabaciones de respaldo!\n\n - Los invitados que usen iPhones, Androids o Safari a menudo tendrán problemas - ¡ten cuidado!",
     "insecure-stream-id": "⚠️ ID de transmisión inseguro detectado\n\nSe recomienda encarecidamente usar una contraseña si se utiliza un ID de transmisión corto y no único.\n\nEsto es solo una advertencia que puede ser ignorada.",
     "mobile-no-screen-share": "Lo sentimos, tu navegador móvil no admite compartir pantalla.\n\nLas <a href='https://docs.vdo.ninja/getting-started/native-mobile-app-versions' target='_blank'>aplicaciones nativas</a> ofrecen soporte básico para ello.",
-    "no-screen-share-supported-firefox": "Lo sentimos, tu navegador no admite compartir pantalla.\n\nLa configuración de tu Firefox puede estar bloqueándolo o has accedido al sitio de forma insegura."
+    "no-screen-share-supported-firefox": "Lo sentimos, tu navegador no admite compartir pantalla.\n\nLa configuración de tu Firefox puede estar bloqueándolo o has accedido al sitio de forma insegura.",
+    "block-from-rejoining": "Bloquear reingreso (4 horas)"
   }
 }

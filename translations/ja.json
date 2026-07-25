@@ -333,7 +333,24 @@
     "tilt": "チルト:",
     "zoom": "ズーム:",
     "focus": "フォーカス:",
-    "keyboard-shortcuts": "キーボードショートカット:"
+    "keyboard-shortcuts": "キーボードショートカット:",
+    "add-jitter-buffer": "ジッターバッファを追加",
+    "audio-only": "音声のみ",
+    "clean-obs-output": "クリーンなOBS出力",
+    "close-other-video-apps": "他のビデオ通話アプリを閉じている",
+    "exclude-director-audio": "ディレクターの音声を除外",
+    "exclude-director-video": "ディレクターの映像を除外",
+    "face-good-lighting": "光源の方を向いている",
+    "four-three-scene-mode": "4:3シーンモード",
+    "hide-local-share": "自分の共有を隠す",
+    "hide-video-controls": "映像コントロールバーを隠す",
+    "randomize-tile-order": "タイルの順序をランダム化",
+    "restart-whip": "WHIPを再起動",
+    "show-muted-status": "ミュート状態を表示",
+    "show-speaker-outline": "発言者の輪郭を表示",
+    "square-scene-mode": "正方形シーンモード",
+    "use-quiet-room": "静かな部屋を使用している",
+    "video-only": "映像のみ"
 },
   "titles": {
     "100": "100",
@@ -682,7 +699,24 @@
     "show-a-fullscreen-button-on-the-control-bar": "コントロールバーに全画面ボタンを表示",
     "show-a-picture-in-picture-button-on-the-control-bar": "コントロールバーにピクチャ・イン・ピクチャボタンを表示",
     "set-a-countdown-timer-that-this-guest-sees-ctrl-cmd-click-to-pause-or-hold-alt-to-have-show-in-scenes-also-": "このゲストに見えるカウントダウンタイマーを設定します。CTRL(cmd) + クリで一時停止、ALT + クリックでシーン内でも表示されます。",
-    "show-an-approval-popup-to-directors-co-directors-when-a-guest-is-held": "ゲストが招待された時、ディレクター/共同ディレクターに承認ポップアップを表示"
+    "show-an-approval-popup-to-directors-co-directors-when-a-guest-is-held": "ゲストが招待された時、ディレクター/共同ディレクターに承認ポップアップを表示",
+    "add-a-small-playback-buffer-to-smooth-jitter": "小さな再生バッファを追加し、ジッターを軽減します",
+    "disable-audio-playback-for-this-scene": "このシーンの音声再生を無効化",
+    "disable-video-playback-for-this-scene": "このシーンの映像再生を無効化",
+    "exclude-the-director-s-audio-from-this-scene": "このシーンからディレクターの音声を除外",
+    "exclude-the-director-s-video-from-this-scene": "このシーンからディレクターの映像を除外",
+    "hide-own-screen-share-preview": "自分の画面共有プレビューを隠す",
+    "hide-own-share-preview": "自分の共有プレビューを隠す",
+    "hide-the-video-control-bar": "映像のコントロールバーを隠す",
+    "keep-the-scene-output-clean-for-obs": "OBS用にシーンの出力をクリーンに保ちます",
+    "mute-all-guests-in-room-toggle-": "ルーム内の全てのゲストをミュートする(切り替え)",
+    "optimize-the-scene-for-4-3-video": "シーンを4:3映像用に最適化",
+    "optimize-the-scene-for-square-video": "シーンを正方形映像用に最適化",
+    "randomize-the-order-videos-load-into-the-scene": "映像がシーンに読み込まれる順序をランダム化",
+    "show-a-green-outline-around-active-speakers": "発言中の人物の周りに緑の輪郭を表示",
+    "show-a-muted-status-icon-on-remote-tiles": "リモートタイルにミュート状態アイコンを表示",
+    "start-stop-google-drive-recording-for-all-guests": "全てのゲストのGoogleドライブ録画を開始/停止",
+    "when-enabled-highlight-will-unmute-the-highlighted-guest-and-mute-the-other-guests-manual-unmute-changes-can-still-be-made-afterwards-": "有効にすると、ハイライトされたゲストのミュートが解除され、他のゲストはミュートされます。その後も手動でミュート解除の変更は可能です。"
   },
   "placeholders": {
     "join-by-room-name-here": "このルーム名で参加します",
@@ -813,6 +847,7 @@
     "what-bitrate-gdrive": "このリモートゲストは、録画をローカルディスクに直接保存すると同時に、コピーをあなたのGoogleドライブ(録画フォルダ)に送信します。\n\n - ただし録画が失敗する可能性があるので、バックアップ録画を用意しておいてください！\n\n - iPhone、Android、Safariを使用するゲストは頻繁に問題が発生します、注意してください。",
     "insecure-stream-id": "⚠️ 安全でないストリームIDが検出されました\n\nありふれた短いストリームIDを使用する場合は、パスワードの使用を強く推奨します。\n\nこの警告は無視することができます。",
     "mobile-no-screen-share": "申し訳ありませんが、お使いのモバイルブラウザは画面共有に対応していません。\n\nただし、<a href='https://docs.vdo.ninja/getting-started/native-mobile-app-versions' target='_blank'>Androidネイティブアプリ</a>で基本的なサポートを提供しています。",
-    "no-screen-share-supported-firefox": "申し訳ありませんが、お使いのブラウザは画面共有をサポートしていません。\n\nFirefoxの設定で画面共有がブロックされているか、安全でない方法でサイトにアクセスしている可能性があります。"
+    "no-screen-share-supported-firefox": "申し訳ありませんが、お使いのブラウザは画面共有をサポートしていません。\n\nFirefoxの設定で画面共有がブロックされているか、安全でない方法でサイトにアクセスしている可能性があります。",
+    "block-from-rejoining": "再参加をブロック(4時間)"
   }
 }

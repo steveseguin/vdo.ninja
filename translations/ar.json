@@ -350,7 +350,20 @@
     "keyboard-shortcuts": "اختصارات لوحة المفاتيح:",
     "obs-macos-not-supported": "<h1>قم بتحديث OBS Studio إلى الإصدار 26.1.2 أو أحدث؛ الإصدارات الأقدم و StreamLabs OBS غير مدعومة على macOS.\n\t\t\t\t\t\t<br /><i><small><small>تنزيل هنا: <a href='https://github.com/obsproject/obs-studio/releases'>https://github.com/obsproject/obs-studio/releases</a></small></small></i>\n\t\t\t\t\t\t</h1> <br /><br />\n\t\t\t\t\t\t<h2>يرجى استخدام <a href='https://github.com/steveseguin/electroncapture'>تطبيق Electron Capture</a> إذا كانت هناك مشاكل أخرى أو إذا كنت ترغب في استخدام StreamLabs على macOS.</h2>\n\t\t\t\t\t\t<br /> يمكنك تجاوز رسالة الخطأ هذه عن طريق التحديث، <a href='\" +\n\t\t\t\t\t\t\twindow.location.href +\n\t\t\t\t\t\t\t\"'>النقر هنا،</a> أو بإضافة <i>&streamlabs</i> إلى عنوان URL، ولكن قد لا يعمل بالفعل.\n\t\t\t\t\t\t\n\t\t\t\t\t\t<br /> يرجى الإبلاغ عن هذه المشكلة إلى steve@seguin.email إذا كنت تعتقد أنها خطأ.",
     "please-accept-permissions": "- يرجى قبول أذونات الكاميرا",
-    "please-select-which-to-share": "- يرجى تحديد ما ترغب في مشاركته"
+    "please-select-which-to-share": "- يرجى تحديد ما ترغب في مشاركته",
+    "add-jitter-buffer": "إضافة مخزن مؤقت للتذبذب",
+    "audio-only": "الصوت فقط",
+    "clean-obs-output": "مخرجات OBS نظيفة",
+    "exclude-director-audio": "استبعاد صوت المخرج",
+    "exclude-director-video": "استبعاد فيديو المخرج",
+    "four-three-scene-mode": "وضع مشهد 4:3",
+    "hide-local-share": "إخفاء المشاركة المحلية",
+    "hide-video-controls": "إخفاء شريط التحكم بالفيديو",
+    "randomize-tile-order": "ترتيب عشوائي للفيديوهات",
+    "show-muted-status": "عرض حالة الكتم",
+    "show-speaker-outline": "عرض إطار المتحدث النشط",
+    "square-scene-mode": "وضع مشهد مربع",
+    "video-only": "الفيديو فقط"
   },
   "titles": {
     "100": "100",
@@ -675,7 +688,24 @@
     "attempts-to-capture-the-same-resolution-that-the-window-display-is-displayed-at": "يحاول التقاط نفس الدقة التي يتم عرض النافذة/الشاشة بها",
     "this-will-capture-at-up-to-1920x1080-resolution-but-it-will-use-up-more-cpu-and-may-reduce-frame-rate-": "سيتم الالتقاط بدقة تصل إلى 1920x1080، لكنه سيستخدم المزيد من وحدة المعالجة المركزية وقد يقلل معدل الإطارات.",
     "this-will-capture-at-a-medium-resolution-suitable-for-gaming-where-frame-rates-matter-more-than-resolution": "سيتم الالتقاط بدقة متوسطة؛ مناسبة للألعاب حيث معدلات الإطارات أهم من الدقة",
-    "this-will-capture-at-a-low-resolution-suitable-for-low-powered-computers-or-computers-on-poor-networks": "سيتم الالتقاط بدقة منخفضة، مناسبة لأجهزة الكمبيوتر منخفضة الطاقة أو الموجودة على شبكات ضعيفة"
+    "this-will-capture-at-a-low-resolution-suitable-for-low-powered-computers-or-computers-on-poor-networks": "سيتم الالتقاط بدقة منخفضة، مناسبة لأجهزة الكمبيوتر منخفضة الطاقة أو الموجودة على شبكات ضعيفة",
+    "add-a-small-playback-buffer-to-smooth-jitter": "إضافة مخزن مؤقت صغير للتشغيل لتخفيف التذبذب",
+    "disable-audio-playback-for-this-scene": "تعطيل تشغيل الصوت لهذا المشهد",
+    "disable-video-playback-for-this-scene": "تعطيل تشغيل الفيديو لهذا المشهد",
+    "exclude-the-director-s-audio-from-this-scene": "استبعاد صوت المخرج من هذا المشهد",
+    "exclude-the-director-s-video-from-this-scene": "استبعاد فيديو المخرج من هذا المشهد",
+    "hide-own-screen-share-preview": "إخفاء معاينة مشاركة الشاشة الخاصة بك",
+    "hide-own-share-preview": "إخفاء معاينة المشاركة الخاصة بك",
+    "hide-the-video-control-bar": "إخفاء شريط التحكم بالفيديو",
+    "keep-the-scene-output-clean-for-obs": "الحفاظ على نظافة مخرجات المشهد لـ OBS",
+    "mute-all-guests-in-room-toggle-": "كتم جميع الضيوف في الغرفة (تبديل)",
+    "optimize-the-scene-for-4-3-video": "تحسين المشهد لفيديو بنسبة 4:3",
+    "optimize-the-scene-for-square-video": "تحسين المشهد للفيديو المربع",
+    "randomize-the-order-videos-load-into-the-scene": "ترتيب تحميل الفيديوهات إلى المشهد بشكل عشوائي",
+    "show-a-green-outline-around-active-speakers": "عرض إطار أخضر حول المتحدثين النشطين",
+    "show-a-muted-status-icon-on-remote-tiles": "عرض أيقونة حالة الكتم على فيديوهات المشاركين البعيدين",
+    "start-stop-google-drive-recording-for-all-guests": "بدء/إيقاف تسجيل جوجل درايف لجميع الضيوف",
+    "when-enabled-highlight-will-unmute-the-highlighted-guest-and-mute-the-other-guests-manual-unmute-changes-can-still-be-made-afterwards-": "عند التفعيل، سيقوم الإبراز بإلغاء كتم صوت الضيف المُبرَز وكتم صوت باقي الضيوف. لا يزال بإمكانك إجراء تغييرات يدوية لإلغاء الكتم بعد ذلك."
   },
   "placeholders": {
     "join-by-room-name-here": "انضم باسم الغرفة هنا",
@@ -804,6 +834,7 @@
     "what-bitrate-gdrive": "سيقوم هذا الضيف عن بُعد بحفظ التسجيل مباشرة على القرص المحلي، وكذلك إرسال نسخة إلى Google Drive الخاص بك (مجلد التسجيلات).\n\n- يمكن أن يفشل التسجيل، لذا احتفظ بتسجيلات احتياطية!\n\n- غالباً ما يواجه المستخدمون الذين يستخدمون iPhone أو Android أو Safari مشاكل - كن حذراً.",
     "insecure-stream-id": "⚠️ تم اكتشاف معرف بث غير آمن\n\nيُنصح بشدة باستخدام كلمة مرور عند استخدام معرف بث قصير غير فريد.\n\nهذا مجرد تحذير يمكن تجاهله.",
     "mobile-no-screen-share": "عذراً، متصفح هاتفك المحمول لا يدعم مشاركة الشاشة.\n\n<a href='https://docs.vdo.ninja/getting-started/native-mobile-app-versions' target='_blank'>التطبيقات الأصلية</a> تقدم دعماً أساسياً لها.",
-    "no-screen-share-supported-firefox": "عذراً، متصفحك لا يدعم مشاركة الشاشة.\n\nقد تكون إعدادات Firefox الخاصة بك مضبوطة على حظرها أو أنك وصلت إلى الموقع بشكل غير آمن."
+    "no-screen-share-supported-firefox": "عذراً، متصفحك لا يدعم مشاركة الشاشة.\n\nقد تكون إعدادات Firefox الخاصة بك مضبوطة على حظرها أو أنك وصلت إلى الموقع بشكل غير آمن.",
+    "block-from-rejoining": "حظر من إعادة الانضمام (4 ساعات)"
   }
 }
