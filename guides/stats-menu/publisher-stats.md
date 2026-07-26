@@ -8,7 +8,7 @@ description: >-
 
 This is the panel you get when you Ctrl + click **your own camera preview**, or click the connection readout in the page header. It describes what you are sending.
 
-The key structural difference from the viewer panel: the publisher panel repeats a **whole block per connected viewer**. You are not encoding one stream, you are encoding one stream per viewer, and each can be limited differently.
+The key structural difference from the viewer panel: the publisher panel repeats a **whole block per connected viewer**. In ordinary peer-to-peer use, each viewer has a separate connection and can be limited differently.
 
 ## The top block
 
@@ -17,7 +17,7 @@ The key structural difference from the viewer panel: the publisher panel repeats
 | Field | Meaning |
 | --- | --- |
 | `StreamID` | Your own stream ID. Screen shares append `:s` |
-| `Mic level (sent)` | The audio level actually reaching the encoder, 0 to 1. **If this is 0 your viewers hear nothing**, regardless of what your local meter shows |
+| `Mic level (sent)` | The audio level actually reaching the encoder, 0 to 1. **If this stays at 0 while you speak, your viewers receive silence**, regardless of what your local meter shows |
 | `Inbound connections` | How many streams you are receiving |
 | `Outbound connections` | How many viewers are pulling from you |
 | `Capture settings` | What your camera is actually producing, e.g. `1280x720 @ 30fps`. Compare this to the `Resolution` in each viewer block |
@@ -34,17 +34,17 @@ Each connected viewer gets a heading — their `&label` if they set one, otherwi
 
 ### Remote Peer Info
 
-The viewer's self-reported details: `CPU`, `GpGPU`, `Platform (OS)`, `User agent`, `VDO.Ninja Version`, and their `Label` highlighted in pink. This is how you find out that the guest complaining about quality is on a six-year-old laptop.
+The viewer's self-reported details: `CPU`, `GpGPU`, `Platform (OS)`, `User agent`, `VDO.Ninja Version`, and their `Label` highlighted in pink. These are useful context when a problem may be specific to one viewer, but they do not measure the viewer's current CPU or GPU load.
 
 ### Your connection to that viewer
 
 | Field | Meaning | What to look for |
 | --- | --- | --- |
 | `Video bitrate` | What you are sending them for video | Compare to your intended target |
-| `Audio bitrate` | What you are sending them for audio | A ⚠️ appears at 0, which means they are getting no audio |
+| `Audio bitrate` | What you are sending them for audio | A ⚠️ appears at 0. If it remains there while you speak, no audio data is reaching that viewer |
 | `Total sending bitrate` | Everything on this connection including overhead and retransmissions | Should be a little above video + audio |
-| `Available outgoing bitrate` | What the congestion controller believes your upload can carry | **If this is close to your video bitrate you are at your ceiling.** Asking for more will make things worse, not better |
-| `Quality limited by` | Why the encoder is holding back | `none`, `bandwidth`, `cpu`, or `resolution` |
+| `Available outgoing bitrate` | The congestion controller's estimate of what this path can currently carry | If this stays close to the actual bitrate while `Quality limited by` says `bandwidth`, the path is probably congestion-limited. It is an estimate, not a measured physical ceiling |
+| `Quality limited by` | Why the browser is limiting resolution or frame rate | `none`, `bandwidth`, `cpu`, or `other` |
 | `Resolution` | What you are actually encoding for this viewer, with fps | Often lower than your capture settings — that is `Scale factor` at work |
 | `Scale factor` | How much the frame is being downscaled for this viewer | `100%` means full size |
 | `Average round trip time` | Latency to that viewer | |
@@ -55,15 +55,15 @@ The viewer's self-reported details: `CPU`, `GpGPU`, `Platform (OS)`, `User agent
 | `Candidate type - Local` / `Remote` | How this connection was established | `relay` on either side means TURN is carrying it |
 | `Audio codec`, `Video codec`, `Audio clock rate / channels` | What was negotiated | |
 
-Because each viewer has their own block, you can immediately see whether a problem is *yours* or *theirs*. If one viewer shows `bandwidth` and heavy NACKs while three others are clean, the problem is on that viewer's path — your upload is fine.
+Because each viewer has their own block, you can compare paths. If one viewer shows `bandwidth` and heavy NACKs while three others are clean, the problem is specific to that viewer's end-to-end path; it does not prove which segment of that path is responsible.
 
-If every viewer shows `bandwidth` at once, the constraint is your own uplink.
+If every viewer shows `bandwidth` at once, a shared sender-side constraint such as the publisher's uplink becomes more likely.
 
 ### Controls in each block
 
 * **Trigger an ICE restart** renegotiates the network path for that one viewer. Worth trying when a connection has degraded but not dropped — for example after a network change.
 * **Disconnect this viewer** appears only when you are running with access approval — [`&prompt`](../../advanced-settings/settings-parameters/and-prompt.md), `&validate` or `&approve`.
-* **Adjust video bitrate** is a live slider for that viewer's target bitrate. It is only available outside group rooms, where per-viewer bitrate is under your direct control. Dragging it applies on release.
+* **Adjust video bitrate** is a live slider for that viewer's target bitrate. It appears by default outside group rooms; `&slider` or `&showslider` also exposes it in rooms. Dragging it applies on release.
 
 You may also see `max bandwidth target`, `init bitrate target` and `current bitrate target` when those have been set by URL parameters. Clicking `init bitrate target` prompts you for a new value.
 

@@ -14,11 +14,11 @@ Each section below starts from something you can actually observe, tells you whi
 
 | Reading | Diagnosis | Action |
 | --- | --- | --- |
-| Loss 0%, rising PLI | Not a loss problem. The decoder is losing sync for another reason | Have the sender press **Send Keyframe to Viewers** |
-| Loss under 1%, NACKs recovering it | Normal. Retransmission is doing its job | Nothing |
-| Loss 1–5%, PLIs climbing | Congestion. Retransmission is not keeping up | Lower the bitrate, add `&buffer=500`, drop resolution or framerate |
-| Loss above 5% | The path cannot carry what you are sending | Drop to a much lower profile — see [stable IRL streaming](../irl-streaming-stability.md) |
-| Loss 0% but jitter buffer climbing | Packets are arriving late rather than being lost | Usually an overloaded network or a wireless link. Wired connection, or add buffer |
+| Current loss sample 0%, PLI climbing | The decoder keeps requesting refreshes. Earlier loss bursts, decoder resets or layer changes are possible | Have the sender press **Send Keyframe to Viewers** once, then watch whether PLI continues climbing |
+| Loss under 1%, occasional NACKs | Retransmission is probably recovering isolated missing or reordered packets | Monitor it; investigate if the counters keep climbing alongside visible freezes |
+| Loss 1–5%, PLIs climbing | The path is degraded and retransmission may not be keeping up | Lower the bitrate, add `&buffer=500`, or reduce resolution or frame rate |
+| Loss above 5% | The path is dropping a substantial part of the stream | Drop to a much lower profile — see [stable IRL streaming](../irl-streaming-stability.md) |
+| Current loss sample 0% but jitter buffer climbing | Packets are arriving unevenly even though this sample shows little or no loss | Check for an overloaded or wireless network; try a wired connection or add buffer |
 
 The counter-intuitive one: **raising the bitrate when you have packet loss makes it worse.** More data on a path that is already dropping packets means more retransmissions, more keyframes, and more loss. If loss is high, go down, not up.
 
@@ -28,9 +28,9 @@ The counter-intuitive one: **raising the bitrate when you have packet loss makes
 
 The order to check:
 
-1. **`Quality limited by` says `bandwidth`** — compare `Video bitrate` to `Available outgoing bitrate`. If they are close, you have hit the real ceiling of your upload and the congestion controller is correct. A higher target will not help.
+1. **`Quality limited by` says `bandwidth`** — compare `Video bitrate` to `Available outgoing bitrate`. If they remain close, the congestion controller currently believes that path is at its safe limit. A higher target is unlikely to help.
 2. **`Quality limited by` says `cpu`** — see [CPU is the bottleneck on the sending side](#cpu-is-the-bottleneck-on-the-sending-side) below.
-3. **`Quality limited by` says `none` but the bitrate is still low** — nothing is holding you back, so the target itself is the limit. Check your `&videobitrate` / `&maxvideobitrate` settings and, in rooms, the room's own bitrate rules.
+3. **`Quality limited by` says `none` but the bitrate is still low** — the browser is not currently limiting resolution or frame rate. Check your `&videobitrate` / `&maxvideobitrate` settings, the room's bitrate rules, and whether a static or low-detail scene simply needs fewer bits.
 4. **`Scale factor` is below 100%** — the frame is being downscaled. In VDO.Ninja this is usually deliberate: the viewer requested a smaller size because the video is drawn small on their screen.
 
 Then check the receiving side: if the viewer's `Requested resolution` is small, the sender is being asked for a small stream and is doing exactly what it was told. That is the bandwidth optimisation working, not a fault. Use `&scale` on the view link if you need to force it larger.
@@ -45,8 +45,8 @@ This is where the panel saves the most time, because it splits one vague symptom
 
 | Reading | Cause |
 | --- | --- |
-| `Mic level (sent)` is 0 | The microphone is producing silence. Wrong device, muted at the OS, or a virtual cable with nothing feeding it. Nothing downstream can fix this |
-| `Mic level (sent)` is healthy, `Audio bitrate` is 0 ⚠️ | Audio is being captured but not transmitted to that viewer |
+| `Mic level (sent)` stays at 0 while speaking | The microphone pipeline is producing silence. Check the selected device, OS mute, gate, and any virtual cable input |
+| `Mic level (sent)` is healthy, `Audio bitrate` stays at 0 ⚠️ | Audio is being captured but no audio data is reaching that viewer |
 | Both healthy | You are sending audio correctly. The problem is on the receiving end |
 | No `Audio bitrate` row at all for a viewer | No audio track was negotiated with them — check whether that viewer used `&noaudio` |
 
@@ -62,7 +62,7 @@ This is where the panel saves the most time, because it splits one vague symptom
 
 **Read:** `Candidate type - Local` and `Candidate type - Remote`, on either side.
 
-`relay` (shown as `💸 relay server`) means the connection could not be made directly and is being carried through a TURN server. Consequences: extra latency, a bandwidth ceiling imposed by the relay, and cost.
+`relay` (shown as `💸 relay server`) means the selected path is being carried through a TURN server. It can add latency, consume relay capacity and incur hosting cost. A relay is not automatically faulty, and it does not imply a particular fixed bitrate ceiling.
 
 If you also see `⚠️ You're blocking` or `⚠️ They're blocking`, a browser or system setting at that end is actively preventing direct connections — often a VPN, a privacy extension, or a corporate network policy.
 
@@ -70,22 +70,22 @@ What to try, in order:
 
 1. Disable VPNs and WebRTC-blocking browser extensions at both ends.
 2. Get at least one end off a restrictive network (mobile hotspot is a quick test).
-3. If relay is unavoidable, plan for it: lower your bitrate target, since relays are shared infrastructure.
+3. If relay is unavoidable and the stats show congestion, try a lower bitrate target; relays are shared infrastructure and can have capacity or policy limits.
 
-`host` on both ends means you are on the same local network. `srflx` means a direct connection through NAT, which is the normal good result across the internet.
+`host` means a host/interface candidate and `srflx` means a public NAT mapping discovered through STUN. A host-host pair often indicates a LAN path, while a pair using `srflx` can connect directly across the internet without TURN.
 
 ## CPU is the bottleneck on the sending side
 
 **Read:** `Quality limited by` = `cpu`, plus `CPU`, `GpGPU` and `Power level` in the sender's info.
 
-The encoder cannot keep up. Bitrate changes will not help. In rough order of effectiveness:
+The encoder cannot keep up. Raising the bitrate will not help. In rough order of effectiveness:
 
-1. Lower the **framerate** before lowering resolution — encoding cost scales hard with fps.
+1. Lower the frame rate and/or resolution. Frame rate is often the first trade-off for motion-heavy video; resolution may matter more when fine detail is unnecessary.
 2. Switch codec. H.264 usually has hardware encoding available where VP8/VP9 do not. See [hardware-accelerated video encoding](../hardware-accelerated-video-encoding.md).
 3. Reduce the number of viewers pulling directly from that sender. Every viewer is a separate encode.
-4. Close other applications, and check `Power level` — a laptop on battery often throttles aggressively.
+4. Close other applications, and check `Power level` — battery-saving or thermal modes may reduce performance.
 
-For phone guests, also check `Plugged in`. A hot or low phone will throttle no matter what settings you use.
+For phone guests, also check `Plugged in`. A hot phone or one in low-power mode may throttle, but the battery percentage alone does not establish that it has.
 
 ## The connection keeps dropping and re-establishing
 
@@ -105,7 +105,7 @@ Note that `Total Playout Delay` does **not** include Bluetooth headphone latency
 
 ## What to do when none of this helps
 
-Use the **Copy** button and share the output. Both panels if you can — sender and receiver — since almost every remaining case is decided by comparing the two ends.
+Use the **Copy** button and share the output. Capture both panels if you can: comparing sender and receiver often narrows the problem, even when it cannot identify the exact network segment at fault.
 
 * [Asking an AI to read your stats](llm-prompt.md) — a prompt that gives an LLM the context to interpret the dump
 * The [VDO.Ninja Discord](https://discord.vdo.ninja) — include both stats dumps and your full URLs, with any sensitive parts redacted

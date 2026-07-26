@@ -24,12 +24,12 @@ Everything in this section is **self-reported by the person sending the video**.
 | `Pro-Audio (Stereo-mode)` | Only appears if the sender used `&stereo`. Higher-fidelity audio modes usually need headphones at both ends |
 | `VDO.Ninja Version` | The sender's version. Mismatched versions are worth noting when something behaves oddly |
 | `User agent`, `Platform (OS)`, `Browser` | The sender's browser and OS. Click the user agent to copy it |
-| `GpGPU`, `CPU` | The sender's graphics adapter and core count. A weak GPU here explains encoder trouble |
-| `Power level`, `Plugged in` | The sender's battery. **Very useful for phone guests** — a phone below ~20% or running hot will throttle its encoder and there is nothing you can do from your end |
-| `Quality limited by` | Why the sender's encoder is holding back: `none`, `bandwidth`, `cpu`, or `resolution` |
+| `GpGPU`, `CPU` | The sender's graphics adapter and core count. Limited hardware can help explain encoder trouble, but these fields do not measure current load |
+| `Power level`, `Plugged in` | The sender's reported battery state. A low battery, low-power mode, or thermal pressure may reduce performance, but the percentage alone does not prove throttling |
+| `Quality limited by` | Why the browser says the sender's encoder is limiting resolution or frame rate: `none`, `bandwidth`, `cpu`, or `other` |
 | `Total outbound p2p connections` | How many viewers the sender currently has, updated within a few seconds of anyone joining or leaving. The same count can be shown as a 🔗 badge on the video itself with [`&showconnections`](../../advanced-settings/settings-parameters/and-showconnections.md) |
 
-`Quality limited by` is the highest-value field in this section. If a guest looks soft and it says `cpu`, no amount of bitrate tuning on your side will fix it.
+`Quality limited by` is one of the highest-value fields in this section. If a guest looks soft and it says `cpu`, raising the bitrate on your side is unlikely to fix it.
 
 ## Peer-to-peer connection
 
@@ -40,8 +40,8 @@ This section describes the network path itself, measured by your machine.
 | Field | Meaning | What to look for |
 | --- | --- | --- |
 | `Round Trip Time` | Network latency there and back | Stable is more important than low. A number that swings around indicates a congested path |
-| `Candidate type - Local` | How **your** end connected | `host` = direct, same network. `srflx` = direct through NAT. `relay` = via a TURN server |
-| `Candidate type - Remote` | How **their** end connected | Same values. If either side says `relay`, the whole connection is relayed |
+| `Candidate type - Local` | The candidate used at **your** end | `host` = a local interface candidate. `srflx` = a public NAT mapping discovered through STUN. `relay` = a TURN allocation |
+| `Candidate type - Remote` | The candidate used at **their** end | Interpret it together with the local candidate. A selected pair containing `relay` is using TURN; `host` on both ends often indicates a LAN path |
 | `Local network type` | Your interface type where the browser exposes it | Often `unknown`; Chrome hides this for privacy |
 | `Time active` | How long this connection has been up | Resets on reconnect. A number that keeps resetting means the connection is flapping |
 | `Total received` | Total inbound bitrate on this connection | Includes every track plus protocol overhead, so it reads slightly higher than the per-track bitrates added together |
@@ -60,7 +60,7 @@ Each incoming track gets its own section. **A missing section is itself a diagno
 | `Bitrate` | both | Actual received bitrate for this track. A ⚠️ appears here if it drops to zero while the track still exists |
 | `FPS` | video | Frames per second actually being decoded |
 | `Resolution` | video | The size actually arriving. Compare to `Requested resolution` above and to the sender's `Video init width/height` |
-| `Jitter Buffer Delay` | both | How much delay the receiver is adding to smooth out uneven arrival. Rising jitter buffer is an early warning of network trouble, before packet loss shows up |
+| `Jitter Buffer Delay` | both | How much delay the receiver is adding to smooth out uneven arrival. A rising value can warn that packets are arriving unevenly, even when the current loss sample is low |
 | `Audio Level` | audio | Current loudness, 0 to 1. If this sits at exactly 0 while bitrate is healthy, the sender is transmitting silence |
 | `ClockRate` | audio | Sample rate and channel count, e.g. `48000 / 2` |
 | `Codec` | both | The negotiated codec. `opus, /w fec` means forward error correction is active on audio |
@@ -71,14 +71,13 @@ Each incoming track gets its own section. **A missing section is itself a diagno
 
 ### How these interact
 
-Packet loss, NACKs and PLIs are a chain, not three separate numbers:
+Packet loss, NACKs and PLIs often interact:
 
-1. Packets are lost.
-2. Your end sends **NACKs** asking for them again.
-3. If too much is lost to recover, your end gives up and requests a **keyframe (PLI)**.
-4. The keyframe is large, which briefly spikes bandwidth and can cause more loss.
+1. A missing or late packet can cause your end to send a **NACK** asking for it again.
+2. If the decoder cannot continue from the frames it has, it can request a fresh **keyframe (PLI)**.
+3. A keyframe is usually larger than a delta frame, so it can briefly increase bandwidth.
 
-So a rising PLI count usually means the loss is bad enough that retransmission is not keeping up. Visually this is the classic "freeze, then snap back into focus" artefact.
+A burst of loss can therefore produce NACKs followed by a PLI and the familiar "freeze, then snap back into focus" artefact. A PLI is not proof of packet loss, though: startup, decoder resets, layer changes and renegotiation can also request a keyframe. Look for sustained counter growth alongside the visible symptom.
 
 ## Extra rows you may see
 

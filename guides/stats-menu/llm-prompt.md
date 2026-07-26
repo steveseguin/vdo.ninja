@@ -42,31 +42,35 @@ If both panels are pasted, they are the two ends of the same connection and
 should be cross-referenced rather than analysed separately.
 
 FIELD MEANINGS
-- Packet Loss: percentage of packets that never arrived. Under 1% is fine.
+- Packet Loss: the panel's current loss sample. Under 1% is often fine, but a
+  low current sample does not rule out an earlier burst.
 - NACKs sent / NACKs per second: requests to resend a lost packet. Some is
-  normal; sustained growth means real loss on the path.
-- Keyframes requested (PLI): the receiver gave up recovering and asked for a
-  full refresh. Climbing PLI means loss is bad enough that retransmission is
-  not keeping up. Visually: freeze, then snap back into focus.
+  normal; sustained growth usually means missing or reordered packets.
+- Keyframes requested (PLI): the receiver asked for a full refresh because
+  its decoder needed one. Loss can cause this, but startup, decoder resets,
+  layer changes and renegotiation can as well. Correlate sustained growth with
+  NACKs, loss and visible freezes rather than treating PLI as proof of loss.
 - Jitter Buffer Delay: delay added by the receiver to smooth uneven arrival.
-  Rising jitter with zero loss means packets are arriving LATE, not lost.
+  A rising value means arrival is becoming less even; a zero current loss
+  sample does not prove that no earlier packets were lost.
 - Round Trip Time: network latency. Stability matters more than absolute
   value; 200ms intercontinental is normal, a number that swings is not.
-- Candidate type (Local and Remote): "host" = same local network, "srflx" =
-  direct across the internet through NAT, "relay" = going through a TURN
-  relay server, which adds latency and imposes a bandwidth ceiling. If either
-  end says relay, the whole connection is relayed.
+- Candidate type (Local and Remote): "host" = a host/interface candidate,
+  "srflx" = a public NAT mapping discovered through STUN, and "relay" = a TURN
+  allocation. Interpret the selected pair together. A pair containing relay
+  uses TURN; host on both ends often indicates a LAN path.
 - Available outgoing bitrate: what the congestion controller believes the
-  uplink can carry. If the actual video bitrate is close to this, the sender
-  is at its genuine ceiling.
+  selected path can currently carry. It is an estimate, not proof of the
+  physical upload ceiling.
 - Quality limited by: why the encoder is holding back. Values: none,
-  bandwidth, cpu, resolution. This single field usually decides the diagnosis.
+  bandwidth, cpu, other. "none" means the browser is not currently limiting
+  resolution or frame rate; it does not promise that bitrate will hit a target.
 - Scale factor / Requested resolution: VDO.Ninja deliberately asks senders for
   a resolution matching how large the video is drawn on the viewer's display,
   in device pixels. A downscaled stream is usually intentional bandwidth
   optimisation, NOT a fault.
-- Mic level (sent): audio level reaching the encoder, 0 to 1. Zero means the
-  microphone is producing silence and nothing downstream can fix it.
+- Mic level (sent): audio level reaching the encoder, 0 to 1. If it stays at
+  zero while the sender speaks, the microphone pipeline is producing silence.
 - Audio Level: received audio loudness, 0 to 1.
 - Capture settings vs Resolution: what the camera produces vs what is actually
   being encoded for a given viewer. They differ when scaling is applied.
@@ -84,15 +88,16 @@ INTERPRETATION RULES
 1. Raising the bitrate is the WRONG response to packet loss. More data on a
    lossy path causes more retransmission and more loss. Recommend lowering
    bitrate, resolution or framerate instead.
-2. When "Quality limited by" is cpu, bitrate changes will not help. Reducing
-   framerate helps more than reducing resolution. Switching to H.264 often
+2. When "Quality limited by" is cpu, raising bitrate will not help. Reducing
+   frame rate and/or resolution reduces encoder work. Switching to H.264 often
    enables hardware encoding.
 3. When "Quality limited by" is bandwidth AND video bitrate is close to
-   available outgoing bitrate, the congestion controller is correct and a
-   higher target is counterproductive.
+   available outgoing bitrate, the path is probably congestion-limited and a
+   higher target is unlikely to help.
 4. If several viewers show problems but one does not, the problem is on the
-   affected viewer's path, not the sender's uplink. If all viewers show the
-   same limit simultaneously, it is the sender's uplink.
+   affected viewers' end-to-end paths rather than a universal sender limit.
+   If all viewers show the same limit simultaneously, investigate shared
+   sender-side constraints first. Neither pattern proves the exact segment.
 5. Do not treat a downscaled resolution as a fault without first checking
    Requested resolution and Scale factor.
 6. Distinguish "degraded" from "flapping": Time active resetting repeatedly,
@@ -154,7 +159,7 @@ Most of the harder cases are only decidable by comparing sender and receiver, so
 2. On the receiving machine, Ctrl + click the incoming video, press **Copy**.
 3. Label them clearly — `--- PUBLISHER ---` and `--- VIEWER ---` — before pasting.
 
-An LLM given both ends can tell you whether the loss is happening on the upload or the download, which is the question that decides almost everything else.
+Both ends let an LLM cross-check what was sent against what arrived and distinguish many sender, receiver and path problems. They still cannot prove whether loss occurred on the sender's access link, the receiver's access link, or an intermediate network without additional measurements.
 
 ## Next
 

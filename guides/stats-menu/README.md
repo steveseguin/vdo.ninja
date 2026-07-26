@@ -1,12 +1,12 @@
 ---
 description: >-
   How to open VDO.Ninja's statistics panel, what the numbers mean, and how to
-  use them to find the actual cause of a quality problem.
+  use them to narrow down the cause of a quality problem.
 ---
 
 # The stats panel
 
-Every VDO.Ninja video has a live statistics panel behind it. It is the fastest way to answer the questions that otherwise turn into guesswork: is this a network problem or a CPU problem, is the sender or the receiver at fault, is audio even being sent, and is the bitrate you asked for the bitrate you are getting.
+Every VDO.Ninja video has a live statistics panel behind it. It is the fastest way to answer questions that otherwise turn into guesswork: does the evidence point to the network or the encoder, is audio being sent, and is the bitrate you asked for the bitrate you are getting.
 
 <figure><img src="../../.gitbook/assets/stats-menu/stats-viewer-stream-info.png" alt="The Statistics panel showing the stream ID and the Stream Info section"><figcaption><p>The stats panel on the viewing side. The header stays fixed while the list below it scrolls.</p></figcaption></figure>
 
@@ -33,7 +33,7 @@ Which panel you get depends on which video you clicked, and they show different 
 | A remote guest's video | [The viewer panel](viewer-stats.md) | What is arriving at **your** machine, and what the sender says about themselves |
 | Your own camera preview | [The publisher panel](publisher-stats.md) | What **you** are sending, broken down per connected viewer |
 
-A useful consequence: if a guest looks bad to you, their publisher panel and your viewer panel describe the same connection from opposite ends. Comparing the two is usually what identifies whether the problem is upstream or downstream.
+A useful consequence: if a guest looks bad to you, their publisher panel and your viewer panel describe the same connection from opposite ends. Comparing the two can separate a capture or encoder constraint from a problem on that peer-to-peer path. It cannot, by itself, prove whether packet loss occurred on the sender's uplink, the receiver's downlink, or somewhere in transit.
 
 ## Panel controls
 
@@ -61,10 +61,10 @@ If you only remember one thing from this guide, remember this table. Open the pa
 | --- | --- | --- |
 | **Packet Loss** above ~1% | Network congestion or a weak link somewhere on the path | [Diagnosing problems](troubleshooting.md#video-is-blocky-soft-or-keeps-freezing) |
 | **Bitrate** far below what you asked for | The sender cannot push more, or is being told not to | [Diagnosing problems](troubleshooting.md#the-bitrate-is-far-lower-than-i-asked-for) |
-| **Candidate type** says `relay` | Traffic is going through a TURN relay, adding latency and a bandwidth ceiling | [Diagnosing problems](troubleshooting.md#the-connection-is-using-a-relay) |
+| **Candidate type** says `relay` | Traffic is going through a TURN relay, which may add latency or encounter relay capacity limits | [Diagnosing problems](troubleshooting.md#the-connection-is-using-a-relay) |
 | **Quality limited by** says `cpu` | The sender's machine cannot encode fast enough | [Diagnosing problems](troubleshooting.md#cpu-is-the-bottleneck-on-the-sending-side) |
 
-Everything else in the panel is supporting detail for one of those four.
+These four are useful starting points. The surrounding fields provide the context needed before treating any one reading as a diagnosis.
 
 ## What "good" looks like
 
@@ -73,14 +73,14 @@ For a healthy 1080p30 connection between two well-connected machines:
 ```text
 Packet Loss           0 %
 Round Trip Time       under 100 ms
-Candidate type        host or srflx (not relay)
+Candidate type        stable path; direct when available
 Quality limited by    none
 FPS                   within 1-2 of the sender's capture rate
 Jitter Buffer Delay   under ~100 ms
-Bitrate               close to the target you set
+Bitrate               sufficient for the desired quality
 ```
 
-None of these are hard thresholds. A 200 ms round trip is completely normal between continents, and 1% packet loss on a cellular uplink is a good day. Read them as a relative picture, and compare against the same stream when it *was* behaving.
+None of these are hard thresholds. A 200 ms round trip is completely normal between continents, and 1% packet loss on a cellular uplink may be a good result. An encoder may also stay below its target on a static or low-detail scene because it does not need the extra bits. Read the fields as a relative picture, and compare against the same stream when it *was* behaving.
 
 ## Pages in this guide
 
