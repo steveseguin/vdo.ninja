@@ -18,13 +18,13 @@ Example: `&buffer=500`
 
 This feature will increase the size of the audio and video _playout delay_ by means of tweaking the webRTC _jitter buffer_ pipeline (or a related buffer).&#x20;
 
-This can effectively be used as a way to delay the incoming video and audio by around 4-seconds. It's compatible with modern Chromium-based browsers, likely Firefox, but not Safari.
+This can effectively be used as a way to delay the incoming video and audio by roughly 3–5 seconds. It's compatible with modern Chromium-based browsers, likely Firefox, but not Safari.
 
 While in theory this option can also help to improve video and audio quality, as a larger playback buffer should help reduce the effects of network jitter and packet loss, it's not a miracle solution in this regard. Adding 200-ms of buffer delay using this feature is worth trying however, as some users have reported it has helped improve their connections.
 
 The problem is that the browser doesn't fully make use of the available buffer if set high, and so it's largely used as mainly a hint. Network conditions, memory limits and other factors may impact the results as well. \
 \
-Older versions of Chromium allowed upwards of 15-seconds of buffering, with recent versions of Chromium allowing up to just 4-seconds.&#x20;
+Older versions of Chromium allowed upwards of 15-seconds of buffering, while recent versions generally provide only about 3–5 seconds.&#x20;
 
 ### Chunked-mode
 
@@ -64,6 +64,8 @@ As well, the buffering works to buffer the stream, in a way similar to HLS or RT
 \
 The default chunked viewer buffer depends on how chunked mode is being used. Plain `&chunked` starts around 3000-ms if no profile or buffer override is used, while `&chunkprofile` presets use lower starting targets. For clearer control with chunked mode, use `&chunkbuffer`, `&chunkbufferfloor`, and `&chunkbufferceil`.
 
+Current shared chunked audio/video buffering is limited to about 30 seconds. Minute-long chunked buffering is therefore best treated as an experimental video-only path; use HLS or an encoded OBS/server workflow when synchronized audio and video must be delayed by minutes.
+
 Please refer to \&chunked mode for more details, but it could be an option if your goal is to improve stream stability under high packet loss. Recent Chromium-based runtimes are the primary target. Firefox publishing is disabled, while Safari/WebKit publishing is enabled only when its complete WebCodecs and worker track-processing stack passes VDO.Ninja's capability checks.
 
 ## Update in [v23](../../releases/v23.md)
@@ -83,4 +85,8 @@ The option to right click a remote video and add/adjust the [`&buffer`](buffer.m
 
 {% content-ref url="vred.md" %}
 [vred.md](vred.md)
+{% endcontent-ref %}
+
+{% content-ref url="../../guides/delay-an-incoming-feed.md" %}
+[delay-an-incoming-feed.md](../../guides/delay-an-incoming-feed.md)
 {% endcontent-ref %}

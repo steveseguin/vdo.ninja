@@ -56,6 +56,7 @@
   * [Stable IRL streaming](guides/irl-streaming-stability.md)
   * [Mobile uplinks with Starlink, cellular, and bonded networks](guides/mobile-uplink-starlink-cellular-bonding.md)
   * [Packet-loss recovery and resilient media](guides/packet-loss-recovery-and-resilient-media.md)
+  * [Delay an incoming feed](guides/delay-an-incoming-feed.md)
   * [How to get permanent links](guides/how-to-get-permanent-links.md)
   * [24/7 unattended operation](guides/24-7-unattended-operation.md)
   * [Basic hotkeys](guides/hotkey-support/README.md)

@@ -33,6 +33,22 @@ For example:
 
 This makes Meshcast a server-based option for cases where a browser-to-browser connection is too fragile, blocked, or inconsistent. It is a separate service, but it is designed to work well with VDO.Ninja.
 
+## Delayed HLS playback
+
+Meshcast's HLS player can keep an incoming audio/video stream a fixed number of seconds behind live. This is useful for broadcast safety delays and for bringing a delayed feed into OBS.
+
+For example, a two-minute delay uses `delay=120`:
+
+```text
+https://app.meshcast.io/hls-player/STREAM_ID?delay=120&muted=0&controls=0
+```
+
+HLS requires a registered Meshcast account. Start the ingest at least two minutes before opening the player so the complete delay is available.
+
+{% content-ref url="../guides/delay-an-incoming-feed.md" %}
+[delay-an-incoming-feed.md](../guides/delay-an-incoming-feed.md)
+{% endcontent-ref %}
+
 {% embed url="https://www.youtube.com/watch?v=-7QsLChfdsE" %}
 [https://youtu.be/-7QsLChfdsE](https://youtu.be/-7QsLChfdsE)
 {% endembed %}
