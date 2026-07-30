@@ -175,9 +175,9 @@ VDO.Ninja's existing LAN-only parameter is `&lanonly`. The reusable QR module ca
 
 ## Try it
 
-The implementation is included in the app repository at `examples/qrconnect.html`. Once that app revision is deployed, it will be available at:
+The implementation is included in the app repository at `qr.html`. Once that app revision is deployed, it will be available at:
 
-[**https://vdo.ninja/examples/qrconnect.html**](https://vdo.ninja/examples/qrconnect.html)
+[**https://vdo.ninja/qr**](https://vdo.ninja/qr)
 
 One person presses **Start connection** and gets a QR code plus a copyable compact code. The other opens the QR link or pastes the code, gets a reply code back, and the first person scans or pastes that in. Both can then chat; the sharing side can also turn on its camera or microphone. The wrapper drives an unmodified VDO.Ninja iframe, so media uses the normal VDO.Ninja paths while persistent chat and signalling remain in the example wrapper.
 
