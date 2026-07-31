@@ -35,6 +35,7 @@ This section collects practical VDO.Ninja guides for OBS Studio, remote guest wo
 * [how-to-selectively-allow-access.md](how-to-selectively-allow-access.md "mention")
 * [sso-and-signed-in-access.md](sso-and-signed-in-access.md "mention")
 * [how-to-send-the-audio-video-output-of-one-obs-to-another-obs-using-vdo.ninja.md](how-to-send-the-audio-video-output-of-one-obs-to-another-obs-using-vdo.ninja.md "mention")
+* [multi-operator-twitch-production.md](multi-operator-twitch-production.md "mention")
 * [active-speaker-layouts-in-obs.md](active-speaker-layouts-in-obs.md "mention")
 * [active-speaker-highlight-and-talking-indicators.md](active-speaker-highlight-and-talking-indicators.md "mention")
 * [how-to-mirror-a-video-while-full-screen-for-ipads-and-teleprompters.md](how-to-mirror-a-video-while-full-screen-for-ipads-and-teleprompters.md "mention")
