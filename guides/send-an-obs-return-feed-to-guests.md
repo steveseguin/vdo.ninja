@@ -86,6 +86,20 @@ The room-creation page exposes the same behavior as **Guests see only the direct
 
 <figure><img src="../.gitbook/assets/obs-return-broadcast-room-option.png" alt="VDO.Ninja room creation option for guests to see only the director's video"><figcaption><p>Broadcast mode limits the guest-facing video to the director's return while preserving guest-to-guest audio.</p></figcaption></figure>
 
+#### Video walkthrough: broadcast mode and the OBS return
+
+{% embed url="https://www.youtube.com/watch?v=QcFKI9q0yFs" %}
+Configure a broadcast-mode room, bring guests into OBS, and return OBS to those guests
+{% endembed %}
+
+This walkthrough uses an older version of the interface, but its overall room, OBS, Virtual Camera, and mix-minus workflow still applies. Useful sections include:
+
+* [Creating the room and enabling broadcast mode](https://www.youtube.com/watch?v=QcFKI9q0yFs&t=58s)
+* [Adding the room or individual guests to OBS](https://www.youtube.com/watch?v=QcFKI9q0yFs&t=312s)
+* [Returning OBS through Virtual Camera](https://www.youtube.com/watch?v=QcFKI9q0yFs&t=600s)
+* [Routing an OBS mix-minus through a virtual audio cable](https://www.youtube.com/watch?v=QcFKI9q0yFs&t=840s)
+* [Using Meshcast when direct fan-out becomes too demanding](https://www.youtube.com/watch?v=QcFKI9q0yFs&t=1162s)
+
 ### Option B: Use a dedicated return publisher
 
 A separate publisher keeps the return feed independent of the director's camera and control-center preview:
@@ -160,6 +174,12 @@ Guests can continue using `&broadcast` or `&directoronly`. Those parameters deci
 [`&meshcastbitrate`](../meshcast-settings/and-meshcastbitrate.md) controls the server-published camera bitrate. The room's `&trb` value does not change a Meshcast stream's bitrate. If the source is an actual VDO.Ninja screen share, use [`&mcscreensharebitrate`](../meshcast-settings/and-mcscreensharebitrate.md).
 
 Meshcast adds some latency and moves media through a third-party service, but it avoids multiplying the publisher's media upload for every viewer.
+
+{% embed url="https://www.youtube.com/watch?v=YxduINMXw1M" %}
+Understand P2P rooms, broadcast mode, and Meshcast server distribution
+{% endembed %}
+
+This 2021 overview remains useful for understanding the network topology, although its interface, server locations, limits, and standalone Meshcast.io examples may no longer match the current service. The most relevant sections are [broadcast-mode fan-out](https://www.youtube.com/watch?v=YxduINMXw1M&t=193s), [the server-relayed return concept](https://www.youtube.com/watch?v=YxduINMXw1M&t=360s), [integrated `&meshcast` publishing](https://www.youtube.com/watch?v=YxduINMXw1M&t=840s), and [the recommended director-to-guests layout](https://www.youtube.com/watch?v=YxduINMXw1M&t=1620s).
 
 ## Use a self-hosted or managed WHIP/WHEP service
 
