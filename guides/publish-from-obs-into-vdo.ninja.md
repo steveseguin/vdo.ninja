@@ -174,6 +174,8 @@ Try forcing the sender link with `&framerate=30` or `&framerate=60`, depending o
 
 ## Related
 
+To send that OBS output back to room participants, including larger-room relay options, see [Send an OBS return feed to guests](send-an-obs-return-feed-to-guests.md).
+
 If the OBS scene uses a physical webcam and VDO.Ninja also needs that same camera, see [Camera already in use by OBS or VDO.Ninja](../common-errors-and-known-issues/cant-load-camera-both-in-obs-and-vdon.md).
 
 ## Summary
