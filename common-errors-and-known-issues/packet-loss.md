@@ -37,6 +37,29 @@ An Ethernet connection is highly recommended over Wi-Fi.
 
 Sometimes two peers just can't get a good connection, while with other peers they can. This is often largely dependent on your ISPs, and it can be challenging to fix.
 
+### Common problem: one guest is bad only for one producer
+
+**Problem:** One remote guest will occasionally turn red, drop to a low video bitrate, and sound robotic to the producer, while another guest can still see and hear them normally. The computers and the rest of the room appear healthy.
+
+**Likely cause:** Each participant pair uses a separate connection. The affected guest can therefore have intermittent packet loss or congestion on their route to the producer while their route to another guest remains fine. This is especially plausible across continents or between ISPs with poor peering, and is usually a path-specific network problem rather than a PC-performance problem.
+
+**Solution that has worked in practice:** Add `&relay&tcp` to a dedicated producer-side view link for the affected guest where possible:
+
+```
+https://vdo.ninja/?view=STREAMID&relay&tcp
+```
+
+This forces that connection through a TURN relay over TCP, giving it a different route and avoiding a problematic or throttled direct UDP path. It can add latency, so target only the affected feed when practical and test it during a rehearsal. If the connection is already using a relay, `&relay` alone may not change the route; adding `&tcp` is the meaningful comparison.
+
+To confirm the diagnosis during an incident:
+
+1. Open [Mesh Network Debug](../guides/mesh-network-debug.md), click **Refresh** while the guest is speaking, and select the exact guest-to-producer arrow.
+2. Check its candidate path, available bandwidth, packet-loss deltas, NACKs, and PLIs.
+3. Try **Restart This ICE Path** before refreshing or reconnecting the entire room.
+4. Compare direct UDP, `&relay`, and `&relay&tcp`. A VPN endpoint near the producer or a different ISP/hotspot is another useful routing comparison.
+
+If `&relay&tcp` remains stable across multiple broadcasts, that is strong evidence of a route-specific UDP problem, although an intermittent issue cannot be proven from the workaround alone.
+
 * Host your OBS Studio on a premium cloud server, like Amazon AWS Workspaces or Google GCP. These providers have good networks optimized for most users to access, and hosting a VPN, TURN server, or the entire OBS Studio can help you control for network routing issues.
 * Forcing TURN relay servers into use may help at times; adding [`&relay`](../general-settings/and-relay.md) to the links can enable this mode. It may add some latency though, as the video traffic will take a longer, but different, network routing path that may be more reliable. Hosting your own TURN server on a local premium server, and specifying VDO.Ninja to use it, has been a good solution for some.
 * As mentioned above, you can also use a VPN, perhaps one with the server hosted on a local Google Cloud server or use a VPN service that offers local edge network access onto a premium network. If all guests connect via the VPN, you'll have more control over the routing quality.
