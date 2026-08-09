@@ -58,6 +58,7 @@
   * [Mobile uplinks with Starlink, cellular, and bonded networks](guides/mobile-uplink-starlink-cellular-bonding.md)
   * [Delay an incoming feed](guides/delay-an-incoming-feed.md)
   * [How to get permanent links](guides/how-to-get-permanent-links.md)
+  * [Large production rooms with isolated guest feeds](guides/large-production-rooms-with-isolated-guest-feeds.md)
   * [24/7 unattended operation](guides/24-7-unattended-operation.md)
   * [Basic hotkeys](guides/hotkey-support/README.md)
   * [MIDI, API and WebHID support](guides/midi-api-and-webhid-support.md)

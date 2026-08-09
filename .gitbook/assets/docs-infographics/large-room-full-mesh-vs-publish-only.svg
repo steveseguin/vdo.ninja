@@ -1,0 +1,85 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="660" viewBox="0 0 1200 660" role="img" aria-labelledby="title desc">
+	<title id="title">All-to-all room compared with publish-only production routing</title>
+	<desc id="desc">The left side shows guests connected to every other guest as well as production. The right side shows guests sending isolated feeds only to production, with no guest-to-guest media playback.</desc>
+	<defs>
+		<linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+			<stop offset="0" stop-color="#0b1225"/>
+			<stop offset="1" stop-color="#111b35"/>
+		</linearGradient>
+		<linearGradient id="good" x1="0" y1="0" x2="1" y2="0">
+			<stop offset="0" stop-color="#22d3ee"/>
+			<stop offset="1" stop-color="#8b5cf6"/>
+		</linearGradient>
+		<filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+			<feDropShadow dx="0" dy="8" stdDeviation="12" flood-color="#020617" flood-opacity=".35"/>
+		</filter>
+		<marker id="arrow" markerWidth="10" markerHeight="10" refX="9" refY="5" orient="auto" markerUnits="strokeWidth">
+			<path d="M0 0 10 5 0 10Z" fill="#22d3ee"/>
+		</marker>
+		<g id="person">
+			<circle cx="0" cy="-9" r="8" fill="currentColor"/>
+			<path d="M-14 16c1-12 6-18 14-18s13 6 14 18Z" fill="currentColor"/>
+		</g>
+	</defs>
+
+	<rect width="1200" height="660" rx="26" fill="url(#bg)"/>
+	<text x="48" y="54" fill="#f8fafc" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="30" font-weight="700">Room topology: conferencing vs. contribution</text>
+	<text x="48" y="80" fill="#94a3b8" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="16">The room mode determines who requests media from each publisher.</text>
+
+	<rect x="40" y="108" width="540" height="508" rx="22" fill="#121c33" stroke="#334155" filter="url(#shadow)"/>
+	<rect x="64" y="132" width="156" height="30" rx="15" fill="#fb7185" fill-opacity=".15"/>
+	<text x="142" y="153" text-anchor="middle" fill="#fda4af" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="13" font-weight="700" letter-spacing="1.1">ALL-TO-ALL ROOM</text>
+	<text x="64" y="194" fill="#f8fafc" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="22" font-weight="700">Every guest can request every guest</text>
+	<text x="64" y="220" fill="#94a3b8" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="15">More peer paths, decoders, audio routes, and publisher fan-out.</text>
+
+	<g stroke="#fb7185" stroke-opacity=".42" stroke-width="2">
+		<path d="M150 305L270 260L410 305L430 420L290 476L140 420Z"/>
+		<path d="M150 305L410 305M150 305L430 420M150 305L290 476"/>
+		<path d="M270 260L430 420M270 260L290 476M270 260L140 420"/>
+		<path d="M410 305L290 476M410 305L140 420"/>
+		<path d="M430 420L140 420"/>
+	</g>
+	<g font-family="Inter, Segoe UI, Arial, sans-serif" font-size="13" font-weight="700" text-anchor="middle">
+		<g transform="translate(150 305)"><circle r="34" fill="#202c48" stroke="#fb7185"/><g color="#fda4af" transform="translate(0 -2)"><use href="#person"/></g><text y="52" fill="#f8fafc">Guest 1</text></g>
+		<g transform="translate(270 260)"><circle r="34" fill="#202c48" stroke="#fb7185"/><g color="#fda4af" transform="translate(0 -2)"><use href="#person"/></g><text y="52" fill="#f8fafc">Guest 2</text></g>
+		<g transform="translate(410 305)"><circle r="34" fill="#202c48" stroke="#fb7185"/><g color="#fda4af" transform="translate(0 -2)"><use href="#person"/></g><text y="52" fill="#f8fafc">Guest 3</text></g>
+		<g transform="translate(430 420)"><circle r="34" fill="#202c48" stroke="#fb7185"/><g color="#fda4af" transform="translate(0 -2)"><use href="#person"/></g><text y="52" fill="#f8fafc">Guest 4</text></g>
+		<g transform="translate(290 476)"><circle r="34" fill="#202c48" stroke="#fb7185"/><g color="#fda4af" transform="translate(0 -2)"><use href="#person"/></g><text y="52" fill="#f8fafc">Guest 5</text></g>
+		<g transform="translate(140 420)"><circle r="34" fill="#202c48" stroke="#fb7185"/><g color="#fda4af" transform="translate(0 -2)"><use href="#person"/></g><text y="52" fill="#f8fafc">Guest 6</text></g>
+	</g>
+	<rect x="178" y="355" width="225" height="62" rx="15" fill="#311c32" stroke="#fb7185"/>
+	<text x="290" y="381" text-anchor="middle" fill="#fecdd3" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="14" font-weight="700">At 16 guests</text>
+	<text x="290" y="402" text-anchor="middle" fill="#f8fafc" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="15">up to 15 room peers per guest</text>
+	<rect x="64" y="552" width="492" height="42" rx="12" fill="#fb7185" fill-opacity=".09"/>
+	<text x="310" y="578" text-anchor="middle" fill="#fda4af" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="14" font-weight="600">Production connections are additional to the room mesh.</text>
+
+	<rect x="620" y="108" width="540" height="508" rx="22" fill="#121c33" stroke="#334155" filter="url(#shadow)"/>
+	<rect x="644" y="132" width="188" height="30" rx="15" fill="#22d3ee" fill-opacity=".13"/>
+	<text x="738" y="153" text-anchor="middle" fill="#67e8f9" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="13" font-weight="700" letter-spacing="1.1">PUBLISH-ONLY ROOM</text>
+	<text x="644" y="194" fill="#f8fafc" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="22" font-weight="700">Each feed goes straight to production</text>
+	<text x="644" y="220" fill="#94a3b8" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="15">No guest-to-guest media playback; production requests each ISO.</text>
+
+	<g font-family="Inter, Segoe UI, Arial, sans-serif" font-size="13" font-weight="700">
+		<g transform="translate(708 282)"><circle r="28" fill="#162a43" stroke="#22d3ee"/><g color="#67e8f9" transform="translate(0 -1) scale(.82)"><use href="#person"/></g><text x="44" y="5" fill="#f8fafc">Guest 1</text></g>
+		<g transform="translate(708 362)"><circle r="28" fill="#162a43" stroke="#22d3ee"/><g color="#67e8f9" transform="translate(0 -1) scale(.82)"><use href="#person"/></g><text x="44" y="5" fill="#f8fafc">Guest 2</text></g>
+		<g transform="translate(708 442)"><circle r="28" fill="#162a43" stroke="#22d3ee"/><g color="#67e8f9" transform="translate(0 -1) scale(.82)"><use href="#person"/></g><text x="44" y="5" fill="#f8fafc">Guest 3</text></g>
+		<g transform="translate(708 522)"><circle r="28" fill="#162a43" stroke="#22d3ee"/><g color="#67e8f9" transform="translate(0 -1) scale(.82)"><use href="#person"/></g><text x="44" y="5" fill="#f8fafc">Guest 4</text></g>
+	</g>
+	<g stroke="#22d3ee" stroke-width="3" fill="none" marker-end="url(#arrow)">
+		<path d="M804 282C860 282 862 330 910 330"/>
+		<path d="M804 362C852 362 860 354 910 354"/>
+		<path d="M804 442C852 442 860 378 910 378"/>
+		<path d="M804 522C860 522 862 402 910 402"/>
+	</g>
+	<rect x="924" y="270" width="196" height="202" rx="18" fill="#17233f" stroke="url(#good)" stroke-width="2"/>
+	<rect x="946" y="292" width="152" height="42" rx="10" fill="#8b5cf6" fill-opacity=".18"/>
+	<text x="1022" y="318" text-anchor="middle" fill="#c4b5fd" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="15" font-weight="700">Production system</text>
+	<g font-family="Inter, Segoe UI, Arial, sans-serif" font-size="13">
+		<rect x="946" y="350" width="152" height="24" rx="7" fill="#22d3ee" fill-opacity=".11"/><text x="1022" y="367" text-anchor="middle" fill="#e2e8f0">Input 1 · Guest 1</text>
+		<rect x="946" y="382" width="152" height="24" rx="7" fill="#22d3ee" fill-opacity=".11"/><text x="1022" y="399" text-anchor="middle" fill="#e2e8f0">Input 2 · Guest 2</text>
+		<rect x="946" y="414" width="152" height="24" rx="7" fill="#22d3ee" fill-opacity=".11"/><text x="1022" y="431" text-anchor="middle" fill="#e2e8f0">One ISO per guest</text>
+	</g>
+	<rect x="844" y="505" width="276" height="58" rx="14" fill="#22d3ee" fill-opacity=".09"/>
+	<text x="982" y="529" text-anchor="middle" fill="#67e8f9" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="14" font-weight="700">Guest links use bare &amp;view</text>
+	<text x="982" y="549" text-anchor="middle" fill="#cbd5e1" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="13">Only requested production paths remain.</text>
+</svg>

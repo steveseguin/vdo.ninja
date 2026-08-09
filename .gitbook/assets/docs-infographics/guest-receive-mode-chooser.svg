@@ -1,0 +1,51 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="500" viewBox="0 0 1200 500" role="img" aria-labelledby="title desc">
+	<title id="title">Choosing what remote guests receive</title>
+	<desc id="desc">A three-way choice between publish-only mode using view, private director return using directoronly, and director video with room audio using broadcast.</desc>
+	<defs>
+		<linearGradient id="bg2" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#0b1225"/><stop offset="1" stop-color="#151a35"/></linearGradient>
+		<filter id="s2" x="-20%" y="-20%" width="140%" height="140%"><feDropShadow dx="0" dy="8" stdDeviation="10" flood-color="#020617" flood-opacity=".35"/></filter>
+		<marker id="a2" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0 0 8 4 0 8Z" fill="#64748b"/></marker>
+	</defs>
+	<rect width="1200" height="500" rx="26" fill="url(#bg2)"/>
+	<text x="48" y="55" fill="#f8fafc" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="30" font-weight="700">Choose the guest return path</text>
+	<text x="48" y="82" fill="#94a3b8" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="16">Start with what each remote contributor actually needs to receive.</text>
+
+	<rect x="421" y="112" width="358" height="68" rx="18" fill="#202a46" stroke="#475569" filter="url(#s2)"/>
+	<text x="600" y="141" text-anchor="middle" fill="#f8fafc" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="18" font-weight="700">What should the guest receive?</text>
+	<text x="600" y="164" text-anchor="middle" fill="#94a3b8" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="14">Choose one mode for the guest invite.</text>
+
+	<g stroke="#64748b" stroke-width="2" fill="none" marker-end="url(#a2)">
+		<path d="M500 180C500 215 230 207 230 252"/>
+		<path d="M600 180V252"/>
+		<path d="M700 180C700 215 970 207 970 252"/>
+	</g>
+
+	<g font-family="Inter, Segoe UI, Arial, sans-serif" filter="url(#s2)">
+		<rect x="48" y="254" width="348" height="204" rx="20" fill="#12293a" stroke="#22d3ee"/>
+		<circle cx="86" cy="292" r="20" fill="#22d3ee" fill-opacity=".18"/><path d="M78 292h16M86 284v16" stroke="#67e8f9" stroke-width="2"/>
+		<text x="118" y="288" fill="#f8fafc" font-size="18" font-weight="700">Nothing remote</text>
+		<text x="118" y="310" fill="#94a3b8" font-size="13">Publish to production only</text>
+		<rect x="72" y="333" width="116" height="36" rx="10" fill="#22d3ee" fill-opacity=".16"/>
+		<text x="130" y="357" text-anchor="middle" fill="#67e8f9" font-size="17" font-weight="700">&amp;view</text>
+		<text x="72" y="397" fill="#e2e8f0" font-size="14">Lowest guest load and cleanest ISO routing.</text>
+		<text x="72" y="424" fill="#94a3b8" font-size="13">Best default for contribution-only events.</text>
+
+		<rect x="426" y="254" width="348" height="204" rx="20" fill="#211e3b" stroke="#8b5cf6"/>
+		<circle cx="464" cy="292" r="20" fill="#8b5cf6" fill-opacity=".2"/><path d="M456 292h16M464 284v16" stroke="#c4b5fd" stroke-width="2"/>
+		<text x="496" y="288" fill="#f8fafc" font-size="18" font-weight="700">Directors only</text>
+		<text x="496" y="310" fill="#94a3b8" font-size="13">Private production return</text>
+		<rect x="450" y="333" width="166" height="36" rx="10" fill="#8b5cf6" fill-opacity=".18"/>
+		<text x="533" y="357" text-anchor="middle" fill="#c4b5fd" font-size="17" font-weight="700">&amp;directoronly</text>
+		<text x="450" y="397" fill="#e2e8f0" font-size="14">Guests see and hear directors, not guests.</text>
+		<text x="450" y="424" fill="#94a3b8" font-size="13">Use for producer talkback or confidence video.</text>
+
+		<rect x="804" y="254" width="348" height="204" rx="20" fill="#30251c" stroke="#f59e0b"/>
+		<circle cx="842" cy="292" r="20" fill="#f59e0b" fill-opacity=".18"/><path d="M834 292h16M842 284v16" stroke="#fcd34d" stroke-width="2"/>
+		<text x="874" y="288" fill="#f8fafc" font-size="18" font-weight="700">Director video + room audio</text>
+		<text x="874" y="310" fill="#94a3b8" font-size="13">Panel-style conversation</text>
+		<rect x="828" y="333" width="148" height="36" rx="10" fill="#f59e0b" fill-opacity=".16"/>
+		<text x="902" y="357" text-anchor="middle" fill="#fcd34d" font-size="17" font-weight="700">&amp;broadcast</text>
+		<text x="828" y="397" fill="#e2e8f0" font-size="14">Other guest video is blocked.</text>
+		<text x="828" y="424" fill="#94a3b8" font-size="13">Guest-to-guest audio connections remain active.</text>
+	</g>
+</svg>
