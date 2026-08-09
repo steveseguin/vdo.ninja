@@ -45,6 +45,10 @@ The practical test URL is:
 
 `&vred` does not force a fixed video FEC percentage, does not force a specific parity rate, and does not guarantee that repair packets are sent. It is a negotiation preference.
 
+It also does not configure the native Ninja OBS Plugin publisher. That publisher does not offer video RED/ULPFEC or
+FlexFEC. Its **Packet Duplication** setting is an OBS-side control that sends best-effort delayed copies of selected RTP
+packets; it is not activated by `&vred` or `&pvred`.
+
 For normal WebRTC RTP video, VDO.Ninja currently does not expose a URL parameter that forces browser video parity/FEC data. The browser and its WebRTC stack decide whether repair packets are worth sending, and how much bandwidth they can spend.
 
 If you need a VDO.Ninja URL option that explicitly adds parity data, use the chunked/WebCodecs path instead:
@@ -174,4 +178,8 @@ For a stronger future implementation, VDO.Ninja could investigate `RTCRtpTransce
 
 {% content-ref url="../../newly-added-parameters/and-chunked.md" %}
 [and-chunked.md](../../newly-added-parameters/and-chunked.md)
+{% endcontent-ref %}
+
+{% content-ref url="../../guides/packet-loss-recovery-and-resilient-media.md" %}
+[packet-loss-recovery-and-resilient-media.md](../../guides/packet-loss-recovery-and-resilient-media.md)
 {% endcontent-ref %}

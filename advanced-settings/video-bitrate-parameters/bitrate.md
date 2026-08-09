@@ -37,6 +37,10 @@ The maximum achievable bitrate is around 60,000-kbps (60-mbps).
 
 **Lowering** the bitrate can sometimes **reduce CPU load**, **bandwidth**, and **stuttering** issues
 
+{% hint style="info" %}
+Camera-video targets of **600-kbps or lower** intentionally enable bitrate-based resolution scaling, reducing encoder work and CPU usage as well as bandwidth. For example, a 1280x720 source may be reduced to about 640x360 at 600-kbps; lower targets can scale it down further. At 601-kbps and above, this particular bitrate-based resolution reduction is removed, although other resolution and congestion limits can still apply.
+{% endhint %}
+
 You might want to increase the bitrate for game streams, to ensure smooth frame rates.
 
 {% hint style="danger" %}

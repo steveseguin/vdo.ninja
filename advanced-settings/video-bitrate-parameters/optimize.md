@@ -12,17 +12,31 @@ Viewer-Side Option! ([`&view`](../view-parameters/view.md), [`&scene`](../view-p
 
 Example: `&optimize=1000`
 
-| Value            | Description                                                           |
-| ---------------- | --------------------------------------------------------------------- |
-| (integer value)  | value in kbps                                                         |
-| (no value given) | 600-kbps                                                              |
-| `0`              | disables the video track when not considered visible in a scene (OBS) |
+| Value                         | Description                                                           |
+| ----------------------------- | --------------------------------------------------------------------- |
+| Parameter omitted             | optimization is off                                                   |
+| `&optimize` or `&optimize=0`  | disables the video track while it is not visible in a scene (OBS)     |
+| Positive integer, such as 600 | hidden-source bitrate in kbps                                         |
 
 ## Details
 
-`&optimize` reduces the video bitrate to 600-kbps when the video is not visible in OBS (not active in a scene). This is mainly there to help with reducing load for OBS and for guests. It can take a few seconds for the bitrate to ramp back up after it becomes active again.
+`&optimize` reduces the work done for a video source while OBS is not showing it. It is a viewer-side option, so add it to the OBS view or scene URL.
 
+In simple terms:
 
+1. OBS hides the source or switches away from its scene.
+2. VDO.Ninja lowers that connection to the bitrate specified by `&optimize`.
+3. When OBS shows the source again, VDO.Ninja restores its previous bitrate and resolution and requests a fresh keyframe.
+
+If the parameter is omitted, this visibility-based optimization is disabled. If `&optimize` is included without a number, the code treats it as `&optimize=0`: the video track is deactivated while hidden and resumed when visible.
+
+A positive value keeps the video connected at reduced quality instead of turning it off. For example, `&optimize=600` keeps the hidden source running at up to 600-kbps. Values around 300 to 600-kbps are a useful middle ground for frequent scene switching: they reduce CPU and bandwidth while generally resuming faster and more cleanly than `0` or extremely low values.
+
+It can still take a few seconds for quality to ramp back up after a source becomes visible.
+
+{% hint style="warning" %}
+Very low values, such as `&optimize=35` or `&optimize=50`, cause aggressive bitrate and resolution changes. Some H264 hardware encoders can resume to a black frame when OBS makes the source visible again; `&optimize=0`, which deactivates the track while hidden, can be especially prone to this. If this happens, try `&codec=vp8` and/or use a non-zero floor of about 300 to 600-kbps for frequent scene switching.
+{% endhint %}
 
 ### Consider using \&optimize=0&#x20;
 

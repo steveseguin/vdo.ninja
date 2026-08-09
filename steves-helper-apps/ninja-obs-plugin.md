@@ -20,6 +20,25 @@ The Ninja OBS Plugin adds native VDO.Ninja publishing and receiving tools to OBS
 * support for OBS v32 systems, including Windows, macOS, and Linux
 * can auto-add room participants into OBS as browser sources
 * experimental native VP9/H.264/Opus receiver with dual-track VP9 alpha support
+* automatic paced video NACK repair, with optional packet duplication, Audio RED, and REMB adaptation for advanced loss testing
+
+## Packet-loss protection
+
+Leave **Packet Duplication** set to **Off** for the normal starting point. Video NACK retransmission, paced sending, and
+the plugin's two-second keyframe safety limit still operate while duplication is off.
+
+The optional modes add delayed copies of selected video RTP packets:
+
+* **Low:** keyframe packets, up to 20% best-effort extra video traffic
+* **Medium:** keyframes plus one quarter of delta packets, up to 50% extra
+* **High:** every packet can receive one copy, up to 100% extra
+
+These modes are packet duplication, not video RED, ULPFEC, FlexFEC, or RTX. **Audio RED** is a separate negotiated
+option that can carry one previous Opus frame. **Adaptive Bitrate from REMB** tries to avoid congestion by lowering a
+supported OBS encoder; it does not repair a missing packet.
+
+For the exact NACK cache, timing, bandwidth/fan-out costs, mode-selection guidance, receiver limitations, and the reason
+H.264 ULPFEC is not offered, see [Advanced packet-loss recovery and resilient media](../guides/packet-loss-recovery-and-resilient-media.md#ninja-obs-plugin).
 
 ## Receive transparent Game Capture video
 
@@ -39,3 +58,4 @@ See [Using Game Capture and Spout2 with VDO.Ninja](../guides/using-game-capture-
 * positioned as a simpler publishing workflow than relying on a separate browser publisher
 * useful for non-Windows users who want an OBS-native publishing workflow, since the standalone Game Capture app is currently Windows-only
 * **Use Native Receiver (Experimental)** is required for the dual-track VP9 alpha workflow
+* packet protection is applied per direct viewer, so its upload cost grows with P2P fan-out

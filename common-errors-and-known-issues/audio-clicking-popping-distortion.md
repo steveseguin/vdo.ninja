@@ -103,7 +103,8 @@ Ensure your Mac is plugged into a power outlet, not running on battery power.
    * Add `&relay&tcp` to the VDO.Ninja publishing link. Example: `https://vdo.ninja/?webcam&relay&tcp`
 3. Enable RED audio mode:
    * Add to `&audiocodec=red` the viewer-side links
-   * This will switch from OPUS Forward Error Correcting to OPUS Redundancy mode
+   * This asks the browser to negotiate RFC 2198 RED carrying Opus payloads. RED wrapping and Opus in-band FEC are
+     different mechanisms; browser negotiation decides what is actually used.
 
 ### Meshcast /WHIP / WHEP / Servers
 

@@ -9,4 +9,7 @@ Viewer-Side Option! ([`&view`](../view-parameters/view.md), [`&scene`](../view-p
 ## Details
 
 &#x20;`&nofec` on the viewer side can disable audio forward error correction (FEC). I show the audio codec now used in the stats, along with whether FEC is on or not (on by default).\
+
+This flag applies to the VDO.Ninja browser path. It does not disable the Ninja OBS Plugin's automatic video NACK
+retransmission and does not configure the plugin's separate **Audio RED** or **Packet Duplication** settings.
 ![](<../../.gitbook/assets/image (2) (5).png>)

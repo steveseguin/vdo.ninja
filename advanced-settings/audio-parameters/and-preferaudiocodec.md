@@ -46,6 +46,12 @@ https://vdo.ninja/?push=streamID&whipout=whipserver&preferaudiocodec=g722
 * This is an advanced parameter mainly for debugging or specific use cases
 * WHIP servers may require specific codecs
 
+{% hint style="info" %}
+The native Ninja OBS Plugin has its own **Audio RED (Experimental)** setting. When enabled, it offers RFC 2198 RED and
+can carry one previous Opus frame with the current frame; each viewer either selects that mapping or falls back to plain Opus.
+`&preferaudiocodec=red` configures a VDO.Ninja browser publisher and does not turn on the plugin setting.
+{% endhint %}
+
 #### **Related Parameters**
 
 * [`&audiocodec`](../audio-parameters/minptime-1.md) - Forces a specific audio codec (viewer-side)

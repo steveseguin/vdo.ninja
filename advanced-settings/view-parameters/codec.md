@@ -68,6 +68,10 @@ Hardware-encoding has pros and cons. A device generally has limited hardware-enc
 
 H264 may offer hardware encoding for better battery life with mobile and embedded devices. In these causes, it is often used automatically by VDO.Ninja. Support for H264 on Android devices is hit and miss though, so if enabling it, be prepared for it to potentially result in no video playback.
 
+{% hint style="warning" %}
+Some H264 hardware encoders can resume to a black frame after a live bitrate or resolution change. This can be exposed by [`&optimize`](../video-bitrate-parameters/optimize.md) when OBS hides and then shows a source, especially with `&optimize=0` or a very low value. If the video remains black after a scene switch, try `&codec=vp8`; if H264 is required, a non-zero optimize floor of about 300 to 600-kbps may be more reliable.
+{% endhint %}
+
 iOS devices should generally use H264, but the max resolution supported then is 1280x720p30 with iOS 14 and under. With iOS 15, 1080p30 is supported, but I'm not entirely sure if 1080p30 is hardware-encoded as the phone will get quite warm at that resolution.
 
 macOS systems generally prefer H264 and will sometimes hardware-encode. It seems to use less CPU resources decoding H264 versus other codecs, so give it a go if facing CPU issues on your mac.

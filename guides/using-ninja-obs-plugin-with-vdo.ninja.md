@@ -35,6 +35,22 @@ You might use the plugin to:
 * bring VDO.Ninja guests into OBS more directly
 * simplify a recording or production setup that otherwise needs many browser tabs
 
+## Loss-protection settings
+
+Start with **Packet Duplication: Off**. The plugin's video NACK retransmission and pacing are automatic; `Off` only
+disables proactive duplicate packets.
+
+Use **Low** for keyframe protection when isolated random loss remains and the uplink has spare capacity. **Medium** adds
+copies of selected delta packets. **High** can send every video packet twice and should be reserved for measured loss on
+a route that can sustain nearly double the video traffic. The cost is per direct viewer.
+
+**Audio RED** and **Adaptive Bitrate from REMB** are separate default-off options. Audio RED carries a previous Opus
+frame when the viewer negotiates it. Adaptive bitrate reduces a supported OBS encoder when receiver estimates fall; it
+is congestion avoidance rather than packet repair.
+
+The plugin does not generate video RED/ULPFEC or FlexFEC. See the [advanced packet-loss reference](packet-loss-recovery-and-resilient-media.md#ninja-obs-plugin)
+for the protocol distinctions, exact timing and cache limits, native-receiver limitations, and testing guidance.
+
 ## Before using it live
 
 Do a short test before the real session:

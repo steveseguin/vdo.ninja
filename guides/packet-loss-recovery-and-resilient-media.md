@@ -71,6 +71,10 @@ RED is an RTP payload container. It can place a current payload and one or more 
 
 Audio RED commonly carries the previous Opus generation and can approach twice the normal audio bitrate. Video RED is more complicated: browsers may pair the RED container with parity data, may use little redundancy, or may decline to send repair data after it was negotiated. VDO.Ninja's normal video RED flags change negotiation preference; they do not force a duplicate stream or a fixed repair percentage.
 
+The Ninja OBS Plugin's **Packet Duplication** setting is deliberately different. It can send a later copy of the same
+RTP packet with the same sequence number; `High` can do this for every video packet. It is labeled duplication rather
+than RED/FEC so the wire behavior is not confused with browser SDP negotiation or parity repair.
+
 By comparison:
 
 * **RTX** sends a missing packet only after a NACK.
@@ -527,9 +531,10 @@ These details describe the current source implementations reviewed for this guid
 | Video NACK | Yes | Yes | H.264/H.265/AV1 paths | Yes; newer builds pace original-packet repair | Does not generate NACK |
 | Actual RFC RTX stream | Normally yes | No | No | No | Can normalize offered incoming RTX |
 | PLI recovery | Yes | Advertised, but no encoder callback in this output | Wired for H.264/H.265/AV1 | Next scheduled live IDR, normally within two seconds; no on-demand OBS callback | Sends PLI on connect and decoder errors |
-| Video RED/FEC recovery | Browser dependent | No | No | No negotiated video RED/FEC; newer builds offer opt-in paced packet duplication | RED primary extraction only; no redundant-block repair |
+| Video RED/FEC recovery | Browser dependent | No | No | No negotiated video RED/FEC; v1.1.60+ offers opt-in paced packet duplication | RED primary extraction only; no redundant-block repair |
+| Proactive video packet duplication | Browser controlled, not exposed as this fixed policy | No | No | Default-off Low/Medium/High best-effort copies | Not applicable |
 | Opus FEC | Normally browser controlled | Negotiated; plugin does not configure the OBS encoder's loss controls | Advertised, but current encoder does not enable it | Depends on OBS Opus encoder; plugin does not configure it | Decodes Opus; no extra repair layer |
-| Audio RED | Browser dependent | No | No | Opt-in RFC 2198 RED in newer builds, with per-viewer plain-Opus fallback | Not implemented in the native receive path |
+| Audio RED | Browser dependent | No | No | Opt-in RFC 2198 RED in v1.1.60+, with per-viewer plain-Opus fallback | Not implemented in the native receive path |
 | TURN | Automatic list and escalation; force by URL | WHIP endpoint can provide ICE servers | UI modes, fetched VDO TURN list | Custom TURN must be supplied | Same custom ICE settings |
 | SFU | `&meshcast` | WHIP endpoint may be an SFU | No native SFU mode | No native SFU mode | Not applicable |
 | Chunked media | Opt-in | No | No | No | No |
@@ -705,12 +710,26 @@ The OBS service disables B-frames, repeats headers, and clamps the keyframe inte
 
 ### Native publisher recovery
 
-The settings **Packet Duplication (Experimental)**, **Audio RED (Experimental)**, and **Adaptive Bitrate from REMB (Experimental)** identify the newer resilience-capable publisher described below. Older plugin builds use a 512-packet cache, an approximately ten-times-rate pacer, and do not provide those opt-in controls.
+Plugin v1.1.60 and later provide **Packet Duplication (Experimental)**, **Audio RED (Experimental)**, and **Adaptive Bitrate from REMB (Experimental)**. The older 512-packet direct NACK responder and transitional approximately ten-times-rate pacer are not the current implementation.
+
+The three settings are not one combined FEC switch:
+
+| Behavior | Active with protection `Off`? | Purpose |
+| --- | --- | --- |
+| Video NACK and original-packet retransmission | Yes | Reactive repair after a viewer reports a missing RTP sequence number |
+| Frame-aware RTP pacing and whole-frame queue protection | Yes | Avoid keyframe bursts, audio starvation, and deliberately partial frames |
+| PLI/FIR handling and two-second keyframe clamp | Yes | Bound decoder recovery when packet repair is not possible |
+| Packet Duplication | No; default-off | Proactively send selected video RTP packets a second time |
+| Audio RED | No; default-off | Carry one previous Opus frame with the current frame when negotiated |
+| Adaptive Bitrate from REMB | No; default-off | Reduce a supported OBS encoder before persistent congestion collapses the route |
+
+`Off` therefore means **no proactive duplicate video traffic**. It does not disable NACK, pacing, PLI, or the keyframe
+limit.
 
 The newer publisher uses:
 
 * a video original-RTP cache bounded by 2048 packets, 4 MiB, and two seconds;
-* paced NACK repair with a separate repair allowance and a short playback deadline;
+* paced NACK repair with a separate repair allowance and a 500 ms deadline;
 * a frame-aware token-bucket pacer at approximately twice the encoder rate, with two-millisecond scheduling and a small shared fan-out burst allowance;
 * whole-frame admission and queue relief rather than deliberate partial-frame transmission;
 * RTP sequence-number reclamation when an assigned but entirely unsent queue tail is discarded;
@@ -732,6 +751,58 @@ The publisher does not emit an RTX stream or negotiated video RED, ULPFEC, or Fl
 * **Audio RED** negotiates RFC 2198 and carries the current and previous Opus frame when the individual viewer accepts RED; other viewers receive ordinary Opus.
 
 Copies are delayed, paced, lower priority than live media, and allowed to expire instead of extending the live queue. Packet duplication is not RTP RED or parity FEC. Its bandwidth limits are additional to the configured encoded-video target, so include them in the route and fan-out budget. The audio path does not normally negotiate audio NACK, and actual Opus in-band FEC still depends on the OBS encoder.
+
+#### Choosing a Packet Duplication mode
+
+| Mode | Selected packets | Best-effort extra video traffic | Practical use |
+| --- | --- | --- | --- |
+| **Off** | None; automatic NACK still operates | None while the route is clean | Default and first test |
+| **Low** | Every keyframe packet | Up to 20% | Isolated loss damages keyframes, with limited spare upload |
+| **Medium** | Every keyframe packet and every fourth delta packet | Up to 50% | Measured random loss remains after bitrate is brought below capacity |
+| **High** | Every video packet can receive one copy | Up to 100% | Controlled testing with enough capacity to nearly double video traffic |
+
+`High` is the closest mode to “send every packet twice.” It never schedules more than one optional copy of a packet.
+The scheduler has a small internal High-mode packetization allowance so copies selected near keyframe bursts can still
+meet their deadline; this is pacing headroom, not a third transmission.
+
+Each copy retains the primary packet's RTP payload, timestamp, SSRC, and sequence number. It becomes eligible 15 ms
+after the primary was sent and expires after 250 ms. Copies use only idle live-media capacity and remain below NACK
+repair in scheduler priority. These details make the feature best-effort duplicate delivery, not negotiated RTX, RED,
+ULPFEC, or FlexFEC.
+
+Direct peer-to-peer fan-out multiplies this cost. A 4 Mbps publisher with three full-quality viewers is already roughly
+12 Mbps of video upload before audio, RTP/DTLS overhead, NACK repairs, and protection traffic. High duplication can
+approach another 12 Mbps. Extra traffic cannot create capacity on a saturated uplink.
+
+#### Audio RED versus Opus FEC
+
+The plugin's **Audio RED** option offers RFC 2198 RED alongside normal Opus. If an individual viewer selects the RED
+mapping, the current RED RTP payload contains the current Opus generation and, when available, one previous Opus
+generation. A viewer that declines the mapping receives plain Opus, so fallback is per peer.
+
+This is different from Opus in-band FEC. Opus FEC is generated inside the encoder and encodes information about an
+earlier frame into a later Opus frame. RFC 2198 RED wraps already encoded payload generations outside the encoder. The
+plugin does not configure OBS's Opus packet-loss percentage, so do not infer active Opus in-band FEC merely from the
+plugin's Audio RED setting.
+
+#### Why video RED/ULPFEC is not offered
+
+The plugin and its libdatachannel media-handler path do not contain a video ULPFEC or FlexFEC generator. Advertising
+`red` and `ulpfec` payload types in SDP would therefore negotiate labels without producing valid parity repair packets.
+
+There is also a specific H.264-with-NACK constraint in the browser stack. Current libwebrtc sender logic disables
+RED/ULPFEC when NACK is enabled for payloads such as H.264 that lack the picture-ID behavior used to skip unnecessary
+FEC retransmission. In that combination, FEC packets can themselves need retransmission, reducing the value of the
+added bandwidth. This is not proof that every browser receiver rejects correctly generated H.264 FEC, but it is why an
+SDP capability list is not recovery evidence.
+
+A shippable implementation requires a native generator, correct payload/SSRC/sequence and pacing behavior, safe
+per-viewer fallback, and induced-loss tests proving decoded-frame recovery in supported Chromium, Firefox, and WebKit
+receivers. FlexFEC is the preferred future H.264 candidate because libwebrtc's H.264-with-NACK ULPFEC restriction does
+not apply to FlexFEC. Until those tests pass, **Packet Duplication** is the accurate product label.
+
+Browser URL options such as `&vred` and `&pvred` are separate VDO.Ninja browser negotiation preferences. They do not
+enable the plugin's packet duplication settings and cannot make the native plugin publisher generate ULPFEC.
 
 Adaptive bitrate is also default-off. When enabled with a dynamically adjustable OBS encoder, it uses the lowest fresh REMB estimate across the connected viewers, applies conservative staged changes to both the encoder and pacer, enforces a configured floor, and restores the original bitrate when publishing stops. Unsupported encoders fail closed instead of being repeatedly reconfigured.
 
@@ -939,4 +1010,6 @@ For most productions:
 * [RFC 5109: Generic RTP forward error correction](https://www.rfc-editor.org/rfc/rfc5109)
 * [RFC 6716: Opus](https://www.rfc-editor.org/rfc/rfc6716)
 * [RFC 8656: TURN](https://www.rfc-editor.org/rfc/rfc8656)
+* [libwebrtc video sender RED/ULPFEC and FlexFEC selection](https://chromium.googlesource.com/external/webrtc/+/master/call/rtp_video_sender.cc)
+* [libwebrtc video receiver RED/ULPFEC path](https://chromium.googlesource.com/external/webrtc/+/master/video/rtp_video_stream_receiver.cc)
 * [RFC 9725: WHIP](https://www.rfc-editor.org/rfc/rfc9725)
