@@ -15,7 +15,7 @@ flowchart LR
     G1[Guest cameras] --> R[VDO.Ninja room]
     R -->|clean Scene link| O[OBS scene]
     O -->|OBS Virtual Camera| D[Director's return video]
-    D -->|direct or through Meshcast 2| G2[What guests watch]
+    D -->|direct or through Meshcast v2| G2[What guests watch]
     N[Keep the director return out of the OBS Scene] -. prevents the hall-of-mirrors effect .-> O
 ```
 
@@ -79,7 +79,7 @@ With this link, guests see the main director's video instead of receiving every 
 Do not send the complete OBS audio mix back to the guests. They may hear themselves with a delay. The safest starting point is to let VDO.Ninja handle the microphones and use OBS Virtual Camera for the finished picture.
 {% endhint %}
 
-## 4. Optional: send the return through Meshcast 2
+## 4. Optional: send the return through Meshcast v2
 
 For a small room, the direct setup above is usually the simplest and has the least delay. As more guests join, the director must send more copies of the return video.
 
@@ -99,7 +99,7 @@ OBS:   https://vdo.ninja/?scene&room=YOUR_ROOM
 VDO.Ninja handles the connection to Meshcast automatically. The director still selects OBS Virtual Camera in VDO.Ninja, and guests still use their normal broadcast-mode invites.
 
 {% hint style="info" %}
-`&meshcast2` is a temporary name for selecting the newer Meshcast 2 service while Meshcast 1 is still available. When Meshcast 1 is retired, this distinction may be simplified or renamed.
+`&meshcast2` is a temporary name for selecting the newer Meshcast v2 service while Meshcast v1 is still available. When Meshcast v1 is retired, this distinction may be simplified or renamed.
 {% endhint %}
 
 Meshcast usually adds a little more delay, but it reduces the number of return-video copies the director must upload.
@@ -114,7 +114,7 @@ Guest:    https://vdo.ninja/?room=YOUR_ROOM&broadcast
 OBS:      https://vdo.ninja/?scene&room=YOUR_ROOM
 ```
 
-### Larger room: return through Meshcast 2
+### Larger room: return through Meshcast v2
 
 ```text
 Director: https://vdo.ninja/?director=YOUR_ROOM&meshcast2
@@ -195,7 +195,7 @@ If guests must hear sound from OBS, use a carefully prepared audio return that l
 | Guests still see individual cameras | Make sure their invite contains `&broadcast`, or `&broadcast=RETURN` when using a separate return source. |
 | Guests see no OBS return | Start OBS Virtual Camera, enable the director's video, and select OBS Virtual Camera in VDO.Ninja. |
 | Guests hear themselves delayed | Stop sending the full OBS audio mix. Use headphones and keep only one audio return path. |
-| A shared webpage causes echo | Mute the webpage player or use headphones. Prefer the director or Meshcast 2 return method. |
+| A shared webpage causes echo | Mute the webpage player or use headphones. Prefer the director or Meshcast v2 return method. |
 | The return has too much delay | For a small room, remove `&meshcast2` and test the direct return. |
 
 ## Related guides
