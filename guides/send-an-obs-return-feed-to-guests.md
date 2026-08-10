@@ -4,6 +4,10 @@ description: Send OBS Program, Preview, a dedicated scene, or a source back to r
 
 # Send an OBS return feed to guests
 
+{% hint style="info" %}
+Looking for the simplest setup? Start with [Let guests see your finished OBS scene](let-guests-see-your-obs-scene.md). This page continues with the more detailed routing and server options.
+{% endhint %}
+
 A **return feed**, sometimes called a program return or confidence feed, is the video and audio sent back to remote participants so they can follow the production. It can be the public program output, but it does not have to be. OBS can return its Program output, Preview output, a dedicated scene, or even one source.
 
 There are three separate choices in this workflow:

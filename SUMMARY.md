@@ -100,6 +100,7 @@
   * [Twilio phone call-in setup](guides/twilio-phone-call-in-setup.md)
   * [How to control VDO.Ninja with Touch Portal](guides/hotkey-support/how-to-control-vdo.ninja-with-touch-portal.md)
   * [How to publish from OBS into VDO.Ninja](guides/publish-from-obs-into-vdo.ninja.md)
+  * [Let guests see your finished OBS scene](guides/let-guests-see-your-obs-scene.md)
   * [Send an OBS return feed to guests](guides/send-an-obs-return-feed-to-guests.md)
   * [Using the Ninja OBS Plugin with VDO.Ninja](guides/using-ninja-obs-plugin-with-vdo.ninja.md)
   * [How to screen share your iPhone/iPad](guides/screen-share-your-iphone-ipad.md)
