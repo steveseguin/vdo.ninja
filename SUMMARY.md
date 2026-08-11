@@ -739,7 +739,7 @@
   * [No video in OBS, just an "Add camera" button](common-errors-and-known-issues/no-video-in-obs-just-an-add-camera-button.md)
   * [Audio over VDO.Ninja isn't working](common-errors-and-known-issues/audio-over-vdo.ninja-isnt-working.md)
   * [Loading circle shows in OBS or browser](common-errors-and-known-issues/loading-circle-shows-in-obs-or-browser.md)
-  * [Appearing then disappearing guest](common-errors-and-known-issues/appearing-then-disappearing-guest.md)
+  * [Guest appears but no video or audio connects](common-errors-and-known-issues/appearing-then-disappearing-guest.md)
   * [Can't auto-start screen sharing](common-errors-and-known-issues/cant-auto-start-screen-sharing.md)
   * [Audio Clicking / Popping / Distortion](common-errors-and-known-issues/audio-clicking-popping-distortion.md)
   * [Outbound OBS stream audio is crackling](common-errors-and-known-issues/outbound-obs-stream-audio-crackling.md)

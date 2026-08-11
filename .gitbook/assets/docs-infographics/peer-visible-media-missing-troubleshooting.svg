@@ -1,0 +1,137 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="720" viewBox="0 0 1200 720" role="img" aria-labelledby="title desc">
+	<title id="title">Troubleshooting a participant who appears in a room without media</title>
+	<desc id="desc">Room signaling succeeds between two participants, but the direct WebRTC media path fails. A five-step recovery sequence tests a clean link, a different network, TURN relay, TURN relay over TCP, and the alpha preview. A separate note covers video-only codec failures.</desc>
+	<defs>
+		<linearGradient id="background" x1="0" y1="0" x2="1" y2="1">
+			<stop stop-color="#0b1225"/>
+			<stop offset="1" stop-color="#151a35"/>
+		</linearGradient>
+		<linearGradient id="mediaLine" gradientUnits="userSpaceOnUse" x1="290" y1="218" x2="910" y2="218">
+			<stop stop-color="#fb7185"/>
+			<stop offset=".48" stop-color="#f43f5e"/>
+			<stop offset="1" stop-color="#fb7185"/>
+		</linearGradient>
+		<filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+			<feDropShadow dx="0" dy="8" stdDeviation="11" flood-color="#020617" flood-opacity=".38"/>
+		</filter>
+		<marker id="cyanArrow" markerWidth="9" markerHeight="9" refX="8" refY="4.5" orient="auto">
+			<path d="M0 0 9 4.5 0 9Z" fill="#22d3ee"/>
+		</marker>
+		<marker id="greyArrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto">
+			<path d="M0 0 8 4 0 8Z" fill="#64748b"/>
+		</marker>
+		<g id="person">
+			<circle cx="0" cy="-10" r="10" fill="currentColor"/>
+			<path d="M-18 19c1-15 7-22 18-22s17 7 18 22Z" fill="currentColor"/>
+		</g>
+	</defs>
+
+	<rect width="1200" height="720" rx="26" fill="url(#background)"/>
+	<text x="48" y="55" fill="#f8fafc" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="30" font-weight="700">The room sees the peer, but the media path fails</text>
+	<text x="48" y="82" fill="#94a3b8" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="16">Signaling and audio/video use different paths and can fail independently.</text>
+
+	<g filter="url(#shadow)" font-family="Inter, Segoe UI, Arial, sans-serif">
+		<rect x="48" y="116" width="242" height="132" rx="20" fill="#15263d" stroke="#22d3ee"/>
+		<circle cx="100" cy="166" r="30" fill="#22d3ee" fill-opacity=".16" stroke="#22d3ee"/>
+		<g color="#67e8f9" transform="translate(100 168)"><use href="#person"/></g>
+		<text x="148" y="158" fill="#f8fafc" font-size="18" font-weight="700">Participant A</text>
+		<text x="148" y="181" fill="#94a3b8" font-size="14">Room joined</text>
+		<text x="72" y="221" fill="#cbd5e1" font-size="14">Waiting for remote media</text>
+
+		<rect x="478" y="110" width="244" height="80" rx="18" fill="#17233f" stroke="#8b5cf6"/>
+		<text x="600" y="141" text-anchor="middle" fill="#f8fafc" font-size="17" font-weight="700">Room signaling</text>
+		<text x="600" y="165" text-anchor="middle" fill="#c4b5fd" font-size="14">Peer discovered successfully</text>
+
+		<rect x="910" y="116" width="242" height="132" rx="20" fill="#15263d" stroke="#22d3ee"/>
+		<circle cx="962" cy="166" r="30" fill="#22d3ee" fill-opacity=".16" stroke="#22d3ee"/>
+		<g color="#67e8f9" transform="translate(962 168)"><use href="#person"/></g>
+		<text x="1010" y="158" fill="#f8fafc" font-size="18" font-weight="700">Participant B</text>
+		<text x="1010" y="181" fill="#94a3b8" font-size="14">Listed in room</text>
+		<text x="934" y="221" fill="#cbd5e1" font-size="14">Not Visible / buffering</text>
+	</g>
+
+	<g stroke="#22d3ee" stroke-width="3" fill="none" marker-end="url(#cyanArrow)">
+		<path d="M290 148H468"/>
+		<path d="M722 148H900"/>
+	</g>
+	<circle cx="338" cy="148" r="12" fill="#083344" stroke="#22d3ee"/>
+	<path d="M332 148l4 4 8-9" fill="none" stroke="#67e8f9" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+	<circle cx="862" cy="148" r="12" fill="#083344" stroke="#22d3ee"/>
+	<path d="M856 148l4 4 8-9" fill="none" stroke="#67e8f9" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+
+	<path d="M290 218H910" fill="none" stroke="url(#mediaLine)" stroke-width="4" stroke-dasharray="12 10"/>
+	<circle cx="600" cy="218" r="25" fill="#3b1724" stroke="#fb7185" stroke-width="2"/>
+	<path d="M590 208l20 20m0-20-20 20" stroke="#fda4af" stroke-width="4" stroke-linecap="round"/>
+	<rect x="428" y="257" width="344" height="56" rx="15" fill="#3b1724" stroke="#fb7185"/>
+	<text x="600" y="280" text-anchor="middle" fill="#fecdd3" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="15" font-weight="700">Direct WebRTC media path failed</text>
+	<text x="600" y="300" text-anchor="middle" fill="#fda4af" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="13">ICE, NAT, firewall, UDP, or Internet routing</text>
+
+	<text x="48" y="358" fill="#f8fafc" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="21" font-weight="700">Test one change at a time</text>
+	<text x="1152" y="358" text-anchor="end" fill="#94a3b8" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="14">Stop when the connection becomes stable.</text>
+
+	<g stroke="#64748b" stroke-width="2" fill="none" marker-end="url(#greyArrow)">
+		<path d="M258 454H278"/>
+		<path d="M480 454H500"/>
+		<path d="M702 454H722"/>
+		<path d="M924 454H944"/>
+	</g>
+
+	<g font-family="Inter, Segoe UI, Arial, sans-serif" filter="url(#shadow)">
+		<g transform="translate(48 382)">
+			<rect width="210" height="145" rx="18" fill="#17233f" stroke="#475569"/>
+			<circle cx="30" cy="31" r="17" fill="#64748b" fill-opacity=".25"/>
+			<text x="30" y="37" text-anchor="middle" fill="#e2e8f0" font-size="15" font-weight="700">1</text>
+			<text x="56" y="35" fill="#f8fafc" font-size="16" font-weight="700">Clean state</text>
+			<text x="20" y="75" fill="#cbd5e1" font-size="13">Fresh room link</text>
+			<text x="20" y="98" fill="#cbd5e1" font-size="13">Close duplicate tabs</text>
+			<text x="20" y="121" fill="#94a3b8" font-size="12">Check permissions</text>
+		</g>
+
+		<g transform="translate(270 382)">
+			<rect width="210" height="145" rx="18" fill="#122a3c" stroke="#22d3ee"/>
+			<circle cx="30" cy="31" r="17" fill="#22d3ee" fill-opacity=".18"/>
+			<text x="30" y="37" text-anchor="middle" fill="#67e8f9" font-size="15" font-weight="700">2</text>
+			<text x="56" y="35" fill="#f8fafc" font-size="16" font-weight="700">Switch route</text>
+			<text x="20" y="75" fill="#cbd5e1" font-size="13">Wi-Fi ↔ cellular</text>
+			<text x="20" y="98" fill="#cbd5e1" font-size="13">Disable VPN / filter</text>
+			<text x="20" y="121" fill="#94a3b8" font-size="12">Restart browser</text>
+		</g>
+
+		<g transform="translate(492 382)">
+			<rect width="210" height="145" rx="18" fill="#211e3b" stroke="#8b5cf6"/>
+			<circle cx="30" cy="31" r="17" fill="#8b5cf6" fill-opacity=".2"/>
+			<text x="30" y="37" text-anchor="middle" fill="#c4b5fd" font-size="15" font-weight="700">3</text>
+			<text x="56" y="35" fill="#f8fafc" font-size="16" font-weight="700">TURN relay</text>
+			<rect x="20" y="62" width="116" height="32" rx="9" fill="#8b5cf6" fill-opacity=".18"/>
+			<text x="78" y="84" text-anchor="middle" fill="#c4b5fd" font-family="Consolas, Menlo, monospace" font-size="15" font-weight="700">&amp;relay</text>
+			<text x="20" y="121" fill="#94a3b8" font-size="12">Bypass direct route</text>
+		</g>
+
+		<g transform="translate(714 382)">
+			<rect width="210" height="145" rx="18" fill="#30251c" stroke="#f59e0b"/>
+			<circle cx="30" cy="31" r="17" fill="#f59e0b" fill-opacity=".18"/>
+			<text x="30" y="37" text-anchor="middle" fill="#fcd34d" font-size="15" font-weight="700">4</text>
+			<text x="56" y="35" fill="#f8fafc" font-size="16" font-weight="700">Relay + TCP</text>
+			<rect x="20" y="62" width="156" height="32" rx="9" fill="#f59e0b" fill-opacity=".16"/>
+			<text x="98" y="84" text-anchor="middle" fill="#fcd34d" font-family="Consolas, Menlo, monospace" font-size="15" font-weight="700">&amp;relay&amp;tcp</text>
+			<text x="20" y="121" fill="#94a3b8" font-size="12">Compare blocked UDP</text>
+		</g>
+
+		<g transform="translate(936 382)">
+			<rect width="216" height="145" rx="18" fill="#16302f" stroke="#34d399"/>
+			<circle cx="30" cy="31" r="17" fill="#34d399" fill-opacity=".18"/>
+			<text x="30" y="37" text-anchor="middle" fill="#6ee7b7" font-size="15" font-weight="700">5</text>
+			<text x="56" y="35" fill="#f8fafc" font-size="16" font-weight="700">Alpha preview</text>
+			<text x="20" y="75" fill="#d1fae5" font-family="Consolas, Menlo, monospace" font-size="13">/alpha/?room=...</text>
+			<text x="20" y="98" fill="#cbd5e1" font-size="13">Use on every peer</text>
+			<text x="20" y="121" fill="#94a3b8" font-size="12">Rehearse before use</text>
+		</g>
+	</g>
+
+	<rect x="48" y="562" width="1104" height="112" rx="18" fill="#2a2034" stroke="#a78bfa"/>
+	<rect x="70" y="582" width="206" height="30" rx="15" fill="#a78bfa" fill-opacity=".16"/>
+	<text x="173" y="603" text-anchor="middle" fill="#ddd6fe" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="13" font-weight="700" letter-spacing=".7">VIDEO-ONLY BRANCH</text>
+	<text x="70" y="638" fill="#f8fafc" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="16" font-weight="700">Audio works, but video is black?</text>
+	<text x="345" y="638" fill="#cbd5e1" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="14">Test H.264 as a viewer preference, count every iPhone viewer/OBS source, and avoid exhausting hardware encoders.</text>
+	<text x="70" y="660" fill="#a78bfa" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="13">Missing audio in both directions points back to transport, not the video codec.</text>
+</svg>
