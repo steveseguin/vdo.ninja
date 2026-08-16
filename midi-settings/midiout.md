@@ -13,15 +13,17 @@ General Option! ([`&push`](../source-settings/push.md), [`&room`](../general-set
 
 ## Options
 
-Device indices starts at 1, where an index of 0 implies "all". You can refer to [`https://vdo.ninja/midi`](https://vdo.ninja/midi) for a drop-down list of available MIDI devices; the first MIDI device in the list would have a device index ID of 1.
+Device indices start at 1, where an index of 0 implies "all". You can also select a device by its exact, URL-encoded name. You can refer to [`https://vdo.ninja/midi`](https://vdo.ninja/midi) for a list of available MIDI devices.
 
-Example: `&midiout=2`
+Examples: `&midiout=2` or `&midiout=MidiPipe%20Output%201`
 
-<table><thead><tr><th width="275">Value</th><th>Description</th></tr></thead><tbody><tr><td><code>0</code></td><td>using 0 will listen to all midi input devices</td></tr><tr><td>(integer value. eg: 1)</td><td>midi input device list index ID; 1 and up.</td></tr></tbody></table>
+<table><thead><tr><th width="275">Value</th><th>Description</th></tr></thead><tbody><tr><td><code>0</code></td><td>listen to all MIDI input devices</td></tr><tr><td>(integer value; for example, <code>1</code>)</td><td>MIDI input device index, starting at 1</td></tr><tr><td>(exact device name)</td><td>the MIDI input device with that name</td></tr></tbody></table>
 
 ## Details
 
 Allows for sending of MIDI signals to a remote computer. Mirrors even the channel ID.
+
+Device names must match exactly and should be URL encoded. If no device matches the name, the name is ambiguous, or an index is out of range, no MIDI input is selected and a warning is written to the browser console.
 
 The remote device must use [`&midiin`](midiin.md) to accept the signal and a peer connection is needed for the signal to take place.
 
