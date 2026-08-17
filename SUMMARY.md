@@ -102,6 +102,7 @@
   * [How to publish from OBS into VDO.Ninja](guides/publish-from-obs-into-vdo.ninja.md)
   * [Let guests see your finished OBS scene](guides/let-guests-see-your-obs-scene.md)
   * [Send an OBS return feed to guests](guides/send-an-obs-return-feed-to-guests.md)
+  * [Telestrate a caller's video](guides/telestrate-a-callers-video.md)
   * [Using the Ninja OBS Plugin with VDO.Ninja](guides/using-ninja-obs-plugin-with-vdo.ninja.md)
   * [How to screen share your iPhone/iPad](guides/screen-share-your-iphone-ipad.md)
   * [How to get iPhones to output 1080p Videos](guides/how-to-get-iphones-to-output-1080p-videos.md)

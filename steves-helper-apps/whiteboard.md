@@ -130,3 +130,11 @@ document.getElementById('viewLink').value = viewUrl.toString();
 * Adding visual annotations to presentations
 
 The VDO.Ninja Whiteboard combines the power of HTML5 Canvas with VDO.Ninja's peer-to-peer streaming technology to provide a versatile, secure, and accessible tool for real-time visual communication.
+
+## Annotating a caller's live video
+
+The Whiteboard publishes its own canvas as a video source. To draw or ping directly over a caller's camera or screen share, use VDO.Ninja's separate built-in annotation tool. It can send the caller and annotations together to OBS or provide the drawings as a transparent OBS overlay.
+
+{% content-ref url="../guides/telestrate-a-callers-video.md" %}
+[telestrate-a-callers-video.md](../guides/telestrate-a-callers-video.md)
+{% endcontent-ref %}
