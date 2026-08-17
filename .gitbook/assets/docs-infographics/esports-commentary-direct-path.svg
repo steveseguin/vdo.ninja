@@ -1,0 +1,93 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="720" viewBox="0 0 1200 720" role="img" aria-labelledby="title desc">
+	<title id="title">Direct game monitoring for esports commentary</title>
+	<desc id="desc">A gameplay source sends game video and audio through VDO.Ninja directly to both a commentator and production OBS. The commentator microphone returns through VDO.Ninja to production. Production sends the finished program to a public platform, which should not be used by the commentator for monitoring.</desc>
+	<defs>
+		<linearGradient id="flow-bg" x1="0" y1="0" x2="1" y2="1">
+			<stop offset="0" stop-color="#081225"/>
+			<stop offset="1" stop-color="#15203c"/>
+		</linearGradient>
+		<linearGradient id="flow-node" x1="0" y1="0" x2="1" y2="1">
+			<stop offset="0" stop-color="#17233f"/>
+			<stop offset="1" stop-color="#111a30"/>
+		</linearGradient>
+		<filter id="flow-shadow" x="-20%" y="-20%" width="140%" height="150%">
+			<feDropShadow dx="0" dy="9" stdDeviation="12" flood-color="#020617" flood-opacity=".38"/>
+		</filter>
+		<marker id="flow-cyan-arrow" markerWidth="10" markerHeight="10" refX="9" refY="5" orient="auto">
+			<path d="M0 0 10 5 0 10Z" fill="#22d3ee"/>
+		</marker>
+		<marker id="flow-purple-arrow" markerWidth="10" markerHeight="10" refX="9" refY="5" orient="auto">
+			<path d="M0 0 10 5 0 10Z" fill="#a78bfa"/>
+		</marker>
+		<marker id="flow-amber-arrow" markerWidth="10" markerHeight="10" refX="9" refY="5" orient="auto">
+			<path d="M0 0 10 5 0 10Z" fill="#f59e0b"/>
+		</marker>
+	</defs>
+
+	<rect width="1200" height="720" rx="28" fill="url(#flow-bg)"/>
+	<text x="48" y="58" fill="#f8fafc" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="31" font-weight="700">Keep commentary on the direct media path</text>
+	<text x="48" y="87" fill="#94a3b8" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="16">VDO.Ninja is the live monitor and contribution link; the public platform is the audience destination.</text>
+
+	<g filter="url(#flow-shadow)" font-family="Inter, Segoe UI, Arial, sans-serif">
+		<rect x="50" y="220" width="270" height="230" rx="24" fill="url(#flow-node)" stroke="#22d3ee" stroke-width="2"/>
+		<rect x="76" y="247" width="112" height="30" rx="15" fill="#22d3ee" fill-opacity=".13"/>
+		<text x="132" y="268" text-anchor="middle" fill="#67e8f9" font-size="13" font-weight="700" letter-spacing="1">GAME SOURCE</text>
+		<rect x="84" y="305" width="202" height="102" rx="14" fill="#0b1428" stroke="#334155"/>
+		<path d="M101 325h168v62H101z" fill="#172554"/>
+		<path d="M105 375l37-29 27 18 30-31 65 54H105z" fill="#164e63"/>
+		<circle cx="231" cy="340" r="8" fill="#f59e0b"/>
+		<text x="185" y="430" text-anchor="middle" fill="#f8fafc" font-size="15" font-weight="700">Game video + game audio</text>
+
+		<rect x="430" y="250" width="310" height="170" rx="24" fill="url(#flow-node)" stroke="#8b5cf6" stroke-width="2"/>
+		<circle cx="485" cy="309" r="28" fill="#8b5cf6" fill-opacity=".18" stroke="#a78bfa"/>
+		<path d="M474 309h22M485 298v22" stroke="#c4b5fd" stroke-width="4" stroke-linecap="round"/>
+		<text x="530" y="304" fill="#f8fafc" font-size="25" font-weight="700">VDO.Ninja</text>
+		<text x="530" y="330" fill="#c4b5fd" font-size="14" font-weight="700">DIRECT WEBRTC MEDIA</text>
+		<text x="585" y="374" text-anchor="middle" fill="#94a3b8" font-size="14">One live workflow, separate peer paths</text>
+		<text x="585" y="396" text-anchor="middle" fill="#e2e8f0" font-size="14">for commentary and production</text>
+
+		<rect x="865" y="118" width="285" height="142" rx="22" fill="url(#flow-node)" stroke="#22d3ee" stroke-width="2"/>
+		<circle cx="912" cy="171" r="25" fill="#22d3ee" fill-opacity=".15"/>
+		<path d="M900 171a12 12 0 0 0 24 0M912 158v22M912 183v13M902 196h20" fill="none" stroke="#67e8f9" stroke-width="3" stroke-linecap="round"/>
+		<text x="954" y="166" fill="#f8fafc" font-size="21" font-weight="700">Commentator</text>
+		<text x="954" y="190" fill="#94a3b8" font-size="14">Direct game monitor</text>
+		<text x="954" y="213" fill="#c4b5fd" font-size="14">Separate microphone return</text>
+
+		<rect x="865" y="337" width="285" height="142" rx="22" fill="url(#flow-node)" stroke="#8b5cf6" stroke-width="2"/>
+		<rect x="892" y="370" width="66" height="46" rx="7" fill="#1e293b" stroke="#a78bfa"/>
+		<path d="M902 383h46M902 393h30M902 403h40" stroke="#c4b5fd" stroke-width="3" stroke-linecap="round"/>
+		<text x="982" y="386" fill="#f8fafc" font-size="21" font-weight="700">Production OBS</text>
+		<text x="982" y="410" fill="#94a3b8" font-size="14">Mix game + commentary</text>
+		<text x="982" y="433" fill="#e2e8f0" font-size="14">Record and stream the show</text>
+
+		<rect x="865" y="555" width="285" height="112" rx="22" fill="url(#flow-node)" stroke="#f59e0b" stroke-width="2"/>
+		<circle cx="912" cy="611" r="25" fill="#f59e0b" fill-opacity=".15"/>
+		<path d="M903 599l23 12-23 12Z" fill="#fcd34d"/>
+		<text x="954" y="601" fill="#f8fafc" font-size="20" font-weight="700">Public platform</text>
+		<text x="954" y="625" fill="#fcd34d" font-size="14">Audience playback is delayed</text>
+	</g>
+
+	<g fill="none" stroke-linecap="round">
+		<path d="M320 335H417" stroke="#22d3ee" stroke-width="4" marker-end="url(#flow-cyan-arrow)"/>
+		<path d="M740 292C786 256 811 208 852 194" stroke="#22d3ee" stroke-width="4" marker-end="url(#flow-cyan-arrow)"/>
+		<path d="M865 237C810 270 798 317 746 337" stroke="#a78bfa" stroke-width="4" marker-end="url(#flow-purple-arrow)"/>
+		<path d="M740 373C790 389 813 403 852 407" stroke="#22d3ee" stroke-width="4" marker-end="url(#flow-cyan-arrow)"/>
+		<path d="M1007 479V542" stroke="#f59e0b" stroke-width="4" marker-end="url(#flow-amber-arrow)"/>
+	</g>
+
+	<g font-family="Inter, Segoe UI, Arial, sans-serif" font-size="13" font-weight="700">
+		<rect x="333" y="300" width="85" height="27" rx="13" fill="#083344"/><text x="375" y="319" text-anchor="middle" fill="#67e8f9">PUBLISH</text>
+		<rect x="764" y="221" width="99" height="27" rx="13" fill="#083344"/><text x="813" y="240" text-anchor="middle" fill="#67e8f9">WATCH LIVE</text>
+		<rect x="758" y="302" width="105" height="27" rx="13" fill="#2e1f4f"/><text x="810" y="321" text-anchor="middle" fill="#c4b5fd">MIC RETURN</text>
+		<rect x="774" y="379" width="89" height="27" rx="13" fill="#083344"/><text x="818" y="398" text-anchor="middle" fill="#67e8f9">INGEST</text>
+		<rect x="1021" y="506" width="108" height="27" rx="13" fill="#422006"/><text x="1075" y="525" text-anchor="middle" fill="#fcd34d">BROADCAST</text>
+	</g>
+
+	<path d="M884 640C760 680 617 678 504 626C411 582 374 515 320 418" fill="none" stroke="#fb7185" stroke-width="3" stroke-dasharray="9 9" opacity=".75"/>
+	<circle cx="510" cy="626" r="18" fill="#3f1726" stroke="#fb7185"/>
+	<path d="M503 619l14 14M517 619l-14 14" stroke="#fda4af" stroke-width="3" stroke-linecap="round"/>
+	<rect x="347" y="555" width="310" height="45" rx="14" fill="#3f1726" stroke="#fb7185"/>
+	<text x="502" y="574" text-anchor="middle" fill="#fda4af" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="13" font-weight="700">DO NOT MONITOR THE PUBLIC PLAYER</text>
+	<text x="502" y="591" text-anchor="middle" fill="#fecdd3" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="12">It returns the show several seconds late.</text>
+</svg>
+

@@ -1,0 +1,97 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="780" viewBox="0 0 1200 780" role="img" aria-labelledby="title desc">
+	<title id="title">Game publishing options for VDO.Ninja</title>
+	<desc id="desc">Six equal publishing choices are shown: browser screen share, Versus.cam, Game Capture, OBS Virtual Camera, OBS WHIP, and the Ninja OBS Plugin. Each sends a game source to VDO.Ninja, which provides direct feeds to a commentator and production OBS.</desc>
+	<defs>
+		<linearGradient id="options-bg" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#081225"/><stop offset="1" stop-color="#15203c"/></linearGradient>
+		<linearGradient id="options-line" gradientUnits="userSpaceOnUse" x1="100" y1="0" x2="1100" y2="0"><stop stop-color="#22d3ee"/><stop offset=".52" stop-color="#8b5cf6"/><stop offset="1" stop-color="#f59e0b"/></linearGradient>
+		<filter id="options-shadow" x="-20%" y="-20%" width="140%" height="150%"><feDropShadow dx="0" dy="8" stdDeviation="10" flood-color="#020617" flood-opacity=".38"/></filter>
+		<marker id="options-arrow" markerWidth="10" markerHeight="10" refX="9" refY="5" orient="auto"><path d="M0 0 10 5 0 10Z" fill="#8b5cf6"/></marker>
+	</defs>
+
+	<rect width="1200" height="780" rx="28" fill="url(#options-bg)"/>
+	<text x="48" y="57" fill="#f8fafc" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="31" font-weight="700">Choose one publishing path for each game source</text>
+	<text x="48" y="86" fill="#94a3b8" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="16">All six paths can produce a VDO.Ninja feed for the commentator and production operator.</text>
+
+	<g font-family="Inter, Segoe UI, Arial, sans-serif" filter="url(#options-shadow)">
+		<g transform="translate(48 118)">
+			<rect width="336" height="125" rx="20" fill="#122a3c" stroke="#22d3ee"/>
+			<circle cx="38" cy="40" r="19" fill="#22d3ee" fill-opacity=".15"/><path d="M28 33h20v14H28zM34 51h8" fill="none" stroke="#67e8f9" stroke-width="2.5" stroke-linecap="round"/>
+			<text x="70" y="38" fill="#f8fafc" font-size="18" font-weight="700">Browser screen share</text>
+			<text x="70" y="62" fill="#67e8f9" font-size="13" font-weight="700">CHROME / EDGE / CHROMIUM</text>
+			<text x="24" y="92" fill="#cbd5e1" font-size="14">Game window, tab, or display</text>
+			<text x="24" y="112" fill="#94a3b8" font-size="13">Browser-provided system or tab audio</text>
+		</g>
+		<g transform="translate(432 118)">
+			<rect width="336" height="125" rx="20" fill="#251f3d" stroke="#8b5cf6"/>
+			<circle cx="38" cy="40" r="19" fill="#8b5cf6" fill-opacity=".17"/><path d="M26 44l8-8 7 6 10-12M26 50h25" fill="none" stroke="#c4b5fd" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+			<text x="70" y="38" fill="#f8fafc" font-size="18" font-weight="700">Versus.cam</text>
+			<text x="70" y="62" fill="#c4b5fd" font-size="13" font-weight="700">ESPORTS LINK DASHBOARD</text>
+			<text x="24" y="92" fill="#cbd5e1" font-size="14">Preconfigured screen-share invites</text>
+			<text x="24" y="112" fill="#94a3b8" font-size="13">Per-stream monitoring and View Links</text>
+		</g>
+		<g transform="translate(816 118)">
+			<rect width="336" height="125" rx="20" fill="#2b2416" stroke="#f59e0b"/>
+			<circle cx="38" cy="40" r="19" fill="#f59e0b" fill-opacity=".17"/><path d="M27 35h22v14H27zM32 31v4M44 31v4" fill="none" stroke="#fcd34d" stroke-width="2.5" stroke-linecap="round"/>
+			<text x="70" y="38" fill="#f8fafc" font-size="18" font-weight="700">Game Capture</text>
+			<text x="70" y="62" fill="#fcd34d" font-size="13" font-weight="700">NATIVE WINDOWS APP</text>
+			<text x="24" y="92" fill="#cbd5e1" font-size="14">Game/window capture + hardware encode</text>
+			<text x="24" y="112" fill="#94a3b8" font-size="13">Selected-window audio; no OBS required</text>
+		</g>
+
+		<g transform="translate(48 274)">
+			<rect width="336" height="125" rx="20" fill="#122a3c" stroke="#22d3ee"/>
+			<circle cx="38" cy="40" r="19" fill="#22d3ee" fill-opacity=".15"/><path d="M28 31h20v15H28zM33 51h10M48 36l7 4-7 4" fill="none" stroke="#67e8f9" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+			<text x="70" y="38" fill="#f8fafc" font-size="18" font-weight="700">OBS Virtual Camera</text>
+			<text x="70" y="62" fill="#67e8f9" font-size="13" font-weight="700">OBS + BROWSER PUBLISHER</text>
+			<text x="24" y="92" fill="#cbd5e1" font-size="14">Custom scene, crop, capture card, graphics</text>
+			<text x="24" y="112" fill="#94a3b8" font-size="13">Audio requires a separate virtual device</text>
+		</g>
+		<g transform="translate(432 274)">
+			<rect width="336" height="125" rx="20" fill="#251f3d" stroke="#8b5cf6"/>
+			<circle cx="38" cy="40" r="19" fill="#8b5cf6" fill-opacity=".17"/><path d="M26 40h24M43 33l7 7-7 7" fill="none" stroke="#c4b5fd" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+			<text x="70" y="38" fill="#f8fafc" font-size="18" font-weight="700">OBS WHIP</text>
+			<text x="70" y="62" fill="#c4b5fd" font-size="13" font-weight="700">DIRECT OBS OUTPUT</text>
+			<text x="24" y="92" fill="#cbd5e1" font-size="14">OBS encode + OBS program audio</text>
+			<text x="24" y="112" fill="#94a3b8" font-size="13">Uses the normal OBS streaming-output slot</text>
+		</g>
+		<g transform="translate(816 274)">
+			<rect width="336" height="125" rx="20" fill="#2b2416" stroke="#f59e0b"/>
+			<circle cx="38" cy="40" r="19" fill="#f59e0b" fill-opacity=".17"/><path d="M29 31h18v18H29zM24 36h5M47 36h5M24 44h5M47 44h5" fill="none" stroke="#fcd34d" stroke-width="2.5" stroke-linecap="round"/>
+			<text x="70" y="38" fill="#f8fafc" font-size="18" font-weight="700">Ninja OBS Plugin</text>
+			<text x="70" y="62" fill="#fcd34d" font-size="13" font-weight="700">VDO.NINJA INSIDE OBS</text>
+			<text x="24" y="92" fill="#cbd5e1" font-size="14">Native publish + inbound source workflows</text>
+			<text x="24" y="112" fill="#94a3b8" font-size="13">Room and stream-ID support</text>
+		</g>
+	</g>
+
+	<g fill="none" stroke="url(#options-line)" stroke-width="2.5" stroke-linecap="round" opacity=".88">
+		<path d="M216 243C216 443 454 430 508 480"/>
+		<path d="M600 243V474"/>
+		<path d="M984 243C984 443 746 430 692 480"/>
+		<path d="M216 399C216 468 450 459 508 492"/>
+		<path d="M600 399V474"/>
+		<path d="M984 399C984 468 750 459 692 492"/>
+	</g>
+
+	<g font-family="Inter, Segoe UI, Arial, sans-serif" filter="url(#options-shadow)">
+		<rect x="390" y="480" width="420" height="105" rx="24" fill="#17233f" stroke="url(#options-line)" stroke-width="2"/>
+		<text x="600" y="523" text-anchor="middle" fill="#f8fafc" font-size="24" font-weight="700">VDO.Ninja stream or room</text>
+		<text x="600" y="551" text-anchor="middle" fill="#c4b5fd" font-size="14" font-weight="700">DIRECT INTERACTIVE MEDIA PATHS</text>
+		<text x="600" y="574" text-anchor="middle" fill="#94a3b8" font-size="13">Same Push/View identity can recover after a reconnect</text>
+
+		<rect x="105" y="655" width="360" height="82" rx="20" fill="#122a3c" stroke="#22d3ee"/>
+		<text x="285" y="689" text-anchor="middle" fill="#f8fafc" font-size="20" font-weight="700">Commentator</text>
+		<text x="285" y="714" text-anchor="middle" fill="#67e8f9" font-size="14">Watches the direct game feed</text>
+		<rect x="735" y="655" width="360" height="82" rx="20" fill="#251f3d" stroke="#8b5cf6"/>
+		<text x="915" y="689" text-anchor="middle" fill="#f8fafc" font-size="20" font-weight="700">Production OBS</text>
+		<text x="915" y="714" text-anchor="middle" fill="#c4b5fd" font-size="14">Receives, mixes, records, broadcasts</text>
+	</g>
+
+	<g fill="none" stroke="#8b5cf6" stroke-width="4" stroke-linecap="round" marker-end="url(#options-arrow)">
+		<path d="M532 585C487 616 408 630 338 649"/>
+		<path d="M668 585C713 616 792 630 862 649"/>
+	</g>
+	<rect x="476" y="604" width="248" height="29" rx="14" fill="#2e1f4f"/>
+	<text x="600" y="624" text-anchor="middle" fill="#c4b5fd" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="13" font-weight="700">ONE FEED, TWO DIRECT VIEWERS</text>
+</svg>
+

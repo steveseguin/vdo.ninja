@@ -89,6 +89,7 @@
   * [How to send the audio/video output of one OBS to another OBS using VDO.Ninja](guides/how-to-send-the-audio-video-output-of-one-obs-to-another-obs-using-vdo.ninja.md)
   * [Host a guest panel on a Mac with OBS and Meshcast](guides/mac-guest-panel-with-obs-and-meshcast.md)
   * [Multi-operator Twitch production with VDO.Ninja and OBS](guides/multi-operator-twitch-production.md)
+  * [Low-latency game streaming for esports commentary](guides/low-latency-game-streaming-for-esports-commentary.md)
   * [Stream Apple Vision Pro POV and an iPhone camera to TikTok with OBS](guides/stream-apple-vision-pro-and-iphone-to-tiktok-with-obs.md)
   * [Active speaker layouts in OBS](guides/active-speaker-layouts-in-obs.md)
   * [Active speaker, Highlight, and talking indicators](guides/active-speaker-highlight-and-talking-indicators.md)
