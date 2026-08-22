@@ -1,0 +1,102 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="690" viewBox="0 0 1200 690" role="img" aria-labelledby="title desc">
+	<title id="title">Direct broadcast return compared with a Meshcast-assisted return</title>
+	<desc id="desc">The left side shows a production computer sending a separate Program return to four broadcast-mode phone guests. The right side shows the production computer sending one Program return to Meshcast, which distributes it to the four broadcast-mode phones.</desc>
+	<defs>
+		<linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+			<stop offset="0" stop-color="#0b1225"/>
+			<stop offset="1" stop-color="#151a35"/>
+		</linearGradient>
+		<linearGradient id="accent" x1="0" y1="0" x2="1" y2="0">
+			<stop offset="0" stop-color="#22d3ee"/>
+			<stop offset="1" stop-color="#8b5cf6"/>
+		</linearGradient>
+		<filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+			<feDropShadow dx="0" dy="8" stdDeviation="12" flood-color="#020617" flood-opacity=".35"/>
+		</filter>
+		<marker id="teal-arrow" markerWidth="9" markerHeight="9" refX="8" refY="4.5" orient="auto">
+			<path d="M0 0 9 4.5 0 9Z" fill="#22d3ee"/>
+		</marker>
+		<marker id="amber-arrow" markerWidth="9" markerHeight="9" refX="8" refY="4.5" orient="auto">
+			<path d="M0 0 9 4.5 0 9Z" fill="#f59e0b"/>
+		</marker>
+		<g id="phone">
+			<rect x="-18" y="-31" width="36" height="62" rx="7" fill="#182642" stroke="currentColor" stroke-width="2"/>
+			<rect x="-12" y="-21" width="24" height="38" rx="3" fill="currentColor" fill-opacity=".16"/>
+			<circle cx="0" cy="24" r="2" fill="currentColor"/>
+		</g>
+		<g id="computer">
+			<rect x="-54" y="-38" width="108" height="70" rx="8" fill="#182642" stroke="currentColor" stroke-width="2"/>
+			<rect x="-43" y="-27" width="86" height="48" rx="3" fill="currentColor" fill-opacity=".13"/>
+			<path d="M-19 43h38M0 32v11" stroke="currentColor" stroke-width="4" stroke-linecap="round"/>
+		</g>
+		<g id="cloud">
+			<path d="M-56 22h105c18 0 29-11 29-26 0-14-10-24-24-26-4-23-22-37-45-37-21 0-38 11-45 30-3-1-7-2-11-2-20 0-35 14-35 32 0 17 11 29 26 29Z" fill="#252044" stroke="currentColor" stroke-width="2"/>
+		</g>
+	</defs>
+
+	<rect width="1200" height="690" rx="26" fill="url(#bg)"/>
+	<text x="48" y="55" fill="#f8fafc" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="30" font-weight="700">Program return for mobile guests</text>
+	<text x="48" y="82" fill="#94a3b8" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="16">Guest links use &amp;broadcast, so every phone decodes one director video instead of every guest video.</text>
+
+	<rect x="40" y="110" width="540" height="500" rx="22" fill="#121c33" stroke="#334155" filter="url(#shadow)"/>
+	<rect x="64" y="134" width="166" height="30" rx="15" fill="#f59e0b" fill-opacity=".15"/>
+	<text x="147" y="155" text-anchor="middle" fill="#fcd34d" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="13" font-weight="700" letter-spacing="1.1">DIRECT RETURN</text>
+	<text x="64" y="196" fill="#f8fafc" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="22" font-weight="700">Small room: lowest return delay</text>
+	<text x="64" y="222" fill="#94a3b8" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="15">The director sends one Program path to each guest.</text>
+
+	<g font-family="Inter, Segoe UI, Arial, sans-serif" font-size="13" font-weight="700" text-anchor="middle">
+		<g transform="translate(115 302)" color="#67e8f9"><use href="#phone"/><text y="54" fill="#f8fafc">Guest 1</text></g>
+		<g transform="translate(115 430)" color="#67e8f9"><use href="#phone"/><text y="54" fill="#f8fafc">Guest 2</text></g>
+		<g transform="translate(505 302)" color="#67e8f9"><use href="#phone"/><text y="54" fill="#f8fafc">Guest 3</text></g>
+		<g transform="translate(505 430)" color="#67e8f9"><use href="#phone"/><text y="54" fill="#f8fafc">Guest 4</text></g>
+		<g transform="translate(310 363)" color="#c4b5fd"><use href="#computer"/><text y="70" fill="#f8fafc">Director + OBS</text><text y="90" fill="#94a3b8" font-size="12" font-weight="400">OBS Virtual Camera</text></g>
+	</g>
+
+	<g fill="none" stroke-linecap="round">
+		<path d="M147 302C204 302 224 322 254 344" stroke="#22d3ee" stroke-width="3" marker-end="url(#teal-arrow)"/>
+		<path d="M147 430C204 430 224 405 254 384" stroke="#22d3ee" stroke-width="3" marker-end="url(#teal-arrow)"/>
+		<path d="M453 302C398 302 382 322 366 343" stroke="#22d3ee" stroke-width="3" marker-end="url(#teal-arrow)"/>
+		<path d="M453 430C398 430 382 405 366 384" stroke="#22d3ee" stroke-width="3" marker-end="url(#teal-arrow)"/>
+		<path d="M255 330C218 292 187 278 147 278" stroke="#f59e0b" stroke-width="3" marker-end="url(#amber-arrow)"/>
+		<path d="M255 396C218 437 187 454 147 454" stroke="#f59e0b" stroke-width="3" marker-end="url(#amber-arrow)"/>
+		<path d="M365 330C401 292 418 278 453 278" stroke="#f59e0b" stroke-width="3" marker-end="url(#amber-arrow)"/>
+		<path d="M365 396C401 437 418 454 453 454" stroke="#f59e0b" stroke-width="3" marker-end="url(#amber-arrow)"/>
+	</g>
+	<rect x="70" y="516" width="480" height="68" rx="14" fill="#f59e0b" fill-opacity=".08"/>
+	<text x="310" y="542" text-anchor="middle" fill="#fcd34d" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="14" font-weight="700">Guest camera and microphone go to production</text>
+	<text x="310" y="565" text-anchor="middle" fill="#cbd5e1" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="13">Director Program video returns directly to each guest.</text>
+
+	<rect x="620" y="110" width="540" height="500" rx="22" fill="#121c33" stroke="#334155" filter="url(#shadow)"/>
+	<rect x="644" y="134" width="240" height="30" rx="15" fill="#8b5cf6" fill-opacity=".17"/>
+	<text x="764" y="155" text-anchor="middle" fill="#c4b5fd" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="13" font-weight="700" letter-spacing="1.1">MESHCAST RETURN</text>
+	<text x="644" y="196" fill="#f8fafc" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="22" font-weight="700">Larger room: reduce director fan-out</text>
+	<text x="644" y="222" fill="#94a3b8" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="15">The director sends one Program path to the server.</text>
+
+	<g font-family="Inter, Segoe UI, Arial, sans-serif" font-size="13" font-weight="700" text-anchor="middle">
+		<g transform="translate(690 302)" color="#67e8f9"><use href="#phone"/><text y="54" fill="#f8fafc">Guest 1</text></g>
+		<g transform="translate(690 430)" color="#67e8f9"><use href="#phone"/><text y="54" fill="#f8fafc">Guest 2</text></g>
+		<g transform="translate(1090 302)" color="#67e8f9"><use href="#phone"/><text y="54" fill="#f8fafc">Guest 3</text></g>
+		<g transform="translate(1090 430)" color="#67e8f9"><use href="#phone"/><text y="54" fill="#f8fafc">Guest 4</text></g>
+		<g transform="translate(825 382)" color="#c4b5fd"><use href="#computer"/><text y="70" fill="#f8fafc">Director + OBS</text></g>
+		<g transform="translate(980 375) scale(.72)" color="#a78bfa"><use href="#cloud"/></g>
+		<text x="980" y="380" fill="#f8fafc" font-size="14">Meshcast</text>
+	</g>
+
+	<g fill="none" stroke-linecap="round">
+		<path d="M722 302C755 304 769 327 778 346" stroke="#22d3ee" stroke-width="3" marker-end="url(#teal-arrow)"/>
+		<path d="M722 430C755 428 769 407 778 389" stroke="#22d3ee" stroke-width="3" marker-end="url(#teal-arrow)"/>
+		<path d="M1058 302C978 294 928 324 881 350" stroke="#22d3ee" stroke-width="3" marker-end="url(#teal-arrow)"/>
+		<path d="M1058 430C978 438 928 409 881 390" stroke="#22d3ee" stroke-width="3" marker-end="url(#teal-arrow)"/>
+		<path d="M881 372H927" stroke="#f59e0b" stroke-width="4" marker-end="url(#amber-arrow)"/>
+		<path d="M951 345C907 295 806 276 722 278" stroke="#f59e0b" stroke-width="3" marker-end="url(#amber-arrow)"/>
+		<path d="M951 400C905 445 805 454 722 454" stroke="#f59e0b" stroke-width="3" marker-end="url(#amber-arrow)"/>
+		<path d="M1008 345C1028 319 1037 292 1038 278" stroke="#f59e0b" stroke-width="3" marker-end="url(#amber-arrow)"/>
+		<path d="M1008 400C1028 423 1037 442 1038 454" stroke="#f59e0b" stroke-width="3" marker-end="url(#amber-arrow)"/>
+	</g>
+	<rect x="650" y="516" width="480" height="68" rx="14" fill="#8b5cf6" fill-opacity=".09"/>
+	<text x="890" y="542" text-anchor="middle" fill="#c4b5fd" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="14" font-weight="700">Director link adds &amp;meshcast</text>
+	<text x="890" y="565" text-anchor="middle" fill="#cbd5e1" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="13">Meshcast distributes the Program return to the guests.</text>
+
+	<rect x="40" y="628" width="1120" height="38" rx="12" fill="url(#accent)" fill-opacity=".1"/>
+	<text x="600" y="652" text-anchor="middle" fill="#e2e8f0" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="14">With &amp;broadcast, guest-to-guest audio remains active. Use &amp;directoronly when guests should hear only directors.</text>
+</svg>

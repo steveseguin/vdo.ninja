@@ -17,6 +17,7 @@ This section collects practical VDO.Ninja guides for OBS Studio, remote guest wo
 * [handling-guest-disconnects-and-connection-recovery.md](handling-guest-disconnects-and-connection-recovery.md "mention")
 * [primary-and-backup-guests-with-scene-and-slots.md](primary-and-backup-guests-with-scene-and-slots.md "mention")
 * [delay-an-incoming-feed.md](delay-an-incoming-feed.md "mention")
+* [stable-mobile-guest-production-with-obs-and-electron-capture.md](stable-mobile-guest-production-with-obs-and-electron-capture.md "mention")
 * [ninjabacker-tipping.md](ninjabacker-tipping.md "mention")
 * [hardware-accelerated-video-encoding.md](hardware-accelerated-video-encoding.md "mention")
 * [audio-filters.md](audio-filters.md "mention")

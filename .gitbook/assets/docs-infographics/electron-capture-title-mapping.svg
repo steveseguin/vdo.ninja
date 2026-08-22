@@ -1,0 +1,78 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="620" viewBox="0 0 1200 620" role="img" aria-labelledby="title desc">
+	<title id="title">Stable Electron Capture window title mapping for OBS</title>
+	<desc id="desc">The diagram shows unique VDO.Ninja Stream IDs mapped to unique Electron Capture window titles and matching OBS Window Capture source names. It also shows the menu and command-line methods for setting a title.</desc>
+	<defs>
+		<linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+			<stop offset="0" stop-color="#0b1225"/>
+			<stop offset="1" stop-color="#151a35"/>
+		</linearGradient>
+		<filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+			<feDropShadow dx="0" dy="8" stdDeviation="10" flood-color="#020617" flood-opacity=".38"/>
+		</filter>
+		<marker id="arrow" markerWidth="10" markerHeight="10" refX="9" refY="5" orient="auto">
+			<path d="M0 0 10 5 0 10Z" fill="#64748b"/>
+		</marker>
+		<g id="camera">
+			<rect x="-30" y="-22" width="60" height="44" rx="8" fill="#182642" stroke="currentColor" stroke-width="2"/>
+			<circle r="13" fill="currentColor" fill-opacity=".18" stroke="currentColor" stroke-width="2"/>
+			<path d="M30-10 46-18v36L30 10Z" fill="currentColor"/>
+		</g>
+		<g id="window">
+			<rect x="-42" y="-31" width="84" height="62" rx="7" fill="#182642" stroke="currentColor" stroke-width="2"/>
+			<path d="M-42-15h84" stroke="currentColor" stroke-width="2"/>
+			<circle cx="-31" cy="-23" r="2.5" fill="currentColor"/>
+			<circle cx="-22" cy="-23" r="2.5" fill="currentColor"/>
+		</g>
+		<g id="obs">
+			<circle r="32" fill="#182642" stroke="currentColor" stroke-width="2"/>
+			<circle cx="0" cy="-10" r="10" fill="none" stroke="currentColor" stroke-width="5"/>
+			<circle cx="-9" cy="7" r="10" fill="none" stroke="currentColor" stroke-width="5"/>
+			<circle cx="9" cy="7" r="10" fill="none" stroke="currentColor" stroke-width="5"/>
+		</g>
+	</defs>
+
+	<rect width="1200" height="620" rx="26" fill="url(#bg)"/>
+	<text x="48" y="55" fill="#f8fafc" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="30" font-weight="700">Keep every guest mapped to one OBS source</text>
+	<text x="48" y="82" fill="#94a3b8" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="16">Use a unique Stream ID, Electron Capture window title, and OBS source name for every guest.</text>
+
+	<g font-family="Inter, Segoe UI, Arial, sans-serif">
+		<rect x="48" y="112" width="1104" height="116" rx="20" fill="#121c33" stroke="#334155" filter="url(#shadow)"/>
+		<text x="76" y="143" fill="#f8fafc" font-size="18" font-weight="700">Two supported ways to set the Electron Capture title</text>
+		<rect x="76" y="162" width="466" height="42" rx="11" fill="#22d3ee" fill-opacity=".11" stroke="#22d3ee" stroke-opacity=".5"/>
+		<text x="94" y="188" fill="#67e8f9" font-size="15" font-weight="700">Menu:</text>
+		<text x="152" y="188" fill="#e2e8f0" font-size="15">Right-click → Edit Window Title → VDO Guest 01</text>
+		<rect x="570" y="162" width="554" height="42" rx="11" fill="#8b5cf6" fill-opacity=".12" stroke="#8b5cf6" stroke-opacity=".55"/>
+		<text x="588" y="188" fill="#c4b5fd" font-size="15" font-weight="700">Command line:</text>
+		<text x="706" y="188" fill="#e2e8f0" font-size="15" font-family="Consolas, monospace">--title="VDO Guest 01"</text>
+	</g>
+
+	<g font-family="Inter, Segoe UI, Arial, sans-serif" font-size="13" font-weight="700" text-anchor="middle">
+		<text x="180" y="274" fill="#94a3b8" font-size="13" letter-spacing="1">VDO.NINJA PUBLISHER</text>
+		<text x="600" y="274" fill="#94a3b8" font-size="13" letter-spacing="1">ELECTRON CAPTURE WINDOW</text>
+		<text x="1020" y="274" fill="#94a3b8" font-size="13" letter-spacing="1">OBS WINDOW CAPTURE</text>
+
+		<g transform="translate(180 350)" color="#22d3ee"><use href="#camera"/><text y="58" fill="#f8fafc" font-size="16">Guest camera 1</text><text y="80" fill="#67e8f9" font-family="Consolas, monospace">push=CAM_01</text></g>
+		<g transform="translate(600 350)" color="#8b5cf6"><use href="#window"/><text y="58" fill="#f8fafc" font-size="16">VDO Guest 01</text><text y="80" fill="#c4b5fd" font-family="Consolas, monospace">view=CAM_01</text></g>
+		<g transform="translate(1020 350)" color="#f59e0b"><use href="#obs"/><text y="58" fill="#f8fafc" font-size="16">Guest 01 - Electron</text><text y="80" fill="#fcd34d" font-weight="400">Exact title match</text></g>
+
+		<g transform="translate(180 490)" color="#22d3ee"><use href="#camera"/><text y="58" fill="#f8fafc" font-size="16">Guest camera 2</text><text y="80" fill="#67e8f9" font-family="Consolas, monospace">push=CAM_02</text></g>
+		<g transform="translate(600 490)" color="#8b5cf6"><use href="#window"/><text y="58" fill="#f8fafc" font-size="16">VDO Guest 02</text><text y="80" fill="#c4b5fd" font-family="Consolas, monospace">view=CAM_02</text></g>
+		<g transform="translate(1020 490)" color="#f59e0b"><use href="#obs"/><text y="58" fill="#f8fafc" font-size="16">Guest 02 - Electron</text><text y="80" fill="#fcd34d" font-weight="400">Exact title match</text></g>
+	</g>
+
+	<g fill="none" stroke="#64748b" stroke-width="3" marker-end="url(#arrow)">
+		<path d="M238 350H540"/>
+		<path d="M658 350H965"/>
+		<path d="M238 490H540"/>
+		<path d="M658 490H965"/>
+	</g>
+	<g font-family="Inter, Segoe UI, Arial, sans-serif" font-size="12" fill="#94a3b8" text-anchor="middle">
+		<text x="390" y="338">matching Stream ID</text>
+		<text x="812" y="338">matching window title</text>
+		<text x="390" y="478">matching Stream ID</text>
+		<text x="812" y="478">matching window title</text>
+	</g>
+
+	<rect x="48" y="578" width="1104" height="26" rx="10" fill="#fb7185" fill-opacity=".1"/>
+	<text x="600" y="596" text-anchor="middle" fill="#fda4af" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="13" font-weight="700">Do not leave several windows with the same generic title. OBS may select another elecap.exe window.</text>
+</svg>

@@ -24,6 +24,8 @@ The Electron Capture app uses recent versions of Chromium, which is more resista
 
 Lastly, since playback is agnostic, you can window-capture the same video multiple times, using one copy in a mixed-down live stream, while using a window-capture to record a clean full-resolution isolated video stream.
 
+For a multi-guest setup, give every Electron Capture window a unique title and use strict title matching in OBS. See [Stable mobile guest production with OBS and Electron Capture](../guides/stable-mobile-guest-production-with-obs-and-electron-capture.md) for menu and command-line title instructions, fixed guest mappings, broadcast return options, and troubleshooting.
+
 ## ASIO Support (Windows)
 
 The Electron Capture app for Windows now supports ASIO audio device input via VDO.Ninja. ASIO (Audio Stream Input/Output) provides significantly lower audio latency compared to standard Windows audio drivers, making it ideal for:
