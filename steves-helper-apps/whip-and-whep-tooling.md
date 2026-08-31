@@ -12,6 +12,8 @@ WHIP is a bit like the classic RTMP publishing, but it's far more advanced, incl
 
 WHEP, on the other hand, is generally used to playback video using the same technology, rather to publish it. VDO.Ninja also supports WHEP playback and hosting, with advanced statistic panels, recording, and buffering options.&#x20;
 
+When muting WHEP playback, prefer [`&mutespeaker`](../source-settings/and-mutespeaker.md) over [`&noaudio`](../advanced-settings/view-parameters/noaudio.md). Many SFU servers require the WHEP viewer to accept both audio and video; using `&noaudio` can prevent the session from connecting. `&mutespeaker` allows both tracks to arrive while keeping local speaker output muted.
+
 ### Native mobile app WHIP publishing
 
 The VDO.Ninja native Android and iOS apps can also act as WHIP publishing clients. This is useful when you want a phone camera, Android USB camera, Android HDMI capture adapter, mobile screen share, or USB audio source to publish directly to a WHIP service.

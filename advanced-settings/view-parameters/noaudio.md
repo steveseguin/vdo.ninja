@@ -15,6 +15,8 @@ Viewer-Side Option! ([`&view`](view.md), [`&scene`](scene.md), [`&room`](../../g
 
 Delivers video only streams; audio playback is disabled for all incoming streams. `&noaudio` also hides the speaker button.
 
+**WHEP compatibility:** Avoid `&noaudio` on links that play media through WHEP. Many WHIP/WHEP SFU servers expect the viewer to accept both the audio and video tracks and cannot send only one of them. Preventing the audio track from connecting can therefore cause the entire WHEP playback link to fail. If you need silent WHEP playback, use [`&mutespeaker`](../../source-settings/and-mutespeaker.md) instead; the audio track can still arrive while local speaker output stays muted.
+
 You can pass a comma separated list of stream IDs that will be excluded, so that they specifically will play audio. `?noaudio=guest1a,guest2a` will only allow audio from guest1a and guest2a to play
 
 
