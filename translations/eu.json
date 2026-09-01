@@ -316,7 +316,21 @@
     "names-and-labels-coming-soon": "\n\tNames identifying connected peers will be a feature in an upcoming release.\n",
     "order-up": "<i class=\"las la-plus\"></i>",
     "links": "Liens",
-    "copy-solo-view-link": "copy solo view link"
+    "copy-solo-view-link": "copy solo view link",
+    "add-jitter-buffer": "Gehitu jitter buffer-a",
+    "audio-only": "Audioa soilik",
+    "clean-obs-output": "OBS irteera garbia",
+    "exclude-director-audio": "Baztertu zuzendariaren audioa",
+    "exclude-director-video": "Baztertu zuzendariaren bideoa",
+    "four-three-scene-mode": "4:3 eszena modua",
+    "hide-local-share": "Ezkutatu partekatze lokala",
+    "hide-video-controls": "Ezkutatu bideo kontrolak",
+    "randomize-tile-order": "Ausaz nahastu bideoen ordena",
+    "restart-whip": "Berrabiarazi WHIP",
+    "show-muted-status": "Erakutsi mutu egoera",
+    "show-speaker-outline": "Erakutsi hizlariaren ingerada",
+    "square-scene-mode": "Eszena karratu modua",
+    "video-only": "Bideoa soilik"
   },
   "titles": {
     "100": "100",
@@ -632,7 +646,24 @@
     "if-enabled-you-must-manually-add-a-video-to-a-scene-for-it-to-appear-": "有効にすると、動画を表示させるために手動でシーンに追加する必要があります。",
     "set-to-default-audio-channel": "デフォルトのオーディオチャンネルに設定",
     "set-to-audio-channel-7": "オーディオチャンネル7に設定",
-    "set-to-audio-channel-8": "オーディオチャンネル8に設定"
+    "set-to-audio-channel-8": "オーディオチャンネル8に設定",
+    "add-a-small-playback-buffer-to-smooth-jitter": "Gehitu erreprodukzio buffer txiki bat jitterra leuntzeko",
+    "disable-audio-playback-for-this-scene": "Desgaitu eszena honetako audio erreprodukzioa",
+    "disable-video-playback-for-this-scene": "Desgaitu eszena honetako bideo erreprodukzioa",
+    "exclude-the-director-s-audio-from-this-scene": "Baztertu zuzendariaren audioa eszena honetatik",
+    "exclude-the-director-s-video-from-this-scene": "Baztertu zuzendariaren bideoa eszena honetatik",
+    "hide-own-screen-share-preview": "Ezkutatu norberaren pantaila-partekatzearen aurrebista",
+    "hide-own-share-preview": "Ezkutatu norberaren partekatzearen aurrebista",
+    "hide-the-video-control-bar": "Ezkutatu bideoaren kontrol-barra",
+    "keep-the-scene-output-clean-for-obs": "Mantendu eszenaren irteera garbia OBSrentzat",
+    "mute-all-guests-in-room-toggle-": "Isildu gelako gonbidatu guztiak (txandakatu)",
+    "optimize-the-scene-for-4-3-video": "Optimizatu eszena 4:3 bideorako",
+    "optimize-the-scene-for-square-video": "Optimizatu eszena bideo karraturako",
+    "randomize-the-order-videos-load-into-the-scene": "Ausaz nahastu bideoak eszenan kargatzeko ordena",
+    "show-a-green-outline-around-active-speakers": "Erakutsi kontorno berdea hizlari aktiboen inguruan",
+    "show-a-muted-status-icon-on-remote-tiles": "Erakutsi mutu egoeraren ikonoa urruneko bideoetan",
+    "start-stop-google-drive-recording-for-all-guests": "Hasi/gelditu Google Drive grabaketa gonbidatu guztientzat",
+    "when-enabled-highlight-will-unmute-the-highlighted-guest-and-mute-the-other-guests-manual-unmute-changes-can-still-be-made-afterwards-": "Gaituta dagoenean, Nabarmentze funtzioak (Highlight) nabarmendutako gonbidatua piztuko du eta beste gonbidatuak isilduko ditu. Ondoren ere eskuzko piztu/isiltze aldaketak egin daitezke."
   },
   "placeholders": {
     "join-by-room-name-here": "Sartu gela izena batzeko",
@@ -761,6 +792,7 @@
     "streamid-already-published-obvious": "The stream ID you are publishing to is already in use.\n\nPlease consider using a password or a more varied/unique stream ID to avoid this issue.\n\nYou will now be disconnected.",
     "insecure-stream-id": "⚠️ Insecure stream ID detected\n\nIt is strongly advised that a password is used if using a short non-unique stream ID.\n\nThis is just a warning that can be ignored.",
     "mobile-no-screen-share": "Sorry, your mobile browser does not support screen-sharing.\n\nThe <a href='https://docs.vdo.ninja/getting-started/native-mobile-app-versions' target='_blank'>The native apps</a> do offer basic support for it though.",
-    "no-screen-share-supported-firefox": "Zure nabigatzaileak ez du pantaila partekatzea onartzen.\n\nBaliteke Firefoxen ezarpenek blokeatzea edo gunea ez‑seguru irekitzea."
+    "no-screen-share-supported-firefox": "Zure nabigatzaileak ez du pantaila partekatzea onartzen.\n\nBaliteke Firefoxen ezarpenek blokeatzea edo gunea ez‑seguru irekitzea.",
+    "block-from-rejoining": "Blokeatu berriz ez sartzeko (4 ordu)"
   }
 }
