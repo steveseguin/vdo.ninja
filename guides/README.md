@@ -35,6 +35,7 @@ This section collects practical VDO.Ninja guides for OBS Studio, remote guest wo
 * [green-room-and-guest-approval-options.md](green-room-and-guest-approval-options.md "mention")
 * [how-to-selectively-allow-access.md](how-to-selectively-allow-access.md "mention")
 * [sso-and-signed-in-access.md](sso-and-signed-in-access.md "mention")
+* [protecting-a-room-from-unwanted-listeners.md](protecting-a-room-from-unwanted-listeners.md "mention")
 * [how-to-send-the-audio-video-output-of-one-obs-to-another-obs-using-vdo.ninja.md](how-to-send-the-audio-video-output-of-one-obs-to-another-obs-using-vdo.ninja.md "mention")
 * [multi-operator-twitch-production.md](multi-operator-twitch-production.md "mention")
 * [low-latency-game-streaming-for-esports-commentary.md](low-latency-game-streaming-for-esports-commentary.md "mention")

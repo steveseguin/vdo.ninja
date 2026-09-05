@@ -8,6 +8,8 @@ description: >-
 
 VDO.Ninja has several access-control tools. They are not interchangeable, so start by choosing the layer you want to control:
 
+If a director/room link has leaked, read [Protecting a room from unwanted listeners](protecting-a-room-from-unwanted-listeners.md). Limiting director controls is not the same as preventing media access through scene/view links.
+
 | Goal | Best option | Where it applies |
 | --- | --- | --- |
 | Limit how many people can be admitted to a room | [`&roomcap`](../advanced-settings/director-parameters/and-roomcap.md) | Claimed director rooms |

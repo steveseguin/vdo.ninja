@@ -8,6 +8,16 @@ description: A larger lobby and invite workflow for controlling access before us
 
 Use it when you expect many people to request access, or when you want authenticated room ownership, waiting lists, and owner-controlled grant/revoke decisions before sending people into the actual VDO.Ninja room.
 
+Hosts and persistent helpers sign in with Discord, but the app also supports anonymous guests and shareable invitations. Use named Discord invitations when guest identity matters. Leave Testing mode disabled if visitors should wait for admission.
+
+## Access-control limits
+
+The app uses authenticated VDO signaling as well as app-level owner/helper controls. Scene tokens are prevented from claiming the signaling director seat or publishing through the checked request paths; keep those viewing credentials private.
+
+The guest-isolation option currently sets the client-side `directoronly` viewing parameter. It is not a verified server-side restriction on every media request. The reviewed non-viewer signaling path does not check app owner/helper status for every director claim or play request. Do not promise complete role/feed isolation against an admitted user with a modified client.
+
+See [Protecting a room from unwanted listeners](../guides/protecting-a-room-from-unwanted-listeners.md) for the September 2026 source review, practical setup, and verification limits, and the [live host and guest guide](https://app.invite.cam/guide) for the app workflow.
+
 ## What it is for
 
 `app.invite.cam` is useful for:

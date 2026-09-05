@@ -4,7 +4,7 @@ description: A powerful tool that allows a director to move guests to a differen
 
 # How to transfer guests to other rooms
 
-Sometimes you will want to move a user from one room to another. This is often the case if wanting to pre-screen users, or if you want to create break-out rooms. It also is a way to ensure when you kick a user out of a room, they cannot be allowed back in without express permission.
+Sometimes you will want to move a user from one room to another, for example to pre-screen users or create break-out rooms. Transfers can help keep destination invitations private during normal use, but are not an account-based ban or a guarantee against someone who has retained destination or source credentials.
 
 ![The transfer room button appears as an option for each guest](<../../.gitbook/assets/image (2) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1).png>)
 
@@ -14,7 +14,7 @@ When a user is transferred to another room, they no longer are the owner of that
 
 Only the main director can transfer users; anyone can be the director of a room -- it's first come first serve, so be sure to leave the director-window open if you wish to remain the director of a room
 
-When a guest is transferred to a new room, they do not know which room they are transferred to. This allows for privacy and secrecy, allowing for the main landing room to act like a screening room.
+Standard transfers keep the destination room out of the guest's normal address bar, allowing the original room to act as a screening room. This is not guaranteed secrecy: destination information reaches the browser through signaling, and some transfer paths send migration information to the room. Do not rely on transfer alone against someone inspecting their client. See [Protecting a room from unwanted listeners](../../guides/protecting-a-room-from-unwanted-listeners.md).
 
 The [`&queue`](../../general-settings/queue.md) command can be used in conjunction with rooms and transfer rooms. When you transfer a user from a queue, they will no longer be in any queue once transferred. When in queue, the guest will not be able to see anyone, but the director will be able to see them. When transferred out of the queue, they will be able to see everyone in the room.
 
