@@ -59,6 +59,10 @@ This is different from a raw VDO.Ninja `&push` stream ID. `app.invite.cam` manag
 4. The owner grants or revokes access.
 5. Approved users are sent to the intended VDO.Ninja link or room flow.
 
+Bulk activation and return-to-lobby actions preserve each guest's saved mute, isolation, and other settings. Saving an individual guest's settings creates an override that survives reconnecting through a reusable invite; the invite cannot silently reactivate that guest. Other participants can continue using the invite normally.
+
+Discord sign-in preserves the intended room and reusable invite. Complete sign-in in the tab where you started it; missing or expired sign-in requests offer a link to start again.
+
 ## Related
 
 {% content-ref url="../guides/how-to-selectively-allow-access.md" %}
