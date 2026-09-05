@@ -63,6 +63,8 @@ This is different from a raw VDO.Ninja `&push` stream ID. `app.invite.cam` manag
 
 Bulk activation and return-to-lobby actions preserve each guest's saved mute, isolation, and other settings. Saving an individual guest's settings creates an override that survives reconnecting through a reusable invite; the invite cannot silently reactivate that guest. Other participants can continue using the invite normally.
 
+Unchecking **Anyone with this link can use it** creates a single-use invite. The first guest account claims it and can reconnect; a different account cannot claim the same link. Anonymous guests must retain their original browser session to keep that identity. Blocking an active guest immediately clears their live route, and blocking a helper immediately removes their controls; existing signaling-outage limits still apply.
+
 Discord sign-in preserves the intended room and reusable invite. Complete sign-in in the tab where you started it; missing or expired sign-in requests offer a link to start again.
 
 ## Related
