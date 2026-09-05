@@ -14,7 +14,13 @@ Hosts and persistent helpers sign in with Discord, but the app also supports ano
 
 The app uses authenticated VDO signaling as well as app-level owner/helper controls. Scene tokens are prevented from claiming the signaling director seat or publishing through the checked request paths; keep those viewing credentials private.
 
-The guest-isolation option currently sets the client-side `directoronly` viewing parameter. It is not a verified server-side restriction on every media request. The reviewed non-viewer signaling path does not check app owner/helper status for every director claim or play request. Do not promise complete role/feed isolation against an admitted user with a modified client.
+The September 2026 deployment enforces media permissions in the app's signaling server. Ordinary guests cannot claim director ownership, create viewer tokens, or use their guest credentials to subscribe to another isolated guest. Guest access follows the session the host has actually activated. The guest interface does not expose scene/solo links or the room's viewer token.
+
+Keep guest isolation enabled for a director-only guest experience. Disabling isolation intentionally allows the configured group conversation; this is not a per-source viewing allowlist. Owners and authorized helpers can receive guest media. Viewer tokens deliberately allow viewing across the room, so someone given a scene link can alter the scene/source selection. They are bearer credentials, not invitations restricted to one person or source.
+
+**Solo-link deployment caveat (September 5):** a live helper test found that VDO.Ninja's solo-link generator copied the helper/director signaling credential instead of the viewer token. A local fix and failing-before/passing-after test are ready, but that client fix has not yet been deployed. Until verified live, do not distribute generated solo links outside the trusted director team. Group scene links use the viewer token.
+
+Returning a guest to the lobby, blocking them, or revoking helper access updates signaling permissions and closes the affected connected media peers. If a publisher has lost its signaling connection while peer-to-peer media continues, immediate revocation cannot be guaranteed until it reconnects. Existing custom-room owners are preserved; first-visitor ownership of previously unclaimed room names remains a separate unresolved issue.
 
 See [Protecting a room from unwanted listeners](../guides/protecting-a-room-from-unwanted-listeners.md) for the September 2026 source review, practical setup, and verification limits, and the [live host and guest guide](https://app.invite.cam/guide) for the app workflow.
 

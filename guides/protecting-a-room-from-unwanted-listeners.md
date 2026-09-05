@@ -16,7 +16,7 @@ In a normal room, the director URL is not an account-bound credential. Someone w
 | Start a new password-protected room | Exclude someone who does not receive the new credentials | Anyone receiving the room name and password can construct other room links |
 | Use `&maindirectorpassword` | Establish which director token-linked guests should recognize | Does not make scene/view access private |
 | Use SSO with an allowlist | Check accounts before supplying access to the protected room | Requiring sign-in alone permits any signed-in user; admitted browsers receive a shared room secret |
-| Use app.invite.cam | Account-owned hosting, waiting lobby, invitations, and helper permissions | Anonymous guests are supported; guest viewing defaults are not a guarantee of isolation from a modified client |
+| Use app.invite.cam | Managed admission and server-enforced guest/director media permissions | Keep guest isolation enabled; shared viewer tokens grant room viewing; see the solo-link deployment caveat below |
 
 If the unwanted person is an outsider, replacing leaked credentials or using an allowlist is useful. If that person must remain an admitted guest but must not access other feeds, do not assume these options provide that stronger guarantee.
 
@@ -158,7 +158,13 @@ Suggested setup:
 
 The app uses an authenticated signaling connection for its VDO iframe, alongside app-level ownership checks. Scene tokens can join and view, but are prevented from claiming the signaling director seat or publishing through the checked request paths. Knowing the public lobby URL alone does not supply those credentials.
 
-There are limits. **Keep activated guests from seeing each other** currently adds the guest client's `directoronly` viewing option. It is not proof that the server forbids every guest-to-guest media request. The reviewed non-viewer signaling path also does not check the app's owner/helper role for every director claim or play request. Do not promise every admitted guest is technically unable to alter roles or reach other feeds using a modified client.
+The September 2026 app deployment enforces guest isolation at the signaling server. Guests cannot claim director ownership, mint viewing tokens, or use their own credentials to access another isolated guest through a constructed scene/solo URL. They can publish only through their active invite session. Owners and authorized helpers retain the normal director workflow. Keep **Keep activated guests from seeing each other** enabled; disabling isolation intentionally permits the configured group conversation.
+
+The app does not show guests scene/solo controls or distribute the viewer token to them. A viewer link deliberately shared by the director is a bearer credential: its recipient can view the room, including by changing scene/source parameters. It is not restricted to the exact source shown in the original URL.
+
+**Solo-link deployment caveat (September 5):** live testing found that generated solo links still copy director/helper signaling credentials in the deployed VDO.Ninja client. The local generator fix passes its regression test but is awaiting deployment. Do not share those solo links outside the trusted director team until the fix is verified live. Group scene links use the viewer token.
+
+Connected media revocation was tested: moving a guest back to the lobby closes the affected peer connections. If a publisher loses signaling while its peer-to-peer media continues, immediate revocation is not guaranteed until reconnection. First-visitor ownership of previously unclaimed room names also remains unresolved; create and verify ownership before distributing a room link.
 
 If an old raw VDO session is exposed, changing the invitation page alone does not secure it. Move production into the managed workflow and retire the old sessions and credentials.
 
@@ -180,9 +186,9 @@ Passing normal-browser checks verifies the intended workflow. It does not establ
 
 ## Verification scope
 
-Reviewed September 5, 2026 against local VDO.Ninja client/SSO service source, local production-app source for app.invite.cam, and the public app guide. The app's 74 existing local tests passed, including scene-token join/view, publish rejection, and director-claim rejection. These are not a complete adversarial security audit.
+Reviewed September 5, 2026 against local VDO.Ninja client/SSO service source, deployed app.invite.cam source, and the public app guide. The app's 107 local checks passed (69 app/roster checks and 38 full-handler access checks); the unclaimed-room ownership test is explicitly deferred. Production browser checks covered guest publishing, director reception, shared viewing, denial of unshared guest scene/solo access, and connected media revocation. A real Discord session also exercised helper activation and demotion. The additional solo-credential test identified the client deployment caveat above. These are not a complete adversarial security audit.
 
-Live signed-in SSO admission, production deployment parity, and revocation of established media sessions were not tested. Availability and UI may differ between deployed versions; verify the build used for your production.
+Fresh Discord OAuth returned to the existing owner room, and native OBS 32.2.2 received synthetic video/audio through scene and solo browser sources, including after reload. The solo-link credential limitation above still applies. Live signed-in VDO.Ninja SSO admission has not been tested; app.invite.cam uses a separate access system, and its successful tests do not establish SSO security. Verify the client and server versions used for your production.
 
 Source paths checked for this review:
 
