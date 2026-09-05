@@ -12,6 +12,8 @@ Hosts and persistent helpers sign in with Discord, but the app also supports ano
 
 In **App helpers / co-directors**, enter exact Discord usernames, keeping periods and underscores. Use the Discord username rather than the app room URL name. An optional leading `@` or full `username#discriminator` is accepted. Punctuation-distinct names are different accounts and do not share helper access.
 
+Removing a name immediately revokes helper access granted by that list. A separately assigned Helper role or temporary helper grant must also be revoked if you want to remove all of that person's helper access.
+
 Custom guest destinations and lobby previews support HTTP(S) URLs and relative web paths. Executable URL schemes, including `javascript:` and `data:`, are blocked. Refresh already open app pages to load this protection for saved and newly entered destinations.
 
 The host can also promote a connected anonymous guest to a temporary helper. That access belongs to the currently granted app sessions and ends when they disconnect, reload, or are demoted. It does not become a saved helper invitation. Guests using multiple tabs appear once in the roster and remain online until their last tab disconnects.
