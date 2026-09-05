@@ -10,6 +10,8 @@ Use it when you expect many people to request access, or when you want authentic
 
 Hosts and persistent helpers sign in with Discord, but the app also supports anonymous guests and shareable invitations. Use named Discord invitations when guest identity matters. Leave Testing mode disabled if visitors should wait for admission.
 
+In **App helpers / co-directors**, enter exact Discord usernames, keeping periods and underscores. Use the Discord username rather than the app room URL name. An optional leading `@` or full `username#discriminator` is accepted. Punctuation-distinct names are different accounts and do not share helper access.
+
 The host can also promote a connected anonymous guest to a temporary helper. That access belongs to the currently granted app sessions and ends when they disconnect, reload, or are demoted. It does not become a saved helper invitation. Guests using multiple tabs appear once in the roster and remain online until their last tab disconnects.
 
 ## Access-control limits
