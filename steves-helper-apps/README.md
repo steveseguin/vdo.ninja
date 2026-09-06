@@ -19,6 +19,7 @@ This section covers the VDO.Ninja ecosystem beyond the main web app, including h
 * [raspberry.ninja](raspberry.ninja/ "mention") ([https://raspberry.ninja](https://raspberry.ninja))
 * [mixer-app.md](mixer-app.md "mention") ([https://vdo.ninja/alpha/mixer](https://vdo.ninja/alpha/mixer))
 * [screen-recorder.md](screen-recorder.md "mention") ([https://vdo.ninja/screenrecorder/](https://vdo.ninja/screenrecorder/))
+* [qr-connect.md](qr-connect.md "mention") ([https://vdo.ninja/qr](https://vdo.ninja/qr))
 * [whip-and-whep-tooling.md](whip-and-whep-tooling.md "mention") ([https://vdo.ninja/whip](https://vdo.ninja/whip))
 * [icecast-and-azuracast.md](icecast-and-azuracast.md "mention") ([https://vdo.ninja/icecast](https://vdo.ninja/icecast))
 * [versus.cam.md](versus.cam.md "mention") ([https://versus.cam/](https://versus.cam/))

@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="530" viewBox="0 0 960 530" role="img" aria-labelledby="title description">
+  <title id="title">Two codes. Then a call.</title>
+  <desc id="description">A sends an offer code to B, then B sends a reply code to A. Both can then enable camera and microphone for encrypted audio, video, and chat. No handshake server carries the codes. TURN can relay traffic when needed.</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 Z" fill="#205c96"/></marker>
+  </defs>
+  <rect width="960" height="530" fill="white"/>
+  <g font-family="Arial, Helvetica, sans-serif" text-anchor="middle" fill="#142c43">
+    <text x="480" y="54" font-size="38" font-weight="bold">Two codes. Then a call.</text>
+    <text x="480" y="85" font-size="24">No handshake server</text>
+    <g fill="#edf4fb" stroke="#205c96" stroke-width="3">
+      <rect x="45" y="100" width="190" height="210" rx="22"/>
+      <rect x="725" y="100" width="190" height="210" rx="22"/>
+    </g>
+    <g font-size="29" font-weight="bold">
+      <text x="140" y="210">Device A</text><text x="820" y="210">Device B</text>
+      <text x="480" y="139">1. Offer code</text>
+      <text x="480" y="241">2. Reply code</text>
+    </g>
+    <g stroke="#205c96" stroke-width="5" marker-end="url(#arrow)">
+      <path d="M260 170 H695"/><path d="M700 273 H265"/>
+    </g>
+    <rect x="45" y="348" width="870" height="122" rx="18" fill="#e9f5f0" stroke="#25644a" stroke-width="3"/>
+    <text x="480" y="391" font-size="30" font-weight="bold">3. Start camera / microphone</text>
+    <text x="480" y="438" font-size="28">Encrypted audio, video and chat</text>
+    <text x="480" y="511" font-size="25">Direct when possible; TURN relay if needed</text>
+  </g>
+</svg>

@@ -32,6 +32,7 @@
     * [Documentation](steves-helper-apps/raspberry.ninja/documentation.md)
   * [Mixer App](steves-helper-apps/mixer-app.md)
   * [Screen Recorder](steves-helper-apps/screen-recorder.md)
+  * [QR Connect](steves-helper-apps/qr-connect.md)
   * [WHIP and WHEP tooling](steves-helper-apps/whip-and-whep-tooling.md)
   * [Icecast and AzuraCast audio publishing](steves-helper-apps/icecast-and-azuracast.md)
   * [Versus.cam](steves-helper-apps/versus.cam.md)

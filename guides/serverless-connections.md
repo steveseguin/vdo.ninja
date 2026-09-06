@@ -8,7 +8,7 @@ Every VDO.Ninja call normally starts the same way. Both browsers connect to the 
 
 **The server is a postman, not a participant.** If the two browsers exchange the initial messages by some other means — a QR code held up to a camera, a line pasted into a chat box — they can establish their own data channel. The example then uses that channel to carry any later signalling peer to peer, so it never needs the handshake server.
 
-An example implementation is linked at the bottom of the page.
+For a shorter explanation, a diagram, and setup steps, see [QR Connect](../steves-helper-apps/qr-connect.md). This page covers the technical details.
 
 ## What actually has to be exchanged
 
@@ -89,9 +89,9 @@ compact codes keep TURN as a fallback without forcing it normally.
 
 ## After connecting: persistent chat and signalling
 
-The first VDO.Ninja data channel is sufficient to finish the QR handshake, but
-VDO.Ninja may replace that peer connection when a camera or microphone is first
-added. Chat tied only to the bootstrap connection would disappear with it.
+The first VDO.Ninja data channel is sufficient to finish the QR handshake.
+A separate persistent channel keeps chat and later signalling independent
+of the media connection's lifecycle.
 
 The example therefore negotiates a second, independent data-only peer
 connection immediately after connecting. It inherits VDO.Ninja's ICE servers
@@ -179,6 +179,6 @@ The implementation is included in the app repository at `qr.html`. Once that app
 
 [**https://vdo.ninja/qr**](https://vdo.ninja/qr)
 
-One person presses **Start connection** and gets a QR code plus a copyable compact code. The other opens the QR link or pastes the code, gets a reply code back, and the first person scans or pastes that in. Both can then chat; the sharing side can also turn on its camera or microphone. The wrapper drives an unmodified VDO.Ninja iframe, so media uses the normal VDO.Ninja paths while persistent chat and signalling remain in the example wrapper.
+One person presses **Start connection** and gets a QR code plus a copyable compact code. The other opens the QR link or pastes the code, gets a reply code back, and the first person scans or pastes that in. Both can then chat and turn on their own camera or microphone. Media uses the normal VDO.Ninja iframe paths. The wrapper opts into parent-routed SDP/ICE signalling with `bypasssignaling`, keeping compact session IDs consistent during later media negotiation.
 
 The wire format, the measurements behind the numbers on this page, and the cross-browser test results are documented alongside the example in [`examples/qrconnect.md`](https://github.com/obsninja/obsninja/blob/master/examples/qrconnect.md).
