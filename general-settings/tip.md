@@ -33,7 +33,7 @@ Enables Ninja Backer tipping for the sender. Viewers must opt in with `&showtips
 - `&notipqr`: hide the QR overlay
 - `&tipqrsize=200`: set QR size (default 150, min 100)
 - `&tipamounts=1,5,10,25`: custom preset amounts
-- `&tipcurrency=USD`: set currency for the tip modal
+- `&tipcurrency=USD`: initial currency hint; the performer's verified currency wins
 - `&tipserver=https://ninjabacker.com`: override the tip server (advanced)
 - `&receivetips` or `&tipping`: show setup modal without an ID (legacy)
 

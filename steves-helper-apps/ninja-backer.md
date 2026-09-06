@@ -4,7 +4,7 @@ description: Tipping and supporter platform used with VDO.Ninja tip links and cr
 
 # Ninja Backer
 
-Ninja Backer is the tipping and supporter platform used by VDO.Ninja's `&tip` and `&tips` workflows.
+Ninja Backer is the tipping and supporter platform used by VDO.Ninja's `&tip` and `&showtips` workflows.
 
 ## Link
 

@@ -31,13 +31,13 @@ Each performer also gets a standalone donation page, for example:
 3. Copy your Tip ID from the dashboard
 4. Add `&tip=YOUR_TIP_ID` to your push link
 
-Example (alpha):
-`https://vdo.ninja/alpha/?push=mystream&tip=YOUR_TIP_ID`
+Example:
+`https://vdo.ninja/?push=mystream&tip=YOUR_TIP_ID`
 
 ### Viewers
 
 Viewers must opt in with `&showtips` to see the tip UI:
-`https://vdo.ninja/alpha/?view=mystream&showtips`
+`https://vdo.ninja/?view=mystream&showtips`
 
 ## URL parameters
 
@@ -50,7 +50,7 @@ Viewers must opt in with `&showtips` to see the tip UI:
 | `&notipqr` | Viewer | Hide the QR code overlay |
 | `&tipqrsize=200` | Viewer | QR size in pixels (default 150, min 100) |
 | `&tipamounts=1,5,10,25` | Viewer | Custom preset amounts |
-| `&tipcurrency=USD` | Viewer | Currency for the tip modal |
+| `&tipcurrency=USD` | Viewer | Initial currency hint; the performer's verified currency wins |
 
 {% hint style="info" %}
 Use `&tip` or `&tipsid` for tipping. The `&tips` parameter is a guest help-screen and is not the tipping feature.
@@ -73,10 +73,16 @@ Full developer docs are available at:
 
 This includes webhook details, live tip notification pages, OBS overlay pages, and other integrations.
 
-## Alpha notes
+## Payment notes
 
-- Tipping is currently on `https://vdo.ninja/alpha` for testing
-- Minimum tip amount is $1 (will likely increase after alpha)
+- Tipping uses the sender's opt-in and the viewer's `&showtips` opt-in.
+- Payment amounts and minimums use the performer's currency. JPY uses whole yen; other supported currencies use two decimals. The payment form enforces the server's limits.
 - Commission is 0% (Stripe fees only)
 - Commission may change in the future as NinjaBacker is a separate service
 - Questions or feedback: reach out on Discord
+
+## Third-party automation
+
+Use the [developer guide](https://ninjabacker.com/developers) for signed webhooks, delivery retries, and SSE. Keep your Tip ID and OBS URL private. SSE is a live feed with no replay; use webhooks for durable automation. Accept a webhook only after signature verification and durable storage, deduplicate using `X-NinjaBacker-Delivery`, and ignore `isTest: true` for paid rewards.
+
+If payment succeeds but confirmation fails, use **Retry Notification**; it does not charge again.
