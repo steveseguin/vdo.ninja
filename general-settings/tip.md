@@ -37,6 +37,24 @@ Enables Ninja Backer tipping for the sender. Viewers must opt in with `&showtips
 - `&tipserver=https://ninjabacker.com`: override the tip server (advanced)
 - `&receivetips` or `&tipping`: show setup modal without an ID (legacy)
 
+## Example links
+
+Creator (keep this publishing link private):
+
+```text
+https://vdo.ninja/?push=mystream&tip=YOUR_TIP_ID
+```
+
+Viewer:
+
+```text
+https://vdo.ninja/?view=mystream&showtips
+```
+
+Replace both placeholders with your own stream ID and dashboard Tip ID. Share `https://ninjabacker.com/YOUR_USERNAME` as the public tip page, rather than sharing a private notification token.
+
+Use **Send Test Tip** in the dashboard to test alerts without a charge. If a real payment succeeds but confirmation fails, **Retry Notification** retries confirmation without charging again.
+
 ## Guide
 
 {% content-ref url="../guides/ninjabacker-tipping.md" %}
