@@ -86,3 +86,13 @@ This includes webhook details, live tip notification pages, OBS overlay pages, a
 Use the [developer guide](https://ninjabacker.com/developers) for signed webhooks, delivery retries, and SSE. Keep your Tip ID and OBS URL private. SSE is a live feed with no replay; use webhooks for durable automation. Accept a webhook only after signature verification and durable storage, deduplicate using `X-NinjaBacker-Delivery`, and ignore `isTest: true` for paid rewards.
 
 If payment succeeds but confirmation fails, use **Retry Notification**; it does not charge again.
+
+## Receipts and payment status
+
+The checkout offers an optional receipt email address. Stripe receives this address to send the receipt; NinjaBacker does not retain it in tip history or send it to creator webhooks. Leaving it blank keeps the usual checkout flow.
+
+The dashboard warns when Stripe needs account information or has disabled payments or payouts. Follow the Stripe Dashboard link to resolve those requirements. Adjusted tip totals exclude refunded amounts and disputed funds, before Stripe fees; recent tips show their refund and dispute status.
+
+NinjaBacker periodically checks Stripe to recover missed payment confirmations and refresh refund/dispute status. It does not create another charge during recovery.
+
+In the webhook settings, refresh delivery history to inspect recent attempts. Eligible failed or pending deliveries can be retried using the same delivery ID, so integrations must continue deduplicating that ID. Delivered events and events for an old destination cannot be replayed with this control.
