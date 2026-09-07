@@ -56,6 +56,7 @@
   * [Video bitrate in rooms](guides/video-bitrate-in-rooms.md)
   * [Room-only mobile bitrate tiers](guides/room-only-mobile-bitrate-tiers.md)
   * [Stable IRL streaming](guides/irl-streaming-stability.md)
+  * [Low-bandwidth video and connection profiles](guides/low-bandwidth-video-and-connection-profiles.md)
   * [Mobile uplinks with Starlink, cellular, and bonded networks](guides/mobile-uplink-starlink-cellular-bonding.md)
   * [Delay an incoming feed](guides/delay-an-incoming-feed.md)
   * [How to get permanent links](guides/how-to-get-permanent-links.md)

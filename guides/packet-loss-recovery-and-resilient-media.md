@@ -1013,3 +1013,6 @@ For most productions:
 * [libwebrtc video sender RED/ULPFEC and FlexFEC selection](https://chromium.googlesource.com/external/webrtc/+/master/call/rtp_video_sender.cc)
 * [libwebrtc video receiver RED/ULPFEC path](https://chromium.googlesource.com/external/webrtc/+/master/video/rtp_video_stream_receiver.cc)
 * [RFC 9725: WHIP](https://www.rfc-editor.org/rfc/rfc9725)
+
+
+For adaptive camera profiles, extreme low-bitrate behavior, browser qualification and measured phone results, see [Low-bandwidth video and connection profiles](low-bandwidth-video-and-connection-profiles.md).

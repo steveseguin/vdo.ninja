@@ -11,6 +11,7 @@ This section collects practical VDO.Ninja guides for OBS Studio, remote guest wo
 * [video-bitrate-for-push-view-links.md](video-bitrate-for-push-view-links.md "mention")
 * [video-bitrate-in-rooms.md](video-bitrate-in-rooms.md "mention")
 * [room-only-mobile-bitrate-tiers.md](room-only-mobile-bitrate-tiers.md "mention")
+* [Low-bandwidth video and connection profiles](low-bandwidth-video-and-connection-profiles.md)
 * [hotkey-support](hotkey-support/ "mention")
 * [midi-api-and-webhid-support.md](midi-api-and-webhid-support.md "mention")
 * [ptz-remote-control.md](ptz-remote-control.md "mention")

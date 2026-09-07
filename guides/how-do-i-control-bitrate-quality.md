@@ -53,3 +53,6 @@ You can improve audio quality in the same way, by increasing the [`&audiobitrate
 {% content-ref url="audio-filters.md" %}
 [audio-filters.md](audio-filters.md)
 {% endcontent-ref %}
+
+
+For adaptive camera profiles, extreme low-bitrate behavior, browser qualification and measured phone results, see [Low-bandwidth video and connection profiles](low-bandwidth-video-and-connection-profiles.md).

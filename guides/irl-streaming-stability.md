@@ -6,6 +6,8 @@ description: A practical field guide for stable VDO.Ninja IRL streams from phone
 
 Start with 720p30 at about 2 Mbps. A 6000-kbps viewing target does not reserve 6000 kbps or make a cellular path more reliable. It asks for larger frames and can make packet loss, recovery bursts, phone heat, and encoder instability worse.
 
+For the experimental adaptive `connectionprofile=irl` and the clearer-slideshow `talkinghead` option, see [Low-bandwidth video and connection profiles](low-bandwidth-video-and-connection-profiles.md). These are separate from the static presets below. When testing an adaptive profile, omit the viewer `degrade=maintain-framerate` override shown below so it does not override the profile's resolution preference. Check the linked guide's availability and browser limitations first.
+
 ## 1. Start with this profile
 
 Replace `STREAMID` with a unique stream ID.
