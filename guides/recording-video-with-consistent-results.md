@@ -16,6 +16,8 @@ If you record a guest after their video has already crossed a weak Wi-Fi connect
 
 For important recordings, do not depend on only one copy. Use a live recording and at least one backup.
 
+For longer local takes, use [`&splitrecording`](../advanced-settings/recording-parameters/and-splitrecording.md) to save smaller parts. The updated disk-only recorder makes each part independently playable; recordings shared with a cloud uploader retain continuation parts. Automatic iPhone/iPad splitting also limits estimated part size without lowering recording quality. Check that your deployment includes this update and test actual saved files on the device.
+
 ## A simple approach
 
 For many serious productions, a practical approach to test is:
