@@ -13,8 +13,55 @@ You could find out more about these parameters when searching for them on this l
 
 ## Mix-Minus (`&mixminus`)
 
-`&mixminus` (alias `&mm`) enables N-1 (mix-minus) routing when used on a director or co-director link. Each guest receives a custom audio mix that includes all other participants but excludes their own audio, preventing self-return echo loops.
+Mix-minus, also called N-1, is a return mix that excludes the recipient's own audio. For example, guest A receives the host, guest B, and playback audio; guest B receives the host, guest A, and playback audio. Each guest's separate microphone feed is omitted from their own return.
 
-This is a director-side feature: the director's browser creates and manages the per-guest mixes. Add `&mixminus` to the **director** URL, not to guest links.
+`&mixminus` (alias `&mm`) enables director-hosted mix-minus on a director or co-director link. The browser builds a separate return for each guest, including the director's outgoing audio and other received guest audio by default.
 
-Note: `&mixminus` prevents a guest from hearing their own voice back, but does **not** prevent speaker-to-mic acoustic bleed in rooms where guests use external speakers without headphones. For that, see [`&noheadphones`](source-settings/noheadphones.md).
+### Enable director-hosted mix-minus
+
+Add the flag to the director URL before joining:
+
+`https://vdo.ninja/?director=ROOM&mixminus`
+
+Replace `ROOM` with your room name and preserve any other required room parameters. For this workflow, put the flag on the director that will host the mixes; guests do not need it on their invite links. A co-director can also host mixes, but enabling multiple mixers can introduce additional copies of the same audio.
+
+The mixing browser needs an active audio context, access to the source audio, and an outbound peer audio connection to each recipient. Keep that browser connected throughout the session. A visible Mix control alone does not guarantee that an outbound audio sender exists.
+
+**The flag does not disable normal guest-to-guest audio.** If a guest hears another participant directly and through the director's mix, they may hear doubled or delayed audio. Plan and test the complete routing; adding the flag alone does not convert an ordinary room into a single-path audio system.
+
+### Choose what a guest hears
+
+In the director control center, open the listener's **Additional Controls**, find **PGM / Mic**, and select **Mix**. Choose the sources for that listener:
+
+* **Director Mix** includes the director's processed outgoing audio.
+* Raw input devices can be selected separately. Avoid including the same microphone through both a raw input and Director Mix.
+* **Guests** lets you select other received audio sources. The listener's own connection is excluded automatically.
+
+The per-guest Mix control can also be used without the URL flag for a targeted route. Without `&mixminus`, other guests are excluded initially; with it, other guests are included by default.
+
+Opening the menu enables the custom mix and may immediately replace the outbound audio track. Closing it only hides the menu. There is currently no reliable one-click restoration of the original director audio track; uncheck sources to stop relaying them and verify what the listener hears. See [Guest Audio Recovery and Mesh Debug](guides/mesh-network-debug.md#emergency-audio-patch-send-b-to-a-with-mix) for the detailed recovery procedure.
+
+### Common uses
+
+| Use case | Routing approach |
+| --- | --- |
+| Interviews, panels, or remote production | Give each participant the host and selected other speakers, excluding their own feed. Check for duplicate direct audio paths. |
+| Playback clips or music for participants | Bring playback into Ninja as a separate audio source or as part of the director's outgoing audio, then include it in the required returns. |
+| A missing guest-to-guest audio connection | Use the listener's Mix control to relay only the missing speaker. Remove that source from the custom mix when the direct connection recovers. |
+| Phone or external conferencing bridges | Build a return excluding the caller or conference audio before sending it back to that endpoint. See [phone call-in routing](guides/phone-call-ins-with-vdo-ninja-and-virtual-audio-cables.md). |
+
+### OBS scene changes and program returns
+
+Keeping voices audible while switching cameras or screen shares is a separate routing task. One approach is a room scene link with `&novideo` as an audio-only OBS browser source, reused in every required scene. Mute duplicate audio on the visual sources and ensure the audio source remains active during transitions. `&mixminus` controls participant returns; it does not keep OBS sources active across scene changes.
+
+For playback from OBS, create a return containing only the sources that participants should hear, such as clips, music, or the host microphone. Exclude incoming room audio from that shared return. See [Send an OBS return feed to guests](guides/send-an-obs-return-feed-to-guests.md).
+
+**Mix-minus cannot remove a voice already embedded in a mixed input.** If the OBS program feed contains guest A, excluding A's separate Ninja connection does not remove A from that program feed. Keep sources separate until the return mix is built, or create the required mix-minus upstream in the mixer or routing software.
+
+### Limits and checks before going live
+
+* These custom returns use individual peer audio connections. Meshcast does not provide this per-recipient mix-minus routing; do not assume a shared Meshcast program feed can supply a different return to each guest.
+* A second connection carrying the same person's microphone is a separate source. Excluding their main connection does not automatically exclude that duplicate.
+* Mix-minus does not prevent acoustic feedback from speakers into microphones. Use headphones where possible; see [`&noheadphones`](source-settings/noheadphones.md) for speaker-based setups.
+* Have each participant speak, play a clip, and switch production scenes. Confirm that everyone hears each intended source once and never hears their own delayed voice.
+* Recheck after reconnecting a guest or restoring a failed direct connection. If audio doubles, inspect both the direct path and the selected custom-mix sources.
