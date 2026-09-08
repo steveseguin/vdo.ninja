@@ -4,6 +4,8 @@ description: Set up a Twilio phone number and backend for the experimental VDO.N
 
 # Twilio phone call-in setup
 
+The shared call-in audio controls are described in [Microphone mute and private conversations](signalwire-sip-call-in-setup.md#microphone-mute-and-private-conversations). Builds containing the September 8, 2026 update pause the caller's return feed during Solo Talk/private isolation and restore it afterward, without taking the caller's incoming audio off air.
+
 This guide is for advanced users or operators testing the experimental Twilio call-in adapter. It assumes there is a compatible backend service, such as a Cloudflare Worker, that can mint Twilio Voice SDK tokens and answer Twilio webhooks.
 
 Do not put Twilio account secrets in a VDO.Ninja URL, a public web page, or GitHub. Twilio Account Auth Tokens and API key secrets belong on the backend only.

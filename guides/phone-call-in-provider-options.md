@@ -6,6 +6,8 @@ description: Compare practical BYO phone call-in options for VDO.Ninja, includin
 
 Phone call-ins require a bridge between the public phone network and the browser. VDO.Ninja can handle the WebRTC side, but a phone provider still needs to supply the phone number, PSTN minutes, SIP trunk, or programmable voice API.
 
+For calls within an existing SIP/AoIP system, a public phone number and PSTN provider are unnecessary. Route calls through a WebRTC-capable PBX extension using `&callin=sip`; see [the existing SIP server setup](signalwire-sip-call-in-setup.md#already-have-a-sip-server-or-aoip-system).
+
 The current recommended direction is bring-your-own provider. A free shared VDO.Ninja dial-in number may be tested later, but it is not the default recommendation yet because phone numbers and PSTN minutes create ongoing cost and abuse risk.
 
 Last reviewed: July 12, 2026.
