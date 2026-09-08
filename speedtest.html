@@ -343,9 +343,9 @@
 				srcString = appendSpeedtestParams(srcString, speedtestPublisherParams);
 				srcString += "&"+testType+"&audiodevice=0&fullscreen&transparent&darkmode&remote&speedtest="+zone;
 				
-				if (urlParams.has("turn")) {
-					srcString = srcString + "&turn=" + urlParams.get("turn");
-				}
+				urlParams.getAll("turn").forEach(function (turnvalue) {
+					srcString = srcString + "&turn=" + turnvalue;
+				});
 
 				// we are changing some text on page load, just to demonstrate what's possible.
 				iframe.onload = function (e) {
@@ -388,9 +388,9 @@
 				var srcString = "./?view=" + streamID + "&cleanish&noaudio&scale=0&speedtest="+zone; // No TURN servers set on the reciever. Don't want to query for TURN servers needlessly.
 				srcString = appendSpeedtestParams(srcString, speedtestViewerParams);
 
-				if (urlParams.has("turn")) {
-					srcString = srcString + "&turn=" + urlParams.get("turn");
-				}
+				urlParams.getAll("turn").forEach(function (turnvalue) {
+					srcString = srcString + "&turn=" + turnvalue;
+				});
 
 				if (urlParams.has("buffer")) {
 					srcString = srcString + "&buffer=" + urlParams.get("buffer");
