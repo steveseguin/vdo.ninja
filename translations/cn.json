@@ -315,7 +315,21 @@
     "click-for-quick-room-overview": "\n<i class=\"las la-question-circle\"></i> <span data-translate=\"click-here-for-help\">单击此处获取快速概览和帮助</span>\n",
     "names-and-labels-coming-soon": "\n\t成员名称将是VDO.Ninja未来的功能之一。\n",
     "order-up": "<i class=\"las la-plus\"></i>",
-    "copy-solo-view-link": "复制独立观看链接"
+    "copy-solo-view-link": "复制独立观看链接",
+    "add-jitter-buffer": "添加抖动缓冲",
+    "audio-only": "仅音频",
+    "clean-obs-output": "清理 OBS 输出",
+    "exclude-director-audio": "排除导演音频",
+    "exclude-director-video": "排除导演视频",
+    "four-three-scene-mode": "4:3 场景模式",
+    "hide-local-share": "隐藏本地共享",
+    "hide-video-controls": "隐藏视频控制栏",
+    "randomize-tile-order": "随机排列画面顺序",
+    "restart-whip": "重启 WHIP",
+    "show-muted-status": "显示静音状态",
+    "show-speaker-outline": "显示发言者边框",
+    "square-scene-mode": "方形场景模式",
+    "video-only": "仅视频"
   },
   "titles": {
     "100": "100",
@@ -631,7 +645,24 @@
     "if-enabled-you-must-manually-add-a-video-to-a-scene-for-it-to-appear-": "如果启用，您必须手动将视频添加到场景中才能显示。",
     "set-to-default-audio-channel": "设置为默认音频频道",
     "set-to-audio-channel-7": "设置为音频频道 7",
-    "set-to-audio-channel-8": "设置为音频频道 8"
+    "set-to-audio-channel-8": "设置为音频频道 8",
+    "add-a-small-playback-buffer-to-smooth-jitter": "添加一个小型播放缓冲区以平滑抖动",
+    "disable-audio-playback-for-this-scene": "禁用此场景的音频播放",
+    "disable-video-playback-for-this-scene": "禁用此场景的视频播放",
+    "exclude-the-director-s-audio-from-this-scene": "从此场景中排除导演的音频",
+    "exclude-the-director-s-video-from-this-scene": "从此场景中排除导演的视频",
+    "hide-own-screen-share-preview": "隐藏自己的屏幕共享预览",
+    "hide-own-share-preview": "隐藏自己的共享预览",
+    "hide-the-video-control-bar": "隐藏视频控制栏",
+    "keep-the-scene-output-clean-for-obs": "为 OBS 保持场景输出的整洁",
+    "mute-all-guests-in-room-toggle-": "将房间内所有嘉宾静音（切换）",
+    "optimize-the-scene-for-4-3-video": "为 4:3 视频优化场景",
+    "optimize-the-scene-for-square-video": "为方形视频优化场景",
+    "randomize-the-order-videos-load-into-the-scene": "随机化视频加载到场景中的顺序",
+    "show-a-green-outline-around-active-speakers": "在活跃发言者周围显示绿色边框",
+    "show-a-muted-status-icon-on-remote-tiles": "在远程画面上显示静音状态图标",
+    "start-stop-google-drive-recording-for-all-guests": "开始/停止为所有嘉宾进行 Google Drive 录制",
+    "when-enabled-highlight-will-unmute-the-highlighted-guest-and-mute-the-other-guests-manual-unmute-changes-can-still-be-made-afterwards-": "启用后，“突出显示”功能将取消对被突出显示嘉宾的静音，并将其他嘉宾静音。之后仍可手动更改静音设置。"
   },
   "placeholders": {
     "join-by-room-name-here": "在此使用房间名称加入",
@@ -759,6 +790,8 @@
     "streamid-already-published-obvious": "您正在发布的流ID已被占用。\n\n请考虑使用密码或更复杂/唯一的流ID以避免此问题。\n\n即将断开连接。",
     "what-bitrate-gdrive": "该远程嘉宾将把录制内容直接保存至本地磁盘，并同步副本到您的Google Drive（recordings文件夹）。\n\n - 录制可能失败，建议同时开启备份录制！\n\n - 使用iPhone、Android设备或Safari浏览器的嘉宾常会遇到问题，需特别注意。",
     "insecure-stream-id": "⚠️ 检测到不安全流ID\n\n若使用简短非唯一流ID，强烈建议启用密码保护。\n\n本提示可忽略继续操作。",
-    "mobile-no-screen-share": "抱歉，您的移动浏览器不支持屏幕共享。\n\n但 <a href='https://docs.vdo.ninja/getting-started/native-mobile-app-versions' target='_blank'>原生APP</a> 可提供基础支持。"
+    "mobile-no-screen-share": "抱歉，您的移动浏览器不支持屏幕共享。\n\n但 <a href='https://docs.vdo.ninja/getting-started/native-mobile-app-versions' target='_blank'>原生APP</a> 可提供基础支持。",
+    "block-from-rejoining": "阻止重新加入（4小时）",
+    "no-screen-share-supported-firefox": "很抱歉，您的浏览器不支持屏幕共享。\n\n您的 Firefox 设置可能已配置为阻止此功能，或者您是通过不安全的方式访问本站点。"
   }
 }
