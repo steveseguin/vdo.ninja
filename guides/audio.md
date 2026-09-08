@@ -49,6 +49,8 @@ Tip: If you want to configure the VB Audio driver with custom settings, the reco
 
 #### Using OBS to capture audio
 
+For a focused walkthrough with current screenshots, see [Share audio from OBS to VDO.Ninja](share-obs-audio-with-vdo-ninja.md). It covers application capture, the monitoring device, which sources enter the cable, and changing audio sources. For video too, see [Share OBS Virtual Camera and audio](share-obs-virtual-camera-and-audio.md).
+
 While this option still requires a virtual audio cable, as seen above, you can use OBS to capture the application's audio and output the audio from OBS to the virtual cable via the Monitor output in OBS.
 
 <figure><img src="../.gitbook/assets/image (5) (5).png" alt=""><figcaption><p>Another way of selecting application audio for the Virtual Audio Cable</p></figcaption></figure>

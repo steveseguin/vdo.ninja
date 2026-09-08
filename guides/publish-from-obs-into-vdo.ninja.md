@@ -4,6 +4,8 @@ description: Publish an OBS scene into VDO.Ninja using OBS Virtual Camera and a 
 
 # Publish from OBS into VDO.Ninja
 
+For focused Windows walkthroughs with cropped screenshots, see [Share audio from OBS to VDO.Ninja](share-obs-audio-with-vdo-ninja.md) or [Share OBS Virtual Camera and audio](share-obs-virtual-camera-and-audio.md). The camera guide includes scene switching, fixed camera scenes, and keeping voices separate from game audio.
+
 If you want to use an OBS scene, source, crop, or full program output as the camera feed in VDO.Ninja, the most reliable general workflow is:
 
 1. Build the shot in OBS
@@ -65,10 +67,10 @@ OBS does not include a built-in virtual microphone device, so you normally need 
 
 In OBS:
 
-1. Open **Settings** -> **Audio** or **Advanced**
+1. Open **Settings → Audio** and scroll to its **Advanced** section
 2. Set the **Monitoring Device** to your virtual audio cable input
 3. Open **Advanced Audio Properties**
-4. For each source you want to send to VDO.Ninja, set **Audio Monitoring** to `Monitor and Output`
+4. For each source you want to send to VDO.Ninja, set **Audio Monitoring** to **Monitoring Enabled** in OBS 32.2.2, or **Monitor and Output** in older versions
 
 This lets OBS send selected audio sources into the virtual cable, which VDO.Ninja can then use as a microphone.
 

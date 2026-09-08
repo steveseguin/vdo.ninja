@@ -6,6 +6,8 @@ description: Send low-latency audio and video from one OBS setup to another remo
 
 In this walk-through we demonstrate how to use VDO.Ninja to stream a low-latency video/audio stream from one OBS Studio to another remote OBS Studio.
 
+For current Windows screenshots and a focused setup, use [Share OBS Virtual Camera and audio](share-obs-virtual-camera-and-audio.md). If your picture already works, use [Share audio from OBS to VDO.Ninja](share-obs-audio-with-vdo-ninja.md). These guides include changing sources, choosing a fixed Virtual Camera scene, and keeping game audio separate from Discord voices.
+
 {% embed url="https://youtu.be/Ze1q6Qof2r0" %}
 
 #### Requirements
@@ -45,7 +47,7 @@ Just press START VIRTUAL CAM in OBS v26 or newer.
 
 #### Step 2
 
-We will now configure OBS to output audio from the Browser Source to the Virtual Audio Cable. In the OBS settings, under Advanced, we select the Monitoring Device to be our Virtual Audio device. (CABLE Input).
+We will now configure OBS to output audio from the Browser Source to the Virtual Audio Cable. In current OBS, open **Settings → Audio**, scroll to the **Advanced** section, and select **CABLE Input** as the **Monitoring Device**. The older screenshot below shows a different settings layout.
 
 We also want to disable Windows audio ducking.
 
@@ -53,7 +55,7 @@ We also want to disable Windows audio ducking.
 
 #### Step 3
 
-In our last configuration step, we want to go into the Advanced Audio Properties in OBS. When there, we want to set up the Audio Monitoring setting to have any audio we want pushed to the Virtual Audio Cable to be set to MONITOR AND OUTPUT.
+In our last configuration step, open **Advanced Audio Properties** in OBS. For each source you want sent into the cable, choose **Monitoring Enabled** in OBS 32.2.2, or **Monitor and Output** in older versions as pictured below. Leave sources you want excluded on **Monitor Off**.
 
 ![](https://lh6.googleusercontent.com/rlcZugNaCwarzH2x08EATZJ17q4_LwozJv2ulOyigTmONkyCqaxBTLKlfbvy1BBVKEUD3BUnADQWOrLbYYYCjmu0q854BeFaccKWow1533U0mr0mDnMAq3NbnPrvYsx8YDx8XFCbGpERGxE)
 
