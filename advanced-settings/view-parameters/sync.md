@@ -43,12 +43,38 @@ The audio compensation follows subsequent buffer changes. This is entirely viewe
 
 [`&buffer2`](../video-parameters/and-buffer2.md) accounts for estimated network delay in the buffer calculation. It is not required to enable audio compensation. If your wrapper already calculates stream offsets, start with `&sync=0` and use the API for the requested buffer.
 
-### Limits
+### Negative sync: reduce added audio delay
+
+Use a negative value when audio needs less of the extra delay added by the compensation path. For example:
+
+```text
+https://vdo.ninja/?view=STREAMID&buffer=500&sync=-100
+```
+
+This requests 100 ms less audio compensation than `sync=0`. If the measured native audio jitter-buffer delay is 200 ms, the calculation is `500 - 200 - 100 = 200 ms` of additional audio delay, instead of 300 ms with `sync=0`. The native browser buffer is still managed separately.
+
+The final added audio delay is clamped to zero. If only 50 ms of compensation is available, `sync=-100` can remove that 50 ms; it cannot make audio play another 50 ms earlier. Likewise, negative sync alone with no available added delay cannot advance late audio. Its effect can change as the browser buffer settles.
+
+### Maximum sync and buffer values
+
+These limits apply to different parts of playback:
+
+| Setting | Current limit or behavior |
+| --- | --- |
+| Normal WebRTC `buffer`, `buffer2`, or iframe `setBufferDelay` | Native receiver hints are clamped to **0-4000 ms**. The browser may deliver a different actual delay; this is not an end-to-end latency cap. |
+| `sync` audio compensation | No separate fixed 4000 ms cap. The audio delay node is created with capacity equal to the initial nonnegative sync offset plus the initial audio buffer (or video buffer if no audio buffer is set), plus **5000 ms** of spare capacity. Later adjustments do not enlarge that existing node. |
+| Web Audio capacity | The browser API requires a delay-node capacity below 180 seconds. With the extra 5-second allowance, keep the initial positive sync offset plus initial buffer **below 175000 ms** for portability. This is a technical ceiling, not a tested or recommended sync range. |
+| Chunked buffering | Separate from these native WebRTC hints: shared audio/video targets are capped at **30000 ms**; video-only targets default to a **180000 ms** ceiling. See [`&buffer`](buffer.md) for the relevant options and limitations. |
+
+For example, `sync=0&buffer=1000` creates an audio compensation node with about 6000 ms of capacity. Loading a larger initial positive `sync` value creates a larger node, but does not extend the native video buffer. Raising the iframe buffer request beyond 4000 ms can therefore delay audio further without making native video follow.
+
+The Web Audio ceiling comes from [`createDelay()`](https://www.w3.org/TR/webaudio-1.0/#dom-baseaudiocontext-createdelay). Large audio-only offsets are not a way to obtain synchronized long-delay WebRTC playback. For ordinary A/V correction, use the smallest offsets needed and test the actual viewer.
+
+### Other limits
 
 * This is an attempt to compensate audio delay, not a guarantee of frame-accurate synchronization. Browser buffering and audio processing need time to adjust, especially when reducing a buffer. A requested zero buffer means minimum practical buffering, not zero end-to-end latency.
 * Compensation requires the viewer's Web Audio processing path. Do not combine it with [`&noap`](../../general-settings/noaudioprocessing.md) when relying on this feature.
 * The extra audio processing is opt-in; it adds processing and scheduling work, which matters on a heavily loaded viewer with many streams.
-* Small negative offsets can reduce an existing added audio delay, but cannot advance audio beyond the available playback data.
 
 `&sync=500` without a video buffer request adds an audio offset without requesting an additional video buffer.
 

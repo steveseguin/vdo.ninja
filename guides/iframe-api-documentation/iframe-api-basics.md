@@ -1153,6 +1153,7 @@ Notes:
 
 * Sending `setBufferDelay` **without** `streamID`, `UUID`, or `label` updates the viewer's default requested buffer.
 * Sending it **with** `streamID`, `UUID`, or `label` creates/updates an explicit per-stream override.
+* For normal WebRTC, native receiver buffer hints are clamped to 0-4000 ms. Larger requests are not a way to extend native video buffering and can leave separately delayed audio out of sync. See [`&sync`](../../advanced-settings/view-parameters/sync.md) for audio-node limits and negative-offset examples; negative sync reduces available added audio delay rather than providing negative latency.
 * `UUID: "*"` fans the same request out to all currently connected streams when no `streamID` or `label` is supplied. A supplied `streamID` takes precedence, so omit it when targeting every stream.
 * For chunked video workflows, the live target can still differ from the requested value if adaptive buffering is enabled.
 * If you need a fixed long-delay video target, load the viewer with:
