@@ -1,0 +1,15 @@
+Generated with the built-in image_gen tool.
+
+Use case: infographic-diagram
+Asset type: educational illustration for VDO.Ninja GitBook documentation.
+Create one polished landscape infographic, white background, dark readable sans-serif text, spacious layout, friendly small illustrated headphones/microphone/playback icons. Two stacked panels. Precise labels, no invented UI, no logos.
+Title: "Mix-minus: each guest gets a different return"
+Top panel: subtitle "Keep sources separate". Two independent horizontal rows with colored labeled source chips on left, right-pointing arrow, headphone listener on right.
+Row 1 source chips exactly "Host" + "Guest B" + "Playback", arrow to "Guest A". Beneath row: "Guest A's own feed is excluded".
+Row 2 source chips exactly "Host" + "Guest A" + "Playback", arrow to "Guest B". Beneath row: "Guest B's own feed is excluded".
+Use consistent colors for Host, Guest A, Guest B, Playback. Do not add arrows between rows. This represents intended return contents, not automatic suppression of direct peer connections.
+Bottom panel separated by fine rule, warm pale background, title "A premixed feed cannot be unmixed".
+Illustrate one sealed audio container labeled "OBS program" with visibly combined chips "Host + Guest A + Playback". Single arrow from that container to headphones labeled "Guest A". Beside headphones small warning icon and exact text "Guest A still hears their own voice".
+Bottom caption exact: "Exclude room audio before building a shared playback return."
+Small footer exact: "Use one audio path per source. Direct guest audio can duplicate a relayed mix."
+Make all text accurate and large enough for documentation, visual hierarchy, generous padding. No additional claims or decorations.

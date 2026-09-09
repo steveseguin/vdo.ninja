@@ -15,6 +15,8 @@ You could find out more about these parameters when searching for them on this l
 
 Mix-minus, also called N-1, is a return mix that excludes the recipient's own audio. For example, guest A receives the host, guest B, and playback audio; guest B receives the host, guest A, and playback audio. Each guest's separate microphone feed is omitted from their own return.
 
+<figure><img src=".gitbook/assets/docs-infographics/mix-minus-returns.png" alt="Guest A receives host, Guest B, and playback; Guest B receives host, Guest A, and playback. A premixed OBS feed containing Guest A still returns Guest A's voice to them."><figcaption><p>Intended return mixes keep each listener's own source out. A voice already embedded in a program feed must be excluded upstream; also avoid duplicate direct and relayed audio paths.</p></figcaption></figure>
+
 `&mixminus` (alias `&mm`) enables director-hosted mix-minus on a director or co-director link. The browser builds a separate return for each guest, including the director's outgoing audio and other received guest audio by default.
 
 ### Enable director-hosted mix-minus
