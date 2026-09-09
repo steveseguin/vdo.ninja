@@ -1126,6 +1126,10 @@ iframe.contentWindow.postMessage({
 
 Sets the buffer delay in milliseconds.
 
+**Keeping audio synchronized:** for normal WebRTC streams, load the viewer iframe with [`&sync=0`](../../advanced-settings/view-parameters/sync.md) before connecting, for example `https://vdo.ninja/?view=streamID123&sync=0`. This enables Web Audio compensation so audio can follow subsequent buffer changes. The API message alone does not enable that processing path.
+
+This is entirely viewer-side; the publisher does not need any changes. Neither `&buffer2` nor chunked publishing is required. `sync=0` means compensation with no extra fixed audio offset, not synchronization disabled. Changes may take time to settle and are not guaranteed to be frame accurate.
+
 ```
 // Set default buffer delay
 iframe.contentWindow.postMessage({ 
@@ -1149,7 +1153,7 @@ Notes:
 
 * Sending `setBufferDelay` **without** `streamID`, `UUID`, or `label` updates the viewer's default requested buffer.
 * Sending it **with** `streamID`, `UUID`, or `label` creates/updates an explicit per-stream override.
-* `UUID: "*"` fans the same request out to all currently connected streams.
+* `UUID: "*"` fans the same request out to all currently connected streams when no `streamID` or `label` is supplied. A supplied `streamID` takes precedence, so omit it when targeting every stream.
 * For chunked video workflows, the live target can still differ from the requested value if adaptive buffering is enabled.
 * If you need a fixed long-delay video target, load the viewer with:
 

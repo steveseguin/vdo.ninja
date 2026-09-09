@@ -26,6 +26,12 @@ The problem is that the browser doesn't fully make use of the available buffer i
 \
 Older versions of Chromium allowed upwards of 15-seconds of buffering, while recent versions generally provide only about 3–5 seconds.&#x20;
 
+### Keeping audio synchronized when changing the buffer
+
+If audio and video are synchronized initially but separate when you change the buffer, add [`&sync=0`](sync.md) to the **viewer URL before connecting**. This enables a Web Audio delay node that tries to compensate audio as the requested buffer changes, including changes through iframe [`setBufferDelay`](../../guides/iframe-api-documentation/iframe-api-basics.md).
+
+This is a viewer-side setting for normal WebRTC input. `&sync=0` does not require `&buffer2` or chunked mode. Browser buffer changes are approximate and may take time to settle; this is not a frame-accurate playout guarantee.
+
 ### Chunked-mode
 
 If using the `&chunked` transfer mode, the method and function of the `&buffer` option is different than normal. There is not hard coded limit on what delay you can add, as it that uses it a custom buffering solution that isn't controlled by the browser. You can set the delay to be whatever you want; minutes even, assuming you have the memory for it.
@@ -34,7 +40,7 @@ Using `&buffer` with `&chunked` mode can improve quality, however more than a fe
 
 #### Example values
 
-`&buffer=0` will force the audio to be in sync with the video, with the video playing back with minimal delay.
+`&buffer=0` requests minimal browser buffering. Add [`&sync=0`](sync.md) separately to enable explicit audio compensation.
 
 `&buffer=100` will add a 100-ms time delay to the video, on top of any existing delay.
 
@@ -51,7 +57,7 @@ If the issue is short random packet loss rather than jitter, [`&codec=vp8&vred`]
 {% endhint %}
 
 {% hint style="info" %}
-You can refer to the [`&sync`](sync.md) command if you wish to delay the audio, relative to the video. `&buffer` will try to keep the audio and video in sync, which might always be desired.
+Use [`&sync=0`](sync.md) to enable audio compensation while adjusting the buffer. A nonzero `&sync` value adds an audio offset relative to that compensation. The browser's normal buffering alone may not keep both tracks aligned during changes.
 {% endhint %}
 
 ## Chunked mode
