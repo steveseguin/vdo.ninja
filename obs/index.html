@@ -918,20 +918,22 @@
       const languageSelector = document.getElementById('languageSelector');
       
       
-      const DEFAULT_GRID_MARGIN = 75;
-      const DEFAULT_GRID_SPACING = 30;
+      const DEFAULT_GRID_MARGIN = 50;
+      const DEFAULT_GRID_SPACING = 40;
       const DEFAULT_GRID_X_OFFSET = 0;
       const DEFAULT_GRID_Y_OFFSET = 0;
       const DEFAULT_GRID_SPLIT_SCREEN = false;
 
-      const DEFAULT_REACTION_HIGHLIGHT_SPACING = 15;
+      const DEFAULT_REACTION_HIGHLIGHT_MARGIN = 15;
+      const DEFAULT_REACTION_HIGHLIGHT_SPACING = 20;
       const DEFAULT_REACTION_HIGHLIGHT_X_OFFSET = 0;
       const DEFAULT_REACTION_HIGHLIGHT_Y_OFFSET = 0;
       const DEFAULT_REACTION_HIGHLIGHT_DISTRIBUTE_CAMERAS = false;
+      const DEFAULT_REACTION_HIGHLIGHT_SIDE_CAMERAS_SIZE = 15;
 
       const CELL_ASPECT_RATIO = 16 / 9;
-      const REACTION_CAMERA_CROP_RATIO = 3/4; 
-      const HIGHLIGHT_CAMERA_CROP_RATIO = 3/4; 
+      const REACTION_CAMERA_CROP_RATIO = 0; 
+      const HIGHLIGHT_CAMERA_CROP_RATIO = 0; 
       const REACTION_HIGHLIGHT_ASPECT_RATIO = 16 / 9;
 
       
@@ -1148,8 +1150,25 @@
       let requestCallbacks = {}; 
       let vdoNinjaLastActivityTime = 0;
       let vdoNinjaConnectionCheckTimer = null;
+      setInterval(() => {
+          if (vdoNinjaConnected && document.getElementById("vdoNinjaIframe") && document.getElementById("vdoNinjaIframe").contentWindow) {
+              document.getElementById("vdoNinjaIframe").contentWindow.postMessage({"getStreamInfo": true}, "*");
+          }
+      }, 5000);
       let screenShareId = null; 
-      let highlightedStreamId = null; 
+      let highlightedStreamId = null;
+      let directorStreamId = null;
+
+      window.setDirector = function(streamId) {
+          if (directorStreamId === streamId) {
+              directorStreamId = null; 
+          } else {
+              directorStreamId = streamId;
+          }
+          logMessage(directorStreamId ? `Stream ${streamId} set as Director.` : `Director cleared.`);
+          updateStreamList();
+          applyLayoutsToScenes(); 
+      }; 
       const layoutConfigsListDiv = document.getElementById('layoutConfigsList');
       const addLayoutConfigBtn = document.getElementById('addLayoutConfigBtn');
       let sceneLayoutConfigs = []; 
@@ -1695,13 +1714,13 @@
       }
 
       
-      function createSliderWithNumberInput(idPrefix, labelKey, min, max, step, value, configId, propertyName) {
+      function createSliderWithNumberInput(idPrefix, labelKey, min, max, step, value, configId, propertyName, fallbackLabel = null) {
           const container = document.createElement('div');
           container.className = 'slider-container';
 
           const label = document.createElement('label');
           label.htmlFor = `layout-slider-${propertyName}-${configId}`;
-          label.textContent = (getTranslation(labelKey) ? getTranslation(labelKey) : labelKey) + ":";
+          label.textContent = (getTranslation(labelKey, fallbackLabel) ? getTranslation(labelKey, fallbackLabel) : (fallbackLabel || labelKey)) + ":";
           label.dataset.i18nLabel = labelKey;
           label.className = 'slider-label';
 
@@ -1991,7 +2010,9 @@
               container.appendChild(createSliderWithNumberInput(`grid-offsety-${configId}`, 'sceneLayouts.controls.offsetY', -1000, 1000, 1, currentConfig.offsetY ?? DEFAULT_GRID_Y_OFFSET, configId, 'offsetY'));
               container.appendChild(createCheckbox(`grid-split-${configId}`, 'sceneLayouts.controls.gridSplitScreenTwoCameras', currentConfig.splitScreenTwoCameras ?? DEFAULT_GRID_SPLIT_SCREEN, configId, 'splitScreenTwoCameras'));
           } else if (layoutType === 'reaction' || layoutType === 'highlight') {
+              container.appendChild(createSliderWithNumberInput(`rh-margin-${configId}`, 'sceneLayouts.controls.margin', 0, 500, 1, currentConfig.margin ?? DEFAULT_REACTION_HIGHLIGHT_MARGIN, configId, 'margin'));
               container.appendChild(createSliderWithNumberInput(`rh-spacing-${configId}`, 'sceneLayouts.controls.spacing', 0, 200, 1, currentConfig.spacing ?? DEFAULT_REACTION_HIGHLIGHT_SPACING, configId, 'spacing'));
+              container.appendChild(createSliderWithNumberInput(`rh-sideCamerasSize-${configId}`, 'sceneLayouts.controls.sideCamerasSize', 0, 50, 1, currentConfig.sideCamerasSize ?? DEFAULT_REACTION_HIGHLIGHT_SIDE_CAMERAS_SIZE, configId, 'sideCamerasSize', 'Side Cameras Size (%)'));
               container.appendChild(createSliderWithNumberInput(`rh-offsetx-${configId}`, 'sceneLayouts.controls.offsetX', -1000, 1000, 1, currentConfig.offsetX ?? DEFAULT_REACTION_HIGHLIGHT_X_OFFSET, configId, 'offsetX'));
               container.appendChild(createSliderWithNumberInput(`rh-offsety-${configId}`, 'sceneLayouts.controls.offsetY', -1000, 1000, 1, currentConfig.offsetY ?? DEFAULT_REACTION_HIGHLIGHT_Y_OFFSET, configId, 'offsetY'));
               container.appendChild(createCheckbox(`rh-distribute-${configId}`, 'sceneLayouts.controls.distributeCameras', currentConfig.distributeCameras ?? DEFAULT_REACTION_HIGHLIGHT_DISTRIBUTE_CAMERAS, configId, 'distributeCameras'));
@@ -2225,7 +2246,14 @@
                             : `<span style="color:#FFC107">${getTranslation("activeStreams.notInObs")}</span>`
                         }
                       </div>
-                      <div style="margin-top: 8px;" class="flex-row">`; 
+                      <div style="margin-top: 8px;" class="flex-row">`;
+            
+            const isDirector = directorStreamId === streamId;
+            streamItemHTML += `
+                      <button class="small-btn" onclick="setDirector('${streamId}')"
+                          style="background-color: ${isDirector ? '#27ae60' : '#4C80AF'}; margin-right: 5px; color: white; border: none; border-radius: 4px; padding: 4px 8px; cursor: pointer; transition: background-color 0.2s;">
+                          ${isDirector ? '★ ' + getTranslation("activeStreams.buttons.director", "Director") : getTranslation("activeStreams.buttons.setDirector", "Set Director")}
+                      </button>`; 
             streamItemHTML += `
                       <button class="add-stream-btn" data-stream-id="${streamId}"
                           style="background-color: ${
@@ -3265,7 +3293,7 @@
         }
         if (includeCommonParams) {
           url +=
-            "&cleanoutput&proaudio&ab=160&transparent&autoplay&noheader&webcursor&sl&cover&sl&showmeta"; 
+            "&cleanoutput&proaudio&ab=160&transparent&autoplay&noheader&webcursor&sl&cover&sl&showmeta";
         }
         return url;
       }
@@ -3362,9 +3390,43 @@
             }
             logMessage("VDO.Ninja iframe connection established and active.", "logMessages.vdoNinja.iframeConnectedActive");
           }
-          if (data && data.streamID) {
-            const streamId = data.streamID;
-            const label = data.label || (window.translation ? getTranslation("vdoNinja.defaultStreamLabel", {id: streamId}) : `Stream ${streamId}`); 
+          if (data) {
+            if (data.streamInfo) {
+                let updatedAny = false;
+                for (const uuid in data.streamInfo) {
+                    const info = data.streamInfo[uuid];
+                    const streamId = info.streamID;
+                    const label = info.label;
+                    if (streamId && label && activeStreams[streamId] && activeStreams[streamId].label !== label) {
+                        logMessage(`VDO.Ninja stream label dynamically synced for ID ${streamId}: "${label}" (was "${activeStreams[streamId].label}")`, "logMessages.vdoNinja.streamLabelUpdated", { id: streamId, newLabel: label, oldLabel: activeStreams[streamId].label });
+                        activeStreams[streamId].label = label;
+                        updatedAny = true;
+                    }
+                }
+                if (updatedAny) updateStreamList();
+            }
+            let streamId = data.streamID;
+            if (!streamId && data.UUID) {
+                const foundStream = Object.values(activeStreams).find(s => s.uuid === data.UUID);
+                if (foundStream) streamId = foundStream.streamId;
+            }
+
+            if (streamId) {
+                let incomingLabel = data.label;
+                if (data.value && typeof data.value === 'object' && data.value.label) {
+                    incomingLabel = data.value.label;
+                }
+                
+                if (incomingLabel && activeStreams[streamId] && activeStreams[streamId].label !== incomingLabel) {
+                    logMessage(
+                      `VDO.Ninja stream label dynamically updated for ID ${streamId}: "${incomingLabel}" (was "${activeStreams[streamId].label}")`,
+                      "logMessages.vdoNinja.streamLabelUpdated", { id: streamId, newLabel: incomingLabel, oldLabel: activeStreams[streamId].label }
+                    );
+                    activeStreams[streamId].label = incomingLabel;
+                    updateStreamList(); 
+                }
+
+                const label = incomingLabel || (window.translation ? getTranslation("vdoNinja.defaultStreamLabel", {id: streamId}) : `Stream ${streamId}`); 
             if (
               (data.action === "view-connection" && data.value === true) || 
               data.action === "guest-connected" || 
@@ -3421,6 +3483,7 @@
                   updateStreamList(); 
                 }
               }
+            }
             }
           }
         },
@@ -3794,10 +3857,34 @@
         }
       }
 
-      
+      function sortCameraItemsWithDirectorFirst(items, generalCamPrefix) {
+          const prefix = generalCamPrefix + "_";
+          return items.sort((a, b) => {
+              if (!directorStreamId) return 0;
+              
+              let isADirector = false;
+              let isBDirector = false;
+              
+              const expectedDirectorPrefix = prefix + directorStreamId;
+              
+              if (a.sourceName === expectedDirectorPrefix || a.sourceName === expectedDirectorPrefix + ":s") {
+                  isADirector = true;
+              }
+              
+              if (b.sourceName === expectedDirectorPrefix || b.sourceName === expectedDirectorPrefix + ":s") {
+                  isBDirector = true;
+              }
+              
+              if (isADirector && !isBDirector) return -1;
+              if (!isADirector && isBDirector) return 1;
+              return 0;
+          });
+      }
+
       async function applyGridLayoutToScene(sceneName, vdoNinjaSceneItems, canvasWidth, canvasHeight, layoutConfig) {
         const generalCamPrefix = getFullCameraPrefix();
-        const cameraItems = vdoNinjaSceneItems.filter(item => item.sourceName.startsWith(generalCamPrefix) && !item.sourceName.endsWith(':s')); 
+        let cameraItems = vdoNinjaSceneItems.filter(item => item.sourceName.startsWith(generalCamPrefix) && !item.sourceName.endsWith(':s')); 
+        cameraItems = sortCameraItemsWithDirectorFirst(cameraItems, generalCamPrefix);
 
         if (cameraItems.length === 0) {
             logMessage(`No VDO.Ninja camera sources to apply Grid layout in scene '${sceneName}'.`, "logMessages.obs.noSourcesForGridLayout", {sceneName});
@@ -3903,11 +3990,12 @@
             item.sourceName.startsWith(mainContentPrefix) && 
             (isReactionLayout ? item.sourceName.endsWith(mainContentSuffix) : !item.sourceName.endsWith(':s'))
         );
-        const sideCameraSources = vdoNinjaSceneItems.filter(item => 
+        let sideCameraSources = vdoNinjaSceneItems.filter(item => 
             item.sourceName.startsWith(generalCamPrefix) && 
             !mainContentSources.find(mcs => mcs.sourceName === item.sourceName) && 
             !item.sourceName.endsWith(':s') 
         );
+        sideCameraSources = sortCameraItemsWithDirectorFirst(sideCameraSources, generalCamPrefix);
         
         let mainContentItem = null;
         if (mainContentSources.length > 0) {
@@ -3938,24 +4026,13 @@
             logMessage(`Main content for ${isReactionLayout ? 'Reaction' : 'Highlight'} layout in scene '${sceneName}' not found/visible. Applying fallback grid of cameras.`, 
                        isReactionLayout ? "logMessages.obs.reactionMainNotFoundFallbackGrid" : "logMessages.obs.highlightMainNotFoundFallbackGrid", { sceneName });
             
-            let fallbackGridMargin = DEFAULT_GRID_MARGIN;
-            let fallbackGridSpacing = DEFAULT_GRID_SPACING;
-            let fallbackGridOffsetX = DEFAULT_GRID_X_OFFSET;
-            let fallbackGridOffsetY = DEFAULT_GRID_Y_OFFSET;
+            let fallbackGridMargin = layoutConfig.margin ?? DEFAULT_REACTION_HIGHLIGHT_MARGIN;
+            let fallbackGridSpacing = layoutConfig.spacing ?? DEFAULT_REACTION_HIGHLIGHT_SPACING;
+            let fallbackGridOffsetX = layoutConfig.offsetX ?? DEFAULT_REACTION_HIGHLIGHT_X_OFFSET;
+            let fallbackGridOffsetY = layoutConfig.offsetY ?? DEFAULT_REACTION_HIGHLIGHT_Y_OFFSET;
             let fallbackGridSplitScreenTwoCameras = DEFAULT_GRID_SPLIT_SCREEN;
 
-            const firstGridSceneConfig = sceneLayoutConfigs.find(cfg => cfg.layoutType === 'grid' && cfg.sceneName);
-
-            if (firstGridSceneConfig) {
-                logMessage(`Using grid settings from the first configured 'Grid' layout scene ('${firstGridSceneConfig.sceneName}') as fallback for '${sceneName}'.`, "logMessages.obs.usingGridSceneFallbackSettings", { sceneName: firstGridSceneConfig.sceneName, targetScene: sceneName });
-                fallbackGridMargin = firstGridSceneConfig.margin ?? DEFAULT_GRID_MARGIN;
-                fallbackGridSpacing = firstGridSceneConfig.spacing ?? DEFAULT_GRID_SPACING;
-                fallbackGridOffsetX = firstGridSceneConfig.offsetX ?? DEFAULT_GRID_X_OFFSET;
-                fallbackGridOffsetY = firstGridSceneConfig.offsetY ?? DEFAULT_GRID_Y_OFFSET;
-                fallbackGridSplitScreenTwoCameras = firstGridSceneConfig.splitScreenTwoCameras ?? DEFAULT_GRID_SPLIT_SCREEN;
-            } else {
-                logMessage(`No 'Grid' layout scene found. Using default grid settings as fallback for '${sceneName}'.`, "logMessages.obs.usingDefaultGridFallbackSettings", {targetScene: sceneName});
-            }
+            logMessage(`Using spacing and margin from the ${isReactionLayout ? 'Reaction' : 'Highlight'} layout for fallback Grid.`, "logMessages.obs.usingReactHighlightFallbackSettings", { sceneName });
 
             const fallbackGridConfig = {
                 margin: fallbackGridMargin,
@@ -3986,10 +4063,13 @@
         }
 
         const mainSourceItem = mainContentItem; 
+        const margin = layoutConfig.margin ?? DEFAULT_REACTION_HIGHLIGHT_MARGIN;
         const spacing = layoutConfig.spacing ?? DEFAULT_REACTION_HIGHLIGHT_SPACING;
         const offsetX = layoutConfig.offsetX ?? DEFAULT_REACTION_HIGHLIGHT_X_OFFSET;
         const offsetY = layoutConfig.offsetY ?? DEFAULT_REACTION_HIGHLIGHT_Y_OFFSET;
         const distributeCameras = layoutConfig.distributeCameras ?? DEFAULT_REACTION_HIGHLIGHT_DISTRIBUTE_CAMERAS;
+        const sideCamerasSizePercentage = layoutConfig.sideCamerasSize ?? DEFAULT_REACTION_HIGHLIGHT_SIDE_CAMERAS_SIZE;
+        const sideCamerasSizeRatio = sideCamerasSizePercentage / 100;
         const cameraCropRatio = isReactionLayout ? REACTION_CAMERA_CROP_RATIO : HIGHLIGHT_CAMERA_CROP_RATIO;
         const itemAspectRatio = REACTION_HIGHLIGHT_ASPECT_RATIO; 
 
@@ -4003,13 +4083,13 @@
         }
 
         
-        let leftCameraAreaWidth = camsLeft.length > 0 ? canvasWidth * 0.15 : 0;
-        let rightCameraAreaWidth = camsRight.length > 0 ? canvasWidth * 0.15 : 0;
+        let leftCameraAreaWidth = camsLeft.length > 0 ? canvasWidth * sideCamerasSizeRatio : 0;
+        let rightCameraAreaWidth = camsRight.length > 0 ? canvasWidth * sideCamerasSizeRatio : 0;
 
         
         let baseScaleWidthForMainContent = canvasWidth;
-        baseScaleWidthForMainContent -= spacing;
-        baseScaleWidthForMainContent -= spacing;
+        baseScaleWidthForMainContent -= margin;
+        baseScaleWidthForMainContent -= margin;
         if (leftCameraAreaWidth > 0) {
             baseScaleWidthForMainContent -= leftCameraAreaWidth;
             baseScaleWidthForMainContent -= spacing; 
@@ -4023,14 +4103,14 @@
         let mainContentVisualHeight = mainContentVisualWidth / itemAspectRatio;
 
         
-        const availableHeightForScaling = canvasHeight - (2 * spacing);
+        const availableHeightForScaling = canvasHeight - (2 * margin);
         if (mainContentVisualHeight > availableHeightForScaling) {
             mainContentVisualHeight = Math.max(1, availableHeightForScaling);
             mainContentVisualWidth = mainContentVisualHeight * itemAspectRatio;
         }
         
         
-        const mainContentVisualX = spacing + 
+        const mainContentVisualX = margin + 
                                    (leftCameraAreaWidth > 0 ? (leftCameraAreaWidth + spacing) : 0) + 
                                    offsetX;
         
@@ -4057,16 +4137,16 @@
 
         const positionCameras = async (cameraList, startXForColumn, columnTotalWidth) => {
             if (cameraList.length > 0 && columnTotalWidth > 0) {
-                const camAvailableHeightTotal = canvasHeight - (cameraList.length + 1) * spacing; 
+                const camAvailableHeightTotal = canvasHeight - (2 * margin) - Math.max(0, cameraList.length - 1) * spacing; 
                 let camCellHeight = (cameraList.length > 0) ? Math.max(1, camAvailableHeightTotal / cameraList.length) : 0;
                 
                 // Calculate width based on height and aspect ratio, then apply crop
                 let camCellOriginalWidthUncropped = camCellHeight * itemAspectRatio; // Camera's original aspect ratio assumed same as main for now
-                let camCellVisibleWidthAfterCrop = camCellOriginalWidthUncropped * cameraCropRatio;
+                let camCellVisibleWidthAfterCrop = cameraCropRatio > 0 ? (camCellOriginalWidthUncropped * cameraCropRatio) : camCellOriginalWidthUncropped;
 
-                // If visible width after crop is too wide for the column, or invalid, adjust.
+                // If visible width after crop is too wide for the column, adjust.
                 // Prioritize fitting into columnTotalWidth.
-                if (camCellVisibleWidthAfterCrop > columnTotalWidth || camCellVisibleWidthAfterCrop <= 0) {
+                if (camCellVisibleWidthAfterCrop > columnTotalWidth) {
                      camCellVisibleWidthAfterCrop = Math.max(1, columnTotalWidth); 
                      if (cameraCropRatio > 0) { // Recalculate original width and height based on fitting visible width
                         camCellOriginalWidthUncropped = camCellVisibleWidthAfterCrop / cameraCropRatio;
@@ -4117,13 +4197,13 @@
         };
         
         // Position left cameras
-        const startXLeftColumn = spacing; // Relative to canvas edge before offsetX
+        const startXLeftColumn = margin; // Relative to canvas edge before offsetX
         await positionCameras(camsLeft, startXLeftColumn, leftCameraAreaWidth);
 
         // Position right cameras (if any)
         if (distributeCameras && camsRight.length > 0) {
             // Start X for right column is after main content and its preceding space
-            const startXRightColumn = spacing + /*left edge*/
+            const startXRightColumn = margin + /*left edge*/
                                       (leftCameraAreaWidth > 0 ? (leftCameraAreaWidth + spacing) : 0) + /*left col area*/
                                       mainContentVisualWidth + spacing; /*main content and space after it*/
             await positionCameras(camsRight, startXRightColumn, rightCameraAreaWidth);

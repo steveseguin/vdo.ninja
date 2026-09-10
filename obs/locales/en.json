@@ -125,7 +125,8 @@
         "offsetX": "X Offset",
         "offsetY": "Y Offset",
         "gridSplitScreenTwoCameras": "Split screen for 2 cameras (Grid)",
-        "distributeCameras": "Distribute cameras (Reaction/Highlight)"
+        "distributeCameras": "Distribute cameras (Reaction/Highlight)",
+        "sideCamerasSize": "Side Cameras Size (%)"
     }
   },
   "activeStreams": {
@@ -137,13 +138,15 @@
     "notSet": "Not Set",
     "defaultSceneTag": "default",
     "mappedSceneTag": "mapped",
-    "addedToObs": "✓ Added to OBS",
-    "notInObs": "✗ Not in OBS",
+    "addedToObs": "âœ“ Added to OBS",
+    "notInObs": "âœ— Not in OBS",
     "buttons": {
         "addToObs": "Add to OBS",
         "removeFromObs": "Remove from OBS",
         "highlight": "Highlight",
         "unhighlight": "Unhighlight",
+        "director": "Director",
+        "setDirector": "Set Director",
         "screenShare": "Screen Share",
         "stopScreenShare": "Stop Screen Share"
     }
@@ -310,3 +313,4 @@
     }
   }
 }
+
