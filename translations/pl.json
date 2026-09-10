@@ -316,7 +316,21 @@
     "names-and-labels-coming-soon": "\n\tNazwy identyfikujące połączonych użytkowników będą dostępne w nadchodzącej wersji.\n",
     "order-up": "<i class=\"las la-plus\"></i>",
     "links": "linki",
-    "copy-solo-view-link": "kopiuj link widoku solo"
+    "copy-solo-view-link": "kopiuj link widoku solo",
+    "add-jitter-buffer": "Dodaj bufor jitter",
+    "audio-only": "Tylko audio",
+    "clean-obs-output": "Czyste wyjście OBS",
+    "exclude-director-audio": "Wyklucz audio prowadzącego",
+    "exclude-director-video": "Wyklucz wideo prowadzącego",
+    "four-three-scene-mode": "Tryb sceny 4:3",
+    "hide-local-share": "Ukryj lokalne udostępnianie",
+    "hide-video-controls": "Ukryj sterowanie wideo",
+    "randomize-tile-order": "Losowa kolejność kafelków",
+    "restart-whip": "Uruchom ponownie WHIP",
+    "show-muted-status": "Pokaż status wyciszenia",
+    "show-speaker-outline": "Pokaż obrys aktywnego rozmówcy",
+    "square-scene-mode": "Tryb sceny kwadratowej",
+    "video-only": "Tylko wideo"
   },
   "titles": {
     "100": "100",
@@ -654,7 +668,24 @@
     "-8-": "Dodaj do sceny 8",
     "-1-": "Ustaw na kanał audio 1",
     "-2-": "Dodaj do sceny 2",
-    "-webp-": "Zwiększaj na własne ryzyko. Zmienia rozmiar przychodzącego wideo dla każdego gościa; urządzenia mobilne wyłączone, tryb webp także."
+    "-webp-": "Zwiększaj na własne ryzyko. Zmienia rozmiar przychodzącego wideo dla każdego gościa; urządzenia mobilne wyłączone, tryb webp także.",
+    "add-a-small-playback-buffer-to-smooth-jitter": "Dodaj mały bufor odtwarzania, aby wygładzić jitter",
+    "disable-audio-playback-for-this-scene": "Wyłącz odtwarzanie audio dla tej sceny",
+    "disable-video-playback-for-this-scene": "Wyłącz odtwarzanie wideo dla tej sceny",
+    "exclude-the-director-s-audio-from-this-scene": "Wyklucz audio prowadzącego z tej sceny",
+    "exclude-the-director-s-video-from-this-scene": "Wyklucz wideo prowadzącego z tej sceny",
+    "hide-own-screen-share-preview": "Ukryj podgląd własnego udostępniania ekranu",
+    "hide-own-share-preview": "Ukryj podgląd własnego udostępniania",
+    "hide-the-video-control-bar": "Ukryj pasek sterowania wideo",
+    "keep-the-scene-output-clean-for-obs": "Zachowaj czyste wyjście sceny dla OBS",
+    "mute-all-guests-in-room-toggle-": "Wycisz wszystkich gości w pokoju (przełącznik)",
+    "optimize-the-scene-for-4-3-video": "Zoptymalizuj scenę pod wideo 4:3",
+    "optimize-the-scene-for-square-video": "Zoptymalizuj scenę pod wideo kwadratowe",
+    "randomize-the-order-videos-load-into-the-scene": "Losowa kolejność ładowania wideo do sceny",
+    "show-a-green-outline-around-active-speakers": "Pokaż zielony obrys wokół aktywnych rozmówców",
+    "show-a-muted-status-icon-on-remote-tiles": "Pokaż ikonę statusu wyciszenia na kafelkach zdalnych gości",
+    "start-stop-google-drive-recording-for-all-guests": "Uruchom/zatrzymaj nagrywanie na Google Drive dla wszystkich gości",
+    "when-enabled-highlight-will-unmute-the-highlighted-guest-and-mute-the-other-guests-manual-unmute-changes-can-still-be-made-afterwards-": "Gdy włączone, funkcja Wyróżnienia włączy dźwięk u wyróżnionego gościa i wyciszy pozostałych gości. Ręczne zmiany wyciszenia nadal można wprowadzać później."
   },
   "placeholders": {
     "join-by-room-name-here": "Dołącz po nazwie pokoju",
@@ -783,6 +814,7 @@
     "what-bitrate-gdrive": "Ten zdalny gość zapisze nagranie na swoim lokalnym dysku, a także prześle kopię na Twój Google Drive (folder nagrań).\n\n - Nagrywanie może się nie udać, więc miej kopię zapasową!\n\n - Goście na iPhone, Android lub Safari często mają problemy - miej to na uwadze.",
     "insecure-stream-id": "⚠️ Wykryto niebezpieczne ID transmisji\n\nZaleca się użycie hasła, jeśli używasz krótkiego, nieunikalnego ID.\n\nTo tylko ostrzeżenie, które można zignorować.",
     "mobile-no-screen-share": "Przepraszamy, przeglądarka mobilna nie obsługuje udostępniania ekranu.\n\nNatywne aplikacje oferują podstawowe wsparcie: <a href='https://docs.vdo.ninja/getting-started/native-mobile-app-versions' target='_blank'>aplikacje mobilne</a>.",
-    "no-screen-share-supported-firefox": "Przepraszamy, Twoja przeglądarka nie obsługuje udostępniania ekranu.\n\nTwoje ustawienia Firefoksa mogą blokować tę funkcję lub strona jest otwarta niebezpiecznie."
+    "no-screen-share-supported-firefox": "Przepraszamy, Twoja przeglądarka nie obsługuje udostępniania ekranu.\n\nTwoje ustawienia Firefoksa mogą blokować tę funkcję lub strona jest otwarta niebezpiecznie.",
+    "block-from-rejoining": "Zablokuj ponowne dołączenie (4 godziny)"
   }
 }
