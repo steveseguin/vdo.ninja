@@ -1,0 +1,51 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="720" viewBox="0 0 1200 720" role="img" aria-labelledby="title desc">
+  <title id="title">Show audio and room returns are different feeds</title>
+  <desc id="desc">For a room using direct conversation audio, selected on-air voices and OBS playback go to the show mix for OBS and Meshcast. Only clips and music return from OBS to the main room. Private talk stays between the director and guest, outside broadcast capture.</desc>
+  <defs>
+    <marker id="blue" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M0,0 L10,5 L0,10" fill="#2563eb"/></marker>
+    <marker id="green" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M0,0 L10,5 L0,10" fill="#07836a"/></marker>
+    <marker id="purple" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M0,0 L10,5 L0,10" fill="#7c3aed"/></marker>
+    <style>text{font-family:Arial,Helvetica,sans-serif;fill:#18263d}.title{font-size:30px;font-weight:700}.sub{font-size:19px;fill:#475569}.label{font-size:16px;font-weight:700;letter-spacing:1px}.head{font-size:22px;font-weight:700}.body{font-size:19px}.small{font-size:17px;fill:#475569}.box{fill:white;stroke:#cfdae8;stroke-width:2}</style>
+  </defs>
+  <rect width="1200" height="720" rx="20" fill="#f5f8fc"/>
+  <text x="40" y="53" class="title">Show audio and room returns are different feeds</text>
+  <text x="40" y="86" class="sub">Example: VDO.Ninja already carries the guest-to-guest conversation.</text>
+
+  <rect x="24" y="114" width="1152" height="218" rx="16" fill="#eaf1ff"/>
+  <text x="44" y="144" class="label" style="fill:#1d4ed8">SHOW FEED</text>
+  <rect x="44" y="164" width="320" height="142" rx="12" class="box"/>
+  <text x="64" y="198" class="head">Selected on-air voices</text>
+  <text x="64" y="230" class="body">+ OBS clips and music</text>
+  <text x="64" y="276" class="small">Exclude private / backstage talk</text>
+  <path d="M370 232 H442" fill="none" stroke="#2563eb" stroke-width="3" marker-end="url(#blue)"/>
+  <rect x="454" y="188" width="260" height="93" rx="12" class="box"/>
+  <text x="584" y="226" class="head" text-anchor="middle">Complete show mix</text>
+  <text x="584" y="256" class="small" text-anchor="middle">Built in OBS or your mixer</text>
+  <path d="M722 232 H793" fill="none" stroke="#2563eb" stroke-width="3" marker-end="url(#blue)"/>
+  <rect x="805" y="164" width="346" height="142" rx="12" class="box"/>
+  <text x="825" y="201" class="head">OBS stream / recording</text>
+  <text x="825" y="238" class="head">Meshcast show feed</text>
+  <text x="825" y="275" class="small">Greenroom / show monitoring</text>
+
+  <rect x="24" y="347" width="1152" height="159" rx="16" fill="#e8f7f2"/>
+  <text x="44" y="378" class="label" style="fill:#066b58">ROOM RETURN</text>
+  <rect x="44" y="396" width="320" height="87" rx="12" class="box"/>
+  <text x="64" y="431" class="head">OBS clips and music only</text>
+  <text x="64" y="460" class="small">No host or guest microphones</text>
+  <path d="M370 440 H442" fill="none" stroke="#07836a" stroke-width="3" marker-end="url(#green)"/>
+  <rect x="454" y="396" width="260" height="87" rx="12" class="box"/>
+  <text x="584" y="431" class="head" text-anchor="middle">Playback return</text>
+  <text x="584" y="460" class="small" text-anchor="middle">Cable A / separate output</text>
+  <path d="M722 440 H793" fill="none" stroke="#07836a" stroke-width="3" marker-end="url(#green)"/>
+  <rect x="805" y="396" width="346" height="87" rx="12" class="box"/>
+  <text x="825" y="431" class="head">Main VDO.Ninja room</text>
+  <text x="825" y="460" class="small">Conversation already arrives directly</text>
+
+  <rect x="24" y="522" width="1152" height="133" rx="16" fill="#f2edff"/>
+  <text x="44" y="554" class="label" style="fill:#6d28d9">PRIVATE TALK</text>
+  <text x="64" y="600" class="head">Director + selected guest</text>
+  <path d="M373 591 H443" fill="none" stroke="#7c3aed" stroke-width="3" marker-end="url(#purple)"/>
+  <text x="467" y="600" class="head">Headphones / private path</text>
+  <text x="64" y="632" class="small">Keep both voices out of OBS capture, the show feed, and unintended custom returns.</text>
+  <text x="40" y="691" class="small">A full show feed needs a different route from the playback-only room return. Check both outputs when muting.</text>
+</svg>

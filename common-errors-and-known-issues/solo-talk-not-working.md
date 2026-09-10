@@ -6,6 +6,8 @@ description: Solo Talk doesn’t engage or behave as expected
 
 Solo Talk is a director control that opens a private audio path to a guest.
 
+If Solo Talk works but private speech reaches OBS or Meshcast, check the capture and monitoring routes in [Room audio, OBS, Meshcast, and private talk](../guides/room-audio-obs-meshcast-and-private-talk.md#7-keep-private-conversations-off-air). Capturing the director's listening output or a separate host microphone can bypass the intended isolation.
+
 - Main director only: Co‑directors do not have Solo Talk controls. See `director-settings/codirector.md`.
 - Toggle vs 2‑way: Click Solo Talk for one‑way; hold Ctrl/Cmd for two‑way (Private 2‑Way). Both map to internal actions 5/9.
 - Mic source: Ensure the director’s mic is enabled in VDO.Ninja. If your mic only exists in OBS, guests won’t hear Solo Talk.
@@ -17,4 +19,3 @@ Related
 
 - `viewers-settings/director.md`
 - `director-settings/codirector.md`
-

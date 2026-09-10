@@ -101,6 +101,7 @@
   * [How to mirror a video while Full-Screen - For iPads and Teleprompters](guides/how-to-mirror-a-video-while-full-screen-for-ipads-and-teleprompters.md)
   * [How to capture an application's audio](guides/audio.md)
   * [Share audio from OBS to VDO.Ninja](guides/share-obs-audio-with-vdo-ninja.md)
+  * [Room audio, OBS, Meshcast, and private talk](guides/room-audio-obs-meshcast-and-private-talk.md)
   * [Phone call-ins with VDO.Ninja and virtual audio cables](guides/phone-call-ins-with-vdo-ninja-and-virtual-audio-cables.md)
   * [Phone call-in provider options](guides/phone-call-in-provider-options.md)
   * [SignalWire SIP call-in setup](guides/signalwire-sip-call-in-setup.md)

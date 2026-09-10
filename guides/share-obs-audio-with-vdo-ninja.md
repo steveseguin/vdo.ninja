@@ -8,6 +8,8 @@ Use OBS to choose the sounds you send, then use **VB-CABLE** to carry that mix i
 
 For video as well, continue with [Share OBS Virtual Camera and audio](share-obs-virtual-camera-and-audio.md). That guide also covers changing scenes and switching between two players while keeping their voices audible.
 
+For a live room that also needs guest audio in OBS, a complete Meshcast show feed, and private director talk, see [Room audio, OBS, Meshcast, and private talk](room-audio-obs-meshcast-and-private-talk.md). It covers the separate room-return and show-output mixes.
+
 These steps are for **Windows 10/11 and OBS Studio**. Screenshots show OBS **32.2.2** and VDO.Ninja in Chrome. Older OBS versions use **Monitor and Output** where the screenshots show **Monitoring Enabled**. For other operating systems, see the [general application audio guide](audio.md).
 
 ## 1. Install the cable and keep your headphones as the normal output

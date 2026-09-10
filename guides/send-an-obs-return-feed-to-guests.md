@@ -4,6 +4,8 @@ description: Send OBS Program, Preview, a dedicated scene, or a source back to r
 
 # Send an OBS return feed to guests
 
+For step-by-step audio routing with the Director's Room or Mixer, including mix-minus, continuous voices during screenshare scene changes, a complete Meshcast show mix, and private talk, see [Room audio, OBS, Meshcast, and private talk](room-audio-obs-meshcast-and-private-talk.md).
+
 {% hint style="info" %}
 Looking for the simplest setup? Start with [Let guests see your finished OBS scene](let-guests-see-your-obs-scene.md). This page continues with the more detailed routing and server options.
 {% endhint %}
