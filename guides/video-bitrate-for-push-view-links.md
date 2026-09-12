@@ -6,12 +6,12 @@ description: How to control video bitrates for basic push/view links
 
 ## The default settings
 
-The default video bitrate for simple push/view links is 2500-kbps.
+The fallback video bitrate for simple push/view links is approximately 2500 kbps, but current camera setup normally selects a 4000 kbps outbound target when quality is omitted. Explicit camera quality presets and screen-share initialization paths can select different defaults. See [Default resolution and bitrate by mode](default-resolution-and-bitrate.md) for the complete breakdown.
 
 [https://vdo.ninja/?push=streamid](https://vdo.ninja/?push=streamid)\
 [https://vdo.ninja/?view=streamid](https://vdo.ninja/?view=streamid)\
 \
-By default, both outgoing and incoming video bitrates are set at 2500-kbps.  This default setting and parameters are different if using [Rooms ](../getting-started/rooms/)and explained in detail [here](video-bitrate-in-rooms.md).
+Without an explicit viewer request, the connection uses the publisher/negotiated target. A viewer can request a different bitrate, subject to sender limits. Room preview allocation is separate; see [Video bitrate in rooms](video-bitrate-in-rooms.md).
 
 There are five parameters we will take a look at:
 

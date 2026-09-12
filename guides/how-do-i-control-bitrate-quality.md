@@ -10,7 +10,7 @@ description: Control VDO.Ninja bitrate and video quality using URL parameters fo
 
 The bitrate controls are accessible via a URL parameter that can be added to the VIEW link.
 
-Something like [https://vdo.ninja/?view=yyyyy\&bitrate=10000 ](https://vdo.ninja/?view=yyyyy\&bitrate=10000)will let the viewer request set a 10-mbps bitrate; up to around 20000-kbps is reasonable, but higher is possible in situations. The value is in kilobits per second and the default bitrate is 2500-kbps.
+Something like [https://vdo.ninja/?view=yyyyy\&bitrate=10000](https://vdo.ninja/?view=yyyyy\&bitrate=10000) lets the viewer request a 10 Mbps video bitrate. The value is in kilobits per second. The fallback is approximately 2500 kbps, while current camera setup normally selects 4000 kbps when quality is omitted. Capture mode, explicit quality, room allocation, and mobile caps affect the result; see [Default resolution and bitrate by mode](default-resolution-and-bitrate.md).
 
 The viewer sets the bitrate generally, although you can set maximum allowed bitrates as the publisher of a stream. See the advanced settings in the wiki for more help here; there are many options available.
 
