@@ -4,7 +4,31 @@ description: Share a screen with someone who only wants to watch, using a solo v
 
 # View-only screen sharing on an iPad or computer
 
-If the receiving device asks whether to join with a camera or audio only, you have opened a **guest invite**. To just watch, open a **view link** or a **scene link**. Viewers do not need to publish a camera or microphone, and OBS is not required.
+**For a room link, include `&solo` or `&scene` to make it view-only. Adding `&view=STREAMID` by itself to a room link does not skip the join screen.** Viewers do not need to publish a camera or microphone, and OBS is not required.
+
+## Fix the room link you already have
+
+If your link already includes `room` and `view`, append `&solo`:
+
+**Still asks how to join:**
+
+```text
+https://vdo.ninja/?room=YOURROOM&view=YOURSCREENID
+```
+
+**Opens only the selected feed:**
+
+```text
+https://vdo.ninja/?room=YOURROOM&view=YOURSCREENID&solo
+```
+
+`&solo` needs no value after it. Keep the screen's stream ID after `&view=`. Alternatively, use `&scene&view=YOURSCREENID` with the room link to view that selected feed.
+
+If you only have `?room=YOURROOM`, add `&scene=0` to watch the room's feeds, or use `&scene=1` and have the director add the screen to Scene 1. Scene 0 can show other feeds too; the solo example above selects just the screen.
+
+Keep existing password/access parameters. Add query parameters before any `#` fragment in the URL. Reusability and viewer mode are separate: a reusable room invite still asks how to join unless the URL selects viewer mode.
+
+<figure><img src="../.gitbook/assets/view-only-room-join-choices.png" alt="Room link without solo or scene shows Join Room with Camera and Screenshare with Room choices."><figcaption><p>A room link with view=STREAMID but no solo or scene still presents join choices. The choices shown can vary with device and link options.</p></figcaption></figure>
 
 ## Already sharing in a room? Copy the solo view link
 
@@ -16,6 +40,8 @@ If the receiving device asks whether to join with a camera or audio only, you ha
 Keep the full copied link, including any password or access parameters. The room's guest invitation and the director page address serve different purposes; neither is the screen's viewing link.
 
 Solo links work in ordinary browsers even though the interface and documentation also describe using them in OBS. See [Rooms and solo links](../getting-started/rooms/README.md).
+
+<figure><img src="../.gitbook/assets/view-only-director-link-panels.png" alt="Director link panels: Invite a Guest has a room URL; Capture a Group Scene has scene=0 and room in its URL."><figcaption><p>The top-level Copy link buttons have different purposes. Capture a Group Scene provides a viewing link that also works in an ordinary browser.</p></figcaption></figure>
 
 ## Simplest reusable setup: two links, no room
 
@@ -69,11 +95,15 @@ https://vdo.ninja/?room=YOURROOM&scene=1
 
 In the director page, add the screen share to **Scene 1**. This lets you keep the same viewer URL while choosing which feed appears. Check scene membership when starting a new session. `&scene=0` automatically includes the room's video feeds, so use a selected scene or solo link when viewers should see only the screen.
 
+To obtain that Scene 1 link from the interface, turn off **Auto-add guests** in the **Capture a Group Scene** panel, then click its **Copy link** button.
+
+<figure><img src="../.gitbook/assets/view-only-manual-scene-link.png" alt="Capture a Group Scene with Auto-add guests off, showing a scene=1 link and Copy link button."><figcaption><p>With Auto-add guests off, the copied link uses Scene 1. Add the screen-share feed to that scene so viewers have something to watch.</p></figcaption></figure>
+
 ## Quick troubleshooting
 
 | What you see | What to check |
 | --- | --- |
-| Camera / audio-only join choices | Open the viewer link, not the guest invite or publishing link. |
+| Camera / audio-only join choices | On a room link, include `&solo` with `&view=YOURSCREENID`, or use `&scene`. `&view` alone does not select viewer mode in a room. |
 | A blank or waiting viewer | Confirm the sender is actively sharing and both links use the same stream ID, room, and password where applicable. |
 | An empty Scene 1 | Add the screen-share feed to Scene 1 in the director page. |
 | Webcam appears instead of the screen | Copy the screen share's own solo view link. |
