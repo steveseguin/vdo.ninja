@@ -37,6 +37,8 @@ Keep existing password/access parameters. Add query parameters before any `#` fr
 3. Click **copy solo view link** beneath that feed.
 4. Send that copied link to the viewer and open it in the iPad's or computer's browser.
 
+<figure><img src="../.gitbook/assets/view-only-copy-solo-link.png" alt="Bottom of a feed's director control box, with the solo viewing URL and copy solo view link button highlighted in green."><figcaption><p>Look at the bottom of the screen-share feed's control box, below audio settings and video settings. Click copy solo view link in the green-highlighted area. The generated URL already includes solo=1, which selects solo viewer mode.</p></figcaption></figure>
+
 Keep the full copied link, including any password or access parameters. The room's guest invitation and the director page address serve different purposes; neither is the screen's viewing link.
 
 Solo links work in ordinary browsers even though the interface and documentation also describe using them in OBS. See [Rooms and solo links](../getting-started/rooms/README.md).
