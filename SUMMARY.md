@@ -60,6 +60,7 @@
   * [Mobile uplinks with Starlink, cellular, and bonded networks](guides/mobile-uplink-starlink-cellular-bonding.md)
   * [Delay an incoming feed](guides/delay-an-incoming-feed.md)
   * [How to get permanent links](guides/how-to-get-permanent-links.md)
+  * [View-only screen sharing on an iPad or computer](guides/view-only-screen-sharing.md)
   * [Large production rooms with isolated guest feeds](guides/large-production-rooms-with-isolated-guest-feeds.md)
   * [Stable mobile guest production with OBS and Electron Capture](guides/stable-mobile-guest-production-with-obs-and-electron-capture.md)
   * [24/7 unattended operation](guides/24-7-unattended-operation.md)

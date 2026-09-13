@@ -6,6 +6,7 @@ description: VDO.Ninja how-to guides for OBS Studio, remote guests, screen shari
 
 This section collects practical VDO.Ninja guides for OBS Studio, remote guest workflows, screen sharing, mobile phones, audio routing, bitrate tuning, recording, WHIP, Meshcast, and browser-source production setups.
 
+* [View-only screen sharing on an iPad or computer](view-only-screen-sharing.md)
 * [cheat-sheets.md](cheat-sheets.md "mention")
 * [how-does-group-chat-work.md](../help/how-does-group-chat-work.md "mention")
 * [video-bitrate-for-push-view-links.md](video-bitrate-for-push-view-links.md "mention")

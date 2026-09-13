@@ -7,6 +7,8 @@ description: >-
 
 # Permanent links, reusable invites, and stream IDs
 
+Just want someone to watch your shared screen without joining with a camera or microphone? See [View-only screen sharing on an iPad or computer](view-only-screen-sharing.md) for the correct room link and a reusable two-link setup.
+
 If your OBS browser source stops showing the right guest after they refresh, you usually need a **stable stream ID**.
 
 Think of it like a phone number for a camera feed:
