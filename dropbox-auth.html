@@ -92,9 +92,10 @@
 					}
 				}
 
-				function clearSession() {
+				function clearSession(expectedState) {
 					try {
-						localStorage.removeItem(SESSION_KEY);
+						const pending = readSession();
+						if (expectedState && pending && pending.state === expectedState) localStorage.removeItem(SESSION_KEY);
 					} catch (error) {}
 				}
 
@@ -172,7 +173,7 @@
 				}
 
 				function waitForSessionFromOpener(expectedState) {
-					if (!window.opener || typeof window.opener.postMessage !== "function") {
+					if (!expectedState || !window.opener || typeof window.opener.postMessage !== "function") {
 						return Promise.resolve(null);
 					}
 				return new Promise((resolve) => {
@@ -182,6 +183,9 @@
 						if (!event || !event.data || event.data.source !== MESSAGE_SOURCE || event.data.type !== "session") {
 							return;
 						}
+						const offered = event.data.session;
+						if (event.source !== window.opener || event.origin === "null" || !offered ||
+							offered.origin !== event.origin || offered.state !== expectedState) return;
 						window.removeEventListener("message", handleMessage);
 						if (!settled) {
 							settled = true;
@@ -216,15 +220,12 @@
 
 			async function ensureAuthSession(expectedState) {
 				let session = readSession();
-				if (session) {
+				if (session && expectedState && session.state === expectedState && session.origin === window.location.origin) {
 					return session;
 				}
 				const remoteSession = await waitForSessionFromOpener(expectedState);
-				if (remoteSession) {
-					try {
-						localStorage.setItem(SESSION_KEY, JSON.stringify(remoteSession));
-					} catch (error) {}
-				}
+				// A custom deployment may use this callback, but its handoff belongs
+				// only to its opener. Never persist it on the callback site's origin.
 				return remoteSession;
 			}
 
@@ -241,7 +242,7 @@
 						setStatus(message, "error");
 						const targetOrigin = authSession?.origin || window.location.origin;
 						postResult({ source: MESSAGE_SOURCE, type: "error", message, clearTokens: false, targetOrigin });
-						clearSession();
+						clearSession(state);
 						closeSoon();
 						return;
 					}
@@ -249,7 +250,7 @@
 					if (!code) {
 						setStatus("No authorization code present in the URL.", "error");
 						const targetOrigin = authSession?.origin || window.location.origin;
-						clearSession();
+						clearSession(state);
 						postResult({ source: MESSAGE_SOURCE, type: "error", message: "Missing authorization code.", clearTokens: false, targetOrigin });
 						return;
 					}
@@ -258,14 +259,14 @@
 						setStatus("This tab no longer has a pending authorization session.", "error");
 						const expiredOrigin = authSession?.origin || window.location.origin;
 						postResult({ source: MESSAGE_SOURCE, type: "error", message: "Authorization session expired.", clearTokens: false, targetOrigin: expiredOrigin });
-						clearSession();
+						clearSession(state);
 						return;
 					}
 
-					if (authSession.state && state && authSession.state !== state) {
+					if (!state || !authSession.state || authSession.state !== state) {
 						setStatus("State mismatch; refusing to continue.", "error");
 						postResult({ source: MESSAGE_SOURCE, type: "error", message: "Dropbox state mismatch.", clearTokens: false, targetOrigin: authSession.origin || window.location.origin });
-						clearSession();
+						clearSession(state);
 						return;
 					}
 
@@ -276,16 +277,16 @@
 						if (!tokens) {
 							throw new Error("Dropbox returned an invalid token payload.");
 						}
-						storeTokens(tokens);
+						if (authSession.origin === window.location.origin) storeTokens(tokens);
 						setStatus("Dropbox linked successfully. You can close this window.", "success");
 						postResult({ source: MESSAGE_SOURCE, type: "tokens", tokens, targetOrigin: authSession.origin || window.location.origin });
-						clearSession();
+						clearSession(state);
 						closeSoon();
 					} catch (error) {
 						console.error("Dropbox OAuth failed", error);
 						setStatus(error?.message || "Unable to complete Dropbox authorization.", "error");
 						postResult({ source: MESSAGE_SOURCE, type: "error", message: error?.message || "Dropbox authorization failed.", clearTokens: true, targetOrigin: authSession.origin || window.location.origin });
-						clearSession();
+						clearSession(state);
 					}
 				}
 

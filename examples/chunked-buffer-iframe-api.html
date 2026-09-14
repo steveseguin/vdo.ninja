@@ -284,7 +284,11 @@
 					</div>
 					<div>
 						<label for="viewer-params">Viewer Params</label>
-						<textarea id="viewer-params">scene&autostart&label=ChunkedIframeDemo&chunkbufferceil=12000</textarea>
+						<textarea id="viewer-params">scene&autostart&label=ChunkedIframeDemo&chunkbufferadaptive=0&chunkbufferceil=180000</textarea>
+					</div>
+					<div>
+						<label for="publisher-params">Publisher Params</label>
+						<textarea id="publisher-params">chunked=600&chunkbitrate=600&bitrate=600&maxvideobitrate=600&chunkindex=1&chunknack=1&chunknackattempts=8&chunknackdelay=250&chunkchunksize=4096&chunkcache=30000&chunkedbuffer=1500&chunkadapt=bitrate&chunkadaptfloor=250&chunkadaptceil=600&label=ChunkedBufferPublisher</textarea>
 					</div>
 					<div class="row">
 						<button id="reload-viewer" type="button">Reload Viewer</button>
@@ -391,6 +395,10 @@
 				<p>The two most useful values to watch are:</p>
 				<p><code>session.rpcs[uuid].buffer</code> = requested base buffer for that peer.</p>
 				<p><code>stats.chunked_mode_video.buffer_buffer</code> = live effective target after any adaptive logic.</p>
+				<p><code>chunked/chunkbitrate/bitrate/maxvideobitrate</code> are bitrate controls in kbps, not receiver delay.</p>
+				<p><code>chunkedbuffer</code> is the sender pacing/adaptation window. Use <code>setBufferDelay</code> or <code>chunkbuffer</code> for receiver playout delay.</p>
+				<p><code>chunknack=1</code> enables indexed reliability and retransmission; <code>chunkcache</code> is the resend cache window.</p>
+				<p>The default publisher params use a conservative <code>600 kbps</code> profile without forcing a camera resolution, so odd webcams and browser test devices can still open. For a weak-link 360p cap, add <code>quality=2</code> and <code>fps=30</code> if the camera supports those constraints; try <code>quality=1</code> and <code>900</code> kbps values only after the route has enough headroom.</p>
 				<div class="note">
 					If you want deterministic QA, disable or stub the adaptive buffer helper in a dedicated test harness. For real integrations, leave adaptation on and observe both the requested base and the effective target.
 				</div>
@@ -450,6 +458,7 @@
 
 		var roomInput = document.getElementById("room");
 		var viewerParamsInput = document.getElementById("viewer-params");
+		var publisherParamsInput = document.getElementById("publisher-params");
 		var delayInput = document.getElementById("delay-ms");
 		var uuidSelect = document.getElementById("uuid-select");
 		var viewerFrame = document.getElementById("viewer-frame");
@@ -468,6 +477,7 @@
 
 		roomInput.value = readSearchParam("room", uid("chunkdemo"));
 		viewerParamsInput.value = readSearchParam("viewerParams", viewerParamsInput.value);
+		publisherParamsInput.value = readSearchParam("publisherParams", publisherParamsInput.value);
 
 		function buildViewerUrl() {
 			var room = encodeURIComponent(roomInput.value.trim());
@@ -485,10 +495,12 @@
 				"push=" + pushId,
 				"room=" + room,
 				"webcam",
-				"autostart",
-				"chunked=1800",
-				"label=ChunkedBufferPublisher"
+				"autostart"
 			];
+			var extra = publisherParamsInput.value.trim();
+			if (extra) {
+				params = params.concat(extra.split("&").filter(Boolean));
+			}
 			if (testMedia) {
 				params.push("testmedia=1");
 				params.push("testwidth=640");

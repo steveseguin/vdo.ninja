@@ -524,7 +524,7 @@ class NotificationManager {
 		  <button class="notification-popup-close">&times;</button>
 		</div>
 		<div class="notification-popup-body">
-		  <p>You've been subscribed to notifications for "${topic}" for a month.</p>
+		  <p></p>
 		  <p>Would you like to continue receiving these notifications?</p>
 		</div>
 		<div class="notification-popup-actions">
@@ -532,6 +532,7 @@ class NotificationManager {
 		  <button class="renew-btn">Renew Subscription</button>
 		</div>
 	  `;
+	  renewalElement.querySelector('.notification-popup-body p').textContent = `You've been subscribed to notifications for "${topic}" for a month.`;
 	  document.body.appendChild(renewalElement);
 	  localStorage.setItem('lastRenewalPrompt', now.toString());
 	  renewalElement.querySelector('.notification-popup-close').addEventListener('click', () => {
@@ -762,7 +763,8 @@ class NotificationManager {
     try {
       const savedHistory = localStorage.getItem('notificationHistory');
       if (savedHistory) {
-        notificationHistory = JSON.parse(savedHistory);
+        const parsed = JSON.parse(savedHistory);
+        notificationHistory = Array.isArray(parsed) ? parsed.filter(item => item && typeof item === 'object' && !Array.isArray(item)) : [];
         this.notifySubscribers('historyUpdated', { notifications: notificationHistory });
       }
     } catch (e) {

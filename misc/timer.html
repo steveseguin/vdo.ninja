@@ -1,0 +1,98 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400;500;700;900&display=swap" rel="stylesheet">
+<style>
+html {
+	width:100%;
+    height:100%;
+}
+
+body {
+	width:100%;
+    height:100%;
+}
+p {
+  text-align: center;
+  font-size: 60px;
+  margin-top: 0px;
+  font-family: 'Roboto', sans-serif;
+  background-color: rgba(255,255,255,0)
+}
+</style>
+</head>
+<body onmousedown="buttonPress(event)" oncontextmenu="event.preventDefault();" onload="start();">
+
+<p id="demo"></p>
+
+<script>
+
+// Set the date we're counting down to
+var countDownDate = null;
+var x = null;
+var isReset = false;
+var isPaused = true;
+
+document.getElementById("demo").innerHTML = "00:00:00<small><small><small><small>.000</small></small></small></small>"; //set timer to 00:00:00
+
+function buttonPress(event) {
+  //alert("You pressed button: " + event.button);
+  if (isPaused) { //if paused
+  	if (event.button==0) { //left click
+  		isPaused = false; //unpause current timer
+    }
+    if (event.button==2) { //right click
+    	if (isReset) { //is reset
+        	isReset = false;
+            isPaused = false;
+            start(); //run timer
+        } else { //is running
+        	if(x) {clearInterval(x);}
+    		isReset = true;
+        	document.getElementById("demo").innerHTML = "00:00:00<small><small><small><small>.000</small></small></small></small>"; //set timer to 00:00:00
+        }
+    }
+  } else { //if isPaused = false
+  	if (event.button==0) { //left click
+        isPaused = true; //pause current timer
+    }
+    if (event.button==2) { //right click
+        if (isReset) { //is reset
+            isReset = false;
+            start(); //run timer
+        } else { //is running
+            if(x) {clearInterval(x);}
+            isReset = true;
+            document.getElementById("demo").innerHTML = "00:00:00<small><small><small><small>.000</small></small></small></small>"; //set timer to 00:00:00
+        }
+    }
+  }
+}
+  
+// Update the count down every 1 second
+function start(){
+	countDownDate = new Date().getTime();
+	x = setInterval(function() {
+		if (!isPaused) {
+			// Get today's date and time
+			var now = new Date().getTime();
+
+			// Find the distance between now and the count down date
+			var distance = now - countDownDate ;
+
+			// Time calculations for days, hours, minutes and seconds 
+			var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+			var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+			var seconds = Math.floor((distance % (1000 * 60)) / 1000);
+			var milliseconds = Math.floor((distance % (1000)) );
+			// Output the result in an element with id="demo"
+			document.getElementById("demo").innerHTML =  ("00" + hours).slice (-2) + ":" +  ("00" + minutes).slice (-2) + ":" +  ("00" + seconds).slice (-2) + "<small><small><small><small>." + ("000" + milliseconds).slice (-3)+"</small></small></small></small>";
+		}
+	}, 10);
+}
+
+</script>
+
+</body>
+</html>

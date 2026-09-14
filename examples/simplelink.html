@@ -17,7 +17,7 @@
 	<meta content="text/html;charset=utf-8" http-equiv="Content-Type" />
 	<meta content="utf-8" http-equiv="encoding" />
 	<meta name="copyright" content="&copy; 2025 Steve Seguin" />
-	<meta name="license" content="https://github.com/steveseguin/vdo.ninja/LICENSE.md" />
+	<meta name="license" content="https://github.com/steveseguin/vdo.ninja/blob/master/examples/LICENSE" />
 	<meta name="sourcecode" content="https://github.com/steveseguin/vdo.ninja" />
 	<meta name="stance-on-war" content="Steve Seguin condemns Russia's brutal invasion of Ukraine 💙💛." />
 	<meta name="robots" content="index, follow">
@@ -53,7 +53,7 @@
             max-width: 1200px;
             margin: 0 auto;
         }
-
+		
 		.main-title {
             color: var(--text-color);
             text-align: center;
@@ -210,7 +210,7 @@
             body {
                 padding: 10px;
             }
-
+            
             .card {
                 padding: 12px;
                 margin: 10px 0;
@@ -242,7 +242,7 @@
             background: var(--highlight-color);
             border-color: var(--highlight-color);
         }
-
+		
     </style>
 </head>
 <body>
@@ -252,12 +252,12 @@
         <h2>🎥 Select Video Input Device</h2>
         <div id="videoInputs"></div>
     </div>
-
+    
     <div class="card">
         <h2>🎤 Select Audio Input Device</h2>
         <div id="audioInputs"></div>
     </div>
-
+    
     <div class="card">
         <h2>⚙️ Options</h2>
         <div class="options">
@@ -349,7 +349,7 @@
             if (prevSelected) {
                 prevSelected.classList.remove('selected');
             }
-
+            
             if (element === prevSelected) {
                 selectedVideo = null;
             } else {
@@ -360,7 +360,7 @@
 
 		function generateUrl() {
             const url = new URL(baseUrl);
-
+            
             if (selectedVideo === null) {
                 url.searchParams.set('vd', '0');
             } else if (selectedVideo) {
@@ -386,7 +386,7 @@
                     url.searchParams.set(broadcastMode, '');
                 }
             }
-
+            
             if (password) url.searchParams.set('pw', password);
             if (streamId) url.searchParams.set('id', streamId);
             if (autostart) url.searchParams.set('as', '');
@@ -421,7 +421,7 @@
                 console.warn("Permission request failed:", e);
             }
         }
-
+		
 		document.getElementById('generatedUrl').onclick = function() {
             if (this.value) {
                 navigator.clipboard.writeText(this.value).then(() => {

@@ -1119,7 +1119,7 @@ function gohere1(){
 		var whipwait = "&whipwait=" + document.getElementById('whipwaitFlag').value;
 		
 		if (document.getElementById('changeText1a').value){
-			window.location = domain + "?push&whippush=" + encodeURIComponent(document.getElementById('changeText1').value) + "&whippushtoken=" + document.getElementById('changeText1a').value + codec + bitrate+whipoutaudiobitrate+vbrcbr+autogain+stereo+denoise+svc+e2ee+keyFrameRateFlag + whipwait;
+			window.location = domain + "?push&whippush=" + encodeURIComponent(document.getElementById('changeText1').value) + "&whippushtoken=" + encodeURIComponent(document.getElementById('changeText1a').value) + codec + bitrate+whipoutaudiobitrate+vbrcbr+autogain+stereo+denoise+svc+e2ee+keyFrameRateFlag + whipwait;
 		} else {
 			window.location = domain + "?push&whippush=" + encodeURIComponent(document.getElementById('changeText1').value) + codec + bitrate+whipoutaudiobitrate+vbrcbr+autogain+stereo+denoise+svc+e2ee+keyFrameRateFlag + whipwait;
 		}
@@ -1169,7 +1169,7 @@ function updateSVC(){
 function gohere1t(){
 	if (document.getElementById('changeText1t').value){
 		localStorage.setItem('changeText1t', document.getElementById('changeText1t').value);
-		window.location = domain + "?whipoutvideobitrate=5800&stereo&push&whippush=https%3A%2F%2Fg.webrtc.live-video.net%3A4443%2Fv2%2Foffer&whippushtoken="+ document.getElementById('changeText1t').value;
+		window.location = domain + "?whipoutvideobitrate=5800&stereo&push&whippush=https%3A%2F%2Fg.webrtc.live-video.net%3A4443%2Fv2%2Foffer&whippushtoken="+ encodeURIComponent(document.getElementById('changeText1t').value);
 	}
 }
 
@@ -1216,7 +1216,7 @@ function gohere3(){
 		}
 		
 		if (document.getElementById('changeText3a').value){
-			addedon += "&whepplaytoken="+document.getElementById('changeText3a').value;
+			addedon += "&whepplaytoken="+encodeURIComponent(document.getElementById('changeText3a').value);
 		}
 		
 		addedon += "&whepwait="+document.getElementById('whepicewait').value;
@@ -1442,7 +1442,7 @@ function initializeUI() {
   }
 }
 
-function switchTab(targetId) {
+function switchTab(targetId, updateHash = true) {
   document.querySelectorAll('.urlInput').forEach(section => {
     section.style.display = section.id === targetId ? 'block' : 'none';
   });
@@ -1452,13 +1452,17 @@ function switchTab(targetId) {
       .findIndex(section => section.id === targetId));
   });
   
-  window.location.hash = tabHashMap[targetId];
+  if (updateHash) {
+    window.location.hash = tabHashMap[targetId];
+  }
 }
 
 function checkHashAndSelectTab() {
   const hash = window.location.hash.substring(1);
-  if (hash && hashTabMap[hash]) {
-    switchTab(hashTabMap[hash]);
+  if (!hash) {
+    switchTab('urlInput1', false);
+  } else if (hashTabMap[hash]) {
+    switchTab(hashTabMap[hash], false);
   }
 }
 

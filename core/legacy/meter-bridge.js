@@ -1,5 +1,5 @@
-import { waitForLegacySession } from './session-bridge.js';
-import { levelBus } from '../events/level-bus.js';
+import { waitForLegacySession } from './session-bridge.js?v=20260911.1';
+import { levelBus } from '../events/level-bus.js?v=20260911.1';
 
 const DEFAULT_INTERVAL_MS = 120;
 const SILENCE_THRESHOLD = 2; // matches legacy behaviour where values < 2 are ignored

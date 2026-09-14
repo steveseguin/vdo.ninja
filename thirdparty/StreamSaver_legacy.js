@@ -189,9 +189,13 @@ function streamSaverFunction(){
         if (useBlobFallback) {
           const blob = new Blob(chunks, { type: 'application/octet-stream; charset=utf-8' })
           const link = document.createElement('a')
-          link.href = URL.createObjectURL(blob)
+          const url = URL.createObjectURL(blob)
+          chunks = []
+          link.href = url
           link.download = filename
           link.click()
+          // Allow Safari to consume the download before releasing the saved part.
+          setTimeout(() => URL.revokeObjectURL(url), 60000)
         } else {
           channel.port1.postMessage('end')
         }
@@ -211,6 +215,16 @@ function streamSaverFunction(){
 
   const streamSaver = {
     createWriteStream,
+    isTrustedMessage (event) {
+      if (!event || !mitmTransporter) return false
+      const source = mitmTransporter.isIframe ? mitmTransporter.contentWindow : mitmTransporter.frame
+      if (!source || event.source !== source) return false
+      try {
+        return event.origin === new URL(streamSaver.mitm, global.location.href).origin
+      } catch (error) {
+        return false
+      }
+    },
     WritableStream: global.WritableStream || ponyfill.WritableStream,
     supported: true,
     version: { full: '2.0.7', major: 2, minor: 0, dot: 7 },

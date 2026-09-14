@@ -2,66 +2,28 @@
 
 This directory contains various examples demonstrating different features and capabilities of VDO.Ninja. All examples are accessible through the index.html file.
 
-## Categories
+## Licensing
 
-### Core API Examples
-- **api_example.html** - Basic iframe API usage demonstration
-- **simple_iframe_api.html** - Simple iframe API implementation
-- **iframetesting.html** - Testing iframe functionality
-- **iframe.outbound-stats.html** - Get stats from VDO.Ninja using the iframe API
-- **mute_guest_iframe.html** - Control guest muting via iframe API
-- **iframe_example.html** - Additional iframe API example
+The [MIT license](LICENSE) covers original example code that Steve Seguin owns or is authorized to sublicense. Third-party components retain their own copyrights and licenses; the example-code license does not replace their notices or relicense VDO.Ninja core, external assets, or hosted services.
 
-### UI & Layout Examples
-- **draggable.html** - Drag multiple windows around to create custom layouts
-- **dual.html** - Two VDO.Ninja windows (Picture-in-Picture style)
-- **custom_overlay.html** - Custom overlay implementation
-- **rotated.html** - Video rotation example
-- **slidingzoom.html** - Sliding zoom effect
+- `360.html` and `360.js` are original MIT example code using the local A-Frame library; preserve its [A-Frame and bundled component notices](../thirdparty/aframe.min.js.LICENSE).
+- The WebXR AR sender and receiver use local [Three.js 0.160.0](../thirdparty/three/README.md); preserve its [MIT notice](../thirdparty/three/LICENSE).
+- `gtamap.html` uses locally bundled [Leaflet 1.9.4](../thirdparty/leaflet/README.md); preserve its [BSD-2-Clause notice](../thirdparty/leaflet/LICENSE). Map tiles still come from CARTO; the example retains its CARTO and OpenStreetMap credits.
+- `midi.html` uses the locally bundled [WebMidi.js 3.0.1](../thirdparty/webmidi3.js); preserve its [Apache-2.0 and bundled dependency notices](../thirdparty/webmidi3.js.LICENSE).
+- [`nes.min.css`](nes.min.css): [NES.css, Bootstrap Reboot, and Normalize.css license notices](nes.min.css.LICENSE).
+- [`obs_remote/thirdparty/obs-websocket.min.js`](obs_remote/thirdparty/obs-websocket.min.js): [OBS WebSocket JavaScript library license notice](obs_remote/thirdparty/obs-websocket.min.js.LICENSE).
 
-### Room Management
-- **waiting_room.html** - Virtual waiting room implementation
-- **simplelink.html** - Simple link generation
-- **changepass.html** - Create passwords and HASH values for rooms
-- **transfer.html** - Room transfer functionality
+Keep these notices with the corresponding libraries when copying or redistributing them. Dependencies loaded from external URLs remain subject to their own licenses and service terms.
 
-### Control Examples
-- **obsremote.html** - Remotely control OBS using VDO.Ninja
-- **webcontrol.html** - Web-based control interface
-- **powerpoint.html** - PowerPoint control integration
-- **gamecontroller.html** - Game controller input handling
-- **switchmics.html** - Switch between microphones
+## Browse examples
 
-### Hardware & Sensors
-- **midi.html** - MIDI API demonstration
-- **webhid.html** - Interface with USB devices (e.g., StreamDeck)
-- **sensors.html** - Transmit sensor and video data from phone to computer
-- **sensoroverlay.html** - Overlay sensor data on video
-- **accelerometer.html** - Accelerometer data usage
+Use the [examples catalogue](index.html) to browse the available examples, search by keyword, or filter by category.
 
-### Platform Integration
-- **twitch.html** - Twitch live chat side-by-side with VDO.Ninja
-- **youtube.html** - YouTube integration example
-- **kick.html** - Kick platform integration
-- **wireless.html** - Wireless streaming setup
-- **zoom.html** - Publish to VDO.Ninja for window-capturing into Zoom
+## 360-degree viewer
 
-### Specialized Applications
-- **teleprompter.html** - Teleprompter implementation
-- **teleprompt.html** - Alternative teleprompter
-- **labelonly.html** - Display labels only
-- **custom_labels.html** - Custom label implementation
-- **socal.html** - Social streaming example
+Open [360.html](360.html) and enter a VDO.Ninja stream ID, or open a local equirectangular photo/video. For a direct live view, use `360.html?view=STREAM_ID` (with `password` if needed). The older `/360.html` address forwards here and preserves URL parameters.
 
-### Communication & Data
-- **p2p.html** - Data transport tunneling service example
-- **chat.html** - Chat-only interface (dockable into OBS)
-- **googleai.html** - Google AI integration
-
-### Utilities
-- **testsdp.html** - SDP testing utility
-- **status.html** - Status monitoring
-- **ptz.html** - Pan-Tilt-Zoom camera control
+Drag or use arrow keys to look around, scroll or use +/− to zoom, and use Reset view to recenter. Local videos have playback and sound controls. The A-Frame headset button is available where WebXR is supported. Live viewing uses the existing iframe frame API and requires HTTPS/localhost and video-frame processing support; local files do not connect to a VDO.Ninja session and are not uploaded.
 
 ## Usage
 

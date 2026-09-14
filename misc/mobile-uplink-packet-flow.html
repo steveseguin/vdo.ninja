@@ -1,0 +1,1165 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+	<!-- Primary Meta Tags -->
+	<title>Mobile Uplink Packet Flow Lab — VDO.Ninja</title>
+	<meta name="title" content="Mobile Uplink Packet Flow Lab — VDO.Ninja" />
+	<meta name="description" content="Interactive lab showing how packet loss, jitter, and short outages affect mobile video uplinks (Starlink Roam + 5G), and how WebRTC, buffered WebRTC, chunked/WebCodecs, SRT, RTMP, and bonded-network paths trade latency for cleaner recovery." />
+	<meta name="author" content="Steve Seguin" />
+	<meta name="theme-color" content="#0f131d" />
+	<link rel="canonical" href="https://vdo.ninja/misc/mobile-uplink-packet-flow.html" />
+
+	<!-- Favicons -->
+	<link rel="shortcut icon" href="data:image/x-icon;," type="image/x-icon" />
+	<link rel="icon" type="image/png" sizes="32x32" href="../media/favicon-32x32.png" />
+	<link rel="icon" type="image/png" sizes="16x16" href="../media/favicon-16x16.png" />
+	<link rel="icon" href="../media/favicon.ico" />
+	<link rel="apple-touch-icon" href="../media/icon-192x192.png" />
+
+	<!-- X (Twitter) Card Tags -->
+	<meta name="twitter:card" content="summary_large_image" />
+	<meta name="twitter:creator" content="@SteveSeguin" />
+	<meta name="twitter:title" content="Mobile Uplink Packet Flow Lab — VDO.Ninja" />
+	<meta name="twitter:description" content="Visualize how loss, jitter, and outages hit mobile Starlink + 5G video, and how WebRTC, chunked, SRT, RTMP, and bonded paths compare." />
+	<meta name="twitter:image" content="https://vdo.ninja/media/vdoNinja_logo_full.png" />
+
+	<!-- Open Graph Tags -->
+	<meta property="og:type" content="website" />
+	<meta property="og:url" content="https://vdo.ninja/misc/mobile-uplink-packet-flow.html" />
+	<meta property="og:title" content="Mobile Uplink Packet Flow Lab — VDO.Ninja" />
+	<meta property="og:description" content="Visualize how loss, jitter, and outages hit mobile Starlink + 5G video, and how WebRTC, chunked, SRT, RTMP, and bonded paths compare." />
+	<meta property="og:image" content="https://vdo.ninja/media/vdoNinja_logo_full.png" />
+	<meta property="og:image:width" content="1200" />
+	<meta property="og:image:height" content="630" />
+	<meta property="og:site_name" content="VDO.Ninja" />
+
+	<style>
+		:root {
+			color-scheme: light;
+			--ink: #17202a;
+			--muted: #5b6472;
+			--line: #d7dde6;
+			--paper: #f7f8fb;
+			--panel: #ffffff;
+			--blue: #2367c9;
+			--green: #16845b;
+			--orange: #c75f12;
+			--red: #c83232;
+			--purple: #6949b8;
+			--teal: #177b87;
+			--shadow: 0 12px 30px rgba(18, 28, 45, 0.1);
+		}
+
+		* {
+			box-sizing: border-box;
+		}
+
+		body {
+			margin: 0;
+			background: var(--paper);
+			color: var(--ink);
+			font: 15px/1.45 system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+		}
+
+		main {
+			display: grid;
+			grid-template-columns: minmax(0, 1.35fr) minmax(320px, 0.65fr);
+			min-height: 100vh;
+		}
+
+		.stage {
+			display: flex;
+			flex-direction: column;
+			min-width: 0;
+			padding: 24px;
+			gap: 16px;
+		}
+
+		.header {
+			display: flex;
+			align-items: flex-end;
+			justify-content: space-between;
+			gap: 20px;
+		}
+
+		h1,
+		h2,
+		h3,
+		p {
+			margin: 0;
+		}
+
+		h1 {
+			font-size: 28px;
+			line-height: 1.1;
+			letter-spacing: 0;
+		}
+
+		.header p {
+			max-width: 780px;
+			color: var(--muted);
+			margin-top: 8px;
+		}
+
+		.badge {
+			display: inline-flex;
+			align-items: center;
+			gap: 8px;
+			border: 1px solid var(--line);
+			background: var(--panel);
+			padding: 8px 10px;
+			font-weight: 650;
+			white-space: nowrap;
+		}
+
+		.badge::before {
+			content: "";
+			width: 10px;
+			height: 10px;
+			border-radius: 50%;
+			background: var(--green);
+			box-shadow: 0 0 0 4px rgba(22, 132, 91, 0.14);
+		}
+
+		.tabs,
+		.path-tabs {
+			display: grid;
+			border: 1px solid var(--line);
+			background: var(--panel);
+			box-shadow: var(--shadow);
+		}
+
+		.tabs {
+			grid-template-columns: repeat(5, minmax(0, 1fr));
+		}
+
+		.path-tabs {
+			grid-template-columns: repeat(3, minmax(0, 1fr));
+			box-shadow: none;
+		}
+
+		.tabs button,
+		.path-tabs button,
+		.icon-button {
+			appearance: none;
+			border: 0;
+			background: transparent;
+			color: var(--ink);
+			cursor: pointer;
+			font: inherit;
+		}
+
+		.tabs button,
+		.path-tabs button {
+			min-height: 48px;
+			padding: 8px 10px;
+			border-right: 1px solid var(--line);
+			font-weight: 650;
+		}
+
+		.tabs button:last-child,
+		.path-tabs button:last-child {
+			border-right: 0;
+		}
+
+		.tabs button[aria-pressed="true"],
+		.path-tabs button[aria-pressed="true"] {
+			background: #17202a;
+			color: #fff;
+		}
+
+		.visual-shell {
+			position: relative;
+			min-height: 480px;
+			border: 1px solid var(--line);
+			background: var(--panel);
+			box-shadow: var(--shadow);
+			overflow: hidden;
+		}
+
+		canvas {
+			display: block;
+			width: 100%;
+			height: 480px;
+		}
+
+		.overlay-metrics {
+			position: absolute;
+			left: 16px;
+			right: 16px;
+			bottom: 16px;
+			display: grid;
+			grid-template-columns: repeat(4, minmax(0, 1fr));
+			gap: 10px;
+			pointer-events: none;
+		}
+
+		.metric {
+			background: rgba(255, 255, 255, 0.88);
+			border: 1px solid rgba(215, 221, 230, 0.9);
+			padding: 10px;
+			min-width: 0;
+		}
+
+		.metric span {
+			display: block;
+			font-size: 12px;
+			color: var(--muted);
+		}
+
+		.metric strong {
+			display: block;
+			font-size: 20px;
+			line-height: 1.1;
+			margin-top: 4px;
+		}
+
+		.controls {
+			display: grid;
+			grid-template-columns: repeat(4, minmax(0, 1fr));
+			gap: 12px;
+		}
+
+		.control {
+			background: var(--panel);
+			border: 1px solid var(--line);
+			padding: 12px;
+		}
+
+		label {
+			display: flex;
+			justify-content: space-between;
+			gap: 12px;
+			font-weight: 650;
+		}
+
+		label span {
+			color: var(--muted);
+			font-weight: 600;
+		}
+
+		input[type="range"] {
+			width: 100%;
+			margin-top: 12px;
+			accent-color: var(--blue);
+		}
+
+		.side {
+			min-width: 0;
+			border-left: 1px solid var(--line);
+			background: #fff;
+			padding: 24px;
+			overflow: auto;
+		}
+
+		.side-inner {
+			display: grid;
+			gap: 18px;
+			max-width: 760px;
+		}
+
+		.panel {
+			border: 1px solid var(--line);
+			background: var(--panel);
+			padding: 16px;
+		}
+
+		.panel h2 {
+			font-size: 18px;
+			line-height: 1.2;
+			margin-bottom: 10px;
+		}
+
+		.panel p,
+		.panel li {
+			color: var(--muted);
+		}
+
+		.panel ul {
+			padding-left: 19px;
+			margin: 10px 0 0;
+		}
+
+		.rec-grid {
+			display: grid;
+			grid-template-columns: 1fr;
+			gap: 10px;
+		}
+
+		.rec {
+			border-left: 4px solid var(--blue);
+			background: #f8fafc;
+			padding: 12px;
+		}
+
+		.rec:nth-child(2) {
+			border-left-color: var(--green);
+		}
+
+		.rec:nth-child(3) {
+			border-left-color: var(--orange);
+		}
+
+		.rec:nth-child(4) {
+			border-left-color: var(--purple);
+		}
+
+		.rec h3 {
+			font-size: 15px;
+			margin-bottom: 6px;
+		}
+
+		code {
+			display: block;
+			white-space: pre-wrap;
+			overflow-wrap: anywhere;
+			background: #111827;
+			color: #e5f3ff;
+			padding: 10px;
+			margin-top: 8px;
+			font: 12px/1.45 "SFMono-Regular", Consolas, monospace;
+		}
+
+		code.inline {
+			display: inline;
+			white-space: normal;
+			overflow-wrap: anywhere;
+			background: #eef1f6;
+			color: #1f2937;
+			padding: 1px 5px;
+			margin: 0;
+			border-radius: 3px;
+			font-size: 0.92em;
+		}
+
+		.legend {
+			display: flex;
+			flex-wrap: wrap;
+			gap: 8px 18px;
+			padding: 12px 14px;
+			border: 1px solid var(--line);
+			background: var(--panel);
+			font-size: 13px;
+			color: var(--muted);
+		}
+
+		.legend span {
+			display: inline-flex;
+			align-items: center;
+			gap: 7px;
+		}
+
+		.legend .dot {
+			width: 12px;
+			height: 12px;
+			border-radius: 50%;
+			flex: none;
+		}
+
+		.legend .ring {
+			width: 12px;
+			height: 12px;
+			border-radius: 50%;
+			border: 2px solid var(--orange);
+			background: transparent;
+			flex: none;
+		}
+
+		.legend .cross {
+			color: var(--red);
+			font-weight: 800;
+		}
+
+		.how-to {
+			color: var(--muted);
+			margin-top: 8px;
+			font-size: 13px;
+		}
+
+		.source-list a {
+			color: var(--blue);
+			text-decoration-thickness: 1px;
+			text-underline-offset: 3px;
+		}
+
+		.source-list li {
+			margin-top: 6px;
+		}
+
+		.note {
+			border: 1px solid rgba(199, 95, 18, 0.32);
+			background: rgba(199, 95, 18, 0.08);
+			padding: 12px;
+			color: #663305;
+		}
+
+		.icon-button {
+			display: inline-flex;
+			align-items: center;
+			justify-content: center;
+			width: 38px;
+			height: 38px;
+			border: 1px solid var(--line);
+			background: #fff;
+		}
+
+		.icon-button svg {
+			width: 18px;
+			height: 18px;
+			fill: none;
+			stroke: currentColor;
+			stroke-width: 2;
+			stroke-linecap: round;
+			stroke-linejoin: round;
+		}
+
+		@media (max-width: 1100px) {
+			main {
+				grid-template-columns: 1fr;
+			}
+
+			.side {
+				border-left: 0;
+				border-top: 1px solid var(--line);
+			}
+		}
+
+		@media (max-width: 760px) {
+			.stage,
+			.side {
+				padding: 16px;
+			}
+
+			.header {
+				align-items: flex-start;
+				flex-direction: column;
+			}
+
+			.tabs,
+			.path-tabs {
+				grid-template-columns: repeat(2, minmax(0, 1fr));
+			}
+
+			.tabs button,
+			.path-tabs button {
+				border-bottom: 1px solid var(--line);
+			}
+
+			.controls,
+			.overlay-metrics {
+				grid-template-columns: repeat(2, minmax(0, 1fr));
+			}
+
+			canvas {
+				height: 430px;
+			}
+		}
+
+		@media (max-width: 480px) {
+			.controls,
+			.overlay-metrics {
+				grid-template-columns: 1fr;
+			}
+
+			h1 {
+				font-size: 24px;
+			}
+		}
+	</style>
+</head>
+<body>
+	<main>
+		<section class="stage" aria-label="Packet flow simulator">
+			<div class="header">
+				<div>
+					<h1>Mobile Uplink Packet Flow Lab</h1>
+					<p>
+						Remote phone video from a moving Starlink plus 5G uplink is usually limited by loss, jitter, and short outages before it is limited by raw upload speed.
+						This model separates single-link, unmanaged dual-link, and purpose-built bonded service behavior, then shows why buffered SRT, RTMP, or chunked/WebCodecs modes trade delay for cleaner recovery.
+					</p>
+					<p class="how-to">
+						<strong>How to use:</strong> pick a transport (top row) and a network path (second row), then drag the sliders to see how loss, jitter, and frame size change the picture. The numbers are an illustrative model to show tradeoffs, not measured results.
+					</p>
+				</div>
+				<div class="badge" id="modeBadge">Plain WebRTC</div>
+			</div>
+
+			<div class="tabs" role="group" aria-label="Transport mode">
+				<button type="button" data-mode="webrtc" aria-pressed="true">WebRTC</button>
+				<button type="button" data-mode="buffer">WebRTC + Buffer</button>
+				<button type="button" data-mode="chunked">Chunked</button>
+				<button type="button" data-mode="srt">SRT</button>
+				<button type="button" data-mode="rtmp">RTMP</button>
+			</div>
+
+			<div class="path-tabs" role="group" aria-label="Network path setup">
+				<button type="button" data-path="single" aria-pressed="true">Starlink Only</button>
+				<button type="button" data-path="dual">Unmanaged Starlink + 5G</button>
+				<button type="button" data-path="bonded">Bonded Service</button>
+			</div>
+
+			<div class="visual-shell">
+				<canvas id="flowCanvas" width="1280" height="560" aria-label="Animated packet flow from phone through mobile uplink networks to OBS"></canvas>
+				<div class="overlay-metrics">
+					<div class="metric"><span>Live bitrate</span><strong id="bitrateMetric">2.9 Mbps</strong></div>
+					<div class="metric"><span>Glass-to-glass delay</span><strong id="delayMetric">0.35 s</strong></div>
+					<div class="metric"><span>Recovery wait</span><strong id="repairMetric">keyframe</strong></div>
+					<div class="metric"><span>Frame damage</span><strong id="damageMetric">visible</strong></div>
+				</div>
+			</div>
+
+			<div class="legend" aria-label="Animation legend">
+				<span><i class="dot" style="background:#2367c9"></i> Video packet</span>
+				<span><i class="dot" style="background:#6949b8"></i> Keyframe</span>
+				<span><i class="dot" style="background:#16845b"></i> Sent via 5G</span>
+				<span><i class="cross">&times;</i> Dropped packet</span>
+				<span><i class="ring"></i> Recovered packet</span>
+			</div>
+
+			<div class="controls" aria-label="Network controls">
+				<div class="control">
+					<label for="obstruction">Tree cover <span id="obstructionValue">35%</span></label>
+					<input id="obstruction" type="range" min="0" max="100" value="35" />
+				</div>
+				<div class="control">
+					<label for="jitter">Starlink jitter <span id="jitterValue">45 ms</span></label>
+					<input id="jitter" type="range" min="0" max="180" value="45" />
+				</div>
+				<div class="control">
+					<label for="cellular">5G strength <span id="cellularValue">65%</span></label>
+					<input id="cellular" type="range" min="0" max="100" value="65" />
+				</div>
+				<div class="control">
+					<label for="encoder">Encoder target <span id="encoderValue">3.0 Mbps</span></label>
+					<input id="encoder" type="range" min="800" max="7000" step="100" value="3000" />
+				</div>
+			</div>
+		</section>
+
+		<aside class="side" aria-label="Options">
+			<div class="side-inner">
+				<section class="panel">
+					<h2 id="modeTitle">Plain WebRTC</h2>
+					<p id="modeCopy">
+						WebRTC is best when latency matters. It reacts fast to packet loss, but that means tree-cover dropouts or path jitter can make the encoder slash bitrate even when average bandwidth looks high.
+					</p>
+				</section>
+
+				<section class="panel">
+					<h2>What Is Happening</h2>
+					<ul>
+						<li>H.264 frames are split into RTP packets. Missing packets can corrupt part of a frame or force a keyframe request.</li>
+						<li>Lower bitrate is more loss-tolerant because each compressed frame is smaller. Lost data can be retried faster, and a recovery keyframe is smaller.</li>
+						<li><code class="inline">&q=0</code> is 1080p/high quality. That creates larger H.264 frames, so one loss can take longer to repair and may need a new keyframe before the picture is clean again.</li>
+						<li>WebRTC congestion control treats loss and delay as congestion, so it often reduces bitrate before a user sees the full available upload speed.</li>
+						<li>Starlink and cellular often have different latency and jitter. Sending packets across both paths without a service that reorders, buffers, and de-duplicates them can make packet timing worse for VDO.Ninja.</li>
+						<li>Speedify or a Peplink-style bonded service can hide short path failures by spreading or duplicating packets, but it needs to be designed for real-time traffic and cannot remove obstruction gaps from Starlink itself.</li>
+						<li>More frequent keyframes, requested from the viewer/OBS link with <code class="inline">&keyframe=2000</code>, are a recovery option for lingering damage, but they increase bandwidth. With a weak link, that extra bandwidth can make loss worse, so they are not a default setting.</li>
+						<li>A large WebRTC receive buffer can give a keyframe time to arrive, but WebRTC is not built around large contribution buffers. Chunked mode can use bigger buffers more naturally.</li>
+						<li>RTMP does not repair frames like chunked mode; it uses reliable ordered delivery, so playback blocks until the missing data arrives.</li>
+						<li>SRT, RTMP, and VDO.Ninja chunked/WebCodecs improve quality by allowing buffering, retransmission, ordered delivery, or repair. The cost is latency.</li>
+						<li>VDO.Ninja chunked mode is a JavaScript-powered P2P adaptive path. It is cruder than a dedicated contribution protocol, but it can do custom recovery and buffering behavior that normal browser WebRTC media tracks do not expose.</li>
+					</ul>
+				</section>
+
+				<section class="panel">
+					<h2>Options To Test</h2>
+					<div class="rec-grid">
+						<div class="rec">
+							<h3>Lower-bitrate WebRTC option</h3>
+							<p>720p or modest 1080p at 30 fps keeps frames smaller, making packet loss and keyframe recovery less painful than 1080p at 7 Mbps.</p>
+							<code>Push:
+https://vdo.ninja/?push=REMOTE_ID&q=1&codec=h264&h264profile&outboundvideobitrate=3000&maxframerate=30
+
+OBS:
+https://vdo.ninja/?view=REMOTE_ID&buffer=3000&bitrate=3000</code>
+						</div>
+						<div class="rec">
+							<h3>1080p WebRTC option</h3>
+							<p><code class="inline">&q=0</code> is 1080p. Use this only when packet loss is low enough that larger H.264 frames and recovery keyframes are not constantly being damaged.</p>
+							<code>Push test:
+https://vdo.ninja/?push=REMOTE_ID&q=0&codec=h264&h264profile&outboundvideobitrate=4500&maxframerate=30&nomobilebitratecap
+
+OBS test:
+https://vdo.ninja/?view=REMOTE_ID&buffer=3000&bitrate=4500</code>
+						</div>
+						<div class="rec">
+							<h3>Chunked/WebCodecs option</h3>
+							<p>Chunked mode can add FEC/NACK-style recovery and explicit playout buffering in JavaScript. It can tolerate larger buffers than plain WebRTC media, but it is still experimental.</p>
+							<code>Push:
+https://vdo.ninja/?push=REMOTE_ID&q=1&chunked=1800&chunkprofile=balanced&outboundvideobitrate=1800
+
+OBS:
+https://vdo.ninja/?view=REMOTE_ID&chunkbuffer=3000</code>
+						</div>
+						<div class="rec">
+							<h3>SRT or RTMP relay option</h3>
+							<p>If OBS is only forwarding to multistream and a few seconds of latency is acceptable, app.meshcast.io with SRT or RTMP is the buffered contribution-path option.</p>
+							<code>SRT target:
+720p30 to 1080p30, H.264, 2500-4500 Kbps, 2s keyframes, latency 2000-6000 ms
+
+RTMP target:
+H.264 + AAC, CBR-like, 2s keyframes, 3000-5000 Kbps, expect more delay</code>
+						</div>
+						<div class="rec">
+							<h3>Keyframe interval option (targeted fix)</h3>
+							<p>WebRTC already requests a keyframe automatically when it detects loss, so do not set this by default. Use it only if damage lingers for seconds after a dropout. <code class="inline">&keyframe</code> is a viewer-side option: the OBS/view link asks the remote phone to send keyframes at that interval. A keyframe is the largest frame type, so forcing them often spends bandwidth and can make a weak uplink worse. Start at 2000; drop to 1000 only if 2000 is too slow and the bond has headroom. Under ~1000 ms quality drops steeply.</p>
+							<code>OBS (keyframe request goes here):
+https://vdo.ninja/?view=REMOTE_ID&bitrate=3000&buffer=1000&keyframe=2000</code>
+						</div>
+					</div>
+				</section>
+
+				<section class="panel note">
+					<h2>Practical Takeaway</h2>
+					<p>
+						For this specific moving Starlink Roam plus 5G case, do not optimize for maximum advertised upload first.
+						Optimize for fewer visible losses: 30 fps, bitrate headroom, 3 seconds of receive buffer, a real bonded service when using Starlink plus cellular together, and a fallback SRT/RTMP relay path.
+					</p>
+				</section>
+
+				<section class="panel source-list">
+					<h2>Source Notes</h2>
+					<ul>
+						<li><a href="https://www.starlink.com/legal/documents/DOC-1470-99699-90" target="_blank" rel="noreferrer">Starlink specifications</a> list typical upload and latency ranges; obstruction support docs point users to the app obstruction checker.</li>
+						<li><a href="https://support.speedify.com/article/870-bonding-mode" target="_blank" rel="noreferrer">Speedify Bonding Mode</a> describes streaming traffic prioritization and switching between bonding and redundancy.</li>
+						<li><a href="https://support.speedify.com/article/692-enhance-streaming-mode" target="_blank" rel="noreferrer">Speedify Enhance Streaming</a> describes automatic audio/video stream detection and priority handling.</li>
+						<li><a href="https://docs.aws.amazon.com/ivs/latest/LowLatencyUserGuide/streaming-config.html" target="_blank" rel="noreferrer">AWS IVS encoder guidance</a> documents RTMP/RTMPS/SRT ingest, CBR guidance, 2-second keyframes, and bandwidth headroom.</li>
+						<li>Local VDO.Ninja source confirms `&q`, `&outboundvideobitrate`, `&buffer`, `&keyframe`, chunked profiles, and `&nomobilebitratecap` handling in `main.js` and `webrtc.js`.</li>
+					</ul>
+				</section>
+			</div>
+		</aside>
+	</main>
+
+	<script>
+		(function () {
+			"use strict";
+
+			var canvas = document.getElementById("flowCanvas");
+			var ctx = canvas.getContext("2d");
+			var tabs = Array.prototype.slice.call(document.querySelectorAll(".tabs button"));
+			var pathTabs = Array.prototype.slice.call(document.querySelectorAll(".path-tabs button"));
+			var modeBadge = document.getElementById("modeBadge");
+			var modeTitle = document.getElementById("modeTitle");
+			var modeCopy = document.getElementById("modeCopy");
+			var bitrateMetric = document.getElementById("bitrateMetric");
+			var delayMetric = document.getElementById("delayMetric");
+			var repairMetric = document.getElementById("repairMetric");
+			var damageMetric = document.getElementById("damageMetric");
+
+			var sliders = {
+				obstruction: document.getElementById("obstruction"),
+				jitter: document.getElementById("jitter"),
+				cellular: document.getElementById("cellular"),
+				encoder: document.getElementById("encoder")
+			};
+
+			var labels = {
+				obstruction: document.getElementById("obstructionValue"),
+				jitter: document.getElementById("jitterValue"),
+				cellular: document.getElementById("cellularValue"),
+				encoder: document.getElementById("encoderValue")
+			};
+
+			var modes = {
+				webrtc: {
+					name: "Plain WebRTC",
+					delay: 0.32,
+					repair: 0.12,
+					buffer: 0.05,
+					redundancy: 0,
+					color: "#2367c9",
+					copy: "WebRTC is best when latency matters. It reacts fast to packet loss, but that means tree-cover dropouts or path jitter can make the encoder slash bitrate even when average bandwidth looks high."
+				},
+				buffer: {
+					name: "WebRTC + Buffer",
+					delay: 3.0,
+					repair: 0.22,
+					buffer: 0.65,
+					redundancy: 0,
+					color: "#16845b",
+					copy: "A receive buffer does not change WebRTC congestion control, but it gives OBS time to smooth jitter and short delivery gaps. It is a good first step when live interaction is not required."
+				},
+				chunked: {
+					name: "Chunked WebCodecs",
+					delay: 3.2,
+					repair: 0.62,
+					buffer: 0.74,
+					redundancy: 0.38,
+					color: "#6949b8",
+					copy: "Chunked/WebCodecs mode sends encoded chunks over data channels with optional FEC/NACK behavior and explicit playout buffering. It is a JavaScript-powered P2P adaptive system, so it is cruder than dedicated SRT/RTMP contribution tools, but it can do custom recovery that normal WebRTC media tracks do not expose."
+				},
+				srt: {
+					name: "SRT Relay",
+					delay: 4.6,
+					repair: 0.86,
+					buffer: 0.9,
+					redundancy: 0.25,
+					color: "#c75f12",
+					copy: "SRT is built for contribution feeds over unreliable networks. Its latency buffer and retransmissions buy time to recover missing packets, making it a strong fit when OBS is a relay rather than an interactive viewer."
+				},
+				rtmp: {
+					name: "RTMP Relay",
+					delay: 5.5,
+					repair: 0.72,
+					buffer: 0.95,
+					redundancy: 0.1,
+					color: "#c83232",
+					copy: "RTMP rides over reliable ordered delivery, so missing data blocks the stream until it arrives. It avoids some immediate video corruption, but bad packets become stalls and accumulated delay."
+				}
+			};
+
+			var state = {
+				mode: "webrtc",
+				path: "single",
+				time: 0,
+				packets: []
+			};
+
+			var pathModes = {
+				single: {
+					name: "Starlink only",
+					cellActive: false,
+					bonded: false,
+					timingPenalty: 0,
+					help: 0,
+					copy: "One path, no cellular timing mismatch. Obstructions and Starlink jitter directly hit the media path."
+				},
+				dual: {
+					name: "Unmanaged dual uplink",
+					cellActive: true,
+					bonded: false,
+					timingPenalty: 0.17,
+					help: 0.08,
+					copy: "Starlink and 5G are both present, but without a bonding service packets can arrive on different clocks. For VDO.Ninja, that timing spread may help less than expected."
+				},
+				bonded: {
+					name: "Bonded service",
+					cellActive: true,
+					bonded: true,
+					timingPenalty: 0.04,
+					help: 0.42,
+					copy: "A bonding service can split, duplicate, reorder, and buffer traffic so Starlink plus 5G behaves more like one real-time uplink."
+				}
+			};
+
+			function resizeCanvas() {
+				var rect = canvas.getBoundingClientRect();
+				var ratio = window.devicePixelRatio || 1;
+				canvas.width = Math.max(900, Math.floor(rect.width * ratio));
+				canvas.height = Math.max(430, Math.floor(rect.height * ratio));
+				var scaleX = rect.width ? canvas.width / rect.width : ratio;
+				var scaleY = rect.height ? canvas.height / rect.height : ratio;
+				ctx.setTransform(scaleX, 0, 0, scaleY, 0, 0);
+			}
+
+			function val(name) {
+				return parseFloat(sliders[name].value);
+			}
+
+			function updateLabels() {
+				labels.obstruction.textContent = val("obstruction") + "%";
+				labels.jitter.textContent = val("jitter") + " ms";
+				labels.cellular.textContent = val("cellular") + "%";
+				labels.encoder.textContent = (val("encoder") / 1000).toFixed(1) + " Mbps / " + frameModel(val("encoder")).label;
+			}
+
+			function setMode(mode) {
+				state.mode = mode;
+				tabs.forEach(function (button) {
+					button.setAttribute("aria-pressed", button.dataset.mode === mode ? "true" : "false");
+				});
+				modeBadge.textContent = modes[mode].name + " / " + pathModes[state.path].name;
+				modeTitle.textContent = modes[mode].name;
+				modeCopy.textContent = modes[mode].copy + " " + pathModes[state.path].copy;
+			}
+
+			function setPath(path) {
+				state.path = path;
+				pathTabs.forEach(function (button) {
+					button.setAttribute("aria-pressed", button.dataset.path === path ? "true" : "false");
+				});
+				setMode(state.mode);
+			}
+
+			function drawNode(x, y, title, subtitle, color) {
+				ctx.save();
+				ctx.fillStyle = "#ffffff";
+				ctx.strokeStyle = "#cbd5e1";
+				ctx.lineWidth = 1.5;
+				roundRect(x - 68, y - 38, 136, 76, 8);
+				ctx.fill();
+				ctx.stroke();
+				ctx.fillStyle = color;
+				ctx.beginPath();
+				ctx.arc(x - 48, y - 10, 8, 0, Math.PI * 2);
+				ctx.fill();
+				ctx.fillStyle = "#17202a";
+				ctx.font = "700 14px system-ui";
+				ctx.fillText(title, x - 30, y - 13);
+				ctx.fillStyle = "#5b6472";
+				ctx.font = "12px system-ui";
+				ctx.fillText(subtitle, x - 48, y + 13);
+				ctx.restore();
+			}
+
+			function roundRect(x, y, w, h, r) {
+				ctx.beginPath();
+				ctx.moveTo(x + r, y);
+				ctx.arcTo(x + w, y, x + w, y + h, r);
+				ctx.arcTo(x + w, y + h, x, y + h, r);
+				ctx.arcTo(x, y + h, x, y, r);
+				ctx.arcTo(x, y, x + w, y, r);
+				ctx.closePath();
+			}
+
+			function pathPoint(start, end, t, bow) {
+				var x = start.x + (end.x - start.x) * t;
+				var y = start.y + (end.y - start.y) * t + Math.sin(t * Math.PI) * bow;
+				return { x: x, y: y };
+			}
+
+			function frameModel(encoder) {
+				var normalized = Math.max(0, Math.min(1, (encoder - 800) / 6200));
+				var frameScale = 0.58 + normalized * 1.18;
+				var exposure = 0.68 + normalized * 0.95;
+				var label = encoder >= 4200 ? "1080p large" : encoder >= 2400 ? "HD medium" : "small frames";
+				return {
+					scale: frameScale,
+					exposure: exposure,
+					label: label,
+					keyframeSeconds: 0.48 + frameScale * 0.72
+				};
+			}
+
+			function spawnPackets(metrics) {
+				var spawnEvery = Math.max(0.045, 0.15 - val("encoder") / 70000);
+				if (state.time % spawnEvery < 0.018) {
+					var isKey = Math.floor(state.time * 2) % 12 === 0;
+					var path = pathModes[state.path];
+					var viaCell = path.cellActive && Math.random() < val("cellular") / (path.bonded ? 120 : 170);
+					var mode = modes[state.mode];
+					var lossRisk = metrics.lossRisk;
+					var redundant = Math.random() < (mode.redundancy + metrics.pathRedundancy);
+					var lost = Math.random() < lossRisk && !(redundant && Math.random() < 0.75);
+					var repaired = lost && Math.random() < metrics.repairChance;
+					state.packets.push({
+						birth: state.time,
+						duration: 2.0 + metrics.frame.scale * 0.42 + Math.random() * 0.7 + mode.buffer * 0.8,
+						viaCell: viaCell,
+						key: isKey,
+						lost: lost,
+						repaired: repaired,
+						size: (isKey ? 7 : 4 + Math.random() * 2) * Math.min(1.55, metrics.frame.scale)
+					});
+				}
+			}
+
+			function computeMetrics() {
+				var mode = modes[state.mode];
+				var path = pathModes[state.path];
+				var obstruction = val("obstruction") / 100;
+				var jitter = val("jitter");
+				var cellular = val("cellular") / 100;
+				var encoder = val("encoder");
+				var frame = frameModel(encoder);
+				var cellHelp = path.cellActive ? cellular * path.help : 0;
+				var mismatchPenalty = path.cellActive ? path.timingPenalty * Math.max(0.2, cellular) * Math.min(1, jitter / 90) : 0;
+				var baseLoss = obstruction * 0.3 + jitter / 720 + mismatchPenalty;
+				var lossRisk = Math.max(0.012, Math.min(0.68, baseLoss * frame.exposure - cellHelp));
+				var pathRedundancy = path.bonded ? 0.46 * cellular : 0;
+				var repair = mode.repair + mode.redundancy * 0.22 + pathRedundancy * 0.25;
+				var repairChance = Math.min(0.94, repair);
+				var unrepaired = Math.max(0, lossRisk * (1 - repairChance));
+				var isWebrtcMedia = state.mode === "webrtc" || state.mode === "buffer";
+				var isRtmp = state.mode === "rtmp";
+				var isChunked = state.mode === "chunked";
+				var keyframeWait = isWebrtcMedia ? frame.keyframeSeconds + jitter / 850 + lossRisk * 1.25 : 0;
+				var retryWait = isChunked ? 0.24 + frame.scale * 0.24 + jitter / 2400 + lossRisk * 0.9 : 0;
+				var srtWait = state.mode === "srt" ? 0.34 + frame.scale * 0.16 + jitter / 2600 + lossRisk * 0.55 : 0;
+				var rtmpBlock = isRtmp ? 0.42 + frame.scale * 0.44 + jitter / 1800 + lossRisk * 2.4 : 0;
+				var recoveryWait = keyframeWait || retryWait || srtWait || rtmpBlock;
+				var concealment = Math.min(0.82, Math.max(0, mode.delay - 0.35) / Math.max(0.4, recoveryWait) * 0.22 + mode.buffer * 0.18);
+				var congestionPenalty = isWebrtcMedia ? lossRisk * frame.scale * 3.2 : unrepaired * frame.scale * 1.35;
+				var bitrate = Math.max(0.45, encoder / 1000 * (1 - congestionPenalty));
+				var damage;
+				if (isRtmp) {
+					damage = Math.min(1, unrepaired * frame.scale * 0.65);
+				} else if (isChunked || state.mode === "srt") {
+					damage = Math.max(0, Math.min(1, unrepaired * frame.scale * 2.2 - concealment * 0.55));
+				} else {
+					damage = Math.max(0, Math.min(1, unrepaired * frame.scale * 3.15 + obstruction * 0.12 - concealment));
+				}
+				var delay = mode.delay + mode.buffer * jitter / 1150 + mismatchPenalty * 1.6 + (isRtmp ? rtmpBlock * lossRisk : recoveryWait * unrepaired);
+				return {
+					mode: mode,
+					path: path,
+					frame: frame,
+					pathRedundancy: pathRedundancy,
+					repairChance: repairChance,
+					lossRisk: lossRisk,
+					unrepaired: unrepaired,
+					bitrate: bitrate,
+					delay: delay,
+					damage: damage,
+					recoveryWait: recoveryWait,
+					recoveryType: isRtmp ? "block" : isChunked || state.mode === "srt" ? "retry" : "keyframe",
+					concealment: concealment
+				};
+			}
+
+			function draw(metrics) {
+				var rect = canvas.getBoundingClientRect();
+				var w = rect.width;
+				var h = rect.height;
+				ctx.clearRect(0, 0, w, h);
+
+				ctx.fillStyle = "#f8fafc";
+				ctx.fillRect(0, 0, w, h);
+
+				var yMid = h * 0.43;
+				var phone = { x: w * 0.11, y: yMid };
+				var h264 = { x: w * 0.29, y: yMid };
+				var star = { x: w * 0.49, y: yMid - 64 };
+				var cell = { x: w * 0.49, y: yMid + 64 };
+				var edge = { x: w * 0.68, y: yMid };
+				var obs = { x: w * 0.88, y: yMid };
+
+				drawBackgroundClouds(w, h, metrics);
+				drawLanes(phone, h264, star, cell, edge, obs, metrics);
+
+				drawNode(phone.x, phone.y, "S25 Ultra", "camera + encoder", "#2367c9");
+				drawNode(h264.x, h264.y, "H.264", "compressed frames", "#6949b8");
+				drawNode(star.x, star.y, "Starlink", "fast but bursty", "#c75f12");
+				drawNode(cell.x, cell.y, "5G", metrics.path.cellActive ? (metrics.path.bonded ? "bonded path" : "timing mismatch") : "not used", metrics.path.cellActive ? "#16845b" : "#9aa5b5");
+				drawNode(edge.x, edge.y, state.mode === "webrtc" || state.mode === "buffer" || state.mode === "chunked" ? "VDO.Ninja" : "Relay", metrics.mode.name, metrics.mode.color);
+				drawNode(obs.x, obs.y, "OBS", "browser source", "#17202a");
+
+				drawPackets(phone, h264, star, cell, edge, obs, metrics);
+				drawBuffer(obs.x, obs.y + 78, metrics);
+				drawDamageScreen(obs.x, obs.y - 105, metrics);
+			}
+
+			function drawBackgroundClouds(w, h, metrics) {
+				var obstruction = val("obstruction") / 100;
+				ctx.save();
+				ctx.fillStyle = "rgba(199, 95, 18, " + (0.12 + obstruction * 0.23).toFixed(3) + ")";
+				for (var i = 0; i < 8; i++) {
+					var x = w * 0.38 + i * w * 0.035;
+					var y = h * 0.13 + Math.sin(state.time + i) * 5;
+					ctx.beginPath();
+					ctx.arc(x, y, 22 + obstruction * 20, 0, Math.PI * 2);
+					ctx.fill();
+				}
+				ctx.fillStyle = "rgba(23, 123, 135, 0.08)";
+				ctx.fillRect(w * 0.62, 0, w * 0.13, h);
+				ctx.restore();
+			}
+
+			function drawLanes(phone, h264, star, cell, edge, obs, metrics) {
+				ctx.save();
+				ctx.lineWidth = 3;
+				ctx.setLineDash([8, 8]);
+				line(phone, h264, "#9aa5b5");
+				line(h264, star, "#c75f12");
+				ctx.globalAlpha = metrics.path.cellActive ? 1 : 0.22;
+				line(h264, cell, "#16845b");
+				ctx.globalAlpha = 1;
+				line(star, edge, "#c75f12");
+				ctx.globalAlpha = metrics.path.cellActive ? 1 : 0.22;
+				line(cell, edge, metrics.path.bonded ? "#16845b" : "#9aa5b5");
+				ctx.globalAlpha = 1;
+				line(edge, obs, metrics.mode.color);
+				ctx.setLineDash([]);
+				drawPathNote(cell.x - 72, cell.y + 58, metrics.path);
+				ctx.restore();
+			}
+
+			function drawPathNote(x, y, path) {
+				ctx.save();
+				ctx.fillStyle = path.bonded ? "rgba(22,132,91,0.1)" : path.cellActive ? "rgba(200,50,50,0.08)" : "rgba(90,100,114,0.08)";
+				ctx.strokeStyle = path.bonded ? "rgba(22,132,91,0.34)" : path.cellActive ? "rgba(200,50,50,0.28)" : "rgba(90,100,114,0.2)";
+				roundRect(x, y, 150, 42, 6);
+				ctx.fill();
+				ctx.stroke();
+				ctx.fillStyle = path.bonded ? "#16603f" : path.cellActive ? "#8a2a2a" : "#5b6472";
+				ctx.font = "12px system-ui";
+				var text = path.bonded ? "reorder + dedupe" : path.cellActive ? "arrival clocks differ" : "single uplink";
+				ctx.fillText(text, x + 10, y + 25);
+				ctx.restore();
+			}
+
+			function line(a, b, color) {
+				ctx.strokeStyle = color;
+				ctx.beginPath();
+				ctx.moveTo(a.x, a.y);
+				ctx.lineTo(b.x, b.y);
+				ctx.stroke();
+			}
+
+			function drawPackets(phone, h264, star, cell, edge, obs, metrics) {
+				var next = [];
+				for (var i = 0; i < state.packets.length; i++) {
+					var p = state.packets[i];
+					var age = state.time - p.birth;
+					var t = age / p.duration;
+					if (t <= 1.15) {
+						next.push(p);
+					}
+					if (t < 0 || t > 1) {
+						continue;
+					}
+					var pos;
+					if (t < 0.22) {
+						pos = pathPoint(phone, h264, t / 0.22, 0);
+					} else if (t < 0.56) {
+						pos = pathPoint(h264, p.viaCell ? cell : star, (t - 0.22) / 0.34, p.viaCell ? 24 : -24);
+					} else if (t < 0.78) {
+						pos = pathPoint(p.viaCell ? cell : star, edge, (t - 0.56) / 0.22, p.viaCell ? -18 : 18);
+					} else {
+						pos = pathPoint(edge, obs, (t - 0.78) / 0.22, 0);
+					}
+
+					var dropVisible = p.lost && !p.repaired && t > 0.48 && t < 0.77;
+					var repairVisible = p.repaired && t > 0.62;
+					ctx.save();
+					ctx.globalAlpha = dropVisible ? 0.28 : 1;
+					ctx.fillStyle = p.key ? "#6949b8" : "#2367c9";
+					if (p.viaCell) {
+						ctx.fillStyle = "#16845b";
+					}
+					if (repairVisible) {
+						ctx.fillStyle = "#c75f12";
+					}
+					ctx.beginPath();
+					ctx.arc(pos.x, pos.y, p.size, 0, Math.PI * 2);
+					ctx.fill();
+					if (dropVisible) {
+						ctx.strokeStyle = "#c83232";
+						ctx.lineWidth = 2;
+						ctx.beginPath();
+						ctx.moveTo(pos.x - 8, pos.y - 8);
+						ctx.lineTo(pos.x + 8, pos.y + 8);
+						ctx.moveTo(pos.x + 8, pos.y - 8);
+						ctx.lineTo(pos.x - 8, pos.y + 8);
+						ctx.stroke();
+					}
+					if (repairVisible) {
+						ctx.strokeStyle = "#c75f12";
+						ctx.lineWidth = 2;
+						ctx.beginPath();
+						ctx.arc(pos.x, pos.y, p.size + 5, 0, Math.PI * 2);
+						ctx.stroke();
+					}
+					ctx.restore();
+				}
+				state.packets = next;
+			}
+
+			function drawBuffer(x, y, metrics) {
+				var width = 160;
+				var fill = Math.max(0.04, Math.min(1, metrics.concealment + metrics.mode.buffer * 0.46 - metrics.unrepaired * 0.5));
+				ctx.save();
+				ctx.fillStyle = "#ffffff";
+				ctx.strokeStyle = "#cbd5e1";
+				roundRect(x - width / 2, y, width, 26, 6);
+				ctx.fill();
+				ctx.stroke();
+				ctx.fillStyle = metrics.mode.color;
+				roundRect(x - width / 2 + 3, y + 3, (width - 6) * fill, 20, 4);
+				ctx.fill();
+				ctx.fillStyle = "#5b6472";
+				ctx.font = "12px system-ui";
+				ctx.fillText(metrics.recoveryType === "keyframe" ? "buffer vs keyframe" : metrics.recoveryType === "block" ? "TCP-style blocking" : "retry buffer", x - 58, y + 48);
+				ctx.restore();
+			}
+
+			function drawDamageScreen(x, y, metrics) {
+				ctx.save();
+				ctx.fillStyle = "#111827";
+				ctx.strokeStyle = "#cbd5e1";
+				roundRect(x - 76, y - 44, 152, 88, 8);
+				ctx.fill();
+				ctx.stroke();
+				var damage = metrics.damage;
+				ctx.fillStyle = "#1d4ed8";
+				ctx.fillRect(x - 64, y - 32, 128, 64);
+				ctx.fillStyle = "rgba(255,255,255,0.9)";
+				ctx.fillRect(x - 44, y - 22, 34, 48);
+				ctx.fillStyle = "rgba(22,132,91,0.9)";
+				ctx.fillRect(x + 4, y - 12, 48, 38);
+				ctx.fillStyle = "rgba(200,50,50," + Math.min(0.72, damage).toFixed(3) + ")";
+				for (var i = 0; i < 7; i++) {
+					var bx = x - 58 + ((i * 29 + Math.floor(state.time * 18)) % 116);
+					var by = y - 28 + ((i * 19) % 52);
+					ctx.fillRect(bx, by, 18 + damage * 18, 8 + damage * 13);
+				}
+				if (metrics.recoveryType === "block" && metrics.lossRisk > 0.16) {
+					ctx.fillStyle = "rgba(17,24,39,0.58)";
+					ctx.fillRect(x - 64, y - 32, 128, 64);
+					ctx.fillStyle = "#ffffff";
+					ctx.fillRect(x - 16, y - 17, 9, 34);
+					ctx.fillRect(x + 7, y - 17, 9, 34);
+				}
+				ctx.restore();
+			}
+
+			function updateMetrics(metrics) {
+				bitrateMetric.textContent = metrics.bitrate.toFixed(1) + " Mbps";
+				delayMetric.textContent = metrics.delay < 1 ? Math.round(metrics.delay * 1000) + " ms" : metrics.delay.toFixed(1) + " s";
+				var waitText = metrics.recoveryWait < 1 ? Math.round(metrics.recoveryWait * 1000) + " ms" : metrics.recoveryWait.toFixed(1) + " s";
+				if (metrics.recoveryType === "block") {
+					repairMetric.textContent = "blocks " + waitText;
+				} else if (metrics.recoveryType === "retry") {
+					repairMetric.textContent = "retry " + waitText;
+				} else {
+					repairMetric.textContent = "keyframe " + waitText;
+				}
+				if (metrics.recoveryType === "block" && metrics.lossRisk > 0.22) {
+					damageMetric.textContent = "stalls";
+				} else if (metrics.damage > 0.45 && metrics.frame.scale < 0.95 && metrics.recoveryWait < 1.6) {
+					damageMetric.textContent = "some";
+				} else {
+					damageMetric.textContent = metrics.damage > 0.45 ? "visible" : metrics.damage > 0.18 ? "some" : "low";
+				}
+			}
+
+			function tick(now) {
+				state.time = now / 1000;
+				var metrics = computeMetrics();
+				spawnPackets(metrics);
+				draw(metrics);
+				updateMetrics(metrics);
+				requestAnimationFrame(tick);
+			}
+
+			tabs.forEach(function (button) {
+				button.addEventListener("click", function () {
+					setMode(button.dataset.mode);
+				});
+			});
+
+			pathTabs.forEach(function (button) {
+				button.addEventListener("click", function () {
+					setPath(button.dataset.path);
+				});
+			});
+
+			Object.keys(sliders).forEach(function (name) {
+				sliders[name].addEventListener("input", updateLabels);
+			});
+
+			window.addEventListener("resize", resizeCanvas);
+			updateLabels();
+			setMode("webrtc");
+			setPath("single");
+			resizeCanvas();
+			requestAnimationFrame(tick);
+		})();
+	</script>
+</body>
+</html>

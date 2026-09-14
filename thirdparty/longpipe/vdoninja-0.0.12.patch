@@ -1,0 +1,1366 @@
+diff --git a/README.md b/README.md
+--- a/README.md
++++ b/README.md
+@@ -88,6 +88,33 @@
+ await pipeline.setBackground({ blur: { sigma: 20 } })
+ await pipeline.setBackground('https://example.com/other-bg.jpg')
+ ```
++
++### Temporal matte modes
++
++Temporal behavior can be selected at construction and changed without
++rebuilding the pipeline:
++
++```ts
++const pipeline = new EffectsPipeline(stream, {
++  background: 'blur',
++  temporalMode: 'stabilized', // 'stabilized' | 'warp-only' | 'off'
++})
++
++await pipeline.setTemporalMode('off')
++```
++
++`stabilized` preserves the flow-gated historical matte. `warp-only` uses
++optical flow only to fill skipped inference frames. `off` disables temporal
++history and runs current-frame segmentation on every source frame.
++
++### Protected startup
++
++Set `waitForFirstFrame: true` when publishing a background effect. This opt-in
++suppresses startup passthrough on every output transport and defers the video
++pipe until the model is attached. `ready` then waits for the first rendered
++output; bitmap-shuttle also waits for successful main-thread presentation.
++Initialization errors and destroy still reject readiness. The default remains
++passthrough during initialization for other SDK consumers.
+
+ ## Performance presets
+
+diff --git a/src/index.ts b/src/index.ts
+index e5200e3..66d2d40 100644
+--- a/src/index.ts
++++ b/src/index.ts
+@@ -7,7 +7,7 @@ export type {
+   BackgroundInput, Background, BlurInput, ColorInput, ImageInput, VideoInput,
+   PresetName, ManualPreset, ModelName,
+   AudioMode, AudioInput, DenoiseOptions, DenoiseModel, DenoiseTier, DenoiseModelOption, AudioStats,
+-  PipelineError, ErrorSource,
++  PipelineError, ErrorSource, ErrorCode, TemporalMode,
+ } from '~/pipeline/index.ts'
+ 
+ // Lower-level types for callers building on top of the backend directly.
+diff --git a/src/pipeline/index.ts b/src/pipeline/index.ts
+--- a/src/pipeline/index.ts
++++ b/src/pipeline/index.ts
+@@ -14,7 +14,7 @@
+ import type { BackgroundInput, Background } from './background'
+ import { normalizeBackground } from './background'
+ import type { AudioInput } from './audio'
+-import type { InitData, PipelineError } from './messages'
++import type { InitData, PipelineError, TemporalMode } from './messages'
+ import { selectTopology } from './topology'
+ import { buildOutputStream, normalizeAudio } from './audio'
+ import { AudioDenoiser } from '~/audio/denoiser.ts'
+@@ -60,6 +60,13 @@
+   // the video worker). Default: 'passthrough'.
+   audio?:          AudioInput
+   enabled?:        boolean                      // default: true
++  // Suppress startup passthrough and resolve ready only after rendered output.
++  // Opt in when the selected background must stay hidden during initialization.
++  waitForFirstFrame?: boolean                    // default: false
++  // Temporal matte behavior. 'stabilized' preserves the historical mask;
++  // 'warp-only' uses flow only to fill skipped inference frames; 'off' runs
++  // current-frame inference with no temporal history. Default: 'stabilized'.
++  temporalMode?:   TemporalMode
+   // Output canvas dimensions. Default: matches the input video track's
+   // intrinsic size (preserves aspect ratio + avoids pointless rescale).
+   // Falls back to 1280×720 if the track hasn't reported its size yet.
+@@ -97,7 +104,9 @@
+ // One versioned path hosts everything — video model weights (model_*.bin) and
+ // audio denoise assets (rnnoise.wasm / dfn.wasm / dfn_weights.pack). Filenames
+ // disambiguate; no per-kind subfolder.
+-const DEFAULT_WEIGHTS_BASE_URL = 'https://cdn.longpipe.dev/models/v/0.0.4/'
++// VDO.Ninja vendors the weights beside the browser module so effects never
++// acquire a runtime CDN dependency. Consumers can still override this option.
++const DEFAULT_WEIGHTS_BASE_URL = './thirdparty/longpipe/models/v/0.0.4/'
+
+ const DEFAULTS = {
+   background:     'blur'                  as BackgroundInput,
+@@ -105,6 +114,7 @@
+   weightsBaseUrl: DEFAULT_WEIGHTS_BASE_URL,
+   audio:          'passthrough'           as AudioInput,
+   enabled:        true,
++  temporalMode:   'stabilized' as TemporalMode,
+   adaptive:       true,
+   debug:          false,
+ }
+@@ -189,6 +199,9 @@
+   // Same as bgCleanup but for the preview background (setPreview). Cleared on
+   // clearPreview / replacement / destroy.
+   private previewBgCleanup: (() => void) | null = null
++  private destroyed = false
++  private readySettled = false
++  private rejectReady: ((reason: unknown) => void) | null = null
+
+   constructor(inputStream: MediaStream, options: PipelineOptions) {
+     const opts = { ...DEFAULTS, ...options }
+@@ -239,7 +252,7 @@
+       }
+     }
+     this.stream = buildOutputStream(outputSetup.videoTrack, inputStream, audio, denoisedTrack)
+-    outputSetup.startPassthrough?.(inputStream)
++    if (!opts.waitForFirstFrame) outputSetup.startPassthrough?.(inputStream)
+
+     // Worker spawn — Blob-URL pattern when WORKER_SOURCE is inlined by the
+     // tsup build (published builds), URL-based fallback in dev mode where
+@@ -250,17 +263,34 @@
+     this.controller = new WorkerController(this.worker)
+
+     this.ready = new Promise<void>((resolve, reject) => {
+-      this.controller.addPersistentListener('ready', () => {
++      this.rejectReady = reject
++      const markReady = () => {
++        if (this.readySettled) return
++        this.readySettled = true
++        this.rejectReady = null
+         log('ready handler invoked; resolving .ready')
+         opts.onReady?.()
+         resolve()
++      }
++      this.controller.addPersistentListener('ready', () => {
++        // Bitmap delivery uses a different port from control messages. Wait
++        // until main has actually presented the first bitmap on its canvas.
++        if (opts.waitForFirstFrame && outputSetup.firstFrame) {
++          void outputSetup.firstFrame.then(markReady)
++        } else {
++          markReady()
++        }
+       })
+       this.controller.addPersistentListener('error', (info) => {
+         console.error(`[longpipe/pipeline] error (${info.source}):`, info.message)
+         // Init-phase fatal errors reject the ready promise (the natural
+         // surface for construction failures). Errors after ready resolved
+         // can't reject it (already settled) but DO go through onError.
+-        if (!info.recoverable) reject(new Error(info.message))
++        if (!info.recoverable && !this.readySettled) {
++          this.readySettled = true
++          this.rejectReady = null
++          reject(new Error(info.message))
++        }
+         opts.onError?.(info)
+       })
+     })
+@@ -274,6 +304,8 @@
+       topology,
+       preset:     opts.preset,
+       enabled:    opts.enabled,
++      waitForFirstFrame: !!opts.waitForFirstFrame,
++      temporalMode: opts.temporalMode,
+       backend:    'auto' as const,
+       dtype:      'f16'  as const,
+       canvasSize: outputSize,
+@@ -303,16 +335,22 @@
+     try {
+       log('normalizing background…')
+       const norm = await normalizeBackground(rawBackground)
++      if (this.destroyed) {
++        norm.cleanup?.()
++        return
++      }
+       this.bgCleanup = norm.cleanup ?? null
+       const initData: InitData = { ...partialInit, background: norm.background }
+       const initTransferList = [...transferList, ...(norm.transferList ?? [])]
+
+       log('sending init…')
+       const initRes = await this.controller.sendMessage('init', initData, initTransferList)
++      if (this.destroyed) return
+       log('init resolved:', initRes)
+
+       log('fetching weights:', initRes.resolvedPreset.model, initRes.resolvedDtype)
+       const weights = await fetchModelWeights(weightsBaseUrl, initRes.resolvedPreset.model, initRes.resolvedDtype)
++      if (this.destroyed) return
+       log('weights bytes:', weights.byteLength)
+
+       log('sending startRender…')
+@@ -336,6 +374,7 @@
+         this.adaptive.start()
+       }
+     } catch (err) {
++      if (this.destroyed || (err as Error & { pipelineReported?: boolean }).pipelineReported) return
+       console.error('[longpipe/pipeline] bootstrap failed:', err)
+       // Inject a synthetic 'error' event so the ready promise rejects
+       // through the same listener path as worker-emitted errors. Bracket
+@@ -345,6 +384,7 @@
+         data: { request_id: 'error', res: {
+           message:     (err as Error).message ?? String(err),
+           source:      'worker',
++          code:        'bootstrap-failed',
+           recoverable: false,
+           cause:       err,
+         } },
+@@ -373,14 +413,29 @@
+   // teardown could leave the worker reading from a torn-down port.
+   async setBackground(input: BackgroundInput): Promise<void> {
+     const norm = await normalizeBackground(input)
++    if (this.destroyed) {
++      norm.cleanup?.()
++      throw new DOMException('LongPipe pipeline destroyed', 'AbortError')
++    }
+     const previousCleanup = this.bgCleanup
+-    this.bgCleanup = norm.cleanup ?? null
+-    await this.controller.sendMessage('setBackground', norm.background, norm.transferList)
++    const nextCleanup = norm.cleanup ?? null
++    this.bgCleanup = nextCleanup
++    try {
++      await this.controller.sendMessage('setBackground', norm.background, norm.transferList)
++    } catch (err) {
++      norm.cleanup?.()
++      if (this.bgCleanup === nextCleanup) this.bgCleanup = previousCleanup
++      throw err
++    }
+     previousCleanup?.()
+   }
+
++  async setTemporalMode(mode: TemporalMode): Promise<void> {
++    await this.controller.sendMessage('setTemporalMode', { mode })
++  }
++
+   setPreset(p: PresetName | ManualPreset, weights?: ArrayBuffer): void {
+-    void this.controller.sendMessage('setPreset', { preset: p, weights })
++    void this.controller.sendMessage('setPreset', { preset: p, weights }).catch(() => {})
+   }
+
+   // ── Preview ───────────────────────────────────────────────────────────────
+@@ -397,7 +452,7 @@
+   // compositors don't resample), so just CSS-size the element for display.
+   attachPreview(canvas: HTMLCanvasElement): void {
+     const offscreen = canvas.transferControlToOffscreen()
+-    void this.controller.sendMessage('attachPreview', { canvas: offscreen }, [offscreen])
++    void this.controller.sendMessage('attachPreview', { canvas: offscreen }, [offscreen]).catch(() => {})
+   }
+
+   // Set / update the previewed candidate. `background` is the identical wide
+@@ -406,26 +461,37 @@
+   // once the worker has applied it (after any URL/bitmap load).
+   async setPreview(input: { background: BackgroundInput; fps?: number }): Promise<void> {
+     const norm = await normalizeBackground(input.background)
++    if (this.destroyed) {
++      norm.cleanup?.()
++      throw new DOMException('LongPipe pipeline destroyed', 'AbortError')
++    }
+     const previousCleanup = this.previewBgCleanup
+-    this.previewBgCleanup = norm.cleanup ?? null
+-    await this.controller.sendMessage(
+-      'setPreview',
+-      { background: norm.background, fps: input.fps },
+-      norm.transferList,
+-    )
++    const nextCleanup = norm.cleanup ?? null
++    this.previewBgCleanup = nextCleanup
++    try {
++      await this.controller.sendMessage(
++        'setPreview',
++        { background: norm.background, fps: input.fps },
++        norm.transferList,
++      )
++    } catch (err) {
++      norm.cleanup?.()
++      if (this.previewBgCleanup === nextCleanup) this.previewBgCleanup = previousCleanup
++      throw err
++    }
+     previousCleanup?.()
+   }
+
+   // Stop previewing. The preview canvas freezes on its last frame (hide it in
+   // your UI). To "apply" a previewed effect, call setBackground(sameInput).
+   clearPreview(): void {
+-    void this.controller.sendMessage('clearPreview', {} as Record<string, never>)
++    void this.controller.sendMessage('clearPreview', {} as Record<string, never>).catch(() => {})
+     this.previewBgCleanup?.()
+     this.previewBgCleanup = null
+   }
+
+   setEnabled(on: boolean): void {
+-    void this.controller.sendMessage('setEnabled', { enabled: on })
++    void this.controller.sendMessage('setEnabled', { enabled: on }).catch(() => {})
+   }
+
+   // Async stats snapshot from the worker. Returned object includes rolling
+@@ -460,6 +526,8 @@
+
+ 
+   destroy(): void {
++    if (this.destroyed) return
++    this.destroyed = true
+     this.adaptive?.stop()
+     this.adaptive = null
+     this.denoiser?.destroy()
+@@ -468,8 +536,16 @@
+     this.bgCleanup = null
+     this.previewBgCleanup?.()
+     this.previewBgCleanup = null
+-    void this.controller.sendMessage('destroy', {} as Record<string, never>)
+-    this.controller.terminate()
++    if (!this.readySettled) {
++      this.readySettled = true
++      this.rejectReady?.(new DOMException('LongPipe pipeline destroyed', 'AbortError'))
++      this.rejectReady = null
++    }
++    const controller = this.controller
++    controller.removePersistentListener('error')
++    void controller.sendMessage('destroy', {} as Record<string, never>, [], 1_000)
++      .catch(() => {})
++      .finally(() => controller.terminate())
+     this.inputCleanup()
+     this.outputCleanup()
+   }
+@@ -484,4 +560,4 @@
+ export type { AudioMode, AudioInput, DenoiseOptions }         from './audio'
+ export type { DenoiseModel, DenoiseTier, DenoiseModelOption } from '~/audio/kernels.ts'
+ export type { AudioStats }                                    from '~/audio/messages.ts'
+-export type { PipelineError, ErrorSource }                    from './messages'
++export type { PipelineError, ErrorSource, ErrorCode, TemporalMode } from './messages'
+diff --git a/src/pipeline/messages.ts b/src/pipeline/messages.ts
+--- a/src/pipeline/messages.ts
++++ b/src/pipeline/messages.ts
+@@ -9,6 +9,8 @@
+ import type { Background } from './background'
+ import type { Topology } from './topology'
+
++export type TemporalMode = 'stabilized' | 'warp-only' | 'off'
++
+ // ── Command-keyed maps ──────────────────────────────────────────────────────
+ // Type-safe sendMessage<C>(cmd, data) → Promise<response>.
+
+@@ -17,6 +19,7 @@
+   startRender:   { weights: ArrayBuffer }
+   setBackground: Background
+   setEnabled:    { enabled: boolean }
++  setTemporalMode: { mode: TemporalMode }
+   setPreset:     { preset: PresetName | ManualPreset; weights?: ArrayBuffer }
+   getStats:      Record<string, never>
+   destroy:       Record<string, never>
+@@ -33,6 +36,7 @@
+   startRender:   void
+   setBackground: void
+   setEnabled:    void
++  setTemporalMode: void
+   setPreset:     PresetSwapResult
+   getStats:      RendererStats
+   destroy:       void
+@@ -50,6 +54,8 @@
+   preset:     PresetName | ManualPreset
+   background: Background
+   enabled:    boolean
++  waitForFirstFrame?: boolean
++  temporalMode: TemporalMode
+   // Output canvas dimensions. For transfer-capture topology this is
+   // redundant with outputCanvas (the transferred OffscreenCanvas
+   // already has its size); for MSTG and bitmap-shuttle the worker
+@@ -104,6 +110,15 @@
+   preset:        string    // resolved preset's model name
+   skipFrames:    number    // resolved preset's skipFrames
+   enabled:       boolean   // false = passthrough mode
++  temporalMode:  TemporalMode
++
++  // Resolved GPU/output state. These are safe capability buckets rather than
++  // raw adapter strings, so consumers can report failures without adding a
++  // fingerprinting surface.
++  backend:       'webgpu' | 'webgl'
++  dtype:         Dtype
++  outputWidth:   number
++  outputHeight:  number
+
+   // Transport identifiers — useful for debugging which paths the topology
+   // selector picked on a given browser. Static across the session.
+@@ -124,9 +139,20 @@
+   | 'audio'         // audio denoise subsystem (worklet init, asset fetch, etc.)
+   | 'unknown'
+
++export type ErrorCode =
++  | 'backend-lost'
++  | 'worker-crashed'
++  | 'worker-message-error'
++  | 'command-timeout'
++  | 'command-failed'
++  | 'pipe-failed'
++  | 'bootstrap-failed'
++  | 'unknown'
++
+ export interface PipelineError {
+   message:     string
+   source:      ErrorSource
++  code?:       ErrorCode
+   // false = the pipeline cannot continue; caller should destroy() + recreate.
+   // true  = transient; pipeline keeps running in degraded state.
+   recoverable: boolean
+@@ -157,6 +183,11 @@
+   res:        CmdResponseMap[C]
+ }
+
++export interface WorkerFailure {
++  request_id: string
++  error:      PipelineError
++}
++
+ export interface WorkerEvent<E extends EventName = EventName> {
+   request_id: E       // persistent listener key matches event name
+   res:        EventMap[E]
+diff --git a/src/pipeline/setup_output.ts b/src/pipeline/setup_output.ts
+--- a/src/pipeline/setup_output.ts
++++ b/src/pipeline/setup_output.ts
+@@ -21,6 +21,7 @@
+   // it today (the worker-owned topologies write directly to the output
+   // surface so there's nowhere for main to inject passthrough frames).
+   startPassthrough?: (inputStream: MediaStream) => void
++  firstFrame?:      Promise<void>
+   cleanup:          () => void
+ }
+
+@@ -51,6 +52,7 @@
+         initFields:       { outputPort: s.port },
+         transferList:     s.transferList,
+         startPassthrough: s.startPassthrough,
++        firstFrame:      s.firstFrame,
+         cleanup:          s.cleanup,
+       }
+     }
+diff --git a/src/pipeline/transports/input_postmessage.ts b/src/pipeline/transports/input_postmessage.ts
+index 0ebed68..ba64b3b 100644
+--- a/src/pipeline/transports/input_postmessage.ts
++++ b/src/pipeline/transports/input_postmessage.ts
+@@ -10,11 +10,9 @@
+ //     new video frame and ships it (transferred, zero-copy) to the worker
+ //     via a MessagePort
+ //
+-// Backpressure: postMessage is fire-and-forget. The worker-side adapter
+-// has a "replace pending on arrival" slot so frames don't queue
+-// indefinitely on its side, but if main floods the channel faster than
+-// worker drains, the channel queue itself can grow. v0.1 trusts the
+-// worker drains fast enough; v0.2 should add an ack-based gating loop.
++// Backpressure: keep at most one transferred frame in flight. The worker
++// acknowledges receipt before main constructs the next VideoFrame, bounding
++// both the channel queue and native frame resources on slow devices.
+ 
+ import { createLogger } from '../debug'
+ 
+@@ -58,14 +56,25 @@ export function setupPostMessageInput(inputStream: MediaStream): PostMessageInpu
+   const workerPort = channel.port2
+ 
+   let stopped = false
++  let frameInFlight = false
++  mainPort.onmessage = () => { frameInFlight = false }
++  mainPort.start?.()
+ 
+   const tick: RVFCCallback = (_now, meta) => {
+     if (stopped) return
++    if (frameInFlight) {
++      rvfc(tick)
++      return
++    }
++    let frame: VideoFrame | null = null
+     try {
+       // VideoFrame.timestamp is microseconds; rVFC's mediaTime is seconds.
+-      const frame = new VideoFrame(video, { timestamp: meta.mediaTime * 1_000_000 })
++      frame = new VideoFrame(video, { timestamp: meta.mediaTime * 1_000_000 })
++      frameInFlight = true
+       mainPort.postMessage({ frame }, [frame])
+     } catch (err) {
++      frameInFlight = false
++      frame?.close()
+       // VideoFrame() can throw if the video isn't ready yet for this tick;
+       // safe to skip — next rVFC will retry.
+       log.warn('VideoFrame() failed; skipping frame:', err)
+@@ -76,6 +85,7 @@ export function setupPostMessageInput(inputStream: MediaStream): PostMessageInpu
+ 
+   const cleanup = () => {
+     stopped = true
++    mainPort.onmessage = null
+     mainPort.close()
+     video.srcObject = null
+     video.pause()
+diff --git a/src/pipeline/transports/output_bitmap_shuttle.ts b/src/pipeline/transports/output_bitmap_shuttle.ts
+--- a/src/pipeline/transports/output_bitmap_shuttle.ts
++++ b/src/pipeline/transports/output_bitmap_shuttle.ts
+@@ -28,6 +28,7 @@
+   // Auto-stops the moment the worker posts its first bitmap so the handoff
+   // is seamless. Safe to call once; no-op on subsequent calls.
+   startPassthrough: (inputStream: MediaStream) => void
++  firstFrame:   Promise<void>
+   cleanup:      () => void
+ }
+
+@@ -72,6 +73,8 @@
+   // handoff happens at steady-state cadence.
+   const HANDOFF_AT_FRAME = 3
+   let workerFramesReceived = 0
++  let firstFrameResolve: (() => void) | null = null
++  const firstFrame = new Promise<void>(resolve => { firstFrameResolve = resolve })
+
+   mainPort.onmessage = (e: MessageEvent<{ bmp: ImageBitmap }>) => {
+     if (passthroughActive) {
+@@ -84,9 +87,12 @@
+     }
+     try {
+       ctx.transferFromImageBitmap(e.data.bmp)
++      firstFrameResolve?.()
++      firstFrameResolve = null
+     } catch (err) {
+       // transferFromImageBitmap can throw if the bitmap was somehow already
+       // consumed; log + drop so the pipe doesn't stall.
++      e.data.bmp.close()
+       log.warn('transferFromImageBitmap failed:', err)
+     }
+   }
+@@ -125,7 +131,7 @@
+         resizeQuality: 'medium',
+       }).then(bmp => {
+         if (!passthroughActive) { bmp.close(); return }
+-        try { ctx.transferFromImageBitmap(bmp) } catch { /* drop */ }
++        try { ctx.transferFromImageBitmap(bmp) } catch { bmp.close() }
+         schedule(tick)
+       }).catch(() => {
+         // createImageBitmap can fail mid-stream (e.g., paused source).
+@@ -157,6 +163,7 @@
+     port:         workerPort,
+     transferList: [workerPort],
+     startPassthrough,
++    firstFrame,
+     cleanup,
+   }
+ }
+diff --git a/src/pipeline/video_source.ts b/src/pipeline/video_source.ts
+index 63a08a5..04f8f21 100644
+--- a/src/pipeline/video_source.ts
++++ b/src/pipeline/video_source.ts
+@@ -68,6 +68,9 @@ export async function setupVideoSource(input: VideoSourceInput): Promise<VideoSo
+   const workerPort = channel.port2
+ 
+   let stopped = false
++  let frameInFlight = false
++  mainPort.onmessage = () => { frameInFlight = false }
++  mainPort.start?.()
+ 
+   const rvfc = (video as unknown as { requestVideoFrameCallback?: RVFCMethod })
+     .requestVideoFrameCallback
+@@ -76,10 +79,18 @@ export async function setupVideoSource(input: VideoSourceInput): Promise<VideoSo
+   if (rvfc) {
+     const tick: RVFCCallback = (_now, meta) => {
+       if (stopped) return
++      if (frameInFlight) {
++        rvfc(tick)
++        return
++      }
++      let frame: VideoFrame | null = null
+       try {
+-        const frame = new VideoFrame(video, { timestamp: meta.mediaTime * 1_000_000 })
++        frame = new VideoFrame(video, { timestamp: meta.mediaTime * 1_000_000 })
++        frameInFlight = true
+         mainPort.postMessage({ frame }, [frame])
+       } catch {
++        frameInFlight = false
++        frame?.close()
+         // VideoFrame() can fail if the underlying media frame isn't
+         // ready for this tick (rare but possible). Skip; next rVFC
+         // invocation will retry.
+@@ -92,10 +103,18 @@ export async function setupVideoSource(input: VideoSourceInput): Promise<VideoSo
+     // (couples to display refresh, not video decode) but functional.
+     const tick = () => {
+       if (stopped) return
++      if (frameInFlight) {
++        requestAnimationFrame(tick)
++        return
++      }
++      let frame: VideoFrame | null = null
+       try {
+-        const frame = new VideoFrame(video, { timestamp: performance.now() * 1000 })
++        frame = new VideoFrame(video, { timestamp: performance.now() * 1000 })
++        frameInFlight = true
+         mainPort.postMessage({ frame }, [frame])
+       } catch {
++        frameInFlight = false
++        frame?.close()
+         // skip — see above
+       }
+       requestAnimationFrame(tick)
+@@ -105,6 +124,7 @@ export async function setupVideoSource(input: VideoSourceInput): Promise<VideoSo
+ 
+   const cleanup = () => {
+     stopped = true
++    mainPort.onmessage = null
+     mainPort.close()
+     video.pause()
+     video.removeAttribute('src')
+diff --git a/src/pipeline/worker/adapters/input_postmessage.ts b/src/pipeline/worker/adapters/input_postmessage.ts
+index ede91bc..7940304 100644
+--- a/src/pipeline/worker/adapters/input_postmessage.ts
++++ b/src/pipeline/worker/adapters/input_postmessage.ts
+@@ -13,6 +13,7 @@ export function createPostMessageInput(port: MessagePort): ReadableStream<VideoF
+ 
+   port.onmessage = (e: MessageEvent<{ frame: VideoFrame }>) => {
+     const { frame } = e.data
++    try { port.postMessage({ type: 'ack' }) } catch { /* closing */ }
+     if (resolvePull) {
+       const r = resolvePull
+       resolvePull = null
+diff --git a/src/pipeline/worker/adapters/output_bitmap_shuttle.ts b/src/pipeline/worker/adapters/output_bitmap_shuttle.ts
+--- a/src/pipeline/worker/adapters/output_bitmap_shuttle.ts
++++ b/src/pipeline/worker/adapters/output_bitmap_shuttle.ts
+@@ -12,13 +12,24 @@
+ export function createBitmapShuttleOutput(
+   renderer: Renderer,
+   port:     MessagePort,
++  onFrame?: () => void,
+ ): WritableStream<VideoFrame> {
+   return new WritableStream<VideoFrame>({
+     write(frame) {
+-      renderer.process(frame)
+-      frame.close()
+-      const bmp = renderer.canvas.transferToImageBitmap()
+-      port.postMessage({ bmp }, [bmp])
++      let bmp: ImageBitmap
++      try {
++        renderer.process(frame)
++        bmp = renderer.canvas.transferToImageBitmap()
++      } finally {
++        frame.close()
++      }
++      try {
++        port.postMessage({ bmp }, [bmp])
++      } catch (err) {
++        bmp.close()
++        throw err
++      }
++      onFrame?.()
+     },
+     close() {
+       port.close()
+diff --git a/src/pipeline/worker/adapters/output_mstg.ts b/src/pipeline/worker/adapters/output_mstg.ts
+--- a/src/pipeline/worker/adapters/output_mstg.ts
++++ b/src/pipeline/worker/adapters/output_mstg.ts
+@@ -9,13 +9,23 @@
+
+ import type { Renderer } from '../renderer'
+
+-export function createMstgOutput(renderer: Renderer): TransformStream<VideoFrame, VideoFrame> {
++export function createMstgOutput(renderer: Renderer, onFrame?: () => void): TransformStream<VideoFrame, VideoFrame> {
+   return new TransformStream<VideoFrame, VideoFrame>({
+     transform(frame, controller) {
+-      renderer.process(frame)
+-      const out = new VideoFrame(renderer.canvas, { timestamp: frame.timestamp })
+-      frame.close()
+-      controller.enqueue(out)
++      let out: VideoFrame | null = null
++      try {
++        renderer.process(frame)
++        out = new VideoFrame(renderer.canvas, { timestamp: frame.timestamp })
++      } finally {
++        frame.close()
++      }
++      try {
++        controller.enqueue(out)
++      } catch (err) {
++        out.close()
++        throw err
++      }
++      onFrame?.()
+     },
+   })
+ }
+diff --git a/src/pipeline/worker/adapters/output_transfer_capture.ts b/src/pipeline/worker/adapters/output_transfer_capture.ts
+--- a/src/pipeline/worker/adapters/output_transfer_capture.ts
++++ b/src/pipeline/worker/adapters/output_transfer_capture.ts
+@@ -10,11 +10,15 @@
+
+ import type { Renderer } from '../renderer'
+
+-export function createTransferCaptureOutput(renderer: Renderer): WritableStream<VideoFrame> {
++export function createTransferCaptureOutput(renderer: Renderer, onFrame?: () => void): WritableStream<VideoFrame> {
+   return new WritableStream<VideoFrame>({
+     write(frame) {
+-      renderer.process(frame)
+-      frame.close()
++      try {
++        renderer.process(frame)
++      } finally {
++        frame.close()
++      }
++      onFrame?.()
+     },
+   })
+ }
+diff --git a/src/pipeline/worker/create_output.ts b/src/pipeline/worker/create_output.ts
+--- a/src/pipeline/worker/create_output.ts
++++ b/src/pipeline/worker/create_output.ts
+@@ -29,13 +29,19 @@
+   data:     InitData,
+   renderer: Renderer,
+   signal:   AbortSignal,
++  onFirstFrame?: () => void,
+ ): WritableStream<VideoFrame> {
++  const onFrame = onFirstFrame ? () => {
++    const notify = onFirstFrame
++    onFirstFrame = undefined
++    notify?.()
++  } : undefined
+   switch (data.topology.output) {
+     case 'mstg': {
+       if (!data.outputWritable) {
+         throw new Error("create_output: topology.output='mstg' but InitData.outputWritable missing")
+       }
+-      const transform = createMstgOutput(renderer)
++      const transform = createMstgOutput(renderer, onFrame)
+       // Background pipe: transform → MSTG writable. handleInit will pipe its
+       // input into transform.writable; backpressure flows through both.
+       transform.readable.pipeTo(data.outputWritable, { signal }).catch(err => {
+@@ -45,13 +51,13 @@
+     }
+
+     case 'transfer-capture':
+-      return createTransferCaptureOutput(renderer)
++      return createTransferCaptureOutput(renderer, onFrame)
+
+     case 'bitmap-shuttle': {
+       if (!data.outputPort) {
+         throw new Error("create_output: topology.output='bitmap-shuttle' but InitData.outputPort missing")
+       }
+-      return createBitmapShuttleOutput(renderer, data.outputPort)
++      return createBitmapShuttleOutput(renderer, data.outputPort, onFrame)
+     }
+   }
+ }
+diff --git a/src/pipeline/worker/index.ts b/src/pipeline/worker/index.ts
+--- a/src/pipeline/worker/index.ts
++++ b/src/pipeline/worker/index.ts
+@@ -20,6 +20,7 @@
+ import type {
+   WorkerRequest,
+   WorkerResponse,
++  WorkerFailure,
+   WorkerEvent,
+   CmdName,
+   CmdDataMap,
+@@ -29,6 +30,8 @@
+   EventName,
+   EventMap,
+   RendererStats,
++  TemporalMode,
++  PipelineError,
+ } from '../messages'
+ import type { Background } from '../background'
+ import type { ManualPreset, PresetName } from '../presets'
+@@ -42,6 +45,7 @@
+
+ let renderer:  Renderer        | null = null
+ let pumpAbort: AbortController | null = null
++let startDeferredPipe: (() => void) | null = null
+
+ // State held between handleInit and handleStartRender — the latter only
+ // needs to know which preset the autotune chose (so it can pass it to
+@@ -58,11 +62,11 @@
+     respond(request_id, res)
+   } catch (err) {
+     log('cmd FAILED:', cmd, err)
+-    emit('error', {
++    respondFailure(request_id, {
+       message:     `${cmd} failed: ${(err as Error).message ?? String(err)}`,
+       source:      'worker',
++      code:        cmd === 'init' || cmd === 'startRender' ? 'bootstrap-failed' : 'command-failed',
+       recoverable: false,
+-      cause:       err,
+     })
+   }
+ }
+@@ -73,6 +77,7 @@
+     case 'startRender':   return handleStartRender((data as CmdDataMap['startRender']).weights)
+     case 'setBackground': return handleSetBackground(data as Background)
+     case 'setEnabled':    return handleSetEnabled((data as CmdDataMap['setEnabled']).enabled)
++    case 'setTemporalMode': return handleSetTemporalMode((data as CmdDataMap['setTemporalMode']).mode)
+     case 'setPreset':   return handleSetPreset(data as CmdDataMap['setPreset'])
+     case 'getStats':    return renderer?.getStats() ?? null
+     case 'destroy':     return handleDestroy()
+@@ -100,13 +105,18 @@
+   const setup = await setupBackend(data, data.canvasSize, {
+     onContextLost: (err) => {
+       log('GPU context lost:', err.message)
+-      emit('error', err)
++      emit('error', {
++        message:     err.message,
++        source:      'backend-lost',
++        code:        'backend-lost',
++        recoverable: false,
++      })
+     },
+   })
+   log('handleInit: backend ready:', setup.resolvedBackend, setup.resolvedDtype, 'canvas:', setup.canvas.width, 'x', setup.canvas.height)
+
+   // Construct Renderer in boot mode (no preset, no weights, no network).
+-  // Pipe starts immediately so passthrough is flowing while autotune runs.
++  // Unless protected startup is requested, passthrough flows while autotune runs.
+   log('handleInit: constructing Renderer (boot mode)…')
+   renderer = new Renderer({
+     backend:     setup.backend,
+@@ -114,6 +124,7 @@
+     canvas:      setup.canvas,
+     background:  data.background,
+     enabled:     data.enabled,
++    temporalMode: data.temporalMode,
+     topology:    data.topology,
+   })
+
+@@ -121,31 +132,46 @@
+   log('handleInit: createInputStream…')
+   const input  = createInputStream(data)
+   log('handleInit: createOutputSink…')
+-  const output = createOutputSink(data, renderer, pumpAbort.signal)
+-
+-  log('handleInit: starting pipe (passthrough)…')
+-  startPipe({
+-    input,
+-    output,
+-    signal: pumpAbort.signal,
+-  }).then(() => {
+-    log('pipe completed (input ended)')
+-  }).catch(err => {
+-    if (pumpAbort?.signal.aborted) {
+-      log('pipe aborted (expected on destroy)')
+-      return
+-    }
+-    log('pipe FAILED:', err)
+-    emit('error', {
+-      message:     `pipe failed: ${(err as Error).message}`,
+-      source:      'worker',
+-      recoverable: false,
+-      cause:       err,
+-    })
+-  })
+-
+-  // Autotune (or named-preset lookup). Pipe is already pumping passthrough,
+-  // so the consumer sees live video while this runs (~1-2s on cold start).
++  const output = createOutputSink(data, renderer, pumpAbort.signal,
++    data.waitForFirstFrame ? () => emit('ready', undefined) : undefined)
++
++  const runPipe = () => {
++    startPipe({
++      input,
++      output,
++      signal: pumpAbort!.signal,
++    }).then(() => {
++      log('pipe completed (input ended)')
++    }).catch(err => {
++      if (pumpAbort?.signal.aborted) {
++        log('pipe aborted (expected on destroy)')
++        return
++      }
++      log('pipe FAILED:', err)
++      emit('error', {
++        message:     `pipe failed: ${(err as Error).message}`,
++        source:      'worker',
++        code:        'pipe-failed',
++        recoverable: false,
++      })
++      })
++  }
++
++  if (data.waitForFirstFrame) {
++    // No raw frame enters any output transport before segmentation is ready.
++    startDeferredPipe = runPipe
++    pumpAbort.signal.addEventListener('abort', () => {
++      if (!startDeferredPipe) return
++      startDeferredPipe = null
++      void input.cancel().catch(() => {})
++      void output.abort().catch(() => {})
++    }, { once: true })
++  } else {
++    runPipe()
++  }
++
++  // Autotune (or named-preset lookup). Protected startup keeps the pipe
++  // deferred until the model is attached; other consumers see passthrough.
+   // Note: autotune competes with passthrough for GPU; passthrough is cheap
+   // (one Input.run + one CompositePassthrough) so contention is minor.
+   log('handleInit: resolvePreset…')
+@@ -169,7 +195,13 @@
+   renderer.setPreset(resolvedPreset, weights)
+
+   log('handleStartRender: ready (effect mode active)')
+-  emit('ready', undefined)
++  if (startDeferredPipe) {
++    const start = startDeferredPipe
++    startDeferredPipe = null
++    start()
++  } else {
++    emit('ready', undefined)
++  }
+ }
+
+ async function handleSetBackground(bg: Background): Promise<void> {
+@@ -178,6 +210,14 @@
+
+ async function handleSetEnabled(on: boolean): Promise<void> {
+   renderer?.setEnabled(on)
++}
++
++async function handleSetTemporalMode(mode: TemporalMode): Promise<void> {
++  if (mode !== 'stabilized' && mode !== 'warp-only' && mode !== 'off') {
++    throw new Error(`handleSetTemporalMode: invalid mode '${String(mode)}'`)
++  }
++  if (!renderer) throw new Error('handleSetTemporalMode: not initialized')
++  renderer.setTemporalMode(mode)
+ }
+
+ async function handleAttachPreview(data: CmdDataMap['attachPreview']): Promise<void> {
+@@ -233,6 +273,11 @@
+   ;(self as unknown as Worker).postMessage(reply)
+ }
+
++function respondFailure(request_id: string, error: PipelineError): void {
++  const reply: WorkerFailure = { request_id, error }
++  ;(self as unknown as Worker).postMessage(reply)
++}
++
+ function emit<E extends EventName>(name: E, res: EventMap[E]): void {
+   const event: WorkerEvent<E> = { request_id: name, res }
+   ;(self as unknown as Worker).postMessage(event)
+diff --git a/src/pipeline/worker/renderer.ts b/src/pipeline/worker/renderer.ts
+index be8602c..a03cf08 100644
+--- a/src/pipeline/worker/renderer.ts
++++ b/src/pipeline/worker/renderer.ts
+@@ -24,7 +24,7 @@ const FLOW_DEC_W = 16   // shipping flow-head width
+ const FLOW_STAB = { tLo: 0.15, tHi: 2.5, leak: 0.15, release: 0.9, tDiv:1.0, divScale: 2.0 }
+ import type { ManualPreset } from '../presets'
+ import type { Background } from '../background'
+-import type { RendererStats } from '../messages'
++import type { RendererStats, TemporalMode } from '../messages'
+ import type { Topology } from '../topology'
+ 
+ // Preview: render a *candidate* effect to a second canvas while the main
+@@ -43,6 +43,7 @@ export interface RendererOptions {
+   canvas:      OffscreenCanvas
+   background:  Background
+   enabled:     boolean
++  temporalMode: TemporalMode
+   topology:    Topology              // reported in stats for debug
+ }
+ 
+@@ -72,11 +73,13 @@ export class Renderer {
+   // while null; process() runs passthrough.
+   private preset:  ManualPreset | null = null
+   private enabled: boolean
++  private temporalMode: TemporalMode
+   // Current background tracked here so setPreset can rebuild the RenderOp
+   // with the same background (otherwise an adaptive swap would flash to
+   // a hardcoded fallback).
+   private currentBackground: Background
+   private modelTimingCounter: number = 0
++  private modelTimingPending: boolean = false
+ 
+   private renderOp:     RenderOp
+   // Optical-flow temporal state — null unless the loaded .bin carries a `flow` blob.
+@@ -145,6 +148,7 @@ export class Renderer {
+     this.backendKind       = opts.backendKind
+     this.canvas            = opts.canvas
+     this.enabled           = opts.enabled
++    this.temporalMode      = opts.temporalMode
+     this.currentBackground = opts.background
+     this.topology          = opts.topology
+ 
+@@ -174,8 +178,16 @@ export class Renderer {
+     // non-flow tiers follow the plain skip cadence. A preview tick that needs alpha
+     // forces a run when main didn't already produce one this frame.
+     let ranModel = false
+-    if (mainEffect && this.flow) {
+-      ranModel = this.stepFlow()
++    if (mainEffect && (this.temporalMode === 'off' ||
++        (this.temporalMode === 'warp-only' && this.flow?.everyFrame))) {
++      // No temporal history. `off` deliberately runs the model every source
++      // frame even when the selected preset normally skips frames. For an
++      // every-frame preset, warp-only is equivalent and avoids all flow work.
++      this.runModelOnce(); ranModel = true
++    } else if (mainEffect && this.flow) {
++      ranModel = this.temporalMode === 'warp-only'
++        ? this.stepWarpOnly()
++        : this.stepFlow()
+     } else if (mainEffect) {
+       if (this.shouldRunModel()) { this.runModelOnce(); ranModel = true }
+       else this.skippedCount++
+@@ -199,10 +211,11 @@ export class Renderer {
+     } else {
+       this.compositeMain(mainEffect)
+     }
+-    this.displayRunSamples.push({ ts: performance.now(), ms: performance.now() - td })
++    const renderedAt = performance.now()
++    this.displayRunSamples.push({ ts: renderedAt, ms: renderedAt - td })
+     this.trimSamples(this.displayRunSamples)
+ 
+-    this.framesRenderedAt.push(performance.now())
++    this.framesRenderedAt.push(renderedAt)
+     this.trim(this.framesRenderedAt)
+   }
+ 
+@@ -238,16 +251,22 @@ export class Renderer {
+   // Run the model once. All tiers are static — temporal stability comes from the
+   // separate optical-flow path, not recurrent state threaded here.
+   private runModelOnce(): void {
+-    const t = performance.now()
++    const shouldSample = this.backendKind === 'webgpu' &&
++      this.modelTimingCounter % MODEL_TIMING_SAMPLE_INTERVAL === 0 &&
++      !this.modelTimingPending
++    const startedAt = shouldSample ? performance.now() : 0
+     this.renderOp.runModel()
+     // GPU-time sampling: WebGPU only (cheap native promise per sync; WebGL's
+     // setTimeout-polling fence is too heavy at per-frame rate). Even on WebGPU,
+     // sample 1 in N runs to keep concurrent in-flight syncs bounded.
+-    if (this.backendKind === 'webgpu' && this.modelTimingCounter % MODEL_TIMING_SAMPLE_INTERVAL === 0) {
++    if (shouldSample) {
++      this.modelTimingPending = true
+       this.backend.sync().then(() => {
+-        this.modelRunSamples.push({ ts: performance.now(), ms: performance.now() - t })
++        const completedAt = performance.now()
++        this.modelRunSamples.push({ ts: completedAt, ms: completedAt - startedAt })
+         this.trimSamples(this.modelRunSamples)
+       }).catch(() => { /* sync errors during shutdown are expected */ })
++        .finally(() => { this.modelTimingPending = false })
+     }
+     this.modelTimingCounter++
+   }
+@@ -298,6 +317,30 @@ export class Renderer {
+     return ranModel
+   }
+ 
++  // Optical-flow interpolation without historical blending. Inference frames
++  // use the current model matte directly; skipped frames warp the most recent
++  // inference matte. This avoids trails while retaining smoother motion for
++  // presets that cannot afford inference on every source frame.
++  private stepWarpOnly(): boolean {
++    const f = this.flow!
++
++    f.networkInput.run()
++    f.curBaseDown.run()
++
++    if (this.shouldRunModel()) {
++      this.runModelOnce()
++      this.backend.copyTensor(f.curBaseDown.output, f.frameAHeld)
++      if (f.alphaHeld) this.backend.copyTensor(f.tier.output, f.alphaHeld)
++      return true
++    }
++
++    this.skippedCount++
++    f.net.run(); f.up.run()
++    f.predWarp!.run()
++    this.renderOp.applyAlpha(f.predWarp!.output)
++    return false
++  }
++
+   // True when the preview should composite this frame: a canvas is attached, a
+   // candidate is set (null = clearPreview), the SDK is enabled, and enough time
+   // has elapsed since the last preview composite (throttle — main is priority).
+@@ -326,6 +369,15 @@ export class Renderer {
+     this.enabled = on
+   }
+ 
++  setTemporalMode(mode: TemporalMode): void {
++    if (this.temporalMode === mode) return
++    this.temporalMode = mode
++    this.skipCounter = 0
++    // A stabilized carrier from an older mode/background must never be reused;
++    // reseed it from the next current inference frame.
++    if (this.flow) this.flow.warm = false
++  }
++
+   // Attach the preview output canvas (once — the canvas's control was
+   // transferred from main). WebGPU registers a 2nd GPUCanvasContext on the
+   // shared device and composites the preview straight to it; WebGL can't drive
+@@ -463,6 +515,11 @@ export class Renderer {
+       preset:     this.preset?.model ?? 'boot',
+       skipFrames: this.preset?.skipFrames ?? 0,
+       enabled:    this.enabled,
++      temporalMode: this.temporalMode,
++      backend:    this.backendKind,
++      dtype:      this.backend.dtype,
++      outputWidth: this.canvas.width,
++      outputHeight: this.canvas.height,
+       inputPath:  this.topology.input,
+       outputPath: this.topology.output,
+     }
+@@ -505,6 +562,7 @@ export class Renderer {
+         this.bgVideoPorts.set(target, bg.port)
+         bg.port.onmessage = (e: MessageEvent<{ frame: VideoFrame }>) => {
+           const frame = e.data.frame
++          try { bg.port.postMessage({ type: 'ack' }) } catch { /* closing */ }
+           try {
+             input.setSource(frame)
+             input.run()
+diff --git a/src/pipeline/worker_controller.ts b/src/pipeline/worker_controller.ts
+index 35bfb78..6ac4f31 100644
+--- a/src/pipeline/worker_controller.ts
++++ b/src/pipeline/worker_controller.ts
+@@ -1,12 +1,9 @@
+ // Typed control-plane bridge between main and worker.
+ //
+-// Request/response with UUIDs (matched on `request_id`); each sendMessage()
+-// returns a Promise that resolves with the worker's response. Persistent
+-// listeners stay registered across multiple events (used for stats /
+-// errors / ready).
+-//
+-// Data plane (frames, bitmaps) bypasses this — flows through transferred
+-// streams or dedicated MessagePorts.
++// Requests are bounded by command-specific timeouts. Worker crashes and
++// message-deserialization failures reject every pending request and surface one
++// structured fatal event to the pipeline; a dead worker must never leave the
++// caller waiting forever.
+ 
+ import type {
+   CmdName,
+@@ -16,65 +13,207 @@ import type {
+   EventMap,
+   WorkerRequest,
+   WorkerResponse,
++  WorkerFailure,
+   WorkerEvent,
++  PipelineError,
+ } from './messages'
+ 
+ import { createLogger } from './debug'
+ 
+ export type EventHandler<E extends EventName> = (data: EventMap[E]) => void
+ 
++type PendingRequest = {
++  cmd: CmdName
++  resolve: (data: unknown) => void
++  reject: (reason: Error) => void
++  timer: ReturnType<typeof setTimeout>
++}
++
++const COMMAND_TIMEOUT_MS: Record<CmdName, number> = {
++  init:            60_000,
++  startRender:     60_000,
++  setBackground:  15_000,
++  setEnabled:      10_000,
++  setTemporalMode: 10_000,
++  setPreset:       30_000,
++  getStats:        10_000,
++  destroy:         5_000,
++  attachPreview:   15_000,
++  setPreview:      15_000,
++  clearPreview:    10_000,
++}
++
+ const log = createLogger('worker_controller')
+ 
++function requestError(info: PipelineError): Error {
++  const err = new Error(info.message) as Error & {
++    pipelineError?: PipelineError
++    pipelineReported?: boolean
++  }
++  err.pipelineError = info
++  err.pipelineReported = true
++  return err
++}
++
+ export class WorkerController {
+   private worker: Worker
+-  private listeners: Map<string, (data: unknown) => void> = new Map()
+-  private persistentEvents: Set<string> = new Set()
++  private persistentListeners: Map<string, (data: unknown) => void> = new Map()
++  private pending: Map<string, PendingRequest> = new Map()
++  private terminalError: PipelineError | null = null
++  private terminated = false
+ 
+   constructor(worker: Worker) {
+     this.worker = worker
+     this.worker.addEventListener('message', this.handleMessage.bind(this))
+-    log('constructed; message listener attached')
++    this.worker.addEventListener('error', this.handleWorkerError.bind(this))
++    this.worker.addEventListener('messageerror', this.handleMessageError.bind(this))
++    log('constructed; worker listeners attached')
+   }
+ 
+-  private handleMessage(event: MessageEvent<WorkerResponse | WorkerEvent>): void {
+-    const { request_id, res } = event.data
+-    const handler = this.listeners.get(request_id)
+-    log('msg received: request_id=', request_id, 'handler?', !!handler, 'persistent?', this.persistentEvents.has(request_id))
+-    if (!handler) return
+-    handler(res)
+-    if (!this.persistentEvents.has(request_id)) {
+-      this.listeners.delete(request_id)
++  private handleMessage(event: MessageEvent<WorkerResponse | WorkerFailure | WorkerEvent>): void {
++    const data = event.data
++    if (!data || typeof data.request_id !== 'string') {
++      this.handleFatal({
++        message:     'LongPipe worker returned a malformed message',
++        source:      'worker',
++        code:        'worker-message-error',
++        recoverable: false,
++      })
++      return
+     }
++
++    const requestId = data.request_id
++    const persistent = this.persistentListeners.get(requestId)
++    if (persistent) {
++      const eventData = (data as WorkerEvent).res
++      if (requestId === 'error' && eventData && !(eventData as PipelineError).recoverable) {
++        this.handleFatal(eventData as PipelineError)
++        return
++      }
++      persistent(eventData)
++      return
++    }
++
++    const pending = this.pending.get(requestId)
++    log('msg received: request_id=', requestId, 'pending?', !!pending)
++    if (!pending) return
++
++    clearTimeout(pending.timer)
++    this.pending.delete(requestId)
++
++    if ('error' in data) {
++      pending.reject(requestError(data.error))
++      this.emitError(data.error)
++      return
++    }
++    pending.resolve((data as WorkerResponse).res)
++  }
++
++  private handleWorkerError(event: ErrorEvent): void {
++    this.handleFatal({
++      message:     event.message || 'LongPipe worker crashed',
++      source:      'worker',
++      code:        'worker-crashed',
++      recoverable: false,
++    })
++  }
++
++  private handleMessageError(): void {
++    this.handleFatal({
++      message:     'LongPipe worker message could not be deserialized',
++      source:      'worker',
++      code:        'worker-message-error',
++      recoverable: false,
++    })
++  }
++
++  private handleFatal(info: PipelineError): void {
++    if (this.terminalError || this.terminated) return
++    this.terminalError = info
++    const err = requestError(info)
++    for (const pending of this.pending.values()) {
++      clearTimeout(pending.timer)
++      pending.reject(err)
++    }
++    this.pending.clear()
++    this.emitError(info)
++  }
++
++  private emitError(info: PipelineError): void {
++    const handler = this.persistentListeners.get('error')
++    if (handler) handler(info)
+   }
+ 
+   addPersistentListener<E extends EventName>(name: E, handler: EventHandler<E>): void {
+-    this.persistentEvents.add(name)
+-    this.listeners.set(name, handler as (data: unknown) => void)
++    this.persistentListeners.set(name, handler as (data: unknown) => void)
+     log('addPersistentListener:', name)
++    if (name === 'error' && this.terminalError) {
++      handler(this.terminalError as EventMap[E])
++    }
+   }
+ 
+   removePersistentListener(name: EventName): void {
+-    this.persistentEvents.delete(name)
+-    this.listeners.delete(name)
++    this.persistentListeners.delete(name)
+   }
+ 
+   sendMessage<C extends CmdName>(
+     cmd:      C,
+     data:     CmdDataMap[C],
+     transfer: Transferable[] = [],
++    timeoutMs: number = COMMAND_TIMEOUT_MS[cmd],
+   ): Promise<CmdResponseMap[C]> {
++    if (this.terminalError) return Promise.reject(requestError(this.terminalError))
++    if (this.terminated) return Promise.reject(new Error('LongPipe worker is terminated'))
++
+     const request_id = crypto.randomUUID()
+     log('sendMessage:', cmd, 'request_id=', request_id, 'transferables=', transfer.length)
+-    return new Promise((resolve) => {
+-      this.listeners.set(request_id, (res) => resolve(res as CmdResponseMap[C]))
++
++    return new Promise((resolve, reject) => {
++      const timer = setTimeout(() => {
++        const info: PipelineError = {
++          message:     `LongPipe worker command timed out: ${cmd}`,
++          source:      'worker',
++          code:        'command-timeout',
++          recoverable: false,
++        }
++        this.handleFatal(info)
++      }, timeoutMs)
++
++      this.pending.set(request_id, {
++        cmd,
++        resolve: (res) => resolve(res as CmdResponseMap[C]),
++        reject,
++        timer,
++      })
++
+       const message: WorkerRequest<C> = { cmd, data, request_id }
+-      this.worker.postMessage(message, transfer)
++      try {
++        this.worker.postMessage(message, transfer)
++      } catch (err) {
++        clearTimeout(timer)
++        this.pending.delete(request_id)
++        const info: PipelineError = {
++          message:     `${cmd} could not be sent to the LongPipe worker: ${(err as Error).message ?? String(err)}`,
++          source:      'worker',
++          code:        'command-failed',
++          recoverable: false,
++        }
++        reject(requestError(info))
++        this.emitError(info)
++      }
+     })
+   }
+ 
+   terminate(): void {
++    if (this.terminated) return
++    this.terminated = true
++    const err = new Error('LongPipe worker terminated')
++    for (const pending of this.pending.values()) {
++      clearTimeout(pending.timer)
++      pending.reject(err)
++    }
++    this.pending.clear()
+     this.worker.terminate()
+-    this.listeners.clear()
+-    this.persistentEvents.clear()
++    this.persistentListeners.clear()
+   }
+ }
+diff --git a/tsup.config.ts b/tsup.config.ts
+index dc7a4f7..b2768ed 100644
+--- a/tsup.config.ts
++++ b/tsup.config.ts
+@@ -28,7 +28,10 @@ const tildeAlias: esbuild.Plugin = {
+ const inlineWorker: esbuild.Plugin = {
+   name: 'inline-worker',
+   setup(build) {
+-    build.onLoad({ filter: /pipeline\/worker_inline\.ts$/ }, async () => {
++    // esbuild reports native backslashes on Windows and forward slashes on
++    // Unix. Matching both keeps published and locally rebuilt bundles
++    // self-contained on every build host.
++    build.onLoad({ filter: /pipeline[\\/]worker_inline\.ts$/ }, async () => {
+       const result = await esbuild.build({
+         entryPoints: [resolve(__dirname, 'src/pipeline/worker/index.ts')],
+         bundle: true,
+@@ -56,7 +59,7 @@ const inlineWorker: esbuild.Plugin = {
+ const inlineWorklet: esbuild.Plugin = {
+   name: 'inline-worklet',
+   setup(build) {
+-    build.onLoad({ filter: /audio\/worklet_inline\.ts$/ }, async () => {
++    build.onLoad({ filter: /audio[\\/]worklet_inline\.ts$/ }, async () => {
+       const result = await esbuild.build({
+         entryPoints: [resolve(__dirname, 'src/audio/worklet/processor.ts')],
+         bundle: true,

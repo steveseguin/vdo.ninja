@@ -16,8 +16,8 @@
 <title>GTA-Style Mini-Map - VDO.Ninja</title>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<link rel="stylesheet" href="../thirdparty/leaflet/leaflet.css" />
+<script src="../thirdparty/leaflet/leaflet.js"></script>
 <style>
 * {
 	margin: 0;
@@ -178,9 +178,22 @@ body {
 	pointer-events: none;
 }
 
-/* Hide Leaflet controls and attribution inside minimap */
-#map .leaflet-control-container { display: none !important; }
-#map .leaflet-control-attribution { display: none !important; }
+/* Keep credits outside the circular clip and rotating map. */
+#map-attribution {
+	width: 280px;
+	margin-top: 36px;
+	padding: 3px 5px;
+	background: rgba(0, 0, 0, 0.85);
+	color: #fff;
+	font: 11px/16px 'Segoe UI', 'Arial', sans-serif;
+	text-align: center;
+	border-radius: 3px;
+}
+
+#map-attribution a {
+	color: inherit;
+	text-decoration: underline;
+}
 
 /* Waiting indicator */
 #waiting {
@@ -238,6 +251,10 @@ body {
 			<span id="street-name">AWAITING GPS</span>
 		</div>
 	</div>
+	<div id="map-attribution">
+		&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener noreferrer">OpenStreetMap contributors</a>
+		&middot; &copy; <a href="https://carto.com/attributions" target="_blank" rel="noopener noreferrer">CARTO</a>
+	</div>
 </div>
 
 <div id="waiting">WAITING FOR GPS SIGNAL...</div>
@@ -266,7 +283,7 @@ body {
 		center: [37.7749, -122.4194], // Default: San Francisco
 		zoom: MAP_ZOOM,
 		zoomControl: false,
-		attributionControl: false,
+		attributionControl: false, // Persistent credits are rendered outside the clipped map.
 		dragging: false,
 		scrollWheelZoom: false,
 		doubleClickZoom: false,

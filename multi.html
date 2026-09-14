@@ -169,56 +169,70 @@
             background-color: #000;
         }
 
+        #frames-container {
+            width: 100%;
+            height: 100%;
+            position: relative;
+        }
+
         iframe {
             border: none;
             position: absolute;
             background-color: #000;
         }
 
+        .layout-over-under,
+        .layout-side-by-side {
+            display: flex;
+        }
+
+        .layout-over-under {
+            flex-direction: column;
+        }
+
         .layout-over-under iframe {
+            position: relative;
+            flex: 1 1 0;
             width: 100%;
-            height: 50%;
-        }
-
-        .layout-over-under iframe:nth-child(1) {
-            top: 0;
-            left: 0;
-        }
-
-        .layout-over-under iframe:nth-child(2) {
-            top: 50%;
-            left: 0;
+            height: auto;
+            min-height: 0;
         }
 
         .layout-side-by-side iframe {
-            width: 50%;
+            position: relative;
+            flex: 1 1 0;
+            width: auto;
             height: 100%;
-            top: 0;
+            min-width: 0;
         }
 
-        .layout-side-by-side iframe:nth-child(1) {
-            left: 0;
-        }
-
-        .layout-side-by-side iframe:nth-child(2) {
-            left: 50%;
-        }
-
-        .layout-pip iframe:nth-child(1) {
+        .layout-pip > iframe:first-child {
             width: 100%;
             height: 100%;
             top: 0;
             left: 0;
         }
 
-        .layout-pip iframe:nth-child(2) {
-            width: 30%;
-            height: 20%;
-            bottom: 20px;
+        .picture-in-picture-frames {
+            position: absolute;
             right: 20px;
+            bottom: 20px;
+            width: 30%;
+            max-height: calc(100% - 40px);
+            display: flex;
+            flex-direction: column-reverse;
+            gap: 10px;
+            z-index: 10;
+        }
+
+        .picture-in-picture-frames iframe {
+            position: relative;
+            flex: 0 1 20vh;
+            width: 100%;
+            height: 20vh;
+            min-height: 0;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
             border-radius: 8px;
-            z-index: 10;
         }
 
         .layout-overlay iframe {
@@ -331,43 +345,39 @@
         }
 
         @media (max-width: 600px) {
+            .layout-side-by-side {
+                flex-direction: column;
+            }
+
             .layout-side-by-side iframe {
                 width: 100%;
-                height: 50%;
+                height: auto;
+                min-width: auto;
+                min-height: 0;
             }
 
-            .layout-side-by-side iframe:nth-child(1) {
-                top: 0;
-                left: 0;
-            }
-
-            .layout-side-by-side iframe:nth-child(2) {
-                top: 50%;
-                left: 0;
-            }
-
-            .layout-pip iframe:nth-child(2) {
+            .picture-in-picture-frames {
                 width: 40%;
-                height: 25%;
-                bottom: 10px;
                 right: 10px;
+                bottom: 10px;
+                max-height: calc(100% - 20px);
+            }
+
+            .picture-in-picture-frames iframe {
+                flex-basis: 25vh;
+                height: 25vh;
             }
         }
 
         @media (orientation: landscape) and (max-width: 800px) {
+            .layout-over-under {
+                flex-direction: row;
+            }
+
             .layout-over-under iframe {
-                width: 50%;
+                width: auto;
                 height: 100%;
-            }
-
-            .layout-over-under iframe:nth-child(1) {
-                top: 0;
-                left: 0;
-            }
-
-            .layout-over-under iframe:nth-child(2) {
-                top: 0;
-                left: 50%;
+                min-width: 0;
             }
         }
     </style>
@@ -425,6 +435,64 @@
     <script>
         let urlCount = 2;
         let currentTab = 0;
+        const trustedIframeAllow = 'accelerometer; camera; encrypted-media; geolocation; gyroscope; microphone; midi; picture-in-picture; speaker-selection; usb; xr-spatial-tracking; autoplay; fullscreen; display-capture';
+        const genericIframeAllow = 'autoplay; encrypted-media; fullscreen; picture-in-picture';
+
+        function normalizeIframeUrl(value) {
+            let url = (value || '').trim();
+            if (!url) return false;
+
+            const firstSegment = url.split(/[\/?#]/)[0];
+            const relativePage = /\.(?:html?|xhtml|shtml|php|asp|aspx|jsp)$/i.test(firstSegment);
+            if (!/^[a-z][a-z0-9+.-]*:/i.test(url) && firstSegment.includes('.') && !relativePage && !url.startsWith('./') && !url.startsWith('/')) {
+                url = 'https://' + url;
+            }
+
+            try {
+                const parsed = new URL(url, window.location.href);
+                const protocol = (parsed.protocol || '').toLowerCase();
+                if (protocol !== 'http:' && protocol !== 'https:') return false;
+                if (protocol === 'http:' && parsed.hostname !== 'localhost' && parsed.hostname !== '127.0.0.1' && parsed.hostname !== '[::1]' && location.hostname !== 'insecure.vdo.ninja') {
+                    parsed.protocol = 'https:';
+                }
+                return parsed.href;
+            } catch (e) {
+                return false;
+            }
+        }
+
+        function isTrustedIframeUrl(url) {
+            try {
+                const hostname = new URL(url, window.location.href).hostname.toLowerCase();
+                return hostname === location.hostname ||
+                    hostname === 'localhost' ||
+                    hostname === '127.0.0.1' ||
+                    hostname === '[::1]' ||
+                    hostname === 'vdo.ninja' ||
+                    hostname.endsWith('.vdo.ninja') ||
+                    hostname === 'obs.ninja' ||
+                    hostname.endsWith('.obs.ninja') ||
+                    hostname === 'versus.cam' ||
+                    hostname === 'dev.versus.cam' ||
+                    hostname === 'backup.vdo.ninja' ||
+                    hostname === 'invite.cam' ||
+                    hostname === 'rtc.ninja';
+            } catch (e) {
+                return false;
+            }
+        }
+
+        function createMixerIframe(url, className) {
+            const iframe = document.createElement('iframe');
+            iframe.src = url;
+            if (className) {
+                iframe.className = className;
+            }
+            iframe.allow = isTrustedIframeUrl(url) ? trustedIframeAllow : genericIframeAllow;
+            iframe.allowFullscreen = true;
+            iframe.allowTransparency = true;
+            return iframe;
+        }
         
         function loadSavedSettings() {
             const saved = localStorage.getItem('iframeMixerSettings');
@@ -520,7 +588,14 @@
                 alert('Please enter at least 2 URLs');
                 return;
             }
-            
+
+            const normalizedUrls = urls.map(normalizeIframeUrl);
+            const invalidIndex = normalizedUrls.indexOf(false);
+            if (invalidIndex !== -1) {
+                alert(`URL ${invalidIndex + 1} must be a valid http or https URL`);
+                return;
+            }
+
             saveSettings();
             
             document.getElementById('settings-page').style.display = 'none';
@@ -535,28 +610,28 @@
                 const tabBar = document.getElementById('tab-bar');
                 tabBar.style.display = 'flex';
                 
-                urls.forEach((url, index) => {
+                normalizedUrls.forEach((url, index) => {
                     const tab = document.createElement('div');
                     tab.className = 'tab' + (index === 0 ? ' active' : '');
                     tab.textContent = `Tab ${index + 1}`;
                     tab.onclick = () => switchTab(index);
                     tabBar.appendChild(tab);
-                    
-                    const iframe = document.createElement('iframe');
-                    iframe.src = url;
-                    iframe.className = index === 0 ? 'active' : '';
-                    iframe.allow = 'accelerometer; camera; encrypted-media; geolocation; gyroscope; microphone; midi; clipboard-read; clipboard-write; payment; picture-in-picture; speaker-selection; usb; xr-spatial-tracking';
-                    iframe.allowFullscreen = true;
-                    iframe.allowTransparency = true;
+
+                    const iframe = createMixerIframe(url, index === 0 ? 'active' : '');
                     framesContainer.appendChild(iframe);
                 });
+            } else if (layout === 'pip') {
+                framesContainer.appendChild(createMixerIframe(normalizedUrls[0]));
+
+                const pictureInPictureFrames = document.createElement('div');
+                pictureInPictureFrames.className = 'picture-in-picture-frames';
+                normalizedUrls.slice(1).forEach(url => {
+                    pictureInPictureFrames.appendChild(createMixerIframe(url));
+                });
+                framesContainer.appendChild(pictureInPictureFrames);
             } else {
-                urls.forEach((url, index) => {
-                    const iframe = document.createElement('iframe');
-                    iframe.src = url;
-                    iframe.allow = 'accelerometer; camera; encrypted-media; geolocation; gyroscope; microphone; midi; clipboard-read; clipboard-write; payment; picture-in-picture; speaker-selection; usb; xr-spatial-tracking';
-                    iframe.allowFullscreen = true;
-                    iframe.allowTransparency = true;
+                normalizedUrls.forEach((url, index) => {
+                    const iframe = createMixerIframe(url);
                     framesContainer.appendChild(iframe);
                 });
             }

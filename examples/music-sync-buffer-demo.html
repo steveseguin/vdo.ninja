@@ -331,6 +331,10 @@
 						<label for="viewer-params">Viewer Params</label>
 						<textarea id="viewer-params">scene&autostart&cleanoutput&label=MusicSyncViewer&noaudio&chunkbufferadaptive=0&chunkbufferceil=180000</textarea>
 					</div>
+					<div>
+						<label for="publisher-params">Publisher Params</label>
+						<textarea id="publisher-params">chunked=600&chunkbitrate=600&bitrate=600&maxvideobitrate=600&chunkindex=1&chunknack=1&chunknackattempts=8&chunknackdelay=250&chunkchunksize=4096&chunkcache=30000&chunkedbuffer=1500&chunkadapt=bitrate&chunkadaptfloor=250&chunkadaptceil=600&label=MusicSyncPublisher</textarea>
+					</div>
 					<div class="row">
 						<button id="reload-viewer" type="button">Load Viewer</button>
 						<button id="refresh-state" type="button">Refresh State</button>
@@ -486,6 +490,8 @@
 				<p class="muted"><code>chunkbufferadaptive=0</code> keeps the requested target fixed instead of letting the viewer drift.</p>
 				<p class="muted"><code>chunkbufferceil=180000</code> allows up to 3 minutes of video buffering.</p>
 				<p class="muted"><code>noaudio</code> avoids pretending VDO.Ninja chunked audio is the long-delay path.</p>
+				<p class="muted">The default publisher params use a conservative <code>600 kbps</code> profile without forcing a camera resolution, which keeps fake cameras, unusual webcams, and mobile browsers from failing hard constraints. For a weak-link 360p cap, add <code>quality=2</code> and <code>fps=30</code> if the device supports those constraints. For stronger desktop rooms, try <code>quality=1</code>, <code>chunked=900</code>, <code>chunkbitrate=900</code>, <code>bitrate=900</code>, <code>maxvideobitrate=900</code>, <code>chunkadaptfloor=300</code>, and <code>chunkadaptceil=900</code>.</p>
+				<p class="muted"><code>chunkedbuffer</code> is sender pacing/adaptation headroom; receiver delay is controlled by <code>setBufferDelay</code>, <code>chunkbuffer</code>, or <code>buffer</code>.</p>
 				<p class="muted"><code>setBufferDelay</code> drives the same internal playout target as <code>&buffer=</code>. It does not, by itself, enable the RTT-compensated <code>&buffer2</code> behavior.</p>
 				<p class="muted">If you want <code>buffer2</code>-style RTT compensation in this demo, add <code>buffer2=0</code> to the viewer params before loading the iframe. The buttons will still update the numeric delay target afterward.</p>
 				<p class="muted">For per-frame timing, listen for iframe messages with <code>action: "chunked-inbound"</code> or <code>"chunked-outbound"</code>. Their payload exposes <code>value.ts</code> and <code>value.type</code>.</p>
@@ -513,6 +519,7 @@
 
 		var roomInput = document.getElementById("room");
 		var viewerParamsInput = document.getElementById("viewer-params");
+		var publisherParamsInput = document.getElementById("publisher-params");
 		var bpmInput = document.getElementById("bpm");
 		var beatsPerBarInput = document.getElementById("beats-per-bar");
 		var barsDelayedInput = document.getElementById("bars-delayed");
@@ -537,6 +544,7 @@
 
 		roomInput.value = readSearchParam("room", uid("musicsync"));
 		viewerParamsInput.value = readSearchParam("viewerParams", viewerParamsInput.value);
+		publisherParamsInput.value = readSearchParam("publisherParams", publisherParamsInput.value);
 
 		var pendingCallbacks = {};
 		var stateCache = {
@@ -562,10 +570,12 @@
 				"push=" + pushId,
 				"room=" + room,
 				"webcam",
-				"autostart",
-				"chunked=1800",
-				"label=MusicSyncPublisher"
+				"autostart"
 			];
+			var extra = publisherParamsInput.value.trim();
+			if (extra) {
+				params = params.concat(extra.split("&").filter(Boolean));
+			}
 			if (testMedia) {
 				params.push("testmedia=1");
 				params.push("testwidth=640");

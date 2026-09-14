@@ -1,0 +1,1566 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+	<!-- Primary Meta Tags -->
+	<title>Unstable Connection Builder — VDO.Ninja</title>
+	<meta name="title" content="Unstable Connection Builder — VDO.Ninja" />
+	<meta name="description" content="Build matching VDO.Ninja push and view URLs for unstable mobile uplinks: normal WebRTC, chunked/WebCodecs, audio recovery, Meshcast, relay tests, and local iframe simulation." />
+	<meta name="author" content="Steve Seguin" />
+	<meta name="theme-color" content="#0f131d" />
+	<link rel="canonical" href="https://vdo.ninja/misc/unstable-connection-builder.html" />
+
+	<!-- Favicons -->
+	<link rel="shortcut icon" href="data:image/x-icon;," type="image/x-icon" />
+	<link rel="icon" type="image/png" sizes="32x32" href="../media/favicon-32x32.png" />
+	<link rel="icon" type="image/png" sizes="16x16" href="../media/favicon-16x16.png" />
+	<link rel="icon" href="../media/favicon.ico" />
+	<link rel="apple-touch-icon" href="../media/icon-192x192.png" />
+
+	<!-- X (Twitter) Card Tags -->
+	<meta name="twitter:card" content="summary_large_image" />
+	<meta name="twitter:creator" content="@SteveSeguin" />
+	<meta name="twitter:title" content="Unstable Connection Builder — VDO.Ninja" />
+	<meta name="twitter:description" content="Generate matching push/view URLs for unstable VDO.Ninja connections: WebRTC, chunked, audio recovery, Meshcast, and relay tests." />
+	<meta name="twitter:image" content="https://vdo.ninja/media/vdoNinja_logo_full.png" />
+
+	<!-- Open Graph Tags -->
+	<meta property="og:type" content="website" />
+	<meta property="og:url" content="https://vdo.ninja/misc/unstable-connection-builder.html" />
+	<meta property="og:title" content="Unstable Connection Builder — VDO.Ninja" />
+	<meta property="og:description" content="Generate matching push/view URLs for unstable VDO.Ninja connections: WebRTC, chunked, audio recovery, Meshcast, and relay tests." />
+	<meta property="og:image" content="https://vdo.ninja/media/vdoNinja_logo_full.png" />
+	<meta property="og:image:width" content="1200" />
+	<meta property="og:image:height" content="630" />
+	<meta property="og:site_name" content="VDO.Ninja" />
+
+	<style>
+		:root {
+			color-scheme: light;
+			--bg: #f5f7fa;
+			--panel: #ffffff;
+			--ink: #17202a;
+			--muted: #5d6978;
+			--line: #d9e0ea;
+			--blue: #2458c7;
+			--green: #137a52;
+			--orange: #b85f18;
+			--red: #bd3030;
+			--slate: #283241;
+			--shadow: 0 16px 42px rgba(24, 34, 48, 0.11);
+		}
+
+		* {
+			box-sizing: border-box;
+		}
+
+		body {
+			margin: 0;
+			background: var(--bg);
+			color: var(--ink);
+			font: 14px/1.45 system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+		}
+
+		button,
+		input,
+		select,
+		textarea {
+			font: inherit;
+		}
+
+		button {
+			cursor: pointer;
+		}
+
+		.topbar {
+			display: flex;
+			justify-content: space-between;
+			align-items: flex-start;
+			gap: 20px;
+			padding: 20px 24px;
+			border-bottom: 1px solid var(--line);
+			background: var(--panel);
+		}
+
+		h1,
+		h2,
+		h3,
+		p {
+			margin: 0;
+		}
+
+		h1 {
+			font-size: 26px;
+			line-height: 1.1;
+			letter-spacing: 0;
+		}
+
+		.topbar p {
+			max-width: 840px;
+			margin-top: 6px;
+			color: var(--muted);
+		}
+
+		.status-pill {
+			display: inline-flex;
+			align-items: center;
+			gap: 8px;
+			border: 1px solid var(--line);
+			background: #f9fbfd;
+			padding: 8px 10px;
+			white-space: nowrap;
+			font-weight: 650;
+		}
+
+		.status-pill::before {
+			content: "";
+			width: 10px;
+			height: 10px;
+			border-radius: 50%;
+			background: var(--green);
+			box-shadow: 0 0 0 4px rgba(19, 122, 82, 0.15);
+		}
+
+		.workspace {
+			display: grid;
+			grid-template-columns: minmax(360px, 0.9fr) minmax(420px, 1.1fr);
+			gap: 18px;
+			padding: 18px;
+		}
+
+		.column {
+			min-width: 0;
+			display: flex;
+			flex-direction: column;
+			gap: 14px;
+		}
+
+		.panel {
+			background: var(--panel);
+			border: 1px solid var(--line);
+			box-shadow: var(--shadow);
+		}
+
+		.panel-header {
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+			gap: 12px;
+			padding: 14px 16px;
+			border-bottom: 1px solid var(--line);
+		}
+
+		.panel-header h2,
+		.panel-header h3 {
+			font-size: 15px;
+			line-height: 1.2;
+			letter-spacing: 0;
+		}
+
+		.panel-header span {
+			color: var(--muted);
+			font-size: 12px;
+		}
+
+		.panel-body {
+			padding: 14px 16px 16px;
+		}
+
+		.presets {
+			display: grid;
+			grid-template-columns: repeat(2, minmax(0, 1fr));
+			gap: 10px;
+		}
+
+		.preset-button,
+		.action-button,
+		.small-button {
+			border: 1px solid var(--line);
+			background: #f8fafc;
+			color: var(--ink);
+			padding: 10px 12px;
+			text-align: left;
+		}
+
+		.preset-button {
+			min-height: 86px;
+		}
+
+		.preset-button[aria-pressed="true"] {
+			border-color: var(--blue);
+			box-shadow: inset 0 0 0 2px rgba(36, 88, 199, 0.16);
+			background: #eef4ff;
+		}
+
+		.preset-button strong {
+			display: block;
+			font-size: 14px;
+		}
+
+		.preset-button span {
+			display: block;
+			margin-top: 5px;
+			color: var(--muted);
+			font-size: 12px;
+		}
+
+		details.panel {
+			overflow: hidden;
+		}
+
+		summary.panel-header {
+			list-style: none;
+			cursor: pointer;
+		}
+
+		summary.panel-header::-webkit-details-marker {
+			display: none;
+		}
+
+		.controls-grid {
+			display: grid;
+			grid-template-columns: repeat(2, minmax(0, 1fr));
+			gap: 12px;
+		}
+
+		.control {
+			min-width: 0;
+		}
+
+		.control.wide {
+			grid-column: 1 / -1;
+		}
+
+		.control label {
+			display: flex;
+			justify-content: space-between;
+			align-items: baseline;
+			gap: 10px;
+			font-weight: 650;
+		}
+
+		.control label output {
+			color: var(--muted);
+			font-size: 12px;
+			font-weight: 650;
+		}
+
+		.control input[type="text"],
+		.control input[type="number"],
+		.control select,
+		.control textarea {
+			width: 100%;
+			margin-top: 6px;
+			border: 1px solid var(--line);
+			background: #fff;
+			color: var(--ink);
+			padding: 8px 9px;
+			border-radius: 0;
+		}
+
+		.control input[type="range"] {
+			width: 100%;
+			margin-top: 8px;
+			accent-color: var(--blue);
+		}
+
+		.toggle-row {
+			display: flex;
+			align-items: flex-start;
+			gap: 9px;
+			padding: 9px 10px;
+			border: 1px solid var(--line);
+			background: #fbfcfe;
+			min-height: 58px;
+		}
+
+		.toggle-row input {
+			margin-top: 3px;
+		}
+
+		.toggle-row strong {
+			display: block;
+			font-size: 13px;
+		}
+
+		.hint {
+			margin-top: 5px;
+			color: var(--muted);
+			font-size: 12px;
+		}
+
+		.warning {
+			color: var(--orange);
+			font-weight: 650;
+		}
+
+		.url-stack {
+			display: grid;
+			gap: 10px;
+		}
+
+		.url-box label {
+			display: flex;
+			justify-content: space-between;
+			gap: 8px;
+			font-weight: 700;
+			margin-bottom: 6px;
+		}
+
+		.url-box textarea {
+			width: 100%;
+			min-height: 74px;
+			resize: vertical;
+			border: 1px solid var(--line);
+			background: #fbfcfe;
+			padding: 9px;
+			color: #17202a;
+			font-family: ui-monospace, SFMono-Regular, Consolas, "Liberation Mono", monospace;
+			font-size: 12px;
+			line-height: 1.35;
+		}
+
+		.button-row {
+			display: flex;
+			flex-wrap: wrap;
+			gap: 8px;
+		}
+
+		.action-button {
+			text-align: center;
+			font-weight: 700;
+			background: var(--slate);
+			color: #fff;
+			border-color: var(--slate);
+		}
+
+		.action-button.secondary {
+			background: #fff;
+			color: var(--ink);
+			border-color: var(--line);
+		}
+
+		.action-button.danger {
+			background: #fff;
+			color: var(--red);
+			border-color: rgba(189, 48, 48, 0.35);
+		}
+
+		.small-button {
+			padding: 6px 8px;
+			font-size: 12px;
+			font-weight: 700;
+		}
+
+		.frames {
+			display: grid;
+			grid-template-columns: repeat(2, minmax(0, 1fr));
+			gap: 12px;
+		}
+
+		.frame-shell {
+			min-width: 0;
+			border: 1px solid var(--line);
+			background: #101722;
+		}
+
+		.frame-title {
+			display: flex;
+			align-items: center;
+			justify-content: space-between;
+			gap: 8px;
+			padding: 8px 10px;
+			color: #fff;
+			background: #222c39;
+			font-size: 12px;
+			font-weight: 700;
+		}
+
+		iframe {
+			display: block;
+			width: 100%;
+			height: 360px;
+			border: 0;
+			background: #000;
+		}
+
+		.live-grid {
+			display: grid;
+			grid-template-columns: repeat(2, minmax(0, 1fr));
+			gap: 10px;
+			align-items: end;
+		}
+
+		.recommendations {
+			display: grid;
+			gap: 8px;
+		}
+
+		.recommendations div {
+			border-left: 4px solid var(--blue);
+			background: #f8fafc;
+			padding: 8px 10px;
+			color: var(--muted);
+		}
+
+		.option-table {
+			width: 100%;
+			border-collapse: collapse;
+			font-size: 12px;
+		}
+
+		.option-table th,
+		.option-table td {
+			vertical-align: top;
+			border-top: 1px solid var(--line);
+			padding: 8px;
+			text-align: left;
+		}
+
+		.option-table th {
+			color: var(--muted);
+			font-weight: 700;
+			background: #f8fafc;
+		}
+
+		code {
+			font-family: ui-monospace, SFMono-Regular, Consolas, "Liberation Mono", monospace;
+			font-size: 12px;
+		}
+
+		.message-log {
+			max-height: 160px;
+			overflow: auto;
+			border: 1px solid var(--line);
+			background: #fbfcfe;
+			padding: 8px;
+			font-family: ui-monospace, SFMono-Regular, Consolas, "Liberation Mono", monospace;
+			font-size: 12px;
+			white-space: pre-wrap;
+		}
+
+		@media (max-width: 1180px) {
+			.workspace,
+			.frames {
+				grid-template-columns: 1fr;
+			}
+		}
+
+		@media (max-width: 720px) {
+			.topbar {
+				flex-direction: column;
+			}
+
+			.workspace {
+				padding: 10px;
+			}
+
+			.presets,
+			.controls-grid,
+			.live-grid {
+				grid-template-columns: 1fr;
+			}
+		}
+	</style>
+</head>
+<body>
+	<header class="topbar">
+		<div>
+			<h1>Unstable Connection Builder</h1>
+			<p>Build VDO.Ninja push and view links for poor mobile uplinks, Starlink jitter, packet loss, relay tests, and chunked/WebCodecs recovery. This page only generates URLs and wraps VDO.Ninja in iframes; it does not change core code.</p>
+		</div>
+		<div class="status-pill" id="capabilitySummary">Checking browser</div>
+	</header>
+
+	<main class="workspace">
+		<section class="column" aria-label="Configuration">
+			<section class="panel">
+				<div class="panel-header">
+					<h2>Preset Library</h2>
+					<span>Click one, then tune</span>
+				</div>
+				<div class="panel-body">
+					<div class="presets" id="presetList"></div>
+				</div>
+			</section>
+
+			<form id="controlForm"></form>
+		</section>
+
+		<section class="column" aria-label="Output and preview">
+			<section class="panel">
+				<div class="panel-header">
+					<h2>Generated Links</h2>
+					<span id="activePresetLabel">Default</span>
+				</div>
+				<div class="panel-body url-stack">
+					<div class="url-box">
+						<label for="pushUrl">Push link <button type="button" class="small-button" data-copy="pushUrl">Copy</button></label>
+						<textarea id="pushUrl" readonly spellcheck="false"></textarea>
+					</div>
+					<div class="url-box">
+						<label for="viewUrl">View link <button type="button" class="small-button" data-copy="viewUrl">Copy</button></label>
+						<textarea id="viewUrl" readonly spellcheck="false"></textarea>
+					</div>
+					<div class="button-row">
+						<button type="button" class="action-button" id="loadFrames">Load / reload iframes</button>
+						<button type="button" class="action-button secondary" id="openPush">Open push</button>
+						<button type="button" class="action-button secondary" id="openView">Open view</button>
+						<button type="button" class="action-button danger" id="stopFrames">Stop iframes</button>
+					</div>
+					<p class="hint">Local simulation uses browser test media and validates URL behavior. It does not simulate real packet loss; use network tools or a real weak link for impairment testing.</p>
+				</div>
+			</section>
+
+			<section class="panel">
+				<div class="panel-header">
+					<h2>Live Iframe Controls</h2>
+					<span>PostMessage controls</span>
+				</div>
+				<div class="panel-body">
+					<div class="live-grid">
+						<div class="control">
+							<label for="liveBitrate">Video bitrate <output id="liveBitrateValue">2500 kbps</output></label>
+							<input id="liveBitrate" type="range" min="250" max="8000" step="50" value="2500" />
+						</div>
+						<div class="control">
+							<label for="liveBuffer">Viewer buffer <output id="liveBufferValue">500 ms</output></label>
+							<input id="liveBuffer" type="range" min="0" max="4000" step="50" value="500" />
+						</div>
+					</div>
+					<div class="button-row" style="margin-top: 12px;">
+						<button type="button" class="action-button secondary" id="applyLiveBitrate">Apply video bitrate</button>
+						<button type="button" class="action-button secondary" id="applyLiveBuffer">Apply buffer</button>
+						<button type="button" class="action-button secondary" id="forceKeyframe">Force keyframe</button>
+						<button type="button" class="action-button secondary" id="requestStats">Request stats</button>
+					</div>
+					<p class="hint">Live controls work after the iframes have connected. Video bitrate and buffer target the viewer; Force keyframe targets the publisher. Startup-only settings such as audio bitrate, codec, RED, chunked mode, relay mode, and WebCodecs buffers are set in the panels on the left and require reloading the iframes.</p>
+				</div>
+			</section>
+
+			<section class="panel">
+				<div class="panel-header">
+					<h2>Preview</h2>
+					<span>Publisher and viewer</span>
+				</div>
+				<div class="panel-body">
+					<div class="frames">
+						<div class="frame-shell">
+							<div class="frame-title"><span>Publisher</span><button type="button" class="small-button" data-reload-frame="pushFrame">Reload</button></div>
+							<iframe id="pushFrame" title="Publisher preview" allow="camera;microphone;fullscreen;display-capture;autoplay;clipboard-write;screen-wake-lock"></iframe>
+						</div>
+						<div class="frame-shell">
+							<div class="frame-title"><span>Viewer</span><button type="button" class="small-button" data-reload-frame="viewFrame">Reload</button></div>
+							<iframe id="viewFrame" title="Viewer preview" allow="camera;microphone;fullscreen;display-capture;autoplay;clipboard-write;screen-wake-lock"></iframe>
+						</div>
+					</div>
+				</div>
+			</section>
+
+			<section class="panel">
+				<div class="panel-header">
+					<h2>Suggestions</h2>
+					<span>What to adjust first</span>
+				</div>
+				<div class="panel-body recommendations" id="recommendations"></div>
+			</section>
+
+			<section class="panel">
+				<div class="panel-header">
+					<h2>Iframe Messages</h2>
+					<span>Recent events and command echoes</span>
+				</div>
+				<div class="panel-body">
+					<div class="message-log" id="messageLog">No iframe messages yet.</div>
+				</div>
+			</section>
+
+			<section class="panel">
+				<div class="panel-header">
+					<h2>Supported URL Options</h2>
+					<span>Reviewed against local parser names</span>
+				</div>
+				<div class="panel-body">
+					<table class="option-table" id="optionTable">
+						<thead>
+							<tr><th>Option</th><th>Side</th><th>Use</th></tr>
+						</thead>
+						<tbody></tbody>
+					</table>
+				</div>
+			</section>
+		</section>
+	</main>
+
+	<script>
+	(function () {
+		"use strict";
+
+		var appBase = new URL("../", window.location.href);
+		var activePreset = "balanced";
+		var localStorageKey = "vdoUnstableConnectionBuilderState";
+		var viewLoadTimer = null;
+
+		var state = {
+			streamId: "unstable_" + Math.random().toString(36).slice(2, 8),
+			linkMode: "local",
+			autoStart: true,
+			cleanOutput: true,
+			stats: true,
+			remote: false,
+			obsFix: 1,
+			extraPush: "",
+			extraView: "",
+
+			quality: 1,
+			width: 1280,
+			height: 720,
+			fps: 24,
+			contentHint: "motion",
+			videoCodec: "vp8",
+			viewBitrate: 2500,
+			outboundVideoBitrate: 2500,
+			maxVideoBitrate: 2500,
+			maxBandwidth: 70,
+			videoBufferMode: "buffer",
+			videoBuffer: 500,
+			audioBuffer: 120,
+			degrade: "maintain-framerate",
+			keyframe: 3000,
+			videoRed: true,
+			preferredVideoRed: false,
+			disableNack: false,
+			disablePli: false,
+			disableRemb: false,
+
+			audioBitrate: 96,
+			outboundAudioBitrate: 96,
+			stereoMode: "off",
+			opusFec: true,
+			audioRedCodec: false,
+			audioRedPayloads: false,
+			audioFecPayloads: false,
+			preferAudioRedPayloads: false,
+			preferAudioFecPayloads: false,
+			dtx: false,
+			audioRateMode: "cbr",
+			ptime: 20,
+			minptime: 10,
+			maxptime: 60,
+
+			chunked: true,
+			chunkedMs: 2500,
+			chunkedBuffer: 6000,
+			chunkProfile: "balanced",
+			chunkFec: 4,
+			chunkNack: true,
+			chunkBuffer: 750,
+			chunkBufferFloor: 450,
+			chunkBufferCeil: 1400,
+			chunkBufferAdaptive: true,
+			chunkJitterSlack: 220,
+			chunkAdapt: "hybrid",
+			chunkAdaptFloor: 420,
+			chunkAdaptCeil: 2600,
+			chunkAdaptThreshold: 340,
+			chunkAdaptMaxDrop: 6,
+			chunkAdaptInterval: 900,
+			chunkRetry: 0,
+			chunkCache: 0,
+			chunkChunkSize: 16384,
+			noChunkAudio: false,
+
+			meshcast: false,
+			meshcast2: false,
+			meshcastMode: "any",
+			meshcastCode: "",
+			meshcastBitrate: 2500,
+			meshcastAudioBitrate: 96,
+			meshcastCodec: "vp8",
+			meshcastScale: 100,
+			chunkcast: false,
+			relay: false,
+			lanOnly: false,
+			tcp: false
+		};
+
+		var presets = [
+			{
+				id: "rtp",
+				name: "Low-latency RTP guard",
+				description: "Normal WebRTC with buffer, VP8 RED test, keyframe recovery, and bandwidth headroom.",
+				values: {
+					chunked: false,
+					meshcast: false,
+					videoCodec: "vp8",
+					videoRed: true,
+					viewBitrate: 2500,
+					outboundVideoBitrate: 2500,
+					maxVideoBitrate: 2500,
+					maxBandwidth: 70,
+					videoBuffer: 500,
+					audioBuffer: 120,
+					keyframe: 3000,
+					fps: 24,
+					degrade: "maintain-framerate",
+					audioBitrate: 96,
+					opusFec: true
+				}
+			},
+			{
+				id: "balanced",
+				name: "Chunked balanced",
+				description: "Default WebCodecs recovery profile for jitter plus moderate random loss.",
+				values: {
+					chunked: true,
+					chunkedMs: 2500,
+					chunkedBuffer: 6000,
+					chunkProfile: "balanced",
+					chunkFec: 4,
+					chunkNack: true,
+					chunkBuffer: 750,
+					chunkBufferFloor: 450,
+					chunkBufferCeil: 1400,
+					chunkJitterSlack: 220,
+					chunkAdapt: "hybrid",
+					chunkAdaptFloor: 420,
+					chunkAdaptCeil: 2600,
+					chunkAdaptThreshold: 340,
+					chunkAdaptMaxDrop: 6,
+					chunkAdaptInterval: 900,
+					videoCodec: "vp8",
+					viewBitrate: 2500,
+					outboundVideoBitrate: 2500,
+					maxBandwidth: 70
+				}
+			},
+			{
+				id: "loss",
+				name: "High loss / high RTT",
+				description: "More playout budget, stronger FEC, longer resend cache, lower bitrate and frame rate.",
+				values: {
+					chunked: true,
+					chunkedMs: 3000,
+					chunkedBuffer: 9000,
+					chunkProfile: "mobile",
+					chunkFec: 3,
+					chunkNack: true,
+					chunkBuffer: 1200,
+					chunkBufferFloor: 800,
+					chunkBufferCeil: 4500,
+					chunkJitterSlack: 500,
+					chunkAdapt: "framerate",
+					chunkAdaptFloor: 320,
+					chunkAdaptCeil: 1800,
+					chunkAdaptThreshold: 260,
+					chunkAdaptMaxDrop: 12,
+					chunkAdaptInterval: 1200,
+					chunkRetry: 350,
+					chunkCache: 12000,
+					viewBitrate: 1800,
+					outboundVideoBitrate: 1800,
+					maxVideoBitrate: 2200,
+					maxBandwidth: 60,
+					fps: 20,
+					videoBuffer: 1000,
+					audioBuffer: 250
+				}
+			},
+			{
+				id: "program",
+				name: "Delay-ok program feed",
+				description: "Higher quality when several seconds of delay is acceptable.",
+				values: {
+					chunked: true,
+					chunkedMs: 4500,
+					chunkedBuffer: 12000,
+					chunkProfile: "desktop",
+					chunkFec: 5,
+					chunkNack: true,
+					chunkBuffer: 2200,
+					chunkBufferFloor: 1400,
+					chunkBufferCeil: 7000,
+					chunkJitterSlack: 700,
+					chunkAdapt: "bitrate",
+					chunkAdaptFloor: 900,
+					chunkAdaptCeil: 4200,
+					chunkAdaptThreshold: 500,
+					chunkAdaptMaxDrop: 4,
+					chunkAdaptInterval: 900,
+					viewBitrate: 3600,
+					outboundVideoBitrate: 3600,
+					maxVideoBitrate: 4200,
+					maxBandwidth: 75,
+					fps: 30,
+					videoBuffer: 1500,
+					audioBuffer: 250
+				}
+			},
+			{
+				id: "audio",
+				name: "Audio resilience focus",
+				description: "Conservative video plus Opus FEC, audio buffer, and optional audio RED testing.",
+				values: {
+					chunked: false,
+					videoCodec: "vp8",
+					videoRed: true,
+					viewBitrate: 1600,
+					outboundVideoBitrate: 1600,
+					maxVideoBitrate: 1800,
+					maxBandwidth: 60,
+					videoBuffer: 800,
+					audioBuffer: 350,
+					audioBitrate: 96,
+					outboundAudioBitrate: 96,
+					opusFec: true,
+					audioRedCodec: false,
+					dtx: false,
+					audioRateMode: "cbr",
+					ptime: 20,
+					minptime: 10,
+					maxptime: 60
+				}
+			},
+			{
+				id: "meshcast",
+				name: "Meshcast relay test",
+				description: "Test server-assisted delivery for NAT trouble, scale, or route stability.",
+				values: {
+					chunked: false,
+					meshcast: true,
+					meshcast2: false,
+					meshcastMode: "any",
+					meshcastBitrate: 2500,
+					meshcastAudioBitrate: 96,
+					meshcastCodec: "vp8",
+					meshcastScale: 100,
+					viewBitrate: 2500,
+					outboundVideoBitrate: 2500,
+					maxVideoBitrate: 2500,
+					maxBandwidth: 70,
+					videoBuffer: 750,
+					audioBuffer: 150
+				}
+			}
+		];
+
+		var groups = [
+			{
+				id: "session",
+				title: "Session and Preview",
+				note: "Local simulation uses test media. Real mode is for copying to separate devices.",
+				open: true,
+				controls: [
+					{ key: "streamId", label: "Stream ID", type: "text", wide: true, hint: "Use a unique ID before sharing real links." },
+					{ key: "linkMode", label: "Connection mode", type: "select", options: [["local", "Local test media"], ["real", "Real camera/mic"]] },
+					{ key: "obsFix", label: "OBS fix level", type: "number", min: 0, max: 3, step: 1, hint: "Default 1 is safest for OBS Browser Source." },
+					{ key: "autoStart", label: "Autostart capture", type: "checkbox", hint: "Adds webcam/autostart on the push iframe." },
+					{ key: "cleanOutput", label: "Clean iframe output", type: "checkbox", hint: "Removes most UI chrome from the embedded app." },
+					{ key: "stats", label: "Show stats overlay", type: "checkbox", hint: "Useful for checking bitrate, NACKs, PLIs, buffer, and relay state." },
+					{ key: "remote", label: "Enable remote flag", type: "checkbox", hint: "Useful for remote stats/control tests; use a passcode for shared links." },
+					{ key: "extraPush", label: "Extra push params", type: "text", wide: true, hint: "Optional raw params, for example: &label=PhoneA" },
+					{ key: "extraView", label: "Extra view params", type: "text", wide: true, hint: "Optional raw params, for example: &solo&scale=100" }
+				]
+			},
+			{
+				id: "video",
+				title: "Normal WebRTC Video",
+				note: "Startup RTP controls. Reload iframes after changing codec, RED, or keyframe settings.",
+				open: true,
+				controls: [
+					{ key: "videoCodec", label: "Viewer codec preference", type: "select", options: [["vp8", "VP8"], ["h264", "H.264"], ["vp9", "VP9"], ["av1", "AV1"], ["", "Auto"]] },
+					{ key: "quality", label: "Publisher quality q", type: "select", options: [[1, "q=1 / 720p-ish"], [0, "q=0 / 1080p-ish"], [2, "q=2 / lower"], [-3, "1440p"], [-2, "2160p"]] },
+					{ key: "width", label: "Width", type: "number", min: 160, max: 3840, step: 2 },
+					{ key: "height", label: "Height", type: "number", min: 90, max: 2160, step: 2 },
+					{ key: "fps", label: "Frame rate", type: "number", min: 1, max: 60, step: 1 },
+					{ key: "contentHint", label: "Content hint", type: "select", options: [["motion", "motion"], ["detail", "detail"], ["text", "text"], ["", "auto"]] },
+					{ key: "viewBitrate", label: "Viewer target bitrate", type: "range", min: 250, max: 10000, step: 50, unit: "kbps" },
+					{ key: "outboundVideoBitrate", label: "Outbound video bitrate", type: "range", min: 250, max: 10000, step: 50, unit: "kbps" },
+					{ key: "maxVideoBitrate", label: "Publisher max video bitrate", type: "range", min: 250, max: 10000, step: 50, unit: "kbps" },
+					{ key: "maxBandwidth", label: "Max bandwidth share", type: "range", min: 0, max: 100, step: 1, unit: "%" },
+					{ key: "videoBufferMode", label: "Buffer parameter", type: "select", options: [["buffer", "buffer"], ["buffer2", "buffer2 includes RTT"]] },
+					{ key: "videoBuffer", label: "Viewer video buffer", type: "range", min: 0, max: 4000, step: 50, unit: "ms" },
+					{ key: "audioBuffer", label: "Viewer audio buffer", type: "range", min: 0, max: 2000, step: 10, unit: "ms" },
+					{ key: "degrade", label: "Degradation preference", type: "select", options: [["maintain-framerate", "maintain-framerate"], ["maintain-resolution", "maintain-resolution"], ["balanced", "balanced"], ["", "auto"]] },
+					{ key: "keyframe", label: "Forced keyframe interval", type: "range", min: 0, max: 10000, step: 250, unit: "ms" },
+					{ key: "videoRed", label: "Viewer video RED", type: "checkbox", hint: "Adds &vred. Best tested with VP8; browser decides actual FEC behavior." },
+					{ key: "preferredVideoRed", label: "Publisher preferred RED", type: "checkbox", hint: "Adds &pvred on the push side for offer-side RED preference experiments." },
+					{ key: "disableNack", label: "Disable NACK", type: "checkbox", hint: "Testing only. Leave off for reliability." },
+					{ key: "disablePli", label: "Disable PLI", type: "checkbox", hint: "Testing only. Leave off for recovery." },
+					{ key: "disableRemb", label: "Disable REMB", type: "checkbox", hint: "Testing only. Leave off unless isolating congestion behavior." }
+				]
+			},
+			{
+				id: "audio",
+				title: "Audio Recovery",
+				note: "Opus in-band FEC and audio RED are separate experiments.",
+				open: false,
+				controls: [
+					{ key: "audioBitrate", label: "Viewer audio bitrate", type: "range", min: 16, max: 510, step: 1, unit: "kbps" },
+					{ key: "outboundAudioBitrate", label: "Outbound audio bitrate", type: "range", min: 16, max: 510, step: 1, unit: "kbps" },
+					{ key: "stereoMode", label: "Stereo / pro audio", type: "select", options: [["off", "off"], ["1", "stereo both"], ["3", "stereo out / mono in"], ["5", "auto pro-audio"], ["mono", "mono high bitrate"]] },
+					{ key: "opusFec", label: "Keep Opus FEC enabled", type: "checkbox", hint: "When off, adds &nofec. Default is on." },
+					{ key: "audioRedCodec", label: "Prefer audio RED codec", type: "checkbox", hint: "Adds audiocodec=red / preferaudiocodec=red. Experimental." },
+					{ key: "audioRedPayloads", label: "Answer-side audio RED payload", type: "checkbox", hint: "Adds &redaudio on the push side." },
+					{ key: "audioFecPayloads", label: "Answer-side audio FEC payload", type: "checkbox", hint: "Adds &fecaudio on the push side." },
+					{ key: "preferAudioRedPayloads", label: "Offer-side audio RED payload", type: "checkbox", hint: "Adds &predaudio on the view side." },
+					{ key: "preferAudioFecPayloads", label: "Offer-side audio FEC payload", type: "checkbox", hint: "Adds &pfecaudio on the view side." },
+					{ key: "dtx", label: "DTX", type: "checkbox", hint: "Can save bandwidth in silence; usually not ideal for program audio." },
+					{ key: "audioRateMode", label: "Audio rate mode", type: "select", options: [["cbr", "CBR"], ["vbr", "VBR"], ["auto", "auto"]] },
+					{ key: "ptime", label: "ptime", type: "number", min: 10, max: 300, step: 10 },
+					{ key: "minptime", label: "minptime", type: "number", min: 10, max: 300, step: 10 },
+					{ key: "maxptime", label: "maxptime", type: "number", min: 10, max: 300, step: 10 }
+				]
+			},
+			{
+				id: "chunked",
+				title: "Chunked / WebCodecs Recovery",
+				note: "Chromium is the target. These params are URL-gated and leave defaults untouched elsewhere.",
+				open: true,
+				controls: [
+					{ key: "chunked", label: "Enable chunked mode", type: "checkbox", hint: "Adds &chunked on the push link." },
+					{ key: "chunkedMs", label: "Chunked interval", type: "range", min: 250, max: 10000, step: 250, unit: "ms" },
+					{ key: "chunkedBuffer", label: "Sender backlog", type: "range", min: 1000, max: 30000, step: 500, unit: "ms" },
+					{ key: "chunkProfile", label: "Chunk profile", type: "select", options: [["mobile", "mobile"], ["balanced", "balanced"], ["desktop", "desktop"], ["custom", "custom/manual"]] },
+					{ key: "chunkFec", label: "Parity FEC rate", type: "range", min: 0, max: 12, step: 1, unit: "data chunks" },
+					{ key: "chunkNack", label: "Selective retransmits", type: "checkbox", hint: "Adds &chunknack=1 to both sides." },
+					{ key: "chunkBuffer", label: "Viewer chunk buffer", type: "range", min: 0, max: 10000, step: 50, unit: "ms" },
+					{ key: "chunkBufferFloor", label: "Buffer floor", type: "range", min: 0, max: 10000, step: 50, unit: "ms" },
+					{ key: "chunkBufferCeil", label: "Buffer ceiling", type: "range", min: 0, max: 15000, step: 50, unit: "ms" },
+					{ key: "chunkBufferAdaptive", label: "Adaptive chunk buffer", type: "checkbox", hint: "Turn off to add &fixedchunkbuffer." },
+					{ key: "chunkJitterSlack", label: "Jitter slack", type: "range", min: 0, max: 3000, step: 50, unit: "ms" },
+					{ key: "chunkAdapt", label: "Adaptation mode", type: "select", options: [["bitrate", "bitrate"], ["framerate", "framerate"], ["hybrid", "hybrid"], ["", "off"]] },
+					{ key: "chunkAdaptFloor", label: "Adapt floor", type: "range", min: 0, max: 5000, step: 20, unit: "kbps/factor" },
+					{ key: "chunkAdaptCeil", label: "Adapt ceiling", type: "range", min: 0, max: 10000, step: 50, unit: "kbps/factor" },
+					{ key: "chunkAdaptThreshold", label: "Adapt threshold", type: "range", min: 0, max: 3000, step: 20, unit: "ms" },
+					{ key: "chunkAdaptMaxDrop", label: "Max frame drop factor", type: "range", min: 0, max: 30, step: 1, unit: "x" },
+					{ key: "chunkAdaptInterval", label: "Adapt interval", type: "range", min: 100, max: 10000, step: 100, unit: "ms" },
+					{ key: "chunkRetry", label: "NACK retry spacing", type: "range", min: 0, max: 5000, step: 50, unit: "ms" },
+					{ key: "chunkCache", label: "Resend cache", type: "range", min: 0, max: 60000, step: 500, unit: "ms" },
+					{ key: "chunkChunkSize", label: "Payload chunk size", type: "range", min: 2048, max: 65536, step: 1024, unit: "bytes" },
+					{ key: "noChunkAudio", label: "Disable chunked audio", type: "checkbox", hint: "Adds &nochunkaudio to both sides." }
+				]
+			},
+			{
+				id: "relay",
+				title: "Relay and Meshcast",
+				note: "Use when direct P2P routes are unstable, blocked, or need scale.",
+				open: false,
+				controls: [
+					{ key: "meshcast", label: "Enable Meshcast", type: "checkbox", hint: "Adds &meshcast to the push link." },
+					{ key: "meshcast2", label: "Use meshcast2", type: "checkbox", hint: "Adds &meshcast2 instead of &meshcast." },
+					{ key: "meshcastMode", label: "Meshcast mode", type: "select", options: [["any", "any"], ["video", "video"], ["audio", "audio"]] },
+					{ key: "meshcastCode", label: "Meshcast code", type: "text", hint: "Optional &meshcastcode / &mccode value." },
+					{ key: "meshcastBitrate", label: "Meshcast video bitrate", type: "range", min: 250, max: 10000, step: 50, unit: "kbps" },
+					{ key: "meshcastAudioBitrate", label: "Meshcast audio bitrate", type: "range", min: 16, max: 510, step: 1, unit: "kbps" },
+					{ key: "meshcastCodec", label: "Meshcast codec", type: "select", options: [["vp8", "VP8"], ["h264", "H.264"], ["vp9", "VP9"], ["av1", "AV1"], ["", "auto"]] },
+					{ key: "meshcastScale", label: "Meshcast scale", type: "range", min: 10, max: 100, step: 5, unit: "%" },
+					{ key: "chunkcast", label: "Chunkcast", type: "checkbox", hint: "Relay/chunkcast experiment." },
+					{ key: "relay", label: "Force TURN relay", type: "checkbox", hint: "Emergency/testing only. Usually increases latency." },
+					{ key: "lanOnly", label: "LAN only", type: "checkbox", hint: "Only for local network tests." },
+					{ key: "tcp", label: "Prefer TCP TURN", type: "checkbox", hint: "Testing only; can increase latency." }
+				]
+			}
+		];
+
+		var supportedOptions = [
+			["push/view", "push/view", "stream identity for the direct connection"],
+			["testmedia, webcam, autostart", "push", "local simulation with fake media or automatic capture"],
+			["codec, videobitrate", "view", "viewer request for codec and target video bitrate"],
+			["outboundvideobitrate, maxvideobitrate, maxbandwidth", "push", "sender bitrate target, sender cap, and available-bandwidth headroom"],
+			["buffer, buffer2, audiobuffer", "view", "receiver-side playout buffering for jitter"],
+			["degrade", "view", "sender degradation preference requested by the viewer"],
+			["keyframe", "view", "periodic keyframe request for lingering damage recovery"],
+			["vred, pvred", "view/push", "video RED negotiation preferences; browser decides actual redundancy/FEC use"],
+			["audiobitrate, outboundaudiobitrate", "push/view", "Opus bitrate target and sender audio bitrate"],
+			["nofec, redaudio, fecaudio, predaudio, pfecaudio", "push/view", "Opus FEC toggle and experimental audio RED/FEC payload ordering"],
+			["audiocodec, preferaudiocodec", "push/view", "audio codec preference such as RED"],
+			["ptime, minptime, maxptime, cbr, vbr, dtx", "push/view", "Opus packetization and rate-mode behavior"],
+			["chunked, chunkedbuffer", "push", "WebCodecs chunked mode and sender backlog budget"],
+			["chunkprofile", "push/view", "mobile, balanced, or desktop defaults before manual overrides"],
+			["chunkfec, chunknack", "push/view", "parity repair and selective retransmission"],
+			["chunkbuffer, chunkbufferfloor, chunkbufferceil, fixedchunkbuffer, chunkjitterslack", "view", "chunked playout target and jitter headroom"],
+			["chunkadapt, chunkadaptfloor, chunkadaptceil, chunkadaptthreshold, chunkadaptmaxdrop, chunkadaptinterval", "push/view", "dynamic bitrate/framerate adaptation controls"],
+			["chunkretry, chunkcache, chunkchunksize", "push", "NACK retry spacing, resend cache duration, and chunk payload size"],
+			["nochunkaudio", "push/view", "keep audio on normal RTP while video uses chunked mode"],
+			["meshcast, meshcast2, meshcastcode", "push", "server-assisted relay/SFU path"],
+			["meshcastbitrate, mcab, meshcastcodec, meshcastscale", "push", "Meshcast encoder controls"],
+			["relay, lanonly, tcp", "push/view", "ICE route constraints for testing or emergency routing"],
+			["stats, remote, cleanoutput, obsfix", "push/view", "diagnostics and embedding behavior"]
+		];
+
+		function copyState(target, source) {
+			Object.keys(source).forEach(function (key) {
+				target[key] = source[key];
+			});
+		}
+
+		var basePresetState = {};
+		copyState(basePresetState, state);
+
+		var presetPreservedKeys = ["streamId", "linkMode", "autoStart", "cleanOutput", "stats", "remote", "extraPush", "extraView"];
+
+		function applyPreset(preset) {
+			var preserved = {};
+			presetPreservedKeys.forEach(function (key) {
+				preserved[key] = state[key];
+			});
+			Object.keys(state).forEach(function (key) {
+				delete state[key];
+			});
+			copyState(state, basePresetState);
+			copyState(state, preserved);
+			copyState(state, preset.values);
+		}
+
+		function renderPresets() {
+			var wrap = document.getElementById("presetList");
+			wrap.innerHTML = "";
+			presets.forEach(function (preset) {
+				var button = document.createElement("button");
+				button.type = "button";
+				button.className = "preset-button";
+				button.setAttribute("aria-pressed", preset.id === activePreset ? "true" : "false");
+				button.dataset.preset = preset.id;
+				button.innerHTML = "<strong>" + escapeHtml(preset.name) + "</strong><span>" + escapeHtml(preset.description) + "</span>";
+				button.addEventListener("click", function () {
+					activePreset = preset.id;
+					applyPreset(preset);
+					renderAll();
+				});
+				wrap.appendChild(button);
+			});
+		}
+
+		function syncPresetButtons() {
+			document.querySelectorAll("[data-preset]").forEach(function (button) {
+				button.setAttribute("aria-pressed", button.dataset.preset === activePreset ? "true" : "false");
+			});
+			document.getElementById("activePresetLabel").textContent = activePreset === "custom" ? "Custom" : getPresetName(activePreset);
+		}
+
+		function renderControls() {
+			var form = document.getElementById("controlForm");
+			form.innerHTML = "";
+			groups.forEach(function (group) {
+				var details = document.createElement("details");
+				details.className = "panel";
+				details.open = !!group.open;
+
+				var summary = document.createElement("summary");
+				summary.className = "panel-header";
+				summary.innerHTML = "<h2>" + escapeHtml(group.title) + "</h2><span>" + escapeHtml(group.note || "") + "</span>";
+				details.appendChild(summary);
+
+				var body = document.createElement("div");
+				body.className = "panel-body controls-grid";
+				group.controls.forEach(function (control) {
+					body.appendChild(renderControl(control));
+				});
+				details.appendChild(body);
+				form.appendChild(details);
+			});
+		}
+
+		function renderControl(control) {
+			var wrap = document.createElement("div");
+			wrap.className = "control" + (control.wide ? " wide" : "");
+			var value = state[control.key];
+			var id = "field_" + control.key;
+
+			if (control.type === "checkbox") {
+				wrap.className += " wide";
+				var row = document.createElement("label");
+				row.className = "toggle-row";
+				row.setAttribute("for", id);
+				row.innerHTML = '<input id="' + id + '" type="checkbox" ' + (value ? "checked" : "") + '><span><strong>' + escapeHtml(control.label) + '</strong><span class="hint">' + escapeHtml(control.hint || "") + "</span></span>";
+				var checkbox = row.querySelector("input");
+				checkbox.addEventListener("change", function () {
+					state[control.key] = checkbox.checked;
+					activePreset = "custom";
+					renderAll();
+				});
+				wrap.appendChild(row);
+				return wrap;
+			}
+
+			var label = document.createElement("label");
+			label.setAttribute("for", id);
+			label.innerHTML = "<span>" + escapeHtml(control.label) + "</span>";
+			if (control.type === "range") {
+				label.innerHTML += '<output id="' + id + '_value">' + formatValue(value, control.unit) + "</output>";
+			}
+			wrap.appendChild(label);
+
+			var input;
+			if (control.type === "select") {
+				input = document.createElement("select");
+				(control.options || []).forEach(function (option) {
+					var opt = document.createElement("option");
+					opt.value = option[0];
+					opt.textContent = option[1];
+					if (String(option[0]) === String(value)) {
+						opt.selected = true;
+					}
+					input.appendChild(opt);
+				});
+			} else {
+				input = document.createElement("input");
+				input.type = control.type || "text";
+				if (typeof control.min !== "undefined") input.min = control.min;
+				if (typeof control.max !== "undefined") input.max = control.max;
+				if (typeof control.step !== "undefined") input.step = control.step;
+				input.value = value;
+			}
+			input.id = id;
+			input.addEventListener("input", function () {
+				var next = readInputValue(input, control);
+				state[control.key] = next;
+				activePreset = "custom";
+				if (control.type === "range") {
+					var out = document.getElementById(id + "_value");
+					if (out) out.textContent = formatValue(next, control.unit);
+				}
+				updateOutputs();
+			});
+			input.addEventListener("change", function () {
+				saveState();
+				updateOutputs();
+			});
+			wrap.appendChild(input);
+
+			if (control.hint) {
+				var hint = document.createElement("p");
+				hint.className = "hint";
+				hint.textContent = control.hint;
+				wrap.appendChild(hint);
+			}
+			return wrap;
+		}
+
+		function readInputValue(input, control) {
+			if (control.type === "number" || control.type === "range") {
+				return parseFloat(input.value) || 0;
+			}
+			return input.value;
+		}
+
+		function formatValue(value, unit) {
+			if (!unit) return String(value);
+			return String(value) + " " + unit;
+		}
+
+		function addParam(url, key, value) {
+			if (value === false || value === null || typeof value === "undefined" || value === "") return;
+			url.searchParams.set(key, value);
+		}
+
+		function addFlag(url, key, enabled) {
+			if (enabled) url.searchParams.set(key, "1");
+		}
+
+		function addRawParams(url, raw) {
+			if (!raw) return;
+			var cleaned = raw.trim();
+			if (!cleaned) return;
+			if (cleaned.charAt(0) === "?") cleaned = cleaned.slice(1);
+			if (cleaned.charAt(0) === "&") cleaned = cleaned.slice(1);
+			cleaned.split("&").forEach(function (pair) {
+				if (!pair) return;
+				var parts = pair.split("=");
+				var key = parts.shift();
+				if (!key) return;
+				url.searchParams.set(key, parts.length ? parts.join("=") : "1");
+			});
+		}
+
+		function buildUrls() {
+			var push = new URL("index.html", appBase);
+			var view = new URL("index.html", appBase);
+			var both = [push, view];
+
+			addParam(push, "push", state.streamId);
+			addParam(view, "view", state.streamId);
+
+			if (state.autoStart) {
+				addFlag(push, "webcam", true);
+				addFlag(push, "autostart", true);
+			}
+			if (state.linkMode === "local") {
+				addFlag(push, "testmedia", true);
+			}
+
+			both.forEach(function (url) {
+				addFlag(url, "cleanoutput", state.cleanOutput);
+				addFlag(url, "stats", state.stats);
+				addFlag(url, "remote", state.remote);
+				addParam(url, "obsfix", state.obsFix);
+			});
+
+			addParam(push, "q", state.quality);
+			addParam(push, "width", state.width);
+			addParam(push, "height", state.height);
+			addParam(push, "fps", state.fps);
+			addParam(push, "contenthint", state.contentHint);
+			addParam(push, "outboundvideobitrate", state.outboundVideoBitrate);
+			addParam(push, "maxvideobitrate", state.maxVideoBitrate);
+			addParam(push, "maxbandwidth", state.maxBandwidth);
+			addFlag(push, "pvred", state.preferredVideoRed);
+
+			addParam(view, "codec", state.videoCodec);
+			addParam(view, "videobitrate", state.viewBitrate);
+			addParam(view, state.videoBufferMode === "buffer2" ? "buffer2" : "buffer", state.videoBuffer);
+			addParam(view, "audiobuffer", state.audioBuffer);
+			addParam(view, "degrade", state.degrade);
+			addParam(view, "keyframe", state.keyframe);
+			addFlag(view, "vred", state.videoRed);
+			addFlag(view, "nonack", state.disableNack);
+			addFlag(view, "nopli", state.disablePli);
+			addFlag(view, "noremb", state.disableRemb);
+
+			both.forEach(function (url) {
+				addParam(url, "audiobitrate", state.audioBitrate);
+				addParam(url, "ptime", state.ptime);
+				addParam(url, "minptime", state.minptime);
+				addParam(url, "maxptime", state.maxptime);
+				if (state.audioRateMode === "cbr") addFlag(url, "cbr", true);
+				if (state.audioRateMode === "vbr") addFlag(url, "vbr", true);
+				addFlag(url, "dtx", state.dtx);
+				addFlag(url, "nofec", !state.opusFec);
+				if (state.stereoMode !== "off") addParam(url, "stereo", state.stereoMode);
+			});
+			addParam(push, "outboundaudiobitrate", state.outboundAudioBitrate);
+			if (state.audioRedCodec) {
+				addParam(push, "audiocodec", "red");
+				addParam(view, "preferaudiocodec", "red");
+			}
+			addFlag(push, "redaudio", state.audioRedPayloads);
+			addFlag(push, "fecaudio", state.audioFecPayloads);
+			addFlag(view, "predaudio", state.preferAudioRedPayloads);
+			addFlag(view, "pfecaudio", state.preferAudioFecPayloads);
+
+			if (state.chunked) {
+				addParam(push, "chunked", state.chunkedMs);
+				addParam(push, "chunkedbuffer", state.chunkedBuffer);
+				addChunkParams(push, true);
+				addChunkParams(view, false);
+			}
+
+			if (state.meshcast || state.meshcast2) {
+				addParam(push, state.meshcast2 ? "meshcast2" : "meshcast", state.meshcastMode);
+				addParam(push, "meshcastcode", state.meshcastCode);
+				addParam(push, "meshcastbitrate", state.meshcastBitrate);
+				addParam(push, "mcab", state.meshcastAudioBitrate);
+				addParam(push, "meshcastcodec", state.meshcastCodec);
+				addParam(push, "meshcastscale", state.meshcastScale);
+			}
+			addFlag(push, "chunkcast", state.chunkcast);
+
+			both.forEach(function (url) {
+				addFlag(url, "relay", state.relay);
+				addFlag(url, "lanonly", state.lanOnly);
+				addFlag(url, "tcp", state.tcp);
+			});
+
+			addRawParams(push, state.extraPush);
+			addRawParams(view, state.extraView);
+
+			return {
+				push: push.href,
+				view: view.href
+			};
+		}
+
+		function addChunkParams(url, isPush) {
+			var adaptOff = state.chunkAdapt === "";
+			if (!adaptOff && state.chunkProfile && state.chunkProfile !== "custom") {
+				addParam(url, "chunkprofile", state.chunkProfile);
+			}
+			addParam(url, "chunkfec", state.chunkFec);
+			addParam(url, "chunknack", state.chunkNack ? 1 : 0);
+			if (!isPush) {
+				addParam(url, "chunkbuffer", state.chunkBuffer);
+				addParam(url, "chunkbufferfloor", state.chunkBufferFloor);
+				addParam(url, "chunkbufferceil", state.chunkBufferCeil);
+				addFlag(url, "fixedchunkbuffer", !state.chunkBufferAdaptive);
+				addParam(url, "chunkjitterslack", state.chunkJitterSlack);
+			}
+			if (adaptOff) {
+				addParam(url, "chunkadaptfloor", state.chunkedMs);
+				addParam(url, "chunkadaptceil", state.chunkedMs);
+				addParam(url, "chunkadaptmaxdrop", 0);
+			} else {
+				addParam(url, "chunkadapt", state.chunkAdapt);
+				addParam(url, "chunkadaptfloor", state.chunkAdaptFloor);
+				addParam(url, "chunkadaptceil", state.chunkAdaptCeil);
+				addParam(url, "chunkadaptthreshold", state.chunkAdaptThreshold);
+				addParam(url, "chunkadaptmaxdrop", state.chunkAdaptMaxDrop);
+				addParam(url, "chunkadaptinterval", state.chunkAdaptInterval);
+			}
+			if (isPush) {
+				addParam(url, "chunkretry", state.chunkRetry);
+				addParam(url, "chunkcache", state.chunkCache);
+				addParam(url, "chunkchunksize", state.chunkChunkSize);
+			}
+			addFlag(url, "nochunkaudio", state.noChunkAudio);
+		}
+
+		function updateOutputs() {
+			var urls = buildUrls();
+			document.getElementById("pushUrl").value = urls.push;
+			document.getElementById("viewUrl").value = urls.view;
+			syncPresetButtons();
+			updateRecommendations();
+			saveState();
+		}
+
+		function updateRecommendations() {
+			var list = [];
+			if (state.chunked) {
+				list.push("Chunked mode is best when OBS can tolerate extra delay. If stalls remain, raise chunkbufferceil and chunkcache before raising bitrate.");
+				if (state.chunkFec > 0 && state.chunkFec <= 3) {
+					list.push("Strong parity FEC is active. This helps random loss, but it spends upstream bandwidth. Watch whether bitrate collapses under load.");
+				}
+				if (state.chunkAdapt === "framerate") {
+					list.push("Framerate adaptation protects buffer first. Use it for mobile motion when a temporary frame drop is better than a stall.");
+				}
+			} else {
+				list.push("Normal WebRTC is lowest latency. Use buffer for jitter, bitrate headroom for congestion, and VP8+RED only as a targeted packet-loss test.");
+			}
+			if (state.videoCodec === "h264" && state.videoRed) {
+				list.push("H.264 with RED is browser-dependent. If testing RED/FEC behavior, compare against VP8 because Chromium may disable some H.264 RED+ULPFEC paths when NACK is enabled.");
+			}
+			if (state.maxBandwidth > 85) {
+				list.push("High maxbandwidth leaves little room for retransmits and keyframes. For unstable mobile links, 60 to 75 percent is usually a better starting point.");
+			}
+			if (state.keyframe > 0 && state.keyframe < 2000) {
+				list.push("Very frequent keyframes create large bursts. If quality drops during loss, try 3000 ms or turn forced keyframes off.");
+			}
+			if (state.audioRedCodec) {
+				list.push("Audio RED is experimental. Keep a plain Opus preset nearby so you can compare against Opus FEC plus audiobuffer.");
+			}
+			if (state.relay) {
+				list.push("Forced TURN relay can route around bad NAT, but it usually adds latency and may cap throughput on shared TURN servers.");
+			}
+			if (state.meshcast || state.meshcast2) {
+				list.push("Meshcast is useful for scale or route stability. Compare it against direct P2P because the extra server hop may help or hurt depending on location.");
+			}
+			var wrap = document.getElementById("recommendations");
+			wrap.innerHTML = "";
+			list.forEach(function (text) {
+				var div = document.createElement("div");
+				div.textContent = text;
+				wrap.appendChild(div);
+			});
+		}
+
+		function renderOptionTable() {
+			var tbody = document.querySelector("#optionTable tbody");
+			tbody.innerHTML = "";
+			supportedOptions.forEach(function (row) {
+				var tr = document.createElement("tr");
+				tr.innerHTML = "<td><code>" + escapeHtml(row[0]) + "</code></td><td>" + escapeHtml(row[1]) + "</td><td>" + escapeHtml(row[2]) + "</td>";
+				tbody.appendChild(tr);
+			});
+		}
+
+		function loadFrames() {
+			var urls = buildUrls();
+			if (viewLoadTimer) {
+				clearTimeout(viewLoadTimer);
+				viewLoadTimer = null;
+			}
+			document.getElementById("pushFrame").src = urls.push;
+			viewLoadTimer = setTimeout(function () {
+				document.getElementById("viewFrame").src = urls.view;
+				viewLoadTimer = null;
+			}, 1000);
+			logMessage("Loaded iframes.");
+		}
+
+		function stopFrames() {
+			if (viewLoadTimer) {
+				clearTimeout(viewLoadTimer);
+				viewLoadTimer = null;
+			}
+			document.getElementById("pushFrame").removeAttribute("src");
+			document.getElementById("viewFrame").removeAttribute("src");
+			logMessage("Stopped iframes.");
+		}
+
+		function postToViewer(payload) {
+			postToFrame("viewFrame", payload);
+		}
+
+		function postToFrame(id, payload) {
+			var frame = document.getElementById(id);
+			if (!frame || !frame.contentWindow) {
+				logMessage("Frame not loaded: " + id);
+				return;
+			}
+			frame.contentWindow.postMessage(payload, "*");
+			logMessage("Sent to " + id + ": " + JSON.stringify(payload));
+		}
+
+		function logMessage(message) {
+			var log = document.getElementById("messageLog");
+			var line = new Date().toLocaleTimeString() + " " + message;
+			if (log.textContent === "No iframe messages yet.") {
+				log.textContent = line;
+			} else {
+				log.textContent = line + "\n" + log.textContent;
+			}
+		}
+
+		function copyText(id) {
+			var field = document.getElementById(id);
+			field.select();
+			field.setSelectionRange(0, field.value.length);
+			if (navigator.clipboard && navigator.clipboard.writeText) {
+				navigator.clipboard.writeText(field.value).then(function () {
+					logMessage("Copied " + id + ".");
+				}).catch(function () {
+					document.execCommand("copy");
+					logMessage("Copied " + id + ".");
+				});
+			} else {
+				document.execCommand("copy");
+				logMessage("Copied " + id + ".");
+			}
+		}
+
+		function bindEvents() {
+			document.getElementById("loadFrames").addEventListener("click", loadFrames);
+			document.getElementById("stopFrames").addEventListener("click", stopFrames);
+			document.getElementById("openPush").addEventListener("click", function () {
+				window.open(buildUrls().push, "_blank", "noopener");
+			});
+			document.getElementById("openView").addEventListener("click", function () {
+				window.open(buildUrls().view, "_blank", "noopener");
+			});
+			document.querySelectorAll("[data-copy]").forEach(function (button) {
+				button.addEventListener("click", function () {
+					copyText(button.dataset.copy);
+				});
+			});
+			document.querySelectorAll("[data-reload-frame]").forEach(function (button) {
+				button.addEventListener("click", function () {
+					var id = button.dataset.reloadFrame;
+					var frame = document.getElementById(id);
+					if (frame && frame.src) frame.src = frame.src;
+				});
+			});
+			document.getElementById("applyLiveBitrate").addEventListener("click", function () {
+				postToViewer({ bitrate: parseInt(document.getElementById("liveBitrate").value), target: "*" });
+			});
+			document.getElementById("applyLiveBuffer").addEventListener("click", function () {
+				postToViewer({ setBufferDelay: parseInt(document.getElementById("liveBuffer").value), UUID: "*" });
+			});
+			document.getElementById("forceKeyframe").addEventListener("click", function () {
+				// Keyframes are produced by the publisher's encoder, so this targets the push iframe.
+				postToFrame("pushFrame", { function: "commands", action: "forceKeyframe" });
+			});
+			document.getElementById("requestStats").addEventListener("click", function () {
+				postToViewer({ getStats: true });
+				postToFrame("pushFrame", { getStats: true });
+			});
+			["liveBitrate", "liveBuffer"].forEach(function (id) {
+				var input = document.getElementById(id);
+				var out = document.getElementById(id + "Value");
+				input.addEventListener("input", function () {
+					var unit = id === "liveBuffer" ? " ms" : " kbps";
+					out.textContent = input.value + unit;
+				});
+			});
+			window.addEventListener("message", function (event) {
+				if (event.source !== document.getElementById("pushFrame").contentWindow && event.source !== document.getElementById("viewFrame").contentWindow) {
+					return;
+				}
+				var data = event.data;
+				if (typeof data === "object") {
+					logMessage("Received: " + JSON.stringify(trimLargeMessage(data)));
+				}
+			});
+		}
+
+		function trimLargeMessage(data) {
+			var copy = {};
+			Object.keys(data).slice(0, 12).forEach(function (key) {
+				if (typeof data[key] === "object" && data[key] !== null) {
+					copy[key] = "[object]";
+				} else {
+					copy[key] = data[key];
+				}
+			});
+			return copy;
+		}
+
+		function detectCapabilities() {
+			var parts = [];
+			var videoCodecs = [];
+			if (window.RTCRtpReceiver && RTCRtpReceiver.getCapabilities) {
+				var caps = RTCRtpReceiver.getCapabilities("video");
+				var codecs = caps && caps.codecs ? caps.codecs : [];
+				videoCodecs = codecs.map(function (codec) {
+					return (codec.mimeType || "").toLowerCase();
+				});
+			}
+			parts.push(videoCodecs.indexOf("video/red") !== -1 ? "video RED" : "no video RED");
+			parts.push(videoCodecs.indexOf("video/ulpfec") !== -1 ? "ULPFEC" : "no ULPFEC");
+			parts.push(window.VideoEncoder ? "WebCodecs" : "no WebCodecs");
+			parts.push(window.RTCRtpReceiver && "jitterBufferTarget" in RTCRtpReceiver.prototype ? "jitterBufferTarget" : "legacy buffer API");
+			document.getElementById("capabilitySummary").textContent = parts.join(" / ");
+		}
+
+		function saveState() {
+			try {
+				localStorage.setItem(localStorageKey, JSON.stringify({ activePreset: activePreset, state: state }));
+			} catch (e) {
+				// Ignore private-mode storage failures.
+			}
+		}
+
+		function loadState() {
+			try {
+				var saved = JSON.parse(localStorage.getItem(localStorageKey) || "null");
+				if (saved && saved.state) {
+					copyState(state, saved.state);
+					activePreset = saved.activePreset || activePreset;
+				}
+			} catch (e) {
+				// Ignore corrupt saved state.
+			}
+		}
+
+		function getPresetName(id) {
+			for (var i = 0; i < presets.length; i++) {
+				if (presets[i].id === id) return presets[i].name;
+			}
+			return "Custom";
+		}
+
+		function escapeHtml(value) {
+			return String(value)
+				.replace(/&/g, "&amp;")
+				.replace(/</g, "&lt;")
+				.replace(/>/g, "&gt;")
+				.replace(/"/g, "&quot;");
+		}
+
+		function renderAll() {
+			renderPresets();
+			renderControls();
+			renderOptionTable();
+			updateOutputs();
+		}
+
+		loadState();
+		renderAll();
+		bindEvents();
+		detectCapabilities();
+	})();
+	</script>
+</body>
+</html>

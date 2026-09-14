@@ -218,26 +218,31 @@ function importTemplateFile(file) {
 			if (!payload || !Array.isArray(payload.scenes) || !payload.scenes.length) {
 				throw new Error("Missing scenes");
 			}
-			clearPendingSceneDelete(false);
-			state.scenes = payload.scenes.slice(0, 24).map(normalizeTemplateScene);
-			state.activeSceneId = state.scenes[0].id;
-			state.lastAppliedSceneId = null;
-			state.selectedBoxId = null;
+			const scenes = payload.scenes.slice(0, 24).map(normalizeTemplateScene);
+			let brand = state.brand;
+			let placeholders = state.placeholders;
 			if (payload.brand && typeof payload.brand === "object") {
-				state.brand = {
+				brand = {
 					background: /^#[0-9a-f]{6}$/i.test(payload.brand.background || "") ? payload.brand.background : state.brand.background,
 					radius: clamp(parseInt(payload.brand.radius, 10) || 0, 0, 32),
 					labels: payload.brand.labels !== false
 				};
 			}
 			if (Array.isArray(payload.placeholders)) {
-				state.placeholders = payload.placeholders.slice(0, 24).map((item, index) => ({
+				placeholders = payload.placeholders.slice(0, 24).map((item, index) => ({
 					streamID: createId("placeholder"),
 					label: String(item.label || `Guest Slot ${index + 1}`).slice(0, 80),
 					slot: parseInt(item.slot, 10) || index + 1,
 					placeholder: true
 				}));
 			}
+			clearPendingSceneDelete(false);
+			state.scenes = scenes;
+			state.activeSceneId = scenes[0].id;
+			state.lastAppliedSceneId = null;
+			state.selectedBoxId = null;
+			state.brand = brand;
+			state.placeholders = placeholders;
 			renderAll();
 			applySceneToFrame();
 			scheduleSave();
@@ -2066,7 +2071,7 @@ function openUrl(url, statusText = "Output window opened") {
 	if (win && typeof win.focus === "function") {
 		win.focus();
 	}
-	setOutputStatus(statusText, win ? "active" : "idle");
+	setOutputStatus(win ? statusText : "Popup blocked", win ? "active" : "idle");
 	if (!win) {
 		showToast("Popup blocked");
 	}

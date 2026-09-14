@@ -30,8 +30,8 @@ export class TrackRecorder extends EventTarget {
     }
     if (kind === 'video') {
       const candidates = [
-        'video/webm;codecs=vp9,opus',
-        'video/webm;codecs=vp8,opus',
+        'video/webm;codecs=vp9',
+        'video/webm;codecs=vp8',
         'video/webm',
       ];
       return candidates.find((type) => MediaRecorder.isTypeSupported(type)) || null;
@@ -86,7 +86,15 @@ export class TrackRecorder extends EventTarget {
       this.dispatchEvent(new CustomEvent('error', { detail: event.error || event }));
     };
 
-    this.mediaRecorder.start(options.timeslice || 0);
+    try {
+      this.mediaRecorder.start(options.timeslice || 0);
+    } catch (error) {
+      if (this.stopResolver) {
+        this.stopResolver();
+        this.stopResolver = null;
+      }
+      throw error;
+    }
   }
 
   stop() {

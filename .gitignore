@@ -5,9 +5,22 @@ turn-credentials.php
 .claude
 .claude/
 AGENTS.md
+!/AGENTS.md
 CLAUDE.md
 cf/
 wrangler.toml
 package.json
 !thirdparty/mediapipe/tasks-vision/package.json
 docs.md
+
+# Development tests and results do not belong in this public release repository.
+/.github/tests/
+/tests/
+
+# Local secrets and deployment state (not frontend assets)
+.env
+.env.*
+!.env.example
+!.env.sample
+.dev.vars*
+.wrangler/

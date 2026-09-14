@@ -1,0 +1,447 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>VDO.Ninja Live Translation Setup</title>
+		<link rel="shortcut icon" href="./media/favicon.ico" />
+		<style>
+			:root {
+				color-scheme: dark;
+				font-family: Arial, Helvetica, sans-serif;
+				background: #101520;
+				color: #fff;
+			}
+			body {
+				margin: 0;
+				padding: 24px;
+				background: linear-gradient(180deg, #151b29, #30303c) fixed;
+			}
+			main {
+				max-width: 760px;
+				margin: 0 auto;
+			}
+			.logo {
+				max-width: 260px;
+				height: auto;
+			}
+			.card {
+				background: rgba(16, 21, 32, 0.94);
+				border: 1px solid #4a5160;
+				border-radius: 10px;
+				padding: 20px;
+				margin: 18px 0;
+				box-shadow: 0 12px 30px rgba(0, 0, 0, 0.28);
+			}
+			label {
+				display: block;
+				font-weight: bold;
+				margin: 16px 0 6px;
+			}
+			input,
+			select,
+			button {
+				box-sizing: border-box;
+				font: inherit;
+				border-radius: 6px;
+				border: 1px solid #747b88;
+				padding: 10px;
+			}
+			input,
+			select {
+				width: 100%;
+				background: #fff;
+				color: #111;
+			}
+			button {
+				background: #6aab23;
+				color: #fff;
+				font-weight: bold;
+				cursor: pointer;
+				margin: 8px 8px 0 0;
+			}
+			button.secondary {
+				background: #4a5160;
+			}
+			.row {
+				display: grid;
+				grid-template-columns: 1fr 1fr;
+				gap: 14px;
+			}
+			.check {
+				display: flex;
+				align-items: center;
+				gap: 8px;
+				font-weight: normal;
+			}
+			.check input {
+				width: auto;
+			}
+			.help,
+			#status {
+				color: #cbd1da;
+				line-height: 1.45;
+			}
+			.warning {
+				color: #ffd27a;
+			}
+			@media (max-width: 640px) {
+				body {
+					padding: 12px;
+				}
+				.row {
+					grid-template-columns: 1fr;
+				}
+			}
+		</style>
+	</head>
+	<body>
+		<main>
+			<a href="./"><img class="logo" src="./media/vdoNinja_logo_full.png" alt="VDO.Ninja" /></a>
+			<h1>Live translation setup</h1>
+			<p class="help">One person supplies the translation account. Everyone else joins normally and only chooses the language they want to hear.</p>
+
+			<section class="card">
+				<h2>1. Translation account</h2>
+				<label for="provider">Provider</label>
+				<select id="provider">
+					<option value="openai">OpenAI</option>
+				</select>
+
+				<label for="apiKey">OpenAI API key</label>
+				<input id="apiKey" type="password" autocomplete="off" placeholder="sk-..." />
+				<label class="check"><input id="rememberKey" type="checkbox" /> Remember credentials across reloads (not recommended)</label>
+				<p class="help warning">Alpha BYOK mode: by default, the key is handed to the translation page once and then kept only in memory. It is never added to generated links or sent to other participants. Use a dedicated, restricted key with a low spending limit.</p>
+
+				<details>
+					<summary>Optional self-hosted token broker</summary>
+					<label for="brokerURL">Broker session URL</label>
+					<input id="brokerURL" type="url" autocomplete="url" placeholder="https://your-worker.example/session" />
+					<label for="brokerToken">Broker access token</label>
+					<input id="brokerToken" type="password" autocomplete="off" placeholder="A separate secret that protects your broker" />
+					<p class="help">When a broker URL is set, the browser asks it for a short-lived OpenAI client secret instead of receiving your OpenAI key. The broker URL may be added to the account-holder link; the broker token never is.</p>
+				</details>
+
+				<div class="row">
+					<div>
+						<label for="language">Language I want to hear</label>
+						<select id="language">
+							<option value="auto">Auto (system language)</option>
+							<option value="en">English</option>
+							<option value="es">Spanish</option>
+							<option value="pt">Portuguese</option>
+							<option value="fr">French</option>
+							<option value="ja">Japanese</option>
+							<option value="ru">Russian</option>
+							<option value="zh">Chinese</option>
+							<option value="de">German</option>
+							<option value="ko">Korean</option>
+							<option value="hi">Hindi</option>
+							<option value="id">Indonesian</option>
+							<option value="vi">Vietnamese</option>
+							<option value="it">Italian</option>
+						</select>
+					</div>
+					<div>
+						<label for="audioMode">Original audio</label>
+						<select id="audioMode">
+							<option value="replace">Replace with translation</option>
+							<option value="duck">Keep quietly underneath</option>
+							<option value="mix">Play both</option>
+						</select>
+					</div>
+				</div>
+				<button id="save" type="button">Save settings</button>
+				<button id="forget" class="secondary" type="button">Forget credentials</button>
+				<p id="status" aria-live="polite"></p>
+			</section>
+
+			<section class="card">
+				<h2>2. Make the account-holder link</h2>
+				<p class="help">Paste the normal VDO.Ninja link used by the person paying for translation.</p>
+				<p class="help">Use Save and open to pass credentials in this tab. Copied links do not carry credentials; for another site or browser, run translation setup there.</p>
+				<label for="ownerBase">Normal account-holder link</label>
+				<input id="ownerBase" type="url" />
+				<label for="ownerOutput">Translation-enabled account-holder link</label>
+				<input id="ownerOutput" type="text" readonly />
+				<button id="copyOwner" type="button">Copy link</button>
+				<button id="openOwner" type="button">Save and open</button>
+			</section>
+
+			<section class="card">
+				<h2>3. Make the participant link</h2>
+				<p class="help">Paste the normal guest or participant invite. Participants do not need an OpenAI account or API key.</p>
+				<label for="guestLanguage">Participant language</label>
+				<select id="guestLanguage"></select>
+				<label for="guestBase">Normal participant link</label>
+				<input id="guestBase" type="url" placeholder="Paste the reusable guest invite here" />
+				<label for="guestOutput">Translation-ready participant link</label>
+				<input id="guestOutput" type="text" readonly />
+				<button id="copyGuest" type="button">Copy link</button>
+			</section>
+		</main>
+
+		<script>
+			(function () {
+				"use strict";
+				var KEY_STORAGE = "vdo_translation_openai_key";
+				var BROKER_URL_STORAGE = "vdo_translation_broker_url";
+				var BROKER_TOKEN_STORAGE = "vdo_translation_broker_credential";
+				var LEGACY_BROKER_TOKEN_STORAGE = "vdo_translation_broker_token";
+				var LANGUAGE_STORAGE = "vdo_translation_language";
+				var PROVIDER_STORAGE = "vdo_translation_provider";
+				var AUDIO_MODE_STORAGE = "vdo_translation_audio_mode";
+				var params = new URLSearchParams(location.search);
+				var hashParams = new URLSearchParams(location.hash.replace(/^#/, ""));
+				var returnURL = hashParams.get("return") || params.get("return") || new URL("./", location.href).href;
+
+				function byId(id) {
+					return document.getElementById(id);
+				}
+
+				function saved(key, fallback) {
+					try {
+						return localStorage.getItem(key) || fallback;
+					} catch (e) {
+						return fallback;
+					}
+				}
+
+				function storedCredential(key) {
+					try {
+						return sessionStorage.getItem(key) || localStorage.getItem(key) || "";
+					} catch (e) {
+						return "";
+					}
+				}
+
+				function normalizeBrokerURL(value) {
+					value = (value || "").trim();
+					if (!value) {
+						return "";
+					}
+					var parsed = new URL(value);
+					if (parsed.username || parsed.password || parsed.hash) {
+						throw new Error("Use a broker URL without embedded credentials or a fragment. Enter its secret in Broker access token.");
+					}
+					var loopback = ["localhost", "127.0.0.1", "[::1]"].indexOf(parsed.hostname) !== -1;
+					if (parsed.protocol !== "https:" && !(parsed.protocol === "http:" && loopback)) {
+						throw new Error("The broker URL must use HTTPS (HTTP is allowed only for local testing).");
+					}
+					return parsed.href;
+				}
+
+				function saveCredential(key, value, remember) {
+					if (!value) {
+						return;
+					}
+					if (remember) {
+						localStorage.setItem(key, value);
+						sessionStorage.removeItem(key);
+					} else {
+						sessionStorage.setItem(key, value);
+						localStorage.removeItem(key);
+					}
+				}
+
+				function storedBrokerToken(brokerURL) {
+					if (!brokerURL) {
+						return "";
+					}
+					for (var i = 0; i < 2; i++) {
+						try {
+							var storage = i === 0 ? sessionStorage : localStorage;
+							var credential = JSON.parse(storage.getItem(BROKER_TOKEN_STORAGE) || "null");
+							if (credential && typeof credential.token === "string" && credential.token && normalizeBrokerURL(credential.url) === normalizeBrokerURL(brokerURL)) {
+								return credential.token;
+							}
+						} catch (e) {}
+					}
+					return "";
+				}
+
+				function addTranslationParameters(value, owner) {
+					if (!value || !value.trim()) {
+						return "";
+					}
+					try {
+						var url = new URL(value, location.href);
+						if (["https:", "http:"].indexOf(url.protocol) === -1 || url.username || url.password) {
+							return "";
+						}
+						// Never propagate translation credentials from a pasted link.
+						var fragment = new URLSearchParams(url.hash.replace(/^#/, ""));
+						var fragmentChanged = false;
+						["translationkey", "translationbrokertoken"].forEach(function (name) {
+							url.searchParams.delete(name);
+							if (fragment.has(name)) {
+								fragment.delete(name);
+								fragmentChanged = true;
+							}
+						});
+						if (fragmentChanged) {
+							url.hash = fragment.toString();
+						}
+						url.searchParams.set("translatelang", owner ? byId("language").value || "auto" : byId("guestLanguage").value || "auto");
+						if (owner) {
+							url.searchParams.set("translate", "1");
+							url.searchParams.set("translationprovider", byId("provider").value || "openai");
+							url.searchParams.set("translateaudio", byId("audioMode").value || "replace");
+							var brokerURL = normalizeBrokerURL(byId("brokerURL").value);
+							if (brokerURL) {
+								url.searchParams.set("translationbroker", brokerURL);
+							} else {
+								url.searchParams.delete("translationbroker");
+							}
+						} else {
+							url.searchParams.delete("translate");
+							url.searchParams.delete("translationprovider");
+							url.searchParams.delete("translateaudio");
+							url.searchParams.delete("translationkey");
+							url.searchParams.delete("translationbroker");
+							url.searchParams.delete("translationbrokertoken");
+						}
+						return url.href;
+					} catch (e) {
+						return "";
+					}
+				}
+
+				function updateLinks() {
+					byId("ownerOutput").value = addTranslationParameters(byId("ownerBase").value, true);
+					byId("guestOutput").value = addTranslationParameters(byId("guestBase").value, false);
+				}
+
+				function saveSettings() {
+					var key = byId("apiKey").value.trim() || storedCredential(KEY_STORAGE);
+					var brokerURL = "";
+					try {
+						brokerURL = normalizeBrokerURL(byId("brokerURL").value);
+					} catch (error) {
+						byId("status").textContent = error.message || error;
+						return false;
+					}
+					var brokerToken = byId("brokerToken").value.trim() || storedBrokerToken(brokerURL);
+					try {
+						localStorage.setItem(LANGUAGE_STORAGE, byId("language").value);
+						localStorage.setItem(PROVIDER_STORAGE, byId("provider").value);
+						localStorage.setItem(AUDIO_MODE_STORAGE, byId("audioMode").value);
+						if (brokerURL) {
+							localStorage.setItem(BROKER_URL_STORAGE, brokerURL);
+						} else {
+							localStorage.removeItem(BROKER_URL_STORAGE);
+						}
+						saveCredential(KEY_STORAGE, key, byId("rememberKey").checked);
+						if (brokerURL && brokerToken) {
+							saveCredential(BROKER_TOKEN_STORAGE, JSON.stringify({ url: brokerURL, token: brokerToken }), byId("rememberKey").checked);
+							localStorage.removeItem(LEGACY_BROKER_TOKEN_STORAGE);
+							sessionStorage.removeItem(LEGACY_BROKER_TOKEN_STORAGE);
+						}
+						if (brokerURL) {
+							byId("status").textContent = brokerToken ? (byId("rememberKey").checked ? "Broker settings saved. Its access token will persist across reloads." : "Broker settings saved. Its access token will be handed to the translation page once.") : "Broker URL saved. Add its access token before starting translation.";
+						} else {
+							byId("status").textContent = key ? (byId("rememberKey").checked ? "Settings saved. The API key will persist across reloads." : "Settings saved. The key will be handed to the translation page once.") : "Settings saved. Add an API key before starting translation.";
+						}
+					} catch (e) {
+						byId("status").textContent = "This browser could not save the settings.";
+						return false;
+					}
+					updateLinks();
+					return true;
+				}
+
+				function copyValue(id) {
+					var value = byId(id).value;
+					if (!value) {
+						byId("status").textContent = "Enter a valid HTTP or HTTPS VDO.Ninja link and check the broker URL.";
+						return;
+					}
+					function fallbackCopy() {
+						byId(id).focus();
+						byId(id).select();
+						var copied = false;
+						try {
+							copied = document.execCommand("copy");
+						} catch (e) {}
+						byId("status").textContent = copied ? "Link copied." : "Copy unavailable. Select and copy the link manually.";
+					}
+					Promise.resolve()
+						.then(function () {
+							return navigator.clipboard.writeText(value);
+						})
+						.then(function () {
+							byId("status").textContent = "Link copied.";
+						})
+						.catch(fallbackCopy);
+				}
+
+				byId("ownerBase").value = returnURL;
+				byId("provider").value = saved(PROVIDER_STORAGE, "openai");
+				byId("language").value = saved(LANGUAGE_STORAGE, "auto");
+				byId("guestLanguage").innerHTML = byId("language").innerHTML;
+				byId("guestLanguage").value = "auto";
+				byId("audioMode").value = saved(AUDIO_MODE_STORAGE, "replace");
+				byId("brokerURL").value = saved(BROKER_URL_STORAGE, "");
+				try {
+					if (storedCredential(KEY_STORAGE)) {
+						byId("apiKey").placeholder = "Saved key (enter a new key to replace it)";
+					}
+					if (storedBrokerToken(byId("brokerURL").value)) {
+						byId("brokerToken").placeholder = "Saved broker token (enter a new token to replace it)";
+					}
+					if (localStorage.getItem(KEY_STORAGE) || localStorage.getItem(BROKER_TOKEN_STORAGE)) {
+						byId("rememberKey").checked = true;
+					}
+				} catch (e) {}
+				updateLinks();
+
+				["ownerBase", "guestBase", "provider", "language", "guestLanguage", "audioMode", "brokerURL"].forEach(function (id) {
+					byId(id).addEventListener("input", updateLinks);
+					byId(id).addEventListener("change", updateLinks);
+				});
+				byId("save").addEventListener("click", saveSettings);
+				byId("copyOwner").addEventListener("click", function () {
+					copyValue("ownerOutput");
+				});
+				byId("copyGuest").addEventListener("click", function () {
+					copyValue("guestOutput");
+				});
+				byId("openOwner").addEventListener("click", function () {
+					updateLinks();
+					if (!byId("ownerOutput").value) {
+						byId("status").textContent = "Enter a valid HTTP or HTTPS account-holder link and check the broker URL.";
+						return;
+					}
+					if (new URL(byId("ownerOutput").value).origin !== location.origin) {
+						byId("status").textContent = "Credentials cannot be passed to another site. Open translation setup on the account-holder link's site first.";
+						return;
+					}
+					var broker = byId("brokerURL").value.trim();
+					if (broker ? !(byId("brokerToken").value.trim() || storedBrokerToken(broker)) : !(byId("apiKey").value.trim() || storedCredential(KEY_STORAGE))) {
+						byId("status").textContent = broker ? "Add the broker access token before starting translation." : "Add an API key before starting translation.";
+						return;
+					}
+					if (saveSettings() && byId("ownerOutput").value) {
+						location.href = byId("ownerOutput").value;
+					}
+				});
+				byId("forget").addEventListener("click", function () {
+					try {
+						localStorage.removeItem(KEY_STORAGE);
+						sessionStorage.removeItem(KEY_STORAGE);
+						localStorage.removeItem(BROKER_TOKEN_STORAGE);
+						sessionStorage.removeItem(BROKER_TOKEN_STORAGE);
+						localStorage.removeItem(LEGACY_BROKER_TOKEN_STORAGE);
+						sessionStorage.removeItem(LEGACY_BROKER_TOKEN_STORAGE);
+					} catch (e) {}
+					byId("apiKey").value = "";
+					byId("brokerToken").value = "";
+					byId("apiKey").placeholder = "sk-...";
+					byId("brokerToken").placeholder = "A separate secret that protects your broker";
+					byId("rememberKey").checked = false;
+					byId("status").textContent = "Stored credentials removed from this browser.";
+				});
+			})();
+		</script>
+	</body>
+</html>

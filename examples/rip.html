@@ -61,22 +61,22 @@ function dosomething(){
 		mediastream = null;
 	}
 	video.load();
-
+	
 }
-function loadIframe(url=false){
-
+function loadIframe(url=false){ 
+	
 	if (url){
 		var iframesrc = url;
 	} else {
 		var iframesrc = document.getElementById("viewlink").value;
 	}
-
+	
 	iframe.allow = "autoplay;camera;microphone;fullscreen;picture-in-picture;";
 
 	if (iframesrc==""){
 		iframesrc="./";
 	}
-
+	
 	iframe.src = iframesrc;
 	document.body.appendChild(iframe);
 

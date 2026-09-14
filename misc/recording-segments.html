@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<title>Recording segments - VDO.Ninja</title>
+		<style>
+			body { font-family: Arial, sans-serif; max-width: 800px; margin: 0 auto; padding: 20px; background: #f5f5f5; color: #222; }
+			main { background: white; padding: 30px; border-radius: 8px; }
+			li { margin-bottom: 12px; }
+			a { color: #075ca8; }
+		</style>
+	</head>
+	<body>
+		<main>
+			<h1>Recording in segments</h1>
+			<p>Save a long local recording as smaller files. For disk-only recording, each segment is a complete video that can be opened independently. A brief capture gap can occur between segments; live streaming continues.</p>
+			<p><a href="../?webcam&amp;autostart&amp;record=12000&amp;splitrecording=1&amp;quality=0&amp;fps=30" target="_blank" rel="noopener">Open a camera recording with one-minute segments</a></p>
+			<p><a href="../?webcam&amp;autostart&amp;record=12000&amp;recordcodec=mp4&amp;splitrecording=1&amp;quality=0&amp;fps=30" target="_blank" rel="noopener">Try MP4 recording with one-minute segments</a>. MP4 is opt-in and requires browser encoder support. Unsupported browsers keep their normal fallback format; PCM recording takes precedence over this option.</p>
+			<ol>
+				<li>Choose your camera and microphone, then press the recording button.</li>
+				<li>Record for at least two minutes. Move in front of the camera and speak near each minute boundary.</li>
+				<li>Stop recording and allow each download to finish. Open every file separately and check its picture and sound.</li>
+				<li>Start another take to check that recording works again without refreshing.</li>
+			</ol>
+			<p><code>splitrecording=1</code> requests one-minute files. <code>record=12000</code> requests about 12 Mbps video; actual bitrate, resolution and frame rate depend on the camera and encoder. When automatic splitting is enabled on iPhone/iPad, segments use at most five minutes and an estimated 100 MiB size target (about 66 seconds at 12 Mbps). Actual sizes vary. An explicit split interval overrides this estimate.</p>
+			<p><strong>Cloud recording:</strong> when Dropbox or Google Drive is receiving this recording, the encoder remains continuous. The local split files are continuation parts: keep all parts and reassemble them in order. This preserves the existing single-file cloud upload.</p>
+		</main>
+	</body>
+</html>

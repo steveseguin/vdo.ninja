@@ -377,9 +377,9 @@ function showInputModal() {
 }
 
 function submitModalInput() {
-    var room = document.getElementById('roomInput').value;
-    var view = document.getElementById('viewInput').value;
-    var password = document.getElementById('passwordInput').value;
+    room = document.getElementById('roomInput').value;
+    view = document.getElementById('viewInput').value;
+    password = document.getElementById('passwordInput').value;
 
     if (!room && !view) {
         alert("Please enter either a Room ID or a View ID");
@@ -387,13 +387,11 @@ function submitModalInput() {
     }
 
     document.getElementById('inputModal').style.display = 'none';
-    updateURLParams(room, view, password);
     loadIframe();
 }
 
 function sendChatMessage() {
     var msg = document.getElementById('chatInput').value;
-    msg = sanitize(msg);
     if (msg == "") return;
     
     //console.log(msg);
@@ -401,6 +399,7 @@ function sendChatMessage() {
 		try {
 			bc.postMessage({"msg": msg});
 		} catch(e){
+			if (!iframe) return;
 			if (iframe) {
 				const targetOrigin = new URL(iframe.src).origin || "*";
 				iframe.contentWindow.postMessage({ sendChat:msg }, targetOrigin);
@@ -409,10 +408,13 @@ function sendChatMessage() {
     } else if (iframe) {
         const targetOrigin = new URL(iframe.src).origin || "*";
 		iframe.contentWindow.postMessage({ sendChat:msg }, targetOrigin);
+    } else {
+        return;
     }
     
     document.getElementById('chatInput').value = "";
     
+    msg = sanitize(msg); // Escape only the local display copy; transports expect plain text.
     messageList.push({"msg": msg, type: "sent", time: new Date()});
     messageList = messageList.slice(-100);
     updateMessages({"msg": msg, type: "sent", time: new Date()});
@@ -542,7 +544,11 @@ function updateMessages(message = false){
 			msg.innerHTML = "<span class='chat_message chat_other'>"+safeMessage + "  </span><i><small> <small>- "+safeTime+"</small></small></i>";
 			msg.classList.add("inMessage");
 		}
-		document.getElementById("chatBody").appendChild(msg);
+		const chatBody = document.getElementById("chatBody");
+		chatBody.appendChild(msg);
+		while (chatBody.childElementCount > 100) {
+			chatBody.removeChild(chatBody.firstElementChild);
+		}
 	} else {
 		document.getElementById("chatBody").innerHTML = "";
 		for (i in messageList){

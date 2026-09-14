@@ -77,12 +77,23 @@ const WORLD_WIDTH = 2400;
 const WORLD_HEIGHT = 1600;
 const IMAGE_MAX_EDGE = 1800;
 const SNAPSHOT_DEBOUNCE_MS = 90;
+const VDO_INLINE_MESSAGE_BYTES = 12 * 1024;
+const VDO_CHUNK_BYTES = 8 * 1024;
+const VDO_MAX_TRANSFER_BYTES = 32 * 1024 * 1024;
+const VDO_CHUNK_INACTIVITY_MS = 20000;
+const VDO_MAX_INCOMING_TRANSFERS = 4;
+const VDO_CHUNKS_PER_BATCH = 1;
+const VDO_CHUNK_BATCH_DELAY_MS = 8;
 const TOOL_DEFAULT = "select";
 const DISABLE_VIDEO_ROOM = params.has("novideo") || params.has("novideoroom") || params.has("tabletopnovideo");
 const ROOM_NAME_WORDS = ["able above after bright clear cloud color direct early field final first frame fresh great green group guide", "happy heavy large level light local main major marker middle modern motion near north open party plain point", "quick ready river round scene score secure select sharp signal silver simple space stable stone stream table", "target token total track turn video view white wide"].join(" ").split(" ");
 
 const imageCache = new Map();
 const seenMessages = new Set();
+const incomingTransportTransfers = new Map();
+const outgoingSnapshotGenerations = new Map();
+const transportTextEncoder = new TextEncoder();
+const transportTextDecoder = new TextDecoder();
 let broadcastChannel = null;
 let resizeObserver = null;
 let renderQueued = false;
@@ -97,6 +108,8 @@ let selectedTokenId = null;
 let currentStroke = null;
 let currentMeasurement = null;
 let lastAcceptedSnapshotTimestamp = 0;
+let vdoSendChain = Promise.resolve();
+let latestChunkedSnapshotId = null;
 
 const clientId = getOrCreateClientId();
 
@@ -185,8 +198,12 @@ function getActiveScene() {
 	return state.scenes.find(scene => scene.id === state.activeSceneId) || state.scenes[0];
 }
 
-function getStorageKey() {
-	return `${STORAGE_PREFIX}${state.room || "local"}`;
+function getStorageKey(room = state.room, role = state.role) {
+	return `${STORAGE_PREFIX}${role === "gm" ? "gm" : "player"}:${room || "local"}`;
+}
+
+function getLegacyStorageKey(room) {
+	return `${STORAGE_PREFIX}${room || "local"}`;
 }
 
 function saveState() {
@@ -202,7 +219,15 @@ function saveState() {
 
 function loadSavedState(room) {
 	try {
-		const saved = JSON.parse(localStorage.getItem(`${STORAGE_PREFIX}${room || "local"}`) || "null");
+		let saved = JSON.parse(localStorage.getItem(getStorageKey(room, state.role)) || "null");
+		let migratedLegacyGmSave = false;
+		if (!saved && state.role === "gm") {
+			const legacy = JSON.parse(localStorage.getItem(getLegacyStorageKey(room)) || "null");
+			if (legacy && legacy.role === "gm") {
+				saved = legacy;
+				migratedLegacyGmSave = true;
+			}
+		}
 		if (saved && saved.version === 1 && Array.isArray(saved.scenes) && saved.scenes.length) {
 			const role = state.role;
 			const playerName = state.playerName;
@@ -211,6 +236,12 @@ function loadSavedState(room) {
 			state.role = role;
 			state.playerName = playerName || state.playerName;
 			state.password = password || state.password;
+			if (state.role !== "gm") {
+				state.handouts = state.handouts.filter(handout => handout.revealed === true);
+			}
+			if (migratedLegacyGmSave) {
+				localStorage.setItem(getStorageKey(room, "gm"), JSON.stringify(state));
+			}
 			return true;
 		}
 	} catch (error) {
@@ -224,7 +255,7 @@ function normalizeState(next) {
 	normalized.scenes = Array.isArray(next.scenes) && next.scenes.length ? next.scenes : normalized.scenes;
 	normalized.assets = next.assets && typeof next.assets === "object" ? next.assets : {};
 	normalized.rolls = Array.isArray(next.rolls) ? next.rolls.slice(-80) : [];
-	normalized.handouts = Array.isArray(next.handouts) ? next.handouts : [];
+	normalized.handouts = Array.isArray(next.handouts) ? next.handouts.map(handout => ({ ...handout, revealed: handout.revealed === true })) : [];
 	normalized.initiative = next.initiative && Array.isArray(next.initiative.entries) ? next.initiative : { entries: [], activeIndex: 0 };
 	normalized.permissions = { ...createDefaultState().permissions, ...(next.permissions || {}) };
 	normalized.players = next.players && typeof next.players === "object" ? next.players : {};
@@ -467,29 +498,314 @@ function createEnvelope(type, payload = {}) {
 	};
 }
 
+function bytesToBase64(bytes) {
+	let binary = "";
+	for (let index = 0; index < bytes.byteLength; index += 1) {
+		binary += String.fromCharCode(bytes[index]);
+	}
+	return btoa(binary);
+}
+
+function base64ToBytes(value) {
+	const binary = atob(value);
+	const bytes = new Uint8Array(binary.length);
+	for (let index = 0; index < binary.length; index += 1) {
+		bytes[index] = binary.charCodeAt(index);
+	}
+	return bytes;
+}
+
+function getVdoWireSize(payload) {
+	return transportTextEncoder.encode(JSON.stringify({ pipe: payload })).byteLength;
+}
+
+function createVdoTransportPayloads(envelope) {
+	const inlinePayload = { tabletopNinja: envelope };
+	if (getVdoWireSize(inlinePayload) <= VDO_INLINE_MESSAGE_BYTES) {
+		return [inlinePayload];
+	}
+
+	const encoded = transportTextEncoder.encode(JSON.stringify(envelope));
+	if (encoded.byteLength > VDO_MAX_TRANSFER_BYTES) {
+		throw new Error("Tabletop update is too large to sync safely.");
+	}
+	const total = Math.ceil(encoded.byteLength / VDO_CHUNK_BYTES);
+	const payloads = [];
+	for (let index = 0; index < total; index += 1) {
+		const start = index * VDO_CHUNK_BYTES;
+		const payload = {
+			tabletopNinjaChunk: {
+				app: "vdo-tabletop",
+				version: 1,
+				room: envelope.room,
+				transferId: envelope.id,
+				authorId: envelope.authorId,
+				authorRole: envelope.authorRole,
+				timestamp: envelope.timestamp,
+				index,
+				total,
+				byteLength: encoded.byteLength,
+				data: bytesToBase64(encoded.slice(start, start + VDO_CHUNK_BYTES))
+			}
+		};
+		if (getVdoWireSize(payload) > VDO_INLINE_MESSAGE_BYTES) {
+			throw new Error("Tabletop transport chunk exceeds the safe message size.");
+		}
+		payloads.push(payload);
+	}
+	return payloads;
+}
+
+function waitForTransportBatch() {
+	return new Promise(resolve => setTimeout(resolve, VDO_CHUNK_BATCH_DELAY_MS));
+}
+
+function postVdoTransportPayload(payload, targetUuid) {
+	if (!vdoFrame.contentWindow) {
+		throw new Error("Tabletop transport is unavailable.");
+	}
+	const message = {
+		sendData: payload,
+		type: "pcs"
+	};
+	if (targetUuid) {
+		message.UUID = targetUuid;
+	}
+	vdoFrame.contentWindow.postMessage(message, "*");
+}
+
+function createVdoChunkCancelPayload(envelope) {
+	return {
+		tabletopNinjaChunkCancel: {
+			app: "vdo-tabletop",
+			version: 1,
+			room: envelope.room,
+			transferId: envelope.id,
+			authorId: envelope.authorId
+		}
+	};
+}
+
+function queueVdoTransportPayloads(envelope, payloads, targetUuid) {
+	const snapshotKey = envelope.type === "snapshot" ? targetUuid || "*" : null;
+	let generation = 0;
+	if (snapshotKey) {
+		generation = (outgoingSnapshotGenerations.get(snapshotKey) || 0) + 1;
+		outgoingSnapshotGenerations.set(snapshotKey, generation);
+		latestChunkedSnapshotId = envelope.id;
+		syncStatus.textContent = "Syncing";
+		syncStatus.dataset.state = "warn";
+	}
+
+	const completion = vdoSendChain
+		.catch(() => {})
+		.then(async () => {
+			for (let index = 0; index < payloads.length; index += 1) {
+				if (snapshotKey && outgoingSnapshotGenerations.get(snapshotKey) !== generation) {
+					postVdoTransportPayload(createVdoChunkCancelPayload(envelope), targetUuid);
+					return false;
+				}
+				postVdoTransportPayload(payloads[index], targetUuid);
+				if ((index + 1) % VDO_CHUNKS_PER_BATCH === 0 && index + 1 < payloads.length) {
+					await waitForTransportBatch();
+				}
+			}
+			return true;
+		});
+	vdoSendChain = completion.catch(() => {});
+
+	if (snapshotKey) {
+		completion
+			.then(sent => {
+				if (outgoingSnapshotGenerations.get(snapshotKey) === generation) {
+					outgoingSnapshotGenerations.delete(snapshotKey);
+				}
+				if (!sent) {
+					if (latestChunkedSnapshotId === envelope.id) {
+						latestChunkedSnapshotId = null;
+					}
+					return;
+				}
+				if (latestChunkedSnapshotId === envelope.id) {
+					syncStatus.textContent = "Snapshot sent";
+					syncStatus.dataset.state = "warn";
+				}
+			})
+			.catch(error => {
+				if (outgoingSnapshotGenerations.get(snapshotKey) === generation) {
+					outgoingSnapshotGenerations.delete(snapshotKey);
+				}
+				if (latestChunkedSnapshotId === envelope.id) {
+					latestChunkedSnapshotId = null;
+					syncStatus.textContent = "Sync failed";
+					syncStatus.dataset.state = "error";
+				}
+				console.warn("Unable to send tabletop snapshot", error);
+			});
+	}
+	return completion;
+}
+
+function clearIncomingTransportTransfer(key) {
+	const transfer = incomingTransportTransfers.get(key);
+	if (!transfer) {
+		return null;
+	}
+	clearTimeout(transfer.timer);
+	incomingTransportTransfers.delete(key);
+	return transfer;
+}
+
+function expireIncomingTransportTransfer(key) {
+	const transfer = clearIncomingTransportTransfer(key);
+	if (!transfer || state.role === "gm" || transfer.authorRole !== "gm") {
+		return;
+	}
+	syncStatus.textContent = "Retrying sync";
+	syncStatus.dataset.state = "warn";
+	requestSnapshot({ quiet: true });
+}
+
+function refreshIncomingTransportTimer(key, transfer) {
+	clearTimeout(transfer.timer);
+	transfer.timer = setTimeout(() => expireIncomingTransportTransfer(key), VDO_CHUNK_INACTIVITY_MS);
+}
+
+function cancelIncomingTransportTransfer(cancel) {
+	if (!cancel || cancel.app !== "vdo-tabletop" || cancel.room !== state.room || !cancel.authorId || !cancel.transferId) {
+		return;
+	}
+	clearIncomingTransportTransfer(`${cancel.authorId}:${cancel.transferId}`);
+}
+
+function acceptVdoTransportChunk(chunk) {
+	const maxChunks = Math.ceil(VDO_MAX_TRANSFER_BYTES / VDO_CHUNK_BYTES);
+	if (!chunk || chunk.app !== "vdo-tabletop" || chunk.version !== 1 || chunk.room !== state.room || !chunk.authorId || !chunk.transferId || !Number.isInteger(chunk.index) || !Number.isInteger(chunk.total) || !Number.isInteger(chunk.byteLength) || chunk.index < 0 || chunk.total < 1 || chunk.total > maxChunks || chunk.index >= chunk.total || chunk.byteLength < 1 || chunk.byteLength > VDO_MAX_TRANSFER_BYTES || chunk.total !== Math.ceil(chunk.byteLength / VDO_CHUNK_BYTES) || typeof chunk.data !== "string") {
+		return null;
+	}
+
+	let bytes;
+	try {
+		bytes = base64ToBytes(chunk.data);
+	} catch (error) {
+		return null;
+	}
+	const expectedChunkLength = chunk.index === chunk.total - 1 ? chunk.byteLength - chunk.index * VDO_CHUNK_BYTES : VDO_CHUNK_BYTES;
+	if (bytes.byteLength !== expectedChunkLength) {
+		return null;
+	}
+
+	const key = `${chunk.authorId}:${chunk.transferId}`;
+	let transfer = incomingTransportTransfers.get(key);
+	if (!transfer) {
+		while (incomingTransportTransfers.size >= VDO_MAX_INCOMING_TRANSFERS) {
+			const oldestKey = incomingTransportTransfers.keys().next().value;
+			clearIncomingTransportTransfer(oldestKey);
+		}
+		transfer = {
+			authorId: chunk.authorId,
+			authorRole: chunk.authorRole,
+			timestamp: chunk.timestamp,
+			total: chunk.total,
+			byteLength: chunk.byteLength,
+			chunks: new Array(chunk.total),
+			received: 0,
+			receivedBytes: 0,
+			timer: null
+		};
+		incomingTransportTransfers.set(key, transfer);
+	} else if (transfer.total !== chunk.total || transfer.byteLength !== chunk.byteLength || transfer.authorRole !== chunk.authorRole || transfer.timestamp !== chunk.timestamp) {
+		clearIncomingTransportTransfer(key);
+		return null;
+	}
+
+	if (!transfer.chunks[chunk.index]) {
+		transfer.chunks[chunk.index] = bytes;
+		transfer.received += 1;
+		transfer.receivedBytes += bytes.byteLength;
+	}
+	refreshIncomingTransportTimer(key, transfer);
+	if (transfer.received !== transfer.total) {
+		return null;
+	}
+
+	clearIncomingTransportTransfer(key);
+	if (transfer.receivedBytes !== transfer.byteLength) {
+		return null;
+	}
+	const encoded = new Uint8Array(transfer.byteLength);
+	let offset = 0;
+	transfer.chunks.forEach(part => {
+		encoded.set(part, offset);
+		offset += part.byteLength;
+	});
+
+	let envelope;
+	try {
+		envelope = JSON.parse(transportTextDecoder.decode(encoded));
+	} catch (error) {
+		return null;
+	}
+	if (!envelope || envelope.app !== "vdo-tabletop" || envelope.version !== 1 || envelope.room !== state.room || envelope.id !== chunk.transferId || envelope.authorId !== chunk.authorId || envelope.authorRole !== chunk.authorRole || envelope.timestamp !== chunk.timestamp) {
+		return null;
+	}
+	return envelope;
+}
+
+function handleVdoTransportPayload(data, sourceUuid, source = "vdo") {
+	if (!data) {
+		return null;
+	}
+	if (data.tabletopNinjaChunkCancel) {
+		cancelIncomingTransportTransfer(data.tabletopNinjaChunkCancel);
+		return null;
+	}
+	const envelope = data.tabletopNinja || (data.tabletopNinjaChunk ? acceptVdoTransportChunk(data.tabletopNinjaChunk) : null);
+	if (!envelope) {
+		return null;
+	}
+	envelope.sourceUuid = sourceUuid || null;
+	handleTransportMessage(envelope, source);
+	return envelope;
+}
+
 function sendTabletopMessage(type, payload = {}, targetUuid = null) {
 	const envelope = createEnvelope(type, payload);
 	seenMessages.add(envelope.id);
 	if (broadcastChannel) {
 		broadcastChannel.postMessage(envelope);
 	}
-	if (vdoFrame.contentWindow) {
-		const message = {
-			sendData: { tabletopNinja: envelope },
-			type: "pcs"
-		};
-		if (targetUuid) {
-			message.UUID = targetUuid;
+	let transportMode = "local";
+	if (!DISABLE_VIDEO_ROOM && vdoFrame.contentWindow) {
+		try {
+			const transportPayloads = createVdoTransportPayloads(envelope);
+			if (transportPayloads.length === 1) {
+				postVdoTransportPayload(transportPayloads[0], targetUuid);
+				transportMode = "inline";
+			} else {
+				queueVdoTransportPayloads(envelope, transportPayloads, targetUuid);
+				transportMode = "chunked";
+			}
+		} catch (error) {
+			transportMode = "failed";
+			console.warn("Unable to prepare tabletop message", error);
+			showToast(error.message || "Tabletop update is too large to sync.");
 		}
-		vdoFrame.contentWindow.postMessage(message, "*");
 	}
+	Object.defineProperty(envelope, "transportMode", { value: transportMode, enumerable: false });
 	return envelope;
 }
 
 function broadcastSnapshot(reason = "snapshot", targetUuid = null) {
-	syncStatus.textContent = "Synced";
-	syncStatus.dataset.state = "live";
-	return sendTabletopMessage("snapshot", { reason, state: getPublicState() }, targetUuid);
+	const envelope = sendTabletopMessage("snapshot", { reason, state: getPublicState() }, targetUuid);
+	if (envelope.transportMode === "failed") {
+		syncStatus.textContent = "Sync failed";
+		syncStatus.dataset.state = "error";
+	} else if (envelope.transportMode !== "chunked") {
+		syncStatus.textContent = "Synced";
+		syncStatus.dataset.state = "live";
+	}
+	return envelope;
 }
 
 function getPublicState() {
@@ -498,6 +814,7 @@ function getPublicState() {
 	const hiddenAssetIds = {};
 
 	publicState.rolls = publicState.rolls.filter(roll => !roll.privateRoll);
+	publicState.handouts = publicState.handouts.filter(handout => handout.revealed === true);
 	publicState.scenes = publicState.scenes.map(scene => {
 		const publicScene = { ...scene };
 		if (publicScene.mapAssetId) {
@@ -590,11 +907,20 @@ function handleTransportMessage(message, source) {
 			state.role = localRole;
 			state.playerName = localName;
 			state.password = localPassword;
+			state.handouts = state.handouts.filter(handout => handout.revealed === true);
 			state.players[clientId] = { id: clientId, name: state.playerName, role: state.role, updatedAt: Date.now() };
 			syncStatus.textContent = "Synced";
 			syncStatus.dataset.state = "live";
 			saveState();
 			renderAll();
+			sendTabletopMessage("snapshot-ack", { snapshotId: envelope.id }, source === "vdo" ? envelope.sourceUuid : null);
+		}
+	} else if (envelope.type === "snapshot-ack" && state.role === "gm" && envelope.payload) {
+		const snapshotId = envelope.payload.snapshotId;
+		if (latestChunkedSnapshotId === snapshotId) {
+			latestChunkedSnapshotId = null;
+			syncStatus.textContent = "Synced";
+			syncStatus.dataset.state = "live";
 		}
 	} else if (envelope.type === "snapshot-request") {
 		if (state.role === "gm") {
@@ -607,13 +933,20 @@ function handleTransportMessage(message, source) {
 				payload: envelope.payload.payload || {},
 				authorId: envelope.authorId,
 				authorName: envelope.authorName,
-				authorRole: envelope.authorRole
+				// GMs apply intents locally; every transport-received intent is player-originated.
+				authorRole: "player"
 			});
 			broadcastSnapshot(envelope.payload.intent || "intent");
 		}
-	} else if (envelope.type === "handout-show" && envelope.payload) {
-		if (envelope.payload.handout && !state.handouts.some(item => item.id === envelope.payload.handout.id)) {
-			state.handouts.push(envelope.payload.handout);
+	} else if (envelope.type === "handout-show" && envelope.authorRole === "gm" && envelope.payload) {
+		if (envelope.payload.handout && envelope.payload.handout.id) {
+			const revealedHandout = { ...envelope.payload.handout, revealed: true };
+			const handoutIndex = state.handouts.findIndex(item => item.id === revealedHandout.id);
+			if (handoutIndex === -1) {
+				state.handouts.push(revealedHandout);
+			} else {
+				state.handouts[handoutIndex] = revealedHandout;
+			}
 			saveState();
 			renderHandouts();
 		}
@@ -902,6 +1235,10 @@ function renderHandouts() {
 		card.addEventListener("click", () => {
 			showHandout(handout.id);
 			if (state.role === "gm") {
+				if (!handout.revealed) {
+					handout.revealed = true;
+					applyLocalMutation("handout-show");
+				}
 				sendTabletopMessage("handout-show", { handoutId: handout.id, handout });
 			}
 		});
@@ -1430,11 +1767,12 @@ async function importStateFile(file) {
 		const localRole = state.role;
 		const localName = state.playerName;
 		const localPassword = state.password;
+		const localRoom = state.room;
 		state = normalizeState(next);
 		state.role = localRole;
 		state.playerName = localName;
 		state.password = localPassword;
-		state.room = sanitizeRoom(state.room || roomInput.value);
+		state.room = sanitizeRoom(localRoom || roomInput.value);
 		selectedTokenId = null;
 		applyLocalMutation("import");
 		showToast("Session imported");
@@ -1934,6 +2272,7 @@ deleteTokenButton.addEventListener("click", () => {
 	const scene = getActiveScene();
 	scene.tokens = scene.tokens.filter(token => token.id !== selectedTokenId);
 	state.initiative.entries = state.initiative.entries.filter(entry => entry.tokenId !== selectedTokenId);
+	state.initiative.activeIndex = Math.min(state.initiative.activeIndex, Math.max(0, state.initiative.entries.length - 1));
 	selectedTokenId = null;
 	applyLocalMutation("token-delete");
 });
@@ -1974,10 +2313,10 @@ handoutFileInput.addEventListener("change", async () => {
 	}
 	if (file.type.startsWith("image/")) {
 		const image = await fileToCompressedImage(file);
-		state.handouts.push({ id: createId("handout"), kind: "image", name: file.name, dataUrl: image.dataUrl, createdAt: Date.now() });
+		state.handouts.push({ id: createId("handout"), kind: "image", name: file.name, dataUrl: image.dataUrl, createdAt: Date.now(), revealed: false });
 	} else {
 		const text = await readFileAsText(file);
-		state.handouts.push({ id: createId("handout"), kind: "text", name: file.name, text: text.slice(0, 20000), createdAt: Date.now() });
+		state.handouts.push({ id: createId("handout"), kind: "text", name: file.name, text: text.slice(0, 20000), createdAt: Date.now(), revealed: false });
 	}
 	handoutFileInput.value = "";
 	applyLocalMutation("handout");
@@ -2010,9 +2349,8 @@ window.addEventListener("message", event => {
 	}
 	if (event.data.dataReceived) {
 		const data = event.data.dataReceived;
-		if (data.tabletopNinja) {
-			data.tabletopNinja.sourceUuid = event.data.UUID || null;
-			handleTransportMessage(data, "vdo");
+		if (data.tabletopNinja || data.tabletopNinjaChunk || data.tabletopNinjaChunkCancel) {
+			handleVdoTransportPayload(data, event.data.UUID || null, "vdo");
 		}
 	}
 	if (event.data.action === "joining-room") {
@@ -2042,6 +2380,11 @@ window.__tabletopDebug = {
 		renderAll();
 	},
 	receive: message => handleTransportMessage(message, "debug"),
+	receiveVdoPayload: (payload, sourceUuid = "debug-source") => handleVdoTransportPayload(payload, sourceUuid, "debug-vdo"),
+	createEnvelope,
+	createVdoTransportPayloads,
+	getPublicState,
+	getStorageKey,
 	roll: formula => buildRoll(formula, "Debug", false),
 	addImageAsset,
 	renderBoard

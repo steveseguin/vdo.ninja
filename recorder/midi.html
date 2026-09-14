@@ -144,29 +144,35 @@
             console.log("MIDI inputs updated:", WebMidi.inputs);
             debugInfoDiv.innerHTML += `<p>Total MIDI inputs: ${WebMidi.inputs.length}</p>`;
             
-            // Automatically select the first input if available
-            if (WebMidi.inputs.length > 0) {
-                midiInputSelect.selectedIndex = 0;
-                onMidiInputChange();
+            // Preserve a connected input; otherwise use the first available input.
+            if (selectedInput && WebMidi.inputs.includes(selectedInput)) {
+                midiInputSelect.value = selectedInput.id;
             }
+            onMidiInputChange();
         }
 
         midiInputSelect.addEventListener('change', onMidiInputChange);
 
         function onMidiInputChange() {
             const selectedId = midiInputSelect.value;
+            const nextInput = WebMidi.getInputById(selectedId);
+            if (selectedInput && selectedInput === nextInput) {
+                return;
+            }
             console.log("Selected input ID:", selectedId);
             debugInfoDiv.innerHTML += `<p>Selected input ID: ${selectedId}</p>`;
 
-            if (selectedInput) {
+            if (isRecording) {
+                stopRecording();
+            } else if (selectedInput) {
                 selectedInput.removeListener("midimessage");
             }
 
-            selectedInput = WebMidi.getInputById(selectedId);
+            selectedInput = nextInput;
             console.log("Selected input:", selectedInput);
             debugInfoDiv.innerHTML += `<p>Selected input: ${selectedInput ? selectedInput.name : 'None'}</p>`;
 
-            startRecordButton.disabled = !selectedInput;
+            updateButtonStates();
             statusDiv.textContent = selectedInput ? `Selected: ${selectedInput.name}` : 'No input selected';
         }
 

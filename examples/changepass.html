@@ -56,13 +56,13 @@ function runHasher(){
 
 	if (location.hostname == "steveseguin.github.io"){ // allows github to be a backup ; passwords will still work
 		salt = "vdo.ninja";
-	} else if (["vdo.ninja","rtc.ninja","versus.cam","socialstream.ninja"].includes(location.hostname.split(".").slice(-2).join("."))){
+	} else if (["vdo.ninja","rtc.ninja","versus.cam","socialstream.ninja"].includes(location.hostname.split(".").slice(-2).join("."))){ 
 		salt = location.hostname.split(".").slice(-2).join("."); // official sub-domains will retain their passwords
 	}
 
 	// Million to one error with a hash length of 4, and still decent security if using a long randomized password.
 	// For more security, you can use a hash length of just 2 rather than 4; VDO.Ninja v27.10 and newer supports 1,2,3,4,5, or 6 hash lengths.
-	generateHash(password + salt, 4).then(function(hash) {
+	generateHash(password + salt, 4).then(function(hash) { 
 		alert("hash value: "+hash)
 	});
 }

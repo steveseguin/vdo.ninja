@@ -2,13 +2,12 @@
   "name": "@mediapipe/tasks-vision",
   "version": "0.10.14",
   "description": "MediaPipe Vision Tasks",
-  "main": "vision_bundle.cjs",
-  "browser": "vision_bundle.mjs",
-  "module": "vision_bundle.mjs",
+  "main": "vision_bundle.js",
+  "browser": "vision_bundle.js",
+  "module": "vision_bundle.js",
   "exports": {
-    "import":  "./vision_bundle.mjs",
-    "require": "./vision_bundle.cjs",
-    "default":  "./vision_bundle.mjs",
+    "import":  "./vision_bundle.js",
+    "default":  "./vision_bundle.js",
     "types":  "./vision.d.ts"
   },
   "author": "mediapipe@google.com",

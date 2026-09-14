@@ -1,7 +1,7 @@
-import { waitForLegacySession } from '../legacy/session-bridge.js';
-import { monitorTrackLevel } from '../audio/meters.js';
-import { TrackRecorder } from './track-recorder.js';
-import { convertBlobToWav } from './wav-encoder.js';
+import { waitForLegacySession } from '../legacy/session-bridge.js?v=20260911.1';
+import { monitorTrackLevel } from '../audio/meters.js?v=20260911.1';
+import { TrackRecorder } from './track-recorder.js?v=20260911.1';
+import { convertBlobToWav } from './wav-encoder.js?v=20260911.1';
 
 const DEFAULT_OPTIONS = {
   includeLocal: true,
@@ -85,6 +85,7 @@ export class MultiTrackRecorder extends EventTarget {
     this.trackMeters = new Map();
     this.trackStartTimes = new Map(); // Per-track start times relative to session start
     this.startedAt = null;
+    this.stopping = false;
   }
 
   async ensureSession() {
@@ -151,62 +152,103 @@ export class MultiTrackRecorder extends EventTarget {
     const recorders = [];
     const trackStartOffset = Number.isFinite(startOffsetSeconds) ? Math.max(0, startOffsetSeconds) : 0;
 
-    audio.forEach((track, index) => {
-      const cloned = safeCloneTrack(track);
-      const recorder = new TrackRecorder({
-        track: cloned,
-        uuid: participant.uuid,
-        label: `${participant.label || participant.uuid}#${index + 1}`,
-        kind: 'audio',
-        mimeType,
-      });
-      recorder.start({ timeslice, bitsPerSecond });
-      recorders.push({ recorder, trackType: 'audio', channelIndex: index, startOffsetSeconds: trackStartOffset });
-      if (monitorLevels && audioContext) {
-        monitorTrackLevel(audioContext, cloned, {
+    const clonedTracks = [];
+    try {
+      audio.forEach((track, index) => {
+        if (Array.from(this.recorders.values()).some((recorder) => recorder.uuid === participant.uuid && recorder.sourceTrack === track && recorder.mediaRecorder && recorder.mediaRecorder.state !== 'inactive')) {
+          return;
+        }
+        const cloned = safeCloneTrack(track);
+        if (cloned !== track) clonedTracks.push(cloned);
+        const recorder = new TrackRecorder({
+          track: cloned,
           uuid: participant.uuid,
-          trackType: 'audio',
-          metadata: { channelIndex: index, label: participant.label },
-        })
-          .then((meter) => {
-            const meterKey = `${participant.uuid}:audio:${index}`;
-            this.trackMeters.set(meterKey, meter);
-            this.dispatchEvent(
-              new CustomEvent('meter-ready', {
-                detail: {
-                  participant,
-                  trackType: 'audio',
-                  channelIndex: index,
-                  meter,
-                },
-              }),
-            );
+          label: `${participant.label || participant.uuid}#${index + 1}`,
+          kind: 'audio',
+          mimeType,
+        });
+        recorder.sourceTrack = track;
+        recorders.push({ recorder, trackType: 'audio', channelIndex: index, startOffsetSeconds: trackStartOffset });
+        recorder.start({ timeslice, bitsPerSecond });
+        if (monitorLevels && audioContext) {
+          monitorTrackLevel(audioContext, cloned, {
+            uuid: participant.uuid,
+            trackType: 'audio',
+            metadata: { channelIndex: index, label: participant.label },
           })
-          .catch((error) => {
-            console.warn('Failed to attach meter to track', error);
-          });
-      }
-    });
-
-    video.forEach((track, index) => {
-      const cloned = safeCloneTrack(track);
-      const recorder = new TrackRecorder({
-        track: cloned,
-        uuid: participant.uuid,
-        label: `${participant.label || participant.uuid}-video#${index + 1}`,
-        kind: 'video',
-        mimeType: null,
+            .then((meter) => {
+              const meterKey = `${participant.uuid}:audio:${index}`;
+              const latestRecorder = Array.from(this.recorders.values())
+                .filter((candidate) => candidate.uuid === participant.uuid && candidate.kind === 'audio' && candidate.channelIndex === index)
+                .pop();
+              if (this.stopping || latestRecorder !== recorder || !recorder.mediaRecorder || recorder.mediaRecorder.state === 'inactive') {
+                meter.disconnect();
+                return;
+              }
+              const previousMeter = this.trackMeters.get(meterKey);
+              if (previousMeter) {
+                previousMeter.disconnect();
+              }
+              this.trackMeters.set(meterKey, meter);
+              recorder.addEventListener('stop', () => {
+                if (this.trackMeters.get(meterKey) === meter) {
+                  meter.disconnect();
+                  this.trackMeters.delete(meterKey);
+                }
+              }, { once: true });
+              this.dispatchEvent(
+                new CustomEvent('meter-ready', {
+                  detail: {
+                    participant,
+                    trackType: 'audio',
+                    channelIndex: index,
+                    meter,
+                  },
+                }),
+              );
+            })
+            .catch((error) => {
+              console.warn('Failed to attach meter to track', error);
+            });
+        }
       });
-      recorder.start({ timeslice, bitsPerSecond });
-      recorders.push({ recorder, trackType: 'video', channelIndex: index, startOffsetSeconds: trackStartOffset });
-    });
+
+      video.forEach((track, index) => {
+        if (Array.from(this.recorders.values()).some((recorder) => recorder.uuid === participant.uuid && recorder.sourceTrack === track && recorder.mediaRecorder && recorder.mediaRecorder.state !== 'inactive')) {
+          return;
+        }
+        const cloned = safeCloneTrack(track);
+        if (cloned !== track) clonedTracks.push(cloned);
+        const recorder = new TrackRecorder({
+          track: cloned,
+          uuid: participant.uuid,
+          label: `${participant.label || participant.uuid}-video#${index + 1}`,
+          kind: 'video',
+          mimeType: null,
+        });
+        recorder.sourceTrack = track;
+        recorders.push({ recorder, trackType: 'video', channelIndex: index, startOffsetSeconds: trackStartOffset });
+        recorder.start({ timeslice, bitsPerSecond });
+      });
+
+    } catch (error) {
+      recorders.forEach(({ recorder }) => { recorder.stop().catch(() => {}); });
+      clonedTracks.forEach((track) => track.stop());
+      throw error;
+    }
 
     return recorders;
   }
 
   attachRecorderHandlers(participant, recorders) {
     recorders.forEach(({ recorder, trackType, channelIndex, startOffsetSeconds }) => {
-      const key = `${participant.uuid}:${trackType}:${channelIndex}`;
+      const baseKey = `${participant.uuid}:${trackType}:${channelIndex}`;
+      let key = baseKey;
+      let segment = 2;
+      while (this.recorders.has(key) || this.files.has(key)) {
+        key = `${baseKey}:${segment++}`;
+      }
+      recorder.channelIndex = channelIndex;
       this.recorders.set(key, recorder);
       this.trackStartTimes.set(key, startOffsetSeconds);
       recorder.addEventListener('data', (event) => {
@@ -217,6 +259,8 @@ export class MultiTrackRecorder extends EventTarget {
               trackType,
               channelIndex,
               data: event.detail,
+              recordingKey: key,
+              durationSeconds: recorder.getDurationSeconds(),
             },
           }),
         );
@@ -236,8 +280,7 @@ export class MultiTrackRecorder extends EventTarget {
       recorder.addEventListener('stop', () => {
         const blob = recorder.toBlob();
         if (blob) {
-          const fileKey = `${participant.uuid}:${trackType}:${channelIndex}`;
-          this.files.set(fileKey, {
+          this.files.set(key, {
             blob,
             originalBlob: blob,
             participant,
@@ -264,7 +307,7 @@ export class MultiTrackRecorder extends EventTarget {
   }
 
   addParticipant(participant) {
-    if (!this.startedAt) {
+    if (!this.startedAt || this.stopping) {
       throw new Error('Cannot add participant: recording not started.');
     }
     if (!participant || !participant.stream) {
@@ -293,60 +336,80 @@ export class MultiTrackRecorder extends EventTarget {
   }
 
   async start(customOptions = {}) {
-    const options = { ...this.options, ...customOptions };
-    this.options = options;
-    this.files.clear();
-    this.startedAt = Date.now();
-
-    if (this.recorders.size) {
+    if (this.recorders.size || this.stopping) {
       throw new Error('MultiTrackRecorder already running.');
     }
+    const options = { ...this.options, ...customOptions };
+    this.options = options;
+    const previousFiles = this.files;
+    this.files = new Map();
+    this.startedAt = Date.now();
 
-    const participants = await this.listRecordableParticipants();
-    const extras = Array.isArray(options.extraParticipants)
-      ? options.extraParticipants
-          .map((participant, index) => {
-            if (!participant || !participant.stream) {
-              return null;
-            }
-            const uuid = participant.uuid || `external-${index}`;
-            return {
-              uuid,
-              kind: participant.kind || 'external',
-              label: participant.label || uuid,
-              stream: participant.stream,
-              streamID: participant.streamID || uuid,
-              external: true,
-            };
-          })
-          .filter(Boolean)
-      : [];
-    const participantLookup = new Map();
-    participants.forEach((participant) => {
-      if (participant && participant.uuid) {
-        participantLookup.set(participant.uuid, participant);
-      }
-    });
-    extras.forEach((participant) => {
-      if (!participantLookup.has(participant.uuid)) {
-        participants.push(participant);
-        participantLookup.set(participant.uuid, participant);
-      }
-    });
+    let participants;
+    try {
+      participants = await this.listRecordableParticipants();
+      const extras = Array.isArray(options.extraParticipants)
+        ? options.extraParticipants
+            .map((participant, index) => {
+              if (!participant || !participant.stream) {
+                return null;
+              }
+              const uuid = participant.uuid || `external-${index}`;
+              return {
+                uuid,
+                kind: participant.kind || 'external',
+                label: participant.label || uuid,
+                stream: participant.stream,
+                streamID: participant.streamID || uuid,
+                external: true,
+              };
+            })
+            .filter(Boolean)
+        : [];
+      const participantLookup = new Map();
+      participants.forEach((participant) => {
+        if (participant && participant.uuid) {
+          participantLookup.set(participant.uuid, participant);
+        }
+      });
+      extras.forEach((participant) => {
+        if (!participantLookup.has(participant.uuid)) {
+          participants.push(participant);
+          participantLookup.set(participant.uuid, participant);
+        }
+      });
 
-    if (!participants.length) {
-      throw new Error('No recordable participants found.');
+      if (!participants.length) {
+        throw new Error('No recordable participants found.');
+      }
+
+      participants.forEach((participant) => {
+        const recorders = this.createTrackRecorders(participant, options, 0);
+        this.attachRecorderHandlers(participant, recorders);
+      });
+
+      if (!this.recorders.size) {
+        throw new Error('No recordable tracks found.');
+      }
+    } catch (error) {
+      this.stopping = true;
+      const stops = Array.from(this.recorders.values()).map((recorder) => recorder.stop());
+      this.recorders.clear();
+      this.trackMeters.forEach((meter) => meter.disconnect());
+      this.trackMeters.clear();
+      this.trackStartTimes.clear();
+      await Promise.allSettled(stops);
+      this.files = previousFiles;
+      this.startedAt = null;
+      this.stopping = false;
+      throw error;
     }
-
-    participants.forEach((participant) => {
-      const recorders = this.createTrackRecorders(participant, options, 0);
-      this.attachRecorderHandlers(participant, recorders);
-    });
 
     this.dispatchEvent(new CustomEvent('start', { detail: { participants, startedAt: this.startedAt } }));
   }
 
   async stop({ markers = null } = {}) {
+    this.stopping = true;
     const stops = [];
     this.recorders.forEach((recorder) => {
       stops.push(recorder.stop());
@@ -365,6 +428,7 @@ export class MultiTrackRecorder extends EventTarget {
     await this.packageAudioFiles({ markers });
     const packaged = this.files;
     this.startedAt = null;
+    this.stopping = false;
     this.dispatchEvent(new CustomEvent('stop', { detail: { files: packaged } }));
     return packaged;
   }
@@ -435,6 +499,13 @@ export class MultiTrackRecorder extends EventTarget {
     const channel = typeof meta.channelIndex === 'number' ? `c${meta.channelIndex + 1}` : 'c1';
     const timestamp = buildTimestamp(this.startedAt);
     const ext = extension || extensionFromMime(meta.mimeType || meta.originalMimeType || 'audio/wav');
-    return `${prefix}-${room}-${participantLabel}-${trackKind}-${channel}-${timestamp}.${ext}`;
+    const basename = `${prefix}-${room}-${participantLabel}-${trackKind}-${channel}-${timestamp}`;
+    const otherNames = new Set(Array.from(this.files.values()).filter((file) => file !== meta).map((file) => file.filename));
+    let filename = `${basename}.${ext}`;
+    let suffix = 2;
+    while (otherNames.has(filename)) {
+      filename = `${basename}-${suffix++}.${ext}`;
+    }
+    return filename;
   }
 }

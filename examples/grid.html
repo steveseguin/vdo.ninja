@@ -39,16 +39,67 @@
 <div class="iframe-container" id="iframeContainer"></div>
 
 <script>
+  var trustedIframeAllow = "document-domain;encrypted-media;sync-xhr;usb;web-share;cross-origin-isolated;accelerometer;midi;geolocation;autoplay;camera;microphone;fullscreen;picture-in-picture;display-capture;gyroscope;";
+  var genericIframeAllow = "autoplay;encrypted-media;fullscreen;picture-in-picture;";
+
+  function normalizeIframeUrl(value) {
+    var url = (value || "").trim();
+    if (!url) {
+      return false;
+    }
+
+    var firstSegment = url.split(/[\/?#]/)[0];
+    var relativePage = /\.(?:html?|xhtml|shtml|php|asp|aspx|jsp)$/i.test(firstSegment);
+    if (!/^[a-z][a-z0-9+.-]*:/i.test(url) && firstSegment.indexOf(".") > -1 && !relativePage && url.indexOf("./") !== 0 && url.indexOf("/") !== 0) {
+      url = "https://" + url;
+    }
+
+    try {
+      var parsed = new URL(url, window.location.href);
+      var protocol = (parsed.protocol || "").toLowerCase();
+      if (protocol !== "http:" && protocol !== "https:") {
+        return false;
+      }
+      if (protocol === "http:" && parsed.hostname !== "localhost" && parsed.hostname !== "127.0.0.1" && parsed.hostname !== "[::1]" && location.hostname !== "insecure.vdo.ninja") {
+        parsed.protocol = "https:";
+      }
+      return parsed.href;
+    } catch (e) {
+      return false;
+    }
+  }
+
+  function isTrustedIframeUrl(url) {
+    try {
+      var hostname = new URL(url, window.location.href).hostname.toLowerCase();
+      return hostname === location.hostname ||
+        hostname === "localhost" ||
+        hostname === "127.0.0.1" ||
+        hostname === "[::1]" ||
+        hostname === "vdo.ninja" ||
+        hostname.endsWith(".vdo.ninja") ||
+        hostname === "obs.ninja" ||
+        hostname.endsWith(".obs.ninja") ||
+        hostname === "versus.cam" ||
+        hostname === "dev.versus.cam" ||
+        hostname === "backup.vdo.ninja" ||
+        hostname === "invite.cam" ||
+        hostname === "rtc.ninja";
+    } catch (e) {
+      return false;
+    }
+  }
+
   function addIframe() {
-    var url = document.getElementById('urlInput').value;
+    var url = normalizeIframeUrl(document.getElementById('urlInput').value);
     if (url) { // Check if the URL is not empty
       var iframe = document.createElement('iframe');
       iframe.src = url;
-	  iframe.allow = "document-domain;encrypted-media;sync-xhr;usb;web-share;cross-origin-isolated;accelerometer;midi;geolocation;autoplay;camera;microphone;fullscreen;picture-in-picture;display-capture;gyroscope;";
+	  iframe.allow = isTrustedIframeUrl(url) ? trustedIframeAllow : genericIframeAllow;
       document.getElementById('iframeContainer').appendChild(iframe);
       //document.getElementById('urlInput').value = ''; // Clear input field
     } else {
-      alert("Please enter a URL.");
+      alert("Please enter a valid http or https URL.");
     }
   }
 </script>

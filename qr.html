@@ -1,0 +1,1981 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<script>
+			// Directory-style QR aliases must resolve assets beside qr.html.
+			if (/\/qr\/+$/i.test(location.pathname)) {
+				var qrAssetBase = document.createElement("base");
+				qrAssetBase.href = new URL("./", location.origin + location.pathname.replace(/\/+$/, "")).href;
+				document.head.appendChild(qrAssetBase);
+			}
+		</script>
+		<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+		<meta name="description" content="Connect and chat between two VDO.Ninja peers with a QR code or pasted code, with no handshake server involved." />
+		<link rel="canonical" href="https://vdo.ninja/qr" />
+		<link rel="manifest" href="./qr-manifest.webmanifest" />
+		<meta name="theme-color" content="#14171a" />
+		<meta name="apple-mobile-web-app-capable" content="yes" />
+		<meta name="apple-mobile-web-app-title" content="VDO QR Connect" />
+		<link rel="apple-touch-icon" href="./media/icon-192x192.png" />
+		<meta property="og:type" content="website" />
+		<meta property="og:site_name" content="VDO.Ninja" />
+		<meta property="og:url" content="https://vdo.ninja/qr" />
+		<meta property="og:title" content="Serverless Connect - VDO.Ninja" />
+		<meta property="og:description" content="Connect and chat between two VDO.Ninja peers with a QR code or pasted code, with no handshake server involved." />
+		<meta property="og:image" content="https://vdo.ninja/media/vdoNinja_logo_full.png" />
+		<meta name="twitter:card" content="summary_large_image" />
+		<meta name="twitter:title" content="Serverless Connect - VDO.Ninja" />
+		<meta name="twitter:description" content="Connect and chat between two VDO.Ninja peers with a QR code or pasted code, with no handshake server involved." />
+		<meta name="twitter:image" content="https://vdo.ninja/media/vdoNinja_logo_full.png" />
+		<title>Serverless Connect - VDO.Ninja</title>
+		<style>
+			:root {
+				--bg: #14171a;
+				--panel: #1c2025;
+				--line: #333a42;
+				--text: #e6e9ec;
+				--muted: #99a2ac;
+				--accent: #4a90d9;
+			}
+			* {
+				box-sizing: border-box;
+			}
+			html,
+			body {
+				margin: 0;
+				padding: 0;
+				height: 100%;
+				background: var(--bg);
+				color: var(--text);
+				font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+			}
+			body {
+				display: flex;
+				flex-direction: column;
+				height: 100dvh;
+			}
+			header {
+				padding: 12px 16px;
+				padding-top: calc(12px + env(safe-area-inset-top, 0px));
+				padding-right: calc(16px + env(safe-area-inset-right, 0px));
+				padding-left: calc(16px + env(safe-area-inset-left, 0px));
+				border-bottom: 1px solid var(--line);
+				display: flex;
+				align-items: baseline;
+				gap: 10px;
+				flex: 0 0 auto;
+			}
+			header h1 {
+				font-size: 16px;
+				margin: 0;
+				font-weight: 600;
+			}
+			header span {
+				font-size: 12px;
+				color: var(--muted);
+			}
+			main {
+				flex: 1 1 auto;
+				overflow: auto;
+				padding: 16px;
+				padding-right: calc(16px + env(safe-area-inset-right, 0px));
+				padding-bottom: calc(16px + env(safe-area-inset-bottom, 0px));
+				padding-left: calc(16px + env(safe-area-inset-left, 0px));
+				display: flex;
+				flex-direction: column;
+				align-items: center;
+				gap: 16px;
+			}
+			.card {
+				flex-shrink: 0;
+				background: var(--panel);
+				border: 1px solid var(--line);
+				border-radius: 10px;
+				padding: 16px;
+				width: 100%;
+				max-width: 460px;
+			}
+			.card h2 {
+				font-size: 14px;
+				margin: 0 0 8px;
+				font-weight: 600;
+			}
+			.card p {
+				font-size: 13px;
+				color: var(--muted);
+				margin: 0 0 12px;
+				line-height: 1.5;
+			}
+			button {
+				font: inherit;
+				font-size: 14px;
+				padding: 10px 16px;
+				border-radius: 8px;
+				border: 1px solid var(--line);
+				background: #262c33;
+				color: var(--text);
+				cursor: pointer;
+			}
+			button:hover {
+				background: #2f363e;
+			}
+			button.primary {
+				background: #2868a8;
+				border-color: #2868a8;
+				color: #fff;
+			}
+			button.primary:hover {
+				background: #245e98;
+			}
+			button:focus-visible,
+			select:focus-visible,
+			textarea:focus-visible,
+			input:focus-visible {
+				outline: 2px solid #92c7ff;
+				outline-offset: 3px;
+			}
+			button:disabled {
+				opacity: 0.5;
+				cursor: default;
+			}
+			button[aria-pressed="true"] {
+				background: #28537e;
+				border-color: var(--accent);
+			}
+			select {
+				max-width: 100%;
+				font: inherit;
+				font-size: 14px;
+				padding: 10px 32px 10px 10px;
+				border: 1px solid var(--line);
+				border-radius: 8px;
+				background: #262c33;
+				color: var(--text);
+			}
+			.row {
+				display: flex;
+				gap: 8px;
+				flex-wrap: wrap;
+			}
+			#status {
+				font-size: 13px;
+				color: var(--muted);
+				min-height: 18px;
+				text-align: center;
+			}
+			#status.error {
+				color: #e5786d;
+			}
+			.validation {
+				min-height: 18px;
+				margin: 6px 0 0;
+				color: var(--muted);
+				font-size: 12px;
+				line-height: 1.4;
+			}
+			.validation.valid {
+				color: #78c89b;
+			}
+			.validation.error {
+				color: #e5786d;
+			}
+			#qrbox {
+				background: #fff;
+				/* QR readers expect a four-module quiet zone around the code. */
+				padding: 28px;
+				border-radius: 8px;
+				width: 396px;
+				max-width: 100%;
+				aspect-ratio: 1;
+				margin: 0 auto 12px;
+				line-height: 0;
+			}
+			#qrbox img,
+			#qrbox canvas {
+				display: block;
+				width: 100%;
+				height: auto;
+				max-width: 340px;
+				/* keep module edges hard when the code is scaled to fit */
+				image-rendering: pixelated;
+			}
+			#qr-loading {
+				display: flex;
+				width: 100%;
+				max-width: 100%;
+				aspect-ratio: 1;
+				align-items: center;
+				justify-content: center;
+				flex-direction: column;
+				gap: 12px;
+				color: #45515c;
+				font-size: 14px;
+				line-height: 1.4;
+				text-align: center;
+			}
+			.qr-spinner {
+				width: 28px;
+				height: 28px;
+				border: 3px solid #d8dee5;
+				border-top-color: var(--accent);
+				border-radius: 50%;
+				animation: qr-spin 0.8s linear infinite;
+			}
+			@keyframes qr-spin {
+				to {
+					transform: rotate(360deg);
+				}
+			}
+			@media (prefers-reduced-motion: reduce) {
+				.qr-spinner {
+					animation: none;
+				}
+			}
+			textarea {
+				width: 100%;
+				font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+				font-size: 11px;
+				background: #12151a;
+				color: var(--text);
+				border: 1px solid var(--line);
+				border-radius: 6px;
+				padding: 8px;
+				resize: vertical;
+				word-break: break-all;
+			}
+			#scanwrap {
+				position: relative;
+				width: 100%;
+				margin-bottom: 12px;
+			}
+			#scanvideo {
+				width: 100%;
+				max-height: 40vh;
+				background: #000;
+				border-radius: 8px;
+				border: 1px solid var(--line);
+				object-fit: cover;
+				transform: scaleX(-1);
+			}
+			#scanvideo.rear {
+				transform: none;
+			}
+			/*
+		 * The iframe is parked off-screen rather than display:none during the
+		 * handshake - hidden iframes get throttled, and this one has a peer
+		 * connection to build.
+		 */
+			#stage {
+				position: absolute;
+				left: -10000px;
+				top: 0;
+				width: 320px;
+				height: 200px;
+				opacity: 0;
+				pointer-events: none;
+				display: flex;
+				flex-direction: column;
+				min-height: 0;
+			}
+			body.live main {
+				display: none;
+			}
+			body.live #stage {
+				position: static;
+				width: auto;
+				height: auto;
+				opacity: 1;
+				pointer-events: auto;
+				flex: 1 1 auto;
+			}
+			#frame {
+				border: 0;
+				width: 100%;
+				height: 100%;
+				flex: 1 1 auto;
+				min-height: 160px;
+			}
+			#chat-panel {
+				border-top: 1px solid var(--line);
+				background: var(--panel);
+				padding: 8px;
+				padding-right: calc(8px + env(safe-area-inset-right, 0px));
+				padding-left: calc(8px + env(safe-area-inset-left, 0px));
+				flex: 0 0 auto;
+			}
+			#chat-title {
+				display: flex;
+				align-items: baseline;
+				gap: 6px;
+				margin: 0 0 6px;
+				font-size: 13px;
+			}
+			#chat-title span {
+				color: var(--muted);
+				font-size: 11px;
+			}
+			#chat-messages {
+				height: clamp(90px, 16vh, 160px);
+				overflow-y: auto;
+				display: flex;
+				flex-direction: column;
+				gap: 5px;
+				padding: 7px;
+				background: #12151a;
+				border: 1px solid var(--line);
+				border-radius: 6px;
+			}
+			#chat-empty {
+				margin: auto;
+				color: var(--muted);
+				font-size: 12px;
+			}
+			.chat-message {
+				max-width: min(85%, 640px);
+				padding: 6px 8px;
+				border-radius: 7px;
+				font-size: 13px;
+				line-height: 1.35;
+				white-space: pre-wrap;
+				overflow-wrap: anywhere;
+			}
+			.chat-message.mine {
+				align-self: flex-end;
+				background: #28537e;
+			}
+			.chat-message.peer {
+				align-self: flex-start;
+				background: #2a3037;
+			}
+			.chat-message strong {
+				display: block;
+				margin-bottom: 2px;
+				color: #c4cbd2;
+				font-size: 10px;
+				font-weight: 600;
+				text-transform: uppercase;
+			}
+			#chat-form {
+				display: flex;
+				gap: 7px;
+				margin-top: 7px;
+			}
+			#chat-input {
+				min-width: 0;
+				flex: 1 1 auto;
+				font: inherit;
+				font-size: 14px;
+				background: #12151a;
+				color: var(--text);
+				border: 1px solid var(--line);
+				border-radius: 7px;
+				padding: 9px 10px;
+			}
+			#chat-input:disabled {
+				opacity: 0.6;
+			}
+			#controls {
+				display: flex;
+				gap: 8px;
+				padding: 8px;
+				padding-right: calc(8px + env(safe-area-inset-right, 0px));
+				padding-bottom: calc(8px + env(safe-area-inset-bottom, 0px));
+				padding-left: calc(8px + env(safe-area-inset-left, 0px));
+				border-top: 1px solid var(--line);
+				flex-wrap: wrap;
+				align-items: center;
+				justify-content: center;
+				flex: 0 0 auto;
+			}
+			#live-note {
+				flex-basis: 100%;
+				text-align: center;
+				font-size: 13px;
+				color: var(--muted);
+				margin-right: 4px;
+			}
+			#code-note {
+				margin-top: 10px;
+				margin-bottom: 0;
+			}
+			.hint {
+				font-size: 12px;
+				color: var(--muted);
+				margin-top: 8px;
+				line-height: 1.5;
+			}
+			@media (max-width: 600px), (pointer: coarse) {
+				button {
+					min-height: 44px;
+				}
+				select {
+					min-height: 44px;
+					font-size: 16px;
+				}
+				textarea,
+				#chat-input {
+					font-size: 16px;
+				}
+			}
+			@media (max-width: 600px) {
+				main {
+					padding-right: env(safe-area-inset-right, 0px);
+					padding-left: env(safe-area-inset-left, 0px);
+				}
+				#panel-code {
+					max-width: none;
+					padding-right: 0;
+					padding-left: 0;
+					border-right: 0;
+					border-left: 0;
+					border-radius: 0;
+				}
+				#panel-code > h2,
+				#panel-code > p,
+				#panel-code > .row {
+					margin-right: 12px;
+					margin-left: 12px;
+				}
+				#code-text {
+					width: calc(100% - 24px);
+					margin-right: 12px;
+					margin-left: 12px;
+				}
+				#qrbox {
+					width: 100%;
+					max-width: none;
+					padding: var(--qr-quiet-zone, 8.5%);
+					border-radius: 0;
+				}
+				#qrbox img,
+				#qrbox canvas,
+				#qr-loading {
+					width: 100%;
+					max-width: none;
+				}
+			}
+			@media (max-width: 360px) {
+				header {
+					align-items: flex-start;
+					flex-direction: column;
+					gap: 2px;
+				}
+			}
+			.hidden {
+				display: none !important;
+			}
+			.visually-hidden {
+				position: absolute;
+				width: 1px;
+				height: 1px;
+				padding: 0;
+				margin: -1px;
+				overflow: hidden;
+				clip: rect(0, 0, 0, 0);
+				white-space: nowrap;
+				border: 0;
+			}
+		</style>
+	</head>
+	<body>
+		<header>
+			<h1>Serverless Connect</h1>
+			<span>VDO.Ninja with no handshake server</span>
+		</header>
+
+		<main>
+			<div id="status" role="status" aria-live="polite">Loading...</div>
+
+			<!-- step 1: nothing chosen yet -->
+			<div class="card" id="panel-intro">
+				<h2>Start a connection</h2>
+				<p>Connect two devices without the WebSocket handshake server. Start on one device, scan or paste its code on the other, then send the reply code back to the first device. Keep both pages open until connected.</p>
+				<div class="row">
+					<button class="primary" id="btn-share">Start connection</button>
+					<button id="btn-paste-offer">Scan or paste a code</button>
+				</div>
+				<p class="hint">On a phone, the other person can just point their camera app at the QR code you get next - it opens this page for them with the offer already loaded.</p>
+				<p class="hint">Once connected, either person can start their camera and microphone separately. Scanning a code does not share your camera. Across different networks, a STUN or TURN server may still be needed.</p>
+				<p id="offline-note" class="hint hidden" role="status" aria-live="polite"></p>
+			</div>
+
+			<!-- step 2: our code, for the other side to read -->
+			<div class="card hidden" id="panel-code">
+				<h2 id="code-title">Show this to the other person</h2>
+				<div id="qrbox" aria-busy="true">
+					<div id="qr-loading" role="status">
+						<span class="qr-spinner" aria-hidden="true"></span>
+						<span>Preparing connection code...</span>
+					</div>
+				</div>
+				<div class="row">
+					<button id="btn-copy">Copy code</button>
+					<button id="btn-copy-link">Copy link</button>
+					<button id="btn-native-share" class="hidden">Share link</button>
+					<button id="btn-toggle-text">Show as text</button>
+				</div>
+				<p id="code-note"></p>
+				<textarea id="code-text" class="hidden" rows="4" aria-label="Your connection code" readonly></textarea>
+			</div>
+
+			<!-- step 3: read their code back -->
+			<div class="card hidden" id="panel-scan">
+				<h2 id="scan-title">Now read their code</h2>
+				<p id="scan-note">Point your camera at the code on their screen.</p>
+				<div id="scanwrap" class="hidden">
+					<video id="scanvideo" playsinline muted></video>
+				</div>
+				<div class="row">
+					<button class="primary" id="btn-scan">Scan with camera</button>
+					<button id="btn-flip" class="hidden">Flip camera</button>
+					<select id="scan-device" class="hidden" aria-label="Scanning camera"></select>
+				</div>
+				<textarea id="paste-text" rows="4" aria-label="Other device's connection code" aria-describedby="paste-validation" placeholder="...or paste their code here"></textarea>
+				<div id="paste-validation" class="validation" role="status" aria-live="polite">Paste an offer or answer code.</div>
+				<div class="row" style="margin-top: 8px">
+					<button id="btn-paste-clipboard">Paste from clipboard</button>
+					<button id="btn-apply" disabled>Use pasted code</button>
+				</div>
+			</div>
+
+			<div class="card hidden" id="panel-handoff">
+				<h2 id="handoff-title">Sending the reply</h2>
+				<p id="handoff-note">Looking for the tab that created the offer...</p>
+				<div class="row">
+					<button id="btn-handoff-copy">Copy answer code</button>
+					<button id="btn-handoff-reload">Start another connection</button>
+				</div>
+			</div>
+			<button id="btn-reset" class="hidden">Start over</button>
+		</main>
+
+		<div id="stage">
+			<iframe id="frame" title="Two-way video and audio" allow="camera; microphone; autoplay; display-capture; fullscreen" allowfullscreen></iframe>
+			<section id="chat-panel" aria-labelledby="chat-heading">
+				<div id="chat-title">
+					<strong id="chat-heading">Chat</strong>
+					<span>peer to peer</span>
+				</div>
+				<div id="chat-messages" role="log" aria-live="polite" aria-relevant="additions">
+					<div id="chat-empty">No messages yet.</div>
+				</div>
+				<form id="chat-form">
+					<label class="visually-hidden" for="chat-input">Chat message</label>
+					<input id="chat-input" type="text" maxlength="2000" autocomplete="off" placeholder="Message the other person" disabled />
+					<button id="btn-chat-send" class="primary" type="submit" disabled>Send</button>
+				</form>
+			</section>
+			<div id="controls">
+				<span id="live-note" role="status" aria-live="polite"></span>
+				<button id="btn-cam" aria-pressed="false">Start camera</button>
+				<button id="btn-switch-cam" class="hidden">Switch camera</button>
+				<button id="btn-mic" aria-pressed="false">Start microphone</button>
+				<button id="btn-screen">Share screen</button>
+				<button id="btn-hangup">Hang up</button>
+			</div>
+		</div>
+
+		<script src="./thirdparty/qrcode.min.js"></script>
+		<script src="./thirdparty/jsqr.min.js"></script>
+		<script src="./qrconnect.js"></script>
+		<script>
+			(function () {
+				"use strict";
+
+				var el = function (id) {
+					return document.getElementById(id);
+				};
+				var frame = el("frame");
+				var session = null;
+				var params = new URLSearchParams(location.search);
+				var pagePath = location.pathname.length > 1 ? location.pathname.replace(/\/+$/, "") : location.pathname;
+				var pageURL = location.origin + pagePath;
+				var qrBaseURL = new URL("./", pageURL);
+				var qrWorkerURL = new URL("qr-sw.js", qrBaseURL);
+				var currentBlob = null;
+				var pasteValidationRun = 0;
+				var pasteValidationTimer = null;
+				var offlineRestoreTimers = [];
+				var mediaCameraCount = 0;
+				var mediaCameraIndex = 0;
+				var CHAT_MAX_LENGTH = 2000;
+				var CHAT_MAX_MESSAGES = 100;
+				var HANDOFF_PREFIX = "vdo.qrconnect.";
+				var HANDOFF_MAX_AGE = 20 * 60 * 1000;
+				var handoffTabID = QRConnect.randomID(12);
+				var handoffWaitKey = HANDOFF_PREFIX + "waiting." + handoffTabID;
+				var handoffWaiting = false;
+				var handoffHeartbeat = null;
+				var handoffProbe = null;
+				var handoffCode = "";
+				var handoffChannel = null;
+
+				function facingValue(value, fallback) {
+					value = String(value || "").toLowerCase();
+					if (value === "front" || value === "user") {
+						return "user";
+					}
+					if (value === "rear" || value === "back" || value === "environment") {
+						return "environment";
+					}
+					return fallback;
+				}
+
+				function enabledParam(name) {
+					if (!params.has(name)) {
+						return false;
+					}
+					var value = String(params.get(name) || "1").toLowerCase();
+					return value !== "0" && value !== "false" && value !== "off" && value !== "no";
+				}
+
+				var scanner = {
+					generation: 0,
+					active: false,
+					stream: null,
+					raf: null,
+					facing: facingValue(params.get("scan"), "environment"),
+					deviceId: ""
+				};
+				var mediaFacing = facingValue(params.get("camera") || params.get("facing"), "user");
+
+				try {
+					if ("BroadcastChannel" in window) {
+						handoffChannel = new BroadcastChannel("vdo-qrconnect");
+					}
+				} catch (error) {
+					handoffChannel = null;
+				}
+
+				/* ------------------------------ ui ------------------------------ */
+
+				function status(text, isError) {
+					el("status").textContent = text || "";
+					el("status").classList.toggle("error", !!isError);
+				}
+
+				function show(panel) {
+					["intro", "code", "scan", "handoff"].forEach(function (name) {
+						el("panel-" + name).classList.toggle("hidden", panel.indexOf(name) < 0);
+					});
+				}
+
+				function storageGet(key) {
+					try {
+						return localStorage.getItem(key);
+					} catch (error) {
+						return null;
+					}
+				}
+
+				function storageSet(key, value) {
+					try {
+						localStorage.setItem(key, value);
+						return true;
+					} catch (error) {
+						return false;
+					}
+				}
+
+				function storageRemove(key) {
+					try {
+						localStorage.removeItem(key);
+					} catch (error) {}
+				}
+
+				function offlineAssetURLs() {
+					var urls = [location.origin + location.pathname, new URL("qr.html", qrBaseURL).href, new URL("qr-manifest.webmanifest", qrBaseURL).href];
+					Array.prototype.slice.call(document.querySelectorAll("script[src]")).forEach(function (script) {
+						try {
+							var url = new URL(script.src, location.href);
+							if (url.origin === location.origin) {
+								urls.push(url.href);
+							}
+						} catch (error) {}
+					});
+					return urls.filter(function (url, index) {
+						return urls.indexOf(url) === index;
+					});
+				}
+
+				function showOfflineState(ready, error) {
+					var note = el("offline-note");
+					window.__qrOfflineState = {
+						ready: !!ready,
+						error: error ? String(error.message || error) : ""
+					};
+					if (error) {
+						note.textContent = "Offline use could not be prepared. Online connections still work.";
+						note.classList.remove("hidden");
+						return;
+					}
+					if (!ready) {
+						return;
+					}
+					note.textContent = navigator.onLine ? "Available offline on this device." : "Offline copy active. Peers still need the same local network or hotspot.";
+					note.classList.remove("hidden");
+				}
+
+				function cacheOfflineAssets(registration) {
+					return new Promise(function (resolve, reject) {
+						var worker = registration.active || registration.waiting || registration.installing;
+						if (!worker) {
+							reject(new Error("The offline worker is not active."));
+							return;
+						}
+						var channel = new MessageChannel();
+						var timeout = setTimeout(function () {
+							reject(new Error("The offline cache did not respond."));
+						}, 15000);
+						channel.port1.onmessage = function (event) {
+							clearTimeout(timeout);
+							if (event.data && event.data.ok) {
+								resolve();
+							} else {
+								reject(new Error((event.data && event.data.error) || "The offline cache failed."));
+							}
+						};
+						worker.postMessage(
+							{
+								type: "cache-qr-app",
+								urls: offlineAssetURLs()
+							},
+							[channel.port2]
+						);
+					});
+				}
+
+				function qrOfflineRegistration(registration) {
+					var worker = registration && (registration.active || registration.waiting || registration.installing);
+					return worker && registration.scope === qrBaseURL.href && worker.scriptURL === qrWorkerURL.href;
+				}
+
+				function waitForOfflineWorker(registration) {
+					return new Promise(function (resolve, reject) {
+						var worker = registration.installing || registration.waiting || registration.active;
+						if (!worker) {
+							reject(new Error("The offline worker is unavailable."));
+							return;
+						}
+						function checkState() {
+							if (worker.state === "activated" || worker.state === "redundant") {
+								worker.removeEventListener("statechange", checkState);
+								if (worker.state === "activated") {
+									resolve(registration);
+								} else {
+									reject(new Error("The offline worker could not be installed."));
+								}
+							}
+						}
+						worker.addEventListener("statechange", checkState);
+						checkState();
+					});
+				}
+
+				function setupOfflineCache() {
+					if (!window.isSecureContext || !("serviceWorker" in navigator) || !("caches" in window)) {
+						return;
+					}
+					navigator.serviceWorker
+						.getRegistration(qrBaseURL.href)
+						.then(function (registration) {
+							if (qrOfflineRegistration(registration)) {
+								return registration;
+							}
+							return navigator.serviceWorker.register(qrWorkerURL.href, { scope: qrBaseURL.href });
+						})
+						.then(waitForOfflineWorker)
+						.then(function (registration) {
+							return cacheOfflineAssets(registration);
+						})
+						.then(function () {
+							showOfflineState(true);
+						})
+						.catch(function (error) {
+							showOfflineState(false, error);
+						});
+				}
+
+				function restoreOfflineCacheAfterFrameLoad() {
+					if (!window.isSecureContext || !("serviceWorker" in navigator) || !("caches" in window)) {
+						return;
+					}
+					offlineRestoreTimers.forEach(function (timer) {
+						clearTimeout(timer);
+					});
+					offlineRestoreTimers = [500, 2500].map(function (delay) {
+						return setTimeout(function () {
+							navigator.serviceWorker
+								.getRegistration(qrBaseURL.href)
+								.then(function (registration) {
+									if (!qrOfflineRegistration(registration)) {
+										setupOfflineCache();
+									}
+								})
+								.catch(function (error) {
+									showOfflineState(false, error);
+								});
+						}, delay);
+					});
+				}
+
+				frame.addEventListener("load", function () {
+					var source = frame.getAttribute("src") || "";
+					if (/[?&]keepsw(?:&|$)/.test(source)) {
+						restoreOfflineCacheAfterFrameLoad();
+					}
+				});
+
+				function copyText(text, fallbackField) {
+					if (navigator.clipboard && navigator.clipboard.writeText) {
+						return navigator.clipboard.writeText(text);
+					}
+					return new Promise(function (resolve, reject) {
+						var field = fallbackField;
+						var temporary = false;
+						if (!field) {
+							field = document.createElement("textarea");
+							field.value = text;
+							field.style.position = "fixed";
+							field.style.left = "-10000px";
+							document.body.appendChild(field);
+							temporary = true;
+						}
+						field.classList.remove("hidden");
+						field.focus();
+						field.select();
+						try {
+							if (!document.execCommand("copy")) {
+								throw new Error("Copy was not available.");
+							}
+							resolve();
+						} catch (error) {
+							reject(error);
+						} finally {
+							if (temporary) {
+								field.remove();
+							}
+						}
+					});
+				}
+
+				function setChatEnabled(enabled) {
+					el("chat-input").disabled = !enabled;
+					el("btn-chat-send").disabled = !enabled;
+				}
+
+				function setMediaControlsEnabled(enabled) {
+					["cam", "mic"].forEach(function (kind) {
+						// An interrupted connection must not prevent muting a captured device.
+						deviceButton(kind).disabled = grabbed[kind] === "starting" || (!enabled && grabbed[kind] !== true);
+					});
+					el("btn-screen").disabled = !enabled;
+					el("btn-switch-cam").disabled = !enabled;
+				}
+
+				function connectedNote() {
+					return mediaActive.cam || mediaActive.mic ? "Connected." : "Connected. Camera and microphone are off.";
+				}
+
+				function setPasteValidation(text, kind) {
+					var note = el("paste-validation");
+					note.textContent = text;
+					note.classList.toggle("valid", kind === "valid");
+					note.classList.toggle("error", kind === "error");
+				}
+
+				function validatePaste() {
+					var text = el("paste-text").value.trim();
+					var run = ++pasteValidationRun;
+					el("btn-apply").disabled = true;
+					if (!text) {
+						setPasteValidation("Paste an offer or answer code.", "");
+						return;
+					}
+					setPasteValidation("Checking code...", "");
+					QRConnect.decodeBlob(text).then(
+						function (payload) {
+							if (run !== pasteValidationRun) {
+								return;
+							}
+							var usable = false;
+							var message;
+							if (payload.role === "offer" && !session) {
+								usable = true;
+								message = "Valid offer code - ready to answer.";
+							} else if (payload.role === "answer" && session && session.role === "share") {
+								usable = true;
+								message = "Valid answer code - ready to connect.";
+							} else if (payload.role === "answer" && !session) {
+								usable = true;
+								message = "Valid answer code - it can be returned to a waiting tab.";
+							} else if (payload.role === "offer") {
+								message = "Valid offer code, but this page is already connecting.";
+							} else {
+								message = "Valid answer code, but this page is not waiting for one.";
+							}
+							el("btn-apply").disabled = !usable;
+							setPasteValidation(message, usable ? "valid" : "error");
+						},
+						function (error) {
+							if (run !== pasteValidationRun) {
+								return;
+							}
+							setPasteValidation(error.message, "error");
+						}
+					);
+				}
+
+				function fillPaste(text) {
+					el("paste-text").value = text || "";
+					validatePaste();
+				}
+
+				function addChatMessage(text, mine) {
+					var list = el("chat-messages");
+					var empty = el("chat-empty");
+					if (empty) {
+						empty.remove();
+					}
+
+					var message = document.createElement("div");
+					message.className = "chat-message " + (mine ? "mine" : "peer");
+
+					var author = document.createElement("strong");
+					author.textContent = mine ? "You" : "Them";
+					message.appendChild(author);
+
+					var body = document.createElement("span");
+					body.textContent = text;
+					message.appendChild(body);
+					list.appendChild(message);
+
+					while (list.querySelectorAll(".chat-message").length > CHAT_MAX_MESSAGES) {
+						list.removeChild(list.querySelector(".chat-message"));
+					}
+					list.scrollTop = list.scrollHeight;
+				}
+
+				function receiveApplicationData(event) {
+					var payload = event && event.data;
+					var chat = payload && payload.qrchat;
+					if (!chat || chat.v !== 1 || typeof chat.text !== "string" || chat.text.length > CHAT_MAX_LENGTH || !chat.text.trim()) {
+						return;
+					}
+					addChatMessage(chat.text, false);
+				}
+
+				function sendChatMessage() {
+					var input = el("chat-input");
+					var text = input.value.trim();
+					if (!text || !session) {
+						return;
+					}
+					if (
+						!session.sendData({
+							qrchat: {
+								v: 1,
+								text: text.slice(0, CHAT_MAX_LENGTH)
+							}
+						})
+					) {
+						el("live-note").textContent = "Chat is not connected yet.";
+						return;
+					}
+					addChatMessage(text.slice(0, CHAT_MAX_LENGTH), true);
+					input.value = "";
+					input.focus();
+				}
+
+				function renderQR(text) {
+					var box = el("qrbox");
+					box.innerHTML = "";
+					box.qrcode = null;
+					try {
+						/*
+						 * The bundled QR encoder otherwise adds a UTF-8 BOM and
+						 * mishandles a switch back from a multibyte character to
+						 * ASCII. Give it the exact UTF-8 bytes as signed values so
+						 * it writes one byte per entry without changing the text.
+						 */
+						var bytes = new TextEncoder().encode(text);
+						var byteText = {
+							length: bytes.length,
+							charCodeAt: function (index) {
+								return bytes[index] < 128 ? bytes[index] : bytes[index] - 256;
+							},
+							toString: function () {
+								return text;
+							}
+						};
+						box.qrcode = new QRCode(box, {
+							text: byteText,
+							width: 340,
+							height: 340,
+							correctLevel: QRCode.CorrectLevel.L
+						});
+						var moduleCount = box.qrcode._oQRCode.getModuleCount();
+						box.style.setProperty("--qr-quiet-zone", (400 / (moduleCount + 8)).toFixed(4) + "%");
+						box.setAttribute("aria-busy", "false");
+						return true;
+					} catch (e) {
+						box.innerHTML = "";
+						box.setAttribute("aria-busy", "false");
+						return false;
+					}
+				}
+
+				/* --------------------------- scanning --------------------------- */
+
+				function stopScanner() {
+					scanner.generation++;
+					scanner.active = false;
+					el("btn-scan").textContent = "Scan with camera";
+					if (scanner.raf) {
+						cancelAnimationFrame(scanner.raf);
+						scanner.raf = null;
+					}
+					if (scanner.stream) {
+						scanner.stream.getTracks().forEach(function (track) {
+							track.stop();
+						});
+						scanner.stream = null;
+					}
+					el("scanwrap").classList.add("hidden");
+					el("scanvideo").srcObject = null;
+					el("btn-flip").classList.add("hidden");
+					el("scan-device").classList.add("hidden");
+				}
+
+				function updateScannerDevices(stream) {
+					if (!navigator.mediaDevices || !navigator.mediaDevices.enumerateDevices) {
+						return;
+					}
+					navigator.mediaDevices
+						.enumerateDevices()
+						.then(function (devices) {
+							if (scanner.stream !== stream) return;
+							var cameras = devices.filter(function (device) {
+								return device.kind === "videoinput";
+							});
+							var select = el("scan-device");
+							var current = "";
+							var tracks = stream && stream.getVideoTracks();
+							if (tracks && tracks[0] && tracks[0].getSettings) {
+								current = tracks[0].getSettings().deviceId || "";
+							}
+							select.innerHTML = "";
+							cameras.forEach(function (camera, index) {
+								var option = document.createElement("option");
+								option.value = camera.deviceId;
+								option.textContent = camera.label || "Camera " + (index + 1);
+								option.selected = !!current && camera.deviceId === current;
+								select.appendChild(option);
+							});
+							if (current) {
+								scanner.deviceId = current;
+							}
+							select.classList.toggle("hidden", cameras.length < 2);
+						})
+						.catch(function () {});
+				}
+
+				function preferContinuousScannerFocus(stream) {
+					var tracks = stream && stream.getVideoTracks();
+					var track = tracks && tracks[0];
+					if (!track || !track.getCapabilities || !track.applyConstraints) {
+						return;
+					}
+					try {
+						var capabilities = track.getCapabilities();
+						if (!capabilities.focusMode || capabilities.focusMode.indexOf("continuous") < 0) {
+							return;
+						}
+						track
+							.applyConstraints({
+								advanced: [{ focusMode: "continuous" }]
+							})
+							.catch(function () {});
+					} catch (error) {}
+				}
+
+				function startScanner(onResult) {
+					var video = el("scanvideo");
+					var makeSurface = function () {
+						var canvas = document.createElement("canvas");
+						return {
+							canvas: canvas,
+							context: canvas.getContext("2d", { willReadFrequently: true })
+						};
+					};
+					// Separate reusable buffers avoid reallocating 960p and 1920p
+					// pixel stores on every detail pass.
+					var fastSurface = makeSurface();
+					var detailSurface = makeSurface();
+					var videoConstraints = scanner.deviceId ? { deviceId: { exact: scanner.deviceId }, width: { ideal: 1920 }, height: { ideal: 1080 } } : { facingMode: scanner.facing, width: { ideal: 1920 }, height: { ideal: 1080 } };
+
+					stopScanner();
+					var generation = scanner.generation;
+					if (typeof window.jsQR !== "function") {
+						status("The QR scanner did not load. Paste the code instead.", true);
+						return Promise.resolve();
+					}
+					if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+						status("This browser cannot open a camera here. Paste the code instead.", true);
+						return Promise.resolve();
+					}
+					scanner.active = true;
+					el("btn-scan").textContent = "Stop scanning";
+					status("Allow camera access to scan, or paste a code below.");
+					return navigator.mediaDevices
+						.getUserMedia({
+							video: videoConstraints,
+							audio: false
+						})
+						.then(function (stream) {
+							if (generation !== scanner.generation) {
+								stream.getTracks().forEach(function (track) { track.stop(); });
+								return;
+							}
+							scanner.stream = stream;
+							preferContinuousScannerFocus(stream);
+							video.srcObject = stream;
+							video.classList.toggle("rear", scanner.facing !== "user");
+							el("scanwrap").classList.remove("hidden");
+							el("btn-flip").classList.remove("hidden");
+							updateScannerDevices(stream);
+							return video.play();
+						})
+						.then(function () {
+							if (generation !== scanner.generation) return;
+							status("Looking for a code...");
+							var lastScan = 0;
+							var lastDetailScan = -1000;
+							var tick = function (now) {
+								if (generation !== scanner.generation) return;
+								scanner.raf = requestAnimationFrame(tick);
+								if (video.readyState !== video.HAVE_ENOUGH_DATA) {
+									return;
+								}
+								now = now || performance.now();
+								if (now - lastScan < 100) {
+									return;
+								}
+								lastScan = now;
+								// Keep the frequent pass inexpensive on weak phones, but
+								// periodically inspect the full frame in more detail so a
+								// small or distant QR code still has enough pixels per module.
+								var detailScan = now - lastDetailScan >= 500;
+								var maxEdge = detailScan ? 1920 : 960;
+								if (detailScan) {
+									lastDetailScan = now;
+								}
+								var scale = Math.min(1, maxEdge / video.videoWidth, maxEdge / video.videoHeight);
+								var surface = detailScan ? detailSurface : fastSurface;
+								var width = Math.max(1, Math.round(video.videoWidth * scale));
+								var height = Math.max(1, Math.round(video.videoHeight * scale));
+								if (surface.canvas.width !== width || surface.canvas.height !== height) {
+									surface.canvas.width = width;
+									surface.canvas.height = height;
+								}
+								surface.context.drawImage(video, 0, 0, width, height);
+								var image = surface.context.getImageData(0, 0, width, height);
+								var found = jsQR(image.data, image.width, image.height, { inversionAttempts: "dontInvert" });
+								if (found && found.data && QRConnect.isCode(found.data)) {
+									stopScanner();
+									onResult(found.data);
+								}
+							};
+							tick();
+						})
+						.catch(function (error) {
+							if (generation !== scanner.generation) return;
+							stopScanner();
+							if (scanner.deviceId && (error.name === "NotFoundError" || error.name === "OverconstrainedError")) {
+								scanner.deviceId = "";
+								return startScanner(onResult);
+							}
+							status("Could not open the camera: " + error.message + ". Paste the code instead.", true);
+						});
+				}
+
+				/* --------------------------- signalling -------------------------- */
+
+				function makeSession(role, streamID) {
+					// The code itself, not the link, is what has to fit somewhere -
+					// a chat message, an IRC line. Offers and answers both have a
+					// 118-character hard guard; the route-complete fixtures and
+					// browser matrix must stay below it.
+					//
+					// This is a hard limit in both directions: codes over it get their
+					// redundant routes removed and are rejected if the essential data
+					// still does not fit.
+					var budget = role === "share" ? QRConnect.OFFER_LIMIT : QRConnect.ANSWER_LIMIT;
+					var made = new QRConnect.Session({
+						role: role,
+						iframe: frame,
+						vdoBase: pageURL.slice(0, pageURL.lastIndexOf("/") + 1),
+						streamID: streamID,
+						qrBudget: budget,
+						extraParams: "&keepsw&facing=" + encodeURIComponent(mediaFacing)
+					});
+					made.on("state", function (text) {
+						status(text);
+					});
+					made.on("error", function (error) {
+						stopWaitingForAnswer();
+						status(error.message, true);
+					});
+					made.on("data", receiveApplicationData);
+					made.on("devices", function (devices) {
+						mediaCameraCount = devices.filter(function (device) {
+							return device.kind === "videoinput";
+						}).length;
+						el("btn-switch-cam").classList.toggle("hidden", grabbed.cam !== true || mediaCameraCount < 2);
+					});
+					made.on("channel", function (up) {
+						if (up) {
+							setChatEnabled(true);
+							if (role === "share") {
+								setMediaControlsEnabled(true);
+								made.post({ getDeviceList: true, cib: "qrconnect-cameras" });
+								el("live-note").textContent = connectedNote();
+							} else {
+								setMediaControlsEnabled(false);
+								el("live-note").textContent = "Connected. Preparing two-way media...";
+							}
+						} else {
+							setChatEnabled(false);
+							el("live-note").textContent = "Chat disconnected. If it does not recover, hang up and start again.";
+						}
+					});
+					made.on("channel-error", function (error) {
+						setChatEnabled(false);
+						if (role === "share") {
+							setMediaControlsEnabled(true);
+						} else {
+							setMediaControlsEnabled(false);
+						}
+						el("live-note").textContent = "Connected, but persistent chat setup failed: " + error.message;
+					});
+					made.on("return-media", function (state) {
+						if (state === "starting") {
+							setMediaControlsEnabled(false);
+							el("live-note").textContent = "Connected. Preparing two-way media...";
+						} else if (state === "connected") {
+							setMediaControlsEnabled(true);
+							made.post({ getDeviceList: true, cib: "qrconnect-cameras" });
+							el("live-note").textContent = connectedNote();
+						} else if (state === "disconnected") {
+							setMediaControlsEnabled(false);
+							el("live-note").textContent = "Connected, but return media disconnected.";
+						} else if (state === "failed") {
+							setMediaControlsEnabled(false);
+							el("live-note").textContent = "Connected, but two-way media could not be prepared. Receiving media and chat still work.";
+						}
+					});
+					made.on("event", function (data) {
+						if (data.action === "new-video-track-added" || data.action === "new-audio-track-added") {
+							el("live-note").textContent = made.sidecarConnected ? "Connected." : "Media connected; persistent chat unavailable.";
+						}
+						if (data.action === "local-camera-event") {
+							if (grabbed.cam !== true) {
+								finishDeviceStart("cam");
+							} else {
+								el("live-note").textContent = made.sidecarConnected ? "Connected." : "Media connected; persistent chat unavailable.";
+							}
+						} else if ((data.action === "camera-share" || data.action === "started-camera") && grabbed.cam === "starting") {
+							finishDeviceStart("cam");
+						}
+						if (data.action === "local-microphone-event") {
+							finishDeviceStart("mic");
+						}
+					});
+					made.on("connected", function (up) {
+						if (up) {
+							stopScanner();
+							goLive();
+						} else {
+							stopWaitingForAnswer();
+							setChatEnabled(false);
+							setMediaControlsEnabled(false);
+							el("live-note").textContent = "Connection interrupted. If it does not recover, hang up and start again.";
+						}
+					});
+					made.start();
+					el("btn-reset").classList.remove("hidden");
+					window.qrconnect = made; // handle for debugging and for anyone building on this
+					return made;
+				}
+
+				// The bootstrap deliberately carries no media, so a freshly connected
+				// stage is blank until somebody turns a camera on. Say so, rather than
+				// leaving a black rectangle and no explanation.
+				function goLive() {
+					document.body.classList.add("live");
+					status("");
+					["btn-cam", "btn-mic", "btn-screen"].forEach(function (id) {
+						el(id).classList.remove("hidden");
+					});
+					el("btn-screen").classList.toggle("hidden", !navigator.mediaDevices || !navigator.mediaDevices.getDisplayMedia);
+					el("btn-switch-cam").classList.add("hidden");
+					setChatEnabled(false);
+					setMediaControlsEnabled(false);
+					el("live-note").textContent = "Connected. Preparing persistent peer chat...";
+				}
+
+				function publishBlob(result, asURL) {
+					var qrPayload = asURL ? pageURL + "#" + result.text : result.text;
+					currentBlob = {
+						text: result.text,
+						link: pageURL + "#" + result.text,
+						role: session && session.role === "share" ? "offer" : "answer"
+					};
+					// Camera apps need the complete link. Chat and clipboard users only
+					// need the compact code, which keeps it inside the measured budget.
+					el("code-text").value = result.text;
+					var ok = renderQR(qrPayload);
+					var notes = [];
+					if (!ok) {
+						notes.push("Too large for a QR code - use the text instead.");
+					}
+					if (result.dropped.length) {
+						notes.push("Left out " + result.dropped.join(" and ") + " to keep the code small.");
+					}
+					notes.push(result.text.length + "/118 characters.");
+					notes.push(result.candidates + " network route" + (result.candidates === 1 ? "" : "s") + " included.");
+					el("code-note").textContent = notes.join(" ");
+				}
+
+				/* ------------------------ local tab handoff ----------------------- */
+
+				function writeWaitingRecord() {
+					if (!handoffWaiting) {
+						return;
+					}
+					storageSet(
+						handoffWaitKey,
+						JSON.stringify({
+							at: Date.now(),
+							path: location.pathname
+						})
+					);
+				}
+
+				function beginWaitingForAnswer() {
+					if (handoffWaiting) {
+						return;
+					}
+					handoffWaiting = true;
+					writeWaitingRecord();
+					handoffHeartbeat = setInterval(writeWaitingRecord, 15000);
+				}
+
+				function stopWaitingForAnswer() {
+					handoffWaiting = false;
+					if (handoffHeartbeat) {
+						clearInterval(handoffHeartbeat);
+						handoffHeartbeat = null;
+					}
+					storageRemove(handoffWaitKey);
+					storageRemove(HANDOFF_PREFIX + "answer." + handoffTabID);
+				}
+
+				function activeWaitingTabs() {
+					var found = {};
+					var now = Date.now();
+					var keys = [];
+					try {
+						for (var index = 0; index < localStorage.length; index++) {
+							var key = localStorage.key(index);
+							if (key && key.indexOf(HANDOFF_PREFIX + "waiting.") === 0) {
+								keys.push(key);
+							} else if (key && key.indexOf(HANDOFF_PREFIX + "answer.") === 0) {
+								var pending;
+								try {
+									pending = JSON.parse(localStorage.getItem(key) || "null");
+								} catch (error) {
+									pending = null;
+								}
+								if (!pending || !pending.at || now - pending.at > HANDOFF_MAX_AGE) {
+									storageRemove(key);
+								}
+							}
+						}
+					} catch (error) {
+						return found;
+					}
+					keys.forEach(function (key) {
+						var record;
+						try {
+							record = JSON.parse(storageGet(key) || "null");
+						} catch (error) {
+							record = null;
+						}
+						if (!record || !record.at || now - record.at > HANDOFF_MAX_AGE) {
+							storageRemove(key);
+							return;
+						}
+						found[key.slice((HANDOFF_PREFIX + "waiting.").length)] = true;
+					});
+					return found;
+				}
+
+				function postHandoff(message) {
+					if (!handoffChannel) {
+						return;
+					}
+					try {
+						handoffChannel.postMessage(message);
+					} catch (error) {}
+				}
+
+				function acknowledgeHandoff(token) {
+					var key = HANDOFF_PREFIX + "accepted." + token;
+					storageSet(key, String(Date.now()));
+					postHandoff({
+						type: "accepted",
+						token: token
+					});
+					setTimeout(function () {
+						storageRemove(key);
+					}, 5000);
+				}
+
+				function acceptHandedOffAnswer(code, token) {
+					if (!handoffWaiting || !session || session.role !== "share") {
+						return;
+					}
+					QRConnect.decodeBlob(code).then(
+						function (payload) {
+							if (payload.role !== "answer" || !handoffWaiting || !session || session.role !== "share") {
+								return;
+							}
+							stopWaitingForAnswer();
+							session.acceptAnswer(payload);
+							status("Answer received, connecting...");
+							acknowledgeHandoff(token);
+						},
+						function () {}
+					);
+				}
+
+				function readPendingHandoff() {
+					var key = HANDOFF_PREFIX + "answer." + handoffTabID;
+					var packet;
+					try {
+						packet = JSON.parse(storageGet(key) || "null");
+					} catch (error) {
+						packet = null;
+					}
+					if (!packet || !packet.code || !packet.token || !packet.at || Date.now() - packet.at > HANDOFF_MAX_AGE) {
+						storageRemove(key);
+						return;
+					}
+					storageRemove(key);
+					acceptHandedOffAnswer(packet.code, packet.token);
+				}
+
+				function showHandoffResult(title, note) {
+					show(["handoff"]);
+					status("");
+					el("handoff-title").textContent = title;
+					el("handoff-note").textContent = note;
+				}
+
+				function handoffAccepted(token) {
+					if (!handoffProbe || handoffProbe.deliveryToken !== token) {
+						return;
+					}
+					storageRemove(HANDOFF_PREFIX + "accepted." + token);
+					showHandoffResult("Reply delivered", "The waiting connection received this answer. Return to that tab while it connects.");
+				}
+
+				function finishHandoffProbe() {
+					if (!handoffProbe) {
+						return;
+					}
+					var probe = handoffProbe;
+					var waiters = Object.keys(probe.waiters);
+					if (waiters.length !== 1) {
+						if (waiters.length) {
+							showHandoffResult("More than one connection is waiting", "For safety, this answer was not applied automatically. Copy it and paste it into the correct waiting tab.");
+						} else {
+							showHandoffResult("No waiting connection found", "The original tab may be closed, already connected, or this answer may be stale. Copy it and return to the tab that created the offer.");
+						}
+						return;
+					}
+
+					var target = waiters[0];
+					var deliveryToken = QRConnect.randomID(12);
+					var packet = {
+						type: "answer",
+						to: target,
+						token: deliveryToken,
+						code: probe.code,
+						at: Date.now()
+					};
+					handoffProbe.deliveryToken = deliveryToken;
+					var answerKey = HANDOFF_PREFIX + "answer." + target;
+					storageSet(answerKey, JSON.stringify(packet));
+					setTimeout(function () {
+						storageRemove(answerKey);
+					}, HANDOFF_MAX_AGE);
+					postHandoff(packet);
+					showHandoffResult("Reply sent", "Return to the waiting tab to finish connecting. This page will confirm when that tab receives it.");
+					setTimeout(function () {
+						if (storageGet(HANDOFF_PREFIX + "accepted." + deliveryToken)) {
+							handoffAccepted(deliveryToken);
+						}
+					}, 500);
+				}
+
+				function handoffAnswer(code) {
+					handoffCode = code;
+					showHandoffResult("Sending the reply", "Looking for the tab that created the offer...");
+					handoffProbe = {
+						token: QRConnect.randomID(12),
+						code: code,
+						waiters: activeWaitingTabs(),
+						deliveryToken: ""
+					};
+					postHandoff({
+						type: "probe",
+						token: handoffProbe.token
+					});
+					setTimeout(finishHandoffProbe, handoffChannel ? 300 : 0);
+				}
+
+				function receiveHandoffMessage(data) {
+					if (!data || typeof data !== "object") {
+						return;
+					}
+					if (data.type === "probe" && data.token && handoffWaiting) {
+						postHandoff({
+							type: "waiting",
+							probe: data.token,
+							tab: handoffTabID
+						});
+						return;
+					}
+					if (data.type === "waiting" && handoffProbe && data.probe === handoffProbe.token && data.tab) {
+						handoffProbe.waiters[data.tab] = true;
+						return;
+					}
+					if (data.type === "answer" && data.to === handoffTabID) {
+						acceptHandedOffAnswer(data.code, data.token);
+						return;
+					}
+					if (data.type === "accepted") {
+						handoffAccepted(data.token);
+					}
+				}
+
+				if (handoffChannel) {
+					handoffChannel.onmessage = function (event) {
+						receiveHandoffMessage(event.data);
+					};
+				}
+
+				window.addEventListener("storage", function (event) {
+					if (event.key === HANDOFF_PREFIX + "answer." + handoffTabID && event.newValue) {
+						readPendingHandoff();
+					}
+					if (event.key && event.key.indexOf(HANDOFF_PREFIX + "accepted.") === 0 && event.newValue) {
+						handoffAccepted(event.key.slice((HANDOFF_PREFIX + "accepted.").length));
+					}
+				});
+
+				document.addEventListener("visibilitychange", function () {
+					if (!document.hidden) {
+						readPendingHandoff();
+					}
+				});
+
+				window.addEventListener("beforeunload", stopWaitingForAnswer);
+
+				/* ----------------------------- roles ----------------------------- */
+
+				function beShare() {
+					if (session) {
+						return;
+					}
+					show(["code", "scan"]);
+					el("code-title").textContent = "Show this to the other person";
+					el("scan-title").textContent = "Then read their code back";
+					el("scan-note").textContent = "They will get a code of their own. Point your camera at it, or paste it below.";
+					session = makeSession("share");
+					validatePaste();
+					session.on("blob", function (result) {
+						publishBlob(result, true);
+						beginWaitingForAnswer();
+						status("Waiting for their code...");
+					});
+					session.createOffer();
+				}
+
+				function beJoin(payload) {
+					show(["code"]);
+					el("code-title").textContent = "Show this back to them";
+					el("scan-title").textContent = "";
+					session = makeSession("join", payload.streamID);
+					validatePaste();
+					session.on("blob", function (result) {
+						publishBlob(result, true);
+						status("Waiting for them to read it...");
+					});
+					session.acceptOffer(payload);
+				}
+
+				function recoverFromHash() {
+					history.replaceState(null, "", pageURL);
+					if (!session) {
+						show(["intro"]);
+					}
+				}
+
+				function applyCode(text, fromHash) {
+					var code;
+					try {
+						code = QRConnect.extractCode(text);
+					} catch (error) {
+						code = text;
+					}
+					QRConnect.decodeBlob(text)
+						.then(function (payload) {
+							if (payload.role === "offer") {
+								if (session) {
+									if (fromHash) {
+										recoverFromHash();
+									}
+									status("Already connecting.", true);
+									return;
+								}
+								history.replaceState(null, "", pageURL);
+								stopScanner();
+								beJoin(payload);
+							} else if (session && session.role === "share") {
+								stopScanner();
+								stopWaitingForAnswer();
+								if (fromHash) {
+									history.replaceState(null, "", pageURL);
+								}
+								session.acceptAnswer(payload);
+							} else if (!session) {
+								if (fromHash) {
+									history.replaceState(null, "", pageURL);
+								}
+								handoffAnswer(code);
+							} else {
+								if (fromHash) {
+									recoverFromHash();
+								}
+								status("That is an answer code, but nothing here is waiting for one.", true);
+							}
+						})
+						.catch(function (error) {
+							if (fromHash) {
+								recoverFromHash();
+							}
+							status(error.message, true);
+						});
+				}
+
+				/* ----------------------------- wiring ---------------------------- */
+
+				el("btn-share").addEventListener("click", beShare);
+
+				el("btn-paste-offer").addEventListener("click", function () {
+					show(["scan"]);
+					el("btn-reset").classList.remove("hidden");
+					el("scan-title").textContent = "Read their code";
+					el("scan-note").textContent = "Point your camera at their QR code, or paste the code below.";
+				});
+
+				el("btn-scan").addEventListener("click", function () {
+					if (scanner.active) {
+						stopScanner();
+						status("Scanning stopped. You can paste a code or scan again.");
+						return;
+					}
+					startScanner(applyCode);
+				});
+
+				el("btn-flip").addEventListener("click", function () {
+					scanner.deviceId = "";
+					scanner.facing = scanner.facing === "user" ? "environment" : "user";
+					startScanner(applyCode);
+				});
+
+				el("scan-device").addEventListener("change", function () {
+					scanner.deviceId = this.value;
+					startScanner(applyCode);
+				});
+
+				el("paste-text").addEventListener("input", function () {
+					clearTimeout(pasteValidationTimer);
+					pasteValidationTimer = setTimeout(validatePaste, 120);
+				});
+
+				el("btn-apply").addEventListener("click", function () {
+					var text = el("paste-text").value.trim();
+					if (text) {
+						applyCode(text);
+					}
+				});
+
+				el("btn-paste-clipboard").addEventListener("click", function () {
+					if (!navigator.clipboard || !navigator.clipboard.readText) {
+						el("paste-text").focus();
+						status("Paste into the box, then use the validated code.", true);
+						return;
+					}
+					navigator.clipboard.readText().then(
+						function (text) {
+							fillPaste(text);
+							status(text ? "Clipboard code loaded." : "The clipboard is empty.", !text);
+						},
+						function () {
+							el("paste-text").focus();
+							status("Clipboard access was blocked. Paste into the box instead.", true);
+						}
+					);
+				});
+
+				el("btn-copy").addEventListener("click", function () {
+					var field = el("code-text");
+					copyText(field.value, field).then(
+						function () {
+							status("Code copied.");
+						},
+						function () {
+							field.classList.remove("hidden");
+							field.select();
+							status("Select and copy the text above.");
+						}
+					);
+				});
+
+				el("btn-copy-link").addEventListener("click", function () {
+					if (!currentBlob) {
+						return;
+					}
+					copyText(currentBlob.link).then(
+						function () {
+							status("Link copied.");
+						},
+						function () {
+							el("code-text").classList.remove("hidden");
+							status("Copying the link was blocked. Copy the code instead.", true);
+						}
+					);
+				});
+
+				el("btn-native-share").addEventListener("click", function () {
+					if (!currentBlob || !navigator.share) {
+						return;
+					}
+					navigator
+						.share({
+							title: "VDO.Ninja serverless connection",
+							url: currentBlob.link
+						})
+						.then(
+							function () {
+								status("Link shared.");
+							},
+							function (error) {
+								if (!error || error.name !== "AbortError") {
+									status("Could not share the link. Copy it instead.", true);
+								}
+							}
+						);
+				});
+
+				el("btn-toggle-text").addEventListener("click", function () {
+					el("code-text").classList.toggle("hidden");
+				});
+
+				el("btn-handoff-copy").addEventListener("click", function () {
+					copyText(handoffCode).then(
+						function () {
+							status("Answer code copied.");
+						},
+						function () {
+							status("Copy was blocked. Return to the answer page and show its text.", true);
+						}
+					);
+				});
+
+				el("btn-handoff-reload").addEventListener("click", function () {
+					location.href = pageURL;
+				});
+
+				el("chat-form").addEventListener("submit", function (event) {
+					event.preventDefault();
+					sendChatMessage();
+				});
+
+				// First click grabs the device (which is what triggers the browser's
+				// permission prompt); after that the same button just mutes it.
+				var grabbed = { cam: false, mic: false };
+				var mediaActive = { cam: false, mic: false };
+				var grabTimers = { cam: null, mic: null };
+
+				function deviceButton(kind) {
+					return el(kind === "cam" ? "btn-cam" : "btn-mic");
+				}
+
+				function updateDeviceButton(kind) {
+					var button = deviceButton(kind);
+					button.setAttribute("aria-pressed", mediaActive[kind] ? "true" : "false");
+					if (kind === "cam") {
+						button.textContent = mediaActive.cam ? "Stop camera" : "Start camera";
+					} else if (!grabbed.mic) {
+						button.textContent = "Start microphone";
+					} else {
+						button.textContent = mediaActive.mic ? "Mute" : "Unmute";
+					}
+				}
+
+				function finishDeviceStart(kind) {
+					if (grabbed[kind] === true) {
+						return;
+					}
+					clearTimeout(grabTimers[kind]);
+					grabTimers[kind] = null;
+					grabbed[kind] = true;
+					mediaActive[kind] = true;
+					deviceButton(kind).disabled = false;
+					updateDeviceButton(kind);
+					el("live-note").textContent = session && session.sidecarConnected ? "Connected." : "Media connected; persistent chat unavailable.";
+					if (kind === "cam" && session) {
+						session.post({ getDeviceList: true, cib: "qrconnect-cameras" });
+					}
+				}
+
+				function beginDeviceStart(kind, message) {
+					if (!session || grabbed[kind] === "starting") {
+						return;
+					}
+					var button = deviceButton(kind);
+					grabbed[kind] = "starting";
+					mediaActive[kind] = false;
+					button.disabled = true;
+					button.setAttribute("aria-pressed", "false");
+					button.textContent = kind === "cam" ? "Starting camera..." : "Starting mic...";
+					el("live-note").textContent = kind === "cam" ? "Waiting for camera permission..." : "Waiting for microphone permission...";
+					grabTimers[kind] = setTimeout(function () {
+						if (grabbed[kind] !== "starting") {
+							return;
+						}
+						grabbed[kind] = false;
+						mediaActive[kind] = false;
+						button.disabled = false;
+						updateDeviceButton(kind);
+						el("live-note").textContent = (kind === "cam" ? "Camera" : "Microphone") + " did not start. Check permission and try again.";
+					}, 15000);
+					session.post(message);
+				}
+
+				el("btn-cam").addEventListener("click", function () {
+					if (grabbed.cam === true) {
+						mediaActive.cam = !mediaActive.cam;
+						session.post({ camera: "toggle" });
+						updateDeviceButton("cam");
+						return;
+					}
+					mediaCameraIndex = 0;
+					beginDeviceStart("cam", { changeVideoDevice: 0 });
+				});
+
+				el("btn-switch-cam").addEventListener("click", function () {
+					if (!session || grabbed.cam !== true || mediaCameraCount < 2) {
+						return;
+					}
+					mediaCameraIndex = (mediaCameraIndex + 1) % mediaCameraCount;
+					session.post({ changeVideoDevice: mediaCameraIndex });
+					el("live-note").textContent = "Switching camera...";
+				});
+
+				el("btn-mic").addEventListener("click", function () {
+					if (grabbed.mic === true) {
+						mediaActive.mic = !mediaActive.mic;
+						session.post({ mic: "toggle" });
+						updateDeviceButton("mic");
+						return;
+					}
+					beginDeviceStart("mic", { changeAudioDevice: 1 });
+				});
+
+				el("btn-screen").addEventListener("click", function () {
+					session.post({ function: "publishScreen" });
+					el("live-note").textContent = session.sidecarConnected ? "Connected." : "Media connected; persistent chat unavailable.";
+				});
+
+				el("btn-hangup").addEventListener("click", function () {
+					if (session) {
+						session.destroy();
+					}
+					location.href = pageURL;
+				});
+				el("btn-reset").addEventListener("click", function () {
+					stopScanner();
+					if (session) {
+						session.destroy();
+					}
+					location.href = pageURL;
+				});
+
+				/* ------------------------------ boot ----------------------------- */
+
+				if (!window.isSecureContext && location.hostname !== "localhost" && location.hostname !== "127.0.0.1") {
+					status("This page needs HTTPS to use the camera.", true);
+				}
+				el("btn-native-share").classList.toggle("hidden", !navigator.share);
+				setupOfflineCache();
+				window.addEventListener("online", function () {
+					if (window.__qrOfflineState && window.__qrOfflineState.ready) {
+						showOfflineState(true);
+					}
+				});
+				window.addEventListener("offline", function () {
+					if (window.__qrOfflineState && window.__qrOfflineState.ready) {
+						showOfflineState(true);
+					}
+				});
+
+				function readLocationCode(includeQuery) {
+					var code = location.hash.slice(1);
+					if (!code && includeQuery) {
+						code = params.get("c") || params.get("code") || "";
+					}
+					if (!code) {
+						return false;
+					}
+					if (!session) {
+						show([]);
+					}
+					status("Reading their code...");
+					applyCode(code, true);
+					return true;
+				}
+
+				// Scanning a code with the phone's own camera app navigates to this
+				// page. If it is already open, that is only a hash change and the page
+				// never reloads, so the link has to be picked up here too.
+				window.addEventListener("hashchange", function () {
+					readLocationCode(false);
+				});
+
+				if (!readLocationCode(true) && enabledParam("autostart")) {
+					beShare();
+				} else if (!session && !location.hash && !params.get("c") && !params.get("code")) {
+					show(["intro"]);
+					status("");
+				}
+			})();
+		</script>
+	</body>
+</html>

@@ -1,4 +1,3 @@
-importScripts('https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js');
 const CACHE_NAME = 'vdo-ninja-notifications-v1';
 const urlsToCache = [
   '/notifications/media/tone.mp3',
@@ -446,10 +445,10 @@ function cleanupOldNotifications() {
       if (countRequest.result <= 50) return;
       const excess = countRequest.result - 50;
       const index = store.index('timestamp');
+      let deleted = 0;
       index.openCursor(null, 'next').onsuccess = event => {
         const cursor = event.target.result;
         if (!cursor) return;
-        let deleted = 0;
         function deleteNext() {
           if (deleted >= excess) return;
           store.delete(cursor.value.id);
@@ -819,8 +818,8 @@ function showNotification(notification) {
 	}
   
   return Promise.all([
-    testImage('./media/logo2.png'),
-    testImage('./media/icon.png')
+    testImage('./media/logo2.png').catch(() => undefined),
+    testImage('./media/icon.png').catch(() => undefined)
   ]).then(([logoExists, iconExists]) => {
     const options = {
       body: notification.body || 'Someone joined your room',

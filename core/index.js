@@ -1,7 +1,7 @@
-export * from './events/event-bus.js';
-export * from './events/level-bus.js';
-export * from './legacy/session-bridge.js';
-export { bridgeLegacyMeters } from './legacy/meter-bridge.js';
-export * from './recording/index.js';
-export * from './audio/meters.js';
-export * from './uploads/index.js';
+export * from './events/event-bus.js?v=20260911.1';
+export * from './events/level-bus.js?v=20260911.1';
+export * from './legacy/session-bridge.js?v=20260911.1';
+export { bridgeLegacyMeters } from './legacy/meter-bridge.js?v=20260911.1';
+export * from './recording/index.js?v=20260911.1';
+export * from './audio/meters.js?v=20260911.1';
+export * from './uploads/index.js?v=20260911.1';

@@ -1,0 +1,25 @@
+{
+	"name": "VDO.Ninja Serverless Connect",
+	"short_name": "VDO QR Connect",
+	"description": "Connect two VDO.Ninja peers using QR codes or pasted text without a handshake server.",
+	"start_url": "./qr",
+	"scope": "./",
+	"display": "standalone",
+	"background_color": "#14171a",
+	"theme_color": "#14171a",
+	"orientation": "any",
+	"icons": [
+		{
+			"src": "./media/icon-192x192.png",
+			"sizes": "192x192",
+			"type": "image/png",
+			"purpose": "any monochrome"
+		},
+		{
+			"src": "./media/icon-512x512.png",
+			"sizes": "512x512",
+			"type": "image/png",
+			"purpose": "any monochrome"
+		}
+	]
+}

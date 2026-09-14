@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ElectronCapture Deep Link Generator</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.js"></script>
 	<style>
 	/* Modern Grey Theme */
 		:root {
@@ -195,8 +194,9 @@
 		}
 
 		/* Focus Outline */
-		:focus {
-		  outline: none;
+		:focus-visible {
+		  outline: 2px solid var(--accent-color);
+		  outline-offset: 3px;
 		}
 
 		/* Copy Button Success State */
@@ -206,6 +206,35 @@
 
 		#copyBtn.bg-green-500:hover {
 		  background-color: var(--success-hover);
+		}
+
+		/* Local layout styles for this page; no framework required. */
+		*, *::before, *::after { box-sizing: border-box; }
+		body { padding: 2rem 1rem; }
+		button, input { font: inherit; }
+		button { min-height: 44px; border-radius: 6px; }
+		h1 { margin-top: 0; font-size: 1.875rem; line-height: 1.25; }
+		.block { display: block; }
+		.text-sm { font-size: 0.875rem; }
+		.mb-2 { margin-bottom: 0.5rem; }
+		.ml-2 { margin-left: 0.5rem; }
+		.mt-8 { margin-top: 2rem; }
+		.p-4 { padding: 1rem; }
+		.rounded-lg { border-radius: 8px; }
+		.flex { display: flex; gap: 0.5rem; }
+		.items-center { align-items: center; }
+		.justify-between { justify-content: space-between; }
+		.grid { display: grid; grid-template-columns: minmax(0, 1fr); }
+		.grid > *, .flex > * { min-width: 0; }
+		input[type="url"], input[type="number"], input[type="text"] {
+			width: 100%; min-width: 0; min-height: 44px; padding: 0.5rem 0.75rem; border-radius: 6px;
+		}
+		input[type="checkbox"] { flex-shrink: 0; margin: 0; }
+		.link-output { display: grid; gap: 0.75rem; }
+		.link-output > .flex { justify-content: flex-end; flex-wrap: wrap; }
+		@media (min-width: 640px) {
+			[class~="md:grid-cols-2"] { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+			[class~="md:grid-cols-3"] { grid-template-columns: repeat(3, minmax(0, 1fr)); }
 		}
 </style>
 	
@@ -306,8 +335,8 @@
 				</label>
 				
 			</div>
-			<div class="flex space-x-4">
-				<input type="text" id="generatedLink" style="width: calc(100% - 1.5rem - 1px);" readonly
+			<div class="link-output">
+				<input type="text" id="generatedLink" readonly
 					class="w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm text-gray-700"
 					value="electroncapture://">
 					<div class="flex gap-2"> <!-- Added container for buttons -->

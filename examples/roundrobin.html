@@ -1,0 +1,488 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<meta name="description" content="Cycle through every connected VDO.Ninja room participant in a single iframe." />
+		<link rel="canonical" href="https://vdo.ninja/examples/roundrobin.html" />
+		<meta property="og:type" content="website" />
+		<meta property="og:site_name" content="VDO.Ninja" />
+		<meta property="og:url" content="https://vdo.ninja/examples/roundrobin.html" />
+		<meta property="og:title" content="Round-robin Room Viewer - VDO.Ninja" />
+		<meta property="og:description" content="Cycle through every connected VDO.Ninja room participant in a single iframe." />
+		<meta property="og:image" content="https://vdo.ninja/media/vdoNinja_logo_full.png" />
+		<meta name="twitter:card" content="summary_large_image" />
+		<meta name="twitter:title" content="Round-robin Room Viewer - VDO.Ninja" />
+		<meta name="twitter:description" content="Cycle through every connected VDO.Ninja room participant in a single iframe." />
+		<meta name="twitter:image" content="https://vdo.ninja/media/vdoNinja_logo_full.png" />
+		<title>Round-robin Room Viewer - VDO.Ninja</title>
+		<style>
+			:root {
+				color-scheme: dark;
+				font-family: Arial, Helvetica, sans-serif;
+			}
+
+			* {
+				box-sizing: border-box;
+			}
+
+			html,
+			body {
+				width: 100%;
+				height: 100%;
+				margin: 0;
+				overflow: hidden;
+				background: #000;
+			}
+
+			#viewer {
+				position: fixed;
+				inset: 0;
+				display: block;
+				width: 100%;
+				height: 100%;
+				border: 0;
+				background: #000;
+			}
+
+			#status {
+				position: fixed;
+				left: 16px;
+				bottom: 16px;
+				z-index: 2;
+				display: none;
+				max-width: calc(100% - 32px);
+				padding: 8px 12px;
+				border-radius: 6px;
+				background: rgba(0, 0, 0, 0.72);
+				color: #fff;
+				font-size: 14px;
+				line-height: 1.35;
+			}
+
+			body.show-status #status {
+				display: block;
+			}
+
+			#setup {
+				display: none;
+				width: 100%;
+				height: 100%;
+				align-items: center;
+				justify-content: center;
+				padding: 24px;
+				background: #11131a;
+				color: #f5f6f8;
+			}
+
+			body.setup-mode #viewer,
+			body.setup-mode #status {
+				display: none;
+			}
+
+			body.setup-mode #setup {
+				display: flex;
+			}
+
+			.setup-card {
+				width: min(100%, 520px);
+				padding: 28px;
+				border: 1px solid #303442;
+				border-radius: 12px;
+				background: #1b1e27;
+				box-shadow: 0 18px 50px rgba(0, 0, 0, 0.35);
+			}
+
+			.setup-card h1 {
+				margin: 0 0 10px;
+				font-size: 1.65rem;
+			}
+
+			.setup-card p {
+				margin: 0 0 22px;
+				color: #b8bdc9;
+				line-height: 1.5;
+			}
+
+			.field {
+				display: grid;
+				gap: 7px;
+				margin-bottom: 16px;
+			}
+
+			.field label {
+				font-weight: 600;
+			}
+
+			.field input[type="text"],
+			.field input[type="password"],
+			.field input[type="number"] {
+				width: 100%;
+				padding: 11px 12px;
+				border: 1px solid #404655;
+				border-radius: 6px;
+				background: #11131a;
+				color: #fff;
+				font: inherit;
+			}
+
+			.check-field {
+				display: flex;
+				align-items: center;
+				gap: 9px;
+				margin: 12px 0;
+				color: #d9dce3;
+			}
+
+			button {
+				width: 100%;
+				margin-top: 12px;
+				padding: 12px 16px;
+				border: 0;
+				border-radius: 6px;
+				background: #e83e8c;
+				color: #fff;
+				font: inherit;
+				font-weight: 700;
+				cursor: pointer;
+			}
+
+			button:hover,
+			button:focus-visible {
+				background: #f05b9f;
+			}
+
+			.hint {
+				margin-top: 18px !important;
+				margin-bottom: 0 !important;
+				font-size: 0.88rem;
+			}
+		</style>
+	</head>
+	<body>
+		<iframe id="viewer" title="VDO.Ninja round-robin room viewer" allow="autoplay; fullscreen; picture-in-picture"></iframe>
+		<div id="status" role="status" aria-live="polite">Waiting for participants...</div>
+
+		<main id="setup">
+			<section class="setup-card">
+				<h1>Round-robin Room Viewer</h1>
+				<p>Enter a room to create a viewer that automatically cycles through its connected publishers.</p>
+				<form id="setup-form">
+					<div class="field">
+						<label for="room">Room name</label>
+						<input id="room" name="room" type="text" required autocomplete="off" />
+					</div>
+					<div class="field">
+						<label for="password">Room password (optional)</label>
+						<input id="password" name="password" type="password" autocomplete="off" />
+					</div>
+					<div class="field">
+						<label for="interval">Seconds per participant</label>
+						<input id="interval" name="interval" type="number" min="1" max="3600" step="0.5" value="10" required />
+					</div>
+					<label class="check-field">
+						<input id="audio" name="audio" type="checkbox" />
+						Play audio from the visible participant
+					</label>
+					<label class="check-field">
+						<input id="showstatus" name="showstatus" type="checkbox" />
+						Show the participant name and queue position
+					</label>
+					<button type="submit">Open viewer</button>
+				</form>
+				<p class="hint">Copy the resulting page URL into an OBS Browser Source. The participant list updates as people join and leave.</p>
+			</section>
+		</main>
+
+		<script>
+			(function () {
+				"use strict";
+
+				var params = new URLSearchParams(window.location.search);
+				var room = (params.get("room") || "").trim();
+				var intervalSeconds = parseFloat(params.get("interval") || params.get("seconds") || "10");
+				var audioEnabled = params.get("audio") === "1" || params.get("audio") === "true";
+				var showStatus = params.get("showstatus") === "1" || params.get("showstatus") === "true";
+				var viewer = document.getElementById("viewer");
+				var status = document.getElementById("status");
+				var participants = [];
+				var labels = {};
+				var activeStreamID = null;
+				var rotationTimer = null;
+				var replaceTimer = null;
+				var streamRefreshTimer = null;
+				var viewerOrigin = window.location.origin;
+
+				if (!Number.isFinite(intervalSeconds)) {
+					intervalSeconds = 10;
+				}
+				intervalSeconds = Math.min(3600, Math.max(1, intervalSeconds));
+
+				if (showStatus) {
+					document.body.classList.add("show-status");
+				}
+
+				function configureSetupForm() {
+					document.body.classList.add("setup-mode");
+					var setupForm = document.getElementById("setup-form");
+
+					setupForm.addEventListener("submit", function (event) {
+						event.preventDefault();
+						var targetURL = new URL(window.location.href);
+						var roomValue = document.getElementById("room").value.trim();
+						var passwordValue = document.getElementById("password").value;
+						var intervalValue = document.getElementById("interval").value;
+
+						targetURL.search = "";
+						targetURL.searchParams.set("room", roomValue);
+						targetURL.searchParams.set("interval", intervalValue);
+						if (passwordValue) {
+							targetURL.searchParams.set("password", passwordValue);
+						}
+						if (document.getElementById("audio").checked) {
+							targetURL.searchParams.set("audio", "1");
+						}
+						if (document.getElementById("showstatus").checked) {
+							targetURL.searchParams.set("showstatus", "1");
+						}
+						window.location.href = targetURL.toString();
+					});
+				}
+
+				function buildViewerURL() {
+					var viewerURL = new URL("../", window.location.href);
+					var iframeCSS = ["html,body,#gridlayout{width:100%!important;height:100%!important;margin:0!important;overflow:hidden!important;background:#000!important;}", "video{position:absolute!important;inset:0!important;width:100%!important;height:100%!important;margin:0!important;object-fit:cover!important;}"].join("");
+
+					viewerURL.searchParams.set("scene", "0");
+					viewerURL.searchParams.set("room", room);
+					viewerURL.searchParams.set("manual", "1");
+					viewerURL.searchParams.set("nopush", "1");
+					viewerURL.searchParams.set("cleanoutput", "1");
+					viewerURL.searchParams.set("controls", "0");
+					viewerURL.searchParams.set("noap", "1");
+					viewerURL.searchParams.set("b64css", window.btoa(iframeCSS));
+
+					if (audioEnabled) {
+						viewerURL.searchParams.set("mutespeaker", "1");
+					} else {
+						viewerURL.searchParams.set("noaudio", "1");
+					}
+
+					["password", "hash", "salt", "token", "viewtoken", "wss"].forEach(function (name) {
+						if (params.has(name)) {
+							viewerURL.searchParams.set(name, params.get(name));
+						}
+					});
+
+					viewerOrigin = viewerURL.origin;
+					return viewerURL.toString();
+				}
+
+				function sendToViewer(message) {
+					if (!viewer.contentWindow) {
+						return;
+					}
+					viewer.contentWindow.postMessage(message, viewerOrigin);
+				}
+
+				function requestParticipants() {
+					sendToViewer({
+						getStreamIDs: true
+					});
+				}
+
+				function updateStatus() {
+					if (!participants.length) {
+						status.textContent = "Waiting for participants...";
+						return;
+					}
+
+					var position = participants.indexOf(activeStreamID);
+					var label = labels[activeStreamID] || activeStreamID;
+					status.textContent = label + " (" + (position + 1) + " of " + participants.length + ")";
+				}
+
+				function scheduleRotation() {
+					window.clearTimeout(rotationTimer);
+					rotationTimer = null;
+
+					if (participants.length > 1 && activeStreamID) {
+						rotationTimer = window.setTimeout(showNextParticipant, intervalSeconds * 1000);
+					}
+				}
+
+				function applyAudioState() {
+					if (!audioEnabled) {
+						return;
+					}
+
+					sendToViewer({
+						target: "*",
+						settings: {
+							muted: true
+						}
+					});
+
+					if (activeStreamID) {
+						sendToViewer({
+							target: activeStreamID,
+							settings: {
+								muted: false,
+								volume: 1
+							}
+						});
+					}
+				}
+
+				function showParticipant(streamID) {
+					if (!streamID || participants.indexOf(streamID) === -1) {
+						return;
+					}
+
+					activeStreamID = streamID;
+					window.clearTimeout(replaceTimer);
+					applyAudioState();
+					sendToViewer({
+						target: streamID,
+						add: true
+					});
+
+					replaceTimer = window.setTimeout(function () {
+						sendToViewer({
+							target: streamID,
+							replace: true
+						});
+					}, 300);
+
+					updateStatus();
+					scheduleRotation();
+				}
+
+				function showNextParticipant() {
+					if (!participants.length) {
+						clearViewer();
+						return;
+					}
+
+					var currentIndex = participants.indexOf(activeStreamID);
+					var nextIndex = currentIndex === -1 ? 0 : (currentIndex + 1) % participants.length;
+					showParticipant(participants[nextIndex]);
+				}
+
+				function clearViewer() {
+					activeStreamID = null;
+					window.clearTimeout(rotationTimer);
+					window.clearTimeout(replaceTimer);
+					rotationTimer = null;
+					replaceTimer = null;
+
+					if (audioEnabled) {
+						sendToViewer({
+							target: "*",
+							settings: {
+								muted: true
+							}
+						});
+					}
+
+					sendToViewer({
+						target: "*",
+						remove: true
+					});
+					updateStatus();
+				}
+
+				function updateParticipants(streamIDMap) {
+					var incomingIDs = Object.keys(streamIDMap).filter(function (streamID) {
+						return Boolean(streamID);
+					});
+					var previousParticipants = participants.slice();
+					var previousActiveIndex = previousParticipants.indexOf(activeStreamID);
+					var incomingLookup = {};
+					var nextParticipants = [];
+
+					incomingIDs.forEach(function (streamID) {
+						incomingLookup[streamID] = true;
+						labels[streamID] = streamIDMap[streamID] || false;
+					});
+
+					previousParticipants.forEach(function (streamID) {
+						if (incomingLookup[streamID]) {
+							nextParticipants.push(streamID);
+						}
+					});
+
+					incomingIDs.forEach(function (streamID) {
+						if (nextParticipants.indexOf(streamID) === -1) {
+							nextParticipants.push(streamID);
+						}
+					});
+
+					participants = nextParticipants;
+
+					if (!participants.length) {
+						clearViewer();
+						return;
+					}
+
+					if (participants.indexOf(activeStreamID) === -1) {
+						var replacementID = null;
+
+						if (previousActiveIndex !== -1) {
+							for (var offset = 1; offset <= previousParticipants.length; offset += 1) {
+								var candidate = previousParticipants[(previousActiveIndex + offset) % previousParticipants.length];
+								if (incomingLookup[candidate]) {
+									replacementID = candidate;
+									break;
+								}
+							}
+						}
+
+						showParticipant(replacementID || participants[0]);
+						return;
+					}
+
+					applyAudioState();
+					updateStatus();
+					if (!rotationTimer) {
+						scheduleRotation();
+					}
+				}
+
+				function handleViewerMessage(event) {
+					if (event.source !== viewer.contentWindow || event.origin !== viewerOrigin || !event.data || typeof event.data !== "object") {
+						return;
+					}
+
+					if (event.data.streamIDs && typeof event.data.streamIDs === "object") {
+						updateParticipants(event.data.streamIDs);
+						return;
+					}
+
+					if (event.data.action === "view-connection" || event.data.action === "end-view-connection") {
+						window.setTimeout(requestParticipants, 250);
+					}
+				}
+
+				if (!room) {
+					configureSetupForm();
+					return;
+				}
+
+				viewer.addEventListener("load", function () {
+					clearViewer();
+					window.setTimeout(requestParticipants, 250);
+				});
+				window.addEventListener("message", handleViewerMessage);
+				viewer.src = buildViewerURL();
+				streamRefreshTimer = window.setInterval(requestParticipants, 1000);
+
+				window.addEventListener("beforeunload", function () {
+					window.clearInterval(streamRefreshTimer);
+					window.clearTimeout(rotationTimer);
+					window.clearTimeout(replaceTimer);
+				});
+			})();
+		</script>
+	</body>
+</html>

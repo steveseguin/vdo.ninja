@@ -1098,6 +1098,7 @@ body.podcast-studio-mode > :not(#podcast-root):not(#podcast-room-gate):not([data
 .host-input-content {
   display: inline-flex;
   align-items: center;
+  flex-wrap: wrap;
   gap: 14px;
 }
 
@@ -1170,6 +1171,159 @@ body.podcast-studio-mode > :not(#podcast-root):not(#podcast-room-gate):not([data
   letter-spacing: 0.04em;
   color: #ff6b88;
   min-height: 16px;
+}
+
+.host-audio-settings {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 160px;
+  gap: 12px;
+  padding-top: 12px;
+  border-top: 1px solid rgba(255, 255, 255, 0.07);
+}
+
+.host-audio-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+}
+
+.host-audio-field__label {
+  color: rgba(255, 255, 255, 0.58);
+  font-size: 0.69rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.host-audio-device-control {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 7px;
+}
+
+.host-audio-select {
+  width: 100%;
+  min-width: 0;
+  height: 36px;
+  border: 1px solid rgba(158, 197, 255, 0.22);
+  border-radius: 10px;
+  outline: none;
+  background: rgba(8, 12, 22, 0.88);
+  color: rgba(255, 255, 255, 0.9);
+  padding: 0 30px 0 10px;
+  font: inherit;
+  font-size: 0.78rem;
+  color-scheme: dark;
+}
+
+.host-audio-select:focus-visible,
+.host-audio-refresh:focus-visible,
+.host-audio-advanced__summary:focus-visible {
+  border-color: rgba(95, 142, 255, 0.82);
+  box-shadow: 0 0 0 3px rgba(95, 142, 255, 0.16);
+}
+
+.host-audio-select:disabled,
+.host-audio-refresh:disabled {
+  cursor: not-allowed;
+  opacity: 0.48;
+}
+
+.host-audio-check input:disabled {
+  cursor: not-allowed;
+  opacity: 0.48;
+}
+
+.host-audio-refresh {
+  height: 36px;
+  border: 1px solid rgba(95, 142, 255, 0.28);
+  border-radius: 10px;
+  background: rgba(95, 142, 255, 0.13);
+  color: #a6c8ff;
+  padding: 0 10px;
+  font: inherit;
+  font-size: 0.72rem;
+  cursor: pointer;
+}
+
+.host-audio-refresh:hover:not(:disabled) {
+  background: rgba(95, 142, 255, 0.22);
+}
+
+.host-audio-advanced {
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: 12px;
+  background: rgba(8, 12, 22, 0.38);
+}
+
+.host-audio-advanced__summary {
+  border-radius: 12px;
+  color: rgba(255, 255, 255, 0.68);
+  cursor: pointer;
+  font-size: 0.76rem;
+  letter-spacing: 0.04em;
+  list-style-position: inside;
+  padding: 9px 11px;
+}
+
+.host-audio-advanced[open] .host-audio-advanced__summary {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.host-audio-advanced__grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px 14px;
+  padding: 12px;
+}
+
+.host-audio-check {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  min-height: 26px;
+  color: rgba(255, 255, 255, 0.74);
+  cursor: pointer;
+  font-size: 0.74rem;
+}
+
+.host-audio-check input {
+  width: 15px;
+  height: 15px;
+  margin: 0;
+  accent-color: #5f8eff;
+}
+
+.host-audio-field--bitrate {
+  grid-column: 1 / -1;
+}
+
+.host-audio-summary {
+  color: rgba(158, 197, 255, 0.8);
+  font-size: 0.72rem;
+  letter-spacing: 0.025em;
+}
+
+.host-audio-summary[data-state='active'] {
+  color: rgba(47, 231, 163, 0.9);
+}
+
+.host-audio-hint {
+  color: rgba(255, 255, 255, 0.42);
+  font-size: 0.7rem;
+  line-height: 1.45;
+}
+
+@media (max-width: 520px) {
+  .host-audio-settings,
+  .host-audio-advanced__grid {
+    grid-template-columns: 1fr;
+  }
+
+  .host-audio-field--bitrate {
+    grid-column: auto;
+  }
 }
 
 .cloud-sync-list {
@@ -2229,4 +2383,20 @@ body.podcast-studio-mode #chatModuleButton {
 
 .help-section__body a:hover {
   text-decoration: underline;
+}
+.timeline-archive {
+	margin-block: 0.75rem;
+	padding: 0.75rem;
+	border: 1px solid rgba(255, 255, 255, 0.15);
+	border-radius: 8px;
+}
+
+.timeline-archive > summary {
+	cursor: pointer;
+	padding-block: 0.25rem;
+}
+
+.timeline-archive > .timeline-surface {
+	min-height: 0;
+	margin-block: 0.5rem;
 }

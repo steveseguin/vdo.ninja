@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<!-- Copyright (c) 2026 Steve Seguin. SPDX-License-Identifier: MIT -->
+<html lang="en">
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<title>360° Viewer | VDO.Ninja</title>
+	<meta name="description" content="Look around a live VDO.Ninja 360-degree stream or a local equirectangular photo or video." />
+	<script src="../thirdparty/aframe.min.js"></script>
+	<style>
+		:root { color-scheme: dark; font-family: system-ui, sans-serif; background: #111827; color: #f8fafc; }
+		* { box-sizing: border-box; }
+		body { margin: 0; }
+		[hidden] { display: none !important; }
+		button, input { font: inherit; min-height: 44px; border: 1px solid #64748b; border-radius: 6px; padding: 10px 12px; color: inherit; background: #182232; }
+		button { cursor: pointer; }
+		button:focus-visible, input:focus-visible, a:focus-visible { outline: 3px solid #fbbf24; outline-offset: 3px; }
+		a { color: #93c5fd; }
+		#toolbar { position: fixed; z-index: 5; top: 12px; left: 12px; right: 12px; display: flex; flex-wrap: wrap; gap: 8px; pointer-events: none; }
+		#toolbar > * { pointer-events: auto; }
+		#source-panel { position: fixed; z-index: 6; top: 72px; left: 12px; width: min(420px, calc(100% - 24px)); max-height: calc(100dvh - 190px); overflow: auto; padding: 20px; background: #111827f5; border: 1px solid #475569; border-radius: 12px; }
+		h1 { margin: 0 0 12px; font-size: 24px; }
+		p { line-height: 1.5; }
+		label { display: grid; gap: 6px; margin: 14px 0; }
+		input { width: 100%; min-width: 0; }
+		#status { position: fixed; z-index: 5; bottom: 72px; left: 12px; max-width: calc(100% - 24px); padding: 8px 12px; border-radius: 6px; background: #111827e8; pointer-events: none; }
+		#help { position: fixed; z-index: 5; bottom: 12px; left: 12px; right: 100px; margin: 0; font-size: 13px; pointer-events: none; text-shadow: 0 1px 4px #000; }
+		#connection { position: fixed; left: -320px; top: 0; width: 300px; height: 180px; border: 0; }
+		#local-video, #frames { display: none; }
+		@media (max-width: 520px) { #source-panel { top: 120px; max-height: calc(100dvh - 250px); } #toolbar { gap: 4px; } #toolbar button { padding: 8px; } }
+	</style>
+</head>
+<body>
+	<nav id="toolbar" aria-label="Viewer controls">
+		<button id="sources" aria-controls="source-panel" aria-expanded="true">Source</button>
+		<button id="reset">Reset view</button>
+		<button id="sound" aria-pressed="false">Enable sound</button>
+		<button id="play" hidden>Play</button>
+		<button id="fullscreen">Fullscreen</button>
+		<button id="stop">Stop</button>
+	</nav>
+	<section id="source-panel" aria-labelledby="title">
+		<h1 id="title">360° viewer</h1>
+		<p>Open a stitched, equirectangular panorama or video (usually 2:1). Drag to look around, scroll to zoom, or use a supported VR headset.</p>
+		<form id="connect-form">
+			<label for="view">VDO.Ninja stream ID<input id="view" name="view" required autocomplete="off" /></label>
+			<label for="password">Password (if needed)<input id="password" name="password" type="password" autocomplete="off" /></label>
+			<button type="submit">Connect stream</button>
+		</form>
+		<label for="file">Or open a local 360° photo or video<input id="file" type="file" accept="image/*,video/*" /></label>
+		<p>Local files stay in your browser. Live frame viewing requires a browser with video-frame processing support, such as Chrome or Edge.</p>
+		<p><a href="index.html">More examples</a> · <a href="../thirdparty/aframe.min.js.LICENSE">A-Frame and dependency credits</a></p>
+	</section>
+	<p id="status" role="status" aria-live="polite">Choose a stream or local file to begin.</p>
+	<p id="help">Drag or use arrow keys to look around · Scroll or +/− to zoom · R to reset</p>
+	<canvas id="frames" width="2" height="1"></canvas>
+	<video id="local-video" playsinline loop muted></video>
+	<a-scene background="color: #111827" renderer="antialias: true" loading-screen="enabled: false" embedded style="position:fixed;inset:0">
+		<a-sky id="sphere" rotation="0 -90 0" material="shader: flat; color: #fff" panorama-texture></a-sky>
+		<a-camera id="camera" position="0 0 0" wasd-controls="enabled: false" look-controls="pointerLockEnabled: false" camera="fov: 80"></a-camera>
+	</a-scene>
+	<iframe id="connection" title="VDO.Ninja stream connection" allow="autoplay; fullscreen" tabindex="-1" aria-hidden="true"></iframe>
+	<noscript>This viewer requires JavaScript.</noscript>
+	<script src="360.js"></script>
+</body>
+</html>
