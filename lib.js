@@ -38569,7 +38569,8 @@ function hasActiveOutboundAudioSender(UUID) {
 		}
 		var senders = getSenders2(UUID);
 		for (var i = 0; i < senders.length; i++) {
-			if (senders[i].track && senders[i].track.kind === "audio" && senders[i].track.readyState === "live") {
+			var track = getSenderSourceTrack(senders[i]);
+			if (track && track.kind === "audio" && track.readyState === "live") {
 				return true;
 			}
 		}
@@ -42520,15 +42521,16 @@ session.applyIsolatedChat = function (UUID = false) {
 				var settings = {};
 				if (!soloMode) {
 					settings.active = true;
-					session.pcs[UUID].audioMutedOverride = false;
 				} else if (muteList.indexOf(UUID) >= 0) {
 					settings.active = true;
-					session.pcs[UUID].audioMutedOverride = false;
 				} else {
 					log("MUTING via session.applyIsolatedChat");
 					settings.active = false;
-					session.pcs[UUID].audioMutedOverride = true;
 				}
+				if (session.director !== false && session.directorEnabledPPT && session.soloChatUUID.length && !session.soloChatUUID.includes(UUID)) {
+					settings.active = false;
+				}
+				session.pcs[UUID].audioMutedOverride = !settings.active;
 				setEncodings(sender, settings);
 			});
 		} catch (e) {
@@ -42549,15 +42551,16 @@ session.applyIsolatedChat = function (UUID = false) {
 					var settings = {};
 					if (!soloMode) {
 						settings.active = true;
-						session.pcs[UUID].audioMutedOverride = false;
 					} else if (muteList.indexOf(UUID) >= 0) {
 						settings.active = true;
-						session.pcs[UUID].audioMutedOverride = false;
 					} else {
 						log("MUTING via session.applyIsolatedChat");
 						settings.active = false;
-						session.pcs[UUID].audioMutedOverride = true;
 					}
+					if (session.director !== false && session.directorEnabledPPT && session.soloChatUUID.length && !session.soloChatUUID.includes(UUID)) {
+						settings.active = false;
+					}
+					session.pcs[UUID].audioMutedOverride = !settings.active;
 					setEncodings(sender, settings);
 				});
 			} catch (e) {
@@ -42571,6 +42574,37 @@ session.applyIsolatedChat = function (UUID = false) {
 };
 
 var FirefoxSenders = {};
+
+function getSenderSourceTrack(sender) {
+	if (Firefox && sender.track && sender.firefoxAudio) {
+		// Keep the requested source identity while replaceTrack is still settling.
+		return sender.firefoxAudio.source;
+	}
+	return sender.track;
+}
+
+function replaceFirefoxAudioTrack(sender, track = null, active = null) {
+	var state = sender.firefoxAudio;
+	if (!state) {
+		if (active !== false) {
+			return track ? sender.replaceTrack(track) : Promise.resolve();
+		}
+		var source = track || sender.track;
+		var muted = source.clone();
+		muted.enabled = false;
+		// A stopped substitute stays silent without retaining another microphone capture.
+		muted.stop();
+		state = { source: source, muted: muted, active: false };
+		sender.firefoxAudio = state;
+	} else if (track) {
+		state.source = track;
+	}
+	if (active !== null) {
+		state.active = active;
+	}
+	// Restore the source's current mute state, including mic changes made while isolated.
+	return sender.replaceTrack(state.active ? state.source : state.muted);
+}
 
 function setEncodings(sender, settings = null, callback = null, cbarg = null, onResult = null) {
 	if (!settings) {
@@ -42599,6 +42633,41 @@ function setEncodings(sender, settings = null, callback = null, cbarg = null, on
 		callback = options[1];
 		cbarg = options[2];
 		onResult = options[3];
+
+		if (Firefox && sender.track && sender.track.kind === "audio" && "active" in settings) {
+			var audioSettings = {};
+			for (var key in settings) {
+				if (key !== "active") {
+					audioSettings[key] = settings[key];
+				}
+			}
+			// Firefox's audio fallback must affect this sender, never the shared source track.
+			replaceFirefoxAudioTrack(sender, null, settings.active).then(function () {
+				if (Object.keys(audioSettings).length) {
+					// Read fresh parameters after replaceTrack settles.
+					sender.encodingsQueue.unshift([audioSettings, callback, cbarg, onResult]);
+				} else {
+					if (onResult) onResult(null, sender.getParameters());
+					if (callback) {
+						setTimeout(function () {
+							if (cbarg) {
+								callback(cbarg);
+							} else {
+								callback();
+							}
+						}, 0);
+					}
+				}
+				sender.encodingsQueueActive = false;
+				setEncodings(sender);
+			}).catch(function (e) {
+				errorlog(e);
+				sender.encodingsQueueActive = false;
+				if (onResult) onResult(e);
+				setEncodings(sender);
+			});
+			return;
+		}
 
 		const params = sender.getParameters();
 		if (!params.encodings || params.encodings.length == 0) {
@@ -42684,44 +42753,6 @@ function setEncodings(sender, settings = null, callback = null, cbarg = null, on
 					return;
 				}
 			}
-		} else if (Firefox) {
-			// Firefox , all versions, don't support active state with audio yet?? GAhhhhhhhh!
-			if ("track" in sender && "kind" in sender.track && sender.track.kind == "audio") {
-				if ("active" in settings) {
-					warnlog("Firefox does not support track active state with AUDIO yet... We will use enable/disable for that instead.");
-					if (FirefoxSenders.sender) {
-						if (FirefoxSenders.sender.lastState === false) {
-							FirefoxSenders.sender.activeState = settings.active;
-							// already set to false, so should stay disabled
-						} else {
-							FirefoxSenders.sender.activeState = settings.active;
-							sender.track.enabled = settings.active; // either true or false
-						}
-					} else {
-						FirefoxSenders.sender = { lastState: sender.track.enabled, activeState: settings.active };
-						sender.track.enabled = settings.active;
-					}
-
-					delete settings.active;
-					if (!Object.keys(settings).length) {
-						if (callback) {
-							if (cbarg) {
-								setTimeout(function () {
-									callback(cbarg);
-								}, 0);
-							} else {
-								setTimeout(function () {
-									callback();
-								}, 0);
-							}
-						}
-						log("COMPELTED FIREFOX SET ENCODINGS");
-						sender.encodingsQueueActive = false;
-						setEncodings(sender);
-						return;
-					}
-				}
-			}
 		}
 
 		sender
@@ -42753,6 +42784,9 @@ function setEncodings(sender, settings = null, callback = null, cbarg = null, on
 		errorlog(e);
 		sender.encodingsQueueActive = false;
 		if (onResult) onResult(e);
+		if (Firefox && sender.firefoxAudio) {
+			setEncodings(sender);
+		}
 	}
 }
 
@@ -42775,6 +42809,9 @@ session.applySoloChat = function (apply = true) {
 		}
 	}
 
+	// Use the same restrictions for private talk, renegotiation and bitrate updates.
+	session.applyIsolatedChat();
+
 	for (var uuid in session.pcs) {
 		// not sure what to do here wrt to screen tracks
 		try {
@@ -42790,7 +42827,7 @@ session.applySoloChat = function (apply = true) {
 				var settings = {};
 
 				if (session.soloChatUUID.length && session.soloChatUUID.includes(uuid)) {
-					settings.active = true;
+					settings.active = !session.pcs[uuid].audioMutedOverride;
 					setEncodings(
 						sender,
 						settings,
@@ -42806,7 +42843,7 @@ session.applySoloChat = function (apply = true) {
 						uuid
 					);
 				} else if (session.soloChatUUID.length == 0) {
-					settings.active = true;
+					settings.active = !session.pcs[uuid].audioMutedOverride;
 					setEncodings(
 						sender,
 						settings,
@@ -42885,7 +42922,12 @@ function replaceAudioTrackSafely(sender, track, UUID, videoSource = null, contex
 		// A rejected replacement must not repair a newer peer or a superseding track update.
 		repairOwner = { pc: session.pcs && session.pcs[UUID], sender: sender, previousTrack: sender.track };
 		sender.audioReplaceRequest = repairOwner;
-		var result = sender.replaceTrack(track);
+		var result;
+		if (Firefox && sender.firefoxAudio) {
+			result = replaceFirefoxAudioTrack(sender, track);
+		} else {
+			result = sender.replaceTrack(track);
+		}
 		if (result && typeof result.then === "function") {
 			return result
 				.then(function () {
@@ -42934,7 +42976,8 @@ async function attemptPeerAudioRepair(UUID, track, videoSource = null, context =
 	function isCurrentRepair() {
 		return pc && session.pcs[UUID] === pc && pc.signalingState !== "closed" && track && track.readyState !== "ended" &&
 			(!repairOwner || (repairOwner.sender.audioReplaceRequest === repairOwner &&
-				(repairOwner.sender.track === repairOwner.previousTrack || repairOwner.sender.track === track))) &&
+				(repairOwner.sender.track === repairOwner.previousTrack || repairOwner.sender.track === track ||
+					(Firefox && repairOwner.sender.firefoxAudio && repairOwner.sender.track === repairOwner.sender.firefoxAudio.muted && repairOwner.sender.firefoxAudio.source === track)))) &&
 			(!screenRepair || (session.screenStream === videoSource && videoSource && videoSource.getAudioTracks().indexOf(track) !== -1));
 	}
 	try {
@@ -42969,7 +43012,11 @@ async function attemptPeerAudioRepair(UUID, track, videoSource = null, context =
 			var audioSender = repairOwner ? (senders.indexOf(repairOwner.sender) !== -1 ? repairOwner.sender : null) : senders.find(s => s.track && s.track.kind === "audio");
 			if (audioSender && typeof audioSender.replaceTrack === "function") {
 				try {
-					await Promise.resolve(audioSender.replaceTrack(track));
+					if (Firefox && audioSender.firefoxAudio) {
+						await replaceFirefoxAudioTrack(audioSender, track);
+					} else {
+						await Promise.resolve(audioSender.replaceTrack(track));
+					}
 					if (!isCurrentRepair()) return false;
 					// Preserve the supplied track's enabled state, including mute changes during the await.
 					repaired = true;
@@ -43003,7 +43050,11 @@ async function attemptPeerAudioRepair(UUID, track, videoSource = null, context =
 
 				if (!hasAudioSender && nullAudioSender) {
 					try {
-						await Promise.resolve(nullAudioSender.sender.replaceTrack(track));
+						if (Firefox && nullAudioSender.sender.firefoxAudio) {
+							await replaceFirefoxAudioTrack(nullAudioSender.sender, track);
+						} else {
+							await Promise.resolve(nullAudioSender.sender.replaceTrack(track));
+						}
 						if (!isCurrentRepair()) return false;
 						// removeTrack leaves a receive-only/inactive transceiver; replaceTrack alone cannot resume sending.
 						if (nullAudioSender.direction === "recvonly") {
@@ -43089,6 +43140,13 @@ function senderAudioUpdate(callbackUUID = false, videoSource = null) {
 		}
 
 		tracks = videoSource.getAudioTracks();
+		if (session.muted) {
+			tracks.forEach(function (track) {
+				if (!isCallInMixedAudioTrack(track)) {
+					track.enabled = false;
+				}
+			});
+		}
 
 		if (session.audioContentHint && tracks.length) {
 			tracks.forEach(trk => {
@@ -43154,8 +43212,13 @@ function senderAudioUpdate(callbackUUID = false, videoSource = null) {
 						var added = false;
 						senders.forEach(sender => {
 							if (added) {
-								if (sender.track && sender.track.kind == "audio") {
-									sender.track.enabled = false;
+								var senderTrack = getSenderSourceTrack(sender);
+								if (senderTrack && senderTrack.kind == "audio" && senderTrack.readyState !== "ended") {
+									// Retire this sender without silencing an input to the new mix.
+									var mutedTrack = senderTrack.clone();
+									mutedTrack.enabled = false;
+									mutedTrack.stop();
+									replaceAudioTrackSafely(sender, mutedTrack, UUID, STRM, "senderAudioUpdate:mixMinus");
 								}
 								return;
 							}
@@ -43173,12 +43236,14 @@ function senderAudioUpdate(callbackUUID = false, videoSource = null) {
 					});
 					continue;
 				}
+				var availableSenders = [];
 				senders.forEach(sender => {
 					var good = false;
-					if (sender.track && sender.track.id && sender.track.kind == "audio") {
+					var senderTrack = getSenderSourceTrack(sender);
+					if (senderTrack && senderTrack.id && senderTrack.kind == "audio") {
 						tracks.forEach(function (track) {
 							// audio also
-							if (track.id == sender.track.id) {
+							if (track.id == senderTrack.id) {
 								good = true;
 							}
 						});
@@ -43189,7 +43254,8 @@ function senderAudioUpdate(callbackUUID = false, videoSource = null) {
 					if (good) {
 						return;
 					}
-					sender.track.enabled = false;
+					senderTrack.enabled = false;
+					availableSenders.push(sender);
 					//session.pcs[UUID].removeTrack(sender); //  Apparently removeTrack causes renogiation; also kills send/recv.
 				});
 
@@ -43198,9 +43264,10 @@ function senderAudioUpdate(callbackUUID = false, videoSource = null) {
 						var matched = false;
 						var senders = getSenders2(UUID);
 						senders.forEach(sender => {
-							if (sender.track && sender.track.id && sender.track.kind == "audio") {
-								warnlog(sender.track.id + " " + track.id);
-								if (sender.track.id == track.id) {
+							var senderTrack = getSenderSourceTrack(sender);
+							if (senderTrack && senderTrack.id && senderTrack.kind == "audio") {
+								warnlog(senderTrack.id + " " + track.id);
+								if (senderTrack.id == track.id) {
 									warnlog("MATCHED 1");
 									matched = true;
 								}
@@ -43209,20 +43276,14 @@ function senderAudioUpdate(callbackUUID = false, videoSource = null) {
 						if (matched) {
 							return;
 						}
-						var added = false;
-						var senders = getSenders2(UUID);
-						senders.forEach(sender => {
-							if (added) {
-								return;
-							}
-							if (sender.track && sender.track.kind == "audio" && sender.track.enabled == false) {
-								var replaceResult = replaceAudioTrackSafely(sender, track, UUID, videoSource, "senderAudioUpdate:reuse-disabled-sender");
+						// Reserve each stale sender once, including asynchronous replacements.
+						var sender = availableSenders.shift();
+						if (sender) {
+							var replaceResult = replaceAudioTrackSafely(sender, track, UUID, videoSource, "senderAudioUpdate:reuse-disabled-sender");
+							if (!session.muted || isCallInMixedAudioTrack(track)) {
 								enableSenderAfterAudioReplace(sender, track, replaceResult);
-								added = true;
-								warnlog("ADDED 2");
 							}
-						});
-						if (added) {
+							warnlog("ADDED 2");
 							return;
 						}
 						var sender = session.pcs[UUID].addTrack(track, videoSource);
@@ -43231,8 +43292,9 @@ function senderAudioUpdate(callbackUUID = false, videoSource = null) {
 				} else {
 					var senders = getSenders2(UUID);
 					senders.forEach(sender => {
-						if (sender.track && sender.track.kind == "audio") {
-							sender.track.enabled = false; // (trying this instead)
+						var senderTrack = getSenderSourceTrack(sender);
+						if (senderTrack && senderTrack.kind == "audio") {
+							senderTrack.enabled = false; // (trying this instead)
 							//session.pcs[UUID].removeTrack(sender); //  Apparently removeTrack causes renogiation; also kills send/recv.
 						}
 					});
@@ -45491,7 +45553,7 @@ session.setPeerTranslationAudioTrack = function (UUID, track, context = "transla
 				if (currentSenders[senderIndex].track && currentSenders[senderIndex].track.kind === "audio") {
 					entries.push({
 						sender: currentSenders[senderIndex],
-						originalTrack: currentSenders[senderIndex].track
+						originalTrack: getSenderSourceTrack(currentSenders[senderIndex])
 					});
 				}
 			}
@@ -45516,12 +45578,12 @@ session.setPeerTranslationAudioTrack = function (UUID, track, context = "transla
 				}
 			}
 			if (!knownEntry) {
-				state.entries.push({ sender: currentSender, originalTrack: currentSender.track });
+				state.entries.push({ sender: currentSender, originalTrack: getSenderSourceTrack(currentSender) });
 				continue;
 			}
 			for (var localIndex = 0; localIndex < currentLocalTracks.length; localIndex++) {
-				if (currentLocalTracks[localIndex].id === currentSender.track.id) {
-					knownEntry.originalTrack = currentSender.track;
+				if (currentLocalTracks[localIndex].id === getSenderSourceTrack(currentSender).id) {
+					knownEntry.originalTrack = getSenderSourceTrack(currentSender);
 					break;
 				}
 			}
@@ -45606,6 +45668,35 @@ session.restorePeerTranslationAudioTrack = function (UUID) {
 		}
 		delete peer.translationAudioState;
 		return Promise.all(replacements).then(function () {
+			if (state.entries.length > 1 && session.pcs && session.pcs[UUID] === peer && peer.signalingState !== "closed" && !peer.translationAudioState) {
+				var primarySender = state.entries[0].sender;
+				// Detached secondary senders missed routing updates during translation.
+				setEncodings(primarySender, {}, null, null, function (error, parameters) {
+					if (error || !session.pcs || session.pcs[UUID] !== peer || peer.signalingState === "closed" || peer.translationAudioState) return;
+					var senders = getSenders2(UUID);
+					if (senders.indexOf(primarySender) === -1) return;
+					var active = true;
+					if (Firefox && primarySender.firefoxAudio) {
+						active = primarySender.firefoxAudio.active;
+					} else if (parameters.encodings && parameters.encodings.length) {
+						active = parameters.encodings[0].active !== false;
+					}
+					// Honor newer mute changes queued behind this completion too.
+					for (var i = 0; i < primarySender.encodingsQueue.length; i++) {
+						var settings = primarySender.encodingsQueue[i][0];
+						if (settings.active === true || settings.active === false) {
+							active = settings.active;
+						}
+					}
+					for (var i = 1; i < state.entries.length; i++) {
+						var sender = state.entries[i].sender;
+						if (senders.indexOf(sender) === -1) continue;
+						var settings = {};
+						settings.active = active;
+						setEncodings(sender, settings);
+					}
+				});
+			}
 			return true;
 		});
 	} catch (e) {
@@ -72714,7 +72805,8 @@ function getSenders2(UUID) {
 	if (isAlt) {
 		senders.forEach(sender => {
 			if (sender.track && sender.track.id) {
-				if (sender.track.id in screenshareTracks) {
+				var track = getSenderSourceTrack(sender);
+				if (track.id in screenshareTracks) {
 					// I'm not going to change track.kind, since OBS isn't part of this list
 					fixedSenders.push(sender);
 				}
@@ -72723,7 +72815,8 @@ function getSenders2(UUID) {
 	} else {
 		senders.forEach(sender => {
 			if (sender.track && sender.track.id) {
-				if (!(sender.track.id in screenshareTracks)) {
+				var track = getSenderSourceTrack(sender);
+				if (!(track.id in screenshareTracks)) {
 					fixedSenders.push(sender);
 				}
 			}

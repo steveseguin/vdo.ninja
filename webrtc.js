@@ -11375,8 +11375,9 @@ WebRTC.Media = (function () {
 							var senders = pc.getSenders(); // excluded
 							var indexes = [];
 							for (var i = 0; i < senders.length; i++) {
+								var senderTrack = getSenderSourceTrack(senders[i]);
 								for (var j = 0; j < screenTracks.length; j++) {
-									if (senders[i].track && senders[i].track.id == screenTracks[j].id && senders[i].track.kind == screenTracks[j].kind) {
+									if (senderTrack && senderTrack.id == screenTracks[j].id && senderTrack.kind == screenTracks[j].kind) {
 										indexes.push(i);
 									}
 								}
