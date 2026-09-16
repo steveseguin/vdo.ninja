@@ -240,6 +240,9 @@
 		scene.canvas.setAttribute("aria-label", "360-degree panorama. Drag or use arrow keys to look around.");
 	});
 	$("view").value = params.get("view") || params.get("v") || "";
-	$("password").value = params.get("password") ?? params.get("pw") ?? params.get("p") ?? "";
+	var password = params.get("password");
+	if (password === null) password = params.get("pw");
+	if (password === null) password = params.get("p");
+	$("password").value = password === null ? "" : password;
 	if ($("view").value) connect();
 })();

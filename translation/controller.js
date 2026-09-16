@@ -60,7 +60,7 @@
 	function providerLanguage(value) {
 		var normalized = normalizeLanguage(value);
 		var base = normalized.split("-")[0];
-		return SUPPORTED_LANGUAGES[base] ? base : false;
+		return Object.prototype.hasOwnProperty.call(SUPPORTED_LANGUAGES, base) ? base : false;
 	}
 
 	function languagesMatch(first, second) {

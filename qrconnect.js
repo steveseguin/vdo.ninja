@@ -972,10 +972,14 @@
 			}
 			var transport = (flags >> 4) & 1 ? "tcp" : "udp";
 			var mode = flags & 3;
+			var tcpType = transport === "tcp" ? reader.u8() : 0;
+			if (tcpType >= TCP_TYPES.length) {
+				throw new Error("That code contains an invalid TCP candidate type.");
+			}
 			var parts = {
 				type: CAND_TYPES[flags >> 5],
 				transport: transport,
-				tcptype: transport === "tcp" ? TCP_TYPES[reader.u8()] : "",
+				tcptype: TCP_TYPES[tcpType],
 				address: unpackAddress((flags >> 2) & 3, reader),
 				port: 0
 			};
@@ -1825,10 +1829,18 @@
 			// one, but an SDP full of lines we do not know is not, so try both and
 			// keep whichever won.
 			var viaLines = assemble(SDP_MODE_LINES, null);
-			encoded = deflate(split.skeleton).then(function (compressed) {
-				var viaDeflate = assemble(SDP_MODE_SKELETON, compressed);
-				return viaLines.length <= viaDeflate.length ? viaLines : viaDeflate;
-			});
+			encoded = Promise.resolve()
+				.then(function () {
+					// Compression is optional here; both ends of the codec must be supported.
+					new DecompressionStream("deflate-raw");
+					return deflate(split.skeleton);
+				})
+				.then(function (compressed) {
+					var viaDeflate = assemble(SDP_MODE_SKELETON, compressed);
+					return viaLines.length <= viaDeflate.length ? viaLines : viaDeflate;
+				}, function () {
+					return viaLines;
+				});
 		}
 
 		return encoded;

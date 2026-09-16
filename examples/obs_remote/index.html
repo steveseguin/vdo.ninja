@@ -182,8 +182,17 @@
 		}
 		var urlParams = new URLSearchParams(urlEdited);
 		
+		function generatePassword(){
+			var bytes = new Uint8Array(16);
+			window.crypto.getRandomValues(bytes);
+			var password = "";
+			for (var i = 0; i < bytes.length; i++){
+				password += ("0" + bytes[i].toString(16)).slice(-2);
+			}
+			return password;
+		}
 		var roomname = Math.floor(Math.random() * 1000000);
-		var pwurl = Math.floor(Math.random() * 1000000);
+		var pwurl = "";
 
 		if (urlParams.get("password")){
 			pwurl = urlParams.get("password");
@@ -191,6 +200,7 @@
 		} else if (localStorage.getItem('password')){
 			pwurl = localStorage.getItem('password');
 		} else {
+			pwurl = generatePassword();
 			localStorage.setItem('password',pwurl)
 		}
 		
@@ -220,7 +230,7 @@
 			iframe = document.createElement("iframe");
 			
 			if (visible){
-				iframe.src = "https://"+hostname+"/?room="+roomname+"&push=mainOBSOutput&od=0&transparent&webcam&vd=obs&view&password="+pwurl+"&label=OBS_"+Math.floor(Math.random() * 1000000);
+				iframe.src = "https://"+hostname+"/?room="+encodeURIComponent(roomname)+"&push=mainOBSOutput&od=0&transparent&webcam&vd=obs&view&password="+encodeURIComponent(pwurl)+"&label=OBS_"+Math.floor(Math.random() * 1000000);
 				iframe.style.minWidth = "720px";
 				iframe.style.minHeight = "480px";		
 				iframe.style.maxWidth = "50%";
@@ -229,7 +239,7 @@
 				iframe.style.margin = "auto";
 				iframe.allow = "autoplay;camera;microphone;fullscreen;picture-in-picture;";
 			} else {
-				iframe.src = "https://"+hostname+"/?room="+roomname+"&push&autostart&vd=0&view&ad=0&transparent&cleanoutput&password="+pwurl+"&label=OBS_"+Math.floor(Math.random() * 1000000);
+				iframe.src = "https://"+hostname+"/?room="+encodeURIComponent(roomname)+"&push&autostart&vd=0&view&ad=0&transparent&cleanoutput&password="+encodeURIComponent(pwurl)+"&label=OBS_"+Math.floor(Math.random() * 1000000);
 				iframe.style.opacity = 0;
 				iframe.style.width = 0;
 				iframe.style.height = 0;
@@ -316,7 +326,7 @@
 			
 			
 			roomname = document.getElementById('vdoroomname').value || Math.floor(Math.random() * 1000000);
-			pwurl = document.getElementById('vdopassword').value || Math.floor(Math.random() * 1000000);
+			pwurl = document.getElementById('vdopassword').value || generatePassword();
 			localStorage.setItem('roomname',roomname)
 			localStorage.setItem('password',pwurl)
 			
