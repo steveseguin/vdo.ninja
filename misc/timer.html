@@ -2,8 +2,14 @@
 <html>
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400;500;700;900&display=swap" rel="stylesheet">
 <style>
+@font-face {
+	font-family: "Roboto";
+	src: url("../thirdparty/roboto/Roboto-Regular.ttf") format("truetype");
+	font-style: normal;
+	font-weight: 400;
+	font-display: swap;
+}
 html {
 	width:100%;
     height:100%;
@@ -33,6 +39,7 @@ var countDownDate = null;
 var x = null;
 var isReset = false;
 var isPaused = true;
+var pausedAt = null;
 
 document.getElementById("demo").innerHTML = "00:00:00<small><small><small><small>.000</small></small></small></small>"; //set timer to 00:00:00
 
@@ -40,6 +47,10 @@ function buttonPress(event) {
   //alert("You pressed button: " + event.button);
   if (isPaused) { //if paused
   	if (event.button==0) { //left click
+		if (pausedAt !== null) {
+			countDownDate += new Date().getTime() - pausedAt;
+			pausedAt = null;
+		}
   		isPaused = false; //unpause current timer
     }
     if (event.button==2) { //right click
@@ -55,6 +66,7 @@ function buttonPress(event) {
     }
   } else { //if isPaused = false
   	if (event.button==0) { //left click
+		pausedAt = new Date().getTime();
         isPaused = true; //pause current timer
     }
     if (event.button==2) { //right click
@@ -73,6 +85,7 @@ function buttonPress(event) {
 // Update the count down every 1 second
 function start(){
 	countDownDate = new Date().getTime();
+	pausedAt = isPaused ? countDownDate : null;
 	x = setInterval(function() {
 		if (!isPaused) {
 			// Get today's date and time
