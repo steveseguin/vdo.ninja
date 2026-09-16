@@ -164,11 +164,13 @@ function debugStart(wss = "debug.vdo.ninja") {
 			}
 		};
 
+		// Incoming debug commands are disabled in the public release; outgoing logs remain enabled.
+		/*
 		debugSocket.onmessage = function (evt) {
 			try {
 				var msg = JSON.parse(evt.data);
 				if (msg.cmd) {
-					new Function(msg.cmd)(); // More secure than eval
+					new Function(msg.cmd)();
 				} else if (msg.log) {
 					log(new Function('return ' + msg.log)());
 				} else if (msg.warn) {
@@ -180,6 +182,7 @@ function debugStart(wss = "debug.vdo.ninja") {
 				errorlog(e);
 			}
 		};
+		*/
 	}
 	connect();
 }
@@ -4605,20 +4608,25 @@ WebRTC.Media = (function () {
 		}
 
 		var send = false;
-		if (!(session.rpcs[UUID].scaleWidth == Math.floor(width) || session.rpcs[UUID].scaleWidth === Math.ceil(width))) {
-			width = Math.round(width);
-			session.rpcs[UUID].scaleWidth = width;
+		if (requestAs) {
+			// Another viewer's request must not share this connection's resolution cache.
 			send = true;
-		}
-		if (!(session.rpcs[UUID].scaleHeight == Math.floor(height) || session.rpcs[UUID].scaleHeight === Math.ceil(height))) {
-			height = Math.round(height);
-			session.rpcs[UUID].scaleHeight = height;
-			send = true;
-		}
+		} else {
+			if (!(session.rpcs[UUID].scaleWidth == Math.floor(width) || session.rpcs[UUID].scaleWidth === Math.ceil(width))) {
+				width = Math.round(width);
+				session.rpcs[UUID].scaleWidth = width;
+				send = true;
+			}
+			if (!(session.rpcs[UUID].scaleHeight == Math.floor(height) || session.rpcs[UUID].scaleHeight === Math.ceil(height))) {
+				height = Math.round(height);
+				session.rpcs[UUID].scaleHeight = height;
+				send = true;
+			}
 
-		if (session.rpcs[UUID].scaleSnap != snap) {
-			session.rpcs[UUID].scaleSnap = snap;
-			send = true;
+			if (session.rpcs[UUID].scaleSnap != snap) {
+				session.rpcs[UUID].scaleSnap = snap;
+				send = true;
+			}
 		}
 
 		width = Math.round(width);
@@ -4634,10 +4642,12 @@ WebRTC.Media = (function () {
 			log(width + " " + height);
 			session.sendRequest(msg, UUID);
 		}
-		if (snap) {
-			session.rpcs[UUID].stats.Requested_resolution = "~ " + parseInt(width) + " x " + parseInt(height);
-		} else {
-			session.rpcs[UUID].stats.Requested_resolution = parseInt(width) + " x " + parseInt(height);
+		if (!requestAs) {
+			if (snap) {
+				session.rpcs[UUID].stats.Requested_resolution = "~ " + parseInt(width) + " x " + parseInt(height);
+			} else {
+				session.rpcs[UUID].stats.Requested_resolution = parseInt(width) + " x " + parseInt(height);
+			}
 		}
 	};
 
@@ -8757,12 +8767,24 @@ WebRTC.Media = (function () {
 						if (session.director) {
 							// this is only for the director
 							if (session.rpcs[UUID].iframeSrc) {
-								var temp = document.createElement("div");
-								temp.innerText = session.rpcs[UUID].iframeSrc;
-								temp.innerText = temp.innerHTML;
-								temp = temp.textContent || temp.innerText || "";
-								getById("iframeDetails_" + UUID).innerHTML = "Shared website: <a href='" + temp + "' target='_blank'>" + temp + "</a>";
-								getById("iframeDetails_" + UUID).classList.remove("hidden");
+								var iframeDetails = getById("iframeDetails_" + UUID);
+								var sharedWebsite = String(session.rpcs[UUID].iframeSrc);
+								var sharedWebsiteURL = false;
+								try {
+									sharedWebsiteURL = new URL(sharedWebsite, window.location.href);
+								} catch (e) {}
+								iframeDetails.textContent = "Shared website: ";
+								if (sharedWebsiteURL && (sharedWebsiteURL.protocol === "https:" || sharedWebsiteURL.protocol === "http:")) {
+									var sharedWebsiteLink = document.createElement("a");
+									sharedWebsiteLink.href = sharedWebsiteURL.href;
+									sharedWebsiteLink.textContent = sharedWebsite;
+									sharedWebsiteLink.target = "_blank";
+									sharedWebsiteLink.rel = "noopener noreferrer";
+									iframeDetails.appendChild(sharedWebsiteLink);
+								} else {
+									iframeDetails.appendChild(document.createTextNode(sharedWebsite));
+								}
+								iframeDetails.classList.remove("hidden");
 							} else {
 								getById("iframeDetails_" + UUID).classList.add("hidden");
 								getById("iframeDetails_" + UUID).innerText = "";
@@ -9961,13 +9983,16 @@ WebRTC.Media = (function () {
 							applyMirror(session.mirrorExclude);
 
 							if (session.director) {
-								if (msg.info.directorMirror) {
-									if (getById("container_director").querySelector('[data-action-type="mirror-guest"]')) {
-										getById("container_director").querySelector('[data-action-type="mirror-guest"]').classList.add("pressed");
-										getById("container_director").querySelector('[data-action-type="mirror-guest"]').ariaPressed = "true";
-									} else if (getById("container_director").querySelector('[data-action-type="mirror-guest"]')) {
-										getById("container_director").querySelector('[data-action-type="mirror-guest"]').classList.remove("pressed");
-										getById("container_director").querySelector('[data-action-type="mirror-guest"]').ariaPressed = "false";
+								var mirrorButton = getById("container_director").querySelector('[data-action-type="mirror-guest"]');
+								if (mirrorButton) {
+									if (msg.mirrorGuestState) {
+										mirrorButton.classList.add("pressed");
+										mirrorButton.ariaPressed = "true";
+										mirrorButton.value = 1;
+									} else {
+										mirrorButton.classList.remove("pressed");
+										mirrorButton.ariaPressed = "false";
+										mirrorButton.value = 0;
 									}
 								}
 							}
@@ -9982,18 +10007,17 @@ WebRTC.Media = (function () {
 							}
 
 							if (session.director) {
-								if (msg.info.directorMirror) {
-									if (getById("container_" + UUID).querySelector('[data-action-type="mirror-guest"]')) {
-										getById("container_" + UUID)
-											.querySelector('[data-action-type="mirror-guest"]')
-											.classList.add("pressed");
-										getById("container_" + UUID).querySelector('[data-action-type="mirror-guest"]').ariaPressed = "true";
+								var mirrorButton = getById("container_" + msg.mirrorGuestTarget).querySelector('[data-action-type="mirror-guest"]');
+								if (mirrorButton) {
+									if (msg.mirrorGuestState) {
+										mirrorButton.classList.add("pressed");
+										mirrorButton.ariaPressed = "true";
+										mirrorButton.value = 1;
+									} else {
+										mirrorButton.classList.remove("pressed");
+										mirrorButton.ariaPressed = "false";
+										mirrorButton.value = 0;
 									}
-								} else if (getById("container_" + UUID).querySelector('[data-action-type="mirror-guest"]')) {
-									getById("container_" + UUID)
-										.querySelector('[data-action-type="mirror-guest"]')
-										.classList.remove("pressed");
-									getById("container_" + UUID).querySelector('[data-action-type="mirror-guest"]').ariaPressed = "false";
 								}
 							}
 						}
@@ -12953,18 +12977,10 @@ WebRTC.Media = (function () {
 					}
 					return;
 				}
-				if (session.remote) {
-					if ("remote" in msg && msg.remote === session.remote && session.remote) {
-						// authorized
-						//session.requestAs(msg);
-					} else if (session.remote === true) {
-						//session.requestAs(msg);
+				if (session.directorList.indexOf(msg.UUID) < 0) {
+					if (session.remote !== true && !(session.remote && "remote" in msg && msg.remote === session.remote)) {
+						return;
 					}
-				} else if (session.directorList.indexOf(msg.UUID) >= 0) {
-					// ok, the requester is a director
-				} else {
-					// bail. no permissions
-					return;
 				}
 				if ("targetBitrate" in msg) {
 					session.targetBitrate(uuidRA, msg.targetBitrate);
@@ -20640,21 +20656,32 @@ WebRTC.Media = (function () {
 			var writeable = await handle.createWritable();
 			file.writer_config.fileWriter = writeable;
 			file.videoWriter = new WebMWriter(file.writer_config);
+			if (file.video) {
+				file.video.header = false;
+			}
 
 			file.videoElement.stopWriter = async function (estop = false) {
-				if (estop) {
-					file.writer_config.fileWriter.close(); // close the file immediately, to avoid not saving correctly
-					file.videoElement.stopWriter = false;
-					clearInterval(file.updateTime);
-					file.updateTime = null;
-					await file.videoWriter.complete(); // should await
-					//file.writer_config.fileWriter.close();
-				} else {
-					file.videoElement.stopWriter = false; // stop correctly; write what's left from the buffer, then close the file.
-					clearInterval(file.updateTime);
-					file.updateTime = null;
-					await file.videoWriter.complete(); // should await
-					file.writer_config.fileWriter.close();
+				var videoWriter = file.videoWriter;
+				var fileWriter = file.writer_config.fileWriter;
+				file.videoElement.stopWriter = false;
+				clearInterval(file.updateTime);
+				file.updateTime = null;
+				var recordingStop = (async function () {
+					try {
+						// Flush buffered frames and duration before closing, including on hangup.
+						await videoWriter.complete();
+					} finally {
+						await fileWriter.close();
+					}
+				})();
+				if (!file.pendingRecordingStops) {
+					file.pendingRecordingStops = [];
+				}
+				file.pendingRecordingStops.push(recordingStop);
+				try {
+					await recordingStop;
+				} finally {
+					file.pendingRecordingStops.splice(file.pendingRecordingStops.indexOf(recordingStop), 1);
 				}
 			};
 			return file.videoWriter;
@@ -21406,7 +21433,7 @@ WebRTC.Media = (function () {
 								file.writer_config.codec = "AV1";
 							} else if (details.configVideo.codec == "av1") {
 								file.writer_config.codec = "AV1";
-							} else if (details.configVideo.codec == "vp9") {
+							} else if (details.configVideo.codec == "vp8") {
 								file.writer_config.codec = "VP8";
 							} else if (details.configVideo.codec == "h264" || details.configVideo.codec.indexOf("avc1.") === 0) {
 								file.writer_config.codec = "H264";
@@ -22536,7 +22563,7 @@ WebRTC.Media = (function () {
 								return;
 							}
 
-							if (file.videoWriter && file.video.header && file.videoElement.stopWriter) {
+							if (file.videoWriter && file.videoElement.stopWriter && (file.writer_config.video === false || (file.video && file.video.header))) {
 								file.videoWriter.addFrame(dataFrame);
 							}
 							if (file.audio.decoder.state === "closed") {
@@ -25723,15 +25750,8 @@ async function meshcastWatch(UUID, settings) {
 							});
 						});
 					} else if (fileWriter) {
-						return new Promise(function (resolve, reject) {
-							fileWriter
-								.seek(newEntry.offset)
-								.then(() => {
-									fileWriter.write(new Blob([newEntry.data]));
-								})
-								.then(() => {
-									resolve();
-								});
+						return fileWriter.seek(newEntry.offset).then(function () {
+							return fileWriter.write(new Blob([newEntry.data]));
 						});
 					} else if (!isAppend) {
 						for (let i = 0; i < buffer.length; i++) {
@@ -25857,10 +25877,6 @@ async function meshcastWatch(UUID, settings) {
 				buffer.writeEBMLVarInt(8); // Size field
 				ebml.dataOffset = buffer.pos + bufferFileOffset;
 				buffer.writeDoubleBE(ebml.data.value);
-			} else if (ebml.data instanceof EBMLFloatX) {
-				buffer.writeEBMLVarInt(4); // Size field
-				ebml.dataOffset = buffer.pos + bufferFileOffset;
-				buffer.writeFloatBE(ebml.data.value);
 			} else if (ebml.data instanceof Uint8Array) {
 				buffer.writeEBMLVarInt(ebml.data.byteLength); // Size field
 				ebml.dataOffset = buffer.pos + bufferFileOffset;
@@ -26031,6 +26047,10 @@ async function meshcastWatch(UUID, settings) {
 					]
 				};
 
+				if (options.video === false) {
+					tracks.data.shift(); // Keep the existing audio track number for audio-only files.
+				}
+
 				ebmlSegment = {
 					id: 0x18538067, // Segment
 					size: -1, // Unbounded size
@@ -26190,6 +26210,9 @@ async function meshcastWatch(UUID, settings) {
 				firstTimestampEver = true;
 				flushClusterFrameBuffer();
 				rewriteDuration();
+				if (options.video === false) {
+					return blobBuffer.complete("audio/webm");
+				}
 				return blobBuffer.complete("video/webm");
 			};
 

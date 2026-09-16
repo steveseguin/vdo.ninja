@@ -38,6 +38,46 @@
 				--muted: #99a2ac;
 				--accent: #4a90d9;
 			}
+			body[data-qr-theme="light"] {
+				--bg: #f4f6f8;
+				--panel: #ffffff;
+				--line: #b8c2cd;
+				--text: #182330;
+				--muted: #48596b;
+			}
+			body[data-qr-theme="light"] button:not(.primary),
+			body[data-qr-theme="light"] #chat-input,
+			body[data-qr-theme="light"] input,
+			body[data-qr-theme="light"] textarea,
+			body[data-qr-theme="light"] select {
+				background: var(--panel);
+				color: var(--text);
+			}
+			body[data-qr-theme="light"] #chat-messages {
+				background: var(--bg);
+			}
+			body[data-qr-theme="light"] .chat-message.mine {
+				background: #d5e8fa;
+			}
+			body[data-qr-theme="light"] .chat-message.peer {
+				background: #e1e6ec;
+			}
+			body[data-qr-theme="light"] .chat-message strong {
+				color: var(--muted);
+			}
+			body.qr-embedded header {
+				display: none;
+			}
+			body.qr-embedded main {
+				padding: 8px;
+				gap: 8px;
+			}
+			body.qr-hide-instructions #panel-intro > p:not(#offline-note):not(#lora-settings),
+			body.qr-hide-instructions #lora-outgoing > p,
+			body.qr-hide-instructions #scan-note,
+			body.qr-hide-chat #chat-panel {
+				display: none;
+			}
 			* {
 				box-sizing: border-box;
 			}
@@ -491,6 +531,14 @@
 			<div class="card" id="panel-intro">
 				<h2>Start a connection</h2>
 				<p>Connect two devices without the WebSocket handshake server. Start on one device, scan or paste its code on the other, then send the reply code back to the first device. Keep both pages open until connected.</p>
+				<p>
+					<label><input type="checkbox" id="lora-mode" /> LoRa / MeshCore mode</label>
+				</p>
+				<p id="lora-settings" class="hidden">
+					<label for="lora-budget">Maximum characters per message</label>
+					<input id="lora-budget" type="number" min="40" max="140" value="140" step="1" style="width: 5em" />
+					<br />Uses only ASCII letters and digits. Send each message separately, in both directions. Keep both pages open; audio and video still need an IP connection.
+				</p>
 				<div class="row">
 					<button class="primary" id="btn-share">Start connection</button>
 					<button id="btn-paste-offer">Scan or paste a code</button>
@@ -503,6 +551,11 @@
 			<!-- step 2: our code, for the other side to read -->
 			<div class="card hidden" id="panel-code">
 				<h2 id="code-title">Show this to the other person</h2>
+				<div id="lora-outgoing" class="hidden">
+					<p>Send these messages to the other person. Paste their replies below. You can select an earlier message to send it again.</p>
+					<label for="lora-packet">Outgoing message</label>
+					<select id="lora-packet" style="width: 100%; margin-bottom: 12px"></select>
+				</div>
 				<div id="qrbox" aria-busy="true">
 					<div id="qr-loading" role="status">
 						<span class="qr-spinner" aria-hidden="true"></span>
@@ -588,12 +641,42 @@
 				};
 				var frame = el("frame");
 				var session = null;
+				var attemptGeneration = 0;
+				var api = {
+					enabled: false,
+					initialized: false,
+					instanceId: QRConnect.randomID(16),
+					sessionId: null,
+					connection: "idle",
+					chat: "unavailable",
+					returnMedia: "off",
+					screen: "off",
+					outgoing: [],
+					requests: Object.create(null),
+					requestCount: 0,
+					receiving: 0,
+					pending: Object.create(null),
+					callbackCount: 0,
+					chatCount: 0,
+					devices: [],
+					selected: { cam: null, mic: null },
+					activeDevice: { cam: null, mic: null },
+					desired: { cam: false, mic: false },
+					mediaError: { cam: false, mic: false },
+					remoteTracks: { audio: false, video: false },
+					startedAt: null,
+					connectedAt: null,
+					signalingDone: false,
+					theme: "system"
+				};
 				var params = new URLSearchParams(location.search);
 				var pagePath = location.pathname.length > 1 ? location.pathname.replace(/\/+$/, "") : location.pathname;
 				var pageURL = location.origin + pagePath;
 				var qrBaseURL = new URL("./", pageURL);
 				var qrWorkerURL = new URL("qr-sw.js", qrBaseURL);
 				var currentBlob = null;
+				var loraPackets = [];
+				var loraReceiver = {};
 				var pasteValidationRun = 0;
 				var pasteValidationTimer = null;
 				var offlineRestoreTimers = [];
@@ -653,6 +736,10 @@
 				function status(text, isError) {
 					el("status").textContent = text || "";
 					el("status").classList.toggle("error", !!isError);
+					if (api.enabled && isError && document.body.classList.contains("live")) {
+						el("live-note").textContent = text || "";
+					}
+					apiStateEvent();
 				}
 
 				function show(panel) {
@@ -890,10 +977,25 @@
 					var run = ++pasteValidationRun;
 					el("btn-apply").disabled = true;
 					if (!text) {
-						setPasteValidation("Paste an offer or answer code.", "");
+						setPasteValidation(el("lora-mode").checked || loraReceiver.id ? "Paste one LoRa message." : "Paste an offer or answer code.", "");
 						return;
 					}
 					setPasteValidation("Checking code...", "");
+					try {
+						if (/^L1/i.test(QRConnect.extractCode(text))) {
+							checkLoRaPacket(text);
+							el("btn-apply").disabled = false;
+							setPasteValidation("Valid LoRa message - ready to use.", "valid");
+							return;
+						}
+					} catch (error) {
+						setPasteValidation(error.message, "error");
+						return;
+					}
+					if ((session && session.lora) || loraReceiver.id) {
+						setPasteValidation("Paste a LoRa reply from this connection.", "error");
+						return;
+					}
 					QRConnect.decodeBlob(text).then(
 						function (payload) {
 							if (run !== pasteValidationRun) {
@@ -955,6 +1057,9 @@
 						list.removeChild(list.querySelector(".chat-message"));
 					}
 					list.scrollTop = list.scrollHeight;
+					var messageId = "chat-" + ++api.chatCount;
+					apiEvent("chat", { messageId: messageId, text: text, direction: mine ? "sent" : "received" });
+					return messageId;
 				}
 
 				function receiveApplicationData(event) {
@@ -966,9 +1071,9 @@
 					addChatMessage(chat.text, false);
 				}
 
-				function sendChatMessage() {
+				function sendChatMessage(submitted) {
 					var input = el("chat-input");
-					var text = input.value.trim();
+					var text = typeof submitted === "string" ? submitted.trim() : input.value.trim();
 					if (!text || !session) {
 						return;
 					}
@@ -983,9 +1088,12 @@
 						el("live-note").textContent = "Chat is not connected yet.";
 						return;
 					}
-					addChatMessage(text.slice(0, CHAT_MAX_LENGTH), true);
-					input.value = "";
-					input.focus();
+					var messageId = addChatMessage(text.slice(0, CHAT_MAX_LENGTH), true);
+					if (typeof submitted !== "string") {
+						input.value = "";
+						input.focus();
+					}
+					return messageId;
 				}
 
 				function renderQR(text) {
@@ -1135,7 +1243,9 @@
 						})
 						.then(function (stream) {
 							if (generation !== scanner.generation) {
-								stream.getTracks().forEach(function (track) { track.stop(); });
+								stream.getTracks().forEach(function (track) {
+									track.stop();
+								});
 								return;
 							}
 							scanner.stream = stream;
@@ -1202,7 +1312,8 @@
 
 				/* --------------------------- signalling -------------------------- */
 
-				function makeSession(role, streamID) {
+				function makeSession(role, streamID, loraID) {
+					apiBeginAttempt();
 					// The code itself, not the link, is what has to fit somewhere -
 					// a chat message, an IRC line. Offers and answers both have a
 					// 118-character hard guard; the route-complete fixtures and
@@ -1218,6 +1329,9 @@
 						vdoBase: pageURL.slice(0, pageURL.lastIndexOf("/") + 1),
 						streamID: streamID,
 						qrBudget: budget,
+						lora: el("lora-mode").checked,
+						loraBudget: el("lora-budget").value,
+						loraID: loraID,
 						extraParams: "&keepsw&facing=" + encodeURIComponent(mediaFacing)
 					});
 					made.on("state", function (text) {
@@ -1225,16 +1339,33 @@
 					});
 					made.on("error", function (error) {
 						stopWaitingForAnswer();
+						api.connection = "failed";
+						apiEvent("error", { code: "CONNECTION_FAILED", message: error.message, retryable: true });
+						apiEvent("closed", { reason: "failure" });
 						status(error.message, true);
 					});
 					made.on("data", receiveApplicationData);
+					made.on("packet", publishLoRaPacket);
+					made.on("response", function (data) {
+						var pending = api.pending[data.cib];
+						if (pending) {
+							clearTimeout(pending.timer);
+							delete api.pending[data.cib];
+							pending.resolve(data);
+						}
+					});
 					made.on("devices", function (devices) {
+						apiUpdateDevices(devices);
 						mediaCameraCount = devices.filter(function (device) {
 							return device.kind === "videoinput";
 						}).length;
 						el("btn-switch-cam").classList.toggle("hidden", grabbed.cam !== true || mediaCameraCount < 2);
 					});
 					made.on("channel", function (up) {
+						api.chat = up ? "ready" : "disconnected";
+						if (up && role === "share" && api.returnMedia === "off") {
+							api.returnMedia = "starting";
+						}
 						if (up) {
 							setChatEnabled(true);
 							if (role === "share") {
@@ -1249,8 +1380,10 @@
 							setChatEnabled(false);
 							el("live-note").textContent = "Chat disconnected. If it does not recover, hang up and start again.";
 						}
+						apiStateEvent();
 					});
 					made.on("channel-error", function (error) {
+						api.chat = "failed";
 						setChatEnabled(false);
 						if (role === "share") {
 							setMediaControlsEnabled(true);
@@ -1258,8 +1391,10 @@
 							setMediaControlsEnabled(false);
 						}
 						el("live-note").textContent = "Connected, but persistent chat setup failed: " + error.message;
+						apiStateEvent();
 					});
 					made.on("return-media", function (state) {
+						api.returnMedia = state === "connected" ? "ready" : state;
 						if (state === "starting") {
 							setMediaControlsEnabled(false);
 							el("live-note").textContent = "Connected. Preparing two-way media...";
@@ -1274,8 +1409,25 @@
 							setMediaControlsEnabled(false);
 							el("live-note").textContent = "Connected, but two-way media could not be prepared. Receiving media and chat still work.";
 						}
+						apiMediaEvent();
 					});
 					made.on("event", function (data) {
+						if (role === "share" && data.action === "view-connection") {
+							api.returnMedia = data.value ? "ready" : "disconnected";
+							apiMediaEvent();
+						}
+						if (api.enabled && data.action === "screen-share-state") {
+							api.screen = data.value ? "on" : "off";
+							el("btn-screen").textContent = data.value ? "Stop screen share" : "Share screen";
+							apiMediaEvent();
+						}
+						if (data.action === "new-video-track-added") {
+							api.remoteTracks.video = true;
+							apiMediaEvent();
+						} else if (data.action === "new-audio-track-added") {
+							api.remoteTracks.audio = true;
+							apiMediaEvent();
+						}
 						if (data.action === "new-video-track-added" || data.action === "new-audio-track-added") {
 							el("live-note").textContent = made.sidecarConnected ? "Connected." : "Media connected; persistent chat unavailable.";
 						}
@@ -1293,6 +1445,12 @@
 						}
 					});
 					made.on("connected", function (up) {
+						api.connection = up ? "connected" : "disconnected";
+						if (up) {
+							api.signalingDone = true;
+							api.connectedAt = api.connectedAt || Date.now();
+							api.chat = made.sidecarConnected ? "ready" : "starting";
+						}
 						if (up) {
 							stopScanner();
 							goLive();
@@ -1302,6 +1460,7 @@
 							setMediaControlsEnabled(false);
 							el("live-note").textContent = "Connection interrupted. If it does not recover, hang up and start again.";
 						}
+						apiStateEvent();
 					});
 					made.start();
 					el("btn-reset").classList.remove("hidden");
@@ -1332,6 +1491,7 @@
 						link: pageURL + "#" + result.text,
 						role: session && session.role === "share" ? "offer" : "answer"
 					};
+					apiPublishOutgoing({ format: "qr", text: result.text, code: result.text, link: currentBlob.link, role: currentBlob.role, bytes: new TextEncoder().encode(result.text).length, budget: null });
 					// Camera apps need the complete link. Chat and clipboard users only
 					// need the compact code, which keeps it inside the measured budget.
 					el("code-text").value = result.text;
@@ -1346,6 +1506,111 @@
 					notes.push(result.text.length + "/118 characters.");
 					notes.push(result.candidates + " network route" + (result.candidates === 1 ? "" : "s") + " included.");
 					el("code-note").textContent = notes.join(" ");
+				}
+
+				function showLoRaPacket() {
+					var packet = loraPackets[Number(el("lora-packet").value)];
+					if (!packet) {
+						return;
+					}
+					el("code-text").value = packet.text;
+					el("code-text").classList.remove("hidden");
+					renderQR(packet.text);
+					el("code-note").textContent = packet.text.length + "/" + packet.budget + " ASCII characters (bytes). " + loraPackets.length + " outgoing message" + (loraPackets.length === 1 ? "." : "s. Send each separately.");
+				}
+
+				function publishLoRaPacket(packet) {
+					loraPackets.push(packet);
+					var info = QRConnect.readLoRaPacket(packet.text);
+					apiPublishOutgoing({ format: "lora", text: packet.text, bytes: packet.text.length, budget: packet.budget, role: info.role, sequence: info.sequence, part: info.part, count: info.count });
+					var option = document.createElement("option");
+					option.value = loraPackets.length - 1;
+					option.textContent = "Message " + (info.sequence + 1) + (info.count > 1 ? ", part " + (info.part + 1) + "/" + info.count : "") + " - " + packet.text.length + " characters";
+					el("lora-packet").appendChild(option);
+					el("lora-outgoing").classList.remove("hidden");
+					el("btn-copy-link").classList.add("hidden");
+					el("btn-native-share").classList.add("hidden");
+					if (loraPackets.length === 1) {
+						el("qrbox").classList.add("hidden");
+					}
+					el("btn-toggle-text").textContent = el("qrbox").classList.contains("hidden") ? "Show QR" : "Hide QR";
+					el("code-title").textContent = "Send your LoRa messages";
+					el("scan-title").textContent = "Receive their LoRa messages";
+					el("scan-note").textContent = "Paste one message at a time. Missing parts are held until they arrive; repeated messages are safe.";
+					show(["code", "scan"]);
+					showLoRaPacket();
+					status("Send your messages, then paste their replies. Keep this page open.");
+				}
+
+				function checkLoRaPacket(text) {
+					var packet = QRConnect.readLoRaPacket(text);
+					if (session && !session.lora) {
+						throw new Error("Start over to use a LoRa connection.");
+					}
+					if (!session && packet.role === "answer") {
+						throw new Error("Paste this LoRa reply into the original tab that started the connection.");
+					}
+					if ((loraReceiver.id && packet.id !== loraReceiver.id) || (loraReceiver.role && packet.role !== loraReceiver.role)) {
+						throw apiError("WRONG_EXCHANGE", "That message belongs to another connection or is your own outgoing message.");
+					}
+					if (session && packet.budget > session.loraBudget) {
+						throw new Error("That LoRa reply exceeds this connection's message limit.");
+					}
+					if (api.enabled && !session && packet.budget > Number(el("lora-budget").value)) {
+						throw apiError("PACKET_LIMIT", "That offer exceeds the configured LoRa byte limit.");
+					}
+					return packet;
+				}
+
+				function applyLoRaCode(text, fromHash) {
+					var generation = attemptGeneration;
+					return Promise.resolve()
+						.then(function () {
+							apiCheckGeneration(generation);
+							checkLoRaPacket(text);
+							apiBeginAttempt();
+							if (fromHash) {
+								history.replaceState(null, "", pageURL + (api.enabled ? location.search : ""));
+							}
+							return QRConnect.receiveLoRaPacket(loraReceiver, text);
+						})
+						.then(function (result) {
+							apiCheckGeneration(generation);
+							el("lora-mode").checked = true;
+							el("lora-budget").value = loraReceiver.budget;
+							el("lora-settings").classList.remove("hidden");
+							stopScanner();
+							for (var index = 0; index < result.payloads.length; index++) {
+								var payload = result.payloads[index];
+								if (payload.sdp && payload.role === "offer" && !session) {
+									beJoin(payload);
+								} else if (payload.sdp && payload.role === "answer" && session) {
+									session.acceptAnswer(payload);
+								} else if (!payload.sdp && session) {
+									session.acceptLoRaCandidates(payload);
+								}
+							}
+							el("paste-text").value = "";
+							validatePaste();
+							if (!session) {
+								show(["scan"]);
+								el("btn-reset").classList.remove("hidden");
+							}
+							status((result.duplicate ? "Already received. " : "Message received. ") + (result.pending ? "Waiting for message " + (result.next + 1) + " or its missing parts." : "Paste any remaining messages from the other person."));
+							var progress = apiReceiveProgress(result.duplicate, result.payloads.length);
+							apiEvent("receiveProgress", progress);
+							return { ok: true, progress: progress };
+						})
+						.catch(function (error) {
+							if (generation !== attemptGeneration) {
+								return { ok: false, error: apiError("CANCELLED", "The connection attempt was cleared.") };
+							}
+							if (fromHash) {
+								recoverFromHash();
+							}
+							status(error.message, true);
+							return { ok: false, error: error };
+						});
 				}
 
 				/* ------------------------ local tab handoff ----------------------- */
@@ -1364,7 +1629,7 @@
 				}
 
 				function beginWaitingForAnswer() {
-					if (handoffWaiting) {
+					if (api.enabled || handoffWaiting) {
 						return;
 					}
 					handoffWaiting = true;
@@ -1598,7 +1863,7 @@
 				/* ----------------------------- roles ----------------------------- */
 
 				function beShare() {
-					if (session) {
+					if (session || (api.enabled && api.sessionId)) {
 						return;
 					}
 					show(["code", "scan"]);
@@ -1606,6 +1871,11 @@
 					el("scan-title").textContent = "Then read their code back";
 					el("scan-note").textContent = "They will get a code of their own. Point your camera at it, or paste it below.";
 					session = makeSession("share");
+					if (session.lora) {
+						loraReceiver.id = session.loraID;
+						loraReceiver.role = "answer";
+						loraReceiver.maxBudget = session.loraBudget;
+					}
 					validatePaste();
 					session.on("blob", function (result) {
 						publishBlob(result, true);
@@ -1616,10 +1886,14 @@
 				}
 
 				function beJoin(payload) {
-					show(["code"]);
+					el("lora-mode").checked = !!payload.loraID;
+					if (payload.loraID) {
+						el("lora-budget").value = payload.loraBudget;
+					}
+					show(payload.loraID ? ["code", "scan"] : ["code"]);
 					el("code-title").textContent = "Show this back to them";
 					el("scan-title").textContent = "";
-					session = makeSession("join", payload.streamID);
+					session = makeSession("join", payload.streamID, payload.loraID);
 					validatePaste();
 					session.on("blob", function (result) {
 						publishBlob(result, true);
@@ -1629,40 +1903,51 @@
 				}
 
 				function recoverFromHash() {
-					history.replaceState(null, "", pageURL);
+					history.replaceState(null, "", pageURL + (api.enabled ? location.search : ""));
 					if (!session) {
 						show(["intro"]);
 					}
 				}
 
 				function applyCode(text, fromHash) {
+					var generation = attemptGeneration;
 					var code;
 					try {
 						code = QRConnect.extractCode(text);
 					} catch (error) {
 						code = text;
 					}
-					QRConnect.decodeBlob(text)
+					if (/^L1/i.test(code)) {
+						return applyLoRaCode(text, fromHash);
+					}
+					if ((session && session.lora) || loraReceiver.id) {
+						status("Paste a LoRa reply from this connection.", true);
+						return Promise.resolve({ ok: false, error: apiError("WRONG_FORMAT", "Paste a LoRa reply from this connection.") });
+					}
+					return QRConnect.decodeBlob(text)
 						.then(function (payload) {
+							apiCheckGeneration(generation);
 							if (payload.role === "offer") {
 								if (session) {
 									if (fromHash) {
 										recoverFromHash();
 									}
-									status("Already connecting.", true);
-									return;
+									throw apiError("BUSY", "Already connecting.");
 								}
-								history.replaceState(null, "", pageURL);
+								history.replaceState(null, "", pageURL + (api.enabled ? location.search : ""));
 								stopScanner();
 								beJoin(payload);
 							} else if (session && session.role === "share") {
 								stopScanner();
 								stopWaitingForAnswer();
 								if (fromHash) {
-									history.replaceState(null, "", pageURL);
+									history.replaceState(null, "", pageURL + (api.enabled ? location.search : ""));
 								}
 								session.acceptAnswer(payload);
 							} else if (!session) {
+								if (api.enabled) {
+									throw apiError("NO_SESSION", "An answer needs the original connection attempt.");
+								}
 								if (fromHash) {
 									history.replaceState(null, "", pageURL);
 								}
@@ -1671,20 +1956,34 @@
 								if (fromHash) {
 									recoverFromHash();
 								}
-								status("That is an answer code, but nothing here is waiting for one.", true);
+								throw apiError("NO_SESSION", "That is an answer code, but nothing here is waiting for one.");
 							}
+							api.normalReceived = code;
+							var progress = { accepted: true, duplicate: false, completedRecords: 1, missingRecords: [], missingFragments: [], moreNeeded: false };
+							apiEvent("receiveProgress", progress);
+							return { ok: true, progress: progress };
 						})
 						.catch(function (error) {
+							if (generation !== attemptGeneration) {
+								return { ok: false, error: apiError("CANCELLED", "The connection attempt was cleared.") };
+							}
 							if (fromHash) {
 								recoverFromHash();
 							}
 							status(error.message, true);
+							return { ok: false, error: error };
 						});
 				}
 
 				/* ----------------------------- wiring ---------------------------- */
 
 				el("btn-share").addEventListener("click", beShare);
+				el("lora-mode").checked = enabledParam("lora");
+				el("lora-settings").classList.toggle("hidden", !el("lora-mode").checked);
+				el("lora-mode").addEventListener("change", function () {
+					el("lora-settings").classList.toggle("hidden", !this.checked);
+				});
+				el("lora-packet").addEventListener("change", showLoRaPacket);
 
 				el("btn-paste-offer").addEventListener("click", function () {
 					show(["scan"]);
@@ -1794,6 +2093,11 @@
 				});
 
 				el("btn-toggle-text").addEventListener("click", function () {
+					if (session && session.lora) {
+						el("qrbox").classList.toggle("hidden");
+						this.textContent = el("qrbox").classList.contains("hidden") ? "Show QR" : "Hide QR";
+						return;
+					}
 					el("code-text").classList.toggle("hidden");
 				});
 
@@ -1840,6 +2144,9 @@
 				}
 
 				function finishDeviceStart(kind) {
+					if (api.enabled && grabbed[kind] !== "starting") {
+						return;
+					}
 					if (grabbed[kind] === true) {
 						return;
 					}
@@ -1853,6 +2160,17 @@
 					if (kind === "cam" && session) {
 						session.post({ getDeviceList: true, cib: "qrconnect-cameras" });
 					}
+					api.mediaError[kind] = false;
+					if (api.enabled && !api.desired[kind]) {
+						apiSetDevice(kind, false);
+					}
+					apiMediaEvent();
+					if (api.enabled) {
+						var other = kind === "cam" ? "mic" : "cam";
+						if (api.desired[other] && !mediaActive[other] && !api.mediaError[other]) {
+							apiSetDevice(other, true);
+						}
+					}
 				}
 
 				function beginDeviceStart(kind, message) {
@@ -1860,6 +2178,9 @@
 						return;
 					}
 					var button = deviceButton(kind);
+					api.desired[kind] = true;
+					api.mediaError[kind] = false;
+					api.activeDevice[kind] = message[kind === "cam" ? "changeVideoDevice" : "changeAudioDevice"];
 					grabbed[kind] = "starting";
 					mediaActive[kind] = false;
 					button.disabled = true;
@@ -1875,11 +2196,19 @@
 						button.disabled = false;
 						updateDeviceButton(kind);
 						el("live-note").textContent = (kind === "cam" ? "Camera" : "Microphone") + " did not start. Check permission and try again.";
+						api.mediaError[kind] = true;
+						apiEvent("error", { code: "MEDIA_START_TIMEOUT", message: el("live-note").textContent, retryable: true });
+						apiMediaEvent();
 					}, 15000);
 					session.post(message);
+					apiMediaEvent();
 				}
 
 				el("btn-cam").addEventListener("click", function () {
+					if (api.enabled) {
+						apiSetDevice("cam", !mediaActive.cam);
+						return;
+					}
 					if (grabbed.cam === true) {
 						mediaActive.cam = !mediaActive.cam;
 						session.post({ camera: "toggle" });
@@ -1900,6 +2229,10 @@
 				});
 
 				el("btn-mic").addEventListener("click", function () {
+					if (api.enabled) {
+						apiSetDevice("mic", !mediaActive.mic);
+						return;
+					}
 					if (grabbed.mic === true) {
 						mediaActive.mic = !mediaActive.mic;
 						session.post({ mic: "toggle" });
@@ -1910,17 +2243,39 @@
 				});
 
 				el("btn-screen").addEventListener("click", function () {
+					if (api.enabled) {
+						try {
+							Promise.resolve(apiScreenShare(api.screen !== "on", true)).catch(function (error) {
+								if (error.code !== "CANCELLED") {
+									api.screen = "error";
+									status(error.message, true);
+									apiMediaEvent();
+								}
+							});
+						} catch (error) {
+							status(error.message, true);
+						}
+						return;
+					}
 					session.post({ function: "publishScreen" });
 					el("live-note").textContent = session.sidecarConnected ? "Connected." : "Media connected; persistent chat unavailable.";
 				});
 
 				el("btn-hangup").addEventListener("click", function () {
+					if (api.enabled) {
+						apiCleanup(false);
+						return;
+					}
 					if (session) {
 						session.destroy();
 					}
 					location.href = pageURL;
 				});
 				el("btn-reset").addEventListener("click", function () {
+					if (api.enabled) {
+						apiCleanup(true);
+						return;
+					}
 					stopScanner();
 					if (session) {
 						session.destroy();
@@ -1928,7 +2283,814 @@
 					location.href = pageURL;
 				});
 
+				/* --------------------------- embedding API ----------------------- */
+
+				function apiError(code, message, retryable) {
+					var error = new Error(message);
+					error.code = code;
+					error.retryable = !!retryable;
+					return error;
+				}
+
+				function apiCheckGeneration(generation) {
+					if (generation !== attemptGeneration) {
+						throw apiError("CANCELLED", "The connection attempt was cleared.");
+					}
+				}
+
+				function apiSend(message) {
+					if (!api.enabled) {
+						return;
+					}
+					message.api = "qrconnect";
+					message.version = 1;
+					message.instanceId = api.instanceId;
+					if (api.transport === "webview2") {
+						window.chrome.webview.postMessage(message);
+					} else {
+						window.parent.postMessage(message, api.origin);
+					}
+				}
+
+				function apiEvent(name, data) {
+					if (!api.enabled || (!api.initialized && name !== "ready")) {
+						return;
+					}
+					apiSend({ type: "event", event: name, sessionId: api.sessionId, data: data });
+				}
+
+				function apiCapabilities() {
+					return {
+						commands: ["init", "configure", "start", "receive", "getState", "getOutgoing", "setPacketStatus", "sendChat", "setMedia", "getDevices", "selectDevice", "requestScreenShare", "stopScreenShare", "getStats", "hangup", "reset"],
+						formats: ["lora", "qr"],
+						transport: api.transport,
+						screenShare: !!(navigator.mediaDevices && navigator.mediaDevices.getDisplayMedia),
+						deviceKinds: ["camera", "microphone"],
+						peerAcknowledgements: false,
+						limits: { minBytes: 40, maxBytes: 140, chatCharacters: CHAT_MAX_LENGTH, commandBytes: 16384, requestsPerInstance: 4096 }
+					};
+				}
+
+				function apiBeginAttempt() {
+					if (!api.enabled || api.sessionId) {
+						return;
+					}
+					api.sessionId = QRConnect.randomID(16);
+					api.startedAt = Date.now();
+					api.connection = "preparing";
+					api.signalingDone = false;
+				}
+
+				function apiReceiveProgress(duplicate, completed) {
+					var missingRecords = [];
+					var missingFragments = [];
+					var next = loraReceiver.next || 0;
+					for (var sequence = next; sequence <= loraReceiver.highest; sequence++) {
+						var record = loraReceiver.records[sequence];
+						if (!record) {
+							missingRecords.push(sequence);
+							continue;
+						}
+						var parts = [];
+						for (var part = 0; part < record.count; part++) {
+							if (!record.parts[part]) {
+								parts.push(part);
+							}
+						}
+						if (parts.length) {
+							missingFragments.push({ sequence: sequence, count: record.count, parts: parts });
+						}
+					}
+					return { accepted: true, duplicate: !!duplicate, completedRecords: completed || 0, nextRecord: next, missingRecords: missingRecords, missingFragments: missingFragments, moreNeeded: !api.signalingDone, finalRecordCount: null };
+				}
+
+				function apiMediaState(kind) {
+					if (api.mediaError[kind]) {
+						return "error";
+					}
+					if (grabbed[kind] === "starting" || (api.desired[kind] && !mediaActive[kind])) {
+						return "starting";
+					}
+					return mediaActive[kind] ? "on" : "off";
+				}
+
+				function apiGetState() {
+					return {
+						sessionId: api.sessionId,
+						connection: api.connection,
+						chat: api.chat,
+						returnMedia: api.returnMedia,
+						camera: apiMediaState("cam"),
+						microphone: apiMediaState("mic"),
+						screen: api.screen,
+						remoteTracks: apiRemoteTracks(),
+						signalingNeeded: apiSignalingNeeded(),
+						mode: el("lora-mode").checked ? "lora" : "qr",
+						maxBytes: el("lora-mode").checked ? Number(el("lora-budget").value) : null,
+						role: session ? (session.role === "share" ? "offer" : "answer") : loraReceiver.id ? "answer" : null,
+						outgoingCount: api.outgoing.length,
+						receive: loraReceiver.id ? apiReceiveProgress(false, 0) : null,
+						status: el("status").textContent || el("live-note").textContent || ""
+					};
+				}
+
+				function apiSignalingNeeded() {
+					return !!api.sessionId && !api.signalingDone && api.connection !== "closed" && api.connection !== "failed";
+				}
+
+				function apiRemoteTracks() {
+					var tracks = { audio: false, video: false };
+					if (!session) {
+						return tracks;
+					}
+					try {
+						var peers = frame.contentWindow.session.rpcs;
+						Object.keys(peers).forEach(function (key) {
+							if (!peers[key].getReceivers) {
+								throw new Error("Receiver tracks unavailable");
+							}
+							peers[key].getReceivers().forEach(function (receiver) {
+								var track = receiver.track;
+								if (track && track.readyState !== "ended" && (track.kind === "audio" || track.kind === "video")) {
+									tracks[track.kind] = true;
+								}
+							});
+						});
+						return tracks;
+					} catch (error) {
+						return { audio: api.remoteTracks.audio, video: api.remoteTracks.video };
+					}
+				}
+
+				function apiStateEvent() {
+					if (api.enabled && api.initialized) {
+						apiEvent("state", apiGetState());
+					}
+				}
+
+				function apiMediaEvent() {
+					if (api.enabled && api.initialized) {
+						apiEvent("media", apiGetState());
+						apiStateEvent();
+					}
+				}
+
+				function apiPublishOutgoing(packet) {
+					if (!api.enabled) {
+						return;
+					}
+					packet.packetId = api.sessionId + ":" + packet.role + ":" + (packet.format === "lora" ? packet.sequence + ":" + packet.part : "qr");
+					packet.status = null;
+					api.outgoing.push(packet);
+					if (!api.signalingDone) {
+						api.connection = "exchanging";
+					}
+					apiEvent("outgoing", apiOutgoingPacket(packet));
+					apiStateEvent();
+				}
+
+				function apiOutgoingPacket(packet) {
+					var copy = {};
+					Object.keys(packet).forEach(function (key) {
+						copy[key] = packet[key];
+					});
+					copy.needed = apiSignalingNeeded();
+					return copy;
+				}
+
+				function apiUpdateDevices(devices) {
+					var choices = [];
+					for (var index = 0; index < devices.length; index++) {
+						var device = devices[index];
+						if (device.kind === "videoinput" || device.kind === "audioinput") {
+							choices.push({ kind: device.kind === "videoinput" ? "camera" : "microphone", deviceId: device.deviceId || "", label: device.label || "" });
+						}
+					}
+					if (JSON.stringify(choices) !== JSON.stringify(api.devices)) {
+						api.devices = choices;
+						apiEvent("devicesChanged", { devices: choices });
+					}
+					return { devices: choices };
+				}
+
+				function apiFrameRequest(message) {
+					if (!session || !session.realUUID) {
+						return Promise.reject(apiError("NOT_READY", "The media frame is still starting.", true));
+					}
+					return new Promise(function (resolve, reject) {
+						var callback = "qr-api-" + ++api.callbackCount;
+						api.pending[callback] = {
+							resolve: resolve,
+							reject: reject,
+							timer: setTimeout(function () {
+								delete api.pending[callback];
+								reject(apiError("TIMEOUT", "The media frame did not respond.", true));
+							}, 5000)
+						};
+						message.cib = callback;
+						session.post(message);
+					});
+				}
+
+				function apiGetDevices() {
+					var generation = attemptGeneration;
+					var result;
+					if (session) {
+						result = apiFrameRequest({ getDeviceList: true }).then(function (data) {
+							return data.deviceList;
+						});
+					} else if (navigator.mediaDevices && navigator.mediaDevices.enumerateDevices) {
+						result = navigator.mediaDevices.enumerateDevices();
+					} else {
+						return Promise.reject(apiError("UNSUPPORTED", "Device enumeration is unavailable."));
+					}
+					return result.then(function (devices) {
+						apiCheckGeneration(generation);
+						return apiUpdateDevices(devices);
+					});
+				}
+
+				function apiSetDevice(kind, enabled) {
+					api.desired[kind] = enabled;
+					api.mediaError[kind] = false;
+					if (grabbed[kind] === "starting") {
+						return;
+					}
+					if (enabled && grabbed[kind === "cam" ? "mic" : "cam"] === "starting") {
+						// VDO's device acquisition shares state; finish one request first.
+						return;
+					}
+					if (grabbed[kind] === true && (!enabled || api.selected[kind] === null || api.activeDevice[kind] === api.selected[kind])) {
+						mediaActive[kind] = enabled;
+						var message = {};
+						message[kind === "cam" ? "camera" : "mic"] = enabled;
+						session.post(message);
+						updateDeviceButton(kind);
+					} else if (enabled) {
+						var start = {};
+						start[kind === "cam" ? "changeVideoDevice" : "changeAudioDevice"] = api.selected[kind] !== null ? api.selected[kind] : kind === "cam" ? 0 : 1;
+						beginDeviceStart(kind, start);
+					}
+					apiMediaEvent();
+				}
+
+				function apiRequireMedia() {
+					if (!session || !session.sidecarConnected || (session.role === "join" && !session.returnMediaConnected)) {
+						throw apiError("NOT_READY", "Two-way media is not ready yet.", true);
+					}
+				}
+
+				function apiScreenShare(enabled, userClick) {
+					if (enabled) {
+						apiRequireMedia();
+					} else if (!session) {
+						return { screen: "off" };
+					}
+					if (api.screen === "starting") {
+						throw apiError("BUSY", "Finish or dismiss the current screen-sharing request first.", true);
+					}
+					if (enabled && !apiCapabilities().screenShare) {
+						throw apiError("UNSUPPORTED", "Screen sharing is unavailable in this browser.");
+					}
+					var child = frame.contentWindow;
+					if (!child.session || typeof child.toggleScreenShare !== "function") {
+						throw apiError("UNSUPPORTED", "Screen sharing controls are unavailable.");
+					}
+					if (!!child.session.screenShareState === enabled) {
+						api.screen = enabled ? "on" : "off";
+						return { screen: api.screen };
+					}
+					if (enabled && !userClick) {
+						el("btn-screen").textContent = "Click to share screen";
+						el("btn-screen").classList.remove("hidden");
+						el("live-note").textContent = "Click Share screen here to choose what to share.";
+						apiEvent("interactionRequired", { command: "requestScreenShare", reason: "user-activation", control: "btn-screen" });
+						return { interactionRequired: true, screen: api.screen };
+					}
+					var generation = attemptGeneration;
+					api.screen = "starting";
+					el("btn-screen").disabled = true;
+					apiMediaEvent();
+					// The existing screen control owns capture, replacement and track cleanup.
+					return Promise.resolve(child.toggleScreenShare()).then(
+						function () {
+							apiCheckGeneration(generation);
+							api.screen = child.session.screenShareState ? "on" : "off";
+							el("btn-screen").disabled = false;
+							el("btn-screen").textContent = api.screen === "on" ? "Stop screen share" : "Share screen";
+							el("live-note").textContent = connectedNote();
+							apiMediaEvent();
+							return { screen: api.screen };
+						},
+						function (error) {
+							apiCheckGeneration(generation);
+							el("btn-screen").disabled = false;
+							api.screen = "error";
+							apiMediaEvent();
+							throw error;
+						}
+					);
+				}
+
+				function apiStats() {
+					var generation = attemptGeneration;
+					var result = { transport: { media: [], chat: "unknown" }, receivedAudioBytes: null, decodedVideoFrames: null, startedAt: api.startedAt, connectedAt: api.connectedAt, connectMilliseconds: api.connectedAt ? api.connectedAt - api.startedAt : null, outgoingPackets: api.outgoing.length, receivedPackets: 0 };
+					Object.keys(loraReceiver.records || {}).forEach(function (key) {
+						result.receivedPackets += loraReceiver.records[key].received;
+					});
+					if (!session) {
+						return Promise.resolve(result);
+					}
+					var chatStats = session.sidecarPC ? session.sidecarPC.getStats() : Promise.resolve(null);
+					return Promise.all([apiFrameRequest({ getFreshStats: true }), chatStats]).then(function (data) {
+						apiCheckGeneration(generation);
+						var stats = data[0].stats || {};
+						Object.keys(stats.inbound || {}).forEach(function (key) {
+							var peer = stats.inbound[key];
+							var audio = null;
+							var frames = null;
+							Object.keys(peer || {}).forEach(function (trackKey) {
+								var track = peer[trackKey];
+								if (!track || typeof track !== "object") {
+									return;
+								}
+								if (track._type === "audio" && typeof track._last_bytes === "number") {
+									audio = (audio || 0) + track._last_bytes;
+								}
+								if (track._type === "video") {
+									if (typeof track._decodeFrames === "number") {
+										frames = (frames || 0) + track._decodeFrames;
+									} else if (typeof track._framesDecoded === "number") {
+										frames = (frames || 0) + track._framesDecoded;
+									}
+								}
+							});
+							if (audio === null && typeof peer._bytesReceived_audio === "number") {
+								audio = peer._bytesReceived_audio;
+							}
+							if (audio !== null) {
+								result.receivedAudioBytes = (result.receivedAudioBytes || 0) + audio;
+							}
+							if (frames !== null) {
+								result.decodedVideoFrames = (result.decodedVideoFrames || 0) + frames;
+							}
+						});
+						Object.keys(stats.outbound_stats || {}).forEach(function (key) {
+							var peer = stats.outbound_stats[key];
+							if (peer.candidateType_local || peer.candidateType_remote) {
+								result.transport.media.push(peer.candidateType_local === "relay" || peer.candidateType_remote === "relay" ? "relay" : "direct");
+							}
+						});
+						if (data[1]) {
+							data[1].forEach(function (entry) {
+								if (entry.type === "candidate-pair" && entry.nominated && entry.state === "succeeded") {
+									var local = data[1].get(entry.localCandidateId);
+									var remote = data[1].get(entry.remoteCandidateId);
+									result.transport.chat = (local && local.candidateType === "relay") || (remote && remote.candidateType === "relay") ? "relay" : "direct";
+								}
+							});
+						}
+						if (result.receivedAudioBytes === null || result.decodedVideoFrames === null) {
+							return apiReceiverCounters().then(function (counters) {
+								apiCheckGeneration(generation);
+								if (counters) {
+									if (result.receivedAudioBytes === null) {
+										result.receivedAudioBytes = counters.audio;
+									}
+									if (result.decodedVideoFrames === null) {
+										result.decodedVideoFrames = counters.video;
+									}
+								}
+								return result;
+							});
+						}
+						return result;
+					});
+				}
+
+				function apiReceiverCounters() {
+					// Some browser/core combinations omit these counters from IFRAME stats.
+					// QR Connect owns a same-origin media frame; keep its raw reports private.
+					var requests = [];
+					try {
+						var peers = frame.contentWindow.session.rpcs;
+						Object.keys(peers).forEach(function (key) {
+							requests.push(peers[key].getStats());
+						});
+					} catch (error) {
+						return Promise.resolve(null);
+					}
+					return Promise.all(requests).then(
+						function (reports) {
+							var counters = { audio: null, video: null };
+							reports.forEach(function (report) {
+								report.forEach(function (entry) {
+									if (entry.type !== "inbound-rtp") {
+										return;
+									}
+									var kind = entry.kind || entry.mediaType;
+									if (kind === "audio" && typeof entry.bytesReceived === "number") {
+										counters.audio = (counters.audio || 0) + entry.bytesReceived;
+									}
+									if (kind === "video" && typeof entry.framesDecoded === "number") {
+										counters.video = (counters.video || 0) + entry.framesDecoded;
+									}
+								});
+							});
+							return counters;
+						},
+						function () {
+							return null;
+						}
+					);
+				}
+
+				function apiCleanup(reset) {
+					attemptGeneration++;
+					stopScanner();
+					stopWaitingForAnswer();
+					clearTimeout(pasteValidationTimer);
+					pasteValidationRun++;
+					if (session) {
+						session.destroy();
+					}
+					session = null;
+					window.qrconnect = null;
+					Object.keys(api.pending).forEach(function (key) {
+						var pending = api.pending[key];
+						clearTimeout(pending.timer);
+						pending.reject(apiError("CANCELLED", "The connection attempt was cleared."));
+					});
+					api.pending = Object.create(null);
+					["cam", "mic"].forEach(function (kind) {
+						clearTimeout(grabTimers[kind]);
+						grabTimers[kind] = null;
+						grabbed[kind] = false;
+						mediaActive[kind] = false;
+						api.desired[kind] = false;
+						api.mediaError[kind] = false;
+						api.activeDevice[kind] = null;
+						updateDeviceButton(kind);
+					});
+					api.connection = "closed";
+					api.chat = "unavailable";
+					api.returnMedia = "off";
+					api.screen = "off";
+					api.remoteTracks = { audio: false, video: false };
+					apiEvent("closed", { reason: reset ? "reset" : "local-hangup" });
+					if (reset) {
+						api.sessionId = null;
+						api.outgoing = [];
+						api.normalReceived = null;
+						api.startedAt = null;
+						api.connectedAt = null;
+						api.signalingDone = false;
+						api.connection = "idle";
+					}
+					api.receiving = 0;
+					loraReceiver = {};
+					loraPackets = [];
+					currentBlob = null;
+					el("lora-packet").textContent = "";
+					el("lora-outgoing").classList.add("hidden");
+					el("code-text").value = "";
+					el("code-text").classList.add("hidden");
+					el("code-note").textContent = "";
+					el("qrbox").textContent = "";
+					el("qrbox").classList.remove("hidden");
+					el("btn-copy-link").classList.remove("hidden");
+					el("btn-native-share").classList.toggle("hidden", !navigator.share);
+					el("btn-toggle-text").textContent = "Show as text";
+					el("chat-messages").textContent = "";
+					el("chat-input").value = "";
+					el("btn-screen").textContent = "Share screen";
+					el("live-note").textContent = "";
+					document.body.classList.remove("live");
+					setChatEnabled(false);
+					setMediaControlsEnabled(false);
+					el("btn-reset").classList.toggle("hidden", reset);
+					fillPaste("");
+					show(["intro"]);
+					status(reset ? "" : "Connection closed. Start over to make another connection.");
+					apiMediaEvent();
+					return apiGetState();
+				}
+
+				function apiApplyTheme() {
+					var light = api.theme === "light" || (api.theme === "system" && window.matchMedia && window.matchMedia("(prefers-color-scheme: light)").matches);
+					document.body.setAttribute("data-qr-theme", light ? "light" : "dark");
+				}
+
+				function apiConfigure(data) {
+					var mode = data.mode === undefined ? (el("lora-mode").checked ? "lora" : "qr") : data.mode;
+					var budget = data.maxBytes === undefined ? Number(el("lora-budget").value) : data.maxBytes;
+					if ((mode !== "lora" && mode !== "qr") || typeof budget !== "number" || budget % 1 || budget < 40 || budget > 140) {
+						throw apiError("INVALID_CONFIGURATION", "Use mode lora or qr, with a whole-byte LoRa limit from 40 to 140.");
+					}
+					if (data.theme !== undefined && ["system", "light", "dark"].indexOf(data.theme) < 0) {
+						throw apiError("INVALID_CONFIGURATION", "Use theme system, light, or dark.");
+					}
+					["embedded", "showInstructions", "showChat"].forEach(function (key) {
+						if (data[key] !== undefined && typeof data[key] !== "boolean") {
+							throw apiError("INVALID_CONFIGURATION", key + " must be a boolean.");
+						}
+					});
+					if ((api.sessionId || api.receiving) && (mode !== apiGetState().mode || budget !== Number(el("lora-budget").value))) {
+						throw apiError("BUSY", "Reset before changing the connection format or packet limit.");
+					}
+					el("lora-mode").checked = mode === "lora";
+					el("lora-budget").value = budget;
+					el("lora-settings").classList.toggle("hidden", mode !== "lora");
+					if (data.theme !== undefined) {
+						api.theme = data.theme;
+						apiApplyTheme();
+					}
+					if (data.embedded !== undefined) {
+						document.body.classList.toggle("qr-embedded", data.embedded);
+					}
+					if (data.showInstructions !== undefined) {
+						document.body.classList.toggle("qr-hide-instructions", !data.showInstructions);
+					}
+					if (data.showChat !== undefined) {
+						document.body.classList.toggle("qr-hide-chat", !data.showChat);
+					}
+					apiEvent("resize", { width: document.body.scrollWidth, height: document.body.scrollHeight });
+					apiStateEvent();
+					return apiGetState();
+				}
+
+				function apiCommand(command, data) {
+					if (command === "init") {
+						api.initialized = true;
+						return { capabilities: apiCapabilities(), state: apiGetState() };
+					}
+					if (!api.initialized) {
+						throw apiError("NOT_INITIALIZED", "Send init first.");
+					}
+					if (command === "getState") {
+						return apiGetState();
+					}
+					if (command === "configure") {
+						return apiConfigure(data);
+					}
+					if (command === "getOutgoing") {
+						return { packets: api.outgoing.map(apiOutgoingPacket), finalPacketCount: null };
+					}
+					if (command === "reset") {
+						return apiCleanup(true);
+					}
+					if (command === "hangup") {
+						return apiCleanup(false);
+					}
+					if (command === "getDevices") {
+						return apiGetDevices();
+					}
+					if (command === "getStats") {
+						return apiStats();
+					}
+					if (command === "start") {
+						if (api.sessionId || session || api.receiving) {
+							throw apiError("BUSY", "Reset before starting another connection.");
+						}
+						beShare();
+						return { sessionId: api.sessionId, state: apiGetState() };
+					}
+					if (command === "receive") {
+						if (api.connection === "closed" || api.connection === "failed") {
+							throw apiError("CLOSED", "Reset before receiving a new offer.");
+						}
+						if (typeof data.text !== "string" || !data.text.trim()) {
+							throw apiError("INVALID_PACKET", "Supply the received text.");
+						}
+						var code;
+						try {
+							code = QRConnect.extractCode(data.text);
+						} catch (error) {
+							throw apiError("INVALID_PACKET", error.message, true);
+						}
+						if (api.normalReceived && code === api.normalReceived) {
+							return { accepted: true, duplicate: true, sessionId: api.sessionId };
+						}
+						var receiveGeneration = attemptGeneration;
+						api.receiving++;
+						return applyCode(data.text, false).then(function (result) {
+							if (receiveGeneration === attemptGeneration) {
+								api.receiving--;
+							}
+							if (!result.ok) {
+								throw result.error.code ? result.error : apiError("INVALID_PACKET", result.error.message, true);
+							}
+							if (!api.signalingDone) {
+								api.connection = session ? "connecting" : "exchanging";
+							}
+							apiStateEvent();
+							result.progress.sessionId = api.sessionId;
+							return result.progress;
+						});
+					}
+					if (command === "setPacketStatus") {
+						if (["queued", "radioAccepted", "radioAcknowledged", "unconfirmed", "failed"].indexOf(data.status) < 0) {
+							throw apiError("INVALID_STATUS", "Use a supported radio status; QR Connect does not provide peer delivery acknowledgements.");
+						}
+						for (var index = 0; index < api.outgoing.length; index++) {
+							if (api.outgoing[index].packetId === data.packetId) {
+								api.outgoing[index].status = data.status;
+								return apiOutgoingPacket(api.outgoing[index]);
+							}
+						}
+						throw apiError("UNKNOWN_PACKET", "That packet does not belong to this attempt.");
+					}
+					if (command === "sendChat") {
+						if (typeof data.text !== "string" || !data.text.trim() || data.text.length > CHAT_MAX_LENGTH) {
+							throw apiError("INVALID_CHAT", "Supply 1 to 2000 characters of chat text.");
+						}
+						var messageId = sendChatMessage(data.text);
+						if (!messageId) {
+							throw apiError("NOT_READY", "Chat is not connected yet.", true);
+						}
+						return { messageId: messageId };
+					}
+					if (command === "setMedia") {
+						if ((data.camera === undefined && data.microphone === undefined) || (data.camera !== undefined && typeof data.camera !== "boolean") || (data.microphone !== undefined && typeof data.microphone !== "boolean")) {
+							throw apiError("INVALID_MEDIA", "Supply camera and/or microphone as booleans.");
+						}
+						if (data.camera || data.microphone) {
+							apiRequireMedia();
+						}
+						if (data.camera !== undefined) {
+							apiSetDevice("cam", data.camera);
+						}
+						if (data.microphone !== undefined) {
+							apiSetDevice("mic", data.microphone);
+						}
+						return apiGetState();
+					}
+					if (command === "selectDevice") {
+						if (data.kind !== "camera" && data.kind !== "microphone") {
+							throw apiError("INVALID_DEVICE", "Select camera or microphone.");
+						}
+						var found = api.devices.some(function (device) {
+							return device.kind === data.kind && device.deviceId && device.deviceId === data.deviceId;
+						});
+						if (!found) {
+							throw apiError("INVALID_DEVICE", "Select an available device from getDevices.");
+						}
+						var kind = data.kind === "camera" ? "cam" : "mic";
+						if (grabbed[kind] === "starting") {
+							throw apiError("BUSY", "Wait for the current device request to finish.", true);
+						}
+						api.selected[kind] = data.deviceId;
+						if (mediaActive[kind]) {
+							apiRequireMedia();
+							var change = {};
+							change[kind === "cam" ? "changeVideoDevice" : "changeAudioDevice"] = data.deviceId;
+							beginDeviceStart(kind, change);
+							apiMediaEvent();
+						}
+						return { kind: data.kind, deviceId: data.deviceId, state: apiGetState() };
+					}
+					if (command === "requestScreenShare") {
+						return apiScreenShare(true, false);
+					}
+					if (command === "stopScreenShare") {
+						return apiScreenShare(false, false);
+					}
+					throw apiError("UNKNOWN_COMMAND", "Unsupported QR Connect command.");
+				}
+
+				function apiReceiveCommand(event) {
+					if (api.transport !== "webview2" && (event.source !== window.parent || event.origin !== api.origin)) {
+						return;
+					}
+					var request = event.data;
+					if (!request || request.api !== "qrconnect" || request.type !== "command" || typeof request.id !== "string" || !/^[A-Za-z0-9_.:-]{1,80}$/.test(request.id)) {
+						return;
+					}
+					var response = { type: "response", id: request.id, sessionId: api.sessionId };
+					var entry;
+					var generation = attemptGeneration;
+					function fail(error) {
+						if (generation === attemptGeneration) {
+							response.sessionId = api.sessionId;
+						}
+						response.ok = false;
+						response.error = { code: typeof error.code === "string" ? error.code : "OPERATION_FAILED", message: error.message || "The operation failed.", retryable: !!error.retryable, requestId: request.id };
+						if (generation === attemptGeneration) {
+							apiEvent("error", response.error);
+						}
+						return response;
+					}
+					try {
+						if (request.version !== 1) {
+							throw apiError("UNSUPPORTED_VERSION", "Use QR Connect API version 1.");
+						}
+						if ((request.command !== "init" || request.instanceId !== undefined) && request.instanceId !== api.instanceId) {
+							throw apiError("STALE_INSTANCE", "Initialize this iframe instance again.");
+						}
+						var signature = JSON.stringify([request.command, request.sessionId, request.data]);
+						if (signature.length > 16384 || new TextEncoder().encode(signature).length > 16384) {
+							throw apiError("TOO_LARGE", "The command exceeds 16384 bytes.");
+						}
+						entry = api.requests[request.id];
+						if (entry) {
+							if (entry.signature !== signature) {
+								throw apiError("ID_CONFLICT", "That request ID was already used with different contents.");
+							}
+							entry.result.then(apiSend);
+							return;
+						}
+						if (request.command !== "init" && request.sessionId !== api.sessionId) {
+							throw apiError("STALE_SESSION", "Use the current session ID from init or getState.");
+						}
+						if (request.data !== undefined && (!request.data || typeof request.data !== "object" || Array.isArray(request.data))) {
+							throw apiError("INVALID_COMMAND", "Command data must be an object.");
+						}
+						if (api.requestCount >= 4096) {
+							throw apiError("REQUEST_LIMIT", "Reload and initialize a new iframe before sending more commands.");
+						}
+						entry = { signature: signature };
+						api.requests[request.id] = entry;
+						api.requestCount++;
+						var operation;
+						try {
+							operation = apiCommand(request.command, request.data || {});
+						} catch (error) {
+							operation = Promise.reject(error);
+						}
+						generation = attemptGeneration;
+						entry.result = Promise.resolve(operation).then(function (result) {
+							if (generation !== attemptGeneration) {
+								return fail(apiError("CANCELLED", "The connection attempt was cleared."));
+							}
+							response.sessionId = api.sessionId;
+							response.ok = true;
+							response.result = result;
+							return response;
+						}, fail);
+						entry.result.then(apiSend);
+					} catch (error) {
+						apiSend(fail(error));
+					}
+				}
+
+				function setupEmbeddingAPI() {
+					if (!enabledParam("api")) {
+						return;
+					}
+					if (params.has("apiTransport") && ["iframe", "webview2"].indexOf(params.get("apiTransport")) < 0) {
+						status("Unsupported embedding transport. Use iframe or webview2.", true);
+						return;
+					}
+					if (params.get("apiTransport") === "webview2") {
+						if (window.parent !== window || !window.chrome || !window.chrome.webview) {
+							status("The requested native WebView bridge is unavailable.", true);
+							return;
+						}
+						api.transport = "webview2";
+						api.enabled = true;
+						window.chrome.webview.addEventListener("message", apiReceiveCommand);
+					} else {
+						try {
+							var origin = new URL(params.get("parentOrigin"));
+							if (window.parent === window || (origin.protocol !== "https:" && origin.protocol !== "http:") || origin.username || origin.password || origin.pathname !== "/" || origin.search || origin.hash) {
+								throw new Error("Invalid parent origin");
+							}
+							api.origin = origin.origin;
+						} catch (error) {
+							status("Embedding API requires an explicit HTTP or HTTPS parentOrigin.", true);
+							return;
+						}
+						api.transport = "iframe";
+						api.enabled = true;
+						window.addEventListener("message", apiReceiveCommand);
+					}
+					if (handoffChannel) {
+						handoffChannel.close();
+						handoffChannel = null;
+					}
+					apiApplyTheme();
+					if (window.matchMedia) {
+						var scheme = window.matchMedia("(prefers-color-scheme: light)");
+						if (scheme.addListener) {
+							scheme.addListener(apiApplyTheme);
+						}
+					}
+					if (navigator.mediaDevices && navigator.mediaDevices.addEventListener) {
+						navigator.mediaDevices.addEventListener("devicechange", function () {
+							if (api.initialized) {
+								apiGetDevices().catch(function () {});
+							}
+						});
+					}
+					window.addEventListener("resize", function () {
+						apiEvent("resize", { width: document.body.scrollWidth, height: document.body.scrollHeight });
+					});
+					apiEvent("ready", { capabilities: apiCapabilities() });
+				}
+
 				/* ------------------------------ boot ----------------------------- */
+
+				setupEmbeddingAPI();
 
 				if (!window.isSecureContext && location.hostname !== "localhost" && location.hostname !== "127.0.0.1") {
 					status("This page needs HTTPS to use the camera.", true);
@@ -1966,10 +3128,17 @@
 				// page. If it is already open, that is only a hash change and the page
 				// never reloads, so the link has to be picked up here too.
 				window.addEventListener("hashchange", function () {
-					readLocationCode(false);
+					if (!api.enabled) {
+						readLocationCode(false);
+					}
 				});
 
-				if (!readLocationCode(true) && enabledParam("autostart")) {
+				if (enabledParam("api")) {
+					show(["intro"]);
+					if (api.enabled) {
+						status("");
+					}
+				} else if (!readLocationCode(true) && enabledParam("autostart")) {
 					beShare();
 				} else if (!session && !location.hash && !params.get("c") && !params.get("code")) {
 					show(["intro"]);

@@ -41,6 +41,49 @@ candidates; the public example page does not expose that option.
 
 ## How it works
 
+### LoRa / MeshCore messages
+
+Enable **LoRa / MeshCore mode** before starting a connection, or open
+`qr.html?lora`. The default limit is **140 ASCII characters per message**,
+including its header and checksum. The limit can be reduced to 40 characters;
+the answering page automatically uses the offer's limit.
+
+1. Start the connection and copy the selected outgoing message into your radio
+   app. If the selector lists more messages, send each separately.
+2. On the other device, choose **Scan or paste a code** and paste each received
+   message. The page recognizes LoRa messages automatically.
+3. Send that device's outgoing messages back and paste them into the original
+   waiting tab. Continue exchanging available messages until connected.
+
+The first message includes the compact datachannel description and as many
+available candidates as fit, preferring public and relay routes. Overflow and
+late candidates use additional messages through the existing trickle ICE path.
+No route is discarded just to meet the message limit. If a description or a
+single candidate is too large, it is split into numbered parts. Select an
+earlier outgoing message to resend it; duplicates are ignored, and out-of-order
+parts wait for missing messages. **Start over** clears the exchange.
+
+Messages use uppercase Base32 letters/digits and the `L1O` (offer side) or `L1A`
+(answer side) prefix. Each character occupies one UTF-8 byte. A 21-character
+header carries the version/role, an eight-character exchange ID, the message
+limit, record number, part number/count, and CRC-16. Record zero carries the
+existing packed description format; later records carry the existing dense
+candidate format. Candidates retain the description's ICE generation, and
+generated candidate foundations remain distinct across records. Receivers
+reject conflicting parts, damaged messages and replies from another exchange.
+The CRC detects accidental corruption; the full DTLS fingerprint and ICE
+credentials remain in the description.
+
+The limit applies to the text copied into the radio app. Reserve any additional
+space required by your transport by lowering the limit. This mode does not
+connect directly to radio hardware. Keep both browser pages open during the
+exchange; very long delays or background suspension can still require a fresh
+connection. LoRa carries connection signaling; WebRTC chat, audio and video
+still need an IP path between the devices, directly or through TURN.
+
+The ordinary QR mode and its existing code formats remain available. LoRa
+shows copyable text first; **Show QR** displays a QR for the selected packet.
+
 ### Bypassing the handshake server
 
 `&bypass` is an existing VDO.Ninja flag. It replaces the WebSocket with a
@@ -499,6 +542,198 @@ the current page path permits. The media camera defaults to front, the scanner
 defaults to rear, and both can be switched after permission reveals multiple
 devices.
 
+## Embedding API (version 1)
+
+The page can be controlled by another application through `postMessage`.
+Enable it explicitly, binding it to the parent application's exact origin:
+
+```html
+<iframe src="https://vdo.ninja/qr?api=1&parentOrigin=https%3A%2F%2Fapp.example" allow="camera; microphone; autoplay; display-capture; fullscreen" title="QR Connect"></iframe>
+```
+
+Include the scheme and any non-default port in `parentOrigin`. HTTP localhost
+origins are supported for development. Opaque origins such as `file:` and
+sandboxed frames without `allow-same-origin` are not supported by this transport.
+The QR page verifies both the origin and the controlling parent window, and
+sends replies only to that origin. Messages from its inner VDO iframe cannot
+control this API. The parent must likewise verify the QR origin and iframe
+window when receiving messages. Do not forward arbitrary messages from other
+windows or unverified radio senders.
+
+The parent retains contact selection, sender verification, hardware permissions,
+radio credentials, pacing, queues and retry decisions. Only the exact `text` of
+a LoRa packet belongs on the radio. API JSON and its identifiers stay local.
+No radio driver, server component, or application-specific integration is needed
+in QR Connect. The page remains usable on static hosts such as GitHub Pages.
+
+### Initialization and request identity
+
+Register the parent's message listener before loading the iframe. The page emits
+`ready` with its `instanceId` and capabilities. No handshake text is emitted
+before `init`. If `ready` was missed, send `init` without `instanceId` to discover
+the current instance. Initialization is safe to repeat and does not start a call.
+
+```js
+qrFrame.contentWindow.postMessage(
+	{
+		api: "qrconnect",
+		version: 1,
+		type: "command",
+		id: "request-1",
+		command: "init",
+		data: {}
+	},
+	"https://vdo.ninja"
+);
+```
+
+Responses have `type: "response"`, echo `id`, and include `instanceId`,
+`sessionId`, and either `{ ok: true, result: ... }` or
+`{ ok: false, error: { code, message, retryable, requestId } }`.
+The `init` result contains `{ capabilities, state }`.
+
+All commands after initialization must include the returned `instanceId` and
+the current `sessionId`, which is initially `null`. `start` returns a session ID
+immediately; an incoming offer establishes an answering attempt on the first
+accepted fragment. Adopt the response's session ID before sending the next
+command. Each peer has its own local API session ID; it is separate from the
+exchange ID already inside L1 packets. Use a fresh `init` to recover state when
+the current session ID is unknown.
+
+```js
+qrFrame.contentWindow.postMessage(
+	{
+		api: "qrconnect",
+		version: 1,
+		type: "command",
+		id: "request-2",
+		instanceId: currentInstanceId,
+		sessionId: currentSessionId,
+		command: "configure",
+		data: { mode: "lora", maxBytes: 140, embedded: true }
+	},
+	"https://vdo.ninja"
+);
+```
+
+Request IDs are 1–80 ASCII letters, digits, periods, underscores, colons or
+hyphens. Retrying the same ID with the same command, session and data returns
+the original response, including while the operation is pending. It never
+starts another call or sends chat again. Changed contents produce `ID_CONFLICT`.
+Use new IDs for fresh state/statistics reads. Replies to old requests can contain
+old state: they acknowledge that request, not a new call.
+
+Completed requests are retained across `reset`, with a limit of 4,096 requests
+per iframe instance; the API rejects further requests instead of evicting IDs
+and allowing an old command to execute again. Reload and initialize a new iframe
+when needed. Command content is limited to 16,384 UTF-8 bytes. Reloading changes
+`instanceId` and destroys the active connection; it cannot restore an old offer.
+
+### Commands
+
+| Command              | `data` and result                                                                                                                                                                                                                                                                                     |
+| -------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `init`               | Returns capabilities, limits and current state.                                                                                                                                                                                                                                                       |
+| `configure`          | Optional `mode: "lora" \| "qr"`, `maxBytes: 40..140`, `theme: "system" \| "light" \| "dark"`, `embedded`, `showInstructions`, `showChat`. The last three are booleans. Format/budget changes require an idle attempt; presentation can change during a call. Theme applies to the QR page's controls. |
+| `start`              | Creates an offer; returns `{ sessionId, state }` before packets finish gathering.                                                                                                                                                                                                                     |
+| `receive`            | `{ text }`. Uses the normal validation and reassembly path; returns acceptance/progress. Incoming LoRa offers adopt their packet limit, which cannot exceed the configured limit. Receiving never enables camera or microphone.                                                                       |
+| `getState`           | Returns the structured state below.                                                                                                                                                                                                                                                                   |
+| `getOutgoing`        | Returns `{ packets, finalPacketCount: null }`. Recovers missed events without generating new codes.                                                                                                                                                                                                   |
+| `setPacketStatus`    | `{ packetId, status }`; returns the updated packet. Records the parent's report and sends no traffic.                                                                                                                                                                                                 |
+| `sendChat`           | `{ text }`, 1–2,000 UTF-16 characters; returns `{ messageId }`. Uses the established WebRTC chat channel.                                                                                                                                                                                             |
+| `setMedia`           | `{ camera: true/false, microphone: true/false }`; either field may be omitted. Returns current state, which can still be `starting`. Requests for both devices acquire them in sequence. Enabling requires media readiness; disabling is safe before connection.                                      |
+| `getDevices`         | Returns `{ devices: [{ kind, deviceId, label }] }`. Labels and IDs may be unavailable before permission. Does not request capture permission.                                                                                                                                                         |
+| `selectDevice`       | `{ kind: "camera" \| "microphone", deviceId }` from `getDevices`. Selects for the next start, or switches an active input. Selecting an inactive input does not start it.                                                                                                                             |
+| `requestScreenShare` | Reports `interactionRequired` and exposes an in-frame button. The user chooses a source after clicking it. Unsupported browsers return `UNSUPPORTED`.                                                                                                                                                 |
+| `stopScreenShare`    | Stops an active screen share through the existing VDO screen control.                                                                                                                                                                                                                                 |
+| `getStats`           | Returns direct/relay transport, connection timing, received audio bytes, decoded video frames and packet totals. Unavailable counters are `null`. No raw SDP, ICE credentials, addresses, stream IDs or device labels are returned.                                                                   |
+| `hangup`             | Releases the iframe's media and peer connections. Retains the closed session ID and outgoing packet history for inspection.                                                                                                                                                                           |
+| `reset`              | Releases resources, cancels pending work, clears fragments/history and returns to idle with `sessionId: null`. Preserves parent initialization and configuration.                                                                                                                                     |
+
+`setMedia: false` disables publishing that input using the existing mute controls;
+it does not promise to release hardware. `hangup` and `reset` unload the media
+iframe and release its resources. A successful media command acknowledges the
+request; observe `media`/`state` for completion or `error` for failure. Browser
+permission prompts can remain pending, and device-start timeouts are reported.
+
+### Events and state
+
+Events use `{ api, version, type: "event", instanceId, sessionId, event, data }`.
+Every event except `ready` requires initialization.
+
+| Event                 | Contents                                                                                                                                                                                                                                                                                                   |
+| --------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `ready`               | Capabilities and limits; instance identity is in the envelope.                                                                                                                                                                                                                                             |
+| `state`               | Structured connection state and readable status.                                                                                                                                                                                                                                                           |
+| `outgoing`            | One generated packet, with stable `packetId`, `format`, exact `text`, UTF-8 `bytes`, `budget`, `role`, `status` and `needed`. LoRa also includes zero-based `sequence` and `part`, plus fragment `count`. Normal QR includes `code` and `link`, with `budget: null`; it is not labelled as a radio packet. |
+| `receiveProgress`     | `accepted`, `duplicate`, records completed by this input, the next record index, known missing record indexes, and known missing fragments as `{ sequence, count, parts }`. Wholly missing records have no invented fragment count.                                                                        |
+| `chat`                | `{ messageId, text, direction: "sent" \| "received" }`. IDs are local to this page.                                                                                                                                                                                                                        |
+| `media`               | Current state including local inputs, screen sharing, remote tracks and return-media readiness.                                                                                                                                                                                                            |
+| `devicesChanged`      | Current device choices.                                                                                                                                                                                                                                                                                    |
+| `interactionRequired` | Operation, reason and the in-frame control needing a click.                                                                                                                                                                                                                                                |
+| `error`               | Stable code, readable message, retryability and a request ID when available.                                                                                                                                                                                                                               |
+| `closed`              | `local-hangup`, `reset`, or `failure`. A remote transport interruption is reported as `disconnected`; it is not falsely identified as a deliberate remote hangup.                                                                                                                                          |
+| `resize`              | Current content width/height on resize or presentation changes.                                                                                                                                                                                                                                            |
+
+For example, a connected session can still be preparing return media:
+
+```json
+{
+	"connection": "connected",
+	"chat": "ready",
+	"returnMedia": "starting",
+	"camera": "off",
+	"microphone": "off",
+	"screen": "off",
+	"signalingNeeded": false
+}
+```
+
+Connection states are `idle`, `preparing`, `exchanging`, `connecting`,
+`connected`, `disconnected`, `failed` and `closed`. Inputs use `off`, `starting`,
+`on` and `error`; chat and return media have their own readiness states.
+
+Additional candidate packets can arrive after the first offer/answer event.
+There is no declared final packet count in L1. `moreNeeded` remains true until
+the connection succeeds; missing-record/fragment lists describe only known gaps.
+Once `signalingNeeded` becomes false, stop sending any remaining handshake
+packets. `getOutgoing` retains them with `needed: false`, so the parent can
+reconcile its queue without treating them as failed transmissions.
+
+Transmission status is initially `null` (no parent report). Accepted reports
+are `queued` (queued locally), `radioAccepted` (radio accepted the command),
+`radioAcknowledged` (recipient radio acknowledged it), `unconfirmed` (unknown
+outcome), and `failed` (definite failure). `peerAccepted` is rejected because
+QR Connect does not send per-packet peer acknowledgements. A successful
+`receive` response acknowledges acceptance by the **local** page only. Neither
+status updates nor retries create extra radio traffic automatically.
+
+In API mode, normal QR answers must be delivered to their original iframe;
+automatic tab handoff and URL-driven autostart/code loading are disabled. The
+standalone page retains those behaviors when `api` is absent.
+
+### Native WebViews and permissions
+
+An application using a web parent can use the iframe API inside its WebView.
+A WebView2 host loading QR Connect directly can explicitly use
+`?api=1&apiTransport=webview2`. This requires the native bridge in the top-level
+document and uses the same schema over `window.chrome.webview.postMessage` and
+its `message` event. It is never enabled just because a bridge exists. The
+native host must validate the web-message source URL and restrict navigation
+before sending or accepting commands. Other native bridges require a host-side
+adapter; they are not automatically detected.
+
+The host's CSP must allow the QR origin in `frame-src`. Camera, microphone and
+display-capture policy must permit the whole iframe chain, and native apps must
+also handle their platform's permission requirements. Screen capture is optional
+and requires a fresh user interaction; an API message does not bypass that.
+The native bridge's availability does not establish media support in that host.
+
+See [browser messaging](https://developer.mozilla.org/en-US/docs/Web/API/Window/postMessage),
+[capture permissions](https://developer.mozilla.org/en-US/docs/Web/API/MediaDevices/getUserMedia),
+[screen capture](https://developer.mozilla.org/en-US/docs/Web/API/MediaDevices/getDisplayMedia),
+and [WebView2 security](https://learn.microsoft.com/en-us/microsoft-edge/webview2/concepts/security).
+
 ## Reusing the module
 
 `qrconnect.js` has no DOM dependencies and can drive any UI:
@@ -533,11 +768,12 @@ session.createOffer(); // sharer
 
 `QRConnect.decodeBlob(text)` resolves to the payload those last two take.
 `session.post(msg)` forwards a raw IFRAME API message to the iframe.
+`session.destroy()` closes the wrapper's peer channel, cancels startup/gathering
+timers, removes listeners and navigates its media iframe to `about:blank`.
 
 ## Limits
 
-- **Two peers.** Text chat is two-way, but media is currently one-way: one
-  publishes and one views. Rooms need the server.
+- **Two peers.** Text chat and media are two-way. Rooms need the server.
 - Camera controls switch one active publishing device at a time; they do not
   publish multiple cameras simultaneously.
 - **Application-layer SDP wrapping is off**, because the codec cannot pack its

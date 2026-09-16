@@ -17,6 +17,8 @@
  * datachannel over it and the out-of-band exchange is finished. Anything
  * VDO.Ninja later puts on its signalling path, including renegotiation and ICE
  * restarts, is tunnelled peer to peer over that sidecar by relaySignal().
+ * Optional LoRa mode splits the bootstrap into bounded ASCII messages and
+ * continues to expose overflow and late ICE candidates until connected.
  */
 
 (function (global) {
@@ -950,7 +952,7 @@
 		});
 	}
 
-	function unpackCandidates(reader, ufrag) {
+	function unpackCandidates(reader, ufrag, offset) {
 		var count = reader.varint();
 		if (count > MAX_CANDIDATES) {
 			throw new Error("That code contains too many network routes.");
@@ -989,7 +991,7 @@
 			}
 			previous = parts.port;
 			out.push({
-				candidate: buildCandidate(parts, index),
+				candidate: buildCandidate(parts, index + (offset || 0)),
 				sdpMid: "0",
 				sdpMLineIndex: 0,
 				usernameFragment: ufrag
@@ -1223,7 +1225,7 @@
 		bits.finish();
 	}
 
-	function unpackCandidatesDense(reader, ufrag) {
+	function unpackCandidatesDense(reader, ufrag, offset) {
 		var taggedCount = reader.varint();
 		var count = Math.floor(taggedCount / 2);
 		var compact = taggedCount & 1;
@@ -1232,7 +1234,7 @@
 		}
 		if (!compact) {
 			var legacyReader = new Reader(reader.blob(MAX_SDP_BYTES));
-			var legacy = unpackCandidates(legacyReader, ufrag);
+			var legacy = unpackCandidates(legacyReader, ufrag, offset);
 			if (legacy.length !== count || legacyReader.at !== legacyReader.bytes.length) {
 				throw new Error("That code contains invalid network routes.");
 			}
@@ -1306,7 +1308,7 @@
 						address: address,
 						port: port
 					},
-					index
+					index + (offset || 0)
 				),
 				sdpMid: "0",
 				sdpMLineIndex: 0,
@@ -1726,7 +1728,7 @@
 		return ufrag && pwd ? { spec: spec, ufrag: ufrag, pwd: pwd } : null;
 	}
 
-	function encodeBlobUnchecked(payload) {
+	function encodeBlobUnchecked(payload, asBytes) {
 		var split = splitSDP(payload.sdp);
 		var fingerprint = split && packHex(split.values[4]);
 		var setup = split ? SETUPS.indexOf(split.values[5]) : -1;
@@ -1807,7 +1809,7 @@
 				writer.text(streamID);
 			}
 			packCandidatesDense(writer, payload.candidates);
-			return MAGIC + toBase30000(writer.done());
+			return asBytes ? writer.done() : MAGIC + toBase30000(writer.done());
 		}
 
 		var encoded;
@@ -1815,6 +1817,9 @@
 			encoded = (mode === SDP_MODE_RAW ? deflate(payload.sdp) : Promise.resolve(null)).then(function (compressed) {
 				return assemble(mode, compressed);
 			});
+		} else if (asBytes) {
+			// LoRa's line codec also works on browsers without CompressionStream.
+			encoded = Promise.resolve(assemble(SDP_MODE_LINES, null));
 		} else {
 			// A line-encoded skeleton is usually far smaller than a compressed
 			// one, but an SDP full of lines we do not know is not, so try both and
@@ -1839,8 +1844,190 @@
 		});
 	}
 
+	/* LoRa carries ASCII packets, not the QR alphabet's multi-byte glyphs.
+	 * Records are ordered; fragments and duplicates can arrive in any order.
+	 * The receiver belongs to one exchange and is discarded on Start over. */
+	var LORA_ALPHABET = "ABCDEFGHIJKLMNOPQRSTUVWXYZ234567";
+	var LORA_LIMIT = 140;
+	var LORA_HEADER = 21;
+
+	function toBase32(bytes) {
+		var output = "";
+		var value = 0;
+		var bits = 0;
+		for (var index = 0; index < bytes.length; index++) {
+			value = (value << 8) | bytes[index];
+			bits += 8;
+			while (bits >= 5) {
+				bits -= 5;
+				output += LORA_ALPHABET.charAt((value >> bits) & 31);
+			}
+			value &= (1 << bits) - 1;
+		}
+		if (bits) {
+			output += LORA_ALPHABET.charAt((value << (5 - bits)) & 31);
+		}
+		return output;
+	}
+
+	function fromBase32(text) {
+		var bytes = [];
+		var value = 0;
+		var bits = 0;
+		for (var index = 0; index < text.length; index++) {
+			var digit = LORA_ALPHABET.indexOf(text.charAt(index));
+			if (digit < 0) {
+				throw new Error("That LoRa message contains an unsupported character.");
+			}
+			value = (value << 5) | digit;
+			bits += 5;
+			if (bits >= 8) {
+				bits -= 8;
+				bytes.push((value >> bits) & 255);
+			}
+			value &= (1 << bits) - 1;
+		}
+		if (bits >= 5 || value) {
+			throw new Error("That LoRa message has invalid padding.");
+		}
+		return new Uint8Array(bytes);
+	}
+
+	function loRaNumber(value, length) {
+		var text = "";
+		while (length--) {
+			text = LORA_ALPHABET.charAt(value & 31) + text;
+			value >>>= 5;
+		}
+		return text;
+	}
+
+	function loRaChecksum(text) {
+		// CRC-16 detects damaged copy/paste or radio text; DTLS authenticates peers.
+		var crc = 65535;
+		for (var index = 0; index < text.length; index++) {
+			crc ^= text.charCodeAt(index) << 8;
+			for (var bit = 0; bit < 8; bit++) {
+				crc = ((crc << 1) ^ (crc & 32768 ? 4129 : 0)) & 65535;
+			}
+		}
+		return loRaNumber(crc, 4);
+	}
+
+	function loRaPackets(bytes, role, id, sequence, budget) {
+		var text = toBase32(bytes);
+		var capacity = budget - LORA_HEADER;
+		var count = Math.ceil(text.length / capacity);
+		if (budget < 40 || budget > LORA_LIMIT || count < 1 || count > 32 || sequence > MAX_CANDIDATES) {
+			throw new Error("This connection needs too many LoRa message parts. Use a larger message limit or start over.");
+		}
+		var packets = [];
+		for (var index = 0; index < count; index++) {
+			var header = "L1" + (role === "offer" ? "O" : "A") + id + loRaNumber(budget, 2) + loRaNumber(sequence, 2) + loRaNumber(index, 1) + loRaNumber(count - 1, 1);
+			var body = text.slice(index * capacity, (index + 1) * capacity);
+			packets.push(header + loRaChecksum(header + body) + body);
+		}
+		return packets;
+	}
+
+	function readLoRaPacket(text) {
+		var code = extractConnectCode(text).toUpperCase();
+		if (!/^L1[OA][A-Z2-7]+$/.test(code) || code.length <= LORA_HEADER || code.length > LORA_LIMIT) {
+			throw new Error("Use a complete LoRa message of at most 140 ASCII characters.");
+		}
+		var sequence = LORA_ALPHABET.indexOf(code.charAt(13)) * 32 + LORA_ALPHABET.indexOf(code.charAt(14));
+		var budget = LORA_ALPHABET.indexOf(code.charAt(11)) * 32 + LORA_ALPHABET.indexOf(code.charAt(12));
+		var part = LORA_ALPHABET.indexOf(code.charAt(15));
+		var count = LORA_ALPHABET.indexOf(code.charAt(16)) + 1;
+		if (budget < 40 || budget > LORA_LIMIT || code.length > budget || part >= count || sequence > MAX_CANDIDATES || code.slice(17, 21) !== loRaChecksum(code.slice(0, 17) + code.slice(21))) {
+			throw new Error("That LoRa message is damaged or incomplete. Copy it again.");
+		}
+		return { code: code, id: code.slice(3, 11), budget: budget, role: code.charAt(2) === "O" ? "offer" : "answer", sequence: sequence, part: part, count: count, body: code.slice(21) };
+	}
+
+	function receiveLoRaPacket(state, text) {
+		var operation = (state.chain || Promise.resolve()).then(function () {
+			var packet = readLoRaPacket(text);
+			if ((state.id && packet.id !== state.id) || (state.role && packet.role !== state.role)) {
+				throw new Error("That LoRa message belongs to another connection or is your own outgoing message.");
+			}
+			if ((state.budget && packet.budget !== state.budget) || (state.maxBudget && packet.budget > state.maxBudget)) {
+				throw new Error("That LoRa message uses a different message limit. Use the replies from this connection.");
+			}
+			state.id = packet.id;
+			state.role = packet.role;
+			state.budget = packet.budget;
+			state.records = state.records || {};
+			state.next = state.next || 0;
+			state.highest = Math.max(state.highest || 0, packet.sequence);
+			var record = state.records[packet.sequence];
+			if (!record) {
+				record = { parts: [], count: packet.count, received: 0 };
+				state.records[packet.sequence] = record;
+			}
+			if (record.count !== packet.count || (record.parts[packet.part] && record.parts[packet.part] !== packet.body)) {
+				throw new Error("Conflicting LoRa message parts. Use the messages from the same connection.");
+			}
+			var duplicate = !!record.parts[packet.part];
+			if (!duplicate) {
+				record.parts[packet.part] = packet.body;
+				record.received++;
+			}
+			var payloads = [];
+			var start = state.next;
+			var previousPayload = state.payload;
+			var previousCount = state.candidateCount;
+			function readNext() {
+				var next = state.records[state.next];
+				if (!next || next.received !== next.count) {
+					return Promise.resolve({ payloads: payloads, duplicate: duplicate, next: state.next, pending: state.highest >= state.next });
+				}
+				var bytes = fromBase32(next.parts.join(""));
+				var decoded;
+				if (state.next === 0) {
+					decoded = decodeDenseBytes(bytes);
+				} else {
+					var reader = new Reader(bytes);
+					var ufrag = /^a=ice-ufrag:(\S+)/m.exec(state.payload.sdp);
+					var candidates = unpackCandidatesDense(reader, ufrag ? ufrag[1] : "", state.candidateCount);
+					if (reader.at !== bytes.length || !candidates.length || state.candidateCount + candidates.length > MAX_CANDIDATES) {
+						throw new Error("That LoRa message contains invalid network routes.");
+					}
+					decoded = Promise.resolve({ role: state.role, session: state.payload.session, candidates: candidates });
+				}
+				return decoded.then(function (payload) {
+					if (payload.role !== state.role) {
+						throw new Error("That LoRa description has the wrong role.");
+					}
+					if (state.next === 0) {
+						state.payload = payload;
+						state.candidateCount = 0;
+					}
+					payload.loraID = state.id;
+					payload.loraBudget = state.budget;
+					state.candidateCount += payload.candidates.length;
+					state.next++;
+					payloads.push(payload);
+					return readNext();
+				});
+			}
+			return Promise.resolve()
+				.then(readNext)
+				.catch(function (error) {
+					// A malformed later record must not consume an undelivered offer.
+					delete state.records[state.next];
+					state.next = start;
+					state.payload = previousPayload;
+					state.candidateCount = previousCount;
+					throw error;
+				});
+		});
+		state.chain = operation.catch(function () {});
+		return operation;
+	}
+
 	function hasConnectMagic(code) {
-		return code.slice(0, MAGIC.length) === MAGIC || code.slice(0, BASE2048_MAGIC.length) === BASE2048_MAGIC || code.slice(0, BASE512_MAGIC.length) === BASE512_MAGIC || code.slice(0, LEGACY_MAGIC.length) === LEGACY_MAGIC;
+		return /^L1[OA]/i.test(code) || code.slice(0, MAGIC.length) === MAGIC || code.slice(0, BASE2048_MAGIC.length) === BASE2048_MAGIC || code.slice(0, BASE512_MAGIC.length) === BASE512_MAGIC || code.slice(0, LEGACY_MAGIC.length) === LEGACY_MAGIC;
 	}
 
 	function stripChatPunctuation(text) {
@@ -2111,6 +2298,18 @@
 		var hardLimit = this.role === "share" ? OFFER_LIMIT : ANSWER_LIMIT;
 		var requestedBudget = Number(options.qrBudget);
 		this.qrBudget = requestedBudget > 0 ? Math.min(requestedBudget, hardLimit) : hardLimit;
+		this.lora = !!options.lora;
+		if (this.lora) {
+			this.loraBudget = Math.max(40, Math.min(LORA_LIMIT, Math.floor(Number(options.loraBudget) || LORA_LIMIT)));
+			this.loraID = options.loraID || toBase32(crypto.getRandomValues(new Uint8Array(5)));
+			if (!/^[A-Z2-7]{8}$/.test(this.loraID)) {
+				throw new Error("That LoRa connection ID is invalid.");
+			}
+			this.loraSequence = 0;
+			this.loraCandidateKeys = {};
+			this.loraCandidateCount = 0;
+			this.loraSendChain = Promise.resolve();
+		}
 
 		// There is only one code, so everything has to be in it. Local addresses
 		// all arrive at once, but a TURN allocation is a round trip to the relay,
@@ -2166,6 +2365,9 @@
 	};
 
 	Session.prototype.emit = function (name, value) {
+		if (this.destroyed) {
+			return;
+		}
 		(this.listeners[name] || []).forEach(function (handler) {
 			try {
 				handler(value);
@@ -2201,6 +2403,9 @@
 	};
 
 	Session.prototype.start = function () {
+		if (this.destroyed) {
+			return;
+		}
 		this.iframe.src = this.url();
 		this.emit("state", this.role === "share" ? "Starting up..." : "Connecting...");
 	};
@@ -2208,6 +2413,9 @@
 	Session.prototype.handleMessage = function (data) {
 		if (!data || typeof data !== "object") {
 			return;
+		}
+		if (data.cib && ("stats" in data || "deviceList" in data)) {
+			this.emit("response", data);
 		}
 		if ("bypass" in data) {
 			this.handleSignal(data.bypass);
@@ -2292,6 +2500,10 @@
 			this.relaySignal(message);
 			return;
 		}
+		if (this.lora && this.loraLocalPayload && message.candidates) {
+			this.sendLoRaCandidates(message);
+			return;
+		}
 		if (this.collecting && (message.description || message.candidates)) {
 			this.collect(message);
 		}
@@ -2312,6 +2524,9 @@
 	};
 
 	Session.prototype.post = function (message) {
+		if (this.destroyed) {
+			return;
+		}
 		try {
 			this.iframe.contentWindow.postMessage(message, "*");
 		} catch (e) {
@@ -2369,6 +2584,9 @@
 	};
 
 	Session.prototype.startReturnMedia = function () {
+		if (this.destroyed) {
+			return false;
+		}
 		if (this.role !== "join" || this.returnMediaStarted) {
 			return this.returnMediaStarted;
 		}
@@ -2396,8 +2614,16 @@
 		if (!channel) {
 			return;
 		}
+		if (self.destroyed) {
+			channel.close();
+			return;
+		}
 		self.sidecarChannel = channel;
 		channel.onopen = function () {
+			if (self.destroyed) {
+				channel.close();
+				return;
+			}
 			clearTimeout(self.sidecarTimer);
 			clearInterval(self.sidecarDescriptionTimer);
 			self.sidecarConnected = true;
@@ -2439,7 +2665,7 @@
 		var pc = new RTCPeerConnection(self.getSidecarConfiguration());
 		self.sidecarPC = pc;
 		pc.onicecandidate = function (event) {
-			if (!event.candidate) {
+			if (self.destroyed || !event.candidate) {
 				return;
 			}
 			var candidate = {
@@ -2491,6 +2717,9 @@
 
 	Session.prototype.repeatSidecarDescription = function () {
 		var self = this;
+		if (self.destroyed) {
+			return;
+		}
 		clearInterval(self.sidecarDescriptionTimer);
 		if (!self.sendSidecarDescription()) {
 			throw new Error("The bootstrap channel closed before peer chat was ready.");
@@ -2546,6 +2775,9 @@
 		var self = this;
 		self.sidecarSignalChain = self.sidecarSignalChain
 			.then(function () {
+				if (self.destroyed) {
+					return;
+				}
 				if (signal.description) {
 					var offer = signal.description.type === "offer";
 					if (!self.sidecarStarted) {
@@ -2604,6 +2836,9 @@
 
 	// Inbound signalling, re-addressed to whatever UUID our iframe picked.
 	Session.prototype.inject = function (message) {
+		if (this.destroyed) {
+			return;
+		}
 		if (!this.realUUID) {
 			this.queue.push(message);
 			return;
@@ -2697,6 +2932,23 @@
 			self.emit("error", new Error("VDO.Ninja did not produce an SDP. Check that the iframe loaded."));
 			return;
 		}
+		if (self.lora) {
+			// Late candidates join this chain while the first packet is encoding.
+			self.stopGathering();
+			self.loraSendChain = self
+				.buildBlob(description, candidates)
+				.then(function (result) {
+					if (self.destroyed) {
+						return;
+					}
+					self.publishLoRaPackets(result.packets);
+					self.publishLoRaCandidates(result.remaining);
+				})
+				.catch(function (error) {
+					self.emit("error", error);
+				});
+			return;
+		}
 
 		self.buildBlob(description, candidates).then(
 			function (result) {
@@ -2754,6 +3006,9 @@
 			candidates: candidates.slice(),
 			deriveSession: role === "offer" && !!aliases
 		};
+		if (self.lora) {
+			return self.buildLoRaBlob(payload);
+		}
 		var hardLimit = payload.role === "offer" ? OFFER_LIMIT : ANSWER_LIMIT;
 		self.qrBudget = Number(self.qrBudget) > 0 ? Math.min(Number(self.qrBudget), hardLimit) : hardLimit;
 		self.dropped = [];
@@ -2777,6 +3032,135 @@
 				oversized: false
 			};
 		});
+	};
+
+	Session.prototype.takeLoRaCandidates = function (candidates) {
+		var kept = [];
+		var ufrag = /^a=ice-ufrag:(\S+)/m.exec(this.loraLocalPayload.sdp);
+		for (var index = 0; index < candidates.length; index++) {
+			var candidate = candidates[index];
+			if (!candidate || !candidate.candidate || (candidate.usernameFragment && ufrag && candidate.usernameFragment !== ufrag[1])) {
+				continue;
+			}
+			var key = candidate.sdpMid + ":" + candidate.sdpMLineIndex + ":" + candidate.candidate;
+			if (this.loraCandidateKeys[key]) {
+				continue;
+			}
+			if (this.loraCandidateCount >= MAX_CANDIDATES) {
+				throw new Error("Too many network routes for this LoRa connection.");
+			}
+			this.loraCandidateKeys[key] = true;
+			this.loraCandidateCount++;
+			kept.push(candidate);
+		}
+		return kept;
+	};
+
+	Session.prototype.buildLoRaBlob = function (payload) {
+		var self = this;
+		self.loraLocalPayload = payload;
+		var candidates = self.takeLoRaCandidates(payload.candidates);
+		// Give the first message useful Internet routes before local-only routes.
+		candidates.sort(function (left, right) {
+			var leftRank = 4;
+			var rightRank = 4;
+			if (isType(left, "srflx")) {
+				leftRank = 0;
+			} else if (isType(left, "relay")) {
+				leftRank = 2;
+			}
+			if (isType(right, "srflx")) {
+				rightRank = 0;
+			} else if (isType(right, "relay")) {
+				rightRank = 2;
+			}
+			return leftRank + (isIPv6(left) ? 1 : 0) - rightRank - (isIPv6(right) ? 1 : 0);
+		});
+		payload.candidates = [];
+		var remaining = [];
+		var at = 0;
+		return encodeBlobUnchecked(payload, true).then(function (bytes) {
+			var best = bytes;
+			function fitNext() {
+				if (at === candidates.length) {
+					var packets = loRaPackets(best, payload.role, self.loraID, 0, self.loraBudget);
+					self.loraSequence = 1;
+					return { packets: packets, remaining: remaining };
+				}
+				var candidate = candidates[at++];
+				payload.candidates.push(candidate);
+				return encodeBlobUnchecked(payload, true).then(function (trial) {
+					if (Math.ceil((trial.length * 8) / 5) + LORA_HEADER <= self.loraBudget) {
+						best = trial;
+					} else {
+						payload.candidates.pop();
+						remaining.push(candidate);
+					}
+					return fitNext();
+				});
+			}
+			return fitNext();
+		});
+	};
+
+	Session.prototype.publishLoRaPackets = function (packets) {
+		if (this.destroyed || this.connected) {
+			return;
+		}
+		for (var index = 0; index < packets.length; index++) {
+			this.emit("packet", { text: packets[index], budget: this.loraBudget });
+		}
+	};
+
+	Session.prototype.publishLoRaCandidates = function (candidates) {
+		var at = 0;
+		while (at < candidates.length && !this.destroyed && !this.connected) {
+			var batch = [];
+			var best;
+			while (at < candidates.length) {
+				batch.push(candidates[at]);
+				var writer = new Writer();
+				packCandidatesDense(writer, batch);
+				var trial = writer.done();
+				if (batch.length > 1 && Math.ceil((trial.length * 8) / 5) + LORA_HEADER > this.loraBudget) {
+					break;
+				}
+				best = trial;
+				at++;
+			}
+			var packets = loRaPackets(best, this.loraLocalPayload.role, this.loraID, this.loraSequence, this.loraBudget);
+			this.loraSequence++;
+			this.publishLoRaPackets(packets);
+		}
+	};
+
+	Session.prototype.sendLoRaCandidates = function (message) {
+		var self = this;
+		if (message.UUID !== self.peerSlot || (message.session && message.session !== self.localSessionToken)) {
+			return;
+		}
+		self.loraSendChain = self.loraSendChain
+			.then(function () {
+				if (!self.destroyed && !self.connected) {
+					self.publishLoRaCandidates(self.takeLoRaCandidates(message.candidates));
+				}
+			})
+			.catch(function (error) {
+				self.emit("error", error);
+			});
+	};
+
+	Session.prototype.acceptLoRaCandidates = function (payload) {
+		if (!this.lora || payload.loraID !== this.loraID || payload.role !== (this.role === "share" ? "answer" : "offer")) {
+			throw new Error("Those network routes belong to another LoRa connection.");
+		}
+		var message = {};
+		message.UUID = this.slot;
+		message.from = this.peerSlot;
+		message.type = this.role === "share" ? "remote" : "local";
+		message.session = this.wireSessionToken;
+		message.candidates = payload.candidates;
+		this.inject(message);
 	};
 
 	/* -------------------- role-specific entry points -------------------- *
@@ -2833,32 +3217,43 @@
 	 */
 	Session.prototype.waitForIframe = function (callback) {
 		var self = this;
+		if (self.destroyed) {
+			return;
+		}
 		if (self.realUUID) {
 			callback();
 			return;
 		}
 		var waited = 0;
-		var timer = setInterval(function () {
+		clearInterval(self.iframeTimer);
+		self.iframeTimer = setInterval(function () {
 			waited += 100;
-			if (self.realUUID) {
-				clearInterval(timer);
+			if (self.destroyed) {
+				clearInterval(self.iframeTimer);
+			} else if (self.realUUID) {
+				clearInterval(self.iframeTimer);
 				callback();
 			} else if (waited === 12000) {
 				self.emit("state", "Still starting up...");
 			} else if (waited >= self.iframeTimeout) {
-				clearInterval(timer);
+				clearInterval(self.iframeTimer);
 				self.emit("error", new Error("VDO.Ninja did not start inside the iframe. On a slow connection it can take a while; reload to try again."));
 			}
 		}, 100);
 	};
 
 	Session.prototype.destroy = function () {
+		if (this.destroyed) {
+			return;
+		}
+		this.destroyed = true;
 		global.removeEventListener("message", this.onWindowMessage);
 		clearTimeout(this.quietTimer);
 		clearTimeout(this.hardTimer);
 		clearTimeout(this.sidecarTimer);
 		clearTimeout(this.returnMediaTimer);
 		clearInterval(this.sidecarDescriptionTimer);
+		clearInterval(this.iframeTimer);
 		if (this.sidecarChannel) {
 			try {
 				this.sidecarChannel.close();
@@ -2869,12 +3264,24 @@
 				this.sidecarPC.close();
 			} catch (e) {}
 		}
+		this.connected = false;
+		this.sidecarConnected = false;
+		this.returnMediaConnected = false;
+		this.queue = [];
+		this.listeners = {};
+		// Unload the media owner as well as closing the wrapper's data channel.
+		if (this.iframe) {
+			this.iframe.src = "about:blank";
+		}
 	};
 
 	global.QRConnect = {
 		Session: Session,
 		encodeBlob: encodeBlob,
 		decodeBlob: decodeBlob,
+		readLoRaPacket: readLoRaPacket,
+		receiveLoRaPacket: receiveLoRaPacket,
+		LORA_LIMIT: LORA_LIMIT,
 		toMessages: toMessages,
 		randomID: randomID,
 		MAGIC: MAGIC,

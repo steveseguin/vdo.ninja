@@ -17003,6 +17003,7 @@ function remoteStats(msg, UUID) {
 						span.onclick = async function (e) {
 							e.preventDefault();
 							e.stopPropagation();
+							var currentUUID = this.closest('[data-action-type="stats-graphs-details-container"]').dataset.uid;
 							const result = await promptAlt("Select target bitrate (kbps)", false, false, false, false, false, false, {
 								type: 'select',
 								options: ['50', '500', '1000', '2000', '5000', '10000', '20000', '[Custom]'],
@@ -17012,7 +17013,7 @@ function remoteStats(msg, UUID) {
 								var msg = {
 									targetBitrate: parseInt(result),
 									UUID: UUID,
-									requestAs: uuid
+									requestAs: currentUUID
 								};
 								if (isIFrame) {
 									parent.postMessage(msg, session.iframetarget);
@@ -17026,10 +17027,10 @@ function remoteStats(msg, UUID) {
 				var span = container.querySelector("[data-scene-name]");
 				if (span && "label" in msg.remoteStats[uuid] && msg.remoteStats[uuid].label) {
 					span.classList.remove("hidden");
-					span.innerHTML = "stats for viewer: " + msg.remoteStats[uuid].label;
+					span.textContent = "stats for viewer: " + msg.remoteStats[uuid].label;
 				} else if (span && "scene" in msg.remoteStats[uuid] && msg.remoteStats[uuid].scene !== false) {
 					span.classList.remove("hidden");
-					span.innerHTML = "stats for scene: " + msg.remoteStats[uuid].scene;
+					span.textContent = "stats for scene: " + msg.remoteStats[uuid].scene;
 				} else if (uuid === "meshcast") {
 					span.classList.remove("hidden");
 					span.innerHTML = "stats for meshcast ingest";
@@ -17044,19 +17045,20 @@ function remoteStats(msg, UUID) {
 					var span = container.querySelector("[data-resolution]");
 					if (span) {
 						span.classList.remove("hidden");
-						span.innerHTML = msg.remoteStats[uuid].resolution;
+						span.textContent = msg.remoteStats[uuid].resolution;
 						span.style.cursor = "pointer";
 						span.title = "Click to adjust resolution";
 						span.onclick = async function (e) {
 							e.preventDefault();
 							e.stopPropagation();
+							var currentUUID = this.closest('[data-action-type="stats-graphs-details-container"]').dataset.uid;
 							const result = await promptAlt("Select target resolution", false, false, false, false, false, false, {
 								type: 'select',
 								options: ['360', '720', '1080', '1440', '2160', '[Custom]'],
 								placeholder: 'Enter custom height in pixels'
 							});
 							if (result) {
-								session.requestResolution(UUID, 4096, result || 2160, false, uuid);
+								session.requestResolution(UUID, 4096, result || 2160, false, currentUUID);
 							}
 						};
 					}
@@ -17066,7 +17068,7 @@ function remoteStats(msg, UUID) {
 					var span = container.querySelector("[data-video-codec]");
 					if (span) {
 						span.classList.remove("hidden");
-						span.innerHTML = "video codec: " + msg.remoteStats[uuid].video_encoder;
+						span.textContent = "video codec: " + msg.remoteStats[uuid].video_encoder;
 					}
 				}
 			}
@@ -22290,13 +22292,23 @@ session.hangup = function (reload = false, estop = false, preserveStreamTakeover
 		}, 1000);
 	}
 
+	var chunkedRecordingStops = [];
 	try {
 		transferList.forEach(file => {
 			if (file.writer) {
 				file.writer.close();
 			}
+			if (file.pendingRecordingStops) {
+				file.pendingRecordingStops.forEach(function (recordingStop) {
+					chunkedRecordingStops.push(recordingStop.catch(function (error) {
+						errorlog(error);
+					}));
+				});
+			}
 			if (file.videoElement && file.videoElement.stopWriter) {
-				file.videoElement.stopWriter(true); // estop
+				chunkedRecordingStops.push(Promise.resolve(file.videoElement.stopWriter(true)).catch(function (error) {
+					errorlog(error);
+				}));
 			}
 		});
 	} catch (e) {
@@ -22406,7 +22418,13 @@ session.hangup = function (reload = false, estop = false, preserveStreamTakeover
 	} catch (e) { }
 
 	if (reload) {
-		reloadRequested();
+		if (chunkedRecordingStops.length) {
+			Promise.all(chunkedRecordingStops).then(function () {
+				reloadRequested();
+			});
+		} else {
+			reloadRequested();
+		}
 		warnlog("Reloading? uh oh. Why didn't it?");
 		return;
 	} else {
@@ -41068,7 +41086,15 @@ function checkBasicStreamsExist() {
 		//	log(event);
 		//});
 	}
-	session.videoElement.srcObject = outboundAudioPipeline();
+	var outputStream = outboundAudioPipeline();
+	if (iPad && !session.screenShareState && !session.mediafileShare && session.videoElement.recording && session.videoElement.recorder && session.videoElement.recorder.mediaRecorder && session.videoElement.srcObject && outputStream !== session.videoElement.srcObject) {
+		// Keep active iPad recordings attached when the audio pipeline is rebuilt.
+		var recordingStream = session.videoElement.srcObject;
+		recordingStream.getTracks().forEach(function (track) { recordingStream.removeTrack(track); });
+		outputStream.getTracks().forEach(function (track) { recordingStream.addTrack(track); });
+	} else {
+		session.videoElement.srcObject = outputStream;
+	}
 	toggleMute(true);
 	return session.videoElement;
 }
@@ -55352,7 +55378,9 @@ function pauseVideo(videoEle, update = true) {
 			}
 		} else if (link.getAttribute("data-action") === "StopRecording") {
 			if (taskItemInContext.stopWriter) {
-				taskItemInContext.stopWriter();
+				taskItemInContext.stopWriter().catch(function (error) {
+					errorlog(error);
+				});
 			} else if (taskItemInContext.recording) {
 				recordLocalVideo("stop", null, taskItemInContext);
 			}
@@ -58485,7 +58513,9 @@ async function recordVideo(target, event = null, videoKbps = false) {
 	}
 
 	if (video.stopWriter) {
-		video.stopWriter();
+		video.stopWriter().catch(function (error) {
+			errorlog(error);
+		});
 		updateLocalRecordButton(UUID, -1);
 		return;
 	} else if (video.startWriter) {
@@ -59681,6 +59711,7 @@ async function recordLocalVideo(action = null, configureRecording = false, remot
 	};
 
 	video.recorder.stop = function (restart = false, notify = false) {
+		if (iPad && !remote && recorder.closing) return;
 
 		try {
 			if (!remote) {
@@ -60389,14 +60420,14 @@ async function recordWindowCapture(bitrate = 6000) {
 function localGlobalRecordStart() {
 	document.querySelectorAll("[data-action-type='recorder-local']").forEach(target => {
 		var UUID = target.dataset.UUID;
-		if (!UUID) {
+		if (!UUID || !session.rpcs[UUID]) {
 			return;
 		}
 		var video = session.rpcs[UUID].videoElement;
 		if (!video) {
 			return;
 		}
-		if (!video.stopWriter) {
+		if (!video.stopWriter && !("recording" in video)) {
 			recordVideo(target); // if not started, start
 		}
 	});
@@ -60405,7 +60436,7 @@ function localGlobalRecordStart() {
 function localGlobalRecordStop() {
 	document.querySelectorAll("[data-action-type='recorder-local']").forEach(target => {
 		var UUID = target.dataset.UUID;
-		if (!UUID) {
+		if (!UUID || !session.rpcs[UUID]) {
 			return;
 		}
 		var video = session.rpcs[UUID].videoElement;
@@ -60414,6 +60445,8 @@ function localGlobalRecordStop() {
 		}
 		if (video.stopWriter) {
 			recordVideo(target); // if started, stop
+		} else if (video.recording && video.recorder && !video.recorder.closing && typeof video.recorder.stop === "function") {
+			video.recorder.stop();
 		}
 	});
 	recordLocalVideo("stop"); // self
