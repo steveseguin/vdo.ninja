@@ -42590,6 +42590,9 @@ function replaceFirefoxAudioTrack(sender, track = null, active = null) {
 			return track ? sender.replaceTrack(track) : Promise.resolve();
 		}
 		var source = track || sender.track;
+		if (!track && sender.audioReplaceRequest && sender.audioReplaceRequest.pendingTrack) {
+			source = sender.audioReplaceRequest.pendingTrack;
+		}
 		var muted = source.clone();
 		muted.enabled = false;
 		// A stopped substitute stays silent without retaining another microphone capture.
@@ -42920,7 +42923,7 @@ function replaceAudioTrackSafely(sender, track, UUID, videoSource = null, contex
 			return Promise.resolve(false);
 		}
 		// A rejected replacement must not repair a newer peer or a superseding track update.
-		repairOwner = { pc: session.pcs && session.pcs[UUID], sender: sender, previousTrack: sender.track };
+		repairOwner = { pc: session.pcs && session.pcs[UUID], sender: sender, previousTrack: sender.track, pendingTrack: track };
 		sender.audioReplaceRequest = repairOwner;
 		var result;
 		if (Firefox && sender.firefoxAudio) {
@@ -42931,15 +42934,24 @@ function replaceAudioTrackSafely(sender, track, UUID, videoSource = null, contex
 		if (result && typeof result.then === "function") {
 			return result
 				.then(function () {
+					repairOwner.pendingTrack = null;
+					var currentRequest = sender.audioReplaceRequest;
+					if (currentRequest && currentRequest.pendingTrack && currentRequest.pc === repairOwner.pc && sender.track === track) {
+						// A completed predecessor is still owned if a newer replacement fails.
+						currentRequest.previousTrack = track;
+					}
 					return true;
 				})
 				.catch(function (err) {
+					repairOwner.pendingTrack = null;
 					handleAudioReplaceFailure(err, UUID, track, videoSource, context, repairOwner);
 					return false;
 				});
 		}
+		repairOwner.pendingTrack = null;
 		return Promise.resolve(true);
 	} catch (err) {
+		if (repairOwner) repairOwner.pendingTrack = null;
 		handleAudioReplaceFailure(err, UUID, track, videoSource, context, repairOwner);
 		return Promise.resolve(false);
 	}
@@ -42993,6 +43005,7 @@ async function attemptPeerAudioRepair(UUID, track, videoSource = null, context =
 		}
 		repairToken = { started: Date.now() };
 		session.audioRepairInFlight[repairUUID] = repairToken;
+		if (repairOwner) repairOwner.pendingTrack = track;
 		if (session.bumpReliabilityCounter) {
 			session.bumpReliabilityCounter("audio_repair_attempts");
 		}
@@ -43017,9 +43030,9 @@ async function attemptPeerAudioRepair(UUID, track, videoSource = null, context =
 					} else {
 						await Promise.resolve(audioSender.replaceTrack(track));
 					}
-					if (!isCurrentRepair()) return false;
 					// Preserve the supplied track's enabled state, including mute changes during the await.
 					repaired = true;
+					if (!isCurrentRepair()) return false;
 				} catch (e) {
 					errorlog(e);
 				}
@@ -43102,6 +43115,7 @@ async function attemptPeerAudioRepair(UUID, track, videoSource = null, context =
 			errorlog(e);
 		}
 
+		if (repairOwner) repairOwner.pendingTrack = null;
 		if (repaired) {
 			if (settleDelayMs > 0) {
 				// Keep in-flight state around briefly while renegotiation starts.
@@ -43124,6 +43138,13 @@ async function attemptPeerAudioRepair(UUID, track, videoSource = null, context =
 		}
 		return false;
 	} finally {
+		if (repairOwner) {
+			repairOwner.pendingTrack = null;
+			var currentRequest = repairOwner.sender.audioReplaceRequest;
+			if (repaired && currentRequest && currentRequest.pendingTrack && currentRequest.pc === pc && repairOwner.sender.track === track) {
+				currentRequest.previousTrack = track;
+			}
+		}
 		if (repairToken && session.audioRepairInFlight && session.audioRepairInFlight[repairUUID] === repairToken) {
 			delete session.audioRepairInFlight[repairUUID];
 		}
@@ -43240,6 +43261,9 @@ function senderAudioUpdate(callbackUUID = false, videoSource = null) {
 				senders.forEach(sender => {
 					var good = false;
 					var senderTrack = getSenderSourceTrack(sender);
+					if (sender.audioReplaceRequest && sender.audioReplaceRequest.pendingTrack) {
+						senderTrack = sender.audioReplaceRequest.pendingTrack;
+					}
 					if (senderTrack && senderTrack.id && senderTrack.kind == "audio") {
 						tracks.forEach(function (track) {
 							// audio also
@@ -43254,7 +43278,6 @@ function senderAudioUpdate(callbackUUID = false, videoSource = null) {
 					if (good) {
 						return;
 					}
-					senderTrack.enabled = false;
 					availableSenders.push(sender);
 					//session.pcs[UUID].removeTrack(sender); //  Apparently removeTrack causes renogiation; also kills send/recv.
 				});
@@ -43265,6 +43288,9 @@ function senderAudioUpdate(callbackUUID = false, videoSource = null) {
 						var senders = getSenders2(UUID);
 						senders.forEach(sender => {
 							var senderTrack = getSenderSourceTrack(sender);
+							if (sender.audioReplaceRequest && sender.audioReplaceRequest.pendingTrack) {
+								senderTrack = sender.audioReplaceRequest.pendingTrack;
+							}
 							if (senderTrack && senderTrack.id && senderTrack.kind == "audio") {
 								warnlog(senderTrack.id + " " + track.id);
 								if (senderTrack.id == track.id) {
@@ -43289,6 +43315,19 @@ function senderAudioUpdate(callbackUUID = false, videoSource = null) {
 						var sender = session.pcs[UUID].addTrack(track, videoSource);
 
 					});
+					availableSenders.forEach(function (sender) {
+						var senderTrack = getSenderSourceTrack(sender);
+						if (sender.audioReplaceRequest && sender.audioReplaceRequest.pendingTrack) {
+							senderTrack = sender.audioReplaceRequest.pendingTrack;
+						}
+						if (senderTrack && senderTrack.readyState !== "ended") {
+							// Retire the sender without disabling an input to the new output.
+							var mutedTrack = senderTrack.clone();
+							mutedTrack.enabled = false;
+							mutedTrack.stop();
+							replaceAudioTrackSafely(sender, mutedTrack, UUID, videoSource, "senderAudioUpdate:unused-sender");
+						}
+					});
 				} else {
 					var senders = getSenders2(UUID);
 					senders.forEach(sender => {
@@ -43296,6 +43335,9 @@ function senderAudioUpdate(callbackUUID = false, videoSource = null) {
 						if (senderTrack && senderTrack.kind == "audio") {
 							senderTrack.enabled = false; // (trying this instead)
 							//session.pcs[UUID].removeTrack(sender); //  Apparently removeTrack causes renogiation; also kills send/recv.
+						}
+						if (sender.audioReplaceRequest && sender.audioReplaceRequest.pendingTrack) {
+							sender.audioReplaceRequest.pendingTrack.enabled = false;
 						}
 					});
 				}
