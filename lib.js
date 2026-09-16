@@ -57518,7 +57518,7 @@ function setupGoogleDriveUploader(filename = false, sessionUri = false, options 
 					log(res);
 					return;
 				} else {
-					var chunkSize = Math.floor(chunks.size / (256 * 1024)) * (256 * 1024);
+					var chunkSize = Math.floor((chunks.size - 1) / (256 * 1024)) * (256 * 1024);
 					var chunk = chunks.slice(0, chunkSize);
 					chunks = chunks.slice(chunkSize);
 				}
