@@ -125,7 +125,8 @@
         "offsetX": "Deslocamento X",
         "offsetY": "Deslocamento Y",
         "gridSplitScreenTwoCameras": "Tela dividida para 2 câmeras (Grade)",
-        "distributeCameras": "Distribuir câmeras (Reação/Destaque)"
+        "distributeCameras": "Distribuir câmeras (Reação/Destaque)",
+        "sideCamerasSize": "Tamanho das Câmeras Laterais (%)"
     }
   },
   "activeStreams": {
@@ -144,6 +145,8 @@
         "removeFromObs": "Remover do OBS",
         "highlight": "Destacar",
         "unhighlight": "Remover Destaque",
+        "director": "Diretor",
+        "setDirector": "Definir Diretor",
         "screenShare": "Compart. Tela",
         "stopScreenShare": "Parar Compart."
     }
