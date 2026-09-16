@@ -11,7 +11,7 @@
     "customCss": {
         "title": "CSS Personalizzato",
         "label": "Inserisci qui il tuo CSS personalizzato:",
-        "description": "Questo CSS verrÃ  applicato alle sorgenti."
+        "description": "Questo CSS verrà applicato alle sorgenti."
     },
     "obsConnection": {
         "title": "Connessione WebSocket OBS",
@@ -77,7 +77,7 @@
     "obsTargetSettings": {
         "title": "Impostazioni Destinazione OBS",
         "sourceCreationScenesLabel": "Scene per la Creazione di Sorgenti:",
-        "sourceCreationScenesDesc": "Seleziona una o piÃ¹ scene. La prima sarÃ  la principale, le altre per la copia.",
+        "sourceCreationScenesDesc": "Seleziona una o più scene. La prima sarà la principale, le altre per la copia.",
         "loadingScenes": "Caricamento scene...",
         "noScenesFound": "Nessuna scena trovata",
         "refetchScenesButton": "Ricarica Scene",
@@ -85,7 +85,7 @@
             "title": "Impostazioni Condivisione Schermo:",
             "widthLabel": "Larghezza:",
             "heightLabel": "Altezza:",
-            "resolutionNote": "Questa risoluzione verrÃ  utilizzata per le sorgenti di condivisione schermo nelle scene con layout 'Reazione'."
+            "resolutionNote": "Questa risoluzione verrà utilizzata per le sorgenti di condivisione schermo nelle scene con layout 'Reazione'."
         },
         "autoAddSourcesLabel": "Aggiungi automaticamente nuovi stream come sorgenti",
         "autoRemoveSourcesLabel": "Rimuovi automaticamente sorgenti alla disconnessione",
@@ -99,7 +99,7 @@
         "codec": {
             "label": "Codec:",
             "noneOption": "nessuno",
-            "learnMoreTitle": "Scopri di piÃ¹ sulle opzioni codec"
+            "learnMoreTitle": "Scopri di più sulle opzioni codec"
         }
     },
     "sceneLayouts": {
@@ -117,8 +117,8 @@
         },
         "noActiveLayouts": "Nessun layout attivo",
         "removeLayoutTooltip": "Rimuovi questa configurazione layout",
-        "sceneAlreadyConfiguredTooltip": "(GiÃ  in uso)",
-        "sceneAlreadyConfiguredAlert": "La scena '{{sceneName}}' Ã¨ giÃ  in uso da un'altra configurazione layout.",
+        "sceneAlreadyConfiguredTooltip": "(Già in uso)",
+        "sceneAlreadyConfiguredAlert": "La scena '{{sceneName}}' è già in uso da un'altra configurazione layout.",
         "controls": {
             "margin": "Margine",
             "spacing": "Spaziatura",
@@ -138,8 +138,8 @@
         "notSet": "Non Impostato",
         "defaultSceneTag": "predefinita",
         "mappedSceneTag": "mappata",
-        "addedToObs": "âœ“ Aggiunto a OBS",
-        "notInObs": "âœ— Non in OBS",
+        "addedToObs": "✓ Aggiunto a OBS",
+        "notInObs": "✗ Non in OBS",
         "buttons": {
             "addToObs": "Aggiungi a OBS",
             "removeFromObs": "Rimuovi da OBS",
@@ -160,27 +160,27 @@
     "logMessages": {
         "settingsSaved": "Impostazioni salvate.",
         "settingsLoaded": "Impostazioni caricate da localStorage.",
-        "customCssChangedWillApplyToSource": "Input CSS personalizzato modificato. VerrÃ  applicato direttamente alle impostazioni della sorgente OBS alla prossima creazione/aggiornamento.",
+        "customCssChangedWillApplyToSource": "Input CSS personalizzato modificato. Verrà applicato direttamente alle impostazioni della sorgente OBS alla prossima creazione/aggiornamento.",
         "errorLoadingSettings": "Errore nel caricamento delle impostazioni da localStorage: {{message}}. Utilizzo dei valori predefiniti.",
         "noSavedSettings": "Nessuna impostazione salvata trovata. Utilizzo dei valori predefiniti.",
         "appInitialized": "VDO.Ninja OBS Control Dock Inizializzato. Benvenuto!",
         "jsShaLoaded": "Libreria jsSHA caricata con successo (fallback per Web Crypto).",
-        "errorLoadingJsSha": "Errore: Impossibile caricare la libreria jsSHA. L'autenticazione OBS potrebbe fallire se anche Web Crypto non Ã¨ disponibile.",
+        "errorLoadingJsSha": "Errore: Impossibile caricare la libreria jsSHA. L'autenticazione OBS potrebbe fallire se anche Web Crypto non è disponibile.",
         "loadedStreamMappings": "Caricate {{count}} mappature stream.",
         "errorLoadingStreamMappings": "Errore nel caricamento delle mappature stream da localStorage: {{message}}",
         "warningStreamMappingElementsNotFound": "Attenzione: Impossibile trovare tutti gli elementi previsti in un div UI di mappatura stream.",
         "loadedLayoutConfigs": "Caricate {{count}} configurazioni layout scene.",
         "errorLoadingLayoutConfigs": "Errore nel caricamento delle configurazioni layout scene: {{message}}",
         "savedLayoutConfigs": "Salvate {{count}} configurazioni layout scene.",
-        "errorSavingLayoutsDuplicateScene": "Errore nel salvataggio dei layout: La scena '{{sceneName}}' Ã¨ configurata piÃ¹ volte. Assicurati che ogni scena abbia un solo layout.",
+        "errorSavingLayoutsDuplicateScene": "Errore nel salvataggio dei layout: La scena '{{sceneName}}' è configurata più volte. Assicurati che ogni scena abbia un solo layout.",
         "layoutSceneNotFound": "Scena salvata '{{sceneName}}' per il layout non trovata nelle scene OBS correnti.",
         "errorHidingSource": "Errore nel nascondere l'elemento sorgente {{sourceName}} in {{sceneName}}: {{message}}",
-        "sceneAlreadyConfiguredError": "La scena '{{sceneName}}' Ã¨ giÃ  configurata per un altro layout. Ripristino della selezione.",
+        "sceneAlreadyConfiguredError": "La scena '{{sceneName}}' è già configurata per un altro layout. Ripristino della selezione.",
         "vdoNinja": {
             "disconnected": "Disconnesso da VDO.Ninja.",
-            "alreadyConnected": "GiÃ  connesso a VDO.Ninja.",
+            "alreadyConnected": "Già connesso a VDO.Ninja.",
             "errorRoomOrStreamIdNeeded": "Errore VDO.Ninja: Nome Stanza o ID Stream devono essere forniti.",
-            "connectionTimeout": "Timeout connessione VDO.Ninja. Nessuna attivitÃ  ricevuta dall'iframe.",
+            "connectionTimeout": "Timeout connessione VDO.Ninja. Nessuna attività ricevuta dall'iframe.",
             "roomOrStreamIdNeededForConnect": "VDO.Ninja: Nome Stanza o ID Stream specifici devono essere forniti per connettersi.",
             "streamIdsEmptyAfterTrim": "VDO.Ninja: ID Stream forniti ma risultavano vuoti dopo il trim.",
             "initializingIframe": "Inizializzazione iframe VDO.Ninja con URL: {{url}}",
@@ -191,7 +191,7 @@
             "streamDisconnectedInactive": "Stream VDO.Ninja disconnesso/inattivo: \"{{label}}\" (ID: {{id}})",
             "autoRemovingStream": "Rimozione automatica stream {{id}} da OBS.",
             "streamLabelUpdated": "Etichetta stream VDO.Ninja aggiornata per ID {{id}}: \"{{newLabel}}\" (era \"{{oldLabel}}\")",
-            "connectionLostResetting": "Connessione VDO.Ninja persa (nessuna attivitÃ  dall'iframe). Tentativo di reset."
+            "connectionLostResetting": "Connessione VDO.Ninja persa (nessuna attività dall'iframe). Tentativo di reset."
         },
         "obs": {
             "disconnecting": "Disconnessione da OBS WebSocket...",
@@ -219,7 +219,7 @@
             "requestTimeout": "Timeout richiesta OBS '{{requestType}}' (ID: {{id}}).",
             "connectionEstablishedFetchingData": "Connessione OBS completamente stabilita. Recupero dati iniziali...",
             "errorPostConnectionSetup": "Errore durante la configurazione post-connessione OBS (recupero scene): {{message}}",
-            "connectionClosedOrLost": "La connessione OBS Ã¨ stata chiusa o persa.",
+            "connectionClosedOrLost": "La connessione OBS è stata chiusa o persa.",
             "cannotFetchScenesNotConnected": "Impossibile recuperare scene OBS: Non connesso a OBS.",
             "fetchingScenes": "Recupero scene OBS...",
             "fetchedScenesCount": "Recuperate {{count}} scene da OBS.",
@@ -227,16 +227,16 @@
             "errorFetchingScenes": "Errore nel recupero delle scene OBS: {{message}}",
             "cannotHighlightNotConnected": "Impossibile evidenziare: Non connesso a OBS.",
             "highlightLayoutActiveManualLegacy": "La scena '{{sceneName}}' usa il nuovo Layout Evidenziazione. Il pulsante evidenziazione manuale potrebbe avere effetto limitato o essere superato.",
-            "stoppingScreenShareForHighlight": "Una condivisione schermo Ã¨ attiva ({{id}}). Interruzione prima dell'evidenziazione.",
+            "stoppingScreenShareForHighlight": "Una condivisione schermo è attiva ({{id}}). Interruzione prima dell'evidenziazione.",
             "cannotScreenShareNotConnected": "Impossibile avviare condivisione schermo: Non connesso a OBS.",
-            "unhighlightingForScreenShare": "Una telecamera Ã¨ evidenziata ({{id}}). Rimozione evidenziazione prima di avviare la condivisione schermo.",
+            "unhighlightingForScreenShare": "Una telecamera è evidenziata ({{id}}). Rimozione evidenziazione prima di avviare la condivisione schermo.",
             "cannotAddScreenShareNotConnected": "Impossibile aggiungere condivisione schermo: Non connesso a OBS.",
             "cannotAddScreenShareNoRoom": "Impossibile aggiungere condivisione schermo: Nome stanza VDO.Ninja richiesto per URL condivisione schermo.",
             "cannotAddScreenShareNoReactionLayoutScene": "Impossibile aggiungere condivisione schermo: Nessuna scena configurata con layout 'Reazione'.",
             "addingUpdatingScreenShareToReactionScenes": "Aggiunta/Aggiornamento sorgente condivisione schermo '{{sourceName}}' (URL: {{url}}) alle scene Reazione. Creazione primaria in '{{primaryScene}}'. ({{count}} scene totali)",
             "reconfiguringExistingScreenShare": "Riconfigurazione sorgente condivisione schermo esistente '{{oldName}}' per essere '{{newName}}'.",
             "reconfiguredRenamedScreenShare": "Riconfigurata e rinominata sorgente condivisione schermo esistente a '{{sourceName}}'.",
-            "screenShareExistsUpdating": "Sorgente condivisione schermo '{{sourceName}}' giÃ  esistente. Aggiornamento impostazioni.",
+            "screenShareExistsUpdating": "Sorgente condivisione schermo '{{sourceName}}' già esistente. Aggiornamento impostazioni.",
             "creatingNewScreenShareInScene": "Creazione nuova sorgente condivisione schermo '{{sourceName}}' nella scena '{{sceneName}}'.",
             "ensuredTransformedScreenShareReaction": "Assicurata e trasformata sorgente condivisione schermo '{{sourceName}}' nella scena Reazione '{{sceneName}}'.",
             "sourceFoundInSceneEnabled": "Sorgente '{{sourceName}}' trovata nella scena '{{sceneName}}', ID elemento: {{itemId}}. Assicurandosi che sia abilitata.",
@@ -247,8 +247,8 @@
             "successConfigScreenShare": "Condivisione schermo configurata con successo per lo stream {{streamId}} ({{label}}).",
             "errorAddingUpdatingScreenShare": "Errore nell'aggiunta/aggiornamento sorgente condivisione schermo '{{sourceName}}': {{message}}.",
             "cannotToggleHighlightNotConnected": "Impossibile alternare evidenziazione: Non connesso a OBS.",
-            "streamUnhighlighted": "Stream {{id}} non piÃ¹ evidenziato (rinominato da {{oldName}} a {{newName}}).",
-            "streamSuccessfullyUnhighlighted": "Stream {{id}} non piÃ¹ evidenziato con successo (rinominato a {{newName}}).",
+            "streamUnhighlighted": "Stream {{id}} non più evidenziato (rinominato da {{oldName}} a {{newName}}).",
+            "streamSuccessfullyUnhighlighted": "Stream {{id}} non più evidenziato con successo (rinominato a {{newName}}).",
             "streamSuccessfullyHighlighted": "Stream {{id}} evidenziato con successo (rinominato a {{newName}}).",
             "unhighlightError": "Impossibile rimuovere evidenziazione (rinominare) {{sourceName}}, potrebbe non esistere o altro errore: {{message}}",
             "highlightError": "Impossibile evidenziare (rinominare) {{sourceName}}, potrebbe non esistere o altro errore: {{message}}",
@@ -258,12 +258,12 @@
             "foundExistingStandardSource": "Trovata sorgente standard esistente '{{sourceName}}' per lo stream {{streamId}}.",
             "foundExistingHighlightForConnectingStream": "Trovata sorgente OBS esistente '{{sourceName}}' che corrisponde alla denominazione evidenziazione per lo stream connesso {{streamId}}. Aggiornamento stato evidenziazione interno.",
             "foundExistingHighlightedSource": "Trovata sorgente evidenziata esistente '{{sourceName}}' per lo stream {{streamId}}.",
-            "noExistingSourceFoundWillCreate": "NÃ© sorgente standard ('{{baseSourceName}}') nÃ© evidenziata ('{{highlightedSourceName}}') trovata per lo stream {{streamId}}. VerrÃ  creata nuova.",
-            "noExistingStandardSourceSamePrefix": "Sorgente standard '{{sourceName}}' non trovata per lo stream {{streamId}} (prefisso evidenziazione Ã¨ lo stesso). VerrÃ  creata nuova.",
+            "noExistingSourceFoundWillCreate": "Né sorgente standard ('{{baseSourceName}}') né evidenziata ('{{highlightedSourceName}}') trovata per lo stream {{streamId}}. Verrà creata nuova.",
+            "noExistingStandardSourceSamePrefix": "Sorgente standard '{{sourceName}}' non trovata per lo stream {{streamId}} (prefisso evidenziazione è lo stesso). Verrà creata nuova.",
             "errorGettingCanvasSize": "Errore nel recupero dimensioni canvas OBS: {{message}}. Utilizzo predefinito {{width}}x{{height}}.",
             "sourceNotGlobalCreating": "La sorgente '{{sourceName}}' non esiste globalmente. Creazione nella scena '{{sceneName}}'.",
             "sourceCreatedAddedToScene": "Sorgente '{{sourceName}}' creata e aggiunta alla scena '{{sceneName}}'.",
-            "sourceGlobalUpdatingWithUrl": "La sorgente '{{sourceName}}' esiste giÃ  globalmente. Aggiornamento impostazioni. URL: {{url}}",
+            "sourceGlobalUpdatingWithUrl": "La sorgente '{{sourceName}}' esiste già globalmente. Aggiornamento impostazioni. URL: {{url}}",
             "sourceFoundAsItemInScene": "Sorgente '{{sourceName}}' trovata come elemento nella scena '{{sceneName}}'.",
             "sourceNotInSceneAdding": "Sorgente '{{sourceName}}' non nella scena '{{sceneName}}'. Aggiunta in corso.",
             "cloningToMainScene": "Clonazione sorgente '{{sourceName}}' alla scena principale (da checkbox) '{{sceneName}}' a causa della regola di mappatura.",
@@ -302,14 +302,14 @@
             "removingSourceItemFromScene": "Rimozione elemento sorgente '{{sourceName}}' (ID: {{itemId}}) dalla scena '{{sceneName}}'.",
             "errorTryingRemoveSourceItem": "Errore nel tentativo di rimuovere elemento sorgente '{{sourceName}}' dalla scena '{{sceneName}}': {{message}}",
             "codecChangedUpdatingSources": "Codec cambiato a: {{codec}}. Aggiornamento sorgenti OBS...",
-            "codecChangedNotConnected": "OBS non Ã¨ connesso. Le sorgenti non verranno aggiornate con il nuovo codec fino alla riconnessione e una nuova azione.",
+            "codecChangedNotConnected": "OBS non è connesso. Le sorgenti non verranno aggiornate con il nuovo codec fino alla riconnessione e una nuova azione.",
             "sourceUpdatedWithUrlAndCss": "Sorgente '{{sourceName}}' aggiornata con URL: {{url}} e CSS personalizzato.",
             "screenShareSourceUpdatedWithUrlAndCss": "Sorgente condivisione schermo '{{sourceName}}' aggiornata con URL: {{url}} e CSS personalizzato.",
             "codecUpdateComplete": "Aggiornamento codec per sorgenti OBS completato.",
             "codecCssUpdateComplete": "Aggiornamento codec/CSS per sorgenti OBS completato.",
             "inputNameChanged": "Evento OBS: Nome input cambiato da '{{oldName}}' a '{{newName}}'. Controllo scene rilevanti per aggiornamenti layout.",
             "foundPreExistingHighlight": "Trovata sorgente evidenziata pre-esistente in OBS: '{{sourceName}}'. Impostazione evidenziazione attiva su ID stream: {{streamId}}.",
-            "errorCheckingMainContentEnabled": "Errore nel controllare se il contenuto principale {{sourceName}} Ã¨ abilitato: {{message}}"
+            "errorCheckingMainContentEnabled": "Errore nel controllare se il contenuto principale {{sourceName}} è abilitato: {{message}}"
         }
     }
 }

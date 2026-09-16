@@ -1168,7 +1168,11 @@
           }
           logMessage(directorStreamId ? `Stream ${streamId} set as Director.` : `Director cleared.`);
           updateStreamList();
-          applyLayoutsToScenes(); 
+          sceneLayoutConfigs.forEach(function (config) {
+              if (config.sceneName && config.layoutType) {
+                  triggerLayoutUpdateForScene(config.sceneName);
+              }
+          });
       }; 
       const layoutConfigsListDiv = document.getElementById('layoutConfigsList');
       const addLayoutConfigBtn = document.getElementById('addLayoutConfigBtn');
@@ -2265,7 +2269,7 @@
             
             const isDirector = directorStreamId === streamId;
             streamItemHTML += `
-                      <button class="small-btn" onclick="setDirector('${streamId}')"
+                      <button class="small-btn director-btn"
                           style="background-color: ${isDirector ? '#27ae60' : '#4C80AF'}; margin-right: 5px; color: white; border: none; border-radius: 4px; padding: 4px 8px; cursor: pointer; transition: background-color 0.2s;">
                           ${isDirector ? '★ ' + getTranslation("activeStreams.buttons.director", "Director") : getTranslation("activeStreams.buttons.setDirector", "Set Director")}
                       </button>`; 
@@ -2311,6 +2315,12 @@
             streamItemHTML += `</div>`; 
             streamDiv.innerHTML = streamItemHTML;
             streamListContainer.appendChild(streamDiv);
+            const directorBtn = streamDiv.querySelector(".director-btn");
+            if (directorBtn) {
+              directorBtn.addEventListener("click", function () {
+                window.setDirector(streamId);
+              });
+            }
             const addRemoveBtn = streamDiv.querySelector(".add-stream-btn");
             if (addRemoveBtn) {
               addRemoveBtn.addEventListener("click", () => {

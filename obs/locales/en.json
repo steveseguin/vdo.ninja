@@ -138,8 +138,8 @@
     "notSet": "Not Set",
     "defaultSceneTag": "default",
     "mappedSceneTag": "mapped",
-    "addedToObs": "âœ“ Added to OBS",
-    "notInObs": "âœ— Not in OBS",
+    "addedToObs": "✓ Added to OBS",
+    "notInObs": "✗ Not in OBS",
     "buttons": {
         "addToObs": "Add to OBS",
         "removeFromObs": "Remove from OBS",
