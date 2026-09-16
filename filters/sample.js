@@ -57,5 +57,5 @@ async function effectsEngine(){
 			}
 		});
 	}
-	main();
+	return main;
 };

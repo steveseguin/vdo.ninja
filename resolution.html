@@ -1,0 +1,713 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+		<meta name="theme-color" content="#111827" />
+		<title>VDO.Ninja Camera Resolution Tester</title>
+		<style>
+			:root {
+				color-scheme: light;
+				--page: #f3f5f9;
+				--panel: #ffffff;
+				--panel-soft: #f8fafc;
+				--text: #182233;
+				--muted: #5f6c7b;
+				--border: #dce2ea;
+				--primary: #1466d8;
+				--primary-hover: #0f52af;
+				--danger: #bd2c2c;
+				--danger-hover: #971f1f;
+				--success: #16784a;
+				--success-bg: #edf9f3;
+				--warning: #8a5a00;
+				--warning-bg: #fff8e8;
+				--error: #a82424;
+				--error-bg: #fff0f0;
+				--radius: 12px;
+				--shadow: 0 12px 32px rgba(24, 34, 51, 0.08);
+			}
+
+			* {
+				box-sizing: border-box;
+			}
+
+			[hidden] {
+				display: none !important;
+			}
+
+			html {
+				background: var(--page);
+			}
+
+			body {
+				margin: 0;
+				min-width: 280px;
+				background: var(--page);
+				color: var(--text);
+				font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+				line-height: 1.45;
+			}
+
+			button,
+			select {
+				font: inherit;
+			}
+
+			.shell {
+				width: min(1120px, 100%);
+				margin: 0 auto;
+				padding: 32px 20px 48px;
+			}
+
+			.hero {
+				margin-bottom: 20px;
+			}
+
+			.eyebrow {
+				margin: 0 0 6px;
+				color: var(--primary);
+				font-size: 12px;
+				font-weight: 750;
+				letter-spacing: 0.09em;
+				text-transform: uppercase;
+			}
+
+			h1,
+			h2,
+			h3,
+			p {
+				margin-top: 0;
+			}
+
+			h1 {
+				max-width: 760px;
+				margin-bottom: 8px;
+				font-size: clamp(28px, 4vw, 42px);
+				line-height: 1.08;
+				letter-spacing: -0.035em;
+			}
+
+			.lead {
+				max-width: 760px;
+				margin-bottom: 0;
+				color: var(--muted);
+				font-size: 16px;
+			}
+
+			.panel {
+				background: var(--panel);
+				border: 1px solid var(--border);
+				border-radius: var(--radius);
+				box-shadow: var(--shadow);
+			}
+
+			.setup-panel {
+				padding: 20px;
+			}
+
+			.setup-grid {
+				display: grid;
+				grid-template-columns: minmax(220px, 1.25fr) minmax(220px, 1fr) minmax(180px, 0.75fr);
+				gap: 14px;
+			}
+
+			.field {
+				display: grid;
+				gap: 6px;
+				min-width: 0;
+			}
+
+			.field-label {
+				font-size: 13px;
+				font-weight: 700;
+			}
+
+			select {
+				width: 100%;
+				min-height: 46px;
+				padding: 9px 38px 9px 12px;
+				border: 1px solid #c8d0db;
+				border-radius: 8px;
+				background: var(--panel);
+				color: var(--text);
+				font-size: 16px;
+				cursor: pointer;
+			}
+
+			select:focus-visible,
+			button:focus-visible {
+				outline: 3px solid rgba(20, 102, 216, 0.24);
+				outline-offset: 2px;
+			}
+
+			.scan-note {
+				margin: 13px 0 0;
+				color: var(--muted);
+				font-size: 13px;
+			}
+
+			.action-bar {
+				display: grid;
+				grid-template-columns: minmax(220px, 1fr) auto;
+				gap: 10px;
+				align-items: stretch;
+				margin-top: 16px;
+			}
+
+			.primary-slot,
+			.secondary-actions {
+				display: grid;
+				gap: 10px;
+			}
+
+			.secondary-actions {
+				grid-template-columns: repeat(2, max-content);
+			}
+
+			button {
+				min-height: 46px;
+				padding: 10px 17px;
+				border: 1px solid transparent;
+				border-radius: 8px;
+				font-weight: 700;
+				white-space: nowrap;
+				cursor: pointer;
+				transition:
+					background-color 120ms ease,
+					border-color 120ms ease,
+					transform 120ms ease;
+			}
+
+			button:active:not(:disabled) {
+				transform: translateY(1px);
+			}
+
+			button:disabled {
+				cursor: not-allowed;
+				opacity: 0.5;
+			}
+
+			button[hidden] {
+				display: none;
+			}
+
+			.button-primary {
+				width: 100%;
+				background: var(--primary);
+				color: #ffffff;
+			}
+
+			.button-primary:hover:not(:disabled) {
+				background: var(--primary-hover);
+			}
+
+			.button-danger {
+				width: 100%;
+				background: var(--danger);
+				color: #ffffff;
+			}
+
+			.button-danger:hover:not(:disabled) {
+				background: var(--danger-hover);
+			}
+
+			.button-secondary {
+				background: var(--panel);
+				border-color: #b8c3d1;
+				color: #25364d;
+			}
+
+			.button-secondary:hover:not(:disabled) {
+				background: #f3f6fa;
+				border-color: #93a3b6;
+			}
+
+			.status {
+				margin: 16px 0;
+				padding: 12px 14px;
+				border: 1px solid #c7d9ee;
+				border-radius: 9px;
+				background: #eef6ff;
+				color: #214f83;
+				font-size: 14px;
+				font-weight: 600;
+			}
+
+			.status.success {
+				border-color: #b9dfcc;
+				background: var(--success-bg);
+				color: var(--success);
+			}
+
+			.status.error {
+				border-color: #efc2c2;
+				background: var(--error-bg);
+				color: var(--error);
+			}
+
+			.progress {
+				height: 8px;
+				margin: -6px 0 16px;
+				overflow: hidden;
+				border-radius: 999px;
+				background: #dfe6ef;
+			}
+
+			.progress-bar {
+				height: 100%;
+				width: 0;
+				border-radius: inherit;
+				background: var(--primary);
+				transition: width 180ms ease;
+			}
+
+			.preview-grid {
+				display: grid;
+				grid-template-columns: repeat(2, minmax(0, 1fr));
+				gap: 16px;
+			}
+
+			.preview-card {
+				overflow: hidden;
+			}
+
+			#localWrapper {
+				grid-column: 1 / -1;
+			}
+
+			.preview-grid.has-remote #localWrapper {
+				grid-column: auto;
+			}
+
+			.card-heading {
+				display: flex;
+				align-items: baseline;
+				justify-content: space-between;
+				gap: 10px;
+				padding: 14px 16px;
+				border-bottom: 1px solid var(--border);
+			}
+
+			.card-heading h2,
+			.card-heading h3 {
+				margin: 0;
+				font-size: 16px;
+			}
+
+			.card-heading span {
+				color: var(--muted);
+				font-size: 12px;
+			}
+
+			.video-frame {
+				position: relative;
+				min-height: 220px;
+				background: radial-gradient(circle at 50% 35%, rgba(255, 255, 255, 0.09), transparent 38%), #111827;
+			}
+
+			.preview-placeholder {
+				position: absolute;
+				inset: 0;
+				z-index: 1;
+				display: grid;
+				place-content: center;
+				gap: 5px;
+				padding: 20px;
+				color: #d5deeb;
+				text-align: center;
+				pointer-events: none;
+			}
+
+			.preview-placeholder strong {
+				font-size: 16px;
+			}
+
+			.preview-placeholder span {
+				color: #94a3b8;
+				font-size: 13px;
+			}
+
+			video {
+				display: block;
+				width: 100%;
+				height: 100%;
+				min-height: 220px;
+				max-height: 430px;
+				background: transparent;
+				object-fit: contain;
+			}
+
+			.stats {
+				display: grid;
+				grid-template-columns: repeat(3, minmax(0, 1fr));
+				gap: 10px;
+				margin: 16px 0;
+			}
+
+			.stat-card {
+				min-width: 0;
+				padding: 14px;
+				border: 1px solid var(--border);
+				border-radius: 9px;
+				background: var(--panel-soft);
+			}
+
+			.stat-value {
+				overflow: hidden;
+				color: #193b67;
+				font-size: clamp(18px, 3vw, 24px);
+				font-weight: 750;
+				line-height: 1.15;
+				text-overflow: ellipsis;
+				white-space: nowrap;
+			}
+
+			.stat-label {
+				margin-top: 4px;
+				color: var(--muted);
+				font-size: 12px;
+			}
+
+			.results-panel {
+				margin-top: 16px;
+				overflow: hidden;
+			}
+
+			.results-heading {
+				display: flex;
+				align-items: baseline;
+				justify-content: space-between;
+				gap: 12px;
+				padding: 17px 18px;
+				border-bottom: 1px solid var(--border);
+			}
+
+			.results-heading h2 {
+				margin: 0;
+				font-size: 18px;
+			}
+
+			.results-heading p {
+				margin: 0;
+				color: var(--muted);
+				font-size: 12px;
+			}
+
+			.table-wrap {
+				overflow-x: auto;
+				-webkit-overflow-scrolling: touch;
+			}
+
+			table {
+				width: 100%;
+				border-collapse: collapse;
+				font-size: 13px;
+			}
+
+			th,
+			td {
+				padding: 11px 12px;
+				border-bottom: 1px solid var(--border);
+				text-align: left;
+				vertical-align: top;
+			}
+
+			th {
+				background: var(--panel-soft);
+				color: #526173;
+				font-size: 11px;
+				font-weight: 750;
+				letter-spacing: 0.035em;
+				text-transform: uppercase;
+				white-space: nowrap;
+			}
+
+			tbody tr:last-child td {
+				border-bottom: 0;
+			}
+
+			.result-status {
+				font-weight: 750;
+				white-space: nowrap;
+			}
+
+			.result-status.status-success {
+				color: var(--success);
+			}
+
+			.result-status.status-adjusted,
+			.result-status.status-not-supported {
+				color: var(--warning);
+			}
+
+			.result-status.status-failed,
+			.result-status.status-camera-error,
+			.result-status.status-timed-out,
+			.result-status.status-no-frames,
+			.result-status.status-permission-denied {
+				color: var(--error);
+			}
+
+			.empty-results {
+				padding: 24px;
+				color: var(--muted);
+				text-align: center;
+			}
+
+			@media (max-width: 780px) {
+				.shell {
+					padding: 22px 14px 36px;
+				}
+
+				.setup-grid,
+				.preview-grid {
+					grid-template-columns: 1fr;
+				}
+
+				.action-bar {
+					grid-template-columns: 1fr;
+				}
+
+				.secondary-actions {
+					grid-template-columns: repeat(2, minmax(0, 1fr));
+				}
+
+				.secondary-actions button {
+					width: 100%;
+					padding-inline: 10px;
+				}
+
+				.video-frame,
+				video {
+					min-height: 190px;
+				}
+
+				.results-heading {
+					align-items: flex-start;
+					flex-direction: column;
+				}
+
+				thead {
+					display: none;
+				}
+
+				table,
+				tbody,
+				tr,
+				td {
+					display: block;
+					width: 100%;
+				}
+
+				tbody {
+					padding: 12px;
+					background: var(--page);
+				}
+
+				tbody tr {
+					margin-bottom: 12px;
+					overflow: hidden;
+					border: 1px solid var(--border);
+					border-radius: 10px;
+					background: var(--panel);
+				}
+
+				tbody tr:last-child {
+					margin-bottom: 0;
+				}
+
+				td {
+					display: grid;
+					grid-template-columns: minmax(105px, 0.8fr) minmax(0, 1.2fr);
+					gap: 12px;
+					padding: 9px 11px;
+					border-bottom: 1px solid #e7ebf1;
+					word-break: break-word;
+				}
+
+				td::before {
+					content: attr(data-label);
+					color: var(--muted);
+					font-size: 11px;
+					font-weight: 750;
+					letter-spacing: 0.03em;
+					text-transform: uppercase;
+				}
+
+				.empty-results {
+					display: block;
+					padding: 22px 12px;
+				}
+
+				.empty-results::before {
+					display: none;
+				}
+			}
+
+			@media (max-width: 430px) {
+				.shell {
+					padding-inline: 10px;
+				}
+
+				.setup-panel {
+					padding: 14px;
+				}
+
+				.stats {
+					grid-template-columns: 1fr;
+				}
+
+				.stat-card {
+					display: flex;
+					align-items: baseline;
+					justify-content: space-between;
+					gap: 12px;
+				}
+
+				.stat-label {
+					margin-top: 0;
+					text-align: right;
+				}
+
+				td {
+					grid-template-columns: 96px minmax(0, 1fr);
+				}
+			}
+
+			@media (prefers-reduced-motion: reduce) {
+				button,
+				.progress-bar {
+					transition: none;
+				}
+			}
+		</style>
+	</head>
+	<body>
+		<main class="shell">
+			<header class="hero">
+				<p class="eyebrow">VDO.Ninja utility</p>
+				<h1>Find a camera mode that works correctly</h1>
+				<p class="lead">Test the resolutions and frame rates your browser actually receives. The recommended scan fully releases the camera between changes to reduce USB-camera and Android driver lockups.</p>
+			</header>
+
+			<section class="panel setup-panel" aria-label="Camera test setup">
+				<div class="setup-grid">
+					<label class="field">
+						<span class="field-label">1. Camera</span>
+						<select id="cameraSelect">
+							<option value="">Select a camera...</option>
+						</select>
+					</label>
+					<label class="field">
+						<span class="field-label">2. Test plan</span>
+						<select id="scanMode">
+							<option value="safe" selected>Recommended (3 common modes)</option>
+							<option value="orientation">Orientation check (8 modes)</option>
+							<option value="full">Extended scan (32 combinations)</option>
+						</select>
+					</label>
+					<label class="field">
+						<span class="field-label">3. Pause between modes</span>
+						<select id="scanDelay">
+							<option value="1000">1 second</option>
+							<option value="2000">2 seconds</option>
+							<option value="3000" selected>3 seconds (recommended)</option>
+							<option value="5000">5 seconds</option>
+							<option value="8000">8 seconds</option>
+						</select>
+					</label>
+				</div>
+
+				<p class="scan-note" id="scanNote">Recommended tests 480p, 720p, and 1080p at 30 fps. The camera is turned off for three seconds between each mode.</p>
+
+				<div class="action-bar">
+					<div class="primary-slot">
+						<button class="button-primary" id="startScan" disabled>Scan selected camera</button>
+						<button class="button-danger" id="stopScan" hidden>Stop and release camera</button>
+					</div>
+					<div class="secondary-actions" id="secondaryActions" hidden>
+						<button class="button-secondary" id="startP2P">Test WebRTC</button>
+						<button class="button-secondary" id="exportResults">Download CSV</button>
+					</div>
+				</div>
+			</section>
+
+			<div class="status" id="status" role="status" aria-live="polite">Select a camera to begin.</div>
+
+			<div class="progress" id="progressContainer" hidden>
+				<div class="progress-bar" id="progressBar" role="progressbar" aria-label="Test progress" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"></div>
+			</div>
+
+			<section class="preview-grid" id="previewGrid" hidden aria-label="Camera previews">
+				<article class="panel preview-card" id="localWrapper">
+					<div class="card-heading">
+						<h2>Camera preview</h2>
+						<span>Visible while a test is running</span>
+					</div>
+					<div class="video-frame">
+						<div class="preview-placeholder" id="localPlaceholder">
+							<strong>Camera is released</strong>
+							<span>It turns on only while a test is running.</span>
+						</div>
+						<video id="localVideo" autoplay muted playsinline></video>
+					</div>
+				</article>
+				<article class="panel preview-card" id="remoteWrapper" hidden>
+					<div class="card-heading">
+						<h3>WebRTC loopback</h3>
+						<span>What a remote viewer receives</span>
+					</div>
+					<div class="video-frame">
+						<video id="remoteVideo" autoplay muted playsinline></video>
+					</div>
+				</article>
+			</section>
+
+			<section class="stats" id="currentStats" hidden aria-label="Current test">
+				<div class="stat-card">
+					<div class="stat-value" id="currentRes">-</div>
+					<div class="stat-label">Requested resolution</div>
+				</div>
+				<div class="stat-card">
+					<div class="stat-value" id="currentFps">-</div>
+					<div class="stat-label">Requested frame rate</div>
+				</div>
+				<div class="stat-card">
+					<div class="stat-value" id="currentMode">-</div>
+					<div class="stat-label">Last test</div>
+				</div>
+			</section>
+
+			<section class="panel results-panel" aria-labelledby="resultsTitle">
+				<div class="results-heading">
+					<h2 id="resultsTitle">Results</h2>
+					<p>“Adjusted” means the browser returned a different size or frame rate.</p>
+				</div>
+				<div class="table-wrap">
+					<table id="resultsTable">
+						<thead>
+							<tr>
+								<th>Requested</th>
+								<th>Actual video</th>
+								<th>Orientation</th>
+								<th>Target FPS</th>
+								<th>Measured FPS</th>
+								<th>WebRTC FPS</th>
+								<th>Result</th>
+								<th>Notes</th>
+							</tr>
+						</thead>
+						<tbody id="resultsBody">
+							<tr>
+								<td class="empty-results" colspan="8">No tests run yet.</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</section>
+		</main>
+
+		<script src="camera-test.js?v=20260910"></script>
+	</body>
+</html>

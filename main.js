@@ -1,12 +1,12 @@
 /*
- *  Copyright (c) 2026 Steve Seguin. All Rights Reserved.
+ * Copyright (c) 2020-2026 Steve Seguin. All rights reserved.
+ * SPDX-License-Identifier: AGPL-3.0-only
  *
- *  Use of this source code is governed by the APGLv3 open-source license
- *  that can be found in the LICENSE file in the root of the source
- *  tree. Alternative licencing options can be made available on request.
- *
+ * Licensed under the GNU Affero General Public License version 3 only.
+ * See LICENSE for the full terms.
  */
 /*jshint esversion: 6 */
+var QOS_MAIN_BUILD = "20260910.3";
 async function main() {
 	// main asyncronous thread; mostly initializes the user settings.
 
@@ -16,6 +16,12 @@ async function main() {
 	var ConfigSettings = getById("main-js");
 	let ln_template = null;
 	let altLabelOverride = null;
+
+	if (urlParams.has("streamtakeover")) {
+		var streamTakeoverValue = String(urlParams.get("streamtakeover") || "").toLowerCase();
+		session.streamtakeover =
+			streamTakeoverValue === "" || streamTakeoverValue === "1" || streamTakeoverValue === "true";
+	}
 
 	if (urlParams.has("altlabel")) {
 		try {
@@ -40,6 +46,7 @@ async function main() {
 		if (!text) {
 			return;
 		}
+		text = sanitizeCustomHTML(text, 0);
 		if (translation && translation.innerHTML) {
 			translation.innerHTML["enter-display-name"] = text;
 		}
@@ -489,10 +496,13 @@ async function main() {
 		// checking if manual lanuage override enabled
 		try {
 			log("Lang Template: " + ln_template);
-			await changeLg(ln_template);
-			if (altLabelOverride) {
-				applyAltLabelOverride(altLabelOverride);
-			}
+			changeLg(ln_template).then(function () {
+				if (altLabelOverride) {
+					applyAltLabelOverride(altLabelOverride);
+				}
+			}).catch(function (error) {
+				console.warn("Language could not load; using the default text.", error);
+			});
 			// Only show menu if not in auth mode
 			if (!urlParams.has("auth") && !urlParams.has("requireauth")) {
 				//getById("mainmenu").style.opacity = 1;
@@ -506,16 +516,57 @@ async function main() {
 		}
 	}
 	
-	// Initialize authentication if enabled
-	if (window.vdoAuth && (urlParams.has("auth") || urlParams.has("requireauth") || urlParams.has("universaltoken") || urlParams.has("authtoken"))) {
+	// Authentication is optional on ordinary pages, but required links must fail closed.
+	var authRequired = urlParams.has("auth") || urlParams.has("requireauth") || urlParams.has("universaltoken") || urlParams.has("authtoken");
+	var authLoading = Promise.resolve();
+	if (!window.vdoAuth) {
+		var authRow = getById("ssoRoomOptionRow");
+		if (authRow) {
+			authRow.style.display = "none";
+		}
+		var authStyle = document.createElement("link");
+		authStyle.rel = "stylesheet";
+		authStyle.href = "./auth-styles.css";
+		document.head.appendChild(authStyle);
+		authLoading = loadScript("./auth-client.js?v=17").then(function () {
+			if (!window.vdoAuth || typeof window.vdoAuth.init !== "function") {
+				throw new Error("Authentication client did not initialize.");
+			}
+			if (authRow && window.vdoAuth.isSupported && window.vdoAuth.isSupported()) {
+				authRow.style.display = "";
+			}
+		});
+	}
+	if (authRequired) {
 		getById("mainmenu").classList.add("hidden2");
 		getById("header").classList.add("hidden2");
 
-		await window.vdoAuth.init();
+		var authTimeout;
+		var authTimedOut = false;
+		try {
+			await Promise.race([
+				authLoading.then(function () {
+					if (authTimedOut) {
+						throw new Error("Authentication download finished after startup timed out.");
+					}
+					return window.vdoAuth.init();
+				}),
+				new Promise(function (resolve, reject) {
+					authTimeout = setTimeout(function () {
+						authTimedOut = true;
+						reject(new Error("Authentication timed out. Please reload to try again."));
+					}, 8000);
+				})
+			]);
+		} finally {
+			clearTimeout(authTimeout);
+		}
 		// Menu visibility is now handled by auth completion
 		if (session.authMode && (session.authToken || session.authSkipped)) {
 			getById("mainmenu").style.opacity = 1;
 		}
+	} else {
+		authLoading.catch(function (error) { console.warn("Optional authentication controls could not load.", error); });
 	}
 	
 	if (location.hostname !== "vdo.ninja" && location.hostname !== "backup.vdo.ninja" && location.hostname !== "proxy.vdo.ninja" && location.hostname !== "alt.vdo.ninja" && location.hostname !== "obs.ninja") {
@@ -859,42 +910,6 @@ async function main() {
 		}
 	}
 
-	if (urlParams.has("autorelay")) {
-		var autoRelay = (urlParams.get("autorelay") || "1").toLowerCase();
-		if (["0", "false", "off", "no"].includes(autoRelay)) {
-			session.autoRelay = false;
-		} else {
-			session.autoRelay = true;
-		}
-	}
-
-	if (urlParams.has("autorecover")) {
-		var autoRecover = (urlParams.get("autorecover") || "1").toLowerCase();
-		if (["0", "false", "off", "no"].includes(autoRecover)) {
-			session.autoRelay = false;
-			session.adaptiveDisconnect = false;
-			session.autoWhepFallback = false;
-		} else {
-			session.autoRelay = true;
-			session.adaptiveDisconnect = true;
-			session.autoWhepFallback = true;
-		}
-	}
-
-	if (urlParams.has("p2pfailtimeout")) {
-		var p2pFailTimeout = parseInt(urlParams.get("p2pfailtimeout"));
-		if (Number.isFinite(p2pFailTimeout) && p2pFailTimeout > 0) {
-			session.p2pFailTimeoutMs = Math.min(45000, Math.max(3000, p2pFailTimeout));
-		}
-	}
-
-	if (urlParams.has("peerrecoversteps") || urlParams.has("p2precoversteps")) {
-		var peerRecoverSteps = parseInt(urlParams.get("peerrecoversteps") || urlParams.get("p2precoversteps"));
-		if (Number.isFinite(peerRecoverSteps) && peerRecoverSteps > 0) {
-			session.peerRecoverMaxSteps = Math.min(6, Math.max(1, peerRecoverSteps));
-		}
-	}
-
 	if (urlParams.has("testmedia") || urlParams.has("syntheticmedia")) {
 		var testMediaMode = (urlParams.get("testmedia") || urlParams.get("syntheticmedia") || "1").toLowerCase();
 		if (["0", "false", "off", "no"].includes(testMediaMode)) {
@@ -961,31 +976,6 @@ async function main() {
 		}
 	}
 
-	if (urlParams.has("adaptivedisconnect")) {
-		var adaptiveDisconnect = (urlParams.get("adaptivedisconnect") || "1").toLowerCase();
-		if (["0", "false", "off", "no"].includes(adaptiveDisconnect)) {
-			session.adaptiveDisconnect = false;
-		} else {
-			session.adaptiveDisconnect = true;
-		}
-	}
-
-	if (urlParams.has("disconnectfloor")) {
-		var disconnectFloor = parseInt(urlParams.get("disconnectfloor"));
-		if (Number.isFinite(disconnectFloor) && disconnectFloor > 0) {
-			session.disconnectFloor = disconnectFloor;
-		}
-	}
-	if (urlParams.has("disconnectceil")) {
-		var disconnectCeil = parseInt(urlParams.get("disconnectceil"));
-		if (Number.isFinite(disconnectCeil) && disconnectCeil > 0) {
-			session.disconnectCeil = disconnectCeil;
-		}
-	}
-	if (session.disconnectCeil < session.disconnectFloor) {
-		session.disconnectCeil = session.disconnectFloor;
-	}
-
 	if (urlParams.has("ptz")) {
 		session.ptz = true;
 	}
@@ -996,6 +986,8 @@ async function main() {
 	}
 
 	if (urlParams.has("optimize")) {
+		// H264 hardware encoders can resume black after optimize=0 or very-low bitrate/resolution changes.
+		// VP8 or a 300-600 kbps floor is safer for frequent OBS scene switching.
 		session.optimize = parseInt(urlParams.get("optimize")) || 0;
 	}
 
@@ -1555,18 +1547,33 @@ async function main() {
 	//	getById("hideusers").classList.add("hidden");
 	//}
 
-	if (urlParams.has("meshcast2")) {
-		session.meshcast2 = urlParams.get("meshcast2") || "any";
-		meshcast2();
-	} else if (urlParams.has("meshcast") && !urlParams.has("meshcastfailed")) {
-		session.meshcast = urlParams.get("meshcast") || "any";
-		meshcast(true);
-	}
-
-
 	if (urlParams.has("meshcastcode") || urlParams.has("mccode")) {
 		session.meshcastCode = urlParams.get("meshcastcode") || urlParams.get("mccode") || false;
 	}
+
+	if (urlParams.has("meshcast2")) {
+		session.meshcast2 = urlParams.get("meshcast2") || "any";
+		queryMeshcastServers();
+		if (["any", "anon", "audio", "video"].includes(session.meshcast2.toLowerCase())) {
+			session.meshcast = session.meshcast2.toLowerCase();
+		}
+		meshcast2();
+	} else if (urlParams.has("meshcast") && !urlParams.has("meshcastfailed")) {
+		session.meshcast = urlParams.get("meshcast") || "any";
+		const requestedMeshcast = String(session.meshcastCode || session.meshcast).trim();
+		// Explicit third-party endpoints retain their direct-server contract.
+		const requestedHost = requestedMeshcast.replace(/^https?:\/\//i, "").split("/")[0].toLowerCase();
+		const customMeshcast = requestedHost.includes(".") && requestedHost !== "meshcast.io" && !requestedHost.endsWith(".meshcast.io");
+		if (customMeshcast) {
+			meshcast(true);
+		} else {
+			session.meshcast = String(session.meshcast).toLowerCase();
+			session.meshcast2 = "any";
+			queryMeshcastServers();
+			meshcast2();
+		}
+	}
+
 
 	if (urlParams.has("nomeshcast") || urlParams.has("nowhep")) {
 		session.noMeshcast = urlParams.get("nomeshcast") || urlParams.has("nowhep") || true;
@@ -1612,13 +1619,14 @@ async function main() {
 	if (urlParams.has("pagezoom")) {
 		enableFullscreenZoom();
 	}
-	//if (urlParams.has('callin')){
-	// awaitInboundCall()();
-	//}
-
-	//if (urlParams.has("relaywss")) {
-	//	session.relaywss = true;
-	//}
+	if (urlParams.has("callin")) {
+		session.callinRequested = urlParams.get("callin") || "sip";
+		loadScript("./callin.js?v=1", function () {
+			if (window.setupCallIn) {
+				window.setupCallIn({ mode: session.callinRequested });
+			}
+		});
+	}
 
 	if (urlParams.has("fulltalk") && urlParams.get("fulltalk").length == 6) {
 		listenWebsocket(urlParams.get("fulltalk"), false); // talk and hear all
@@ -1979,8 +1987,37 @@ async function main() {
 		}
 	}
 
+	function getMIDIPortSelector(parameterNames) {
+		var selectAll = false;
+		for (var parameterIndex = 0; parameterIndex < parameterNames.length; parameterIndex++) {
+			var parameterName = parameterNames[parameterIndex];
+			if (!urlParams.has(parameterName)) {
+				continue;
+			}
+
+			selectAll = true;
+			var selector = urlParams.get(parameterName);
+			var trimmedSelector = selector === null ? "" : selector.trim();
+			if (trimmedSelector === "") {
+				continue;
+			}
+
+			if (/^\d+$/.test(trimmedSelector)) {
+				var deviceIndex = parseInt(trimmedSelector, 10);
+				if (deviceIndex === 0) {
+					continue;
+				}
+				return deviceIndex;
+			}
+
+			return selector;
+		}
+
+		return selectAll;
+	}
+
 	if (urlParams.has("midipush") || urlParams.has("midiout") || urlParams.has("mo")) {
-		session.midiOut = parseInt(urlParams.get("midipush")) || parseInt(urlParams.get("midiout")) || parseInt(urlParams.get("mo")) || true;
+		session.midiOut = getMIDIPortSelector(["midipush", "midiout", "mo"]);
 	}
 	
 	if (urlParams.has("tc") || urlParams.has("timecode") || urlParams.has("showtimecode")) {
@@ -1996,7 +2033,7 @@ async function main() {
 	}
 
 	if (urlParams.has("midipull") || urlParams.has("midiin") || urlParams.has("midin") || urlParams.has("mi")) {
-		session.midiIn = parseInt(urlParams.get("midipull")) || parseInt(urlParams.get("midiin")) || parseInt(urlParams.get("midin")) || parseInt(urlParams.get("mi")) || true;
+		session.midiIn = getMIDIPortSelector(["midipull", "midiin", "midin", "mi"]);
 	}
 
 	if (urlParams.has("mididelay")) {
@@ -2409,7 +2446,7 @@ async function main() {
 	// Tipping feature - unified &tipsid parameter
 	// &tipsid=xxx → use this overlay token, enable tips, fetch username from API
 	// &tipsid (no value) → show onboarding modal for signup
-	// Legacy: &tip, &tips, &tipid also supported for backwards compatibility
+	// Legacy: &tip and &tipid are also supported. &tips is the guest-help panel.
 	if (urlParams.has("tipsid") || urlParams.has("tip") || urlParams.has("tipid")) {
 		var tipsIdValue = urlParams.get("tipsid") || urlParams.get("tip") || urlParams.get("tipid");
 		session.receiveTips = true;
@@ -3197,17 +3234,22 @@ async function main() {
 				cssStylesheet.type = "text/css";
 				cssStylesheet.media = "screen";
 				cssStylesheet.href = cssURL;
-				document.getElementsByTagName("head")[0].appendChild(cssStylesheet);
+				var cssTimeout = setTimeout(function () {
+					getById("main").classList.remove("hidden");
+				}, 2000);
 
 				cssStylesheet.onload = function () {
+					clearTimeout(cssTimeout);
 					getById("main").classList.remove("hidden");
 					log("loaded remote style sheet");
 				};
 
 				cssStylesheet.onerror = function () {
+					clearTimeout(cssTimeout);
 					getById("main").classList.remove("hidden");
 					errorlog("REMOTE STYLE SHEET HAD ERROR");
 				};
+				document.getElementsByTagName("head")[0].appendChild(cssStylesheet);
 			} else {
 				try {
 					if (["invite.cam","invitecamera.com"].includes(getParentHostname())){
@@ -4201,6 +4243,74 @@ async function main() {
 		}
 	}
 
+	if (urlParams.has("translate") || urlParams.has("translatelang") || urlParams.has("translationlanguage")) {
+		var translateValue = (urlParams.get("translate") || "").trim();
+		var translationOwner = urlParams.has("translate");
+		if (["0", "false", "off", "no"].indexOf(translateValue.toLowerCase()) !== -1) {
+			translationOwner = false;
+		}
+
+		var translationLanguageSetting = (urlParams.get("translatelang") || urlParams.get("translationlanguage") || "").trim();
+		if (!translationLanguageSetting && translateValue && ["1", "true", "on", "yes", "openai"].indexOf(translateValue.toLowerCase()) === -1) {
+			translationLanguageSetting = translateValue;
+		}
+		try {
+			translationLanguageSetting = translationLanguageSetting || localStorage.getItem("vdo_translation_language") || "auto";
+		} catch (e) {
+			translationLanguageSetting = translationLanguageSetting || "auto";
+		}
+
+		var translationLanguage = translationLanguageSetting;
+		if (!translationLanguage || translationLanguage.toLowerCase() === "auto") {
+			try {
+				translationLanguage = (navigator.languages && navigator.languages[0]) || navigator.language || navigator.userLanguage || "en";
+			} catch (e) {
+				translationLanguage = "en";
+			}
+		}
+		translationLanguage = translationLanguage.toString().trim().replace(/_/g, "-");
+		if (!translationLanguage) {
+			translationLanguage = "en";
+		}
+
+		var translationProvider = (urlParams.get("translationprovider") || "").trim().toLowerCase();
+		var translationAudioMode = (urlParams.get("translateaudio") || "").trim().toLowerCase();
+		var translationBrokerURL = (urlParams.get("translationbroker") || "").trim();
+		try {
+			translationProvider = translationProvider || localStorage.getItem("vdo_translation_provider") || "openai";
+			translationAudioMode = translationAudioMode || localStorage.getItem("vdo_translation_audio_mode") || "replace";
+			translationBrokerURL = translationBrokerURL || localStorage.getItem("vdo_translation_broker_url") || "";
+		} catch (e) {
+			translationProvider = translationProvider || "openai";
+			translationAudioMode = translationAudioMode || "replace";
+		}
+		if (["replace", "duck", "mix"].indexOf(translationAudioMode) === -1) {
+			translationAudioMode = "replace";
+		}
+
+		session.translation = {
+			enabled: true,
+			owner: translationOwner,
+			provider: translationProvider,
+			languageSetting: translationLanguageSetting,
+			language: translationLanguage,
+			audioMode: translationAudioMode,
+			brokerURL: translationBrokerURL
+		};
+
+		loadScript("./translation/controller.js?v=6")
+			.then(function () {
+				if (window.VDOTranslation && window.VDOTranslation.start) {
+					return window.VDOTranslation.start(session.translation);
+				}
+				throw new Error("Translation controller did not load.");
+			})
+			.catch(function (error) {
+				errorlog(error);
+				warnUser("Live translation could not start. " + (error.message || error), 5000);
+			});
+	}
+
 	if (urlParams.has("include") && urlParams.get("include")) {
 		urlParams.get("include")
 			.split(",")
@@ -4425,8 +4535,8 @@ async function main() {
 		// Ensure WebAudio outbound pipeline is enabled (unless &noap set later)
 		session.disableWebAudio = false;
 	}
-	if (urlParams.has("lowcut") || urlParams.has("lc") || urlParams.has("higpass")) {
-		session.lowcut = urlParams.get("lowcut") || urlParams.get("lc") || urlParams.get("higpass") || 100;
+	if (urlParams.has("lowcut") || urlParams.has("lc") || urlParams.has("highpass") || urlParams.has("higpass")) {
+		session.lowcut = urlParams.get("lowcut") || urlParams.get("lc") || urlParams.get("highpass") || urlParams.get("higpass") || 100;
 		session.lowcut = parseInt(session.lowcut);
 		session.disableWebAudio = false;
 	}
@@ -4619,7 +4729,10 @@ async function main() {
 	if (urlParams.has("chroma")) {
 		log("Chroma ENABLED");
 		getById("main").style.backgroundColor = "#" + (urlParams.get("chroma") || "0F0");
-	} 
+	} else if (window.obsstudio && isIFrame && ["invite.cam", "invitecamera.com"].includes(getParentHostname())) {
+		getById("main").style.backgroundColor = "rgba(0,0,0,0)";
+		document.documentElement.style.setProperty("--background-color", "#0000");
+	}
 
 	if (urlParams.has("margin")) {
 		try {
@@ -4900,7 +5013,7 @@ async function main() {
 		}
 		if (session.consent) {
 			setTimeout(function () {
-				warnUser("⚠ Privacy warning: The director of this room can remotely switch your camera or microphone without permission.", 8000);
+				warnUser("⚠ Privacy warning: A director or authenticated remote controller can remotely switch your camera or microphone and control your digital video effects without additional permission.", 8000);
 			}, 1500);
 		}
 	}
@@ -4996,7 +5109,10 @@ async function main() {
 		log(session.novideo);
 	}
 
-	if (urlParams.has("noaudio") || urlParams.has("na") || urlParams.has("hideaudio")) {
+	if (urlParams.has("videoonly")) {
+		session.noaudio = [];
+		log("disable audio playback");
+	} else if (urlParams.has("noaudio") || urlParams.has("na") || urlParams.has("hideaudio")) {
 		session.noaudio = urlParams.get("noaudio") || urlParams.get("na") || urlParams.get("hideaudio");
 
 		if (!session.noaudio) {
@@ -5077,6 +5193,21 @@ async function main() {
 	if (urlParams.has("slotmode") || urlParams.has("slotsmode")) {
 		session.slotmode = parseInt(urlParams.get("slotmode")) || parseInt(urlParams.get("slotsmode")) || 1;
 	}
+	if (urlParams.has("slotreserve") || urlParams.has("reserveslots")) {
+		var slotReserveValue = urlParams.get("slotreserve");
+		if (slotReserveValue === null) {
+			slotReserveValue = urlParams.get("reserveslots");
+		}
+		session.slotReservationsEnabled = slotReserveValue !== "0" && slotReserveValue !== "false";
+	}
+	if (urlParams.has("reservedslots")) {
+		try {
+			session.reservedSlots = normalizeSlotReservations(JSON.parse(urlParams.get("reservedslots")));
+			session.slotReservationsEnabled = true;
+		} catch (e) {
+			warnlog("Invalid reserved slots");
+		}
+	}
 
 	if (urlParams.has("slot")) {
 		var slotValue = parseInt(urlParams.get("slot"));
@@ -5129,31 +5260,41 @@ async function main() {
 	if (urlParams.has("chunked") || urlParams.has("chunk")) {
 		session.chunked = parseInt(urlParams.get("chunked")) || parseInt(urlParams.get("chunk")) || 2500; // sender side; enables to allows.
 		// session.alpha = true;
-		if (Firefox || (SafariVersion && !(iOS || iPad))) {
+		if (Firefox) {
 			if (!session.cleanOutput) {
-				warnUser("Only Chromium-based browsers support chunked mode.\n\nPlease switch to Chrome or another compatible browser to use &chunked mode.");
+				warnUser("This browser does not support chunked mode.\n\nPlease switch to a compatible Chromium or Safari browser to use &chunked mode.");
 			}
 			session.chunked = false;
 			console.warn("Disabling chunked mode since not using a compatible browser.");
-		} else if (SafariVersion && (iOS || iPad)) {
-			var wantsFullEncodedChunked = !(urlParams.has("nochunkaudio") || urlParams.has("nochunkedaudio") || urlParams.has("pcm"));
-			var hasFullEncodedChunkedSupport = (
-				typeof MediaStreamTrackProcessor === "function" &&
-				typeof MediaStreamTrackGenerator === "function" &&
+		} else if (SafariVersion) {
+			// Safari exposes MediaStreamTrackProcessor and the standards-based
+			// VideoTrackGenerator in dedicated workers rather than on window.
+			// Verify the complete publish/view stack before enabling chunked mode.
+			var safariWorkerSupport = typeof session.ensureChunkedWorkerSupport === "function" ? await session.ensureChunkedWorkerSupport() : false;
+			var SafariAudioContext = window.AudioContext || window.webkitAudioContext;
+			var hasSafariChunkedWebCodecs = (
+				typeof Worker === "function" &&
 				typeof VideoEncoder === "function" &&
 				typeof AudioEncoder === "function" &&
 				typeof VideoDecoder === "function" &&
 				typeof AudioDecoder === "function" &&
+				typeof AudioData === "function" &&
+				typeof SafariAudioContext === "function" &&
 				typeof EncodedVideoChunk === "function" &&
-				typeof EncodedAudioChunk === "function"
+				typeof EncodedAudioChunk === "function" &&
+				safariWorkerSupport &&
+				safariWorkerSupport.mediaStreamTrackProcessor &&
+				safariWorkerSupport.videoEncoder &&
+				safariWorkerSupport.videoTrackGenerator &&
+				safariWorkerSupport.videoDecoder
 			);
-			var allowMobileSafariChunked = (SafariVersion >= 26) && wantsFullEncodedChunked && hasFullEncodedChunkedSupport;
-			if (!allowMobileSafariChunked) {
+			var allowSafariChunked = hasSafariChunkedWebCodecs;
+			if (!allowSafariChunked) {
 				if (!session.cleanOutput) {
-					warnUser("Chunked mode on iOS/iPadOS is only enabled on version 26+ when full encoded WebCodecs support is present.");
+					warnUser("Chunked mode on this Safari device requires the complete WebCodecs video and audio stack.");
 				}
 				session.chunked = false;
-				console.warn("Disabling chunked mode on iOS/iPadOS Safari/WebKit.");
+				console.warn("Disabling chunked mode on Safari/WebKit because the required WebCodecs APIs are unavailable.");
 			}
 		}
 	}
@@ -5245,6 +5386,31 @@ async function main() {
 		session[target] = value;
 	}
 
+	function parseFirstIntegerParam(names, target, clamp = null) {
+		for (let i = 0; i < names.length; i++) {
+			const name = names[i];
+			if (!urlParams.has(name)) {
+				continue;
+			}
+			let value = parseInt(urlParams.get(name));
+			if (!Number.isFinite(value)) {
+				continue;
+			}
+			if (clamp && Array.isArray(clamp)) {
+				const min = clamp[0];
+				const max = clamp[1];
+				if (typeof min === "number") {
+					value = Math.max(min, value);
+				}
+				if (typeof max === "number") {
+					value = Math.min(max, value);
+				}
+			}
+			session[target] = value;
+			return;
+		}
+	}
+
 	function parseBooleanParam(name, target) {
 		if (!urlParams.has(name)) {
 			return;
@@ -5261,6 +5427,18 @@ async function main() {
 
 	parseIntegerParam("chunkfec", "chunkfec", [0, 12]);
 	parseBooleanParam("chunknack", "chunknack");
+	// chunked is the legacy WebCodecs enable/bitrate value. Prefer the explicit
+	// aliases below for integrations: receiver playout delay belongs in
+	// chunkbuffer/rpc.buffer, not in the encoder bitrate field.
+	parseFirstIntegerParam(["chunkbitrate", "chunkvideobitrate", "webcodecsbitrate"], "chunkbitrate", [1, 100000]);
+	if (urlParams.has("chunkcodec") || urlParams.has("chunkcodecs") || urlParams.has("chunkvideocodec") || urlParams.has("webcodecscodec")) {
+		// Dedicated WebCodecs/chunked codec preference. The regular codec= flag
+		// is an RTP/SDP preference and does not steer chunked encoder selection.
+		session.chunkcodec = urlParams.get("chunkcodec") || urlParams.get("chunkcodecs") || urlParams.get("chunkvideocodec") || urlParams.get("webcodecscodec") || false;
+		if (session.chunkcodec) {
+			session.chunkcodec = session.chunkcodec.toLowerCase();
+		}
+	}
 	parseIntegerParam("chunkbuffer", "chunkbuffer", [0, 180000]);
 	parseIntegerParam("chunkbufferfloor", "chunkbufferfloor", [0, 180000]);
 	parseIntegerParam("chunkbufferceil", "chunkbufferceil", [0, 180000]);
@@ -5281,10 +5459,19 @@ async function main() {
 	parseIntegerParam("chunkadaptthreshold", "chunkadaptthreshold", [0, 10000]);
 	parseIntegerParam("chunkadaptmaxdrop", "chunkadaptmaxdrop", [0, 120]);
 	parseIntegerParam("chunkadaptinterval", "chunkadaptinterval", [100, 60000]);
+	parseBooleanParam("chunkadaptresolution", "chunkadaptresolution");
 
 	parseIntegerParam("chunkretry", "chunkretry", [0, 60000]);
 	parseIntegerParam("chunkcache", "chunkcache", [0, 60000]);
 	parseIntegerParam("chunkchunksize", "chunkchunksize", [2048, 65536]);
+	parseBooleanParam("chunkindex", "chunkindex");
+	// Reliability payloads must carry explicit indices. Otherwise one lost data
+	// payload shifts every following data/parity payload into the wrong slot.
+	if (session.chunknack || (parseInt(session.chunkfec) || 0) >= 2) {
+		session.chunkindex = true;
+	}
+	parseIntegerParam("chunknackattempts", "chunknackattempts", [1, 20]);
+	parseIntegerParam("chunknackdelay", "chunknackdelay", [50, 5000]);
 
 	if (urlParams.has("nochunk") || urlParams.has("nochunked")) {
 		// viewer side
@@ -5636,10 +5823,17 @@ async function main() {
 			getById("testtone").parentNode.insertBefore(addtone, getById("testtone").nextSibling);
 		}
 		
-		if (!Notification) {
-			warnlog("Desktop notifications are not available in your browser.");
-		} else if (Notification.permission !== "granted") {
-			Notification.requestPermission();
+		try {
+			if (typeof Notification === "undefined" || !Notification) {
+				warnlog("Desktop notifications are not available in your browser.");
+			} else if (Notification.permission !== "granted") {
+				var permissionRequest = Notification.requestPermission();
+				if (permissionRequest && typeof permissionRequest.catch === "function") {
+					permissionRequest.catch(function () {});
+				}
+			}
+		} catch (error) {
+			warnlog(error);
 		}
 	}
 	
@@ -6061,12 +6255,18 @@ async function main() {
 	if (session.statsMenu === false) {
 		// hide menu option
 		try {
-			document.queryselector('[data-action="ShowStats"]').parentNode.classList.add("hidden");
-		} catch (e) {}
+			document.querySelector('[data-action="ShowStats"]').parentNode.classList.add("hidden");
+		} catch (e) {
+			warnlog(e);
+		}
 	}
 
 	if (urlParams.has("statsinterval")) {
-		session.statsInterval = parseInt(urlParams.get("statsinterval")) || 3000; // milliseconds.  interval of requesting stats of remote guests
+		var statsIntervalRequested = parseInt(urlParams.get("statsinterval"));
+		if (Number.isFinite(statsIntervalRequested)) {
+			// milliseconds. interval of requesting stats of remote guests; floored so we don't hammer getStats()
+			session.statsInterval = Math.max(250, statsIntervalRequested);
+		}
 	}
 
 	if (urlParams.has("cleandirector") || urlParams.has("cdv")) {
@@ -6200,9 +6400,16 @@ async function main() {
 		session.degrade = urlParams.get("degrade") || true; // Firefox, and maybe Safari, supported I think.
 		// the possible values are maintain-framerate, maintain-resolution, or balanced. The default value is balanced
 	}
+	// Publisher-only, opt-in RTP camera adaptation. Bitrate limits remain independent.
+	if (urlParams.has("rtpprofile") || urlParams.has("connectionprofile")) {
+		var rtpProfile = (urlParams.get(urlParams.has("rtpprofile") ? "rtpprofile" : "connectionprofile") || "").toLowerCase();
+		if (rtpProfile === "talkinghead" || rtpProfile === "irl") {
+			session.rtpProfile = rtpProfile;
+		}
+	}
 
 	if (urlParams.has("maxviewers") || urlParams.has("mv")) {
-		session.maxviewers = urlParams.get("maxviewers") || urlParams.get("mv");
+		session.maxviewers = urlParams.get("maxviewers") || urlParams.get("mv") || "";
 		if (session.maxviewers.length == 0) {
 			session.maxviewers = 1;
 		} else {
@@ -6212,7 +6419,7 @@ async function main() {
 	}
 
 	if (urlParams.has("maxpublishers") || urlParams.has("mp")) {
-		session.maxpublishers = urlParams.get("maxpublishers") || urlParams.get("mp");
+		session.maxpublishers = urlParams.get("maxpublishers") || urlParams.get("mp") || "";
 		if (session.maxpublishers.length == 0) {
 			session.maxpublishers = 1;
 		} else {
@@ -6222,7 +6429,7 @@ async function main() {
 	}
 
 	if (urlParams.has("maxconnections") || urlParams.has("mc")) {
-		session.maxconnections = urlParams.get("maxconnections") || urlParams.get("maxconnections");
+		session.maxconnections = urlParams.get("maxconnections") || urlParams.get("mc") || "";
 		if (session.maxconnections.length == 0) {
 			session.maxconnections = 1;
 		} else {
@@ -6469,7 +6676,7 @@ async function main() {
 			session.animatedMoves = false;
 		}
 		session.fadein = true;
-		document.querySelector(":root").style.setProperty("--fadein-speed", 0.5);
+		document.querySelector(":root").style.setProperty("--fadein-speed", "0.5s");
 		session.activeSpeakerInterval = setInterval(function () {
 			activeSpeaker(false);
 		}, 100);
@@ -6500,6 +6707,25 @@ async function main() {
 			}, 100);
 		}
 	}
+	if (urlParams.has("activehighlight") || urlParams.has("activespeakerfeatured")) {
+		var activeSpeakerHighlightValue = urlParams.has("activehighlight") ? urlParams.get("activehighlight") : urlParams.get("activespeakerfeatured") || 2;
+		if (activeSpeakerHighlightValue === "0" || activeSpeakerHighlightValue === "false") {
+			session.activeSpeakerHighlight = false;
+		} else {
+			session.activeSpeakerHighlight = parseInt(activeSpeakerHighlightValue) || 2;
+			if (session.activeSpeakerHighlight !== 1) {
+				session.activeSpeakerHighlight = 2;
+			}
+		}
+		if (session.activeSpeakerHighlight) {
+			session.audioEffects = true;
+			if (!session.activeSpeakerInterval) {
+				session.activeSpeakerInterval = setInterval(function () {
+					activeSpeaker(false);
+				}, 100);
+			}
+		}
+	}
 	if (urlParams.has("activespeakerdelay") || urlParams.has("speakerviewdelay") || urlParams.has("sasdelay")) {
 		session.activeSpeakerTimeout = urlParams.get("activespeakerdelay") || urlParams.get("speakerviewdelay") || urlParams.get("sasdelay") || 0;
 		session.activeSpeakerTimeout = parseInt(session.activeSpeakerTimeout);
@@ -6525,6 +6751,26 @@ async function main() {
 				var fadeinspeed = 0.5;
 				fadeinspeed += "s";
 				document.querySelector(":root").style.setProperty("--fadein-speed", fadeinspeed);
+			} catch (e) {
+				errorlog("variable css failed");
+			}
+		}
+	}
+	if (urlParams.has("fadeout")) {
+		session.fadeout = true;
+		if (urlParams.get("fadeout") || 0) {
+			try {
+				var fadeoutspeed = parseInt(urlParams.get("fadeout") || 0) / 1000.0;
+				fadeoutspeed += "s";
+				document.querySelector(":root").style.setProperty("--fadeout-speed", fadeoutspeed);
+			} catch (e) {
+				errorlog("variable css failed");
+			}
+		} else {
+			try {
+				var fadeoutspeed = 0.5;
+				fadeoutspeed += "s";
+				document.querySelector(":root").style.setProperty("--fadeout-speed", fadeoutspeed);
 			} catch (e) {
 				errorlog("variable css failed");
 			}
@@ -7321,6 +7567,8 @@ async function main() {
 		session.effect = "16";
 	} else if (urlParams.has("facemesh")) {
 		session.effect = "6";
+	} else if (urlParams.has("facecrop") || urlParams.has("autofacecrop")) {
+		session.effect = "facecrop";
 	} else if (urlParams.has("chromakey")) {
 		session.effect = "14";
 		if (urlParams.get("chromakey")){
@@ -7435,6 +7683,8 @@ async function main() {
 
 	if (urlParams.has("bypass")) {
 		session.bypass = true;
+		// Opt in to routing SDP/ICE through the parent even after RTC opens.
+		session.bypassSignaling = urlParams.has("bypasssignaling");
 		if (!urlParams.get("bypass")){
 			session.customWSS = true;
 		}
@@ -7896,6 +8146,26 @@ async function main() {
 		getById("container-2").title = getById("add_screen").innerText;
 		getById("container-3").title = getById("add_camera").innerText;
 
+		if (
+			urlParams.get("room") && session.roomid &&
+			urlParams.getAll("view").length === 1 &&
+			session.view && session.view.trim() &&
+			session.view === urlParams.get("view") &&
+			session.view.indexOf(",") === -1 &&
+			session.permaid === false && session.director === false &&
+			session.scene === false && !session.studioSoftware &&
+			!session.dataMode && !session.autostart &&
+			!session.webcamonly && session.screenshare === false &&
+			!session.introOnClean && !session.hidehome &&
+			!urlParams.has("fileshare") && !urlParams.has("fs") &&
+			!urlParams.has("website") && !urlParams.has("iframe") &&
+			!urlParams.has("framegrab") && !urlParams.has("app") &&
+			location.hostname !== "rtc.ninja"
+		) {
+			getById("container-22").classList.remove("hidden");
+			getById("container-22").style.display = "";
+		}
+
 		if (session.scene !== false) {
 			getById("container-4").className = "column columnfade";
 			getById("container-3").className = "column columnfade";
@@ -8272,6 +8542,8 @@ async function main() {
 		warnUser("Loading custom effects model...", 1000);
 	} else if (session.effect == "facetracking") {
 		session.effect = "1";
+	} else if (session.effect == "autofacecrop") {
+		session.effect = "facecrop";
 	} else if (session.effect == "zoom") {
 		session.effect = "7";
 	}
@@ -8822,7 +9094,7 @@ async function main() {
 
 			if (session.group) {
 				session.group.forEach(group => {
-					var ele = eleGroup.querySelector('[data-action-type="toggle-group"][data-group="' + group + '"');
+					var ele = eleGroup.querySelector('[data-action-type="toggle-group"][data-group="' + escapeApiSelectorValue(group) + '"]');
 					if (!ele) {
 						ele = document.createElement("div");
 						ele.dataset.actionType = "toggle-group";
@@ -8830,7 +9102,7 @@ async function main() {
 						ele.classList.add("float");
 						ele.style.display = "inline-block";
 						ele.role = "button";
-						ele.innerHTML = '<i class="las la-users" aria-hidden="true"></i><br />' + group;
+						ele.innerHTML = '<i class="las la-users" aria-hidden="true"></i><br />' + escapeHtml(group + "");
 						eleGroup.appendChild(ele);
 						ele.onclick = function () {
 							changeGroupDirectorAPI(this.dataset.group);
@@ -9340,6 +9612,8 @@ async function main() {
 					setTimeout(
 						function (UUID) {
 							session.pcs[UUID].getStats().then(function (stats) {
+								var nominatedCandidate = getSelectedCandidatePairStats(stats);
+								var candidates = {};
 								stats.forEach(stat => {
 									if (stat.id && stat.id.startsWith("DEPRECATED_")) {
 										return;
@@ -9358,37 +9632,58 @@ async function main() {
 											}
 										}
 									} else if (stat.type == "remote-candidate") {
-										if ("relayProtocol" in stat) {
-											if ("ip" in stat) {
-												session.pcs[UUID].stats.remote_relay_IP = stat.ip;
-											}
-											session.pcs[UUID].stats.remote_relayProtocol = stat.relayProtocol;
-										}
-										if ("candidateType" in stat) {
-											session.pcs[UUID].stats.candidateType_remote = stat.candidateType;
-										}
+										candidates[stat.id] = stat;
 									} else if (stat.type == "local-candidate") {
-										if ("relayProtocol" in stat) {
-											if ("ip" in stat) {
-												session.pcs[UUID].stats.local_relayIP = stat.ip;
-											}
-											session.pcs[UUID].stats.local_relayProtocol = stat.relayProtocol;
-										}
-										if ("candidateType" in stat) {
-											session.pcs[UUID].stats.candidateType_local = stat.candidateType;
-										}
-									} else if (stat.type == "candidate-pair" && stat.nominated) {
-										if ("availableOutgoingBitrate" in stat) {
-											session.pcs[UUID].stats.available_outgoing_bitrate_kbps = parseInt(stat.availableOutgoingBitrate / 1024);
-										}
-										if ("totalRoundTripTime" in stat) {
-											if ("responsesReceived" in stat) {
-												session.pcs[UUID].stats.average_roundTripTime_ms = parseInt((stat.totalRoundTripTime / stat.responsesReceived) * 1000);
-											}
-										}
+										candidates[stat.id] = stat;
 									}
 									return;
 								});
+								if (nominatedCandidate) {
+									if ("availableOutgoingBitrate" in nominatedCandidate) {
+										session.pcs[UUID].stats.available_outgoing_bitrate_kbps = parseInt(nominatedCandidate.availableOutgoingBitrate / 1024);
+									}
+									if ("totalRoundTripTime" in nominatedCandidate && "responsesReceived" in nominatedCandidate) {
+										session.pcs[UUID].stats.average_roundTripTime_ms = parseInt((nominatedCandidate.totalRoundTripTime / nominatedCandidate.responsesReceived) * 1000);
+									}
+									var localCandidate = candidates[nominatedCandidate.localCandidateId];
+									var remoteCandidate = candidates[nominatedCandidate.remoteCandidateId];
+									if (localCandidate) {
+										session.pcs[UUID].stats.candidateType_local = localCandidate.candidateType;
+										if (localCandidate.candidateType === "relay") {
+											if (localCandidate.ip) {
+												session.pcs[UUID].stats.local_relayIP = localCandidate.ip;
+											} else {
+												delete session.pcs[UUID].stats.local_relayIP;
+											}
+											if (localCandidate.relayProtocol) {
+												session.pcs[UUID].stats.local_relayProtocol = localCandidate.relayProtocol;
+											} else {
+												delete session.pcs[UUID].stats.local_relayProtocol;
+											}
+										} else {
+											delete session.pcs[UUID].stats.local_relayIP;
+											delete session.pcs[UUID].stats.local_relayProtocol;
+										}
+									}
+									if (remoteCandidate) {
+										session.pcs[UUID].stats.candidateType_remote = remoteCandidate.candidateType;
+										if (remoteCandidate.candidateType === "relay") {
+											if (remoteCandidate.ip) {
+												session.pcs[UUID].stats.remote_relay_IP = remoteCandidate.ip;
+											} else {
+												delete session.pcs[UUID].stats.remote_relay_IP;
+											}
+											if (remoteCandidate.relayProtocol) {
+												session.pcs[UUID].stats.remote_relayProtocol = remoteCandidate.relayProtocol;
+											} else {
+												delete session.pcs[UUID].stats.remote_relayProtocol;
+											}
+										} else {
+											delete session.pcs[UUID].stats.remote_relay_IP;
+											delete session.pcs[UUID].stats.remote_relayProtocol;
+										}
+									}
+								}
 								return;
 							});
 						},
@@ -9541,6 +9836,7 @@ async function main() {
 					UUIDS[i] = {};
 					UUIDS[i].label = session.rpcs[i].label || false;
 					UUIDS[i].streamID = session.rpcs[i].streamID || false;
+					UUIDS[i].tally = getTallySnapshot(session.rpcs[i].streamID);
 					if (session.rpcs[i].stats && session.rpcs[i].stats.info) {
 						UUIDS[i].info = session.rpcs[i].stats.info;
 					} else {
@@ -9550,6 +9846,7 @@ async function main() {
 				parent.postMessage(
 					{
 						streamInfo: UUIDS,
+						tally: getTallySnapshot(),
 						cib: e.data.cib || null
 					},
 					session.iframetarget
@@ -9759,6 +10056,13 @@ async function main() {
 				}
 			} else {
 				session.buffer = delay; // set the default buffer delay only
+				try {
+					if (typeof session.refreshChunkedBufferDelay === "function") {
+						session.refreshChunkedBufferDelay();
+					}
+				} catch (e) {
+					errorlog(e);
+				}
 			}
 		}
 
@@ -9853,6 +10157,11 @@ async function main() {
 			} else {
 				session.slotmode = false;
 			}
+		}
+		if (("slotReservationsEnabled" in e.data || "reservedSlots" in e.data) && session.director && session.slotmode) {
+			var slotReservationsEnabled = "slotReservationsEnabled" in e.data ? !!e.data.slotReservationsEnabled : session.slotReservationsEnabled;
+			var reservedSlots = "reservedSlots" in e.data ? e.data.reservedSlots : session.reservedSlots;
+			setSlotReservationsState(slotReservationsEnabled, reservedSlots, false);
 		}
 
 		////////////  manual scale. Request a specific down-scaled resolution from a remote connection
@@ -9996,50 +10305,151 @@ async function main() {
 		window.onmessage = session.remoteInterfaceAPI;
 	}
 
+	var midiCaptureBindings = {};
+	var midiRoutingListenersAdded = false;
+	session.midiPlaybackOutputs = [];
+
+	function describeMIDIPorts(ports) {
+		return ports
+			.map(function (port, index) {
+				return index + 1 + ": " + (port.name || "Unnamed device");
+			})
+			.join(", ");
+	}
+
+	function resolveMIDIPorts(ports, selector, parameterName, portType) {
+		if (selector === false || selector === null || typeof selector === "undefined") {
+			return [];
+		}
+
+		if (selector === true) {
+			return ports.slice();
+		}
+
+		if (typeof selector === "number") {
+			if (selector >= 1 && selector <= ports.length) {
+				return [ports[selector - 1]];
+			}
+			console.warn(
+				"&" +
+					parameterName +
+					"=" +
+					selector +
+					" does not match an available MIDI " +
+					portType +
+					". Available devices: " +
+					(describeMIDIPorts(ports) || "none")
+			);
+			return [];
+		}
+
+		if (typeof selector === "string") {
+			var matches = ports.filter(function (port) {
+				return port && port.name === selector;
+			});
+
+			if (matches.length === 1) {
+				return matches;
+			}
+
+			if (matches.length > 1) {
+				console.warn("&" + parameterName + "=" + selector + " matches multiple MIDI " + portType + " devices; use an index instead.");
+			} else {
+				console.warn(
+					"&" +
+						parameterName +
+						"=" +
+						selector +
+						" does not match an available MIDI " +
+						portType +
+						". Available devices: " +
+						(describeMIDIPorts(ports) || "none")
+				);
+			}
+		}
+
+		return [];
+	}
+
+	function refreshMIDICaptureInputs() {
+		var selectedInputs = resolveMIDIPorts(WebMidi.inputs, session.midiOut, "midiout", "input");
+		var selectedInputIds = {};
+
+		selectedInputs.forEach(function (input, index) {
+			var inputId = String(input.id || input.name || index);
+			selectedInputIds[inputId] = true;
+			if (midiCaptureBindings[inputId]) {
+				return;
+			}
+
+			var handler = function (e) {
+				e.timestamp += WebMidi.timeStart;
+				sendRawMIDI(e);
+			};
+
+			try {
+				input.addListener("midimessage", handler);
+				midiCaptureBindings[inputId] = { input: input, handler: handler };
+			} catch (e) {
+				errorlog(e);
+			}
+		});
+
+		Object.keys(midiCaptureBindings).forEach(function (inputId) {
+			if (selectedInputIds[inputId]) {
+				return;
+			}
+
+			var binding = midiCaptureBindings[inputId];
+			try {
+				binding.input.removeListener("midimessage", binding.handler);
+			} catch (e) {}
+			delete midiCaptureBindings[inputId];
+		});
+	}
+
+	function refreshMIDIPlaybackOutputs() {
+		session.midiPlaybackOutputs = resolveMIDIPorts(WebMidi.outputs, session.midiIn, "midiin", "output");
+	}
+
+	function initializeMIDIRouting() {
+		WebMidi.timeStart = performance.timeOrigin || Date.now() - performance.now();
+
+		if (!midiRoutingListenersAdded) {
+			WebMidi.addListener("connected", function (e) {
+				log(e);
+				if (typeof session.midiOut === "string") {
+					refreshMIDICaptureInputs();
+				}
+				if (typeof session.midiIn === "string") {
+					refreshMIDIPlaybackOutputs();
+				}
+			});
+
+			WebMidi.addListener("disconnected", function (e) {
+				log(e);
+				if (typeof session.midiOut === "string") {
+					refreshMIDICaptureInputs();
+				}
+				if (typeof session.midiIn === "string") {
+					refreshMIDIPlaybackOutputs();
+				}
+			});
+			midiRoutingListenersAdded = true;
+		}
+
+		refreshMIDICaptureInputs();
+		refreshMIDIPlaybackOutputs();
+		console.log(WebMidi.inputs);
+		console.log(WebMidi.outputs);
+	}
+
 	if (session.midiHotkeys || session.midiOut !== false) {
 		var script = document.createElement("script");
 		script.onload = function () {
 			WebMidi.enable({ sysex: true })
 				.then(() => {
-					WebMidi.timeStart = Date.now(); // start time
-
-					WebMidi.addListener("connected", function (e) {
-						log(e);
-					});
-
-					WebMidi.addListener("disconnected", function (e) {
-						log(e);
-					});
-
-					console.log(WebMidi.inputs);
-
-					if (session.midiOut === true) {
-						for (var i = 0; i < WebMidi.inputs.length; i++) {
-							try {
-								var input = WebMidi.inputs[i];
-								input.addListener("midimessage", function (e) {
-									//log(e);
-									e.timestamp += WebMidi.timeStart;
-									sendRawMIDI(e);
-									//var msg = {};
-									//msg.midi = {};
-									//msg.midi.d = e.data; aka [d1,d2,d3];
-									//msg.midi.c = e.channel;
-									//msg.midi.s = e.timestamp;
-								});
-							} catch (e) {}
-						}
-					} else if (session.midiOut == parseInt(session.midiOut)) {
-						try {
-							var input = WebMidi.inputs[parseInt(session.midiOut) - 1];
-							input.addListener("midimessage", function (e) {
-								e.timestamp += WebMidi.timeStart;
-								sendRawMIDI(e);
-							});
-						} catch (e) {
-							errorlog(e);
-						}
-					}
+					initializeMIDIRouting();
 
 					for (var i = 0; i < WebMidi.inputs.length; i++) {
 						if (session.midiDevice && session.midiDevice !== i + 1) {
@@ -10080,7 +10490,7 @@ async function main() {
 		script.src = "./thirdparty/webmidi3.js"; // dynamically load this only if its needed. Keeps loading time down.
 		script.onload = function () {
 			WebMidi.enable({ sysex: true })
-				.then(() => console.log(WebMidi.outputs))
+				.then(() => initializeMIDIRouting())
 				.catch(errorlog);
 		};
 		document.head.appendChild(script);
@@ -10620,6 +11030,7 @@ async function main() {
 					log(registrations);
 					for (let registration of registrations) {
 						if (registration.scope) {
+							if (urlParams.has("keepsw")) {continue;}
 							if (registration.scope.includes("/notifications/")) {continue;}
 							registration.unregister();
 							console.warn("unregistering: " + registration.scope);
@@ -10650,12 +11061,17 @@ async function main() {
 						}
 					}
 				}
-				session.hangup();
+				session.hangup(false, false, true);
 			} catch (e) {
 				errorlog(e);
 			}
 			try {
 				downloadSessionLog();
+			} catch (e) {}
+			// Last-second critical errors are best effort, after existing cleanup.
+			// Also covers cleanup throwing before hangup reaches its report calls.
+			try {
+				if (typeof session.flushQosCriticalReport === "function") session.flushQosCriticalReport();
 			} catch (e) {}
 		});
 
@@ -10666,9 +11082,9 @@ async function main() {
 			document.head.appendChild(script);
 			if (SafariVersion && SafariVersion <= 15) {
 				// blob mode not needed since iOS 15.6
-				script.src = "./thirdparty/StreamSaver_legacy.js?v=2"; // blob mode for Safari
+				script.src = "./thirdparty/StreamSaver_legacy.js?v=4"; // blob mode for Safari
 			} else {
-				script.src = "./thirdparty/StreamSaver.js?v=29"; // do not use blob mode
+				script.src = "./thirdparty/StreamSaver.js?v=31";
 			}
 		};
 		script.src = "./thirdparty/polyfill.min.js"; // dynamically load this only if its needed. Keeps loading time down.

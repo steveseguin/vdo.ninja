@@ -372,43 +372,100 @@
 	.updated {
 		animation: highlight 1s;
 	}
+	#sceneBroadcastModal .modal-content{
+		box-sizing: border-box;
+		max-width: 720px;
+		width: calc(100% - 32px);
+	}
+	#sceneBroadcastModal .scene-broadcast-intro{
+		line-height: 1.45;
+		margin: 0 0 14px;
+	}
 	#sceneBroadcastTools{
-		width: 92%;
-		margin: 10px auto;
-		padding: 10px;
-		border-radius: 10px;
-		border: 1px solid rgba(255, 255, 255, 0.12);
-		background: rgba(46, 68, 92, 0.35);
-		box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+		background: #f8f9fa;
+		border: 1px solid #cfd5dc;
+		border-radius: var(--border-radius);
+		box-sizing: border-box;
+		margin: 12px 0 16px;
+		padding: 16px;
+		width: 100%;
 	}
 	#sceneBroadcastTools label{
+		color: var(--text-color);
 		display: block;
 		font-size: 0.9em;
-		margin: 6px 0 2px;
-		text-transform: uppercase;
-		letter-spacing: 0.04em;
-		color: #f1f1f1;
+		font-weight: 600;
+		margin: 0 0 4px;
 	}
 	#sceneBroadcastTools select,
 	#sceneBroadcastTools input{
-		width: 100%;
+		background: #fff;
+		border: 1px solid #aeb6c0;
+		border-radius: 4px;
 		box-sizing: border-box;
-		margin: 4px 0 6px;
+		color: var(--text-color);
+		font: inherit;
+		margin: 0 0 14px;
+		padding: 8px 10px;
+		width: 100%;
+	}
+	#sceneBroadcastTools select:focus,
+	#sceneBroadcastTools input:focus{
+		border-color: var(--accent-color);
+		box-shadow: 0 0 0 2px rgba(74, 137, 220, 0.2);
+		outline: none;
 	}
 	.sceneBroadcastActions{
 		display: flex;
-		flex-wrap: wrap;
 		gap: 10px;
-		margin-top: 6px;
+		margin-top: 16px;
 	}
 	.sceneBroadcastActions button{
-		flex: 1 1 160px;
+		flex: 1 1 0;
+		margin: 0;
+		width: auto;
 	}
-	#sceneBroadcastHelp{
+	#sceneBroadcastModal .sceneBroadcastActions button:first-child{
+		background: var(--accent-color);
+		color: #fff;
+	}
+	#sceneBroadcastModal .sceneBroadcastActions button:first-child:hover{
+		background: var(--accent-hover);
+	}
+	#sceneBroadcastHelp,
+	#sceneBroadcastStatus{
+		color: #555;
 		display: block;
-		margin-top: 4px;
 		font-size: 0.85em;
-		color: #d7e9ff;
+		line-height: 1.4;
+	}
+	#sceneBroadcastStatus{
+		margin-top: 10px;
+		min-height: 1.4em;
+	}
+	#sceneBroadcastModal button.scene-broadcast-close{
+		display: block;
+		font-size: 1em;
+		margin-left: auto;
+	}
+	@media (max-width: 600px){
+		#sceneBroadcastModal{
+			padding-top: 16px;
+		}
+		#sceneBroadcastModal .modal-content{
+			margin-bottom: 24px;
+			padding: 16px;
+			width: calc(100% - 24px);
+		}
+		#sceneBroadcastTools{
+			padding: 12px;
+		}
+		.sceneBroadcastActions{
+			flex-direction: column;
+		}
+		.sceneBroadcastActions button{
+			width: 100%;
+		}
 	}
 	 
 	::-webkit-scrollbar-track {
@@ -585,6 +642,7 @@
 	.fadeout {
 		visibility: hidden;
 		opacity: 0;
+		pointer-events: none;
 		transition: visibility 0s 0.5s, opacity 0.5s linear;
 	}
 	.fade2black{
@@ -625,6 +683,71 @@
 		height: 1.7em;
 		cursor: crosshair;
 		border: 1px solid black;
+	}
+	#col1 > [data-slot].slot-reserved {
+		outline: 2px solid rgba(255, 255, 255, 0.8);
+		outline-offset: -3px;
+		position: relative;
+	}
+	#col1 > [data-slot].slot-reserved::after {
+		content: "\1F512";
+		font-size: 11px;
+		pointer-events: none;
+		position: absolute;
+		right: 4px;
+		top: 3px;
+	}
+	.slot-reservation-setting {
+		margin-top: 8px;
+	}
+	.slot-reservation-setting button {
+		margin-left: 8px;
+	}
+	.slot-reservation-list {
+		border: 1px solid #bbb;
+		border-radius: var(--border-radius);
+		margin: 12px 0;
+	}
+	.slot-reservation-empty,
+	.slot-reservation-row {
+		padding: 10px;
+	}
+	.slot-reservation-row {
+		align-items: center;
+		border-bottom: 1px solid #c8c8c8;
+		display: flex;
+		flex-wrap: wrap;
+		gap: 10px;
+	}
+	.slot-reservation-row:last-child {
+		border-bottom: 0;
+	}
+	.slot-reservation-slot {
+		font-weight: bold;
+		min-width: 55px;
+	}
+	.slot-reservation-id {
+		flex: 1;
+		overflow-wrap: anywhere;
+	}
+	.slot-reservation-status {
+		color: #555;
+		min-width: 90px;
+	}
+	.slot-reservation-add {
+		align-items: end;
+		display: flex;
+		flex-wrap: wrap;
+		gap: 10px;
+	}
+	.slot-reservation-add label {
+		display: flex;
+		flex-direction: column;
+		gap: 4px;
+	}
+	.slot-reservation-add input[type="text"] {
+		max-width: 100%;
+		width: 320px;
 	}
 	.col {
 		width: 130px;
@@ -775,6 +898,12 @@
 		border-radius: 6px;
 		cursor:pointer;
 		text-align: center;
+	}
+	#sources > .menuButton,
+	#sources > a {
+		width: 92%;
+		box-sizing: border-box;
+		margin: 4px;
 	}
 	
 	[title]{
@@ -1493,6 +1622,11 @@
 			
 			<h3>Slot assignment</h3>
 			<input type="checkbox" title="A guest is assigned a slot when they join, automatically. If disabled, they must be assigned a slot manually." id="assignSlotToGuest" checked onchange="submitChange2(this)";>Assign a slot to new guests automatically
+			<div class="slot-reservation-setting">
+				<input type="checkbox" title="Reserved slots remain available only to their assigned stream IDs." id="reserveSlots" onchange="submitSlotReservationChange(this)";>Keep selected slots reserved for returning guests
+				<button type="button" id="manageSlotReservations" onclick="openSlotReservationModal()" disabled>Manage reserved slots</button><br />
+				<small>Reservations use stream IDs and do not require a guest-side slot parameter.</small>
+			</div>
 			<h3>Show advanced controls</h3>
 			<input type="checkbox" title="Shows more director control options" id="advancedMode" onchange="toggleAdvanced(this)";>Show the advanced director control options
 			<h3>Show director</h3>
@@ -1508,6 +1642,26 @@
 			<h3>📥 Import settings </h3>
 			Import scenes and settings from local file:<br /><input type="file" accept=".json" onchange="importSession(event);"/><br /><br />
 			<button class='close-btn'>Close Settings</button>
+		</div>
+	</div>
+	<div id="slotReservationModal" class="hidden modal">
+		<div class="modal-content">
+			<span class="close-btn">&times;</span>
+			<h2>Reserved Slots</h2>
+			<p>Reserved slots stay empty for other guests and are reclaimed automatically by the matching stream ID.</p>
+			<div id="slotReservationList" class="slot-reservation-list"></div>
+			<h3>Reserve a slot</h3>
+			<div class="slot-reservation-add">
+				<label>Slot
+					<input type="number" id="slotReservationNumber" min="1" max="100" step="1" />
+				</label>
+				<label>Stream ID
+					<input type="text" id="slotReservationStreamID" maxlength="256" placeholder="camera_alice" />
+				</label>
+				<button type="button" onclick="addSlotReservation()">Reserve Slot</button>
+			</div>
+			<p id="slotReservationStatus" aria-live="polite"></p>
+			<button class="close-btn">Close</button>
 		</div>
 	</div>
 	<div id='roomSettings' class="hidden modal">
@@ -1585,10 +1739,10 @@
 	<div id="sceneBroadcastModal" class="hidden modal">
 		<div class="modal-content">
 			<span class="close-btn">&times;</span>
-			<h2>Scene Output Options</h2>
-			<p>Select how you want to restream the active layout, then open or copy the generated URL.</p>
+			<h2>More Scene Outputs</h2>
+			<p class="scene-broadcast-intro">Create a reusable WHIP output link, use a managed destination, or record the active layout.</p>
 			<div id="sceneBroadcastToolsHost"></div>
-			<button class="close-btn">Close</button>
+			<button class="close-btn scene-broadcast-close">Close</button>
 		</div>
 	</div>
 	<div class="gone" >
@@ -1756,6 +1910,8 @@
 	var lastLayoutRaw = false;
 	var updateOnSlotChange = true;
 	var assignSlotToGuest = true;
+	var slotReservationsEnabled = false;
+	var reservedSlots = {};
 	var toggleLabel = false;
 	var toggleBroadcast = false;
 	var toggleEchoInvite = false;
@@ -1776,20 +1932,12 @@
 	// Scene broadcast presets for Meshcast/WHIP/CDN outputs so the mixer can stream layouts without OBS.
 	var sceneBroadcastProfiles = {
 		"standard": {
-			label: "WHIP prompt (configure in viewer)",
+			label: "WHIP publisher prompt",
 			requiresValue: false,
-			showToken: true,
-			tokenLabel: "WHIP token (optional)",
-			tokenPlaceholder: "Paste stream key (optional)",
-			help: "Opens the scene viewer with WHIP controls so you can paste any ingest URL manually.",
+			showToken: false,
+			help: "Enter the WHIP endpoint and optional bearer token in the publisher window.",
 			buildExtras: function(opts){
-				var extras = "&whippush";
-				if (opts && opts.token){
-					extras += "&whippushtoken="+encodeURIComponent(opts.token);
-				} else {
-					extras += "&whippushtoken";
-				}
-				return extras;
+				return "&whippush&whippushtoken";
 			}
 		},
 		"meshcast": {
@@ -1798,6 +1946,7 @@
 			showToken: true,
 			tokenLabel: "Meshcast code (optional)",
 			tokenPlaceholder: "Optional access code",
+			tokenType: "password",
 			help: "Restream the active layout to Meshcast so viewers can subscribe without OBS or virtual cams.",
 			buildExtras: function(opts){
 				var extras = "&meshcast";
@@ -1813,9 +1962,11 @@
 			valueLabel: "MediaMTX host",
 			valuePlaceholder: "mediamtx.example.com[:port]",
 			showToken: true,
-			tokenLabel: "WHIP token (optional)",
+			tokenLabel: "Bearer token (optional)",
 			tokenPlaceholder: "Authorization token (optional)",
-			help: "Send the layout to your own MediaMTX deployment via WHIP.",
+			tokenType: "password",
+			bearerToken: true,
+			help: "Send the layout to your own MediaMTX deployment. Bearer tokens are passed only to opened publisher windows and are never copied into links.",
 			buildExtras: function(opts){
 				if (!opts || !opts.value){
 					return false;
@@ -1842,14 +1993,16 @@
 			}
 		},
 		"custom": {
-			label: "Custom WHIP endpoint",
+			label: "Custom WHIP output link",
 			requiresValue: true,
-			valueLabel: "WHIP URL",
-			valuePlaceholder: "https://example.com/live",
+			valueLabel: "WHIP endpoint URL",
+			valuePlaceholder: "https://example.com/live/whip",
 			showToken: true,
-			tokenLabel: "WHIP token (optional)",
-			tokenPlaceholder: "Stream key (optional)",
-			help: "Point the layout at any WHIP/SFU/CDN by pasting its endpoint here.",
+			tokenLabel: "Bearer token (optional)",
+			tokenPlaceholder: "Authorization token (optional)",
+			tokenType: "password",
+			bearerToken: true,
+			help: "Point the layout at any WHIP/SFU/CDN. Bearer tokens are passed only to opened publisher windows and are never copied into links.",
 			buildExtras: function(opts){
 				if (!opts || !opts.value){
 					return false;
@@ -1869,6 +2022,7 @@
 			showToken: true,
 			tokenLabel: "Bitrate in kbps (optional)",
 			tokenPlaceholder: "6000",
+			tokenType: "number",
 			help: "Record the scene directly to your local disk. Click the record button in the opened window to start/stop.",
 			buildExtras: function(opts){
 				var extras = "&recordwindow";
@@ -1879,7 +2033,7 @@
 			}
 		}
 	};
-	var sceneBroadcastProfileOrder = ["standard","meshcast","mediamtx","cloudflare","custom","record"];
+	var sceneBroadcastProfileOrder = ["custom","meshcast","mediamtx","cloudflare","record"];
 	
 	
 	var aspectRatio = 16/9.0;
@@ -2298,6 +2452,7 @@
 		for (var i=0;i<eles.length;i++){
 			eles[i].style.boxShadow = "unset";
 		}
+		updateSlotReservationDisplay();
 	}
 	
 	function dragenter(event) {
@@ -2354,6 +2509,7 @@
 		for (var i=0;i<eles.length;i++){
 			eles[i].style.boxShadow = "unset";
 		}
+		updateSlotReservationDisplay();
 		
 		if (ev.target.id == "delete"){
 			if (origThing.classList.contains("disconnected")){
@@ -2381,10 +2537,10 @@
 					var origThing = ev.target;
 					if (origThing.parentNode.id == "col1"){return;}
 					ev.preventDefault();
-					var target = document.querySelector("[data-slot][class='empty']:not([class='hidden'])");
+					var target = document.querySelector("[data-slot].empty:not(.hidden)");
 					if (!target){
 						ensureSlotPlaceholders(slotsNeeded + 1);
-						target = document.querySelector("[data-slot][class='empty']:not([class='hidden'])");
+						target = document.querySelector("[data-slot].empty:not(.hidden)");
 					}
 					if (!target){
 						warnlog("No available slot placeholder to assign stream.");
@@ -2431,6 +2587,7 @@
 						//target.classList.remove("empty");
 						origThing.style.backgroundColor = target.style.backgroundColor;
 					}
+					updateSlotReservationDisplay();
 				};
 				thing.addEventListener("dragstart", drag);
 				
@@ -2467,6 +2624,7 @@
 			  });
 			document.getElementById("sid_"+autoadd).dispatchEvent(event);
 		}
+		updateSlotReservationDisplay();
 	}
 	
 	var colors = [
@@ -2577,6 +2735,214 @@
 		if (slotValue > slotsNeeded){
 			slotsNeeded = slotValue;
 		}
+	}
+
+	function normalizeMixerSlotReservations(reservations){
+		var normalized = {};
+		if (!reservations || typeof reservations !== "object"){
+			return normalized;
+		}
+		Object.keys(reservations).forEach(function(slot){
+			var slotNumber = parseInt(slot);
+			var streamID = reservations[slot];
+			if (!isFinite(slotNumber) || slotNumber < 1 || slotNumber > 100 || streamID === null || streamID === undefined){
+				return;
+			}
+			streamID = String(streamID).trim();
+			if (!streamID || streamID.length > 256){
+				return;
+			}
+			Object.keys(normalized).forEach(function(reservedSlot){
+				if (normalized[reservedSlot] === streamID){
+					delete normalized[reservedSlot];
+				}
+			});
+			normalized[slotNumber] = streamID;
+		});
+		return normalized;
+	}
+
+	function updateSlotReservationDisplay(){
+		if (slotReservationsEnabled){
+			Object.keys(reservedSlots).forEach(function(slot){
+				ensureSlotPlaceholder(parseInt(slot));
+			});
+		}
+		document.querySelectorAll("#col1 > [data-slot]").forEach(function(element){
+			var slot = parseInt(element.dataset.slot);
+			var streamID = slotReservationsEnabled ? reservedSlots[slot] : false;
+			if (streamID){
+				if (!("slotReservationTitle" in element.dataset)){
+					element.dataset.slotReservationTitle = element.title || "";
+				}
+				element.classList.add("slot-reserved");
+				element.title = "Slot " + slot + " is reserved for " + streamID;
+			} else {
+				element.classList.remove("slot-reserved");
+				if ("slotReservationTitle" in element.dataset){
+					element.title = element.dataset.slotReservationTitle;
+					delete element.dataset.slotReservationTitle;
+				}
+			}
+		});
+	}
+
+	function syncSlotReservations(){
+		if (!iframe || !iframe.contentWindow){
+			return;
+		}
+		iframe.contentWindow.postMessage({
+			slotReservationsEnabled: slotReservationsEnabled,
+			reservedSlots: reservedSlots
+		}, "*");
+	}
+
+	function updateSlotReservationControls(){
+		var checkbox = document.getElementById("reserveSlots");
+		var button = document.getElementById("manageSlotReservations");
+		if (checkbox){
+			checkbox.checked = slotReservationsEnabled;
+		}
+		if (button){
+			button.disabled = !slotReservationsEnabled;
+		}
+		updateSlotReservationDisplay();
+	}
+
+	function setSlotReservationStatus(message){
+		var status = document.getElementById("slotReservationStatus");
+		if (status){
+			status.innerText = message || "";
+		}
+	}
+
+	function getConnectedReservationSlot(streamID){
+		if (!guestPositions){
+			return false;
+		}
+		for (var slot in guestPositions){
+			if (guestPositions[slot] === streamID){
+				return parseInt(slot);
+			}
+		}
+		return false;
+	}
+
+	function renderSlotReservations(){
+		var list = document.getElementById("slotReservationList");
+		if (!list){
+			return;
+		}
+		list.innerHTML = "";
+		var slots = Object.keys(reservedSlots).map(function(slot){ return parseInt(slot); }).filter(function(slot){ return !!slot; }).sort(function(a, b){ return a - b; });
+		if (!slots.length){
+			var empty = document.createElement("div");
+			empty.className = "slot-reservation-empty";
+			empty.innerText = "No slots are reserved.";
+			list.appendChild(empty);
+			return;
+		}
+
+		slots.forEach(function(slot){
+			var streamID = reservedSlots[slot];
+			var connectedSlot = getConnectedReservationSlot(streamID);
+			var row = document.createElement("div");
+			row.className = "slot-reservation-row";
+			var slotLabel = document.createElement("span");
+			slotLabel.className = "slot-reservation-slot";
+			slotLabel.innerText = "Slot " + slot;
+			var idLabel = document.createElement("span");
+			idLabel.className = "slot-reservation-id";
+			idLabel.innerText = streamID;
+			var status = document.createElement("span");
+			status.className = "slot-reservation-status";
+			status.innerText = connectedSlot === slot ? "Connected" : connectedSlot ? "In Slot " + connectedSlot : "Waiting";
+			var clearButton = document.createElement("button");
+			clearButton.type = "button";
+			clearButton.innerText = "Clear";
+			clearButton.onclick = function(){ clearSlotReservation(slot); };
+			row.appendChild(slotLabel);
+			row.appendChild(idLabel);
+			row.appendChild(status);
+			row.appendChild(clearButton);
+			list.appendChild(row);
+		});
+	}
+
+	function applyMixerSlotReservations(reservations, syncDirector){
+		reservedSlots = normalizeMixerSlotReservations(reservations);
+		updateSlotReservationControls();
+		renderSlotReservations();
+		if (syncDirector !== false){
+			syncSlotReservations();
+		}
+	}
+
+	function submitSlotReservationChange(element){
+		slotReservationsEnabled = !!element.checked;
+		updateSlotReservationControls();
+		renderSlotReservations();
+		syncSlotReservations();
+		saveSession();
+	}
+
+	function openSlotReservationModal(){
+		if (!slotReservationsEnabled){
+			return;
+		}
+		renderSlotReservations();
+		setSlotReservationStatus("");
+		document.getElementById("slotReservationModal").classList.remove("hidden");
+	}
+
+	function addSlotReservation(){
+		var slotInput = document.getElementById("slotReservationNumber");
+		var streamInput = document.getElementById("slotReservationStreamID");
+		var slot = slotInput ? parseInt(slotInput.value) : 0;
+		var streamID = streamInput ? streamInput.value.trim() : "";
+		if (!slot || slot < 1 || slot > 100){
+			setSlotReservationStatus("Enter a slot number from 1 to 100.");
+			return;
+		}
+		if (!streamID){
+			setSlotReservationStatus("Enter the stream ID that should own this slot.");
+			return;
+		}
+		if (guestPositions[slot] && guestPositions[slot] !== streamID){
+			setSlotReservationStatus("Slot " + slot + " is currently assigned to another stream.");
+			return;
+		}
+		var connectedSlot = getConnectedReservationSlot(streamID);
+		if (connectedSlot && connectedSlot !== slot){
+			setSlotReservationStatus("This stream is connected in Slot " + connectedSlot + ". Move it before reserving another slot.");
+			return;
+		}
+		if (reservedSlots[slot] && reservedSlots[slot] !== streamID){
+			setSlotReservationStatus("Clear the existing Slot " + slot + " reservation first.");
+			return;
+		}
+		Object.keys(reservedSlots).forEach(function(reservedSlot){
+			if (reservedSlots[reservedSlot] === streamID){
+				delete reservedSlots[reservedSlot];
+			}
+		});
+		reservedSlots[slot] = streamID;
+		applyMixerSlotReservations(reservedSlots, true);
+		setSlotReservationStatus("Slot " + slot + " is now reserved for " + streamID + ".");
+		if (slotInput){ slotInput.value = ""; }
+		if (streamInput){ streamInput.value = ""; }
+		saveSession();
+	}
+
+	function clearSlotReservation(slot){
+		slot = parseInt(slot);
+		if (!slot || !(slot in reservedSlots)){
+			return;
+		}
+		delete reservedSlots[slot];
+		applyMixerSlotReservations(reservedSlots, true);
+		setSlotReservationStatus("Slot " + slot + " is no longer reserved.");
+		saveSession();
 	}
 
 	function getUsedWidgetSlots(){
@@ -2731,6 +3097,11 @@
 				getById("assignSlotToGuest").checked = true;
 			}
 		}
+		slotReservationsEnabled = !!(savedSession.settings && savedSession.settings.slotReservationsEnabled);
+		reservedSlots = normalizeMixerSlotReservations(savedSession.reservedSlots || {});
+		updateSlotReservationControls();
+		renderSlotReservations();
+		syncSlotReservations();
 		if (savedSession.settings && ("toggleLabel" in savedSession.settings)){
 			toggleLabel = savedSession.settings.toggleLabel;
 			if (!toggleLabel){
@@ -3065,6 +3436,7 @@
 				var yes = confirm("Are you sure? This will clear the current session");
 				if (!yes){return;}
 				savedSession = obj;
+				applySettings();
 				document.getElementById("containermenu").innerHTML = "";
 				drawAddNewLayout2();
 				drawAddNewLayout3();
@@ -3076,6 +3448,7 @@
 						drawLayout(savedSession.layouts[i]);
 					}
 				}
+				saveSession();
 				alert("The saved session has been imported and loaded.");
 			} else {
 				alert("File contains no valid session information");
@@ -3382,6 +3755,9 @@
 		} else {
 			additional2+="&slotmode=2";
 		}
+		if (slotReservationsEnabled){
+			additional2 += "&slotreserve=1&reservedslots=" + encodeURIComponent(JSON.stringify(reservedSlots));
+		}
 		
 	
 		if (!advancedMode){
@@ -3571,20 +3947,30 @@
 		a.onclick = function(evt){copyFunction(this, evt);};
 		document.getElementById("sources").appendChild(a);
 		
+		var whipButton = document.createElement("button");
+		whipButton.innerHTML = "Publish WHIP";
+		whipButton.id = "publishWhip";
+		whipButton.classList.add("menuButton");
+		whipButton.title = "Publish the active scene to a WHIP ingest endpoint";
+		whipButton.onclick = function(){
+			var sceneURL = getSceneBroadcastBaseURL();
+			if (!sceneURL){
+				return;
+			}
+			openSceneOutputWindow(sceneURL+"&whippush&whippushtoken", false, "whipOutputWindow");
+		};
+		document.getElementById("sources").appendChild(whipButton);
 		
 		var button = document.createElement("button");
 		button.innerHTML = "Publish to Twitch";
 		button.id = "publishTwitch";
 		button.classList.add("menuButton");
 		button.onclick = function(){
-			var URL = window.location.href.split("/");
-			URL.pop();
-			URL = URL.join("/");
-			URL+="/?scene=0&layout&remote&room="+roomname+additional;
-			URL+="&cleanviewer&chroma=000&ssar=landscape&nosettings&prefercurrenttab&showlabels&selfbrowsersurface=include&displaysurface=browser&np&nopush&publish&whippush=twitch&quality=1&whippushtoken&screenshareaspectratio="+aspectRatio+"&locked="+aspectRatio;
-			var win = window.open( URL ,'targetWindow', 'toolbar=no,location=no,status=no,scaling=no,menubar=no,scrollbars=no,resizable=no,width=1280,height=720');
-			win.focus();
-			win.resizeTo(1280,720);
+			var URL = getSceneBroadcastBaseURL();
+			if (!URL){
+				return;
+			}
+			openSceneOutputWindow(URL+"&whippush=twitch&whippushtoken", false, "twitchOutputWindow");
 		};
 		document.getElementById("sources").appendChild(button);
 
@@ -3605,7 +3991,7 @@
 		document.getElementById("sources").appendChild(recordButton);
 
 		var sceneBroadcastButton = document.createElement("button");
-		sceneBroadcastButton.innerHTML = "Scene Output Options";
+		sceneBroadcastButton.innerHTML = "More Outputs";
 		sceneBroadcastButton.classList.add("menuButton");
 		sceneBroadcastButton.onclick = function(){
 			openSceneBroadcastModal();
@@ -3636,6 +4022,9 @@
 		}
 		
 		document.getElementById("chatModule").classList.remove("hidden");
+		if (window.innerWidth <= 700){
+			toggleChat();
+		}
 		
 		iframe.onload = function(){
 			if (remoteSyncOBS){
@@ -3643,6 +4032,7 @@
 			} else {
 				iframe.contentWindow.postMessage({ layouts: savedSession.layouts }, "*"); 
 			}
+			syncSlotReservations();
 		}
 		
 		iframe.src = iframesrc;
@@ -3716,6 +4106,14 @@
 					if (updateOnSlotChange){
 						remoteActivate(false, lastLayoutRaw);
 					}
+					updateSlotReservationDisplay();
+					renderSlotReservations();
+				}
+
+				if (e.data.action === "slot-reservations" && e.data.value){
+					slotReservationsEnabled = !!e.data.value.enabled;
+					applyMixerSlotReservations(e.data.value.slots || {}, false);
+					saveSession();
 				}
 			
 				if (e.data.action === "layout-updated"){
@@ -3830,6 +4228,8 @@
 						if (updateOnSlotChange){
 							remoteActivate(false, lastLayoutRaw);
 						}
+						updateSlotReservationDisplay();
+						renderSlotReservations();
 					}
 				}
 				
@@ -5079,7 +5479,7 @@
 		sceneBroadcastTools.id = "sceneBroadcastTools";
 
 		var sceneBroadcastTargetLabel = document.createElement("label");
-		sceneBroadcastTargetLabel.innerText = "Scene Broadcast Target";
+		sceneBroadcastTargetLabel.innerText = "Output destination";
 		sceneBroadcastTargetLabel.htmlFor = "sceneBroadcastTarget";
 		sceneBroadcastTools.appendChild(sceneBroadcastTargetLabel);
 
@@ -5094,7 +5494,9 @@
 			opt.textContent = sceneBroadcastProfiles[key].label;
 			sceneBroadcastSelect.appendChild(opt);
 		});
-		sceneBroadcastSelect.onchange = updateSceneBroadcastInputs;
+		sceneBroadcastSelect.onchange = function(){
+			updateSceneBroadcastInputs(true);
+		};
 		sceneBroadcastTools.appendChild(sceneBroadcastSelect);
 
 		var sceneBroadcastValueWrapper = document.createElement("div");
@@ -5117,7 +5519,7 @@
 		sceneBroadcastTokenLabel.htmlFor = "sceneBroadcastToken";
 		sceneBroadcastTokenWrapper.appendChild(sceneBroadcastTokenLabel);
 		var sceneBroadcastTokenInput = document.createElement("input");
-		sceneBroadcastTokenInput.type = "text";
+		sceneBroadcastTokenInput.type = "password";
 		sceneBroadcastTokenInput.id = "sceneBroadcastToken";
 		sceneBroadcastTokenWrapper.appendChild(sceneBroadcastTokenInput);
 		sceneBroadcastTools.appendChild(sceneBroadcastTokenWrapper);
@@ -5126,30 +5528,33 @@
 		sceneBroadcastHelp.id = "sceneBroadcastHelp";
 		sceneBroadcastTools.appendChild(sceneBroadcastHelp);
 
+		var sceneBroadcastStatus = document.createElement("small");
+		sceneBroadcastStatus.id = "sceneBroadcastStatus";
+		sceneBroadcastStatus.setAttribute("aria-live", "polite");
+		sceneBroadcastTools.appendChild(sceneBroadcastStatus);
+
 		var sceneBroadcastActions = document.createElement("div");
 		sceneBroadcastActions.classList.add("sceneBroadcastActions");
 
 		var sceneBroadcastOpen = document.createElement("button");
 		sceneBroadcastOpen.classList.add("menuButton");
-		sceneBroadcastOpen.innerHTML = "Open Scene Output";
+		sceneBroadcastOpen.innerHTML = "Open Output Window";
 		sceneBroadcastOpen.onclick = function(){
 			var sceneURL = buildSceneBroadcastURL();
 			if (!sceneURL){
 				return;
 			}
-			var win = window.open(sceneURL ,'targetWindow', 'toolbar=no,location=no,status=no,scaling=no,menubar=no,scrollbars=no,resizable=no,width=1280,height=720');
-			if (win){
-				win.focus();
-				win.resizeTo(1280,720);
-			} else {
-				alert("Pop-up blocked. Please allow pop-ups for this site.");
-			}
+			var profile = getSceneBroadcastProfile();
+			var tokenInput = document.getElementById("sceneBroadcastToken");
+			var bearerToken = profile && profile.bearerToken && tokenInput ? tokenInput.value.trim() : false;
+			setSceneBroadcastStatus("");
+			openSceneOutputWindow(sceneURL, bearerToken, "targetWindow");
 		};
 		sceneBroadcastActions.appendChild(sceneBroadcastOpen);
 
 		var sceneBroadcastCopy = document.createElement("button");
 		sceneBroadcastCopy.classList.add("menuButton");
-		sceneBroadcastCopy.innerHTML = "Copy Scene Output Link";
+		sceneBroadcastCopy.innerHTML = "Copy Output Link";
 		sceneBroadcastCopy.onclick = function(evt){
 			var sceneURL = buildSceneBroadcastURL();
 			if (!sceneURL){
@@ -5159,6 +5564,13 @@
 			if (holder){
 				holder.value = sceneURL;
 				copyToClipboard("sceneBroadcastLink", evt);
+				var profile = getSceneBroadcastProfile();
+				var tokenInput = document.getElementById("sceneBroadcastToken");
+				if (profile && profile.bearerToken && tokenInput && tokenInput.value.trim()){
+					setSceneBroadcastStatus("Bearer token excluded from the copied link. Use Open Output Window to pass it without placing it in the URL.");
+				} else {
+					setSceneBroadcastStatus("Output link copied.");
+				}
 			}
 		};
 		sceneBroadcastActions.appendChild(sceneBroadcastCopy);
@@ -5172,6 +5584,67 @@
 
 		host.appendChild(sceneBroadcastTools);
 		updateSceneBroadcastInputs();
+	}
+
+	function setSceneBroadcastStatus(message){
+		var status = document.getElementById("sceneBroadcastStatus");
+		if (status){
+			status.innerText = message || "";
+		}
+	}
+
+	function handoffSceneBroadcastToken(win, token, sceneURL, attempts){
+		if (!win || win.closed || !token){
+			return;
+		}
+		try {
+			var expectedURL = new URL(sceneURL, window.location.href).href;
+			if (win.location.href === expectedURL && win.session){
+				win.session.whipOutputToken = token;
+				var tokenInput = win.document.querySelector("#publishOutToken input[type='password']");
+				if (tokenInput){
+					tokenInput.value = token;
+				}
+				return;
+			}
+		} catch(e){}
+		if (attempts > 0){
+			setTimeout(function(){
+				handoffSceneBroadcastToken(win, token, sceneURL, attempts - 1);
+			}, 100);
+		}
+	}
+
+	function openSceneOutputWindow(sceneURL, bearerToken, windowName){
+		var win = window.open(sceneURL, windowName || "targetWindow", "toolbar=no,location=no,status=no,scaling=no,menubar=no,scrollbars=no,resizable=no,width=1280,height=720");
+		if (!win){
+			alert("Pop-up blocked. Please allow pop-ups for this site.");
+			return false;
+		}
+		if (bearerToken){
+			handoffSceneBroadcastToken(win, bearerToken, sceneURL, 100);
+		}
+		win.focus();
+		win.resizeTo(1280,720);
+		return win;
+	}
+
+	function getSceneOutputStyleParam(){
+		var css = "#publishSettings{background:#f8f9fa!important;border:1px solid #cfd5dc;bottom:auto!important;box-shadow:0 18px 50px #0008!important;box-sizing:border-box;font-weight:400!important;max-height:calc(100vh - 32px);max-width:calc(100% - 32px)!important;overflow-y:auto!important;top:50%!important;transform:translate(-50%,-50%)!important;width:680px!important;}";
+		css += "#publishSettings .promptModalInner{box-sizing:border-box;padding:24px;width:100%;}";
+		css += "#publishSettings h3{color:#000b3a;font-size:1.5em;margin:0 0 10px;}";
+		css += "#publishSettings small{display:block;font-weight:400;line-height:1.45;margin-bottom:18px;}";
+		css += "#publishSettings br{display:none;}";
+		css += "#publishSettings form{margin:0;}";
+		css += "#publishSettings #publishOutURL,#publishSettings #publishOutToken{margin-bottom:14px;}";
+		css += "#publishSettings #publishOutURL>span,#publishSettings #publishOutToken>span{display:block!important;font-weight:600;margin-bottom:5px;min-width:0!important;}";
+		css += "#publishSettings input{box-sizing:border-box;font:inherit;margin:0!important;padding:9px 10px;width:100%;}";
+		css += "#publishSettings #advanced,#publishSettings #advanced+div{display:flex!important;flex-wrap:wrap;gap:8px;margin:12px 0!important;}";
+		css += "#publishSettings select{font:inherit;margin:0;padding:8px;}";
+		css += "#publishSettings .gobutton{box-sizing:border-box;margin:18px 0 20px;padding:12px;width:100%;}";
+		css += "#publishSettings .promptModalInner>i{border-top:1px solid #d4d8dd;display:block;font-size:.85em;font-weight:400;padding-top:14px;}";
+		css += "@media(max-width:600px){#publishSettings .promptModalInner{padding:18px;}#publishSettings #advanced,#publishSettings #advanced+div{display:grid!important;grid-template-columns:1fr 1fr;}#publishSettings select{min-width:0;width:100%;}}";
+		return "&b64css="+encodeURIComponent(btoa(css));
 	}
 
 	function getSceneBroadcastBaseURL(){
@@ -5190,15 +5663,22 @@
 		sceneURL += "&cleanviewer&chroma=000&ssar=landscape&nosettings&showlabels&prefercurrenttab";
 		sceneURL += "&selfbrowsersurface=include&displaysurface=browser&np&nopush&publish";
 		sceneURL += "&quality=1&screenshareaspectratio="+aspectRatio+"&locked="+aspectRatio;
+		sceneURL += getSceneOutputStyleParam();
 		return sceneURL;
 	}
 
-	function updateSceneBroadcastInputs(){
+	function updateSceneBroadcastInputs(resetValues){
 		initSceneBroadcastTools();
 		var profile = getSceneBroadcastProfile();
 		var valueWrapper = document.getElementById("sceneBroadcastValueWrapper");
 		var valueLabel = document.getElementById("sceneBroadcastValueLabel");
 		var valueInput = document.getElementById("sceneBroadcastValue");
+		var tokenInput = document.getElementById("sceneBroadcastToken");
+		if (resetValues){
+			if (valueInput){ valueInput.value = ""; }
+			if (tokenInput){ tokenInput.value = ""; }
+			setSceneBroadcastStatus("");
+		}
 		if (valueWrapper && valueInput){
 			if (profile.requiresValue){
 				valueWrapper.classList.remove("hidden");
@@ -5211,7 +5691,6 @@
 		}
 		var tokenWrapper = document.getElementById("sceneBroadcastTokenWrapper");
 		var tokenLabel = document.getElementById("sceneBroadcastTokenLabel");
-		var tokenInput = document.getElementById("sceneBroadcastToken");
 		if (tokenWrapper && tokenInput){
 			if (profile.showToken === false){
 				tokenWrapper.classList.add("hidden");
@@ -5220,6 +5699,7 @@
 				tokenWrapper.classList.remove("hidden");
 				tokenLabel.textContent = profile.tokenLabel || "Token (optional)";
 				tokenInput.placeholder = profile.tokenPlaceholder || "";
+				tokenInput.type = profile.tokenType || "text";
 			}
 		}
 		var help = document.getElementById("sceneBroadcastHelp");
@@ -5254,7 +5734,7 @@
 		}
 		var extras = profile.buildExtras({
 			value: value,
-			token: token
+			token: profile.bearerToken ? "" : token
 		});
 		if (extras === false){
 			return false;
@@ -6443,6 +6923,8 @@ function settings() {
 		savedSession.settings = {};
 		savedSession.settings.updateOnSlotChange = updateOnSlotChange;
 		savedSession.settings.assignSlotToGuest = assignSlotToGuest;
+		savedSession.settings.slotReservationsEnabled = slotReservationsEnabled;
+		savedSession.reservedSlots = normalizeMixerSlotReservations(reservedSlots);
 		savedSession.settings.toggleLabel = toggleLabel;
 		savedSession.settings.toggleBroadcast = toggleBroadcast;
 		savedSession.settings.obfuscateInvites = obfuscateInvites;

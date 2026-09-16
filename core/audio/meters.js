@@ -1,7 +1,7 @@
-import { levelBus } from '../events/level-bus.js';
+import { levelBus } from '../events/level-bus.js?v=20260911.1';
 
 const loadedWorklets = new WeakSet();
-const DEFAULT_WORKLET_URL = new URL('./meter.worklet.js', import.meta.url).toString();
+const DEFAULT_WORKLET_URL = new URL('./meter.worklet.js?v=20260911.1', import.meta.url).toString();
 
 async function ensureWorkletModule(audioContext, workletUrl = DEFAULT_WORKLET_URL) {
   if (loadedWorklets.has(audioContext)) {

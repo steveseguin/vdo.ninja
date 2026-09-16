@@ -58,6 +58,8 @@ session.authStreamAssignLastStatus = null;
 session.authStreamAssignLastError = null;
 
 const AUTH_ACCESS_CACHE_TTL_MS = 5000;
+const AUTH_HEARTBEAT_INTERVAL_MS = 30000;
+let authHeartbeatTimer = null;
 
 function getAuthAccessCacheKey(roomIdOrAlias, isDirector) {
   return JSON.stringify({
@@ -359,6 +361,7 @@ function disableDirectorSSO() {
 
 // Sign out of SSO
 function ssoSignOut() {
+  stopAuthHeartbeat();
   session.authToken = null;
   session.authUser = null;
   session.authMode = false;
@@ -464,7 +467,7 @@ function showUserInfo(userInfo) {
   userDisplay.className = 'user-info-display';
 
   const img = document.createElement('img');
-  img.src = userInfo.avatar || './media/default-avatar.png';
+  img.src = userInfo.avatar || './media/avatar.webp';
   img.alt = userInfo.displayName || '';
 
   const details = document.createElement('div');
@@ -495,7 +498,11 @@ async function assignAuthStream(roomId = null, options = {}) {
   roomId = roomId || 'lobby';
   options = options || {};
   const roomScope = await getAuthRoomScope(roomId);
-  if (!session.authToken || (!options.force && session.authStreamAssigned && session.authStreamAssignedRoomId === roomId && session.authStreamAssignedRoomScope === roomScope)) return true;
+  if (!session.authToken) return true;
+  if (!options.force && session.authStreamAssigned && session.authStreamAssignedRoomId === roomId && session.authStreamAssignedRoomScope === roomScope) {
+    startAuthHeartbeat();
+    return true;
+  }
   
   try {
     const response = await fetch(`${AUTH_SERVICE_URL}/api/stream/assign`, {
@@ -529,6 +536,7 @@ async function assignAuthStream(roomId = null, options = {}) {
       
       // Update any UI showing stream ID
       updateStreamIDDisplay();
+      startAuthHeartbeat();
       return true;
     }
     const errorData = await response.json().catch(() => ({}));
@@ -1109,10 +1117,19 @@ async function decryptStreamId(encryptedId, key) {
 }
 
 // Heartbeat to keep stream active
+function stopAuthHeartbeat() {
+  if (authHeartbeatTimer !== null) {
+    clearInterval(authHeartbeatTimer);
+    authHeartbeatTimer = null;
+  }
+}
+
 function startAuthHeartbeat() {
-  if (!session.authToken || !session.streamID) return;
+  const activeStreamId = session.authStreamID || session.realStreamID || session.streamID;
+  if (!session.authToken || !activeStreamId) return false;
+  if (authHeartbeatTimer !== null) return true;
   
-  setInterval(async () => {
+  authHeartbeatTimer = setInterval(async () => {
     const streamId = session.authStreamID || session.realStreamID || session.streamID;
     if (session.authToken && streamId) {
       try {
@@ -1138,6 +1155,10 @@ function startAuthHeartbeat() {
         if (!response.ok) {
           const errorData = await response.json().catch(() => ({}));
           console.error('Heartbeat failed:', response.status, errorData);
+          if (response.status === 401) {
+            stopAuthHeartbeat();
+            return;
+          }
           if (response.status === 403 || response.status === 404) {
             clearAuthStreamAssignment();
             await assignAuthStream(roomId, { silent: response.status === 404 });
@@ -1147,7 +1168,8 @@ function startAuthHeartbeat() {
         console.error('Heartbeat failed:', e);
       }
     }
-  }, 30000); // Every 30 seconds
+  }, AUTH_HEARTBEAT_INTERVAL_MS);
+  return true;
 }
 
 async function ensureDirectorRoomRecord() {
@@ -1252,9 +1274,10 @@ function updateAllSoloLinks() {
       const match = baseUrl.match(/[?&]view=([^&]+)/);
       if (match && match[1]) {
         const streamId = match[1];
-        const soloLink = soloLinkGenerator(streamId, false);
+        const soloLink = soloLinkGenerator(streamId, true);
+        ele.setAttribute('value', soloLink);
         ele.href = soloLink;
-        ele.innerHTML = soloLink;
+        ele.innerText = soloLink;
       }
     }
   });

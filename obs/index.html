@@ -1146,6 +1146,7 @@
       let activeStreams = {}; 
       let obsScenes = []; 
       let requestCallbacks = {}; 
+      let requestSequence = 0;
       let vdoNinjaLastActivityTime = 0;
       let vdoNinjaConnectionCheckTimer = null;
       let screenShareId = null; 
@@ -1259,7 +1260,7 @@
 
       
       function generateRequestId(type) {
-        return `${type}-${Date.now()}-${Math.floor(Math.random() * 1000)}`;
+        return `${type}-${Date.now()}-${++requestSequence}`;
       }
 
       
@@ -1410,7 +1411,9 @@
 
       
       function saveSettings() {
-        const selectedSourceCreationOptions = [];
+        const selectedSourceCreationOptions = document.querySelector('#sourceCreationScenesContainer input[type="checkbox"]')
+          ? []
+          : initialSelectedSourceCreationScenes.slice();
         const checkboxes = document.querySelectorAll('#sourceCreationScenesContainer input[type="checkbox"]:checked');
         checkboxes.forEach(checkbox => selectedSourceCreationOptions.push(checkbox.value));
         
@@ -1437,7 +1440,7 @@
           customCSS: customCssInput.value
         };
         localStorage.setItem("obsNinjaSettings", JSON.stringify(settings));
-        const mappings = getStreamMappings();
+        const mappings = getStreamMappings(true);
         localStorage.setItem("obsNinjaStreamMappings", JSON.stringify(mappings));
         saveLayoutConfigs(); 
       }
@@ -1521,8 +1524,8 @@
               <div style="margin-bottom: 5px;">
                   <label style="font-size: 1em; margin-bottom: 6px; display: block; font-weight:500;" data-i18n="streamIdMappings.ruleTitle">Stream Mapping Rule</label>
                   <div class="flex-row" style="align-items: center; margin-bottom: 6px;">
-                      <input type="text" value="${initialStreamId}" class="mapping-stream-id" data-i18n="[placeholder]streamIdMappings.streamIdPlaceholder;[title]streamIdMappings.streamIdTooltip" placeholder="Stream ID" title="Enter the VDO.Ninja Stream ID to match.">
-                      <input type="text" value="${label}" class="mapping-label" data-i18n="[placeholder]streamIdMappings.labelPlaceholder;[title]streamIdMappings.labelTooltip" placeholder="Label (Optional)" title="Enter the VDO.Ninja Label to match (optional).">
+                      <input type="text" value="" class="mapping-stream-id" data-i18n="[placeholder]streamIdMappings.streamIdPlaceholder;[title]streamIdMappings.streamIdTooltip" placeholder="Stream ID" title="Enter the VDO.Ninja Stream ID to match.">
+                      <input type="text" value="" class="mapping-label" data-i18n="[placeholder]streamIdMappings.labelPlaceholder;[title]streamIdMappings.labelTooltip" placeholder="Label (Optional)" title="Enter the VDO.Ninja Label to match (optional).">
                       <select class="mapping-match-type" data-i18n="[title]streamIdMappings.matchTypeTooltip" title="How to match stream">
                           <option value="streamId" ${matchType === "streamId" ? "selected" : ""} data-i18n="streamIdMappings.matchType.idOnly">ID Only</option>
                           <option value="label" ${matchType === "label" ? "selected" : ""} data-i18n="streamIdMappings.matchType.labelOnly">Label Only</option>
@@ -1549,6 +1552,8 @@
                   </small>
               </div>
           `;
+        mappingDiv.querySelector(".mapping-stream-id").value = initialStreamId;
+        mappingDiv.querySelector(".mapping-label").value = label;
         streamMappingsDiv.appendChild(mappingDiv);
         if (window.translation) {
             mappingDiv.querySelectorAll('[data-i18n]').forEach(element => {
@@ -1566,6 +1571,10 @@
             });
         }
         const sceneDropdown = mappingDiv.querySelector(".mapping-scene-name");
+        sceneDropdown.dataset.selectedScene = sceneName || "";
+        sceneDropdown.addEventListener("change", () => {
+          sceneDropdown.dataset.selectedScene = sceneDropdown.value;
+        });
         populateSceneDropdown(obsScenes, sceneDropdown, "streamIdMappings.selectSceneOption"); 
         if (
           sceneName &&
@@ -1635,7 +1644,7 @@
       }
 
       
-      function getStreamMappings() {
+      function getStreamMappings(includeUnavailable = false) {
         const mappings = [];
         document.querySelectorAll(".stream-mapping").forEach((div) => { 
           const streamIdInput = div.querySelector(".mapping-stream-id");
@@ -1659,7 +1668,7 @@
             const streamId = streamIdInput.value.trim();
             const label = labelInput.value.trim();
             const matchType = matchTypeSelect.value;
-            const sceneName = sceneNameSelect.value.trim();
+            const sceneName = (sceneNameSelect.value || (includeUnavailable ? sceneNameSelect.dataset.selectedScene || "" : "")).trim();
             const cloneToMain = cloneToMainCheckbox.checked;
             const switchToScene = switchToSceneCheckbox.checked;
             if (sceneName && (streamId || label)) { 
@@ -1839,6 +1848,7 @@
           layoutConfigsListDiv.appendChild(configDiv);
 
           const sceneSelect = configDiv.querySelector('.layout-scene-select');
+          sceneSelect.dataset.selectedScene = config.sceneName || "";
           const layoutSelect = configDiv.querySelector('.layout-type-select');
           
           populateSceneDropdownWithOptionsDisabled(obsScenes, sceneSelect, "sceneLayouts.selectSceneOption", configId);
@@ -1923,6 +1933,7 @@
 
               
               
+              sceneSelect.dataset.selectedScene = newSceneName;
               if (newSceneName) {
                   const newDefaultCheckbox = document.querySelector(`#sourceCreationScenesContainer input[type="checkbox"][value="${CSS.escape(newSceneName)}"]`);
                   if (newDefaultCheckbox && newDefaultCheckbox.checked) {
@@ -1953,7 +1964,7 @@
               updateSceneDropdowns(); 
           });
           layoutSelect.addEventListener('change', () => {
-            updateLayoutSpecificControls(configId, layoutSelect.value, controlsContainer, config); 
+            updateLayoutSpecificControls(configId, layoutSelect.value, controlsContainer, sceneLayoutConfigs.find(c => c.id === configId) || config);
             saveLayoutConfigsAndUpdateScene(configId);
           });
           
@@ -2022,8 +2033,9 @@
               const sceneSelect = div.querySelector(`#layout-scene-${configId}`);
               const layoutSelect = div.querySelector(`#layout-type-${configId}`);
               
-              if (sceneSelect && layoutSelect && sceneSelect.value && layoutSelect.value) {
-                  const sceneName = sceneSelect.value;
+              const selectedScene = sceneSelect ? sceneSelect.value || sceneSelect.dataset.selectedScene || "" : "";
+              if (sceneSelect && layoutSelect && selectedScene && layoutSelect.value) {
+                  const sceneName = selectedScene;
                   if (usedSceneNames.has(sceneName)) {
                       logMessage(`Error saving layouts: Scene '${sceneName}' is configured multiple times. Please ensure each scene has only one layout.`, "logMessages.errorSavingLayoutsDuplicateScene", {sceneName});
                       sceneNameError = true;
@@ -2180,6 +2192,9 @@
       
       function updateStreamList() {
         if (!window.translation) return; 
+        const escapeStreamText = value => String(value)
+          .replace(/&/g, "&amp;").replace(/</g, "&lt;")
+          .replace(/>/g, "&gt;").replace(/"/g, "&quot;");
         if (Object.keys(activeStreams).length === 0) {
           streamListContainer.innerHTML =
             `<div class="stream-item" style="text-align:center; background-color:transparent; border:none; color:#888;">${getTranslation("activeStreams.noActiveStreams")}</div>`;
@@ -2209,13 +2224,13 @@
             const isCurrentlyScreenSharingThisStream = screenShareId === streamId;
             let streamItemHTML = `
                       <div style="font-weight: 600; font-size: 1.05em; color: #E0E0E0;">${
-                        stream.label || streamId
+                        escapeStreamText(stream.label || streamId)
                       }</div>
-                      <small>${getTranslation("activeStreams.streamIdLabel", {id: streamId})}${
-              stream.label ? ` | ${getTranslation("activeStreams.labelLabel", {label: stream.label})}` : ""
+                      <small>${escapeStreamText(getTranslation("activeStreams.streamIdLabel", {id: streamId}))}${
+              stream.label ? ` | ${escapeStreamText(getTranslation("activeStreams.labelLabel", {label: stream.label}))}` : ""
             }</small>
                       <small style="display: block; color: #A0A0B0;">
-                          → ${getTranslation("activeStreams.targetSceneLabelText", {sceneName: targetSceneNameForDisplay || getTranslation("activeStreams.notSet")})}
+                          → ${escapeStreamText(getTranslation("activeStreams.targetSceneLabelText", {sceneName: targetSceneNameForDisplay || getTranslation("activeStreams.notSet")}))}
                           ${targetSceneNameForDisplay ? `(${getTranslation(targetSceneTagKey)})` : ""}
                       </small>
                       <div style="margin-top: 2px; font-size: 0.9em;">
@@ -2227,7 +2242,7 @@
                       </div>
                       <div style="margin-top: 8px;" class="flex-row">`; 
             streamItemHTML += `
-                      <button class="add-stream-btn" data-stream-id="${streamId}"
+                      <button class="add-stream-btn" data-stream-id="${escapeStreamText(streamId)}"
                           style="background-color: ${
                             stream.sourceCreated ? "#F44336" : "#4C80AF"
                           };">
@@ -2239,7 +2254,7 @@
                       </button>`;
             if (stream.sourceCreated) { 
               streamItemHTML += `
-                          <button class="highlight-btn" data-stream-id="${streamId}"
+                          <button class="highlight-btn" data-stream-id="${escapeStreamText(streamId)}"
                               style="background-color: ${
                                 isHighlighted ? "#F44336" : "#4CAF50"
                               };">
@@ -2252,7 +2267,7 @@
             }
             if (stream.sourceCreated) {
               streamItemHTML += `
-                          <button class="screen-share-btn" data-stream-id="${streamId}"
+                          <button class="screen-share-btn" data-stream-id="${escapeStreamText(streamId)}"
                                   style="background-color: ${
                                     isCurrentlyScreenSharingThisStream
                                       ? "#F44336"
@@ -2646,7 +2661,8 @@
 
 
         document.querySelectorAll(".mapping-scene-name").forEach(select => {
-            const oldValue = select.value;
+            const oldValue = select.value || select.dataset.selectedScene || "";
+            select.dataset.selectedScene = oldValue;
             populateSceneDropdown(obsScenes, select, "streamIdMappings.selectSceneOption");
             if (oldValue && obsScenes.some(s => s.sceneName === oldValue)) select.value = oldValue; else select.value = "";
         });
@@ -2661,9 +2677,9 @@
 
                 populateSceneDropdownWithOptionsDisabled(obsScenes, sceneSelect, "sceneLayouts.selectSceneOption", configId);
 
-                if (targetSceneNameFromStorage && obsScenes.some(s => s.sceneName === targetSceneNameFromStorage) && !sceneSelect.querySelector(`option[value="${targetSceneNameFromStorage}"]`)?.disabled) {
+                if (targetSceneNameFromStorage && Array.from(sceneSelect.options).some(option => option.value === targetSceneNameFromStorage && !option.disabled)) {
                     sceneSelect.value = targetSceneNameFromStorage;
-                } else if (currentSelectedValueInDropdown && obsScenes.some(s => s.sceneName === currentSelectedValueInDropdown)  && !sceneSelect.querySelector(`option[value="${currentSelectedValueInDropdown}"]`)?.disabled) {
+                } else if (currentSelectedValueInDropdown && Array.from(sceneSelect.options).some(option => option.value === currentSelectedValueInDropdown && !option.disabled)) {
                     sceneSelect.value = currentSelectedValueInDropdown;
                 } else {
                     sceneSelect.value = ""; 
@@ -2700,11 +2716,11 @@
         if (window.translation) obsConnectionStatus.textContent = getTranslation("obsConnection.statusConnecting");
         obsStatusIndicator.classList.remove("connected", "error"); 
         logMessage(`Attempting to connect to OBS WebSocket at ${url}...`, "logMessages.obs.attemptingConnection", { url });
+        let connectionSocket = null;
         const connectionTimeoutId = setTimeout(() => {
           if (
-            obs &&
-            obs.readyState !== WebSocket.OPEN &&
-            obs.readyState !== WebSocket.CONNECTING
+            connectionSocket && obs === connectionSocket &&
+            obs.readyState !== WebSocket.OPEN
           ) {
             logMessage("OBS WebSocket connection attempt timed out.", "logMessages.obs.connectionTimeout");
             if (obs) {
@@ -2723,14 +2739,21 @@
           }
         }, 10000); 
         try {
-          obs = new WebSocket(url);
+          connectionSocket = new WebSocket(url);
+          const previousSocket = obs;
+          obs = connectionSocket;
+          if (previousSocket) {
+            try { previousSocket.close(); } catch (e) {}
+          }
           obs.onopen = () => {
+            if (obs !== connectionSocket) return;
             logMessage(
               "OBS WebSocket connection opened. Waiting for Server Hello...",
               "logMessages.obs.connectionOpenedWaitingHello"
             );
           };
           obs.onmessage = async (event) => {
+            if (obs !== connectionSocket) return;
             try {
               const message = JSON.parse(event.data);
               if (message.op === 0) { 
@@ -2766,7 +2789,8 @@
                     );
                   }
                 }
-                obs.send(JSON.stringify(identifyPayload));
+                if (obs !== connectionSocket) return;
+                connectionSocket.send(JSON.stringify(identifyPayload));
               } else if (message.op === 2) { 
                 clearTimeout(connectionTimeoutId); 
                 logMessage(
@@ -2861,6 +2885,7 @@
           };
           obs.onerror = (errorEvent) => {
             clearTimeout(connectionTimeoutId);
+            if (obs !== connectionSocket) return;
             let errorMsg = "Unknown WebSocket error";
             if (errorEvent && errorEvent.message) {
               errorMsg = errorEvent.message;
@@ -2879,6 +2904,7 @@
           };
           obs.onclose = (event) => {
             clearTimeout(connectionTimeoutId);
+            if (obs !== connectionSocket) return;
             let reason = "";
             if (window.translation) {
                 if (event.code === 4009) { 
@@ -4423,7 +4449,7 @@
             return;
           }
           const script = document.createElement("script");
-          script.src = "https://cdnjs.cloudflare.com/ajax/libs/jsSHA/3.3.0/sha256.js"; 
+          script.src = "../thirdparty/jssha/sha256.js";
           script.onload = () => {
             logMessage("jsSHA library loaded successfully (fallback for Web Crypto).", "logMessages.jsShaLoaded");
             resolve();

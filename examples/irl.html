@@ -1,0 +1,833 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta content="text/html;charset=utf-8" http-equiv="Content-Type" />
+	<title>Twitch, Kick & YouTube Chat + Live Camera - VDO.Ninja</title>
+	<meta name="description" content="Free mobile-friendly tool for IRL streamers: publish your phone's camera with VDO.Ninja while watching your Twitch, Kick, or YouTube live chat at the same time." />
+	<link rel="canonical" href="https://vdo.ninja/examples/irl.html" />
+	<meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+	<meta name="theme-color" content="#000000" />
+	<meta name="mobile-web-app-capable" content="yes" />
+	<meta name="apple-mobile-web-app-capable" content="yes" />
+	<meta name="apple-mobile-web-app-status-bar-style" content="black" />
+	<link rel="icon" type="image/png" sizes="32x32" href="../media/favicon-32x32.png" />
+	<link rel="icon" type="image/png" sizes="16x16" href="../media/favicon-16x16.png" />
+	<link rel="icon" href="../media/favicon.ico" />
+	<link rel="apple-touch-icon" href="../media/icon-192x192.png" />
+	<meta property="og:type" content="website" />
+	<meta property="og:url" content="https://vdo.ninja/examples/irl.html" />
+	<meta property="og:title" content="Twitch, Kick & YouTube Chat + Live Camera - VDO.Ninja" />
+	<meta property="og:description" content="Publish your phone's camera with VDO.Ninja while watching your Twitch, Kick, or YouTube live chat. A free companion for IRL streamers." />
+	<meta property="og:image" content="https://vdo.ninja/media/vdoNinja_logo_full.png" />
+	<meta property="og:image:width" content="1200" />
+	<meta property="og:image:height" content="630" />
+	<meta name="twitter:card" content="summary_large_image" />
+	<meta name="twitter:title" content="Twitch, Kick & YouTube Chat + Live Camera - VDO.Ninja" />
+	<meta name="twitter:description" content="Publish your phone's camera with VDO.Ninja while watching your Twitch, Kick, or YouTube live chat. A free companion for IRL streamers." />
+	<meta name="twitter:image" content="https://vdo.ninja/media/vdoNinja_logo_full.png" />
+	<script type="application/ld+json">
+	{
+		"@context": "https://schema.org",
+		"@type": "WebApplication",
+		"name": "Twitch, Kick & YouTube Chat + Live Camera",
+		"url": "https://vdo.ninja/examples/irl.html",
+		"description": "Publish your camera with VDO.Ninja while watching your Twitch, Kick, or YouTube live chat at the same time. Made for IRL and mobile streamers.",
+		"applicationCategory": "MultimediaApplication",
+		"operatingSystem": "Any",
+		"isPartOf": {
+			"@type": "WebSite",
+			"name": "VDO.Ninja",
+			"url": "https://vdo.ninja/"
+		},
+		"offers": {
+			"@type": "Offer",
+			"price": "0",
+			"priceCurrency": "USD"
+		}
+	}
+	</script>
+<style>
+body {
+  padding: 0;
+  margin: 0;
+  background-color: #000;
+  width: 100vw;
+  height: 100vh;
+  height: 100dvh;
+  color: white;
+  overscroll-behavior: contain;
+  overflow: hidden;
+  display: block;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+iframe {
+  width: 100%;
+  height: 100%;
+  border: 0;
+  margin: 0;
+  padding: 0;
+  display: block;
+}
+
+input,
+select {
+  padding: 12px 16px;
+  width: 100%;
+  box-sizing: border-box;
+  font-size: clamp(16px, 4vw, 20px);
+  margin: 12px 0;
+  z-index: 1000;
+  color: black;
+  display: block;
+  border: 2px solid #333;
+  border-radius: 8px;
+  background: #fff;
+  transition: border-color 0.2s;
+}
+
+input:focus,
+select:focus {
+  outline: none;
+  border-color: #666;
+}
+
+#chatidhint {
+  color: #bbb;
+  font-size: 14px;
+  margin: -4px 0 12px;
+}
+
+#clean {
+  max-width: 800px;
+  width: 90vw;
+  margin: 0 auto;
+  padding: 20px;
+  box-sizing: border-box;
+  max-height: 100vh;
+  max-height: 100dvh;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+h1 {
+  color: white;
+  font-size: clamp(24px, 6vw, 32px);
+  margin: 16px 0 24px 0;
+  line-height: 1.2;
+}
+
+button {
+  font-size: clamp(16px, 4vw, 24px);
+  color: black;
+  display: inline-block;
+  padding: 12px 24px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: transform 0.1s, opacity 0.1s;
+}
+
+button:active {
+  transform: scale(0.98);
+  opacity: 0.9;
+}
+
+#controlbar {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 20;
+  background-color: rgba(0, 0, 0, 0.8);
+  backdrop-filter: blur(8px);
+  height: max(7vh, 50px);
+  width: 100%;
+  display: none;
+  justify-content: center;
+  gap: 8px;
+  padding: 4px;
+  box-sizing: border-box;
+}
+
+#controlbar button {
+  height: calc(100% - 8px);
+  background-color: #222;
+  color: white;
+  box-shadow: none;
+  font-size: 14px;
+  border-radius: 6px;
+  padding: 0 12px;
+  white-space: nowrap;
+  border: 1px solid #444;
+}
+
+.pressed {
+  background-color: #800 !important;
+}
+
+.loading {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  opacity: 1;
+  animation: fadeIn 1s ease-out;
+}
+
+.fullwindow {
+  height: calc(100% - max(7vh, 50px)) !important;
+  width: 100% !important;
+  position: absolute;
+  top: max(7vh, 50px) !important;
+  left: 0 !important;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@media screen and (orientation:portrait) {
+  #container2 {
+    width: 100%;
+    height: 100%;
+    display: none;
+  }
+  #container1 {
+    width: 50vw;
+    height: 50vh;
+    display: none;
+    top: 0;
+    right: 0;
+    left: auto;
+    position: absolute;
+  }
+  #controlbar {
+    flex-wrap: wrap;
+    height: auto;
+    padding: 8px;
+  }
+  #controlbar button {
+    flex: 1 1 auto;
+    min-width: 80px;
+  }
+}
+
+@media screen and (orientation:landscape) {
+  #container2 {
+    width: 60vw;
+    height: 100%;
+    display: none;
+    z-index: 5;
+  }
+  #container1 {
+    width: 50vw;
+    height: 100%;
+    max-height: calc(100vh - 100px);
+    display: none;
+    position: fixed;
+    top: 0;
+    right: -10vw;
+    left: auto;
+  }
+}
+
+.hide {
+  width: 1px !important;
+  height: 1px !important;
+  opacity: 0.5;
+  transition: all 0.3s ease;
+}
+
+/* --- setup screen: layout picker + action buttons --- */
+
+#layoutchoices {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+  margin: 8px 0 4px 0;
+}
+
+.layoutopt {
+  position: relative;
+  cursor: pointer;
+}
+
+.layoutopt input {
+  position: absolute;
+  opacity: 0;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  cursor: pointer;
+}
+
+.layoutcard {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 10px;
+  border: 2px solid #444;
+  border-radius: 8px;
+  color: #fff;
+  background: #111;
+  font-size: 14px;
+  white-space: nowrap;
+}
+
+.layoutopt input:checked + .layoutcard {
+  border-color: #fff;
+  background: #26262a;
+  font-weight: bold;
+}
+
+.layoutopt input:focus-visible + .layoutcard {
+  outline: 2px solid #4c9aff;
+  outline-offset: 2px;
+}
+
+/* mini-diagram of where the camera and chat sit in each layout */
+.diagram {
+  position: relative;
+  width: 76px;
+  height: 48px;
+  border: 1px solid #555;
+  border-radius: 4px;
+  box-sizing: border-box;
+  overflow: hidden;
+  background: #000;
+}
+
+.diagram i {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-style: normal;
+  font-size: 12px;
+  line-height: 1;
+  z-index: 1;
+}
+
+.d-chat { background: #222228; }
+.d-cam { background: #3d3d46; }
+
+.diagram-default .d-chat { left: 0; top: 0; width: 60%; height: 100%; }
+.diagram-default .d-cam { right: 0; top: 0; width: 40%; height: 100%; z-index: 2; }
+
+.diagram-split .d-chat { left: 0; top: 0; width: 50%; height: 100%; }
+.diagram-split .d-cam { right: 0; top: 0; width: 50%; height: 100%; }
+
+.diagram-chat .d-chat { left: 0; top: 0; width: 100%; height: 100%; }
+.diagram-chat .d-cam { right: 2px; bottom: 2px; width: 38%; height: 45%; border-radius: 2px; font-size: 10px; z-index: 2; }
+
+.diagram-camera .d-cam { left: 0; top: 0; width: 100%; height: 100%; }
+.diagram-camera .d-chat { right: 0; top: 0; width: 38%; height: 100%; z-index: 2; }
+
+/* on phones held upright, preview the stacked/portrait arrangement instead */
+@media screen and (orientation:portrait) {
+  .diagram { width: 44px; height: 66px; }
+  .diagram-default .d-chat { width: 100%; height: 100%; }
+  .diagram-default .d-cam { right: 2px; top: 2px; width: 48%; height: 38%; border-radius: 2px; font-size: 10px; }
+  .diagram-split .d-cam { left: 0; top: 0; width: 100%; height: 45%; }
+  .diagram-split .d-chat { top: auto; bottom: 0; width: 100%; height: 55%; }
+  .diagram-camera .d-chat { top: auto; bottom: 0; width: 100%; height: 35%; }
+}
+
+#actions {
+  display: flex;
+  gap: 12px;
+  margin: 16px 0;
+}
+
+#startbtn {
+  background-color: #d1fed1;
+  flex: 1;
+  padding: 14px 24px;
+}
+
+#clearbtn {
+  background-color: #f4cccc;
+  padding: 14px 24px;
+}
+
+/* --- layout modes (picked on the setup screen, cycled via the Layout button) --- */
+
+@media screen and (orientation:landscape) {
+  body.layout-split #container2 {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 50vw;
+    height: 100%;
+  }
+  body.layout-split #container1 {
+    position: fixed;
+    top: 0;
+    right: 0;
+    left: auto;
+    width: 50vw;
+    height: 100%;
+    max-height: none;
+  }
+  body.layout-camera #container2 {
+    position: fixed;
+    top: 0;
+    right: 0;
+    left: auto;
+    width: min(30vw, 420px);
+    height: 100%;
+    z-index: 5;
+  }
+}
+
+@media screen and (orientation:portrait) {
+  body.layout-split #container1 {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: auto;
+    width: 100vw;
+    height: 45vh;
+    height: 45dvh;
+  }
+  body.layout-split #container2 {
+    position: fixed;
+    top: 45vh;
+    top: 45dvh;
+    left: 0;
+    width: 100vw;
+    height: 55vh;
+    height: 55dvh;
+  }
+  body.layout-camera #container2 {
+    position: fixed;
+    top: auto;
+    bottom: 0;
+    left: 0;
+    right: auto;
+    width: 100vw;
+    height: 35vh;
+    height: 35dvh;
+    z-index: 5;
+  }
+}
+
+body.layout-chat #container2 {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  height: 100dvh;
+  z-index: 5;
+}
+
+body.layout-chat #container1 {
+  position: fixed;
+  top: auto;
+  left: auto;
+  right: 12px;
+  bottom: 110px; /* stays clear of the chat message input */
+  width: min(35vw, 280px);
+  height: min(30vh, 210px);
+  max-height: none;
+  z-index: 10;
+  background: #000;
+  border: 1px solid #333;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+body.layout-camera #container1 {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: auto;
+  width: 100vw;
+  height: 100vh;
+  height: 100dvh;
+  max-height: none;
+  z-index: 4;
+}
+</style>
+</head>
+<body>
+	<div id="container2" ></div>
+	<div id="container1" class="loading"></div>
+	<div id="controlbar" >
+		<button id="hidepreview">Hide Preview</button>
+		<button id="mutemic">Mute Mic</button>
+		<button id="mutevideo">Mute Video</button>
+		<button id="cyclelayout">Layout</button>
+		<button id="togglesettings">Settings</button>
+		<button id="hangup">Hangup</button>
+	</div>
+	<div id="clean">
+		<h1>Use VDO.Ninja and Twitch, Kick, or YouTube chat at the same time</h1>
+		<label for="viewlink">VDO.Ninja Stream ID or URL:</label>
+		<input placeholder="Enter a VDON stream ID or VDON URL" id="viewlink" type="text" autocapitalize="off" autocorrect="off" spellcheck="false" enterkeyhint="go" />
+		<label for="chatservice">Chat service:</label>
+		<select id="chatservice">
+			<option value="auto">Auto (URLs or Twitch channel)</option>
+			<option value="twitch">Twitch</option>
+			<option value="kick">Kick</option>
+			<option value="youtube">YouTube</option>
+		</select>
+		<label for="twitch">Channel name, chat URL, or YouTube video ID:</label>
+		<input placeholder="Enter a channel, chat URL, or video ID" id="twitch" type="text" autocapitalize="off" autocorrect="off" spellcheck="false" enterkeyhint="go" />
+		<p id="chatidhint">Choose YouTube when entering a raw 11-character video ID.</p>
+		Layout:
+		<div id="layoutchoices">
+			<label class="layoutopt"><input type="radio" name="layout" value="default" checked />
+				<span class="layoutcard"><span class="diagram diagram-default"><i class="d-chat">&#128172;</i><i class="d-cam">&#128247;</i></span>Default</span>
+			</label>
+			<label class="layoutopt"><input type="radio" name="layout" value="split" />
+				<span class="layoutcard"><span class="diagram diagram-split"><i class="d-chat">&#128172;</i><i class="d-cam">&#128247;</i></span>Split</span>
+			</label>
+			<label class="layoutopt"><input type="radio" name="layout" value="chat" />
+				<span class="layoutcard"><span class="diagram diagram-chat"><i class="d-chat">&#128172;</i><i class="d-cam">&#128247;</i></span>Big Chat</span>
+			</label>
+			<label class="layoutopt"><input type="radio" name="layout" value="camera" />
+				<span class="layoutcard"><span class="diagram diagram-camera"><i class="d-cam">&#128247;</i><i class="d-chat">&#128172;</i></span>Big Camera</span>
+			</label>
+		</div>
+		<div id="actions">
+			<button id="startbtn" onclick="loadIframes()">START</button>
+			<button id="clearbtn" onclick="clearInput()">CLEAR</button>
+		</div>
+		<p>
+			Made for IRL and mobile streamers: publish your phone's camera and mic into your live production via VDO.Ninja while keeping an eye on your Twitch, Kick, or YouTube live chat, all from a single browser tab. No app install needed. You can change the layout mid-stream with the Layout button.<br /><br />If you have feature requests or suggestions, please report them at https://discord.vdo.ninja in the #feature-request channel.
+		</p>
+	</div>
+<script>
+
+window.addEventListener("orientationchange", function() {
+  // Announce the new orientation number
+ // alert(window.orientation);
+}, false);
+
+function removeStorage(cname){
+	localStorage.removeItem(cname);
+}
+
+function setStorage(cname, cvalue, hours=9999){ // not actually a cookie
+	var now = new Date();
+	var item = {
+		value: cvalue,
+		expiry: now.getTime() + (hours * 60 * 60 * 1000),
+	};
+	try{
+		localStorage.setItem(cname, JSON.stringify(item));
+	}catch(e){errorlog(e);}
+}
+
+function getStorage(cname) {
+	try {
+		var itemStr = localStorage.getItem(cname);
+	} catch(e){
+		errorlog(e);
+		return;
+	}
+	if (!itemStr) {
+		return "";
+	}
+	var item = JSON.parse(itemStr);
+	var now = new Date();
+	if (now.getTime() > item.expiry) {
+		localStorage.removeItem(cname);
+		return "";
+	}
+	return item.value;
+}
+if (getStorage("twitchChatLink")){
+	document.getElementById("twitch").value = getStorage("twitchChatLink");
+}
+if (getStorage("vdoNinjaTwitchURL")){
+	document.getElementById("viewlink").value = getStorage("vdoNinjaTwitchURL");
+}
+var savedChatService = getStorage("twitchChatService");
+if (["auto", "twitch", "kick", "youtube"].indexOf(savedChatService) !== -1){
+	document.getElementById("chatservice").value = savedChatService;
+}
+
+var layoutModes = ["default", "split", "chat", "camera"];
+var currentLayout = "default";
+
+if (layoutModes.indexOf(getStorage("twitchLayoutMode")) > 0){
+	var savedLayout = getStorage("twitchLayoutMode");
+	var savedRadio = document.querySelector('input[name="layout"][value="' + savedLayout + '"]');
+	if (savedRadio){ savedRadio.checked = true; }
+}
+
+function applyLayout(mode){
+	layoutModes.forEach(function(m){
+		document.body.classList.remove("layout-" + m);
+	});
+	if (mode !== "default"){
+		document.body.classList.add("layout-" + mode);
+	}
+	currentLayout = mode;
+}
+
+function clearInput(){
+	var confirmit = confirm("Are you sure you want to clear the input fields and local storage?");
+	if (confirmit){
+		removeStorage("twitchChatLink");
+		removeStorage("vdoNinjaTwitchURL");
+		removeStorage("twitchLayoutMode");
+		removeStorage("twitchChatService");
+		document.getElementById("viewlink").value  = "";
+		document.getElementById("twitch").value = "";
+		document.getElementById("chatservice").value = "auto";
+		document.querySelector('input[name="layout"][value="default"]').checked = true;
+	}
+}
+
+function startOnEnter(e){
+	if (e.key === "Enter"){
+		loadIframes();
+	}
+}
+document.getElementById("viewlink").addEventListener("keydown", startOnEnter);
+document.getElementById("twitch").addEventListener("keydown", startOnEnter);
+
+var iframe = null;
+function sendSelfCommand(action, value=null){
+	iframe.contentWindow.postMessage({"target":null, "action":action, "value":value}, '*');
+}
+
+var injectCSS = `
+	#controlButtons{
+		display:none!important;
+	}
+`;
+
+injectCSS = encodeURIComponent(btoa(injectCSS));
+
+function buildChatEmbedURL(input, service){
+	input = input.trim();
+	if (!input){ return ""; }
+
+	service = service || "auto";
+	var host = location.hostname;
+	var stripped = input.replace(/^https?:\/\//i, "").replace(/^www\./i, "");
+	var match;
+	var youtubeMatch = stripped.match(/[?&]v=([\w-]{11})/) || stripped.match(/youtu\.be\/([\w-]{11})/i) || stripped.match(/\/(?:live|shorts|embed)\/([\w-]{11})(?![\w-])/i);
+
+	if (service === "youtube"){
+		match = youtubeMatch || input.match(/^([\w-]{11})$/);
+		return match ? "https://www.youtube.com/live_chat?v=" + match[1] + "&embed_domain=" + host : null;
+	}
+	if (service === "twitch"){
+		match = stripped.match(/twitch\.tv\/(?:popout\/|embed\/)?([A-Za-z0-9_]+)/i);
+		if (!match && /^[A-Za-z0-9_]+$/.test(input)){
+			match = [input, input];
+		}
+		return match ? "https://www.twitch.tv/embed/" + match[1].toLowerCase() + "/chat?darkpopout&parent=" + host : null;
+	}
+	if (service === "kick"){
+		match = stripped.match(/kick\.com\/(?:popout\/)?([A-Za-z0-9_]+)/i);
+		if (!match && /^[A-Za-z0-9_]+$/.test(input)){
+			match = [input, input];
+		}
+		return match ? "https://kick.com/popout/" + match[1] + "/chat" : null;
+	}
+
+	if (/(^|\.)twitch\.tv\//i.test(stripped)){
+		// handles twitch.tv/<channel>, /popout/<channel>/chat, /embed/<channel>/chat, etc
+		match = stripped.match(/twitch\.tv\/(?:popout\/|embed\/)?([A-Za-z0-9_]+)/i);
+		if (match){
+			return "https://www.twitch.tv/embed/" + match[1].toLowerCase() + "/chat?darkpopout&parent=" + host;
+		}
+	} else if (/(^|\.)kick\.com\//i.test(stripped)){
+		// handles kick.com/<channel>, /popout/<channel>/chat, /<channel>/chatroom, etc
+		match = stripped.match(/kick\.com\/(?:popout\/)?([A-Za-z0-9_]+)/i);
+		if (match){
+			return "https://kick.com/popout/" + match[1] + "/chat";
+		}
+	} else if (/(^|\.)(youtube\.com|youtu\.be)\//i.test(stripped) || input.startsWith("@")){
+		match = youtubeMatch;
+		if (match){
+			return "https://www.youtube.com/live_chat?v=" + match[1] + "&embed_domain=" + host;
+		}
+		return null; // a channel or @handle alone isn't enough; YouTube chat embeds need the live video's ID
+	}
+
+	if (/^https?:\/\//i.test(input)){
+		return input; // some other URL; use as provided
+	}
+	if (/^[A-Za-z0-9_]+$/.test(input)){
+		return "https://www.twitch.tv/embed/" + input.toLowerCase() + "/chat?darkpopout&parent=" + host;
+	}
+	return "https://" + input;
+}
+
+function loadIframes(url=false){
+
+	var roomname = document.getElementById("viewlink").value;
+	var twitch = document.getElementById("twitch").value;
+	var chatService = document.getElementById("chatservice").value || "auto";
+
+	if (chatService === "auto" && /^[A-Za-z0-9_-]{11}$/.test(twitch.trim())){
+		alert("This 11-character value could be a Twitch channel or a YouTube video ID. Choose Twitch or YouTube from the Chat service menu.");
+		return;
+	}
+
+	var room2 = buildChatEmbedURL(twitch, chatService);
+	if (room2 === null){
+		if (chatService === "youtube" || /(^|\.)(youtube\.com|youtu\.be)\//i.test(twitch)){
+			alert("YouTube chat embeds need the live video's URL or 11-character video ID, not a channel name.");
+		} else {
+			alert("The chat value does not match the selected service.");
+		}
+		return;
+	}
+
+	var layoutEl = document.querySelector('input[name="layout"]:checked');
+	applyLayout(layoutEl ? layoutEl.value : "default");
+	setStorage("twitchLayoutMode", currentLayout);
+	setStorage("twitchChatService", chatService);
+
+	document.getElementById("clean").parentNode.removeChild(document.getElementById("clean"));
+	document.getElementById("container1").style.display="inline-block";
+	document.getElementById("container2").style.display="inline-block";
+	
+	
+	var path = window.location.host+window.location.pathname.split("/").slice(0,-1).join("/");
+	path = path.replace("/examples","");
+	
+	if (roomname.startsWith("https://")){
+		var room1 = roomname;
+	} else {
+		var room1 = "https://"+path+"/?push="+roomname+"&webcam&autostart&vd=front&ad=1&transparent&noheader&fullscreen&cleanish&b64css="+injectCSS;
+	}
+
+	iframe = document.createElement("iframe");
+	iframe.allow = "autoplay;camera;microphone;fullscreen;picture-in-picture;";
+	iframe.src = room1;
+	
+	document.getElementById("container1").appendChild(iframe);
+	
+	////////////  LISTEN FOR EVENTS
+
+	var eventMethod = window.addEventListener ? "addEventListener" : "attachEvent";
+	var eventer = window[eventMethod];
+	var messageEvent = eventMethod === "attachEvent" ? "onmessage" : "message";
+
+
+	/// If you have a routing system setup, you could have just one global listener for all iframes instead.
+	
+	eventer(messageEvent, function (e) {
+		if (e.source != iframe.contentWindow){return} // reject messages send from other iframes
+		console.warn(e.data);
+		
+		if ("action" in e.data){
+			if (e.data.action === "seeding-started"){
+				document.getElementById("controlbar").style.display="inline-flex";
+				document.getElementById("container1").classList.remove("loading");
+			}
+			
+			if (e.data.action === "settings-menu-state"){
+				if (e.data.value==true){
+					togglesettings.dataset.value = "true";
+					togglesettings.classList.add("pressed");
+					document.getElementById("container1").classList.add("fullwindow");
+				} else {
+					togglesettings.dataset.value = "false";
+					togglesettings.classList.remove("pressed");
+					document.getElementById("container1").classList.remove("fullwindow");
+				}
+			}
+			
+		}
+	});
+	
+	
+	setStorage("twitchChatLink", room2);
+
+	setStorage("vdoNinjaTwitchURL", room1);
+	
+	
+	if (room2){
+		setTimeout(function(){
+			var iframe2 = document.createElement("iframe");
+			iframe2.allow = "autoplay;camera;microphone;fullscreen;picture-in-picture;";
+			iframe2.src = room2;
+			document.getElementById("container2").appendChild(iframe2);
+		},1000);
+	}
+	
+}
+
+var hangup = document.getElementById("hangup");
+hangup.onclick = function(){
+	iframe.contentWindow.postMessage({"hangup":true}, '*');
+}
+
+var cyclelayout = document.getElementById("cyclelayout");
+cyclelayout.onclick = function(){
+	var next = layoutModes[(layoutModes.indexOf(currentLayout) + 1) % layoutModes.length];
+	applyLayout(next);
+	setStorage("twitchLayoutMode", next);
+}
+
+var togglesettings = document.getElementById("togglesettings");
+togglesettings.onclick = function(){
+	iframe.contentWindow.postMessage({"toggleSettings":"toggle"}, '*');
+}
+
+var mutemic = document.getElementById("mutemic");
+mutemic.onclick = function(){
+	if (this.dataset.value!=="false"){
+		this.dataset.value = "false";
+		this.classList.add("pressed");
+		this.innerText = "Un-Mute Mic";
+		sendSelfCommand("mic",false);
+	} else {
+		this.classList.remove("pressed");
+		this.innerText = "Mute Mic";
+		this.dataset.value = "true";
+		sendSelfCommand("mic",true);
+	}
+}
+
+var mutevideo = document.getElementById("mutevideo");
+mutevideo.onclick = function(){
+	if (this.dataset.value!=="false"){
+		this.dataset.value = "false";
+		this.classList.add("pressed");
+		this.innerText = "Un-Mute camera";
+		sendSelfCommand("camera",false);
+	} else {
+		this.classList.remove("pressed");
+		this.innerText = "Mute Camera";
+		this.dataset.value = "true";
+		sendSelfCommand("camera",true);
+	}
+}
+
+var hidepreview = document.getElementById("hidepreview");
+hidepreview.onclick = function(){
+	if (this.dataset.value!=="false"){
+		this.dataset.value = "false";
+		this.classList.add("pressed");
+		this.innerText = "Show Preview";
+		document.getElementById("container1").classList.add("hide");
+		document.getElementById("container2").classList.add("fullwindow");
+	} else {
+		this.classList.remove("pressed");
+		this.innerText = "Hide Preview";
+		this.dataset.value = "true";
+		document.getElementById("container1").classList.remove("hide");
+		document.getElementById("container2").classList.remove("fullwindow");
+	}
+	
+}
+
+</script>
+</body>
+</html>

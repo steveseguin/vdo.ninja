@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<title>Degradation Preference - VDO.Ninja</title>
+		<style>
+			body { font-family: Arial, sans-serif; max-width: 800px; margin: 0 auto; padding: 20px; background: #f5f5f5; }
+			.container { background: white; padding: 30px; border-radius: 8px; }
+			label { display: block; margin: 20px 0 8px; }
+			input, select { padding: 8px; max-width: 100%; box-sizing: border-box; }
+			a { display: inline-block; margin: 20px 20px 0 0; }
+		</style>
+	</head>
+	<body>
+		<main class="container">
+			<h1>Degradation preference</h1>
+			<p>Compare how a webcam stream adapts when bandwidth is limited. Open the publisher, then the viewer. Use a separate browser profile or device for the viewer.</p>
+			<label for="stream">Stream ID</label>
+			<input id="stream" autocomplete="off" />
+			<label for="profile">Publisher camera profile</label>
+			<select id="profile">
+				<option value="">Off (existing behavior)</option>
+				<option value="talkinghead">Talking head (favor detail)</option>
+				<option value="irl">IRL (experimental)</option>
+			</select>
+			<p>Profiles lower frame rate and resolution under sustained pressure, then recover gradually. Talking head reaches a 2 fps cap; experimental IRL reaches 3 fps. Actual delivery can be lower.</p>
+			<label for="preference">Viewer preference</label>
+			<select id="preference">
+				<option value="">Browser default</option>
+				<option value="maintain-resolution">Preserve resolution</option>
+				<option value="maintain-framerate">Preserve frame rate</option>
+				<option value="balanced">Balance resolution and frame rate</option>
+			</select>
+			<p>Preserving resolution may reduce frame rate. Preserving frame rate may reduce resolution. These preferences cannot guarantee usable video on a failing connection.</p>
+			<a id="publisher" target="_blank" rel="noopener">Open publisher</a>
+			<a id="viewer" target="_blank" rel="noopener">Open viewer</a>
+			<p>Close the previous viewer before trying another preference. This example does not impose packet loss or change bitrate limits.</p>
+		</main>
+		<script>
+			(function () {
+				var stream = document.getElementById("stream");
+				var preference = document.getElementById("preference");
+				var profile = document.getElementById("profile");
+				stream.value = "degrade_" + Array.from(crypto.getRandomValues(new Uint32Array(2))).map(function (value) { return value.toString(36); }).join("");
+				function updateLinks() {
+					var id = encodeURIComponent(stream.value.trim());
+					if (!id) {
+						document.getElementById("publisher").removeAttribute("href");
+						document.getElementById("viewer").removeAttribute("href");
+						return;
+					}
+					document.getElementById("publisher").href = "../?push=" + id + "&webcam&autostart" + (profile.value ? "&connectionprofile=" + profile.value : "");
+					document.getElementById("viewer").href = "../?view=" + id + (preference.value ? "&degrade=" + preference.value : "");
+				}
+				stream.addEventListener("input", updateLinks);
+				preference.addEventListener("change", updateLinks);
+				profile.addEventListener("change", updateLinks);
+				updateLinks();
+			})();
+		</script>
+	</body>
+</html>

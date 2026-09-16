@@ -80,38 +80,6 @@
       "dtype": "f16",
       "kind": "tier",
       "hasGru": false
-    },
-    {
-      "name": "dfn.wasm",
-      "size": 406259,
-      "sha256": "bb06861ecb54e94c178c80225c99c4b13aa6113943aa2f5c782b341d5ed27998",
-      "dtype": "-",
-      "kind": "audio-wasm",
-      "hasGru": false
-    },
-    {
-      "name": "rnnoise.wasm",
-      "size": 134856,
-      "sha256": "c2b6449c5f3d3136c9819dd23211907233b6cfd2b2195082463ba26c879e1910",
-      "dtype": "-",
-      "kind": "audio-wasm",
-      "hasGru": false
-    },
-    {
-      "name": "dfn_weights.pack",
-      "size": 13817933,
-      "sha256": "d862ec5889934f16ff83992980c2981a4c67c60fac06dbab9840ea46672a1228",
-      "dtype": "-",
-      "kind": "audio-weights",
-      "hasGru": false
-    },
-    {
-      "name": "dfn_weights_int8.pack",
-      "size": 7950596,
-      "sha256": "57ddb56075bd48ce28876aa3295fbd13f6ee0c5dc50100df2a1af526b1f5f71e",
-      "dtype": "-",
-      "kind": "audio-weights",
-      "hasGru": false
     }
   ]
 }

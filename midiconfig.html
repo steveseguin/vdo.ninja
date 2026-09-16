@@ -78,7 +78,7 @@
     
     <div class="section" id="sendSection">
         <h2>Send MIDI Configuration</h2>
-        <label for="midiOutDevice">MIDI Output Device:</label>
+        <label for="midiOutDevice">MIDI Input/Source Device:</label>
         <select id="midiOutDevice"></select>
         
         <label for="midiOutChannel">MIDI Channel (1-16):</label>
@@ -101,7 +101,7 @@
     
     <div class="section" id="receiveSection" style="display:none;">
         <h2>Receive MIDI Configuration</h2>
-        <label for="midiInDevice">MIDI Input Device:</label>
+        <label for="midiInDevice">MIDI Output/Destination Device:</label>
         <select id="midiInDevice"></select>
     </div>
     <div class="section">
@@ -156,13 +156,22 @@
             midiOutSelect.innerHTML = '';
             midiInSelect.innerHTML = '';
 
-            midiOutputs.forEach((device, index) => {
-                midiOutSelect.options.add(new Option(device.name, index + 1));
+            midiInputs.forEach((device, index) => {
+                midiOutSelect.options.add(new Option(device.name, getMIDIDeviceSelector(midiInputs, device, index)));
             });
 
-            midiInputs.forEach((device, index) => {
-                midiInSelect.options.add(new Option(device.name, index + 1));
+            midiOutputs.forEach((device, index) => {
+                midiInSelect.options.add(new Option(device.name, getMIDIDeviceSelector(midiOutputs, device, index)));
             });
+        }
+
+        function getMIDIDeviceSelector(devices, device, index) {
+            const deviceName = (device.name || '').trim();
+            const matchingNames = devices.filter(candidate => candidate.name === device.name);
+            if (deviceName && matchingNames.length === 1 && !/^\d+$/.test(deviceName)) {
+                return device.name;
+            }
+            return String(index + 1);
         }
 
         document.querySelectorAll('input[name="midiMode"]').forEach((radio) => {
@@ -189,7 +198,9 @@
                 const midiOutChannel = document.getElementById('midiOutChannel').value;
                 const midiHotkeys = document.getElementById('midiHotkeys').value;
 
-                params.push(`midiout=${midiOutDevice}`);
+                if (midiOutDevice) {
+                    params.push(`midiout=${encodeURIComponent(midiOutDevice)}`);
+                }
                 params.push(`midichannel=${midiOutChannel}`);
                 params.push(`midi=${midiHotkeys}`);
 
@@ -201,7 +212,9 @@
 
             if (midiMode === 'receive' || midiMode === 'both') {
                 const midiInDevice = document.getElementById('midiInDevice').value;
-                params.push(`midiin=${midiInDevice}`);
+                if (midiInDevice) {
+                    params.push(`midiin=${encodeURIComponent(midiInDevice)}`);
+                }
             }
 
             // Additional MIDI options

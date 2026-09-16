@@ -1,4 +1,4 @@
-import { EventBus } from './event-bus.js';
+import { EventBus } from './event-bus.js?v=20260911.1';
 
 export const LEVEL_EVENT = 'level';
 export const CLIP_EVENT = 'clip';

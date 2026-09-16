@@ -633,56 +633,34 @@ var CodecsHandler = (function() {
 	}
 	
 	function modifySdp(sdp, disableAudio = false, disableVideo = false) {
-		if (!sdp || typeof sdp !== 'string') {
-			throw 'Invalid arguments.';
+		if (!sdp || typeof sdp !== "string") {
+			throw "Invalid arguments.";
 		}
-		let sdpLines = sdp.split('\r\n');
-		let modifiedLines = [];
-		let inAudioSection = false;
-		let inVideoSection = false;
-		let bundleIds = [];
-
-		for (let line of sdpLines) {
-			if (line.startsWith('m=audio')) {
-				inAudioSection = true;
-				inVideoSection = false;
-				if (!disableAudio) {
-					modifiedLines.push(line);
-					bundleIds.push('0');
+		let disabledSection = false;
+		const rejectedMids = [];
+		const modifiedLines = sdp.split(/\r?\n/).map(line => {
+			if (line.startsWith("m=")) {
+				const parts = line.split(" ");
+				disabledSection = (parts[0] === "m=audio" && disableAudio) || (parts[0] === "m=video" && disableVideo);
+				if (disabledSection) {
+					// Reject the section without changing the offer's media order or count.
+					parts[1] = "0";
+					return parts.join(" ");
 				}
-			} else if (line.startsWith('m=video')) {
-				inAudioSection = false;
-				inVideoSection = true;
-				if (!disableVideo) {
-					modifiedLines.push(line);
-					bundleIds.push('1');
-				} else {
-					modifiedLines.push(''); // Add a line break if video is disabled
-				}
-			} else if (inVideoSection && disableVideo) {
-				continue; // Skip video lines if video is disabled
-			} else if (line.startsWith('a=group:')) {
-				// Skip existing group lines, we'll add updated ones later
-			} else if (inAudioSection && disableAudio) {
-				// Skip audio lines if audio is disabled
-			} else {
-				modifiedLines.push(line);
+			} else if (disabledSection && line.startsWith("a=mid:")) {
+				rejectedMids.push(line.substring(6).trim());
 			}
-		}
-		const tLineIndex = modifiedLines.findIndex(line => line.startsWith('t='));
-		if (bundleIds.length > 0) {
-			modifiedLines.splice(tLineIndex + 1, 0, 
-				`a=group:BUNDLE ${bundleIds.join(' ')}`,
-				`a=group:LS ${bundleIds.join(' ')}`
-			);
-		}
-
-		// Ensure there's a line break at the end
-		if (modifiedLines[modifiedLines.length - 1] !== '') {
-			modifiedLines.push('');
-		}
-
-		return modifiedLines.join('\r\n');
+			return line;
+		}).map(line => {
+			if (line.startsWith("a=group:BUNDLE ")) {
+				const parts = line.trim().split(/\s+/);
+				const mids = parts.slice(1).filter(mid => rejectedMids.indexOf(mid) === -1);
+				return mids.length ? parts[0] + " " + mids.join(" ") : "";
+			}
+			return line;
+		});
+		if (modifiedLines[modifiedLines.length - 1] !== "") modifiedLines.push("");
+		return modifiedLines.join("\r\n");
 	}
 	
     return {

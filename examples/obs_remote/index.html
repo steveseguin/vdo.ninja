@@ -18,7 +18,7 @@
 	<link rel="stylesheet" href="https://vdo.ninja/main.css" />
 	<title>OBS Remote Dashboard - VDO.Ninja</title>
 	<style>
-
+	
 		.container {
 			max-width: 80%;
 			width: fit-content;
@@ -95,23 +95,23 @@
 			margin:5px;
 			border:solid black 2px;
 		}
-
+		
 		body {
 			color:white;
 			display: inline-block;
 			flex-flow: unset;
 		}
-
+		
 		a {
 			color: #CEF!important;
 		}
-
+		
 		#info{
 			margin: 20px;
 			max-height: 50%;
 			overflow: auto;
 		}
-
+		
 		#client {
 			margin:10px;
 			display:block;
@@ -119,7 +119,7 @@
 		label {
 			color:white;
 		}
-
+		
 	</style>
 </head>
 <body>
@@ -145,7 +145,7 @@
 	</div>
 	<script>
 
-		var hostname = "vdo.ninja"; // all that's supported as of this moment.
+		var hostname = "vdo.ninja"; // all that's supported as of this moment. 
 
 		const obs = new OBSWebSocket();
 		var scenesData = {};
@@ -155,7 +155,7 @@
 			document.getElementById("info").innerHTML = action + "<br />"+document.getElementById("info").innerHTML;
 			obs.sendCallback(action, data, sendCallback)
 		}
-
+		
 		(function(w) {
 			w.URLSearchParams = w.URLSearchParams || function(searchString) {
 				var self = this;
@@ -181,9 +181,18 @@
 			window.history.pushState({path: urlEdited.toString()}, '', urlEdited.toString());
 		}
 		var urlParams = new URLSearchParams(urlEdited);
-
+		
+		function generatePassword(){
+			var bytes = new Uint8Array(16);
+			window.crypto.getRandomValues(bytes);
+			var password = "";
+			for (var i = 0; i < bytes.length; i++){
+				password += ("0" + bytes[i].toString(16)).slice(-2);
+			}
+			return password;
+		}
 		var roomname = Math.floor(Math.random() * 1000000);
-		var pwurl = Math.floor(Math.random() * 1000000);
+		var pwurl = "";
 
 		if (urlParams.get("password")){
 			pwurl = urlParams.get("password");
@@ -191,9 +200,10 @@
 		} else if (localStorage.getItem('password')){
 			pwurl = localStorage.getItem('password');
 		} else {
+			pwurl = generatePassword();
 			localStorage.setItem('password',pwurl)
 		}
-
+		
 		if (urlParams.get("room")){
 			roomname = urlParams.get("room")
 			localStorage.setItem('roomname',roomname)
@@ -202,34 +212,34 @@
 		} else {
 			localStorage.setItem('roomname',roomname)
 		}
-
+		
 		document.getElementById('vdoroomname').value = roomname;
 		document.getElementById('vdopassword').value = pwurl;
-
-
+		
+		
 		if (localStorage.getItem('address')){
 			document.getElementById('address').value = localStorage.getItem('address');
-		}
-
+		} 
+		
 		if (localStorage.getItem('wspass')){
 			document.getElementById('password').value = localStorage.getItem('wspass');
-		}
-
+		} 
+		
 		var iframe = null;
 		function createIFrame(visible=true){
 			iframe = document.createElement("iframe");
-
+			
 			if (visible){
-				iframe.src = "https://"+hostname+"/?room="+roomname+"&push=mainOBSOutput&od=0&transparent&webcam&vd=obs&view&password="+pwurl+"&label=OBS_"+Math.floor(Math.random() * 1000000);
+				iframe.src = "https://"+hostname+"/?room="+encodeURIComponent(roomname)+"&push=mainOBSOutput&od=0&transparent&webcam&vd=obs&view&password="+encodeURIComponent(pwurl)+"&label=OBS_"+Math.floor(Math.random() * 1000000);
 				iframe.style.minWidth = "720px";
-				iframe.style.minHeight = "480px";
+				iframe.style.minHeight = "480px";		
 				iframe.style.maxWidth = "50%";
-				iframe.style.maxHeight = "50%";
-				iframe.style.display = "block";
+				iframe.style.maxHeight = "50%";		
+				iframe.style.display = "block";		
 				iframe.style.margin = "auto";
 				iframe.allow = "autoplay;camera;microphone;fullscreen;picture-in-picture;";
 			} else {
-				iframe.src = "https://"+hostname+"/?room="+roomname+"&push&autostart&vd=0&view&ad=0&transparent&cleanoutput&password="+pwurl+"&label=OBS_"+Math.floor(Math.random() * 1000000);
+				iframe.src = "https://"+hostname+"/?room="+encodeURIComponent(roomname)+"&push&autostart&vd=0&view&ad=0&transparent&cleanoutput&password="+encodeURIComponent(pwurl)+"&label=OBS_"+Math.floor(Math.random() * 1000000);
 				iframe.style.opacity = 0;
 				iframe.style.width = 0;
 				iframe.style.height = 0;
@@ -261,7 +271,7 @@
 				}
 			});
 		}
-
+		
 		function sendCallback(err, data){
 			console.log("CALLBACK TRIGGERED");
 			var msg = {};
@@ -272,7 +282,7 @@
 				iframe.contentWindow.postMessage({"sendData":msg}, '*');
 			} catch(e){}
 		}
-
+		
 		function sendRawData(data){
 			var msg = {};
 			msg.sentFromOBS = {};
@@ -281,7 +291,7 @@
 				iframe.contentWindow.postMessage({"sendData":msg}, '*');
 			} catch(e){}
 		}
-
+		
 		function heartBeat(){
 			obs.send("GetStats");
 		}
@@ -303,25 +313,25 @@
 		document.getElementById('address_button').addEventListener('click', e => {
 			connect(e, false);
 		});
-
+		
 		document.getElementById('address_button_2').addEventListener('click', e => {
 			connect(e, true);
 		});
-
+		
 		var heartBeatInterval = null;
-
+		
 		function connect(e, camera){
 			const address = document.getElementById('address').value || "localhost:4444";
 			const password = document.getElementById('password').value;
-
-
+			
+			
 			roomname = document.getElementById('vdoroomname').value || Math.floor(Math.random() * 1000000);
-			pwurl = document.getElementById('vdopassword').value || Math.floor(Math.random() * 1000000);
+			pwurl = document.getElementById('vdopassword').value || generatePassword();
 			localStorage.setItem('roomname',roomname)
 			localStorage.setItem('password',pwurl)
-
+			
 			createIFrame(camera); // connects to VDO.Ninja's IFRAME API
-
+			
 			localStorage.setItem('address',address);
 			if (password){
 				localStorage.setItem('wspass',password);
@@ -334,7 +344,7 @@
 				  address: address
 				});
 			}
-
+			
 			ret.then(() => {
 				console.log(`Success!`);
 				return obs.send('GetSceneList');
@@ -371,10 +381,10 @@
 						}
 					}
 				} catch(e){console.error(e);}
-
+				
 				clearInterval(heartBeatInterval);
 				heartBeatInterval = setInterval(function(){heartBeat();},3000);
-
+				
 			}).catch(err => { // Promise convention dicates you have a catch on every chain.
 				console.log(err);
 				document.getElementById("info").innerHTML = "<br />Error trying to connect. Is SSL enabled on your domain?" + document.getElementById("info").innerHTML;
@@ -383,9 +393,9 @@
 				}
 			});
 		};
-
+		
 		// We use the source visibility one and filter visibility web socket commands quite often in shows.
-
+			
 		obs.on('SwitchScenes', data => {
 			console.log(`New Active Scene: ${data.sceneName}`);
 			scenesData.currentScene = data.sceneName
@@ -419,7 +429,7 @@
 				document.getElementById("info").innerHTML = "<br />"+err.error + document.getElementById("info").innerHTML;
 			}
 		});
-
+			
 	</script>
 </body>
 </html>

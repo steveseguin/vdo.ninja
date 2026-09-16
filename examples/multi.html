@@ -64,7 +64,7 @@ var rooms = "";
 if (urlParams.has("rooms") || urlParams.has("room") || urlParams.has("r")){
 	rooms = urlParams.get("rooms") || urlParams.get("room") || urlParams.get("r");
 	rooms = rooms.split(",");
-
+	
 	if (password == null){
 		password = prompt("Enter the password for the rooms; leave blank for none");
 	}
@@ -92,21 +92,21 @@ if (urlParams.has("rooms") || urlParams.has("room") || urlParams.has("r")){
 	document.write("To use, comma separate the room names. ie: https://vdo.ninja/examples/multi?rooms=xxxx,yyy,ccc");
 }
 
-function loadIframes(url){
+function loadIframes(url){ 
 	var iframe = document.createElement("iframe");
 	iframe.allow = "autoplay;camera;microphone;fullscreen;picture-in-picture;";
-
+	
 	var params = window.location.search || "";
-
+		
 	if (params.startsWith("?")){
 		params = params.slice(1);
 		iframe.src = url + "&" + params
 	} else {
 		iframe.src = url + params
 	}
-
+	
 	document.body.appendChild(iframe);
-
+	
 }
 
 </script>

@@ -221,7 +221,7 @@
 					// Still allow device selection even if initial device is busy
 					recordButton.setAttribute("disabled", "true");
 					videoElement.srcObject = null;
-					videoElement.poster = "camera-off.png"; // Optional: show offline state
+					videoElement.poster = "../media/no-signal-clean.svg";
 				});
 			} catch (error) {
 				console.error('Error initializing:', error);
@@ -241,12 +241,10 @@
 
 				// Only update selects if we have device labels (permissions granted)
 				if (devices.some(device => device.label)) {
-					videoSelect.innerHTML = videoDevices.map(device => 
-						`<option value="${device.deviceId}">${device.label || `Video Device ${videoDevices.indexOf(device) + 1}`}</option>`
-					).join('');
-					audioSelect.innerHTML = audioDevices.map(device => 
-						`<option value="${device.deviceId}">${device.label || `Audio Device ${audioDevices.indexOf(device) + 1}`}</option>`
-					).join('');
+					videoSelect.innerHTML = '';
+					videoDevices.forEach((device, index) => videoSelect.add(new Option(device.label || `Video Device ${index + 1}`, device.deviceId)));
+					audioSelect.innerHTML = '';
+					audioDevices.forEach((device, index) => audioSelect.add(new Option(device.label || `Audio Device ${index + 1}`, device.deviceId)));
 				}
 			} catch (error) {
 				console.error('Error getting devices:', error);
@@ -310,7 +308,7 @@
 					recordButton.removeAttribute("disabled");
 				} else {
 					videoElement.srcObject = null;
-					videoElement.poster = "camera-off.png"; // Optional: show offline state
+					videoElement.poster = "../media/no-signal-clean.svg";
 					recordButton.setAttribute("disabled", "true");
 				}
 
@@ -329,14 +327,14 @@
 				monitorGain = audioContext.createGain();
 				monitorGain.gain.value = monitorEnabled ? 1 : 0;
 				monitorGain.connect(audioContext.destination);
-				await audioContext.audioWorklet.addModule('testrecord-processor.js');
+				await audioContext.audioWorklet.addModule('../core/audio/meter.worklet.js');
 
 				const audioTracks = mediaStream.getAudioTracks();
 				if (audioTracks.length > 0) {
 					sourceNode = audioContext.createMediaStreamSource(mediaStream);
-					meter = new AudioWorkletNode(audioContext, 'meter');
+					meter = new AudioWorkletNode(audioContext, 'podcast-meter');
 					meter.port.onmessage = (event) => {
-						const volume = event.data;
+						const volume = event.data.rms;
 						meterFill.style.width = `${Math.min(volume * 100, 100)}%`;
 					};
 					sourceNode.connect(meter);
@@ -366,10 +364,7 @@
                 await audioContext.resume();
                 if (mediaRecorder && mediaRecorder.state === 'recording') {
                     mediaRecorder.stop();
-                    recordButton.textContent = 'Record';
-                    recordingIndicator.classList.add('hidden');
-                    videoSelect.removeAttribute("disabled");
-                    audioSelect.removeAttribute("disabled");
+                    recordButton.disabled = true;
                 } else {
                     // Show live camera feed again
                     videoElement.srcObject = mediaStream;
@@ -386,8 +381,14 @@
                         }
                     };
                     mediaRecorder.onstop = () => {
+                        recordButton.disabled = false;
+                        recordButton.textContent = 'Record';
+                        recordingIndicator.classList.add('hidden');
+                        videoSelect.removeAttribute("disabled");
+                        audioSelect.removeAttribute("disabled");
                         recordedBlob = new Blob(recordedChunks, { type: 'video/webm' });
                         videoElement.srcObject = null;
+                        URL.revokeObjectURL(videoElement.src);
                         videoElement.src = URL.createObjectURL(recordedBlob);
                         videoElement.controls = true;
                         videoElement.loop = true;

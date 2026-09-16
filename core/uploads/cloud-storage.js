@@ -1,4 +1,4 @@
-import { waitForLegacySession } from '../legacy/session-bridge.js';
+import { waitForLegacySession } from '../legacy/session-bridge.js?v=20260911.1';
 
 const DRIVE_CHUNK_ALIGNMENT = 256 * 1024;
 const DEFAULT_DRIVE_CHUNK_SIZE = 4 * 1024 * 1024;
@@ -71,15 +71,18 @@ export class CloudUploadCoordinator {
 	return this.session.dbx || null;
 }
 
-  startDriveUpload(filename, sessionUri) {
+  startDriveUpload(filename, sessionUri, options = {}) {
     if (typeof window.setupGoogleDriveUploader !== 'function') {
       throw new Error('Google Drive uploader is not available in this build.');
     }
-    return window.setupGoogleDriveUploader(filename, sessionUri);
+    return window.setupGoogleDriveUploader(filename, sessionUri, { ...options, interactive: false });
   }
 
-  createDriveChunkWriter(filename, sessionUri) {
-    const uploader = this.startDriveUpload(filename, sessionUri);
+  createDriveChunkWriter(filename, sessionUri, options = {}) {
+    const uploader = this.startDriveUpload(filename, sessionUri, options);
+    if (typeof uploader?.addChunk !== 'function' || typeof uploader?.finalize !== 'function') {
+      throw new Error('Drive writer does not support upload completion.');
+    }
     return {
       addChunk: (chunk) => uploader?.addChunk?.(chunk),
       finalize: () => uploader?.finalize?.(),
@@ -152,6 +155,7 @@ export class CloudUploadCoordinator {
   }
 
   async uploadBlobToDrive(blob, { filename, onProgress, signal, chunkSize = DEFAULT_DRIVE_CHUNK_SIZE } = {}) {
+    if (signal?.aborted) throw createAbortError();
     const client = this.ensureDriveClient();
     if (!client) {
       return { status: 'skipped', service: 'drive', reason: 'unavailable' };
@@ -162,7 +166,12 @@ export class CloudUploadCoordinator {
     const name = filename || `recording-${Date.now()}.wav`;
     let writer;
     try {
-      writer = this.createDriveChunkWriter(name, this.session.gdrive?.sessionUri);
+      writer = this.createDriveChunkWriter(name, this.session.gdrive?.sessionUri, {
+        signal,
+        onProgress: uploaded => {
+          if (typeof onProgress === 'function') onProgress({ service: 'drive', uploaded, total: blob.size, percentage: blob.size ? Math.min(100, Math.round(uploaded / blob.size * 100)) : 0 });
+        },
+      });
     } catch (error) {
       return { status: 'error', service: 'drive', error };
     }
@@ -180,15 +189,8 @@ export class CloudUploadCoordinator {
       const chunk = blob.slice(offset, Math.min(total, offset + adjustedChunkSize), blob.type || 'application/octet-stream');
       writer.addChunk(chunk);
       uploaded += chunk.size;
-      if (typeof onProgress === 'function') {
-        onProgress({
-          service: 'drive',
-          uploaded,
-          total,
-          percentage: total ? Math.min(100, Math.round((uploaded / total) * 100)) : 0,
-        });
-      }
     }
+    if (signal?.aborted) throw createAbortError();
     writer.addChunk(false);
     if (typeof writer.finalize === 'function') {
       try {
@@ -197,10 +199,12 @@ export class CloudUploadCoordinator {
         return { status: 'error', service: 'drive', error };
       }
     }
+    if (signal?.aborted) throw createAbortError();
     return { status: 'uploaded', service: 'drive', filename: name, bytes: uploaded };
   }
 
   async uploadBlobToDropbox(blob, { filename, onProgress, signal, chunkSize = DEFAULT_DROPBOX_CHUNK_SIZE } = {}) {
+    if (signal?.aborted) throw createAbortError();
     const client = await this.ensureDropboxClient();
     if (!client) {
       return { status: 'skipped', service: 'dropbox', reason: 'unavailable' };
@@ -215,6 +219,7 @@ export class CloudUploadCoordinator {
     } catch (error) {
       return { status: 'error', service: 'dropbox', error };
     }
+    if (signal?.aborted) throw createAbortError();
     if (typeof writer !== 'function') {
       return { status: 'error', service: 'dropbox', error: new Error('Dropbox writer unavailable') };
     }
@@ -226,6 +231,7 @@ export class CloudUploadCoordinator {
       }
       const chunk = blob.slice(offset, Math.min(total, offset + chunkSize), blob.type || 'application/octet-stream');
       await writer(chunk);
+      if (signal?.aborted) throw createAbortError();
       uploaded += chunk.size;
       if (typeof onProgress === 'function') {
         onProgress({
@@ -237,6 +243,7 @@ export class CloudUploadCoordinator {
       }
     }
     await writer(false);
+    if (signal?.aborted) throw createAbortError();
     return { status: 'uploaded', service: 'dropbox', filename: name, bytes: uploaded };
   }
 }

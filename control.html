@@ -1,0 +1,2557 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+		<title>Camera Operator Console - VDO.Ninja</title>
+		<meta name="description" content="A multi-camera remote operations console for VDO.Ninja with live previews, camera settings, PTZ, device switching, and bandwidth controls." />
+		<meta name="theme-color" content="#0a0d12" />
+		<link rel="canonical" href="https://vdo.ninja/control.html" />
+		<meta property="og:type" content="website" />
+		<meta property="og:url" content="https://vdo.ninja/control.html" />
+		<meta property="og:title" content="Camera Operator Console - VDO.Ninja" />
+		<meta property="og:description" content="Operate multiple remote VDO.Ninja cameras from one responsive control surface." />
+		<meta property="og:image" content="https://vdo.ninja/media/icon-512x512.png" />
+		<meta name="twitter:card" content="summary" />
+		<meta name="twitter:title" content="Camera Operator Console - VDO.Ninja" />
+		<meta name="twitter:description" content="Operate multiple remote VDO.Ninja cameras from one responsive control surface." />
+		<meta name="twitter:image" content="https://vdo.ninja/media/icon-512x512.png" />
+		<link rel="icon" href="./media/favicon.ico" sizes="any" />
+		<style>
+			:root {
+				color-scheme: dark;
+				--page: #080b10;
+				--surface: #10151d;
+				--surface-raised: #171e28;
+				--surface-soft: #1d2632;
+				--line: #2a3543;
+				--line-bright: #3a4859;
+				--text: #f4f7fb;
+				--muted: #94a2b4;
+				--dim: #69788a;
+				--accent: #6fe7a5;
+				--accent-strong: #21c778;
+				--accent-ink: #06180f;
+				--warning: #ffbd66;
+				--danger: #ff7474;
+				--info: #75bfff;
+				--radius: 14px;
+				--shadow: 0 20px 55px rgba(0, 0, 0, 0.34);
+			}
+
+			* {
+				box-sizing: border-box;
+			}
+
+			html,
+			body {
+				margin: 0;
+				min-height: 100%;
+				background: var(--page);
+				color: var(--text);
+				font-family:
+					Inter,
+					ui-sans-serif,
+					system-ui,
+					-apple-system,
+					BlinkMacSystemFont,
+					"Segoe UI",
+					sans-serif;
+			}
+
+			body {
+				min-height: 100vh;
+				min-height: 100dvh;
+				overflow: hidden;
+				background: radial-gradient(circle at 18% -10%, rgba(45, 114, 88, 0.2), transparent 34%), linear-gradient(180deg, #0b0f15 0%, var(--page) 42%);
+			}
+
+			button,
+			input,
+			select {
+				font: inherit;
+			}
+
+			button,
+			select,
+			input {
+				outline: none;
+			}
+
+			button:focus-visible,
+			select:focus-visible,
+			input:focus-visible,
+			[tabindex]:focus-visible {
+				box-shadow: 0 0 0 3px rgba(111, 231, 165, 0.28);
+				border-color: var(--accent);
+			}
+
+			button {
+				border: 1px solid var(--line);
+				border-radius: 10px;
+				background: var(--surface-raised);
+				color: var(--text);
+				min-height: 38px;
+				padding: 8px 12px;
+				font-weight: 700;
+				cursor: pointer;
+				transition:
+					border-color 140ms ease,
+					background 140ms ease,
+					transform 140ms ease;
+			}
+
+			button:hover {
+				border-color: var(--line-bright);
+				background: var(--surface-soft);
+			}
+
+			button:active {
+				transform: translateY(1px);
+			}
+
+			button.primary {
+				border-color: #3ed28a;
+				background: var(--accent);
+				color: var(--accent-ink);
+			}
+
+			button.primary:hover {
+				background: #8bf0b7;
+			}
+
+			button.danger {
+				border-color: rgba(255, 116, 116, 0.38);
+				color: #ffc0c0;
+			}
+
+			button.ghost {
+				background: transparent;
+			}
+
+			button.small {
+				min-height: 32px;
+				padding: 5px 9px;
+				font-size: 0.76rem;
+			}
+
+			input[type="text"],
+			input[type="password"],
+			input[type="number"],
+			select {
+				width: 100%;
+				min-height: 38px;
+				border: 1px solid var(--line);
+				border-radius: 9px;
+				background: #0b1017;
+				color: var(--text);
+				padding: 7px 10px;
+			}
+
+			input::placeholder {
+				color: #5f6d7d;
+			}
+
+			input[type="range"] {
+				width: 100%;
+				accent-color: var(--accent-strong);
+			}
+
+			.app-shell {
+				display: grid;
+				grid-template-rows: auto minmax(0, 1fr) auto;
+				min-height: 100vh;
+				min-height: 100dvh;
+			}
+
+			.topbar {
+				position: relative;
+				z-index: 20;
+				display: grid;
+				grid-template-columns: auto minmax(420px, 1fr) auto;
+				gap: 18px;
+				align-items: center;
+				padding: 12px 16px;
+				border-bottom: 1px solid var(--line);
+				background: rgba(10, 14, 20, 0.94);
+				backdrop-filter: blur(18px);
+			}
+
+			.brand {
+				display: flex;
+				align-items: center;
+				gap: 11px;
+				white-space: nowrap;
+			}
+
+			.brand-mark {
+				position: relative;
+				width: 35px;
+				height: 35px;
+				border: 2px solid var(--accent);
+				border-radius: 10px;
+				box-shadow: inset 0 0 0 4px rgba(111, 231, 165, 0.08);
+			}
+
+			.brand-mark::before {
+				content: "";
+				position: absolute;
+				inset: 8px;
+				border: 2px solid var(--accent);
+				border-radius: 50%;
+			}
+
+			.brand-mark::after {
+				content: "";
+				position: absolute;
+				right: -5px;
+				top: 6px;
+				width: 7px;
+				height: 7px;
+				border-radius: 50%;
+				background: var(--accent);
+				box-shadow: 0 0 12px rgba(111, 231, 165, 0.8);
+			}
+
+			.brand-copy strong,
+			.brand-copy span {
+				display: block;
+			}
+
+			.brand-copy strong {
+				font-size: 0.98rem;
+				letter-spacing: 0.01em;
+			}
+
+			.brand-copy span {
+				margin-top: 2px;
+				font-size: 0.68rem;
+				color: var(--muted);
+				letter-spacing: 0.12em;
+				text-transform: uppercase;
+			}
+
+			.connect-form {
+				display: grid;
+				grid-template-columns: minmax(170px, 1fr) minmax(120px, 0.55fr) minmax(150px, 0.7fr) auto;
+				gap: 8px;
+				align-items: end;
+			}
+
+			.field-label {
+				display: grid;
+				gap: 5px;
+				min-width: 0;
+				font-size: 0.68rem;
+				font-weight: 700;
+				letter-spacing: 0.06em;
+				text-transform: uppercase;
+				color: var(--muted);
+			}
+
+			.bandwidth-controls {
+				display: flex;
+				align-items: flex-end;
+				gap: 8px;
+			}
+
+			.bandwidth-controls .field-label {
+				width: 116px;
+			}
+
+			.aggregate-bitrate {
+				display: grid;
+				align-content: center;
+				min-height: 38px;
+				min-width: 86px;
+				padding: 5px 10px;
+				border: 1px solid var(--line);
+				border-radius: 9px;
+				background: #0b1017;
+			}
+
+			.aggregate-bitrate strong,
+			.aggregate-bitrate span {
+				display: block;
+			}
+
+			.aggregate-bitrate strong {
+				font-size: 0.84rem;
+				color: var(--accent);
+			}
+
+			.aggregate-bitrate span {
+				font-size: 0.61rem;
+				color: var(--muted);
+				text-transform: uppercase;
+				letter-spacing: 0.06em;
+			}
+
+			.operator-layout {
+				display: grid;
+				grid-template-columns: minmax(0, 1fr) 390px;
+				gap: 0;
+				min-height: 0;
+			}
+
+			.monitor-column {
+				display: grid;
+				/* Keep the rail's minimum content width inside the preview column. */
+				grid-template-columns: minmax(0, 1fr);
+				grid-template-rows: minmax(0, 1fr) auto;
+				min-width: 0;
+				min-height: 0;
+				background: #06090d;
+			}
+
+			.stage-wrap {
+				min-height: 0;
+				padding: 18px;
+			}
+
+			.stage {
+				position: relative;
+				display: grid;
+				place-items: center;
+				width: 100%;
+				height: 100%;
+				min-height: 320px;
+				border: 1px solid #222c38;
+				border-radius: 16px;
+				overflow: hidden;
+				background: linear-gradient(rgba(255, 255, 255, 0.018) 1px, transparent 1px), linear-gradient(90deg, rgba(255, 255, 255, 0.018) 1px, transparent 1px), #090d12;
+				background-size: 36px 36px;
+				box-shadow: var(--shadow);
+			}
+
+			.stage::after {
+				content: "";
+				position: absolute;
+				inset: 0;
+				pointer-events: none;
+				box-shadow: inset 0 0 80px rgba(0, 0, 0, 0.48);
+			}
+
+			.stage-frame-mount {
+				position: absolute;
+				inset: 0;
+				z-index: 1;
+			}
+
+			.stage iframe,
+			.camera-thumb iframe {
+				display: block;
+				width: 100%;
+				height: 100%;
+				border: 0;
+				background: #05070a;
+			}
+
+			.stage-empty {
+				position: relative;
+				z-index: 2;
+				max-width: 420px;
+				padding: 30px;
+				text-align: center;
+			}
+
+			.stage-empty .empty-ring {
+				width: 68px;
+				height: 68px;
+				margin: 0 auto 18px;
+				border: 2px solid #354353;
+				border-radius: 50%;
+				box-shadow: inset 0 0 0 10px rgba(255, 255, 255, 0.015);
+			}
+
+			.stage-empty h2 {
+				margin: 0 0 8px;
+				font-size: 1.3rem;
+			}
+
+			.stage-empty p {
+				margin: 0;
+				color: var(--muted);
+				line-height: 1.55;
+			}
+
+			.stage-hud {
+				position: absolute;
+				z-index: 3;
+				left: 16px;
+				right: 16px;
+				top: 14px;
+				display: flex;
+				justify-content: space-between;
+				align-items: flex-start;
+				pointer-events: none;
+			}
+
+			.stage-title {
+				padding: 8px 11px;
+				border: 1px solid rgba(255, 255, 255, 0.12);
+				border-radius: 9px;
+				background: rgba(6, 9, 13, 0.76);
+				backdrop-filter: blur(12px);
+			}
+
+			.stage-title strong,
+			.stage-title span {
+				display: block;
+			}
+
+			.stage-title strong {
+				font-size: 0.86rem;
+			}
+
+			.stage-title span {
+				margin-top: 2px;
+				font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
+				font-size: 0.66rem;
+				color: var(--muted);
+			}
+
+			.status-chip {
+				display: inline-flex;
+				align-items: center;
+				gap: 7px;
+				padding: 7px 10px;
+				border: 1px solid rgba(255, 255, 255, 0.12);
+				border-radius: 999px;
+				background: rgba(6, 9, 13, 0.76);
+				font-size: 0.72rem;
+				font-weight: 800;
+				backdrop-filter: blur(12px);
+			}
+
+			.status-chip::before,
+			.camera-status::before {
+				content: "";
+				width: 7px;
+				height: 7px;
+				border-radius: 50%;
+				background: var(--warning);
+				box-shadow: 0 0 9px rgba(255, 189, 102, 0.55);
+			}
+
+			.status-chip.online::before,
+			.camera-card.online .camera-status::before {
+				background: var(--accent);
+				box-shadow: 0 0 9px rgba(111, 231, 165, 0.65);
+			}
+
+			.status-chip.error::before,
+			.camera-card.error .camera-status::before {
+				background: var(--danger);
+				box-shadow: 0 0 9px rgba(255, 116, 116, 0.6);
+			}
+
+			.camera-rail-section {
+				border-top: 1px solid var(--line);
+				background: #0d1219;
+			}
+
+			.camera-rail-head {
+				display: flex;
+				align-items: center;
+				justify-content: space-between;
+				padding: 9px 16px 6px;
+			}
+
+			.camera-rail-head strong {
+				font-size: 0.7rem;
+				letter-spacing: 0.1em;
+				text-transform: uppercase;
+				color: var(--muted);
+			}
+
+			.camera-rail-head span {
+				font-size: 0.68rem;
+				color: var(--dim);
+			}
+
+			.camera-rail {
+				display: flex;
+				gap: 10px;
+				min-height: 118px;
+				overflow-x: auto;
+				padding: 0 16px 13px;
+				scrollbar-color: #364252 transparent;
+				scrollbar-width: thin;
+			}
+
+			.camera-card {
+				position: relative;
+				flex: 0 0 174px;
+				border: 1px solid var(--line);
+				border-radius: 11px;
+				overflow: hidden;
+				background: var(--surface);
+				cursor: pointer;
+				transition:
+					border-color 150ms ease,
+					transform 150ms ease,
+					box-shadow 150ms ease;
+			}
+
+			.camera-card:hover {
+				border-color: var(--line-bright);
+				transform: translateY(-1px);
+			}
+
+			.camera-card.active {
+				border-color: var(--accent);
+				/* A transform would contain and clip the fixed stage preview. */
+				transform: none;
+				transition: border-color 150ms ease, box-shadow 150ms ease;
+				box-shadow:
+					0 0 0 1px rgba(111, 231, 165, 0.2),
+					0 10px 24px rgba(0, 0, 0, 0.25);
+			}
+
+			.camera-thumb {
+				position: relative;
+				height: 78px;
+				background: #05080c;
+			}
+
+			.camera-thumb::after {
+				content: "Preview";
+				position: absolute;
+				inset: 0;
+				display: grid;
+				place-items: center;
+				color: #3d4a59;
+				font-size: 0.65rem;
+				letter-spacing: 0.1em;
+				text-transform: uppercase;
+				pointer-events: none;
+			}
+
+			.camera-card.active .camera-thumb::after {
+				content: "On stage";
+				color: var(--accent);
+				background: linear-gradient(135deg, rgba(33, 199, 120, 0.06), rgba(33, 199, 120, 0.015));
+			}
+
+			.camera-thumb iframe {
+				position: relative;
+				z-index: 1;
+				pointer-events: none;
+			}
+
+			.camera-card.active iframe {
+				position: fixed;
+				left: var(--stage-left);
+				top: var(--stage-top);
+				width: var(--stage-width);
+				height: var(--stage-height);
+				border-radius: 15px;
+				pointer-events: auto;
+			}
+
+			.camera-card-foot {
+				display: flex;
+				align-items: center;
+				justify-content: space-between;
+				gap: 7px;
+				padding: 7px 9px;
+			}
+
+			.camera-card-name {
+				min-width: 0;
+			}
+
+			.camera-card-name strong,
+			.camera-card-name span {
+				display: block;
+				overflow: hidden;
+				text-overflow: ellipsis;
+				white-space: nowrap;
+			}
+
+			.camera-card-name strong {
+				font-size: 0.76rem;
+			}
+
+			.camera-card-name span {
+				margin-top: 2px;
+				font-size: 0.62rem;
+				color: var(--dim);
+			}
+
+			.camera-status {
+				display: flex;
+				align-items: center;
+				gap: 5px;
+				flex: 0 0 auto;
+				font-size: 0.61rem;
+				color: var(--muted);
+			}
+
+			.control-dock {
+				display: grid;
+				grid-template-rows: auto auto minmax(0, 1fr);
+				min-width: 0;
+				min-height: 0;
+				border-left: 1px solid var(--line);
+				background: var(--surface);
+			}
+
+			.control-head {
+				display: flex;
+				align-items: flex-start;
+				justify-content: space-between;
+				gap: 12px;
+				padding: 15px 16px 12px;
+				border-bottom: 1px solid var(--line);
+			}
+
+			.control-head h1 {
+				margin: 0;
+				font-size: 1.05rem;
+			}
+
+			.control-head p {
+				margin: 4px 0 0;
+				max-width: 250px;
+				overflow: hidden;
+				text-overflow: ellipsis;
+				white-space: nowrap;
+				color: var(--muted);
+				font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
+				font-size: 0.7rem;
+			}
+
+			.control-tabs {
+				display: grid;
+				grid-template-columns: repeat(4, 1fr);
+				gap: 5px;
+				padding: 9px 10px;
+				border-bottom: 1px solid var(--line);
+				background: #0d1218;
+			}
+
+			.control-tabs button {
+				min-height: 34px;
+				padding: 6px;
+				border-color: transparent;
+				background: transparent;
+				color: var(--muted);
+				font-size: 0.72rem;
+			}
+
+			.control-tabs button.active {
+				border-color: var(--line);
+				background: var(--surface-raised);
+				color: var(--text);
+			}
+
+			.control-scroll {
+				overflow-y: auto;
+				padding: 13px 14px 24px;
+				scrollbar-color: #364252 transparent;
+				scrollbar-width: thin;
+			}
+
+			.control-panel {
+				display: none;
+			}
+
+			.control-panel.active {
+				display: block;
+			}
+
+			.panel-empty {
+				padding: 42px 24px;
+				text-align: center;
+				color: var(--muted);
+				line-height: 1.55;
+			}
+
+			.control-section {
+				margin-bottom: 12px;
+				border: 1px solid var(--line);
+				border-radius: 12px;
+				background: #0d1219;
+				overflow: hidden;
+			}
+
+			.section-head {
+				display: flex;
+				align-items: flex-start;
+				justify-content: space-between;
+				gap: 10px;
+				padding: 11px 12px 9px;
+				border-bottom: 1px solid rgba(42, 53, 67, 0.7);
+			}
+
+			.section-head strong {
+				font-size: 0.78rem;
+				letter-spacing: 0.04em;
+			}
+
+			.section-head span {
+				font-size: 0.65rem;
+				color: var(--dim);
+				text-align: right;
+			}
+
+			.section-body {
+				padding: 11px 12px 12px;
+			}
+
+			.control-row {
+				padding: 8px 0;
+				border-bottom: 1px solid rgba(42, 53, 67, 0.48);
+			}
+
+			.control-row:first-child {
+				padding-top: 0;
+			}
+
+			.control-row:last-child {
+				padding-bottom: 0;
+				border-bottom: 0;
+			}
+
+			.control-label {
+				display: flex;
+				align-items: baseline;
+				justify-content: space-between;
+				gap: 10px;
+				margin-bottom: 7px;
+			}
+
+			.control-label strong {
+				font-size: 0.74rem;
+				font-weight: 750;
+			}
+
+			.control-label output {
+				font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
+				font-size: 0.68rem;
+				color: var(--accent);
+			}
+
+			.range-line {
+				display: grid;
+				grid-template-columns: minmax(0, 1fr) 82px;
+				gap: 9px;
+				align-items: center;
+			}
+
+			.range-line input[type="number"] {
+				min-height: 34px;
+				padding: 5px 7px;
+				font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
+				font-size: 0.7rem;
+			}
+
+			.switch-line {
+				display: flex;
+				align-items: center;
+				justify-content: space-between;
+				gap: 12px;
+			}
+
+			.switch-line span {
+				font-size: 0.74rem;
+				font-weight: 700;
+			}
+
+			.switch {
+				position: relative;
+				width: 44px;
+				height: 24px;
+				flex: 0 0 auto;
+			}
+
+			.switch input {
+				position: absolute;
+				opacity: 0;
+			}
+
+			.switch span {
+				position: absolute;
+				inset: 0;
+				border: 1px solid var(--line-bright);
+				border-radius: 999px;
+				background: #18212b;
+				cursor: pointer;
+			}
+
+			.switch span::after {
+				content: "";
+				position: absolute;
+				top: 3px;
+				left: 3px;
+				width: 16px;
+				height: 16px;
+				border-radius: 50%;
+				background: #8391a2;
+				transition:
+					transform 140ms ease,
+					background 140ms ease;
+			}
+
+			.switch input:checked + span {
+				border-color: var(--accent-strong);
+				background: rgba(33, 199, 120, 0.2);
+			}
+
+			.switch input:checked + span::after {
+				transform: translateX(20px);
+				background: var(--accent);
+			}
+
+			.ptz-pad {
+				display: grid;
+				grid-template-columns: repeat(3, 1fr);
+				gap: 7px;
+				max-width: 245px;
+				margin: 0 auto;
+			}
+
+			.ptz-pad button {
+				min-height: 46px;
+				padding: 6px;
+				font-size: 1rem;
+			}
+
+			.ptz-pad button.center {
+				font-size: 0.68rem;
+				color: var(--accent);
+			}
+
+			.ptz-spacer {
+				visibility: hidden;
+			}
+
+			.button-grid {
+				display: grid;
+				grid-template-columns: repeat(2, minmax(0, 1fr));
+				gap: 8px;
+			}
+
+			.preset-row {
+				display: flex;
+				flex-wrap: wrap;
+				gap: 7px;
+				margin-top: 9px;
+			}
+
+			.current-format {
+				display: grid;
+				grid-template-columns: repeat(3, 1fr);
+				gap: 7px;
+			}
+
+			.metric {
+				padding: 9px;
+				border: 1px solid var(--line);
+				border-radius: 9px;
+				background: #0a0f15;
+			}
+
+			.metric strong,
+			.metric span {
+				display: block;
+			}
+
+			.metric strong {
+				font-size: 0.8rem;
+			}
+
+			.metric span {
+				margin-top: 3px;
+				font-size: 0.6rem;
+				color: var(--dim);
+				text-transform: uppercase;
+				letter-spacing: 0.06em;
+			}
+
+			.device-select {
+				margin-bottom: 9px;
+			}
+
+			.advanced-note {
+				margin: 8px 0 0;
+				font-size: 0.67rem;
+				line-height: 1.5;
+				color: var(--dim);
+			}
+
+			.footer-status {
+				display: flex;
+				align-items: center;
+				justify-content: space-between;
+				gap: 12px;
+				min-height: 31px;
+				padding: 6px 14px;
+				border-top: 1px solid var(--line);
+				background: #090d12;
+				font-size: 0.67rem;
+				color: var(--muted);
+			}
+
+			.keyboard-hint {
+				white-space: nowrap;
+				color: var(--dim);
+			}
+
+			.toast {
+				position: fixed;
+				z-index: 100;
+				left: 50%;
+				bottom: 44px;
+				transform: translate(-50%, 18px);
+				max-width: min(440px, calc(100vw - 24px));
+				padding: 10px 14px;
+				border: 1px solid var(--line-bright);
+				border-radius: 10px;
+				background: rgba(20, 27, 36, 0.96);
+				box-shadow: var(--shadow);
+				font-size: 0.76rem;
+				opacity: 0;
+				pointer-events: none;
+				transition:
+					opacity 150ms ease,
+					transform 150ms ease;
+			}
+
+			.toast.visible {
+				opacity: 1;
+				transform: translate(-50%, 0);
+			}
+
+			.toast.error {
+				border-color: rgba(255, 116, 116, 0.5);
+				color: #ffc4c4;
+			}
+
+			.hidden {
+				display: none !important;
+			}
+
+			@media (max-width: 1220px) {
+				.topbar {
+					grid-template-columns: auto minmax(390px, 1fr);
+				}
+
+				.bandwidth-controls {
+					grid-column: 1 / -1;
+					justify-content: flex-end;
+				}
+
+				.operator-layout {
+					grid-template-columns: minmax(0, 1fr) 360px;
+				}
+			}
+
+			@media (max-width: 880px) {
+				body {
+					overflow: auto;
+				}
+
+				.app-shell {
+					display: block;
+				}
+
+				.topbar {
+					position: sticky;
+					top: 0;
+					grid-template-columns: 1fr auto;
+					gap: 10px;
+				}
+
+				.brand-copy span {
+					display: none;
+				}
+
+				.connect-form {
+					grid-column: 1 / -1;
+					grid-template-columns: minmax(150px, 1fr) minmax(110px, 0.65fr) auto;
+				}
+
+				.connect-form .label-field {
+					display: none;
+				}
+
+				.bandwidth-controls {
+					grid-column: auto;
+					justify-content: flex-end;
+				}
+
+				.bandwidth-controls .field-label:first-child,
+				.bandwidth-controls .aggregate-bitrate {
+					display: none;
+				}
+
+				.operator-layout {
+					display: block;
+				}
+
+				.monitor-column {
+					display: block;
+				}
+
+				.stage-wrap {
+					padding: 10px;
+				}
+
+				.stage {
+					aspect-ratio: 16 / 9;
+					height: auto;
+					min-height: 230px;
+				}
+
+				.control-dock {
+					border-top: 1px solid var(--line);
+					border-left: 0;
+					min-height: 620px;
+				}
+
+				.control-tabs {
+					position: sticky;
+					top: 128px;
+					z-index: 10;
+				}
+
+				.control-scroll {
+					overflow: visible;
+				}
+
+				.footer-status {
+					position: sticky;
+					bottom: 0;
+					z-index: 15;
+				}
+
+				.keyboard-hint {
+					display: none;
+				}
+			}
+
+			@media (max-width: 620px) {
+				.topbar {
+					padding: 10px;
+				}
+
+				.brand-mark {
+					width: 31px;
+					height: 31px;
+				}
+
+				.connect-form {
+					grid-template-columns: 1fr auto;
+				}
+
+				.connect-form .token-field {
+					grid-column: 1 / 2;
+				}
+
+				.connect-form .stream-field {
+					grid-column: 1 / -1;
+				}
+
+				.bandwidth-controls {
+					display: none;
+				}
+
+				.stage-wrap {
+					padding: 0;
+				}
+
+				.stage {
+					border-width: 0 0 1px;
+					border-radius: 0;
+					min-height: 220px;
+				}
+
+				.stage-hud {
+					left: 9px;
+					right: 9px;
+					top: 9px;
+				}
+
+				.camera-rail {
+					padding-left: 10px;
+					padding-right: 10px;
+				}
+
+				.camera-card {
+					flex-basis: 148px;
+				}
+
+				.camera-thumb {
+					height: 70px;
+				}
+
+				.control-head {
+					padding: 13px 12px 10px;
+				}
+
+				.control-tabs {
+					top: 133px;
+					padding-left: 7px;
+					padding-right: 7px;
+				}
+
+				.control-scroll {
+					padding: 10px 9px 22px;
+				}
+
+				.current-format {
+					grid-template-columns: 1fr;
+				}
+			}
+
+			@media (prefers-reduced-motion: reduce) {
+				*,
+				*::before,
+				*::after {
+					scroll-behavior: auto !important;
+					transition-duration: 0.01ms !important;
+				}
+			}
+		</style>
+	</head>
+	<body>
+		<div class="app-shell">
+			<header class="topbar">
+				<div class="brand" aria-label="VDO.Ninja Camera Operator Console">
+					<span class="brand-mark" aria-hidden="true"></span>
+					<span class="brand-copy">
+						<strong>Camera Operator</strong>
+						<span>VDO.Ninja control surface</span>
+					</span>
+				</div>
+
+				<form id="addCameraForm" class="connect-form">
+					<label class="field-label stream-field">
+						Stream ID(s)
+						<input id="streamInput" type="text" autocomplete="off" placeholder="camera-one, camera-two" required />
+					</label>
+					<label class="field-label label-field">
+						Operator label
+						<input id="labelInput" type="text" autocomplete="off" placeholder="Wide shot" />
+					</label>
+					<label class="field-label token-field">
+						Remote token
+						<input id="remoteInput" type="password" autocomplete="off" placeholder="Matches sender" />
+					</label>
+					<button class="primary" type="submit">Add camera</button>
+				</form>
+
+				<div class="bandwidth-controls" aria-label="Preview bandwidth controls">
+					<label class="field-label">
+						Rail previews
+						<select id="backgroundBitrateSelect">
+							<option value="80">80 kbps</option>
+							<option value="120" selected>120 kbps</option>
+							<option value="250">250 kbps</option>
+							<option value="500">500 kbps</option>
+						</select>
+					</label>
+					<label class="field-label">
+						Selected preview
+						<select id="activeBitrateSelect">
+							<option value="250">250 kbps</option>
+							<option value="500" selected>500 kbps</option>
+							<option value="800">800 kbps</option>
+							<option value="1200">1.2 Mbps</option>
+							<option value="2500">2.5 Mbps</option>
+							<option value="5000">5 Mbps</option>
+						</select>
+					</label>
+					<div class="aggregate-bitrate" title="Maximum requested bitrate across connected previews">
+						<strong id="aggregateBitrate">0 kbps</strong>
+						<span>Preview budget</span>
+					</div>
+				</div>
+			</header>
+
+			<main class="operator-layout">
+				<section class="monitor-column" aria-label="Camera previews">
+					<div class="stage-wrap">
+						<div id="stage" class="stage">
+							<div id="stageFrameMount" class="stage-frame-mount"></div>
+							<div id="stageEmpty" class="stage-empty">
+								<div class="empty-ring" aria-hidden="true"></div>
+								<h2>Add a remote camera</h2>
+								<p>Enter one or more stream IDs above. Each sender needs matching <strong>&amp;remote</strong> authorization; add <strong>&amp;ptz</strong> for hardware controls.</p>
+							</div>
+							<div id="stageHud" class="stage-hud hidden">
+								<div class="stage-title">
+									<strong id="stageName">Camera</strong>
+									<span id="stageStreamId">stream-id</span>
+								</div>
+								<span id="stageStatus" class="status-chip">Connecting</span>
+							</div>
+						</div>
+					</div>
+
+					<div class="camera-rail-section">
+						<div class="camera-rail-head">
+							<strong>Camera rail</strong>
+							<span id="cameraCount">0 cameras</span>
+						</div>
+						<div id="cameraRail" class="camera-rail" role="list" aria-label="Connected cameras"></div>
+					</div>
+				</section>
+
+				<aside class="control-dock" aria-label="Camera controls">
+					<div class="control-head">
+						<div>
+							<h1 id="controlCameraName">No camera selected</h1>
+							<p id="controlCameraMeta">Add a stream to begin</p>
+						</div>
+						<button id="refreshSettingsBtn" class="small" type="button" disabled>Refresh</button>
+					</div>
+
+					<nav class="control-tabs" aria-label="Control groups">
+						<button class="active" type="button" data-tab="lens">Lens</button>
+						<button type="button" data-tab="image">Image</button>
+						<button type="button" data-tab="capture">Capture</button>
+						<button type="button" data-tab="device">Device</button>
+					</nav>
+
+					<div class="control-scroll">
+						<section id="panel-lens" class="control-panel active" data-panel="lens"></section>
+						<section id="panel-image" class="control-panel" data-panel="image"></section>
+						<section id="panel-capture" class="control-panel" data-panel="capture"></section>
+						<section id="panel-device" class="control-panel" data-panel="device"></section>
+					</div>
+				</aside>
+			</main>
+
+			<footer class="footer-status">
+				<span id="footerMessage">Ready. Remote tokens stay in this tab and are not saved.</span>
+				<span class="keyboard-hint">Arrows: pan/tilt · +/−: zoom · Ctrl +/−: focus · 1–9: switch camera</span>
+			</footer>
+		</div>
+
+		<div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+		<script>
+			(function () {
+				"use strict";
+
+				var STORAGE_KEY = "vdoninja_camera_operator_v1";
+				var MESSAGE_ORIGIN = window.location.origin;
+				var state = {
+					cameras: [],
+					activeKey: null,
+					activeBitrate: 500,
+					backgroundBitrate: 120,
+					activeTab: "lens",
+					toastTimer: null,
+					holdTimer: null,
+					holdInterval: null,
+					controlTimers: {},
+					renderTimer: null,
+					userEditingUntil: 0
+				};
+
+				var refs = {
+					addCameraForm: document.getElementById("addCameraForm"),
+					streamInput: document.getElementById("streamInput"),
+					labelInput: document.getElementById("labelInput"),
+					remoteInput: document.getElementById("remoteInput"),
+					backgroundBitrateSelect: document.getElementById("backgroundBitrateSelect"),
+					activeBitrateSelect: document.getElementById("activeBitrateSelect"),
+					aggregateBitrate: document.getElementById("aggregateBitrate"),
+					stageFrameMount: document.getElementById("stageFrameMount"),
+					stageEmpty: document.getElementById("stageEmpty"),
+					stageHud: document.getElementById("stageHud"),
+					stageName: document.getElementById("stageName"),
+					stageStreamId: document.getElementById("stageStreamId"),
+					stageStatus: document.getElementById("stageStatus"),
+					cameraRail: document.getElementById("cameraRail"),
+					cameraCount: document.getElementById("cameraCount"),
+					controlCameraName: document.getElementById("controlCameraName"),
+					controlCameraMeta: document.getElementById("controlCameraMeta"),
+					refreshSettingsBtn: document.getElementById("refreshSettingsBtn"),
+					footerMessage: document.getElementById("footerMessage"),
+					toast: document.getElementById("toast")
+				};
+
+				var CONTROL_NAMES = {
+					aspectRatio: "Aspect ratio",
+					brightness: "Brightness",
+					colorTemperature: "Color temperature",
+					contrast: "Contrast",
+					exposureCompensation: "Exposure compensation",
+					exposureMode: "Exposure mode",
+					exposureTime: "Exposure time",
+					facingMode: "Facing mode",
+					focusDistance: "Focus distance",
+					focusMode: "Focus mode",
+					frameRate: "Frame rate",
+					height: "Height",
+					iso: "ISO",
+					pan: "Pan",
+					resizeMode: "Resize mode",
+					saturation: "Saturation",
+					sharpness: "Sharpness",
+					tilt: "Tilt",
+					torch: "Torch",
+					whiteBalanceMode: "White balance",
+					width: "Width",
+					zoom: "Zoom"
+				};
+
+				var GROUPS = {
+					lens: ["pan", "tilt", "zoom", "focusMode", "focusDistance"],
+					image: ["exposureMode", "exposureTime", "exposureCompensation", "iso", "whiteBalanceMode", "colorTemperature", "brightness", "contrast", "saturation", "sharpness", "torch"],
+					capture: ["width", "height", "frameRate", "aspectRatio", "resizeMode", "facingMode"]
+				};
+
+				function makeKey() {
+					return "camera_" + Math.random().toString(36).substring(2, 9) + "_" + Date.now().toString(36);
+				}
+
+				function activeCamera() {
+					for (var i = 0; i < state.cameras.length; i++) {
+						if (state.cameras[i].key === state.activeKey) {
+							return state.cameras[i];
+						}
+					}
+					return null;
+				}
+
+				function cameraFromMessageSource(source) {
+					for (var i = 0; i < state.cameras.length; i++) {
+						if (state.cameras[i].frame && state.cameras[i].frame.contentWindow === source) {
+							return state.cameras[i];
+						}
+					}
+					return null;
+				}
+
+				function findCameraById(streamID) {
+					var normalized = String(streamID || "").toLowerCase();
+					for (var i = 0; i < state.cameras.length; i++) {
+						if (state.cameras[i].id.toLowerCase() === normalized) {
+							return state.cameras[i];
+						}
+					}
+					return null;
+				}
+
+				function normalizeStreamID(value) {
+					return String(value || "")
+						.trim()
+						.replace(/^.*[?&](?:view|v)=([^&#]+).*$/i, "$1")
+						.split("&")[0]
+						.trim();
+				}
+
+				function parseStreamIDs(value) {
+					var seen = {};
+					return String(value || "")
+						.split(/[\n,]+/)
+						.map(normalizeStreamID)
+						.filter(function (streamID) {
+							var key = streamID.toLowerCase();
+							if (!streamID || seen[key]) return false;
+							seen[key] = true;
+							return true;
+						});
+				}
+
+				function saveLocalState() {
+					try {
+						localStorage.setItem(
+							STORAGE_KEY,
+							JSON.stringify({
+								cameras: state.cameras.map(function (camera) {
+									return { id: camera.id, label: camera.label };
+								}),
+								activeBitrate: state.activeBitrate,
+								backgroundBitrate: state.backgroundBitrate
+							})
+						);
+					} catch (e) {}
+				}
+
+				function loadLocalState() {
+					try {
+						var stored = JSON.parse(localStorage.getItem(STORAGE_KEY) || "null");
+						return stored && typeof stored === "object" ? stored : null;
+					} catch (e) {
+						return null;
+					}
+				}
+
+				function setFooter(message) {
+					refs.footerMessage.textContent = message;
+				}
+
+				function showToast(message, error) {
+					clearTimeout(state.toastTimer);
+					refs.toast.textContent = message;
+					refs.toast.classList.toggle("error", !!error);
+					refs.toast.classList.add("visible");
+					state.toastTimer = setTimeout(function () {
+						refs.toast.classList.remove("visible");
+					}, 2600);
+				}
+
+				function formatBitrate(value) {
+					if (value >= 1000) {
+						return (value / 1000).toFixed(value % 1000 ? 1 : 0) + " Mbps";
+					}
+					return value + " kbps";
+				}
+
+				function updateAggregateBitrate() {
+					var count = state.cameras.length;
+					var total = count ? state.activeBitrate + Math.max(0, count - 1) * state.backgroundBitrate : 0;
+					refs.aggregateBitrate.textContent = formatBitrate(total);
+					refs.cameraCount.textContent = count + " camera" + (count === 1 ? "" : "s");
+				}
+
+				function buildForwardedUrl(blockedKeys) {
+					var url = new URL("./", window.location.href);
+					var params = new URLSearchParams(window.location.search);
+					blockedKeys.forEach(function (key) {
+						params.delete(key);
+					});
+					url.search = params.toString();
+					url.hash = "";
+					return url;
+				}
+
+				function buildViewerUrl(camera) {
+					var url = buildForwardedUrl(["view", "v", "V", "streamid", "pull", "push", "id", "permaid", "bitrate", "videobitrate", "backgroundbitrate", "railbitrate"]);
+					url.searchParams.set("view", camera.id);
+					url.searchParams.set("remote", camera.remote || "");
+					url.searchParams.set("videobitrate", state.backgroundBitrate);
+					url.searchParams.set("noaudio", "1");
+					url.searchParams.set("cleanoutput", "1");
+					url.searchParams.set("autoplay", "1");
+					url.searchParams.set("nohistory", "1");
+					return url.toString();
+				}
+
+				function buildSenderUrl(camera) {
+					var url = buildForwardedUrl(["view", "v", "V", "streamid", "pull", "push", "id", "permaid", "nopush", "noseed", "viewonly", "viewmode", "bitrate", "videobitrate", "backgroundbitrate", "railbitrate", "consent"]);
+					url.searchParams.set("push", camera.id);
+					url.searchParams.set("remote", camera.remote || "");
+					url.searchParams.set("ptz", "");
+					url.searchParams.set("autostart", "");
+					url.searchParams.set("webcam", "");
+					url.searchParams.set("nopreview", "");
+					return url.toString();
+				}
+
+				function createFrame(camera) {
+					var frame = document.createElement("iframe");
+					frame.title = camera.label + " preview";
+					frame.allow = "autoplay;fullscreen;picture-in-picture";
+					frame.setAttribute("allowfullscreen", "");
+					frame.addEventListener("load", function () {
+						if (camera.frame !== frame) return;
+						camera.status = "connecting";
+						updateCameraStatus(camera);
+						clearTimeout(camera.connectionTimer);
+						camera.connectionTimer = setTimeout(function () {
+							if (camera.status !== "online") {
+								camera.status = "waiting";
+								updateCameraStatus(camera);
+							}
+						}, 9000);
+					});
+					frame.src = buildViewerUrl(camera);
+					camera.frame = frame;
+					return frame;
+				}
+
+				function createCameraCard(camera) {
+					var card = document.createElement("article");
+					card.className = "camera-card";
+					card.dataset.cameraKey = camera.key;
+					card.setAttribute("role", "listitem");
+					card.tabIndex = 0;
+					card.setAttribute("aria-label", "Select " + camera.label);
+
+					var thumb = document.createElement("div");
+					thumb.className = "camera-thumb";
+					camera.thumb = thumb;
+					thumb.appendChild(createFrame(camera));
+
+					var foot = document.createElement("div");
+					foot.className = "camera-card-foot";
+					var name = document.createElement("div");
+					name.className = "camera-card-name";
+					var strong = document.createElement("strong");
+					strong.textContent = camera.label;
+					var stream = document.createElement("span");
+					stream.textContent = camera.id;
+					name.appendChild(strong);
+					name.appendChild(stream);
+
+					var status = document.createElement("span");
+					status.className = "camera-status";
+					status.textContent = "Connecting";
+					camera.statusElement = status;
+
+					foot.appendChild(name);
+					foot.appendChild(status);
+					card.appendChild(thumb);
+					card.appendChild(foot);
+					card.addEventListener("click", function () {
+						selectCamera(camera.key);
+					});
+					card.addEventListener("keydown", function (event) {
+						if (event.key === "Enter" || event.key === " ") {
+							event.preventDefault();
+							selectCamera(camera.key);
+						}
+					});
+					camera.card = card;
+					return card;
+				}
+
+				function addCamera(streamID, label, remote, activate) {
+					var existing = findCameraById(streamID);
+					if (existing) {
+						if (remote !== undefined && existing.remote !== (remote || "")) {
+							existing.remote = remote || "";
+							clearTimeout(existing.connectionTimer);
+							existing.settings = null;
+							existing.status = "connecting";
+							// Replace only this viewer so old-window messages cannot restore stale controls.
+							var previousFrame = existing.frame;
+							previousFrame.replaceWith(createFrame(existing));
+							updateCameraStatus(existing);
+							if (existing.key === state.activeKey) {
+								updateStageFrameLayout();
+								renderControls(existing);
+							}
+						}
+						if (activate !== false) selectCamera(existing.key);
+						return existing;
+					}
+
+					var camera = {
+						key: makeKey(),
+						id: streamID,
+						label: label || streamID,
+						remote: remote || "",
+						status: "connecting",
+						settings: null,
+						frame: null,
+						card: null,
+						thumb: null,
+						connectionTimer: null
+					};
+
+					state.cameras.push(camera);
+					refs.cameraRail.appendChild(createCameraCard(camera));
+					updateAggregateBitrate();
+					saveLocalState();
+					if (activate !== false || !state.activeKey) {
+						selectCamera(camera.key);
+					}
+					return camera;
+				}
+
+				function removeCamera(camera) {
+					var index = state.cameras.indexOf(camera);
+					if (index === -1) return;
+					clearTimeout(camera.connectionTimer);
+					if (camera.frame) {
+						camera.frame.src = "about:blank";
+						camera.frame.remove();
+					}
+					if (camera.card) camera.card.remove();
+					state.cameras.splice(index, 1);
+					if (state.activeKey === camera.key) {
+						state.activeKey = null;
+						var replacement = state.cameras[index] || state.cameras[index - 1] || null;
+						if (replacement) selectCamera(replacement.key);
+						else renderEmptyState();
+					}
+					updateAggregateBitrate();
+					saveLocalState();
+					showToast("Removed " + camera.label + ".");
+				}
+
+				function postToCamera(camera, payload) {
+					if (!camera || !camera.frame || !camera.frame.contentWindow) return false;
+					camera.frame.contentWindow.postMessage(payload, MESSAGE_ORIGIN);
+					return true;
+				}
+
+				function sendTargetAction(camera, action, value, value2) {
+					var payload = {
+						function: "targetGuest",
+						target: camera.id,
+						action: action
+					};
+					if (value !== undefined) payload.value = value;
+					if (value2 !== undefined) payload.value2 = value2;
+					return postToCamera(camera, payload);
+				}
+
+				function requestSettings(camera) {
+					if (!camera) return false;
+					setFooter("Requesting live controls from " + camera.label + "…");
+					return sendTargetAction(camera, "getCameraOperatorSettings");
+				}
+
+				function setCameraBitrate(camera, bitrate) {
+					if (!camera) return;
+					postToCamera(camera, {
+						targetBitrate: bitrate,
+						target: camera.id
+					});
+				}
+
+				function applyBitrateBudget() {
+					for (var i = 0; i < state.cameras.length; i++) {
+						setCameraBitrate(state.cameras[i], state.cameras[i].key === state.activeKey ? state.activeBitrate : state.backgroundBitrate);
+					}
+					updateAggregateBitrate();
+					saveLocalState();
+				}
+
+				function updateCameraStatus(camera) {
+					if (!camera || !camera.card) return;
+					camera.card.classList.toggle("online", camera.status === "online");
+					camera.card.classList.toggle("error", camera.status === "error");
+					var label = camera.status === "online" ? "Online" : camera.status === "error" ? "Blocked" : camera.status === "waiting" ? "Waiting" : "Connecting";
+					camera.statusElement.textContent = label;
+					if (camera.key === state.activeKey) updateStageStatus(camera);
+				}
+
+				function updateStageStatus(camera) {
+					if (!camera) return;
+					refs.stageStatus.classList.toggle("online", camera.status === "online");
+					refs.stageStatus.classList.toggle("error", camera.status === "error");
+					refs.stageStatus.textContent = camera.status === "online" ? "Live preview · " + formatBitrate(state.activeBitrate) : camera.status === "error" ? "Authorization required" : camera.status === "waiting" ? "Waiting for sender" : "Connecting";
+				}
+
+				function updateStageFrameLayout() {
+					var camera = activeCamera();
+					if (!camera || !camera.frame) return;
+					var rect = refs.stageFrameMount.getBoundingClientRect();
+					camera.frame.style.setProperty("--stage-left", rect.left + "px");
+					camera.frame.style.setProperty("--stage-top", rect.top + "px");
+					camera.frame.style.setProperty("--stage-width", rect.width + "px");
+					camera.frame.style.setProperty("--stage-height", rect.height + "px");
+				}
+
+				function selectCamera(key) {
+					var next = null;
+					var previous = activeCamera();
+					for (var i = 0; i < state.cameras.length; i++) {
+						if (state.cameras[i].key === key) next = state.cameras[i];
+					}
+					if (!next) return;
+
+					if (previous && previous !== next && previous.frame) {
+						previous.card.classList.remove("active");
+						previous.card.setAttribute("aria-selected", "false");
+						setCameraBitrate(previous, state.backgroundBitrate);
+					}
+
+					state.activeKey = next.key;
+					// Keep live iframes mounted; moving them between parents reloads their connections.
+					updateStageFrameLayout();
+					next.card.classList.add("active");
+					next.card.setAttribute("aria-selected", "true");
+					refs.stageEmpty.classList.add("hidden");
+					refs.stageHud.classList.remove("hidden");
+					refs.stageName.textContent = next.label;
+					refs.stageStreamId.textContent = next.id;
+					refs.controlCameraName.textContent = next.label;
+					refs.controlCameraMeta.textContent = next.id;
+					refs.refreshSettingsBtn.disabled = false;
+					setCameraBitrate(next, state.activeBitrate);
+					updateStageStatus(next);
+					renderControls(next);
+					if (!next.settings && next.status === "online") requestSettings(next);
+					next.card.scrollIntoView({ behavior: "smooth", block: "nearest", inline: "nearest" });
+					updateAggregateBitrate();
+				}
+
+				function renderEmptyState() {
+					refs.stageFrameMount.textContent = "";
+					refs.stageEmpty.classList.remove("hidden");
+					refs.stageHud.classList.add("hidden");
+					refs.controlCameraName.textContent = "No camera selected";
+					refs.controlCameraMeta.textContent = "Add a stream to begin";
+					refs.refreshSettingsBtn.disabled = true;
+					var panels = document.querySelectorAll(".control-panel");
+					for (var i = 0; i < panels.length; i++) {
+						panels[i].textContent = "";
+						var empty = document.createElement("div");
+						empty.className = "panel-empty";
+						empty.textContent = "Camera controls appear here after a remote stream is selected.";
+						panels[i].appendChild(empty);
+					}
+				}
+
+				function createSection(title, meta) {
+					var section = document.createElement("div");
+					section.className = "control-section";
+					var head = document.createElement("div");
+					head.className = "section-head";
+					var strong = document.createElement("strong");
+					strong.textContent = title;
+					var span = document.createElement("span");
+					span.textContent = meta || "";
+					head.appendChild(strong);
+					head.appendChild(span);
+					var body = document.createElement("div");
+					body.className = "section-body";
+					section.appendChild(head);
+					section.appendChild(body);
+					section.body = body;
+					return section;
+				}
+
+				function friendlyName(key) {
+					if (CONTROL_NAMES[key]) return CONTROL_NAMES[key];
+					return key.replace(/([a-z])([A-Z])/g, "$1 $2").replace(/^./, function (letter) {
+						return letter.toUpperCase();
+					});
+				}
+
+				function numberPrecision(step) {
+					var value = String(step || 1);
+					return value.indexOf(".") === -1 ? 0 : Math.min(6, value.length - value.indexOf(".") - 1);
+				}
+
+				function displayValue(value, step) {
+					if (typeof value === "number") {
+						return value.toFixed(numberPrecision(step));
+					}
+					return String(value === undefined ? "" : value);
+				}
+
+				function defaultNumericControlStep(key, min, max) {
+					if (key === "width" || key === "height") return 1;
+					if (key === "frameRate") return 0.01;
+					if (key === "aspectRatio") return 0.001;
+					return Math.max((max - min) / 100, 0.001);
+				}
+
+				function sendConstraint(camera, key, value, ctrl, immediate) {
+					state.userEditingUntil = Date.now() + 450;
+					var timerKey = camera.key + ":" + key;
+					clearTimeout(state.controlTimers[timerKey]);
+					state.controlTimers[timerKey] = setTimeout(
+						function () {
+							sendTargetAction(camera, "setCameraConstraint", {
+								constraint: key,
+								value: value,
+								ctrl: !!ctrl
+							});
+							setFooter("Set " + friendlyName(key).toLowerCase() + " on " + camera.label + ".");
+						},
+						immediate ? 0 : 140
+					);
+				}
+
+				function addNumericControl(container, camera, key, capability, current) {
+					var min = Number(capability.min);
+					var max = Number(capability.max);
+					if (!isFinite(min) || !isFinite(max) || min === max) return false;
+					var reportedStep = Number(capability.step);
+					var hasReportedStep = isFinite(reportedStep) && reportedStep > 0;
+					var step = hasReportedStep ? reportedStep : defaultNumericControlStep(key, min, max);
+					var value = Number(current);
+					if (!isFinite(value)) value = min;
+
+					var row = document.createElement("div");
+					row.className = "control-row";
+					var label = document.createElement("div");
+					label.className = "control-label";
+					var strong = document.createElement("strong");
+					strong.textContent = friendlyName(key);
+					var output = document.createElement("output");
+					output.textContent = displayValue(value, step);
+					label.appendChild(strong);
+					label.appendChild(output);
+
+					var rangeLine = document.createElement("div");
+					rangeLine.className = "range-line";
+					var range = document.createElement("input");
+					range.type = "range";
+					range.min = min;
+					range.max = max;
+					range.step = step;
+					range.value = Math.min(max, Math.max(min, value));
+					range.setAttribute("aria-label", friendlyName(key));
+
+					var number = document.createElement("input");
+					number.type = "number";
+					number.min = min;
+					number.max = max;
+					number.step = hasReportedStep ? step : "any";
+					number.value = displayValue(value, step);
+					number.setAttribute("aria-label", friendlyName(key) + " exact value");
+
+					var update = function (nextValue, immediate) {
+						var parsed = Number(nextValue);
+						if (!isFinite(parsed)) return;
+						parsed = Math.min(max, Math.max(min, parsed));
+						range.value = parsed;
+						number.value = parsed;
+						output.textContent = displayValue(parsed, step);
+						sendConstraint(camera, key, parsed, false, immediate);
+					};
+					range.addEventListener("input", function () {
+						update(range.value, false);
+					});
+					range.addEventListener("change", function () {
+						update(range.value, true);
+					});
+					number.addEventListener("change", function () {
+						update(number.value, true);
+					});
+
+					rangeLine.appendChild(range);
+					rangeLine.appendChild(number);
+					row.appendChild(label);
+					row.appendChild(rangeLine);
+					container.appendChild(row);
+					return true;
+				}
+
+				function addSelectControl(container, camera, key, options, current) {
+					if (!options || !options.length) return false;
+					var row = document.createElement("div");
+					row.className = "control-row";
+					var label = document.createElement("label");
+					label.className = "field-label";
+					label.textContent = friendlyName(key);
+					var select = document.createElement("select");
+					for (var i = 0; i < options.length; i++) {
+						var option = document.createElement("option");
+						option.value = options[i];
+						option.textContent = friendlyName(String(options[i]));
+						if (String(options[i]) === String(current)) option.selected = true;
+						select.appendChild(option);
+					}
+					select.addEventListener("change", function () {
+						sendConstraint(camera, key, select.value, true, true);
+					});
+					label.appendChild(select);
+					row.appendChild(label);
+					container.appendChild(row);
+					return true;
+				}
+
+				function addBooleanControl(container, camera, key, current) {
+					var row = document.createElement("div");
+					row.className = "control-row switch-line";
+					var label = document.createElement("span");
+					label.textContent = friendlyName(key);
+					var switchLabel = document.createElement("label");
+					switchLabel.className = "switch";
+					var input = document.createElement("input");
+					input.type = "checkbox";
+					input.checked = !!current;
+					input.setAttribute("aria-label", friendlyName(key));
+					var visual = document.createElement("span");
+					input.addEventListener("change", function () {
+						sendConstraint(camera, key, input.checked, false, true);
+					});
+					switchLabel.appendChild(input);
+					switchLabel.appendChild(visual);
+					row.appendChild(label);
+					row.appendChild(switchLabel);
+					container.appendChild(row);
+					return true;
+				}
+
+				function addControlForKey(container, camera, key, capabilities, currentSettings) {
+					var capability = capabilities[key];
+					var current = currentSettings[key];
+					if (Array.isArray(capability)) return addSelectControl(container, camera, key, capability, current);
+					if (capability && typeof capability === "object" && "min" in capability && "max" in capability) return addNumericControl(container, camera, key, capability, current);
+					if (typeof capability === "boolean" || typeof current === "boolean") return addBooleanControl(container, camera, key, current);
+					return false;
+				}
+
+				function createPtzSection(camera) {
+					var section = createSection("Movement", "Hold for continuous movement");
+					var pad = document.createElement("div");
+					pad.className = "ptz-pad";
+					var buttons = [
+						["", "", "ptz-spacer"],
+						["↑", "tilt", "1"],
+						["", "", "ptz-spacer"],
+						["←", "pan", "-1"],
+						["Center", "home", "0"],
+						["→", "pan", "1"],
+						["", "", "ptz-spacer"],
+						["↓", "tilt", "-1"],
+						["", "", "ptz-spacer"]
+					];
+					buttons.forEach(function (spec) {
+						var button = document.createElement("button");
+						button.type = "button";
+						button.textContent = spec[0];
+						if (spec[2] === "ptz-spacer") {
+							button.className = "ptz-spacer";
+							button.disabled = true;
+						} else if (spec[1] === "home") {
+							button.className = "center";
+							button.addEventListener("click", function () {
+								sendTargetAction(camera, "ptzPan", 0, "abs");
+								sendTargetAction(camera, "ptzTilt", 0, "abs");
+							});
+						} else {
+							bindHoldControl(button, camera, spec[1], parseInt(spec[2], 10));
+						}
+						pad.appendChild(button);
+					});
+					section.body.appendChild(pad);
+					return section;
+				}
+
+				function bindHoldControl(button, camera, control, direction) {
+					var send = function (event) {
+						var step = event && event.altKey ? 0.002 : 0.01;
+						var action = control === "pan" ? "ptzPan" : control === "tilt" ? "ptzTilt" : control === "focus" ? "ptzFocus" : "ptzZoom";
+						sendTargetAction(camera, action, direction * step);
+					};
+					var stop = function () {
+						clearTimeout(state.holdTimer);
+						clearInterval(state.holdInterval);
+						state.holdTimer = null;
+						state.holdInterval = null;
+					};
+					button.addEventListener("pointerdown", function (event) {
+						event.preventDefault();
+						send(event);
+						state.holdTimer = setTimeout(function () {
+							state.holdInterval = setInterval(function () {
+								send(event);
+							}, 110);
+						}, 280);
+					});
+					button.addEventListener("click", function (event) {
+						event.preventDefault();
+					});
+					["pointerup", "pointercancel", "pointerleave"].forEach(function (name) {
+						button.addEventListener(name, stop);
+					});
+				}
+
+				function createLensQuickSection(camera) {
+					var section = createSection("Lens actions", "Relative controls");
+					var grid = document.createElement("div");
+					grid.className = "button-grid";
+					[
+						["Zoom +", "zoom", 1],
+						["Zoom −", "zoom", -1],
+						["Focus +", "focus", 1],
+						["Focus −", "focus", -1]
+					].forEach(function (spec) {
+						var button = document.createElement("button");
+						button.type = "button";
+						button.textContent = spec[0];
+						bindHoldControl(button, camera, spec[1], spec[2]);
+						grid.appendChild(button);
+					});
+					section.body.appendChild(grid);
+					var autofocus = document.createElement("button");
+					autofocus.type = "button";
+					autofocus.className = "ghost";
+					autofocus.style.width = "100%";
+					autofocus.style.marginTop = "8px";
+					autofocus.textContent = "Reset autofocus";
+					autofocus.addEventListener("click", function () {
+						sendTargetAction(camera, "ptzAutofocus", true);
+						showToast("Autofocus requested for " + camera.label + ".");
+					});
+					section.body.appendChild(autofocus);
+					return section;
+				}
+
+				function createCurrentFormatSection(videoOptions) {
+					var current = videoOptions.currentCameraConstraints || {};
+					var section = createSection("Current capture", videoOptions.trackLabel || "Active camera");
+					var metrics = document.createElement("div");
+					metrics.className = "current-format";
+					[
+						[current.width && current.height ? current.width + " × " + current.height : "—", "Resolution"],
+						[current.frameRate ? Math.round(current.frameRate * 100) / 100 + " fps" : "—", "Frame rate"],
+						[current.aspectRatio ? Math.round(current.aspectRatio * 1000) / 1000 : "—", "Aspect"]
+					].forEach(function (item) {
+						var metric = document.createElement("div");
+						metric.className = "metric";
+						var strong = document.createElement("strong");
+						strong.textContent = item[0];
+						var span = document.createElement("span");
+						span.textContent = item[1];
+						metric.appendChild(strong);
+						metric.appendChild(span);
+						metrics.appendChild(metric);
+					});
+					section.body.appendChild(metrics);
+					return section;
+				}
+
+				function addResolutionPresets(section, camera) {
+					var row = document.createElement("div");
+					row.className = "preset-row";
+					[
+						["360p", 640, 360],
+						["720p", 1280, 720],
+						["1080p", 1920, 1080],
+						["Portrait", 720, 1280]
+					].forEach(function (preset) {
+						var button = document.createElement("button");
+						button.type = "button";
+						button.className = "small";
+						button.textContent = preset[0];
+						button.addEventListener("click", function () {
+							sendConstraint(camera, "width", preset[1], false, true);
+							setTimeout(function () {
+								sendConstraint(camera, "height", preset[2], false, true);
+							}, 180);
+						});
+						row.appendChild(button);
+					});
+					section.body.appendChild(row);
+				}
+
+				function renderKnownControls(panel, camera, keys, title, meta) {
+					var videoOptions = camera.settings.videoOptions || {};
+					var capabilities = videoOptions.cameraConstraints || {};
+					var current = videoOptions.currentCameraConstraints || {};
+					var section = createSection(title, meta);
+					var added = 0;
+					keys.forEach(function (key) {
+						if (key in capabilities || key in current) {
+							if (addControlForKey(section.body, camera, key, capabilities, current)) added++;
+						}
+					});
+					if (added) panel.appendChild(section);
+					return added;
+				}
+
+				function renderVideoEffects(panel, camera) {
+					var videoOptions = camera.settings.videoOptions || {};
+					var effects = videoOptions.videoEffects || {};
+					if (!Array.isArray(effects.options) || !effects.options.length) return false;
+
+					var section = createSection("Digital video effects", "Applied at the sender");
+					var effectRow = document.createElement("div");
+					effectRow.className = "control-row";
+					var field = document.createElement("label");
+					field.className = "field-label";
+					field.textContent = "Effect";
+					var select = document.createElement("select");
+					var currentOption = null;
+					effects.options.forEach(function (effect) {
+						var option = document.createElement("option");
+						option.value = effect.value;
+						option.textContent = effect.label + (effect.requiresSenderImage ? " (sender image)" : "");
+						if (String(effect.value) === String(effects.current)) {
+							option.selected = true;
+							currentOption = effect;
+						}
+						select.appendChild(option);
+					});
+					select.addEventListener("change", function () {
+						sendTargetAction(camera, "setVideoEffect", select.value);
+						setFooter("Requested " + select.options[select.selectedIndex].textContent + " on " + camera.label + ".");
+					});
+					field.appendChild(select);
+					effectRow.appendChild(field);
+					section.body.appendChild(effectRow);
+
+					if (currentOption && currentOption.amount) {
+						var min = Number(currentOption.amount.min);
+						var max = Number(currentOption.amount.max);
+						var step = Number(currentOption.amount.step);
+						var value = Number(effects.amount);
+						if (effects.amount === false || !isFinite(value)) value = min;
+						value = Math.min(max, Math.max(min, value));
+						var amountLabel = document.createElement("div");
+						amountLabel.className = "control-label";
+						var amountName = document.createElement("strong");
+						amountName.textContent = "Effect amount";
+						var output = document.createElement("output");
+						output.textContent = displayValue(value, step);
+						amountLabel.appendChild(amountName);
+						amountLabel.appendChild(output);
+						var amountRow = document.createElement("div");
+						amountRow.className = "control-row";
+						var amountLine = document.createElement("div");
+						amountLine.className = "range-line";
+						var range = document.createElement("input");
+						range.type = "range";
+						range.min = min;
+						range.max = max;
+						range.step = step;
+						range.value = Math.min(max, Math.max(min, value));
+						range.setAttribute("aria-label", "Effect amount");
+						var number = document.createElement("input");
+						number.type = "number";
+						number.min = min;
+						number.max = max;
+						number.step = step;
+						number.value = range.value;
+						number.setAttribute("aria-label", "Effect amount exact value");
+						var update = function (nextValue, immediate, localOnly) {
+							var parsed = Number(nextValue);
+							if (!isFinite(parsed)) return;
+							parsed = Math.min(max, Math.max(min, parsed));
+							range.value = parsed;
+							number.value = parsed;
+							output.textContent = displayValue(parsed, step);
+							state.userEditingUntil = Date.now() + 450;
+							var timerKey = camera.key + ":videoEffectAmount";
+							clearTimeout(state.controlTimers[timerKey]);
+							if (localOnly) return;
+							state.controlTimers[timerKey] = setTimeout(
+								function () {
+									sendTargetAction(camera, "setVideoEffectAmount", parsed);
+									setFooter("Set effect amount on " + camera.label + ".");
+								},
+								immediate ? 0 : 140
+							);
+						};
+						range.addEventListener("input", function () {
+							update(range.value, false, true);
+						});
+						range.addEventListener("change", function () {
+							update(range.value, true);
+						});
+						number.addEventListener("change", function () {
+							update(number.value, true);
+						});
+						amountLine.appendChild(range);
+						amountLine.appendChild(number);
+						amountRow.appendChild(amountLabel);
+						amountRow.appendChild(amountLine);
+						section.body.appendChild(amountRow);
+					}
+
+					panel.appendChild(section);
+					return true;
+				}
+
+				function renderAdvancedControls(panel, camera) {
+					var videoOptions = camera.settings.videoOptions || {};
+					var capabilities = videoOptions.cameraConstraints || {};
+					var current = videoOptions.currentCameraConstraints || {};
+					var known = { deviceId: true, groupId: true };
+					Object.keys(GROUPS).forEach(function (group) {
+						GROUPS[group].forEach(function (key) {
+							known[key] = true;
+						});
+					});
+					var section = createSection("Additional controls", "Reported by this camera");
+					var added = 0;
+					Object.keys(capabilities)
+						.sort()
+						.forEach(function (key) {
+							if (!known[key] && addControlForKey(section.body, camera, key, capabilities, current)) added++;
+						});
+					if (added) panel.appendChild(section);
+				}
+
+				function renderDevicePanel(panel, camera) {
+					var bandwidth = createSection("Preview bandwidth", "Per operator, not the program feed");
+					var bandwidthGrid = document.createElement("div");
+					bandwidthGrid.className = "button-grid";
+					var bandwidthOptions = [
+						[80, "80 kbps"],
+						[120, "120 kbps"],
+						[250, "250 kbps"],
+						[500, "500 kbps"],
+						[800, "800 kbps"],
+						[1200, "1.2 Mbps"],
+						[2500, "2.5 Mbps"],
+						[5000, "5 Mbps"]
+					];
+					[
+						["Selected preview", "activeBitrate", "activeBitrateSelect"],
+						["Rail previews", "backgroundBitrate", "backgroundBitrateSelect"]
+					].forEach(function (spec) {
+						var field = document.createElement("label");
+						field.className = "field-label";
+						field.textContent = spec[0];
+						var select = document.createElement("select");
+						bandwidthOptions.forEach(function (optionSpec) {
+							var option = document.createElement("option");
+							option.value = optionSpec[0];
+							option.textContent = optionSpec[1];
+							if (optionSpec[0] === state[spec[1]]) option.selected = true;
+							select.appendChild(option);
+						});
+						select.addEventListener("change", function () {
+							state[spec[1]] = parseInt(select.value, 10);
+							refs[spec[2]].value = select.value;
+							applyBitrateBudget();
+							updateStageStatus(camera);
+						});
+						field.appendChild(select);
+						bandwidthGrid.appendChild(field);
+					});
+					bandwidth.body.appendChild(bandwidthGrid);
+					var bandwidthNote = document.createElement("p");
+					bandwidthNote.className = "advanced-note";
+					bandwidthNote.textContent = "Only the selected stage preview is boosted. Every other connected camera stays at the rail rate to protect the senders' uplinks.";
+					bandwidth.body.appendChild(bandwidthNote);
+					panel.appendChild(bandwidth);
+
+					var section = createSection("Camera source", "Remote device selection");
+					var cameras = camera.settings.cameras || [];
+					var videoOptions = camera.settings.videoOptions || {};
+					var current = videoOptions.currentCameraConstraints || {};
+					var label = document.createElement("label");
+					label.className = "field-label device-select";
+					label.textContent = "Active camera";
+					var select = document.createElement("select");
+					if (!cameras.length) {
+						var unavailable = document.createElement("option");
+						unavailable.textContent = "No camera list available";
+						select.appendChild(unavailable);
+						select.disabled = true;
+					} else {
+						cameras.forEach(function (device, index) {
+							var option = document.createElement("option");
+							option.value = device.deviceId;
+							option.textContent = device.label || "Camera " + (index + 1);
+							if (device.deviceId && device.deviceId === current.deviceId) option.selected = true;
+							select.appendChild(option);
+						});
+						select.addEventListener("change", function () {
+							sendTargetAction(camera, "setCameraDevice", select.value);
+							showToast("Camera change requested. The sender may ask for approval.");
+						});
+					}
+					label.appendChild(select);
+					section.body.appendChild(label);
+					var note = document.createElement("p");
+					note.className = "advanced-note";
+					note.textContent = "Device changes ask the sender for approval. The sender can add &consent to their link when they intentionally want unattended device changes.";
+					section.body.appendChild(note);
+					panel.appendChild(section);
+
+					var transform = createSection("Output framing", "Applied at the sender");
+					var transformGrid = document.createElement("div");
+					transformGrid.className = "button-grid";
+					[
+						["Mirror output", "remoteMirror", true],
+						["Unmirror output", "remoteMirror", false],
+						["Rotate +90°", "remoteRotate", true],
+						["Reset rotation", "remoteRotate", false]
+					].forEach(function (spec) {
+						var button = document.createElement("button");
+						button.type = "button";
+						button.textContent = spec[0];
+						button.addEventListener("click", function () {
+							sendTargetAction(camera, spec[1], spec[2]);
+						});
+						transformGrid.appendChild(button);
+					});
+					transform.body.appendChild(transformGrid);
+					panel.appendChild(transform);
+
+					var recovery = createSection("Operations", "Recovery and setup");
+					var recoveryGrid = document.createElement("div");
+					recoveryGrid.className = "button-grid";
+					[
+						["Refresh camera", "refreshVideo"],
+						["Recover camera + link", "refreshAll"],
+						["Copy sender link", "copy"],
+						["Remove camera", "remove"]
+					].forEach(function (spec) {
+						var button = document.createElement("button");
+						button.type = "button";
+						button.textContent = spec[0];
+						if (spec[1] === "remove") button.className = "danger";
+						button.addEventListener("click", function () {
+							if (spec[1] === "copy") {
+								copySenderLink(camera);
+							} else if (spec[1] === "remove") {
+								removeCamera(camera);
+							} else {
+								sendTargetAction(camera, spec[1], true);
+								showToast(spec[0] + " requested for " + camera.label + ".");
+							}
+						});
+						recoveryGrid.appendChild(button);
+					});
+					recovery.body.appendChild(recoveryGrid);
+					panel.appendChild(recovery);
+				}
+
+				function copySenderLink(camera) {
+					var link = buildSenderUrl(camera);
+					if (navigator.clipboard && navigator.clipboard.writeText) {
+						navigator.clipboard
+							.writeText(link)
+							.then(function () {
+								showToast("Sender link copied for " + camera.label + ".");
+							})
+							.catch(function () {
+								window.prompt("Copy this sender link:", link);
+							});
+					} else {
+						window.prompt("Copy this sender link:", link);
+					}
+				}
+
+				function renderControls(camera) {
+					clearTimeout(state.renderTimer);
+					var panels = {
+						lens: document.getElementById("panel-lens"),
+						image: document.getElementById("panel-image"),
+						capture: document.getElementById("panel-capture"),
+						device: document.getElementById("panel-device")
+					};
+					Object.keys(panels).forEach(function (key) {
+						panels[key].textContent = "";
+					});
+					if (!camera) {
+						renderEmptyState();
+						return;
+					}
+
+					panels.lens.appendChild(createPtzSection(camera));
+					panels.lens.appendChild(createLensQuickSection(camera));
+
+					if (!camera.settings) {
+						Object.keys(panels).forEach(function (key) {
+							if (key === "lens") return;
+							var empty = document.createElement("div");
+							empty.className = "panel-empty";
+							empty.textContent = camera.status === "online" ? "Requesting supported controls…" : "Detailed controls load when the sender connects.";
+							panels[key].appendChild(empty);
+						});
+						return;
+					}
+
+					renderKnownControls(panels.lens, camera, GROUPS.lens, "Absolute lens controls", "Camera-reported ranges");
+					renderKnownControls(panels.image, camera, GROUPS.image, "Image controls", "Only supported settings are shown");
+					var formatSection = createCurrentFormatSection(camera.settings.videoOptions || {});
+					panels.capture.appendChild(formatSection);
+					addResolutionPresets(formatSection, camera);
+					renderKnownControls(panels.capture, camera, GROUPS.capture, "Capture format", "Resolution and timing");
+					renderAdvancedControls(panels.image, camera);
+					renderVideoEffects(panels.image, camera);
+					renderDevicePanel(panels.device, camera);
+
+					if (!panels.image.children.length) {
+						var unavailable = document.createElement("div");
+						unavailable.className = "panel-empty";
+						unavailable.textContent = "This browser did not expose adjustable image controls for the active camera.";
+						panels.image.appendChild(unavailable);
+					}
+				}
+
+				function scheduleRender(camera) {
+					clearTimeout(state.renderTimer);
+					var delay = Math.max(0, state.userEditingUntil - Date.now());
+					state.renderTimer = setTimeout(function () {
+						if (camera.key === state.activeKey) renderControls(camera);
+					}, delay);
+				}
+
+				function handleViewerMessage(event) {
+					if (!event || !event.data || typeof event.data !== "object") return;
+					var camera = cameraFromMessageSource(event.source);
+					if (!camera) return;
+					var data = event.data;
+
+					if (data.action === "new-stream-added" || data.action === "new-video-track-added" || data.remoteStats) {
+						clearTimeout(camera.connectionTimer);
+						camera.status = "online";
+						updateCameraStatus(camera);
+						setCameraBitrate(camera, camera.key === state.activeKey ? state.activeBitrate : state.backgroundBitrate);
+						setTimeout(function () {
+							requestSettings(camera);
+						}, 180);
+					}
+
+					if (data.action === "camera-operator-settings") {
+						clearTimeout(camera.connectionTimer);
+						camera.status = "online";
+						camera.settings = data.value || null;
+						updateCameraStatus(camera);
+						scheduleRender(camera);
+						setFooter("Live camera controls loaded for " + camera.label + ".");
+					}
+
+					if (data.action === "camera-operator-device-change") {
+						var changed = data.value || {};
+						showToast(changed.ok === false ? changed.error || "Camera change failed." : "Remote camera changed.", changed.ok === false);
+						setTimeout(function () {
+							requestSettings(camera);
+						}, 650);
+					}
+
+					if (data.action === "camera-operator-rejected") {
+						camera.status = "error";
+						updateCameraStatus(camera);
+						showToast("Remote control was rejected. Check the matching &remote token.", true);
+						setFooter("Authorization failed for " + camera.label + ".");
+					}
+
+					if (data.action === "camera-operator-effect-change") {
+						var effectChange = data.value || {};
+						showToast(effectChange.ok === false ? effectChange.error || "Video effect change failed." : "Remote video effect updated.", effectChange.ok === false);
+					}
+
+					if (data.action === "rejected" && (data.value === "refreshVideo" || data.value === "refreshAll")) {
+						showToast("The sender rejected the recovery request.", true);
+					}
+				}
+
+				function setActiveTab(tab) {
+					state.activeTab = tab;
+					var buttons = document.querySelectorAll("[data-tab]");
+					var panels = document.querySelectorAll("[data-panel]");
+					for (var i = 0; i < buttons.length; i++) {
+						var active = buttons[i].dataset.tab === tab;
+						buttons[i].classList.toggle("active", active);
+						buttons[i].setAttribute("aria-selected", active ? "true" : "false");
+					}
+					for (var j = 0; j < panels.length; j++) {
+						panels[j].classList.toggle("active", panels[j].dataset.panel === tab);
+					}
+				}
+
+				function bindUI() {
+					refs.addCameraForm.addEventListener("submit", function (event) {
+						event.preventDefault();
+						var streamIDs = parseStreamIDs(refs.streamInput.value);
+						if (!streamIDs.length) {
+							showToast("Enter at least one stream ID.", true);
+							return;
+						}
+						var remote = refs.remoteInput.value;
+						var label = refs.labelInput.value.trim();
+						streamIDs.forEach(function (streamID, index) {
+							addCamera(streamID, streamIDs.length === 1 && label ? label : streamID, remote, index === streamIDs.length - 1);
+						});
+						refs.streamInput.value = "";
+						refs.labelInput.value = "";
+						showToast("Added " + streamIDs.length + " camera" + (streamIDs.length === 1 ? "" : "s") + ".");
+					});
+
+					refs.activeBitrateSelect.addEventListener("change", function () {
+						state.activeBitrate = parseInt(refs.activeBitrateSelect.value, 10) || 500;
+						applyBitrateBudget();
+						var camera = activeCamera();
+						if (camera) updateStageStatus(camera);
+						showToast("Selected preview set to " + formatBitrate(state.activeBitrate) + ".");
+					});
+
+					refs.backgroundBitrateSelect.addEventListener("change", function () {
+						state.backgroundBitrate = parseInt(refs.backgroundBitrateSelect.value, 10) || 120;
+						applyBitrateBudget();
+						showToast("Rail previews set to " + formatBitrate(state.backgroundBitrate) + ".");
+					});
+
+					refs.refreshSettingsBtn.addEventListener("click", function () {
+						var camera = activeCamera();
+						if (camera) requestSettings(camera);
+					});
+
+					document.querySelectorAll("[data-tab]").forEach(function (button) {
+						button.addEventListener("click", function () {
+							setActiveTab(button.dataset.tab);
+						});
+					});
+
+					window.addEventListener("message", handleViewerMessage);
+					window.addEventListener("resize", updateStageFrameLayout);
+					document.addEventListener("scroll", updateStageFrameLayout, true);
+					if (typeof ResizeObserver === "function") {
+						var stageResizeObserver = new ResizeObserver(updateStageFrameLayout);
+						stageResizeObserver.observe(refs.stageFrameMount);
+					}
+					window.addEventListener("blur", function () {
+						clearTimeout(state.holdTimer);
+						clearInterval(state.holdInterval);
+					});
+
+					document.addEventListener("keydown", function (event) {
+						var tag = event.target && event.target.tagName ? event.target.tagName.toLowerCase() : "";
+						if (tag === "input" || tag === "select" || tag === "textarea" || event.altKey) return;
+						var camera = activeCamera();
+						if (/^[1-9]$/.test(event.key)) {
+							var index = parseInt(event.key, 10) - 1;
+							if (state.cameras[index]) selectCamera(state.cameras[index].key);
+							return;
+						}
+						if (!camera || event.repeat) return;
+						var action = null;
+						var value = 0.01;
+						if (event.key === "ArrowLeft") {
+							action = "ptzPan";
+							value = -value;
+						} else if (event.key === "ArrowRight") action = "ptzPan";
+						else if (event.key === "ArrowUp") action = "ptzTilt";
+						else if (event.key === "ArrowDown") {
+							action = "ptzTilt";
+							value = -value;
+						} else if (event.key === "+" || event.key === "=") action = event.ctrlKey || event.metaKey ? "ptzFocus" : "ptzZoom";
+						else if (event.key === "-" || event.key === "_") {
+							action = event.ctrlKey || event.metaKey ? "ptzFocus" : "ptzZoom";
+							value = -value;
+						}
+						if (action) {
+							event.preventDefault();
+							sendTargetAction(camera, action, value);
+						}
+					});
+				}
+
+				function hydrate() {
+					var params = new URLSearchParams(window.location.search);
+					var stored = loadLocalState();
+					var queryView = params.get("view") || params.get("v") || "";
+					var queryRemote = params.has("remote") ? params.get("remote") || "" : null;
+					var activeBitrate = parseInt(params.get("bitrate") || params.get("videobitrate"), 10);
+					var backgroundBitrate = parseInt(params.get("backgroundbitrate") || params.get("railbitrate"), 10);
+
+					if (!activeBitrate && stored) activeBitrate = parseInt(stored.activeBitrate, 10);
+					if (!backgroundBitrate && stored) backgroundBitrate = parseInt(stored.backgroundBitrate, 10);
+					if (activeBitrate) state.activeBitrate = activeBitrate;
+					if (backgroundBitrate) state.backgroundBitrate = backgroundBitrate;
+					refs.activeBitrateSelect.value = String(state.activeBitrate);
+					refs.backgroundBitrateSelect.value = String(state.backgroundBitrate);
+					if (!refs.activeBitrateSelect.value) refs.activeBitrateSelect.value = "500";
+					if (!refs.backgroundBitrateSelect.value) refs.backgroundBitrateSelect.value = "120";
+					state.activeBitrate = parseInt(refs.activeBitrateSelect.value, 10);
+					state.backgroundBitrate = parseInt(refs.backgroundBitrateSelect.value, 10);
+					if (queryRemote !== null) refs.remoteInput.value = queryRemote;
+
+					if (queryView) {
+						var ids = parseStreamIDs(queryView);
+						ids.forEach(function (streamID, index) {
+							addCamera(streamID, streamID, queryRemote || "", index === ids.length - 1);
+						});
+					} else if (stored && Array.isArray(stored.cameras)) {
+						stored.cameras.forEach(function (saved, index) {
+							if (saved && saved.id) addCamera(saved.id, saved.label || saved.id, "", index === stored.cameras.length - 1);
+						});
+					}
+
+					if (!state.cameras.length) renderEmptyState();
+					updateAggregateBitrate();
+				}
+
+				bindUI();
+				hydrate();
+			})();
+		</script>
+	</body>
+</html>

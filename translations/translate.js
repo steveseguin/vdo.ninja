@@ -30,6 +30,7 @@ const updateList = [
     "fr",
     "it",
     "ja",
+    "kr",
     "eu",
     "nl",
     "pig",

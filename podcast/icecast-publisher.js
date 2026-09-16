@@ -441,7 +441,6 @@ export class IcecastPublisher extends EventTarget {
       return;
     }
     this.stopping = true;
-    this.closeRequested = true;
     if (this.sourceRefreshTimer) {
       clearInterval(this.sourceRefreshTimer);
       this.sourceRefreshTimer = null;
@@ -476,7 +475,9 @@ export class IcecastPublisher extends EventTarget {
           console.warn('Icecast AAC reader cancel failed', error);
         }
       }
-      this.requestStreamClose();
+      if (!encoderPromise) {
+        this.requestStreamClose();
+      }
     } else {
       this.requestStreamClose();
     }
@@ -533,11 +534,12 @@ export class IcecastPublisher extends EventTarget {
     if (!this.streamController || this.closeRequested) {
       return;
     }
+    const controller = this.streamController;
     this.pendingWrites += 1;
     blob
       .arrayBuffer()
       .then(buffer => {
-        if (!this.streamController || this.closeRequested) {
+        if (this.streamController !== controller) {
           return;
         }
         const chunk = new Uint8Array(buffer);
@@ -897,6 +899,7 @@ export class IcecastPublisher extends EventTarget {
 
       const connectSocket = () => new Promise((resolveSocket, rejectSocket) => {
         const socket = new WebSocket(socketUrl.toString());
+        activeSocket = socket;
         let accepted = false;
         let finished = false;
         socket.binaryType = 'arraybuffer';
@@ -916,7 +919,7 @@ export class IcecastPublisher extends EventTarget {
           }
         });
         socket.addEventListener('message', event => {
-          if (typeof event.data !== 'string') {
+          if (settled || activeSocket !== socket || typeof event.data !== 'string') {
             return;
           }
           let message;
@@ -961,6 +964,10 @@ export class IcecastPublisher extends EventTarget {
           finish(rejectSocket, error);
         });
         socket.addEventListener('close', event => {
+          if (!accepted) {
+            finish(rejectSocket, new Error(event.reason || `Icecast relay socket closed (${event.code}).`));
+            return;
+          }
           if (activeSocket !== socket) {
             return;
           }

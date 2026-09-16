@@ -6,12 +6,40 @@ import {
   CloudUploadCoordinator,
   bridgeLegacyMeters,
   monitorTrackLevel,
-} from '../core/index.js';
+} from '../core/index.js?v=20260911.1';
 import { IcecastPublisher, ICECAST_MIME_OPTIONS } from './icecast-publisher.js?v=4';
 
 const STUDIO_ROOT_ID = 'podcast-root';
 const ROSTER_REFRESH_MS = 1500;
 const HOST_MIC_READY_TIMEOUT_MS = 12000;
+const HOST_AUDIO_SETTINGS_STORAGE_KEY = 'podcastStudio.hostAudioSettings';
+const HOST_AUDIO_SETTINGS_VERSION = 1;
+const HOST_AUDIO_PRO_PROFILE = Object.freeze({
+  stereo: true,
+  monoInput: false,
+  bitrate: 256,
+  echoCancellation: false,
+  noiseSuppression: false,
+  autoGainControl: false,
+});
+const HOST_AUDIO_VOICE_PROFILE = Object.freeze({
+  stereo: false,
+  monoInput: true,
+  bitrate: 128,
+  echoCancellation: true,
+  noiseSuppression: true,
+  autoGainControl: true,
+});
+const HOST_AUDIO_QUERY_KEYS = Object.freeze({
+  stereo: ['stereo', 's', 'proaudio'],
+  bitrate: ['audiobitrate', 'ab'],
+  outboundBitrate: ['outboundaudiobitrate', 'oab'],
+  inputChannels: ['channelcount', 'ac', 'inputchannels', 'monomic'],
+  echoCancellation: ['echocancellation', 'aec', 'ec', 'noheadphones', 'nhp', 'lowlatency', 'll', 'ultralow'],
+  noiseSuppression: ['denoise', 'dn', 'noheadphones', 'nhp', 'lowlatency', 'll', 'ultralow'],
+  autoGainControl: ['autogain', 'ag', 'agc', 'noheadphones', 'nhp', 'lowlatency', 'll', 'ultralow'],
+  device: ['audiodevice', 'adevice', 'ad', 'device', 'd', 'ado'],
+});
 const PREFLIGHT_STORAGE_KEY = 'podcastStudio.preflightState';
 const PREFLIGHT_CACHE_MS = 6 * 60 * 60 * 1000;
 const PREFLIGHT_MIN_MANDATORY_MS = 5 * 60 * 1000;
@@ -67,7 +95,7 @@ function injectStylesheet() {
   const link = document.createElement('link');
   link.id = 'podcast-studio-style';
   link.rel = 'stylesheet';
-  link.href = new URL('./studio.css?v=16', import.meta.url).toString();
+  link.href = new URL('./studio.css?v=17', import.meta.url).toString();
   document.head.appendChild(link);
 }
 
@@ -464,6 +492,59 @@ function persistStoredRoomState(state) {
   }
 }
 
+function hasAnyQueryParam(params, keys) {
+  return keys.some((key) => params.has(key));
+}
+
+function normalizeAudioDeviceLabel(value) {
+  return String(value || '')
+    .trim()
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '_')
+    .replace(/^_+|_+$/g, '');
+}
+
+function readHostAudioSettings() {
+  try {
+    const raw = window.localStorage.getItem(HOST_AUDIO_SETTINGS_STORAGE_KEY);
+    if (!raw) {
+      return {};
+    }
+    const parsed = JSON.parse(raw);
+    if (!parsed || typeof parsed !== 'object') {
+      return {};
+    }
+    const profile = ['pro', 'voice', 'custom'].includes(parsed.profile) ? parsed.profile : '';
+    const bitrate = Number.parseInt(parsed.bitrate, 10);
+    return {
+      version: parsed.version === HOST_AUDIO_SETTINGS_VERSION ? parsed.version : 0,
+      profile,
+      deviceId: typeof parsed.deviceId === 'string' ? parsed.deviceId : '',
+      deviceLabel: typeof parsed.deviceLabel === 'string' ? parsed.deviceLabel : '',
+      stereo: typeof parsed.stereo === 'boolean' ? parsed.stereo : undefined,
+      monoInput: typeof parsed.monoInput === 'boolean' ? parsed.monoInput : undefined,
+      bitrate: Number.isFinite(bitrate) && bitrate > 0 ? Math.min(510, bitrate) : undefined,
+      echoCancellation: typeof parsed.echoCancellation === 'boolean' ? parsed.echoCancellation : undefined,
+      noiseSuppression: typeof parsed.noiseSuppression === 'boolean' ? parsed.noiseSuppression : undefined,
+      autoGainControl: typeof parsed.autoGainControl === 'boolean' ? parsed.autoGainControl : undefined,
+    };
+  } catch (error) {
+    console.warn('Unable to read host audio settings', error);
+  }
+  return {};
+}
+
+function persistHostAudioSettings(settings) {
+  try {
+    window.localStorage.setItem(
+      HOST_AUDIO_SETTINGS_STORAGE_KEY,
+      JSON.stringify({ version: HOST_AUDIO_SETTINGS_VERSION, ...(settings || {}) })
+    );
+  } catch (error) {
+    console.warn('Unable to persist host audio settings', error);
+  }
+}
+
 function readPreflightState() {
   try {
     const raw = window.localStorage.getItem(PREFLIGHT_STORAGE_KEY);
@@ -783,6 +864,11 @@ function openDiskHandleDatabase() {
       return;
     }
     const request = window.indexedDB.open(DISK_DB_NAME, 1);
+    let blocked = false;
+    request.onblocked = () => {
+      blocked = true;
+      reject(new Error('Disk folder storage is blocked by another tab. Close that tab and retry.'));
+    };
     request.onerror = () => reject(request.error || new Error('Unable to open disk handle database'));
     request.onupgradeneeded = () => {
       const db = request.result;
@@ -790,7 +876,13 @@ function openDiskHandleDatabase() {
         db.createObjectStore(DISK_DB_STORE);
       }
     };
-    request.onsuccess = () => resolve(request.result);
+    request.onsuccess = () => {
+      if (blocked) {
+        request.result.close();
+        return;
+      }
+      resolve(request.result);
+    };
   });
 }
 
@@ -805,7 +897,7 @@ async function saveDiskDirectoryHandle(handle) {
       db.close();
       resolve();
     };
-    tx.onerror = () => {
+    tx.onerror = tx.onabort = () => {
       db.close();
       reject(tx.error || new Error('Unable to store disk handle'));
     };
@@ -820,7 +912,7 @@ async function readDiskDirectoryHandle() {
     tx.oncomplete = () => {
       db.close();
     };
-    tx.onerror = () => {
+    tx.onerror = tx.onabort = () => {
       db.close();
       reject(tx.error || new Error('Unable to read disk handle'));
     };
@@ -833,14 +925,14 @@ async function verifyStoredDiskRecordingDirectory({ requestPermission = false } 
   try {
     const handle = await readDiskDirectoryHandle();
     if (!handle) {
-      return { ok: false, message: 'No folder selected yet.' };
+      throw new Error('No folder selected yet.');
     }
     let permission = await handle.queryPermission({ mode: 'readwrite' });
     if (permission === 'prompt' && requestPermission) {
       permission = await handle.requestPermission({ mode: 'readwrite' });
     }
     if (permission !== 'granted') {
-      return { ok: false, message: 'Access to the selected folder was denied.' };
+      throw new Error('Access to the selected folder was denied.');
     }
     const meta = readDiskRecordingState();
     writeDiskRecordingState({
@@ -1191,6 +1283,7 @@ async function runPreflightChecklist({ roomSlug } = {}) {
   let micOk = Boolean(micFresh);
   let camOk = Boolean(camFresh);
   let diskReady = false;
+  let diskVerificationInProgress = false;
   let destroyed = false;
   let diskStatusListener = null;
   let resolver;
@@ -1325,7 +1418,13 @@ async function runPreflightChecklist({ roomSlug } = {}) {
       return;
     }
     setPreflightRowState(diskRow, 'testing', 'Validating folder permissions…');
-    const result = await verifyStoredDiskRecordingDirectory({ requestPermission: interactive });
+    let result;
+    diskVerificationInProgress = true;
+    try {
+      result = await verifyStoredDiskRecordingDirectory({ requestPermission: interactive });
+    } finally {
+      diskVerificationInProgress = false;
+    }
     if (result.ok) {
       diskReady = true;
       const meta = readDiskRecordingState();
@@ -1346,7 +1445,11 @@ async function runPreflightChecklist({ roomSlug } = {}) {
   }
 
   refreshDiskRowStatus();
-  diskStatusListener = () => refreshDiskRowStatus();
+  diskStatusListener = () => {
+    if (!diskVerificationInProgress) {
+      refreshDiskRowStatus();
+    }
+  };
   window.addEventListener(PODCAST_DISK_EVENT, diskStatusListener);
 
   if (diskRow.actionButton) {
@@ -1446,6 +1549,7 @@ function collectParticipants(session) {
       uuid,
       label: peer.label || peer.streamID || `Guest ${uuid.substring(0, 4)}`,
       streamID: peer.streamID,
+      stream: peer.streamSrc || peer.stream || peer.videoElement?.srcObject,
       status: (peer.streamSrc && audioTracks.length) ? 'connected' : 'connecting',
       audioLevel: level,
       isLocal: false,
@@ -1493,6 +1597,7 @@ class PodcastStudioApp {
     this.dropboxStatusNode = null;
     this.abortUploadsController = null;
     this.activeDownloadUrls = [];
+    this.recordingArchives = new Set();
     this.stopMeterBridge = null;
     this.roomName = this.roomHint || '';
     this.virtualParticipants = new Map();
@@ -1505,8 +1610,27 @@ class PodcastStudioApp {
     this.hostMicStatusNode = null;
     this.hostMicErrorNode = null;
     this.hostMicBusy = false;
+    this.hostMicBusyAction = '';
     this.hostMicMuted = false;
     this.hostMuteButton = null;
+    this.hostAudioPreferences = readHostAudioSettings();
+    this.hostAudioUrlOverrides = {};
+    this.hostAudioProfile = 'pro';
+    this.hostAudioDevices = [];
+    this.hostAudioDeviceId = this.hostAudioPreferences.deviceId || '';
+    this.hostAudioDeviceLabel = this.hostAudioPreferences.deviceLabel || '';
+    this.hostAudioDeviceSelect = null;
+    this.hostAudioRefreshButton = null;
+    this.hostAudioProfileSelect = null;
+    this.hostAudioStereoInput = null;
+    this.hostAudioMonoInput = null;
+    this.hostAudioBitrateSelect = null;
+    this.hostAudioEchoInput = null;
+    this.hostAudioNoiseInput = null;
+    this.hostAudioGainInput = null;
+    this.hostAudioSummaryNode = null;
+    this.hostAudioDeviceRefreshBusy = false;
+    this.boundHostAudioDeviceChange = null;
     this.cloudBusy = {
       drive: false,
       dropbox: false,
@@ -1632,6 +1756,17 @@ class PodcastStudioApp {
 
     this.roomName = this.resolveRoomName();
     this.buildLayout();
+    this.refreshHostAudioDevices().catch((error) => {
+      console.warn('Unable to initialise host microphones', error);
+    });
+    if (navigator.mediaDevices && typeof navigator.mediaDevices.addEventListener === 'function') {
+      this.boundHostAudioDeviceChange = () => {
+        this.refreshHostAudioDevices().catch((error) => {
+          console.warn('Unable to refresh host microphones after a device change', error);
+        });
+      };
+      navigator.mediaDevices.addEventListener('devicechange', this.boundHostAudioDeviceChange);
+    }
     this.updateIcecastUI();
     this.updateReadinessSummary();
     this.updateRecordingButtons();
@@ -1719,30 +1854,535 @@ class PodcastStudioApp {
     if (!this.session) {
       return;
     }
-    if (this.session.stereo === undefined || this.session.stereo === null || this.session.stereo === false || this.session.stereo === 0) {
-      this.session.stereo = 1;
+    const params = new URLSearchParams(window.location.search);
+    this.hostAudioUrlOverrides = Object.fromEntries(
+      Object.entries(HOST_AUDIO_QUERY_KEYS).map(([key, keys]) => [key, hasAnyQueryParam(params, keys)])
+    );
+
+    const saved = this.hostAudioPreferences?.version === HOST_AUDIO_SETTINGS_VERSION
+      ? this.hostAudioPreferences
+      : {};
+    const stereoValues = [1, 3, 4, 5, '1', '3', '4', '5'];
+    const urlDefinesProfile = this.hostAudioUrlOverrides.stereo ||
+      params.has('noheadphones') || params.has('nhp') ||
+      params.has('lowlatency') || params.has('ll') || params.has('ultralow');
+    const useVoiceProfile = urlDefinesProfile
+      ? !stereoValues.includes(this.session.stereo)
+      : saved.profile === 'voice';
+    const baseProfile = useVoiceProfile ? HOST_AUDIO_VOICE_PROFILE : HOST_AUDIO_PRO_PROFILE;
+    const fallback = {
+      ...baseProfile,
+      stereo: typeof saved.stereo === 'boolean' ? saved.stereo : baseProfile.stereo,
+      monoInput: typeof saved.monoInput === 'boolean' ? saved.monoInput : baseProfile.monoInput,
+      bitrate: saved.bitrate || baseProfile.bitrate,
+      echoCancellation: typeof saved.echoCancellation === 'boolean' ? saved.echoCancellation : baseProfile.echoCancellation,
+      noiseSuppression: typeof saved.noiseSuppression === 'boolean' ? saved.noiseSuppression : baseProfile.noiseSuppression,
+      autoGainControl: typeof saved.autoGainControl === 'boolean' ? saved.autoGainControl : baseProfile.autoGainControl,
+    };
+
+    if (!this.hostAudioUrlOverrides.stereo) {
+      this.session.stereo = fallback.stereo ? 1 : 0;
     }
-    if (!this.session.audiobitrate || this.session.audiobitrate < 192) {
-      this.session.audiobitrate = 256;
+    if (!this.hostAudioUrlOverrides.inputChannels && !this.hostAudioUrlOverrides.stereo) {
+      this.session.audioInputChannels = fallback.monoInput ? 1 : false;
     }
-    if (!this.session.outboundAudioBitrate || this.session.outboundAudioBitrate < 192) {
-      this.session.outboundAudioBitrate = 256;
-    }
-    if (typeof this.session.autoGainControl === 'undefined') {
-      this.session.autoGainControl = false;
-    }
-    if (typeof this.session.noiseSuppression === 'undefined') {
-      this.session.noiseSuppression = false;
-    }
-    if (typeof this.session.echoCancellation === 'undefined') {
-      this.session.echoCancellation = false;
-    }
-    if (typeof this.session.applyStereoDefaults === 'function') {
-      try {
-        this.session.applyStereoDefaults();
-      } catch (error) {
-        console.warn('applyStereoDefaults failed', error);
+    if (!this.hostAudioUrlOverrides.bitrate) {
+      const stereoParamSetABitrate = this.hostAudioUrlOverrides.stereo && Number(this.session.audiobitrate) > 0;
+      if (!stereoParamSetABitrate) {
+        this.session.audiobitrate = fallback.bitrate;
       }
+    }
+    if (!this.hostAudioUrlOverrides.outboundBitrate) {
+      this.session.outboundAudioBitrate = fallback.bitrate;
+    }
+    if (!this.hostAudioUrlOverrides.echoCancellation && this.session.echoCancellation == null) {
+      this.session.echoCancellation = fallback.echoCancellation;
+    }
+    if (!this.hostAudioUrlOverrides.noiseSuppression && this.session.noiseSuppression == null) {
+      this.session.noiseSuppression = fallback.noiseSuppression;
+    }
+    if (!this.hostAudioUrlOverrides.autoGainControl && this.session.autoGainControl == null) {
+      this.session.autoGainControl = fallback.autoGainControl;
+    }
+    if (!this.hostAudioUrlOverrides.device && (saved.deviceId || saved.deviceLabel)) {
+      this.session.audioDevice = [saved.deviceId || normalizeAudioDeviceLabel(saved.deviceLabel)];
+    }
+  }
+
+  getHostAudioSnapshot() {
+    const stereoValues = [1, 3, 4, 5, '1', '3', '4', '5'];
+    const inboundBitrate = Number.parseInt(this.session?.audiobitrate, 10) || 0;
+    const outboundBitrate = Number.parseInt(this.session?.outboundAudioBitrate, 10) || 0;
+    return {
+      stereo: stereoValues.includes(this.session?.stereo),
+      monoInput: this.session?.audioInputChannels === 1 || this.session?.audioInputChannels === '1',
+      inboundBitrate,
+      outboundBitrate,
+      echoCancellation: this.session?.echoCancellation === true,
+      noiseSuppression: this.session?.noiseSuppression === true,
+      autoGainControl: this.session?.autoGainControl === true,
+    };
+  }
+
+  detectHostAudioProfile(snapshot = this.getHostAudioSnapshot()) {
+    const pro = snapshot.stereo &&
+      !snapshot.monoInput &&
+      snapshot.inboundBitrate === HOST_AUDIO_PRO_PROFILE.bitrate &&
+      snapshot.outboundBitrate === HOST_AUDIO_PRO_PROFILE.bitrate &&
+      !snapshot.echoCancellation &&
+      !snapshot.noiseSuppression &&
+      !snapshot.autoGainControl;
+    if (pro) {
+      return 'pro';
+    }
+    const voice = !snapshot.stereo &&
+      snapshot.monoInput &&
+      snapshot.inboundBitrate === HOST_AUDIO_VOICE_PROFILE.bitrate &&
+      snapshot.outboundBitrate === HOST_AUDIO_VOICE_PROFILE.bitrate &&
+      snapshot.echoCancellation &&
+      snapshot.noiseSuppression &&
+      snapshot.autoGainControl;
+    return voice ? 'voice' : 'custom';
+  }
+
+  applyHostAudioProfileToSession(profile) {
+    const settings = profile === 'voice' ? HOST_AUDIO_VOICE_PROFILE : HOST_AUDIO_PRO_PROFILE;
+    this.session.stereo = settings.stereo ? 1 : 0;
+    this.session.mono = !settings.stereo;
+    this.session.audioInputChannels = settings.monoInput ? 1 : false;
+    this.session.audiobitrate = settings.bitrate;
+    this.session.outboundAudioBitrate = settings.bitrate;
+    this.session.echoCancellation = settings.echoCancellation;
+    this.session.noiseSuppression = settings.noiseSuppression;
+    this.session.autoGainControl = settings.autoGainControl;
+    this.hostAudioProfile = profile;
+  }
+
+  applyHostAudioSnapshotToSession(snapshot) {
+    this.session.stereo = snapshot.stereo ? 1 : 0;
+    this.session.mono = !snapshot.stereo;
+    this.session.audioInputChannels = snapshot.monoInput ? 1 : false;
+    this.session.audiobitrate = snapshot.inboundBitrate || false;
+    this.session.outboundAudioBitrate = snapshot.outboundBitrate || false;
+    this.session.echoCancellation = snapshot.echoCancellation;
+    this.session.noiseSuppression = snapshot.noiseSuppression;
+    this.session.autoGainControl = snapshot.autoGainControl;
+    this.hostAudioProfile = this.detectHostAudioProfile(snapshot);
+  }
+
+  applyHostAudioControlsToSession() {
+    const stereo = Boolean(this.hostAudioStereoInput?.checked);
+    const bitrate = Number.parseInt(this.hostAudioBitrateSelect?.value, 10);
+    this.session.stereo = stereo ? 1 : 0;
+    this.session.mono = !stereo;
+    this.session.audioInputChannels = this.hostAudioMonoInput?.checked ? 1 : false;
+    if (Number.isFinite(bitrate) && bitrate > 0) {
+      this.session.audiobitrate = bitrate;
+      this.session.outboundAudioBitrate = bitrate;
+    }
+    this.session.echoCancellation = Boolean(this.hostAudioEchoInput?.checked);
+    this.session.noiseSuppression = Boolean(this.hostAudioNoiseInput?.checked);
+    this.session.autoGainControl = Boolean(this.hostAudioGainInput?.checked);
+    this.hostAudioProfile = 'custom';
+  }
+
+  saveHostAudioPreferences({ audio = false, device = false } = {}) {
+    const next = { ...(this.hostAudioPreferences || {}) };
+    if (audio) {
+      const snapshot = this.getHostAudioSnapshot();
+      next.profile = this.detectHostAudioProfile(snapshot);
+      next.stereo = snapshot.stereo;
+      next.monoInput = snapshot.monoInput;
+      next.bitrate = snapshot.inboundBitrate || snapshot.outboundBitrate || HOST_AUDIO_PRO_PROFILE.bitrate;
+      next.echoCancellation = snapshot.echoCancellation;
+      next.noiseSuppression = snapshot.noiseSuppression;
+      next.autoGainControl = snapshot.autoGainControl;
+    }
+    if (device) {
+      next.deviceId = this.hostAudioDeviceId || '';
+      next.deviceLabel = this.hostAudioDeviceLabel || '';
+    }
+    next.version = HOST_AUDIO_SETTINGS_VERSION;
+    this.hostAudioPreferences = next;
+    persistHostAudioSettings(next);
+  }
+
+  updateHostAudioSummary() {
+    if (!this.hostAudioSummaryNode) {
+      return;
+    }
+    const snapshot = this.getHostAudioSnapshot();
+    const profile = this.detectHostAudioProfile(snapshot);
+    const profileLabel = profile === 'pro'
+      ? 'Pro Audio'
+      : profile === 'voice'
+        ? 'Voice / speakers'
+        : 'Custom';
+    const bitrateLabel = snapshot.inboundBitrate === snapshot.outboundBitrate
+      ? `${snapshot.inboundBitrate || 'auto'} kbps`
+      : `${snapshot.inboundBitrate || 'auto'} in / ${snapshot.outboundBitrate || 'auto'} out`;
+    this.hostAudioSummaryNode.textContent = `${profileLabel} | ${snapshot.stereo ? 'stereo send' : 'mono send'} | ${bitrateLabel}`;
+    this.hostAudioSummaryNode.dataset.state = this.hostMic?.active ? 'active' : 'idle';
+  }
+
+  syncHostAudioControlsFromSession() {
+    const snapshot = this.getHostAudioSnapshot();
+    this.hostAudioProfile = this.detectHostAudioProfile(snapshot);
+    if (this.hostAudioProfileSelect) {
+      this.hostAudioProfileSelect.value = this.hostAudioProfile;
+    }
+    if (this.hostAudioStereoInput) {
+      this.hostAudioStereoInput.checked = snapshot.stereo;
+    }
+    if (this.hostAudioMonoInput) {
+      this.hostAudioMonoInput.checked = snapshot.monoInput;
+    }
+    if (this.hostAudioEchoInput) {
+      this.hostAudioEchoInput.checked = snapshot.echoCancellation;
+    }
+    if (this.hostAudioNoiseInput) {
+      this.hostAudioNoiseInput.checked = snapshot.noiseSuppression;
+    }
+    if (this.hostAudioGainInput) {
+      this.hostAudioGainInput.checked = snapshot.autoGainControl;
+    }
+    if (this.hostAudioBitrateSelect) {
+      const knownRate = snapshot.inboundBitrate === snapshot.outboundBitrate &&
+        Array.from(this.hostAudioBitrateSelect.options).some((option) => option.value === String(snapshot.inboundBitrate));
+      let customOption = this.hostAudioBitrateSelect.querySelector('.host-audio-bitrate-custom');
+      if (!knownRate) {
+        if (!customOption) {
+          customOption = createElement('option', 'host-audio-bitrate-custom', { value: 'custom' });
+          this.hostAudioBitrateSelect.append(customOption);
+        }
+        customOption.textContent = snapshot.inboundBitrate === snapshot.outboundBitrate
+          ? `Custom (${snapshot.inboundBitrate || 'auto'} kbps)`
+          : `Custom (${snapshot.inboundBitrate || 'auto'} / ${snapshot.outboundBitrate || 'auto'} kbps)`;
+        this.hostAudioBitrateSelect.value = 'custom';
+      } else {
+        customOption?.remove();
+        this.hostAudioBitrateSelect.value = String(snapshot.inboundBitrate);
+      }
+    }
+    this.updateHostAudioSummary();
+  }
+
+  setHostAudioControlsDisabled(disabled) {
+    const controlsDisabled = Boolean(disabled || this.hostAudioDeviceRefreshBusy);
+    const controls = [
+      this.hostAudioDeviceSelect,
+      this.hostAudioProfileSelect,
+      this.hostAudioStereoInput,
+      this.hostAudioMonoInput,
+      this.hostAudioBitrateSelect,
+      this.hostAudioEchoInput,
+      this.hostAudioNoiseInput,
+      this.hostAudioGainInput,
+    ];
+    controls.forEach((control) => {
+      if (control) {
+        control.disabled = controlsDisabled;
+      }
+    });
+    if (this.hostAudioRefreshButton) {
+      this.hostAudioRefreshButton.disabled = controlsDisabled;
+    }
+  }
+
+  findHostAudioDevice(devices, preference) {
+    if (!preference && preference !== 1) {
+      return null;
+    }
+    if (preference === 1 || preference === '1') {
+      return devices.find((device) => device.deviceId === 'default') || devices[0] || null;
+    }
+    const desired = normalizeAudioDeviceLabel(preference);
+    return devices.find((device) => device.deviceId === preference) ||
+      devices.find((device) => normalizeAudioDeviceLabel(device.label) === desired) ||
+      devices.find((device) => normalizeAudioDeviceLabel(device.label).includes(desired)) ||
+      null;
+  }
+
+  resolvePreferredHostAudioDevice(devices) {
+    const activeTrack = this.getPublishedHostMicStream()?.getAudioTracks?.()
+      .find((track) => track && track.readyState !== 'ended');
+    const activeDeviceId = activeTrack?.getSettings?.().deviceId || '';
+    const preferences = [];
+    if (activeDeviceId) {
+      preferences.push(activeDeviceId);
+    }
+    const sessionPreference = this.session?.audioDevice;
+    if (sessionPreference === 0) {
+      return null;
+    }
+    const appendSessionPreferences = () => {
+      if (Array.isArray(sessionPreference)) {
+        preferences.push(...sessionPreference);
+      } else if (sessionPreference) {
+        preferences.push(sessionPreference);
+      }
+    };
+    if (this.hostAudioUrlOverrides.device) {
+      appendSessionPreferences();
+    } else {
+      if (this.hostAudioDeviceId) {
+        preferences.push(this.hostAudioDeviceId);
+      }
+      appendSessionPreferences();
+      preferences.push(this.hostAudioPreferences?.deviceId, this.hostAudioPreferences?.deviceLabel);
+    }
+    for (const preference of preferences.filter(Boolean)) {
+      const match = this.findHostAudioDevice(devices, preference);
+      if (match) {
+        return match;
+      }
+    }
+    return devices.find((device) => device.deviceId === 'default') || devices[0] || null;
+  }
+
+  async refreshHostAudioDevices({ requestPermission = false } = {}) {
+    if (!this.hostAudioDeviceSelect || !navigator.mediaDevices) {
+      return;
+    }
+    this.hostAudioDeviceRefreshBusy = true;
+    this.setHostAudioControlsDisabled(this.recording || this.hostMicBusy);
+    let permissionError = null;
+    try {
+      if (requestPermission && !this.hostMic?.active && typeof navigator.mediaDevices.getUserMedia === 'function') {
+        try {
+          const permissionStream = await navigator.mediaDevices.getUserMedia({ audio: true, video: false });
+          permissionStream.getTracks().forEach((track) => track.stop());
+        } catch (error) {
+          permissionError = error;
+        }
+      }
+      const devices = typeof navigator.mediaDevices.enumerateDevices === 'function'
+        ? await navigator.mediaDevices.enumerateDevices()
+        : [];
+      this.hostAudioDevices = devices.filter((device) => device.kind === 'audioinput' && device.deviceId);
+      const selected = this.resolvePreferredHostAudioDevice(this.hostAudioDevices);
+      this.hostAudioDeviceSelect.textContent = '';
+      this.hostAudioDeviceSelect.append(createElement('option', '', {
+        value: '',
+        text: this.hostAudioDevices.length ? 'Choose a microphone' : 'No microphones found',
+      }));
+      this.hostAudioDevices.forEach((device, index) => {
+        this.hostAudioDeviceSelect.append(createElement('option', '', {
+          value: device.deviceId,
+          text: device.label || `Microphone ${index + 1}`,
+        }));
+      });
+      if (selected) {
+        this.hostAudioDeviceId = selected.deviceId;
+        this.hostAudioDeviceLabel = selected.label || 'Microphone';
+        this.hostAudioDeviceSelect.value = selected.deviceId;
+        this.hostAudioDeviceSelect.title = this.hostAudioDeviceLabel;
+        this.session.audioDevice = [selected.deviceId];
+      } else {
+        this.hostAudioDeviceId = '';
+        this.hostAudioDeviceLabel = '';
+        this.hostAudioDeviceSelect.value = '';
+        this.hostAudioDeviceSelect.title = 'Choose the microphone used by the Podcast Studio host input.';
+      }
+      if (permissionError) {
+        this.setHostMicError(permissionError.message || 'Microphone permission was not granted.');
+      }
+    } catch (error) {
+      console.warn('Unable to list host microphones', error);
+      this.hostAudioDevices = [];
+      this.hostAudioDeviceSelect.textContent = '';
+      this.hostAudioDeviceSelect.append(
+        createElement('option', '', { value: '', text: 'Microphones unavailable' })
+      );
+      this.setHostMicError(error?.message || 'Unable to list microphones.');
+    } finally {
+      this.hostAudioDeviceRefreshBusy = false;
+      this.setHostAudioControlsDisabled(this.recording || this.hostMicBusy);
+      this.updateHostAudioSummary();
+    }
+  }
+
+  hostAudioTrackMatchesDevice(track, device) {
+    if (!track || !device) {
+      return false;
+    }
+    const settingsId = track.getSettings?.().deviceId || '';
+    if (settingsId && settingsId === device.deviceId) {
+      return true;
+    }
+    const trackLabel = normalizeAudioDeviceLabel(track.label);
+    const deviceLabel = normalizeAudioDeviceLabel(device.label);
+    if (trackLabel && deviceLabel && (trackLabel === deviceLabel || trackLabel.includes(deviceLabel))) {
+      return true;
+    }
+    return this.getLegacyHostAudioDeviceId() === device.deviceId;
+  }
+
+  getLegacyHostAudioDeviceId() {
+    const inputs = document.querySelectorAll('#audioSource3 input');
+    for (const input of inputs) {
+      if (input.checked && input.value && input.value !== 'ZZZ' && input.dataset.type !== 'screen') {
+        return input.value;
+      }
+    }
+    return '';
+  }
+
+  async waitForReconfiguredHostMic(previousTrackId, device, timeoutMs = HOST_MIC_READY_TIMEOUT_MS) {
+    const started = Date.now();
+    while (Date.now() - started < timeoutMs) {
+      const stream = this.getPublishedHostMicStream();
+      const track = stream?.getAudioTracks?.().find((candidate) => candidate && candidate.readyState !== 'ended');
+      if (stream && track && track.id !== previousTrackId && this.hostAudioTrackMatchesDevice(track, device)) {
+        return { stream, track };
+      }
+      await new Promise((resolve) => setTimeout(resolve, 100));
+    }
+    throw new Error(`Timed out switching to ${device?.label || 'the selected microphone'}.`);
+  }
+
+  async replaceActiveHostAudio(deviceId) {
+    const device = this.hostAudioDevices.find((candidate) => candidate.deviceId === deviceId);
+    if (!device) {
+      throw new Error('The selected microphone is no longer available.');
+    }
+    if (typeof window.changeAudioDeviceById !== 'function') {
+      throw new Error('Microphone switching is not available yet.');
+    }
+    const previousTrack = this.getPublishedHostMicStream()?.getAudioTracks?.()[0] || this.hostMic?.track;
+    const previousTrackId = previousTrack?.id || '';
+    const wasMuted = this.hostMicMuted;
+    window.changeAudioDeviceById(deviceId);
+    const published = await this.waitForReconfiguredHostMic(previousTrackId, device);
+    if (wasMuted) {
+      published.track.enabled = false;
+    }
+    await this.syncHostMicParticipant(published.stream, published.track);
+    this.hostMicMuted = wasMuted;
+    this.updateHostMuteUI();
+  }
+
+  async handleHostAudioDeviceChange() {
+    if (!this.hostAudioDeviceSelect || this.recording || this.hostMicBusy) {
+      return;
+    }
+    const deviceId = this.hostAudioDeviceSelect.value;
+    const device = this.hostAudioDevices.find((candidate) => candidate.deviceId === deviceId);
+    if (!device) {
+      return;
+    }
+    const previousDeviceId = this.hostAudioDeviceId;
+    const previousDeviceLabel = this.hostAudioDeviceLabel;
+    const previousSessionPreference = Array.isArray(this.session.audioDevice)
+      ? [...this.session.audioDevice]
+      : this.session.audioDevice;
+    this.hostAudioDeviceId = device.deviceId;
+    this.hostAudioDeviceLabel = device.label || 'Microphone';
+    this.hostAudioDeviceSelect.title = this.hostAudioDeviceLabel;
+    this.session.audioDevice = [device.deviceId];
+    this.saveHostAudioPreferences({ device: true });
+    this.setHostMicError('');
+    if (!this.hostMic?.active) {
+      this.updateHostAudioSummary();
+      return;
+    }
+    this.hostMicBusy = true;
+    this.hostMicBusyAction = 'update';
+    this.updateHostMicUI();
+    try {
+      await this.replaceActiveHostAudio(device.deviceId);
+    } catch (error) {
+      console.error('Failed to switch host microphone', error);
+      this.hostAudioDeviceId = previousDeviceId;
+      this.hostAudioDeviceLabel = previousDeviceLabel;
+      this.session.audioDevice = previousSessionPreference;
+      if (previousDeviceId) {
+        try {
+          await this.replaceActiveHostAudio(previousDeviceId);
+        } catch (restoreError) {
+          console.error('Failed to restore previous host microphone', restoreError);
+          this.hostMic = null;
+          this.virtualParticipants.delete('host-mic');
+        }
+      }
+      this.saveHostAudioPreferences({ device: true });
+      this.setHostMicError(error?.message || 'Unable to switch microphones.');
+    } finally {
+      this.hostMicBusy = false;
+      this.hostMicBusyAction = '';
+      this.hostAudioDeviceSelect.value = this.hostAudioDeviceId || '';
+      this.hostAudioDeviceSelect.title = this.hostAudioDeviceLabel || 'Choose the microphone used by the Podcast Studio host input.';
+      this.updateHostMicUI();
+      this.refreshRoster();
+    }
+  }
+
+  async renegotiateHostAudio() {
+    if (typeof this.session?.createOffer !== 'function') {
+      return;
+    }
+    await new Promise((resolve) => setTimeout(resolve, 100));
+    Object.entries(this.session.pcs || {}).forEach(([uuid, peer]) => {
+      if (!peer || peer.realUUID || peer.signalingState !== 'stable') {
+        return;
+      }
+      try {
+        this.session.createOffer(uuid);
+      } catch (error) {
+        console.warn('Unable to renegotiate host audio settings', uuid, error);
+      }
+    });
+  }
+
+  async commitHostAudioSettings(profile = 'custom') {
+    if (this.recording || this.hostMicBusy) {
+      this.syncHostAudioControlsFromSession();
+      return;
+    }
+    const previousSnapshot = this.getHostAudioSnapshot();
+    if (profile === 'pro' || profile === 'voice') {
+      this.applyHostAudioProfileToSession(profile);
+    } else {
+      this.applyHostAudioControlsToSession();
+    }
+    this.syncHostAudioControlsFromSession();
+    this.saveHostAudioPreferences({ audio: true });
+    this.setHostMicError('');
+    if (!this.hostMic?.active) {
+      return;
+    }
+    if (!this.hostAudioDeviceId) {
+      this.setHostMicError('Choose a microphone before applying live audio settings.');
+      return;
+    }
+    this.hostMicBusy = true;
+    this.hostMicBusyAction = 'update';
+    this.updateHostMicUI();
+    try {
+      await this.replaceActiveHostAudio(this.hostAudioDeviceId);
+      await this.renegotiateHostAudio();
+    } catch (error) {
+      console.error('Failed to apply host audio settings', error);
+      this.applyHostAudioSnapshotToSession(previousSnapshot);
+      this.syncHostAudioControlsFromSession();
+      this.saveHostAudioPreferences({ audio: true });
+      let restoreFailed = false;
+      try {
+        await this.replaceActiveHostAudio(this.hostAudioDeviceId);
+      } catch (restoreError) {
+        restoreFailed = true;
+        console.error('Failed to restore previous host audio settings', restoreError);
+        if (!this.getPublishedHostMicStream()) {
+          this.hostMic = null;
+          this.virtualParticipants.delete('host-mic');
+        }
+      }
+      const message = error?.message || 'Unable to apply audio settings.';
+      this.setHostMicError(restoreFailed ? `${message} Previous settings could not be restored.` : message);
+    } finally {
+      this.hostMicBusy = false;
+      this.hostMicBusyAction = '';
+      this.updateHostMicUI();
     }
   }
 
@@ -2075,6 +2715,19 @@ class PodcastStudioApp {
       participant,
       legacy: true,
     };
+    const activeDeviceId = track.getSettings?.().deviceId || '';
+    const activeDevice = this.hostAudioDevices.find((device) =>
+      device.deviceId === activeDeviceId || this.hostAudioTrackMatchesDevice(track, device)
+    );
+    if (activeDevice) {
+      this.hostAudioDeviceId = activeDevice.deviceId;
+      this.hostAudioDeviceLabel = activeDevice.label || track.label || 'Microphone';
+      if (this.hostAudioDeviceSelect) {
+        this.hostAudioDeviceSelect.value = activeDevice.deviceId;
+        this.hostAudioDeviceSelect.title = this.hostAudioDeviceLabel;
+      }
+      this.session.audioDevice = [activeDevice.deviceId];
+    }
     try {
       this.session?.sendMessage?.({ virtualHangup: false });
     } catch (error) {
@@ -2118,7 +2771,12 @@ class PodcastStudioApp {
     if (this.hostMicButton) {
       if (this.hostMicBusy || this.recording) {
         this.hostMicButton.disabled = true;
-        const busyLabel = this.hostMic?.active ? 'Disabling…' : 'Enabling…';
+        const busyLabels = {
+          enable: 'Enabling...',
+          disable: 'Disabling...',
+          update: 'Updating...',
+        };
+        const busyLabel = busyLabels[this.hostMicBusyAction] || 'Working...';
         this.hostMicButton.textContent = this.recording ? 'Locked' : busyLabel;
       } else {
         this.hostMicButton.disabled = false;
@@ -2139,6 +2797,8 @@ class PodcastStudioApp {
         this.hostMicStatusNode.dataset.state = 'idle';
       }
     }
+    this.setHostAudioControlsDisabled(this.hostMicBusy || this.recording);
+    this.updateHostAudioSummary();
     this.updateHostMuteUI();
   }
 
@@ -2198,6 +2858,7 @@ class PodcastStudioApp {
       return;
     }
     this.hostMicBusy = true;
+    this.hostMicBusyAction = 'enable';
     this.setHostMicError('');
     this.updateHostMicUI();
     const publishGeneration = this.hostMicPublishGeneration + 1;
@@ -2209,6 +2870,9 @@ class PodcastStudioApp {
     let startedLegacyPublish = false;
     try {
       await this.ensureAudioContextResumed();
+      if (this.hostAudioDeviceId) {
+        this.session.audioDevice = [this.hostAudioDeviceId];
+      }
       let stream = this.getPublishedHostMicStream();
       let track = stream?.getAudioTracks?.().find((candidate) => candidate && candidate.readyState !== 'ended') || null;
       if (!stream || !track) {
@@ -2226,6 +2890,9 @@ class PodcastStudioApp {
         track = published.track;
       }
       await this.syncHostMicParticipant(stream, track);
+      this.refreshHostAudioDevices().catch((error) => {
+        console.warn('Unable to refresh microphones after enabling host input', error);
+      });
     } catch (error) {
       console.error('Failed to enable host microphone', error);
       if (startedLegacyPublish) {
@@ -2237,6 +2904,7 @@ class PodcastStudioApp {
       this.updateHostMicUI();
     } finally {
       this.hostMicBusy = false;
+      this.hostMicBusyAction = '';
       this.updateHostMicUI();
     }
   }
@@ -2248,6 +2916,7 @@ class PodcastStudioApp {
       return;
     }
     this.hostMicBusy = true;
+    this.hostMicBusyAction = 'disable';
     this.updateHostMicUI();
     try {
       if (this.hostMicMeter) {
@@ -2274,6 +2943,7 @@ class PodcastStudioApp {
       this.virtualParticipants.delete('host-mic');
       this.hostMic = null;
       this.hostMicBusy = false;
+      this.hostMicBusyAction = '';
       this.hostMicMuted = false;
       this.setHostMicError('');
       this.updateHostMicUI();
@@ -2813,8 +3483,114 @@ class PodcastStudioApp {
     this.hostMuteButton.addEventListener('click', () => this.handleHostMuteToggle());
     this.hostMicStatusNode = createElement('div', 'host-input-status', { text: 'Idle' });
     hostControls.append(this.hostMicButton, this.hostMuteButton, this.hostMicStatusNode);
-    this.hostMicErrorNode = createElement('div', 'host-input-error');
-    hostPanel.append(hostControls, this.hostMicErrorNode);
+    this.hostMicErrorNode = createElement('div', 'host-input-error', {
+      role: 'status',
+      'aria-live': 'polite',
+    });
+
+    const hostAudioSettings = createElement('div', 'host-audio-settings');
+    const deviceField = createElement('label', 'host-audio-field host-audio-field--device');
+    deviceField.append(createElement('span', 'host-audio-field__label', { text: 'Microphone' }));
+    const deviceControl = createElement('div', 'host-audio-device-control');
+    this.hostAudioDeviceSelect = createElement('select', 'host-audio-select host-audio-device-select', {
+      'aria-label': 'Host microphone',
+      title: 'Choose the microphone used by the Podcast Studio host input.',
+    });
+    this.hostAudioDeviceSelect.append(createElement('option', '', { value: '', text: 'Loading microphones...' }));
+    this.hostAudioDeviceSelect.addEventListener('change', () => {
+      this.handleHostAudioDeviceChange().catch((error) => {
+        console.error('Unable to change the host microphone', error);
+      });
+    });
+    this.hostAudioRefreshButton = createElement('button', 'host-audio-refresh', {
+      type: 'button',
+      text: 'Refresh',
+      title: 'Request microphone access and refresh the device list.',
+    });
+    this.hostAudioRefreshButton.addEventListener('click', () => {
+      this.setHostMicError('');
+      this.refreshHostAudioDevices({ requestPermission: true }).catch((error) => {
+        console.error('Unable to refresh host microphones', error);
+      });
+    });
+    deviceControl.append(this.hostAudioDeviceSelect, this.hostAudioRefreshButton);
+    deviceField.append(deviceControl);
+
+    const profileField = createElement('label', 'host-audio-field');
+    profileField.append(createElement('span', 'host-audio-field__label', { text: 'Audio mode' }));
+    this.hostAudioProfileSelect = createElement('select', 'host-audio-select host-audio-profile-select', {
+      'aria-label': 'Host audio mode',
+      title: 'Pro Audio preserves music and requires headphones. Voice mode controls speaker echo.',
+    });
+    [
+      ['pro', 'Pro Audio'],
+      ['voice', 'Voice / speakers'],
+      ['custom', 'Custom'],
+    ].forEach(([value, text]) => {
+      this.hostAudioProfileSelect.append(createElement('option', '', { value, text }));
+    });
+    this.hostAudioProfileSelect.addEventListener('change', () => {
+      this.commitHostAudioSettings(this.hostAudioProfileSelect.value).catch((error) => {
+        console.error('Unable to apply the host audio mode', error);
+      });
+    });
+    profileField.append(this.hostAudioProfileSelect);
+    hostAudioSettings.append(deviceField, profileField);
+
+    const advancedAudio = createElement('details', 'host-audio-advanced');
+    advancedAudio.append(createElement('summary', 'host-audio-advanced__summary', { text: 'Advanced audio' }));
+    const advancedGrid = createElement('div', 'host-audio-advanced__grid');
+    const makeHostAudioToggle = (labelText, titleText) => {
+      const label = createElement('label', 'host-audio-check', { title: titleText });
+      const input = createElement('input', '', { type: 'checkbox' });
+      label.append(input, createElement('span', '', { text: labelText }));
+      advancedGrid.append(label);
+      return input;
+    };
+    this.hostAudioStereoInput = makeHostAudioToggle('Stereo send', 'Send the host microphone as stereo-compatible Opus audio.');
+    this.hostAudioMonoInput = makeHostAudioToggle('Mono capture', 'Ask the browser to capture a single input channel.');
+    this.hostAudioEchoInput = makeHostAudioToggle('Echo cancellation', 'Reduce speaker echo. Use headphones when this is off.');
+    this.hostAudioNoiseInput = makeHostAudioToggle('Noise reduction', 'Let the browser reduce steady background noise.');
+    this.hostAudioGainInput = makeHostAudioToggle('Auto gain', 'Let the browser automatically adjust microphone volume.');
+
+    const bitrateField = createElement('label', 'host-audio-field host-audio-field--bitrate');
+    bitrateField.append(createElement('span', 'host-audio-field__label', { text: 'Opus bitrate' }));
+    this.hostAudioBitrateSelect = createElement('select', 'host-audio-select host-audio-bitrate-select', {
+      'aria-label': 'Host audio bitrate',
+      title: 'Target Opus bitrate for the host audio path.',
+    });
+    [64, 96, 128, 192, 256, 320].forEach((bitrate) => {
+      this.hostAudioBitrateSelect.append(createElement('option', '', {
+        value: String(bitrate),
+        text: `${bitrate} kbps`,
+      }));
+    });
+    bitrateField.append(this.hostAudioBitrateSelect);
+    advancedGrid.append(bitrateField);
+    [
+      this.hostAudioStereoInput,
+      this.hostAudioMonoInput,
+      this.hostAudioEchoInput,
+      this.hostAudioNoiseInput,
+      this.hostAudioGainInput,
+      this.hostAudioBitrateSelect,
+    ].forEach((control) => {
+      control.addEventListener('change', () => {
+        this.commitHostAudioSettings('custom').catch((error) => {
+          console.error('Unable to apply advanced host audio settings', error);
+        });
+      });
+    });
+    advancedAudio.append(advancedGrid);
+
+    this.hostAudioSummaryNode = createElement('div', 'host-audio-summary', {
+      'aria-live': 'polite',
+    });
+    const hostAudioHint = createElement('div', 'host-audio-hint', {
+      text: 'Pro Audio keeps the cleanest signal. Wear headphones so your guest does not echo.',
+    });
+    this.syncHostAudioControlsFromSession();
+    hostPanel.append(hostControls, hostAudioSettings, advancedAudio, this.hostAudioSummaryNode, hostAudioHint, this.hostMicErrorNode);
 
     const rosterPanel = createElement('section', 'podcast-panel');
     this.rosterList = createElement('div', 'roster-list');
@@ -3542,7 +4318,7 @@ class PodcastStudioApp {
     if (!this.recordingStatusNode) {
       return;
     }
-    if (!this.recording || !this.recordStartedAt) {
+    if (!this.recording || !this.recordStartedAt || this.recordingStatusState === 'error') {
       this.recordingStatusNode.textContent = this.recordingStatusBase || 'Idle';
       this.recordingStatusNode.dataset.state = this.recordingStatusState || 'idle';
       return;
@@ -3637,11 +4413,8 @@ class PodcastStudioApp {
 
   attachRecorderEvents() {
     this.recorder.addEventListener('start', (event) => {
-      if (this.abortUploadsController) {
-        this.abortUploadsController.abort();
-      }
+      this.archiveRecordingResults();
       this.abortUploadsController = new AbortController();
-      this.cleanupDownloadUrls();
       this.trackRuntimeStats.clear();
       this.trackLevelNodes.clear();
       this.teardownSpectrograms();
@@ -3674,6 +4447,9 @@ class PodcastStudioApp {
     });
 
     this.recorder.addEventListener('chunk', (event) => {
+      if (!this.recording) {
+        return;
+      }
       const { participant, trackType, channelIndex } = event.detail || {};
       if (!participant || !trackType) {
         return;
@@ -3687,8 +4463,10 @@ class PodcastStudioApp {
       if (!indicator) {
         return;
       }
-      indicator.badge.textContent = 'Recording';
-      indicator.wrapper.dataset.state = 'recording';
+      if (indicator.wrapper.dataset.state !== 'error') {
+        indicator.badge.textContent = 'Recording';
+        indicator.wrapper.dataset.state = 'recording';
+      }
       this.updateRecordingRuntimeMetrics(key, indicator, event.detail);
       this.trackManifestChunk(event.detail);
     });
@@ -3720,6 +4498,7 @@ class PodcastStudioApp {
           const indicator = this.ensureOutputIndicator(key, participant, trackType, trackIndex);
           if (indicator?.badge) {
             indicator.badge.textContent = 'Late join';
+            indicator.wrapper.dataset.state = 'armed';
             indicator.badge.title = `Joined ${startOffsetSeconds?.toFixed(1) || '?'}s into recording`;
           }
         }
@@ -3728,7 +4507,7 @@ class PodcastStudioApp {
       if (audioTracks.length) {
         audioTracks.forEach((_track, index) => annotateLateJoin('audio', index));
       }
-      const videoTracks = participant.stream?.getVideoTracks?.() || [];
+      const videoTracks = this.recorder.options.includeVideo ? participant.stream?.getVideoTracks?.() || [] : [];
       if (videoTracks.length) {
         videoTracks.forEach((_track, index) => annotateLateJoin('video', index));
       }
@@ -3739,7 +4518,19 @@ class PodcastStudioApp {
 
     this.recorder.addEventListener('error', (event) => {
       console.error('Recorder error', event.detail);
-      this.setStatusMessage('Recorder error: ' + (event.detail?.message || 'unknown'));
+      const detail = event.detail || {};
+      const participant = detail.participant || {};
+      const label = participant.label || participant.streamID || participant.uuid || 'Guest';
+      const track = `${detail.trackType || 'audio'} ${Number.isInteger(detail.channelIndex) ? detail.channelIndex + 1 : 1}`;
+      this.setRecordingStatus(`Recorder error (${label}, ${track}): ${detail.error?.message || detail.message || 'unknown'}`, 'error');
+      if (participant.uuid && detail.trackType) {
+        const key = this.buildTrackKey(participant.uuid, detail.trackType, detail.channelIndex || 0);
+        const indicator = this.ensureOutputIndicator(key, participant, detail.trackType, detail.channelIndex || 0);
+        if (indicator) {
+          indicator.badge.textContent = 'Error';
+          indicator.wrapper.dataset.state = 'error';
+        }
+      }
     });
 
     this.recorder.addEventListener('stop', (event) => {
@@ -3872,6 +4663,7 @@ class PodcastStudioApp {
     if (!this.outputsContainer) {
       return;
     }
+    this.archiveRecordingResults();
     this.outputsContainer.dataset.mode = 'message';
     this.outputsContainer.dataset.hasTracks = '';
     this.outputsContainer.classList.remove('timeline-tracklist');
@@ -4029,28 +4821,19 @@ class PodcastStudioApp {
     if (!indicator) {
       return;
     }
-    const runtime = this.trackRuntimeStats.get(key) || {
-      bytes: 0,
-      startedAt: Date.now(),
-      lastUpdate: Date.now(),
-    };
+    const recordingKey = detail?.recordingKey || key;
+    const runtime = this.trackRuntimeStats.get(recordingKey) || { bytes: 0 };
     const chunk = detail?.data;
     if (chunk && typeof chunk.size === 'number') {
       runtime.bytes += chunk.size;
     }
-    const now = Date.now();
-    if (!runtime.startedAt) {
-      runtime.startedAt = now;
-    }
-    runtime.lastUpdate = now;
-    const elapsedMs = Math.max(1, now - runtime.startedAt);
-    const kbps = runtime.bytes ? (runtime.bytes * 8) / elapsedMs : 0;
-    const durationSeconds = (now - runtime.startedAt) / 1000;
+    const durationSeconds = Number.isFinite(detail?.durationSeconds) ? Math.max(0, detail.durationSeconds) : 0;
+    const kbps = durationSeconds > 0 ? (runtime.bytes * 8) / (durationSeconds * 1000) : 0;
     if (indicator.trackType === 'video' || detail?.trackType === 'video') {
       const videoRateLabel = kbps > 0 ? `${Math.round(kbps)} kbps` : 'capturing…';
       const durationLabel = this.formatDuration(durationSeconds);
-      indicator.recordMetric.textContent = `Recording: ${videoRateLabel} • Video • ${durationLabel}`;
-      this.trackRuntimeStats.set(key, runtime);
+      indicator.recordMetric.textContent = `Encoded: ${videoRateLabel} • Video • ${durationLabel}`;
+      this.trackRuntimeStats.set(recordingKey, runtime);
       return;
     }
     const sampleRate = this.recorder?.options?.targetSampleRate || 48000;
@@ -4060,8 +4843,8 @@ class PodcastStudioApp {
         : `${sampleRate} Hz`;
     const bitrateLabel = kbps > 0 ? `${Math.round(kbps)} kbps` : 'estimating…';
     const durationLabel = this.formatDuration(durationSeconds);
-    indicator.recordMetric.textContent = `Recording: ${bitrateLabel} • WAV ${sampleRateLabel} • ${durationLabel}`;
-    this.trackRuntimeStats.set(key, runtime);
+    indicator.recordMetric.textContent = `Encoded: ${bitrateLabel} • WAV export ${sampleRateLabel} • ${durationLabel}`;
+    this.trackRuntimeStats.set(recordingKey, runtime);
   }
 
   buildRecordingPlanContext({ diskInfo } = {}) {
@@ -4301,13 +5084,16 @@ class PodcastStudioApp {
       });
     } catch (error) {
       console.error('Failed to start recorder', error);
-      this.setStatusMessage('Unable to start recording: ' + (error?.message || 'unknown error'));
+      const failureMessage = 'Unable to start recording: ' + (error?.message || 'unknown error');
+      if (!this.recorder.getFiles().size) {
+        this.setStatusMessage(failureMessage);
+      }
       this.updateHostMicUI();
       this.recordTransitioning = false;
       this.updateRecordingButtons();
       this.stopRecordingStatusTimer();
       this.logRecordingEvent('record:error', { stage: 'start', message: error?.message || 'unknown error' });
-      this.setRecordingStatus('Recording idle', 'error');
+      this.setRecordingStatus(failureMessage, 'error');
       this.updateRecordingPlanStatus('error', { error: error?.message || 'start failed', events: this.recordingPlan?.events || [] });
       this.setUploadProgressPending(false);
     }
@@ -4388,7 +5174,8 @@ class PodcastStudioApp {
       this.setUploadProgressPending(false);
       return;
     }
-    this.cleanupDownloadUrls();
+    this.archiveRecordingResults();
+    if (!this.abortUploadsController) this.abortUploadsController = new AbortController();
     this.outputsContainer.dataset.mode = 'results';
     this.outputsContainer.dataset.hasTracks = '';
     this.outputsContainer.classList.remove('timeline-tracklist');
@@ -4671,6 +5458,7 @@ class PodcastStudioApp {
       const existing = this.rosterItems.get(participant.uuid);
       if (existing) {
         this.updateRosterItem(existing, participant);
+        this.tryAddParticipantToRecording(participant);
       } else {
         const item = this.createRosterItem(participant);
         this.rosterItems.set(participant.uuid, item);
@@ -5794,6 +6582,10 @@ class PodcastStudioApp {
         return;
       }
       if (pending) {
+        if (Array.from(this.uploadTrackers?.[service]?.values() || []).some(entry => ['pending', 'queued', 'uploading'].includes(entry.status))) {
+          this.refreshUploadProgress(service);
+          return;
+        }
         node.dataset.state = 'pending';
         node.textContent = `${this.describeService(service)} uploads pending (recording in progress)`;
       } else if (!this.uploadTrackers?.[service]?.size) {
@@ -6023,6 +6815,7 @@ class PodcastStudioApp {
   }
 
   async queueDropboxUpload(meta, dropboxLine) {
+    const signal = this.abortUploadsController?.signal;
     if (!this.cloud || !meta?.blob) {
       if (dropboxLine) dropboxLine.textContent = 'Dropbox: unavailable';
       return;
@@ -6060,7 +6853,7 @@ class PodcastStudioApp {
             }
           }
         },
-        signal: this.abortUploadsController?.signal,
+        signal,
       });
       this.applyUploadResult(dropboxLine, results.dropbox);
       if (uploadKey) {
@@ -6081,6 +6874,35 @@ class PodcastStudioApp {
     }
   }
 
+  archiveRecordingResults() {
+    if (!this.outputsContainer || this.outputsContainer.dataset.mode !== 'results' || !this.activeDownloadUrls.length) return;
+    const container = this.outputsContainer;
+    const archive = {
+      urls: this.activeDownloadUrls,
+      controller: this.abortUploadsController,
+      element: createElement('details', 'timeline-archive'),
+    };
+    const fileCount = container.querySelectorAll('a[download]').length;
+    archive.element.append(createElement('summary', 'timeline-entry-label', {
+      text: `Previous recording (${fileCount} ${fileCount === 1 ? 'file' : 'files'})`,
+    }));
+    const discard = createElement('button', 'iso-config-row__button', { text: 'Discard this take', type: 'button' });
+    discard.addEventListener('click', () => {
+      if (!window.confirm('Discard these recording downloads and cancel unfinished uploads? Save any files you need first.')) return;
+      if (archive.controller) archive.controller.abort();
+      archive.urls.forEach(url => URL.revokeObjectURL(url));
+      archive.element.remove();
+      this.recordingArchives.delete(archive);
+    });
+    container.before(archive.element);
+    archive.element.append(container, discard);
+    this.outputsContainer = createElement('div', 'timeline-surface');
+    archive.element.after(this.outputsContainer);
+    this.recordingArchives.add(archive);
+    this.activeDownloadUrls = [];
+    this.abortUploadsController = null;
+  }
+
   cleanupDownloadUrls() {
     if (!this.activeDownloadUrls || !this.activeDownloadUrls.length) {
       return;
@@ -6096,6 +6918,12 @@ class PodcastStudioApp {
   }
 
   dispose() {
+    this.recordingArchives.forEach(archive => {
+      if (archive.controller) archive.controller.abort();
+      archive.urls.forEach(url => URL.revokeObjectURL(url));
+      archive.element.remove();
+    });
+    this.recordingArchives.clear();
     this.driveRequestTimers.forEach((_timers, uuid) => {
       this.clearDriveRequestTimers(uuid);
     });
@@ -6119,6 +6947,10 @@ class PodcastStudioApp {
     if (this.boundRemoteRecorderHandler) {
       window.removeEventListener(REMOTE_RECORDER_EVENT, this.boundRemoteRecorderHandler);
       this.boundRemoteRecorderHandler = null;
+    }
+    if (this.boundHostAudioDeviceChange && navigator.mediaDevices && typeof navigator.mediaDevices.removeEventListener === 'function') {
+      navigator.mediaDevices.removeEventListener('devicechange', this.boundHostAudioDeviceChange);
+      this.boundHostAudioDeviceChange = null;
     }
     if (this.levelOff) {
       this.levelOff();

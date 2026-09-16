@@ -20,7 +20,6 @@
 		--chat-width: 400px;
 		--chat-filler: 0px;
 	}
-	
 	body {
 		padding:0;
 		margin:0;
@@ -337,6 +336,7 @@
 		text-align: center;
 		vertical-align: middle;
 		align-content: center;
+		position: relative;
 	}
 	h2 {
 		text-shadow: 0 0 2px #a7a7a7;
@@ -837,6 +837,9 @@
 		border-radius: 5px;
 		background: rgb(238,238,238);
 		background-image: url("data:image/svg+xml,%0A%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 29 29'%3E%3Cpath d='M18 9v-3c-1 0-3.308-.188-4.506 2.216l-4.218 8.461c-1.015 2.036-3.094 3.323-5.37 3.323h-3.906v-2h3.906c1.517 0 2.903-.858 3.58-2.216l4.218-8.461c1.356-2.721 3.674-3.323 6.296-3.323v-3l6 4-6 4zm-9.463 1.324l1.117-2.242c-1.235-2.479-2.899-4.082-5.748-4.082h-3.906v2h3.906c2.872 0 3.644 2.343 4.631 4.324zm15.463 8.676l-6-4v3c-3.78 0-4.019-1.238-5.556-4.322l-1.118 2.241c1.021 2.049 2.1 4.081 6.674 4.081v3l6-4z'/%3E%3C/svg%3E"), linear-gradient(135deg, rgba(238,238,238,1) 0%,rgba(204,204,204,1) 100%);
+		background-position: center;
+		background-repeat: no-repeat;
+		background-size: 24px 24px, cover;
 	}
 	#demoDrop{
 		background-color: #30892c;
@@ -864,6 +867,13 @@
 		position: relative;
 	}
 	
+	body.mobile,
+	body.mobile *,
+	body.mobile *::before,
+	body.mobile *::after {
+		box-sizing: border-box;
+	}
+
 	body.mobile #containerMenu{
 		position: relative;
 		left: 0px;
@@ -873,27 +883,121 @@
 		height: unset;
 		overflow-y: hidden;
 	}
-	
+
+	body.mobile #container {
+		width: 100vw;
+		height: 100vh;
+		height: 100dvh;
+		overflow: hidden;
+	}
+
+	body.mobile #container[style*="display: block"] {
+		display: flex !important;
+		flex-direction: column;
+	}
+
+	body.mobile #containermenu {
+		position: relative;
+		display: flex;
+		align-items: center;
+		flex: 0 0 auto;
+		gap: 0;
+		width: 100vw;
+		height: 46px;
+		min-height: 46px;
+		padding: 0 4px;
+		overflow-x: auto;
+		overflow-y: hidden;
+		-webkit-overflow-scrolling: touch;
+		scrollbar-width: thin;
+	}
+
+	body.mobile #containermenu .groupContainer {
+		flex: 0 0 auto;
+		max-width: none;
+	}
+
+	body.mobile #containermenu .groupContainer > .group {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		width: 108px;
+		max-width: none;
+		height: 34px;
+		margin: 0 4px;
+		padding: 2px 26px 2px 8px;
+		transform: none;
+		font-size: 13px;
+		line-height: 1.15;
+		overflow: hidden;
+	}
+
+	body.mobile #containermenu .groupContainer > .group > span {
+		display: block;
+		max-width: 100%;
+		overflow: hidden;
+		white-space: nowrap;
+		text-overflow: ellipsis;
+	}
+
+	body.mobile #containermenu .groupContainer > .group > span br,
+	body.mobile #containermenu .groupContainer > .group > span small {
+		display: none;
+	}
+
+	body.mobile .hotkey {
+		display: none;
+	}
+
+	body.mobile .groupsize {
+		font-size: 11px;
+	}
+
+	body.mobile .groupview {
+		width: 22px;
+		height: 22px;
+		top: 50%;
+		bottom: auto;
+		transform: translateY(-50%);
+		padding: 1px;
+		font-size: 12px;
+		line-height: 16px;
+	}
+
 	body.mobile #iframeContainer{
 		position: relative;
 		box-shadow: 1px 1px 3px #1b1b1b, -1px -1px 3px #1d1d1d;
 	}
 	body.mobile  #vdoninja {
-		max-width: calc(100vw - 20px);
-		max-height: calc(100vh - 117px);
-		height: 180px;
+		position: relative;
+		left: auto;
+		top: auto;
+		width: 100%;
+		max-width: none;
+		height: 100%;
+		max-height: none;
 	}
 	body.mobile #iframeContainer {
 		position: relative;
-		max-width: calc(100vw - 40px);
+		left: 0;
+		flex: 1 1 auto;
+		width: 100vw;
+		max-width: none;
+		min-height: 0;
+		box-shadow: none;
 	}
-	
+
 	body.mobile {
 		margin:0;
-		overflow: initial;
+		position: relative;
+		min-height: 100vh;
+		min-height: 100dvh;
+		overflow: hidden;
 		overflow-x: hidden;
+		border-radius: 0;
+		box-shadow: none;
 	}
-	
+
 	body.mobile .tFadeStart {
 		top:0;
 	}
@@ -901,11 +1005,78 @@
 	body.mobile .tooltip:hover .tooltiptext {
 		display: none;
 	}
-	
+
 	body.mobile #welcomeWindow{
-		padding-bottom: 40px;
+		position: fixed;
+		height: 100vh;
+		height: 100dvh;
+		padding: 24px 16px calc(24px + env(safe-area-inset-bottom));
+		overflow-y: auto;
+		box-sizing: border-box;
 	}
-	
+
+	body.mobile .center-content{
+		width: 100%;
+		max-width: 420px;
+		margin: 0 auto;
+		text-align: center;
+	}
+
+	body.mobile label {
+		display: block;
+		width: 100%;
+		margin: 0 0 10px 0;
+	}
+
+	body.mobile label[for="roomname"] {
+		display: inline-block;
+		width: calc(100% - 64px);
+		max-width: 320px;
+		margin-right: 6px;
+		vertical-align: middle;
+	}
+
+	body.mobile input {
+		width: 100%;
+		max-width: 320px;
+		min-height: 42px;
+		margin: 5px auto;
+		font-size: 16px;
+	}
+
+	body.mobile label[for="roomname"] input {
+		max-width: none;
+	}
+
+	body.mobile .randomRoomName {
+		width: 42px;
+		height: 42px;
+		margin: 5px 0;
+		vertical-align: middle;
+	}
+
+	body.mobile .tooltip {
+		display: inline-block;
+		vertical-align: middle;
+	}
+
+	body.mobile #savedroompassword{
+		width: 100%;
+		max-width: 120px;
+	}
+
+	body.mobile .footer {
+		left: 12px;
+		right: 12px;
+		bottom: calc(10px + env(safe-area-inset-bottom));
+		justify-content: center;
+		flex-wrap: wrap;
+		width: auto;
+		height: auto;
+		margin: 0;
+		font-size: 13px;
+	}
+
 	#chatModuleButton {
 		user-select: none;
 		position: fixed;
@@ -913,14 +1084,63 @@
 		right: 10px;
 		cursor: pointer;
 	}
-	
+
 	body.mobile #chatModuleButton {
 		position: fixed;
 		bottom: 10px;
 		top: unset;
 		font-size: 150%;
 	}
-	
+
+	body.mobile #chatModule {
+		display: flex;
+		flex-direction: column;
+		align-self: stretch;
+		left: 10px;
+		right: 10px;
+		top: 56px;
+		bottom: 64px;
+		width: auto;
+		max-width: none;
+		height: auto;
+		margin: 0;
+		padding: 8px;
+	}
+
+	body.mobile #chatModule .xbutton {
+		flex: 0 0 auto;
+		align-self: flex-end;
+	}
+
+	body.mobile #chatBody {
+		position: static;
+		flex: 1 1 auto;
+		min-height: 0;
+		width: auto;
+		margin: 0 0 8px 0;
+		overflow-y: auto;
+	}
+
+	body.mobile #chatSendBar {
+		position: static;
+		flex: 0 0 auto;
+		display: flex;
+		gap: 8px;
+		width: auto;
+	}
+
+	body.mobile #chatInput {
+		flex: 1 1 auto;
+		width: auto;
+		min-width: 0;
+		margin: 0;
+	}
+
+	body.mobile #sendChat {
+		flex: 0 0 auto;
+		margin: 0;
+	}
+
 	</style>
 </head>
 <body>
@@ -1022,14 +1242,17 @@
 	}
 	
 	function toggleChat(){
-		document.getElementById("chatModule").classList.toggle("hidden");
-		document.getElementById("chatModuleButton").classList.toggle("hidden");
+		var chatModule = document.getElementById("chatModule");
+		var chatModuleButton = document.getElementById("chatModuleButton");
+		chatModule.classList.toggle("hidden");
 		
-		if (document.getElementById("chatModule").classList.contains("hidden")){
+		if (chatModule.classList.contains("hidden")){
+			chatModuleButton.classList.remove("hidden");
 			document.documentElement.style.setProperty('--chat-width', "0px");
 			document.documentElement.style.setProperty('--chat-filler', "40px");
 			
 		} else {
+			chatModuleButton.classList.add("hidden");
 			document.documentElement.style.setProperty('--chat-width', "400px");
 			document.documentElement.style.setProperty('--chat-filler', "0px");
 		}
@@ -1107,11 +1330,24 @@
 		mobile = true;
 	}
 	
-	if (mobile){
-		//toggleChat();
-		document.body.classList.add("mobile");
-		//getById("chatModule").classList.add("hidden");
+	function isCompactScreen(){
+		return (window.innerWidth && window.innerWidth <= 760) || (window.innerHeight && window.innerHeight <= 500);
 	}
+
+	function useMobileLayout(){
+		return mobile || isCompactScreen();
+	}
+
+	function updateResponsiveLayout(){
+		if (useMobileLayout()){
+			document.body.classList.add("mobile");
+		} else {
+			document.body.classList.remove("mobile");
+		}
+	}
+
+	updateResponsiveLayout();
+	window.addEventListener("resize", updateResponsiveLayout);
 	
 	var aspectRatio = 16/9.0;
 	document.documentElement.style.setProperty('--aspect-ratio', aspectRatio);
@@ -1549,9 +1785,12 @@
 		streamID = "&push="+streamID;
 	}
 	
-	var label = "&label";
-	if (urlParams.has("label") || urlParams.has("l")){
-		label += "=" + (urlParams.get("label") || urlParams.get("l") || "");
+	var label = "";
+	if (urlParams.has("l") && !urlParams.has("label")){
+		label = "&label";
+		if (urlParams.get("l")){
+			label += "=" + encodeURIComponent(urlParams.get("l"));
+		}
 	}
 	
 	var colors = [
@@ -1861,7 +2100,7 @@
 			roomname = generateString(10);
 		}
 		
-		if (mobile){
+		if (useMobileLayout()){
 			additional2 += "&ad=1&chatbutton=1";
 		} else {
 			additional2 += "&chatbutton=0";
@@ -1894,12 +2133,16 @@
 			drawGroup(savedSession.groups[i]);
 		}
 		
-		if (!mobile){
+		if (!useMobileLayout()){
 			document.getElementById("chatModule").classList.remove("hidden");
 			if (!chat){
 				toggleChat();
 			}
-		} 
+		} else if (chat){
+			document.getElementById("chatModuleButton").classList.remove("hidden");
+			document.documentElement.style.setProperty('--chat-width', "0px");
+			document.documentElement.style.setProperty('--chat-filler', "40px");
+		}
 		
 		
 		

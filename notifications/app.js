@@ -803,11 +803,11 @@ function createNotificationPopup(notification) {
   const timeAgo = window.notificationManager.getTimeAgo(notification.timestamp || Date.now());
   notificationElement.innerHTML = `
     <div class="notification-popup-header">
-      <h3 class="notification-popup-title">🔔 ${notification.title || 'VDO.Ninja Notification'}</h3>
+      <h3 class="notification-popup-title">🔔 </h3>
       <button class="notification-popup-close">&times;</button>
     </div>
     <div class="notification-popup-body">
-      <p>${notification.body || 'Someone joined your room'}</p>
+      <p></p>
       <div class="time"><strong>${timeAgo}</strong> (${new Date(notification.timestamp || Date.now()).toLocaleTimeString()})</div>
     </div>
     <div class="notification-popup-actions">
@@ -815,6 +815,8 @@ function createNotificationPopup(notification) {
       <button class="open-url-btn">Open Room</button>
     </div>
   `;
+  notificationElement.querySelector('.notification-popup-title').appendChild(document.createTextNode(notification.title || 'VDO.Ninja Notification'));
+  notificationElement.querySelector('.notification-popup-body p').textContent = notification.body || 'Someone joined your room';
   document.body.appendChild(notificationElement);
   notificationElement.querySelector('.notification-popup-close').addEventListener('click', () => {
     if (document.body.contains(notificationElement)) {
@@ -883,14 +885,16 @@ function updateNotificationHistoryUI() {
     notificationEl.innerHTML = `
       <div class="notification-icon">🔔</div>
       <div class="content">
-        <h3>${notification.title || 'VDO.Ninja Notification'}</h3>
-        <p>${notification.body || 'Notification received'}</p>
+        <h3></h3>
+        <p></p>
         <div class="time"><strong>${timeAgo}</strong> (${new Date(timestamp).toLocaleString()})</div>
       </div>
       <div class="actions">
         <button class="open-url" data-index="${index}">Open</button>
       </div>
     `;
+    notificationEl.querySelector('h3').textContent = notification.title || 'VDO.Ninja Notification';
+    notificationEl.querySelector('p').textContent = notification.body || 'Notification received';
     historyEl.appendChild(notificationEl);
   });
   document.querySelectorAll('.open-url').forEach(button => {

@@ -12,14 +12,14 @@
 	<iframe id="scene"
 		style="position: relative; display:block; width:100%; height: calc(100vh - 50px);"
 		allow="document-domain;encrypted-media;sync-xhr;cross-origin-isolated;accelerometer;midi;autoplay;fullscreen;picture-in-picture;display-capture;"
-		src="https://vdo.ninja/alpha/?room=ROOMHERE123&cleanoutput&transparent&noaudio&controls=0&noap&optimize=0&scale=100&scene&manual&b64css=dmlkZW97CiAgICBwb3NpdGlvbjogYWJzb2x1dGU7CiAgICBsZWZ0OiAwOwogICAgdG9wOiAwOwp9"
+		src="../?room=ROOMHERE123&cleanoutput&transparent&noaudio&controls=0&noap&optimize=0&scale=100&scene&manual&b64css=dmlkZW97CiAgICBwb3NpdGlvbjogYWJzb2x1dGU7CiAgICBsZWZ0OiAwOwogICAgdG9wOiAwOwp9"
 	></iframe>
 <script>
   
 	// you can remotely switch between video streams A and B, instead of using the toggle buttons.  You'll need your own API service to switch, but that's up to you.
   
-	// https://vdo.ninja/alpha/?room=ROOMHERE123&push=STREAM123a&view <= invite guest-a
-	// https://vdo.ninja/alpha/?room=ROOMHERE123&push=STREAM123b&view <= invite guest-b
+	// ../?room=ROOMHERE123&push=STREAM123a&view <= invite guest-a
+	// ../?room=ROOMHERE123&push=STREAM123b&view <= invite guest-b
   
 	// &b64css=dmlkZW97CiAgICBwb3NpdGlvbjogYWJzb2x1dGU7CiAgICBsZWZ0OiAwOwogICAgdG9wOiAwOwp9" -- makes sure all videos added align to the top-left corner, overlapping other videos if needed
 	// we do not use &fadein=0, as that can cause flicker

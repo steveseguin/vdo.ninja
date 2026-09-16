@@ -958,6 +958,7 @@
 			textInput.value = '';
 			textInput.focus();
 			e.preventDefault();
+			return;
 		}
 
 		const rect = canvas.getBoundingClientRect();
@@ -1030,7 +1031,7 @@
 	}
 
 	function draw(e) {
-		if (!isDrawing) return;
+		if (!isDrawing || (currentMode !== 'brush' && currentMode !== 'eraser')) return;
 		const rect = canvas.getBoundingClientRect();
 		const x = (e.clientX - rect.left) * (canvas.width / rect.width);
 		const y = (e.clientY - rect.top) * (canvas.height / rect.height);

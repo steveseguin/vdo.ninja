@@ -299,7 +299,8 @@
 				const audioOutputs = devices.filter(device => device.kind === "audiooutput");
 
 				const previousInput = inputSelect.value;
-				inputSelect.innerHTML = audioInputs.map(device => `<option value="${device.deviceId}">${device.label || "Microphone"}</option>`).join("");
+				inputSelect.innerHTML = "";
+				audioInputs.forEach(device => inputSelect.add(new Option(device.label || "Microphone", device.deviceId)));
 
 				if (previousInput) {
 					const match = Array.from(inputSelect.options).find(option => option.value === previousInput);
@@ -310,7 +311,8 @@
 
 				if (typeof monitorAudioEl.setSinkId === "function" && audioOutputs.length) {
 					const previousOutput = outputSelect.value;
-					outputSelect.innerHTML = audioOutputs.map(device => `<option value="${device.deviceId}">${device.label || "Speaker"}</option>`).join("");
+					outputSelect.innerHTML = "";
+					audioOutputs.forEach(device => outputSelect.add(new Option(device.label || "Speaker", device.deviceId)));
 					outputSelect.disabled = false;
 					if (previousOutput) {
 						const matchOut = Array.from(outputSelect.options).find(option => option.value === previousOutput);
@@ -343,6 +345,9 @@
 			if (!mediaStream) {
 				await startStream();
 			}
+			if (!mediaStream) {
+				return;
+			}
 			const shouldMonitor = !isMonitoring;
 			isMonitoring = shouldMonitor;
 			monitorToggle.textContent = shouldMonitor ? "Mute Monitor" : "Unmute Monitor";
@@ -356,6 +361,12 @@
 				}
 			} catch (error) {
 				console.warn("Playback blocked until user interacts:", error);
+				if (monitorAudioEl.paused) {
+					isMonitoring = false;
+					monitorToggle.textContent = "Unmute Monitor";
+					monitorToggle.classList.add("muted");
+					updateGainFromControl();
+				}
 			}
 		});
 
