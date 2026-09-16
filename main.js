@@ -46,6 +46,7 @@ async function main() {
 		if (!text) {
 			return;
 		}
+		text = sanitizeCustomHTML(text, 0);
 		if (translation && translation.innerHTML) {
 			translation.innerHTML["enter-display-name"] = text;
 		}
@@ -9093,7 +9094,7 @@ async function main() {
 
 			if (session.group) {
 				session.group.forEach(group => {
-					var ele = eleGroup.querySelector('[data-action-type="toggle-group"][data-group="' + group + '"');
+					var ele = eleGroup.querySelector('[data-action-type="toggle-group"][data-group="' + escapeApiSelectorValue(group) + '"]');
 					if (!ele) {
 						ele = document.createElement("div");
 						ele.dataset.actionType = "toggle-group";
@@ -9101,7 +9102,7 @@ async function main() {
 						ele.classList.add("float");
 						ele.style.display = "inline-block";
 						ele.role = "button";
-						ele.innerHTML = '<i class="las la-users" aria-hidden="true"></i><br />' + group;
+						ele.innerHTML = '<i class="las la-users" aria-hidden="true"></i><br />' + escapeHtml(group + "");
 						eleGroup.appendChild(ele);
 						ele.onclick = function () {
 							changeGroupDirectorAPI(this.dataset.group);

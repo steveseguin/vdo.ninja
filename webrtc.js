@@ -24516,7 +24516,7 @@ async function queryMeshcastServers(callback = false) {
 			if (server.code) option.code = server.code;
 			if (server.id) option.id = server.id;
 			option.url = server.url;
-			option.innerHTML = server.label;
+			option.textContent = server.label;
 			option.preferred = server.preferred;
 			document.getElementById("edgelist").appendChild(option);
 			return option;

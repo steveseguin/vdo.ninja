@@ -18483,34 +18483,43 @@ function printValues(obj, sort = false) {
 			if (sectionCounts[label] > 1 && label !== String(key).replace(/_/g, " ")) {
 				label += " (" + String(key).slice(0, 4) + ")";
 			}
-			let tmp = sanitizeChat(label);
+			let tmp = escapeHtml(String(label)).substring(0, 500).trim();
 			out += `<li><h2 title='${tmp}'>${tmp}</h2></li>`;
 			if (key == "info") {
 				out += printValues(obj[key]);
 			} else if (key == "meta") {
 				out += `<li class="meta-container">`;
 				Object.entries(obj[key]).forEach(([category, data]) => {
+					var metaValue = String(data.value || "");
+					var categoryText = escapeHtml(category);
 					if (data.type === "file" && data.filetype && data.filetype.startsWith("image/")) {
 						out += `<div class="meta-item meta-image">
-                            <img src="${data.value}" alt="${data.label || category}"
+                            <img src="${escapeHtml(metaValue)}" alt="${escapeHtml(String(data.label || category))}"
                                 style="max-width:50px;max-height:50px;object-fit:contain;">
                             <div class="meta-image-info">
-                                <small>${category}</small>
+                                <small>${categoryText}</small>
                                 <small>${formatFileSize(data.size)}</small>
                             </div>
                         </div>`;
 					} else if (data.type === "url") {
+						var href = "";
+						try {
+							var protocol = new URL(metaValue, window.location.href).protocol;
+							if (protocol === "http:" || protocol === "https:" || protocol === "mailto:" || protocol === "tel:") {
+								href = ' href="' + escapeHtml(metaValue) + '"';
+							}
+						} catch (e) {}
 						out += `<div class="meta-item meta-url">
-                            <small>${category}:</small>
-                            <a href="${data.value}" target="_blank" rel="noopener"
-                               class="meta-link" title="${data.value}">
-                                ${truncateUrl(data.value)}
+                            <small>${categoryText}:</small>
+                            <a${href} target="_blank" rel="noopener"
+                               class="meta-link" title="${escapeHtml(metaValue)}">
+                                ${escapeHtml(String(truncateUrl(metaValue)))}
                             </a>
                         </div>`;
 					} else {
 						out += `<div class="meta-item">
-                            <small>${category}:</small>
-                            <span class="meta-value">${data.value || ''}</span>
+                            <small>${categoryText}:</small>
+                            <span class="meta-value">${escapeHtml(metaValue)}</span>
                         </div>`;
 					}
 				});
@@ -18565,9 +18574,9 @@ function printValues(obj, sort = false) {
 					value = parseInt(parseFloat(value) * 10000) / 10000.0;
 					hint = "A high packet loss will lower quality of the media";
 				} else if (key == "local_relay_IP") {
-					value = "<a href='https://whatismyipaddress.com/ip/" + value + "' target='_blank'>" + value + "</a>";
+					value = "<a href='https://whatismyipaddress.com/ip/" + escapeHtml(String(obj[key])) + "' target='_blank'>" + value + "</a>";
 				} else if (key == "remote_relay_IP") {
-					value = "<a href='https://whatismyipaddress.com/ip/" + value + "' target='_blank'>" + value + "</a>";
+					value = "<a href='https://whatismyipaddress.com/ip/" + escapeHtml(String(obj[key])) + "' target='_blank'>" + value + "</a>";
 				} else if (key == "local_ip_blocking" && value) {
 					console.warn("Your system or connection is blocking p2p traffic");
 					value = "⚠️ You're blocking";
@@ -18720,7 +18729,7 @@ function printValues(obj, sort = false) {
 							(y - 3) +
 							'px;"></div>\
 						</div>';
-						out += '<a href="https://www.google.com/maps?q=' + lat + "," + lon + '" style="color:lightblue;text-align:center;margin:0 auto;" target="_blank">Open Location in Google Maps</a>';
+						out += '<a href="https://www.google.com/maps?q=' + escapeHtml(String(obj.lat)) + "," + escapeHtml(String(obj.lon)) + '" style="color:lightblue;text-align:center;margin:0 auto;" target="_blank">Open Location in Google Maps</a>';
 					}
 				}
 
@@ -19243,13 +19252,21 @@ function printMyStats(menu, screenshare = false) {
 				}
 
 				if (key == "local_relay_IP") {
-					value = "<a href='https://whatismyipaddress.com/ip/" + value + "' target='_blank'>" + value + "</a>";
+					value = "<a href='https://whatismyipaddress.com/ip/" + escapeHtml(String(obj[key])) + "' target='_blank'>" + value + "</a>";
 				}
 				if (key == "remote_relay_IP") {
-					value = "<a href='https://whatismyipaddress.com/ip/" + value + "' target='_blank'>" + value + "</a>";
+					value = "<a href='https://whatismyipaddress.com/ip/" + escapeHtml(String(obj[key])) + "' target='_blank'>" + value + "</a>";
 				}
 				if (key == "watch_URL") {
-					value = "<a title='The standalone Meshcast.io view link for this stream' href='" + value + "' target='_blank'>" + value + "</a>";
+					var watchUrl = String(obj[key]);
+					var watchHref = "";
+					try {
+						var watchProtocol = new URL(watchUrl, window.location.href).protocol;
+						if (watchProtocol === "http:" || watchProtocol === "https:") {
+							watchHref = " href='" + escapeHtml(watchUrl) + "'";
+						}
+					} catch (e) {}
+					value = "<a title='The standalone Meshcast.io view link for this stream'" + watchHref + " target='_blank'>" + value + "</a>";
 				}
 				if (key == "candidateType_local" && value == "relay") {
 					stat = "Candidate type - Local";
@@ -23582,9 +23599,9 @@ function syncGroup(groups, UUID) {
 		return;
 	}
 	groups.forEach(group => {
-		var ele = getById("container_" + UUID).querySelector('[data-action-type="toggle-group"][data--u-u-i-d="' + UUID + '"][data-group="' + group + '"]');
+		var ele = getById("container_" + UUID).querySelector('[data-action-type="toggle-group"][data--u-u-i-d="' + UUID + '"][data-group="' + escapeApiSelectorValue(group) + '"]');
 		if (!ele) {
-			var newGroup = htmlToElement('<button style="margin: 0 5px 10px 5px;" class="pressed" data-sid="' + session.rpcs[UUID].streamID + '" data--u-u-i-d="' + UUID + '" data-action-type="toggle-group" data-group="' + group + '"   title="Add to Group: ' + group + '" onclick="changeGroup(this, event);"><span ><i class="las la-users" style="color:#060"></i>' + group + "</span></button>");
+			var newGroup = htmlToElement('<button style="margin: 0 5px 10px 5px;" class="pressed" data-sid="' + session.rpcs[UUID].streamID + '" data--u-u-i-d="' + UUID + '" data-action-type="toggle-group" data-group="' + escapeHtml(group + "") + '"   title="Add to Group: ' + escapeHtml(group + "") + '" onclick="changeGroup(this, event);"><span ><i class="las la-users" style="color:#060"></i>' + escapeHtml(group + "") + "</span></button>");
 
 			var added = false;
 			getById("container_" + UUID)
@@ -25569,7 +25586,7 @@ function showTipBanner(tipData) {
 	// Create banner element
 	var banner = document.createElement("div");
 	banner.className = "tipBanner";
-	banner.innerHTML = currencySymbol + amount + " tip from " + fromLabel;
+	banner.innerHTML = escapeHtml(currencySymbol + amount) + " tip from " + fromLabel;
 	if (tipData.message) {
 		banner.innerHTML += '<div class="tipBannerMessage">"' + sanitizeChat(tipData.message) + '"</div>';
 	}
@@ -25601,14 +25618,16 @@ function processTipMessage(tipData, UUID) {
 
 	// Plain text version for notification
 	var notifyMsg = currencySymbol + tipData.amount + " tip from " + fromLabel;
+	var chatMsg = escapeHtml(currencySymbol + tipData.amount) + " tip from " + fromLabel;
 	if (message) {
 		notifyMsg += ': "' + message + '"';
+		chatMsg += ': "' + message + '"';
 	}
 
 	var data = {
 		time: Date.now(),
 		type: "tip",
-		msg: notifyMsg,
+		msg: chatMsg,
 		label: "Tip"
 	};
 
@@ -25758,12 +25777,13 @@ function openTipModal(UUID) {
 	var peerLabel = sanitizeLabel(peer.tipId || peer.label || peer.streamID || "Performer");
 	var amounts = peer.tipAmounts || session.tipAmounts || [5, 10, 25, 50, 100];
 	var currency = peer.tipCurrency || session.tipCurrency || "USD";
-	var currencySymbol = getTipCurrencySymbol(currency);
+	var currencySymbol = escapeHtml(String(getTipCurrencySymbol(currency)));
 
 	var modalID = "tipModal_" + UUID;
 	var zindex = 32 + document.querySelectorAll(".promptModal").length + document.querySelectorAll(".alertModal").length;
 
 	var amountButtons = amounts.map(function(amt) {
+		amt = escapeHtml(String(amt));
 		return '<button class="tipAmountBtn" aria-pressed="false" data-amount="' + amt + '" onclick="selectTipAmount(this, \'' + UUID + '\')">' + currencySymbol + amt + '</button>';
 	}).join('');
 
@@ -33000,9 +33020,9 @@ function createControlBox(UUID, soloLink, streamID, slot_init = false) {
 	container.appendChild(controls);
 
 	session.group.forEach(group => {
-		var ele = controls.querySelector('[data-action-type="toggle-group"][data--u-u-i-d="' + UUID + '"][data-group="' + group + '"]');
+		var ele = controls.querySelector('[data-action-type="toggle-group"][data--u-u-i-d="' + UUID + '"][data-group="' + escapeApiSelectorValue(group) + '"]');
 		if (!ele) {
-			var newGroup = htmlToElement('<button style="margin: 0 5px 10px 5px;" data-sid="' + session.rpcs[UUID].streamID + '" data--u-u-i-d="' + UUID + '" data-action-type="toggle-group" data-group="' + group + '"   title="Add to Group: ' + group + '" onclick="changeGroup(this, event);"><span ><i class="las la-users" style="color:#060"></i>' + group + "</span></button>");
+			var newGroup = htmlToElement('<button style="margin: 0 5px 10px 5px;" data-sid="' + session.rpcs[UUID].streamID + '" data--u-u-i-d="' + UUID + '" data-action-type="toggle-group" data-group="' + escapeHtml(group + "") + '"   title="Add to Group: ' + escapeHtml(group + "") + '" onclick="changeGroup(this, event);"><span ><i class="las la-users" style="color:#060"></i>' + escapeHtml(group + "") + "</span></button>");
 
 			var added = false;
 			container.querySelectorAll(".customGroup>[data-group]").forEach(ele => {
@@ -33347,9 +33367,9 @@ function createControlBoxScreenshare(UUID, soloLink, streamID) {
 	container.appendChild(controls);
 
 	session.group.forEach(group => {
-		var ele = controls.querySelector('[data-action-type="toggle-group"][data--u-u-i-d="' + UUID + '"][data-group="' + group + '"]');
+		var ele = controls.querySelector('[data-action-type="toggle-group"][data--u-u-i-d="' + UUID + '"][data-group="' + escapeApiSelectorValue(group) + '"]');
 		if (!ele) {
-			var newGroup = htmlToElement('<button style="margin: 0 5px 10px 5px;" data-sid="' + session.rpcs[UUID].streamID + '" data--u-u-i-d="' + UUID + '" data-action-type="toggle-group" data-group="' + group + '" title="Add to Group: ' + group + '" onclick="changeGroup(this, event);"><span ><i class="las la-users" style="color:#060"></i>' + group + "</span></button>");
+			var newGroup = htmlToElement('<button style="margin: 0 5px 10px 5px;" data-sid="' + session.rpcs[UUID].streamID + '" data--u-u-i-d="' + UUID + '" data-action-type="toggle-group" data-group="' + escapeHtml(group + "") + '" title="Add to Group: ' + escapeHtml(group + "") + '" onclick="changeGroup(this, event);"><span ><i class="las la-users" style="color:#060"></i>' + escapeHtml(group + "") + "</span></button>");
 
 			var added = false;
 			container.querySelectorAll(".customGroup>[data-group]").forEach(ele => {
@@ -62053,16 +62073,27 @@ function changeGroupDirector(ele, state = null) {
 
 function changeGroupDirectorAPI(group, state = null, update = true) {
 	log("changeGroupDirectorAPI()");
-	group = sanitizeLabel(group);
+	// Keep the group ID as text; escape only when rendering it.
+	if (group === null) {
+		group = "";
+	}
+	group = (group + "").substring(0, 100).trim();
 
 	if (document.getElementById("container_director")) {
-		var ele = getById("container_director").querySelector('[data-action-type="toggle-group"][data-group="' + group + '"]');
+		var ele = getById("container_director").querySelector('[data-action-type="toggle-group"][data-group="' + escapeApiSelectorValue(group) + '"]');
 		if (ele) {
 			if (update) {
-				ele.click();
+				if (state === null) {
+					ele.click();
+				} else {
+					changeGroupDirector(ele, state);
+				}
 			} else if (state === true) {
 				ele.classList.add("pressed");
 				ele.ariaPressed = "true";
+			} else if (state === false) {
+				ele.classList.remove("pressed");
+				ele.ariaPressed = "false";
 			}
 			if (session.group.indexOf(group) === -1) {
 				return false;
@@ -62076,11 +62107,11 @@ function changeGroupDirectorAPI(group, state = null, update = true) {
 
 	var eleGroup = getById("groups");
 	eleGroup.classList.remove("hidden");
-	var ele = eleGroup.querySelector('[data-action-type="toggle-group"][data-group="' + group + '"');
+	var ele = eleGroup.querySelector('[data-action-type="toggle-group"][data-group="' + escapeApiSelectorValue(group) + '"]');
 
 	if (eleGroup.showDirector) {
 		if (!ele) {
-			ele = htmlToElement('<button style="margin: 0 5px 10px 5px;" data-sid="' + session.streamID + '" data-action-type="toggle-group" data-group="' + group + '"   title="Add to Group: ' + group + '" onclick="changeGroupDirector(this);"><span ><i class="las la-users" style="color:#060"></i>' + group + "</span></button>");
+			ele = htmlToElement('<button style="margin: 0 5px 10px 5px;" data-sid="' + session.streamID + '" data-action-type="toggle-group" data-group="' + escapeHtml(group) + '"   title="Add to Group: ' + escapeHtml(group) + '" onclick="changeGroupDirector(this);"><span ><i class="las la-users" style="color:#060"></i>' + escapeHtml(group) + "</span></button>");
 
 			var added = false;
 			eleGroup.querySelectorAll("[data-group]").forEach(ele2 => {
@@ -62101,7 +62132,7 @@ function changeGroupDirectorAPI(group, state = null, update = true) {
 		ele.classList.add("float");
 		ele.style.display = "inline-block";
 		ele.role = "button";
-		ele.innerHTML = '<i class="las la-users" aria-hidden="true"></i><br />' + group;
+		ele.innerHTML = '<i class="las la-users" aria-hidden="true"></i><br />' + escapeHtml(group);
 		eleGroup.appendChild(ele);
 		ele.onclick = function () {
 			changeGroupDirectorAPI(this.dataset.group);
@@ -62133,7 +62164,7 @@ function changeGroupDirectorAPI(group, state = null, update = true) {
 			session.group.splice(index, 1);
 			changed = true;
 		}
-	} else if (ele.classList.contains("green")) {
+	} else if (ele.classList.contains(eleGroup.showDirector ? "pressed" : "green")) {
 		if (eleGroup.showDirector) {
 			ele.classList.remove("pressed");
 			ele.ariaPressed = "false";
@@ -62181,7 +62212,11 @@ function changeGroupDirectorAPI(group, state = null, update = true) {
 
 function changeGroupViewDirectorAPI(group, state = null) {
 	log("changeGroupViewDirectorAPI()");
-	group = sanitizeLabel(group);
+	// Keep the group ID as text; escape only when rendering it.
+	if (group === null) {
+		group = "";
+	}
+	group = (group + "").substring(0, 100).trim();
 
 	var index = session.groupView.indexOf(group);
 
