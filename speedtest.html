@@ -344,7 +344,7 @@
 				srcString += "&"+testType+"&audiodevice=0&fullscreen&transparent&darkmode&remote&speedtest="+zone;
 				
 				urlParams.getAll("turn").forEach(function (turnvalue) {
-					srcString = srcString + "&turn=" + turnvalue;
+					srcString = srcString + "&turn=" + encodeURIComponent(turnvalue);
 				});
 
 				// we are changing some text on page load, just to demonstrate what's possible.
@@ -389,7 +389,7 @@
 				srcString = appendSpeedtestParams(srcString, speedtestViewerParams);
 
 				urlParams.getAll("turn").forEach(function (turnvalue) {
-					srcString = srcString + "&turn=" + turnvalue;
+					srcString = srcString + "&turn=" + encodeURIComponent(turnvalue);
 				});
 
 				if (urlParams.has("buffer")) {

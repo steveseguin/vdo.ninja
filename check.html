@@ -1153,7 +1153,7 @@
 				var srcString =	"./index.html?push=" + streamID + "&cleanoutput&privacy&"+testType+"&audiodevice=1&fullscreen&transparent&remote&maxbandwidth&speedtest="+zone;
 				
 				urlParams.getAll("turn").forEach(function (turnvalue) {
-					srcString = srcString + "&turn=" + turnvalue;
+					srcString = srcString + "&turn=" + encodeURIComponent(turnvalue);
 				});
 
 				// we are changing some text on page load, just to demonstrate what's possible.
@@ -1214,7 +1214,7 @@
 				var srcString = "./index.html?view=" + streamID + "&cleanoutput&privacy&noaudio&transparent&bitrate=6000&scale=100&speedtest="+zone; // No TURN servers set on the reciever. Don't want to query for TURN servers needlessly.
 
 				urlParams.getAll("turn").forEach(function (turnvalue) {
-					srcString = srcString + "&turn=" + turnvalue;
+					srcString = srcString + "&turn=" + encodeURIComponent(turnvalue);
 				});
 
 				if (urlParams.has("buffer")) {
