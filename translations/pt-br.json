@@ -1,6 +1,8 @@
 {
   "innerHTML": {
     "view-only": "Apenas assistir",
+    "chunked-synchronizing": "Sincronizando…",
+    "chunked-buffering": "Carregando…",
     "logo-header": "\n<font id=\"qos\">V</font>DO.Ninja \n",
     "copy-this-url": "Copie este URL em seu \"fonte de navegador\"",
     "you-are-in-the-control-center": "Centro de controle para sala:",
