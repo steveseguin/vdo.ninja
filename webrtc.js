@@ -8471,14 +8471,15 @@ WebRTC.Media = (function () {
 		}
 		const color = getDrawingColor(sourceUUID);
 		const styled = Object.assign({}, draw);
-		if (forceColor || !styled.c) {
+		// Preserve picker colors; legacy drawings keep their participant color.
+		if (!styled.c || (forceColor && !/^#[0-9a-f]{6}$/i.test(styled.c))) {
 			styled.c = color;
 		}
 		if (Array.isArray(styled.p)) {
 			styled.p = styled.p.map(segment => {
 				if (segment && typeof segment === "object") {
 					const next = Object.assign({}, segment);
-					if (forceColor || !next.c) {
+					if (!next.c || (forceColor && !/^#[0-9a-f]{6}$/i.test(next.c))) {
 						next.c = styled.c;
 					}
 					return next;

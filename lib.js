@@ -63,6 +63,8 @@ var translation = false;
 
 var miscTranslations = {
 	// i can replace this list from time to time from the generated one in blank.json using translate.js
+	"drawing-color": "Color",
+	"drawing-ping-help": "Click or tap to point briefly. Click Ping again to turn it off.",
 	start: "START",
 	"new-display-name": "Enter a new Display Name for this stream",
 	"submit-error-report": "Press OK to submit any error logs to VDO.Ninja. Error logs may contain private information.",
@@ -11886,6 +11888,8 @@ function drawOnScreen() {
 		canvas.addEventListener("pointerleave", onMouseOut, false);
 
 		document.getElementById("startDrawScreen").classList.add("hidden");
+		getById("drawScreenColor").value = "#000000";
+		getById("drawScreenColor").setAttribute("aria-label", getTranslation("drawing-color"));
 
 		document.querySelectorAll(".drawActive").forEach(ele => {
 			ele.classList.remove("hidden");
@@ -11893,30 +11897,10 @@ function drawOnScreen() {
 	};
 
 	object.color = function color(obj) {
-		switch (obj.dataset.color) {
-			case "green":
-				x = "green";
-				break;
-			case "blue":
-				x = "blue";
-				break;
-			case "red":
-				x = "red";
-				break;
-			case "yellow":
-				x = "yellow";
-				break;
-			case "orange":
-				x = "orange";
-				break;
-			case "black":
-				x = "black";
-				break;
-			case "white":
-				x = "white";
-				break;
-		}
-		if (x == "white") y = 14;
+		x = obj.value || obj.dataset.color || x;
+		ctx.fillStyle = x;
+		getById("drawScreenColor").value = ctx.fillStyle;
+		if (x == "white" || x == "#ffffff") y = 14;
 		else y = 2;
 	};
 
@@ -12116,15 +12100,31 @@ function drawOnThis(video, force = false) {
 		const pingDrawingBtn = document.createElement('button');
 		const clearDrawingBtn = document.createElement('button');
 		const undoDrawingBtn = document.createElement('button'); // Undo button
+		var colorInput = document.createElement("input");
+		var drawingColor = "#ff0000";
 
-		enableDrawingBtn.textContent = "Enable Drawing";
-		pingDrawingBtn.textContent = "Ping";
-		clearDrawingBtn.textContent = "Clear";
-		undoDrawingBtn.textContent = "Undo"; // Undo button text
+		miniTranslate(enableDrawingBtn, "drawing-pen", "Pen");
+		miniTranslate(pingDrawingBtn, "drawing-ping", "Ping");
+		miniTranslate(clearDrawingBtn, "clear", "Clear");
+		miniTranslate(undoDrawingBtn, "drawing-undo", "Undo");
+		colorInput.setAttribute("aria-label", getTranslation("drawing-color"));
+		enableDrawingBtn.setAttribute("aria-pressed", "false");
+		pingDrawingBtn.setAttribute("aria-pressed", "false");
+		pingDrawingBtn.title = getTranslation("drawing-ping-help");
+		colorInput.type = "color";
+		colorInput.value = drawingColor;
+		colorInput.addEventListener("input", function () {
+			if (!/^#[0-9a-f]{6}$/i.test(colorInput.value)) {
+				return;
+			}
+			stopDrawing();
+			drawingColor = colorInput.value;
+		});
 		buttonContainer.className = "buttonContainer";
 
 		buttonContainer.appendChild(enableDrawingBtn);
 		buttonContainer.appendChild(pingDrawingBtn);
+		buttonContainer.appendChild(colorInput);
 		buttonContainer.appendChild(clearDrawingBtn);
 		buttonContainer.appendChild(undoDrawingBtn); // Add undo button to container
 		holder.appendChild(buttonContainer);
@@ -12132,6 +12132,7 @@ function drawOnThis(video, force = false) {
 		let isDrawing = false;
 		let drawingEnabled = false;
 		let pingMode = false;
+		var pingTimer = false;
 		let drawingData = [];
 		let lastPoint = null;
 		let lastSentTime = 0;
@@ -12158,12 +12159,8 @@ function drawOnThis(video, force = false) {
 				}
 				point.x = Math.round(point.x * 4000) / 4000;
 				point.y = Math.round(point.y * 4000) / 4000;
-				drawPing(point, "red");
+				drawPing(point, drawingColor);
 				sendDrawingData("ping", point);
-				pingMode = false;
-				pingDrawingBtn.classList.remove("pressed");
-				pingDrawingBtn.textContent = "Ping";
-				canvas.style.pointerEvents = drawingEnabled ? "auto" : "none";
 				return;
 			}
 			isDrawing = true;
@@ -12184,7 +12181,7 @@ function drawOnThis(video, force = false) {
 			}
 
 			ctx.lineCap = 'round';
-			ctx.strokeStyle = 'red';
+			ctx.strokeStyle = drawingColor;
 
 			const canvasX = x * canvas.width;
 			const canvasY = y * canvas.height;
@@ -12228,7 +12225,8 @@ function drawOnThis(video, force = false) {
 			ctx.fill();
 			ctx.restore();
 
-			setTimeout(redrawCanvas, 1800);
+			clearTimeout(pingTimer);
+			pingTimer = setTimeout(redrawCanvas, 1800);
 		}
 
 		function redrawCanvas() {
@@ -12236,7 +12234,8 @@ function drawOnThis(video, force = false) {
 			ctx.beginPath();
 			ctx.lineCap = 'round';
 			ctx.lineJoin = 'round';
-			ctx.strokeStyle = "red";
+			var activeColor = drawingColor;
+			ctx.strokeStyle = activeColor;
 
 			let isNewPath = true;
 
@@ -12249,6 +12248,15 @@ function drawOnThis(video, force = false) {
 					ctx.beginPath();
 					isNewPath = true;
 					continue;
+				}
+
+				var nextColor = segment.c || "red";
+				if (nextColor !== activeColor) {
+					ctx.stroke();
+					ctx.beginPath();
+					activeColor = nextColor;
+					ctx.strokeStyle = activeColor;
+					isNewPath = true;
 				}
 
 				if (segment.t) {
@@ -12497,7 +12505,7 @@ function drawOnThis(video, force = false) {
 				if (!point) { return; }
 				const dataToSend = {
 					ping: point,
-					c: "red"
+					c: drawingColor
 				};
 				if (video.id === "videosource") {
 					for (var UUID in session.pcs) {
@@ -12520,7 +12528,7 @@ function drawOnThis(video, force = false) {
 				var processedPoints = processPoints(lastPoints);
 				var styledPoints = processedPoints.map(segment => {
 					if (segment && typeof segment === "object") {
-						return Object.assign({}, segment, { c: "red" });
+						return Object.assign({}, segment, { c: drawingColor });
 					}
 					return segment;
 				});
@@ -12529,7 +12537,7 @@ function drawOnThis(video, force = false) {
 
 				var dataToSend = {
 					p: styledPoints,
-					c: "red"
+					c: drawingColor
 				};
 
 				drawingData.push(...styledPoints); // Store only points in drawingData
@@ -12578,32 +12586,34 @@ function drawOnThis(video, force = false) {
 		window.addEventListener('resize', resizeCanvas);
 		video.addEventListener('resize', resizeCanvas);
 
-		enableDrawingBtn.addEventListener('click', () => {
+		enableDrawingBtn.addEventListener("click", function () {
+			stopDrawing();
 			drawingEnabled = !drawingEnabled;
-			enableDrawingBtn.textContent = drawingEnabled ? 'Disable Drawing' : 'Enable Drawing';
+			enableDrawingBtn.classList.toggle("pressed", drawingEnabled);
+			enableDrawingBtn.setAttribute("aria-pressed", drawingEnabled);
 			if (drawingEnabled) {
 				pingMode = false;
 				pingDrawingBtn.classList.remove("pressed");
-				pingDrawingBtn.textContent = "Ping";
+				pingDrawingBtn.setAttribute("aria-pressed", "false");
 			}
 			canvas.style.pointerEvents = (drawingEnabled || pingMode) ? "auto" : "none";
 		});
 
-		pingDrawingBtn.addEventListener('click', () => {
+		pingDrawingBtn.addEventListener("click", function () {
+			stopDrawing();
 			pingMode = !pingMode;
+			pingDrawingBtn.classList.toggle("pressed", pingMode);
+			pingDrawingBtn.setAttribute("aria-pressed", pingMode);
 			if (pingMode) {
 				drawingEnabled = false;
-				enableDrawingBtn.textContent = "Enable Drawing";
-				pingDrawingBtn.classList.add("pressed");
-				pingDrawingBtn.textContent = "Click target";
-			} else {
-				pingDrawingBtn.classList.remove("pressed");
-				pingDrawingBtn.textContent = "Ping";
+				enableDrawingBtn.classList.remove("pressed");
+				enableDrawingBtn.setAttribute("aria-pressed", "false");
 			}
 			canvas.style.pointerEvents = (drawingEnabled || pingMode) ? "auto" : "none";
 		});
 
 		clearDrawingBtn.addEventListener('click', () => {
+			clearTimeout(pingTimer);
 			ctx.clearRect(0, 0, canvas.width, canvas.height);
 			drawingData = [];
 			lastPoints = [];
@@ -12640,6 +12650,7 @@ function drawOnThis(video, force = false) {
 
 		function createCleanupFunction() {
 			return function cleanup() {
+				clearTimeout(pingTimer);
 				sendDrawingData("cleanup");
 
 				window.removeEventListener('resize', resizeCanvas);
