@@ -108,6 +108,11 @@ var rotate = parseInt(urlParams.get("rotate")) || "90";
 var sdfasd = decodeURIComponent(urlParams.get("link") || "") || getStorage("savedRotateLink") ||  "";
 
 var linktoload = sdfasd || prompt("What URL would you like to load? (rotated)");
+var linkURL = document.createElement("a");
+linkURL.href = linktoload;
+if (linkURL.protocol === "javascript:") {
+	linktoload = "about:blank";
+}
 setStorage("savedRotateLink", linktoload, 99999);
 
 

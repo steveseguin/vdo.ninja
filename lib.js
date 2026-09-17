@@ -55448,7 +55448,7 @@ function pauseVideo(videoEle, update = true) {
 			if (response) {
 				taskItemInContext.href = response;
 				taskItemInContext.dataset.raw = response;
-				taskItemInContext.innerHTML = response;
+				taskItemInContext.textContent = response;
 			}
 		} else if (link.getAttribute("data-action") === "QRCode") {
 			warnUser("Loading QR Code");

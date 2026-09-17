@@ -10053,7 +10053,7 @@ async function main() {
 							ele.value = delay;
 						});
 					}
-				} else if (session.rpcs[e.data.UUID]) {
+				} else if (Object.prototype.hasOwnProperty.call(session.rpcs, e.data.UUID) && session.rpcs[e.data.UUID]) {
 					session.rpcs[e.data.UUID].buffer = delay;
 					playoutdelay(e.data.UUID);
 					document.querySelectorAll('#bufferSettings[data--u-u-i-d="' + e.data.UUID + '"] input[data-buffer-value]').forEach(ele => {

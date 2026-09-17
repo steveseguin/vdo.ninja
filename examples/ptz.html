@@ -137,6 +137,11 @@ if (urlParams.has("view") || urlParams.has("v")){
 function loadIframes(){ 
 
 	var iframesrc = document.getElementById("viewlink").value;
+	var linkURL = document.createElement("a");
+	linkURL.href = iframesrc;
+	if (linkURL.protocol === "javascript:") {
+		return;
+	}
 	
 	document.getElementById("viewlink").parentNode.parentNode.removeChild(document.getElementById("viewlink").parentNode);
 	document.getElementById("container1").style.display="inline-block";

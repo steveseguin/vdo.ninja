@@ -329,7 +329,9 @@
 					streamID = urlParams.get("sid");
 				}
 				
-				document.getElementById("remote").innerHTML = "<a style='color:#CCC' target='_blank' href='./monitor?sid="+streamID+"'>Remote Monitoring Link</a><br />";
+				var remoteLinkContainer = document.getElementById("remote");
+				remoteLinkContainer.innerHTML = "<a style='color:#CCC' target='_blank'>Remote Monitoring Link</a><br />";
+				remoteLinkContainer.querySelector("a").href = "./monitor?sid=" + streamID;
 
 				var iframe = document.createElement("iframe");
 				var iframeContainer = document.createElement("span");

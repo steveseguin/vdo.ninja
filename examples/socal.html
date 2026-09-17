@@ -144,6 +144,11 @@ function loadIframes(url=false){
 
 	var roomname = document.getElementById("viewlink").value;
 	var room2 = document.getElementById("social").value;
+	var linkURL = document.createElement("a");
+	linkURL.href = room2;
+	if (linkURL.protocol === "javascript:") {
+		return;
+	}
 	
 	document.getElementById("clean").parentNode.removeChild(document.getElementById("clean"));
 	document.getElementById("container1").style.display="inline-block";

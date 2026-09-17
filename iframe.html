@@ -128,9 +128,9 @@
 	 */
 	function createExampleHeader(exampleId, iframesrc, container) {
 		var header = newElement("div", { 
-			classList: "example-header", 
-			innerHTML: `<span title="${iframesrc}">${iframesrc}</span>` 
+			classList: "example-header"
 		});
+		header.appendChild(newElement("span", { title: iframesrc, textContent: iframesrc }));
 
 		// Add connection status indicator
 		var statusIndicator = newElement("span", {
@@ -333,7 +333,7 @@
 			input.classList.remove('error');
 		} catch (error) {
 			input.classList.add('error');
-			logOutput(`❌ JSON Error: ${error.message}`, {
+			logOutput(`❌ JSON Error: ${escapeDisplayText(error.message)}`, {
 				exampleId: exampleId,
 				classList: "error-log"
 			});
@@ -356,8 +356,8 @@
 
 		var headerText = newElement("div");
 		headerText.innerHTML = `
-			<h3>${config.title}</h3>
-			<p><em>${config.description}</em></p>
+			<h3>${escapeDisplayText(config.title)}</h3>
+			<p><em>${escapeDisplayText(config.description)}</em></p>
 			${config.info || ''}
 		`;
 
@@ -627,7 +627,7 @@
 
 		// Default logging
 		console.log(data);
-		logOutput(`📥 ${JSON.stringify(data, null, 2)}`, {
+		logOutput(`📥 ${escapeDisplayText(JSON.stringify(data, null, 2))}`, {
 			exampleId: exampleId,
 			type: "event"
 		});
@@ -696,7 +696,7 @@
 		const actionHandlers = {
 			"guest-connected": () => {
 				ActiveConnections.set(data.streamID, data.value);
-				logOutput(`✅ Guest connected: ${data.streamID} (${data.value?.label || 'No label'})`, {
+				logOutput(`✅ Guest connected: ${escapeDisplayText(data.streamID)} (${escapeDisplayText(data.value?.label || 'No label')})`, {
 					exampleId: exampleId,
 					type: "event",
 					classList: "success-log"
@@ -704,7 +704,7 @@
 			},
 			"guest-disconnected": () => {
 				ActiveConnections.delete(data.streamID);
-				logOutput(`❌ Guest disconnected: ${data.streamID}`, {
+				logOutput(`❌ Guest disconnected: ${escapeDisplayText(data.streamID)}`, {
 					exampleId: exampleId,
 					type: "event",
 					classList: "error-log"
@@ -729,7 +729,7 @@
 		if (handler) {
 			handler();
 		} else if (data.action !== "loudness" && data.action !== "view-stats-updated") {
-			logOutput(`📌 Action: ${data.action}${data.value ? ` - ${JSON.stringify(data.value)}` : ''}`, {
+			logOutput(`📌 Action: ${escapeDisplayText(data.action)}${data.value ? ` - ${escapeDisplayText(JSON.stringify(data.value))}` : ''}`, {
 				exampleId: exampleId,
 				type: "event"
 			});
@@ -741,10 +741,10 @@
 	 */
 	function handleStatsMessage(stats, exampleId) {
 		let formatted = `📊 <strong>Connection Stats</strong><br/>`;
-		formatted += `Inbound: ${stats.total_inbound_connections} | Outbound: ${stats.total_outbound_connections}<br/>`;
+		formatted += `Inbound: ${escapeDisplayText(stats.total_inbound_connections)} | Outbound: ${escapeDisplayText(stats.total_outbound_connections)}<br/>`;
 		
 		for (const streamID in stats.inbound) {
-			formatted += `<br/><strong>Stream: ${streamID}</strong><br/>`;
+			formatted += `<br/><strong>Stream: ${escapeDisplayText(streamID)}</strong><br/>`;
 			formatted += formatObject(stats.inbound[streamID]);
 		}
 		
@@ -760,7 +760,7 @@
 	function handleStreamIDsMessage(streamIDs, exampleId) {
 		let formatted = `📋 <strong>Active Streams</strong><br/>`;
 		for (const [id, label] of Object.entries(streamIDs)) {
-			formatted += `• ${id}: ${label || 'No label'}<br/>`;
+			formatted += `• ${escapeDisplayText(id)}: ${escapeDisplayText(label || 'No label')}<br/>`;
 		}
 		logOutput(formatted, {
 			exampleId: exampleId,
@@ -780,9 +780,9 @@
 		}, {});
 
 		for (const [kind, devices] of Object.entries(grouped)) {
-			formatted += `<br/><strong>${kind}:</strong><br/>`;
+			formatted += `<br/><strong>${escapeDisplayText(kind)}:</strong><br/>`;
 			devices.forEach(device => {
-				formatted += `• ${device.label || 'Unnamed device'}<br/>`;
+				formatted += `• ${escapeDisplayText(device.label || 'Unnamed device')}<br/>`;
 			});
 		}
 		
@@ -812,7 +812,7 @@
 			const barWidth = Math.min(100, Math.max(0, (level + 40) * 2.5));
 			html += `
 				<div class="loudness-meter">
-					<span>${streamID}:</span>
+					<span>${escapeDisplayText(streamID)}:</span>
 					<div class="loudness-bar">
 						<div class="loudness-fill" style="width: ${barWidth}%"></div>
 					</div>
@@ -851,7 +851,7 @@
 			if (sensors[type]) {
 				html += `<strong>${label}:</strong><br/>`;
 				for (const [axis, value] of Object.entries(sensors[type])) {
-					html += `${axis}: ${(Math.round(value * 100000) / 100000)}<br/>`;
+					html += `${escapeDisplayText(axis)}: ${(Math.round(value * 100000) / 100000)}<br/>`;
 				}
 			}
 		}
@@ -876,7 +876,7 @@
 		}
 
 		iframe.contentWindow.postMessage(message, '*');
-		logOutput(`📤 Sent: ${JSON.stringify(message)}`, {
+		logOutput(`📤 Sent: ${escapeDisplayText(JSON.stringify(message))}`, {
 			exampleId: exampleId,
 			type: "command",
 			classList: "post-log"
@@ -963,6 +963,12 @@
 	// Make function globally accessible
 	window.switchTab = switchTab;
 
+	function escapeDisplayText(value) {
+		var text = document.createElement("span");
+		text.textContent = String(value);
+		return text.innerHTML;
+	}
+
 	/**
 	 * Formats an object for display
 	 */
@@ -970,10 +976,10 @@
 		let formatted = "";
 		for (const [key, value] of Object.entries(obj)) {
 			if (typeof value === "object" && value !== null) {
-				formatted += `${indent}<strong>${key}:</strong><br/>`;
+				formatted += `${indent}<strong>${escapeDisplayText(key)}:</strong><br/>`;
 				formatted += formatObject(value, indent + "&nbsp;&nbsp;");
 			} else {
-				formatted += `${indent}<strong>${key}:</strong> ${value}<br/>`;
+				formatted += `${indent}<strong>${escapeDisplayText(key)}:</strong> ${escapeDisplayText(value)}<br/>`;
 			}
 		}
 		return formatted;

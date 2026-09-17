@@ -160,6 +160,15 @@ function loadIframes(){
 
 	var iframesrca = document.getElementById("viewlinka").value;
 	var iframesrcb = document.getElementById("viewlinkb").value;
+	var linkURL = document.createElement("a");
+	linkURL.href = iframesrca;
+	if (linkURL.protocol === "javascript:") {
+		return;
+	}
+	linkURL.href = iframesrcb;
+	if (linkURL.protocol === "javascript:") {
+		return;
+	}
 	
 	document.getElementById("deleteme").remove()
 	delete document.getElementById("deleteme");

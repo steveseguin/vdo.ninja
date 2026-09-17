@@ -7504,6 +7504,14 @@ WebRTC.Media = (function () {
 				}
 			}
 
+			// Reject peer IDs that collide with inherited object properties.
+			if (
+				Object.prototype.hasOwnProperty.call(Object.prototype, msg.UUID) ||
+				(session.customWSS && Object.prototype.hasOwnProperty.call(Object.prototype, msg.from))
+			) {
+				return;
+			}
+
 			//if (msg.request == "debug"){
 			//	var request = new XMLHttpRequest();
 			//	request.open('POST', "https://reports.vdo.ninja/");  //  php, well, whatever.

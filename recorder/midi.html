@@ -117,17 +117,23 @@
         const dataCountDiv = document.getElementById('dataCount');
         const debugInfoDiv = document.getElementById('debugInfo');
 
+        function appendDebugInfo(message) {
+            var entry = document.createElement("p");
+            entry.textContent = message;
+            debugInfoDiv.appendChild(entry);
+        }
+
         WebMidi
             .enable({ sysex: true })
             .then(onWebMidiEnabled)
             .catch(err => {
                 console.error("WebMidi could not be enabled:", err);
-                debugInfoDiv.innerHTML += `<p>Error enabling WebMidi: ${err.message}</p>`;
+                appendDebugInfo(`Error enabling WebMidi: ${err.message}`);
             });
 
         function onWebMidiEnabled() {
             console.log("WebMidi enabled!");
-            debugInfoDiv.innerHTML += "<p>WebMidi enabled successfully!</p>";
+            appendDebugInfo("WebMidi enabled successfully!");
             updateMidiInputs();
             WebMidi.addListener("connected", updateMidiInputs);
             WebMidi.addListener("disconnected", updateMidiInputs);
@@ -139,10 +145,10 @@
                 const option = new Option(input.name, input.id);
                 midiInputSelect.add(option);
                 console.log(`Input ${index}: ${input.name} (${input.id})`);
-                debugInfoDiv.innerHTML += `<p>Input ${index}: ${input.name} (${input.id})</p>`;
+                appendDebugInfo(`Input ${index}: ${input.name} (${input.id})`);
             });
             console.log("MIDI inputs updated:", WebMidi.inputs);
-            debugInfoDiv.innerHTML += `<p>Total MIDI inputs: ${WebMidi.inputs.length}</p>`;
+            appendDebugInfo(`Total MIDI inputs: ${WebMidi.inputs.length}`);
             
             // Preserve a connected input; otherwise use the first available input.
             if (selectedInput && WebMidi.inputs.includes(selectedInput)) {
@@ -160,7 +166,7 @@
                 return;
             }
             console.log("Selected input ID:", selectedId);
-            debugInfoDiv.innerHTML += `<p>Selected input ID: ${selectedId}</p>`;
+            appendDebugInfo(`Selected input ID: ${selectedId}`);
 
             if (isRecording) {
                 stopRecording();
@@ -170,7 +176,7 @@
 
             selectedInput = nextInput;
             console.log("Selected input:", selectedInput);
-            debugInfoDiv.innerHTML += `<p>Selected input: ${selectedInput ? selectedInput.name : 'None'}</p>`;
+            appendDebugInfo(`Selected input: ${selectedInput ? selectedInput.name : 'None'}`);
 
             updateButtonStates();
             statusDiv.textContent = selectedInput ? `Selected: ${selectedInput.name}` : 'No input selected';
@@ -179,7 +185,7 @@
         startRecordButton.addEventListener('click', () => {
             if (!selectedInput) {
                 console.error("No MIDI input selected");
-                debugInfoDiv.innerHTML += "<p>Error: No MIDI input selected</p>";
+                appendDebugInfo("Error: No MIDI input selected");
                 return;
             }
             midiData = [];
@@ -187,7 +193,7 @@
             updateButtonStates();
 
             console.log("Starting recording on input:", selectedInput.name);
-            debugInfoDiv.innerHTML += `<p>Starting recording on input: ${selectedInput.name}</p>`;
+            appendDebugInfo(`Starting recording on input: ${selectedInput.name}`);
 
             selectedInput.addListener("midimessage", event => {
                 console.log("MIDI message received:", event.data);
@@ -210,7 +216,7 @@
 
         function stopRecording() {
             console.log("Stopping recording");
-            debugInfoDiv.innerHTML += "<p>Stopping recording</p>";
+            appendDebugInfo("Stopping recording");
             isRecording = false;
             updateButtonStates();
             if (selectedInput) {

@@ -102,7 +102,7 @@ async function handleVdoUrlParameter(vdoUrlParam, subscribeParam) {
           requestNotificationPermission().then(permission => {
             if (permission === 'granted') {
               startNotificationSubscription(result.topic);
-              displayStatusMessage(`✅ Automatically subscribed to: <strong>${result.topic}</strong>`, 'active');
+              displayStatusMessage(`✅ Automatically subscribed to: <strong>${escapeNotificationText(result.topic)}</strong>`, 'active');
             }
           });
         }, 1000);
@@ -122,7 +122,7 @@ function handleTopicParameter(topicParam) {
     requestNotificationPermission().then(permission => {
       if (permission === 'granted') {
         startNotificationSubscription(topicParam);
-        displayStatusMessage(`✅ Automatically subscribed to topic: <strong>${topicParam}</strong>`, 'active');
+        displayStatusMessage(`✅ Automatically subscribed to topic: <strong>${escapeNotificationText(topicParam)}</strong>`, 'active');
       }
     });
   }, 1000);
@@ -293,6 +293,11 @@ function setupUrlDetection() {
     addUrlInputListeners(urlInput, topicInput);
   }
 }
+function escapeNotificationText(value) {
+	var text = document.createElement("span");
+	text.textContent = String(value);
+	return text.innerHTML;
+}
 function displayStatusMessage(message, statusType = 'active', duration = 5000) {
   const statusEl = document.getElementById('notification-status');
   if (!statusEl) return;
@@ -315,7 +320,7 @@ async function processVdoUrl(url, topicInput) {
     if (result && result.topic) {
       topicInput.value = result.topic;
       updateExampleUrl();
-      displayStatusMessage(`✅ Topic extracted: <strong>${result.topic}</strong>`, 'active');
+      displayStatusMessage(`✅ Topic extracted: <strong>${escapeNotificationText(result.topic)}</strong>`, 'active');
     }
   } catch (error) {
     console.error('Error processing VDO URL:', error);
@@ -353,7 +358,7 @@ function enhanceTopicInput() {
         if (topic) {
           topicInput.value = topic;
           updateExampleUrl();
-          displayStatusMessage(`✅ Topic extracted from URL: <strong>${topic}</strong>`, 'active');
+          displayStatusMessage(`✅ Topic extracted from URL: <strong>${escapeNotificationText(topic)}</strong>`, 'active');
         } else {
           topicInput.value = pastedText;
           displayStatusMessage('⚠️ Could not extract topic from text', 'warning');
@@ -432,11 +437,11 @@ function updateSubscriptionStatusPanel() {
     const pushEnabled = localStorage.getItem('pushSubscription') ? 'Enabled' : 'Disabled';
     statusDetails.innerHTML = `
       <div class="status active">
-        <p><strong>Currently subscribed to:</strong> ${topic}</p>
+        <p><strong>Currently subscribed to:</strong> ${escapeNotificationText(topic)}</p>
         <p><strong>Connection status:</strong> <span id="sw-connection-status">Checking...</span></p>
         <p><strong>Push notifications:</strong> <span id="push-status">${pushEnabled}</span></p>
         <p><strong>Last activity:</strong> <span id="last-activity-display">${lastPollDate}</span></p>
-        <button id="unsubscribe-button" class="danger">Unsubscribe from "${topic}"</button>
+        <button id="unsubscribe-button" class="danger">Unsubscribe from "${escapeNotificationText(topic)}"</button>
       </div>
     `;
     document.getElementById('unsubscribe-button')?.addEventListener('click', () => {
@@ -962,7 +967,7 @@ function setupParseUrlButton() {
       }
     } catch (error) {
       console.error('Error parsing URL:', error);
-      displayStatusMessage('⚠️ Error parsing URL: ' + error.message, 'warning');
+      displayStatusMessage('⚠️ Error parsing URL: ' + escapeNotificationText(error.message), 'warning');
     } finally {
       parseUrlBtn.textContent = 'Create Notification Topic';
       parseUrlBtn.disabled = false;

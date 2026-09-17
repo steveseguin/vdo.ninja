@@ -91,7 +91,7 @@ function updateLink(event){
 	path = path.replace("/examples","");
 	
 	var viewLink = "https://"+path+"/?view="+streamid;
-	document.getElementById("viewLink").innerHTML = "View link is: "+viewLink;
+	document.getElementById("viewLink").textContent = "View link is: "+viewLink;
 }
 
 function loadIframes(url=false){ 

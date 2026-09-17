@@ -1735,7 +1735,7 @@
 			if (ele.tagName == "A"){
 				ele.href = "./index.html?room="+roomname+"&datamode&midiin&chat"+additional; // datamode disables video/audio
 			} else if (ele.tagName == "I"){
-				ele.innerHTML = "URL + ?room="+roomname+"&datamode&midiin&chat"+additional;
+				ele.textContent = "URL + ?room="+roomname+"&datamode&midiin&chat"+additional;
 			}
 		});
 	}

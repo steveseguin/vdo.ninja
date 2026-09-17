@@ -98,6 +98,11 @@ function loadIframe(url=false){  // this is pretty important if you want to avoi
 	} else {
 		var iframesrc = document.getElementById("viewlink").value;
 	}
+	var linkURL = document.createElement("a");
+	linkURL.href = iframesrc;
+	if (linkURL.protocol === "javascript:") {
+		return;
+	}
 	console.log(iframesrc);
 	document.getElementById("viewlink").parentNode.removeChild(document.getElementById("viewlink"));
 	document.getElementById("canvas").style.display="block";

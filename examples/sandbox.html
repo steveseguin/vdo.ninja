@@ -2091,21 +2091,40 @@ function addLogEntry(type, method, endpoint, data, response) {
   
   const time = new Date().toLocaleTimeString();
   
-  let html = `<span class="log-time">[${time}]</span>`;
-  html += `<span class="log-method log-${method.toLowerCase()}">${method}</span>`;
+  const timeLabel = document.createElement("span");
+  timeLabel.className = "log-time";
+  timeLabel.textContent = `[${time}]`;
+  logEntry.appendChild(timeLabel);
+
+  const methodLabel = document.createElement("span");
+  methodLabel.className = "log-method log-" + method.toLowerCase();
+  methodLabel.textContent = method;
+  logEntry.appendChild(methodLabel);
   
   if (type === 'request') {
-    html += `<span class="log-request">${endpoint}</span>`;
+    const requestLabel = document.createElement("span");
+    requestLabel.className = "log-request";
+    requestLabel.textContent = `${endpoint}`;
+    logEntry.appendChild(requestLabel);
     if (data) {
-      html += `<br><span class="log-request">Data: ${typeof data === 'object' ? JSON.stringify(data) : data}</span>`;
+      logEntry.appendChild(document.createElement("br"));
+      const dataLabel = document.createElement("span");
+      dataLabel.className = "log-request";
+      dataLabel.textContent = `Data: ${typeof data === 'object' ? JSON.stringify(data) : data}`;
+      logEntry.appendChild(dataLabel);
     }
   } else if (type === 'response') {
-    html += `<span class="log-response">Response: ${typeof response === 'object' ? JSON.stringify(response) : response}</span>`;
+    const responseLabel = document.createElement("span");
+    responseLabel.className = "log-response";
+    responseLabel.textContent = `Response: ${typeof response === 'object' ? JSON.stringify(response) : response}`;
+    logEntry.appendChild(responseLabel);
   } else if (type === 'error') {
-    html += `<span class="log-error">Error: ${data}</span>`;
+    const errorLabel = document.createElement("span");
+    errorLabel.className = "log-error";
+    errorLabel.textContent = `Error: ${data}`;
+    logEntry.appendChild(errorLabel);
   }
-  
-  logEntry.innerHTML = html;
+
   logger.appendChild(logEntry);
   logger.scrollTop = logger.scrollHeight;
 }
