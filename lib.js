@@ -37954,7 +37954,7 @@ async function getAudioOnly(selector, trackid = null, override = false, requestT
 			}
 		}
 		constraint.video = false;
-		if (audioList[i].value === "default") {
+		if (audioList[i].value === "default" && (iOS || iPad || SafariVersion)) {
 			// Before permission, Safari exposes no device ID; gotDevices2 uses this placeholder.
 			// Request the default microphone, as the camera path already does.
 			delete constraint.audio.deviceId;
