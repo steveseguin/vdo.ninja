@@ -505,6 +505,7 @@
     * [\&border](advanced-settings/design-parameters/and-border.md)
     * [\&bordercolor](advanced-settings/design-parameters/and-bordercolor.md)
     * [\&holdercolor](advanced-settings/design-parameters/and-holdercolor.md)
+    * [\&aligntop](advanced-settings/design-parameters/and-aligntop.md)
     * [\&rounded](advanced-settings/design-parameters/rounded.md)
     * [\&margin](advanced-settings/design-parameters/margin.md)
     * [\&darkmode](advanced-settings/design-parameters/darkmode.md)
