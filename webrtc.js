@@ -11497,6 +11497,9 @@ WebRTC.Media = (function () {
 			if (session.pcs[UUID].canvasOverlay && session.pcs[UUID].canvasOverlay.cleanup) {
 				session.pcs[UUID].canvasOverlay.cleanup();
 			}
+			if (session.pcs[UUID].canvasOverlayScreen && session.pcs[UUID].canvasOverlayScreen.cleanup) {
+				session.pcs[UUID].canvasOverlayScreen.cleanup();
+			}
 
 			if (session.soloChatUUID && session.soloChatUUID.includes(UUID)) {
 				session.soloChatUUID.splice(session.soloChatUUID.indexOf(UUID), 1);
@@ -11522,6 +11525,9 @@ WebRTC.Media = (function () {
 			try {
 				if (session.pcs[UUID + "_screen"].canvasOverlay && session.pcs[UUID + "_screen"].canvasOverlay.cleanup) {
 					session.pcs[UUID + "_screen"].canvasOverlay.cleanup();
+				}
+				if (session.pcs[UUID + "_screen"].canvasOverlayScreen && session.pcs[UUID + "_screen"].canvasOverlayScreen.cleanup) {
+					session.pcs[UUID + "_screen"].canvasOverlayScreen.cleanup();
 				}
 			} catch (e) {
 				errorlog(e);

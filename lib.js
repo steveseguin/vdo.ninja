@@ -12699,7 +12699,7 @@ function drawOnThis(video, force = false) {
 
 function receiveDrawingOnVideo(video, UUID = false) {
 	try {
-		if (!video || !video.container) {
+		if (!video || (!video.container && video !== session.screenShareElement)) {
 			warnlog("no video holder; not compatible");
 			return;
 		}
@@ -12728,6 +12728,11 @@ function receiveDrawingOnVideo(video, UUID = false) {
 			canvas.style.height = computedStyle.height;
 			canvas.style.top = `${videoRect.top + window.scrollY}px`;
 			canvas.style.left = `${videoRect.left + window.scrollX}px`;
+			if (video === session.screenShareElement && !video.container) {
+				// The separate screen preview shares its positioning parent with the overlay.
+				canvas.style.top = video.offsetTop + "px";
+				canvas.style.left = video.offsetLeft + "px";
+			}
 			canvas.width = video.clientWidth;
 			canvas.height = video.clientHeight;
 
@@ -72529,7 +72534,7 @@ function insertAfter(newNode, existingNode) {
 	existingNode.parentNode.insertBefore(newNode, existingNode.nextSibling);
 }
 addEventToAll(".column", "click", function (e, ele) {
-	if (ele.classList.contains("skip-animation")) {
+	if (ele.id === "container-22" || ele.classList.contains("skip-animation")) {
 		return;
 	}
 	try {
