@@ -41,12 +41,22 @@ candidates; the public example page does not expose that option.
 
 ## How it works
 
-### LoRa / MeshCore messages
+### Trickle mode (LoRa / mesh compatible)
 
-Enable **LoRa / MeshCore mode** before starting a connection, or open
+Enable **Trickle mode (LoRa / mesh compatible)** before starting a connection, or open
 `qr.html?lora`. The default limit is **140 ASCII characters per message**,
 including its header and checksum. The limit can be reduced to 40 characters;
 the answering page automatically uses the offer's limit.
+
+This mode works with text transports beyond radio apps. It splits connection
+details into small messages and sends additional network routes as they become
+available; it does not necessarily reduce the total amount of text exchanged.
+MeshCore and Meshtastic do not have identical message limits. Meshtastic's
+[Android composer](https://github.com/meshtastic/meshtastic/blob/master/docs/software/android/user/messages-and-channels.md#message-limits)
+allows 200 bytes, while MeshCore's
+[channel message handling](https://github.com/meshcore-dev/MeshCore/blob/main/src/helpers/BaseChatMesh.cpp)
+counts the sender-name prefix against the text limit. Lower this page's limit
+to fit the app and message type you use; 140 bytes is not a universal radio limit.
 
 1. Start the connection and copy the selected outgoing message into your radio
    app. If the selector lists more messages, send each separately.

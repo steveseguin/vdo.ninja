@@ -532,12 +532,12 @@
 				<h2>Start a connection</h2>
 				<p>Connect two devices without the WebSocket handshake server. Start on one device, scan or paste its code on the other, then send the reply code back to the first device. Keep both pages open until connected.</p>
 				<p>
-					<label><input type="checkbox" id="lora-mode" /> LoRa / MeshCore mode</label>
+					<label><input type="checkbox" id="lora-mode" /> Trickle mode (LoRa / mesh compatible)</label>
 				</p>
 				<p id="lora-settings" class="hidden">
 					<label for="lora-budget">Maximum characters per message</label>
 					<input id="lora-budget" type="number" min="40" max="140" value="140" step="1" style="width: 5em" />
-					<br />Uses only ASCII letters and digits. Send each message separately, in both directions. Keep both pages open; audio and video still need an IP connection.
+					<br />Splits connection details into small messages using ASCII letters and digits (one byte each). Lower the limit to fit your messaging app; MeshCore and Meshtastic limits differ. Send each message separately, in both directions. Keep both pages open; audio and video still need an IP connection.
 				</p>
 				<div class="row">
 					<button class="primary" id="btn-share">Start connection</button>

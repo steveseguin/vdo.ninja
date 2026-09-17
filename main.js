@@ -4744,6 +4744,12 @@ async function main() {
 		}
 	}
 
+	if (urlParams.has("aligntop")) {
+		var alignTopStyle = document.createElement("style");
+		alignTopStyle.innerHTML = ".holder {top: 0 !important;}";
+		document.head.appendChild(alignTopStyle);
+	}
+
 	if (urlParams.has("rounded") || urlParams.has("round")) {
 		try {
 			session.borderRadius = urlParams.get("rounded") || urlParams.get("round") || 50;
