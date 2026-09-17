@@ -22,7 +22,7 @@ In the recorded browser samples, writing that out in the usual format came to **
 
 That is the obstacle. Three thousand characters produces a QR code that is too dense for the intended screen-to-camera exchange and exceeds many short-message limits.
 
-Getting it under two hundred is the whole trick.
+Ordinary QR mode packs those details into one short code per person. Trickle mode can instead split them across several small text messages.
 
 ## Where the savings come from
 
@@ -99,8 +99,9 @@ and policy, so it still prefers direct paths and can use TURN when direct
 connectivity fails. Later VDO.Ninja signalling and application data move onto
 that sidecar before media controls are enabled.
 
-Precisely: the only descriptions a person carries out of band are the original
-compact offer and answer. The sidecar does have an ordinary internal offer and
+The descriptions a person carries out of band are the original compact offer
+and answer. Trickle mode can split these into parts and carry additional network
+routes in separate messages before connecting. The sidecar has its own internal offer and
 answer, but those bytes travel automatically over the already-established peer
 data channel and never appear as another code.
 
@@ -121,7 +122,7 @@ The renderer passes the compact text to the QR encoder as exact UTF-8 bytes and 
 
 The codes are plain text, so anything that carries text will do.
 
-**Offers and answers now share a 118-character hard limit.** Current Chrome,
+**Ordinary QR offers and answers share a 118-character hard limit.** Current Chrome,
 Firefox, and real-iPhone Safari runs produce 44–70 characters. A deterministic
 fixture with unrelated addresses and randomized ports is the stronger size
 check: Chrome-shaped SDP is 89 characters and Firefox-shaped SDP is 96 while
@@ -141,8 +142,48 @@ message or carrier SMS was sent during automated validation, so platform
 moderation and carrier recoding remain external variables.
 
 {% hint style="info" %}
-**It takes two messages, one in each direction.** The first person posts an offer, the second replies with an answer, and only then are they connected. A channel that only travels one way cannot do it.
+**Ordinary QR mode takes two messages, one in each direction.** The first person posts an offer, the second replies with an answer, and only then are they connected. Trickle mode can require several messages each way. A channel that only travels one way cannot do either exchange.
 {% endhint %}
+
+### Trickle mode (LoRa / mesh compatible)
+
+Enable **Trickle mode (LoRa / mesh compatible)** on the QR page, or open
+[vdo.ninja/qr?lora](https://vdo.ninja/qr?lora). Older versions label this
+**LoRa / MeshCore mode**. The existing `?lora` URL option is unchanged.
+For the manual exchange steps, see [QR Connect](../steves-helper-apps/qr-connect.md).
+
+This mode uses **140 ASCII characters per message** by default, including its
+header and checksum. The limit can be reduced to **40**, and the replying page
+adopts the offer's limit. ASCII letters and digits occupy one UTF-8 byte each,
+unlike the dense Unicode alphabet used by ordinary QR codes. The 118-character
+QR ceiling does not apply to the combined Trickle exchange.
+
+The first record carries the compact data-channel description and as many
+available network routes as fit, preferring public and relay routes. Overflow
+and late routes follow in additional messages through the existing trickle ICE
+path. Routes are not discarded just to meet the message budget. Descriptions
+or individual routes that exceed it are split into numbered parts. Smaller
+individual messages can mean more total text and more manual exchanges.
+
+Messages start with `L1O` for the offer side or `L1A` for the answer side. The
+header identifies the exchange, record and part, and includes a checksum.
+Receivers reassemble parts, ignore duplicates and reject conflicting parts or
+messages from another exchange. Keep sending each available message separately
+in both directions until connected; **Start over** clears the exchange.
+
+The format can be carried by other text transports as well as LoRa apps.
+MeshCore and Meshtastic do not share a single message limit:
+
+- Meshtastic's [Android composer](https://github.com/meshtastic/meshtastic/blob/master/docs/software/android/user/messages-and-channels.md#message-limits) allows 200 bytes; the underlying mesh payload limit is approximately 233 bytes.
+- MeshCore's [channel message handling](https://github.com/meshcore-dev/MeshCore/blob/main/src/helpers/BaseChatMesh.cpp) includes the sender-name prefix in its text allowance. A channel can therefore require a limit below this page's 140-byte default.
+
+Set the budget to fit the app and message type, including space needed for
+prefixes added by the transport. The page does not connect directly to radio
+hardware, and radio delivery has not been verified by the browser tests above.
+LoRa carries connection signalling only; WebRTC chat, audio and video still
+need an IP path between the browsers, directly or through TURN. Keep both pages
+open: long delays, background suspension or changed network routes can require
+a fresh exchange.
 
 ## What it costs you
 
