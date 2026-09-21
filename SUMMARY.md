@@ -52,6 +52,7 @@
 * [Guides](guides/README.md)
   * [Cheat Sheets](guides/cheat-sheets.md)
   * [Common questions re: Rooms](help/how-does-group-chat-work.md)
+  * [Run a call-in show with OBS and VDO.Ninja](guides/call-in-show-with-obs.md)
   * [Video bitrate for push/view links](guides/video-bitrate-for-push-view-links.md)
   * [Video bitrate in rooms](guides/video-bitrate-in-rooms.md)
   * [Room-only mobile bitrate tiers](guides/room-only-mobile-bitrate-tiers.md)
