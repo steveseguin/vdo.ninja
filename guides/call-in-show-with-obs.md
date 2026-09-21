@@ -12,6 +12,8 @@ The options below cover a host with roughly one to four remote guests on air at 
 
 In a normal VDO.Ninja room, guests hear one another directly. The host can speak and listen from the Director's Room while keeping their own camera and microphone in OBS.
 
+<figure><img src="../.gitbook/assets/docs-infographics/call-in-show-setup.png" alt="Three parts of the same call-in setup: the host and callers converse through VDO.Ninja; the host camera and microphone plus guest video and audio feed OBS, which broadcasts to YouTube; the host listens to guests through VDO.Ninja on headphones with OBS guest monitoring off."><figcaption><p>One basic arrangement: VDO.Ninja carries the conversation, OBS combines the broadcast, and the host listens through the Director's Room. OBS guest monitoring is off, while guest audio remains enabled for the broadcast.</p></figcaption></figure>
+
 | Sound | How it reaches its destination |
 | --- | --- |
 | Host microphone to callers | Select and enable the host microphone in VDO.Ninja |

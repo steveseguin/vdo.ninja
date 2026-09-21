@@ -1,0 +1,29 @@
+Generated using the built-in image_gen tool.
+Asset: call-in-show-setup.png
+
+Use case: infographic-diagram.
+Create a polished illustrated educational infographic for the VDO.Ninja documentation guide "Run a call-in show with OBS and VDO.Ninja". Landscape 3:2 composition, white background, generous whitespace, large dark legible sans-serif text, restrained teal and blue accents, warm friendly editorial illustrations of people wearing headphones, microphones, cameras and computer monitors. This is a conceptual illustration, not a software screenshot. Show three distinct stacked horizontal bands, each depicting a different part of the SAME setup. Keep all arrowheads and connections unambiguous. No tiny text.
+
+Title exactly: "A basic call-in show"
+
+Top band header exactly "1. Conversation"
+Left: host wearing headphones at a microphone, label "Host".
+Center: browser-window illustration labeled "VDO.Ninja room".
+Right: three small remote guests all wearing headphones, grouped under label "Callers".
+Two-headed arrows Host <-> VDO.Ninja room <-> Callers.
+Short line below: "The host and callers hear one another."
+
+Middle band header exactly "2. Broadcast"
+Left: two separate small illustrated inputs stacked vertically, labeled "Host camera + mic" and "Guest video + audio".
+Both inputs have ONE-WAY arrows into an OBS monitor in the center labeled "OBS".
+OBS has ONE-WAY arrow rightward into a broadcast screen labeled "YouTube".
+Short line below: "OBS combines the show."
+
+Bottom band header exactly "3. Host listening"
+Left: small browser-window illustration labeled "VDO.Ninja guest audio".
+ONE-WAY arrow to an illustrated pair of headphones at center labeled "Host headphones".
+Right: a separate simple note card with NO connecting arrows, reading "OBS guest monitoring: OFF".
+Short line below: "Listen to guests in one place."
+
+Bottom footer callout exactly: "Keep the full OBS audio mix out of the room."
+Accuracy: no OBS-to-room arrow, no YouTube-to-room arrow, no microphone-to-headphone arrow, no cables implying guest audio is a host microphone input. No invented UI controls or logos, no extra prose, no decorative illegible text. Attractive illustrative detail should support the explanation, not crowd it.
