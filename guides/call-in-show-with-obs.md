@@ -1,91 +1,147 @@
 ---
-description: Common setups for a live call-in show with OBS and VDO.Ninja, including room audio, guest scenes, caller lobbies, approval, and optional phone support.
+description: Plan an OBS call-in show around caller admission, reusable scenes and slots, conversation audio, guest video returns, and telephone support.
 ---
 
 # Run a call-in show with OBS and VDO.Ninja
 
-A call-in show can use VDO.Ninja for the conversation and OBS for the finished broadcast. Viewers join through a browser link, the host brings callers into the conversation, and OBS sends the selected guests, host camera, and audio to YouTube or another streaming service.
+VDO.Ninja can carry the conversation while OBS builds the finished show for YouTube or another streaming service. These are common options for a host with roughly one to four callers on air, with links to setup details.
 
-The options below cover a host with roughly one to four remote guests on air at once. A caller using a phone's browser joins like any other guest; dialing a telephone number is a separate option covered at the end.
+Start by [creating a room](../getting-started/rooms/README.md). The **Director's Room** is the host's control page. Callers receive a guest invitation; OBS receives a viewing link added as a **Browser Source**, which displays a webpage inside your OBS composition. Keep director and OBS viewing links private.
 
-## The basic audio setup
+Use the sections that match what you need:
 
-In a normal VDO.Ninja room, guests hear one another directly. The host can speak and listen from the Director's Room while keeping their own camera and microphone in OBS.
+* [Manage waiting callers and admission](#manage-waiting-callers-and-admission).
+* [Keep OBS ready as callers change](#keep-obs-ready-as-callers-change).
+* [Let everyone talk without doubled audio](#let-everyone-talk-without-doubled-audio).
+* [Choose what callers see](#choose-what-callers-see).
+* [Handle reconnects and prepare for the show](#handle-reconnects-and-prepare-for-the-show).
+* [Accept telephone calls](#accept-telephone-calls).
 
-<figure><img src="../.gitbook/assets/docs-infographics/call-in-show-setup.png" alt="Three parts of the same call-in setup: the host and callers converse through VDO.Ninja; the host camera and microphone plus guest video and audio feed OBS, which broadcasts to YouTube; the host listens to guests through VDO.Ninja on headphones with OBS guest monitoring off."><figcaption><p>One basic arrangement: VDO.Ninja carries the conversation, OBS combines the broadcast, and the host listens through the Director's Room. OBS guest monitoring is off, while guest audio remains enabled for the broadcast.</p></figcaption></figure>
+## Manage waiting callers and admission
 
-| Sound | How it reaches its destination |
-| --- | --- |
-| Host microphone to callers | Select and enable the host microphone in VDO.Ninja |
-| Host microphone to the broadcast | Capture the microphone in OBS |
-| Guests to one another | Normal VDO.Ninja room audio |
-| Guests to the host's headphones | Listen through the Director's Room |
-| Guests to the broadcast | VDO.Ninja scene or solo Browser Sources in OBS |
+A public call-in invitation needs somewhere for people to wait. Joining the conversation and appearing on the broadcast are separate decisions: removing a caller from an OBS picture does not stop other people in the room hearing them.
 
-To set up this arrangement:
-
-1. [Create a room](../getting-started/rooms/README.md) and keep its Director's Room open.
-2. Click **Enable director's microphone or video**, select the host microphone, and enable it for the conversation. The host's camera can stay in OBS; sending video to callers is optional.
-3. Select headphones as the director's audio output and enable local guest playback if it is muted. Have callers wear headphones too.
-4. Add the guest scene or solo links to OBS as **Browser Sources**, with **Control audio via OBS** enabled. Keep the host's existing camera and microphone sources in OBS.
-5. Leave OBS monitoring off for those guest sources when listening through VDO.Ninja. Keep their broadcast audio enabled. Avoid also capturing the director browser/headphone output through Desktop Audio or application capture, which would duplicate the guests.
-6. Keep the director's microphone out of the guest scene captured by OBS, since OBS already captures the host microphone. The director is normally excluded from scene links; enabling **Director will also be a performer** / `&showdirector` can change that.
-
-This arrangement does not need a virtual audio cable or an OBS audio return. VDO.Ninja carries the conversation, so sending the complete OBS mix back would return callers' own voices to them. Keep YouTube playback muted on participating devices too.
-
-See [Echo or feedback issues](../common-errors-and-known-issues/echo-or-feedback-issues.md#control-room-plus-obs-monitoring) for duplicate monitoring and capture problems.
-
-## One group source or separate guest sources?
-
-Both are common. The choice is where you want to manage the guest layout and audio levels.
-
-| OBS arrangement | What it provides | When a new caller arrives |
+| Need | Common approach | Details |
 | --- | --- | --- |
-| One group scene Browser Source | VDO.Ninja arranges the guests; OBS gets one combined guest audio fader | Add the caller to the VDO.Ninja scene; the existing OBS source follows |
-| Separate solo Browser Sources | Independent positioning, filters, and audio faders in OBS | Add or replace a solo link, or prepare reusable guest/slot sources |
+| A public waiting list with host/helper controls | **app.invite.cam** provides a lobby, invitations, admission, and return-to-lobby actions | [app.invite.cam guide](../steves-helper-apps/app-invite-cam.md) |
+| A lobby using regular VDO.Ninja rooms | Share a separate waiting-room link, then transfer selected callers into the live room | [Transfer rooms](../getting-started/rooms/transfer-rooms.md) |
+| Approval before entering a room | Add `&requireapproval` to the director link; approve or deny pending requests | [Director approval](../advanced-settings/director-parameters/and-requireapproval.md) |
+| Access based on identity | Use signed-in room access and configure an allowlist or manage pending access requests | [SSO and access controls](sso-and-signed-in-access.md) |
 
-For a group source, copy **Capture a Group Scene** from the director page. Turn **Auto-add guests** off for a manually selected scene, then use **Add to Scene** on the callers you want on air. OBS keeps the same Browser Source and audio settings as callers change.
+**app.invite.cam** gives callers somewhere to wait instead of repeatedly trying to enter the show. It supports anonymous guests or named Discord users. For a panel whose callers hear one another, configure group conversation rather than director-only guest isolation.
 
-With **Auto-add guests** on (`&scene=0`), room guests appear automatically. That fits a room containing only the people intended to be on air. A manual scene such as `&scene=1` lets the director choose the broadcast participants. See [Scene options](../advanced-settings/view-parameters/scene.md) and the [Mixer app](../steves-helper-apps/mixer-app.md) for layout controls.
+**Transfer rooms** send callers back to the lobby when they rejoin through their original invitation. Share that lobby link, keep both director pages open, and use matching room passwords. Transfers manage ordinary arrivals; they are not an account-based ban.
 
-Separate sources suit an OBS layout with individual guest boxes. [Permanent links and slots](how-to-get-permanent-links.md) cover reusable sources for recurring guests or fixed seats, so every new caller need not require a new OBS setup.
+**Approval and sign-in:** `&requireapproval` does not block new joins when the director is absent. Sign-in alone permits signed-in accounts; configure access rules to restrict admission. [Green rooms and waiting options](green-room-and-guest-approval-options.md) also covers queue/hold modes.
 
-If the show switches between several OBS scenes, reuse the existing guest source in each scene that needs its audio. Another option is a shared audio-only room source with separate video-only sources. See [Keep voices active while switching pictures](room-audio-obs-meshcast-and-private-talk.md#3-keep-voices-active-when-switching-to-a-screenshare).
+### Screen callers without putting private talk on air
 
-## Where callers wait and how they join
+A lobby operator or helper can check a caller's microphone before admission. If the on-air host does the screening, keep their microphone out of the broadcast too.
 
-Joining the conversation and going on air are separate decisions. Removing someone from the broadcast scene does not remove them from the room or stop the other callers hearing them.
+VDO.Ninja's local listening controls and **Solo Talk** do not mute a separate microphone source in OBS. Keep screening audio out of OBS's guest selection and desktop capture, and control the host's OBS mic separately. See [Private conversations and Solo Talk](room-audio-obs-meshcast-and-private-talk.md#7-keep-private-conversations-off-air).
 
-### app.invite.cam lobby
+## Keep OBS ready as callers change
 
-[app.invite.cam](../steves-helper-apps/app-invite-cam.md) is well suited to public call-in shows: it provides a waiting list, host/helper controls, and admission or return-to-lobby actions. Share the lobby invitation so callers have somewhere to wait instead of repeatedly trying to enter the live conversation.
+A **VDO.Ninja scene link** is a webpage showing the feeds selected for that VDO.Ninja scene. It can show several callers together or just one caller. It is different from an **OBS scene**, which combines your host camera, graphics, and Browser Sources into the broadcast picture.
 
-Hosts sign in; guest invitations can support anonymous callers or named Discord users. For a panel where admitted callers hear one another, configure group conversation rather than leaving those guests isolated to the director. The [app's host and guest guide](https://app.invite.cam/guide) covers the controls.
+### Arrange the callers together in VDO.Ninja
 
-### A transfer room in regular VDO.Ninja
+With this approach, one OBS Browser Source displays the whole caller layout. OBS gets one audio fader for that source; VDO.Ninja provides the individual guest controls.
 
-A second VDO.Ninja room can serve as the public lobby. Callers join that room, and its director transfers them into the separate live room when ready. Share the lobby link rather than the live-room invitation.
+* **Automatic layout:** Use **Capture a Group Scene** in the director page. With **Auto-add guests** on (`&scene=0`), room guests appear automatically. This fits a live room containing only intended broadcast participants.
+* **Manual selection:** Turn **Auto-add guests** off and add chosen callers to a numbered VDO.Ninja scene, such as Scene 1. The OBS source stays fixed while you add or remove people. [Scene controls](../advanced-settings/view-parameters/scene.md) explain the options.
+* **Custom layout and numbered seats:** Open [vdo.ninja/mixer](https://vdo.ninja/mixer). The Mixer lets you assign callers to slots and place those slots in layouts, including crops for phone video. Copy its clean scene/output link into OBS, rather than the Mixer control-page URL. See the [Mixer guide](../steves-helper-apps/mixer-app.md).
 
-On a normal reconnect or refresh, transferred callers return to their original lobby link. That keeps routine rejoining out of the live conversation. Transfers are a production workflow, not an account-based ban. Keep both director pages open; the rooms need matching passwords for transfers. See [Transfer rooms](../getting-started/rooms/transfer-rooms.md).
+A **slot** is a numbered seat: changing who occupies slot 1 changes the caller shown in that seat without rebuilding the layout. In the Mixer, turn off **Assign a slot to new guests automatically** if arrivals should wait for manual assignment. Save/export the Mixer settings for reuse.
 
-### Director approval and signed-in access
+### Arrange individual caller boxes in OBS
 
-For a join approval gate, add [`&requireapproval`](../advanced-settings/director-parameters/and-requireapproval.md) to the director link. Callers wait for the director to approve or deny their request. Keep the director connected: this live approval setting does not block new joins when the director is absent.
+Separate Browser Sources let OBS position, crop, filter, and adjust the volume of each caller independently. Those sources can follow a seat, a selected scene, or a particular person:
 
-If identity matters too, [SSO and signed-in access](sso-and-signed-in-access.md) cover room access controls, allowlists, and pending requests. Requiring sign-in alone permits signed-in users; configure the access rules for who should actually be admitted.
+| What the OBS source follows | How to reuse it |
+| --- | --- |
+| **A numbered slot** | Assign callers with the Mixer or the director's `&slotmode` controls. An OBS link using `&viewslot=1` follows whoever occupies slot 1. Prepare one source per seat. |
+| **A dedicated VDO.Ninja scene** | Give each OBS caller box its own scene link. Keep one caller in each scene; remove the previous caller and add the next. No fixed caller identity is needed. |
+| **A particular guest** | Use that guest's solo link. A unique, fixed `&push` ID in their invitation keeps the source reusable for their later appearances. |
 
-[Green rooms and guest waiting options](green-room-and-guest-approval-options.md) compares these approaches with queue/hold modes.
+Example OBS link for slot 1:
 
-## Optional additions
+```text
+https://vdo.ninja/?room=YOUR_ROOM&scene&viewslot=1
+```
 
-**Let callers see the finished show:** OBS Virtual Camera can send a picture back while VDO.Ninja continues carrying the conversation. Keep that returned picture out of the OBS guest scene to avoid a repeating image. See [Let guests see your finished OBS scene](let-guests-see-your-obs-scene.md).
+Use it with the Mixer or a director using `&slotmode`, and preserve your room's access parameters. Change the slot number for other OBS boxes. A guest's `&slot=1` requests a seat; it does not reserve it.
 
-**Let callers hear clips or music:** Send a separate playback-only return, excluding the host and guest microphones already carried by VDO.Ninja. See [Return OBS clips and music to the room](room-audio-obs-meshcast-and-private-talk.md#4-return-obs-clips-and-music-to-the-main-room).
+[Slot viewing](../advanced-settings/mixer-scene-parameters/and-viewslot.md) and [Permanent links, scenes, and slots](how-to-get-permanent-links.md) provide the complete link sets. Use generated viewing links for authenticated rooms so OBS can connect without interactive sign-in.
 
-**Screen a caller privately:** Use the lobby workflow or arrange private talk separately. A host microphone captured directly by OBS remains on air even when VDO.Ninja's talk controls change. See [Keep private conversations off air](room-audio-obs-meshcast-and-private-talk.md#7-keep-private-conversations-off-air).
+## Let everyone talk without doubled audio
 
-**Accept telephone calls:** Dial-in support needs a phone provider or an external phone/softphone bridge. [Phone call-in provider options](phone-call-in-provider-options.md) links to the experimental SIP/SignalWire and Twilio setups. Those callers currently enter the director's audio mix rather than appearing as ordinary guest tiles, so the basic guest-only OBS source above needs an additional route for that mixed audio. An external phone setup is covered in [Phone call-ins with virtual audio cables](phone-call-ins-with-vdo-ninja-and-virtual-audio-cables.md).
+One common arrangement uses VDO.Ninja for conversation and OBS for broadcast audio. The host selects the same physical microphone in both applications, while hearing callers through VDO.Ninja on headphones.
 
-## Before going live
+<figure><img src="../.gitbook/assets/docs-infographics/call-in-show-setup.png" alt="The host and callers converse through VDO.Ninja. The host camera and microphone plus guest video and audio feed OBS, which broadcasts to YouTube. The host listens through VDO.Ninja on headphones, with OBS guest monitoring off."><figcaption><p>One basic arrangement. OBS guest monitoring is off because the host listens through VDO.Ninja; guest audio remains enabled for the broadcast.</p></figcaption></figure>
 
-Make a short OBS recording with two callers: confirm everyone hears the others once, callers do not hear themselves, and the recording includes the host and both guests. Admit another caller, switch OBS scenes if used, and check what happens when someone reconnects. Confirm waiting callers and any private conversations stay out of the broadcast.
+1. In the Director's Room, choose **Enable director's microphone or video** and select the host microphone. Sending a camera to callers is optional. In the Mixer, use **Director View** for these controls.
+2. Send the director's listening output to headphones and enable local guest playback if muted. Callers use headphones too and keep YouTube playback muted.
+3. Keep the host camera and microphone sources in OBS. Add the caller viewing links chosen above, enable **Control audio via OBS**, and check their output meters and broadcast track.
+4. Leave OBS monitoring off for those caller sources when listening through VDO.Ninja. Avoid also capturing the director's browser/headphone output through Desktop Audio or application capture.
+5. Keep the director's microphone out of the caller output sent to OBS, since OBS already captures it. Check the Mixer's director visibility setting or `&showdirector` if enabled; these can include the director in scene outputs.
+
+Guests hear the host and each other through the room; no OBS audio return is needed. Listening through OBS instead is another option, but then disable duplicate local playback in VDO.Ninja. See [Echo and duplicate monitoring](../common-errors-and-known-issues/echo-or-feedback-issues.md#control-room-plus-obs-monitoring).
+
+### Keep voices audible when switching pictures
+
+Switching to a fullscreen caller, a screen share, or a host-only OBS scene can remove the source carrying other voices. Two common approaches are:
+
+* Reuse the existing caller sources in each OBS scene that needs their audio, keeping them active.
+* Create a shared **Room Audio** scene in OBS with an audio-only VDO.Ninja source, and use video-only links for the pictures. This makes the on-air audio selection independent of the picture layout.
+
+Capture each voice once and include only on-air callers in a shared audio source. [Keep voices active while switching pictures](room-audio-obs-meshcast-and-private-talk.md#3-keep-voices-active-when-switching-to-a-screenshare) covers source settings and screen-share audio.
+
+### Let callers hear clips or music
+
+A separate return can send OBS playback to the conversation. In the normal room arrangement, that return contains clips/music only: leave out all host and caller microphones already carried by VDO.Ninja. Otherwise callers hear themselves or the other speakers twice.
+
+A virtual audio device or hardware mixer can supply this route. [Return OBS clips and music](room-audio-obs-meshcast-and-private-talk.md#4-return-obs-clips-and-music-to-the-main-room) covers the setup. Custom per-caller mixes are another option for more involved productions; see [Individual guest mixes](room-audio-obs-meshcast-and-private-talk.md#6-option-use-the-directormixer-custom-guest-mixes).
+
+## Choose what callers see
+
+The callers' view can differ from the audience's OBS picture.
+
+| Caller experience | Setup |
+| --- | --- |
+| See the other participants | Use normal room invitations. Each guest receives the other participants' video. |
+| See the host or a single show view | Add [`&broadcast`](../advanced-settings/view-parameters/broadcast.md) to guest invitations. Callers receive the main director's video while normal guest-to-guest audio remains available. |
+| See the finished OBS picture | Use `&broadcast` invites and select **OBS Virtual Camera** as the director's camera. It can show Program or a dedicated guest-return scene. |
+
+`&broadcast` controls what callers watch; it does not start the YouTube broadcast or belong on OBS viewing links. Keep a returned OBS picture out of the VDO.Ninja output OBS captures to prevent a repeating image. Virtual Camera carries video only. See [Let guests see the finished OBS scene](let-guests-see-your-obs-scene.md).
+
+### Direct video or Meshcast distribution
+
+Broadcast mode can work **without Meshcast**: the director sends their video to the callers directly. This reduces guests' video-sharing work but gives the director more return-video uploads.
+
+With **Meshcast**, a publishing guest or director uploads a feed to a server for distribution. For an OBS picture returned by the director, enable `&meshcast` on the director link and retain `&broadcast` on guest invitations. The [return guide](let-guests-see-your-obs-scene.md#4-optional-send-the-return-through-meshcast-v2) also documents `&meshcast2` for the newer service.
+
+Meshcast also works for individual guest publications in ordinary rooms. It reduces repeated uploads but adds a server dependency and some delay. Enabling it for the director does not move the guests' outgoing feeds to Meshcast. See [Meshcast options](../newly-added-parameters/and-meshcast.md).
+
+Neither mode makes the full OBS audio mix suitable for active callers. People only watching in a greenroom can receive that full mix. See [Show feeds and room returns](room-audio-obs-meshcast-and-private-talk.md).
+
+## Handle reconnects and prepare for the show
+
+A reusable OBS source saves editing links, but someone may still need to restore the caller's seat or scene selection.
+
+* **Recurring guest:** Give them a unique fixed stream ID, or use `&permaid` to remember one in the same browser. Two simultaneous callers must not share an ID.
+* **Brief disconnection:** The director's [`&scenerestore`](../advanced-settings/mixer-scene-parameters/and-scenerestore.md) can restore manual scene membership for a returning guest with a valid temporary restore identity. It does not bypass admission or save every layout permanently.
+* **Caller returns to the lobby:** Re-admit or transfer them, then check their seat and on-air audio. Keep a host-only OBS scene ready while sorting out a missing feed.
+
+Before the show, make an OBS recording with two callers. Check conversation audio, broadcast audio, a new admission, a caller replacement, a reconnect, and every OBS scene you will switch to. Test private talk separately from ordinary on-air conversation. If using an OBS return or Meshcast, include those paths in the rehearsal.
+
+## Accept telephone calls
+
+A caller opening the guest link in a phone browser uses the workflows above. Dialing a telephone number requires a phone provider or a phone/softphone bridge.
+
+| Approach | What changes | Setup guide |
+| --- | --- | --- |
+| External phone or softphone with an audio mixer/router | Create return mixes that let browser and telephone callers hear each other without hearing themselves | [Phone calls with virtual audio cables or hardware](phone-call-ins-with-vdo-ninja-and-virtual-audio-cables.md) |
+| Experimental integrated SIP/SignalWire or Twilio support | Configure the provider-backed call-in path; telephone callers currently join the director's audio mix, rather than ordinary guest tiles | [Phone call-in provider options](phone-call-in-provider-options.md) |
+
+For the integrated path, a guest-only OBS viewing source will not capture the phone caller by itself. Plan how the director's mixed audio reaches OBS and avoid capturing the host microphone twice. The linked phone guides cover this additional routing.
