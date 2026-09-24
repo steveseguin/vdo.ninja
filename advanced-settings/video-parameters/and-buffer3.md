@@ -1,5 +1,5 @@
 ---
-description: Experimental viewer buffering with slower adaptive audio sync corrections
+description: Experimental viewer buffering with brief audio fades around sync corrections
 ---
 
 # \&buffer3
@@ -18,18 +18,19 @@ Example: `&buffer3=500`
 
 ## Details
 
-`&buffer3` is an experimental alternative to [`&buffer`](../view-parameters/buffer.md) for normal WebRTC/RTP playback. It uses the existing buffer calculations and automatically enables [`&sync=0`](../view-parameters/sync.md), with slower adjustments to the audio compensation delay.
+`&buffer3` is an experimental alternative to [`&buffer`](../view-parameters/buffer.md) for normal WebRTC/RTP playback. It uses the existing buffer calculations and automatically enables [`&sync=0`](../view-parameters/sync.md). When audio compensation needs to change, it briefly fades audio out, steps the delay, and fades audio back in.
 
-It is intended for situations where frequently changing audio delay produces audible pitch wobble. The trade-off is slower correction when audio and video drift apart.
+It is intended for situations where changing audio delay produces audible pitch wobble. This duck-and-splice behavior is part of `buffer3` itself; there is no additional toggle. The trade-off is a brief volume dip and potentially skipped or repeated audio during a correction.
 
 ### How audio compensation changes
 
 * Differences within 10 ms are tolerated.
-* A correction must remain necessary in the same direction for at least one second before a new ramp starts. Actual response timing also depends on the statistics update interval.
-* The audio delay changes at no more than 5 ms per second.
-* When the requested correction reverses direction, the current ramp pauses while the new direction is observed.
+* A correction must remain necessary in the same direction for at least one second before a splice starts. Actual response timing also depends on the statistics update interval.
+* A dedicated gain node fades audio to silence over 15 ms. The delay steps at 18 ms, while silent. Audio fades back in from 20 ms to 35 ms.
+* The 35 ms envelope is scheduled on the audio clock with a short 10 ms lead.
+* Splices cannot overlap. A fresh second of sustained error is required after a completed splice before another correction; returning within tolerance or reversing direction restarts that stability check.
 
-This limits the pitch shift caused by adjusting the delay. **It does not eliminate pitch changes or guarantee exact A/V synchronization.** Large buffer changes can take many seconds or minutes to settle, leaving a temporary mismatch while audio catches up.
+The compensation delay now changes in steps, avoiding the gradual pitch bend of a delay ramp. **This is not an artifact-free or exact A/V synchronization guarantee.** Fades can be audible, particularly with music or repeated corrections. A large decrease skips audio and a large increase revisits older buffered audio; a 35 ms fade does not hide an arbitrarily large jump. The browser's own audio processing also remains active.
 
 The native WebRTC audio and video buffering paths remain active, and measured jitter still affects the target. Buffer3 does not hold the entire requested audio delay at a fixed value. For a constant extra audio offset, use [`&audiodelay`](../audio-parameters/and-audiodelay.md).
 
@@ -51,19 +52,19 @@ These examples require a VDO.Ninja build that includes this experimental option.
 
 ### Interaction with other settings
 
-* An explicit [`&sync`](../view-parameters/sync.md) value overrides the automatically selected zero offset. It still uses buffer3's slower compensation.
+* An explicit [`&sync`](../view-parameters/sync.md) value overrides the automatically selected zero offset. It still uses buffer3's duck-and-splice compensation.
 * An explicit [`&audiobuffer`](../audio-parameters/and-bufferaudio.md) / `&bufferaudio` value retains its existing behavior.
 * Buffer3 alone uses the normal `buffer` calculation without the extra RTT adjustment from [`&buffer2`](and-buffer2.md). If `buffer2` is also present, its RTT adjustment remains enabled.
 * Prefer one buffer parameter per URL. When combined, a nonzero `buffer` value takes precedence over `buffer2`, which takes precedence over `buffer3`; the presence of `buffer3` still enables its audio compensation mode.
-* [`&noap`](../../general-settings/noaudioprocessing.md) bypasses the Web Audio pipeline, so the slower audio compensation cannot run. The browser buffer requests still apply.
+* [`&noap`](../../general-settings/noaudioprocessing.md) bypasses the Web Audio pipeline, so the duck-and-splice audio compensation cannot run. The browser buffer requests still apply.
 
-Iframe [`setBufferDelay`](../../guides/iframe-api-documentation/iframe-api-basics.md) can change the target while connected. Audio follows using the same slower correction rules.
+Iframe [`setBufferDelay`](../../guides/iframe-api-documentation/iframe-api-basics.md) can change the target while connected. Audio follows using the same stability check and duck-and-splice correction.
 
 ### Limits
 
 Normal WebRTC receiver buffer hints are clamped to 0-4000 ms. They are requests to the browser, so actual delay and settling time vary. Larger requests can add more audio delay without equivalent video delay; they are not a way to obtain synchronized long-delay playback.
 
-The slower correction described here applies to the RTP audio sync path. [`&chunked`](../../newly-added-parameters/and-chunked.md) playback retains its separate buffering controls and refresh behavior.
+The duck-and-splice correction described here applies to the RTP audio sync path. [`&chunked`](../../newly-added-parameters/and-chunked.md) playback retains its separate buffering controls and refresh behavior.
 
 ## Related
 
