@@ -9,11 +9,14 @@ description: Share files directly between computers and phones with VDO.Ninja Dr
 ## Share files
 
 1. Open [vdo.ninja/drop](https://vdo.ninja/drop) on the device with your files.
-2. Choose **Choose files**, or drag files onto the page. You can select multiple files, including documents, photos, videos, and ZIP archives.
-3. Choose **Copy link** and send the link to your recipient.
-4. Keep the tab open and your device awake while recipients download. The page shows connected recipients and transfer progress.
+2. Keep the suggested four-word **Share name**, or enter your own and choose **Apply name**. Names can contain 1–64 letters, numbers, hyphens, or underscores and are case-sensitive.
+3. Choose **Choose files**, or drag files onto the page. You can select multiple files, including documents, photos, videos, and ZIP archives.
+4. Choose **Copy link** and send the link to your recipient.
+5. Keep the tab open and your device awake while recipients download. The page shows connected recipients and transfer progress.
 
-Anyone with the full sharing link can download the files while you are sharing. Use **Remove** to stop sharing one file, or **Stop sharing** to remove all files. Refreshing the sender page creates a new sharing session and requires selecting the files again.
+Links look like `https://vdo.ninja/drop?view=cedar-river-lunar-otter`. Anyone who knows the name can download while you are sharing, so avoid easy-to-guess names. Names are not reserved: if another Drop sender is using the same name, choose a different one. Drop uses its own VDO.Ninja salt to separate these shares from regular stream IDs.
+
+Use **Remove** to stop sharing one file, or **Stop sharing** to remove all files. The share name is locked while files are selected; stop sharing before changing it. Refreshing always clears the file selection. The bare sender page generates a new name each time; after **Apply name**, its `?share=...` URL keeps that name for reuse. Older sharing links with a password fragment still work.
 
 ## Send to your phone with a QR code
 
