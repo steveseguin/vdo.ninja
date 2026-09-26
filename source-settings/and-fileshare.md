@@ -14,6 +14,8 @@ Sender-Side Option! ([`&push`](push.md))
 
 Adding `&fileshare` to a URL allows the user to select a video or audio file as a source for streaming.
 
+For downloadable files, use [VDO.Ninja Drop](../steves-helper-apps/vdo-ninja-drop.md) at [vdo.ninja/drop](https://vdo.ninja/drop). It provides a dedicated file sharing page with download links and QR codes for sending files to another device.
+
 The stream can be paused and scrubbed like a normal video/audio file. It will auto-loop when it ends.
 
 Supports audio-only files as well as common video formats. Depends on your browser. If you mute the video, it will mute the video for all the viewers as well. It is extremely simple in functionality and is only available when the URL is used. The resolution used will be limited by the video's native resolution.
