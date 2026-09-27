@@ -257,7 +257,7 @@ If you are self-hosting VDO.Ninja, often these URL parameters can be hard-coded 
 | `iframe`            | See `website`          | -              | -                              |
 | `iframetarget`      | -                      | String         | Sets iframe target             |
 | `imagelist`         | -                      | JSON array     | Sets list of background images |
-| `include`           | -                      | Stream ID(s)   | Includes specified streams     |
+| `include`           | -                      | Stream ID(s)   | Adds streams within the viewer's room scope; does not import streams from outside the room |
 | `insertablestreams` | `is`                   | Boolean/String | -                              |
 | `intro`             | `ib`                   | Boolean        | Shows intro                    |
 | `isolation`         | `voiceisolation`, `vi` | Boolean        | Requests mic voice isolation   |
