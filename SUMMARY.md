@@ -470,6 +470,7 @@
     * [\&controlbarspace](advanced-settings/settings-parameters/and-controlbarspace.md)
     * [\&nosettings](source-settings/and-nosettings.md)
     * [\&nomicbutton](viewers-settings/nomicbutton.md)
+    * [\&scenemutebutton](advanced-settings/buttons-and-control-bar-parameters/and-scenemutebutton.md)
     * [\&nospeakerbutton](source-settings/and-nospeakerbutton.md)
     * [\&novideobutton](viewers-settings/and-novideobutton.md)
     * [\&nofileshare](source-settings/nofileshare.md)

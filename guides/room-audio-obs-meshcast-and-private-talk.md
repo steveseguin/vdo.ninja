@@ -169,6 +169,8 @@ Current limitations matter: opening the Mix menu enables the custom mix; closing
 
 Mix-minus prevents unwanted returned audio. It does not, by itself, make a conversation private.
 
+For guest-controlled room-only talk, alpha guest links can include [`&scenemutebutton`](../advanced-settings/buttons-and-control-bar-parameters/and-scenemutebutton.md). This adds an amber **Mute in scenes** control for the guest's microphone and shared audio. Normal room participants still hear the guest, while updated scene pages mute that guest, including Meshcast/WHEP playback. Plain view links and audio mixed back through another source need separate control. Use updated alpha pages for both guest and scene links.
+
 1. Keep the director's listening output on headphones outside the broadcast capture.
 2. Before talking privately, take the guest out of the broadcast audio selection or mute their dedicated OBS audio source. Exclude the host's separate OBS microphone capture too if it would carry the private conversation. Keep their VDO.Ninja microphones enabled for the conversation.
 3. On the main director's guest card, hold **Ctrl** on Windows/Linux or **Cmd** on macOS while selecting **Solo Talk** for two-way private talk. A plain click is one-way talk. If the Mixer does not expose that control in your version, use the main Director's Room controls.
