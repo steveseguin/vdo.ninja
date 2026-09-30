@@ -84,7 +84,7 @@ This is a useful comparison when UDP is blocked or heavily throttled. TCP can ad
 Use the same simple room link on the current preview build for **all participants** during a rehearsal:
 
 ```text
-https://vdo.ninja/alpha/?room=ROOMNAME&autorecover=1
+https://vdo.ninja/alpha/?room=ROOMNAME
 ```
 
 The alpha preview may contain connection-recovery changes ahead of the main site. Test it before relying on it for a production session. If alpha works while the main site repeatedly fails on the same devices and network, record that comparison when reporting the issue.

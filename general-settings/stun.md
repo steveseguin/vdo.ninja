@@ -41,11 +41,11 @@ When dealing with ICE (Interactive Connectivity Establishment) candidates, you m
    * Srflx candidates are used to traverse NATs and allow the devices on both sides to find a route to communicate through the NAT.
    * Srflx is the most common candidate type seen when making a connection with another remote peer on the Internet, via VDO.Ninja.
 2. **prflx (Peer Reflexive)**:
-   * Peer reflexive candidates are also a result of communication with a STUN server, but unlike server reflexive candidates, they represent the reflexive address of the remote peer, not the local device. In other words, they are the public IP and port of the other side, as observed by the STUN server.
+   * Peer reflexive candidates are discovered when the peers test connections to each other and find an address that was not already known.
    * Prflx candidates can be helpful in situations where a WebRTC peer wants to communicate with another peer, and it needs to discover the public address of that peer to establish direct communication.
    * Prflx are not common among VDO.Ninja connections, but may be seen when tethering, using a symmetrical firewall, or other non-common networking setups.
 
-In summary, srflx and prflx candidates both involve the use of STUN servers to discover reflexive addresses, but srflx represents the public address of the local device (behind NAT), while prflx represents the public address of the remote peer. These types of candidates are crucial for WebRTC communication because they help establish peer-to-peer connections across NAT devices and firewalls.
+Both types help peers connect across NATs and firewalls: srflx addresses are learned from a STUN server, while prflx addresses are learned during connection checks between peers.
 
 ## Related
 

@@ -6,7 +6,7 @@ description: Practical playbook for guest disconnects, retry behavior, and fallb
 
 When guests randomly disconnect, freeze, or reconnect in loops, there is rarely one single fix. This guide gives a layered approach so you can choose the least disruptive option first, then escalate only when needed.
 
-<figure><img src="../.gitbook/assets/docs-infographics/guest-disconnect-recovery-ladder.png" alt="Diagram showing a guest disconnect recovery ladder from retry tuning to network checks, fallback transport, and live-show operational fallback"><figcaption><p>Start with URL-only recovery controls, then escalate toward relay, Meshcast, WHIP/WHEP, or live-show operational fallbacks only when needed.</p></figcaption></figure>
+<figure><img src="../.gitbook/assets/docs-infographics/guest-disconnect-recovery-ladder.png" alt="Diagram showing a guest disconnect recovery ladder from retry tuning to network checks, fallback transport, and live-show operational fallback"><figcaption><p>Start with reconnect and retry options, then try relay, Meshcast, WHIP/WHEP, or live-show fallbacks when needed.</p></figcaption></figure>
 
 ## Fast checklist before going live
 
@@ -17,25 +17,11 @@ When guests randomly disconnect, freeze, or reconnect in loops, there is rarely 
    - Meshcast/WHIP+WHEP fallback
    - Mix-minus patching for critical audio continuity
 
-## Option 1: URL-only recovery tuning (quickest)
+## Option 1: Reconnect and retry
 
-Use these on room/director/push/view links as needed:
+VDO.Ninja attempts to reconnect automatically. Keep the guest link open after a brief interruption.
 
-- `&autorecover=1` enables adaptive disconnect timing, TURN escalation, and eligible WHEP fallback signaling.
-- Automatic relay escalation is enabled by default: direct P2P is tried first, a hard failure gets one normal ICE restart, and only a still-failed path gets one relay-eligible restart after the recovery window.
-- `&autorelay=0`, `off`, `false`, or `no` disables forced-relay escalation. An explicit `&autorelay` value overrides the relay portion of `&autorecover` when both are present.
-- `&p2pfailtimeout=<ms>` sets recovery timing window (default `12000`, clamp `3000-45000`).
-- `&peerrecoversteps=<n>` sets retry depth (default `3`, clamp `1-6`).
-- `&pendingicettl=<ms>` controls queued ICE candidate retention (default `15000`, clamp `3000-60000`).
-
-Suggested presets:
-
-- Balanced:
-  - `&autorecover=1&p2pfailtimeout=12000&peerrecoversteps=3&pendingicettl=15000`
-- Aggressive recovery:
-  - `&autorecover=1&p2pfailtimeout=7000&peerrecoversteps=5&pendingicettl=20000`
-- High-latency environments:
-  - `&autorecover=1&p2pfailtimeout=18000&peerrecoversteps=4&pendingicettl=30000`
+For a view link that needs to keep checking for a missing stream, use [`&retry=10`](../advanced-settings/settings-parameters/and-retry.md) to check every 10 seconds. `&retrytimeout=5000` sets the minimum wait before retrying a lost stream; 5000 ms is the default and minimum.
 
 ## Option 2: Browser and network remediations
 
@@ -78,9 +64,9 @@ For larger productions:
 ## Example link templates
 
 - Director:
-  - `https://vdo.ninja/?director=ROOM&autorecover=1&peerrecoversteps=4&p2pfailtimeout=9000`
+  - `https://vdo.ninja/?director=ROOM`
 - Guest:
-  - `https://vdo.ninja/?room=ROOM&push=GUESTID&autorecover=1`
+  - `https://vdo.ninja/?room=ROOM&push=GUESTID`
 - Viewer/Scene:
   - `https://vdo.ninja/?scene&room=ROOM&retry&retrytimeout=5000`
 
@@ -88,9 +74,5 @@ For larger productions:
 
 - [Primary and Backup Guests with `&scene` and `&slots=1`](primary-and-backup-guests-with-scene-and-slots.md)
 - [Mesh Network Debug](mesh-network-debug.md)
-- [`&autorecover`](../advanced-settings/settings-parameters/and-autorecover.md)
-- [`&autorelay`](../advanced-settings/turn-and-stun-parameters/and-autorelay.md)
-- [`&p2pfailtimeout`](../advanced-settings/settings-parameters/and-p2pfailtimeout.md)
-- [`&peerrecoversteps`](../advanced-settings/settings-parameters/and-peerrecoversteps.md)
 - [`&pendingicettl`](../advanced-settings/turn-and-stun-parameters/and-pendingicettl.md)
 - [Packet Loss](../common-errors-and-known-issues/packet-loss.md)

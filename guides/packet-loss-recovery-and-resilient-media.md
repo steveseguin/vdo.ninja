@@ -245,7 +245,7 @@ If names are unreadable on a clean link, try a more efficient supported codec, r
 
 TURN relays encrypted peer traffic when direct connectivity is blocked or the relay route is better. The endpoints still perform NACK, RTX, PLI, FEC, congestion control, and decoding across that connection.
 
-VDO.Ninja is direct-first by default. `autoRelay` is enabled, so a hard-failed direct connection receives an initial recovery attempt followed by bounded TURN escalation. This is connection recovery, not continuous route optimization for modest packet loss.
+VDO.Ninja normally prefers direct connections, but can use TURN automatically when needed. If a direct connection works but performs poorly, try forcing TURN to compare the routes.
 
 Force TURN with:
 
@@ -264,12 +264,6 @@ https://vdo.ninja/?view=STREAMID&relay&tcp
 ```
 
 `&tcp` filters the TURN choices but does not itself force TURN. Pair it with `&relay`.
-
-Disable automatic escalation only for a controlled test:
-
-```text
-&autorelay=0
-```
 
 **TURN can help when**
 

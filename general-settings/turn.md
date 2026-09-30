@@ -41,7 +41,7 @@ Using a TURN server can also hide your IP address from other peers. You will nee
 
 [https://vdo.ninja/speedtest](https://vdo.ninja/speedtest) performs a connection test using the TURN server. It will select the closest public TURN server to you. At peak hours, these TURN servers might have lower performance compared to at off-peak hours, so consider hosting your own TURN server if absolute maximum performance is needed.
 
-You can check to see if you are using the TURN server by checking the connection stats window (`Left-Click` + `CTRL` while viewing a video. In this stats display, "Relay" implies connected to a TURN server. HOST implies connected via a LAN. SRFLX/PRFLX implies connected directly via [STUN](stun.md).
+To check the connection type, `CTRL` + `Left-Click` a video to open its stats. RELAY means a TURN server is carrying the stream. HOST usually means a LAN or direct public IP connection, without a relay. SRFLX/PRFLX usually means a direct connection across NAT; see [STUN](stun.md).
 
 ### Installing your own TURN server
 

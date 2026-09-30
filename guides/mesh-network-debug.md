@@ -159,17 +159,9 @@ For a one-way B to A failure, prefer A's per-guest **Mix** panel and select only
 
 Apply connection flags to the **affected guest links**, not only to the director link.
 
-### Automatic recovery with TURN escalation
+### Automatic recovery
 
-For the complete opt-in recovery bundle, use this on both A and B:
-
-`&autorecover=1`
-
-This enables adaptive disconnect timing, automatic TURN escalation, and WHEP fallback signaling when WHIP/WHEP settings exist. It keeps direct P2P as the first choice; TURN is used only after recovery escalates and only when usable TURN servers are configured.
-
-Automatic TURN escalation is enabled by default. Direct P2P remains the first choice; on a hard failure VDO.Ninja attempts one normal ICE restart, waits the recovery window, and then makes one relay-eligible restart if the path is still not connected. `&autorelay=1` can make this explicit or override `&autorecover=0`.
-
-Use `&autorelay=0`, `&autorelay=off`, `&autorelay=false`, or `&autorelay=no` to disable automatic forced-relay escalation regardless of room size. Use `&turn=0` when the link must not have TURN servers available to normal browser ICE selection either.
+VDO.Ninja attempts to reconnect automatically and can use TURN when a direct connection is unavailable. If the same pair keeps failing, try forcing TURN below. Use [`&turn=0`](../general-settings/turn.md) only if you need to disable TURN entirely.
 
 ### Force TURN relay
 

@@ -79,7 +79,6 @@ At very low capacity, audio, packet headers, retransmissions, and keyframes also
 | Option | Where / role | What it can help | What it does not solve |
 | --- | --- | --- | --- |
 | [`relay`](../general-settings/and-relay.md) | Endpoint URL; forces TURN routing | Testing whether a different route avoids a bad direct path | Does not create uplink capacity or repair packets by itself; can add latency |
-| [`autorelay=1`](../advanced-settings/turn-and-stun-parameters/and-autorelay.md) | Connection recovery; enabled by default in the reviewed code | Escalating to a relay-eligible recovery attempt after failure | Not an image-quality or minimum-bitrate control; unlike `relay`, it does not force TURN from startup |
 | [`buffer=500`](../advanced-settings/view-parameters/buffer.md) | Viewer; playback buffering request in milliseconds | Jitter and late arrivals where supported | Adds delay; cannot restore detail discarded by the encoder or guarantee repair |
 | [`codec=h264`, `vp8`, etc.](../advanced-settings/view-parameters/codec.md) | Viewer codec request | Comparing hardware load, compatibility and compression | A different codec is not a guaranteed congestion fix; the Pixel moving-source comparison below used VP8 |
 | NACK/RTX and PLI | Normally negotiated RTP feedback/repair | Resending missing packets or requesting a clean keyframe | Requires time and bandwidth; large recovery frames can stress a weak link |

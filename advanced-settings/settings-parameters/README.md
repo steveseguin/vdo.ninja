@@ -18,11 +18,7 @@ You can use them for publisher, viewer and director URLs.
 
 ### Connection Recovery (Trials)
 
-These options help with unstable peer-to-peer links and recovery behavior:
-
-- [`&autorecover`](and-autorecover.md)
-- [`&p2pfailtimeout`](and-p2pfailtimeout.md)
-- [`&peerrecoversteps`](and-peerrecoversteps.md) (alias: `&p2precoversteps`)
+For reconnect and retry options, see [Handling Guest Disconnects and Connection Recovery](../../guides/handling-guest-disconnects-and-connection-recovery.md).
 
 ### Chat Lite Overlay Integration
 

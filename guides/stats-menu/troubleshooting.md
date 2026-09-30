@@ -93,7 +93,7 @@ For phone guests, also check `Plugged in`. A hot phone or one in low-power mode 
 
 `Time active` resetting to zero repeatedly is the clearest signal that the connection is flapping rather than merely degraded. On the sending side, watch whether `Peer recovery attempts` and `Media stall restarts` climb during the session.
 
-If they do, the network path is unstable rather than merely slow. `&autorecover` and a lower, more conservative bitrate profile will do more than any quality setting. See [handling guest disconnects](../handling-guest-disconnects-and-connection-recovery.md).
+If they do, the network path is unstable rather than merely slow. Try a lower bitrate and check the network connection before changing quality settings. See [handling guest disconnects](../handling-guest-disconnects-and-connection-recovery.md).
 
 ## Video is fine but badly out of sync with audio
 

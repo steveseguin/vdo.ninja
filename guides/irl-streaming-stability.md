@@ -15,13 +15,13 @@ Replace `STREAMID` with a unique stream ID.
 Publisher/push link:
 
 ```text
-https://vdo.ninja/?push=STREAMID&quality=1&fps=30&codec=h264&outboundvideobitrate=2000&maxvideobitrate=2500&autorecover=1
+https://vdo.ninja/?push=STREAMID&quality=1&fps=30&codec=h264&outboundvideobitrate=2000&maxvideobitrate=2500
 ```
 
 OBS/view link:
 
 ```text
-https://vdo.ninja/?view=STREAMID&videobitrate=2000&buffer=1000&retry=10&autorecover=1&degrade=maintain-framerate
+https://vdo.ninja/?view=STREAMID&videobitrate=2000&buffer=1000&retry=10&degrade=maintain-framerate
 ```
 
 This profile uses:
@@ -37,13 +37,13 @@ If it still freezes while moving, use the weak-signal profile before trying a hi
 Publisher/push link:
 
 ```text
-https://vdo.ninja/?push=STREAMID&quality=2&fps=30&codec=h264&outboundvideobitrate=900&maxvideobitrate=1200&autorecover=1
+https://vdo.ninja/?push=STREAMID&quality=2&fps=30&codec=h264&outboundvideobitrate=900&maxvideobitrate=1200
 ```
 
 OBS/view link:
 
 ```text
-https://vdo.ninja/?view=STREAMID&videobitrate=900&buffer=1500&retry=10&autorecover=1&degrade=maintain-framerate
+https://vdo.ninja/?view=STREAMID&videobitrate=900&buffer=1500&retry=10&degrade=maintain-framerate
 ```
 
 The weak-signal profile targets 360p30. It is less sharp, but its smaller frames need less upload capacity and recover faster after loss.
@@ -71,7 +71,7 @@ Test current Chrome and the native VDO.Ninja app. Disable aggressive battery opt
 | Symptom | Likely layer | First test |
 | --- | --- | --- |
 | Bitrate falls and the image becomes soft | Congestion control | Lower bitrate or resolution; relay usually does not create more radio capacity. |
-| Audio and video freeze together during movement | Cellular loss or network handoff | Test a bonded path and keep `autorecover=1`. |
+| Audio and video freeze together during movement | Cellular loss or network handoff | Test a bonded path and keep the stream open during brief interruptions. |
 | Audio continues but remote video turns black or freezes | Video encoder, track, or decoder recovery | Add `&keyframe=2000` to the view link as a test and compare the local phone preview. |
 | The local preview also freezes or turns black | Device capture, thermal, or app lifecycle | Cool the device, keep browser capture foregrounded, and test 360p30 in the native app. |
 | The app or page closes or reloads | Mobile OS memory, thermal, or application failure | Lower capture load, close unused apps/tabs, and preserve a local recording. |
@@ -83,7 +83,7 @@ Test current Chrome and the native VDO.Ninja app. Disable aggressive battery opt
 | Path | Best use | Main tradeoff |
 | --- | --- | --- |
 | Direct WebRTC | Normal low-latency IRL with a usable cellular path | Fastest, but short outages are visible. |
-| Automatic recovery | Roaming or intermittent peer-path failures | Recovery takes time; `autorecover=1` enables the broader recovery bundle. |
+| Automatic recovery | Roaming or intermittent peer-path failures | Recovery takes time; a complete coverage loss still interrupts the stream. |
 | Forced TURN relay | Carrier NAT or a poor direct route | Adds a server hop and latency; it does not repair weak RF coverage. |
 | Bonded connection | Carrier handoffs, moving coverage, or critical streams | Uses more data, battery, equipment, and sometimes VPN latency. |
 | Chunked/WebCodecs | Supported devices where 1-4 seconds of delay is acceptable | Browser-dependent and cannot bridge a complete outage by itself. |
@@ -123,13 +123,13 @@ Recent Chromium-based runtimes are the primary target. Current VDO.Ninja code di
 Experimental publisher/push link:
 
 ```text
-https://vdo.ninja/?push=STREAMID&quality=1&fps=30&chunked=1400&chunkbitrate=1400&chunkprofile=mobile&chunkedbuffer=2000&autorecover=1
+https://vdo.ninja/?push=STREAMID&quality=1&fps=30&chunked=1400&chunkbitrate=1400&chunkprofile=mobile&chunkedbuffer=2000
 ```
 
 Experimental OBS/view link:
 
 ```text
-https://vdo.ninja/?view=STREAMID&chunkbuffer=1500&chunkbufferfloor=1000&chunkbufferceil=3500&chunkjitterslack=500&retry=10&autorecover=1
+https://vdo.ninja/?view=STREAMID&chunkbuffer=1500&chunkbufferfloor=1000&chunkbufferceil=3500&chunkjitterslack=500&retry=10
 ```
 
 Expect extra delay. If VDO.Ninja reports that chunked mode is unsupported, or if the publisher heats or crashes, return to the standard 720p30 profile.

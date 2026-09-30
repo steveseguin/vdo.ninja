@@ -44,10 +44,10 @@ If you are self-hosting VDO.Ninja, often these URL parameters can be hard-coded 
 | `autorecord`       | -                                     | Boolean/Integer                                 | Starts recording automatically            |
 | `autorecordlocal`  | -                                     | Boolean/Integer                                 | -                                         |
 | `autorecordremote` | -                                     | Boolean/Integer                                 | -                                         |
-| `autorecover`      | -                                     | Boolean                                         | Enables connection-recovery bundle        |
+| `autorecover`      | -                                     | Boolean                                         | No longer used        |
 | `autoreload`       | -                                     | Integer (minutes)                               | Auto reloads page after specified minutes |
 | `autoreload24`     | -                                     | Time (HH:MM)                                    | Reloads at specified time                 |
-| `autorelay`        | -                                     | Boolean                                         | Controls relay escalation in recovery (default on) |
+| `autorelay`        | -                                     | Boolean                                         | No longer used |
 | `autostart`        | `as`                                  | Boolean                                         | Auto starts session                       |
 | `autohide`         | -                                     | Boolean                                         | -                                         |
 | `autowhep`         | -                                     | Boolean                                         | Auto-derives WHEP share URL from WHIP output URL |
@@ -412,10 +412,10 @@ If you are self-hosting VDO.Ninja, often these URL parameters can be hard-coded 
 | `pan`             | See `panning`          | -              | -                       |
 | `panning`         | `pan`                  | Boolean/String | Sets audio panning      |
 | `password`        | `pass`, `pw`, `p`      | String         | Sets room password      |
-| `p2pfailtimeout`  | -                      | Integer (ms)   | Sets P2P recovery timeout window |
+| `p2pfailtimeout`  | -                      | Integer (ms)   | No longer used |
 | `p2precoversteps` | See `peerrecoversteps` | -              | -                       |
 | `pcm`             | -                      | Boolean        | -                       |
-| `peerrecoversteps`| `p2precoversteps`      | Integer (1-6)  | Max automated recovery steps |
+| `peerrecoversteps`| `p2precoversteps`      | Integer (1-6)  | No longer used |
 | `permaid`         | See `push`             | -              | -                       |
 | `pendingicettl`   | -                      | Integer (ms)   | Pending ICE queue TTL   |
 | `pie`             | -                      | String/Boolean | -                       |

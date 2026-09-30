@@ -10,7 +10,7 @@ General Option! ([`&push`](push.md), [`&room`](../general-settings/room.md), [`&
 
 ## Details
 
-The enhanced security parameter will auto-disconnect you from the handshake-server after the first peer connection is established (Publishers only are disconnected; not viewers). In effect, this makes it impossible for the server to request future handshakes from you, and hence no more future peer connections.
+With `&secure`, the publisher or viewer disconnects from the handshake server after its first peer connection is established. No further peers can connect through that server until you refresh the page.
 
 The feature also makes the connection activity verbose, letting you know when someone starts watching your stream and when that viewer disconnects.
 

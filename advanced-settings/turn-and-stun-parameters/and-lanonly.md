@@ -30,7 +30,7 @@ https://vdo.ninja/?view=streamID&lanonly
 * Disables TURN/STUN servers to prevent external relay
 * Still requires internet connection for initial handshake and website access
 * Failed external connections will retry but won't establish
-* Only allows RFC1918 private IP ranges (192.168.x.x, 10.x.x.x, 172.16-31.x.x)
+* Allows private host addresses (192.168.x.x, 10.x.x.x, 172.16-31.x.x) and browser-generated `.local` names
 
 #### **Technical Implementation**
 
@@ -56,7 +56,7 @@ https://vdo.ninja/?view=streamID&lanonly
 #### **Notes**
 
 * For fully offline operation, consider self-hosting VDO.Ninja
-* Devices must be on the same subnet for connection
+* Devices must be reachable over the local network
 * Useful for reducing latency in local productions
 * May help with privacy concerns about external IP exposure
 
