@@ -4,36 +4,37 @@ description: Configure Cloud Sync uploads for recordings using Google Drive and 
 
 # Cloud Sync (Google Drive + Dropbox)
 
-VDO.Ninja can upload recording chunks to cloud storage as part of podcast/studio workflows. This is useful for redundancy and remote collaboration.
+In Podcast Studio, Google Drive receives guest backups during recording. Dropbox uploads the host's finished recordings after recording stops. Wait for uploads to finish before closing the page.
 
 ## Google Drive
 
 Google Drive uses an in-app OAuth flow.
 
-1. Open the podcast studio and find the **Cloud Sync** card.
-2. Click **Link Google Drive**.
+1. Open the podcast studio and find **Recording settings**.
+2. Click **Connect** next to **Google Drive**.
 3. Complete the Google popup authorization (`drive.file` scope).
-4. Confirm the status switches to **Linked**.
+4. Confirm the status switches to **Connected**.
+5. Click **Enable guest backup**. Each guest must accept the recording prompt; check that their backup is confirmed.
 
-Optional folder targeting:
+Uploads go to the `recordings` folder by default. To choose another folder:
 
-`&gdrivefolder=YourFolderName`
+`&recordfolder=YourFolderName`
 
 ## Dropbox
 
-Dropbox also supports OAuth linking in the Cloud Sync card.
+Connect Dropbox under **Recording settings** to upload the host's recordings after Stop.
 
-1. Click **Link Dropbox**.
+1. Click **Connect** next to **Dropbox**.
 2. Complete the Dropbox popup authorization.
-3. Confirm the status switches to linked/success.
+3. Confirm the status switches to **Connected**.
 
-The OAuth flow can store refresh-capable credentials locally so uploads can resume in future sessions.
+The OAuth flow can remember the connection for future sessions.
 
 ## Manual Dropbox token fallback
 
 If popup auth is blocked in a kiosk or constrained environment, you can still provide a token manually:
 
-* Paste a token into the Dropbox field in Cloud Sync, or
+* Paste a token into the Dropbox field under **Recording settings**, or
 * Use `&dropbox=YOUR_ACCESS_TOKEN`
 
 Manual tokens can expire quickly, so OAuth is recommended for normal use.

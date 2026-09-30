@@ -18,7 +18,7 @@ Example (manual fallback token):
 
 ## Details
 
-- Primary flow: use **Link Dropbox** in the Cloud Sync card (OAuth popup).
+- In Podcast Studio, click **Connect** next to **Dropbox** under **Recording settings**. Finished host recordings upload after Stop.
 - `&dropbox=...` is a manual token fallback for constrained environments.
 - OAuth-based linking can store refresh-capable credentials locally for better long-lived upload behavior.
 - Security: treat tokens as secrets and avoid sharing URLs containing tokens.

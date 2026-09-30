@@ -16,11 +16,11 @@ You can also right-click and record any video within VDO.Ninja.
 
 Depending on the type of video, and whether its local or remote, recording the video with this method may use up extra resources from the publisher's computer, including CPU and bandwidth.
 
-Another issue is the format saved is WebM, which sometimes will need post-processing to make it compatible with many popular video editors. If the browser crashes, that also may cause the video recording to become lost, so it might not be the most reliable option.
+Recordings usually save as WebM; `&recordcodec=mp4` requests MP4 where supported. WebM files may need conversion for some video editors. A browser crash can lose an unfinished recording.
 
 That said, this is an easy option and available for free within VDO.Ninja.
 
-Given the small chance the browser will fail with recording, you can use features like `&splitrecording` to automatically segment the video as its being recorded, saving perhaps 5-minute portions of the video at a time. You will need to concatenate the video chunks together however afterwards, but helps reduce the likelihood of the entire recording being lost due to a system crash.
+Use `&splitrecording` to save smaller parts during longer recordings. Disk-only recordings save as standalone files you can join in a video editor. Recordings also uploaded to the cloud use continuation parts that need reassembly.
 
 ### Using OBS to record; or multiple OBS
 
@@ -61,14 +61,14 @@ You could in theory record to Twitch or paid WebRTC service via their WHIP inges
 
 ### Recording to Google Drive / Dropbox
 
-Cloud Sync can upload local recording chunks to Google Drive or Dropbox as part of studio workflows.
+Podcast Studio offers guest backups to Google Drive and uploads finished host recordings to Dropbox.
 
-Current flow is centered around the **Cloud Sync** card:
+Connect the services under **Recording settings**:
 
-* **Google Drive:** link with built-in OAuth
-* **Dropbox:** link with OAuth, with optional manual token fallback (`&dropbox=...`)
+* **Google Drive:** connect, then click **Enable guest backup**. Guests must accept the recording prompt.
+* **Dropbox:** connect with OAuth, or use a manual token (`&dropbox=...`). Host recordings upload after Stop.
 
-This gives you local recordings plus cloud redundancy.
+Wait for saving and uploads to finish before closing the studio.
 
 See setup details here:
 

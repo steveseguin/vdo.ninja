@@ -26,7 +26,7 @@ When you start a recording (via right-click or director UI), a dialog appears wi
 * **Audio-only recording** — checkbox to skip video
 * **Bitrate slider** — adjustable from 50 to 10,000 kbps
 
-> **Important:** There is no codec or container format selector in the recording dialog. The video codec must be set via URL parameter _before_ joining. The container format (WebM vs MP4) is chosen automatically based on your browser.
+Set the video codec in the URL before joining. Use `&recordcodec=mp4` to request MP4 where supported; there is no codec or container selector in the recording dialog.
 
 ***
 
@@ -38,7 +38,7 @@ When you start a recording (via right-click or director UI), a dialog appears wi
 | [`&autorecord`](../advanced-settings/recording-parameters/and-autorecord.md) | Auto-record local + remote on load | — |
 | [`&autorecordlocal`](../advanced-settings/recording-parameters/and-autorecordlocal.md) | Auto-record local video only | — |
 | [`&autorecordremote`](../advanced-settings/recording-parameters/and-autorecordremote.md) | Auto-record remote video(s) only | — |
-| [`&recordcodec`](../advanced-settings/recording-parameters/and-recordcodec.md) (`&rc`) | Choose video codec | VP8 (Chromium), H.264 (Safari) |
+| [`&recordcodec`](../advanced-settings/recording-parameters/and-recordcodec.md) (`&rc`) | Choose video codec or MP4 container | VP8 when supported; otherwise browser fallback |
 | [`&pcm`](../advanced-settings/recording-parameters/and-pcm.md) | Record uncompressed PCM audio | off (uses Opus) |
 | `&splitrecording` | Split recording into segments | 5 min |
 | [`&recordmotion`](../advanced-settings/recording-parameters/and-recordmotion.md) | Snapshot on motion detection | sensitivity 15 |
@@ -90,21 +90,22 @@ Use `&recordcodec` (alias `&rc`) **in the URL** to choose which video codec the 
 | --- | --- |
 | `vp8` | Most compatible. Default fallback on Chromium browsers. Recommended for Android devices. |
 | `vp9` | Better compression than VP8. Good for high-resolution recordings. |
-| `h264` | Hardware-friendly. Default on Safari. May not work well when recording remote iOS streams on Chromium. |
+| `h264` | Hardware-friendly. Used by the MP4 fallback on older Safari. May not work well when recording remote iOS streams on Chromium. |
 | `av1` | Best compression. Limited browser and hardware support — requires AV1 hardware encoder on most devices. |
+| `mp4` | Requests MP4 with browser-selected codecs. Does not override PCM or audio-only recording. |
 
 ### Checking codec support and choosing wisely
 
 A useful workflow is to use [https://vdo.ninja/codecs](https://vdo.ninja/codecs) to check which recording codecs and formats your browser supports, then set `&recordcodec` accordingly. For H.265/HEVC specifically, you can check support at [https://vdo.ninja/h265](https://vdo.ninja/h265).
 
-If a guest's browser does not support the requested codec, VDO.Ninja falls back automatically to the browser's default (VP8 on Chromium, H.264 on Safari) — the recording will still work, just with a different codec than requested.
+Unsupported choices fall back to a browser-supported format. Check the saved file to see which format was used.
 
 ### How VDO.Ninja selects the codec internally
 
 1. If `&recordcodec` is set, it checks if the browser supports that codec via `MediaRecorder.isTypeSupported()`
 2. If supported, it uses it
-3. If not supported, it falls back to the browser's default (VP8 on Chromium, H.264 on Safari)
-4. On iOS/Safari, if the selected WebM mimeType is not supported at all, it falls back to `video/mp4` and saves as `.mp4`
+3. If not supported, it falls back to a browser-supported format
+4. On iOS/Safari, if WebM is unsupported, it falls back to MP4. `&recordcodec=mp4` requests MP4 directly where supported.
 
 > If you are getting recording errors, try `&recordcodec=vp8` — it is the most widely supported codec and avoids incompatible hardware encoder issues.
 
@@ -112,15 +113,14 @@ If a guest's browser does not support the requested codec, VDO.Ninja falls back 
 
 ## Container Formats and Browser Differences
 
-**You do not choose the container format** — VDO.Ninja selects it automatically based on what the browser supports. Different browsers and platforms produce different output files.
+VDO.Ninja normally requests WebM, with MP4 fallback on older Safari. Use `&recordcodec=mp4` to request MP4 where supported.
 
 ### Chromium Browsers (Chrome, Edge, Brave — Desktop and Android)
 
-* **Container:** WebM (`.webm`)
+* **Container:** WebM (`.webm`) by default, or MP4 (`.mp4`) when requested and supported
 * **Default video codec:** VP8
 * **Default audio codec:** Opus
 * **Also supports:** VP9, H.264, AV1 (hardware dependent)
-* Chrome 114+ also has experimental MP4 container support, but VDO.Ninja uses WebM by default
 
 ### Firefox (Desktop and Android)
 
@@ -139,6 +139,8 @@ If a guest's browser does not support the requested codec, VDO.Ninja falls back 
 * Known bug: older Safari could report the mimeType as `video/webm` but actually output MP4/H.264 data
 
 **Safari 18.4+ (2025 onwards):**
+
+Safari added [WebM recording support in 18.4](https://webkit.org/blog/16574/webkit-features-in-safari-18-4/), so VDO.Ninja can now use its usual VP8/Opus WebM default on Safari too.
 
 * **Container:** MP4 or WebM
 * **Video codecs:** H.264, HEVC, VP8, VP9, AV1 (hardware dependent)
@@ -171,15 +173,15 @@ If a guest's browser does not support the requested codec, VDO.Ninja falls back 
 | Chrome (Android) | WebM | VP8 | Opus |
 | Firefox (desktop / Android) | WebM | VP8 | Opus |
 | Safari < 18.4 (macOS) | **MP4** | **H.264** | **AAC** |
-| Safari 18.4+ (macOS) | MP4 (default) or WebM | H.264 (default) | AAC (default) |
+| Safari 18.4+ (macOS) | WebM by default; MP4 opt-in | VP8 (WebM) | Opus (WebM) |
 | iOS Safari < 18.4 | **MP4** | **H.264** | **AAC** |
-| iOS Safari 18.4+ | MP4 (default) or WebM | H.264 (default) | AAC (default) |
+| iOS Safari 18.4+ | WebM by default; MP4 opt-in | VP8 (WebM) | Opus (WebM) |
 
 > You can check which codecs your specific browser supports at [https://vdo.ninja/codecs](https://vdo.ninja/codecs)
 
 ### What this means in practice
 
-If you have a room with guests on different browsers, **your recordings may be in different formats**: a Chrome guest will produce `.webm` files while a Safari guest will produce `.mp4` files. This is normal and expected. The files can be converted afterward if needed.
+Guests on different browsers may produce different file formats. If your player or editor needs MP4, request it with `&recordcodec=mp4` or convert the saved file afterward.
 
 ***
 
@@ -214,20 +216,12 @@ Automatically splits recordings into time-based segments to protect against data
 
 | Value | Behaviour |
 | --- | --- |
-| _(no value)_ | 5-minute segments (Safari/iOS), 10-minute segments (other browsers) |
+| _(no value)_ | 5-minute segments |
 | Integer (e.g. `10`) | Segments of that many minutes (minimum 1) |
 
-Files are saved with numbered suffixes (e.g. `recording.webm`, `recording.webm_1`, `recording.webm_2`).
+Disk-only recordings save standalone files such as `recording.webm` and `recording_1.webm`. Open them individually or join them in a video editor.
 
-**To reassemble segments:**
-
-```bash
-# Windows
-copy /b recording.webm + recording.webm_1 + recording.webm_2 output.webm
-
-# FFmpeg
-ffmpeg -i "concat:recording.webm|recording.webm_1|recording.webm_2" -c copy output.webm
-```
+Recordings also uploaded to Google Drive or Dropbox keep continuation parts such as `recording.webm_1`. Keep every part and reassemble them in order. See the [split recording guide](../advanced-settings/recording-parameters/and-splitrecording.md) for instructions.
 
 On mobile or laptop, VDO.Ninja will also auto-save the current segment at 2% battery.
 
@@ -273,9 +267,9 @@ Saves a PNG snapshot to disk whenever motion is detected in a video. Useful as a
 The VDO.Ninja Podcast Studio (`/podcast/`) has its own advanced recording system separate from the standard `&record` approach:
 
 * **Multitrack recording** — records each participant as a separate audio track (48 kHz)
-* **WAV encoder** — produces lossless WAV files per track, ideal for post-production
-* **IndexedDB crash recovery** — recording chunks are persisted to IndexedDB every 30 seconds, so recordings can be recovered if the browser crashes
-* **Cloud upload** — integrates with Google Drive and Dropbox for automatic upload during recording
+* **WAV export** — converts each recorded audio track to WAV for editing
+* **Save before closing** — stop and download your recordings before closing the studio. Unsaved tracks can be lost if the browser crashes.
+* **Cloud upload** — guest backups go to Google Drive during recording; host recordings upload to Dropbox after Stop
 * **`&studioiso`** — controls whether isolated disk recording is enabled (on by default)
 
 This is a distinct recording pipeline from the standard `&record` system — it is designed specifically for podcast workflows where you need separate, high-quality audio tracks per guest.
@@ -335,7 +329,7 @@ The Director control room has a dedicated "Google Drive" button per guest that l
 
 ### Dropbox Integration
 
-Dropbox upload is also available, using OAuth2 authentication. The director can enable Dropbox upload per guest during recording. Like Google Drive, it streams the recording to the cloud while also saving a local copy.
+In Podcast Studio, connect Dropbox under **Recording settings** to upload the host's finished recordings after Stop. Wait for the uploads to finish before closing the studio.
 
 ***
 
@@ -345,7 +339,7 @@ Recordings saved as WebM may need conversion for use in some video editors (e.g.
 
 ### WebM to MP4 — often no video transcoding needed
 
-When the recording uses H.264 video (`&recordcodec=h264`), converting between WebM and MP4 containers can be done **without transcoding the video** — it is just a container remux, which is nearly instant. However, if the audio is Opus (the default on Chromium), the audio will need to be transcoded to a format the MP4 container supports (e.g. AAC), since MP4 does not natively support Opus audio.
+When the recording uses H.264 video (`&recordcodec=h264`), converting between WebM and MP4 containers can be done **without transcoding the video** — it is just a container remux, which is nearly instant. For broad player and editor compatibility, convert Opus audio to AAC.
 
 If the recording uses VP8 or VP9 video, the video itself will need to be transcoded to H.264 for MP4 compatibility.
 
@@ -373,7 +367,7 @@ ffmpeg -i recording.webm -c:a copy output.wav
 * **For podcasts/interviews**, use `&pcm` for lossless audio and a high video bitrate (e.g. `&record=6000`).
 * **For safety**, add `&splitrecording` to protect against browser crashes.
 * **For direct-to-disk recording without another video encode**, consider `&chunked` mode (Chromium-focused, experimental).
-* **Mixed browser rooms** will produce mixed formats — Chrome guests will save WebM files, Safari guests will save MP4. This is normal.
+* **Mixed browser rooms** can produce different formats. Check each saved file before editing.
 * **Safari < 18.4** only supports MP4/H.264/AAC. If your guests are on older Safari or iOS, the recording format cannot be changed.
 * **Check your codecs** at [https://vdo.ninja/codecs](https://vdo.ninja/codecs) to see what your browser supports.
 

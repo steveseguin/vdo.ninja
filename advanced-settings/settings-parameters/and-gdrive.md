@@ -17,7 +17,7 @@ Example: `&gdrive`
 ## Details
 
 - Enables Google Drive Cloud Sync upload paths in supported studio workflows.
-- Typical flow is OAuth linking via the **Link Google Drive** button in the Cloud Sync card.
+- In Podcast Studio, click **Connect** next to **Google Drive** under **Recording settings**, then **Enable guest backup**. Guests must accept the recording prompt.
 - Requires user auth and the proper Drive scope.
 
 ## Recommended setup
