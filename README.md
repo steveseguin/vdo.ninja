@@ -56,6 +56,8 @@ This repository contains the VDO.Ninja web frontend and sample apps using its IF
 
 ![High-Level Architecture](images/vdo-ninja-overview.png)
 
+How they fit together: the HTML page loads, opens a WSS channel to the signaling server to establish on a room and stream ID and swap connection info, then WebRTC takes over for the media. ICE (Interactive Connectivity Establishment) is the glue that orders the attempts: try a direct host address (same LAN — Local Area Network), then a STUN‑discovered public address, and only if both fail, route through TURN.
+
 | Technology (full name) | Role in VDO.Ninja | Where it lives in the source |
 |---|---|---|
 | **HTML** — HyperText Markup Language (plus its JavaScript) | Serves the static frontend: the landing page, the **push**/**view** URL model, and the IFRAME API. No video is processed here. | The repo is *only* the web frontend + sample apps; it's deployed as static files (e.g. GitHub Pages). |
