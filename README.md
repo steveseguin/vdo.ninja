@@ -52,6 +52,18 @@ Join the [Discord](https://discord.vdo.ninja) for community exhibitions, discuss
 ## What's in this repo
 This repository contains the VDO.Ninja web frontend and sample apps using its IFRAME API. Production backend implementations and operational scripts belong in separate repositories. Optional TURN configuration and `.sample` files are included as self-hosting examples; the website does not execute them. TURN setup guidance is provided in [turnserver.md](turnserver.md). The user documentation for VDO.Ninja itself is found at docs.vdo.ninja.
 
+## Quick technical overview
+
+![High-Level Architecture](images/vdo-ninja-overview.png)
+
+| Technology (full name) | Role in VDO.Ninja | Where it lives in the source |
+|---|---|---|
+| **HTML** — HyperText Markup Language (plus its JavaScript) | Serves the static frontend: the landing page, the **push**/**view** URL model, and the IFRAME API. No video is processed here. | The repo is *only* the web frontend + sample apps; it's deployed as static files (e.g. GitHub Pages). |
+| **WSS** — WebSocket Secure (the TLS‑encrypted WebSocket) | The minimal **signaling / "handshake" server**. Exchanges room joins/leaves, stream IDs, offer/answer, and ICE candidates so peers can find each other. Does **not** carry video; drops out once the peer link is up. | Browser client talks to `wss://wss.vdo.ninja:443`; the server itself is a separate repo (steveseguin/websocket_server). |
+| **WebRTC** — Web Real‑Time Communication | The actual engine: secure, low‑latency, peer‑to‑peer audio/video between browsers, end‑to‑end encrypted with **DTLS/SRTP**. | Built into the browser; the frontend drives it. Media flows device‑to‑device in ~90–95% of cases. |
+| **STUN** — Session Traversal Utilities for NAT | Lets a device behind a **NAT** (Network Address Translation) discover its own public **IP** (Internet Protocol) address and port, producing "reflexive" candidates so two remote peers can open a direct path. | Defaults to Google/Cloudflare STUN (`stun.l.google.com:19302`); overridable via `&stun`. |
+| **TURN** — Traversal Using Relays around NAT | A fallback relay that forwards the already‑encrypted stream between two peers when a direct path is impossible (strict firewalls, some 4G LTE). Hides IPs. | Optional self‑hosted server (`turnserver.md` + sample config); forced with `&relay`. |
+
 ## Hosting and local development
 
 The public service is available at [vdo.ninja](https://vdo.ninja/). To host the frontend yourself, serve this repository from an HTTPS-enabled static web server. There is no frontend build step or package installation required.
