@@ -1,6 +1,13 @@
 {
   "innerHTML": {
+    "drawing-color": "Kolorea",
+    "drawing-pen": "Boligrafoa",
+    "drawing-ping": "Ping",
+    "drawing-undo": "Desegin",
+    "drawing-ping-help": "Egin klik edo sakatu laburki seinalatzeko. Egin klik berriro Ping-en desaktibatzeko.",
     "view-only": "Ikusi soilik",
+    "chunked-synchronizing": "Sinkronizatzen…",
+    "chunked-buffering": "Bufferrean gordetzen…",
     "logo-header": "\n<font id=\"qos\">V</font>DO.Ninja \n",
     "copy-this-url": "Kopiatu URL hau OBS iturri bilatzailean",
     "you-are-in-the-control-center": "Gelaren kontrol zentrua:",
@@ -384,6 +391,8 @@
   },
   "titles": {
     "view-only": "Ikusi soilik",
+    "chunked-synchronizing": "Sinkronizatzen…",
+    "chunked-buffering": "Bufferrean gordetzen…",
     "the-language-you-want-to-hear-when-live-translation-is-available": "Zuzeneko itzulpena erabilgarri dagoenean entzun nahi duzun hizkuntza",
     "100": "100",
     "developer-and-user-documentation": "Developer and User Documentation",

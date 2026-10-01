@@ -1,6 +1,13 @@
 {
   "innerHTML": {
+    "drawing-color": "اللون",
+    "drawing-pen": "القلم",
+    "drawing-ping": "Ping",
+    "drawing-undo": "تراجع",
+    "drawing-ping-help": "انقر أو المس للإشارة لحظيًا. انقر على Ping مرة أخرى لإيقافه.",
     "view-only": "المشاهدة فقط",
+    "chunked-synchronizing": "جارٍ المزامنة…",
+    "chunked-buffering": "جارٍ التخزين المؤقت…",
     "logo-header": "\n<font id=\"qos\" style=\"color: white;\">V</font>DO.Ninja \n",
     "copy-this-url": "انسخ هذا الرابط في \"مصدر المتصفح\" الخاص بك",
     "you-are-in-the-control-center": "مركز التحكم للغرفة:",
@@ -384,6 +391,8 @@
   },
   "titles": {
     "view-only": "المشاهدة فقط",
+    "chunked-synchronizing": "جارٍ المزامنة…",
+    "chunked-buffering": "جارٍ التخزين المؤقت…",
     "the-language-you-want-to-hear-when-live-translation-is-available": "اللغة التي تريد سماعها عند توفر الترجمة المباشرة",
     "100": "100",
     "developer-and-user-documentation": "Developer and User Documentation",

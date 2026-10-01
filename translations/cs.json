@@ -1,6 +1,13 @@
 {
   "innerHTML": {
+    "drawing-color": "Barva",
+    "drawing-pen": "Pero",
+    "drawing-ping": "Ping",
+    "drawing-undo": "Zpět",
+    "drawing-ping-help": "Kliknutím nebo klepnutím krátce ukážete. Dalším kliknutím na Ping to vypnete.",
     "view-only": "Pouze sledovat",
+    "chunked-synchronizing": "Synchronizace…",
+    "chunked-buffering": "Ukládání do vyrovnávací paměti…",
     "logo-header": "\n<font id=\"qos\">V</font>DO.Ninja \n",
     "copy-this-url": "Zkopírujte tuhle URL do OBS \"Browser Source\"",
     "you-are-in-the-control-center": "Jsi v administraci místnosti",
@@ -384,6 +391,8 @@
   },
   "titles": {
     "view-only": "Pouze sledovat",
+    "chunked-synchronizing": "Synchronizace…",
+    "chunked-buffering": "Ukládání do vyrovnávací paměti…",
     "the-language-you-want-to-hear-when-live-translation-is-available": "Jazyk, který chcete slyšet, když je k dispozici živý překlad",
     "100": "100",
     "developer-and-user-documentation": "Dokumentace pro vývojáře a uživatele",

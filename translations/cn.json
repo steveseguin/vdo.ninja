@@ -1,6 +1,13 @@
 {
   "innerHTML": {
+    "drawing-color": "颜色",
+    "drawing-pen": "画笔",
+    "drawing-ping": "Ping",
+    "drawing-undo": "撤销",
+    "drawing-ping-help": "点击或轻触即可短暂指示。再次点击 Ping 可关闭。",
     "view-only": "仅观看",
+    "chunked-synchronizing": "正在同步…",
+    "chunked-buffering": "正在缓冲…",
     "logo-header": "\n<font id=\"qos\">V</font>DO.Ninja \n",
     "copy-this-url": "将此 URL 复制到“浏览器源”中",
     "you-are-in-the-control-center": "您处于控制中心：",
@@ -384,6 +391,8 @@
   },
   "titles": {
     "view-only": "仅观看",
+    "chunked-synchronizing": "正在同步…",
+    "chunked-buffering": "正在缓冲…",
     "the-language-you-want-to-hear-when-live-translation-is-available": "实时翻译可用时您希望听到的语言",
     "100": "100",
     "developer-and-user-documentation": "开发者与用户文档",

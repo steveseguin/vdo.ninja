@@ -1,6 +1,13 @@
 {
   "innerHTML": {
+    "drawing-color": "Kleur",
+    "drawing-pen": "Pen",
+    "drawing-ping": "Ping",
+    "drawing-undo": "Ongedaan maken",
+    "drawing-ping-help": "Klik of tik om kort te wijzen. Klik nogmaals op Ping om het uit te schakelen.",
     "view-only": "Alleen kijken",
+    "chunked-synchronizing": "Synchroniseren…",
+    "chunked-buffering": "Bufferen…",
     "logo-header": "\n<font id=\"qos\">V</font>DO.Ninja \n",
     "copy-this-url": "Kopieer deze URL naar je \"browser source\"",
     "you-are-in-the-control-center": "Controlecentrum voor kamer:",
@@ -384,6 +391,8 @@
   },
   "titles": {
     "view-only": "Alleen kijken",
+    "chunked-synchronizing": "Synchroniseren…",
+    "chunked-buffering": "Bufferen…",
     "the-language-you-want-to-hear-when-live-translation-is-available": "De taal die je wilt horen wanneer livevertaling beschikbaar is",
     "100": "100",
     "developer-and-user-documentation": "Ontwikkelaars- en gebruikersdocumentatie",

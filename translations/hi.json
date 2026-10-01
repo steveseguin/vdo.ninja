@@ -1,6 +1,13 @@
 {
   "innerHTML": {
+    "drawing-color": "रंग",
+    "drawing-pen": "पेन",
+    "drawing-ping": "Ping",
+    "drawing-undo": "पूर्ववत करें",
+    "drawing-ping-help": "संक्षेप में इंगित करने के लिए क्लिक या टैप करें। इसे बंद करने के लिए Ping पर फिर से क्लिक करें।",
     "view-only": "केवल देखें",
+    "chunked-synchronizing": "सिंक्रनाइज़ हो रहा है…",
+    "chunked-buffering": "बफ़र हो रहा है…",
     "logo-header": "\n<font id=\"qos\" style=\"color: white;\">V</font>DO.Ninja \n",
     "copy-this-url": "इस यूआरएल को अपने \"ब्राउज़र सोर्स\" में कॉपी करें",
     "you-are-in-the-control-center": "रूम का नियंत्रण केंद्र:",
@@ -377,6 +384,8 @@
   },
   "titles": {
     "view-only": "केवल देखें",
+    "chunked-synchronizing": "सिंक्रनाइज़ हो रहा है…",
+    "chunked-buffering": "बफ़र हो रहा है…",
     "the-language-you-want-to-hear-when-live-translation-is-available": "लाइव अनुवाद उपलब्ध होने पर आप जिस भाषा में सुनना चाहते हैं",
     "100": "100",
     "developer-and-user-documentation": "डेवलपर और यूज़र डॉक्यूमेंटेशन",

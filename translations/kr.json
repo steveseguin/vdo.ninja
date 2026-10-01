@@ -1,6 +1,13 @@
 {
   "innerHTML": {
+    "drawing-color": "색상",
+    "drawing-pen": "펜",
+    "drawing-ping": "Ping",
+    "drawing-undo": "실행 취소",
+    "drawing-ping-help": "클릭하거나 탭하여 잠깐 가리킵니다. Ping을 다시 클릭하면 꺼집니다.",
     "view-only": "시청만 하기",
+    "chunked-synchronizing": "동기화 중…",
+    "chunked-buffering": "버퍼링 중…",
     "logo-header": "\n<font id=\"qos\" style=\"color: white;\">V</font>DO.Ninja \n",
     "copy-this-url": "이 URL을 \"브라우저 소스\"에 복사하세요",
     "you-are-in-the-control-center": "컨트롤 센터 접속 방:",
@@ -377,6 +384,8 @@
   },
   "titles": {
     "view-only": "시청만 하기",
+    "chunked-synchronizing": "동기화 중…",
+    "chunked-buffering": "버퍼링 중…",
     "the-language-you-want-to-hear-when-live-translation-is-available": "실시간 번역을 사용할 수 있을 때 듣고 싶은 언어",
     "100": "100",
     "developer-and-user-documentation": "개발자 및 사용자 문서",

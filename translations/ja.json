@@ -1,6 +1,13 @@
 {
   "innerHTML": {
+    "drawing-color": "色",
+    "drawing-pen": "ペン",
+    "drawing-ping": "Ping",
+    "drawing-undo": "元に戻す",
+    "drawing-ping-help": "クリックまたはタップして一時的に指し示します。もう一度 Ping をクリックするとオフになります。",
     "view-only": "視聴のみ",
+    "chunked-synchronizing": "同期中…",
+    "chunked-buffering": "バッファリング中…",
     "logo-header": "\n<font id=\"qos\">V</font>DO.Ninja \n",
     "copy-this-url": "このURLをOBSの「ブラウザソース」に追加",
     "you-are-in-the-control-center": "ルーム管理センター:",
@@ -384,6 +391,8 @@
   },
   "titles": {
     "view-only": "視聴のみ",
+    "chunked-synchronizing": "同期中…",
+    "chunked-buffering": "バッファリング中…",
     "the-language-you-want-to-hear-when-live-translation-is-available": "ライブ翻訳が利用可能な場合に聞きたい言語",
     "100": "100",
     "developer-and-user-documentation": "開発者およびユーザー向けドキュメント",

@@ -1,6 +1,13 @@
 {
   "innerHTML": {
+    "drawing-color": "Колір",
+    "drawing-pen": "Перо",
+    "drawing-ping": "Ping",
+    "drawing-undo": "Скасувати",
+    "drawing-ping-help": "Натисніть або торкніться, щоб коротко вказати. Натисніть Ping ще раз, щоб вимкнути.",
     "view-only": "Лише перегляд",
+    "chunked-synchronizing": "Синхронізація…",
+    "chunked-buffering": "Буферизація…",
     "logo-header": "\n<font id=\"qos\">V</font>DO.Ninja \n",
     "copy-this-url": "Скопіюйте цей URL в OBS \"Browser Source\"",
     "you-are-in-the-control-center": "Контрольний центр кімнати: ",
@@ -377,6 +384,8 @@
   },
   "titles": {
     "view-only": "Лише перегляд",
+    "chunked-synchronizing": "Синхронізація…",
+    "chunked-buffering": "Буферизація…",
     "the-language-you-want-to-hear-when-live-translation-is-available": "Мова, яку ви хочете чути, коли доступний переклад у реальному часі",
     "100": "100",
     "developer-and-user-documentation": "Документація для розробників та користувачів",
