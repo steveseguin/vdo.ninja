@@ -1,6 +1,13 @@
 {
   "innerHTML": {
+    "drawing-color": "Kolor",
+    "drawing-pen": "Pióro",
+    "drawing-ping": "Ping",
+    "drawing-undo": "Cofnij",
+    "drawing-ping-help": "Kliknij lub dotknij, aby krótko wskazać. Kliknij Ping ponownie, aby wyłączyć.",
     "view-only": "Tylko oglądanie",
+    "chunked-synchronizing": "Synchronizacja…",
+    "chunked-buffering": "Buforowanie…",
     "logo-header": "\n<font id=\"qos\" style=\"color: white;\">V</font>DO.Ninja \n",
     "copy-this-url": "Skopiuj ten URL do \"Browser Source\"",
     "you-are-in-the-control-center": "Centrum sterowania pokoju:",
@@ -384,6 +391,8 @@
   },
   "titles": {
     "view-only": "Tylko oglądanie",
+    "chunked-synchronizing": "Synchronizacja…",
+    "chunked-buffering": "Buforowanie…",
     "the-language-you-want-to-hear-when-live-translation-is-available": "Język, który chcesz słyszeć, gdy dostępne jest tłumaczenie na żywo",
     "100": "100",
     "developer-and-user-documentation": "Dokumentacja dla deweloperów i użytkowników",

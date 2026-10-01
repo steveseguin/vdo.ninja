@@ -1,5 +1,10 @@
 {
   "innerHTML": {
+    "drawing-color": "Farbe",
+    "drawing-pen": "Stift",
+    "drawing-ping": "Ping",
+    "drawing-undo": "Rückgängig",
+    "drawing-ping-help": "Klicken oder tippen, um kurz darauf zu zeigen. Erneut auf Ping klicken, um es auszuschalten.",
     "view-only": "Nur ansehen",
     "chunked-synchronizing": "Synchronisierung…",
     "chunked-buffering": "Puffern…",

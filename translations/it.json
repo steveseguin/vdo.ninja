@@ -1,6 +1,13 @@
 {
   "innerHTML": {
+    "drawing-color": "Colore",
+    "drawing-pen": "Penna",
+    "drawing-ping": "Ping",
+    "drawing-undo": "Annulla",
+    "drawing-ping-help": "Fai clic o tocca per indicare brevemente. Fai di nuovo clic su Ping per disattivarlo.",
     "view-only": "Solo visualizzazione",
+    "chunked-synchronizing": "Sincronizzazione…",
+    "chunked-buffering": "Buffering…",
     "logo-header": "\n<font id=\"qos\">V</font>DO.Ninja \n",
     "copy-this-url": "Copia questo URL in un OBS \"Browser Source\"",
     "you-are-in-the-control-center": "Sei nel pannello di controllo",
@@ -384,6 +391,8 @@
   },
   "titles": {
     "view-only": "Solo visualizzazione",
+    "chunked-synchronizing": "Sincronizzazione…",
+    "chunked-buffering": "Buffering…",
     "the-language-you-want-to-hear-when-live-translation-is-available": "La lingua che vuoi ascoltare quando è disponibile la traduzione in tempo reale",
     "100": "100",
     "developer-and-user-documentation": "Documentazione per sviluppatori e utenti",

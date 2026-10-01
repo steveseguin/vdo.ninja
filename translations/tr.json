@@ -1,6 +1,13 @@
 {
   "innerHTML": {
+    "drawing-color": "Renk",
+    "drawing-pen": "Kalem",
+    "drawing-ping": "Ping",
+    "drawing-undo": "Geri al",
+    "drawing-ping-help": "Kısa süre işaret etmek için tıklayın veya dokunun. Kapatmak için Ping'e tekrar tıklayın.",
     "view-only": "Yalnızca izle",
+    "chunked-synchronizing": "Senkronize ediliyor…",
+    "chunked-buffering": "Arabelleğe alınıyor…",
     "logo-header": "\n<font id=\"qos\">V</font>DO.Ninja \n",
     "copy-this-url": "Bu URL'yi \"tarayıcı kaynağına\" kopyalayın",
     "you-are-in-the-control-center": "Odanın kontrol merkezindesiniz:",
@@ -377,6 +384,8 @@
   },
   "titles": {
     "view-only": "Yalnızca izle",
+    "chunked-synchronizing": "Senkronize ediliyor…",
+    "chunked-buffering": "Arabelleğe alınıyor…",
     "the-language-you-want-to-hear-when-live-translation-is-available": "Canlı çeviri kullanılabildiğinde duymak istediğiniz dil",
     "100": "100",
     "developer-and-user-documentation": "Geliştirici ve Kullanıcı Dokümantasyonu",
