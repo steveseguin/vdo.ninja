@@ -64,6 +64,12 @@ A director can also address a specific guest via full screen text messages, or v
 
 Text Messages can be broadcast to the room from the director.
 
+### Switch a guest to Meshcast (alpha)
+
+On current alpha pages, open a guest's **Additional Controls** and select **Use Meshcast**, the last button after **Rotate Video**. Select it again to return the guest to direct connections. Both the director and guest need the updated alpha page for the button to appear.
+
+Meshcast can reduce the guest's upload load by having a server distribute their stream. A small broadcast icon beside the guest indicators shows status details on hover. See [switching a connected guest to Meshcast](../../newly-added-parameters/and-meshcast.md#switch-a-connected-guest-from-the-directors-room-alpha) for the steps, screenshot, and viewer compatibility details.
+
 ## Isolated Solo links for each Room Guest <a href="#h.208l8vmog36i" id="h.208l8vmog36i"></a>
 
 When you create a room, the guest's feeds will show up in the director’s room. While multiple people can join the director’s room, only the first director to join has the ability to issue commands. Any one in the director room can access the isolated solo streams for each guest though.

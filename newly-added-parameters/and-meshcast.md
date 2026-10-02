@@ -68,6 +68,35 @@ You can select the Meshcast server (region) via URL Parameter, if you want low-l
 [and-meshcastcode.md](../advanced-settings/meshcast-parameters/and-meshcastcode.md)
 {% endcontent-ref %}
 
+## Switch a connected guest from the director's room (alpha)
+
+In [VDO.Ninja alpha](https://vdo.ninja/alpha/), the director can turn Meshcast on or off for a guest who is already in the room. Use current alpha pages for the director, the guest, and any viewers you want to switch.
+
+1. Open **Additional Controls** on the guest's control panel.
+2. Select **Use Meshcast**, the last button after **Rotate Video**. The button becomes highlighted when the guest is publishing via Meshcast.
+3. Select **Use Meshcast** again to return to direct peer-to-peer connections.
+
+The guest does not need to leave the room or change their invite link to switch. This controls their primary camera and microphone feed; separate screen-share connections are not switched. There may be a brief interruption as viewers change over.
+
+<figure><img src="../.gitbook/assets/director-use-meshcast.png" alt="Example director guest panel with Additional Controls expanded and Use Meshcast highlighted below Rotate Video; a small broadcast icon appears near the top of the preview" width="300"><figcaption><p>Use Meshcast is the last button in this group. The small broadcast icon near the top of the preview provides status details on hover.</p></figcaption></figure>
+
+### Read the broadcast icon
+
+Hover over the small broadcast icon beside the guest's signal and battery indicators to read its tooltip:
+
+* **Guest is publishing via Meshcast.** The guest's Meshcast publisher is connected. This also applies to guests who joined with `&meshcast` already enabled.
+* **Receiving this guest's stream via a server (WHEP).** The director is receiving a server feed, which may be MediaMTX or another WHEP service. The icon does not always mean Meshcast.
+
+While a switch is in progress, or if it fails, the tooltip shows the current status or error instead.
+
+### Viewers and compatibility
+
+Viewers using [`&nomeshcast`](../advanced-settings/meshcast-parameters/and-nomeshcast.md) or `&nowhep` keep their direct feed. This means the director can see the publishing icon while still receiving the guest directly. Viewer settings such as `&novideo` and `&noaudio` continue to apply.
+
+Older viewer pages are not moved to Meshcast by the button. If a guest joined with `&meshcast` already enabled and an older viewer is using that server feed, the tooltip may ask for that viewer to reload before Meshcast can be switched off.
+
+If **Use Meshcast** is missing, see [the missing-button checks](../common-errors-and-known-issues/meshcast-connection-issues.md#use-meshcast-button-is-missing).
+
 ## Related
 
 {% content-ref url="../advanced-settings/meshcast-parameters/" %}
