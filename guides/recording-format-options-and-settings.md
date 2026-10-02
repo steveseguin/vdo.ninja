@@ -268,9 +268,11 @@ The VDO.Ninja Podcast Studio (`/podcast/`) has its own advanced recording system
 
 * **Multitrack recording** — records each participant as a separate audio track (48 kHz)
 * **WAV export** — converts each recorded audio track to WAV for editing
-* **Save before closing** — stop and download your recordings before closing the studio. Unsaved tracks can be lost if the browser crashes.
+* **Audio recovery** — saves a copy of each audio track in your browser while recording, so you can download it after reopening the studio.
 * **Cloud upload** — guest backups go to Google Drive during recording; host recordings upload to Dropbox after Stop
 * **`&studioiso`** — controls whether isolated disk recording is enabled (on by default)
+
+After reopening, look under **Timeline & Outputs** for **Saved audio**. Expand the saved take and choose **Prepare download** for each track, then download the WAV or original audio. Copies stay until you choose **Clear saved audio** or clear your browser data. Use the same browser and device; interrupted takes may be incomplete.
 
 This is a distinct recording pipeline from the standard `&record` system — it is designed specifically for podcast workflows where you need separate, high-quality audio tracks per guest.
 
