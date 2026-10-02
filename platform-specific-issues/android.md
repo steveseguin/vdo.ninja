@@ -8,18 +8,22 @@ description: Mobile app version of VDO.Ninja and other Android related topics
 
 ### Native Android app
 
-The native mobile app for Android supports one-way publishing with a number of features beyond what the browser version can offer. It will also work while in the background, and sometimes works on certain devices when the browser version won't.
+The native Android app publishes camera, USB camera, screen, and microphone sources, with optional remote-audio monitoring. It supports background operation, subject to Android's permissions and battery restrictions.
 
 Current native app capabilities include:
 
 * **Local recording** while publishing, with a video gallery for reviewing and deleting clips
-* **Screen sharing** with system audio
+* **Screen sharing** with optional system audio on Android 10+; supported Android 14+ devices can offer single-app or full-screen capture
 * **Ultra-wide camera support** and expanded camera selection options
 * **Improved USB audio support** — including external USB microphones
 * **USB video (UVC) capture** support
 * Background operation
+* **Android video quality** presets, custom bitrate, and a maximum capture frame-rate control
+* **WHIP/WHEP** publishing and viewer delivery
+* Optional **professional camera controls**, stream-health stats, talkback, and Social Stream Ninja chat/TTS
+* Experimental **RTMP/SRT external output** with separate video/audio encoder settings
 
-Please note, the native app requires a modern version of Android, while the web-based version of VDO.Ninja has been tested with Android 5.1 using Chrome.
+The native Android build retains Android 5.0/API 21 compatibility, but individual features have higher OS and hardware requirements. For example, native system-audio capture requires Android 10+ and an app that allows it.
 
 The **Google Play Store** <img src="../.gitbook/assets/image (116) (1).png" alt="" data-size="line"> hosted version is here: \
 [https://play.google.com/store/apps/details?id=flutter.vdo.ninja](https://play.google.com/store/apps/details?id=flutter.vdo.ninja)  \
@@ -29,10 +33,10 @@ An Android APK for direct download is also available here (kept updated with the
 [https://drive.google.com/file/d/1L8meslXPEzivocH3wz48abNtJ926hQUr/view?usp=drive\_link](https://drive.google.com/file/d/1L8meslXPEzivocH3wz48abNtJ926hQUr/view?usp=drive\_link)\
 (Manually installing requires manual updating.)
 
-Source-code for building the Android app is here:\
+Public reference source is available here; it may lag current distributed builds:\
 [https://github.com/steveseguin/vdon\_flutter/](https://github.com/steveseguin/vdon\_flutter/)
 
-For more details, see [Native mobile app versions](../steves-helper-apps/native-mobile-app-versions.md).
+For setup and platform limits, see the [native app guide](../steves-helper-apps/native-mobile-app.md). For the camera presets, capture frame-rate ceiling, and bitrate controls, see the [quality guide](../guides/improving-quality-of-the-native-app.md).
 
 ### External camera support
 
@@ -80,7 +84,7 @@ Not all cameras may appear as options when using a mobile device via the browser
 
 ### Screen sharing
 
-Screen sharing on Android is not supported via the browser. The native Android app supports screen sharing, including system audio capture.
+Screen sharing on Android is not supported via the browser. Use **SCREEN** in the native Android app and approve the system capture prompt. **Capture System Audio** is optional on Android 10+; some apps block capture. Supported Android 14+ devices can share one app or the entire screen.
 
 For iPhone screen sharing, you can refer to [this guide](../guides/screen-share-your-iphone-ipad.md).
 

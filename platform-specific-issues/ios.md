@@ -64,13 +64,19 @@ The native iOS app overcomes many of these browser limitations — see below.
 The VDO.Ninja native iOS app has grown significantly in features and is recommended when Safari's limitations are a problem. Current capabilities include:
 
 * **Local recording** while publishing
-* **Screen recording** (still hit and miss on iOS, but functional in many cases)
+* **Background screen sharing** through ReplayKit, with separate quality presets up to 1080p when resources permit
+* **App audio and microphone narration** during screen sharing, with separate mute controls
+* Optional **camera Picture in Picture** while sharing the screen on supported devices
 * **Dual-camera mode** — front and rear cameras simultaneously
 * **Ultra-wide camera support**
 * **Improved USB microphone support** — including external USB audio devices (DJI mics, etc.)
-* Torch light and zoom controls
-* Background operation
+* Opt-in professional camera controls for supported focus, exposure, white balance, zoom, and torch functions
+* **WHIP/WHEP** publishing and viewer delivery
+* Optional **RTMP/SRT output** from single-camera sources, with separate encoder settings
+* Remote-audio monitoring, Social Stream Ninja chat/TTS, and an optional stream-health overlay
 
-Screen sharing on iOS remains somewhat unreliable, but the native app provides the best available support for it on the platform.
+To share Notes or another app, start **VDO.Ninja Screen Recorder** in Apple's broadcast picker, then switch apps. Safari on iOS cannot provide this workflow. Use **iOS Screen Share Quality → Maximum** for more detail, or lower the mode and restart if the broadcast becomes unstable. App audio and protected-content capture remain subject to ReplayKit restrictions.
 
-For more details, see [Native mobile app versions](../steves-helper-apps/native-mobile-app-versions.md).
+Native iOS screen sharing uses its generated viewer link or WHIP destination; its direct publisher does not join rooms. RTMP/SRT external output is for single-camera sources, not screen sharing, microphone-only mode, or dual-camera mixing. USB camera input is not exposed by the iOS app; external USB audio is a separate capability.
+
+For setup, see the [native app guide](../steves-helper-apps/native-mobile-app.md) and [iPhone/iPad screen-sharing walkthrough](../guides/screen-share-your-iphone-ipad.md). The [quality guide](../guides/improving-quality-of-the-native-app.md) explains the presets and their limits.

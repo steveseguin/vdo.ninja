@@ -6,9 +6,11 @@ description: How to screen share an iPhone or iPad to OBS and VDO.Ninja using th
 
 If you want to screen share an iPhone or iPad into OBS or VDO.Ninja, there are a few practical paths. The simplest modern option is the native VDO.Ninja mobile app. Another reliable option is to connect the device to a Mac and capture it through QuickTime, then share that window into VDO.Ninja.
 
-If you are on iOS, there is not a full browser-based screen sharing option in Safari, so you will generally want to use one of the methods below.
+Safari on iOS cannot share another app's screen. To share Notes, a game, or another app, use the native VDO.Ninja app or mirror the device to a computer.
 
-One recently added way to screen share is with the VDO.Ninja native mobile app. It now supports screen sharing, however system audio capture may be missing.
+## Share with the native iOS app
+
+The native app supports background screen broadcasting through ReplayKit. Current versions can capture app audio and microphone narration, with separate mute controls. Protected content and individual apps can still prevent audio or video capture.
 
 {% content-ref url="../steves-helper-apps/native-mobile-app-versions.md" %}
 [native-mobile-app-versions.md](../steves-helper-apps/native-mobile-app-versions.md)
@@ -17,15 +19,31 @@ One recently added way to screen share is with the VDO.Ninja native mobile app. 
 \
 <img src="../.gitbook/assets/image (192).png" alt="" data-size="original"><img src="../.gitbook/assets/image (193).png" alt="" data-size="original">
 
-When using the native app to screen share, be sure to select the VDO.Ninja Screen Recorder option once prompted by Apple. Then click Start Broadcast.
+1. Choose **SCREEN** in the native app.
+2. In **Publishing Settings**, choose a Stream ID or leave it blank for an automatic one. Use **iOS Screen Share Quality** to select **Balanced**, **Quality**, or **Maximum**; **Maximum** targets up to 1080p when resources permit. **Performance** is also available for lower load.
+3. Connect and select **VDO.Ninja Screen Recorder** in Apple's broadcast picker, then tap **Start Broadcast**.
+4. Enable the microphone in Apple's broadcast controls if you want narration.
+5. Switch to Notes or the app you want to share. Leaving VDO.Ninja in the background should not end the broadcast.
+6. Open the app-generated viewer link in your receiving browser or OBS Browser Source. The native iOS screen-sharing publisher uses a direct viewer link or configured WHIP destination; it does not join a VDO.Ninja room.
 
-If you do not see the option, try scrolling down. If you still do not see it, update your iOS system version to the newest available version. Older versions may not support screen sharing, such as iOS 15.x.
+### Quality and audio
 
-If you still cannot find it, check that the app has the correct permissions in your iOS settings, seek support, or try one of the other options below.
+For small text, try **Maximum**. If sharing freezes or stops, choose **Quality** or **Balanced** and restart screen sharing. The app can lower resolution, frame rate, and bitrate under resource pressure. See the [quality-mode table](improving-quality-of-the-native-app.md#ios-screen-share-quality) for the current limits.
 
-You can leave all other settings as default when using the [VDO.Ninja native app](../steves-helper-apps/native-mobile-app-versions.md). Once you start your broadcast, you will be provided a link at the top of the app that you can put into your browser or OBS browser source.
+The microphone and app-audio buttons control different sources. Check both if a viewer hears narration but not the shared app, or the shared app but not narration. Unmuting in VDO.Ninja does not enable a microphone disabled in Apple's broadcast controls.
 
-### Other options
+The optional **Camera overlay** adds front- or rear-camera Picture in Picture on supported devices. Keep its window visible; hiding or closing it pauses the camera inset. It generally requires iOS 18 or later on iPhone, and unsupported devices continue with screen sharing only.
+
+Add playback parameters such as `&buffer=500` to the **receiving link**, not to the app's Stream ID. Buffering can help jitter on supported viewers at the cost of latency; it cannot increase the phone's capture detail. Viewer bitrate requests do not bypass the native screen-share preset limits.
+
+### If the broadcast does not start
+
+* Look for **VDO.Ninja Screen Recorder** in Apple's picker; scroll if needed.
+* No video is sent until **Start Broadcast** has been selected. If you cancelled the picker, end the session and select **SCREEN** again.
+* Update the installed app and iOS where available. Older app versions may have different quality controls or audio behavior.
+* If it still fails, report the device model, iOS version, app version, selected quality mode, and receiving browser or OBS version.
+
+## Other options
 
 Another option is to use Apple AirPlay to wirelessly cast your screen to a computer, and then window-capture that output.
 

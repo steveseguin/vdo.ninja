@@ -1,184 +1,104 @@
 ---
-description: Improve quality of video if using iOS or Android native app versions
+description: Set capture quality, bitrate, frame rate, and playback buffering for the native iOS and Android apps.
 ---
 
 # How to improve quality of the native app
 
-The [native app version](../steves-helper-apps/native-mobile-app-versions.md) of VDO.Ninja isn't as feature rich as the web-app version, so control over exactly resolutions, frame rates, and more are a bit limited. Still, there are ways to encourage the quality to be as high as it can go.
+Choose capture quality in the native app first, then check the received video. App version, capture mode, codec, network, and device temperature all affect the result. Newer builds have more specific controls than the older **Prefer 1080p** switch.
 
-For the full native app walkthrough, including WHIP, USB devices, recording, talkback, and Social Stream Ninja, see:
+For audio, recording, USB devices, and publishing destinations, see the [native mobile app guide](../steves-helper-apps/native-mobile-app.md).
 
-{% content-ref url="../steves-helper-apps/native-mobile-app.md" %}
-[native-mobile-app.md](../steves-helper-apps/native-mobile-app.md)
-{% endcontent-ref %}
+## Where do I put URL parameters?
 
-## Increase the bitrate
+Use **Publishing Settings** for native capture controls. Add viewer parameters to the app-generated link in the **receiving browser or OBS Browser Source**. Keep its existing stream ID, password, and connection parameters.
 
-Setting the bitrate on the **viewer side**, such as by adding one of the following to the view-link.\
-\
-`&videobitrate=12000` or if you want to push things even more, try:  `&videobitrate=20000`
+For normal native camera publishing to VDO.Ninja, a starting viewer link could be:
 
-Different phones will have different CPU/encoding capabilities, so different codecs can result in varying qualities sometimes. 20-mbps is very hard on some phones, and they may overheat quickly.
-
-### Android app-side bitrate
-
-The Android native app also has an app-side **Custom bitrate** option under **Advanced Settings**. Enable it and enter the target bitrate in kbps. The app accepts values from 100 to 50000 kbps, with typical defaults around 6000 kbps for 720p and 10000 kbps for 1080p.
-
-The iOS native app does not currently expose the same app-side custom bitrate field, so iOS quality is mainly influenced by the capture preset, viewer-side bitrate request, codec negotiation, network quality, and device thermals.
-
-## Enable 1080p mode
-
-In the app itself, you can enable the prefer 1080p mode also. This doesn't force 1080p mode, but it "suggests" to the phone that is what you want captured. In time, more advanced controls may be added in this respect.
-
-**If screen sharing on iOS, you will probably want to NOT enable 1080p**, as iOS devices tend to stop screen sharing after a few seconds if the resource load is too high. 720p tends to keep this from happening.
-
-## Improve the network connection
-
-You can also try to connect your smartphone via Ethernet, rather than via WiFi, and ensure your network connection is top-notch. You can do this with a USB to Ethernet adapter, and then connecting the phone to your router.
-
-You'll want the viewer also to be on a wired connection if possible, so preferably also ethernet.
-
-If on cellular, considering using a bonded cellular connection, such as those provided by Speedify or other provider.
-
-#### Diagnosing Your Network Connection
-
-Before optimizing quality, check your connection type:
-
-**Add `&stats` to your view link** to see live statistics including:
-
-* Bitrate being received
-* Packet loss percentage
-  * Should be 0% ideally, under 1% acceptable
-* Connection type (`relay` vs `host`/`srflx`)
-  * `host`/`srflx` = direct, `relay` = TURN server
-
-If you see `candidateType: relay` on either side, your connection is going through a TURN server, which adds latency and may limit bandwidth. For best quality, you want a **direct peer-to-peer connection** (`host` or `srflx`).&#x20;
-
-**Tips for avoiding TURN/relay:**
-
-* Ensure both devices are on the same network if possible
-* Check router/firewall settings for WebRTC traffic
-* Try a different network if stuck on relay mode
-
-#### Network Optimization Tips
-
-1. **Use Ethernet adapters** - USB-C to Ethernet adapters eliminate WiFi variability
-2. **Same network advantage** - When phone and computer are on the same LAN, direct peer-to-peer is more likely
-3. **Check packet loss** - `&stats` shows packet loss. Even 1-2% loss degrades quality noticeably
-4. **WiFi 5GHz vs 2.4GHz** - 5GHz has less interference but shorter range
-5. **Bonded cellular** - Services like Speedify can combine WiFi + cellular for stability
-
-***
-
-## Smartphone overheating
-
-Phone thermal throttling is a common cause of quality degradation during video encoding.
-
-* **Use a phone cooling fan or heatsink** - metal heatsinks on the back help significantly
-* **Remove the phone case** during extended sessions
-* **Avoid direct sunlight** and hot environments
-* **Lower screen brightness** - screen is a heat source
-* **Try H.264 codec** - often has hardware encoding with lower heat output (\&codec=h264)
-* **Close other apps** to reduce CPU load
-
-## Update your smartphone
-
-Some smartphones will have limited functionality if using an older version of the operating system. This is especially true of iOS devices, where iOS 16 and up have several core improvements over older versions.
-
-## If Republishing Through OBS
-
-When using OBS to capture the VDO.Ninja stream:
-
-1. **Increase OBS browser source bitrate**: In your streaming settings, ensure output bitrate is high enough (8000+ kbps for 1080p)
-2. **Add a Sharpening Filter**: Right-click the browser source -> Filters -> Add Effect Filter -> "Sharpening". Use a small value (0.08-0.15). This helps restore perceived sharpness lost in compression, especially for text and lines.
-3. **Match resolution**: Set browser source dimensions to match the incoming stream (1920x1080 for 1080p)
-4. **Use Game Capture mode**: If performance allows, consider OBS's hardware-accelerated capture modes
-
-***
-
-## Viewer-side URL options for tweaking quality
-
-### Codec Selection
-
-Codec selection is generally negotiated by the viewer, browser, device hardware, and publishing target. For VDO.Ninja viewer links, try:
-
-```
-&codec=h264
+```text
+https://vdo.ninja/?view=mycamera&videobitrate=6000
 ```
 
-H.264 often has hardware encoding on phones, reducing CPU load and heat.
+This requests about 6 Mbps. If the picture remains compressed and the phone and network have capacity, try a higher request. It is not a guaranteed received bitrate. Native iOS screen-share presets and WHIP encoders have their own limits; a larger viewer-side value cannot override them.
 
+Browser publisher options such as `&ssq`, `&ssbitrate`, and `&contenthint` are not native-app capture controls. Adding them to a viewer link does not configure the native screen encoder. `&sharperscreen` is a [viewer-side scaling option](../advanced-settings/screen-share-parameters/and-sharperscreen.md).
+
+## iOS screen-share quality
+
+Select **SCREEN → Publishing Settings → iOS Screen Share Quality**. The native ReplayKit publisher has these upper targets when device resources permit:
+
+| Mode | Resolution bound | Frame-rate ceiling | Video bitrate ceiling |
+| --- | --- | --- | --- |
+| Performance | 960 × 540 | 20 fps | 1800 kbps |
+| Balanced | 1280 × 720 | 24 fps | 3000 kbps |
+| Quality | 1280 × 720 | 30 fps | 5500 kbps |
+| Maximum | 1920 × 1080 | 30 fps | 7500 kbps |
+
+These are encoder limits, not guarantees of the received resolution, frame rate, or bitrate. The screen's aspect ratio is preserved, including portrait orientation. Resource pressure can lower the limits; **Maximum** can fall back to 720p. Codec negotiation can also limit resolution. Older builds or alternate publishing paths may differ.
+
+For Notes, documents, and small text, try **Maximum** when you need more detail. If sharing freezes or stops, choose **Quality** or **Balanced** and restart the broadcast. A viewer request such as `&videobitrate=20000` cannot turn a 720p preset into a 1080p screen share.
+
+Start **VDO.Ninja Screen Recorder** in Apple's broadcast picker, then open Notes or the app you want to share. Background screen broadcasting is supported. Safari on iOS cannot screen-share another app. See the [iPhone/iPad walkthrough](screen-share-your-iphone-ipad.md).
+
+## Android capture quality
+
+For built-in cameras, **Android video quality** offers **720p60**, **1080p30**, and **1080p60**, with a camera-support check and fallback to 1080p30 for the last option.
+
+The selected camera determines which modes are available. USB and other source modes may use **Prefer 1080p** instead. iOS camera modes also use their available capture controls; they do not use the screen-share preset table above.
+
+### Custom bitrate on Android
+
+Under **Advanced Settings**, enable **Custom bitrate** and enter 100–50000 kbps. Common defaults are 6000 kbps for 720p and 10000 kbps for 1080p. iOS does not expose this same field for normal camera publishing.
+
+Raising bitrate can preserve more detail, but increasing it on an overloaded connection can make playback less stable. Check the received result before raising it again.
+
+## Frame-rate limits
+
+**Advanced Settings → Maximum capture frame rate** offers **Auto**, common rates including 10 fps, and a custom whole-number ceiling from 1 to 60 fps. The saved setting applies on the next publishing session.
+
+It applies to Android cameras, USB cameras, and screen sharing, and to iOS cameras, including their WebRTC/WHIP senders. iOS ReplayKit uses its own quality modes. A 60 fps ceiling cannot make a 30 fps source faster. For UVC input, dropping delivered frames does not necessarily reduce USB traffic or camera power use.
+
+Lower frame rates can be useful for mostly static material. Set bitrate separately when you also want to limit upload usage.
+
+## Minimum video bitrate
+
+Both apps offer **Advanced Settings → Minimum video bitrate** for VDO.Ninja camera streams. **Default** keeps the normal policy. A custom value accepts 50–50000 kbps and applies on the next stream, bounded by the negotiated maximum.
+
+This is a negotiation hint, not a guaranteed floor or data-use cap. Lower values permit more compression and may reduce freezing on weak connections; higher values favor detail but can stall on weak links. It does not change WHIP, RTMP, SRT, or native iOS screen sharing. **Use 150 kbps** fills the field; press **Apply** to save it.
+
+## Codec selection
+
+Start with the default codec. For direct VDO.Ninja viewing, `&codec=h264` requests H.264, which commonly has hardware acceleration on mobile devices. Both publisher and receiver must support the codec.
+
+Do not assume `&codec=av1` or `&codec=vp9` works with every native build. The native iOS screen publisher uses a reduced-resolution VP8 compatibility fallback, so forcing VP8 can make text substantially softer. H.264 profile negotiation can also reduce a high-resolution share for a particular receiver.
+
+WHIP services negotiate their own supported codecs. RTMP/SRT external output has separate H.264/AAC settings in **More → Advanced external output**.
+
+## Buffering and scaling on the viewer
+
+If playback stutters, try this on the receiving link:
+
+```text
+&buffer=500
 ```
-&codec=vp9
-```
 
-VP9 can deliver better quality at lower bitrates for screen content with text.
+This requests a 500 ms buffer target on supported viewers. It can help with jitter at the cost of latency; it does not directly sharpen text or guarantee recovery of missing frames. Normal WebRTC buffer hints are capped at 4000 ms, and the browser may apply a different delay. See [buffering and audio synchronization](../advanced-settings/view-parameters/buffer.md).
 
-```
-&codec=av1
-```
+`&scale=100` disables the web viewer's automatic fit-to-window scaling requests. It does not increase native capture resolution or override the phone's encoder adaptation. Native publishers do not necessarily implement every browser scaling request. See [scale](../advanced-settings/view-parameters/scale.md).
 
-Best compression efficiency but requires newer devices and more CPU.
+## Check the received stream
 
-**Try different codecs** - some phones have hardware acceleration for specific codecs, which keeps them cooler and sustains quality longer.
+Add `&stats` to the viewer link to inspect received resolution, frame rate, bitrate, and packet loss. The app's optional **Stream Health Overlay** is also useful, but a selected preset alone does not confirm what the viewer receives.
 
-If you are using the native app's WHIP-only mode, the WHIP service may also restrict which codecs, bitrates, and resolutions are accepted.
+* Use a stable WiFi or Ethernet connection on both ends. For WiFi, compare performance near the access point.
+* Check whether freezes correlate with packet loss, a bitrate drop, or the phone getting hot. Stutter alone does not establish packet loss.
+* A TURN relay connection is not itself a fault. Compare measured performance before changing networks or relay settings.
+* Reduce capture quality or frame rate if the phone overheats. Avoid direct sunlight and remove an insulating case if needed.
+* Each direct viewer adds upload work. WHIP/WHEP distribution can be useful for larger audiences.
 
-#### Content Hint (Resolution Priority)
+## Receiving in OBS
 
-```
-&contenthint=detail
-```
+Put viewer parameters on the **Browser Source URL**. Match the source and scene layout to the received aspect ratio, especially for portrait screens, and avoid unnecessary resizing of text.
 
-Tells the encoder to prioritize **resolution over framerate**. Excellent for screen sharing with text, documents, or detailed content. Also works: `&sshint=detail`
+OBS's stream or recording output bitrate controls the later OBS encode; it does not set the bitrate coming from the phone. Check the VDO.Ninja feed first, then the OBS output. A sharpening filter can change perceived sharpness, but cannot restore missing detail.
 
-```
-&contenthint=motion
-```
-
-Prioritizes smooth framerate over resolution. Better for video playback or games.
-
-#### Degradation Preference
-
-```
-&degrade=maintain-resolution
-```
-
-Similar to contenthint, explicitly tells encoder to drop framerate before reducing resolution when bandwidth is limited.
-
-#### Resolution and Scaling
-
-```
-&scale=100
-```
-
-#### Buffer for Jitter Compensation
-
-```
-&buffer=3000
-```
-
-Adds a 3-second playback buffer. Adds latency but helps smooth out network jitter. Useful if you see stuttering. Try values from 500-5000ms.
-
-```
-&buffer2=3000
-```
-
-Same as buffer but also includes RTT compensation.
-
-***
-
-### Final Notes
-
-Getting "lossless" quality from mobile screen share isn't truly possible due to real-time encoding constraints, but with the right combination of settings, you can get excellent results suitable for most use cases. The key factors are:
-
-1. Good network conditions (low latency, zero packet loss)
-2. Direct peer-to-peer connection (avoiding TURN)
-3. High bitrate allowance (10000+ kbps)
-4. Appropriate codec for your device
-5. Content hint set to prioritize what matters (resolution vs framerate)
-6. Phone staying cool<br>
-
-if you want more control over settings and quality, you'll need to use the web app, available at [https://vdo.ninja](https://vdo.ninja), however this does not support screen sharing on mobile.
-
-And for absolute highest quality, consider USB screen mirroring to a computer, then screen sharing from the computer using the web app where you have full control over all settings.
+For an alternative iOS workflow, connect the phone to a Mac and capture its screen through QuickTime, then share that window from the computer. The [iPhone/iPad guide](screen-share-your-iphone-ipad.md) covers that setup.

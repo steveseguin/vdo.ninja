@@ -11,7 +11,12 @@ The Screen sharing feature is highly dependent on the operating system of the de
 * Safari on iOS does not support screen sharing via the browser.
 * Android does not support screen sharing via the browser.
 
-The native mobile apps for both [iOS and Android](../steves-helper-apps/native-mobile-app-versions.md) support screen sharing. The Android native app includes system audio capture. Screen sharing on iOS is still hit and miss, but functional in many cases.
+The native mobile apps for both [iOS and Android](../steves-helper-apps/native-mobile-app-versions.md) support screen sharing:
+
+* **iOS:** select **SCREEN**, start **VDO.Ninja Screen Recorder** in Apple's broadcast picker, then open the app you want to share. Background broadcasting is supported. Current versions can capture ReplayKit app audio and microphone narration, with separate mute controls. If sharing stops, lower **iOS Screen Share Quality** and restart the broadcast.
+* **Android:** approve the screen-capture prompt. Android 14+ can offer a single app or the entire screen. **Capture System Audio** requires Android 10+ and an app that permits audio capture.
+
+Protected content may block video or audio on either platform. A browser camera link cannot substitute for native capture of another mobile app. See the [native-app guide](../steves-helper-apps/native-mobile-app.md#screen) for quality, audio, and camera-overlay controls.
 
 There's other tricks as well to get screen sharing working on mobile, such as using QuickTime via USB.
 
