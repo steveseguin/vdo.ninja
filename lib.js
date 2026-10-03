@@ -58194,7 +58194,7 @@ async function setupDropbox(accessToken = null, options = {}) {
 	if (!token) {
 		return null;
 	}
-	if (!forceReauth && session.dbx && session.dropboxAccessToken === token) {
+	if (!forceReauth && session.dbx && session.dbx.auth.getAccessToken() === token) {
 		return session.dbx;
 	}
 	session.dropboxAccessToken = token;
