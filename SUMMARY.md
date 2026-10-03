@@ -418,6 +418,7 @@
     * [\&clock](advanced-settings/settings-parameters/and-clock.md)
     * [\&clock24](advanced-settings/settings-parameters/and-clock24-alpha.md)
     * [\&timer](advanced-settings/settings-parameters/and-timer.md)
+    * [\&playbacktimer](advanced-settings/settings-parameters/and-playbacktimer.md)
     * [\&powerpoint](advanced-settings/settings-parameters/and-powerpoint.md)
     * [\&widget](advanced-settings/settings-parameters/and-widget.md)
     * [\&token](advanced-settings/settings-parameters/and-token.md)
