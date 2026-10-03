@@ -23143,10 +23143,10 @@ function getQuickStats(sid = false) {
 		stats.streamID = session.streamID;
 
 		if (session.whipOut && session.whipOut.stats) {
-			myStats.whip_outbound = session.whipOut.stats;
+			stats.whip_outbound = session.whipOut.stats;
 		}
 		if (session.whepIn && session.whepIn.stats) {
-			myStats.whep_inbound = session.whepIn.stats;
+			stats.whep_inbound = session.whepIn.stats;
 		}
 
 		for (var i in session.rpcs) {
