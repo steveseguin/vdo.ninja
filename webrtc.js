@@ -6753,15 +6753,15 @@ WebRTC.Media = (function () {
 			try {
 				session.pcs[i].sendChannel.send(msg);
 				sentList.push(i);
+				if (UUID && UUID === i) {
+					return sentList.length;
+				}
 			} catch (e) {
 				if (session.pcs[i].startTime + 100000 < Date.now()) {
 					warnlog("RTC Connection seems to be dead or not yet open? 1");
 				} else {
 					log("RTC Connection seems to be dead or not yet open? 1");
 				}
-			}
-			if (UUID && UUID === i) {
-				return sentList.length;
 			}
 		}
 		for (var i in session.rpcs) {
