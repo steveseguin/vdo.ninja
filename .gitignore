@@ -80,6 +80,8 @@ docs.md
 /screenrecorder/
 /auth-integration.md
 /convert.html
+/thirdparty/ffmpeg.min.js
+/thirdparty/ffmpeg.min.js.LICENSE
 /.github/workflows/README.md
 
 # Private TURN operating instructions; the shared guide is turnserver.md.
