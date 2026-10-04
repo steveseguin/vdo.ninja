@@ -79,7 +79,8 @@ var CodecsHandler = (function() {
 					codecNumber = codecNumber.trim();
 					if (!codecNumber || !codecNumber.length) return;
 					info.videoCodecNumbers.push(codecNumber);
-					info.videoCodecNumbersOriginal = line;
+					// Keep the original CRLF when replacing only the codec order.
+					info.videoCodecNumbersOriginal = line.replace(/\r$/, "");
 				});
 			}
 			var LINE = line.toUpperCase();
