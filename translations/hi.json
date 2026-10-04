@@ -1,5 +1,11 @@
 {
   "innerHTML": {
+    "use-meshcast": "Meshcast का उपयोग करें",
+    "muted-in-scenes": "सीन में म्यूट है",
+    "guest-muted-scenes": "गेस्ट ने सीन में खुद को म्यूट किया",
+    "scene-mute-saved": "सीन में म्यूट बना रहेगा",
+    "changing-scene-audio": "सीन का ऑडियो बदल रहा है",
+    "scene-audio-not-confirmed": "सीन के ऑडियो की पुष्टि नहीं हुई",
     "view-only": "केवल देखें",
     "logo-header": "\n<font id=\"qos\" style=\"color: white;\">V</font>DO.Ninja \n",
     "copy-this-url": "इस यूआरएल को अपने \"ब्राउज़र सोर्स\" में कॉपी करें",
@@ -376,6 +382,9 @@
     "statistics": "Statistics"
   },
   "titles": {
+    "switch-this-guest-s-camera-and-microphone-between-direct-connections-and-meshcast": "इस अतिथि के कैमरे और माइक्रोफ़ोन को सीधे कनेक्शन और Meshcast के बीच बदलें",
+    "mute-microphone-and-shared-audio-in-scene-outputs": "सीन आउटपुट में माइक्रोफ़ोन और साझा किए गए ऑडियो को म्यूट करें",
+    "mute-audio-in-scene-outputs": "सीन आउटपुट में माइक्रोफ़ोन और साझा किए गए ऑडियो को म्यूट करें",
     "view-only": "केवल देखें",
     "the-language-you-want-to-hear-when-live-translation-is-available": "लाइव अनुवाद उपलब्ध होने पर आप जिस भाषा में सुनना चाहते हैं",
     "100": "100",

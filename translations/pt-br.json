@@ -1,5 +1,11 @@
 {
   "innerHTML": {
+    "use-meshcast": "Usar Meshcast",
+    "muted-in-scenes": "Silenciado nas cenas",
+    "guest-muted-scenes": "O convidado se silenciou nas cenas",
+    "scene-mute-saved": "Cenas continuam sem som",
+    "changing-scene-audio": "Alterando o áudio das cenas",
+    "scene-audio-not-confirmed": "Áudio das cenas não confirmado",
     "view-only": "Apenas assistir",
     "chunked-synchronizing": "Sincronizando…",
     "chunked-buffering": "Carregando…",
@@ -385,6 +391,9 @@
     "statistics": "Statistics"
   },
   "titles": {
+    "switch-this-guest-s-camera-and-microphone-between-direct-connections-and-meshcast": "Alternar a câmera e o microfone deste convidado entre conexões diretas e Meshcast",
+    "mute-microphone-and-shared-audio-in-scene-outputs": "Silenciar o microfone e o áudio compartilhado nas saídas das cenas",
+    "mute-audio-in-scene-outputs": "Silenciar o microfone e o áudio compartilhado nas saídas das cenas",
     "view-only": "Apenas assistir",
     "the-language-you-want-to-hear-when-live-translation-is-available": "O idioma que você quer ouvir quando a tradução ao vivo estiver disponível",
     "100": "100",

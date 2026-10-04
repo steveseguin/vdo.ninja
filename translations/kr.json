@@ -1,5 +1,11 @@
 {
   "innerHTML": {
+    "use-meshcast": "Meshcast 사용",
+    "muted-in-scenes": "장면에서 음소거됨",
+    "guest-muted-scenes": "게스트가 장면에서 자신의 오디오를 음소거함",
+    "scene-mute-saved": "장면 음소거 유지",
+    "changing-scene-audio": "장면 오디오 변경 중",
+    "scene-audio-not-confirmed": "장면 오디오 상태 미확인",
     "view-only": "시청만 하기",
     "logo-header": "\n<font id=\"qos\" style=\"color: white;\">V</font>DO.Ninja \n",
     "copy-this-url": "이 URL을 \"브라우저 소스\"에 복사하세요",
@@ -376,6 +382,9 @@
     "statistics": "Statistics"
   },
   "titles": {
+    "switch-this-guest-s-camera-and-microphone-between-direct-connections-and-meshcast": "이 게스트의 카메라와 마이크를 직접 연결과 Meshcast 간에 전환",
+    "mute-microphone-and-shared-audio-in-scene-outputs": "장면 출력에서 마이크와 화면 공유 오디오 음소거",
+    "mute-audio-in-scene-outputs": "장면 출력에서 마이크와 화면 공유 오디오 음소거",
     "view-only": "시청만 하기",
     "the-language-you-want-to-hear-when-live-translation-is-available": "실시간 번역을 사용할 수 있을 때 듣고 싶은 언어",
     "100": "100",

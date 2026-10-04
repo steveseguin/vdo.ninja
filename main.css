@@ -284,8 +284,9 @@ th {
 }
 .advancedVideoSettings .preSelectButton {
 	display: inline-block;
-	margin: 4px 0 4px 3px;
-	padding: 2px 8px 1px 8px;
+	margin: 0;
+	padding: 4px;
+	white-space: nowrap;
 }
 .meter {
 	display: inline-block;
@@ -753,7 +754,7 @@ button.hint {
 #overlayClock:empty{
 	display: none;
 }
-#overlayClockContainer2{
+#overlayClockContainer2, #overlayPlaybackTimerContainer{
 	margin: 0 auto;
 	background-color: #0000;
 	color: white;
@@ -771,37 +772,40 @@ button.hint {
 	cursor: pointer;
 	user-select: none;
 }
-#overlayClockContainer2.top {
+#overlayClockContainer2.top, #overlayPlaybackTimerContainer.top {
 	top:0%;
 	bottom:unset;
 }
-#overlayClockContainer2.vmiddle {
+#overlayClockContainer2.vmiddle, #overlayPlaybackTimerContainer.vmiddle {
 	bottom: 48%;
 	top:unset;
 }
-#overlayClockContainer2.bottom {
+#overlayClockContainer2.bottom, #overlayPlaybackTimerContainer.bottom {
 	bottom: 0%;
 	top:unset;
 }
-#overlayClockContainer2.left {
+#overlayClockContainer2.left, #overlayPlaybackTimerContainer.left {
 	right:unset;
 	left: 0;
 }
-#overlayClockContainer2.hmiddle {
+#overlayClockContainer2.hmiddle, #overlayPlaybackTimerContainer.hmiddle {
 	right:45%;
 	left:unset;
 }
-#overlayClockContainer2.right {
+#overlayClockContainer2.right, #overlayPlaybackTimerContainer.right {
 	right:0;
 	left:unset;
 }
 
-#overlayClock2{
+#overlayClock2, #overlayPlaybackTimer{
 	padding:0 5px;
 	background-color: #0009;
 }
-#overlayClock2:empty{
+#overlayClock2:empty, #overlayPlaybackTimer:empty{
 	display: none;
+}
+#overlayPlaybackTimerContainer {
+	pointer-events: none;
 }
 #stickyMsgs{
 	margin: 0 auto;
@@ -1006,7 +1010,45 @@ body.darktheme .footer>a:visited {
 }
 
 .advancedVideoSettings > div:first-child {
+	display: grid;
+	grid-template-columns: minmax(0, 1fr) 68px auto auto;
+	column-gap: 4px;
+	align-items: center;
 	width: 100%;
+	min-width: 0;
+	padding-right: 4px;
+}
+
+.advancedVideoSettings > div:first-child > .settingsLabel,
+.advancedVideoSettings > div:first-child > .inputConstraint,
+.advancedVideoSettings > div:first-child > div {
+	grid-column: 1 / -1;
+}
+
+.advancedVideoSettings .settingsLabel {
+	width: 100%;
+	margin: 8px 0;
+	overflow-wrap: anywhere;
+}
+
+.advancedVideoSettings .manualInput {
+	width: 68px;
+	margin: 0;
+	padding: 4px;
+}
+
+.advancedVideoSettings label[for^="manual_"] {
+	margin-left: 0 !important;
+	justify-self: end;
+}
+
+.advancedVideoSettings input[type="checkbox"] {
+	margin: 0;
+	justify-self: start;
+}
+
+.advancedVideoSettings input.inputConstraint {
+	margin: 4px 0 10px;
 }
 
 .advancedVideoSettings .settings-select-row {
@@ -1014,11 +1056,11 @@ body.darktheme .footer>a:visited {
 	width: 100%;
 	align-items: center;
 	gap: 4px;
+	margin-bottom: 6px;
 }
 
 .advancedVideoSettings .settings-select-row > label {
-	flex: 0 0 auto;
-	white-space: nowrap;
+	flex: 0 1 auto;
 }
 
 .advancedVideoSettings .settings-select-row > select {
@@ -1348,6 +1390,23 @@ hr {
 	font-size: 1.5em;
 	z-index: 2;
 	cursor: help;
+}
+.broadcast-status {
+	position: absolute;
+	left: 49px;
+	top: 3px;
+	font-size: 16px;
+	z-index: 2;
+	cursor: help;
+	color: var(--lighttheme-text);
+	text-shadow: 0 0 2px var(--lighttheme-1);
+}
+.darktheme .broadcast-status {
+	color: var(--discord-text);
+	text-shadow: 0 0 2px var(--discord-grey-0);
+}
+.broadcast-status:not(.hidden) ~ .rem-con-count {
+	left: 70px;
 }
 .hasMedia > .signal-meter {
 	display: block;
@@ -3179,20 +3238,55 @@ input[type="file"]#fileselector4 + label {
 }
 
 
+.file-manager,
+#chatBody .file-transfer {
+	--file-surface: var(--lighttheme-2);
+	--file-inset: var(--lighttheme-1);
+	--file-text: var(--lighttheme-8);
+	--file-muted: #50545c;
+	--file-border: var(--lighttheme-4);
+	background: var(--file-surface);
+	color: var(--file-text);
+	border: 1px solid var(--file-border);
+	box-sizing: border-box;
+	line-height: 1.5;
+}
+
+.darktheme .file-manager,
+.darktheme #chatBody .file-transfer {
+	--file-surface: var(--discord-grey-2);
+	--file-inset: var(--discord-grey-5);
+	--file-text: var(--discord-text);
+	--file-muted: #bbc0c8;
+	--file-border: var(--discord-grey-8);
+}
+
+#activeShares > .file-manager {
+	font-size: 14px;
+}
+
 .file-manager {
-    max-width: 400px;
-    background: #ddda;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    padding: 16px;
-    margin: 10px;
-    transition: all 0.3s ease;
+	max-width: 400px;
+	border-radius: 8px;
+	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+	padding: 16px;
+	margin: 10px;
 }
 
 .file-manager.minimized {
-    max-width: 300px;
-    padding: 8px;
-	min-height: 40px;
+	position: relative;
+	float: none;
+	bottom: auto;
+	height: auto;
+	min-height: 0;
+	overflow: visible;
+	padding: 12px;
+}
+
+#activeShares .file-manager.minimized .file-manager-header {
+	margin-bottom: 0;
+	padding-bottom: 0;
+	border-bottom: 0;
 }
 
 .file-manager.minimized .file-list,
@@ -3207,17 +3301,24 @@ input[type="file"]#fileselector4 + label {
 
 #activeShares .header-controls {
     display: flex;
+	flex-wrap: wrap;
     gap: 8px;
 }
 
 #activeShares .file-manager-header {
     display: flex;
+	flex-wrap: wrap;
     justify-content: space-between;
     align-items: center;
     margin-bottom: 16px;
     padding-bottom: 8px;
-    border-bottom: 1px solid #eee;
+    border-bottom: 1px solid var(--file-border);
 	gap: 12px;
+}
+
+#activeShares .file-manager-header h3 {
+	margin: 0;
+	font-size: 16px;
 }
 
 #activeShares .file-upload-zone {
@@ -3241,43 +3342,55 @@ input[type="file"]#fileselector4 + label {
 
 #activeShares .file-item {
     display: grid;
-    grid-template-columns: 1fr auto auto;
+	grid-template-columns: minmax(0, 1fr) auto;
     gap: 12px;
-    align-items: center;
-    padding: 12px;
-    border-bottom: 1px solid #eee;
+	align-items: start;
+	padding: 12px 0;
+	border-bottom: 1px solid var(--file-border);
 }
 
 #activeShares .file-info {
     display: flex;
     flex-direction: column;
+	min-width: 0;
     gap: 4px;
 }
 
 #activeShares .file-name {
-    font-weight: 500;
+	font-weight: 600;
+	overflow-wrap: anywhere;
+	word-break: break-word;
 }
 
 #activeShares  .file-size {
-    color: #666;
+    color: var(--file-muted);
     font-size: 0.9em;
 }
 
 #activeShares .download-info {
-    font-size: 0.85em;
-    color: #666;
-    margin-top: 4px;
+	display: grid;
+	grid-template-columns: minmax(0, 1fr) auto;
+	gap: 4px 8px;
+	font-size: 13px;
+	color: var(--file-muted);
+	overflow-wrap: anywhere;
+	word-break: break-word;
+}
+
+#activeShares .downloader-name,
+#activeShares .file-progress {
+	grid-column: 1 / -1;
 }
 
 #activeShares .file-size {
-    color: #666;
+    color: var(--file-muted);
     font-size: 0.9em;
 }
 
 #activeShares .file-progress {
     position: relative;
-    height: 4px;
-    background: #eee;
+	height: 6px;
+	background: var(--file-border);
     border-radius: 2px;
     overflow: hidden;
     margin: 4px 0;
@@ -3288,13 +3401,17 @@ input[type="file"]#fileselector4 + label {
     left: 0;
     top: 0;
     height: 100%;
-    background: #4CAF50;
+    background: var(--darktheme-green);
     transition: width 0.3s;
 }
 
 #activeShares .progress-text {
-    font-size: 0.9em;
-    color: #666;
+	font-size: inherit;
+	color: var(--file-muted);
+}
+
+.darktheme #activeShares .progress-bar {
+	background: #75c886;
 }
 
 #activeShares .transfer-info {
@@ -3305,53 +3422,111 @@ input[type="file"]#fileselector4 + label {
 
 #activeShares .no-files {
     text-align: center;
-    color: #666;
+    color: var(--file-muted);
     padding: 20px;
 }
 
 #activeShares .transfer-item {
-    background: #f5f5f5;
+    background: var(--file-inset);
     padding: 8px;
     border-radius: 4px;
     margin-top: 4px;
 }
 
 #activeShares .transfer-speed {
-    font-size: 0.9em;
-    color: #666;
+	font-size: inherit;
+	color: var(--file-muted);
+	text-align: right;
 }
 
 #activeShares .button-primary {
-    background: #4CAF50;
+    background: var(--darktheme-green);
     color: white;
 }
 
-#activeShares .button {
-    padding: 6px 12px;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 0.9em;
-    transition: background 0.3s;
+#activeShares .button,
+#chatBody .file-transfer button {
+	padding: 6px 10px;
+	min-height: 34px;
+	margin: 0;
+	border: 1px solid var(--file-border);
+	border-radius: 4px;
+	background: var(--file-inset);
+	color: var(--file-text);
+	cursor: pointer;
+	font-size: 13px;
+	line-height: 1.5;
 }
 
 #activeShares .button-primary {
-    background: #4CAF50;
+    background: var(--darktheme-green);
     color: white;
 }
 
 #activeShares .button-secondary {
-    background: #666;
-    color: white;
+	background: var(--file-inset);
+	color: var(--file-text);
 }
 
 #activeShares .button-danger {
-    background: #f44336;
+    background: var(--darktheme-red);
     color: white;
 }
 
-#activeShares .button:hover {
-    opacity: 0.9;
+#activeShares .button:hover,
+#chatBody .file-transfer button:not(:disabled):hover {
+	filter: brightness(1.08);
+	box-shadow: none;
+}
+
+#chatBody .file-transfer {
+	padding: 12px;
+	font-size: 14px;
+	overflow-wrap: anywhere;
+	word-break: break-word;
+}
+
+#chatBody .file-transfer-name {
+	display: block;
+	margin: 8px 0;
+	font-style: normal;
+	font-weight: 600;
+}
+
+#chatBody .file-transfer-actions {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 8px;
+	margin-top: 8px;
+}
+
+#chatBody .file-transfer button[data-button-type="download"]:not(:disabled) {
+	background: var(--darktheme-blue);
+	color: white;
+}
+
+#chatBody .file-transfer button:disabled {
+	color: var(--file-muted);
+	cursor: default;
+	opacity: 1;
+}
+
+#chatBody .file-transfer > i:last-child {
+	display: block;
+	margin-top: 8px;
+	font-style: normal;
+	color: var(--file-muted);
+}
+
+#chatBody .file-transfer > i:last-child small {
+	font-size: 12px;
+}
+
+@media (max-width: 420px) {
+	#activeShares .file-item {
+		grid-template-columns: minmax(0, 1fr);
+	}
 }
 
 .controlVideoBox {
@@ -3422,6 +3597,30 @@ input[type="file"]#fileselector4 + label {
 	outline:none;
 	padding: 5px 5px;
 }
+#scenemutebutton.orange .la-broadcast-tower,
+.scene-mute-state .la-broadcast-tower {
+	color: #ffc65c;
+}
+
+#scenemutebutton.scene-mute-suspended {
+	opacity: 0.5;
+}
+
+.video-mute-state.scene-mute-state {
+	left: 2vh;
+	right: auto;
+	font-size: 0.8em;
+	padding: 3px 6px;
+}
+
+#scenemutebutton span {
+	display: inline-block;
+	max-width: 80px;
+	font-size: 0.8em;
+	line-height: 1;
+	vertical-align: middle;
+}
+
 .float2 {
 	opacity: 0.8;
 	min-width: 45px;
@@ -4129,6 +4328,11 @@ span[data-resolution]:hover, span[data-bitrate]:hover {
 	height: 0px;
 	opacity: 0;
 }
+.hide-effects-controls #effectsDiv,
+.hide-effects-controls #effectsDiv3 {
+	display: none !important;
+}
+
 .hidden2 {
 	display: none !important;
 	visibility: hidden;
@@ -5083,15 +5287,6 @@ div#roomnotes2 {
 .darktheme .meshFailedText {
 	color: #ef6f6c;
 }
-.meshHealthBadge {
-	display: inline-block;
-	padding: 2px 7px;
-	border-radius: 10px;
-	color: #fff;
-	font-size: 12px;
-	cursor: pointer;
-}
-
 @media (max-width: 900px) {
 	.meshToolbarHeading {
 		flex-basis: 100%;
@@ -8178,9 +8373,10 @@ a.soloLink:focus {
     background-color: rgba(14, 17, 24, 0.60) !important;
 }
 
-/* 11) Chat module glass and cohesion */
+/* 11) Chat module surfaces and cohesion */
 #chatModule {
-    background-color: rgba(255,255,255,0.75) !important;
+	background-color: var(--lighttheme-2) !important;
+	max-width: calc(100vw - 20px);
     backdrop-filter: blur(10px) saturate(120%);
     -webkit-backdrop-filter: blur(10px) saturate(120%);
     border: 1px solid rgba(0,0,0,0.08) !important;
@@ -8188,14 +8384,24 @@ a.soloLink:focus {
     overflow: hidden;
 }
 .darktheme #chatModule {
-    background-color: rgba(28,31,36,0.65) !important;
+	background-color: var(--discord-grey-2) !important;
     border: 1px solid rgba(255,255,255,0.08) !important;
 }
 .chat-header {
     background-color: transparent !important;
+	color: var(--lighttheme-text);
     border-bottom: 1px solid rgba(0,0,0,0.08);
 }
-.darktheme .chat-header { border-bottom-color: rgba(255,255,255,0.08); }
+.darktheme .chat-header {
+	border-bottom-color: rgba(255,255,255,0.08);
+	color: var(--discord-text);
+}
+#chatBody {
+	background-color: var(--lighttheme-3);
+}
+.darktheme #chatBody {
+	background-color: var(--discord-grey-1);
+}
 .chat-input-area { background-color: transparent !important; }
 
 /* Chat links harmonized with accent */

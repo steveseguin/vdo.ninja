@@ -129,7 +129,7 @@
 
 				var iframe = document.createElement("iframe");
 				iframe.allow = "autoplay";
-				var srcString = "./?datamode&label=chatOverlay" + 
+				var srcString = "../?datamode&label=chatOverlay" +
 					(room ? "&scene&room=" + room : "") + 
 					(view ? "&view=" + view : "") + 
 					(password ? "&password=" + password : "");
@@ -172,12 +172,16 @@
 				var entry = document.createElement('div');
 				if (type) {
 					var typeElement = document.createElement('i');
-					typeElement.textContent = type.replace(/_/g, ' ');
+					var label = document.createElement("template");
+					label.innerHTML = type;
+					typeElement.textContent = label.content.textContent.replace(/_/g, ' ');
 					entry.appendChild(typeElement);
 					entry.appendChild(document.createTextNode(" "));
 				}
 				var message = document.createElement('span');
-				message.textContent = data;
+				var decodedMessage = document.createElement("textarea");
+				decodedMessage.innerHTML = data;
+				message.textContent = decodedMessage.value;
 				entry.appendChild(message);
 				document.getElementById('chat-overlay').prepend(entry);
 			}

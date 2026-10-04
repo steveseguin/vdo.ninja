@@ -1,0 +1,12 @@
+{
+	"name": "vdo-realtime-translation-broker",
+	"main": "src/index.mjs",
+	"compatibility_date": "2026-07-18",
+	"vars": {
+		"ALLOWED_ORIGINS": "https://vdo.ninja,http://localhost:8080"
+	},
+	"observability": {
+		"enabled": true,
+		"head_sampling_rate": 0.1
+	}
+}
