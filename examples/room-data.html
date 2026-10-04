@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<title>Data-only room — VDO.Ninja</title>
+		<style>
+			body {
+				font-family: sans-serif;
+				max-width: 800px;
+				margin: 2rem auto;
+				padding: 0 1rem;
+			}
+			section {
+				border: 1px solid #aaa;
+				padding: 1rem;
+				margin: 1rem 0;
+			}
+			pre,
+			a {
+				overflow-wrap: anywhere;
+				white-space: pre-wrap;
+			}
+		</style>
+	</head>
+	<body>
+		<h1>Data-only room</h1>
+		<p>Two iframes join the same room without a camera, microphone, or push ID. Once connected, send a sample message from either participant.</p>
+		<p>Use <code>?room=YOUR_ROOM&amp;password=YOUR_PASSWORD</code> to join an existing room. Otherwise, this page creates random room credentials.</p>
+		<section id="peer-a">
+			<h2>Participant A</h2>
+			<p class="status">Connecting…</p>
+			<p><a target="_blank" rel="noopener">Open participant</a></p>
+			<button disabled>Send from A</button>
+			<pre></pre>
+		</section>
+		<section id="peer-b">
+			<h2>Participant B</h2>
+			<p class="status">Connecting…</p>
+			<p><a target="_blank" rel="noopener">Open participant</a></p>
+			<button disabled>Send from B</button>
+			<pre></pre>
+		</section>
+		<script>
+			var params = new URLSearchParams(location.search);
+			var random = new Uint32Array(4);
+			crypto.getRandomValues(random);
+			var room = params.get("room") || "data" + random[0].toString(16) + random[1].toString(16);
+			var password = params.get("password") || random[2].toString(16) + random[3].toString(16);
+			var peers = [];
+
+			window.addEventListener("message", function (event) {
+				peers.forEach(function (peer) {
+					if (event.source !== peer.frame.contentWindow || event.origin !== location.origin || !event.data) return;
+					if (event.data.action === "view-connection") {
+						peer.button.disabled = !event.data.value;
+						peer.status.textContent = event.data.value ? "Connected" : "Disconnected";
+					}
+					if ("dataReceived" in event.data) {
+						peer.log.textContent += "Received: " + JSON.stringify(event.data.dataReceived) + "\n";
+					}
+				});
+			});
+
+			["a", "b"].forEach(function (name) {
+				var section = document.getElementById("peer-" + name);
+				var frame = document.createElement("iframe");
+				var url = new URL("../", location.href);
+				url.search = new URLSearchParams({ room: room, password: password, datamode: "", label: name.toUpperCase() }).toString();
+				section.querySelector("a").href = url.href;
+				section.querySelector("a").textContent = url.href;
+				frame.hidden = true;
+				frame.title = "Participant " + name.toUpperCase();
+				var peer = { frame: frame, button: section.querySelector("button"), status: section.querySelector(".status"), log: section.querySelector("pre") };
+				peers.push(peer);
+				peer.button.onclick = function () {
+					frame.contentWindow.postMessage({ sendData: { from: name.toUpperCase(), message: "Hello", time: Date.now() } }, location.origin);
+				};
+				frame.src = url.href;
+				section.appendChild(frame);
+			});
+		</script>
+	</body>
+</html>

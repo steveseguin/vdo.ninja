@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="en">
+<meta charset="utf-8">
+<title>Mixer guest controls</title>
+<h1>Mixer guest controls</h1>
+<p>Add <code>&amp;mixercontrols=guests</code> to a mixer URL containing the room name and existing co-director credentials. Include the room password if required.</p>
+<p><code>mixer.html?room=ROOM&amp;codirector=CO_PASSWORD&amp;password=ROOM_PASSWORD&amp;mixercontrols=guests</code></p>
+<p>This opens the ordinary Director's Room controls inside the mixer page and automatically adds <code>&amp;noclaim</code>. The main director must enable co-directors and provide the co-director password. The URL option does not grant permissions.</p>
+<p>Guest thumbnails, guest controls and Solo Talk use the existing director implementation. The mixer layout editor, automatic slot reservations and saved-layout publishing do not start. This mode does not include a separate Program preview.</p>
+<p>These links share a randomly generated room and passwords for this page. Open the main director first:</p>
+<ul>
+<li><a id="director" target="_blank" rel="noopener">Main director</a></li>
+<li><a id="controls" target="_blank" rel="noopener">Embedded co-director controls</a></li>
+<li><a id="mixer" target="_blank" rel="noopener">Normal mixer</a></li>
+</ul>
+<script>
+var random = new Uint32Array(6);
+crypto.getRandomValues(random);
+var room = "mixer" + random[0].toString(16) + random[1].toString(16);
+var password = random[2].toString(16) + random[3].toString(16);
+var codirector = random[4].toString(16) + random[5].toString(16);
+document.getElementById("director").href = "../?" + new URLSearchParams({ director: room, codirector: codirector, password: password });
+document.getElementById("controls").href = "../mixer.html?" + new URLSearchParams({ room: room, codirector: codirector, password: password, mixercontrols: "guests" });
+document.getElementById("mixer").href = "../mixer.html?" + new URLSearchParams({ room: room, password: password });
+</script>
+</html>

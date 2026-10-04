@@ -44,7 +44,7 @@ document.getElementById("container").appendChild(iframe);
 
 Data-only room guests connect automatically after admission without a camera, microphone, or explicit push ID. `&dataonly` is an alias. Use `&scene` or `&nopush` for a listener that connects to publishers without advertising itself; existing room approval and queue rules still apply.
 
-Wait for a peer connection before calling `sendData`.
+[Open the two-participant example](room-data.html) to send data in both directions. Wait for a peer connection before calling `sendData`.
 
 ## Setting Up Event Listeners
 

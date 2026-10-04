@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<title>Buffer3 audio sync comparison</title>
+		<style>
+			body {
+				font: 16px/1.5 sans-serif;
+				margin: 24px;
+			}
+			iframe {
+				width: 48%;
+				height: 420px;
+				border: 1px solid #888;
+			}
+			input {
+				width: 100px;
+			}
+			@media (max-width: 700px) {
+				iframe {
+					width: 100%;
+				}
+			}
+		</style>
+	</head>
+	<body>
+		<h1>Buffer3 audio sync comparison</h1>
+		<p>Start the publisher, then adjust the receiver buffer while listening. Changing modes reloads the receiver; Apply changes the current buffer through the iframe API. Fixed audio delay changes reload the receiver.</p>
+		<p>In Buffer or Buffer2 mode, repeat Apply with the same value: duplicate receiver settings and audio ramp targets are skipped, while compensation continues when measured jitter or RTT changes.</p>
+		<p><code>&amp;buffer3=1000</code> enables experimental RTP audio sync: ignore deviations within 10 ms and require at least one second of sustained deviation before correcting. Each correction fades audio out over 15 ms, steps the delay while silent, then fades back in by 35 ms. Splices cannot overlap and require a fresh second of sustained error before repeating. No additional toggle is needed.</p>
+		<p>Buffer3 avoids gradual pitch bending from the compensation delay. The brief volume dip and skipped or repeated audio can still be audible, especially for large changes or music.</p>
+		<p>Buffer3 enables <code>sync=0</code> automatically. Explicit <code>sync</code> and <code>audiobuffer</code> still apply. <code>noap</code> disables the Web Audio correction. Buffer2 retains its RTT compensation. This comparison also uses <code>sync=0</code> for the legacy modes.</p>
+		<p><code>&amp;audiodelay=1000</code> adds a fixed extra second to incoming audio without enabling sync compensation. Only positive values enable it (maximum 179000 ms); <code>noap</code> disables it. Combined with sync, it adds to the changing sync delay. For outgoing microphone audio, use the existing <code>&amp;micdelay=1000</code>.</p>
+		<p>
+			<label
+				>Mode
+				<select id="mode">
+					<option value="buffer3">Buffer3 (experimental)</option>
+					<option value="buffer">Buffer</option>
+					<option value="buffer2">Buffer2 (includes RTT)</option>
+					<option value="audiodelay">Fixed audio delay only</option>
+				</select></label
+			>
+			<label>Buffer / audio delay (ms) <input id="buffer" type="number" min="0" max="4000" step="10" value="1000" /></label>
+			<button id="apply">Apply</button>
+		</p>
+		<p id="status" role="status">Select a camera in the publisher. Use headphones to avoid feedback.</p>
+		<p><a id="publisher-link" target="_blank" rel="noopener">Open publisher</a> · <a id="viewer-link" target="_blank" rel="noopener">Open receiver</a></p>
+		<iframe id="publisher" title="Publisher" allow="camera; microphone; autoplay"></iframe>
+		<iframe id="receiver" title="Receiver" allow="autoplay"></iframe>
+		<script>
+			var base = new URL("../", location.href);
+			var stream = "buffer3" + crypto.getRandomValues(new Uint32Array(2)).join("");
+			var receiver = document.getElementById("receiver");
+			var mode = document.getElementById("mode");
+			var buffer = document.getElementById("buffer");
+			var publisherUrl = base.href + "?" + new URLSearchParams({ push: stream, webcam: "", autostart: "", codec: "vp8", iframe: "" });
+			document.getElementById("publisher").src = publisherUrl;
+			document.getElementById("publisher-link").href = publisherUrl;
+			function viewerUrl() {
+				var params = new URLSearchParams({ view: stream, autostart: "" });
+				if (mode.value !== "audiodelay") params.set("sync", "0");
+				params.set(mode.value, buffer.value);
+				var url = base.href + "?" + params;
+				document.getElementById("viewer-link").href = url;
+				return url;
+			}
+			mode.onchange = function () {
+				receiver.src = viewerUrl();
+				document.getElementById("status").textContent = "Receiver reloaded with " + mode.value + ".";
+			};
+			document.getElementById("apply").onclick = function () {
+				if (!buffer.reportValidity()) return;
+				if (mode.value === "audiodelay") {
+					mode.onchange();
+					return;
+				}
+				receiver.contentWindow.postMessage({ setBufferDelay: Number(buffer.value), UUID: "*" }, base.origin);
+				viewerUrl();
+				document.getElementById("status").textContent = "Requested " + buffer.value + " ms. Allow time for audio and video to settle.";
+			};
+			receiver.src = viewerUrl();
+		</script>
+	</body>
+</html>

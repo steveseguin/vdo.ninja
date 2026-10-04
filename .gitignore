@@ -16,6 +16,10 @@ docs.md
 # Development tests and results do not belong in this public release repository.
 /.github/tests/
 /tests/
+**/test/
+**/tests/
+*.test.*
+*.spec.*
 
 # Local secrets and deployment state (not frontend assets)
 .env
@@ -80,3 +84,8 @@ docs.md
 
 # Private TURN operating instructions; the shared guide is turnserver.md.
 /turnserver-private.md
+
+# Hosted service directory pages.
+/hire.html
+/freelance.html
+/services.html

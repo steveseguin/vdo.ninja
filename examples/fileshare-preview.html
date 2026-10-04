@@ -1,0 +1,21 @@
+<!doctype html>
+<html lang="en">
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<title>File-sharing previews</title>
+	<h1>File-sharing previews</h1>
+	<p>Open a publisher and its viewer in separate tabs. Choose a video with audio. The viewer should continue receiving the file while the publisher's preview is small or hidden, including when the file loops.</p>
+	<ul>
+		<li><a id="mini" target="_blank" rel="noopener">Publish with a mini preview</a> — use its eye button to hide or restore the preview.</li>
+		<li><a id="hidden" target="_blank" rel="noopener">Publish with no preview</a> — playback starts after selecting the file.</li>
+		<li><a id="viewer" target="_blank" rel="noopener">Open the viewer</a></li>
+	</ul>
+	<p>Close the publisher before switching preview modes.</p>
+	<script>
+		const stream = "filepreview" + crypto.getRandomValues(new Uint32Array(2)).join("");
+		const base = new URL("../", location.href).href;
+		document.getElementById("mini").href = base + "?" + new URLSearchParams({ push: stream, fileshare: "", minipreview: "" });
+		document.getElementById("hidden").href = base + "?" + new URLSearchParams({ push: stream, fileshare: "", np: "" });
+		document.getElementById("viewer").href = base + "?" + new URLSearchParams({ view: stream, autostart: "" });
+	</script>
+</html>
