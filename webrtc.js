@@ -7,8 +7,6 @@
  */
 /*jshint esversion: 6 */
 
-// Release stamps identify the scripts that actually loaded, including mixed caches.
-var QOS_WEBRTC_BUILD = "20260910.3";
 
 var DebugLog = false;
 var debugSocket = null;
@@ -92,9 +90,61 @@ function warnlog(msg, url = false, lineNumber = false) {
 	} catch (e) { }
 }
 
+function sanitizeQosMessage(value) {
+	if (typeof value !== "string") return null;
+	var text = value.slice(0, 2048).replace(/^Unhandled Error: (?:Uncaught )?/, "").replace(/^(?:TypeError|ReferenceError|Error): /, "");
+	var match = text.match(/^Cannot (read|set) propert(?:ies|y) (?:of |[^ ]+ of )(undefined|null)(?: \((?:reading|setting) ['"]([^'"]+)['"]\))?/i);
+	if (match) {
+		var property = match[3];
+		var properties = ["srcObject", "getTracks", "getVideoTracks", "getAudioTracks", "style", "value", "length", "recording", "send", "close", "play", "pause", "remove", "addEventListener", "connectionState", "stats", "dataset", "classList", "audio", "video", "sdp", "type"];
+		return "Cannot " + match[1].toLowerCase() + " properties of " + match[2].toLowerCase() + (property ? " (reading '" + (properties.indexOf(property) !== -1 ? property : "property redacted") + "')" : "");
+	}
+	// Fixed browser/app reasons can occur inside a longer error containing SDP,
+	// credentials or a URL. Return the matched reason, never the surrounding text.
+	var reasons = [
+		"The provided value cannot be converted to a sequence", "Permission denied",
+		"Permission dismissed", "Requested device not found", "Could not start video source",
+		"Could not start audio source", "Device in use", "Failed to fetch",
+		"Load failed", "The operation was aborted", "The play() request was interrupted",
+		"play() failed because the user didn't interact with the document first",
+		"The object is in an invalid state", "The user aborted a request",
+		"Maximum call stack size exceeded", "ResizeObserver loop limit exceeded",
+		"Audio track ended unexpectedly", "Trying to stop webaudio more than once",
+		"No audio / video track found; can't publish to WHIP", "No meshcast server found that worked",
+		"Meshcast returned no anonymous credential", "Meshcast returned no publishing credential",
+		"Meshcast could not start publishing", "sendRequest returned false",
+		"Failed to set remote answer sdp", "Failed to set remote offer sdp",
+		"Failed to set local answer sdp", "Failed to set local offer sdp",
+		"Failed to parse SessionDescription", "Called in wrong state: stable",
+		"Called in wrong state: have-local-offer", "Called in wrong state: have-remote-offer"
+	];
+	var http = text.match(/^(WHIP|WHEP) request failed \(HTTP (0|[1-5][0-9]{2})\)$/);
+	if (http) return http[0];
+	var details = [];
+	for (var i = 0; i < reasons.length; i++) {
+		if (text.indexOf(reasons[i]) !== -1) details.push(reasons[i]);
+	}
+	match = text.match(/Failed to execute ['"]([a-zA-Z]+)['"] on ['"]([a-zA-Z]+)['"]/);
+	if (match && /^(setRemoteDescription|setLocalDescription|createOffer|createAnswer|addIceCandidate|addTrack|addTransceiver|replaceTrack|setParameters|postMessage|send|start|stop)$/.test(match[1]) && /^(RTCPeerConnection|RTCRtpSender|RTCDataChannel|WebSocket|Window|MediaRecorder)$/.test(match[2])) {
+		details.unshift("Failed to execute '" + match[1] + "' on '" + match[2] + "'");
+	}
+	if (!details.length && /(?:is not a function|is not defined|is not an object)/.test(text)) {
+		// Expressions can contain user-chosen keys. The class and source frames
+		// identify the failing code without transmitting those expressions.
+		return text.match(/is not a function|is not defined|is not an object/)[0];
+	}
+	if (!details.length && /(?:NotAllowedError|NotFoundError|NotReadableError|OverconstrainedError)/.test(text)) {
+		return text.match(/NotAllowedError|NotFoundError|NotReadableError|OverconstrainedError/)[0];
+	}
+	return details.length ? details.join("; ").slice(0, 200) : null;
+}
+
 function errorlog(msg, url = false, lineNumber = false) {
 	try {
 	console.error(performance.now() + ": ", msg);
+	if (typeof session !== "undefined" && session.queueQosError && !(typeof msg === "string" && msg.indexOf("CRITICAL ") === 0)) {
+		session.queueQosError("app_exception", msg, null, lineNumber, false);
+	}
 	let errorData = msg;
 	if (typeof msg === "object" && msg !== null) {
 		errorData = {
@@ -296,6 +346,86 @@ function downloadLogs() {
 	URL.revokeObjectURL(url);
 	errorReport = [];
 	} catch (e) { }
+}
+
+function isValidStreamID(value) {
+	return typeof value === "string" && value.length > 0 &&
+		!/[^A-Za-z0-9_:]/.test(value) &&
+		!Object.prototype.hasOwnProperty.call(Object.prototype, value);
+}
+
+// Preflight only protocol fields that carry stream identities, not arbitrary user data.
+// Reject the whole message before any of its controls can change peer or UI state.
+function validateIncomingStreamIDs(msg) {
+	function record(value) {
+		return value !== null && typeof value === "object" && !Array.isArray(value);
+	}
+	function optionalID(value) {
+		return value === undefined || value === null || value === false || value === "" || isValidStreamID(value);
+	}
+	function fields(value, optional = false) {
+		return record(value) && ["streamID", "sid", "streamId", "realStreamId", "realStreamID"].every(key =>
+			!(key in value) || (optional ? optionalID(value[key]) : isValidStreamID(value[key])));
+	}
+	function idMap(value, checkValue, allowEmptyKey = false) {
+		return value === undefined || value === null || value === false ||
+			(record(value) && Object.keys(value).every(key =>
+				((allowEmptyKey && key === "") || isValidStreamID(key)) && checkValue(value[key])));
+	}
+	function layoutItem(value) {
+		return value === null || value === false ||
+			(fields(value, true) && optionalID(value.defaultStreamID));
+	}
+	function layout(value) {
+		// Scalar layout modes/indexes are not stream IDs. The empty key holds unassigned slots.
+		if (Array.isArray(value)) return value.every(layoutItem);
+		if (!record(value)) return true;
+		return idMap(value, item => Array.isArray(item) ? item.every(layoutItem) : layoutItem(item), true);
+	}
+	function sceneAction(value) {
+		return fields(value) && (!("target" in value) || isValidStreamID(value.target));
+	}
+
+	var valid = fields(msg);
+	if (valid && msg.request === "listing" && "list" in msg) {
+		valid = Array.isArray(msg.list) && msg.list.every(item => fields(item, true));
+	}
+	if (valid && "directorState" in msg) {
+		valid = idMap(msg.directorState, item => fields(item, true));
+	}
+	if (valid) {
+		valid = ["slotsUpdate", "reservedSlots"].every(key => {
+			var slots = msg[key];
+			return slots === undefined || slots === null || slots === false ||
+				((record(slots) || Array.isArray(slots)) && Object.keys(slots).every(slot => optionalID(slots[slot])));
+		});
+	}
+	if (valid) {
+		valid = optionalID(msg.infocus) && optionalID(msg.infocus2) &&
+			layout(msg.layout) && layout(msg.layout_array);
+	}
+	if (valid && msg.layouts) {
+		valid = typeof msg.layouts === "object" && Object.keys(msg.layouts).every(key => layout(msg.layouts[key]));
+	}
+	if (valid && "scene" in msg && "action" in msg && "target" in msg) {
+		valid = isValidStreamID(msg.target);
+	}
+	if (valid && msg.directorSettings) {
+		valid = record(msg.directorSettings) && optionalID(msg.directorSettings.soloVideo) &&
+			idMap(msg.directorSettings.scene, sceneAction) && idMap(msg.directorSettings.mute, sceneAction);
+	}
+	if (valid && msg.connectionMap) {
+		var map = msg.connectionMap;
+		valid = fields(map, true) && (!map.connections || (Array.isArray(map.connections) && map.connections.every(conn => {
+			if (!record(conn)) return false;
+			if (optionalID(conn.peerStreamID)) return true;
+			// Viewers without a stream use their peer UUID here; UUIDs may contain hyphens.
+			return conn.peerStreamID === conn.peerUUID && typeof conn.peerUUID === "string" &&
+				conn.peerUUID.indexOf("-") !== -1 && !/[^A-Za-z0-9_-]/.test(conn.peerUUID);
+		})));
+	}
+	if (!valid) errorlog("Discarding incoming message: invalid stream ID or stream ID data.");
+	return valid;
 }
 
 async function generateHash(str, length = false) {
@@ -943,6 +1073,7 @@ WebRTC.Media = (function () {
 	session.bitrate = false; // 20000, aka videobitrate;
 	session.bitrate_set = false;
 	session.buffer = false;
+	session.buffer3 = false; // Opt-in RTP audio sync with brief gain ducks around delay steps.
 	session.defaultChunkedBuffer = 3000;
 	session.chunkbufferadaptive = true;
 	if (typeof session.includeRTT === "undefined") {
@@ -1233,6 +1364,9 @@ WebRTC.Media = (function () {
 	session.noMeshcast = false;
 	session.miconly = false;
 	session.muted = false;
+	session.sceneMuted = false;
+	session.sceneMuteButton = false;
+	session.sceneMuteStatus = "ready";
 	session.muted_activeSpeaker = false;
 	session.muted_savedState = false;
 	session.mono = false;
@@ -1240,6 +1374,7 @@ WebRTC.Media = (function () {
 	session.nochunk = false;
 	session.nochunkaudio = false;
 	session.audioBuffer = false;
+	session.audioDelay = 0; // Fixed extra incoming audio delay in milliseconds; positive values only.
 	session.motionDetectionInterval = false;
 	// session.forceChunked = false;
 	session.maxAvailableSlots = 20;
@@ -1535,6 +1670,7 @@ WebRTC.Media = (function () {
 	// Used by main.js to keep normal &wss/&wss2 ahead of invite.cam &invitecam
 	// and scene-only &scenewss2 routing. Do not reset casually.
 	session.wssSetViaUrl = false;
+	session.invitecamManaged = false;
 	session.waitForCandidates = false;
 	session.whipOutKeyframe = false;
 	session.whipOutKeyframeOnNewViewer = false;
@@ -1678,16 +1814,8 @@ WebRTC.Media = (function () {
 		}
 	}
 
-	// QoS (Quality of Service) monitoring - only for official VDO.ninja domains
-	// Strictly limited to: vdo.ninja and dev.versus.cam
-	session.qosEnabled = (function() {
-		var h = location.hostname;
-		// Only these exact domains - no subdomains, no other domains
-		if (h === "vdo.ninja") return true;
-		if (h === "dev.versus.cam") return true;
-		// All other domains: disabled (self-hosted, backup, rtc.ninja, etc.)
-		return false;
-	})();
+	// Only pages executing on vdo.ninja participate, including /alpha/.
+	session.qosEnabled = location.hostname === "vdo.ninja";
 
 	if (session.qosEnabled) {
 		session.qosData = {
@@ -1702,6 +1830,7 @@ WebRTC.Media = (function () {
 			bitrateSamples: [],
 			turnServersUsed: [],
 			meshcastServersUsed: [],
+			meshcast: [],
 			candidateTypesLocal: [],
 			candidateTypesRemote: [],
 			lastVideoCodec: null,
@@ -1713,13 +1842,13 @@ WebRTC.Media = (function () {
 		};
 	}
 
-	// QoS holds at most three distinct records in memory, independently of debug.
+	// Keep a small recent error buffer, independently of debug logging.
 	var qosErrors = [];
-	var qosCriticalSent = false;
+	var qosCriticalSent = 0;
 	var qosCriticalTimer = null;
 	session.qosCriticalEnabled = location.hostname === "vdo.ninja" && /^\/alpha(?:\/|$)/.test(location.pathname);
 	var qosCodes = ["signaling_failed", "handshake_decryption_failed", "local_offer_failed", "local_answer_failed", "remote_offer_failed", "remote_answer_failed", "ice_recovery_exhausted", "dtls_failed", "control_transport_closed", "initial_settings_apply_failed", "initial_settings_send_failed", "initial_settings_compose_failed", "video_track_setup_failed", "audio_track_setup_failed", "app_exception"];
-	var qosErrorNames = ["Error", "TypeError", "ReferenceError", "SyntaxError", "RangeError", "OperationError", "InvalidStateError", "InvalidAccessError", "NotSupportedError", "NotAllowedError", "AbortError", "NetworkError", "DataError", "SecurityError", "TimeoutError"];
+	var qosErrorNames = ["Error", "TypeError", "ReferenceError", "SyntaxError", "RangeError", "OperationError", "InvalidStateError", "InvalidAccessError", "NotSupportedError", "NotAllowedError", "AbortError", "NetworkError", "DataError", "SecurityError", "TimeoutError", "NotFoundError", "NotReadableError", "OverconstrainedError"];
 	var qosFiles = ["webrtc.js", "lib.js", "main.js", "auth-client.js", "podcast/bootstrap.js"];
 	function qosSource(url, line) {
 		try {
@@ -1752,13 +1881,13 @@ WebRTC.Media = (function () {
 		try {
 			clearTimeout(qosCriticalTimer);
 			qosCriticalTimer = null;
-			if (!session.qosEnabled || !session.qosCriticalEnabled || qosCriticalSent || typeof postQosPayload !== "function" || typeof qosSoftwareInfo !== "function") return;
+			if (!session.qosEnabled || !session.qosCriticalEnabled || qosCriticalSent >= 3 || typeof postQosPayload !== "function" || typeof qosSoftwareInfo !== "function") return;
 			if (!qosErrors.some(function (item) { return !item.sent && item.urgent; })) return;
-			qosCriticalSent = true; // Claim the attempt before fetch or lifecycle races.
+			qosCriticalSent++; // Bounded attempts; never retry a failed upload.
 			var payload = qosSoftwareInfo();
 			payload.reportType = "critical";
 			payload.errors = session.takeQosErrors();
-			postQosPayload(payload, 1024);
+			postQosPayload(payload, 4096);
 		} catch (e) { /* Reporting must never report itself or affect the call. */ }
 	};
 	session.queueQosError = function (code, error, file, line, urgent) {
@@ -1767,19 +1896,31 @@ WebRTC.Media = (function () {
 			var source = qosStackSource(error);
 			file = source ? source.file : (qosFiles.indexOf(file) !== -1 ? file : null);
 			line = source ? source.line : Math.max(0, Math.min(100000, parseInt(line, 10) || 0));
-			var key = code + ":" + file + ":" + line;
+			var message = sanitizeQosMessage(typeof error === "string" ? error : error && error.message);
+			if (code === "app_exception" && !source && !file && !message) return;
+			var key = code + ":" + file + ":" + line + ":" + message;
 			var existing = qosErrors.find(function (item) { return item.key === key; });
-			if (existing) {
-				existing.urgent = existing.urgent || !!urgent;
-			} else {
-				if (qosErrors.length >= 3) return;
-				var name = error && qosErrorNames.indexOf(error.name) !== -1 ? error.name : "Error";
-				qosErrors.push({ key: key, sent: false, urgent: !!urgent, record: { code: code, name: name, file: file, line: file ? line : 0 } });
+			if (existing) return;
+			var name = error && qosErrorNames.indexOf(error.name) !== -1 ? error.name : "Error";
+			var record = { code: code, name: name, file: file, line: file ? line : 0 };
+			if (message) record.msg = message;
+			// Only application source locations, never stack text, URLs or arguments.
+			if (error && typeof error.stack === "string") {
+				var frames = [];
+				error.stack.slice(0, 4096).split(/\r?\n/).forEach(function (frame) {
+					if (!/^\s*at\s/.test(frame) && !/^[^\s]*@https?:/.test(frame)) return;
+					var match = frame.match(/(https?:\/\/[^\s()]+):(\d+):(\d+)/);
+					var location = match && qosSource(match[1], match[2]);
+					if (location && frames.length < 3) frames.push(location);
+				});
+				if (frames.length) record.frames = frames;
 			}
-			if (urgent && session.qosCriticalEnabled && !qosCriticalSent && !qosCriticalTimer) {
+			if (qosErrors.length >= 6) qosErrors.shift();
+			qosErrors.push({ key: key, sent: false, urgent: !!urgent, record: record });
+			if (urgent && session.qosCriticalEnabled && qosCriticalSent < 3 && !qosCriticalTimer) {
 				qosCriticalTimer = setTimeout(session.flushQosCriticalReport, 1000);
 			}
-		} catch (e) { /* No messages, stacks or arbitrary objects cross the QoS boundary. */ }
+		} catch (e) { /* Reporting cannot interrupt logging or the call. */ }
 	};
 	session.observeQosTransport = function (peer) {
 		try {
@@ -1795,7 +1936,7 @@ WebRTC.Media = (function () {
 	};
 	window.addEventListener("error", function (event) {
 		var source = qosSource(event.filename, event.lineno);
-		if (source) session.queueQosError("app_exception", event.error, source.file, source.line, true);
+		if (source) session.queueQosError("app_exception", event.error || event.message, source.file, source.line, true);
 	});
 	window.addEventListener("unhandledrejection", function (event) {
 		var source = qosStackSource(event.reason);
@@ -3926,8 +4067,6 @@ WebRTC.Media = (function () {
 		var keyPromise = webStreamTakeoverKeyPromises[alias];
 		try {
 			return await keyPromise;
-		} catch (error) {
-			throw error;
 		} finally {
 			if (webStreamTakeoverKeyPromises[alias] === keyPromise) {
 				delete webStreamTakeoverKeyPromises[alias];
@@ -4477,6 +4616,8 @@ WebRTC.Media = (function () {
 	};
 
 	session.setScale = function (UUID, scale, force = false) {
+		var pc = session.pcs[UUID];
+		if (!pc) return;
 		warnlog("SET SCALING IS FIRING, which is GOOD !!!!!! " + scale);
 
 		try {
@@ -4570,6 +4711,7 @@ WebRTC.Media = (function () {
 					senders,
 					settings,
 					function (arr) {
+						if (session.pcs[arr[1]] !== pc) return;
 						log("scale set! " + arr[0]);
 						pokeIframeAPI("setVideoScale", arr[0], arr[1]); // deprecated
 						pokeIframeAPI("set-video-scale", arr[0], arr[1]);
@@ -4700,6 +4842,7 @@ WebRTC.Media = (function () {
 			return;
 		}
 
+		var pc = session.pcs[UUID];
 		cover = cover || false;
 		snape = snap || false;
 
@@ -4817,6 +4960,7 @@ WebRTC.Media = (function () {
 				sender,
 				settings,
 				function (arr) {
+					if (session.pcs[arr[1]] !== pc) return;
 					log("scale set!");
 					pokeIframeAPI("setVideoScale", arr[0], arr[1]); // depreciated
 					pokeIframeAPI("set-video-scale", arr[0], arr[1]);
@@ -5139,6 +5283,16 @@ WebRTC.Media = (function () {
 	};
 
 	session.directMigrateIssue = function (migrateRoom, transferSettings, UUID) {
+		if (session.invitecamManaged) {
+			if (
+				migrateRoom !== session.roomid ||
+				!transferSettings ||
+				transferSettings.justResetting !== true ||
+				Object.keys(transferSettings).length !== 1
+			) {
+				return false;
+			}
+		}
 		transferSettings = { ...transferSettings };
 		pokeIframeAPI("transfer", migrateRoom, UUID);
 		if (session.password) {
@@ -5874,6 +6028,7 @@ WebRTC.Media = (function () {
 			return;
 		} // user already disconnected.
 
+		var pc = session.pcs[UUID];
 		if (session.pcs[UUID].bitrateTimeout) {
 			clearInterval(session.pcs[UUID].bitrateTimeout);
 			session.pcs[UUID].bitrateTimeout = null;
@@ -5985,6 +6140,7 @@ WebRTC.Media = (function () {
 				log("starting some preload bitrate " + (Date.now() - session.pcs[UUID].startTime));
 				session.pcs[UUID].bitrateTimeout = setTimeout(
 					function (uuid) {
+						if (session.pcs[uuid] !== pc) return;
 						try {
 							warnlog("stopping some preload bitrate " + (Date.now() - session.pcs[uuid].startTime));
 							session.limitBitrate(uuid, null);
@@ -6025,6 +6181,7 @@ WebRTC.Media = (function () {
 					sender,
 					settings,
 					function (arr) {
+						if (session.pcs[arr[1]] !== pc) return;
 						pokeIframeAPI("setVideoBitrate", arr[0], arr[1]);
 						pokeIframeAPI("set-video-bitrate", arr[0], arr[1]);
 						log("bandwidth set a! " + arr[0]);
@@ -6082,6 +6239,7 @@ WebRTC.Media = (function () {
 
 							session.pcs[UUID].bitrateTimeoutFirefox = setTimeout(
 								function (uuid, bp) {
+									if (session.pcs[uuid] !== pc) return;
 									// I have firefox/safari waiting 3 seconds before changing bitrates
 									log("bitrate timeout; ios/firefox specific: " + bandwidth);
 									session.pcs[uuid].bitrateTimeoutFirefox = false;
@@ -6094,6 +6252,7 @@ WebRTC.Media = (function () {
 						} else {
 							session.pcs[UUID].bitrateTimeoutFirefox = setTimeout(
 								function (uuid) {
+									if (session.pcs[uuid] !== pc) return;
 									// trick it into thinking its running
 									session.pcs[uuid].bitrateTimeoutFirefox = false;
 								},
@@ -6105,6 +6264,7 @@ WebRTC.Media = (function () {
 								sender,
 								settings,
 								function (arr) {
+									if (session.pcs[arr[1]] !== pc) return;
 									log("bandwidth set b! " + arr[0]);
 									session.pcs[arr[1]].stats.scaleFactor = parseInt(arr[2]) + "%";
 									pokeIframeAPI("setVideoBitrate", arr[0], arr[1]); // depcreated
@@ -6121,6 +6281,7 @@ WebRTC.Media = (function () {
 							sender,
 							settings,
 							function (arr) {
+								if (session.pcs[arr[1]] !== pc) return;
 								log("bandwidth set c! " + arr[0]);
 								session.pcs[arr[1]].stats.scaleFactor = parseInt(arr[2]) + "%";
 								pokeIframeAPI("setVideoBitrate", arr[0], arr[1]); // depcreated
@@ -6141,6 +6302,7 @@ WebRTC.Media = (function () {
 
 							session.pcs[UUID].bitrateTimeoutFirefox = setTimeout(
 								function (uuid, bp) {
+									if (session.pcs[uuid] !== pc) return;
 									// I have firefox/safari waiting 3 seconds before changing bitrates
 									log("bitrate timeout; ios/firefox specific: " + bandwidth);
 									session.pcs[uuid].bitrateTimeoutFirefox = false;
@@ -6153,6 +6315,7 @@ WebRTC.Media = (function () {
 						} else {
 							session.pcs[UUID].bitrateTimeoutFirefox = setTimeout(
 								function (uuid) {
+									if (session.pcs[uuid] !== pc) return;
 									// trick it into thinking its running
 									session.pcs[uuid].bitrateTimeoutFirefox = false;
 								},
@@ -6164,6 +6327,7 @@ WebRTC.Media = (function () {
 								sender,
 								settings,
 								function (arr) {
+									if (session.pcs[arr[1]] !== pc) return;
 									log("bandwidth set d! " + arr[0]);
 									pokeIframeAPI("setVideoBitrate", arr[0], arr[1]); // dep
 									pokeIframeAPI("set-video-bitrate", arr[0], arr[1]);
@@ -6176,6 +6340,7 @@ WebRTC.Media = (function () {
 							sender,
 							settings,
 							function (arr) {
+								if (session.pcs[arr[1]] !== pc) return;
 								log("bandwidth set e! " + arr[0]);
 								pokeIframeAPI("setVideoBitrate", arr[0], arr[1]); // dep
 								pokeIframeAPI("set-video-bitrate", arr[0], arr[1]);
@@ -6387,13 +6552,20 @@ WebRTC.Media = (function () {
 		}
 	};
 
-	session.desaltStreamID = function (streamID) {
+	session.desaltStreamID = function (streamID, report = true) {
+		function finish(value) {
+			if (!isValidStreamID(value)) {
+				errorlog("Discarding incoming message: invalid desalted stream ID.");
+				return false;
+			}
+			if (report) pokeIframeAPI("stream-id-detected", value);
+			return value;
+		}
 		if (session.password) {
 			if (session.hash !== false) {
 				//log("hash is not false");
 				streamID = streamID.slice(0, -1 * session.hash.length);
-				pokeIframeAPI("stream-id-detected", streamID);
-				return streamID;
+				return finish(streamID);
 			} else {
 				//log("Stream ID pre:"+streamID);
 				return generateHash(session.password + session.salt, 6)
@@ -6403,14 +6575,12 @@ WebRTC.Media = (function () {
 						//log(streamID);
 						streamID = streamID.slice(0, -1 * session.hash.length);
 						//log("Final streamID: "+streamID);
-						pokeIframeAPI("stream-id-detected", streamID);
-						return streamID;
+						return finish(streamID);
 					})
 					.catch(errorlog);
 			}
 		}
-		pokeIframeAPI("stream-id-detected", streamID);
-		return streamID;
+		return finish(streamID);
 	};
 
 	/* session.reissueView = function(streamID){ // Probably causes more problems than it solves.
@@ -7504,6 +7674,8 @@ WebRTC.Media = (function () {
 				}
 			}
 
+			if (!validateIncomingStreamIDs(msg)) return;
+
 			// Reject peer IDs that collide with inherited object properties.
 			if (
 				Object.prototype.hasOwnProperty.call(Object.prototype, msg.UUID) ||
@@ -7521,7 +7693,14 @@ WebRTC.Media = (function () {
 
 			if (msg.streamID) {
 				// desalt.  Base layer only.
-				msg.streamID = session.desaltStreamID(msg.streamID);
+				msg.streamID = await session.desaltStreamID(msg.streamID);
+				if (!msg.streamID) return;
+			}
+			// Check the entire roster before storing it or resolving the room-list promise.
+			if (msg.request === "listing" && msg.list) {
+				for (var item of msg.list) {
+					if (item.streamID && !(await session.desaltStreamID(item.streamID, false))) return;
+				}
 			}
 
 			if ("remote" in msg) {
@@ -7572,6 +7751,9 @@ WebRTC.Media = (function () {
 							if ("roomid" in msg) {
 								if ("target" in msg) {
 									if (msg.target == session.UUID) {
+										if (session.invitecamManaged && msg.roomid !== session.roomenc) {
+											return;
+										}
 										msg.request = "transferred";
 										session.roomenc = msg.roomid;
 										var data = {};
@@ -7785,7 +7967,7 @@ WebRTC.Media = (function () {
 
 						if (session.approval_popup && !session.pendingJoinPrompted.has(joinRequestUUID) && !session.suppressApprovalPopups) {
 							session.pendingJoinPrompted.add(joinRequestUUID);
-							confirmAlt("A " + (joinRequestIsScene ? "scene" : "guest") + " is waiting for approval.\n\n" + joinRequestLabel + "\n\nApprove?", false, "server-approval-" + joinRequestUUID).then(function (res) {
+							confirmAlt("A " + (joinRequestIsScene ? "scene" : "guest") + " is waiting for approval.\n\n" + escapeHtml(String(joinRequestLabel)) + "\n\nApprove?", false, "server-approval-" + joinRequestUUID).then(function (res) {
 								if (res) {
 									if (typeof approveJoinRequest === "function") {
 										approveJoinRequest(joinRequestUUID);
@@ -7969,6 +8151,17 @@ WebRTC.Media = (function () {
 					//}
 					session.alreadyJoinedMembers = msg.list;
 					session.listPromise.resolve(msg.list); // used for rooms  -- this is being de-salted on its own
+					// Only a successful room listing starts data-only publishing; denied joins also resolve listPromise.
+					// Use normal stream discovery while preserving explicit viewer and relay modes.
+					if (
+						(urlParams.has("datamode") || urlParams.has("dataonly")) &&
+						session.scene === false &&
+						!session.director && !session.doNotSeed && !session.retransmit &&
+						!session.seeding && !session.shadowBanned &&
+						(!session.view || session.permaid !== false)
+					) {
+						session.postPublish();
+					}
 					} else if (msg.request == "transferred") {
 						clearJoinPendingModal();
 						// Get a list of streams you have access to
@@ -8058,7 +8251,8 @@ WebRTC.Media = (function () {
 								if (msg.list[i].UUID in session.rpcs) {
 									log("RTC already connected"); /// lets just say instead of Stream, we have
 								} else {
-									var streamID = session.desaltStreamID(msg.list[i].streamID);
+									var streamID = await session.desaltStreamID(msg.list[i].streamID);
+									if (!streamID) return;
 									log("STREAM ID desalted 2:" + streamID);
 
 									if (session.queue) {
@@ -8224,22 +8418,20 @@ WebRTC.Media = (function () {
 									if (!session.cleanOutput && window.obsstudio) {
 										try {
 											var hangupContainer = getById("hangupContainer");
-											if (hangupContainer) {
-												var refreshButton = hangupContainer.querySelector("button");
-												if (refreshButton) {
-													refreshButton.remove();
-												}
-												hangupContainer.innerHTML = "&#x1F44B;<br>";
-												var obsExplainer = document.createElement("div");
-												obsExplainer.style.fontSize = "20%";
-												obsExplainer.style.maxWidth = "720px";
-												obsExplainer.style.lineHeight = "1.45";
-												obsExplainer.style.margin = "14px auto";
-												obsExplainer.textContent = "This OBS browser source disconnected because the stream ID is already in use. This usually means the OBS source is using a push link instead of a view link, or the same stream is already open in another tab, browser source, or device. Use the view link in OBS, or close the other session that is already using this stream ID.";
-												hangupContainer.appendChild(obsExplainer);
-												if (refreshButton) {
-													hangupContainer.appendChild(refreshButton);
-												}
+											var refreshButton = hangupContainer.querySelector("button");
+											if (refreshButton) {
+												refreshButton.remove();
+											}
+											hangupContainer.innerHTML = "&#x1F44B;<br>";
+											var obsExplainer = document.createElement("div");
+											obsExplainer.style.fontSize = "20%";
+											obsExplainer.style.maxWidth = "720px";
+											obsExplainer.style.lineHeight = "1.45";
+											obsExplainer.style.margin = "14px auto";
+											obsExplainer.textContent = "This OBS browser source disconnected because the stream ID is already in use. This usually means the OBS source is using a push link instead of a view link, or the same stream is already open in another tab, browser source, or device. Use the view link in OBS, or close the other session that is already using this stream ID.";
+											hangupContainer.appendChild(obsExplainer);
+											if (refreshButton) {
+												hangupContainer.appendChild(refreshButton);
 											}
 										} catch (e) {
 											errorlog(e);
@@ -8331,8 +8523,7 @@ WebRTC.Media = (function () {
 				}
 				if (msg.UUID in session.rpcs) {
 					warnlog("problem");
-					if (msg.bye) session.closeRPC(msg.UUID);
-					else session.closeRPC(msg.UUID);
+					session.closeRPC(msg.UUID);
 					// I'll have to figure out where to reconnect somewhere else
 				}
 			} else if (msg.iceRestartRequest && msg.UUID) {
@@ -8357,7 +8548,7 @@ WebRTC.Media = (function () {
 
 		session.ws.onerror = async function (event) {
 			if (event.currentTarget === session.ws && !session.security && !session.qosClosing) {
-				session.queueQosError("signaling_failed", null, "webrtc.js", 0, true);
+				session.queueQosError("signaling_failed", null, "webrtc.js", 0, false);
 			}
 			warnlog(event);
 		};
@@ -8367,7 +8558,7 @@ WebRTC.Media = (function () {
 				for (var peerUUID in session.rpcs) updateWhepDirectorControls(peerUUID);
 			}
 			if (event.currentTarget === session.ws && !event.wasClean && !session.security && !session.qosClosing) {
-				session.queueQosError("signaling_failed", null, "webrtc.js", 0, true);
+				session.queueQosError("signaling_failed", null, "webrtc.js", 0, false);
 			}
 			// this gets triggered, along with error, so we will ignore error.
 			clearTimeout(session.pingTimeout);
@@ -8578,6 +8769,7 @@ WebRTC.Media = (function () {
 
 	// Shared control messages can arrive over WSS before any data channel exists.
 			session.processRPCSOnMessage = async function (msg, UUID) {
+				if (!validateIncomingStreamIDs(msg)) return;
 				if (msg.session && (("volume" in msg) || ("hangup" in msg))) {
 					if (!session.pcs[UUID] || session.pcs[UUID].session !== msg.session) return;
 					return session.processPCSOnMessage(msg, UUID);
@@ -9220,6 +9412,7 @@ WebRTC.Media = (function () {
 						meshcastWatch(UUID, msg.meshcast); // this function filters out invalid meshcast requests instead now.
 					}
 				}
+				if (msg.meshcastStatus) updateMeshcastDirector(UUID, msg.meshcastStatus);
 
 				if ("lowerhand" in msg) {
 					if (session.directorList.indexOf(UUID) >= 0) {
@@ -9370,10 +9563,20 @@ WebRTC.Media = (function () {
 					}
 				}
 
+				if ("sceneMuteState" in msg) {
+					updateRemoteSceneMuteState(UUID, msg.sceneMuteState, msg.sceneMuteStatus);
+					mustUpdateMixer = true;
+				}
+
 				if ("info" in msg) {
+					if ("sceneMuted" in msg.info) {
+						updateRemoteSceneMuteState(UUID, msg.info.sceneMuted, msg.info.sceneMuteStatus);
+						mustUpdateMixer = true;
+					}
 					// info should only be initial data
 					warnlog(msg);
 					session.rpcs[UUID].stats.info = msg.info;
+					if (msg.info.meshcastControl) updateMeshcastDirector(UUID, msg.info.meshcastControl);
 					if (session.translationController && msg.info.language) {
 						session.translationController.setRemoteLanguage(UUID, msg.info.language);
 					}
@@ -9411,16 +9614,14 @@ WebRTC.Media = (function () {
 					// Only expose primary WHIP recovery when the guest reports a live restart capability.
 					if (session.director) {
 						var controls = getById("controls_" + UUID);
-						if (controls) {
-							var whipButton = controls.querySelector('[data-action-type="restart-whip"]');
-							if (whipButton) {
-								if (msg.info.whipRestartable) {
-									whipButton.dataset.UUID = UUID;
-									whipButton.classList.remove("hidden");
-								} else {
-									whipButton.classList.add("hidden");
-									delete whipButton.dataset.UUID;
-								}
+						var whipButton = controls.querySelector('[data-action-type="restart-whip"]');
+						if (whipButton) {
+							if (msg.info.whipRestartable) {
+								whipButton.dataset.UUID = UUID;
+								whipButton.classList.remove("hidden");
+							} else {
+								whipButton.classList.add("hidden");
+								delete whipButton.dataset.UUID;
 							}
 						}
 					}
@@ -9682,6 +9883,7 @@ WebRTC.Media = (function () {
 							}
 
 							pokeIframeAPI("remote-mute-state", session.rpcs[UUID].remoteMuteState, UUID);
+							updateRemoteSceneMuteState(UUID);
 						} catch (e) {
 							errorlog(e);
 						}
@@ -10261,6 +10463,7 @@ WebRTC.Media = (function () {
 
 					pokeAPI("remoteMuted", session.rpcs[UUID].remoteMuteState, session.rpcs[UUID].streamID);
 					pokeIframeAPI("remote-mute-state", msg.muteState, UUID);
+					updateRemoteSceneMuteState(UUID);
 				}
 
 				if ("requestSceneUpdate" in msg) {
@@ -11578,6 +11781,7 @@ WebRTC.Media = (function () {
 			}
 		}
 		delete session.pcs[UUID];
+		updateSceneMuteButton();
 		session.applySoloChat();
 		applySceneState();
 	};
@@ -12218,6 +12422,10 @@ WebRTC.Media = (function () {
 				msg.info.meta = session.meta;
 				msg.info.order = session.order;
 				msg.info.muted = session.muted;
+				if (session.sceneMuteButton) {
+					msg.info.sceneMuted = session.sceneMuted;
+					msg.info.sceneMuteStatus = session.sceneMuteStatus;
+				}
 				msg.info.queued = session.queue;
 				if (session.preferChannel) {
 					msg.info.preferChannel = session.preferChannel;
@@ -12254,6 +12462,8 @@ WebRTC.Media = (function () {
 
 
 				msg.info.proaudio_init = session.proaudio;
+				msg.info.meshcastSwitch = true;
+				msg.info.meshcastControl = getMeshcastControlStatus();
 
 				if (session.whipOutput) {
 					msg.info.whipOut = true;
@@ -12536,6 +12746,7 @@ WebRTC.Media = (function () {
 						}
 					}
 				}
+				if (!validateIncomingStreamIDs(msg)) return;
 				log(msg);
 
 				if ("remote" in msg) {
@@ -12739,6 +12950,7 @@ WebRTC.Media = (function () {
 	};
 
 		session.processPCSOnMessage = async function (msg, UUID, altUUID = false) {
+			if (!validateIncomingStreamIDs(msg)) return;
 			msg.UUID = UUID;
 			if (msg.session && (("volume" in msg) || ("hangup" in msg)) && (!session.pcs[UUID] || session.pcs[UUID].session !== msg.session)) return;
 			if (msg.session && (("whepSettings" in msg) || ("whepScreenSettings" in msg) || ("screenStopped" in msg))) {
@@ -12881,6 +13093,19 @@ WebRTC.Media = (function () {
 					log("Someone is trying to transfer a guest");
 					if (session.codirector_transfer) {
 						if (UUID in session.pcs && session.pcs[UUID].coDirector === true) {
+							if (session.invitecamManaged) {
+								if (
+									msg.roomid !== session.roomenc ||
+									!msg.transferSettings ||
+									msg.transferSettings.justResetting !== true ||
+									Object.keys(msg.transferSettings).length !== 1
+								) {
+									var data = {};
+									data.rejected = "requestCoMigrate";
+									session.sendRequest(data, UUID);
+									return;
+								}
+							}
 							log("Valid co director trying to transfer a guest");
 							var data = {};
 							if (msg.transferSettings && msg.transferSettings.updateurl) {
@@ -13231,8 +13456,9 @@ WebRTC.Media = (function () {
 									continue;
 								}
 								output[uuid] = session.pcs[uuid].stats;
-								//output[uuid].label = session.pcs[uuid].label;
-								// output[uuid].streamID = session.pcs[uuid].streamID;
+								if (output[uuid] && session.pcs[uuid].label) {
+									output[uuid] = Object.assign({}, output[uuid], { label: session.pcs[uuid].label });
+								}
 							}
 						}
 						var data = {};
@@ -13249,7 +13475,9 @@ WebRTC.Media = (function () {
 										continue;
 									}
 									output[uuid] = session.pcs[uuid].stats;
-									//output[uuid].label = session.pcs[uuid].label;
+									if (output[uuid] && session.pcs[uuid].label) {
+										output[uuid] = Object.assign({}, output[uuid], { label: session.pcs[uuid].label });
+									}
 								}
 							}
 							var data = {};
@@ -13333,6 +13561,9 @@ WebRTC.Media = (function () {
 												continue;
 											}
 											output[uuid] = session.pcs[uuid].stats;
+											if (session.pcs[uuid].label) {
+												output[uuid] = Object.assign({}, output[uuid], { label: session.pcs[uuid].label });
+											}
 										}
 									}
 									var data = {};
@@ -13357,6 +13588,9 @@ WebRTC.Media = (function () {
 										continue;
 									}
 									output[uuid] = session.pcs[uuid].stats;
+									if (session.pcs[uuid].label) {
+										output[uuid] = Object.assign({}, output[uuid], { label: session.pcs[uuid].label });
+									}
 								}
 							}
 							var data = {};
@@ -13384,6 +13618,9 @@ WebRTC.Media = (function () {
 													continue;
 												}
 												output[uuid] = session.pcs[uuid].stats;
+												if (session.pcs[uuid].label) {
+													output[uuid] = Object.assign({}, output[uuid], { label: session.pcs[uuid].label });
+												}
 											}
 										}
 										var data = {};
@@ -13409,6 +13646,9 @@ WebRTC.Media = (function () {
 											continue;
 										}
 										output[uuid] = session.pcs[uuid].stats;
+										if (session.pcs[uuid].label) {
+											output[uuid] = Object.assign({}, output[uuid], { label: session.pcs[uuid].label });
+										}
 									}
 								}
 								var data = {};
@@ -13636,6 +13876,17 @@ WebRTC.Media = (function () {
 						}
 					}
 				}
+				if (session.meshcastSwitch && msg.meshcastReady && msg.meshcastReady.handoff === session.meshcastSwitch) {
+					var ready = msg.meshcastReady;
+					var activeMedia = pauseMeshcastPeer(UUID, ready.active === true, ready.active ? ready : undefined);
+					if (ready.active === false) {
+						if (ready.recover) {
+							session.sendMessage({ whepSettings: { type: "whep", url: false, handoff: session.meshcastSwitch, audio: activeMedia.audio, video: activeMedia.video } }, UUID);
+						} else {
+							session.pcs[UUID].meshcastReturnPending = false;
+						}
+					}
+				}
 				var remoteAuthorized = session.remote === true || (session.remote && "remote" in msg && msg.remote === session.remote);
 				if (session.directorList.indexOf(altUUID || UUID) == -1) {
 					// if the director gets rejected, let them know.
@@ -13809,9 +14060,9 @@ WebRTC.Media = (function () {
 						var track0 = session.streamSrc.getAudioTracks();
 						if (track0.length) {
 							if ("deviceId" in msg) {
-								applyAudioHack(msg.keyname, msg.value, msg.deviceId);
+								applyAudioHack(msg.keyname, msg.value, msg.deviceId, UUID);
 							} else {
-								applyAudioHack(msg.keyname, msg.value);
+								applyAudioHack(msg.keyname, msg.value, "default", UUID);
 							}
 						}
 					}
@@ -14234,6 +14485,7 @@ WebRTC.Media = (function () {
 							log("WHIP restart requested but no WHIP connection active");
 						}
 					}
+					if (typeof msg.requestMeshcast === "boolean") setGuestMeshcast(msg.requestMeshcast);
 
 					if ("reconnectPeer" in msg) {
 						// Restart ICE on one specific mesh path. Closing here used to leave
@@ -14643,6 +14895,15 @@ WebRTC.Media = (function () {
 				if (session.directorUUID === (altUUID || UUID)) {
 					// main director only.
 					if (msg.request === "migrate") {
+						if (session.invitecamManaged) {
+							if (
+								!msg.transferSettings ||
+								msg.transferSettings.justResetting !== true ||
+								Object.keys(msg.transferSettings).length !== 1
+							) {
+								return;
+							}
+						}
 						warnlog("TRANSFERRING?");
 
 						if ("transferSettings" in msg) {
@@ -14821,12 +15082,13 @@ WebRTC.Media = (function () {
 					}
 				}
 
-				if ("changeCameraEffect" in msg || "changeCameraEffectAmount" in msg) {
+				if ("changeCameraEffect" in msg || "changeCameraEffectAmount" in msg || "changeCameraBackgroundImage" in msg) {
 					var effectDirectorAuthorized = session.directorList.indexOf(altUUID || UUID) >= 0;
 					if (effectDirectorAuthorized || remoteAuthorized) {
 						var requestedEffect = "changeCameraEffect" in msg ? msg.changeCameraEffect : undefined;
 						var requestedEffectAmount = "changeCameraEffectAmount" in msg ? msg.changeCameraEffectAmount : undefined;
-						var effectResult = await changeVideoEffectWithConsent(requestedEffect, requestedEffectAmount, UUID);
+						var requestedBackgroundImage = "changeCameraBackgroundImage" in msg ? msg.changeCameraBackgroundImage : undefined;
+						var effectResult = await changeVideoEffectWithConsent(requestedEffect, requestedEffectAmount, UUID, requestedBackgroundImage);
 						var effectResponse = { cameraEffectChange: effectResult };
 						if (effectDirectorAuthorized && ("changeCameraEffect" in msg || !effectResult.ok)) {
 							effectResponse.videoOptions = listVideoSettingsPrep();
@@ -15157,11 +15419,13 @@ WebRTC.Media = (function () {
 				if ("allowscreenwhipout" in msg && msg.allowscreenwhipout === false) {
 					session.pcs[UUID].whipScreen = false;
 				}
+				if (msg.info) session.pcs[UUID].meshcastSwitchSupported = msg.info.meshcastSwitch === true;
+				session.pcs[UUID].meshcastMedia = { audio: session.pcs[UUID].allowAudio, video: session.pcs[UUID].allowVideo };
 				if ("allowmeshcast" in msg && msg.allowmeshcast === false) {
 					session.pcs[UUID].whipout = false;
 				} else if ("allowwhipout" in msg && msg.allowwhipout === false) {
 					session.pcs[UUID].whipout = false;
-				} else if (session.meshcast) {
+				} else if (session.meshcast && !session.meshcastSwitch) {
 					if (session.meshcast == "video") {
 						session.pcs[UUID].allowVideo = false;
 					} else if (session.meshcast == "audio") {
@@ -15174,7 +15438,7 @@ WebRTC.Media = (function () {
 						session.pcs[UUID].allowAudio = false;
 						session.pcs[UUID].allowVideo = false;
 					}
-				} else if (session.whipOutput) {
+				} else if (session.whipOutput && !session.meshcastSwitch) {
 					if (session.pcs[UUID].allowAudio === true && session.pcs[UUID].allowVideo === true) {
 						session.pcs[UUID].allowAudio = false;
 						session.pcs[UUID].allowVideo = false;
@@ -15547,7 +15811,7 @@ WebRTC.Media = (function () {
 			log(data);
 		};
 
-		session.initialPublish = function (UUID) {
+		session.initialPublish = function (UUID, onlyMissing = false) {
 			log("INITIAL PUBLISH START: " + UUID);
 
 			if (UUID in session.pcs) {
@@ -15558,7 +15822,7 @@ WebRTC.Media = (function () {
 				return;
 			}
 
-			if (getSenders2(UUID).length) {
+			if (!onlyMissing && getSenders2(UUID).length) {
 				errorlog("PROBLEM, Senders is more than 0: " + getSenders2(UUID).length);
 			}
 
@@ -15606,10 +15870,11 @@ WebRTC.Media = (function () {
 			log("Does Local Stream Source EXIST?");
 			log(stream.getTracks());
 
-			if (session.whipoutSettings && session.pcs[UUID].whipout === null && (!session.promptAccess || session.pcs[UUID].playbackAccessApproved === true)) {
+			if (session.whipoutSettings && session.pcs[UUID].whipout === null && (!session.meshcastSwitch || (session.pcs[UUID].meshcastSwitchSupported && session.whipoutSettings.url && session.meshcastSwitchBusy !== "Switching to direct…")) && (!session.promptAccess || session.pcs[UUID].playbackAccessApproved === true)) {
 				// if true, already connected, and if false, it's disabled.
 				var data = {};
 				data.whepSettings = session.whipoutSettings;
+				if (session.meshcastSwitch) data.whepSettings = Object.assign({}, data.whepSettings, { handoff: session.meshcastSwitch });
 				if (session.sendMessage(data, UUID)) {
 					session.pcs[UUID].whipout = true;
 				}
@@ -15624,6 +15889,7 @@ WebRTC.Media = (function () {
 			if (!audioOnly) {
 				stream.getVideoTracks().forEach(async track => {
 					try {
+						if (onlyMissing && getSenders2(UUID).some(function (sender) { return sender.track.kind === "video"; })) return;
 						if (session.pcs[UUID].allowVideo === true) {
 							if (track.kind == "video") {
 								if (session.pcs[UUID].guest === true && session.roombitrate === 0) {
@@ -15682,6 +15948,7 @@ WebRTC.Media = (function () {
 				stream.getAudioTracks().forEach(track => {
 					// where else are tracks added?  Need to add this to that as well as audio.
 					try {
+						if (onlyMissing && getSenders2(UUID).some(function (sender) { return sender.track.kind === "audio"; })) return;
 						if (track.kind == "audio") {
 							session.pcs[UUID].addTrack(track, stream);
 							warnlog("added audio track");
@@ -17961,7 +18228,6 @@ WebRTC.Media = (function () {
 				if (!payload) {
 					return;
 				}
-				const descriptors = cached.parityDescriptors || [];
 				const metaExtra = {
 					version: 1,
 					frameId: cached.frameId,
@@ -19480,7 +19746,7 @@ WebRTC.Media = (function () {
 					return priority === 0 ? RELIABLE_RELIEF_HIGH_PRIORITY_PAUSES : RELIABLE_RELIEF_PAUSES;
 				}
 
-				function markReliableViewerSkipped(uuid, channel, health, reason) {
+				function markReliableViewerSkipped(channel, health, reason) {
 					health.skipped = (health.skipped || 0) + 1;
 					health.reliableSkipped = (health.reliableSkipped || 0) + 1;
 					const reliefSkip = reason === "relief" || reason === "relief-drain";
@@ -19543,7 +19809,7 @@ WebRTC.Media = (function () {
 								session.stats.chunkedReliablePaused = (session.stats.chunkedReliablePaused || 0) + 1;
 							}
 							if (health.consecutiveHigh >= getReliableReliefThreshold(priority)) {
-								markReliableViewerSkipped(uuid, channel, health, "relief");
+								markReliableViewerSkipped(channel, health, "relief");
 								continue;
 							}
 							return true;
@@ -19580,7 +19846,7 @@ WebRTC.Media = (function () {
 						var configuredLowWater = channel.bufferedAmountLowThreshold || 524288;
 						var recoveryWater = Math.max(65536, Math.min(configuredLowWater, highWater * 0.5));
 						if (bufferedAmount > recoveryWater) {
-							return markReliableViewerSkipped(uuid, channel, health, "relief-drain");
+							return markReliableViewerSkipped(channel, health, "relief-drain");
 						}
 						health.reliableRelieved = false;
 						health.reliablePaused = false;
@@ -19595,14 +19861,14 @@ WebRTC.Media = (function () {
 						if (session.chunkedRecorder) {
 							session.chunkedRecorder.needKeyFrame = true;
 						}
-						return reliabilityEnabled ? markReliableViewerSkipped(uuid, channel, health, "waiting-keyframe") : false;
+						return reliabilityEnabled ? markReliableViewerSkipped(channel, health, "waiting-keyframe") : false;
 					}
 					if (!isMetadata && (mediaType === "key" || mediaType === "delta" || mediaType === "video") && !channel.keyframeSent) {
 						warnlog("Waiting for keyframe / header before sending delta / raw video data");
 						if (session.chunkedRecorder) {
 							session.chunkedRecorder.needKeyFrame = true;
 						}
-						return reliabilityEnabled ? markReliableViewerSkipped(uuid, channel, health, "waiting-keyframe") : false;
+						return reliabilityEnabled ? markReliableViewerSkipped(channel, health, "waiting-keyframe") : false;
 					}
 					if (!isMetadata && (mediaType === "audio" || mediaType === "pcm") && !channel.audioHeaderSent) {
 						warnlog("Waiting for audio header before sending raw audio data");
@@ -19653,7 +19919,7 @@ WebRTC.Media = (function () {
 							session.stats.chunkedReliablePaused = (session.stats.chunkedReliablePaused || 0) + 1;
 						}
 						if (health.consecutiveHigh >= getReliableReliefThreshold(priority)) {
-							return markReliableViewerSkipped(uuid, channel, health, "relief");
+							return markReliableViewerSkipped(channel, health, "relief");
 						}
 						return false;
 					}
@@ -22687,6 +22953,11 @@ WebRTC.Media = (function () {
 
 	/// THE PROBLEM IS I HAVE A PATH WAY FOR INPUT AND A PATHWAY FOR OUTPUT, BU THEY SHARE THE SAME PATHWAY. LOL.  I NEED TO COMBINE THESE INTO ONE.
 	session.setupIncoming = async function (msg) {
+		if (!validateIncomingStreamIDs(msg)) return false;
+		if (!isValidStreamID(msg.streamID)) {
+			errorlog("Discarding incoming offer: missing or invalid stream ID.");
+			return false;
+		}
 		// ingesting stream as a viewer
 		log("SETUP INCOMING");
 		var UUID = msg.UUID;
@@ -22930,6 +23201,9 @@ WebRTC.Media = (function () {
 		session.rpcs[UUID].lockedAudioBitrate = false;
 		session.rpcs[UUID].virtualHangup = false;
 		session.rpcs[UUID].remoteMuteState = false;
+		session.rpcs[UUID].remoteSceneMuteState = null;
+		session.rpcs[UUID].remoteSceneMuteStatus = "ready";
+		session.rpcs[UUID].remoteSceneMuteElement = false;
 		session.rpcs[UUID].remoteMuteElement = false;
 		session.rpcs[UUID].closeTimeout = null;
 		session.rpcs[UUID].__closing = false;
@@ -22985,9 +23259,9 @@ WebRTC.Media = (function () {
 				"videoElement", "streamSrc", "inboundAudioPipeline", "stats", "getStatsTimeout", "eventPlayActive", "startTime",
 				"screenElement", "screenShareState", "smallScreen", "__whepPrevSmallScreen", "__whepAutoSmallScreen", "lastScreenStarted", "lastScreenStopped",
 				"canvas", "canvasCtx", "canvasOverlay", "canvasOverlays", "imageElement", "viewChromaCanvas", "viewChromaCanvasCtx", "viewChromaState",
-				"motionDetectionInterval", "canvasIntervalAction", "voiceMeter", "signalMeter", "batteryMeter", "connectionDetails", "volumeControl", "remoteMuteElement", "remoteVideoMuteElement", "remoteRaisedHandElement",
+				"motionDetectionInterval", "canvasIntervalAction", "voiceMeter", "signalMeter", "batteryMeter", "connectionDetails", "volumeControl", "remoteMuteElement", "remoteSceneMuteElement", "remoteVideoMuteElement", "remoteRaisedHandElement",
 				"mutedState", "mutedStateMixer", "mutedStateScene", "mirrorState", "flipState", "rotate", "savedVolume", "scaleHeight", "scaleWidth", "scaleSnap",
-				"channelOffset", "channelWidth", "isolatedChannel", "buffer", "manualBandwidth", "targetBandwidth", "videoMuted", "directorVideoMuted", "directorVolumeState", "directorMutedState", "remoteMuteState", "opacityDisconnect", "opacityMuted",
+				"channelOffset", "channelWidth", "isolatedChannel", "buffer", "manualBandwidth", "targetBandwidth", "videoMuted", "directorVideoMuted", "directorVolumeState", "directorMutedState", "remoteMuteState", "remoteSceneMuteState", "remoteSceneMuteStatus", "opacityDisconnect", "opacityMuted",
 				"label", "labelSetByDirector", "meta", "group", "order", "settings", "loudnessRecoveryState"
 			];
 			for (var fieldIndex = 0; fieldIndex < mediaFields.length; fieldIndex++) {
@@ -23867,6 +24141,8 @@ WebRTC.Media = (function () {
 				}
 
 				msg.guest = false;
+				msg.info.meshcastSwitch = true;
+				msg.info.meshcastControl = getMeshcastControlStatus();
 				msg.scene = false;
 				msg.director = false;
 				msg.limitaudio = false;
@@ -24317,12 +24593,16 @@ var meshcastServerList = false;
 const meshcastPingResults = new Map();
 
 function selectMeshcast(ele) {
-	if (session.meshcast2) {
+	if (session.meshcast2Pending || session.whipOutput || session.whipOutputScreen) return;
+	const option = ele.options[ele.selectedIndex];
+	if (!option || option.disabled) return;
+	if (!option.url) {
+		if (!session.meshcast2) session.meshcast2 = "any";
 		session.meshcastCode = ele.value || "any";
 		return;
 	}
+	session.meshcast2 = false;
 	meshcastServer = {};
-	const option = ele.options[ele.selectedIndex];
 	meshcastServer.url = option.url;
 	meshcastServer.code = option.code || null;
 	meshcastServer.id = option.id || null;
@@ -24387,7 +24667,8 @@ function handleMeshcastFailure(option, reason = "fail") {
 
 function sortMeshcastOptions() {
 	const edgelist = document.getElementById("edgelist");
-	const options = Array.from(edgelist.options);
+	const selected = edgelist.options[edgelist.selectedIndex];
+	const options = Array.from(edgelist.options).filter(option => option.url);
 
 	options.sort((a, b) => {
 		const aResult = meshcastPingResults.get(a.id || a.code) || { load: Infinity, failed: true };
@@ -24416,6 +24697,7 @@ function sortMeshcastOptions() {
 	});
 
 	options.forEach(option => edgelist.appendChild(option));
+	if (selected) selected.selected = true;
 }
 
 function selectBestMeshcastServer() {
@@ -24440,6 +24722,8 @@ function selectBestMeshcastServer() {
 }
 
 async function queryMeshcastServers(callback = false) {
+	// Directors using the default mode can also choose a legacy node.
+	var includeLegacy = session.meshcast2 && session.director && urlParams.has("meshcast") && !urlParams.has("meshcast2");
 	if (session.meshcast2) {
 		var controller = new AbortController();
 		var timeout = setTimeout(function () { controller.abort(); }, 10000);
@@ -24448,21 +24732,21 @@ async function queryMeshcastServers(callback = false) {
 			select.innerHTML = "";
 			var automatic = document.createElement("option");
 			automatic.value = "";
-			automatic.textContent = "Automatic (Meshcast v2)";
+			automatic.textContent = "Automatic (v2 - new)";
 			select.appendChild(automatic);
-			select.disabled = !!session.whipOutput || !!session.whipOutputScreen;
+			select.disabled = !!session.meshcast2Pending || !!session.whipOutput || !!session.whipOutputScreen;
 			const response = await fetch("https://app.meshcast.io/api/publish/anonymous/servers", { signal: controller.signal });
 			if (!response.ok) throw new Error("Meshcast region list unavailable");
 			const payload = await response.json();
 			for (const server of payload.servers || []) {
 				const option = document.createElement("option");
 				option.value = server.id;
-				option.textContent = server.name || server.region || server.id;
+				option.textContent = (server.name || server.region || server.id) + " (v2 - new)";
 				select.appendChild(option);
 			}
 			const preferred = preferredMeshcast2Server(payload.servers || []);
 			if (preferred) select.value = preferred.id;
-			select.disabled = !!session.whipOutput || !!session.whipOutputScreen;
+			select.disabled = !!session.meshcast2Pending || !!session.whipOutput || !!session.whipOutputScreen;
 			if (session.director && !session.cleanOutput && !session.cleanDirector) document.getElementById("meshcastMenu").classList.remove("hidden");
 
 		} catch (e) {
@@ -24472,7 +24756,7 @@ async function queryMeshcastServers(callback = false) {
 			clearTimeout(timeout);
 			if (callback) callback();
 		}
-		return;
+		if (!includeLegacy) return;
 	}
 	try {
 		const d = new Date();
@@ -24484,7 +24768,7 @@ async function queryMeshcastServers(callback = false) {
 
 		const meshcastValue = typeof session.meshcast === "string" ? session.meshcast.trim() : session.meshcast;
 		const specialMeshcastModes = ["any", "audio", "video"];
-		let requestedCode = session.meshcastCode || null;
+		let requestedCode = includeLegacy ? null : session.meshcastCode || null;
 
 		if (typeof requestedCode === "string") {
 			requestedCode = requestedCode.trim();
@@ -24493,7 +24777,7 @@ async function queryMeshcastServers(callback = false) {
 			}
 		}
 
-		if (!requestedCode && typeof meshcastValue === "string" && meshcastValue.length) {
+		if (!includeLegacy && !requestedCode && typeof meshcastValue === "string" && meshcastValue.length) {
 			const normalizedMeshcast = meshcastValue.toLowerCase();
 			if (!specialMeshcastModes.includes(normalizedMeshcast)) {
 				requestedCode = meshcastValue;
@@ -24558,7 +24842,8 @@ async function queryMeshcastServers(callback = false) {
 			if (server.code) option.code = server.code;
 			if (server.id) option.id = server.id;
 			option.url = server.url;
-			option.textContent = server.label;
+			option.value = server.id || server.code || server.url;
+			option.textContent = server.label + " (v1 - legacy)";
 			option.preferred = server.preferred;
 			document.getElementById("edgelist").appendChild(option);
 			return option;
@@ -24576,9 +24861,9 @@ async function queryMeshcastServers(callback = false) {
 		sortMeshcastOptions();
 
 		// Select best available server
-		selectBestMeshcastServer();
+		if (!includeLegacy) selectBestMeshcastServer();
 
-		if (callback) {
+		if (callback && !includeLegacy) {
 			callback();
 		}
 
@@ -24681,13 +24966,15 @@ async function renewMeshcast2Sessions() {
 	}
 }
 
-async function meshcast2() {
+async function meshcast2(primaryOnly = false) {
 	if (!session.meshcast2 || (!session.autostart && !session.videoElement.srcObject && !session.screenShareState)) {
 		return;
 	}
 	if (session.meshcast2Pending) {
 		return session.meshcast2Pending;
 	}
+	const select = document.getElementById("edgelist");
+	if (select) select.disabled = true;
 	const baseUrl = "https://app.meshcast.io";
 	const mode = String(session.meshcast2).toLowerCase();
 	const anonymous = session.meshcast2 === true || ["any", "anon", "audio", "video"].includes(mode);
@@ -24780,7 +25067,7 @@ async function meshcast2() {
 			if (session.whipPublishPrimary && (session.autostart || session.videoElement.srcObject)) {
 				await configureOutput("primary");
 			}
-			if (session.whipPublishScreen && session.screenShareState) {
+			if (session.whipPublishScreen && session.screenShareState && !primaryOnly) {
 				await configureOutput("screen");
 			}
 		} catch (e) {
@@ -24797,11 +25084,12 @@ async function meshcast2() {
 	} finally {
 		clearTimeout(requestTimeout);
 		session.meshcast2Pending = null;
+		if (select) select.disabled = !!session.whipOutput || !!session.whipOutputScreen;
 	}
 }
 
-async function meshcast(ping = false) {
-	if (session.meshcast2) return meshcast2();
+async function meshcast(ping = false, primaryOnly = false) {
+	if (session.meshcast2) return meshcast2(primaryOnly);
 	if (!session.meshcast) return;
 
 	if (ping) {
@@ -24859,7 +25147,7 @@ async function meshcast(ping = false) {
 				session.whipoutSettings = false;
 			}
 
-			if (session.whipPublishScreen) {
+			if (session.whipPublishScreen && !primaryOnly) {
 				session.whipOutputScreen = meshcastServer.url + "/" + screenToken + "/whip";
 				session.whipoutScreenSettings = {
 					type: "whep",
@@ -24871,7 +25159,7 @@ async function meshcast(ping = false) {
 				if (session.screenShareState) {
 					whipOutScreen();
 				}
-			} else {
+			} else if (!primaryOnly) {
 				session.whipOutputScreen = false;
 				session.whipoutScreenSettings = false;
 			}
@@ -25027,6 +25315,7 @@ function whepSettingsHasStarted(settings) {
 				warnlog(e);
 			}
 			rpc.whep = null;
+			updateWhepDirectorControls(UUID);
 			if (clearState) {
 				rpc.pendingPrimaryWhepSettings = null;
 				rpc.lastPrimaryWhepUrl = null;
@@ -25089,6 +25378,14 @@ function whepSettingsHasStarted(settings) {
 		// whepWatch(UUID, msg.whepSettings);
 		if (session.noMeshcast) {
 			return;
+		}
+		if (settings && settings.handoff && settings.media !== "screen" && session.rpcs[UUID]) {
+			var peer = session.rpcs[UUID];
+			var previous = peer.meshcastHandoff;
+			if (previous && previous.id === settings.handoff && previous.target === !!settings.url) return;
+			peer.meshcastHandoff = { id: settings.handoff, target: !!settings.url, active: previous ? previous.active : !!peer.whep, audio: settings.audio, video: settings.video };
+			finishMeshcastHandoff(UUID, peer.meshcastHandoff).catch(errorlog);
+			if (!settings.url) return;
 		}
 		console.log(settings);
 

@@ -1,5 +1,11 @@
 {
   "innerHTML": {
+    "use-meshcast": "Meshcast kullan",
+    "muted-in-scenes": "Sahnelerde sessizde",
+    "guest-muted-scenes": "Misafir sahnelerde kendi sesini kapattı",
+    "scene-mute-saved": "Sahneler sessizde kalacak",
+    "changing-scene-audio": "Sahne sesi değiştiriliyor",
+    "scene-audio-not-confirmed": "Sahne ses durumu doğrulanamadı",
     "view-only": "Yalnızca izle",
     "logo-header": "\n<font id=\"qos\">V</font>DO.Ninja \n",
     "copy-this-url": "Bu URL'yi \"tarayıcı kaynağına\" kopyalayın",
@@ -376,6 +382,9 @@
     "statistics": "Statistics"
   },
   "titles": {
+    "switch-this-guest-s-camera-and-microphone-between-direct-connections-and-meshcast": "Bu konuğun kamerasını ve mikrofonunu doğrudan bağlantılar ile Meshcast arasında değiştir",
+    "mute-microphone-and-shared-audio-in-scene-outputs": "Sahne çıkışlarında mikrofonu ve paylaşılan sesi kapat",
+    "mute-audio-in-scene-outputs": "Sahne çıkışlarında mikrofonu ve paylaşılan sesi kapat",
     "view-only": "Yalnızca izle",
     "the-language-you-want-to-hear-when-live-translation-is-available": "Canlı çeviri kullanılabildiğinde duymak istediğiniz dil",
     "100": "100",

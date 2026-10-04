@@ -1,5 +1,7 @@
 {
   "innerHTML": {
+    "use-meshcast": "Use Meshcast",
+    "guest-muted-scenes": "Guest muted scenes",
     "view-only": "Vieway Onlyay",
     "logo-header": "\n<font id=\"qos\" style=\"color: white;\">Vay</font>inja \nDO.Nay",
     "copy-this-url": "opy this URL into your \"browser source\"Cay",
@@ -383,6 +385,8 @@
     "statistics": "Statistics"
   },
   "titles": {
+    "switch-this-guest-s-camera-and-microphone-between-direct-connections-and-meshcast": "Switch this guest's camera and microphone between direct connections and Meshcast",
+    "mute-microphone-and-shared-audio-in-scene-outputs": "Mute microphone and shared audio in scene outputs",
     "view-only": "Vieway Onlyay",
     "the-language-you-want-to-hear-when-live-translation-is-available": "Ethay anguagelay ouyay antway otay earhay henway ivelay anslationtray isway availableway",
     "100": "100ay",

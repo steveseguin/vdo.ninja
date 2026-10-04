@@ -1,5 +1,11 @@
 {
   "innerHTML": {
+    "use-meshcast": "Meshcast を使用",
+    "muted-in-scenes": "シーン内でミュート中",
+    "guest-muted-scenes": "ゲストがシーン内の音声をミュート中",
+    "scene-mute-saved": "シーンのミュートを保持",
+    "changing-scene-audio": "シーンの音声を変更中",
+    "scene-audio-not-confirmed": "シーンの音声状態を確認できません",
     "view-only": "視聴のみ",
     "logo-header": "\n<font id=\"qos\">V</font>DO.Ninja \n",
     "copy-this-url": "このURLをOBSの「ブラウザソース」に追加",
@@ -383,6 +389,9 @@
     "statistics": "Statistics"
   },
   "titles": {
+    "switch-this-guest-s-camera-and-microphone-between-direct-connections-and-meshcast": "このゲストのカメラとマイクを直接接続と Meshcast の間で切り替える",
+    "mute-microphone-and-shared-audio-in-scene-outputs": "シーン出力でマイクと画面共有の音声をミュート",
+    "mute-audio-in-scene-outputs": "シーン出力でマイクと画面共有の音声をミュート",
     "view-only": "視聴のみ",
     "the-language-you-want-to-hear-when-live-translation-is-available": "ライブ翻訳が利用可能な場合に聞きたい言語",
     "100": "100",

@@ -1,5 +1,11 @@
 {
   "innerHTML": {
+    "use-meshcast": "استخدام Meshcast",
+    "muted-in-scenes": "مكتوم في المشاهد",
+    "guest-muted-scenes": "الضيف كتم صوته في المشاهد",
+    "scene-mute-saved": "كتم المشاهد مستمر",
+    "changing-scene-audio": "جارٍ تغيير صوت المشاهد",
+    "scene-audio-not-confirmed": "حالة صوت المشاهد غير مؤكدة",
     "view-only": "المشاهدة فقط",
     "logo-header": "\n<font id=\"qos\" style=\"color: white;\">V</font>DO.Ninja \n",
     "copy-this-url": "انسخ هذا الرابط في \"مصدر المتصفح\" الخاص بك",
@@ -383,6 +389,9 @@
     "statistics": "Statistics"
   },
   "titles": {
+    "switch-this-guest-s-camera-and-microphone-between-direct-connections-and-meshcast": "تبديل كاميرا هذا الضيف وميكروفونه بين الاتصالات المباشرة وMeshcast",
+    "mute-microphone-and-shared-audio-in-scene-outputs": "كتم صوت الميكروفون والصوت المشترك في مخرجات المشاهد",
+    "mute-audio-in-scene-outputs": "كتم صوت الميكروفون والصوت المشترك في مخرجات المشاهد",
     "view-only": "المشاهدة فقط",
     "the-language-you-want-to-hear-when-live-translation-is-available": "اللغة التي تريد سماعها عند توفر الترجمة المباشرة",
     "100": "100",

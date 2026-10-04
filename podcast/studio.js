@@ -6,7 +6,9 @@ import {
   CloudUploadCoordinator,
   bridgeLegacyMeters,
   monitorTrackLevel,
-} from '../core/index.js?v=20260911.1';
+  convertBlobToWav,
+} from '../core/index.js?v=20261001.1';
+import { AudioRecoveryWriter, listAudioRecoverySessions, loadRecoveryTrack, clearAudioRecoverySession } from './audio-recovery.js?v=1';
 import { IcecastPublisher, ICECAST_MIME_OPTIONS } from './icecast-publisher.js?v=4';
 
 const STUDIO_ROOT_ID = 'podcast-root';
@@ -43,7 +45,7 @@ const HOST_AUDIO_QUERY_KEYS = Object.freeze({
 const PREFLIGHT_STORAGE_KEY = 'podcastStudio.preflightState';
 const PREFLIGHT_CACHE_MS = 6 * 60 * 60 * 1000;
 const PREFLIGHT_MIN_MANDATORY_MS = 5 * 60 * 1000;
-const DROPBOX_GUIDE_URL = '/cloud.html#dropbox';
+const DROPBOX_GUIDE_URL = '/podcast/cloud.html#dropbox';
 const CLOUD_STATUS_STORAGE_KEY = 'podcastStudio.cloudStatus';
 const CLOUD_STATUS_STALE_MS = 30 * 60 * 1000;
 const DISK_RECORDING_STORAGE_KEY = 'podcastStudio.diskRecordingState';
@@ -95,7 +97,7 @@ function injectStylesheet() {
   const link = document.createElement('link');
   link.id = 'podcast-studio-style';
   link.rel = 'stylesheet';
-  link.href = new URL('./studio.css?v=17', import.meta.url).toString();
+  link.href = new URL('./studio.css?v=18', import.meta.url).toString();
   document.head.appendChild(link);
 }
 
@@ -1598,6 +1600,8 @@ class PodcastStudioApp {
     this.abortUploadsController = null;
     this.activeDownloadUrls = [];
     this.recordingArchives = new Set();
+    this.audioRecovery = null;
+    this.recoveryDownloadUrls = new Set();
     this.stopMeterBridge = null;
     this.roomName = this.roomHint || '';
     this.virtualParticipants = new Map();
@@ -1786,6 +1790,7 @@ class PodcastStudioApp {
     this.updateRoomIndicator();
     this.updateCloudFooter();
     this.attachRecorderEvents();
+    this.refreshAudioRecovery();
     this.refreshRoster();
     this.startRosterLoop();
     this.levelOff = levelBus.on(LEVEL_EVENT, (payload) => this.updateMeterFromBus(payload));
@@ -3677,8 +3682,8 @@ class PodcastStudioApp {
 
     this.recordingSummary = createElement('div', 'recording-summary');
     this.captureSummaryNode = createElement('div', 'recording-summary__item', { text: 'Capture: Audio ISO' });
-    this.backupSummaryNode = createElement('div', 'recording-summary__item', { text: 'Backup: None' });
-    this.saveSummaryNode = createElement('div', 'recording-summary__item', { text: 'Save: Browser buffer only' });
+    this.backupSummaryNode = createElement('div', 'recording-summary__item', { text: 'Guest backup: None' });
+    this.saveSummaryNode = createElement('div', 'recording-summary__item', { text: 'Save: Browser download' });
     this.recordingSummary.append(this.captureSummaryNode, this.backupSummaryNode, this.saveSummaryNode);
     this.recordingSummary.style.display = 'none';
 
@@ -4010,7 +4015,15 @@ class PodcastStudioApp {
     const timelinePanel = createElement('section', 'podcast-panel timeline-shell');
     timelinePanel.classList.add('console-grid__span-2');
     this.outputsContainer = createElement('div', 'timeline-surface');
-    timelinePanel.append(this.outputsContainer);
+    this.recoveryStatus = createElement('p', 'upload-meta audio-recovery-status', { role: 'status' });
+    this.recoveryPanel = createElement('details', 'timeline-archive audio-recovery-panel');
+    this.recoveryPanel.hidden = true;
+    this.recoverySummary = createElement('summary', 'timeline-entry-label', { text: 'Saved audio' });
+    this.recoveryList = createElement('div', 'audio-recovery-list');
+    this.recoveryPanel.append(this.recoverySummary, createElement('p', 'upload-meta', {
+      text: 'Saved on this browser and device. Interrupted takes may be incomplete. Downloading keeps the saved copy.',
+    }), this.recoveryList);
+    timelinePanel.append(this.outputsContainer, this.recoveryStatus, this.recoveryPanel);
     this.showOutputsMessage('Recordings and cue points will appear here.');
     makeCollapsible(timelinePanel, 'Timeline & Outputs', 'podcastStudio.collapse.timeline');
 
@@ -4287,7 +4300,7 @@ class PodcastStudioApp {
       saveTargets.push('Dropbox');
     }
     if (!saveTargets.length) {
-      return 'Browser buffer only';
+      return 'Browser download';
     }
     return `After stop -> ${saveTargets.join(' + ')}`;
   }
@@ -4423,6 +4436,27 @@ class PodcastStudioApp {
       this.recordTransitioning = false;
       this.recordStartedAt = event?.detail?.startedAt || Date.now();
       this.markers = [];
+      const recovery = new AudioRecoveryWriter({
+        id: this.recordingSessionId || createRecordingSessionId(),
+        roomName: this.roomName,
+        startedAt: this.recordStartedAt,
+        onError: (error) => {
+          console.warn('Audio recovery storage failed', error);
+          if (this.audioRecovery === recovery) {
+            this.recoveryStatus.textContent = 'Audio recovery could not be saved. Stop and download your recordings before closing this tab.';
+            this.recoveryStatus.dataset.state = 'error';
+          }
+        },
+        onSaved: () => {
+          if (this.audioRecovery === recovery && this.recoveryStatus.dataset.state !== 'saving') {
+            this.recoveryStatus.textContent = 'Saving audio recovery copies in this browser.';
+            this.recoveryStatus.dataset.state = 'saving';
+          }
+        },
+      });
+      this.audioRecovery = recovery;
+      this.recoveryStatus.dataset.state = '';
+      this.recoveryStatus.textContent = 'Preparing audio recovery copies...';
       this.renderMarkers();
       this.scheduleAutoSyncMarker();
       this.updateRecordingButtons();
@@ -4451,6 +4485,9 @@ class PodcastStudioApp {
         return;
       }
       const { participant, trackType, channelIndex } = event.detail || {};
+      if (trackType === 'audio' && this.audioRecovery) {
+        this.audioRecovery.append(event.detail, this.markers);
+      }
       if (!participant || !trackType) {
         return;
       }
@@ -4534,6 +4571,17 @@ class PodcastStudioApp {
     });
 
     this.recorder.addEventListener('stop', (event) => {
+      const recovery = this.audioRecovery;
+      if (recovery) {
+        recovery.finish(this.markers.map(marker => ({ ...marker }))).then(() => {
+          if (this.audioRecovery === recovery && !recovery.failed) {
+            this.recoveryStatus.textContent = recovery.session.tracks.length
+              ? 'Audio recovery copies saved in this browser.'
+              : 'No audio recovery copies were captured.';
+          }
+          this.refreshAudioRecovery();
+        });
+      }
       this.recording = false;
       this.recordTransitioning = false;
       this.stopRecordingStatusTimer();
@@ -4666,8 +4714,7 @@ class PodcastStudioApp {
     this.archiveRecordingResults();
     this.outputsContainer.dataset.mode = 'message';
     this.outputsContainer.dataset.hasTracks = '';
-    this.outputsContainer.classList.remove('timeline-tracklist');
-    this.outputsContainer.classList.remove('timeline-results');
+    this.outputsContainer.classList.remove('timeline-tracklist', 'timeline-results');
     this.outputsContainer.innerHTML = '';
     if (typeof text === 'string' && text.trim()) {
       this.outputsContainer.append(createElement('div', 'timeline-placeholder', { text }));
@@ -6395,11 +6442,11 @@ class PodcastStudioApp {
     }
     if (this.backupSummaryNode) {
       if (!guestBackup.total) {
-        this.backupSummaryNode.textContent = 'Backup: No guests connected';
+        this.backupSummaryNode.textContent = 'Guest backup: No guests connected';
       } else if (!guestBackup.requested) {
-        this.backupSummaryNode.textContent = 'Backup: None';
+        this.backupSummaryNode.textContent = 'Guest backup: None';
       } else {
-        this.backupSummaryNode.textContent = `Backup: Guest backup ${guestBackup.confirmed}/${guestBackup.total} confirmed`;
+        this.backupSummaryNode.textContent = `Guest backup: ${guestBackup.confirmed}/${guestBackup.total} confirmed`;
       }
     }
     if (this.saveSummaryNode) {
@@ -6874,6 +6921,94 @@ class PodcastStudioApp {
     }
   }
 
+  async refreshAudioRecovery() {
+    try {
+      const sessions = await listAudioRecoverySessions();
+      const sessionIds = new Set(sessions.map(session => session.id));
+      Array.from(this.recoveryList.children).forEach(take => {
+        if (sessionIds.has(take.dataset.sessionId)) return;
+        take.querySelectorAll('a[download]').forEach(link => {
+          URL.revokeObjectURL(link.href);
+          this.recoveryDownloadUrls.delete(link.href);
+        });
+        take.remove();
+      });
+      this.recoveryPanel.hidden = !sessions.length;
+      this.recoverySummary.textContent = `Saved audio (${sessions.length} ${sessions.length === 1 ? 'take' : 'takes'})`;
+      sessions.forEach((session, index) => {
+        if (Array.from(this.recoveryList.children).some(take => take.dataset.sessionId === session.id)) return;
+        const take = createElement('details', 'timeline-archive audio-recovery-take');
+        take.dataset.sessionId = session.id;
+        take.append(createElement('summary', 'timeline-entry-label', {
+          text: `${session.roomName || 'Studio'} • ${new Date(session.startedAt).toLocaleString()}`,
+        }));
+        session.tracks.forEach((track, index) => {
+          const row = createElement('div', 'audio-recovery-track');
+          const header = createElement('div', 'timeline-entry-header');
+          header.append(createElement('span', 'timeline-entry-label', {
+            text: `${track.label} • Audio ${track.channelIndex + 1} • Starts at ${track.startOffsetSeconds.toFixed(2)}s`,
+          }));
+          const recover = createElement('button', 'iso-config-row__button', { type: 'button', text: 'Prepare download' });
+          const status = createElement('div', 'upload-meta', { role: 'status' });
+          recover.addEventListener('click', async () => {
+            recover.disabled = true;
+            status.textContent = 'Preparing audio...';
+            try {
+              const original = await loadRecoveryTrack(session.id, track);
+              if (!take.isConnected) return;
+              const basename = `podcast-recovered-${session.id}-${index + 1}`;
+              const addDownload = (blob, extension, text) => {
+                const url = URL.createObjectURL(blob);
+                this.recoveryDownloadUrls.add(url);
+                header.append(createElement('a', 'marker-badge', { href: url, download: this.sanitizeDiskFilename(`${basename}-${track.label}.${extension}`, extension), text }));
+              };
+              const extension = track.mimeType.includes('ogg') ? 'ogg' : track.mimeType.includes('mp4') ? 'm4a' : 'webm';
+              addDownload(original, extension, 'Download original');
+              try {
+                const wav = await convertBlobToWav(original, {
+                  audioContext: this.audioContext,
+                  markers: session.markers,
+                  trackStartOffsetSeconds: track.startOffsetSeconds,
+                });
+                if (!take.isConnected) return;
+                addDownload(wav, 'wav', 'Download WAV');
+                status.textContent = '';
+              } catch (error) {
+                status.textContent = 'WAV conversion failed. Download the original audio to keep it.';
+              }
+              recover.remove();
+            } catch (error) {
+              status.textContent = `Could not load saved audio: ${error.message}`;
+              recover.disabled = false;
+            }
+          });
+          header.append(recover);
+          row.append(header, status);
+          take.append(row);
+        });
+        const clear = createElement('button', 'iso-config-row__button', { type: 'button', text: 'Clear saved audio' });
+        const clearStatus = createElement('p', 'upload-meta', { role: 'status' });
+        clear.addEventListener('click', async () => {
+          if (!window.confirm('Clear this saved audio copy from the browser? Download any tracks you need first.')) return;
+          clear.disabled = true;
+          try {
+            await clearAudioRecoverySession(session.id);
+            await this.refreshAudioRecovery();
+          } catch (error) {
+            clearStatus.textContent = `Could not clear saved audio: ${error.message}`;
+            clear.disabled = false;
+          }
+        });
+        take.append(clear, clearStatus);
+        this.recoveryList.insertBefore(take, this.recoveryList.children[index] || null);
+      });
+    } catch (error) {
+      console.warn('Unable to list saved audio', error);
+      this.recoveryStatus.textContent = 'Audio recovery storage is unavailable. Download your recordings before closing this tab.';
+      this.recoveryStatus.dataset.state = 'error';
+    }
+  }
+
   archiveRecordingResults() {
     if (!this.outputsContainer || this.outputsContainer.dataset.mode !== 'results' || !this.activeDownloadUrls.length) return;
     const container = this.outputsContainer;
@@ -6918,6 +7053,8 @@ class PodcastStudioApp {
   }
 
   dispose() {
+    this.recoveryDownloadUrls.forEach(url => URL.revokeObjectURL(url));
+    this.recoveryDownloadUrls.clear();
     this.recordingArchives.forEach(archive => {
       if (archive.controller) archive.controller.abort();
       archive.urls.forEach(url => URL.revokeObjectURL(url));

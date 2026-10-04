@@ -24,3 +24,59 @@ docs.md
 !.env.sample
 .dev.vars*
 .wrangler/
+
+# Private backend services and production configuration (root paths only).
+/callin-worker/
+/hss/
+/icecast-worker/
+/media-hosting-service/
+/public-broadcast-token-api/
+/qos-server/
+/tip-server/
+/translation-service/
+/vdo-auth-service/
+/turnservers/
+/turnsetup.sh
+/settings/
+/wrangler.json
+/wrangler.jsonc
+
+# Private development notes, investigations, and local artifacts.
+/devstuff/
+/docs/
+/security-review/
+/ed0/
+/.agents/
+/.codex-tmp/
+/.AGENTS.md.swp
+/.actrc
+/tmp/
+/debug.log
+/production-alpha-connectivity-results.json
+/tmp_mobile_flow_*.png
+/misc/*-repro.html
+/misc/*-checks.html
+
+# Separate projects and old development checkouts.
+/Companion-Ninja/
+/NinjamPlus/
+/vdo-streamdeck/
+/invite.cam/
+/guides.vdo.ninja/
+/vdo.ninja-gitbook/
+/vdo-ninja-gitbook/
+/v29/
+/v30/
+
+# Explicitly excluded from public releases, including nested file/folder names.
+*testonly*
+*donotinclude*
+/thirdparty/testingonly_donotinclude/
+/media/backgrounds/run.py
+/screenrecorder/
+/auth-integration.md
+/convert.html
+/.github/workflows/README.md
+
+# Private TURN operating instructions; the shared guide is turnserver.md.
+/turnserver-private.md

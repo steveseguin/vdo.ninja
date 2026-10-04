@@ -49,6 +49,7 @@
   "open-in-new-tab": "Open in new Tab",
   "copy-to-clipboard": "Copy to Clipboard",
   "innerHTML": {
+    "use-meshcast": "Use Meshcast",
     "view-only": "View Only",
     "clean-obs-output": "Clean OBS output",
     "hide-video-controls": "Hide video controls",
@@ -230,6 +231,11 @@
     "mute": "Mute",
     "mute-microphone-by-default": "Muted; guest can unmute",
     "mute-scene": "mute in scenes",
+    "muted-in-scenes": "Muted in scenes",
+    "guest-muted-scenes": "Guest muted scenes",
+    "scene-mute-saved": "Scene mute saved",
+    "changing-scene-audio": "Changing scene audio",
+    "scene-audio-not-confirmed": "Scene audio not confirmed",
     "mute-the-mic": "\n                        <i id=\"mutetoggle\" class=\"toggleSize las la-microphone\" style=\"position: relative; top: 0.5px;\"></i>\n                    ",
     "mute-video-guest": "Video off",
     "no-audio": " No Audio",
@@ -395,6 +401,9 @@
     "user-raised-hand": "user raised hand"
   },
   "titles": {
+    "switch-this-guest-s-camera-and-microphone-between-direct-connections-and-meshcast": "Switch this guest's camera and microphone between direct connections and Meshcast",
+    "mute-microphone-and-shared-audio-in-scene-outputs": "Mute microphone and shared audio in scene outputs",
+    "mute-audio-in-scene-outputs": "Mute microphone and shared audio in scene outputs",
     "view-only": "View Only",
     "the-language-you-want-to-hear-when-live-translation-is-available": "The language you want to hear when live translation is available",
     "add-a-small-playback-buffer-to-smooth-jitter": "Add a small playback buffer to smooth jitter",

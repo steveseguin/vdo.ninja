@@ -52,9 +52,39 @@ Join the [Discord](https://discord.vdo.ninja) for community exhibitions, discuss
 ## What's in this repo
 This repository contains the VDO.Ninja web frontend and sample apps using its IFRAME API. Production backend implementations and operational scripts belong in separate repositories. Optional TURN configuration and `.sample` files are included as self-hosting examples; the website does not execute them. TURN setup guidance is provided in [turnserver.md](turnserver.md). The user documentation for VDO.Ninja itself is found at docs.vdo.ninja.
 
+## How VDO.Ninja works
+
+In a typical browser session, the **publisher** shares a camera, microphone, or screen. A **viewer** receives it in another browser or an OBS Browser Source. The website supplies the app; the devices capture, encode, send, and play the media using WebRTC.
+
+![The website sends app files to both devices over HTTPS. Signaling exchanges connection details over WSS. A separate WebRTC connection carries encrypted audio and video from publisher to viewer.](images/how-vdoninja-connects.png)
+
+| Part | What it does |
+| --- | --- |
+| **Website (HTTPS)** | Loads the interface and JavaScript that run on your device. Serving these files does not itself relay the stream. |
+| **Signaling / handshake (WSS)** | Helps peers find each other and exchange connection details. Normally stays connected for room activity, new viewers, and reconnection; it does not carry the audio/video stream. |
+| **WebRTC** | Handles real-time audio, video, and data between connected peers. |
+| **STUN** | Helps discover a device's address as seen from outside its local network. A STUN server does not forward the media. |
+| **TURN** | Relays encrypted media when needed, or when relay mode is requested. It forwards packets without decoding the audio/video. |
+
+![Direct media travels from publisher to viewer across a LAN or the internet. Relayed media travels through a TURN server and remains encrypted between the peers.](images/how-vdoninja-media-travels.png)
+
+WebRTC's **ICE** connection checks select a working route from the available addresses and relays. Discovery and checks can overlap; they are not a fixed sequence of separate LAN, STUN, and TURN attempts. See the [ICE protocol overview](https://www.rfc-editor.org/rfc/rfc8445.html#section-2) for the technical details.
+
+Ordinary rooms use peer connections: a publisher may send a separate copy to each receiving peer, so more viewers can require more upload bandwidth and device resources. A director's room coordinates participants; it does not automatically mix everyone's video on a server. Optional SFU, WHIP/WHEP, and other modes can use different media paths.
+
+For your own website or a fully local setup, choose a guide below.
+
 ## Hosting and local development
 
 The public service is available at [vdo.ninja](https://vdo.ninja/). To host the frontend yourself, serve this repository from an HTTPS-enabled static web server. There is no frontend build step or package installation required.
+
+Choose the guide that matches your setup:
+
+| What you want to host | Guide | What it provides |
+| --- | --- | --- |
+| The website on your own web server | [Manual hosting](install.md) | Static website files; public VDO.Ninja connection services remain enabled by default. |
+| The website using Docker on a VPS, home server, or Raspberry Pi | [docker-vdon](https://github.com/steveseguin/docker-vdon) | An HTTPS website container; public VDO.Ninja connection services remain enabled by default. |
+| A local setup intended to work without internet | [offline_deployment](https://github.com/steveseguin/offline_deployment) | The website, a local secure handshake server, and certificate setup instructions. Start with the ordinary installation; Docker is optional. |
 
 For a local preview, run this from the repository root:
 
@@ -87,11 +117,13 @@ Due to the nature of live video production, where unexpected changes to the app 
 
 The browser client uses signaling to establish ordinary rooms and peer connections. STUN helps discover network addresses; TURN relays traffic when a direct connection cannot be established. These services are separate from the static frontend.
 
-- **Signaling:** [install.md](install.md) links to a separate handshake-server project and describes configuring the client for it.
+- **Signaling:** [websocket_server](https://github.com/steveseguin/websocket_server) provides standalone handshake servers. Its advanced routing server (`vdoninja_advanced.js`) uses the browser URL option **`wss2=`**; the older fanout servers use **`wss=`**. Use the matching option on both publisher and viewer links.
 - **TURN:** [turnserver.md](turnserver.md), `turnserver_basic.conf`, and the `.sample` files provide optional self-hosting examples. Replace placeholder settings before use. The website does not execute these samples.
 - **Twilio call-in:** requires an explicitly configured backend URL. The Twilio backend implementation and a hosted default are not included. SIP call-in instead uses the provider settings entered by the user.
 - **Live translation:** accepts a user-supplied API key or a separately configured token broker. No broker implementation is bundled here.
-- **Offline deployments:** see the separate [offline deployment project](https://github.com/steveseguin/offline_deployment). Check its requirements and compatibility before deploying it.
+- **Offline deployments:** [offline_deployment](https://github.com/steveseguin/offline_deployment) combines the website with a local advanced routing server and disables automatic public STUN/TURN configuration in its prepared website. Its guide covers setup, connection checks, and optional internet-assisted connections.
+
+HTTPS is still required for phones and other remote clients on a private LAN. When using a private CA, install and trust its public root certificate on each client device; see the [certificate guide for browsers, OBS, and native apps](https://github.com/steveseguin/offline_deployment/blob/main/docs/certificates.md). Native apps can handle certificate trust differently from browsers, so follow the app-specific notes there.
 
 Self-hosting the frontend does not automatically make a deployment independent of hosted services. Review the features you enable and their configured endpoints. See [LICENCE.md](LICENCE.md) for the distinction between the software license and access to hosted services.
 

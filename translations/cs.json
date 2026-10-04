@@ -1,5 +1,11 @@
 {
   "innerHTML": {
+    "use-meshcast": "Použít Meshcast",
+    "muted-in-scenes": "Ve scénách ztlumeno",
+    "guest-muted-scenes": "Host se ve scénách ztlumil",
+    "scene-mute-saved": "Ztlumení scén zachováno",
+    "changing-scene-audio": "Mění se zvuk scén",
+    "scene-audio-not-confirmed": "Stav zvuku scén nepotvrzen",
     "view-only": "Pouze sledovat",
     "logo-header": "\n<font id=\"qos\">V</font>DO.Ninja \n",
     "copy-this-url": "Zkopírujte tuhle URL do OBS \"Browser Source\"",
@@ -383,6 +389,9 @@
     "statistics": "Statistics"
   },
   "titles": {
+    "switch-this-guest-s-camera-and-microphone-between-direct-connections-and-meshcast": "Přepnout kameru a mikrofon tohoto hosta mezi přímým připojením a Meshcast",
+    "mute-microphone-and-shared-audio-in-scene-outputs": "Ztlumit mikrofon a sdílený zvuk ve výstupech scén",
+    "mute-audio-in-scene-outputs": "Ztlumit mikrofon a sdílený zvuk ve výstupech scén",
     "view-only": "Pouze sledovat",
     "the-language-you-want-to-hear-when-live-translation-is-available": "Jazyk, který chcete slyšet, když je k dispozici živý překlad",
     "100": "100",

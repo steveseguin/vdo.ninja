@@ -13,7 +13,7 @@
 		content="VDO.Ninja, PTZ controller, remote camera control, pan tilt zoom, talkback, livestream camera"
 	/>
 	<meta name="robots" content="index,follow,max-image-preview:large" />
-	<meta name="theme-color" content="#0f172a" />
+	<meta name="theme-color" content="#202328" />
 	<meta property="og:type" content="website" />
 	<meta property="og:title" content="VDO.Ninja PTZ Controller" />
 	<meta
@@ -35,16 +35,15 @@
 	<link rel="apple-touch-icon" href="/media/icon-192x192.png" />
 		<style>
 			:root {
-				--bg: #0f172a;
-				--panel: #111827;
-				--panel-2: #1f2937;
-				--text: #e5e7eb;
-				--muted: #9ca3af;
-				--accent: #22c55e;
-				--accent-2: #14b8a6;
+				--bg: #202328;
+				--panel: #292d33;
+				--panel-2: #353b43;
+				--text: #eceef1;
+				--muted: #b1b7c0;
+				--accent: #8bd7be;
 				--danger: #ef4444;
-				--border: #374151;
-				--input: #0b1220;
+				--border: #454c56;
+				--input: #22262c;
 				--stage-overlay-alpha: 0.72;
 			}
 
@@ -55,8 +54,9 @@
 		body {
 			margin: 0;
 			font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-			background: radial-gradient(circle at top right, #1e293b 0%, var(--bg) 45%);
+			background: var(--bg);
 			color: var(--text);
+			line-height: 1.45;
 		}
 
 		main {
@@ -64,20 +64,19 @@
 			margin: 0 auto;
 			padding: 16px;
 			display: grid;
-			gap: 12px;
+			gap: 16px;
 		}
 
 		.panel {
-			background: linear-gradient(160deg, rgba(255, 255, 255, 0.02), rgba(255, 255, 255, 0));
 			background-color: var(--panel);
-			border: 1px solid var(--border);
-			border-radius: 12px;
-			padding: 12px;
+			border-radius: 10px;
+			padding: 16px;
 		}
 
 		h1 {
-			margin: 0 0 6px;
-			font-size: 1.35rem;
+			margin: 0;
+			font-size: 1.25rem;
+			font-weight: 600;
 		}
 
 		p {
@@ -115,6 +114,8 @@
 			border: 1px solid var(--border);
 			background: var(--input);
 			color: var(--text);
+			font: inherit;
+			min-width: 0;
 		}
 
 		input[type="range"] {
@@ -138,9 +139,9 @@
 			min-width: 0;
 			padding: 7px 9px;
 			border-radius: 8px;
-			border: 1px solid rgba(71, 85, 105, 0.75);
-			background: #0b1220;
-			color: #cbd5e1;
+			border: 1px solid var(--border);
+			background: var(--input);
+			color: var(--muted);
 			font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
 			font-size: 0.76rem;
 			line-height: 1.25;
@@ -160,13 +161,34 @@
 			padding: 8px 10px;
 			border-radius: 8px;
 			cursor: pointer;
-			font-weight: 600;
+			font-family: inherit;
+			font-size: 0.88rem;
+			font-weight: 400;
+			min-height: 40px;
 		}
 
 		button.primary {
-			background: linear-gradient(140deg, var(--accent), var(--accent-2));
-			color: #04130b;
-			border-color: #0e8f4e;
+			background: var(--accent);
+			color: #142d25;
+			border-color: var(--accent);
+			font-weight: 600;
+		}
+
+		button:hover:not(:disabled) {
+			filter: brightness(1.12);
+		}
+
+		button:focus,
+		input:focus,
+		select:focus,
+		summary:focus {
+			outline: 2px solid var(--accent);
+			outline-offset: 3px;
+		}
+
+		button.secondary {
+			background: transparent;
+			border-color: transparent;
 		}
 
 		button.danger {
@@ -197,29 +219,37 @@
 
 		.layout {
 			display: grid;
-			gap: 12px;
-			grid-template-columns: minmax(320px, 420px) 1fr;
+			gap: 20px;
+			grid-template-columns: 320px minmax(0, 1fr);
+			align-items: start;
 		}
 
 			.controls {
 				display: grid;
-				gap: 10px;
+				gap: 16px;
+				min-width: 0;
+				padding: 16px;
+				background: var(--panel);
+				border-radius: 10px;
 				transition: opacity 0.2s ease;
 			}
 
 		.control-card {
-			border: 1px solid var(--border);
-			background: #0c1424;
-			border-radius: 10px;
-			padding: 10px;
+			border-bottom: 1px solid var(--border);
+			padding-bottom: 16px;
+			min-width: 0;
+		}
+
+		.control-card:last-child {
+			border-bottom: 0;
+			padding-bottom: 0;
 		}
 
 		.control-title {
-			font-size: 0.86rem;
-			color: #93c5fd;
-			text-transform: uppercase;
-			letter-spacing: 0.06em;
-			margin-bottom: 8px;
+			font-size: 0.94rem;
+			color: var(--text);
+			font-weight: 600;
+			margin: 0 0 10px;
 		}
 
 		.pad {
@@ -255,32 +285,40 @@
 
 		.pad-surface {
 			height: 120px;
-			border: 1px dashed #475569;
+			border: 1px dashed var(--border);
 			border-radius: 10px;
 			display: grid;
 			place-items: center;
 			color: #cbd5e1;
-			background: #0b1220;
+			background: var(--input);
+			padding: 12px;
+			text-align: center;
 			user-select: none;
 			touch-action: none;
 		}
 
 			.preview-panel {
-				padding: 8px;
+				padding: 0;
+				position: sticky;
+				top: 16px;
+				min-width: 0;
+				background: transparent;
 			}
 
 			.preview-stage {
 				position: relative;
 				width: 100%;
-				height: 100%;
-				min-height: 620px;
-				border: 1px solid var(--border);
+				height: 0;
+				padding-bottom: 56.25%;
 				border-radius: 10px;
 				background: #000;
 				overflow: hidden;
 			}
 
 			.preview-transform {
+				position: absolute;
+				top: 0;
+				left: 0;
 				width: 100%;
 				height: 100%;
 				transform-origin: center center;
@@ -288,6 +326,7 @@
 			}
 
 			.preview-transform iframe {
+				display: block;
 				width: 100%;
 				height: 100%;
 				min-height: 0;
@@ -298,9 +337,12 @@
 
 			.preview-pad-overlay {
 				position: absolute;
-				inset: 0;
+				top: 0;
+				right: 0;
+				bottom: 0;
+				left: 0;
 				display: flex;
-				align-items: end;
+				align-items: flex-end;
 				justify-content: center;
 				padding: 12px;
 				font-size: 0.8rem;
@@ -361,6 +403,8 @@
 			}
 
 			body.stage-mode .preview-panel {
+				position: static;
+				z-index: auto;
 				padding: 0;
 				border: 0;
 				border-radius: 0;
@@ -370,6 +414,7 @@
 			body.stage-mode .preview-stage {
 				min-height: 0;
 				height: 100vh;
+				padding-bottom: 0;
 				border: 0;
 				border-radius: 0;
 			}
@@ -378,28 +423,29 @@
 				position: fixed;
 				top: 12px;
 				left: 12px;
-				width: min(420px, calc(100vw - 24px));
+				width: 320px;
+				max-width: calc(100vw - 24px);
 				max-height: calc(100vh - 24px);
 				overflow: auto;
 				padding: 10px;
 				border: 1px solid rgba(148, 163, 184, 0.25);
 				border-radius: 12px;
-				background: rgba(7, 15, 30, var(--stage-overlay-alpha));
+				background: rgba(32, 35, 40, var(--stage-overlay-alpha));
 				backdrop-filter: blur(8px);
 				z-index: 20;
 			}
 
 			body.stage-mode.stage-solid-controls #controlsColumn {
-				background: #0c1424;
+				background: var(--panel);
 				backdrop-filter: none;
 			}
 
 			body.stage-mode #controlsColumn .control-card {
-				background: rgba(12, 20, 36, 0.72);
+				background: transparent;
 			}
 
 			body.stage-mode #controlsColumn button {
-				background: rgba(31, 41, 55, 0.72);
+				background: var(--panel-2);
 			}
 
 			.small {
@@ -412,87 +458,246 @@
 			color: #d1d5db;
 		}
 
+		summary {
+			cursor: pointer;
+			padding: 6px 0;
+			color: var(--muted);
+		}
+
+		details[open] > summary {
+			margin-bottom: 12px;
+			color: var(--text);
+		}
+
+		.page-heading {
+			display: flex;
+			flex-wrap: wrap;
+			align-items: center;
+			justify-content: space-between;
+			gap: 8px;
+		}
+
+		.connect-row {
+			display: grid;
+			grid-template-columns: minmax(0, 1fr) auto auto;
+			align-items: end;
+			gap: 10px;
+		}
+
+		.connection-options {
+			margin-top: 6px;
+		}
+
+		.preview-toolbar {
+			margin-bottom: 12px;
+		}
+
+		body.stage-mode .preview-toolbar {
+			position: fixed;
+			top: 12px;
+			right: 12px;
+			z-index: 30;
+			padding: 6px;
+			border-radius: 8px;
+			background: var(--panel);
+		}
+
+		.preview-stage:fullscreen {
+			width: 100vw;
+			height: 100vh;
+			padding-bottom: 0;
+			border-radius: 0;
+		}
+
+		.preview-stage:-webkit-full-screen {
+			width: 100vw;
+			height: 100vh;
+			padding-bottom: 0;
+			border-radius: 0;
+		}
+
 			@media (max-width: 980px) {
 				.layout {
 					grid-template-columns: 1fr;
 				}
-				.preview-stage {
-					min-height: 380px;
+				.preview-panel {
+					grid-row: 1;
+					top: 0;
+					z-index: 2;
+					background: var(--bg);
+				}
+				body.stage-mode .preview-toolbar {
+					left: 12px;
+					right: auto;
+				}
+				body.stage-mode #controlsColumn {
+					top: 80px;
+					max-height: calc(100vh - 92px);
 				}
 				.sender-row button {
 					width: 100%;
+				}
+			}
+
+			@media (max-width: 560px) {
+				main {
+					padding: 12px;
+				}
+				.connect-row {
+					grid-template-columns: 1fr auto;
+				}
+				.connect-row > label {
+					grid-column: 1 / -1;
+				}
+				.preview-toolbar {
+					gap: 4px;
+				}
+				.preview-toolbar button {
+					padding: 8px;
+					font-size: 0.8rem;
+				}
+				body.stage-mode .preview-toolbar {
+					right: 12px;
+					display: grid;
+					grid-template-columns: repeat(3, minmax(0, 1fr));
+				}
+				body.stage-mode #controlsColumn {
+					top: 96px;
+					max-height: calc(100vh - 108px);
+				}
+			}
+
+			@media (max-width: 980px) and (max-height: 600px) {
+				.preview-panel {
+					position: static;
 				}
 			}
 		</style>
 	</head>
 	<body>
 		<main>
-			<section class="panel" id="introPanel">
-				<h1>Standalone PTZ Controller</h1>
-				<p>Dedicated control interface that does not modify the default VDO.Ninja UI.</p>
-			</section>
+			<header id="introPanel" class="page-heading">
+				<h1>PTZ Controller</h1>
+				<div class="row">
+					<button id="togglePreviewBtn" class="secondary">Hide Preview</button>
+					<button id="toggleControlsBtn" class="secondary">Hide Controls Pane</button>
+				</div>
+			</header>
 
-			<section class="panel" id="setupPanel">
-				<div class="grid">
-				<label>
-					Viewer URL or Stream ID
-					<input id="viewInput" type="text" placeholder="https://vdo.ninja/?view=STREAMID or STREAMID" />
-				</label>
-				<label>
-					Target Stream ID / UUID
-					<input id="targetInput" type="text" placeholder="Optional; auto-uses ?view when possible" />
-				</label>
-				<label>
-					Remote Token
-					<input id="remoteInput" type="text" placeholder="Optional; required for &remote token control" />
-				</label>
-				<label>
-					Options
-					<select id="embedPreset">
-						<option value="light">Lightweight embed (recommended)</option>
-						<option value="raw">Use URL exactly as provided</option>
-					</select>
-				</label>
-			</div>
-				<div class="row" style="margin-top:8px;">
-					<label class="checkline">
-						<input id="muteViewerAudioToggle" type="checkbox" />
-						Mute embed audio (&noaudio)
+			<section class="panel" id="setupPanel" aria-label="Connection">
+				<div class="connect-row">
+					<label>
+						Viewer URL or Stream ID
+						<input id="viewInput" type="text" placeholder="Paste a viewer link or stream ID" />
 					</label>
-					<label class="checkline">
-						<input id="senderNoPreviewToggle" type="checkbox" checked />
-						Include &nopreview in sender template
-					</label>
-					<label class="checkline">
-						<input id="senderNoVideoInToggle" type="checkbox" />
-						Sender: No incoming video (&novideo)
-					</label>
-					<label class="checkline">
-						<input id="talkbackToggle" type="checkbox" />
-						Enable controller microphone talkback (two-way audio)
-					</label>
-					<div class="small">Talkback uses the generated sender link and will ask this controller page for microphone access.</div>
-				</div>
-				<div class="row" style="margin-top:10px;">
 					<button id="connectBtn" class="primary">Connect Viewer</button>
-					<button id="reloadBtn">Reload</button>
-					<button id="togglePreviewBtn">Toggle Preview</button>
-					<button id="toggleControlsBtn">Hide Controls Pane</button>
-					<button id="stageModeBtn">Stage Mode</button>
-					<button id="fullscreenBtn">PTZ Fullscreen</button>
-					<span class="small">If keyboard shortcuts do not respond, click anywhere on this page first.</span>
+					<button id="reloadBtn" class="secondary">Reload</button>
 				</div>
-				<div class="row sender-row" style="margin-top:8px;">
-					<button id="copySenderUrlBtn">Copy Sender Link</button>
-					<span id="senderTemplateLine" class="template-line placeholder">Paste a viewer URL or stream ID to generate a sender link.</span>
-				</div>
-				<div id="statusLine" class="status" style="margin-top:8px;">Idle.</div>
+				<div id="statusLine" class="status" role="status" style="margin-top:10px;">Paste a viewer link to get started.</div>
+				<details class="connection-options">
+					<summary>Connection &amp; sender options</summary>
+					<div class="grid">
+						<label>
+							Target Stream ID / UUID
+							<input id="targetInput" type="text" placeholder="Optional; detected from viewer link" />
+						</label>
+						<label>
+							Remote Token
+							<input id="remoteInput" type="text" placeholder="Optional; use the sender's token if required" />
+						</label>
+						<label>
+							Embed mode
+							<select id="embedPreset">
+								<option value="light">Lightweight embed (recommended)</option>
+								<option value="raw">Use URL exactly as provided</option>
+							</select>
+						</label>
+					</div>
+					<div class="grid" style="margin-top:16px;">
+						<label class="checkline"><input id="muteViewerAudioToggle" type="checkbox" />Mute viewer audio</label>
+						<label class="checkline"><input id="senderNoPreviewToggle" type="checkbox" checked />Hide preview in sender link</label>
+						<label class="checkline"><input id="senderNoVideoInToggle" type="checkbox" />Disable incoming video in sender link</label>
+						<label class="checkline"><input id="talkbackToggle" type="checkbox" />Enable microphone talkback</label>
+					</div>
+					<p class="small" style="margin-top:10px;">Talkback uses the generated sender link and asks for microphone access on this controller.</p>
+					<div class="row sender-row" style="margin-top:12px;">
+						<button id="copySenderUrlBtn">Copy Sender Link</button>
+						<span id="senderTemplateLine" class="template-line placeholder">Paste a viewer URL or stream ID to generate a sender link.</span>
+					</div>
+				</details>
 			</section>
 
 			<section class="layout" id="layoutSection">
 				<div class="controls" id="controlsColumn">
 					<div class="control-card">
-						<div class="control-title">Stage + Preview</div>
+						<div class="control-title">Pan / Tilt</div>
+						<div class="pad">
+							<button class="spacer" disabled>.</button>
+							<button data-hold-control="tilt" data-dir="1">Tilt Up</button>
+							<button class="spacer" disabled>.</button>
+							<button data-hold-control="pan" data-dir="-1">Pan Left</button>
+							<button data-home="1">Home</button>
+							<button data-hold-control="pan" data-dir="1">Pan Right</button>
+							<button class="spacer" disabled>.</button>
+							<button data-hold-control="tilt" data-dir="-1">Tilt Down</button>
+							<button class="spacer" disabled>.</button>
+						</div>
+						<div class="row" style="margin-top:10px;">
+							<label class="checkline">
+								<input id="fineToggle" type="checkbox" />
+								Fine control (Alt)
+							</label>
+						</div>
+					</div>
+					<div class="control-card">
+						<div class="control-title">Zoom / Focus</div>
+						<div class="split">
+							<button data-hold-control="zoom" data-dir="1">Zoom +</button>
+							<button data-hold-control="zoom" data-dir="-1">Zoom -</button>
+							<button data-hold-control="focus" data-dir="1">Focus +</button>
+							<button data-hold-control="focus" data-dir="-1">Focus -</button>
+						</div>
+						<div class="row" style="margin-top:8px;">
+							<button id="autofocusBtn">Reset Autofocus</button>
+						</div>
+					</div>
+					<div class="control-card">
+						<div class="control-title">Presets</div>
+						<div class="preset-grid">
+							<button data-preset-recall="1" aria-label="Recall preset 1">1</button>
+							<button data-preset-recall="2" aria-label="Recall preset 2">2</button>
+							<button data-preset-recall="3" aria-label="Recall preset 3">3</button>
+							<button data-home="1">Home</button>
+							<button class="secondary" data-preset-save="1">Save 1</button>
+							<button class="secondary" data-preset-save="2">Save 2</button>
+							<button class="secondary" data-preset-save="3">Save 3</button>
+						</div>
+					</div>
+					<details class="control-card">
+						<summary>Movement settings</summary>
+						<div class="grid">
+							<label>
+								Base Step (default 0.005)
+								<input id="baseStepInput" type="number" min="0.001" max="1" step="0.001" value="0.005" />
+							</label>
+							<label>
+								Repeat Interval (ms)
+								<input id="repeatInput" type="number" min="40" max="500" step="10" value="120" />
+							</label>
+						</div>
+						<div class="row" style="margin-top:8px;">
+							<label style="display:flex;align-items:center;gap:8px;">
+								<input id="panInvertToggle" type="checkbox" checked />
+								Invert pan
+							</label>
+							<label style="display:flex;align-items:center;gap:8px;">
+								<input id="tiltInvertToggle" type="checkbox" />
+								Invert tilt
+							</label>
+						</div>
+					</details>
+					<details class="control-card">
+						<summary>Preview &amp; orientation</summary>
 						<div class="split">
 							<button id="mirrorPreviewBtn">Mirror Preview</button>
 							<button id="rotatePreviewBtn">Rotate +90</button>
@@ -524,126 +729,55 @@
 								<input id="overlayOpacityInput" type="range" min="0.3" max="0.95" step="0.05" value="0.72" />
 							</label>
 						</div>
-					</div>
-
-					<div class="control-card">
-						<div class="control-title">Step + Repeat</div>
-					<div class="grid">
+					</details>
+					<details class="control-card">
+						<summary>Absolute position</summary>
 						<label>
-							Base Step (default 0.005)
-							<input id="baseStepInput" type="number" min="0.001" max="1" step="0.001" value="0.005" />
+							Pan <span id="panAbsValue" class="value">0.00</span>
+							<input id="panAbs" type="range" min="-1" max="1" step="0.01" value="0" />
 						</label>
 						<label>
-							Repeat Interval (ms)
-							<input id="repeatInput" type="number" min="40" max="500" step="10" value="120" />
+							Tilt <span id="tiltAbsValue" class="value">0.00</span>
+							<input id="tiltAbs" type="range" min="-1" max="1" step="0.01" value="0" />
 						</label>
-					</div>
-					<div class="row" style="margin-top:8px;">
-						<label style="display:flex;align-items:center;gap:8px;">
-							<input id="fineToggle" type="checkbox" />
-							Force fine mode (Alt equivalent)
+						<label>
+							Zoom <span id="zoomAbsValue" class="value">0.00</span>
+							<input id="zoomAbs" type="range" min="0" max="1" step="0.01" value="0" />
 						</label>
-						<label style="display:flex;align-items:center;gap:8px;">
-							<input id="panInvertToggle" type="checkbox" checked />
-							Invert pan
+						<label>
+							Focus <span id="focusAbsValue" class="value">0.50</span>
+							<input id="focusAbs" type="range" min="0" max="1" step="0.01" value="0.5" />
 						</label>
-						<label style="display:flex;align-items:center;gap:8px;">
-							<input id="tiltInvertToggle" type="checkbox" />
-							Invert tilt
-						</label>
-					</div>
+						<div class="row">
+							<button id="applyAbsBtn">Apply All Absolute</button>
+						</div>
+					</details>
+					<details class="control-card">
+						<summary>Drag &amp; scroll pads</summary>
+						<div id="dragPad" class="pad-surface">Drag here for pan/tilt</div>
+						<div id="wheelPad" class="pad-surface" style="margin-top:8px;">Scroll here for PTZ/focus (Shift/Ctrl modifiers supported)</div>
+					</details>
+					<details class="control-card">
+						<summary>Camera recovery</summary>
+						<div class="split">
+							<button id="refreshCameraBtn">Refresh Camera</button>
+							<button id="recoverStreamBtn">Refresh Camera + Link</button>
+						</div>
+						<div class="row" style="margin-top:8px;">
+							<span class="small">Remote recovery still requires valid <code>&amp;remote</code> authorization on the sender.</span>
+						</div>
+					</details>
 				</div>
-
-				<div class="control-card">
-					<div class="control-title">Pan / Tilt</div>
-					<div class="pad">
-						<button class="spacer" disabled>.</button>
-						<button data-hold-control="tilt" data-dir="1">Tilt Up</button>
-						<button class="spacer" disabled>.</button>
-						<button data-hold-control="pan" data-dir="-1">Pan Left</button>
-						<button data-home="1">Home</button>
-						<button data-hold-control="pan" data-dir="1">Pan Right</button>
-						<button class="spacer" disabled>.</button>
-						<button data-hold-control="tilt" data-dir="-1">Tilt Down</button>
-						<button class="spacer" disabled>.</button>
-					</div>
-				</div>
-
-				<div class="control-card">
-					<div class="control-title">Zoom / Focus</div>
-					<div class="split">
-						<button data-hold-control="zoom" data-dir="1">Zoom +</button>
-						<button data-hold-control="zoom" data-dir="-1">Zoom -</button>
-						<button data-hold-control="focus" data-dir="1">Focus +</button>
-						<button data-hold-control="focus" data-dir="-1">Focus -</button>
-					</div>
-					<div class="row" style="margin-top:8px;">
-						<button id="autofocusBtn">Reset Autofocus</button>
-					</div>
-				</div>
-
-				<div class="control-card">
-					<div class="control-title">Camera Recovery</div>
-					<div class="split">
-						<button id="refreshCameraBtn">Refresh Camera</button>
-						<button id="recoverStreamBtn">Refresh Camera + Link</button>
-					</div>
-					<div class="row" style="margin-top:8px;">
-						<span class="small">Remote recovery still requires valid <code>&amp;remote</code> authorization on the sender.</span>
-					</div>
-				</div>
-
-				<div class="control-card">
-					<div class="control-title">Presets</div>
-					<div class="preset-grid">
-						<button data-preset-recall="1">Recall 1</button>
-						<button data-preset-recall="2">Recall 2</button>
-						<button data-preset-recall="3">Recall 3</button>
-						<button data-home="1">Recall Home</button>
-						<button data-preset-save="1">Save 1</button>
-						<button data-preset-save="2">Save 2</button>
-						<button data-preset-save="3">Save 3</button>
-						<div class="small" style="align-self:center;">0 = home. Shift+1/2/3 = save.</div>
-					</div>
-				</div>
-
-				<div class="control-card">
-					<div class="control-title">Drag + Wheel Surface</div>
-					<div id="dragPad" class="pad-surface">Drag here for pan/tilt</div>
-					<div id="wheelPad" class="pad-surface" style="margin-top:8px;">Scroll here for PTZ/focus (Shift/Ctrl modifiers supported)</div>
-				</div>
-
-				<div class="control-card">
-					<div class="control-title">Absolute Position</div>
-					<label>
-						Pan <span id="panAbsValue" class="value">0.00</span>
-						<input id="panAbs" type="range" min="-1" max="1" step="0.01" value="0" />
-					</label>
-					<label>
-						Tilt <span id="tiltAbsValue" class="value">0.00</span>
-						<input id="tiltAbs" type="range" min="-1" max="1" step="0.01" value="0" />
-					</label>
-					<label>
-						Zoom <span id="zoomAbsValue" class="value">0.00</span>
-						<input id="zoomAbs" type="range" min="0" max="1" step="0.01" value="0" />
-					</label>
-					<label>
-						Focus <span id="focusAbsValue" class="value">0.50</span>
-						<input id="focusAbs" type="range" min="0" max="1" step="0.01" value="0.5" />
-					</label>
-					<div class="row">
-						<button id="applyAbsBtn">Apply All Absolute</button>
-					</div>
-				</div>
-			</div>
 
 				<div class="panel preview-panel" id="previewPanel">
-					<div class="row" style="margin-bottom:8px;">
-						<button id="previewFullscreenBtn">Feed Fullscreen</button>
+					<div class="row preview-toolbar">
+						<button id="stageModeBtn" title="Fill the window with video and overlay the controls">Stage Mode</button>
+						<button id="fullscreenBtn" class="secondary" title="Fullscreen with controls">PTZ Fullscreen</button>
+						<button id="previewFullscreenBtn" class="secondary" title="Fullscreen video without controls">Video Fullscreen</button>
 					</div>
 					<div class="preview-stage" id="previewStage">
 						<div id="previewTransform" class="preview-transform">
-							<iframe id="viewerFrame" allow="autoplay;camera;microphone;fullscreen;picture-in-picture;display-capture;"></iframe>
+							<iframe id="viewerFrame" title="Camera preview" allow="autoplay;camera;microphone;fullscreen;picture-in-picture;display-capture;"></iframe>
 						</div>
 						<div id="previewPadOverlay" class="preview-pad-overlay">Drag for pan/tilt. Scroll for zoom/focus.</div>
 					</div>
@@ -658,7 +792,7 @@
 						Hold Alt for fine steps. P = toggle preview drag/wheel overlay. M = mirror preview, R / Shift+R = rotate preview, F = stage mode toggle.
 						A = reset autofocus. Ctrl/Cmd+M = mirror remote, Ctrl/Cmd+R = rotate remote, Ctrl/Cmd+Shift+R = reset remote rotation.
 						Use the camera recovery card to refresh the sender camera or request its available camera list without opening the director UI.
-						Use "Invert pan" or "Invert tilt" if your camera responds opposite to expected direction.
+						Use "Invert pan" or "Invert tilt" if your camera responds opposite to expected direction. Click this page first if keyboard shortcuts do not respond.
 					</p>
 				</details>
 			</section>
@@ -1401,7 +1535,7 @@
 					return;
 				}
 				state.peerConnected = true;
-				setStatus("Peer connected. PTZ controls are ready.");
+				setStatus("Stream connected. Camera controls require PTZ support on the sender.");
 				if (state.pendingPreset) {
 					var pending = state.pendingPreset;
 					state.pendingPreset = null;
@@ -1691,6 +1825,7 @@
 				refs.togglePreviewBtn.addEventListener("click", function () {
 					state.previewHidden = !state.previewHidden;
 					refs.previewPanel.style.display = state.previewHidden ? "none" : "";
+					refs.togglePreviewBtn.textContent = state.previewHidden ? "Show Preview" : "Hide Preview";
 				});
 				refs.toggleControlsBtn.addEventListener("click", function () {
 					setControlsCollapsed(!state.controlsCollapsed);

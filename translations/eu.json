@@ -1,5 +1,11 @@
 {
   "innerHTML": {
+    "use-meshcast": "Erabili Meshcast",
+    "muted-in-scenes": "Eszenetan mutututa",
+    "guest-muted-scenes": "Gonbidatuak bere burua mututu du eszenetan",
+    "scene-mute-saved": "Eszenetako mututzea mantenduta",
+    "changing-scene-audio": "Eszenetako audioa aldatzen",
+    "scene-audio-not-confirmed": "Eszenetako audioa baieztatu gabe",
     "view-only": "Ikusi soilik",
     "logo-header": "\n<font id=\"qos\">V</font>DO.Ninja \n",
     "copy-this-url": "Kopiatu URL hau OBS iturri bilatzailean",
@@ -383,6 +389,9 @@
     "statistics": "Statistics"
   },
   "titles": {
+    "switch-this-guest-s-camera-and-microphone-between-direct-connections-and-meshcast": "Aldatu gonbidatu honen kamera eta mikrofonoa zuzeneko konexioen eta Meshcast-en artean",
+    "mute-microphone-and-shared-audio-in-scene-outputs": "Mututu mikrofonoa eta partekatutako audioa eszenen irteeretan",
+    "mute-audio-in-scene-outputs": "Mututu mikrofonoa eta partekatutako audioa eszenen irteeretan",
     "view-only": "Ikusi soilik",
     "the-language-you-want-to-hear-when-live-translation-is-available": "Zuzeneko itzulpena erabilgarri dagoenean entzun nahi duzun hizkuntza",
     "100": "100",

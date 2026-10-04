@@ -1,5 +1,7 @@
 {
   "innerHTML": {
+    "use-meshcast": "Use Meshcast",
+    "guest-muted-scenes": "Guest muted scenes",
     "view-only": "View Only",
     "chunked-synchronizing": "Synchronizing…",
     "chunked-buffering": "Buffering…",
@@ -378,6 +380,8 @@
     "statistics": "Statistics"
   },
   "titles": {
+    "switch-this-guest-s-camera-and-microphone-between-direct-connections-and-meshcast": "Switch this guest's camera and microphone between direct connections and Meshcast",
+    "mute-microphone-and-shared-audio-in-scene-outputs": "Mute microphone and shared audio in scene outputs",
     "view-only": "View Only",
     "the-language-you-want-to-hear-when-live-translation-is-available": "The language you want to hear when live translation is available",
     "100": "100",
