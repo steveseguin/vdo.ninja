@@ -91,3 +91,27 @@ docs.md
 /hire.html
 /freelance.html
 /services.html
+
+# Previously removed unused dependencies; exclude from future release copies.
+/thirdparty/jeeliz/JeelizResizer.js
+/thirdparty/jeeliz/helpers/HeadControls.js
+/thirdparty/jeeliz/helpers/JeelizFaceCut.js
+/thirdparty/jeeliz/helpers/JeelizResizer.js
+/thirdparty/jeeliz/helpers/JeelizThreeHelper.js
+/thirdparty/jeeliz/helpers/addDragEventListener.js
+/thirdparty/jeeliz/modules/jeelizFaceFilter.module.js
+/thirdparty/jeeliz/modules/jeelizFaceFilter.moduleNoDOM.js
+/thirdparty/jeeliz/three/ShaderParticleEngine/LICENSE
+/thirdparty/jeeliz/three/ShaderParticleEngine/SPE.min.js
+/thirdparty/jeeliz/three/customMaterials/GlowMaterial/LICENSE
+/thirdparty/jeeliz/three/customMaterials/GlowMaterial/threex.atmospherematerial.js
+/thirdparty/jeeliz/three/customMaterials/GlowMaterial/threex.atmospherematerialdatgui.js
+/thirdparty/jeeliz/three/customMaterials/GlowMaterial/threex.dilategeometry.js
+/thirdparty/jeeliz/three/customMaterials/GlowMaterial/threex.geometricglow.js
+/thirdparty/jeeliz/three/matrix/THREEMatrix.js
+/thirdparty/jeeliz/three/v112/GLTFLoader.js
+/thirdparty/jeeliz/three/v112/three.js
+/thirdparty/jquery.min.js
+/thirdparty/jquery.min.js.LICENSE
+/thirdparty/jquery/jquery-ui.min.js
+/thirdparty/webmidi.js
