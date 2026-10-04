@@ -22111,13 +22111,16 @@ function collectMeshcastQos(pc, url, receiving, stats) {
 
 // Only software release information; never the page URL or a client identifier.
 function qosSoftwareInfo() {
+	var deployment = "other"; // Other paths on vdo.ninja, including archived versions.
+	if (/^\/alpha(?:\/|$)/.test(location.pathname)) deployment = "alpha";
+	else if (/^\/(?:[^/]+\.html)?$/.test(location.pathname)) deployment = "production";
 	var browser = "Unknown", version = 0;
 	if (typeof Safari !== "undefined" && Safari) { browser = "Safari"; version = typeof SafariVersion === "number" ? SafariVersion : 0; }
 	else if (typeof Firefox !== "undefined" && Firefox) { browser = "Firefox"; version = Firefox; }
 	else if (typeof ChromiumVersion !== "undefined" && ChromiumVersion) { browser = "Chrome"; version = ChromiumVersion; }
 	return {
 		build: session.version,
-		deployment: location.hostname === "vdo.ninja" ? (/^\/alpha(?:\/|$)/.test(location.pathname) ? "alpha" : "production") : "other",
+		deployment: deployment,
 		browser: browser,
 		browserVersion: Math.max(0, Math.min(500, parseInt(version, 10) || 0))
 	};
