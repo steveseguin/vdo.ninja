@@ -172,16 +172,19 @@ In a typical browser session, the **publisher** shares a camera, microphone, or 
 | **WebRTC** | Handles real-time audio, video, and data between connected peers. |
 | **STUN** | Helps discover a device's address as seen from outside its local network. A STUN server does not forward the media. |
 | **TURN** | Relays encrypted media when needed, or when relay mode is requested. It forwards packets without decoding the audio/video. |
+| **Meshcast (optional)** | Receives a published stream and distributes it to multiple viewers, reducing the publisher's upload load. |
 
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="images/how-vdoninja-media-travels-dark.png" />
   <source media="(prefers-color-scheme: light)" srcset="images/how-vdoninja-media-travels.png" />
-  <img alt="Direct media travels from publisher to viewer across a LAN or the internet. Relayed media travels through a TURN server and remains encrypted between the peers." src="images/how-vdoninja-media-travels.png" />
+  <img alt="Media can travel directly between peers, through a TURN relay while remaining encrypted between peers, or through optional Meshcast distribution, where the publisher uploads once and Meshcast sends the stream to multiple viewers." src="images/how-vdoninja-media-travels.png" />
 </picture>
 
 WebRTC's **ICE** connection checks select a working route from the available addresses and relays. Discovery and checks can overlap; they are not a fixed sequence of separate LAN, STUN, and TURN attempts. See the [ICE protocol overview](https://www.rfc-editor.org/rfc/rfc8445.html#section-2) for the technical details.
 
-Ordinary rooms use peer connections: a publisher may send a separate copy to each receiving peer, so more viewers can require more upload bandwidth and device resources. A director's room coordinates participants; it does not automatically mix everyone's video on a server. Optional SFU, WHIP/WHEP, and other modes can use different media paths.
+Ordinary rooms use peer connections: a publisher may send a separate copy to each receiving peer, so more viewers can require more upload bandwidth and device resources. A director's room coordinates participants; it does not automatically mix everyone's video on a server.
+
+With optional [Meshcast](https://meshcast.io), the publisher sends a stream to Meshcast, which distributes it to viewers. This reduces the publisher's upload load when serving multiple viewers. Meshcast is enabled separately; ICE does not automatically switch a peer-to-peer session to Meshcast. Other SFU and WHIP/WHEP setups can also use server-based media paths.
 
 For your own website or a fully local setup, see the [hosting guides](#hosting-and-local-development).
 
