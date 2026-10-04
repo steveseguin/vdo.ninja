@@ -38582,7 +38582,7 @@ function reconnectDevices(event) {
 					if (videoSelect.value == "ZZZ") {
 						for (var i = 0; i < videoSelect.options.length; i++) {
 							try {
-								if (videoSelect.options[i].innerHTML == lastVideoDevice) {
+								if (videoSelect.options[i].textContent == lastVideoDevice) {
 									videoSelect.options[i].selected = "true";
 									streamConnected = true;
 									lastVideoDevice = null;
