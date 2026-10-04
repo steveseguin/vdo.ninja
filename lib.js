@@ -66930,10 +66930,11 @@ async function whipOutScreen() {
 	let offer;
 	try {
 		offer = await pc.createOffer();
+		if (session.whipOutScreen !== pc) return false;
 	} catch (e) {
 		errorlog(e);
 		pc.close();
-		session.whipOutScreen = null;
+		if (session.whipOutScreen === pc) session.whipOutScreen = null;
 		return false;
 	}
 
@@ -66945,10 +66946,11 @@ async function whipOutScreen() {
 
 	try {
 		await pc.setLocalDescription(offer);
+		if (session.whipOutScreen !== pc) return false;
 	} catch (e) {
 		errorlog(e);
 		pc.close();
-		session.whipOutScreen = null;
+		if (session.whipOutScreen === pc) session.whipOutScreen = null;
 		return false;
 	}
 
@@ -66972,10 +66974,12 @@ async function whipOutScreen() {
 		errorlog(e);
 	}
 
+	if (session.whipOutScreen !== pc) return false;
+
 	let localSDP = pc.localDescription ? pc.localDescription.sdp : null;
 	if (!localSDP) {
 		pc.close();
-		session.whipOutScreen = null;
+		if (session.whipOutScreen === pc) session.whipOutScreen = null;
 		return false;
 	}
 	var filteredDesc = filterDescriptionIpv6(pc.localDescription);
@@ -67028,10 +67032,11 @@ async function whipOutScreen() {
 	let response;
 	try {
 		response = await sendOfferToEndpoint(localSDP);
+		if (session.whipOutScreen !== pc) return false;
 	} catch (err) {
 		errorlog(err);
 		pc.close();
-		session.whipOutScreen = null;
+		if (session.whipOutScreen === pc) session.whipOutScreen = null;
 		return false;
 	}
 
@@ -67149,6 +67154,8 @@ async function whipOutScreen() {
 			errorlog(e);
 		}
 	}
+
+	if (session.whipOutScreen !== pc) return false;
 
 	if (!session.whipoutScreenSettings) {
 		session.whipoutScreenSettings = { type: "whep", url: whepUrl, token: session.streamID + "_s", media: "screen", started: false };
