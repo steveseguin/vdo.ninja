@@ -46969,7 +46969,8 @@ session.publishFile = async function (ele, event) {
 }; // publishFile
 
 class CanvasStreamSource {
-	constructor() {
+	constructor(video) {
+		this.video = video;
 		this.canvas = document.createElement('canvas');
 		this.ctx = this.canvas.getContext('2d', { willReadFrequently: true });
 		this.stream = this.canvas.captureStream(30);
@@ -46986,7 +46987,7 @@ class CanvasStreamSource {
 	}
 
 	drawKeyframeTrigger() {
-		if (!this.canvas || !this.ctx || Date.now() - this.lastFrameTime < 500) return;
+		if ((this.video && !this.initialized) || !this.canvas || !this.ctx || Date.now() - this.lastFrameTime < 500) return;
 
 		const state = this.ctx.getImageData(0, 0, this.canvas.width, this.canvas.height);
 
@@ -47032,6 +47033,7 @@ class CanvasStreamSource {
 			console.error("Failed to initialize MediaStreamTrackGenerator, keeping canvas:", e);
 			this.initialized = true;
 		}
+		if (this.video) this.video.srcObject = this.stream;
 	}
 
 	handleFrame(event) {
@@ -47164,9 +47166,8 @@ session.publishFrameSource = function (ele, event) {
 	v.dataset.menu = "context-menu-video";
 	v.setAttribute("playsinline", "");
 
-	session.canvasSource = new CanvasStreamSource();
-	session.streamSrc = session.canvasSource.getStream();
-	v.srcObject = session.streamSrc;
+	session.canvasSource = new CanvasStreamSource(v);
+	session.streamSrc = session.canvasSource.getStream(); // Attach after the first frame selects the source track.
 
 	v.className = "tile clean";
 
@@ -47250,15 +47251,10 @@ session.publishFrameSource = function (ele, event) {
 	};
 
 	v.onloadeddata = async () => {
+		v.onloadeddata = null;
 
 		session.mediafileShare = true;
 		getById("mainmenu").remove();
-
-		if (Firefox) {
-			session.streamSrc = v.mozCaptureStream();
-		} else {
-			session.streamSrc = v.captureStream(); // gaaaaaaaaaaaahhhhhhhh!
-		}
 
 		if (session.framegrab && session.framegrabAudioRequested && session.pendingFramegrabAudioSettings) {
 			try {
