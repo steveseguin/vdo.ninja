@@ -138,21 +138,42 @@ Also check out the FAQ for common answers: https://docs.vdo.ninja or view recent
 I maintain a Youtube playlist with VDO.Ninja related content I create at https://www.youtube.com/watch?v=vLpRzMjUDaE&list=PLWodc2tCfAH1WHjl4WAOOoRSscJ8CHACe, however Youtube is full of community-created guides that are worth checking out.
 
 ## Related Projects
-### VDO.Ninja's Electron Capture:
-A better way to perform "Window Capturing" on desktop if OBS Browser Sources fails you. A downloadable tool designed to enhance VDO.Ninja, but has been expanded to have additional functionality for content creators in general
-[https://github.com/steveseguin/electroncapture](https://github.com/steveseguin/electroncapture)
 
-### Social Stream Ninja
-A free Chrome extension (also a Standalone app version is available now) that lets you stream and feature chat comments from Youtube, Twitch, Facebook, and more. Featured comments will appear directly in OBS or VMix as an overlay, or as a stream list of comments. It also includes a dock for more advanced function, such as text-to-speech, LLM bots, sentiment analysis, and saving messages to disk. No chroma-keying needed and the styling is pretty easy to customize without needing to modify the Chrome extension itself.
-[http://socialstream.ninja](http://socialstream.ninja)
+Steve maintains these apps and services for use with VDO.Ninja and live production. See the [full helper-app catalog](https://docs.vdo.ninja/steves-helper-apps) for setup guides, more utilities, and community tools.
 
-### Rasbperry Ninja
-Use a Linux system, Raspberry Pi, Nvidia Jetson, Mac, and even Windows PC (WSL) to publis or view WebRTC video using Gstreamer and Python; no browser needed . This project can use the system's local hardware encoder to enable high resolution video and even accelerated AV1 encoding. Support for USB, CSI, and HDMI video sources is available, along with options to pass-thru sources without transcoding. OpenCV-friendly, for low-latency computer vision and machine learning applications.
-[http://raspberry.ninja](https://github.com/steveseguin/raspberry_ninja)
+### Capture and native integrations
 
-### CAPTION.Ninja
-A free AI-based closed-captioning tool to add speech-to-text overlays to OBS Studio. It's browser-based with an easy OBS or VMix integration. Developed by Steve as well!
-[https://caption.ninja](https://caption.ninja)
+| Project | What it adds |
+| --- | --- |
+| [Game Capture](https://vdo.ninja/gamecapture) | A native Windows app for publishing games, app windows, and Spout2 sources to VDO.Ninja, with hardware encoding and window audio. Useful for esports feeds and VTuber workflows. |
+| [Ninja OBS Plugin](https://steveseguin.github.io/ninja-obs-plugin/) | Publish directly from OBS to VDO.Ninja, receive streams, and automatically add room participants as OBS sources. Supports OBS 32 on Windows, macOS, and Linux; the native receiver and transparent Game Capture workflow are experimental. |
+| [Custom OBS builds with improved WHIP support](https://github.com/steveseguin/obs-studio/releases) | Steve's OBS fork adds WHIP trickle ICE and improved TURN connectivity for VDO.Ninja. Releases include OBS 32.2.2 and OBS 33 beta builds for Windows, macOS, and Linux. Check each release's platform requirements and known limitations. |
+| [Electron Capture](https://github.com/steveseguin/electroncapture) | A desktop app for frameless playback and window capture of VDO.Ninja feeds and other web content, useful when an OBS Browser Source does not suit your setup. |
+| [VDO.Ninja Video Capture Extension](https://github.com/steveseguin/video_capture_extension) | Publish individual web videos or a browser tab with audio into VDO.Ninja. Requires Chrome or a compatible Chromium browser version 116 or newer; DRM-protected video cannot be captured. |
+| [Ninja VST3 Plugin](https://steveseguin.github.io/Ninja-VST3-Plugin/) | Send and receive VDO.Ninja audio inside supported DAWs. Currently Windows-only and tested with Reaper; this is an audio-only plugin. |
+| [Raspberry.Ninja](https://github.com/steveseguin/raspberry_ninja) | Publish or receive streams using Python and GStreamer without a browser, on Raspberry Pi, Linux, Jetson, macOS, or Windows via WSL. Supports hardware encoding, camera/capture inputs, WHIP output, and computer-vision workflows. |
+
+### Production services and overlays
+
+| Project | What it adds |
+| --- | --- |
+| [Meshcast](https://meshcast.io) / [Meshcast app](https://app.meshcast.io) | Server-assisted distribution for larger VDO.Ninja rooms and one-to-many streams, reducing the publisher's upload load. The newer app supports WHIP, RTMP, and SRT workflows; RTMP/SRT use requires an account. |
+| [Comms](https://comms.cam/) | Browser-based production intercom and talkback built on VDO.Ninja, with separate audio groups for hosts, crew, and backstage coordination. |
+| [app.invite.cam](https://app.invite.cam) | A managed lobby with reusable invitations, waiting lists, and host/helper controls for admitting guests into VDO.Ninja. Hosts sign in with Discord. |
+| [Social Stream Ninja](https://socialstream.ninja) | Combine live chat from YouTube, Twitch, and other platforms into OBS or vMix overlays. Available as a browser extension or standalone app, with featured comments, text-to-speech, bots, and message-saving tools. |
+| [Caption.Ninja](https://caption.ninja/) | Browser-based live captions and translation overlays for OBS and vMix. [Caption Local](https://github.com/steveseguin/caption-local) adds speech recognition on your own computer, with optional human review through Caption.Ninja. |
+| [Ninja Backer](https://ninjabacker.com) | Creator tipping pages and OBS alerts, integrated with VDO.Ninja's built-in tipping options. |
+
+### Controls and browser utilities
+
+| Project | What it adds |
+| --- | --- |
+| [VDO.Ninja Stream Deck Plugin](https://github.com/steveseguin/vdo-streamdeck) | Control microphones, cameras, guests, scenes, mixer layouts, and PTZ using Stream Deck keys and dials. Currently beta; not yet released in the Stream Deck marketplace. |
+| [Companion-Ninja](https://github.com/steveseguin/Companion-Ninja) | Remote-control tools and HTTP/WebSocket API examples for VDO.Ninja, including Bitfocus Companion workflows. |
+| [Screen Recorder](https://vdo.ninja/screenrecorder/) | Record tutorials and demos in a desktop browser using screen capture, webcam, microphone, and supported system audio, with local recording downloads. |
+| [Chat Lite](https://vdo.ninja/chat-lite/) | A lightweight Social Stream Ninja chat/activity view inside VDO.Ninja or a local browser pop-out. Use the full Social Stream Ninja overlays for a separate OBS Browser Source. |
+| [Icecast / AzuraCast helper](https://vdo.ninja/icecast) | Set up browser publishing of local audio or a received VDO.Ninja stream to an Icecast-compatible radio server. |
+| [Teleprompter Tool](https://vdo.ninja/teleprompter) | Flip, mirror, or rotate embeddable websites, chat overlays, and VDO.Ninja feeds for teleprompter displays. |
 
 ## Privacy
 I try to avoid data collection whenever possible and video streams are generally designed to be private, but use at your own risk. It is best to not share links created with VDO.Ninja with those you do not trust. I've provided instructions on how to deploy a TURN server if IP-address privacy is an issue for you. See: [turnserver.md](turnserver.md)
