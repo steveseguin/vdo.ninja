@@ -58956,7 +58956,7 @@ async function recordVideo(target, event = null, videoKbps = false) {
 
 	setTimeout(
 		function (v) {
-			if (v && v.recorder) {
+			if (v && v.recording && v.recorder) {
 				v.recorder.mediaRecorder.start(1000);
 			}
 		},
