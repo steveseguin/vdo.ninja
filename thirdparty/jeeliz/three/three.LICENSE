@@ -1,7 +1,7 @@
 Three.js MIT notice
 ===================
 
-Applies to v112/three.min.js. The r112 source below is the license reference. Other libraries under this directory retain their own licenses.
+Applies to v112/three.min.js, v112/three.js, v112/GLTFLoader.js, and the Three.js math subset in matrix/THREEMatrix.js. The r112 source below is the license reference. Other libraries under this directory retain their own licenses.
 
 Source: https://raw.githubusercontent.com/mrdoob/three.js/r112/LICENSE
 

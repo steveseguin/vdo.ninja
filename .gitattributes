@@ -1,0 +1,19 @@
+# Do not normalize or convert line endings. Store files exactly as-is.
+* -text
+
+# Binary files - no conversion
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.webp binary
+*.ico binary
+*.svg binary
+*.mp3 binary
+*.wav binary
+*.ogg binary
+*.webm binary
+*.wasm binary
+*.bin binary
+*.tflite binary
+*.map binary

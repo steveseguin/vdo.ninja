@@ -265,7 +265,7 @@ function showAuthUI(options = {}) {
   authContainer.innerHTML = `
     <div class="auth-modal">
       <h2>Sign in to VDO.Ninja</h2>
-      <p>${options.message || 'Sign in to claim your personal stream ID and enable advanced features'}</p>
+      <p class="auth-message"></p>
       
       <div class="auth-buttons">
         <button onclick="socialSignIn('google')" class="auth-button google">
@@ -287,6 +287,7 @@ function showAuthUI(options = {}) {
     </div>
   `;
   
+  authContainer.querySelector('.auth-message').textContent = options.message || 'Sign in to claim your personal stream ID and enable advanced features';
   document.body.appendChild(authContainer);
 }
 
@@ -523,7 +524,13 @@ async function assignAuthStream(roomId = null, options = {}) {
     if (response.ok) {
       const assignment = await response.json();
 
-      session.authStreamID = assignment.realStreamId || assignment.streamId || session.streamID;
+      // Encrypted lookup aliases are opaque; validate the canonical ID we actually use.
+      const assignedStreamID = assignment.realStreamId || assignment.streamId || session.streamID;
+      if (!isValidStreamID(assignedStreamID)) {
+        errorlog("Discarding auth response: invalid stream ID.");
+        return false;
+      }
+      session.authStreamID = assignedStreamID;
       session.realStreamID = assignment.realStreamId || session.authStreamID;
       session.streamSecret = assignment.streamSecret;
       session.authStreamAssigned = true;
@@ -544,7 +551,7 @@ async function assignAuthStream(roomId = null, options = {}) {
     session.authStreamAssignLastError = errorData;
     console.error("Failed to assign auth stream:", response.status, errorData);
     if (!options.silent && typeof warnUser === "function") {
-      warnUser(errorData.error || "Failed to register authenticated stream ID.", false, false);
+      warnUser(escapeHtml(String(errorData.error || "Failed to register authenticated stream ID.")), false, false);
     }
   } catch (e) {
     session.authStreamAssignLastStatus = 0;
@@ -970,10 +977,17 @@ function updateStreamDisplay(streamId, userInfo) {
       const badge = document.createElement('div');
       badge.className = 'user-auth-badge';
       badge.innerHTML = `
-        <img src="${userInfo.avatar}" alt="${userInfo.displayName}">
-        <span class="user-handle">${userInfo.userHandle}</span>
-        <span class="user-provider ${userInfo.provider}">${userInfo.provider}</span>
+        <img>
+        <span class="user-handle"></span>
+        <span class="user-provider"></span>
       `;
+      const avatar = badge.querySelector('img');
+      avatar.src = userInfo.avatar || './media/avatar.webp';
+      avatar.alt = userInfo.displayName || '';
+      badge.querySelector('.user-handle').textContent = userInfo.userHandle || '';
+      const provider = badge.querySelector('.user-provider');
+      provider.className = 'user-provider ' + (userInfo.provider || '');
+      provider.textContent = userInfo.provider || '';
       header.appendChild(badge);
     }
   }
@@ -1047,6 +1061,10 @@ async function resolveStream(streamId) {
     
     if (response.ok) {
       const data = await response.json();
+      if (!isValidStreamID(data.realStreamId)) {
+        errorlog("Discarding auth response: invalid resolved stream ID.");
+        return { error: "Invalid stream ID" };
+      }
       if (session.authMode && !data.userInfo) {
         return { error: 'Stream is not registered for this authenticated room' };
       }

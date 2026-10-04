@@ -1,7 +1,7 @@
 jQuery UI 1.13.1 MIT notice
 ===========================
 
-Applies to jquery-ui.js, jquery-ui.css, and the accompanying jQuery UI theme assets in this directory.
+Applies to jquery-ui.js, jquery-ui.min.js, jquery-ui.css, and the accompanying jQuery UI theme assets in this directory.
 
 Source: https://cdn.jsdelivr.net/npm/jquery-ui@1.13.1/LICENSE.txt
 

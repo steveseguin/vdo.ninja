@@ -1,0 +1,267 @@
+# VDO.Ninja: usage guide, documentation map, and related project sources
+
+VDO.Ninja brings live video, audio, and data from remote browsers, phones, cameras, and applications into OBS Studio and other production tools using WebRTC. It is used for interviews, podcasts, remote guests, screen sharing, esports, mobile cameras, intercom, and custom peer-to-peer applications. Steve Seguin maintains VDO.Ninja and many of the related projects below. Older material may call VDO.Ninja "OBS.Ninja".
+
+This is a curated starting point for people and language models, with practical basics and links to authoritative documentation and public source code. Links and project information reviewed on 2026-09-09. Feature availability depends on the deployed version, browser, operating system, and optional services.
+
+## Main entry points
+
+- [VDO.Ninja](https://vdo.ninja/): Free hosted web application; ordinary camera, screen-sharing, and room workflows need no account or installation.
+- [VDO.Ninja documentation](https://docs.vdo.ninja/): Official GitBook; start here for user-facing instructions and URL parameters.
+- [Complete GitBook documentation index](https://docs.vdo.ninja/llms.txt): Machine-readable sitemap containing the full set of documentation pages, including individual parameters and troubleshooting articles.
+- [VDO.Ninja source](https://github.com/steveseguin/vdo.ninja): Public application repository, development history, issues, and version branches.
+- [GitBook source](https://github.com/steveseguin/vdo.ninja/tree/gitbook): Documentation lives on the separate `gitbook` branch.
+- [Steve Seguin's GitHub projects](https://github.com/steveseguin?tab=repositories): Full public repository directory; the map below selects VDO.Ninja and production-related projects.
+
+## How to use this map
+
+Start with the workflow that matches the user's role: publisher/guest, viewer/OBS operator, director, mobile-app user, or developer. A setting for one role does not necessarily belong on every link.
+
+GitBook serves Markdown pages by appending `.md` to their published page URL. Documentation links below use these Markdown endpoints directly. Use the complete GitBook index to find additional pages or a moved topic; GitBook's published URLs can differ from filenames on its source branch.
+
+For a related app, consult its own current README, documentation, and releases. Some GitBook helper-app pages contain older snapshots. Native-app store releases, browser releases, development branches, alpha, and beta can differ; check the relevant version before assuming feature parity. A public source repository is listed only where one was verified; hosted services do not necessarily publish their source.
+
+## VDO.Ninja basics
+
+- A publisher sends a camera, microphone, screen, or other source. A viewer receives it. `push` identifies a publishing stream; `view` selects the stream to receive. Use a different stream ID for each simultaneous publisher.
+- A room groups participants. Its director manages guests and obtains individual guest links and scene links for production. A guest invite, director link, and OBS scene link have different purposes.
+- OBS normally receives a feed through a Browser Source containing a VDO.Ninja viewer or scene URL. A plugin is optional for this basic workflow.
+- Normal connections use WebRTC, often directly between peers. Signaling helps peers find each other; TURN can relay a connection when a direct route is unavailable. Optional distribution services such as Meshcast change the media path and upload requirements.
+- Additional peer-to-peer viewers consume publisher bandwidth and device resources. Room previews and a production/OBS feed can have different quality settings.
+- VDO.Ninja supplies contribution feeds; OBS or another production tool can mix them, record them, and broadcast the finished program to a streaming platform. Recording and cloud upload require their own setup.
+
+### Send a camera or phone into OBS
+
+1. Open [VDO.Ninja](https://vdo.ninja/) on the device supplying video and choose **Add your camera to OBS**.
+2. Allow camera/microphone access, choose the intended devices, and select **Start**.
+3. Copy the generated view link. On the receiving computer, add an OBS **Browser Source** and paste that link into its URL field.
+4. Set the OBS source size for the intended layout, then check video and the OBS audio mixer. Keep the sending page running. Use headphones when participants also hear a return feed.
+
+For reusable direct links, replace `YOUR_UNIQUE_STREAM_ID` in both examples with the same hard-to-guess alphanumeric ID. These are templates, not live demo rooms:
+
+```text
+Publisher: https://vdo.ninja/?push=YOUR_UNIQUE_STREAM_ID
+Viewer:    https://vdo.ninja/?view=YOUR_UNIQUE_STREAM_ID
+```
+
+Treat stream links as access information. If you configure a password, use the same password on the corresponding publisher and viewer links; URL-encode its value. See the [password reference](https://docs.vdo.ninja/advanced-settings/setup-parameters/and-password.md) and [privacy/security guide](https://docs.vdo.ninja/help/privacy-and-security-details.md).
+
+### Host a room with remote guests
+
+1. Choose **Create a Room** on VDO.Ninja, enter a unique room name, and set a room password if needed.
+2. Keep the director link for the production team and send guest invites to participants.
+3. Guests select their devices and start. The director can monitor, talk to guests, manage scene membership, and copy each guest's solo link.
+4. Add the director-generated solo links to separate OBS Browser Sources, or use a scene link for a combined layout. Add guests to that scene in the director controls.
+
+Equivalent basic URL templates are below. If the room has a password, include the matching password on all relevant links. Prefer the UI-generated links when using additional room options.
+
+```text
+Director: https://vdo.ninja/?director=YOUR_UNIQUE_ROOM
+Guest:    https://vdo.ninja/?room=YOUR_UNIQUE_ROOM
+Scene:    https://vdo.ninja/?scene&room=YOUR_UNIQUE_ROOM
+```
+
+For a persistent individual guest feed, assign that guest a reusable stream ID; do not reuse one publisher ID for multiple people. Director preview quality is not a reliable indication of the quality OBS receives. See [rooms](https://docs.vdo.ninja/getting-started/rooms.md), [permanent links](https://docs.vdo.ninja/guides/how-to-get-permanent-links.md), and [room bitrate](https://docs.vdo.ninja/guides/video-bitrate-in-rooms.md).
+
+### Share a screen or application
+
+Use **Remote Screenshare into OBS** on the main page, select a screen/window/tab in the browser picker, and copy the generated view link. Audio capture choices depend on the browser, OS, and selected surface; sharing a picture does not guarantee that its audio is included. For Windows gameplay, app audio, or Spout2 sources, see Game Capture below. For iPhone/iPad screen broadcasting, use the native-app guide.
+
+### Native iOS and Android apps
+
+VDO.Ninja has official native apps for iPhone/iPad and Android, alongside its mobile browser experience. They focus on mobile camera, microphone, and screen publishing, with recording and mobile-specific features varying by device and release. Use the generated viewer link in OBS or a browser. Consult the current app guide for rooms, talkback, camera controls, external devices, and screen broadcasting.
+
+- [iOS/iPadOS App Store](https://apps.apple.com/us/app/vdo-ninja/id1607609685): Official VDO.Ninja app by Steve Seguin.
+- [Android Google Play](https://play.google.com/store/apps/details?id=flutter.vdo.ninja): Official VDO.Ninja Android app.
+- [Native app guide](https://docs.vdo.ninja/steves-helper-apps/native-mobile-app.md): Setup and platform-specific workflows.
+- [Native app downloads and features](https://docs.vdo.ninja/steves-helper-apps/native-mobile-app-versions.md): Download links and mobile feature notes.
+- [Native app source](https://github.com/steveseguin/vdon_flutter): Flutter mobile project; public source and store builds may differ.
+
+## URL parameters: first concepts
+
+Use `?` before the first query parameter and `&` between later parameters. Preserve the stream ID/room and any password already on a generated link. Boolean flags can often be written without a value, but their exact behavior is parameter-specific.
+
+- `push=ID`: Publish using a chosen stream ID.
+- `view=ID`: Receive a stream; this is usually the link supplied to OBS.
+- `room=NAME`: Join a guest room.
+- `director=NAME`: Open that room's director controls.
+- `scene&room=NAME`: Receive a room scene controlled by the director.
+- `password=VALUE`: Set the stream/room password context; keep matching endpoints consistent.
+- `label=NAME`: Set a participant/stream label.
+- `videobitrate=KBPS`: Request a video bitrate; sender/viewer placement and other limits matter. It is a target, not a guarantee.
+- `roombitrate` and `totalroombitrate`: Room quality controls; consult the room-bitrate guide before changing guest preview traffic.
+- `proaudio`: Audio preset for higher-fidelity/stereo workflows; it changes processing assumptions, so check audio routing and feedback before using it for music.
+
+Read [URL parameter basics](https://docs.vdo.ninja/getting-started/the-power-of-the-url-parameter.md), the [common parameter cheat sheet](https://docs.vdo.ninja/advanced-settings/cheat-sheet-of-basic-parameters.md), and the [full parameter catalog](https://docs.vdo.ninja/advanced-settings.md) for syntax, defaults, placement, and interactions. Start with a working basic link before adding advanced options.
+
+## Documentation sitemap: getting started and production
+
+- [Getting started](https://docs.vdo.ninja/getting-started.md): First stream, guests, OBS, and core workflows.
+- [Camera-to-OBS basics](https://docs.vdo.ninja/getting-started/vdo.ninja-basics.md): Publisher setup and receiving a view link.
+- [Stream IDs](https://docs.vdo.ninja/getting-started/stream-ids.md): Naming and identifying streams.
+- [How VDO.Ninja works](https://docs.vdo.ninja/readme/how-does-it-work.md): WebRTC and the connection model.
+- [All how-to guides](https://docs.vdo.ninja/guides.md): Full workflow guide directory.
+- [Rooms and group chat](https://docs.vdo.ninja/getting-started/rooms.md): Director, guest, solo-link, and scene concepts.
+- [Room questions](https://docs.vdo.ninja/guides/how-does-group-chat-work.md): Group-call behavior and production considerations.
+- [Director options](https://docs.vdo.ninja/advanced-settings/director-parameters.md): Director-page URL settings.
+- [Scene/layout options](https://docs.vdo.ninja/advanced-settings/mixer-scene-parameters.md): Scene output, layout, slots, and individual views.
+- [Green rooms and guest approval](https://docs.vdo.ninja/guides/green-room-and-guest-approval-options.md): Screening, waiting, and activation workflows.
+- [Large rooms with isolated feeds](https://docs.vdo.ninja/guides/large-production-rooms-with-isolated-guest-feeds.md): Production layouts that limit guest-to-guest traffic.
+- [OBS return feed](https://docs.vdo.ninja/guides/send-an-obs-return-feed-to-guests.md): Send the finished program back to guests.
+- [Active speaker layouts](https://docs.vdo.ninja/guides/active-speaker-layouts-in-obs.md): Build speaker-driven OBS layouts.
+- [Permanent links](https://docs.vdo.ninja/guides/how-to-get-permanent-links.md): Reusable guest invites, streams, and OBS links.
+- [OBS Virtual Camera for meeting apps](https://docs.vdo.ninja/guides/use-vdo.ninja-as-a-webcam-for-google-hangouts-zoom-and-more.md): Route a VDO.Ninja production into Zoom, Meet, Teams, and similar apps.
+
+## Documentation sitemap: video, audio, mobile, and networking
+
+- [Direct-stream bitrate](https://docs.vdo.ninja/guides/video-bitrate-for-push-view-links.md): Quality controls for paired push/view links.
+- [Room bitrate](https://docs.vdo.ninja/guides/video-bitrate-in-rooms.md): Distinguish guest previews from production quality.
+- [Video settings](https://docs.vdo.ninja/advanced-settings/video-parameters.md): Resolution, frame rate, codecs, effects, and playback.
+- [Video bitrate settings](https://docs.vdo.ninja/advanced-settings/video-bitrate-parameters.md): Sender, viewer, and room bitrate controls.
+- [Audio filters and bitrate](https://docs.vdo.ninja/guides/audio-filters.md): Voice versus music, processing, and quality.
+- [Audio settings](https://docs.vdo.ninja/advanced-settings/audio-parameters.md): Channels, delay, muting, filters, and device behavior.
+- [Capture application audio](https://docs.vdo.ninja/guides/audio.md): Desktop audio and routing choices.
+- [Room audio and private talk](https://docs.vdo.ninja/guides/room-audio-obs-meshcast-and-private-talk.md): OBS, guest audio, Meshcast, and talkback.
+- [Live audio translation](https://docs.vdo.ninja/guides/live-audio-translation.md): Configure speech-to-speech translation for a room.
+- [Screen-sharing settings](https://docs.vdo.ninja/advanced-settings/screen-share-parameters.md): Capture quality and audio options.
+- [Phone as a webcam](https://docs.vdo.ninja/getting-started/mobile-phone-camera-into-webcam.md): Mobile camera contribution.
+- [iPhone/iPad screen sharing](https://docs.vdo.ninja/guides/screen-share-your-iphone-ipad.md): Mobile screen-broadcast setup.
+- [Native-app quality](https://docs.vdo.ninja/guides/improving-quality-of-the-native-app.md): Tune the native publishing workflow.
+- [Mobile parameters](https://docs.vdo.ninja/advanced-settings/mobile-parameters.md): Mobile-specific link settings.
+- [Stable IRL streaming](https://docs.vdo.ninja/guides/irl-streaming-stability.md): Prepare mobile/field streams for changing networks.
+- [Weak connections and video profiles](https://docs.vdo.ninja/guides/low-bandwidth-video-and-connection-profiles.md): Bandwidth, quality, and device tradeoffs.
+- [Cellular, Starlink, and bonding](https://docs.vdo.ninja/guides/mobile-uplink-starlink-cellular-bonding.md): Uplink and transport choices.
+- [Connection recovery](https://docs.vdo.ninja/guides/handling-guest-disconnects-and-connection-recovery.md): Guest disconnects and recovery behavior.
+- [TURN/STUN settings](https://docs.vdo.ninja/advanced-settings/turn-and-stun-parameters.md): Connectivity and custom relay configuration.
+- [Chunked/WebCodecs mode](https://docs.vdo.ninja/advanced-settings/settings-parameters/and-chunked.md): Advanced opt-in transport, buffering, retransmission, and FEC; check endpoint support and latency requirements.
+- [Packet-loss recovery reference](https://docs.vdo.ninja/steves-helper-apps/ninja-obs-plugin/packet-loss-recovery-and-resilient-media.md): Reliability options across browser and native workflows.
+
+## Documentation sitemap: recording, plugins, and distribution
+
+- [Recording options](https://docs.vdo.ninja/guides/options-to-record-streams.md): Local, remote, and backup recording approaches.
+- [Recording consistency](https://docs.vdo.ninja/guides/recording-video-with-consistent-results.md): Network, buffering, and recording-method tradeoffs.
+- [Recording formats](https://docs.vdo.ninja/guides/recording-format-options-and-settings.md): Codecs, containers, and browser compatibility.
+- [Cloud Sync](https://docs.vdo.ninja/guides/cloud-sync-google-drive-and-dropbox.md): Google Drive and Dropbox recording uploads.
+- [Recording parameters](https://docs.vdo.ninja/advanced-settings/recording-parameters.md): Recording-related URL controls.
+- [Game Capture and Spout2](https://docs.vdo.ninja/guides/using-game-capture-with-vdo.ninja.md): Windows gameplay, app audio, avatars, and transparent-video workflows.
+- [Ninja OBS Plugin setup](https://docs.vdo.ninja/guides/using-ninja-obs-plugin-with-vdo.ninja.md): Publish or receive directly in OBS.
+- [Publish from OBS](https://docs.vdo.ninja/guides/publish-from-obs-into-vdo.ninja.md): Choose an OBS contribution method.
+- [OBS through WHIP](https://docs.vdo.ninja/guides/from-obs-to-vdo.ninja-using-whip.md): WHIP publishing workflow.
+- [WHIP/WHEP tooling](https://docs.vdo.ninja/steves-helper-apps/whip-and-whep-tooling.md): HTTP-based WebRTC ingest and playback tools.
+- [Meshcast](https://docs.vdo.ninja/steves-helper-apps/meshcast.io.md): Server-assisted media distribution.
+- [Self-host a Meshcast-like service](https://docs.vdo.ninja/guides/deploy-your-own-meshcast-like-service.md): Media-server deployment guide.
+- [Icecast/AzuraCast publishing](https://docs.vdo.ninja/steves-helper-apps/icecast-and-azuracast.md): Internet-radio audio contribution.
+- [Phone call-ins](https://docs.vdo.ninja/guides/phone-call-in-provider-options.md): Telephony integration choices.
+- [Ninja Backer tipping](https://docs.vdo.ninja/guides/ninjabacker-tipping.md): Creator tips and stream alerts.
+
+## Documentation sitemap: troubleshooting and access
+
+Start with matching stream IDs/passwords, camera and microphone permissions, device selection, and the receiving link. Check the actual OBS source and audio mixer as well as the browser preview. For unstable media, inspect stats, available upload, packet loss, CPU load, and mobile power/thermal limits before increasing bitrate.
+
+- [Troubleshooting index](https://docs.vdo.ninja/common-errors-and-known-issues.md): Browse by symptom.
+- [Stats panel](https://docs.vdo.ninja/guides/stats-menu.md): Live stream diagnostics.
+- [Troubleshooting with stats](https://docs.vdo.ninja/guides/stats-menu/troubleshooting.md): Interpret transport and media measurements.
+- [Camera/microphone permissions](https://docs.vdo.ninja/common-errors-and-known-issues/enable-camera-microphone-permissions.md): Browser and OS access checks.
+- [Blank or choppy OBS source](https://docs.vdo.ninja/common-errors-and-known-issues/nothing-shows-up-in-obs-or-it-is-choppy.md): OBS receiving problems.
+- [Echo and feedback](https://docs.vdo.ninja/common-errors-and-known-issues/echo-or-feedback-issues.md): Headphones, monitoring, and audio loops.
+- [Packet loss](https://docs.vdo.ninja/common-errors-and-known-issues/packet-loss.md): Corruption, dropouts, and poor networks.
+- [Wi-Fi works but mobile data does not](https://docs.vdo.ninja/common-errors-and-known-issues/works-on-wifi-but-not-on-4g.md): Cellular connectivity problems.
+- [Enterprise firewalls](https://docs.vdo.ninja/common-errors-and-known-issues/enterprise-firewall-checklist.md): Network requirements for IT teams.
+- [Platform notes](https://docs.vdo.ninja/platform-specific-issues.md): Android, iOS, macOS, and browser-specific behavior.
+- [Selective access](https://docs.vdo.ninja/guides/how-to-selectively-allow-access.md): Control who can connect.
+- [Room access protection](https://docs.vdo.ninja/guides/protecting-a-room-from-unwanted-listeners.md): Protect production rooms.
+- [SSO and signed-in access](https://docs.vdo.ninja/guides/sso-and-signed-in-access.md): Optional authenticated workflows.
+- [Privacy and security](https://docs.vdo.ninja/help/privacy-and-security-details.md): Data handling, connection privacy, and policies.
+
+## Related projects: capture, OBS, and audio
+
+- [Electron Capture](https://electroncapture.app/): Desktop app for clean website/video playback, window capture, audio output selection, and production workflows. [Source](https://github.com/steveseguin/electroncapture), [downloads](https://github.com/steveseguin/electroncapture/releases), [guide](https://docs.vdo.ninja/steves-helper-apps/electron-capture.md).
+- [Game Capture](https://vdo.ninja/gamecapture): Native Windows game, window, webcam, and Spout2 publisher for VDO.Ninja, including application audio and optional alpha workflows. [Source](https://github.com/steveseguin/game-capture), [downloads](https://github.com/steveseguin/game-capture/releases), [guide](https://docs.vdo.ninja/guides/using-game-capture-with-vdo.ninja.md).
+- [Ninja OBS Plugin](https://steveseguin.github.io/ninja-obs-plugin/): Integrated VDO.Ninja publishing and receiving in OBS. Consult releases for supported OBS/OS builds and experimental receiver features. [Source](https://github.com/steveseguin/ninja-obs-plugin), [downloads](https://github.com/steveseguin/ninja-obs-plugin/releases), [guide](https://docs.vdo.ninja/steves-helper-apps/ninja-obs-plugin.md).
+- [Raspberry.Ninja](https://raspberry.ninja/): Python/GStreamer publishing, receiving, and recording for Raspberry Pi, Linux, other single-board computers, and supported desktop environments. [Source and setup](https://github.com/steveseguin/raspberry_ninja), [quick start](https://github.com/steveseguin/raspberry_ninja/blob/main/QUICK_START.md), [guide](https://docs.vdo.ninja/steves-helper-apps/raspberry.ninja.md).
+- [VDO.Ninja native mobile apps](https://docs.vdo.ninja/steves-helper-apps/native-mobile-app.md): Android and iOS capture companions. [Source](https://github.com/steveseguin/vdon_flutter); official store links are in the mobile section above.
+- [Ninja VST3 Plugin](https://steveseguin.github.io/Ninja-VST3-Plugin/): Publish DAW audio or receive/mix remote VDO.Ninja audio in supported VST3 hosts. [Source](https://github.com/steveseguin/Ninja-VST3-Plugin), [downloads](https://github.com/steveseguin/Ninja-VST3-Plugin/releases). Check current builds for platform support.
+- [VDO Cable source](https://github.com/steveseguin/vdocable): Windows application-audio router that sends separate app audio sources into separate VDO.Ninja streams.
+- [NINJAMplus source - Steve's fork](https://github.com/steveseguin/NinjamPlus): Interval-based remote music collaboration with optional synchronized VDO.Ninja video. Music uses NINJAM timing; it is a separate workflow from a low-latency conversational room. [Fork builds](https://github.com/steveseguin/NinjamPlus/releases).
+- [VDO.Ninja video capture extension source](https://github.com/steveseguin/video_capture_extension): Capture webpage video for VDO.Ninja publishing; consult its README for supported environments.
+
+## Related projects: chat, captions, and creator tools
+
+- [Social Stream Ninja](https://socialstream.ninja/): Aggregate supported live-chat sources, display overlays, feature comments, run TTS, and automate production interactions. [Web/extension source](https://github.com/steveseguin/social_stream), [current guides](https://socialstream.ninja/docs/guides.html), [downloads](https://socialstream.ninja/docs/download.html).
+- [Social Stream Ninja desktop source](https://github.com/steveseguin/ssn_app): SSApp desktop runtime, source windows and sign-in sessions, local services, and desktop integrations. The web interface and capture scripts live in `social_stream`. [Releases](https://github.com/steveseguin/ssn_app/releases).
+- [Ninja Chatter](https://ninjachatter.com/): Hosted community chat rooms with website embeds, OBS overlays, moderation, and Social Stream Ninja integration. [Getting started](https://ninjachatter.com/docs/getting-started.html), [developer guide](https://ninjachatter.com/docs/developers.html), [GitBook overview](https://docs.vdo.ninja/steves-helper-apps/ninja-chatter.md). No public source repository was verified for this service.
+- [Ninja Backer](https://ninjabacker.com/): Creator tipping with Stripe onboarding, VDO.Ninja integration, OBS alerts, and webhooks. [User guide](https://docs.vdo.ninja/guides/ninjabacker-tipping.md), [developer guide](https://ninjabacker.com/developers). No public source repository was verified for the hosted service.
+- [Caption.Ninja](https://caption.ninja/): Live speech captions, transcription, translation, and overlay workflows. [Source](https://github.com/steveseguin/captionninja), [guide](https://docs.vdo.ninja/steves-helper-apps/caption.ninja.md). Browser speech recognition may use a browser/vendor service; use Caption Local when local recognition is required.
+- [Caption Local source](https://github.com/steveseguin/caption-local): Run speech recognition on your own computer, with optional Caption.Ninja review and overlay delivery. [Setup choices](https://github.com/steveseguin/caption-local/blob/main/docs/SELF-HOSTING.md), [getting started](https://github.com/steveseguin/caption-local/blob/main/docs/GETTING-STARTED.md).
+- [Chat Lite guide](https://docs.vdo.ninja/steves-helper-apps/chat-lite.md): Lightweight Social Stream chat/activity integration for VDO.Ninja. [Social Stream Lite app](https://socialstream.ninja/lite/), [source repository](https://github.com/steveseguin/social_stream).
+- [Social Stream Ninja Stream Deck plugin source](https://github.com/steveseguin/ssn-streamdeck): Native Elgato Stream Deck controls for Social Stream Ninja.
+- [LUT Maker](https://steveseguin.github.io/LUT-maker/): Camera/color-chart calibration and LUT generation for OBS and other video workflows. [Source](https://github.com/steveseguin/LUT-maker).
+
+## Related projects: rooms, links, distribution, and control
+
+- [Comms](https://comms.cam/): Browser production intercom and multi-group voice chat. [Source](https://github.com/steveseguin/comms.cam), [guide](https://docs.vdo.ninja/steves-helper-apps/comms.md).
+- [Versus.cam](https://versus.cam/): Simplified low-latency stream contribution and monitoring, including esports workflows. [Source](https://github.com/steveseguin/versus), [guide](https://docs.vdo.ninja/steves-helper-apps/versus.cam.md).
+- [Meshcast](https://meshcast.io/): Server-assisted media distribution for VDO.Ninja workflows. [Newer app](https://app.meshcast.io/), [guide](https://docs.vdo.ninja/steves-helper-apps/meshcast.io.md). A hosted service; the experimental server fork below is an alternative, not its source code.
+- [WHIP/WHEP integration source](https://github.com/steveseguin/whip): VDO.Ninja-specific ingest/playback wrapper and self-hosting project. Read its limitations; the wrapper is not itself an SFU/media distribution server.
+- [Broadcast-box with VDO.Ninja support](https://github.com/steveseguin/broadcast-box-with-vdon-support): Experimental fork demonstrating a self-hosted Meshcast-like path. Its README identifies it as a proof of concept.
+- [Invite.cam](https://invite.cam/): Package and obfuscate invite links. Obfuscation is distinct from authentication. [Source](https://github.com/steveseguin/invite.cam).
+- [Wizard link generator](https://linkgen.vdo.ninja/): Guided VDO.Ninja link creation. [Steve's source fork](https://github.com/steveseguin/vdo.ninja-linkgen).
+- [Advanced invite generator](https://invite.vdo.ninja/): Configure detailed guest invites. [Steve's source fork](https://github.com/steveseguin/vdon-invite).
+- [Companion Ninja](https://companion.vdo.ninja/): HTTP/WebSocket control interface for VDO.Ninja and automation tools. [Source](https://github.com/steveseguin/Companion-Ninja).
+- [VDO.Ninja Stream Deck plugin](https://steveseguin.github.io/vdo-streamdeck/): Elgato Stream Deck controls. [Source](https://github.com/steveseguin/vdo-streamdeck).
+- [Bitfocus Companion VDO.Ninja module](https://github.com/bitfocus/companion-module-vdo-ninja): Community Companion integration. [Steve's fork](https://github.com/steveseguin/companion-module-vdo-ninja).
+- [PowerPoint remote source](https://github.com/steveseguin/powerpoint_remote): Remote slide controls using VDO.Ninja and MIDI/AutoHotkey workflows.
+- [OBS remote example](https://vdo.ninja/examples/obsremote.html): OBS control example. The older [Remote Ninja repository](https://github.com/steveseguin/remote_ninja) directs users here and notes its obsolete OBS WebSocket v4 dependency.
+
+## Built-in web tools and their source locations
+
+These are hosted VDO.Ninja web tools, rather than separate native applications. Source links are included where the implementation is part of the public repository. Consult their guides for any optional service or browser requirements.
+
+- [Mixer](https://vdo.ninja/mixer.html): Compose and control browser layouts. [Source](https://github.com/steveseguin/vdo.ninja/blob/develop/mixer.html), [guide](https://docs.vdo.ninja/steves-helper-apps/mixer-app.md).
+- [Screen Recorder](https://vdo.ninja/screenrecorder/): Browser recording utility. [Guide](https://docs.vdo.ninja/steves-helper-apps/screen-recorder.md).
+- [QR Connect](https://vdo.ninja/qr.html): Pair browsers through QR-code exchange. [Guide](https://docs.vdo.ninja/steves-helper-apps/qr-connect.md).
+- [Teleprompter](https://vdo.ninja/teleprompter.html): Display and transform content for a teleprompter. [Source](https://github.com/steveseguin/vdo.ninja/blob/develop/teleprompter.html), [guide](https://docs.vdo.ninja/steves-helper-apps/teleprompter-tool.md).
+- [Whiteboard](https://vdo.ninja/whiteboard.html): Collaborative drawing and whiteboard streaming. [Source](https://github.com/steveseguin/vdo.ninja/blob/develop/whiteboard.html), [guide](https://docs.vdo.ninja/steves-helper-apps/whiteboard.md).
+- [WHIP publisher](https://vdo.ninja/whip.html): Browser WHIP publishing page. [Source](https://github.com/steveseguin/vdo.ninja/blob/develop/whip.html).
+- [Icecast publisher](https://vdo.ninja/icecast.html): Audio publishing to Icecast/AzuraCast. [Source](https://github.com/steveseguin/vdo.ninja/blob/develop/icecast.html).
+- [Streaming quality test](https://vdo.ninja/speedtest.html): Diagnose device/network streaming performance. [Source](https://github.com/steveseguin/vdo.ninja/blob/develop/speedtest.html).
+- [Device capabilities](https://vdo.ninja/supports.html): Inspect browser media support. [Source](https://github.com/steveseguin/vdo.ninja/blob/develop/supports.html).
+- [Device listing](https://vdo.ninja/devices.html): Identify available media devices. [Source](https://github.com/steveseguin/vdo.ninja/blob/develop/devices.html).
+
+## Developer, API, and self-hosting sitemap
+
+- [Iframe embedding guide](https://docs.vdo.ninja/guides/iframe-api-documentation.md): Embed VDO.Ninja and exchange commands/events with `postMessage`.
+- [Iframe basics](https://docs.vdo.ninja/guides/iframe-api-documentation/iframe-api-basics.md): Start with embedding and connection events.
+- [Director iframe API](https://docs.vdo.ninja/guides/iframe-api-documentation/iframe-api-for-directors.md): Control room/director workflows from a host page.
+- [HTTP/WebSocket API](https://docs.vdo.ninja/advanced-settings/api-and-midi-parameters/api.md): Remote control through the existing page API.
+- [MIDI, API, and WebHID](https://docs.vdo.ninja/guides/midi-api-and-webhid-support.md): Hardware buttons and automation.
+- [Iframe API playground](https://vdo.ninja/iframe.html): Interactive examples. [Source](https://github.com/steveseguin/vdo.ninja/blob/develop/iframe.html).
+- [Example applications](https://vdo.ninja/examples/): Small integrations and demos. [Source](https://github.com/steveseguin/vdo.ninja/tree/develop/examples).
+- [VDO.Ninja SDK source](https://github.com/steveseguin/ninjasdk): JavaScript audio/video/data SDK for browser and Node.js integrations. [Guide chooser](https://github.com/steveseguin/ninjasdk/blob/main/docs/guides.md).
+- [Ninja P2P source](https://github.com/steveseguin/ninja-p2p): Agent coordination, messaging, inboxes, and file transfer over VDO.Ninja data channels.
+- [VDO.Ninja MCP source](https://github.com/steveseguin/ninjamcp): MCP tools for connecting AI clients, exchanging messages/files, and sharing task state over VDO.Ninja.
+- [Steve's App](https://steves.app/): Related browser-based remote access to coding/terminal workflows using P2P transport. [Source](https://github.com/steveseguin/stevesapp).
+- [Application entry point](https://github.com/steveseguin/vdo.ninja/blob/develop/index.html): Main static web UI.
+- [Startup and configuration](https://github.com/steveseguin/vdo.ninja/blob/develop/main.js): Main initialization and URL-setting logic.
+- [Shared application helpers](https://github.com/steveseguin/vdo.ninja/blob/develop/lib.js): Shared UI/media/integration helpers.
+- [WebRTC source](https://github.com/steveseguin/vdo.ninja/blob/develop/webrtc.js): Signaling, peers, and media connection logic.
+- [Installation guide](https://github.com/steveseguin/vdo.ninja/blob/develop/install.md): Static-site deployment and self-hosting. Serving a copy of the page does not automatically replace signaling or relay infrastructure.
+- [TURN server guide](https://github.com/steveseguin/vdo.ninja/blob/develop/turnserver.md): Relay-server setup and integration.
+- [Signaling server source](https://github.com/steveseguin/websocket_server): Public signaling-server project; verify compatibility with the application version being deployed.
+- [Offline deployment source](https://github.com/steveseguin/offline_deployment): Scripts and instructions for local/offline installations; check current prerequisites.
+- [Additional guides site source](https://github.com/steveseguin/guides.vdo.ninja): Separate guides project; the main GitBook source is the `gitbook` branch linked above.
+
+The browser application is a static site. For local development, serve it over HTTP on localhost rather than opening it with `file://`; camera/microphone APIs require a secure context such as HTTPS or localhost. Self-hosting the web page alone does not improve a peer-to-peer network route. Source links above use the public repository's `develop` branch as reviewed; deployed production, alpha, beta, and native clients may run different code.
+
+## Updates, community, and support
+
+- [Release history](https://docs.vdo.ninja/releases.md): Published VDO.Ninja release notes.
+- [Current project updates](https://docs.vdo.ninja/updates.md): VDO.Ninja and helper-app news.
+- [FAQ](https://docs.vdo.ninja/faq.md): Common questions and project information.
+- [Support options](https://docs.vdo.ninja/help/where-can-i-get-support.md): Community help and support guidance.
+- [VDO.Ninja Discord](https://discord.vdo.ninja/): Community discussion and help.
+- [VDO.Ninja Reddit](https://www.reddit.com/r/vdoninja/): Community questions and shared workflows.
+- [VDO.Ninja issue tracker](https://github.com/steveseguin/vdo.ninja/issues): Application bugs and feature requests; use each related project's own tracker for its issues.
+- [Useful links](https://docs.vdo.ninja/important-links.md): Additional official sites, tools, generators, and community resources.
+
+For a useful support report, include the affected role, browser/app/OBS version, OS/device, expected versus actual behavior, relevant URL parameters with private values removed, and a minimal reproduction or stats capture.

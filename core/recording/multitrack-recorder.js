@@ -260,6 +260,8 @@ export class MultiTrackRecorder extends EventTarget {
               channelIndex,
               data: event.detail,
               recordingKey: key,
+              mimeType: recorder.mimeType,
+              startOffsetSeconds,
               durationSeconds: recorder.getDurationSeconds(),
             },
           }),

@@ -7,7 +7,6 @@
  */
 /*jshint esversion: 6 */
 
-var QOS_LIB_BUILD = "20260910.5";
 
 ///// For the debug output, uncomment this section.
 /*
@@ -149,6 +148,8 @@ var miscTranslations = {
 	"meshcast-publishing-failed": "Meshcast could not start publishing. Please try again shortly.",
 	"whep-only-controls": "WHEP-only connection. P2P is unavailable; mute and disconnect can use signaling. Other remote controls need P2P.",
 	"whep-controls-unavailable": "WHEP playback is active, but P2P and signaling controls are unavailable.",
+	"meshcast-publishing": "Guest is publishing via Meshcast.",
+	"whep-receiving": "Receiving this guest's stream via a server (WHEP).",
 	"peer-command-not-sent": "The command could not be sent. Check the connection and try again.",
 	"confirm-reload-user": "Are you sure you wish to reload this user's browser?",
 	"webrtc-is-blocked": "⚠ This browser has either blocked WebRTC or does not support it.\n\nThis site will not work without it.\n\nDisable any browser extensions or privacy settings that may be blocking WebRTC, or try a different browser.",
@@ -189,6 +190,22 @@ var miscTranslations = {
 	"accept-inbound-caller": "Accept the inbound telephone caller?",
 	"disable-video": "Disable Video",
 	"show-more-options": "Show more options",
+	"invitecam-managed-transfer": "Use Invite.Cam's Move selected to control to change rooms.",
+	"stop-test-preview": "Stop Test Preview",
+	"start-test-preview": "Start Test Preview",
+	"whep-test-preview-running": "Test preview is running (muted).",
+	"whep-test-preview-off": "Test preview is off.",
+	"invalid-whep-source-url": "Invalid WHEP source URL. Use https:// (or http://localhost for local testing).",
+	"whep-test-preview-stopped": "WHEP test preview stopped.",
+	"whep-test-preview-stopped-url-change": "Test preview stopped because the URL changed.",
+	"whep-test-preview-starting": "Starting WHEP test preview (muted)...",
+	"whep-test-preview-started": "WHEP test preview started (muted).",
+	"whep-test-preview-failed": "Test preview failed. Check URL/token and try again.",
+	"whep-test-preview-stopped-before-share": "Test preview stopped before sharing.",
+	"update": "Update",
+	"whep-share-disabled-advertising": "WHEP sharing is configured, but &nowhep/nomeshcast disables advertising to peers.",
+	"whep-share-join-room": "WHEP sharing is configured. Join a room to advertise it to peers.",
+	"whep-share-advertising": "Advertising a WHEP source to room peers via the data channel.",
 	"system-default": "System Default"
 };
 
@@ -254,7 +271,7 @@ function extractTurnHostnameFromUrl(turnUrl) {
 // Build QoS allowlist from a list of TURN server configurations
 function buildQosTurnAllowlist(turnlist) {
 	var allowlist = [];
-	if (!turnlist || !Array.isArray(turnlist)) return allowlist;
+	if (!Array.isArray(turnlist)) return allowlist;
 	turnlist.forEach(function(turn) {
 		var urls = turn.urls || turn.url || [];
 		if (typeof urls === "string") urls = [urls];
@@ -309,7 +326,7 @@ function getSlotColor(index) {
 	}
 	if (!slotColorPalette[index]) {
 		var hue = (index * 47) % 360;
-		slotColorPalette[index] = "hsl(" + hue + ", 65%, 55%)";
+		return "hsl(" + hue + ", 65%, 55%)";
 	}
 	return slotColorPalette[index];
 }
@@ -329,14 +346,12 @@ function applySlotColor(element, slotNumber) {
 	var color = getSlotColorBySlotNumber(slotNumber);
 	if (color) {
 		element.style.background = color;
-		element.style.backgroundColor = color;
 	} else {
 		element.style.removeProperty("background");
-		element.style.removeProperty("background-color");
 	}
 }
 
-function populateSlotPicker(maxSlots) {
+function populateSlotPicker() {
 	var picker = document.getElementById("slotPicker");
 	if (!picker) {
 		return;
@@ -2004,7 +2019,7 @@ async function promptAlt(inputText, block = false, asterix = false, value = fals
 
 		try {
 			document.getElementById("submit_" + promptID).addEventListener("click", async function (event) {
-				var pid = event.target.dataset.pid;
+				var pid = event.currentTarget.dataset.pid;
 				if (time) {
 					result = parseInt(document.getElementById("input_" + pid + "_sec").value || "0") + parseInt(document.getElementById("input_" + pid).value || "0") * 60;
 					if (document.getElementById("countup_" + promptID).checked) {
@@ -2032,7 +2047,7 @@ async function promptAlt(inputText, block = false, asterix = false, value = fals
 
 		try {
 			document.getElementById("cancel_" + promptID).addEventListener("click", function (event) {
-				var pid = event.target.dataset.pid;
+				var pid = event.currentTarget.dataset.pid;
 				document.getElementById("modal_" + pid).remove();
 				document.getElementById("modalBackdrop_" + pid).remove();
 				Prompts[pid].resolve();
@@ -2041,7 +2056,7 @@ async function promptAlt(inputText, block = false, asterix = false, value = fals
 
 		try {
 			document.getElementById("close_" + promptID).addEventListener("click", function (event) {
-				var pid = event.target.dataset.pid;
+				var pid = event.currentTarget.dataset.pid;
 				document.getElementById("modal_" + pid).remove();
 				document.getElementById("modalBackdrop_" + pid).remove();
 				Prompts[pid].resolve();
@@ -2781,7 +2796,7 @@ async function confirmAlt(inputText, block = false, context = null) {
 		document.getElementById("submit_" + promptID).focus();
 
 		document.getElementById("submit_" + promptID).addEventListener("click", function (event) {
-			var pid = event.target.dataset.pid;
+			var pid = event.currentTarget.dataset.pid;
 			result = true;
 			getById("modalBackdrop_" + pid).remove();
 			getById("modal_" + pid).remove();
@@ -2789,14 +2804,14 @@ async function confirmAlt(inputText, block = false, context = null) {
 		});
 
 		document.getElementById("cancel_" + promptID).addEventListener("click", function (event) {
-			var pid = event.target.dataset.pid;
+			var pid = event.currentTarget.dataset.pid;
 			getById("modalBackdrop_" + pid).remove();
 			getById("modal_" + pid).remove();
 			Prompts[pid].resolve();
 		});
 
 		document.getElementById("close_" + promptID).addEventListener("click", function (event) {
-			var pid = event.target.dataset.pid;
+			var pid = event.currentTarget.dataset.pid;
 			getById("modalBackdrop_" + pid).remove();
 			getById("modal_" + pid).remove();
 			Prompts[pid].resolve();
@@ -3914,20 +3929,6 @@ var sanitizePassword = function (passwrd) {
 	//	}
 	//}
 	return sanitized;
-};
-
-var decodeSanitizedPassword = function (passwrd) {
-	if (passwrd === "" || passwrd === false || passwrd === null || typeof passwrd === "undefined") {
-		return "";
-	}
-	if (typeof passwrd !== "string") {
-		passwrd = String(passwrd);
-	}
-	try {
-		return decodeURIComponent(passwrd);
-	} catch (e) {
-		return passwrd;
-	}
 };
 
 function checkConnection() {
@@ -5263,7 +5264,8 @@ function makeMiniDraggableElement(elmnt) {
 		timestamp = Date.now();
 
 		e = e || window.event;
-		if (session.infocus) {
+		if (session.infocus || (e.target && e.target.controls && "playlist" in e.target)) {
+			// File previews keep their native playback and seek controls.
 			return;
 		}
 
@@ -5585,11 +5587,11 @@ function renderQueueButtonState() {
 		return;
 	}
 
-	var pendingCount = (session.pendingJoinRequests && session.pendingJoinRequests.length) ? session.pendingJoinRequests.length : 0;
-	var queueCount = (session.queueList && session.queueList.length) ? session.queueList.length : 0;
+	var pendingCount = session.pendingJoinRequests.length;
+	var queueCount = session.queueList.length;
 	var hasPending = pendingCount > 0;
 	var hasQueue = !!session.queue && queueCount > 0;
-	var shouldShow = !!session.queue || hasPending || hasQueue;
+	var shouldShow = !!session.queue || hasPending;
 
 	if (shouldShow) {
 		queueButton.classList.remove("hidden");
@@ -5606,31 +5608,23 @@ function renderQueueButtonState() {
 	var queueTitle = "Load next guest in queue";
 	if (hasPending && !session.queue) {
 		queueTitle = "Review pending join requests";
-	} else if (hasPending && session.queue) {
+	} else if (hasPending) {
 		queueTitle = "Load next guest in queue (pending join approvals waiting)";
 	}
 	queueButton.title = queueTitle;
 	queueButton.setAttribute("aria-label", queueTitle);
 
-	var badgeCount = 0;
-	if (session.queue) {
-		if (queueCount) {
-			badgeCount = queueCount;
-		} else if (pendingCount) {
-			badgeCount = pendingCount;
-		}
-	} else if (pendingCount) {
-		badgeCount = pendingCount;
+	var badgeCount = pendingCount;
+	if (session.queue && queueCount) {
+		badgeCount = queueCount;
 	}
 
 	if (badgeCount) {
 		queueBadge.innerHTML = badgeCount > 10 ? "‼" : badgeCount;
-		queueBadge.classList.add("queueNotification");
-		queueBadge.classList.add("queueNotificationPulse");
+		queueBadge.classList.add("queueNotification", "queueNotificationPulse");
 	} else {
 		queueBadge.innerHTML = "";
-		queueBadge.classList.remove("queueNotification");
-		queueBadge.classList.remove("queueNotificationPulse");
+		queueBadge.classList.remove("queueNotification", "queueNotificationPulse");
 	}
 }
 
@@ -6370,6 +6364,12 @@ function setupIncomingScreenTracking(v, UUID) {
 	v.usermuted = false;
 
 	v.addEventListener("volumechange", function (e) {
+		if (isSceneAudioMuted(UUID)) {
+			if (!this.muted) {
+				this.muted = true;
+			}
+			return;
+		}
 		var muteState = checkMuteState(UUID);
 		if (this.muted && this.muted !== muteState) {
 			this.usermuted = 1;
@@ -6888,6 +6888,12 @@ function setupIncomingVideoTracking(v, UUID) {
 	}
 
 	v.addEventListener("volumechange", function (e) {
+		if (isSceneAudioMuted(UUID)) {
+			if (!this.muted) {
+				this.muted = true;
+			}
+			return;
+		}
 		var muteState = checkMuteState(UUID);
 		if (this.muted && this.muted !== muteState) {
 			this.usermuted = 1;
@@ -7285,6 +7291,9 @@ function switchModes(state = null) {
 					}
 					if (session.rpcs[UUID].remoteMuteElement) {
 						target.appendChild(session.rpcs[UUID].remoteMuteElement);
+					}
+					if (session.rpcs[UUID].remoteSceneMuteElement) {
+						target.appendChild(session.rpcs[UUID].remoteSceneMuteElement);
 					}
 				}
 			}
@@ -8634,8 +8643,6 @@ function updateMixerRun(e = false) {
 			spotlightLayout = { x: 20, y: 20, w: 80, h: 80, c: false };
 		} else if (mediaPool.length == 7) {
 			spotlightLayout = { x: 16.66667, y: 0, w: 83.33333, h: 100, c: false };
-		} else if (mediaPool.length == 5 || mediaPool.length == 6) {
-			spotlightLayout = { x: 20, y: 0, w: 80, h: 100, c: false };
 		} else {
 			spotlightLayout = { x: 20, y: 0, w: 80, h: 100, c: false };
 		}
@@ -8974,10 +8981,11 @@ function updateMixerRun(e = false) {
 
 	if (session.videoElement && (session.videoElement.src || session.videoElement.srcObject)) {
 		// fileshare or stream
-		if ("playlist" in session.videoElement) {
+		var filePreview = "playlist" in session.videoElement;
+		if (filePreview && (session.videoElement.style.display === "none" || !session.videoElement.videoWidth)) {
 			playarea.appendChild(session.videoElement); // fileshare.
 		} else if (session.videoElement.style.display !== "none") {
-			if (session.videoElement && session.videoElement.srcObject && session.videoElement.srcObject.getVideoTracks().length) {
+			if ((session.videoElement.srcObject && session.videoElement.srcObject.getVideoTracks().length) || (filePreview && session.videoElement.videoWidth)) {
 				if (miniPreview) {
 					var container = null;
 					if (mpl === 0 && miniPreview === 2) {
@@ -9263,7 +9271,10 @@ function updateMixerRun(e = false) {
 		if (!session.waitImageTimeoutObject) {
 			session.waitImageTimeoutObject = setTimeout(function () {
 				session.waitImageTimeoutObject = true;
-				var retryImage = getById("retryimage");
+				var retryImage = document.getElementById("retryimage");
+				if (!retryImage && session.pipWindow) {
+					retryImage = session.pipWindow.document.getElementById("retryimage");
+				}
 				if (!retryImage) {
 					playarea.innerHTML += '<img id="retryimage"/>';
 					retryImage = getById("retryimage");
@@ -10173,6 +10184,9 @@ function updateMixerRun(e = false) {
 				if (session.rpcs[vid.dataset.UUID].remoteMuteElement) {
 					holder.appendChild(session.rpcs[vid.dataset.UUID].remoteMuteElement);
 				}
+				if (session.rpcs[vid.dataset.UUID].remoteSceneMuteElement) {
+					holder.appendChild(session.rpcs[vid.dataset.UUID].remoteSceneMuteElement);
+				}
 
 				if (session.signalMeter) {
 					if (vid.dataset.UUID && !session.rpcs[vid.dataset.UUID].signalMeter) {
@@ -10812,18 +10826,12 @@ session.updateFramegrabAudioUI = function (enable) {
 		const micButton = getById("mutebutton");
 		const speakerButton = getById("mutespeakerbutton");
 		if (enable) {
-			if (controls) {
-				controls.classList.remove("hidden");
-			}
-			if (micButton) {
-				micButton.classList.remove("hidden");
-				micButton.style.removeProperty("display");
-			}
-			if (speakerButton) {
-				speakerButton.classList.remove("hidden");
-				speakerButton.style.removeProperty("display");
-			}
-		} else if (speakerButton) {
+			controls.classList.remove("hidden");
+			micButton.classList.remove("hidden");
+			micButton.style.removeProperty("display");
+			speakerButton.classList.remove("hidden");
+			speakerButton.style.removeProperty("display");
+		} else {
 			speakerButton.classList.add("hidden");
 		}
 	} catch (err) {
@@ -10892,9 +10900,6 @@ session.autoSelectFramegrabAudioDevice = function () {
 		return false;
 	}
 	const audioMenu = getById("audioSource3");
-	if (!audioMenu) {
-		return false;
-	}
 	const inputs = Array.from(audioMenu.querySelectorAll("input[type='checkbox']"));
 	if (!inputs.length) {
 		return false;
@@ -11133,14 +11138,10 @@ session.startFramegrabAudio = async function (overrideSettings = null) {
 		if (hasAudio) {
 			session.muted = false;
 			const muteToggle = getById("mutetoggle");
-			if (muteToggle) {
-				muteToggle.className = "las la-microphone toggleSize";
-			}
+			muteToggle.className = "las la-microphone toggleSize";
 			const muteButton = getById("mutebutton");
-			if (muteButton) {
-				muteButton.classList.remove("red", "pulsate");
-				muteButton.ariaPressed = "false";
-			}
+			muteButton.classList.remove("red", "pulsate");
+			muteButton.ariaPressed = "false";
 			if (!session.cleanOutput) {
 				try {
 					getById("header").classList.remove("red");
@@ -16874,7 +16875,7 @@ function directorGraphStats() {
 			}
 			plotData(sceneStats[uuid], UUID, uuid);
 
-			if ("video_bitrate_kbps" in sceneStats[uuid] && sceneStats[uuid].video_bitrate_kbps !== "video_bitrate_kbps") {
+			if (isFinite(parseFloat(sceneStats[uuid].video_bitrate_kbps))) {
 				var span = container.querySelector("[data-bitrate]");
 				if (span) {
 					span.classList.remove("hidden");
@@ -16903,6 +16904,15 @@ function directorGraphStats() {
 						}
 					};
 				}
+			} else {
+				var span = container.querySelector("[data-bitrate]");
+				if (span) {
+					span.classList.remove("hidden");
+					span.textContent = "No video stats available";
+					span.style.cursor = "";
+					span.title = "";
+					span.onclick = null;
+				}
 			}
 
 			var span = container.querySelector("[data-scene-name]");
@@ -16922,10 +16932,10 @@ function directorGraphStats() {
 				span.title = "You can use &label=xxxx to give your view links a unique label";
 			}
 
-			if ("resolution" in sceneStats[uuid]) {
-				var span = container.querySelector("[data-resolution]");
-				if (span) {
-					span.classList.remove("hidden");
+			var span = container.querySelector("[data-resolution]");
+			if (span) {
+				span.classList.toggle("hidden", !sceneStats[uuid].resolution);
+				if (sceneStats[uuid].resolution) {
 					span.innerHTML = sceneStats[uuid].resolution;
 					span.style.cursor = "pointer";
 					span.title = "Click to adjust resolution";
@@ -16945,10 +16955,10 @@ function directorGraphStats() {
 				}
 			}
 
-			if ("video_encoder" in sceneStats[uuid]) {
-				var span = container.querySelector("[data-video-codec]");
-				if (span) {
-					span.classList.remove("hidden");
+			var span = container.querySelector("[data-video-codec]");
+			if (span) {
+				span.classList.toggle("hidden", !sceneStats[uuid].video_encoder);
+				if (sceneStats[uuid].video_encoder) {
 					span.innerHTML = "video codec: " + sceneStats[uuid].video_encoder;
 				}
 			}
@@ -17009,7 +17019,7 @@ function remoteStats(msg, UUID) {
 
 				plotData(msg.remoteStats[uuid], UUID, uuid);
 
-				if ("video_bitrate_kbps" in msg.remoteStats[uuid] && msg.remoteStats[uuid].video_bitrate_kbps !== "video_bitrate_kbps") {
+				if (isFinite(parseFloat(msg.remoteStats[uuid].video_bitrate_kbps))) {
 					var span = container.querySelector("[data-bitrate]");
 					if (span) {
 						span.classList.remove("hidden");
@@ -17038,6 +17048,15 @@ function remoteStats(msg, UUID) {
 							}
 						};
 					}
+				} else {
+					var span = container.querySelector("[data-bitrate]");
+					if (span) {
+						span.classList.remove("hidden");
+						span.textContent = "No video stats available";
+						span.style.cursor = "";
+						span.title = "";
+						span.onclick = null;
+					}
 				}
 
 				var span = container.querySelector("[data-scene-name]");
@@ -17057,10 +17076,10 @@ function remoteStats(msg, UUID) {
 					span.title = "You can use &label=xxxx to give your view links a unique label";
 				}
 
-				if ("resolution" in msg.remoteStats[uuid]) {
-					var span = container.querySelector("[data-resolution]");
-					if (span) {
-						span.classList.remove("hidden");
+				var span = container.querySelector("[data-resolution]");
+				if (span) {
+					span.classList.toggle("hidden", !msg.remoteStats[uuid].resolution);
+					if (msg.remoteStats[uuid].resolution) {
 						span.textContent = msg.remoteStats[uuid].resolution;
 						span.style.cursor = "pointer";
 						span.title = "Click to adjust resolution";
@@ -17080,10 +17099,10 @@ function remoteStats(msg, UUID) {
 					}
 				}
 
-				if ("video_encoder" in msg.remoteStats[uuid]) {
-					var span = container.querySelector("[data-video-codec]");
-					if (span) {
-						span.classList.remove("hidden");
+				var span = container.querySelector("[data-video-codec]");
+				if (span) {
+					span.classList.toggle("hidden", !msg.remoteStats[uuid].video_encoder);
+					if (msg.remoteStats[uuid].video_encoder) {
 						span.textContent = "video codec: " + msg.remoteStats[uuid].video_encoder;
 					}
 				}
@@ -18208,9 +18227,16 @@ function playoutdelay(UUID) {
 								// above about 4000 ms. Chunked/WebCodecs long-delay playout is
 								// handled separately, so keep this clamp RTP-only.
 								if ("jitterBufferTarget" in receiver) {
-									receiver.jitterBufferTarget = Math.max(0, Math.min(parseFloat(sync_offset) || 0, 4000));
+									var receiver_delay = Math.max(0, Math.min(parseFloat(sync_offset) || 0, 4000));
+									// Compare the corrected value on this receiver, not the user buffer setting.
+									if (session.buffer3 || receiver.jitterBufferTarget !== receiver_delay) {
+										receiver.jitterBufferTarget = receiver_delay;
+									}
 								} else {
-									receiver.playoutDelayHint = Math.max(0, Math.min(parseFloat(sync_offset / 1000) || 0, 4));
+									var receiver_delay = Math.max(0, Math.min(parseFloat(sync_offset / 1000) || 0, 4));
+									if (session.buffer3 || receiver.playoutDelayHint !== receiver_delay) {
+										receiver.playoutDelayHint = receiver_delay;
+									}
 								}
 								// receiver.jitterBufferDelayhint = parseFloat(sync_offset/1000); // This is deprecated I believe
 								if (session.sync !== false) {
@@ -18221,10 +18247,26 @@ function playoutdelay(UUID) {
 											if (audio_delay < 0) {
 												audio_delay = 0;
 											}
-											try {
-												session.rpcs[UUID].inboundAudioPipeline[receiver.track.id].delayNode.delayTime.linearRampToValueAtTime(parseFloat(audio_delay / 1000.0), session.audioCtx.currentTime + parseFloat(session.statsInterval / 9000));
-											} catch (e) {
-												session.rpcs[UUID].inboundAudioPipeline[receiver.track.id].delayNode.delayTime.setValueAtTime(parseFloat(audio_delay / 1000.0), session.audioCtx.currentTime + 1);
+											if (session.buffer3) {
+												session.rpcs[UUID].stats[tid].Audio_Sync_Target_ms = audio_delay;
+												audio_delay = 1000 * updateBuffer3AudioDelay(session.rpcs[UUID].inboundAudioPipeline[receiver.track.id].delayNode, audio_delay / 1000.0, session.rpcs[UUID].inboundAudioPipeline[receiver.track.id].duckNode);
+											} else {
+												var delayNode = session.rpcs[UUID].inboundAudioPipeline[receiver.track.id].delayNode;
+												var audioDelaySeconds = parseFloat(audio_delay / 1000.0);
+												// Cache the scheduled endpoint, since delayTime.value changes during a ramp.
+												if (delayNode.lastAudioSyncTarget !== audioDelaySeconds) {
+													try {
+														var audioDelayNow = session.audioCtx.currentTime;
+														var currentAudioDelay = delayNode.delayTime.value;
+														// A later change must start now, not at the last event before an idle gap.
+														delayNode.delayTime.cancelScheduledValues(audioDelayNow);
+														delayNode.delayTime.setValueAtTime(currentAudioDelay, audioDelayNow);
+														delayNode.delayTime.linearRampToValueAtTime(audioDelaySeconds, audioDelayNow + parseFloat(session.statsInterval / 9000));
+													} catch (e) {
+														delayNode.delayTime.setValueAtTime(audioDelaySeconds, session.audioCtx.currentTime + 1);
+													}
+													delayNode.lastAudioSyncTarget = audioDelaySeconds;
+												}
 											}
 											session.rpcs[UUID].stats[tid].Audio_Sync_Delay_ms = audio_delay || 0;
 										}
@@ -18236,9 +18278,15 @@ function playoutdelay(UUID) {
 								// above about 4000 ms. Chunked/WebCodecs long-delay playout is
 								// handled separately, so keep this clamp RTP-only.
 								if ("jitterBufferTarget" in receiver) {
-									receiver.jitterBufferTarget = Math.max(0, Math.min(parseFloat(sync_offset) || 0, 4000));
+									var receiver_delay = Math.max(0, Math.min(parseFloat(sync_offset) || 0, 4000));
+									if (session.buffer3 || receiver.jitterBufferTarget !== receiver_delay) {
+										receiver.jitterBufferTarget = receiver_delay;
+									}
 								} else {
-									receiver.playoutDelayHint = Math.max(0, Math.min(parseFloat(sync_offset / 1000) || 0, 4));
+									var receiver_delay = Math.max(0, Math.min(parseFloat(sync_offset / 1000) || 0, 4));
+									if (session.buffer3 || receiver.playoutDelayHint !== receiver_delay) {
+										receiver.playoutDelayHint = receiver_delay;
+									}
 								}
 								// receiver.jitterBufferDelayhint = parseFloat(sync_offset/1000); // This is deprecated I believe
 							}
@@ -18276,9 +18324,7 @@ function printViewStats(menu, UUID) {
 		menu.innerHTML = "<br /><br /><br />Remote Publisher Disconnected";
 		// nothing left to poll; a reconnecting peer comes back under a new UUID
 		var closedBox = getById("menuStatsBox");
-		if (closedBox) {
-			clearInterval(closedBox.interval);
-		}
+		clearInterval(closedBox.interval);
 		return false;
 	}
 
@@ -18770,10 +18816,14 @@ function printValues(obj, sort = false) {
 
 function processMeshcastStats(UUID) {
 	try {
-		session.rpcs[UUID].whep.getStats().then(function (stats) {
+		var meshcastPeer = session.rpcs[UUID].whep;
+		meshcastPeer.getStats().then(function (stats) {
 			if (!(UUID in session.rpcs)) {
 				return;
 			}
+
+			if (session.rpcs[UUID].whep !== meshcastPeer) return;
+			collectMeshcastQos(meshcastPeer, null, true, stats);
 
 			if (!session.rpcs[UUID].stats["WHEP_Connection"]) {
 				// meshcast
@@ -19466,6 +19516,7 @@ function updateLocalStats() {
 						return;
 					}
 					data.getStats().then(function (stats) {
+						collectMeshcastQos(data, null, false, stats);
 						if ("audio_bitrate_kbps" in data.stats) {
 							data.stats.audio_bitrate_kbps = 0;
 						}
@@ -19639,8 +19690,8 @@ function updateLocalStats() {
 						if (nominatedCandidate) {
 							if ("availableOutgoingBitrate" in nominatedCandidate) {
 								data.stats.available_outgoing_bitrate_kbps = parseInt(nominatedCandidate.availableOutgoingBitrate / 1024);
-								if (session.maxBandwidth !== false) {
-									session.limitMaxBandwidth(data.stats.available_outgoing_bitrate_kbps, session.pcs[UUID], false);
+								if (session.maxBandwidth !== false && data === session.whipOut) {
+									session.limitMaxBandwidth(data.stats.available_outgoing_bitrate_kbps, data, true);
 								}
 							}
 							if ("totalRoundTripTime" in nominatedCandidate) {
@@ -20232,6 +20283,102 @@ function toggleControlBar() {
 	}
 }
 
+function updateSceneMuteButton(notify = false) {
+	if (!session.sceneMuteButton) {
+		return;
+	}
+	var pending = false;
+	var failed = false;
+	for (var UUID in session.pcs) {
+		getSenders2(UUID).forEach(sender => {
+			if (sender.sceneMuteRequest) {
+				pending = pending || sender.sceneMuteRequest.pending;
+				failed = failed || sender.sceneMuteRequest.failed;
+			}
+		});
+	}
+	var status = failed ? "error" : pending ? "pending" : "ready";
+	var changed = session.sceneMuteStatus !== status;
+	session.sceneMuteStatus = status;
+	var button = getById("scenemutebutton");
+	button.classList.toggle("orange", (session.sceneMuted && !session.muted) || status !== "ready");
+	button.classList.toggle("scene-mute-suspended", session.sceneMuted && session.muted && status === "ready");
+	button.setAttribute("aria-pressed", session.sceneMuted ? "true" : "false");
+	button.setAttribute("aria-busy", pending ? "true" : "false");
+	if (failed) {
+		miniTranslate(button, "scene-audio-not-confirmed", "Scene audio not confirmed");
+	} else if (pending) {
+		miniTranslate(button, "changing-scene-audio", "Changing scene audio");
+	} else if (session.sceneMuted && session.muted) {
+		miniTranslate(button, "scene-mute-saved", "Scene mute saved");
+	} else if (session.sceneMuted) {
+		miniTranslate(button, "muted-in-scenes", "Muted in scenes");
+	} else {
+		miniTranslate(button, "mute-scene", "Mute in scenes");
+	}
+	if (notify || changed) {
+		session.sendMessage({ sceneMuteState: session.sceneMuted, sceneMuteStatus: status });
+		if (notify) {
+			pokeIframeAPI("scene-mute-state", session.sceneMuted);
+			pokeAPI("sceneMuted", session.sceneMuted);
+		}
+		if (changed) {
+			pokeIframeAPI("scene-mute-status", status);
+			pokeAPI("sceneMuteStatus", status);
+		}
+	}
+}
+
+function toggleSceneMute() {
+	session.sceneMuted = !session.sceneMuted;
+	session.applyIsolatedChat(false, true);
+}
+
+function updateRemoteSceneMuteState(UUID, muted, status) {
+	var peer = session.rpcs[UUID];
+	if (!peer) {
+		return;
+	}
+	if (typeof muted === "boolean") {
+		peer.remoteSceneMuteState = muted;
+		peer.remoteSceneMuteStatus = status === "pending" || status === "error" ? status : "ready";
+		pokeIframeAPI("remote-scene-mute-state", muted, UUID);
+		pokeAPI("remoteSceneMuted", muted, peer.streamID);
+		pokeIframeAPI("remote-scene-mute-status", peer.remoteSceneMuteStatus, UUID);
+		pokeAPI("remoteSceneMuteStatus", peer.remoteSceneMuteStatus, peer.streamID);
+	}
+	var source = session.rpcs[peer.realUUID || UUID];
+	if (!source || typeof source.remoteSceneMuteState !== "boolean") {
+		return;
+	}
+	applyMuteState(UUID);
+	if (session.roomid && (!session.cleanOutput || session.director) && (session.scene === false || session.showMuteState)) {
+		if (!peer.remoteSceneMuteElement) {
+			peer.remoteSceneMuteElement = getById("sceneMuteStateTemplate").cloneNode(true);
+			peer.remoteSceneMuteElement.id = "remoteSceneMuteState_" + UUID;
+			if (session.director) {
+				peer.remoteSceneMuteElement.style.top = "5px";
+				peer.remoteSceneMuteElement.style.left = "7px";
+			}
+		}
+		var element = peer.remoteSceneMuteElement;
+		element.classList.toggle("hidden", (peer.remoteMuteState && source.remoteSceneMuteStatus === "ready") || (!source.remoteSceneMuteState && source.remoteSceneMuteStatus === "ready"));
+		if (source.remoteSceneMuteStatus === "error") {
+			miniTranslate(element, "scene-audio-not-confirmed", "Scene audio not confirmed");
+		} else if (source.remoteSceneMuteStatus === "pending") {
+			miniTranslate(element, "changing-scene-audio", "Changing scene audio");
+		} else {
+			miniTranslate(element, "guest-muted-scenes", "Guest muted scenes");
+		}
+		if (peer.remoteMuteElement && peer.remoteMuteElement.parentNode) {
+			peer.remoteMuteElement.parentNode.appendChild(element);
+		}
+	}
+	if (!peer.realUUID && session.rpcs[UUID + "_screen"]) {
+		updateRemoteSceneMuteState(UUID + "_screen");
+	}
+}
+
 function toggleMute(apply = false, event = false) {
 	// TODO: I need to have this be MUTE, toggle, with volume not touched.
 
@@ -20362,6 +20509,7 @@ function toggleMute(apply = false, event = false) {
 		pokeIframeAPI("mic-mute-state", session.muted);
 		pokeAPI("muted", session.muted);
 	}
+	updateSceneMuteButton();
 	if (session.translationController) {
 		session.translationController.syncMuteState(session.muted);
 	}
@@ -20389,9 +20537,6 @@ function updateSpeakerMutedOutputHints() {
 	var hints = ["speakerMutedOutputHint", "speakerMutedOutputHint3"];
 	for (var i = 0; i < hints.length; i++) {
 		var hint = getById(hints[i]);
-		if (!hint) {
-			continue;
-		}
 		if (session.speakerMuted) {
 			hint.classList.remove("hidden");
 		} else {
@@ -20550,10 +20695,6 @@ function getCurrentSpeakerVolumePercent() {
 	return SPEAKER_VOLUME_MAX_PERCENT;
 }
 
-function convertSpeakerPercentToVolume(percent) {
-	return clampSpeakerVolumePercent(percent) / 100;
-}
-
 function updateSpeakerVolumeSliderUI(volume) {
 	if (!speakerVolumeSliderElement) {
 		return;
@@ -20585,7 +20726,7 @@ function setSessionPlaybackVolume(volume, target) {
 
 	session.volume = volume;
 
-	var applyToAll = !target || target === "*" || typeof target === "undefined";
+	var applyToAll = !target || target === "*";
 
 	if (applyToAll) {
 		if (session.videoElement && typeof session.videoElement.volume === "number") {
@@ -20628,7 +20769,7 @@ function setSessionPlaybackVolume(volume, target) {
 			if (!peer || !peer.videoElement) {
 				continue;
 			}
-			if (!applyToAll && target && target !== "*" && peer.streamID && peer.streamID !== target) {
+			if (!applyToAll && peer.streamID && peer.streamID !== target) {
 				continue;
 			}
 			peer.videoElement.volume = volume;
@@ -20645,7 +20786,7 @@ function handleSpeakerVolumeSliderInput(event) {
 		return;
 	}
 	var percent = clampSpeakerVolumePercent(event.target.value);
-	var volume = convertSpeakerPercentToVolume(percent);
+	var volume = percent / 100;
 	setSessionPlaybackVolume(volume, "*");
 }
 
@@ -20662,7 +20803,7 @@ function openSpeakerVolumePanel() {
 		return;
 	}
 
-	updateSpeakerVolumeSliderUI(typeof session.volume === "number" ? session.volume : 1);
+	updateSpeakerVolumeSliderUI(session.volume);
 
 	speakerVolumePanelElement.classList.remove("hidden");
 	speakerVolumePanelElement.setAttribute("aria-hidden", "false");
@@ -20688,24 +20829,12 @@ function openSpeakerVolumePanel() {
 function closeSpeakerVolumePanel(options) {
 	clearSpeakerVolumeHoldTimer();
 
-	if (!speakerVolumePanelElement || !speakerVolumePanelVisible) {
-		if (speakerVolumePanelElement) {
-			speakerVolumePanelElement.setAttribute("aria-hidden", "true");
+	if (speakerVolumePanelElement) {
+		if (speakerVolumePanelVisible) {
+			speakerVolumePanelElement.classList.add("hidden");
 		}
-		if (speakerVolumeDocumentListenersActive) {
-			document.removeEventListener("pointerdown", handleSpeakerVolumeDocumentPointerDown, true);
-			document.removeEventListener("keydown", handleSpeakerVolumeKeydown, true);
-			speakerVolumeDocumentListenersActive = false;
-		}
-		if (!options || options.preserveToggleGuard !== true) {
-			session.ignoreNextSpeakerToggle = false;
-		}
-		speakerVolumePanelVisible = false;
-		return;
+		speakerVolumePanelElement.setAttribute("aria-hidden", "true");
 	}
-
-	speakerVolumePanelElement.classList.add("hidden");
-	speakerVolumePanelElement.setAttribute("aria-hidden", "true");
 	speakerVolumePanelVisible = false;
 
 	if (speakerVolumeDocumentListenersActive) {
@@ -20790,33 +20919,23 @@ function speakerButtonPointerUp(event) {
 	}
 }
 
-function speakerButtonPointerLeave() {
-	clearSpeakerVolumeHoldTimer();
-}
-
 function initSpeakerVolumeControl() {
 	speakerVolumeButton = getById("mutespeakerbutton");
 	speakerVolumePanelElement = getById("speakerVolumePanel");
 	speakerVolumeSliderElement = getById("speakerVolumeSlider");
 	speakerVolumeValueElement = getById("speakerVolumeValue");
 
-	if (!speakerVolumeButton || !speakerVolumePanelElement || !speakerVolumeSliderElement) {
-		return;
-	}
-
 	var initialPercent = getCurrentSpeakerVolumePercent();
 	speakerVolumeSliderElement.value = initialPercent;
-	if (speakerVolumeValueElement) {
-		speakerVolumeValueElement.textContent = initialPercent + "%";
-	}
+	speakerVolumeValueElement.textContent = initialPercent + "%";
 	speakerVolumePanelElement.classList.add("hidden");
 	speakerVolumePanelElement.setAttribute("aria-hidden", "true");
 	speakerVolumePanelVisible = false;
 
 	speakerVolumeButton.addEventListener("pointerdown", speakerButtonPointerDown);
 	speakerVolumeButton.addEventListener("pointerup", speakerButtonPointerUp);
-	speakerVolumeButton.addEventListener("pointerleave", speakerButtonPointerLeave);
-	speakerVolumeButton.addEventListener("pointercancel", speakerButtonPointerLeave);
+	speakerVolumeButton.addEventListener("pointerleave", clearSpeakerVolumeHoldTimer);
+	speakerVolumeButton.addEventListener("pointercancel", clearSpeakerVolumeHoldTimer);
 
 	speakerVolumePanelElement.addEventListener("pointerdown", function (event) {
 		event.stopPropagation();
@@ -21007,7 +21126,7 @@ function updateFileShare() {
 						transferItem.className = 'transfer-item';
 						transferItem.innerHTML = `
                             <div class="download-info">
-                                Downloading by: ${getLabelForUUID(UUID)}
+                                <span class="downloader-name">Downloading by: ${getLabelForUUID(UUID)}</span>
                                 <div class="file-progress">
                                     <div class="progress-bar" style="width: ${data.progress}%"></div>
                                 </div>
@@ -21734,12 +21853,12 @@ function initButtonToggleSettings() {
 	// Hide toggles on unsupported platforms
 	if (iOS || iPad) {
 		var fsContainer = getById("fullscreenToggleContainer");
-		if (fsContainer) fsContainer.style.display = "none";
+		fsContainer.style.display = "none";
 	}
 
 	if (typeof documentPictureInPicture === "undefined") {
 		var pipContainer = getById("pipToggleContainer");
-		if (pipContainer) pipContainer.style.display = "none";
+		pipContainer.style.display = "none";
 	}
 
 	// Restore saved settings (only if URL params didn't already set them)
@@ -21751,7 +21870,7 @@ function initButtonToggleSettings() {
 
 		var savedPIP = getStorage("pipButtonSetting");
 		var pipPage = getById("PictureInPicturePage");
-		if (savedPIP === true && pipPage && pipPage.classList.contains("hidden") && typeof documentPictureInPicture !== "undefined") {
+		if (savedPIP === true && pipPage.classList.contains("hidden") && typeof documentPictureInPicture !== "undefined") {
 			togglePIPButtonSetting();
 		}
 	} catch(e) {}
@@ -21943,16 +22062,65 @@ function releaseWakeLock() {
 	}
 }
 
+// Reuse the existing WHIP/WHEP stats and state callbacks. No extra polling.
+function collectMeshcastQos(pc, url, receiving, stats) {
+	try {
+		if (!session.qosEnabled || !session.qosData || session.qosData.sent || !pc) return;
+		var qd = session.qosData;
+		var record = pc.qosMeshcast;
+		if (url) {
+			var endpoint = new URL(url);
+			if (endpoint.hostname !== "meshcast.io" && !endpoint.hostname.endsWith(".meshcast.io")) return;
+			var version = endpoint.hostname === "app.meshcast.io" ? 2 : 1;
+			var server = endpoint.hostname;
+			if (version === 2) {
+				var node = endpoint.searchParams.get("server");
+				// Only infrastructure node names; never a URL path or publish key.
+				if (node && /^[a-z]{2,12}(?:-[a-z]{2,12}){0,3}-?\d{1,3}$/.test(node)) server = node;
+			}
+			if (!record) {
+				if (!qd.meshcast || qd.meshcast.length >= 4) return;
+				record = { server: server, version: version, direction: receiving ? "viewer" : "publisher", success: null, loss: null, rtt: null, _lossCount: 0, _rttCount: 0 };
+				qd.meshcast.push(record);
+				pc.qosMeshcast = record;
+			} else {
+				record.server = server;
+			}
+		}
+		if (!record) return;
+		if (pc.connectionState === "connected" || pc.iceConnectionState === "connected" || pc.iceConnectionState === "completed") record.success = true;
+		else if (record.success !== true && (pc.connectionState === "failed" || pc.iceConnectionState === "failed")) record.success = false;
+		if (!stats) return;
+		var pair = getSelectedCandidatePairStats(stats);
+		if (pair && typeof pair.currentRoundTripTime === "number" && isFinite(pair.currentRoundTripTime)) {
+			record._rttCount++;
+			record.rtt = (record.rtt || 0) + (pair.currentRoundTripTime * 1000 - (record.rtt || 0)) / record._rttCount;
+		}
+		stats.forEach(function (stat) {
+			if (stat.type !== "inbound-rtp" && stat.type !== "remote-inbound-rtp") return;
+			var loss = null;
+			if (typeof stat.fractionLost === "number") loss = stat.fractionLost * 100;
+			else if (typeof stat.packetsLost === "number" && typeof stat.packetsReceived === "number" && stat.packetsReceived + stat.packetsLost > 0) loss = stat.packetsLost * 100 / (stat.packetsReceived + stat.packetsLost);
+			if (loss !== null && isFinite(loss)) {
+				record._lossCount++;
+				record.loss = (record.loss || 0) + (Math.max(0, Math.min(100, loss)) - (record.loss || 0)) / record._lossCount;
+			}
+		});
+	} catch (e) { }
+}
+
 // Only software release information; never the page URL or a client identifier.
 function qosSoftwareInfo() {
-	var stamp = function (value) { return /^\d{8}\.\d{1,4}$/.test(value) ? value : "unknown"; };
+	var deployment = "other"; // Other paths on vdo.ninja, including archived versions.
+	if (/^\/alpha(?:\/|$)/.test(location.pathname)) deployment = "alpha";
+	else if (/^\/(?:[^/]+\.html)?$/.test(location.pathname)) deployment = "production";
 	var browser = "Unknown", version = 0;
 	if (typeof Safari !== "undefined" && Safari) { browser = "Safari"; version = typeof SafariVersion === "number" ? SafariVersion : 0; }
 	else if (typeof Firefox !== "undefined" && Firefox) { browser = "Firefox"; version = Firefox; }
 	else if (typeof ChromiumVersion !== "undefined" && ChromiumVersion) { browser = "Chrome"; version = ChromiumVersion; }
 	return {
-		build: "w" + stamp(typeof QOS_WEBRTC_BUILD === "string" ? QOS_WEBRTC_BUILD : "") + "/l" + stamp(QOS_LIB_BUILD) + "/m" + stamp(typeof QOS_MAIN_BUILD === "string" ? QOS_MAIN_BUILD : ""),
-		deployment: location.hostname === "vdo.ninja" ? (/^\/alpha(?:\/|$)/.test(location.pathname) ? "alpha" : "production") : "other",
+		build: session.version,
+		deployment: deployment,
 		browser: browser,
 		browserVersion: Math.max(0, Math.min(500, parseInt(version, 10) || 0))
 	};
@@ -21962,8 +22130,12 @@ function postQosPayload(payload, limit) {
 	try {
 		// Check the executing page, not the script URL, referrer or parent frame.
 		// Keep this boundary even if an older script enables session.qosEnabled.
-		if (location.hostname !== "vdo.ninja" && location.hostname !== "dev.versus.cam") return;
+		if (location.hostname !== "vdo.ninja") return;
 		var blob = new Blob([JSON.stringify(payload)], { type: "application/json" });
+		while (blob.size > limit && payload.errors && payload.errors.length > 1) {
+			payload.errors.shift(); // Keep the recent errors without losing the summary.
+			blob = new Blob([JSON.stringify(payload)], { type: "application/json" });
+		}
 		if (blob.size > limit) return;
 		// QoS alone omits cookies/referrers. There is deliberately no beacon
 		// fallback, offline queue or retry if keepalive is unavailable/blocked.
@@ -21981,6 +22153,7 @@ function sendQosReport() {
 
 	try {
 		var qd = session.qosData;
+		if (!qd.meshcast) qd.meshcast = [];
 
 		// Helper functions
 			var avg = function(arr) {
@@ -22170,6 +22343,13 @@ function sendQosReport() {
 			var candidateLocal = sanitizeCandidateType((qd.candidateTypesLocal && qd.candidateTypesLocal.length) ? qd.candidateTypesLocal[0] : null);
 			var candidateRemote = sanitizeCandidateType((qd.candidateTypesRemote && qd.candidateTypesRemote.length) ? qd.candidateTypesRemote[0] : null);
 
+		var connectionSuccess = null;
+		if (qd.connectionSuccesses > 0 || qd.rttSamples.length > 0 || qd.meshcast.some(function (item) { return item.success === true; })) {
+			connectionSuccess = true;
+		} else if (qd.connectionFailures > 0 || qd.meshcast.some(function (item) { return item.success === false; })) {
+			connectionSuccess = false;
+		}
+
 				// Build payload - NO room IDs, stream IDs, or passwords
 			var payload = {
 			// Session
@@ -22185,12 +22365,15 @@ function sendQosReport() {
 				transportType: qd.transportType || "unknown",
 				turnServer: turnServer,
 				meshcastServer: meshcastServer,
+				meshcast: qd.meshcast.map(function (item) {
+					return { server: item.server, version: item.version, direction: item.direction, success: item.success, loss: item.loss === null ? null : Math.round(item.loss * 100) / 100, rtt: item.rtt === null ? null : Math.round(item.rtt) };
+				}),
 				wssSuccess: qd.wssSuccess,
 				candidateLocal: candidateLocal,
 				candidateRemote: candidateRemote,
 
 				// Quality
-				connectionSuccess: qd.connectionSuccesses > 0 || qd.rttSamples.length > 0,
+				connectionSuccess: connectionSuccess,
 				connectionFailures: qd.connectionFailures,
 				iceRestarts: sanitizeCount(qd.iceRestarts),
 
@@ -22508,6 +22691,7 @@ function hangup2() {
 	getById("screenshare3button").classList.add("hidden");
 	getById("settingsbutton").classList.add("hidden");
 	getById("mutebutton").classList.add("hidden");
+	getById("scenemutebutton").classList.add("hidden");
 	getById("hangupbutton2").classList.add("hidden");
 	//getById("chatbutton").classList.remove("hidden");
 	getById("controlButtons").classList.remove("hidden");
@@ -22641,6 +22825,10 @@ var armedTransfer = false;
 var transferSettings = {};
 
 async function directMigrate(ele, event, room = false) {
+	if (session.invitecamManaged) {
+		warnUser(getTranslation("invitecam-managed-transfer"));
+		return false;
+	}
 	// everyone in the room will hangup this guest also?  I like that idea.  What about the STREAM ID?  I suppose we don't kick out if the viewID matches.
 	log("directMigrate");
 	if (room) {
@@ -22898,7 +23086,6 @@ function autoAssignAudioChannel(UUID) {
 
 	// Find the guest's container
 	var container = getById("container_" + UUID);
-	if (!container) return;
 
 	// Find the channel button in the guest's container
 	var btn = container.querySelector('[data-action-type="sceneAudioChannel"][data-channel="' + channel + '"]');
@@ -23233,6 +23420,11 @@ function getDetailedState(sid = false) {
 			item.iframeSrc = session.rpcs[UUID].iframeSrc;
 			item.localStream = false;
 			item.muted = session.rpcs[UUID].remoteMuteState;
+			var sceneMuteSource = session.rpcs[session.rpcs[UUID].realUUID || UUID];
+			if (typeof sceneMuteSource.remoteSceneMuteState === "boolean") {
+				item.sceneMuted = sceneMuteSource.remoteSceneMuteState;
+				item.sceneMuteStatus = sceneMuteSource.remoteSceneMuteStatus;
+			}
 			item.videoMuted = session.rpcs[UUID].videoMuted;
 			try {
 				item.activeSpeaker = session.rpcs[UUID].activelySpeaking;
@@ -23396,6 +23588,10 @@ function getDetailedState(sid = false) {
 	streamList[session.streamID].localStream = true;
 	streamList[session.streamID].seeding = session.seeding;
 	streamList[session.streamID].muted = session.muted;
+	if (session.sceneMuteButton) {
+		streamList[session.streamID].sceneMuted = session.sceneMuted;
+		streamList[session.streamID].sceneMuteStatus = session.sceneMuteStatus;
+	}
 	streamList[session.streamID].videoMuted = session.videoMuted;
 	streamList[session.streamID].videoVisible = session.videoElement && session.videoElement.checkVisibility();
 	streamList[session.streamID].speakerMuted = session.speakerMuted;
@@ -24794,10 +24990,23 @@ function directVolume(ele) {
 	return msg.value;
 }
 
+function isSceneAudioMuted(UUID) {
+	var peer = session.rpcs[UUID];
+	return session.scene !== false && peer && session.rpcs[peer.realUUID || UUID].remoteSceneMuteState === true;
+}
+
 function applyMuteState(UUID) {
 	// this is the mute state of PLAYBACK audio; not the microphone or outbound.
 	if (!(UUID in session.rpcs)) {
 		return "UUID not found";
+	}
+
+	// A guest's broadcast mute also covers relayed audio and overrides player controls.
+	if (isSceneAudioMuted(UUID)) {
+		if (session.rpcs[UUID].videoElement) {
+			session.rpcs[UUID].videoElement.muted = true;
+		}
+		return true;
 	}
 
 	var muteOutcome = session.rpcs[UUID].mutedState || session.rpcs[UUID].mutedStateMixer || session.rpcs[UUID].mutedStateScene || session.speakerMuted || session.rpcs[UUID].bandwidthMuted;
@@ -24851,7 +25060,7 @@ function checkMuteState(UUID, includeSpeakerMuted) {
 			return true;
 		}
 	}
-	return session.rpcs[UUID].mutedState || session.rpcs[UUID].mutedStateMixer || session.rpcs[UUID].mutedStateScene || (includeSpeakerMuted && session.speakerMuted) || session.rpcs[UUID].bandwidthMuted;
+	return isSceneAudioMuted(UUID) || session.rpcs[UUID].mutedState || session.rpcs[UUID].mutedStateMixer || session.rpcs[UUID].mutedStateScene || (includeSpeakerMuted && session.speakerMuted) || session.rpcs[UUID].bandwidthMuted;
 }
 
 var volumeLUT = [0, 1, 2, 2.4, 2.7, 3, 3.4, 3.7, 4, 4.5, 4.8, 5, 5.6, 6, 6.4, 6.8, 7, 7.7, 8, 8.6, 9, 9.5, 10, 10.4, 10.9, 11, 12, 12.5, 13, 13.6, 14, 14.7, 15, 15.6, 16, 17, 17.7, 18, 19, 19.7, 20, 21, 21.8, 22, 23, 24, 24.7, 25, 26, 27, 28, 28.5, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 45, 46, 47, 48, 49, 51, 52, 53, 55, 56, 58, 59, 61, 62, 64, 65, 67, 68, 70, 72, 74, 75, 77, 79, 81, 83, 85, 87, 89, 91, 93, 95, 97, 100, 102, 104, 107, 109, 112, 114, 117, 119, 122, 125, 128, 131, 134, 137, 140, 143, 146, 149, 152, 156, 159, 163, 166, 170, 174, 177, 181, 185, 189, 193, 198, 202, 206, 211, 215, 220, 225, 230, 234, 240, 245, 250, 255, 261, 266, 272, 278, 284, 290, 296, 302, 308, 315, 322, 328, 335, 342, 350, 357, 364, 372, 380, 388, 396, 404, 413, 421, 430, 439, 448, 458, 467, 477, 487, 497, 507, 518, 528, 539, 551, 562, 574, 586, 598, 610, 623, 635, 649, 662, 676, 690, 704, 718, 733, 748, 764, 779, 795, 812, 828];
@@ -24988,7 +25197,7 @@ function getStoredDirectorSettings() {
 	if (!settings || typeof settings !== "object") {
 		return {};
 	}
-	return JSON.parse(JSON.stringify(settings));
+	return settings;
 }
 
 function getStoredDirectorInputValue(input, settings = null) {
@@ -25054,8 +25263,7 @@ function saveDirectorSettings(intent = {}) {
 		return;
 	}
 	//console.warn("Saving");
-	var storedSettings = getStoredDirectorSettings();
-	var settings = storedSettings;
+	var settings = getStoredDirectorSettings();
 
 	if (getById("customizeLinks").classList.contains("hidden")) {
 		settings.customizeLinks = true;
@@ -25743,7 +25951,7 @@ function initTipNotifications() {
 				if (tipData.type === "tip") {
 					processTipMessage(tipData, null);
 					// Broadcast to room peers
-					broadcastTipReceived(tipData);
+					session.sendPeers({ tip: tipData });
 				}
 			} catch(e) {
 				errorlog("Tip SSE parse error:", e);
@@ -25784,20 +25992,6 @@ async function fetchPerformerFromToken() {
 	} catch(e) {
 		errorlog("Failed to fetch performer from token:", e);
 	}
-}
-
-// Close SSE connection
-function closeTipNotifications() {
-	if (session.tipEventSource) {
-		session.tipEventSource.close();
-		session.tipEventSource = null;
-	}
-}
-
-// Broadcast tip received to all peers (so viewers see it too)
-function broadcastTipReceived(tipData) {
-	var msg = { tip: tipData };
-	session.sendPeers(msg);
 }
 
 // Open tip modal for a peer
@@ -26389,6 +26583,7 @@ async function publishScreen() {
 
 			if (!session.cleanOutput && !session.cleanViewer) {
 				getById("mutebutton").classList.remove("hidden");
+				getById("scenemutebutton").classList.remove("hidden");
 				getById("mutespeakerbutton").classList.remove("hidden");
 				//getById("mutespeakerbutton").className="float";
 				getById("chatbutton").className = "float";
@@ -26424,6 +26619,7 @@ async function publishScreen() {
 					getById("sessionMarkerButton").classList.remove("hidden");
 				}
 				getById("mutebutton").classList.add("hidden");
+				getById("scenemutebutton").classList.add("hidden");
 				getById("mutespeakerbutton").classList.add("hidden");
 				getById("chatbutton").classList.add("hidden");
 				getById("mutevideobutton").classList.add("hidden");
@@ -26744,7 +26940,7 @@ function updateForceRotatedCSS(rotateThis = session.forceRotate) {
 }
 
 async function joinDataMode() {
-	// join the room, but without publishing anything.
+	// Room data-only guests publish after admission; listener modes only subscribe.
 	await session.connect();
 	if (session.roomid) {
 		getById("head3").classList.add("hidden");
@@ -26930,6 +27126,7 @@ function publishWebcam(btn = false, miconly = false) {
 
 	if (!session.cleanOutput) {
 		getById("mutebutton").classList.remove("hidden");
+		getById("scenemutebutton").classList.remove("hidden");
 		getById("mutespeakerbutton").classList.remove("hidden");
 		//getById("mutespeakerbutton").className="float";
 		getById("chatbutton").className = "float";
@@ -26987,6 +27184,7 @@ function publishWebcam(btn = false, miconly = false) {
 			getById("sessionMarkerButton").classList.remove("hidden");
 		}
 		getById("mutebutton").classList.add("hidden");
+		getById("scenemutebutton").classList.add("hidden");
 		getById("mutespeakerbutton").classList.add("hidden");
 		getById("chatbutton").classList.add("hidden");
 		getById("mutevideobutton").classList.add("hidden");
@@ -27253,6 +27451,8 @@ function soloLinkGenerator(streamID, scene = true) {
 		if (session.defaultPassword === false) {
 			passAdd2 = "&password=" + session.password;
 		}
+	} else if (session.password === false && session.defaultPassword === false) {
+		passAdd2 = "&password=false";
 	}
 
 	if (session.token) {
@@ -29895,11 +30095,10 @@ async function createRoom(roomname = false, reload = false) {
 			return;
 		}
 		passwordRoom = oldDirectorSettings.password;
-		if (passwordRoom === session.defaultPassword) {
+		if (passwordRoom === false) {
+			passwordRoom = "false";
+		} else if (passwordRoom === session.defaultPassword) {
 			passwordRoom = "";
-		} else if (passwordRoom === false) {
-			passwordRoom = "";
-			session.password = false;
 		}
 		roomname = oldDirectorSettings.roomid;
 		if (!roomname) {
@@ -30035,9 +30234,7 @@ async function createRoom(roomname = false, reload = false) {
 	try {
 		if (createdViaWizard) {
 			var roomApprovalToggle = getById("requireApprovalForRoom");
-			if (roomApprovalToggle) {
-				session.requireServerApproval = !!roomApprovalToggle.checked;
-			}
+			session.requireServerApproval = !!roomApprovalToggle.checked;
 		}
 		if (createdViaWizard && session.requireServerApproval && !session.claimBypassKey) {
 			var generatedRoomKey = "";
@@ -30087,23 +30284,23 @@ async function createRoom(roomname = false, reload = false) {
 		if (session.password === "false" || session.password === "0" || session.password === "off") {
 			session.password = false;
 			if (urlParams.has("pass")) {
-				updateURL("pass=0");
+				updateURL("pass=0", true, false);
 				passAdd = "&pass=0";
 				passAdd2 = "&pass=0";
 			} else if (urlParams.has("pw")) {
-				updateURL("pw=0");
+				updateURL("pw=0", true, false);
 				passAdd = "&pw=0";
 				passAdd2 = "&pw=0";
 			} else if (urlParams.has("p")) {
-				updateURL("p=0");
+				updateURL("p=0", true, false);
 				passAdd = "&p=0";
 				passAdd2 = "&p=0";
 			} else if (urlParams.has("password")) {
-				updateURL("password=false");
+				updateURL("password=false", true, false);
 				passAdd = "&password=false";
 				passAdd2 = "&password=false";
 			} else {
-				updateURL("p=0");
+				updateURL("p=0", true, false);
 				passAdd = "&p=0";
 				passAdd2 = "&p=0";
 			}
@@ -31234,16 +31431,7 @@ function toggleHighlightMuteFollow(ele) {
 }
 
 function normalizeLayoutStateValue(state) {
-	if (typeof state === "undefined") {
-		return undefined;
-	}
-	if (state === null) {
-		return false;
-	}
-	if (state === true) {
-		return false;
-	}
-	if (state === false) {
+	if (state === null || state === true || state === false) {
 		return false;
 	}
 	if (typeof state === "number") {
@@ -31254,10 +31442,7 @@ function normalizeLayoutStateValue(state) {
 		if (!normalized) {
 			return false;
 		}
-		if (normalized === "false" || normalized === "off" || normalized === "auto" || normalized === "0") {
-			return false;
-		}
-		if (normalized === "true") {
+		if (normalized === "false" || normalized === "off" || normalized === "auto" || normalized === "0" || normalized === "true") {
 			return false;
 		}
 	}
@@ -31266,7 +31451,7 @@ function normalizeLayoutStateValue(state) {
 
 function isAutoLayoutState(state) {
 	const normalized = normalizeLayoutStateValue(state);
-	return normalized === false || typeof normalized === "undefined" || normalized === null;
+	return normalized === false || typeof normalized === "undefined";
 }
 
 function requestInfocus(ele, evt = null, value = null) {
@@ -31644,9 +31829,9 @@ async function createDirectorOnlyBox() {
 			"<div class='soloButton' title='A direct solo view of the video/audio stream with nothing else'> \
 				<a class='soloLink advanced task' data-menu='context-menu' data-sololink='true' data-drag='1' draggable='true' onclick='copyFunction(this,event)' \
 				value='" +
-			soloLink +
+			escapeHtml(soloLink) +
 			"' href='" +
-			soloLink +
+			escapeHtml(soloLink) +
 			"'/>" +
 			sanitizeChat(soloLink) +
 			"</a>\
@@ -31863,9 +32048,9 @@ async function createDirectorScreenshareOnlyBox() {
 			"<div class='soloButton' title='A direct solo view of the video/audio stream with nothing else'> \
 				<a class='soloLink advanced task' data-menu='context-menu' data-sololink='true' data-drag='1' draggable='true' onclick='copyFunction(this,event)' \
 				value='" +
-			soloLink +
+			escapeHtml(soloLink) +
 			"' href='" +
-			soloLink +
+			escapeHtml(soloLink) +
 			"'/>" +
 			sanitizeChat(soloLink) +
 			"</a>\
@@ -32692,6 +32877,13 @@ function updateWhepDirectorControls(UUID) {
 	var whep = (peer.whep && peer.whep.connectionState === "connected") || (screen && screen.whep && screen.whep.connectionState === "connected");
 	var fallback = !!whep && !p2p;
 	var signaling = session.ws && session.ws.readyState === WebSocket.OPEN;
+	var indicator = getById("videoContainer_" + UUID).querySelector('[data-action-type="meshcast-status"]');
+	if (indicator) {
+		var status = peer.meshcastStatus || {};
+		indicator.title = status.busy || status.error || (status.on ? getTranslation("meshcast-publishing") : whep ? getTranslation("whep-receiving") : "");
+		indicator.setAttribute("aria-label", indicator.title);
+		indicator.classList.toggle("hidden", !indicator.title);
+	}
 	var meters = [peer.signalMeter, screen && screen.signalMeter];
 	for (var i = 0; i < meters.length; i++) {
 		if (!meters[i]) continue;
@@ -32701,7 +32893,7 @@ function updateWhepDirectorControls(UUID) {
 		warning.title = getTranslation(signaling ? "whep-only-controls" : "whep-controls-unavailable");
 		warning.setAttribute("aria-label", warning.title);
 	}
-	var remoteActions = ["volume", "direct-chat", "forward", "solo-chat", "mute-video-guest", "toggle-remote-speaker", "hide-guest", "toggle-remote-display", "refresh-mic", "change-params", "change-url", "advanced-audio-settings", "advanced-camera-settings", "custom-mix", "messaging-box-send", "create-timer", "recorder-remote", "recorder-google-drive-remote", "restart-whip", "open-file-share", "hand-raised"];
+	var remoteActions = ["volume", "direct-chat", "forward", "solo-chat", "mute-video-guest", "toggle-remote-speaker", "hide-guest", "toggle-remote-display", "refresh-mic", "change-params", "change-url", "advanced-audio-settings", "advanced-camera-settings", "custom-mix", "messaging-box-send", "create-timer", "recorder-remote", "recorder-google-drive-remote", "restart-whip", "meshcast-toggle", "open-file-share", "hand-raised"];
 	controls.querySelectorAll("button[data-action-type], input[data-action-type]").forEach(function (button) {
 		var action = button.dataset.actionType;
 		var unavailable = fallback && (remoteActions.indexOf(action) !== -1 || (!signaling && (action === "mute-guest" || action === "hangup")));
@@ -32814,9 +33006,9 @@ function createControlBox(UUID, soloLink, streamID, slot_init = false) {
 			"<div class='soloButton' title='A direct solo view of the video/audio stream with nothing else. Its audio can be remotely controlled from here'> \
 				<a class='soloLink advanced task'  data-menu='context-menu' data-sololink='true' data-drag='1' draggable='true' onclick='copyFunction(this,event)' \
 				value='" +
-			soloLink +
+			escapeHtml(soloLink) +
 			"' href='" +
-			soloLink +
+			escapeHtml(soloLink) +
 			"'/>" +
 			sanitizeChat(soloLink) +
 			"</a>\
@@ -33035,6 +33227,8 @@ function createControlBox(UUID, soloLink, streamID, slot_init = false) {
 		videoContainer.appendChild(session.rpcs[UUID].batteryMeter);
 	}
 
+	videoContainer.appendChild(htmlToElement('<i class="las la-broadcast-tower broadcast-status hidden" data-action-type="meshcast-status" role="img" tabindex="0"></i>'));
+
 	if (session.showConnections) {
 		if (!session.rpcs[UUID].connectionDetails) {
 			createConnectionDetailsEle(UUID);
@@ -33048,6 +33242,7 @@ function createControlBox(UUID, soloLink, streamID, slot_init = false) {
 
 	videoContainer.appendChild(session.rpcs[UUID].voiceMeter);
 	videoContainer.appendChild(session.rpcs[UUID].remoteMuteElement);
+	updateRemoteSceneMuteState(UUID);
 	videoContainer.appendChild(session.rpcs[UUID].remoteVideoMuteElement);
 	videoContainer.appendChild(session.rpcs[UUID].remoteRaisedHandElement);
 	videoContainer.appendChild(iframeDetails);
@@ -33096,6 +33291,7 @@ function createControlBox(UUID, soloLink, streamID, slot_init = false) {
 		errorlog(e);
 	}
 
+	if (session.rpcs[UUID].meshcastStatus) updateMeshcastDirector(UUID, session.rpcs[UUID].meshcastStatus);
 	updateWhepDirectorControls(UUID);
 	pokeIframeAPI("control-box", true, UUID);
 
@@ -33201,9 +33397,9 @@ function createControlBoxScreenshare(UUID, soloLink, streamID) {
 			"<div class='soloButton' title='A direct solo view of the video/audio stream with nothing else.'> \
 			<a class='soloLink advanced task' data-menu='context-menu' data-sololink='true' data-drag='1' draggable='true' onclick='copyFunction(this,event)' \
 			value='" +
-			soloLink +
+			escapeHtml(soloLink) +
 			"' href='" +
-			soloLink +
+			escapeHtml(soloLink) +
 			"'/>" +
 			sanitizeChat(soloLink) +
 			"</a>\
@@ -33394,6 +33590,7 @@ function createControlBoxScreenshare(UUID, soloLink, streamID) {
 
 	videoContainer.appendChild(session.rpcs[UUID].voiceMeter);
 	videoContainer.appendChild(session.rpcs[UUID].remoteMuteElement);
+	updateRemoteSceneMuteState(UUID);
 	videoContainer.appendChild(session.rpcs[UUID].remoteVideoMuteElement);
 	videoContainer.appendChild(session.rpcs[UUID].remoteRaisedHandElement);
 	videoContainer.appendChild(iframeDetails);
@@ -35531,6 +35728,211 @@ function meshReconnectWhep(uuid) {
 	return false;
 }
 
+function getMeshcastControlStatus() {
+	// Older Firefox disables a shared video source instead of an individual sender.
+	return {
+		available: !!(session.seeding && session.videoElement && session.videoElement.srcObject && !session.noMeshcast && session.whipPublishPrimary !== false && (!session.whipOutput || session.meshcast || session.meshcast2) && !(Firefox && Firefox < 110)),
+		on: !!((session.meshcast || session.meshcast2) && session.whipOut && session.whipOut.connectionState === "connected"),
+		busy: session.meshcastSwitchBusy || false,
+		error: session.meshcastSwitchError || false
+	};
+}
+
+function updateMeshcastDirector(UUID, status) {
+	var peer = session.rpcs[UUID];
+	if (!peer || !status) return;
+	peer.meshcastStatus = status;
+	if (!session.director) return;
+	var controls = getById("controls_" + UUID);
+	var button = controls.querySelector('[data-action-type="meshcast-toggle"]');
+	if (button) {
+		button.classList.toggle("hidden", !status.available);
+		button.classList.toggle("pressed", !!status.on);
+		button.setAttribute("aria-pressed", status.on ? "true" : "false");
+		button.disabled = !!status.busy || button.dataset.whepDisabled === "true";
+	}
+	updateWhepDirectorControls(UUID);
+}
+
+function toggleMeshcastDirector(ele) {
+	var UUID = ele.dataset.UUID;
+	var peer = session.rpcs[UUID];
+	if (!peer || !peer.meshcastStatus || peer.meshcastStatus.busy) return;
+	if (session.sendRequest({ requestMeshcast: !peer.meshcastStatus.on }, UUID)) ele.disabled = true;
+}
+
+function announceMeshcastStatus() {
+	session.sendMessage({ meshcastStatus: getMeshcastControlStatus() });
+}
+
+function pauseMeshcastPeer(UUID, paused, media = { audio: true, video: true }) {
+	var peer = session.pcs[UUID];
+	if (!peer) return;
+	var activeMedia = { audio: false, video: false };
+	getSenders2(UUID).forEach(function (sender) {
+		if (!sender.track || !media[sender.track.kind]) return;
+		var encodings = sender.getParameters().encodings;
+		var active = sender.meshcastPaused ? sender.meshcastPaused.active : sender.firefoxAudio ? sender.firefoxAudio.active : !encodings || !encodings[0] || encodings[0].active !== false;
+		activeMedia[sender.track.kind] = active;
+		if (paused) {
+			if (sender.meshcastPaused) return;
+			sender.meshcastPaused = { active: active };
+			setEncodings(sender, {});
+		} else if (sender.meshcastPaused) {
+			delete sender.meshcastPaused;
+			setEncodings(sender, { active: active });
+		}
+	});
+	return activeMedia;
+}
+
+function stopGuestMeshcastPublisher() {
+	session.whipOutput = false; // Stop the existing reconnect loop before closing its peer.
+	if (session.whipOut) {
+		if (session.whipOut.deleteme) session.whipOut.deleteme();
+		clearInterval(session.whipOut.keyframeTimeout);
+		clearInterval(session.whipOut.bitrateTimeout);
+		if (session.whipOut.meshcastTrickle) session.whipOut.meshcastTrickle.stop();
+		session.whipOut.close();
+		session.whipOut = null;
+	}
+	session.whipoutSettings = false;
+	session.meshcast = false;
+	session.meshcast2 = false;
+	if (session.meshcast2Sessions) delete session.meshcast2Sessions.primary;
+	for (var UUID in session.pcs) {
+		if (session.pcs[UUID].whipout !== false) session.pcs[UUID].whipout = null;
+	}
+}
+
+async function setGuestMeshcast(enabled) {
+	if (session.meshcastSwitchBusy) return;
+	if (!getMeshcastControlStatus().available) { announceMeshcastStatus(); return; }
+	if (!session.meshcastSwitchSettings) {
+		session.meshcastSwitchSettings = { meshcast: session.meshcast || "any", meshcast2: session.meshcast || session.meshcast2 ? session.meshcast2 : "any" };
+	}
+	session.meshcastSwitchError = false;
+	session.meshcastSwitchBusy = enabled ? "Starting Meshcast…" : "Switching to direct…";
+	announceMeshcastStatus();
+	try {
+		if (enabled) {
+			if (!getMeshcastControlStatus().on) {
+				session.meshcastSwitch = Date.now();
+				session.meshcast = session.meshcastSwitchSettings.meshcast;
+				session.meshcast2 = session.meshcastSwitchSettings.meshcast2;
+				await meshcast(false, true);
+				var started = Date.now();
+				while (!getMeshcastControlStatus().on || !session.whipoutSettings || !session.whipoutSettings.url) {
+					if (session.meshcast2LastError || Date.now() - started > 15000) throw new Error("Meshcast could not start; direct connections are still available.");
+					await sleep(100);
+				}
+				broadcastWhepSettings("primary");
+			}
+		} else {
+			// Old viewers can keep using an existing URL-enabled Meshcast session.
+			// They need the handoff capability before that publisher can be stopped.
+			for (var UUID in session.pcs) {
+				var peer = session.pcs[UUID];
+				if (peer.whipout && !peer.meshcastSwitchSupported) throw new Error("A viewer needs to reload before Meshcast can be switched off.");
+			}
+			session.meshcastSwitch = Date.now();
+			for (var UUID in session.pcs) {
+				var peer = session.pcs[UUID];
+				if (!peer.whipout || !peer.meshcastSwitchSupported) continue;
+				// URL-enabled Meshcast peers may never have had primary P2P tracks.
+				var media = peer.meshcastMedia;
+				if (media && (peer.allowVideo !== media.video || peer.allowAudio !== media.audio)) {
+					peer.allowVideo = media.video;
+					peer.allowAudio = media.audio;
+					session.initialPublish(UUID, true);
+				}
+				var activeMedia = pauseMeshcastPeer(UUID, false);
+				peer.meshcastReturnPending = true;
+				session.sendMessage({ whepSettings: { type: "whep", url: false, handoff: session.meshcastSwitch, audio: activeMedia.audio, video: activeMedia.video } }, UUID);
+			}
+			var started = Date.now();
+			while (Object.values(session.pcs).some(function (peer) { return peer.meshcastReturnPending; })) {
+				if (Date.now() - started > 10000) throw new Error("Some viewers have not switched back yet. Meshcast is still available; try again.");
+				await sleep(100);
+			}
+			stopGuestMeshcastPublisher();
+			session.meshcastSwitch = false;
+		}
+	} catch (e) {
+		errorlog(e);
+		session.meshcastSwitchError = e.message;
+		if (enabled) {
+			stopGuestMeshcastPublisher();
+			session.meshcastSwitch = false;
+		}
+	}
+	session.meshcastSwitchBusy = false;
+	announceMeshcastStatus();
+}
+
+// Keep the old feed playing until the selected receiver has fresh media.
+// Only director-initiated handoffs use this path; regular WHEP keeps its ontrack flow.
+async function finishMeshcastHandoff(UUID, state) {
+	var peer = session.rpcs[UUID];
+	var started = Date.now();
+	var baseline = null;
+	while (session.rpcs[UUID] === peer && peer.meshcastHandoff === state) {
+		var receiver = state.target ? peer.whep : peer;
+		if (receiver && receiver.connectionState === "connected") {
+			var counts = { audio: 0, video: 0 };
+			var receivers = receiver.getReceivers().filter(function (item, index) {
+				return item.track && item.track.readyState === "live" && (state.target || !peer.screenIndexes || peer.screenIndexes.indexOf(index) === -1);
+			});
+			var reports = await Promise.all(receivers.map(function (item) { return item.getStats(); }));
+			if (session.rpcs[UUID] !== peer || peer.meshcastHandoff !== state) return;
+			reports.forEach(function (stats) {
+				stats.forEach(function (stat) {
+					if (stat.type !== "inbound-rtp") return;
+					if ((stat.kind || stat.mediaType) === "video") counts.video += stat.framesDecoded || 0;
+					if ((stat.kind || stat.mediaType) === "audio") counts.audio += stat.packetsReceived || 0;
+				});
+			});
+			if (!baseline) baseline = state.target ? { audio: 0, video: 0 } : counts;
+			if ((!peer.whepExpectedVideo || state.video === false || counts.video > baseline.video) && (!peer.whepExpectedAudio || state.audio === false || counts.audio > baseline.audio)) {
+				var tracks = receivers.map(function (item) { return item.track; });
+				if (peer.streamSrc) peer.streamSrc.getTracks().forEach(function (track) { peer.streamSrc.removeTrack(track); });
+				if (peer.videoElement && peer.videoElement.srcObject) peer.videoElement.srcObject.getTracks().forEach(function (track) { peer.videoElement.srcObject.removeTrack(track); });
+				state.active = state.target;
+				session.onTrack({ streams: [new MediaStream(tracks)], meshcastHandoff: true }, UUID);
+				session.sendRequest({ meshcastReady: { handoff: state.id, active: state.target, audio: !!peer.whepExpectedAudio, video: !!peer.whepExpectedVideo } }, UUID);
+				if (state.target && peer.whepExpectedVideo) {
+					getById("controls_" + UUID).querySelectorAll('[data-action-type^="change-quality"]').forEach(function (button) {
+						button.dataset.meshcastPressed = button.classList.contains("pressed") ? "true" : "false";
+					});
+					disableQualityDirector(UUID);
+				}
+				if (!state.target) {
+					stopPrimaryWhep(UUID);
+					delete peer.meshcastHandoff;
+					var controls = getById("controls_" + UUID);
+					controls.querySelectorAll('[data-action-type^="change-quality"]').forEach(function (button) {
+						button.disabled = false;
+						button.classList.remove("disable");
+						var original = getById("controls_blank").querySelector('[data-action-type="' + button.dataset.actionType + '"]');
+						if (original) button.title = original.title;
+						if ("meshcastPressed" in button.dataset) {
+							button.classList.toggle("pressed", button.dataset.meshcastPressed === "true");
+							button.setAttribute("aria-pressed", button.dataset.meshcastPressed);
+							delete button.dataset.meshcastPressed;
+						}
+					});
+				}
+				return;
+			}
+		}
+		if (Date.now() - started > 10000) {
+			if (state.target && !state.active) { stopPrimaryWhep(UUID); delete peer.meshcastHandoff; }
+			return;
+		}
+		await sleep(100);
+	}
+}
+
 function restartWhipDirector(ele) {
 	var UUID = ele.dataset.UUID;
 	var rpc = UUID && session.rpcs && session.rpcs[UUID];
@@ -35997,6 +36399,17 @@ function handleConnectionMapResponse(msg, UUID) {
 	if (msg.connectionMap) {
 		var map = msg.connectionMap;
 		var mapConnections = Array.isArray(map.connections) ? map.connections : [];
+		var uuids = [map.uuid, map.requesterUUID].concat(mapConnections.map(conn => conn.peerUUID));
+		// IDs enter single-quoted JavaScript strings inside double-quoted HTML attributes.
+		// HTML references can produce an apostrophe (39/0x27) or backslash (92/0x5c).
+		if (uuids.some(id =>
+			/["'\\]/.test(id) ||
+			/&(?:apos|bsol);/.test(id) ||
+			/&#0*(?:39|92)(?![0-9])|&#[xX]0*(?:27|5[cC])(?![0-9a-fA-F])/.test(id)
+		)) {
+			errorlog("Discarding connection map: unsafe UUID.");
+			return;
+		}
 		if (map.meshRequestId !== undefined && map.meshRequestId !== meshData.requestId) {
 			log("Ignored stale mesh response " + map.meshRequestId);
 			return;
@@ -36437,30 +36850,6 @@ function aggregateMeshData() {
 	};
 
 	log("Aggregated directional mesh data: " + meshData.summary.totalNodes + " nodes, " + meshData.summary.totalConnections + " directed connections");
-}
-
-function getMeshHealthBadge() {
-	// Returns HTML for the health badge to show in director controls
-	var s = meshData.summary;
-	if (!s) return "";
-
-	var color = "#4CAF50"; // green
-	var text = s.healthyConnections + "/" + s.totalConnections;
-
-	if (s.failedConnections > 0) {
-		color = "#F44336"; // red
-		text = s.failedConnections + " failed";
-	} else if (s.audioStalledConnections > 0) {
-		color = "#FF9800"; // orange
-		text = s.audioStalledConnections + " audio stalled";
-	} else if (s.degradedConnections > 0) {
-		color = "#FF9800"; // orange
-	} else if (s.unknownConnections > 0) {
-		color = "#757575"; // gray
-		text = s.unknownConnections + " unverified";
-	}
-
-	return '<span class="meshHealthBadge" role="button" tabindex="0" style="background:' + color + ';" onclick="openMeshVisualization()" onkeydown="if(event.key===\'Enter\'||event.key===\' \'){event.preventDefault();openMeshVisualization();}">' + text + '</span>';
 }
 
 function setMeshRefreshBusy(refreshing) {
@@ -37199,7 +37588,7 @@ function showNodeDetails(node) {
 				<span class="meshConnectionState">${escapeMeshText(c.state)}</span>
 			</div>
 			<small class="meshConnectionMedia"><span class="meshMuted">${escapeMeshText(c.reportSource || "unverified")}</span> &middot; <span style="color:${audioColor};">${audioStatus}</span></small>
-			${c.bandwidth > 0 ? '<br><small class="meshMuted">' + c.bandwidth + ' kbps</small>' : ''}
+			${c.bandwidth > 0 ? '<br><small class="meshMuted">' + escapeMeshText(String(c.bandwidth)) + ' kbps</small>' : ''}
 		</div>`;
 	}).join("");
 
@@ -37364,9 +37753,9 @@ function showEdgeDetails(edge) {
 
 	var statsDetails = '<p class="meshMuted">No RTP sample was returned.</p>';
 	if (edge.sampleWindowMs > 0) {
-		statsDetails = '<p><strong>RTP sample:</strong> ' + edge.sampleWindowMs + ' ms</p>' +
-			'<p><strong>Audio sent -> received:</strong> ' + edge.audioSentPacketsDelta + ' -> ' + edge.audioReceivedPacketsDelta + ' packets</p>' +
-			'<p><strong>Video sent -> received:</strong> ' + edge.videoSentPacketsDelta + ' -> ' + edge.videoReceivedPacketsDelta + ' packets</p>';
+		statsDetails = '<p><strong>RTP sample:</strong> ' + escapeMeshText(String(edge.sampleWindowMs)) + ' ms</p>' +
+			'<p><strong>Audio sent -> received:</strong> ' + escapeMeshText(String(edge.audioSentPacketsDelta)) + ' -> ' + escapeMeshText(String(edge.audioReceivedPacketsDelta)) + ' packets</p>' +
+			'<p><strong>Video sent -> received:</strong> ' + escapeMeshText(String(edge.videoSentPacketsDelta)) + ' -> ' + escapeMeshText(String(edge.videoReceivedPacketsDelta)) + ' packets</p>';
 	}
 
 	panel.innerHTML = `
@@ -37380,13 +37769,13 @@ function showEdgeDetails(edge) {
 		${mediaStatusHtml("Audio", edge.audioExpected, edge.audioFlowing)}
 		${mediaStatusHtml("Video", edge.videoExpected, edge.videoFlowing)}
 		${patchedStatus}
-		${edge.bandwidth > 0 ? '<p><strong>Bandwidth:</strong> ' + edge.bandwidth + ' kbps</p>' : ''}
+		${edge.bandwidth > 0 ? '<p><strong>Bandwidth:</strong> ' + escapeMeshText(String(edge.bandwidth)) + ' kbps</p>' : ''}
 		<p><strong>Candidate path:</strong> ${escapeMeshText(candidateDetails)}</p>
 		<p><strong>Publisher audio track:</strong> ${escapeMeshText(trackStatus(edge.audioSenderTrackPresent, edge.audioSenderTrackEnabled, edge.audioSenderTrackState, false))}</p>
 		<p><strong>Listener audio track:</strong> ${escapeMeshText(trackStatus(edge.audioTrackPresent, edge.audioTrackEnabled, edge.audioTrackState, edge.audioTrackMuted))}</p>
 		${statsDetails}
-		<p><strong>NACK count:</strong> ${edge.nackCount}</p>
-		<p><strong>PLI count:</strong> ${edge.pliCount}</p>
+		<p><strong>NACK count:</strong> ${escapeMeshText(String(edge.nackCount))}</p>
+		<p><strong>PLI count:</strong> ${escapeMeshText(String(edge.pliCount))}</p>
 		<p class="meshDetailNote">ICE restart targets this arrow. A Mix-Minus patch bridges the peer pair in both directions.</p>
 		<div class="meshActionStack">
 			${actionButtons}
@@ -39899,11 +40288,11 @@ if (navigator.userAgent.toLowerCase().indexOf(" electron/") > -1) {
 						  <ul class="desktop-capturer-selection__list">
 							${sources
 									.map(
-										({ id, name, thumbnail, display_id, appIcon }) => `
+										() => `
 							  <li class="desktop-capturer-selection__item">
-								<button class="desktop-capturer-click desktop-capturer-selection__btn" data-id="${id}" title="${name}">
-								  <img class="desktop-capturer-selection__thumbnail" src="${thumbnail.toDataURL()}" />
-								  <span class="desktop-capturer-selection__name">${name}</span>
+								<button class="desktop-capturer-click desktop-capturer-selection__btn">
+								  <img class="desktop-capturer-selection__thumbnail" />
+								  <span class="desktop-capturer-selection__name"></span>
 								</button>
 							  </li>
 							`
@@ -39919,11 +40308,11 @@ if (navigator.userAgent.toLowerCase().indexOf(" electron/") > -1) {
 						  <ul class="desktop-capturer-selection__list">
 							${sources
 									.map(
-										({ id, name, thumbnail, display_id, appIcon }) => `
+										() => `
 							  <li class="desktop-capturer-selection__item">
-								<button class="desktop-capturer-click desktop-capturer-selection__btn" data-id="${id}" title="${name}">
-								  <img class="desktop-capturer-selection__thumbnail" src="${thumbnail.toDataURL()}" />
-								  <span class="desktop-capturer-selection__name">${name}</span>
+								<button class="desktop-capturer-click desktop-capturer-selection__btn">
+								  <img class="desktop-capturer-selection__thumbnail" />
+								  <span class="desktop-capturer-selection__name"></span>
 								</button>
 							  </li>
 							`
@@ -39938,66 +40327,54 @@ if (navigator.userAgent.toLowerCase().indexOf(" electron/") > -1) {
 						</div>
 					  `;
 						}
+						selectionElem.querySelectorAll(".desktop-capturer-selection__btn").forEach(function(button, index) {
+							const source = sources[index];
+							button.dataset.id = source.id;
+							button.title = source.name;
+							button.querySelector(".desktop-capturer-selection__name").textContent = source.name;
+							button.querySelector("img").src = source.thumbnail.toDataURL();
+						});
 						document.body.appendChild(selectionElem);
 						const systemAudioCheckbox = getById("alsoCaptureAudio");
 						const appAudioOption = getById("captureAppAudioParent");
 						const appAudioCheckbox = getById("captureAppAudio");
-						if (appAudioOption && appAudioCheckbox) {
-							const supportsAppAudio = !macOS && electronSupportsApplicationAudio();
-							if (supportsAppAudio) {
-								appAudioOption.style.display = "inline-block";
-								appAudioCheckbox.addEventListener("change", () => {
-									if (!systemAudioCheckbox) {
-										return;
+						const supportsAppAudio = !macOS && electronSupportsApplicationAudio();
+						if (supportsAppAudio) {
+							appAudioOption.style.display = "inline-block";
+							appAudioCheckbox.addEventListener("change", () => {
+								if (appAudioCheckbox.checked) {
+									systemAudioCheckbox.dataset.wasCheckedBeforeAppAudio = systemAudioCheckbox.checked ? "true" : "false";
+									if (systemAudioCheckbox.checked) {
+										systemAudioCheckbox.checked = false;
 									}
-									if (appAudioCheckbox.checked) {
-										systemAudioCheckbox.dataset.wasCheckedBeforeAppAudio = systemAudioCheckbox.checked ? "true" : "false";
-										if (systemAudioCheckbox.checked) {
-											systemAudioCheckbox.checked = false;
-										}
-									} else {
-										if (systemAudioCheckbox.dataset.wasCheckedBeforeAppAudio === "true") {
-											systemAudioCheckbox.checked = true;
-										}
-										delete systemAudioCheckbox.dataset.wasCheckedBeforeAppAudio;
+								} else {
+									if (systemAudioCheckbox.dataset.wasCheckedBeforeAppAudio === "true") {
+										systemAudioCheckbox.checked = true;
 									}
-								});
-							} else {
-								appAudioOption.style.display = "none";
+									delete systemAudioCheckbox.dataset.wasCheckedBeforeAppAudio;
+								}
+							});
+						} else {
+							appAudioOption.style.display = "none";
+							appAudioCheckbox.checked = false;
+						}
+						systemAudioCheckbox.addEventListener("change", () => {
+							if (systemAudioCheckbox.checked) {
 								appAudioCheckbox.checked = false;
 							}
-						}
-						if (systemAudioCheckbox) {
-							systemAudioCheckbox.addEventListener("change", () => {
-								if (systemAudioCheckbox.checked && appAudioCheckbox) {
-									appAudioCheckbox.checked = false;
-								}
-								delete systemAudioCheckbox.dataset.wasCheckedBeforeAppAudio;
-							});
-						}
+							delete systemAudioCheckbox.dataset.wasCheckedBeforeAppAudio;
+						});
 						if (macOS) {
 							const captureDesktopButton = getById("captureDesktopAudio");
-							if (captureDesktopButton) {
-								captureDesktopButton.style.display = "none";
-							}
+							captureDesktopButton.style.display = "none";
 							const alsoCaptureAudioCheckbox = getById("alsoCaptureAudio");
-							if (alsoCaptureAudioCheckbox) {
-								alsoCaptureAudioCheckbox.checked = false;
-							}
+							alsoCaptureAudioCheckbox.checked = false;
 							const alsoCaptureAudioParent1 = getById("alsoCaptureAudioParent1");
-							if (alsoCaptureAudioParent1) {
-								alsoCaptureAudioParent1.style.display = "none";
-							}
+							alsoCaptureAudioParent1.style.display = "none";
 							const alsoCaptureAudioParent2 = getById("alsoCaptureAudioParent2");
-							if (alsoCaptureAudioParent2) {
-								alsoCaptureAudioParent2.style.display = "inline-block";
-							}
-							if (appAudioOption) {
-								appAudioOption.style.display = "none";
-							}
-							if (appAudioCheckbox) {
-								appAudioCheckbox.checked = false;
-							}
+							alsoCaptureAudioParent2.style.display = "inline-block";
+							appAudioOption.style.display = "none";
+							appAudioCheckbox.checked = false;
 						}
 
 						document.getElementById("cancelscreenshare").addEventListener("click", async () => {
@@ -40020,9 +40397,9 @@ if (navigator.userAgent.toLowerCase().indexOf(" electron/") > -1) {
 									}
 									const systemAudioCheckbox = getById("alsoCaptureAudio");
 									const appAudioCheckbox = getById("captureAppAudio");
-									const hadSystemAudioPreference = !!(systemAudioCheckbox && (systemAudioCheckbox.checked || systemAudioCheckbox.dataset.wasCheckedBeforeAppAudio === "true"));
-									const wantsAppAudio = !!(appAudioCheckbox && appAudioCheckbox.checked && electronSupportsApplicationAudio());
-									const wantsSystemAudio = !wantsAppAudio && !!(systemAudioCheckbox && systemAudioCheckbox.checked);
+									const hadSystemAudioPreference = !!(systemAudioCheckbox.checked || systemAudioCheckbox.dataset.wasCheckedBeforeAppAudio === "true");
+									const wantsAppAudio = !!(appAudioCheckbox.checked && electronSupportsApplicationAudio());
+									const wantsSystemAudio = !wantsAppAudio && !!systemAudioCheckbox.checked;
 
 									var audioStream = null;
 									if (wantsSystemAudio) {
@@ -40071,13 +40448,9 @@ if (navigator.userAgent.toLowerCase().indexOf(" electron/") > -1) {
 											}
 											if (audioStream) {
 												console.warn("Falling back to desktop audio; application audio capture unavailable for selected source.");
-												if (systemAudioCheckbox) {
-													systemAudioCheckbox.checked = true;
-													delete systemAudioCheckbox.dataset.wasCheckedBeforeAppAudio;
-												}
-												if (appAudioCheckbox) {
-													appAudioCheckbox.checked = false;
-												}
+												systemAudioCheckbox.checked = true;
+												delete systemAudioCheckbox.dataset.wasCheckedBeforeAppAudio;
+												appAudioCheckbox.checked = false;
 											}
 										}
 									}
@@ -42507,7 +42880,31 @@ session.applyIsolatedVolume = function () {
 	}
 };
 
-session.applyIsolatedChat = function (UUID = false) {
+session.applyIsolatedChat = function (UUID = false, notify = false) {
+	function applyAudio(sender, settings, UUID) {
+		var peer = session.pcs[UUID];
+		if (!session.sceneMuteButton || session.pcs[peer.realUUID || UUID].scene === false) {
+			setEncodings(sender, settings);
+			return;
+		}
+		var previous = sender.sceneMuteRequest;
+		// Reapply media settings without flashing the scene control for an unchanged request.
+		var request = {
+			active: settings.active,
+			pending: previous ? previous.pending || previous.failed || previous.active !== settings.active : settings.active === false,
+			failed: false
+		};
+		sender.sceneMuteRequest = request;
+		setEncodings(sender, settings, null, null, error => {
+			if (session.pcs[UUID] !== peer || sender.sceneMuteRequest !== request) {
+				return;
+			}
+			request.pending = false;
+			request.failed = !!error;
+			setTimeout(updateSceneMuteButton, 0);
+		});
+	}
+
 	//  mutes outbound mic audio; for guests, and not the director
 	log("applyIsolatedChat");
 	session.applyIsolatedVolume(); // this toggle the speaker output
@@ -42592,8 +42989,11 @@ session.applyIsolatedChat = function (UUID = false) {
 				if (session.director !== false && session.directorEnabledPPT && session.soloChatUUID.length && !session.soloChatUUID.includes(UUID)) {
 					settings.active = false;
 				}
+				if (session.sceneMuted && session.pcs[session.pcs[UUID].realUUID || UUID].scene !== false) {
+					settings.active = false;
+				}
 				session.pcs[UUID].audioMutedOverride = !settings.active;
-				setEncodings(sender, settings);
+				applyAudio(sender, settings, UUID);
 			});
 		} catch (e) {
 			errorlog(e);
@@ -42622,14 +43022,18 @@ session.applyIsolatedChat = function (UUID = false) {
 					if (session.director !== false && session.directorEnabledPPT && session.soloChatUUID.length && !session.soloChatUUID.includes(UUID)) {
 						settings.active = false;
 					}
+					if (session.sceneMuted && session.pcs[session.pcs[UUID].realUUID || UUID].scene !== false) {
+						settings.active = false;
+					}
 					session.pcs[UUID].audioMutedOverride = !settings.active;
-					setEncodings(sender, settings);
+					applyAudio(sender, settings, UUID);
 				});
 			} catch (e) {
 				errorlog(e);
 			}
 		}
 	}
+	updateSceneMuteButton(notify);
 	if (session.callin && session.callin.updateMixer) {
 		session.callin.updateMixer();
 	}
@@ -42672,6 +43076,11 @@ function replaceFirefoxAudioTrack(sender, track = null, active = null) {
 }
 
 function setEncodings(sender, settings = null, callback = null, cbarg = null, onResult = null) {
+	if (settings && sender.meshcastPaused) {
+		settings = Object.assign({}, settings);
+		if ("active" in settings) sender.meshcastPaused.active = settings.active;
+		settings.active = false;
+	}
 	if (!settings) {
 		if (!sender.encodingsQueue) {
 			// not set
@@ -43019,7 +43428,7 @@ function replaceAudioTrackSafely(sender, track, UUID, videoSource = null, contex
 	}
 }
 
-function enableSenderAfterAudioReplace(sender, track, replaceResult) {
+function enableSenderAfterAudioReplace(track, replaceResult) {
 	try {
 		if (track) {
 			track.enabled = true;
@@ -43307,7 +43716,7 @@ function senderAudioUpdate(callbackUUID = false, videoSource = null) {
 							}
 							if (sender.track && sender.track.kind == "audio") {
 								var replaceResult = replaceAudioTrackSafely(sender, trk, UUID, STRM, "senderAudioUpdate:mixMinus");
-								enableSenderAfterAudioReplace(sender, trk, replaceResult);
+								enableSenderAfterAudioReplace(trk, replaceResult);
 								added = true;
 								warnlog("ADDED 5");
 							}
@@ -43369,7 +43778,7 @@ function senderAudioUpdate(callbackUUID = false, videoSource = null) {
 						if (sender) {
 							var replaceResult = replaceAudioTrackSafely(sender, track, UUID, videoSource, "senderAudioUpdate:reuse-disabled-sender");
 							if (!session.muted || isCallInMixedAudioTrack(track)) {
-								enableSenderAfterAudioReplace(sender, track, replaceResult);
+								enableSenderAfterAudioReplace(track, replaceResult);
 							}
 							warnlog("ADDED 2");
 							return;
@@ -43493,6 +43902,7 @@ async function press2talk(clean = false) {
 	}
 	getById("press2talk").outerHTML = "";
 	getById("mutebutton").classList.remove("hidden");
+	getById("scenemutebutton").classList.remove("hidden");
 	getById("hangupbutton2").classList.remove("hidden");
 
 	if (!session.showDirector && session.recordLocal !== false) {
@@ -43712,9 +44122,6 @@ async function press2talk(clean = false) {
 
 function closeStatsMenu() {
 	var existing = getById("menuStatsBox");
-	if (!existing) {
-		return false;
-	}
 	clearInterval(existing.interval);
 	if (existing.escapeHandler) {
 		document.removeEventListener("keydown", existing.escapeHandler);
@@ -43727,7 +44134,7 @@ function closeStatsMenu() {
 function toggleStatsMenuClosed(targetKey) {
 	// ctrl+clicking the same video again closes the panel, rather than silently rebuilding it
 	var existing = getById("menuStatsBox");
-	if (!existing || existing.dataset.statsTarget !== String(targetKey)) {
+	if (existing.dataset.statsTarget !== String(targetKey)) {
 		return false;
 	}
 	closeStatsMenu();
@@ -44710,6 +45117,14 @@ async function publishScreen2(constraints, audioList = [], audio = true, overrid
 				errorlog(e);
 			}
 
+			if (session.screenshareContentHint || session.contentHint) {
+				try {
+					stream.getVideoTracks()[0].contentHint = session.screenshareContentHint || session.contentHint;
+				} catch (e) {
+					errorlog(e);
+				}
+			}
+
 			/// RETURN stream for preview? rather than jumping right in.
 			session.screenShareState = true;
 			pokeIframeAPI("screen-share-state", session.screenShareState, null, session.streamID);
@@ -45360,6 +45775,9 @@ function drawingPermissionRequestMessage(request, idx) {
 
 function fileShareMessage(fileinfo, idx) {
 	const fileName = sanitizeChat(fileinfo.name); // Escape the display copy without changing the original name.
+	const fileSize = escapeHtml(String(fileinfo.size));
+	const fileId = escapeHtml(String(fileinfo.id));
+	const fileMessage = " has shared a file with you:<br /><i class='file-transfer-name'>" + fileName + "</i>";
 
 	var label = false;
 	if (fileinfo.pc) {
@@ -45369,19 +45787,20 @@ function fileShareMessage(fileinfo, idx) {
 	}
 	var data = {};
 	data.idx = idx;
+	data.fileTransfer = true;
 	if (fileinfo.status === 0) {
-		data.msg = " has a shared a file with you:<br /><i>" + fileName + "</i><br />Do you trust them? <button title='file size: " + fileinfo.size + " bytes' data-button-type='download' data-fid='" + fileinfo.id + "' data-tid='" + idx + "' onclick='requestFile(this);'>Download it here</button><button data-button-type='clear' data-fid='" + fileinfo.id + "' data-tid='" + idx + "' style='margin:10px 0 10px 2px;' onclick='clearDownloadFile(this);'>Clear</button>";
+		data.msg = fileMessage + "Do you trust them?<div class='file-transfer-actions'><button title='file size: " + fileSize + " bytes' data-button-type='download' data-fid='" + fileId + "' data-tid='" + idx + "' onclick='requestFile(this);'>Download it here</button><button data-button-type='clear' data-fid='" + fileId + "' data-tid='" + idx + "' onclick='clearDownloadFile(this);'>Clear</button></div>";
 	} else if (fileinfo.status === 1) {
-		data.msg = " has a shared a file with you:<br /><i>" + fileName + "</i><br /><button title='file size: " + fileinfo.size + " bytes' data-button-type='download' data-fid='" + fileinfo.id + "' data-tid='" + idx + "'>Requested</button>";
+		data.msg = fileMessage + "<div class='file-transfer-actions'><button title='file size: " + fileSize + " bytes' data-button-type='download' data-fid='" + fileId + "' data-tid='" + idx + "'>Requested</button></div>";
 	} else if (fileinfo.status === 2) {
-		data.msg = " has a shared a file with you:<br /><i>" + fileName + "</i><br /><button title='file size: " + fileinfo.size + " bytes' data-button-type='download' data-fid='" + fileinfo.id + "' data-tid='" + idx + "' onclick='cancelFile(this);'>Downloading: " + parseInt(transferList[idx].completed * 100) + "%</button>";
+		data.msg = fileMessage + "<div class='file-transfer-actions'><button title='file size: " + fileSize + " bytes' data-button-type='download' data-fid='" + fileId + "' data-tid='" + idx + "' onclick='cancelFile(this);'>Downloading: " + parseInt(transferList[idx].completed * 100) + "%</button></div>";
 	} else if (fileinfo.status === 3) {
-		data.msg = " has a shared a file with you:<br /><i>" + fileName + "</i><br /><button disabled title='file size: " + fileinfo.size + " bytes' data-button-type='download' data-fid='" + fileinfo.id + "' data-tid='" + idx + "' >Download Completed</button>";
+		data.msg = fileMessage + "<div class='file-transfer-actions'><button disabled title='file size: " + fileSize + " bytes' data-button-type='download' data-fid='" + fileId + "' data-tid='" + idx + "' >Download Completed</button></div>";
 		transferList[idx].status = 6;
 	} else if (fileinfo.status === 4) {
-		data.msg = " has a shared a file with you:<br /><i>" + fileName + "</i><br /><button title='file size: " + fileinfo.size + " bytes' data-button-type='download' data-fid='" + fileinfo.id + "' data-tid='" + idx + "' disabled >No longer available</button>";
+		data.msg = fileMessage + "<div class='file-transfer-actions'><button title='file size: " + fileSize + " bytes' data-button-type='download' data-fid='" + fileId + "' data-tid='" + idx + "' disabled >No longer available</button></div>";
 	} else if (fileinfo.status === 5) {
-		data.msg = " has a shared a file with you:<br /><i>" + fileName + "</i><br /><button title='file size: " + fileinfo.size + " bytes' data-button-type='download' data-fid='" + fileinfo.id + "' data-tid='" + idx + "' disabled >Cancelled</button>";
+		data.msg = fileMessage + "<div class='file-transfer-actions'><button title='file size: " + fileSize + " bytes' data-button-type='download' data-fid='" + fileId + "' data-tid='" + idx + "' disabled >Cancelled</button></div>";
 		transferList[idx].status = 6;
 	} else if (fileinfo.status === 6) {
 		return;
@@ -46273,7 +46692,8 @@ session.publishFile = async function (ele, event) {
 		v.dataset.sid = session.streamID;
 	}
 
-	v.autoplay = false;
+	// Hidden file previews have no native Play button available.
+	v.autoplay = !!(session.nopreview || session.minipreview === 3);
 	if (session.showControls !== null) {
 		v.controls = session.showControls;
 	} else {
@@ -46309,6 +46729,10 @@ session.publishFile = async function (ele, event) {
 	}, false);
 
 	v.className = "tile clean fileshare";
+	if (session.nopreview) {
+		v.style.display = "none";
+		container.style.display = "none";
+	}
 
 	session.videoElement = v;
 	session.mirrorExclude = true;
@@ -46416,6 +46840,7 @@ session.publishFile = async function (ele, event) {
 	getById("gridlayout").appendChild(container);
 
 	function handleUIAndStream() {
+		window.onresize = updateMixer;
 		if (session.roomid !== false) {
 			if (session.roomid === "" && (!session.view || session.view === "")) {
 			} else {
@@ -46480,6 +46905,9 @@ session.publishFile = async function (ele, event) {
 					session.stereo = 3;
 				}
 				session.windowed = session.windowed === null ? false : session.windowed;
+				if (session.include.length) {
+					play();
+				}
 			}
 		} else {
 			if (session.fullscreen) {
@@ -46534,11 +46962,15 @@ session.publishFile = async function (ele, event) {
 		}
 
 		session.seedStream();
+		if (session.minipreview) {
+			updateMixer();
+		}
 	}
 }; // publishFile
 
 class CanvasStreamSource {
-	constructor() {
+	constructor(video) {
+		this.video = video;
 		this.canvas = document.createElement('canvas');
 		this.ctx = this.canvas.getContext('2d', { willReadFrequently: true });
 		this.stream = this.canvas.captureStream(30);
@@ -46555,7 +46987,7 @@ class CanvasStreamSource {
 	}
 
 	drawKeyframeTrigger() {
-		if (!this.canvas || !this.ctx || Date.now() - this.lastFrameTime < 500) return;
+		if ((this.video && !this.initialized) || !this.canvas || !this.ctx || Date.now() - this.lastFrameTime < 500) return;
 
 		const state = this.ctx.getImageData(0, 0, this.canvas.width, this.canvas.height);
 
@@ -46601,6 +47033,7 @@ class CanvasStreamSource {
 			console.error("Failed to initialize MediaStreamTrackGenerator, keeping canvas:", e);
 			this.initialized = true;
 		}
+		if (this.video) this.video.srcObject = this.stream;
 	}
 
 	handleFrame(event) {
@@ -46733,9 +47166,8 @@ session.publishFrameSource = function (ele, event) {
 	v.dataset.menu = "context-menu-video";
 	v.setAttribute("playsinline", "");
 
-	session.canvasSource = new CanvasStreamSource();
-	session.streamSrc = session.canvasSource.getStream();
-	v.srcObject = session.streamSrc;
+	session.canvasSource = new CanvasStreamSource(v);
+	session.streamSrc = session.canvasSource.getStream(); // Attach after the first frame selects the source track.
 
 	v.className = "tile clean";
 
@@ -46819,15 +47251,10 @@ session.publishFrameSource = function (ele, event) {
 	};
 
 	v.onloadeddata = async () => {
+		v.onloadeddata = null;
 
 		session.mediafileShare = true;
 		getById("mainmenu").remove();
-
-		if (Firefox) {
-			session.streamSrc = v.mozCaptureStream();
-		} else {
-			session.streamSrc = v.captureStream(); // gaaaaaaaaaaaahhhhhhhh!
-		}
 
 		if (session.framegrab && session.framegrabAudioRequested && session.pendingFramegrabAudioSettings) {
 			try {
@@ -47766,19 +48193,6 @@ function initMixMinusStateForGuest(uuid) {
 	}
 }
 
-// Toggle mix-minus enabled/disabled for a specific guest
-function toggleMixMinusForGuest(uuid) {
-	if (!session.mixMinusState) {
-		session.mixMinusState = {};
-	}
-	if (!session.mixMinusState[uuid]) {
-		initMixMinusStateForGuest(uuid);
-	}
-	session.mixMinusState[uuid].enabled = !session.mixMinusState[uuid].enabled;
-	updateMixMinusForGuest(uuid);
-	return session.mixMinusState[uuid].enabled;
-}
-
 // Toggle a specific audio source in the mix for a guest
 function toggleSourceInMixForGuest(sourceUUID, targetUUID) {
 	if (!session.mixMinusState) {
@@ -47814,29 +48228,6 @@ function toggleDirectorDeviceInMix(deviceId, targetUUID) {
 
 	updateMixMinusForGuest(targetUUID);
 	return state.directorAudioDevices[deviceId];
-}
-
-// Set mix-minus state for all guests
-function setMixMinusForAll(enabled) {
-	if (!session.mixMinusDefaults) {
-		session.mixMinusDefaults = {
-			allGuestsEnabled: enabled,
-			includeDirectorAudio: true,
-			includeAllGuests: true
-		};
-	} else {
-		session.mixMinusDefaults.allGuestsEnabled = enabled;
-	}
-
-	if (!session.mixMinusState) {
-		session.mixMinusState = {};
-		return;
-	}
-
-	for (var uuid in session.mixMinusState) {
-		session.mixMinusState[uuid].enabled = enabled;
-		updateMixMinusForGuest(uuid);
-	}
 }
 
 // Update/rebuild the mix-minus stream for a guest
@@ -47917,38 +48308,6 @@ function onGuestLeftMixMinus(uuid) {
 		// Update their mix since a source left
 		updateMixMinusForGuest(otherUUID);
 	}
-}
-
-// UI handler for mix-minus toggle button in director panel
-function directToggleMixMinus(ele, event) {
-	if (!session.directorMixMinus) {
-		warnUser("Mix-minus not enabled. Add &mixminus to your director URL.");
-		return;
-	}
-
-	var UUID = ele.dataset.UUID;
-	if (!UUID) {
-		// Try to find UUID from parent element
-		try {
-			UUID = ele.closest("[data-UUID]").dataset.UUID;
-		} catch (e) {
-			errorlog("Could not find guest UUID for mix-minus toggle");
-			return;
-		}
-	}
-
-	var enabled = toggleMixMinusForGuest(UUID);
-
-	// Update button appearance
-	if (enabled) {
-		ele.classList.add("pressed");
-		ele.title = "Mix-minus enabled - this guest hears all other audio";
-	} else {
-		ele.classList.remove("pressed");
-		ele.title = "Mix-minus disabled for this guest";
-	}
-
-	log("Mix-minus for " + UUID + " is now: " + (enabled ? "enabled" : "disabled"));
 }
 
 // Global variable to track open dropdown
@@ -48070,7 +48429,7 @@ function populateMixDropdown(targetUUID, dropdown) {
 			html += '<div class="mix-dropdown-item">';
 			html += '<input type="checkbox" id="mix-dir-' + targetUUID.substring(0, 8) + '" ';
 			html += (checked ? 'checked ' : '');
-			html += 'onchange="toggleMixSource(\'' + targetUUID + '\', \'__director_mix__\', \'mix\', this)">';
+			html += 'onchange="toggleMixSource(\'' + targetUUID + '\', \'__director_mix__\', \'mix\')">';
 			html += '<label for="mix-dir-' + targetUUID.substring(0, 8) + '">Director Mix (with effects)</label>';
 			html += '</div>';
 		} else {
@@ -48099,7 +48458,7 @@ function populateMixDropdown(targetUUID, dropdown) {
 				html += '<div class="mix-dropdown-item">';
 				html += '<input type="checkbox" id="mix-raw-' + i + '-' + targetUUID.substring(0, 8) + '" ';
 				html += (checked ? 'checked ' : '');
-				html += 'onchange="toggleMixSource(\'' + targetUUID + '\', \'' + deviceId + '\', \'raw\', this)">';
+				html += 'onchange="toggleMixSource(\'' + targetUUID + '\', \'' + deviceId + '\', \'raw\')">';
 				html += '<label for="mix-raw-' + i + '-' + targetUUID.substring(0, 8) + '">' + sanitizeLabel(label) + '</label>';
 				html += '</div>';
 			}
@@ -48140,7 +48499,7 @@ function populateMixDropdown(targetUUID, dropdown) {
 		html += '<div class="mix-dropdown-item">';
 		html += '<input type="checkbox" id="mix-guest-' + UUID.substring(0, 8) + '" ';
 		html += (checked ? 'checked ' : '');
-		html += 'onchange="toggleMixSource(\'' + targetUUID + '\', \'' + UUID + '\', false, this)">';
+		html += 'onchange="toggleMixSource(\'' + targetUUID + '\', \'' + UUID + '\', false)">';
 		html += '<label for="mix-guest-' + UUID.substring(0, 8) + '">' + sanitizeLabel(displayLabel) + '</label>';
 		html += '</div>';
 	}
@@ -48161,7 +48520,7 @@ function sanitizeLabel(str) {
 }
 
 // Toggle a source in the mix and update the mix
-function toggleMixSource(targetUUID, sourceId, sourceType, checkbox) {
+function toggleMixSource(targetUUID, sourceId, sourceType) {
 	if (!session.mixMinusState || !session.mixMinusState[targetUUID]) {
 		return;
 	}
@@ -48441,7 +48800,7 @@ function requestVideoEffectControlConsent(UUID) {
 	return peer.videoEffectControlConsentPending;
 }
 
-async function changeVideoEffectWithConsent(effect, amount, UUID) {
+async function changeVideoEffectWithConsent(effect, amount, UUID, backgroundImage) {
 	var settings = getVideoEffectControlSettings();
 	var requestedEffect = typeof effect === "undefined" ? false : String(effect);
 	var requestedAmount = typeof amount === "undefined" ? false : Number(amount);
@@ -48466,13 +48825,17 @@ async function changeVideoEffectWithConsent(effect, amount, UUID) {
 			return { ok: false, error: "Unsupported effect amount" };
 		}
 	}
-	if (requestedEffect === false && requestedAmount === false) {
+	if (requestedEffect === false && requestedAmount === false && typeof backgroundImage === "undefined") {
 		return { ok: false, error: "No effect change requested" };
 	}
 
 	var approved = await requestVideoEffectControlConsent(UUID);
 	if (!approved) {
 		return { ok: false, error: "Sender rejected video effect control", rejected: true };
+	}
+
+	if (typeof backgroundImage !== "undefined") {
+		return await changeVideoBackgroundImage(backgroundImage);
 	}
 
 	if (requestedEffect !== false) {
@@ -48798,7 +49161,7 @@ async function requestGoogleDriveRecord(ele, state = null, bitrate = null, event
 			}
 		}
 
-		var filename = UUID;
+		var filename;
 		if (session.rpcs[UUID]) {
 			filename = buildRecordingFilenameBase(session.rpcs[UUID].label, session.rpcs[UUID].streamID, UUID, 55);
 		} else {
@@ -48959,7 +49322,7 @@ async function ensureGoogleDriveRecordAccess() {
 }
 
 function buildGoogleDriveRemoteRecordingFilename(UUID, batchTimestamp, index) {
-	var filename = UUID;
+	var filename;
 	if (session.rpcs[UUID]) {
 		filename = buildRecordingFilenameBase(session.rpcs[UUID].label, session.rpcs[UUID].streamID, UUID, 55);
 	} else {
@@ -48997,14 +49360,12 @@ function setGoogleDriveAllGuestsButtonState(active) {
 	}
 	if (active) {
 		ele.value = 1;
-		ele.classList.add("pressed");
-		ele.classList.add("red");
+		ele.classList.add("pressed", "red");
 		ele.ariaPressed = "true";
 		ele.innerHTML = '<i class="toggleSize las la-stop-circle"></i>';
 	} else {
 		ele.value = 0;
-		ele.classList.remove("pressed");
-		ele.classList.remove("red");
+		ele.classList.remove("pressed", "red");
 		ele.ariaPressed = "false";
 		ele.innerHTML = '<i class="toggleSize las la-cloud-upload-alt"></i>';
 	}
@@ -49014,15 +49375,15 @@ function updateGoogleDriveAllGuestsButtonState() {
 	setGoogleDriveAllGuestsButtonState(getRemoteGoogleDriveRecordButtons(true).length > 0);
 }
 
-async function remoteGlobalGdriveRecordToggle(ele) {
+async function remoteGlobalGdriveRecordToggle() {
 	if (getRemoteGoogleDriveRecordButtons(true).length > 0) {
-		remoteGlobalGdriveRecordStop(ele);
+		remoteGlobalGdriveRecordStop();
 		return;
 	}
-	await remoteGlobalGdriveRecordStart(ele);
+	await remoteGlobalGdriveRecordStart();
 }
 
-async function remoteGlobalGdriveRecordStart(ele) {
+async function remoteGlobalGdriveRecordStart() {
 	var targets = getRemoteGoogleDriveRecordButtons(false);
 	if (!targets.length) {
 		setGoogleDriveAllGuestsButtonState(false);
@@ -49073,7 +49434,7 @@ async function remoteGlobalGdriveRecordStart(ele) {
 	setGoogleDriveAllGuestsButtonState(true);
 }
 
-function remoteGlobalGdriveRecordStop(ele) {
+function remoteGlobalGdriveRecordStop() {
 	var targets = getRemoteGoogleDriveRecordButtons(true);
 	for (var i = 0; i < targets.length; i++) {
 		requestGoogleDriveRecord(targets[i], false);
@@ -50343,7 +50704,7 @@ function updateDirectorsVideo(data, UUID) {
 
 				var label = document.createElement("label");
 				//label.id = "label_" + i;
-				label.htmlFor = "constraints_" + i + " _" + UUID;
+				label.htmlFor = "constraints_" + i + "_" + UUID;
 				if (i === "colorTemperature") {
 					label.innerText = "Color Temp:";
 				} else if (i === "exposureCompensation") {
@@ -51522,7 +51883,7 @@ function listAudioSettings() {
 	}
 }
 
-function applyAudioHack(constraint, value = null, deviceid = "default") {
+function applyAudioHack(constraint, value = null, deviceid = "default", callbackUUID = false) {
 	if (value == parseFloat(value)) {
 		value = parseFloat(value);
 		if (constraint == "channelCount") {
@@ -51588,7 +51949,7 @@ function applyAudioHack(constraint, value = null, deviceid = "default") {
 	enumerateDevices()
 		.then(gotDevices2)
 		.then(function () {
-			grabAudio("#audioSource3", null, new_constraints, false, saveAudioResult, true);
+			grabAudio("#audioSource3", null, new_constraints, callbackUUID, saveAudioResult, true);
 		});
 }
 
@@ -52383,10 +52744,6 @@ function queueUpdateCameraConstraints(args) {
 	updateCameraConstraintsNext.push(args);
 }
 
-function clearUpdateCameraConstraintsQueue() {
-	updateCameraConstraintsNext = false;
-}
-
 function finishUpdateCameraConstraints(value) {
 	if (updateCameraConstraintsNext && updateCameraConstraintsNext.length) {
 		setTimeout(function () {
@@ -52432,7 +52789,7 @@ async function updateCameraConstraints(constraint, value = null, ctrl = false, U
 			if (!save) {
 				errorlog("TRACK IS NOT ENABLED");
 			}
-			clearUpdateCameraConstraintsQueue();
+			updateCameraConstraintsNext = false;
 			updateCameraConstraintsBusy = false;
 			return false;
 		}
@@ -54175,6 +54532,8 @@ function createScreenShareURL(transparent = true) {
 	var extras = "";
 	if (session.password) {
 		extras += "&password=" + session.password; // encodeURIComponent(
+	} else if (session.password === false && session.defaultPassword === false) {
+		extras += "&password=false";
 	}
 
 	if (session.privacy) {
@@ -54650,7 +55009,7 @@ function changeURL(changeURL) {
 		hangup(false);
 		window.location.href = changeURL;
 	} else {
-		confirmAlt(getTranslation("director-redirect-1") + changeURL + getTranslation("director-redirect-2")).then(res => {
+		confirmAlt(getTranslation("director-redirect-1") + escapeHtml(String(changeURL)) + getTranslation("director-redirect-2")).then(res => {
 			if (res) {
 				hangup(false);
 				window.location.href = changeURL;
@@ -56183,6 +56542,20 @@ function toggleQualityDirector(bitrate, UUID, ele) {
 }
 
 var clockOverlayTimer = null;
+function updatePlaybackTimer() {
+	// Use the first received video that has started, matching its native playback timer.
+	for (var UUID in session.rpcs) {
+		var video = session.rpcs[UUID].videoElement;
+		if (video && video.isConnected && !video.ended && video.currentTime > 0 && Number.isFinite(video.currentTime)) {
+			var time = Math.floor(video.currentTime);
+			getById("overlayPlaybackTimer").textContent = zpadTime(Math.floor(time / 60)) + ":" + zpadTime(time % 60);
+			getById("overlayPlaybackTimerContainer").classList.remove("hidden");
+			return;
+		}
+	}
+	getById("overlayPlaybackTimerContainer").classList.add("hidden");
+}
+
 function zpadTime(number) {
 	var output = "" + number;
 	while (output.length < 2) {
@@ -56869,6 +57242,9 @@ function updateMessages() {
 		if ("idx" in msgTransferList[i]) {
 			msg.id = "transfer_" + msgTransferList[i].idx;
 			msg.classList.add("transfer");
+			if (msgTransferList[i].fileTransfer) {
+				msg.classList.add("file-transfer");
+			}
 		}
 		if (msgTransferList[i].type == "sent") {
 			msg.innerHTML = msgTransferList[i].msg + "<i><small><small>" + time + "</small></small></i>";
@@ -58182,13 +58558,9 @@ async function setupDropbox(accessToken = null, options = {}) {
 		token = null;
 	}
 	if (!token) {
-		try {
-			var oauthResponse = await ensureDropboxOAuthAccessToken({ interactive: interactive || preferOAuth });
-			if (oauthResponse && oauthResponse.accessToken) {
-				token = oauthResponse.accessToken;
-			}
-		} catch (e) {
-			throw e;
+		var oauthResponse = await ensureDropboxOAuthAccessToken({ interactive: interactive || preferOAuth });
+		if (oauthResponse && oauthResponse.accessToken) {
+			token = oauthResponse.accessToken;
 		}
 	}
 	if (!token) {
@@ -58247,7 +58619,7 @@ function resumeDropbox() {
 					localStorage.removeItem("dropboxSession");
 					console.error("Error uploading file:", error);
 					if (!session.cleanOutput) {
-						confirmAlt("There was an error finalizing a previous file upload. \n" + (error.error_summary || "") + "\n\nWould you like to keep trying?").then(res => {
+						confirmAlt("There was an error finalizing a previous file upload. \n" + escapeHtml(String(error.error_summary || "")) + "\n\nWould you like to keep trying?").then(res => {
 							if (!res) {
 								localStorage.removeItem("dropboxSession");
 							}
@@ -59163,13 +59535,11 @@ async function dropSessionMarker() {
 	log("Session marker dropped: " + label);
 
 	var btn = getById("sessionMarkerButton");
-	if (btn) {
-		btn.style.background = "rgba(255,100,100,0.6)";
-		btn.title = label + " dropped";
-		setTimeout(function () {
-			btn.style.background = "";
-		}, 500);
-	}
+	btn.style.background = "rgba(255,100,100,0.6)";
+	btn.title = label + " dropped";
+	setTimeout(function () {
+		btn.style.background = "";
+	}, 500);
 }
 
 function downloadSessionLog() {
@@ -60301,6 +60671,45 @@ async function recordWindowCapture(bitrate = 6000) {
 		return;
 	}
 
+	var stream = null;
+	var video = null;
+	var cleaned = false;
+	var hiddenControls = [];
+	function cleanupWindowCapture() {
+		if (cleaned) return;
+		cleaned = true;
+		// End capture before restoring UI so controls cannot enter the final frames.
+		if (stream) stream.getTracks().forEach(function(track) { track.stop(); });
+		if (video) {
+			if (video.recording && video.recorder && !video.recorder.closing) {
+				recordLocalVideo("stop", false, video);
+			}
+			video.remove();
+			if (session.recordWindowElement === video) session.recordWindowElement = null;
+		}
+		if (session.goLivePC) {
+			try { session.goLivePC.close(); } catch(e) {}
+			session.goLivePC = null;
+		}
+		hiddenControls.forEach(function(control) { control.classList.remove("hidden"); });
+		var btn = document.getElementById("recordWindowButton");
+		if (btn) {
+			btn.innerHTML = "&#9679; Start Recording";
+			btn.title = "Record the complete scene tab; use the browser's Stop sharing control to finish";
+			btn.style.background = "#d00";
+			btn.style.opacity = "1";
+			btn.dataset.recording = "0";
+			btn.disabled = false;
+		}
+		var liveBtn = document.getElementById("goLiveButton");
+		if (liveBtn) {
+			liveBtn.innerHTML = "&#x1F4E1; Go Live";
+			liveBtn.title = "Stream to Twitch via WHIP (requires stream key)";
+			liveBtn.style.background = "#6441a5";
+			liveBtn.dataset.live = "0";
+		}
+	}
+
 	try {
 		// Determine resolution from session parameters
 		var targetWidth = 1920;
@@ -60342,7 +60751,13 @@ async function recordWindowCapture(bitrate = 6000) {
 				height: { ideal: targetHeight },
 				cursor: "never"
 			},
-			audio: true,
+			// Preserve the scene mix, including remote guests, without voice processing.
+			audio: {
+				restrictOwnAudio: false,
+				echoCancellation: false,
+				noiseSuppression: false,
+				autoGainControl: false
+			},
 			preferCurrentTab: true,
 			selfBrowserSurface: "include",
 			surfaceSwitching: "exclude"
@@ -60352,14 +60767,30 @@ async function recordWindowCapture(bitrate = 6000) {
 			constraints.video.displaySurface = session.displaySurface;
 		}
 		if (session.suppressLocalAudioPlayback) {
-			constraints.audio = { suppressLocalAudioPlayback: true };
+			constraints.audio.suppressLocalAudioPlayback = true;
 		}
 
+		document.querySelectorAll("#recordWindowButton, #goLiveButton, #recordWindowHelp, #publishSettings, #recordLocalbutton").forEach(function(control) {
+			if (!control.classList.contains("hidden")) {
+				hiddenControls.push(control);
+				control.classList.add("hidden");
+			}
+		});
 		log("Starting window capture: " + targetWidth + "x" + targetHeight + "@" + targetFps + "fps");
-		var stream = await navigator.mediaDevices.getDisplayMedia(constraints);
+		stream = await navigator.mediaDevices.getDisplayMedia(constraints);
+		var captureTrack = stream.getVideoTracks()[0];
+		if (!captureTrack) throw new Error("No scene video was shared.");
+		captureTrack.onended = cleanupWindowCapture;
+		if (!stream.getAudioTracks().length) {
+			var withoutAudio = await confirmAlt("No audio was shared. Record without sound?\nChoose Cancel to try again, selecting the scene tab with Share tab audio enabled.");
+			if (!withoutAudio || cleaned) {
+				cleanupWindowCapture();
+				return;
+			}
+		}
 
 		// Create a temp video element to hold the capture
-		var video = document.createElement("video");
+		video = document.createElement("video");
 		video.id = "recordWindowSource";
 		video.srcObject = stream;
 		video.muted = true;
@@ -60370,40 +60801,13 @@ async function recordWindowCapture(bitrate = 6000) {
 
 		session.recordWindowElement = video;
 
-		// Handle stream ending (user stops sharing)
-		stream.getVideoTracks()[0].onended = function() {
-			log("Window capture ended");
-			if (video.recording) {
-				recordLocalVideo("stop", false, video);
-			}
-			video.remove();
-			session.recordWindowElement = null;
-			// Reset button state if exists
-			var btn = document.getElementById("recordWindowButton");
-			if (btn) {
-				btn.innerHTML = "&#9679; Start Recording";
-				btn.title = "Record this scene to a local video file";
-				btn.style.background = "#d00";
-				btn.style.opacity = "1";
-				btn.dataset.recording = "0";
-			}
-			// Stop Go Live if active
-			if (session.goLivePC) {
-				try {
-					session.goLivePC.close();
-				} catch(e) {}
-				session.goLivePC = null;
-			}
-			var liveBtn = document.getElementById("goLiveButton");
-			if (liveBtn) {
-				liveBtn.innerHTML = "&#x1F4E1; Go Live";
-				liveBtn.title = "Stream to Twitch via WHIP (requires stream key)";
-				liveBtn.style.background = "#6441a5";
-				liveBtn.dataset.live = "0";
-			}
-		};
-
 		await video.play();
+		// Let hidden controls/dismissed audio prompts paint before encoding the tab.
+		await new Promise(function(resolve) { requestAnimationFrame(function() { requestAnimationFrame(resolve); }); });
+		if (cleaned || captureTrack.readyState === "ended") {
+			cleanupWindowCapture();
+			return;
+		}
 
 		// Start recording using existing infrastructure
 		var usePCM = session.pcm || false;
@@ -60414,22 +60818,19 @@ async function recordWindowCapture(bitrate = 6000) {
 		};
 
 		log("Starting window recording at " + bitrate + " kbps" + (usePCM ? " with PCM audio" : ""));
-		recordLocalVideo("start", configureRecording, video);
+		await recordLocalVideo("start", configureRecording, video);
+		var recorder = video.recorder;
+		if (!video.recording || !recorder || recorder.closing || recorder.mediaRecorder.state === "inactive") {
+			throw new Error("The scene recorder could not start.");
+		}
+		recorder.mediaRecorder.addEventListener("stop", function() {
+			// Segment rotation uses the same recorder and must keep capturing the tab.
+			if (!recorder.splitting || recorder.closing) cleanupWindowCapture();
+		});
 
 	} catch (e) {
 		errorlog("Window capture failed: " + e);
-		if (session.recordWindowElement) {
-			session.recordWindowElement.remove();
-			session.recordWindowElement = null;
-		}
-		// Reset button state on error/cancel
-		var btn = document.getElementById("recordWindowButton");
-		if (btn) {
-			btn.innerHTML = "&#9679; Start Recording";
-			btn.style.background = "#d00";
-			btn.style.opacity = "1";
-			btn.dataset.recording = "0";
-		}
+		cleanupWindowCapture();
 	}
 }
 
@@ -60566,6 +60967,9 @@ session.onTrack = function (event, UUID) {
 			}
 		}
 	}
+
+	var handoff = session.rpcs[UUID].meshcastHandoff;
+	if (!screenshare && handoff && !event.meshcastHandoff && (event.target === session.rpcs[UUID].whep || handoff.active || !handoff.target)) return;
 
 	if (screenshare) {
 		const parentUUID = screenshareParentOverride || (typeof UUID === "string" && UUID.endsWith("_screen") ? UUID.slice(0, -7) : UUID);
@@ -61296,6 +61700,9 @@ function updateIncomingVideoElement(UUID, video = true, audio = true) {
 	if (!session.rpcs[UUID].videoElement) {
 		return;
 	}
+	if (isSceneAudioMuted(UUID)) {
+		applyMuteState(UUID);
+	}
 	if (!session.rpcs[UUID].streamSrc) {
 		return;
 	}
@@ -61352,9 +61759,15 @@ function updateIncomingVideoElement(UUID, video = true, audio = true) {
 		});
 
 		if ((session.motionSwitch || session.motionRecord) && !session.rpcs[UUID].motionDetectionInterval) {
-			session.rpcs[UUID].motionDetectionInterval = setTimeout(function () {
-				setInterval(function () {
-					motionDetection(session.rpcs[UUID].videoElement, session.motionSwitch || session.motionRecord);
+			var motionPeer = session.rpcs[UUID];
+			motionPeer.motionDetectionInterval = setTimeout(function () {
+				if (session.rpcs[UUID] !== motionPeer) return;
+				motionPeer.motionDetectionInterval = setInterval(function () {
+					if (session.rpcs[UUID] !== motionPeer) {
+						clearInterval(motionPeer.motionDetectionInterval);
+						return;
+					}
+					motionDetection(motionPeer.videoElement, session.motionSwitch || session.motionRecord);
 				}, 400);
 			}, 2000);
 		}
@@ -61378,16 +61791,6 @@ function updateIncomingVideoElement(UUID, video = true, audio = true) {
 	}
 }
 
-function getLoudnessCallbackID() {
-	if (!session) {
-		return null;
-	}
-	if (typeof session.pushLoudnessCIB !== "undefined" && session.pushLoudnessCIB !== null) {
-		return session.pushLoudnessCIB;
-	}
-	return null;
-}
-
 function postLoudnessToIframe(loudnessObj, value, UUID = null, mode = "update") {
 	if (!isIFrame) {
 		return true;
@@ -61407,9 +61810,8 @@ function postLoudnessToIframe(loudnessObj, value, UUID = null, mode = "update") 
 		loudnessMessage.UUID = UUID;
 	}
 
-	var loudnessCIB = getLoudnessCallbackID();
-	if (loudnessCIB !== null) {
-		loudnessMessage.cib = loudnessCIB;
+	if (typeof session.pushLoudnessCIB !== "undefined" && session.pushLoudnessCIB !== null) {
+		loudnessMessage.cib = session.pushLoudnessCIB;
 	}
 
 	try {
@@ -61664,6 +62066,15 @@ function addAudioPipeline(UUID, track) {
 		if (session.sync !== false) {
 			log("adding a delay node to audio");
 			source = addDelayNode(source, UUID, trackid);
+			screwedUp = true;
+		}
+		if (session.audioDelay > 0) {
+			// Keep this fixed offset separate from the adaptive sync delay node.
+			var fixedDelayNode = session.audioCtx.createDelay(Math.max(1, session.audioDelay / 1000));
+			fixedDelayNode.delayTime.value = session.audioDelay / 1000;
+			source.connect(fixedDelayNode);
+			session.rpcs[UUID].inboundAudioPipeline[trackid].fixedDelayNode = fixedDelayNode;
+			source = fixedDelayNode;
 			screwedUp = true;
 		}
 		if (session.style === 2) {
@@ -62589,6 +63000,61 @@ function adjustPan(UUID, value) {
 	}
 }
 
+function updateBuffer3AudioDelay(delayNode, target, duckNode) {
+	// RTP buffer3 only. Keep the state on the node so rebuilt audio pipelines start fresh.
+	var now = session.audioCtx.currentTime;
+	var param = delayNode.delayTime;
+	var state = delayNode.buffer3State;
+	if (!state) {
+		state = delayNode.buffer3State = { from: param.value, to: param.value, switchAt: now, end: now, direction: 0, since: now };
+	}
+	var current = now < state.switchAt ? state.from : state.to;
+	// Finish the whole envelope before considering another correction. Later stats supply the latest target.
+	if (!duckNode || !isFinite(target) || now < state.end) {
+		return current;
+	}
+	target = Math.max(0, Math.min(target, param.maxValue));
+	var difference = target - current;
+	// Allow 10 ms of error; require the same correction direction for at least 1 second.
+	var direction = Math.abs(difference) > 0.010 ? (difference > 0 ? 1 : -1) : 0;
+	if (direction !== state.direction) {
+		state.direction = direction;
+		state.since = now;
+	}
+	if (!direction || now - state.since < 1) {
+		return current;
+	}
+	// Schedule on the audio clock with a short lead: 15 ms fade out, a silent step at 18 ms,
+	// then fade in from 20 to 35 ms. The dedicated gain is otherwise always unity.
+	var start = now + 0.010;
+	var gain = duckNode.gain;
+	try {
+		gain.cancelScheduledValues(now);
+		gain.setValueAtTime(1, start);
+		gain.linearRampToValueAtTime(0, start + 0.015);
+		gain.setValueAtTime(0, start + 0.020);
+		gain.linearRampToValueAtTime(1, start + 0.035);
+		param.cancelScheduledValues(now);
+		param.setValueAtTime(current, start);
+		param.setValueAtTime(target, start + 0.018);
+	} catch (e) {
+		// A scheduling failure must not leave audio muted or a pending unmasked step.
+		gain.cancelScheduledValues(now);
+		gain.setValueAtTime(1, now);
+		param.cancelScheduledValues(now);
+		param.setValueAtTime(current, now);
+		throw e;
+	}
+	state.from = current;
+	state.to = target;
+	state.switchAt = start + 0.018;
+	state.end = start + 0.035;
+	// Require a fresh second of sustained error after the splice before another duck.
+	state.direction = 0;
+	state.since = state.end;
+	return current;
+}
+
 function addDelayNode(source, UUID, trackid) {
 	// append the delay Node to the track??? WOULD THIS WORK?
 
@@ -62608,8 +63074,18 @@ function addDelayNode(source, UUID, trackid) {
 	session.rpcs[UUID].inboundAudioPipeline[trackid].delayNode = session.audioCtx.createDelay(delay + 5); // 5 seconds additionally added for the purpose of flexibility
 
 	session.rpcs[UUID].inboundAudioPipeline[trackid].delayNode.delayTime.value = delay; // delayTime takes it in seconds.
+	if (!session.buffer3) {
+		session.rpcs[UUID].inboundAudioPipeline[trackid].delayNode.lastAudioSyncTarget = delay;
+	}
 	source.connect(session.rpcs[UUID].inboundAudioPipeline[trackid].delayNode);
 	log("added new delay node");
+	if (session.buffer3) {
+		var duckNode = session.audioCtx.createGain();
+		duckNode.gain.value = 1;
+		session.rpcs[UUID].inboundAudioPipeline[trackid].delayNode.connect(duckNode);
+		session.rpcs[UUID].inboundAudioPipeline[trackid].duckNode = duckNode;
+		return duckNode;
+	}
 	return session.rpcs[UUID].inboundAudioPipeline[trackid].delayNode;
 }
 
@@ -63867,7 +64343,7 @@ function getLongpipeOutputResolution(track) {
 	};
 }
 
-function effectToLongpipeTemporalMode(effect) {
+function effectToLongpipeTemporalMode() {
 	var requested = getLongpipeUrlParam(["longpipetemporal", "lptemporal"]);
 	if (requested === "off" || requested === "none" || requested === "0") return "off";
 	if (requested === "warp" || requested === "warp-only") return "warp-only";
@@ -64105,7 +64581,7 @@ function getLongpipeOutputTrack(pipeline) {
 	return false;
 }
 
-function longpipeSourceCanFlow(pipeline) {
+function longpipeSourceCanFlow() {
 	try {
 		if (document.hidden) return false;
 		var sourceTracks = session.streamSrc && session.streamSrc.getVideoTracks();
@@ -64130,7 +64606,7 @@ function startLongpipeHealthMonitor(pipeline) {
 			return;
 		}
 		var now = Date.now();
-		if (!longpipeSourceCanFlow(pipeline)) {
+		if (!longpipeSourceCanFlow()) {
 			pipeline.vdoLastFramesAt = now;
 			pipeline.vdoLastStatsAt = now;
 			return;
@@ -64202,7 +64678,7 @@ function armLongpipePipeline(pipeline) {
 		updateLongpipeStats("ready");
 		var readyBackground = effectToLongpipeBg();
 		var readyBackgroundSignature = getLongpipeBackgroundSignature(readyBackground);
-		var readyTemporalMode = effectToLongpipeTemporalMode(session.effect);
+		var readyTemporalMode = effectToLongpipeTemporalMode();
 		if (!readyBackgroundSignature || pipeline.vdoBackgroundSignature !== readyBackgroundSignature || pipeline.vdoTemporalMode !== readyTemporalMode) {
 			setLongpipeBackground(readyBackground, pipeline);
 		}
@@ -64276,7 +64752,7 @@ function getLongpipeBackgroundSignature(background) {
 function setLongpipeBackground(background, pipeline) {
 	pipeline = pipeline || session.longpipe;
 	if (!pipeline || session.longpipe !== pipeline || typeof pipeline.setBackground !== "function") return false;
-	var temporalMode = effectToLongpipeTemporalMode(session.effect);
+	var temporalMode = effectToLongpipeTemporalMode();
 	var backgroundSignature = getLongpipeBackgroundSignature(background);
 	pipeline.vdoBackgroundRequestId = (pipeline.vdoBackgroundRequestId || 0) + 1;
 	var requestId = pipeline.vdoBackgroundRequestId;
@@ -64319,7 +64795,7 @@ function getLongpipeOptions(owner, track) {
 		weightsBaseUrl: LONGPIPE_WEIGHTS_BASE_URL,
 		preset: preset,
 		adaptive: shouldUseLongpipeAdaptive(preset),
-		temporalMode: effectToLongpipeTemporalMode(session.effect),
+		temporalMode: effectToLongpipeTemporalMode(),
 		outputResolution: getLongpipeOutputResolution(track),
 		audio: "passthrough",
 		// This opt-in suppresses raw startup frames in every LongPipe transport.
@@ -64671,6 +65147,29 @@ function attemptTFLiteJsFileLoad(quiet) {
 
 	return false;
 }
+// Used by local iframe commands and consented remote effect controls.
+// Loading first keeps the current background when the URL fails or lacks CORS support.
+async function changeVideoBackgroundImage(url) {
+	if (typeof url !== "string" || !url) {
+		return { ok: false, error: "A background image URL is required" };
+	}
+	var img = document.createElement("img");
+	img.crossOrigin = "anonymous";
+	var loaded = await new Promise(function (resolve) {
+		img.onload = function () { resolve(true); };
+		img.onerror = function () { resolve(false); };
+		img.src = url;
+	});
+	if (!loaded) {
+		return { ok: false, error: "Unable to load the background image. Check the URL and CORS support." };
+	}
+	img.style = "max-width:130px;max-height:73.5px;display:inline-block;margin:10px;cursor:pointer;";
+	img.onclick = function (event) { changeEffectsImage(event, this); };
+	getById("selectImage_contents").prepend(img);
+	await changeEffectsImage(null, img);
+	return { ok: true, backgroundImage: img.src };
+}
+
 async function changeEffectsImage(ev, ele) {
 	if (ele.files && ele.files[0]) {
 		if (session.effectsImage) {
@@ -65651,6 +66150,7 @@ function updateMeshcast2Stats(pc, publishUrl, playbackUrl, media) {
 		if (!playbackUrl || !match || /^(pk_|live_)/.test(decodeURIComponent(match[1]))) return;
 		pc.stats.whep_URL = url.href;
 		pc.stats.server = url.searchParams.get("server") || pc.stats.server;
+		collectMeshcastQos(pc, playbackUrl, false);
 		if (media === "camera" || session.whipPublishPrimary === false) {
 			const selector = document.getElementById("edgelist");
 			if (selector && Array.from(selector.options).some(option => option.value === pc.stats.server)) selector.value = pc.stats.server;
@@ -65827,6 +66327,7 @@ function whipOut() {
 			const meshcastPeer = session.whipOut;
 			meshcastPeer.meshcastTrickle = createMeshcastTrickle(meshcastPeer, session.whipOutput, "whip", session.whipOutputToken, () => session.whipOut === meshcastPeer);
 			session.whipOut.stats = {};
+			collectMeshcastQos(session.whipOut, session.whipOutput, false);
 			session.whipOut.maxBandwidth = null; // based on max available bitrate
 			session.whipOut.scale = false;
 			session.whipOut.offerToReceiveAudio = false;
@@ -66047,6 +66548,8 @@ function whipOut() {
 				};
 
 				session.whipOut.onconnectionstatechange = function () {
+					if (this === session.whipOut) collectMeshcastQos(this);
+					if (session.meshcast || session.meshcast2 || session.meshcastSwitch) announceMeshcastStatus();
 					log("WHIP connection state: " + session.whipOut.connectionState);
 					if (session.whipOut.connectionState === 'failed') {
 						retryWhipConnection();
@@ -66152,6 +66655,7 @@ function whipOut() {
 		log("AJAX: " + type);
 		//log(data);
 		try {
+			const reportingPeer = session.whipOut;
 			const trickle = session.whipOut && session.whipOut.meshcastTrickle;
 			var xhttp = new XMLHttpRequest();
 			xhttp.onreadystatechange = async function () {
@@ -66184,7 +66688,7 @@ function whipOut() {
 						}
 						try {
 							log(this.getAllResponseHeaders());
-							WHELPlaybackURL = this.getResponseHeader("whep") || this.getResponseHeader("WHEP") || false;
+							WHELPlaybackURL = this.getResponseHeader("whep") || false;
 							if (!WHELPlaybackURL) {
 								console.log("Note: No WHEP key/value was found in the WHIP header response or it was not exposed.\n\nProviding the WHEP URL for this WHIP output via the WHEP header key will allow p2p access to the WHEP stream for others conneted to this peer.");
 							}
@@ -66304,7 +66808,7 @@ function whipOut() {
 								broadcastWhepSettings("primary");
 								if (session.whipoutSettings) {
 									for (var UUID in session.pcs) {
-										if (session.pcs[UUID].whipout === null && (!session.promptAccess || session.pcs[UUID].playbackAccessApproved === true)) {
+										if (!session.meshcastSwitch && session.pcs[UUID].whipout === null && (!session.promptAccess || session.pcs[UUID].playbackAccessApproved === true)) {
 											var data = {};
 											data.whepSettings = session.whipoutSettings;
 											var sentWhepSettings = session.sendMessage(data, UUID);
@@ -66341,7 +66845,7 @@ function whipOut() {
 									broadcastWhepSettings("primary");
 									if (session.whipoutSettings) {
 										for (var UUID in session.pcs) {
-											if (session.pcs[UUID].whipout === null && (!session.promptAccess || session.pcs[UUID].playbackAccessApproved === true)) {
+											if (!session.meshcastSwitch && session.pcs[UUID].whipout === null && (!session.promptAccess || session.pcs[UUID].playbackAccessApproved === true)) {
 												var data = {};
 												data.whepSettings = session.whipoutSettings;
 												var sentWhepSettings = session.sendMessage(data, UUID);
@@ -66372,7 +66876,7 @@ function whipOut() {
 						// Early peers may already be marked sent after receiving an empty URL.
 						broadcastWhepSettings("primary");
 						for (var UUID in session.pcs) {
-							if (session.pcs[UUID].whipout === null && (!session.promptAccess || session.pcs[UUID].playbackAccessApproved === true)) {
+							if (!session.meshcastSwitch && session.pcs[UUID].whipout === null && (!session.promptAccess || session.pcs[UUID].playbackAccessApproved === true)) {
 								var data = {};
 								data.whepSettings = session.whipoutSettings;
 								var sentWhepSettings = session.sendMessage(data, UUID);
@@ -66384,22 +66888,18 @@ function whipOut() {
 					}
 				}
 			} else if (this.readyState == 4) {
+				if (type === "sdp" && reportingPeer && reportingPeer === session.whipOut && reportingPeer.qosMeshcast) {
+					if (reportingPeer.qosMeshcast.success !== true) reportingPeer.qosMeshcast.success = false;
+					errorlog("WHIP request failed (HTTP " + this.status + ")");
+				}
 				try {
 					if (session.meshcast2 && typeof session.whipOutput === "string" && session.whipOutput.includes("app.meshcast.io/api/gateway/whip")) {
 						let errorCode = null;
 						let errorPayload = null;
-						if (this.getResponseHeader && this.getResponseHeader("content-type") && this.getResponseHeader("content-type").includes("application/json")) {
-							try {
-								errorPayload = JSON.parse(this.responseText || "{}");
-							} catch (e) {
-								errorPayload = null;
-							}
-						} else {
-							try {
-								errorPayload = JSON.parse(this.responseText || "{}");
-							} catch (e) {
-								errorPayload = null;
-							}
+						try {
+							errorPayload = JSON.parse(this.responseText || "{}");
+						} catch (e) {
+							errorPayload = null;
 						}
 						if (errorPayload && errorPayload.code) {
 							errorCode = errorPayload.code;
@@ -66791,6 +67291,10 @@ function broadcastWhepSettings(kind = "primary") {
 		}
 		const data = {};
 		const payload = Object.assign({}, settings);
+		if (kind === "primary" && session.meshcastSwitch) {
+			if (!peer.meshcastSwitchSupported || session.meshcastSwitchBusy === "Switching to direct…") continue;
+			payload.handoff = session.meshcastSwitch;
+		}
 		if (kind === "screen") {
 			data.whepScreenSettings = payload;
 		} else {
@@ -66882,6 +67386,7 @@ async function whipOutScreen() {
 	}
 
 	session.whipOutScreen = pc;
+	collectMeshcastQos(pc, session.whipOutputScreen, false);
 	const meshcastTrickle = createMeshcastTrickle(pc, session.whipOutputScreen, "whip", session.whipOutputToken, () => session.whipOutScreen === pc);
 	const gatheringWait = meshcastTrickle ? meshcastTrickle.wait : session.whipWait;
 	pc.stats = {};
@@ -66909,6 +67414,7 @@ async function whipOutScreen() {
 		}
 	};
 	pc.oniceconnectionstatechange = () => {
+		collectMeshcastQos(pc);
 		if (pc.iceConnectionState === "failed" || pc.iceConnectionState === "disconnected" || pc.iceConnectionState === "closed") {
 			warnlog("Screen WHIP ICE state: " + pc.iceConnectionState);
 		}
@@ -66996,7 +67502,7 @@ async function whipOutScreen() {
 						const contentType = this.getResponseHeader("content-type") || "";
 						const linkHeader = this.getResponseHeader("link") || "";
 						const locationHeader = this.getResponseHeader("location") || null;
-						const whepHeader = this.getResponseHeader("whep") || this.getResponseHeader("WHEP") || null;
+						const whepHeader = this.getResponseHeader("whep") || null;
 						const responseHeaders = this.getAllResponseHeaders ? this.getAllResponseHeaders() : "";
 						resolve({
 							status: this.status,
@@ -67034,6 +67540,7 @@ async function whipOutScreen() {
 		response = await sendOfferToEndpoint(localSDP);
 		if (session.whipOutScreen !== pc) return false;
 	} catch (err) {
+		if (pc.qosMeshcast && pc.qosMeshcast.success !== true) pc.qosMeshcast.success = false;
 		errorlog(err);
 		pc.close();
 		if (session.whipOutScreen === pc) session.whipOutScreen = null;
@@ -67308,6 +67815,7 @@ function whipClient() {
 			if (event.data) {
 				var data = JSON.parse(event.data);
 
+				if (!validateIncomingStreamIDs(data)) return;
 				if ("sdp" in data) {
 					// Build a trickle callback if the OBS publisher supports reverse trickle ICE.
 					// This lets us send the answer immediately and trickle candidates afterward,
@@ -67380,6 +67888,7 @@ function whipClient() {
 	connect();
 }
 async function processWhipIn(data, sendTrickle) {
+	if (!validateIncomingStreamIDs(data)) return false;
 	// LISTEN FOR REMOTE WHIP (from OBS?)
 	var msg = {};
 	msg.description = {};
@@ -67425,7 +67934,7 @@ async function processWhipIn(data, sendTrickle) {
 
 	log("setupIncoming");
 	if (await session.setupIncoming(msg) === false) {
-		throw new Error("Incoming connection rejected: signaling encryption is required.");
+		throw new Error("Incoming connection rejected: invalid stream ID or required signaling encryption.");
 	}
 
 	const whipPeer = session.rpcs[UUID];
@@ -67973,7 +68482,7 @@ function sdpHasIpv4Candidates(sdp) {
  * @returns {Array} Reordered array with IPv4 candidates first
  */
 function reorderCandidatesIpv4First(candidates) {
-	if (!candidates || !Array.isArray(candidates) || candidates.length === 0) {
+	if (!Array.isArray(candidates) || candidates.length === 0) {
 		return candidates;
 	}
 
@@ -68011,7 +68520,7 @@ function filterIpv6FromCandidates(candidates) {
 		droppedIpv6: 0
 	};
 
-	if (!candidates || !Array.isArray(candidates)) {
+	if (!Array.isArray(candidates)) {
 		return result;
 	}
 
@@ -68135,19 +68644,6 @@ async function whepIn(whepInput = false, whepInputToken = false, UUID = false) {
 		tricklePatchDisabledReason = false;
 		iceGatheringComplete = false;
 		whepEndOfCandidatesSent = false;
-	}
-
-	function hasListValue(list, value) {
-		if (!list || value === null || typeof value === "undefined") {
-			return false;
-		}
-		if (typeof list.includes === "function") {
-			return list.includes(value);
-		}
-		if (typeof list.indexOf === "function") {
-			return list.indexOf(value) !== -1;
-		}
-		return false;
 	}
 
 	function supportsTrickleIcePatch(acceptPatchHeader) {
@@ -68561,10 +69057,10 @@ async function whepIn(whepInput = false, whepInputToken = false, UUID = false) {
 				if (!streamID) {
 					return false;
 				}
-				if (!hasListValue(session.noaudio, streamID)) {
+				if (!session.noaudio.includes(streamID)) {
 					return false;
 				}
-			} else if (session.excludeaudio && streamID && hasListValue(session.excludeaudio, streamID)) {
+			} else if (session.excludeaudio && streamID && session.excludeaudio.includes(streamID)) {
 				return false;
 			}
 			return true;
@@ -69023,6 +69519,7 @@ async function whepIn(whepInput = false, whepInputToken = false, UUID = false) {
 			try {
 				session.rpcs[UUID].whep = new RTCPeerConnection(config);
 				const meshcastPeer = session.rpcs[UUID].whep;
+				collectMeshcastQos(meshcastPeer, whepInput, true);
 				meshcastTrickle = createMeshcastTrickle(meshcastPeer, whepInput, "whep", whepInputToken, () => session.rpcs[UUID] && session.rpcs[UUID].whep === meshcastPeer);
 			} catch (err) {
 				errorlog(err);
@@ -69054,7 +69551,7 @@ async function whepIn(whepInput = false, whepInputToken = false, UUID = false) {
 				return;
 			}
 
-			if (video) {
+			if (video && !session.rpcs[UUID].meshcastHandoff) {
 				disableQualityDirector(UUID);
 			}
 
@@ -69143,6 +69640,7 @@ async function whepIn(whepInput = false, whepInputToken = false, UUID = false) {
 		session.rpcs[UUID].whep.onconnectionstatechange = function () {
 			if (!session.rpcs[UUID] || session.rpcs[UUID].whep !== this) return;
 			updateWhepDirectorControls(UUID);
+			collectMeshcastQos(this);
 			if (session.rpcs[UUID] && session.rpcs[UUID].whep && session.rpcs[UUID].whep.connectionState === 'failed') {
 				console.warn("Whep connection failed");
 				retryWhepConnection(UUID);
@@ -69217,6 +69715,14 @@ async function whepIn(whepInput = false, whepInputToken = false, UUID = false) {
 	}
 
 	function retryWhepConnection(UUID, forceReconnect = false) {
+		var handoffPeer = session.rpcs[UUID];
+		if (handoffPeer && handoffPeer.meshcastHandoff && handoffPeer.meshcastHandoff.active) {
+			var handoff = handoffPeer.meshcastHandoff;
+			if (handoff.target) {
+				session.sendRequest({ meshcastReady: { handoff: handoff.id, active: false, recover: true } }, UUID);
+			}
+			return false;
+		}
 		forceReconnect = !!forceReconnect;
 		if (!session.rpcs[UUID]) {
 			log("Session closed, stopping retry attempts");
@@ -69576,6 +70082,10 @@ async function whepIn(whepInput = false, whepInputToken = false, UUID = false) {
 						// not in spec?
 					}
 				} else if (this.readyState == 4) {
+					if (type === "sdp" && requestConnection.qosMeshcast) {
+						if (requestConnection.qosMeshcast.success !== true) requestConnection.qosMeshcast.success = false;
+						errorlog("WHEP request failed (HTTP " + this.status + ")");
+					}
 					requestingStream = false;
 					// console.warn(this.status, this.readyState);
 					if (this.status == 432) {
@@ -70495,6 +71005,18 @@ async function targetGuest(target, action, value = null, value2 = null) {
 		};
 		cameraConstraintRequest = await session.encodeRemote(cameraConstraintRequest);
 		return !!session.sendRequest(cameraConstraintRequest, cameraConstraintUUID);
+	} else if (action == "setBackgroundImage") {
+		var backgroundUUID = resolveTargetGuestUUID(target);
+		if (!backgroundUUID || typeof value !== "string" || !value) {
+			return false;
+		}
+		var backgroundRequest = {
+			changeCameraBackgroundImage: value,
+			cameraOperatorRequest: true,
+			remote: session.remote
+		};
+		backgroundRequest = await session.encodeRemote(backgroundRequest);
+		return !!session.sendRequest(backgroundRequest, backgroundUUID);
 	} else if (action == "setVideoEffect" || action == "cameraEffect") {
 		var cameraEffectUUID = resolveTargetGuestUUID(target);
 		if (!cameraEffectUUID || (typeof value !== "string" && typeof value !== "number")) {
@@ -70744,13 +71266,26 @@ function oscClient() {
 			if (event.data) {
 				var data = JSON.parse(event.data);
 
-				if ("msg" in data) {
+				if (data && typeof data === "object" && "msg" in data) {
 					data = data.msg;
+				}
+				if (!validateIncomingStreamIDs(data)) return;
+				// Companion targets may be stream IDs, connected peer UUIDs, or slot/reset values.
+				function validTarget(value) {
+					return value === undefined || value === null || typeof value === "boolean" ||
+						(typeof value === "number" && isFinite(value)) || value === "*" ||
+						value === "" || isValidStreamID(value) ||
+						(typeof value === "string" && Object.prototype.hasOwnProperty.call(session.rpcs, value));
+				}
+				if (!validTarget(data.target) || (data.action === "setBufferDelay" && !validTarget(data.value2))) {
+					errorlog("Discarding API message: invalid stream target.");
+					return;
 				}
 
 				if ("value" in data) {
 					if ("action" in data && data.action == "layout") {
 						data.value = safelyDecodeValue(data.value);
+						if (!validateIncomingStreamIDs({ layout: data.value })) return;
 					}
 				}
 
@@ -70859,9 +71394,6 @@ function setupCommands() {
 			return false;
 		}
 		var ele = getById("muteAllGuests");
-		if (!ele) {
-			return false;
-		}
 		var requestedState = parseExplicitApiBoolean(value);
 		if (requestedState !== null) {
 			ele.value = requestedState ? 0 : 1;
@@ -73194,7 +73726,7 @@ async function createSecondStream2(UUID) {
 			if (sender.track && sender.track.kind == track.kind) {
 				if (track.kind === "audio") {
 					var replaceResult = replaceAudioTrackSafely(sender, track, UUID, session.screenStream, "createSecondStream2");
-					enableSenderAfterAudioReplace(sender, track, replaceResult);
+					enableSenderAfterAudioReplace(track, replaceResult);
 				} else {
 					sender.replaceTrack(track); // replace may not be supported by all browsers.  eek.
 					sender.track.enabled = true;
