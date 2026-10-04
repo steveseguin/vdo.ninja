@@ -66010,6 +66010,7 @@ function whipOut() {
 
 				const publishingPeer = session.whipOut;
 				session.whipOut.onicecandidate = function (event) {
+					if (session.whipOut !== publishingPeer) return;
 					//event
 					if (event.candidate == null) {
 						log("END OF ICE CANDIDATES");
@@ -66039,7 +66040,8 @@ function whipOut() {
 
 				// WHIP connection state monitoring for auto-reconnection
 				session.whipOut.oniceconnectionstatechange = function () {
-					log("WHIP ICE state: " + session.whipOut.iceConnectionState);
+					if (session.whipOut !== publishingPeer) return;
+					log("WHIP ICE state: " + publishingPeer.iceConnectionState);
 					if (session.whipOut.iceConnectionState === 'disconnected' ||
 						session.whipOut.iceConnectionState === 'failed') {
 						retryWhipConnection();
@@ -66047,7 +66049,8 @@ function whipOut() {
 				};
 
 				session.whipOut.onconnectionstatechange = function () {
-					log("WHIP connection state: " + session.whipOut.connectionState);
+					if (session.whipOut !== publishingPeer) return;
+					log("WHIP connection state: " + publishingPeer.connectionState);
 					if (session.whipOut.connectionState === 'failed') {
 						retryWhipConnection();
 					}
@@ -66064,6 +66067,8 @@ function whipOut() {
 	var publishing = false;
 
 	function publish(event) {
+		var publishingPeer = session.whipOut;
+		if (!publishingPeer || publishingPeer !== event.target) return;
 		if (publishing) {
 			log(event);
 			errorlog("onnegotiationneeded again?");
@@ -66073,37 +66078,41 @@ function whipOut() {
 		warnlog("ON NEGO NEEDED");
 		warnlog(event);
 		try {
-			session.whipOut
+			publishingPeer
 				.createOffer()
 				.then(function (description) {
+					if (session.whipOut !== publishingPeer) return;
 					try {
 						description = configureWhipOutSDP(description);
 					} catch (e) {
 						errorlog(e);
 					}
-					return session.whipOut.setLocalDescription(description);
+					return publishingPeer.setLocalDescription(description);
 				})
 				.then(async function () {
+					if (session.whipOut !== publishingPeer) return;
 					try {
-						const gatheringWait = session.whipOut.meshcastTrickle ? session.whipOut.meshcastTrickle.wait : session.whipWait;
+						const gatheringWait = publishingPeer.meshcastTrickle ? publishingPeer.meshcastTrickle.wait : session.whipWait;
 						if (gatheringWait) {
 							console.log("Waiting for ice candidates to collect. At least 300ms recommended; at most 30-seconds.");
 							let startTime = Date.now();
 							const { promise, resolve } = sleepCancellable(gatheringWait); // 500ms for managed anonymous Meshcast; otherwise preserve the configured wait.
-							session.whipOut.iceCompletedCallback = resolve; // Can complete earlier if possible.
-							if (session.whipOut.meshcastGatheringEarlyCompletion && session.whipOut.iceGatheringState === "complete") {
+							publishingPeer.iceCompletedCallback = resolve; // Can complete earlier if possible.
+							if (publishingPeer.meshcastGatheringEarlyCompletion && publishingPeer.iceGatheringState === "complete") {
 								resolve();
 							}
 							await promise; // pausing for a moment; until all collected or timed out
+							if (session.whipOut !== publishingPeer) return;
 							console.log("Finished waiting for ice candidates. Waited " + (Date.now() - startTime) / 1000 + "-seconds");
-							delete session.whipOut.iceCompletedCallback;
+							delete publishingPeer.iceCompletedCallback;
 						}
 					} catch (e) {
 						errorlog(e);
 					}
 
-					//warnlog(session.whipOut.localDescription.sdp);
-					var filteredDesc = filterDescriptionIpv6(session.whipOut.localDescription);
+					if (session.whipOut !== publishingPeer) return;
+					//warnlog(publishingPeer.localDescription.sdp);
+					var filteredDesc = filterDescriptionIpv6(publishingPeer.localDescription);
 					var sdp = filteredDesc.sdp;
 
 					// sdp = configureWhipOutSDP(sdp);
@@ -66152,9 +66161,12 @@ function whipOut() {
 		log("AJAX: " + type);
 		//log(data);
 		try {
-			const trickle = session.whipOut && session.whipOut.meshcastTrickle;
+			const requestPeer = session.whipOut;
+			if (!requestPeer) return;
+			const trickle = requestPeer.meshcastTrickle;
 			var xhttp = new XMLHttpRequest();
 			xhttp.onreadystatechange = async function () {
+				if (session.whipOut !== requestPeer) return;
 				if (this.readyState == 4 && (this.status == 200 || this.status == 201)) {
 					if (trickle) trickle.accept(this);
 					var contentType = this.getResponseHeader("content-type");
@@ -66276,9 +66288,10 @@ function whipOut() {
 						if (session.stunOnly) { // or whatever flag you want to use
 							jsep.sdp = filterStunOnly(jsep.sdp);
 						}
-						session.whipOut
+						requestPeer
 							.setRemoteDescription(jsep)
 							.then(async function () {
+								if (session.whipOut !== requestPeer) return;
 								warnlog("SHOULD BE CONNECTED?");
 								//var content = "";
 								//while (candidates.length) {
@@ -66299,6 +66312,7 @@ function whipOut() {
 								}
 								session.whipOutSetScale();
 								await sleep(1000); //  give whip server a moment to setup I guess.
+								if (session.whipOut !== requestPeer) return;
 								// Meshcast v2 supplies its playback URL only after WHIP responds.
 								// Early peers may already be marked sent after receiving an empty URL.
 								broadcastWhepSettings("primary");
@@ -66317,6 +66331,7 @@ function whipOut() {
 								//}
 							})
 							.catch(async function (e) {
+								if (session.whipOut !== requestPeer) return;
 								errorlog(e);
 								errorlog("Recieved an invalid SDP answer response from the WHIP endpoint. While things may still work, it won't work as intended.");
 								if (WHELPlaybackURL) {
@@ -66336,6 +66351,7 @@ function whipOut() {
 										errorlog(e);
 									}
 									await sleep(1000); //  give whip server a moment to setup I guess.
+									if (session.whipOut !== requestPeer) return;
 									// Meshcast v2 supplies its playback URL only after WHIP responds.
 									// Early peers may already be marked sent after receiving an empty URL.
 									broadcastWhepSettings("primary");
@@ -66368,6 +66384,7 @@ function whipOut() {
 							session.whipoutSettings.started = Date.now();
 						}
 						await sleep(1000);
+						if (session.whipOut !== requestPeer) return;
 						// Meshcast v2 supplies its playback URL only after WHIP responds.
 						// Early peers may already be marked sent after receiving an empty URL.
 						broadcastWhepSettings("primary");
@@ -66440,6 +66457,7 @@ function whipOut() {
 		xhttp.setRequestHeader("Content-Type", "application/" + type);
 
 		xhttp.onerror = function (e) {
+			if (session.whipOut !== requestPeer) return;
 			errorlog(e);
 
 			if (window.location.protocol == "https:" && session.whipOutput.startsWith("http://") && !session.whipOutput.startsWith("http://localhost")) {
@@ -66538,6 +66556,7 @@ function whipOut() {
 		}
 
 		whipReconnecting = true;
+		var retryPeer = session.whipOut;
 
 		const maxRetries = 5;
 		const initialDelay = 2000;
@@ -66547,6 +66566,7 @@ function whipOut() {
 		let currentDelay = Math.min(initialDelay * Math.pow(2, currentRetry), maxDelay);
 
 		function attemptReconnect() {
+			if (session.whipOut !== retryPeer) return;
 			if (!session.whipOutput) {
 				log("WHIP output removed, stopping retry");
 				whipReconnecting = false;
@@ -66583,10 +66603,12 @@ function whipOut() {
 			// Attempt reconnection - reuses session.whipOutput and session.whipOutputToken
 			try {
 				whipConnect();
+				retryPeer = session.whipOut;
 				// Give it time to connect before checking
 				var checkAttempts = 0;
 				var maxCheckAttempts = 6; // Up to 30 seconds total (6 x 5s)
 				function checkConnectionState() {
+					if (session.whipOut !== retryPeer) return;
 					checkAttempts++;
 					if (session.whipOut &&
 						(session.whipOut.connectionState === 'connected' ||
@@ -66612,6 +66634,7 @@ function whipOut() {
 					}
 				}
 				function scheduleNextRetry() {
+					if (session.whipOut !== retryPeer) return;
 					currentRetry++;
 					whipReconnectAttempts = currentRetry;
 					if (currentRetry < maxRetries) {
