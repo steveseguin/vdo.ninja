@@ -37,7 +37,7 @@ For advanced users, NGINX might be more appropriate than using Github Pages, so 
 
 Please consider the below directions just loose guidelines; you may need to change things up depending on factors like firewalls, operating system versions, and other factors.  This NGINX install guide makes some assumptions that you know the basics of NGINX, running Linux servers, domain name setup, and code deployments. Most users getting stuck do because of the SSL requirement, or because of overly complicated firewall/VPS setups.
 
-Please note, VDO.Ninja REQUIRES a domain name and SSL, unless you modify all browsers being used to support otherwise. (More on this in the [Internet-free section](#internet-free-deployments) below)  As a result, getting VDO.Ninja working can be quite challenging, as setting up domain names and SSL can be tricky for some. 
+For access from other devices, use HTTPS with a valid certificate. For testing on the same computer, `http://localhost` works without SSL or browser changes. See the [Internet-free section](#internet-free-deployments) below for offline setups.
 
 The following commands will setup NGINX, assuming you are running on a standard Ubuntu server. 
 ```

@@ -48,7 +48,7 @@
 		
 		<meta name="msapplication-TileColor" content="#da532c" />
 		<meta name="theme-color" content="#0f131d" />
-		<link rel="stylesheet" href="./main.css?ver=4051" />
+		<link rel="stylesheet" href="./main.css?ver=4055" />
 		<script type="text/javascript" crossorigin="anonymous" src="./thirdparty/adapter.js"></script>
 		
 		<link rel="shortcut icon" href="data:image/x-icon;," type="image/x-icon" />
@@ -87,7 +87,7 @@
 		<span itemprop="thumbnail" itemscope itemtype="http://schema.org/ImageObject">
 			<link itemprop="url" href="./media/vdoNinja_logo_full.png" />
 		</span>
-		<script type="text/javascript" crossorigin="anonymous"  src="./thirdparty/CodecsHandler.js?ver=30"></script>
+		<script type="text/javascript" crossorigin="anonymous"  src="./thirdparty/CodecsHandler.js?ver=34"></script>
 		<script type="text/javascript" crossorigin="anonymous" src="./thirdparty/aes.js"></script>
 		<script>
 			var startupCdnRedirecting = false;
@@ -98,7 +98,7 @@
 				}
 			}
 		</script>
-		<script type="text/javascript" crossorigin="anonymous" src="./webrtc.js?ver=971" onerror="retryStartupOnBackup()"></script>
+		<script type="text/javascript" crossorigin="anonymous" src="./webrtc.js?ver=981" onerror="retryStartupOnBackup()"></script>
 		<input id="zoomSlider" type="range" style="display: none;" />
 		<span id="electronDragZone" style="display:none;pointer-events: none; z-index:-10; position:absolute;top:0;left:0;width:100%;height:2%;min-height:20px;"></span>
 		<div id="header">
@@ -222,7 +222,7 @@
                         <i class="toggleSize las la-users"></i>
                     </div>
 
-                    <div id="gdriveAllGuests" title="Start/stop Google Drive recording for all guests" alt="Start/stop Google Drive recording for all guests" aria-label="Start or stop Google Drive recording for all guests" onmousedown="event.preventDefault(); event.stopPropagation();"  onclick="remoteGlobalGdriveRecordToggle(this)"  tabindex="2" role="button" aria-pressed="false" onkeydown="enterPressedClick(event,this);" onkeyup="enterPressedClick(event,this);"  class="hidden float" style="cursor: pointer;" >
+                    <div id="gdriveAllGuests" title="Start/stop Google Drive recording for all guests" alt="Start/stop Google Drive recording for all guests" aria-label="Start or stop Google Drive recording for all guests" onmousedown="event.preventDefault(); event.stopPropagation();"  onclick="remoteGlobalGdriveRecordToggle()"  tabindex="2" role="button" aria-pressed="false" onkeydown="enterPressedClick(event,this);" onkeyup="enterPressedClick(event,this);"  class="hidden float" style="cursor: pointer;" >
                         <i class="toggleSize las la-cloud-upload-alt"></i>
                     </div>
                 
@@ -248,6 +248,10 @@
                     <div id="mutebutton" onclick="if (event.detail === 0) { toggleMute(); }" onmousedown="toggleMute(false, event);event.preventDefault(); event.stopPropagation();" data-key="mute-the-mic" data-translate-aria="mute-the-mic" title="Mute the Mic (CTRL/⌘ + M)" alt="Mute the Mic" aria-label="Mute Microphone" ontouchstart="toggleMute(false, event);event.preventDefault(); event.stopPropagation();" tabindex="2" role="button" aria-pressed="false" onkeydown="enterPressedClick(event,this);" onkeyup="enterPressedClick(event,this);"  class="hidden float" style="cursor: pointer;">
                         <i id="mutetoggle" class="toggleSize las la-microphone" style="position: relative; top: 0.5px;"></i>
                     </div>
+					<div id="scenemutebutton" onmousedown="event.preventDefault(); event.stopPropagation();" onclick="toggleSceneMute()" title="Mute microphone and shared audio in scene outputs" data-key="mute-audio-in-scene-outputs" aria-label="Mute in scenes" data-translate-aria="mute-scene" tabindex="2" role="button" aria-pressed="false" onkeydown="enterPressedClick(event,this);" onkeyup="enterPressedClick(event,this);" class="hidden float" style="cursor: pointer; display: none;">
+						<i class="toggleSize las la-broadcast-tower"></i>
+						<span data-translate="mute-scene">Mute in scenes</span>
+					</div>
                     <div id="mutevideobutton" onmousedown="event.preventDefault(); event.stopPropagation();" data-key="disable-the-camera" data-translate-aria="disable-the-camera" title="Disable the Camera (CTRL/⌘ + B)" alt="Disable the Camera" aria-label="Mute Camera" onclick="toggleVideoMute()"   tabindex="2" role="button" aria-pressed="false" onkeydown="enterPressedClick(event,this);" onkeyup="enterPressedClick(event,this);"  class="hidden float" style="cursor: pointer;">
                         <i id="mutevideotoggle" onmousedown="event.preventDefault(); event.stopPropagation();"  class="toggleSize las la-video"></i>
                     </div>
@@ -1849,6 +1853,7 @@
 		<div id="hiddenElements"></div>
 		<div id="overlayClockContainer" data-menu='context-menu-clock' data-initial="600" class="hidden"><span id="overlayClock"></span></div>
 		<div id="overlayClockContainer2" data-menu='context-menu-clock' data-initial="600" class="hidden"><span id="overlayClock2"></span></div>
+		<div id="overlayPlaybackTimerContainer" class="hidden"><span id="overlayPlaybackTimer"></span></div>
 		<div id="overlayMsgs" onclick="this.innerHTML = '';" style="display:none"></div>
 		<div id="stickyMsgs" class="hidden"></div>
 		<div id="bigPlayButton" onclick="this.innerHTML = '';" style="display:none"></div>
@@ -2069,6 +2074,10 @@
 						<button data-action-type="restart-whip" class="hidden" title="Restart WHIP publishing connection (e.g., to Meshcast/MediaMTX)" onclick="restartWhipDirector(this)">
 							<i class="las la-broadcast-tower"></i>
 							<span data-translate="restart-whip">Restart WHIP</span>
+						</button>
+						<button data-action-type="meshcast-toggle" class="mainonly hidden" aria-pressed="false" title="Switch this guest's camera and microphone between direct connections and Meshcast" onclick="toggleMeshcastDirector(this)">
+							<i class="las la-broadcast-tower"></i>
+							<span data-translate="use-meshcast">Use Meshcast</span>
 						</button>
 						<button data-action-type="recorder-google-drive-remote" title="The Remote Guest will record their local stream and upload it to your Google Drive. *experimental*" onclick="requestGoogleDriveRecord(this, null, null, event)">
 							<i class="las la-compact-disc"></i>
@@ -3260,6 +3269,9 @@
 			<i class="las la-microphone-slash"></i>
 			<i class="las la-microphone"></i>
 		</div>
+		<div id="sceneMuteStateTemplate" class="hidden video-mute-state scene-mute-state orange" role="status">
+			<i class="las la-broadcast-tower"></i> <span data-translate="guest-muted-scenes">Guest muted scenes</span>
+		</div>
 		<div id="videoMuteStateTemplate" class="hidden video-mute-state">
 			<i class="las la-video-slash"></i>
 		</div>
@@ -3379,7 +3391,7 @@
 			// if (!window.location.search){document.body.innerHTML = "";} // uncomment this line, if you wish to try it.
 			
 			var session = WebRTC.Media; // session is a required global variable if configuring manually. Run before loading main.js but after webrtc.js.
-			session.version = "31.2";
+			session.version = "31.3"; // added director claim-time room admission controls (cap + bypass key + approval queue)
 			session.streamID = session.generateStreamID(); // randomly generates a streamID for this session. You can set your own programmatically if needed
 			
 			session.defaultPassword = "someEncryptionKey123"; // Change this password if self-deploying for added security/privacy
@@ -3504,8 +3516,8 @@
 			
 		</script>
 		
-		<script type="text/javascript" crossorigin="anonymous" id="lib-js" src="./lib.js?ver=14210" onerror="retryStartupOnBackup()"></script>
-		<script type="text/javascript" crossorigin="anonymous" id="main-js" src="./main.js?ver=1091" onerror="retryStartupOnBackup()"></script>
+		<script type="text/javascript" crossorigin="anonymous" id="lib-js" src="./lib.js?ver=14228" onerror="retryStartupOnBackup()"></script>
+		<script type="text/javascript" crossorigin="anonymous" id="main-js" src="./main.js?ver=1102" onerror="retryStartupOnBackup()"></script>
 		<script>
 			// Wait for the DOM, not for optional downloads or the window load event.
 			function showStartupError(error) {

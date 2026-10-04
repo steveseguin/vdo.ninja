@@ -37,3 +37,9 @@ main.js UI Events
 - Extract recorder setup into `core/recording` service with explicit track selection.
 - Decouple UI updates from recorder state via events, allowing alternate shells (podcast studio) to subscribe.
 - Introduce multi-track pipeline that uses `session.peers[UUID].stream` assets and writes separate WAV files per participant before mixdown.
+
+## Podcast Studio Audio Recovery
+
+Podcast Studio saves each audio track's encoded chunks, name, start time, and cue markers to IndexedDB while recording (`podcast/audio-recovery.js`). Reconnected tracks are saved as separate segments.
+
+After reopening the studio in the same browser, expand **Saved audio** under **Timeline & Outputs**, select a take, and choose **Prepare download**. Each track offers its original audio and, when conversion succeeds, a WAV download. Copies remain until **Clear saved audio** is selected or browser data is cleared. Interrupted takes may be incomplete. Storage failures appear in the studio; stop and download the normal recordings before closing the tab.

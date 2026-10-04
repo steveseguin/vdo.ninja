@@ -192,7 +192,7 @@
             display: block;
         }
         
-        .modal input[type="text"], .modal input[type="url"], .modal input[type="password"] {
+        .modal input[type="text"], .modal input[type="url"], .modal input[type="password"], .modal select {
             width: calc(100% - 20px);
             padding: 8px;
             margin: 8px 0;
@@ -242,7 +242,7 @@
         .view-link-container button {
             white-space: nowrap;
         }
-        .view-link-container button::after {
+        .view-link-container button[onclick="copyViewLink()"]::after {
             content: " View Link";
             display: none;
         }
@@ -250,7 +250,7 @@
             .view-link-container input {
                 display: none;
             }
-            .view-link-container button::after {
+            .view-link-container button[onclick="copyViewLink()"]::after {
                 display: inline;
             }
         }
@@ -373,6 +373,18 @@
 				<button onclick="showMode('playground')" title="Local drawing only - no streaming">Playground</button>
 			</div>
 			<div class="mode-description" id="modeDescription"></div>
+			<div class="input-group" id="audioOptions">
+				<label><input type="checkbox" id="enableAudio" onchange="updateAudioOptions()"> Include live microphone commentary</label>
+				<div id="audioDeviceGroup" hidden>
+					<label for="audioDeviceSelect">Microphone</label>
+					<select id="audioDeviceSelect" onchange="saveAudioOptions()">
+						<option value="default">System default</option>
+						<option value="communications">Communications device</option>
+					</select>
+					<button type="button" onclick="refreshAudioDevices()">Refresh microphones</button>
+					<small id="audioStatus" role="status">Allow microphone access to show device names.</small>
+				</div>
+			</div>
             
             <div class="modal-content" id="vdo-content">
                 <div class="input-group">
@@ -419,6 +431,7 @@
 	<div class="view-link-container" title="This view-link can be shared to let others see your canvas output as a streaming video">
 		<input type="text" id="viewLink" readonly>
 		<button onclick="copyViewLink()">Copy</button>
+		<button onclick="openViewLink()">Open viewer</button>
 	</div>
 	
 <script>
@@ -438,6 +451,42 @@
 	let screenShareVideo = null;
 	let animationFrameId = null;
 	
+	const enableAudioCheckbox = document.getElementById("enableAudio");
+	const audioDeviceSelect = document.getElementById("audioDeviceSelect");
+
+	function saveAudioOptions() {
+		try {
+			localStorage.setItem("lastFramegrabAudio", enableAudioCheckbox.checked ? "1" : "0");
+			localStorage.setItem("lastFramegrabAudioDevice", audioDeviceSelect.value);
+		} catch (e) {}
+	}
+
+	function updateAudioOptions() {
+		document.getElementById("audioDeviceGroup").hidden = !enableAudioCheckbox.checked;
+		saveAudioOptions();
+		if (enableAudioCheckbox.checked) refreshAudioDevices();
+	}
+
+	async function refreshAudioDevices() {
+		const status = document.getElementById("audioStatus");
+		try {
+			const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+			stream.getTracks().forEach(function (track) { track.stop(); });
+			const devices = await navigator.mediaDevices.enumerateDevices();
+			const selected = audioDeviceSelect.value;
+			while (audioDeviceSelect.options.length > 2) audioDeviceSelect.remove(2);
+			devices.forEach(function (device) {
+				if (device.kind !== "audioinput" || !device.deviceId || device.deviceId === "default" || device.deviceId === "communications") return;
+				audioDeviceSelect.add(new Option(device.label || "Microphone", device.deviceId));
+			});
+			audioDeviceSelect.value = selected;
+			if (!audioDeviceSelect.value) audioDeviceSelect.value = "default";
+			status.textContent = "Microphone access allowed. Choose the input to publish.";
+		} catch (e) {
+			status.textContent = "Microphone unavailable. Allow microphone access and refresh, or turn commentary off.";
+		}
+	}
+
 	// Theme management
 	function initTheme() {
 		const savedTheme = localStorage.getItem('theme');
@@ -627,13 +676,24 @@
             if (config.whipToken) url.searchParams.set("whippushtoken", config.whipToken);
         }
         
-        url.searchParams.set("framegrab", "");
-        url.searchParams.set("view", "");
+		// Merge options without creating a second query string or overriding the form.
+		new URLSearchParams(window.location.search).forEach(function (value, key) {
+			if (!url.searchParams.has(key)) url.searchParams.set(key, value);
+		});
+		["audio", "audiodevice", "adevice", "ad", "device", "d", "ado"].forEach(function (key) {
+			url.searchParams.delete(key);
+		});
+		url.searchParams.set("framegrab", "1");
+		url.searchParams.set("framegrabaudio", enableAudioCheckbox.checked ? "1" : "0");
+		if (enableAudioCheckbox.checked) url.searchParams.set("audiodevice", audioDeviceSelect.value);
+		saveAudioOptions();
+		if (config.mode === "vdo") showViewLink(config);
 	
         const iframe = document.createElement("iframe");
         iframe.style.width = "0";
         iframe.style.height = "0";
-        iframe.src = url.toString()+window.location.search.replace("&","?");
+		iframe.allow = "autoplay; microphone";
+        iframe.src = url.toString();
 		
 		iframe.onload = function(){
 			setTimeout(function(){
@@ -662,6 +722,7 @@
 			'twitch': 'Stream directly to your Twitch channel',
 			'playground': 'Local drawing mode - no streaming'
 		};
+		document.getElementById("audioOptions").hidden = mode === "playground";
 		localStorage.setItem('lastMode', mode);
 		document.getElementById('modeDescription').textContent = descriptions[mode];
 	}
@@ -683,7 +744,7 @@
 		
 		window.iframe = createAndAppendIframe(config);
 		document.querySelector('.modal-overlay').style.display = 'none';
-		setTimeout(function(){startStreaming();},1000);
+
 	}
 
     function handleVDO() {
@@ -708,19 +769,27 @@
 			password
 		};
 
+		window.iframe = createAndAppendIframe(config);
+		document.querySelector('.modal-overlay').style.display = 'none';
+	}
+
+	function showViewLink(config) {
 		const viewUrl = new URL("./", window.location.href);
-		if (push) viewUrl.searchParams.set("view", push);
-		if (room) viewUrl.searchParams.set("room", room);
+		if (config.push) viewUrl.searchParams.set("view", config.push);
+		if (config.room) viewUrl.searchParams.set("room", config.room);
 		if (config.push && config.room) viewUrl.searchParams.set("solo", "")
-		if (password) viewUrl.searchParams.set("password", password);
+		if (config.password) viewUrl.searchParams.set("password", config.password);
 		
 		document.getElementById('viewLink').value = viewUrl.toString()+"&sharperscreen";
 		document.querySelector('.view-link-container').style.display = 'flex';
 		
-		window.iframe = createAndAppendIframe(config);
-		document.querySelector('.modal-overlay').style.display = 'none';
 	}
-	
+
+	function openViewLink() {
+		const url = document.getElementById("viewLink").value;
+		if (url) window.open(url, "_blank", "noopener");
+	}
+
 	function copyViewLink() {
 		const viewLink = document.getElementById('viewLink');
 		if (window.innerWidth <= 1600) {
@@ -757,7 +826,7 @@
 		
 		window.iframe = createAndAppendIframe(config);
 		document.querySelector('.modal-overlay').style.display = 'none';
-		setTimeout(function(){startStreaming();},1000);
+
 	}
 
     function handlePlayground() {
@@ -767,6 +836,30 @@
 
     // Show modal on load instead of creating iframe immediately
 	window.addEventListener('load', () => {
+		const audioParams = new URLSearchParams(window.location.search);
+		const audioParam = audioParams.has("framegrabaudio") ? "framegrabaudio" : (audioParams.has("audio") ? "audio" : null);
+		var device = "default";
+		// Direct publishing links remain silent unless they explicitly enable audio.
+		if (audioParam) {
+			enableAudioCheckbox.checked = !["0", "false", "no", "off"].includes((audioParams.get(audioParam) || "").trim().toLowerCase());
+		} else if (!["room", "r", "push", "id", "permaid", "whip", "whipout", "whippush"].some(function (key) { return audioParams.has(key); })) {
+			try { enableAudioCheckbox.checked = localStorage.getItem("lastFramegrabAudio") === "1"; } catch (e) {}
+		}
+		try { device = localStorage.getItem("lastFramegrabAudioDevice") || "default"; } catch (e) {}
+		const aliases = ["audiodevice", "adevice", "ad", "device", "d", "ado"];
+		for (var i = 0; i < aliases.length; i++) {
+			if (audioParams.has(aliases[i])) {
+				device = (audioParams.get(aliases[i]) || "default").trim();
+				break;
+			}
+		}
+		if (["0", "false", "no", "off", "none", "zzz"].includes(device.toLowerCase())) {
+			enableAudioCheckbox.checked = false;
+			device = "default";
+		}
+		if (device !== "default" && device !== "communications") audioDeviceSelect.add(new Option("Selected microphone", device));
+		audioDeviceSelect.value = device;
+		document.getElementById("audioDeviceGroup").hidden = !enableAudioCheckbox.checked;
 		if (window.location.search){
 			const getUrlParams = () => Object.fromEntries(new URLSearchParams(window.location.search));
 			const params = getUrlParams();
@@ -789,7 +882,7 @@
 				if (room) localStorage.setItem('lastRoomName', room);
 				if (password) localStorage.setItem('lastPassword', password);
 				
-				createAndAppendIframe(config);
+				window.iframe = createAndAppendIframe(config);
 				
 				return;
 			} else if (whipUrl){
@@ -798,7 +891,7 @@
 					whipUrl,
 					whipToken
 				};
-				createAndAppendIframe(config);
+				window.iframe = createAndAppendIframe(config);
 				return
 			}
 		}
@@ -1256,12 +1349,12 @@
 	///////// the following is a loopback webrtc trick to get chrome to not throttle this tab when not visible.
 	try {
 		var receiveChannelCallback = function (e) {
-			remoteConnection.datachannel = event.channel;
+			remoteConnection.datachannel = e.channel;
 			remoteConnection.datachannel.onmessage = function (e) {};
 			remoteConnection.datachannel.onopen = function (e) {};
 			remoteConnection.datachannel.onclose = function (e) {};
 			setInterval(function () {
-				remoteConnection.datachannel.send("KEEPALIVE");
+				if (remoteConnection.datachannel.readyState === "open") remoteConnection.datachannel.send("KEEPALIVE");
 			}, 1000);
 		};
 		var errorHandle = function (e) {};

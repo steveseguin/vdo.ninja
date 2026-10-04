@@ -16,6 +16,10 @@ docs.md
 # Development tests and results do not belong in this public release repository.
 /.github/tests/
 /tests/
+**/test/
+**/tests/
+*.test.*
+*.spec.*
 
 # Local secrets and deployment state (not frontend assets)
 .env
@@ -24,3 +28,90 @@ docs.md
 !.env.sample
 .dev.vars*
 .wrangler/
+
+# Private backend services and production configuration (root paths only).
+/callin-worker/
+/hss/
+/icecast-worker/
+/media-hosting-service/
+/public-broadcast-token-api/
+/qos-server/
+/tip-server/
+/translation-service/
+/vdo-auth-service/
+/turnservers/
+/turnsetup.sh
+/settings/
+/wrangler.json
+/wrangler.jsonc
+
+# Private development notes, investigations, and local artifacts.
+/devstuff/
+/docs/
+/security-review/
+/ed0/
+/.agents/
+/.codex-tmp/
+/.AGENTS.md.swp
+/.actrc
+/tmp/
+/debug.log
+/production-alpha-connectivity-results.json
+/tmp_mobile_flow_*.png
+/misc/*-repro.html
+/misc/*-checks.html
+
+# Separate projects and old development checkouts.
+/Companion-Ninja/
+/NinjamPlus/
+/vdo-streamdeck/
+/invite.cam/
+/guides.vdo.ninja/
+/vdo.ninja-gitbook/
+/vdo-ninja-gitbook/
+/v29/
+/v30/
+
+# Explicitly excluded from public releases, including nested file/folder names.
+*testonly*
+*donotinclude*
+/thirdparty/testingonly_donotinclude/
+/media/backgrounds/run.py
+/screenrecorder/
+/auth-integration.md
+/convert.html
+/thirdparty/ffmpeg.min.js
+/thirdparty/ffmpeg.min.js.LICENSE
+/.github/workflows/README.md
+
+# Private TURN operating instructions; the shared guide is turnserver.md.
+/turnserver-private.md
+
+# Hosted service directory pages.
+/hire.html
+/freelance.html
+/services.html
+
+# Previously removed unused dependencies; exclude from future release copies.
+/thirdparty/jeeliz/JeelizResizer.js
+/thirdparty/jeeliz/helpers/HeadControls.js
+/thirdparty/jeeliz/helpers/JeelizFaceCut.js
+/thirdparty/jeeliz/helpers/JeelizResizer.js
+/thirdparty/jeeliz/helpers/JeelizThreeHelper.js
+/thirdparty/jeeliz/helpers/addDragEventListener.js
+/thirdparty/jeeliz/modules/jeelizFaceFilter.module.js
+/thirdparty/jeeliz/modules/jeelizFaceFilter.moduleNoDOM.js
+/thirdparty/jeeliz/three/ShaderParticleEngine/LICENSE
+/thirdparty/jeeliz/three/ShaderParticleEngine/SPE.min.js
+/thirdparty/jeeliz/three/customMaterials/GlowMaterial/LICENSE
+/thirdparty/jeeliz/three/customMaterials/GlowMaterial/threex.atmospherematerial.js
+/thirdparty/jeeliz/three/customMaterials/GlowMaterial/threex.atmospherematerialdatgui.js
+/thirdparty/jeeliz/three/customMaterials/GlowMaterial/threex.dilategeometry.js
+/thirdparty/jeeliz/three/customMaterials/GlowMaterial/threex.geometricglow.js
+/thirdparty/jeeliz/three/matrix/THREEMatrix.js
+/thirdparty/jeeliz/three/v112/GLTFLoader.js
+/thirdparty/jeeliz/three/v112/three.js
+/thirdparty/jquery.min.js
+/thirdparty/jquery.min.js.LICENSE
+/thirdparty/jquery/jquery-ui.min.js
+/thirdparty/webmidi.js

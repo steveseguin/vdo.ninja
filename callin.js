@@ -2656,11 +2656,7 @@
 				var adapter = adapters[provider.value];
 				state.mode = provider.value;
 				updateProviderFields();
-				if (!adapter.available) {
-					setStatus(adapter.message);
-				} else {
-					setStatus(adapter.message);
-				}
+				setStatus(adapter.message);
 			};
 			connect.onclick = function () {
 				unlockRingtoneAudio();

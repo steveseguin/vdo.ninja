@@ -1614,6 +1614,9 @@
 			
 			<h3>Layout switching</h3>
 			<input type="checkbox" title="When a user is assigned a slot or switches slots, the last active layout is re-applied automatically" id="updateOnSlotChange" checked onchange="submitChange(this)";>Update layout on a slot change
+			<h3>Recording</h3>
+			<label><input type="checkbox" id="showRecordingLabels" onchange="submitRecordingLabelsChange(this)">Show guest names in recordings</label>
+			<br /><small>Applies to new windows opened with Record Scene or Record to Disk.</small>
 			
 			<h3>Trigger OBS scenes change on layout change</h3>
 			<input type="checkbox" title="" id="syncOBS" onchange="submitChange3(this)";>Activate linked OBS scene on layout change
@@ -1925,6 +1928,7 @@
 	var syncOBS = false;
 	var remoteSyncOBS = false;
 	var showDirector = true;
+	var showRecordingLabels = false;
 	var sceneBroadcastBaseParams = "";
 	
 	var currentOBSState = false;
@@ -1941,7 +1945,7 @@
 			}
 		},
 		"meshcast": {
-			label: "Meshcast (managed)",
+			label: "Meshcast v2 - new",
 			requiresValue: false,
 			showToken: true,
 			tokenLabel: "Meshcast code (optional)",
@@ -2023,7 +2027,7 @@
 			tokenLabel: "Bitrate in kbps (optional)",
 			tokenPlaceholder: "6000",
 			tokenType: "number",
-			help: "Record the scene directly to your local disk. Click the record button in the opened window to start/stop.",
+			help: "Record the complete scene to disk. In the opened window, click Start Recording, select that tab, and enable tab audio. Use the browser's Stop sharing control to finish. Guest names can be enabled in Mixer Settings under Recording.",
 			buildExtras: function(opts){
 				var extras = "&recordwindow";
 				if (opts && opts.token && parseInt(opts.token)){
@@ -3075,6 +3079,8 @@
 	initialLayouts.layouts.push(data);
 	
 	function applySettings(){
+		showRecordingLabels = !!(savedSession.settings && savedSession.settings.showRecordingLabels);
+		getById("showRecordingLabels").checked = showRecordingLabels;
 		if (savedSession.settings && ("updateOnSlotChange" in savedSession.settings)){
 			updateOnSlotChange = savedSession.settings.updateOnSlotChange;
 			if (!updateOnSlotChange){
@@ -3345,6 +3351,11 @@
 			element.removeAttribute('checked');
 			updateOnSlotChange=false;
 		}
+		saveSession();
+	}
+
+	function submitRecordingLabelsChange(element){
+		showRecordingLabels = element.checked;
 		saveSession();
 	}
 	
@@ -3737,6 +3748,23 @@
 	
 	var iframe = null;
 	
+	function openCoDirectorControls(){
+		var director = iframe && iframe.contentWindow;
+		if (!director || typeof director.buildCoDirectorInviteURL !== "function"){
+			return;
+		}
+		if (!director.session.directorPassword){
+			director.warnUser("Enable 'Allow for remote co-directors' in the director controls first.", 6000);
+			return;
+		}
+		var link = new URL(director.buildCoDirectorInviteURL());
+		link.searchParams.set("noclaim", "");
+		if (link.host === location.host){
+			link.protocol = location.protocol;
+		}
+		window.open(link.href, "_blank", "noopener");
+	}
+
 	function createIframeURL(){
 		var additional = ""; // guest/scene links also
 		if (password){
@@ -3795,6 +3823,23 @@
 		roomname = sanitizeRoomName(roomname);
 		if (!roomname){
 			roomname = generateString(10);
+		}
+		if (urlParams.get("mixercontrols") === "guests"){
+			var controlsURL = new URL("./index.html", window.location.href);
+			controlsURL.search = urlParams.toString();
+			controlsURL.searchParams.delete("mixercontrols");
+			controlsURL.searchParams.set("director", roomname);
+			controlsURL.searchParams.set("noclaim", "");
+			if (password){
+				controlsURL.searchParams.set("password", password);
+			}
+			iframe.src = controlsURL.href;
+			iframe.style.cssText = "position:fixed;top:0;left:0;width:100%;height:100%;max-width:none;max-height:none;border:0;";
+			document.getElementById("sources").classList.add("hidden");
+			document.getElementById("container").classList.add("hidden");
+			document.title = "Guest controls: " + roomname;
+			document.body.appendChild(iframe);
+			return;
 		}
 		
 		if (roomname!==false){
@@ -3890,6 +3935,13 @@
 		document.getElementById("sources").appendChild(button);
 		
 		var button = document.createElement("button");
+		button.textContent = "Open co-director controls";
+		button.title = "Open the existing Director's Room controls in a new tab without claiming the room.";
+		button.classList.add("menuButton");
+		button.onclick = openCoDirectorControls;
+		document.getElementById("sources").appendChild(button);
+
+		var button = document.createElement("button");
 		button.innerHTML = "Add Stream ID"; 
 		button.title = "Create a placeholder for a stream ID; the guest doesn't need to be connected yet.";
 		button.classList.add("menuButton");
@@ -3984,6 +4036,9 @@
 			URL = URL.join("/");
 			URL+="/?scene=0&layout&remote&room="+roomname+additional;
 			URL+="&chroma=000&recordwindow&screenshareaspectratio="+aspectRatio+"&locked="+aspectRatio;
+			if (showRecordingLabels){
+				URL+="&showlabels";
+			}
 			var win = window.open( URL ,'recordWindow', 'toolbar=no,location=no,status=no,scaling=no,menubar=no,scrollbars=no,resizable=no,width=1280,height=720');
 			win.focus();
 			win.resizeTo(1280,720);
@@ -5641,13 +5696,15 @@
 		css += "#publishSettings input{box-sizing:border-box;font:inherit;margin:0!important;padding:9px 10px;width:100%;}";
 		css += "#publishSettings #advanced,#publishSettings #advanced+div{display:flex!important;flex-wrap:wrap;gap:8px;margin:12px 0!important;}";
 		css += "#publishSettings select{font:inherit;margin:0;padding:8px;}";
+		css += "#publishSettings input,#publishSettings select{background:#fff;color:#111;border-color:#8b95a3;}";
+		css += "#publishSettings input::placeholder{color:#596575!important;opacity:1;}";
 		css += "#publishSettings .gobutton{box-sizing:border-box;margin:18px 0 20px;padding:12px;width:100%;}";
 		css += "#publishSettings .promptModalInner>i{border-top:1px solid #d4d8dd;display:block;font-size:.85em;font-weight:400;padding-top:14px;}";
 		css += "@media(max-width:600px){#publishSettings .promptModalInner{padding:18px;}#publishSettings #advanced,#publishSettings #advanced+div{display:grid!important;grid-template-columns:1fr 1fr;}#publishSettings select{min-width:0;width:100%;}}";
 		return "&b64css="+encodeURIComponent(btoa(css));
 	}
 
-	function getSceneBroadcastBaseURL(){
+	function getSceneBroadcastBaseURL(recordWindow){
 		if (!roomname){
 			alert("Missing room name. Please load a room before creating an output link.");
 			return false;
@@ -5660,8 +5717,15 @@
 		parts.pop();
 		var base = parts.join("/");
 		var sceneURL = base+"/?scene=0&layout&remote&room="+roomname+extra;
-		sceneURL += "&cleanviewer&chroma=000&ssar=landscape&nosettings&showlabels&prefercurrenttab";
-		sceneURL += "&selfbrowsersurface=include&displaysurface=browser&np&nopush&publish";
+		sceneURL += "&cleanviewer&chroma=000&ssar=landscape&nosettings&prefercurrenttab";
+		if (!recordWindow || showRecordingLabels){
+			sceneURL += "&showlabels";
+		}
+		sceneURL += "&selfbrowsersurface=include&displaysurface=browser&np&nopush";
+		// recordwindow captures the complete tab itself; publish opens the separate WHIP setup flow.
+		if (!recordWindow){
+			sceneURL += "&publish";
+		}
 		sceneURL += "&quality=1&screenshareaspectratio="+aspectRatio+"&locked="+aspectRatio;
 		sceneURL += getSceneOutputStyleParam();
 		return sceneURL;
@@ -5739,7 +5803,7 @@
 		if (extras === false){
 			return false;
 		}
-		var baseURL = getSceneBroadcastBaseURL();
+		var baseURL = getSceneBroadcastBaseURL(profile === sceneBroadcastProfiles.record);
 		if (!baseURL){
 			return false;
 		}
@@ -6935,6 +6999,7 @@ function settings() {
 		savedSession.settings.pixelDensity = pixelDensity;
 		savedSession.settings.absolutePixel = absolutePixel;
 		savedSession.settings.showDirector = showDirector;
+		savedSession.settings.showRecordingLabels = showRecordingLabels;
 		//savedSession.settings.autoMixerSceneName = autoMixerSceneName;
 		savedSession.settings.toggleEchoInvite = toggleEchoInvite;
 		savedSession.settings.toggleDenoiseInvite = toggleDenoiseInvite;

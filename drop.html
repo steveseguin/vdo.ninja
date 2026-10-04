@@ -1,0 +1,1062 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<meta name="description" content="Share files directly between browsers with VDO.Ninja Drop. Send a link or scan a QR code to download on another device. Free, with no account required." />
+		<meta name="referrer" content="no-referrer" />
+		<meta name="theme-color" content="#14171a" />
+		<link rel="canonical" href="https://vdo.ninja/drop" />
+		<link rel="icon" type="image/png" sizes="32x32" href="./media/favicon-32x32.png" />
+		<link rel="icon" type="image/png" sizes="16x16" href="./media/favicon-16x16.png" />
+		<link rel="icon" href="./media/favicon.ico" />
+		<link rel="apple-touch-icon" href="./media/icon-192x192.png" />
+		<meta property="og:type" content="website" />
+		<meta property="og:site_name" content="VDO.Ninja" />
+		<meta property="og:url" content="https://vdo.ninja/drop" />
+		<meta property="og:title" content="VDO.Ninja Drop — Free Peer-to-Peer File Sharing" />
+		<meta property="og:description" content="Send files between computers and phones with a link or QR code. Download individual files or queue them all. Keep the sender’s tab open while sharing." />
+		<meta property="og:image" content="https://vdo.ninja/media/vdoNinja_logo_full.png" />
+		<meta property="og:image:alt" content="VDO.Ninja" />
+		<meta name="twitter:card" content="summary_large_image" />
+		<meta name="twitter:title" content="VDO.Ninja Drop — Free Peer-to-Peer File Sharing" />
+		<meta name="twitter:description" content="Share files directly between browsers using a link or QR code. Free, with no account required." />
+		<meta name="twitter:image" content="https://vdo.ninja/media/vdoNinja_logo_full.png" />
+		<meta name="twitter:image:alt" content="VDO.Ninja" />
+		<title>VDO.Ninja Drop — Free Peer-to-Peer File Sharing</title>
+		<style>
+			:root {
+				color-scheme: dark;
+				--bg: #14171a;
+				--panel: #1c2025;
+				--line: #333a42;
+				--text: #e6e9ec;
+				--muted: #a4adb7;
+				--accent: #70b5fa;
+			}
+			* {
+				box-sizing: border-box;
+			}
+			[hidden] {
+				display: none !important;
+			}
+			body {
+				margin: 0;
+				background: var(--bg);
+				color: var(--text);
+				font:
+					16px/1.5 -apple-system,
+					BlinkMacSystemFont,
+					"Segoe UI",
+					Roboto,
+					Helvetica,
+					Arial,
+					sans-serif;
+			}
+			a {
+				color: var(--accent);
+			}
+			button,
+			input {
+				font: inherit;
+			}
+			button {
+				border: 1px solid var(--line);
+				border-radius: 8px;
+				padding: 10px 16px;
+				background: #272e36;
+				color: var(--text);
+				cursor: pointer;
+			}
+			button:hover:not(:disabled) {
+				background: #343e49;
+			}
+			button:disabled {
+				opacity: 0.45;
+				cursor: default;
+			}
+			button.primary {
+				background: var(--accent);
+				color: #101b28;
+				border-color: var(--accent);
+				font-weight: 650;
+			}
+			button.primary:hover:not(:disabled) {
+				background: #99cbff;
+			}
+			:focus-visible {
+				outline: 3px solid var(--accent);
+				outline-offset: 4px;
+			}
+			header {
+				border-bottom: 1px solid var(--line);
+				padding: 18px max(24px, calc((100% - 880px) / 2));
+				display: flex;
+				align-items: center;
+				justify-content: space-between;
+				gap: 20px;
+			}
+			.brand {
+				color: var(--text);
+				text-decoration: none;
+				font-weight: 750;
+				letter-spacing: -0.5px;
+			}
+			.brand span {
+				color: var(--accent);
+				margin-left: 6px;
+				font-weight: 450;
+			}
+			.header-link {
+				font-size: 14px;
+			}
+			main {
+				max-width: 880px;
+				margin: 0 auto;
+				padding: 32px 24px;
+			}
+			h1 {
+				margin: 0;
+				font-size: clamp(30px, 5vw, 44px);
+				letter-spacing: -1.3px;
+				line-height: 1.15;
+			}
+			h2 {
+				margin: 0;
+				font-size: 18px;
+			}
+			p {
+				margin: 8px 0;
+			}
+			.muted,
+			.file-detail {
+				color: var(--muted);
+			}
+			.intro {
+				margin-bottom: 20px;
+			}
+			.intro-heading {
+				display: flex;
+				align-items: center;
+				justify-content: space-between;
+				flex-wrap: wrap;
+				gap: 8px 16px;
+			}
+			.status {
+				display: inline-flex;
+				align-items: center;
+				gap: 8px;
+				font-size: 14px;
+				margin-left: auto;
+			}
+			.status::before {
+				content: "";
+				width: 8px;
+				height: 8px;
+				border-radius: 50%;
+				background: #daa85c;
+				flex-shrink: 0;
+			}
+			.status[data-online="true"]::before {
+				background: #74cfa7;
+			}
+			.panel {
+				border: 1px solid var(--line);
+				border-radius: 12px;
+				background: var(--panel);
+				margin-top: 20px;
+				padding: 24px;
+			}
+			.drop-zone {
+				border: 1px dashed #56677a;
+				text-align: center;
+				padding: 24px 20px;
+				border-radius: 10px;
+			}
+			.drop-zone.dragging {
+				background: #253648;
+				border-color: var(--accent);
+			}
+			.drop-icon {
+				color: var(--accent);
+				width: 38px;
+				height: 38px;
+				margin-bottom: 10px;
+			}
+			.drop-zone h2 {
+				margin-bottom: 16px;
+			}
+			.drop-zone p {
+				font-size: 14px;
+				margin-top: 14px;
+			}
+			.link-row {
+				display: flex;
+				gap: 10px;
+				margin-top: 12px;
+			}
+			.link-row input {
+				width: 100%;
+				min-width: 0;
+				padding: 11px 12px;
+				border: 1px solid var(--line);
+				border-radius: 8px;
+				background: var(--bg);
+				color: var(--text);
+				font-size: 14px;
+			}
+			.link-row button {
+				white-space: nowrap;
+			}
+			#share-name-form {
+				margin-bottom: 16px;
+			}
+			.name-row {
+				align-items: center;
+				margin-top: 0;
+			}
+			.name-row label {
+				white-space: nowrap;
+			}
+			.name-row input {
+				flex: 1;
+			}
+			#share-name-form .hint {
+				margin-top: 8px;
+			}
+			.qr-panel {
+				margin-top: 20px;
+				padding-top: 20px;
+				border-top: 1px solid var(--line);
+				text-align: center;
+			}
+			.qr-panel h3 {
+				margin: 0 0 16px;
+				font-size: 16px;
+			}
+			#qr-code {
+				width: 320px;
+				max-width: 100%;
+				margin: 0 auto;
+				padding: 32px;
+				background: #fff;
+				border-radius: 8px;
+			}
+			#qr-code img,
+			#qr-code canvas {
+				max-width: 100%;
+				height: auto;
+			}
+			.hint {
+				font-size: 13px;
+				color: var(--muted);
+				margin-top: 12px;
+			}
+			.list-heading {
+				display: flex;
+				justify-content: space-between;
+				align-items: center;
+				gap: 16px;
+			}
+			.list-heading p {
+				font-size: 14px;
+				margin: 3px 0 0;
+			}
+			.file-list {
+				list-style: none;
+				margin: 16px 0 0;
+				padding: 0;
+			}
+			.file-row {
+				display: flex;
+				align-items: center;
+				gap: 16px;
+				padding: 18px 0;
+				border-top: 1px solid var(--line);
+			}
+			.file-info {
+				min-width: 0;
+				flex: 1;
+			}
+			.file-name {
+				font-weight: 600;
+				overflow-wrap: anywhere;
+			}
+			.file-detail {
+				font-size: 13px;
+				margin-top: 4px;
+				overflow-wrap: anywhere;
+			}
+			.file-row button {
+				font-size: 14px;
+				padding: 8px 12px;
+				flex-shrink: 0;
+			}
+			progress {
+				display: block;
+				margin-top: 10px;
+				width: 100%;
+				height: 5px;
+				border: 0;
+				border-radius: 4px;
+				overflow: hidden;
+				accent-color: var(--accent);
+			}
+			progress::-webkit-progress-bar {
+				background: var(--line);
+			}
+			progress::-webkit-progress-value {
+				background: var(--accent);
+			}
+			.empty {
+				color: var(--muted);
+				padding: 26px 0 6px;
+				text-align: center;
+			}
+			.notice {
+				padding: 12px 16px;
+				border: 1px solid #846942;
+				border-radius: 8px;
+				background: #2c251b;
+				margin-top: 20px;
+				overflow-wrap: anywhere;
+			}
+			footer {
+				color: var(--muted);
+				font-size: 13px;
+				margin-top: 24px;
+			}
+			footer p {
+				margin-top: 12px;
+			}
+			#engine {
+				position: fixed;
+				width: 1px;
+				height: 1px;
+				left: -10px;
+				bottom: 0;
+				border: 0;
+			}
+			@media (max-width: 540px) {
+				header {
+					padding: 16px 20px;
+				}
+				main {
+					padding: 32px 16px;
+				}
+				.panel {
+					padding: 18px;
+				}
+				.link-row {
+					flex-direction: column;
+				}
+				.name-row {
+					flex-direction: row;
+					flex-wrap: wrap;
+				}
+				.name-row label {
+					flex-basis: 100%;
+				}
+				.name-row button:disabled {
+					display: none;
+				}
+				.file-row {
+					gap: 10px;
+				}
+				.list-heading {
+					align-items: flex-start;
+				}
+			}
+		</style>
+	</head>
+	<body>
+		<header>
+			<a class="brand" href="./drop.html">VDO.Ninja <span>Drop</span></a>
+			<a class="header-link" href="./" target="_blank" rel="noopener">VDO.Ninja</a>
+		</header>
+		<main>
+			<div class="intro">
+				<div class="intro-heading">
+					<h1 id="title">Share files directly.</h1>
+					<div class="status" id="status" role="status">Getting ready…</div>
+				</div>
+				<p class="muted" id="subtitle">Choose your files, share the link, and keep this tab open.</p>
+			</div>
+			<div class="notice" id="notice" role="alert" hidden></div>
+			<section class="panel" id="sender-panel" aria-label="Share files">
+				<form id="share-name-form">
+					<div class="link-row name-row">
+						<label for="share-name">Share name</label>
+						<input id="share-name" required maxlength="64" pattern="[a-zA-Z0-9_\-]{1,64}" title="Use 1–64 letters, numbers, hyphens or underscores." autocomplete="off" autocapitalize="none" spellcheck="false" aria-describedby="share-name-hint share-name-status" />
+						<button id="apply-name" type="submit" disabled>Apply name</button>
+					</div>
+					<p class="hint" id="share-name-hint">Anyone who knows the name can download. Avoid easy-to-guess names.</p>
+					<p class="hint" id="share-name-status" role="status" hidden></p>
+				</form>
+				<div class="drop-zone" id="drop-zone">
+					<svg class="drop-icon" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="M16 22V5m-6 6 6-6 6 6M5 20v7h22v-7" /></svg>
+					<h2>Drop your files here</h2>
+					<button class="primary" id="choose" disabled>Choose files</button>
+					<input id="file-input" type="file" multiple hidden />
+					<p class="muted">Any file type, including ZIP. To share a folder, ZIP it first.</p>
+				</div>
+				<div id="share-panel" hidden>
+					<h2 id="share-link-title" style="margin-top: 24px">Your sharing link</h2>
+					<div class="link-row">
+						<input id="share-link" readonly spellcheck="false" aria-labelledby="share-link-title" />
+						<button id="copy-link">Copy link</button>
+						<button id="show-qr" aria-expanded="false" aria-controls="qr-panel">Show QR code</button>
+					</div>
+					<p class="hint">Anyone with this link can download while you’re sharing. Refreshing clears your file selection.</p>
+					<div class="qr-panel" id="qr-panel" hidden>
+						<h3>Scan with your phone</h3>
+						<div id="qr-code" role="img" aria-label="QR code for the file download link" hidden></div>
+						<p id="qr-status" class="hint" role="status"></p>
+						<p class="hint">Open your phone’s camera and scan to download.<br />Keep this sharing tab open while your phone downloads.</p>
+					</div>
+				</div>
+			</section>
+			<section class="panel" aria-labelledby="files-title">
+				<div class="list-heading">
+					<div>
+						<h2 id="files-title">Shared files</h2>
+						<p class="muted" id="summary">No files selected</p>
+					</div>
+					<button id="stop-all" hidden>Stop sharing</button>
+					<button class="primary" id="download-all" hidden disabled>Download all</button>
+				</div>
+				<ul class="file-list" id="file-list"></ul>
+				<p class="empty" id="empty">Your files will appear here.</p>
+				<p class="hint" id="download-hint" hidden>Downloads run one at a time. Allow multiple downloads if your browser asks, and check its downloads list for saved files.</p>
+			</section>
+			<footer>
+				<p>VDO.Ninja Drop provides free, peer-to-peer file sharing between computers and phones. Send documents, photos, videos, or ZIP files with no account or app installation required.</p>
+				<p id="availability">Files are sent from your browser. Keep this tab open and your device awake until downloads finish.</p>
+				<p id="new-share" hidden><a href="./drop.html">Share your own files</a></p>
+			</footer>
+			<noscript><p class="notice">JavaScript is required to share and download files.</p></noscript>
+		</main>
+		<script>
+			(() => {
+				"use strict";
+				// One-file, same-origin wrapper. ?view=<name> opens a recipient;
+				// ?share=<name> starts a sender with a reusable name. A bare URL picks
+				// four random words. Native password + salt isolate Drop shares.
+				// Legacy ?view=<ID>#password=<key> links retain their original salt.
+				// File offers, requests, and transfers use the normal VDO.Ninja engine.
+				const $ = id => document.getElementById(id);
+				const params = new URLSearchParams(location.search);
+				const receiving = params.has("view");
+				const rows = new Map();
+				const uploads = new Map();
+				const queue = [];
+				let frame,
+					engine,
+					session,
+					active = null,
+					ready = false;
+				let everConnected = false,
+					bootStarted = Date.now();
+				let streamID, password;
+				let shareConflict = false;
+				const validShareName = /^[a-zA-Z0-9_-]{1,64}$/;
+
+				function notice(message) {
+					$("notice").textContent = message;
+					$("notice").hidden = !message;
+				}
+				function text(element, value) {
+					if (element.textContent !== value) element.textContent = value;
+				}
+				function randomShareName() {
+					const words = `acorn acres actor agate air albatross almond amber anchor angle animal antler apple apron archer arctic arrow artist aspen atlas autumn avenue
+						badge bagel bamboo banana band banner bark barn barrel basil basket bay beach bean bear beaver beetle bell berry birch bird bison blanket bloom blossom blue boat book border bottle boulder bowl branch brass bread breeze brick bridge brook brush bubble bucket bud buffalo butter button
+						cabin cactus cake camel camera camp candle canyon cape captain carrot castle cat cedar celery chalk cherry chess chest chick chisel circle citrus clam clay cliff clock cloud clover coast cocoa coconut coffee comet coral cork cotton cove coyote crab crane creek crest cricket crown crystal cube cup curry cypress
+						daisy dawn deer delta desert dew diamond diner dolphin dome donkey door dove dragon dream drift drum duck dune dusk
+						eagle earth east echo edge elm ember emerald falcon farm feather fern ferry field fig finch fir fire fish flag flame flannel flax flint float flock flora flower flute foam forest fork fossil fountain fox frost fruit fudge
+						galaxy garden garlic garnet gate gazelle gecko gem ginger glass globe glow goat gold goose grain grape grass gravel green grove gull
+						harbor hare harp harvest hat haven hawk hazel heart heath hedge heron hill hive holly honey hoof horizon horn horse hotel hound house hummingbird hyacinth
+						ibis ice igloo ink inlet iris island ivory ivy jacket jade jaguar jam jar jasmine jay jelly jewel jigsaw journal joy juniper
+						kale kangaroo kayak kelp kettle key kiwi kite kitten koala lagoon lake lamb lamp lantern lark lava lawn leaf leek lemon leopard lilac lily lime linen lion lizard llama loaf lobster log lotus lunar lynx
+						magnet magpie mango maple marble mare market marsh meadow melon mint mirror mist mitten moon moose moss moth mountain mouse mug mushroom music mussel mustard
+						nectar needle nest nettle night north note nutmeg oak oasis oat ocean olive onion opal orange orbit orchid otter owl oyster
+						paddle page palm panda paper parcel parrot parsley pasta patch path peach pearl pebble pecan pelican pencil pepper petal piano pickle pie pigeon pine pink pipit planet plant plum pocket pond pony poplar poppy porch potato prairie prism puffin pumpkin purple puzzle
+						quail quartz queen quilt quince rabbit raccoon radish rail rain rainbow raven ray reed reef ridge ring river robin rock rocket root rope rose rowan ruby rug
+						sage sail salad salmon sand satin saucer scarf sea seal seed shade shark shawl sheep shell shield ship shoal shore shrimp silver sky slate sleet slope snail snake snow soap sock sofa soil song sorrel south sparrow spice spoon spring spruce square squirrel star steam steel stem stone stork storm stream sugar summer summit sun sunset surf swan sweet swift sycamore
+						table taco tail talon tangerine tea teal temple tent tern terra thorn thyme tide tiger tile timber toast toffee tomato torch tower trail tree trout tulip tuna tunnel turtle twig
+						umber valley vanilla vase velvet vine viola violet vista vole wagon walnut wasp water wave wax weasel web west whale wheat wheel willow wind window wing winter wolf wood wool wren yam yard yellow yew zebra zinc zinnia`
+						.trim()
+						.split(/\s+/);
+					// Rejection sampling keeps every word equally likely for any list size.
+					const limit = Math.floor(0x100000000 / words.length) * words.length;
+					return Array.from(crypto.getRandomValues(new Uint32Array(4)), value => {
+						while (value >= limit) value = crypto.getRandomValues(new Uint32Array(1))[0];
+						return words[value % words.length];
+					}).join("-");
+				}
+				function updateNameControls() {
+					if (receiving) return;
+					const locked = !!(session && session.hostedFiles.length);
+					const changed = $("share-name").value !== streamID;
+					$("share-name").disabled = locked;
+					$("apply-name").disabled = locked || (!changed && !shareConflict);
+					$("choose").disabled = !ready || changed || shareConflict;
+					text($("share-name-status"), locked ? "Stop sharing to change the name." : changed ? "Apply your new name before choosing files." : "");
+					$("share-name-status").hidden = !locked && !changed;
+				}
+				function size(bytes) {
+					if (!bytes) return "0 B";
+					const unit = Math.min(4, Math.floor(Math.log(bytes) / Math.log(1024)));
+					return (bytes / Math.pow(1024, unit)).toLocaleString(undefined, { maximumFractionDigits: unit ? 1 : 0 }) + " " + ["B", "KB", "MB", "GB", "TB"][unit];
+				}
+				function connected(peer) {
+					return !!peer && (peer.connectionState === "connected" || peer.iceConnectionState === "connected" || peer.iceConnectionState === "completed");
+				}
+				function available(file) {
+					return file.dropAvailable !== false && connected(session.rpcs[file.UUID]);
+				}
+				function row(key, file, action) {
+					if (!rows.has(key)) {
+						const li = document.createElement("li");
+						li.className = "file-row";
+						const info = document.createElement("div");
+						info.className = "file-info";
+						const name = document.createElement("div");
+						name.className = "file-name";
+						const detail = document.createElement("div");
+						detail.className = "file-detail";
+						const progress = document.createElement("progress");
+						progress.max = 100;
+						progress.hidden = true;
+						const button = document.createElement("button");
+						button.onclick = action;
+						info.append(name, detail, progress);
+						li.append(info, button);
+						$("file-list").appendChild(li);
+						rows.set(key, { li, name, detail, progress, button });
+					}
+					const entry = rows.get(key);
+					text(entry.name, file.name);
+					entry.progress.setAttribute("aria-label", "Transfer progress for " + file.name);
+					return entry;
+				}
+				function publishList() {
+					Object.keys(session.pcs).forEach(uuid => {
+						if (session.hostedFiles.length) session.provideFileList(uuid);
+						else session.sendMessage({ fileList: [] }, uuid);
+					});
+				}
+				function removeFile(id) {
+					(uploads.get(id) || []).forEach(transfer => transfer.close());
+					engine.cancelFileTransfer(id);
+					uploads.delete(id);
+					publishList();
+					render();
+				}
+				function addFiles(files) {
+					if (!ready || receiving || shareConflict) return;
+					if ($("share-name").value !== streamID) {
+						$("share-name").focus();
+						return;
+					}
+					const selected = Array.from(files);
+					if (!selected.length) return;
+					session.shareFile({ files: selected, value: "" });
+					render();
+				}
+				function fail(attempt, message) {
+					if (attempt.error || attempt.saved) return;
+					attempt.error = message;
+					attempt.file.status = 5;
+					if (attempt.writer) attempt.writer.abort().catch(() => {});
+					if (attempt.channel) attempt.channel.close();
+					if (active === attempt) active = null;
+					// Pause the batch after a failure so a disconnected sender or blocked
+					// download does not silently fail every remaining file.
+					queue.length = 0;
+				}
+				function enqueue(index) {
+					const file = engine.transferList[index];
+					if (!file || !available(file) || queue.includes(index) || (active && active.index === index)) return;
+					queue.push(index);
+					nextDownload();
+					render();
+				}
+				function nextDownload() {
+					if (active || !queue.length) return;
+					const index = queue.shift();
+					const file = engine.transferList[index];
+					if (!file || !available(file)) {
+						queue.length = 0;
+						return;
+					}
+					const attempt = { index, file, bytes: 0, lastData: Date.now(), eof: false, saved: false, error: "", channel: null };
+					file.dropAttempt = attempt;
+					file.completed = 0;
+					active = attempt;
+					try {
+						engine.requestFile({ dataset: { tid: String(index), fid: file.id } });
+					} catch (error) {
+						fail(attempt, "Could not request this file. Try again.");
+					}
+				}
+
+				function installBridge() {
+					// Keep the native transfer list and stable indices used by the receiver.
+					// Native offers contain a complete catalog; reconcile repeats/removals
+					// here instead of appending duplicate download buttons in the wrapper.
+					const addDownloadLink = engine.addDownloadLink;
+					engine.addDownloadLink = (files, uuid, peers) => {
+						if (!receiving || !Array.isArray(files)) return;
+						const valid = files.filter(file => file && typeof file.id === "string" && typeof file.name === "string" && Number.isSafeInteger(file.size) && file.size >= 0);
+						const offered = new Set(valid.map(file => file.id));
+						engine.transferList.forEach(file => {
+							if (file.UUID === uuid) file.dropAvailable = offered.has(file.id);
+						});
+						const known = new Set(engine.transferList.filter(file => file.UUID === uuid).map(file => file.id));
+						addDownloadLink(
+							valid.filter(file => {
+								if (known.has(file.id)) return false;
+								known.add(file.id);
+								return true;
+							}),
+							uuid,
+							peers
+						);
+					};
+
+					const sendFile = session.sendFile;
+					session.sendFile = (uuid, id) => {
+						if (receiving) return;
+						const before = new Set(session.hostedTransfers);
+						let channel,
+							pendingRead = null,
+							readTimer;
+						const resume = () => {
+							clearTimeout(readTimer);
+							if (!channel || channel.readyState !== "open" || !pendingRead) return;
+							if (channel.bufferedAmount > 256 * 1024) {
+								readTimer = setTimeout(resume, 100);
+								return;
+							}
+							const read = pendingRead;
+							pendingRead = null;
+							read();
+						};
+						// The native sender creates one FileReader synchronously. Scope the
+						// adapter to that construction, then restore the iframe constructor.
+						// Its original slicing, framing, and cleanup remain in charge.
+						const FileReader = engine.FileReader;
+						engine.FileReader = class extends FileReader {
+							readAsArrayBuffer(blob) {
+								if (channel && channel.bufferedAmount > 1024 * 1024) {
+									pendingRead = () => super.readAsArrayBuffer(blob);
+									resume();
+								} else super.readAsArrayBuffer(blob);
+							}
+						};
+						try {
+							sendFile(uuid, id);
+						} finally {
+							engine.FileReader = FileReader;
+						}
+						channel = session.hostedTransfers.find(item => !before.has(item) && item.label === id);
+						if (!channel) return;
+						const close = channel.close.bind(channel);
+						const transfer = { channel, bytes: 0, eof: false, close };
+						if (!uploads.has(id)) uploads.set(id, []);
+						uploads.get(id).push(transfer);
+						channel.bufferedAmountLowThreshold = 256 * 1024;
+						channel.addEventListener("bufferedamountlow", resume);
+						let closeTimer;
+						const finishSending = () => {
+							closeTimer = setTimeout(channel.bufferedAmount ? finishSending : close, channel.bufferedAmount ? 1000 : 30000);
+						};
+						channel.close = () => {
+							if (!transfer.eof) close();
+							// The native receiver closes on EOF. Let it consume the queued
+							// messages before closing locally, including very small files.
+							else if (!closeTimer) finishSending();
+						};
+						channel.addEventListener("close", () => {
+							clearTimeout(readTimer);
+							clearTimeout(closeTimer);
+							pendingRead = null;
+						});
+						const send = channel.send.bind(channel);
+						channel.send = data => {
+							send(data);
+							if (typeof data !== "string") transfer.bytes += data.byteLength;
+							else if (data === "EOF1") transfer.eof = true;
+						};
+					};
+
+					const receiveFile = session.recieveFile;
+					session.recieveFile = (peers, uuid, channel) => {
+						const attempt = active;
+						if (!receiving || !attempt || attempt.channel || attempt.file.UUID !== uuid || channel.label !== attempt.file.id) {
+							channel.close();
+							return;
+						}
+						attempt.channel = channel;
+						let header = false;
+						// Observe before the existing handler so invalid/incomplete transfers
+						// cannot be presented as successfully received files.
+						channel.addEventListener("message", event => {
+							attempt.lastData = Date.now();
+							let invalid = false;
+							if (!header) {
+								try {
+									const data = JSON.parse(event.data);
+									invalid = data.type !== "filetransfer" || data.id !== attempt.file.id || data.size !== attempt.file.size || data.filename !== attempt.file.name;
+								} catch (error) {
+									invalid = true;
+								}
+								header = true;
+							} else if (event.data === "EOF1") {
+								attempt.eof = attempt.bytes === attempt.file.size;
+								invalid = !attempt.eof;
+							} else if (typeof event.data === "string") {
+								invalid = true;
+							} else {
+								attempt.bytes += event.data.byteLength;
+								invalid = attempt.bytes > attempt.file.size;
+							}
+							if (invalid || attempt.error) {
+								event.stopImmediatePropagation();
+								fail(attempt, "Transfer interrupted or incomplete. Try again.");
+							}
+						});
+						channel.addEventListener("close", () => {
+							if (!attempt.eof) fail(attempt, "Transfer interrupted. Try again.");
+						});
+						channel.addEventListener("error", () => fail(attempt, "Transfer failed. Try again."));
+						receiveFile(peers, uuid, channel);
+					};
+
+					// Use the bundled StreamSaver and its browser fallbacks. Wait for the
+					// sink to close before advancing the queue; EOF alone is not a save.
+					const createWriteStream = engine.streamSaver.createWriteStream;
+					engine.streamSaver.createWriteStream = (name, stop) => {
+						const attempt = active;
+						if (!receiving || !attempt) return createWriteStream(name, stop);
+						const writer = createWriteStream(name, () => fail(attempt, "Download cancelled by the browser.")).getWriter();
+						attempt.writer = writer;
+						return new engine.WritableStream({
+							async write(chunk) {
+								if (attempt.error) return;
+								try {
+									await writer.write(chunk);
+								} catch (error) {
+									fail(attempt, "Could not save the download. Check your browser and retry.");
+								}
+							},
+							async close() {
+								try {
+									if (attempt.error || !attempt.eof) {
+										await writer.abort();
+										return;
+									}
+									await writer.close();
+									if (attempt.error) return;
+									attempt.saved = true;
+									if (active === attempt) active = null;
+									nextDownload();
+								} catch (error) {
+									fail(attempt, "Could not finish saving. Check your browser and retry.");
+								}
+							},
+							async abort() {
+								fail(attempt, "Download interrupted. Try again.");
+								try {
+									await writer.abort();
+								} catch (error) {
+									/* Already closed. */
+								}
+							}
+						});
+					};
+					engine.addEventListener("message", event => {
+						if (active && engine.streamSaver.isTrustedMessage && engine.streamSaver.isTrustedMessage(event) && event.data && event.data.streamSaverError) {
+							fail(active, "Browser downloads are unavailable. Try another browser.");
+						}
+					});
+				}
+
+				function render() {
+					if (!ready) return;
+					updateNameControls();
+					const peers = Object.values(receiving ? session.rpcs : session.pcs).filter(connected);
+					const online = peers.length > 0;
+					everConnected = everConnected || online;
+					const signaling = session.ws && session.ws.readyState === 1;
+					$("status").dataset.online = String(online || (!receiving && signaling));
+					text($("status"), receiving ? (online ? "Connected to sender" : everConnected ? "Sender offline — waiting to reconnect" : "Waiting for the sender…") : online ? peers.length + (peers.length === 1 ? " recipient connected" : " recipients connected") : signaling ? "Ready to share" : "Connecting to the sharing service…");
+					if (shareConflict) {
+						text($("status"), "Share name already in use");
+						$("status").dataset.online = "false";
+					}
+					if (active && Date.now() - active.lastData > 90000) fail(active, "Transfer timed out. Try again.");
+					if (active && !active.eof && !available(active.file)) fail(active, "Sender disconnected or stopped sharing. Try again when available.");
+					const files = receiving ? engine.transferList : session.hostedFiles;
+					const keys = new Set();
+					let count = 0,
+						total = 0;
+					files.forEach((file, index) => {
+						if (receiving && file.dropAvailable === false && !file.dropAttempt) return;
+						const key = receiving ? String(index) : file.id;
+						keys.add(key);
+						count++;
+						total += file.size;
+						const entry = row(key, file, () => {
+							if (!receiving) removeFile(file.id);
+							else if (active && active.index === index) fail(active, "Cancelled. You can download again.");
+							else if (queue.includes(index)) queue.splice(queue.indexOf(index), 1);
+							else enqueue(index);
+							render();
+						});
+						let detail = size(file.size);
+						entry.progress.hidden = true;
+						entry.button.disabled = false;
+						if (receiving) {
+							const attempt = file.dropAttempt;
+							const busy = active && active.index === index;
+							const queued = queue.includes(index);
+							text(entry.button, busy || queued ? "Cancel" : attempt && attempt.saved ? "Download again" : attempt && attempt.error ? "Retry" : "Download");
+							entry.button.disabled = !busy && !queued && !available(file);
+							if (busy) {
+								const percent = file.size ? Math.min(100, Math.floor((attempt.bytes / file.size) * 100)) : attempt.eof ? 100 : 0;
+								detail += " · " + (attempt.eof ? "Finishing download…" : attempt.channel ? "Receiving " + percent + "%" : "Requesting…");
+								entry.progress.hidden = false;
+								entry.progress.value = percent;
+							} else if (queued) detail += " · Queued";
+							else if (attempt && attempt.error) detail += " · " + attempt.error;
+							else if (attempt && attempt.saved) detail += " · Received";
+							else if (!available(file)) detail += file.dropAvailable === false ? " · No longer shared" : " · Sender offline";
+						} else {
+							text(entry.button, "Remove");
+							const transfers = uploads.get(file.id) || [];
+							const running = transfers.filter(transfer => transfer.channel.readyState !== "closed");
+							const sent = transfers.filter(transfer => transfer.channel.readyState === "closed" && transfer.eof).length;
+							if (running.length) {
+								const bytes = running.reduce((sum, transfer) => sum + Math.max(0, transfer.bytes - transfer.channel.bufferedAmount), 0);
+								const percent = file.size ? Math.min(100, Math.floor((bytes / (file.size * running.length)) * 100)) : 0;
+								detail += " · Sending to " + running.length + " · " + percent + "%";
+								entry.progress.hidden = false;
+								entry.progress.value = percent;
+							} else if (sent) detail += " · Sent " + sent + (sent === 1 ? " time" : " times");
+							else detail += " · Ready to download";
+						}
+						text(entry.detail, detail);
+					});
+					rows.forEach((entry, key) => {
+						if (!keys.has(key)) {
+							entry.li.remove();
+							rows.delete(key);
+						}
+					});
+					text($("summary"), count ? count + (count === 1 ? " file · " : " files · ") + size(total) : receiving ? "No files available yet" : "No files selected");
+					$("empty").hidden = count > 0;
+					text($("empty"), receiving ? (online ? "The sender has no files shared right now." : "Files appear when the sender is online and sharing.") : "Your files will appear here.");
+					$("share-panel").hidden = receiving || !count || shareConflict;
+					$("stop-all").hidden = receiving || !count;
+					$("download-all").disabled = !!active || !!queue.length || !files.some(file => available(file) && !(file.dropAttempt && file.dropAttempt.saved));
+				}
+
+				$("share-name").oninput = updateNameControls;
+				$("share-name-form").onsubmit = event => {
+					event.preventDefault();
+					if (receiving || (session && session.hostedFiles.length) || !validShareName.test($("share-name").value)) return;
+					// Restart through the existing page lifecycle only when no files are
+					// shared, so changing a name cannot interrupt an active download.
+					const senderURL = new URL(location.pathname, location.origin);
+					senderURL.searchParams.set("share", $("share-name").value);
+					location.assign(senderURL.href);
+				};
+				window.addEventListener("message", event => {
+					if (receiving || !frame || event.source !== frame.contentWindow || event.origin !== location.origin || !event.data) return;
+					if (event.data.action === "alert" && (event.data.value === "Stream ID is already in use." || event.data.value === "Stream ID is already in use in this room.")) {
+						shareConflict = true;
+						notice("That share name is already in use. Stop sharing any selected files, then apply a different name or reload to retry.");
+						render();
+					}
+				});
+				$("choose").onclick = () => $("file-input").click();
+				$("file-input").onchange = event => {
+					addFiles(event.target.files);
+					event.target.value = "";
+				};
+				$("stop-all").onclick = () => {
+					uploads.forEach(transfers => transfers.forEach(transfer => transfer.close()));
+					session.hostedFiles.slice().forEach(file => engine.cancelFileTransfer(file.id));
+					uploads.clear();
+					publishList();
+					render();
+				};
+				$("download-all").onclick = () => {
+					engine.transferList.forEach((file, index) => {
+						if (available(file) && !(file.dropAttempt && file.dropAttempt.saved) && !queue.includes(index)) queue.push(index);
+					});
+					nextDownload();
+					render();
+				};
+				$("copy-link").onclick = async () => {
+					try {
+						await navigator.clipboard.writeText($("share-link").value);
+						$("copy-link").textContent = "Copied!";
+						setTimeout(() => {
+							$("copy-link").textContent = "Copy link";
+						}, 2000);
+					} catch (error) {
+						$("share-link").focus();
+						$("share-link").select();
+						notice("Copy the selected link using your browser’s copy command.");
+					}
+				};
+				$("share-link").onclick = event => event.target.select();
+				$("show-qr").onclick = async () => {
+					const button = $("show-qr");
+					const show = $("qr-panel").hidden;
+					$("qr-panel").hidden = !show;
+					button.setAttribute("aria-expanded", String(show));
+					button.textContent = show ? "Hide QR code" : "Show QR code";
+					if (!show || $("qr-code").firstChild) return;
+					button.disabled = true;
+					$("qr-status").hidden = false;
+					$("qr-status").textContent = "Loading QR code…";
+					try {
+						// Reuse the app's bundled encoder, loaded only when requested.
+						if (!window.QRCode) {
+							await new Promise((resolve, reject) => {
+								const script = document.createElement("script");
+								script.onload = resolve;
+								script.onerror = () => {
+									script.remove();
+									reject(new Error("QR library unavailable"));
+								};
+								script.src = "./thirdparty/qrcode.min.js";
+								document.head.appendChild(script);
+							});
+						}
+						new QRCode($("qr-code"), {
+							text: $("share-link").value,
+							width: 256,
+							height: 256,
+							colorDark: "#000000",
+							colorLight: "#ffffff",
+							correctLevel: QRCode.CorrectLevel.M
+						});
+						$("qr-code").removeAttribute("title");
+						$("qr-code").hidden = false;
+						$("qr-status").hidden = true;
+					} catch (error) {
+						$("qr-code").textContent = "";
+						$("qr-code").hidden = true;
+						$("qr-status").textContent = "Could not create the QR code. Copy the link, or hide and reopen the code to retry.";
+					} finally {
+						button.disabled = false;
+					}
+				};
+				window.addEventListener("dragover", event => event.preventDefault());
+				window.addEventListener("drop", event => event.preventDefault());
+				$("drop-zone").addEventListener("dragover", () => $("drop-zone").classList.add("dragging"));
+				$("drop-zone").addEventListener("dragleave", () => $("drop-zone").classList.remove("dragging"));
+				$("drop-zone").addEventListener("drop", event => {
+					$("drop-zone").classList.remove("dragging");
+					const items = Array.from(event.dataTransfer.items || []);
+					if (items.some(item => item.webkitGetAsEntry && item.webkitGetAsEntry() && item.webkitGetAsEntry().isDirectory)) {
+						notice("ZIP folders before sharing, then choose or drop the ZIP file.");
+						return;
+					}
+					addFiles(event.dataTransfer.files);
+				});
+				window.addEventListener("beforeunload", event => {
+					if (ready && (active || (!receiving && session.hostedFiles.length))) {
+						event.preventDefault();
+						event.returnValue = "";
+					}
+				});
+
+				if (receiving) {
+					$("sender-panel").hidden = true;
+					$("download-all").hidden = false;
+					$("download-hint").hidden = false;
+					$("new-share").hidden = false;
+					$("title").textContent = "Files, coming your way.";
+					$("subtitle").textContent = "Download a file or collect them all.";
+					$("availability").textContent = "The sender needs to keep their sharing tab open. Keep this page open until your downloads finish.";
+				}
+				if (!window.isSecureContext || !window.RTCPeerConnection) {
+					notice("Open Drop over HTTPS (or localhost) in a browser with WebRTC support.");
+					$("status").textContent = "Unable to start";
+					return;
+				}
+				streamID = receiving ? params.get("view") : params.has("share") ? params.get("share") : randomShareName();
+				const fragment = new URLSearchParams(location.hash.slice(1));
+				const legacy = receiving && fragment.has("password");
+				password = legacy ? fragment.get("password") : "drop-" + streamID;
+				$("share-name").value = receiving ? "" : streamID;
+				updateNameControls();
+				if (!validShareName.test(streamID || "") || (legacy && (!/^[a-zA-Z0-9]{1,64}$/.test(streamID) || !/^[a-f0-9]{32}$/.test(password || "")))) {
+					notice(receiving ? "This sharing link is invalid. Ask the sender to copy the full link again." : "Enter a share name using 1–64 letters, numbers, hyphens or underscores, then apply it.");
+					$("status").textContent = "Invalid sharing link";
+					return;
+				}
+				const shareURL = new URL(location.pathname, location.origin);
+				shareURL.searchParams.set("view", streamID);
+				if (legacy) shareURL.hash = new URLSearchParams({ password }).toString();
+				$("share-link").value = shareURL.href;
+				const source = new URL("./", location.href);
+				source.search = new URLSearchParams({
+					[receiving ? "view" : "push"]: streamID.replace(/-/g, "_"),
+					password,
+					datamode: "1",
+					cleanoutput: "1",
+					noaudio: "1",
+					novideo: "1",
+					noiframe: "1",
+					nochunk: "1",
+					chatbutton: "0",
+					nosettings: "1",
+					label: "Drop"
+				}).toString();
+				if (!legacy) source.searchParams.set("salt", "vdo.ninja/drop");
+				frame = document.createElement("iframe");
+				frame.id = "engine";
+				frame.hidden = true;
+				frame.title = "VDO.Ninja file connection";
+				frame.tabIndex = -1;
+				frame.setAttribute("aria-hidden", "true");
+				frame.allow = "camera 'none'; microphone 'none'; display-capture 'none'";
+				frame.src = source.href;
+				document.body.appendChild(frame);
+				const boot = setInterval(() => {
+					engine = frame.contentWindow;
+					try {
+						// Startup may redirect to a backup host if a core script fails.
+						// This wrapper needs the local, same-origin copy of the app.
+						if (engine.location.href !== "about:blank" && engine.location.origin !== location.origin) throw new Error("Origin changed");
+					} catch (error) {
+						clearInterval(boot);
+						$("status").textContent = "Unable to load the connection";
+						notice("The local VDO.Ninja app could not load. Reload this page to try again.");
+						return;
+					}
+					if (engine.session && engine.session.recieveFile && engine.session.shareFile && engine.streamSaver && engine.addDownloadLink) {
+						clearInterval(boot);
+						session = engine.session;
+						installBridge();
+						ready = true;
+						$("choose").disabled = false;
+						if (!shareConflict) notice("");
+						render();
+						setInterval(render, 300);
+					} else if (Date.now() - bootStarted > 30000) {
+						$("status").textContent = "Still connecting…";
+						notice("The connection is taking longer than expected. Check your network, or reload this page to try again.");
+					}
+				}, 100);
+			})();
+		</script>
+	</body>
+</html>

@@ -5,6 +5,12 @@
     "drawing-ping": "Ping",
     "drawing-undo": "Deshacer",
     "drawing-ping-help": "Haz clic o toca para señalar brevemente. Haz clic en Ping de nuevo para desactivarlo.",
+    "use-meshcast": "Usar Meshcast",
+    "muted-in-scenes": "Silenciado en escenas",
+    "guest-muted-scenes": "El invitado se silenció en escenas",
+    "scene-mute-saved": "Silencio en escenas conservado",
+    "changing-scene-audio": "Cambiando audio de escenas",
+    "scene-audio-not-confirmed": "Audio de escenas sin confirmar",
     "view-only": "Solo ver",
     "chunked-synchronizing": "Sincronizando…",
     "chunked-buffering": "Almacenando en búfer…",
@@ -390,6 +396,9 @@
     "statistics": "Statistics"
   },
   "titles": {
+    "switch-this-guest-s-camera-and-microphone-between-direct-connections-and-meshcast": "Cambiar la cámara y el micrófono de este invitado entre conexiones directas y Meshcast",
+    "mute-microphone-and-shared-audio-in-scene-outputs": "Silenciar el micrófono y el audio compartido en las salidas de escena",
+    "mute-audio-in-scene-outputs": "Silenciar el micrófono y el audio compartido en las salidas de escena",
     "view-only": "Solo ver",
     "the-language-you-want-to-hear-when-live-translation-is-available": "El idioma que quieres escuchar cuando la traducción en directo esté disponible",
     "100": "100",

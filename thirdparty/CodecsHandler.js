@@ -79,7 +79,8 @@ var CodecsHandler = (function() {
 					codecNumber = codecNumber.trim();
 					if (!codecNumber || !codecNumber.length) return;
 					info.videoCodecNumbers.push(codecNumber);
-					info.videoCodecNumbersOriginal = line;
+					// Leave the original line ending outside the replacement.
+					info.videoCodecNumbersOriginal = line.replace(/\r$/, "");
 				});
 			}
 			var LINE = line.toUpperCase();
@@ -169,7 +170,8 @@ var CodecsHandler = (function() {
 					codecNumber = codecNumber.trim();
 					if (!codecNumber || !codecNumber.length) return;
 					info.audioCodecNumbers.push(codecNumber);
-					info.audioCodecNumbersOriginal = line;
+					// Leave the original line ending outside the replacement.
+					info.audioCodecNumbersOriginal = line.replace(/\r$/, "");
 				});
 			}
 			var LINE = line.toLowerCase();
