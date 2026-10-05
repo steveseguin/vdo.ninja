@@ -1,5 +1,12 @@
 {
   "innerHTML": {
+    "drawing-color": "Barva",
+    "drawing-pen": "Pero",
+    "drawing-ping": "Ping",
+    "drawing-undo": "Zpět",
+    "drawing-ping-help": "Kliknutím nebo klepnutím krátce ukážete. Dalším kliknutím na Ping to vypnete.",
+    "chunked-synchronizing": "Synchronizace…",
+    "chunked-buffering": "Ukládání do vyrovnávací paměti…",
     "use-meshcast": "Použít Meshcast",
     "muted-in-scenes": "Ve scénách ztlumeno",
     "guest-muted-scenes": "Host se ve scénách ztlumil",

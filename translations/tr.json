@@ -1,5 +1,12 @@
 {
   "innerHTML": {
+    "drawing-color": "Renk",
+    "drawing-pen": "Kalem",
+    "drawing-ping": "Ping",
+    "drawing-undo": "Geri al",
+    "drawing-ping-help": "Kısa süre işaret etmek için tıklayın veya dokunun. Kapatmak için Ping'e tekrar tıklayın.",
+    "chunked-synchronizing": "Senkronize ediliyor…",
+    "chunked-buffering": "Arabelleğe alınıyor…",
     "use-meshcast": "Meshcast kullan",
     "muted-in-scenes": "Sahnelerde sessizde",
     "guest-muted-scenes": "Misafir sahnelerde kendi sesini kapattı",

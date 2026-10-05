@@ -1,5 +1,12 @@
 {
   "innerHTML": {
+    "drawing-color": "Kleur",
+    "drawing-pen": "Pen",
+    "drawing-ping": "Ping",
+    "drawing-undo": "Ongedaan maken",
+    "drawing-ping-help": "Klik of tik om kort te wijzen. Klik nogmaals op Ping om het uit te schakelen.",
+    "chunked-synchronizing": "Synchroniseren…",
+    "chunked-buffering": "Bufferen…",
     "use-meshcast": "Meshcast gebruiken",
     "muted-in-scenes": "Gedempt in scènes",
     "guest-muted-scenes": "Gast heeft zichzelf gedempt in scènes",

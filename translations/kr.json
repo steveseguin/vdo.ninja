@@ -1,5 +1,12 @@
 {
   "innerHTML": {
+    "drawing-color": "색상",
+    "drawing-pen": "펜",
+    "drawing-ping": "Ping",
+    "drawing-undo": "실행 취소",
+    "drawing-ping-help": "클릭하거나 탭하여 잠깐 가리킵니다. Ping을 다시 클릭하면 꺼집니다.",
+    "chunked-synchronizing": "동기화 중…",
+    "chunked-buffering": "버퍼링 중…",
     "use-meshcast": "Meshcast 사용",
     "muted-in-scenes": "장면에서 음소거됨",
     "guest-muted-scenes": "게스트가 장면에서 자신의 오디오를 음소거함",

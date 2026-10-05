@@ -1,5 +1,12 @@
 {
   "innerHTML": {
+    "drawing-color": "色",
+    "drawing-pen": "ペン",
+    "drawing-ping": "Ping",
+    "drawing-undo": "元に戻す",
+    "drawing-ping-help": "クリックまたはタップして一時的に指し示します。もう一度 Ping をクリックするとオフになります。",
+    "chunked-synchronizing": "同期中…",
+    "chunked-buffering": "バッファリング中…",
     "use-meshcast": "Meshcast を使用",
     "muted-in-scenes": "シーン内でミュート中",
     "guest-muted-scenes": "ゲストがシーン内の音声をミュート中",

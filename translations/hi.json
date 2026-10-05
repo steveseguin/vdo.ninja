@@ -1,5 +1,12 @@
 {
   "innerHTML": {
+    "drawing-color": "रंग",
+    "drawing-pen": "पेन",
+    "drawing-ping": "Ping",
+    "drawing-undo": "पूर्ववत करें",
+    "drawing-ping-help": "संक्षेप में इंगित करने के लिए क्लिक या टैप करें। इसे बंद करने के लिए Ping पर फिर से क्लिक करें।",
+    "chunked-synchronizing": "सिंक्रनाइज़ हो रहा है…",
+    "chunked-buffering": "बफ़र हो रहा है…",
     "use-meshcast": "Meshcast का उपयोग करें",
     "muted-in-scenes": "सीन में म्यूट है",
     "guest-muted-scenes": "गेस्ट ने सीन में खुद को म्यूट किया",

@@ -1,5 +1,10 @@
 {
   "innerHTML": {
+    "drawing-color": "Цвет",
+    "drawing-pen": "Перо",
+    "drawing-ping": "Ping",
+    "drawing-undo": "Отменить",
+    "drawing-ping-help": "Нажмите или коснитесь, чтобы кратко указать. Нажмите Ping ещё раз, чтобы выключить.",
     "use-meshcast": "Использовать Meshcast",
     "muted-in-scenes": "Звук в сценах выключен",
     "guest-muted-scenes": "Гость выключил свой звук в сценах",

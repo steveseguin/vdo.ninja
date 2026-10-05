@@ -1,5 +1,10 @@
 {
   "innerHTML": {
+    "drawing-color": "Couleur",
+    "drawing-pen": "Stylo",
+    "drawing-ping": "Ping",
+    "drawing-undo": "Annuler",
+    "drawing-ping-help": "Cliquez ou touchez pour pointer brièvement. Cliquez de nouveau sur Ping pour le désactiver.",
     "use-meshcast": "Utiliser Meshcast",
     "muted-in-scenes": "Audio coupé dans les scènes",
     "guest-muted-scenes": "L'invité a coupé son audio dans les scènes",

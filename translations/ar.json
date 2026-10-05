@@ -1,5 +1,12 @@
 {
   "innerHTML": {
+    "drawing-color": "اللون",
+    "drawing-pen": "القلم",
+    "drawing-ping": "Ping",
+    "drawing-undo": "تراجع",
+    "drawing-ping-help": "انقر أو المس للإشارة لحظيًا. انقر على Ping مرة أخرى لإيقافه.",
+    "chunked-synchronizing": "جارٍ المزامنة…",
+    "chunked-buffering": "جارٍ التخزين المؤقت…",
     "use-meshcast": "استخدام Meshcast",
     "muted-in-scenes": "مكتوم في المشاهد",
     "guest-muted-scenes": "الضيف كتم صوته في المشاهد",

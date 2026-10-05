@@ -1,5 +1,12 @@
 {
   "innerHTML": {
+    "drawing-color": "颜色",
+    "drawing-pen": "画笔",
+    "drawing-ping": "Ping",
+    "drawing-undo": "撤销",
+    "drawing-ping-help": "点击或轻触即可短暂指示。再次点击 Ping 可关闭。",
+    "chunked-synchronizing": "正在同步…",
+    "chunked-buffering": "正在缓冲…",
     "use-meshcast": "使用 Meshcast",
     "muted-in-scenes": "场景中已静音",
     "guest-muted-scenes": "来宾已在场景中静音",

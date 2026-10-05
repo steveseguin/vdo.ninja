@@ -1,5 +1,12 @@
 {
   "innerHTML": {
+    "drawing-color": "Kolor",
+    "drawing-pen": "Pióro",
+    "drawing-ping": "Ping",
+    "drawing-undo": "Cofnij",
+    "drawing-ping-help": "Kliknij lub dotknij, aby krótko wskazać. Kliknij Ping ponownie, aby wyłączyć.",
+    "chunked-synchronizing": "Synchronizacja…",
+    "chunked-buffering": "Buforowanie…",
     "use-meshcast": "Użyj Meshcast",
     "muted-in-scenes": "Wyciszono w scenach",
     "guest-muted-scenes": "Gość wyciszył się w scenach",

@@ -1,5 +1,10 @@
 {
   "innerHTML": {
+    "drawing-color": "Farbe",
+    "drawing-pen": "Stift",
+    "drawing-ping": "Ping",
+    "drawing-undo": "Rückgängig",
+    "drawing-ping-help": "Klicken oder tippen, um kurz darauf zu zeigen. Erneut auf Ping klicken, um es auszuschalten.",
     "use-meshcast": "Meshcast verwenden",
     "muted-in-scenes": "In Szenen stumm",
     "guest-muted-scenes": "Gast hat sich in Szenen stummgeschaltet",

@@ -1,5 +1,12 @@
 {
   "innerHTML": {
+    "drawing-color": "Colore",
+    "drawing-pen": "Penna",
+    "drawing-ping": "Ping",
+    "drawing-undo": "Annulla",
+    "drawing-ping-help": "Fai clic o tocca per indicare brevemente. Fai di nuovo clic su Ping per disattivarlo.",
+    "chunked-synchronizing": "Sincronizzazione…",
+    "chunked-buffering": "Buffering…",
     "use-meshcast": "Usa Meshcast",
     "muted-in-scenes": "Audio disattivato nelle scene",
     "guest-muted-scenes": "L'ospite ha disattivato il proprio audio nelle scene",

@@ -1,5 +1,12 @@
 {
   "innerHTML": {
+    "drawing-color": "Колір",
+    "drawing-pen": "Перо",
+    "drawing-ping": "Ping",
+    "drawing-undo": "Скасувати",
+    "drawing-ping-help": "Натисніть або торкніться, щоб коротко вказати. Натисніть Ping ще раз, щоб вимкнути.",
+    "chunked-synchronizing": "Синхронізація…",
+    "chunked-buffering": "Буферизація…",
     "use-meshcast": "Використовувати Meshcast",
     "muted-in-scenes": "Звук у сценах вимкнено",
     "guest-muted-scenes": "Гість вимкнув свій звук у сценах",

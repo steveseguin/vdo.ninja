@@ -1,5 +1,10 @@
 {
   "innerHTML": {
+    "drawing-color": "Cor",
+    "drawing-pen": "Caneta",
+    "drawing-ping": "Ping",
+    "drawing-undo": "Desfazer",
+    "drawing-ping-help": "Clique ou toque para apontar brevemente. Clique em Ping novamente para desativar.",
     "use-meshcast": "Usar Meshcast",
     "muted-in-scenes": "Silenciado nas cenas",
     "guest-muted-scenes": "O convidado se silenciou nas cenas",

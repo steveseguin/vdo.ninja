@@ -1,5 +1,12 @@
 {
   "innerHTML": {
+    "drawing-color": "Kolorea",
+    "drawing-pen": "Boligrafoa",
+    "drawing-ping": "Ping",
+    "drawing-undo": "Desegin",
+    "drawing-ping-help": "Egin klik edo sakatu laburki seinalatzeko. Egin klik berriro Ping-en desaktibatzeko.",
+    "chunked-synchronizing": "Sinkronizatzen…",
+    "chunked-buffering": "Bufferrean gordetzen…",
     "use-meshcast": "Erabili Meshcast",
     "muted-in-scenes": "Eszenetan mutututa",
     "guest-muted-scenes": "Gonbidatuak bere burua mututu du eszenetan",

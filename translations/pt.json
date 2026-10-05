@@ -1,5 +1,12 @@
 {
   "innerHTML": {
+    "drawing-color": "Cor",
+    "drawing-pen": "Caneta",
+    "drawing-ping": "Ping",
+    "drawing-undo": "Desfazer",
+    "drawing-ping-help": "Clique ou toque para apontar brevemente. Clique em Ping novamente para desativar.",
+    "chunked-synchronizing": "Sincronizando…",
+    "chunked-buffering": "Armazenando em buffer…",
     "use-meshcast": "Usar Meshcast",
     "muted-in-scenes": "Sem som nas cenas",
     "guest-muted-scenes": "O convidado silenciou-se nas cenas",
