@@ -35746,7 +35746,7 @@ function updateMeshcastDirector(UUID, status) {
 	var controls = getById("controls_" + UUID);
 	var button = controls.querySelector('[data-action-type="meshcast-toggle"]');
 	if (button) {
-		button.classList.toggle("hidden", !status.available);
+		button.classList.toggle("hidden", !status.available || location.hostname !== "vdo.ninja");
 		button.classList.toggle("pressed", !!status.on);
 		button.setAttribute("aria-pressed", status.on ? "true" : "false");
 		button.disabled = !!status.busy || button.dataset.whepDisabled === "true";
