@@ -23330,10 +23330,10 @@ function getQuickStats(sid = false) {
 		stats.streamID = session.streamID;
 
 		if (session.whipOut && session.whipOut.stats) {
-			myStats.whip_outbound = session.whipOut.stats;
+			stats.whip_outbound = session.whipOut.stats;
 		}
 		if (session.whepIn && session.whepIn.stats) {
-			myStats.whep_inbound = session.whepIn.stats;
+			stats.whep_inbound = session.whepIn.stats;
 		}
 
 		for (var i in session.rpcs) {
@@ -38971,7 +38971,7 @@ function reconnectDevices(event) {
 					if (videoSelect.value == "ZZZ") {
 						for (var i = 0; i < videoSelect.options.length; i++) {
 							try {
-								if (videoSelect.options[i].innerHTML == lastVideoDevice) {
+								if (videoSelect.options[i].textContent == lastVideoDevice) {
 									videoSelect.options[i].selected = "true";
 									streamConnected = true;
 									lastVideoDevice = null;
@@ -58566,15 +58566,16 @@ async function setupDropbox(accessToken = null, options = {}) {
 	if (!token) {
 		return null;
 	}
-	if (!forceReauth && session.dbx && session.dropboxAccessToken === token) {
+	// A pending client may be using a different token; check again after it finishes.
+	while (dropboxInitPromise) {
+		await dropboxInitPromise;
+	}
+	if (!forceReauth && session.dbx && session.dbx.auth.getAccessToken() === token) {
 		return session.dbx;
 	}
 	session.dropboxAccessToken = token;
 	if (manualToken && opts.persist !== false) {
 		persistDropboxToken(token);
-	}
-	if (dropboxInitPromise) {
-		return dropboxInitPromise;
 	}
 	dropboxInitPromise = (async currentToken => {
 		await ensureDropboxSDKLoaded();
@@ -59328,7 +59329,7 @@ async function recordVideo(target, event = null, videoKbps = false) {
 
 	setTimeout(
 		function (v) {
-			if (v && v.recorder) {
+			if (!cancell && v && v.recording && v.recorder) {
 				v.recorder.mediaRecorder.start(1000);
 			}
 		},
@@ -66301,6 +66302,7 @@ function whipOut() {
 	var codec = false;
 	var keyframe = false;
 	async function whipConnect() {
+		var connectedPeer = null;
 		try {
 			if (!session.configuration) {
 				await chooseBestTURN();
@@ -66320,6 +66322,7 @@ function whipOut() {
 			// do anything whip specific here
 
 			session.whipOut = new RTCPeerConnection(config);
+			connectedPeer = session.whipOut;
 			// Only official Meshcast v2 publishing may finish the gathering wait early.
 			// Capture this per connection; generic WHIP endpoints retain their behavior.
 			session.whipOut.meshcastGatheringEarlyCompletion = !!session.meshcast2 &&
@@ -66511,6 +66514,7 @@ function whipOut() {
 
 				const publishingPeer = session.whipOut;
 				session.whipOut.onicecandidate = function (event) {
+					if (session.whipOut !== publishingPeer) return;
 					//event
 					if (event.candidate == null) {
 						log("END OF ICE CANDIDATES");
@@ -66540,6 +66544,7 @@ function whipOut() {
 
 				// WHIP connection state monitoring for auto-reconnection
 				session.whipOut.oniceconnectionstatechange = function () {
+					if (session.whipOut !== publishingPeer) return;
 					log("WHIP ICE state: " + session.whipOut.iceConnectionState);
 					if (session.whipOut.iceConnectionState === 'disconnected' ||
 						session.whipOut.iceConnectionState === 'failed') {
@@ -66548,6 +66553,7 @@ function whipOut() {
 				};
 
 				session.whipOut.onconnectionstatechange = function () {
+					if (session.whipOut !== publishingPeer) return;
 					if (this === session.whipOut) collectMeshcastQos(this);
 					if (session.meshcast || session.meshcast2 || session.meshcastSwitch) announceMeshcastStatus();
 					log("WHIP connection state: " + session.whipOut.connectionState);
@@ -66563,10 +66569,13 @@ function whipOut() {
 		} catch (e) {
 			errorlog(e);
 		}
+		return connectedPeer;
 	}
 	var publishing = false;
 
 	function publish(event) {
+		var publishingPeer = event.target;
+		if (!publishingPeer || session.whipOut !== publishingPeer) return;
 		if (publishing) {
 			log(event);
 			errorlog("onnegotiationneeded again?");
@@ -66576,37 +66585,41 @@ function whipOut() {
 		warnlog("ON NEGO NEEDED");
 		warnlog(event);
 		try {
-			session.whipOut
+			publishingPeer
 				.createOffer()
 				.then(function (description) {
+					if (session.whipOut !== publishingPeer) return;
 					try {
 						description = configureWhipOutSDP(description);
 					} catch (e) {
 						errorlog(e);
 					}
-					return session.whipOut.setLocalDescription(description);
+					return publishingPeer.setLocalDescription(description);
 				})
 				.then(async function () {
+					if (session.whipOut !== publishingPeer) return;
 					try {
-						const gatheringWait = session.whipOut.meshcastTrickle ? session.whipOut.meshcastTrickle.wait : session.whipWait;
+						const gatheringWait = publishingPeer.meshcastTrickle ? publishingPeer.meshcastTrickle.wait : session.whipWait;
 						if (gatheringWait) {
 							console.log("Waiting for ice candidates to collect. At least 300ms recommended; at most 30-seconds.");
 							let startTime = Date.now();
 							const { promise, resolve } = sleepCancellable(gatheringWait); // 500ms for managed anonymous Meshcast; otherwise preserve the configured wait.
-							session.whipOut.iceCompletedCallback = resolve; // Can complete earlier if possible.
-							if (session.whipOut.meshcastGatheringEarlyCompletion && session.whipOut.iceGatheringState === "complete") {
+							publishingPeer.iceCompletedCallback = resolve; // Can complete earlier if possible.
+							if (publishingPeer.meshcastGatheringEarlyCompletion && publishingPeer.iceGatheringState === "complete") {
 								resolve();
 							}
 							await promise; // pausing for a moment; until all collected or timed out
+							if (session.whipOut !== publishingPeer) return;
 							console.log("Finished waiting for ice candidates. Waited " + (Date.now() - startTime) / 1000 + "-seconds");
-							delete session.whipOut.iceCompletedCallback;
+							delete publishingPeer.iceCompletedCallback;
 						}
 					} catch (e) {
 						errorlog(e);
 					}
 
-					//warnlog(session.whipOut.localDescription.sdp);
-					var filteredDesc = filterDescriptionIpv6(session.whipOut.localDescription);
+					if (session.whipOut !== publishingPeer) return;
+					//warnlog(publishingPeer.localDescription.sdp);
+					var filteredDesc = filterDescriptionIpv6(publishingPeer.localDescription);
 					var sdp = filteredDesc.sdp;
 
 					// sdp = configureWhipOutSDP(sdp);
@@ -66656,9 +66669,11 @@ function whipOut() {
 		//log(data);
 		try {
 			const reportingPeer = session.whipOut;
+			if (!reportingPeer) return;
 			const trickle = session.whipOut && session.whipOut.meshcastTrickle;
 			var xhttp = new XMLHttpRequest();
 			xhttp.onreadystatechange = async function () {
+				if (session.whipOut !== reportingPeer) return;
 				if (this.readyState == 4 && (this.status == 200 || this.status == 201)) {
 					if (trickle) trickle.accept(this);
 					var contentType = this.getResponseHeader("content-type");
@@ -66780,9 +66795,10 @@ function whipOut() {
 						if (session.stunOnly) { // or whatever flag you want to use
 							jsep.sdp = filterStunOnly(jsep.sdp);
 						}
-						session.whipOut
+						reportingPeer
 							.setRemoteDescription(jsep)
 							.then(async function () {
+								if (session.whipOut !== reportingPeer) return;
 								warnlog("SHOULD BE CONNECTED?");
 								//var content = "";
 								//while (candidates.length) {
@@ -66803,6 +66819,7 @@ function whipOut() {
 								}
 								session.whipOutSetScale();
 								await sleep(1000); //  give whip server a moment to setup I guess.
+								if (session.whipOut !== reportingPeer) return;
 								// Meshcast v2 supplies its playback URL only after WHIP responds.
 								// Early peers may already be marked sent after receiving an empty URL.
 								broadcastWhepSettings("primary");
@@ -66821,6 +66838,7 @@ function whipOut() {
 								//}
 							})
 							.catch(async function (e) {
+								if (session.whipOut !== reportingPeer) return;
 								errorlog(e);
 								errorlog("Recieved an invalid SDP answer response from the WHIP endpoint. While things may still work, it won't work as intended.");
 								if (WHELPlaybackURL) {
@@ -66840,6 +66858,7 @@ function whipOut() {
 										errorlog(e);
 									}
 									await sleep(1000); //  give whip server a moment to setup I guess.
+									if (session.whipOut !== reportingPeer) return;
 									// Meshcast v2 supplies its playback URL only after WHIP responds.
 									// Early peers may already be marked sent after receiving an empty URL.
 									broadcastWhepSettings("primary");
@@ -66872,6 +66891,7 @@ function whipOut() {
 							session.whipoutSettings.started = Date.now();
 						}
 						await sleep(1000);
+						if (session.whipOut !== reportingPeer) return;
 						// Meshcast v2 supplies its playback URL only after WHIP responds.
 						// Early peers may already be marked sent after receiving an empty URL.
 						broadcastWhepSettings("primary");
@@ -66940,6 +66960,7 @@ function whipOut() {
 		xhttp.setRequestHeader("Content-Type", "application/" + type);
 
 		xhttp.onerror = function (e) {
+			if (session.whipOut !== reportingPeer) return;
 			errorlog(e);
 
 			if (window.location.protocol == "https:" && session.whipOutput.startsWith("http://") && !session.whipOutput.startsWith("http://localhost")) {
@@ -67038,6 +67059,7 @@ function whipOut() {
 		}
 
 		whipReconnecting = true;
+		var retryPeer = session.whipOut;
 
 		const maxRetries = 5;
 		const initialDelay = 2000;
@@ -67046,7 +67068,8 @@ function whipOut() {
 		let currentRetry = whipReconnectAttempts;
 		let currentDelay = Math.min(initialDelay * Math.pow(2, currentRetry), maxDelay);
 
-		function attemptReconnect() {
+		async function attemptReconnect() {
+			if (session.whipOut !== retryPeer) return;
 			if (!session.whipOutput) {
 				log("WHIP output removed, stopping retry");
 				whipReconnecting = false;
@@ -67082,11 +67105,13 @@ function whipOut() {
 
 			// Attempt reconnection - reuses session.whipOutput and session.whipOutputToken
 			try {
-				whipConnect();
+				retryPeer = await whipConnect();
+				if (session.whipOut !== retryPeer) return;
 				// Give it time to connect before checking
 				var checkAttempts = 0;
 				var maxCheckAttempts = 6; // Up to 30 seconds total (6 x 5s)
 				function checkConnectionState() {
+					if (session.whipOut !== retryPeer) return;
 					checkAttempts++;
 					if (session.whipOut &&
 						(session.whipOut.connectionState === 'connected' ||
@@ -67112,6 +67137,7 @@ function whipOut() {
 					}
 				}
 				function scheduleNextRetry() {
+					if (session.whipOut !== retryPeer) return;
 					currentRetry++;
 					whipReconnectAttempts = currentRetry;
 					if (currentRetry < maxRetries) {
@@ -67436,10 +67462,11 @@ async function whipOutScreen() {
 	let offer;
 	try {
 		offer = await pc.createOffer();
+		if (session.whipOutScreen !== pc) return false;
 	} catch (e) {
 		errorlog(e);
 		pc.close();
-		session.whipOutScreen = null;
+		if (session.whipOutScreen === pc) session.whipOutScreen = null;
 		return false;
 	}
 
@@ -67451,10 +67478,11 @@ async function whipOutScreen() {
 
 	try {
 		await pc.setLocalDescription(offer);
+		if (session.whipOutScreen !== pc) return false;
 	} catch (e) {
 		errorlog(e);
 		pc.close();
-		session.whipOutScreen = null;
+		if (session.whipOutScreen === pc) session.whipOutScreen = null;
 		return false;
 	}
 
@@ -67478,10 +67506,12 @@ async function whipOutScreen() {
 		errorlog(e);
 	}
 
+	if (session.whipOutScreen !== pc) return false;
+
 	let localSDP = pc.localDescription ? pc.localDescription.sdp : null;
 	if (!localSDP) {
 		pc.close();
-		session.whipOutScreen = null;
+		if (session.whipOutScreen === pc) session.whipOutScreen = null;
 		return false;
 	}
 	var filteredDesc = filterDescriptionIpv6(pc.localDescription);
@@ -67534,11 +67564,12 @@ async function whipOutScreen() {
 	let response;
 	try {
 		response = await sendOfferToEndpoint(localSDP);
+		if (session.whipOutScreen !== pc) return false;
 	} catch (err) {
 		if (pc.qosMeshcast && pc.qosMeshcast.success !== true) pc.qosMeshcast.success = false;
 		errorlog(err);
 		pc.close();
-		session.whipOutScreen = null;
+		if (session.whipOutScreen === pc) session.whipOutScreen = null;
 		return false;
 	}
 
@@ -67656,6 +67687,8 @@ async function whipOutScreen() {
 			errorlog(e);
 		}
 	}
+
+	if (session.whipOutScreen !== pc) return false;
 
 	if (!session.whipoutScreenSettings) {
 		session.whipoutScreenSettings = { type: "whep", url: whepUrl, token: session.streamID + "_s", media: "screen", started: false };

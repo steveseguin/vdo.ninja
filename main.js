@@ -5106,8 +5106,8 @@ async function main() {
 		log("disable audio playback from Directors");
 	}
 	if (urlParams.has("nodirectorvideo")) {
-		session.nodirectoraudio = true;
-		log("disable audio playback from Directors");
+		session.nodirectorvideo = true;
+		log("disable video playback from Directors");
 	}
 
 	if (urlParams.has("forceios")) {

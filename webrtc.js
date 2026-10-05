@@ -6930,7 +6930,7 @@ WebRTC.Media = (function () {
 					log("RTC Connection seems to be dead or not yet open? 1");
 				}
 			}
-			if (UUID && UUID === i) {
+			if (UUID && sentList.length) {
 				return sentList.length;
 			}
 		}
