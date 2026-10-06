@@ -41889,7 +41889,10 @@ async function grabVideo(quality = 0, eleName = "previewWebcam", selector = "sel
 		} else if (videoSelect.options[videoSelect.selectedIndex].text.includes(" rear")) {
 			// Android
 			mirror = true;
-		} else if (videoSelect.options[videoSelect.selectedIndex].text.includes("NDI Video")) {
+		} else if (
+			videoSelect.options[videoSelect.selectedIndex].text.toLowerCase().includes("ndi video") ||
+			videoSelect.options[videoSelect.selectedIndex].text.toLowerCase().startsWith("ndi ")
+		) {
 			// NDI Virtualcam
 			mirror = true;
 		} else if (videoSelect.options[videoSelect.selectedIndex].text.startsWith("Back Camera")) {
@@ -57004,37 +57007,37 @@ function getChatMessage(msg, label = false, director = false, overlay = false, U
 	}
 }
 
-function rainbow(step, colours) {
-	var r, g, b;
-	var h = 1 - step / colours;
-	var i = ~~(h * 6);
-	var f = h * 6 - i;
-	var q = 1 - f;
-	switch (i % 6) {
-		case 0:
-			(r = 1), (g = f), (b = 0);
-			break;
-		case 1:
-			(r = q), (g = 1), (b = 0);
-			break;
-		case 2:
-			(r = 0), (g = 1), (b = f);
-			break;
-		case 3:
-			(r = 0), (g = q), (b = 1);
-			break;
-		case 4:
-			(r = f), (g = 0), (b = 1);
-			break;
-		case 5:
-			(r = 1), (g = 0), (b = q);
-			break;
-	}
-	var c = "#" + ("00" + (~~(r * 200 + 35)).toString(16)).slice(-2) + ("00" + (~~(g * 200 + 35)).toString(16)).slice(-2) + ("00" + (~~(b * 200 + 35)).toString(16)).slice(-2);
-	return c;
-}
-
 function getColorFromName(str, colorseed = false, totalcolors = false) {
+	function rainbow(step, colours) {
+		var r, g, b;
+		var h = 1 - step / colours;
+		var i = ~~(h * 6);
+		var f = h * 6 - i;
+		var q = 1 - f;
+		switch (i % 6) {
+			case 0:
+				(r = 1), (g = f), (b = 0);
+				break;
+			case 1:
+				(r = q), (g = 1), (b = 0);
+				break;
+			case 2:
+				(r = 0), (g = 1), (b = f);
+				break;
+			case 3:
+				(r = 0), (g = q), (b = 1);
+				break;
+			case 4:
+				(r = f), (g = 0), (b = 1);
+				break;
+			case 5:
+				(r = 1), (g = 0), (b = q);
+				break;
+		}
+		var c = "#" + ("00" + (~~(r * 200 + 35)).toString(16)).slice(-2) + ("00" + (~~(g * 200 + 35)).toString(16)).slice(-2) + ("00" + (~~(b * 200 + 35)).toString(16)).slice(-2);
+		return c;
+	}
+
 	var out = 0,
 		len = str.length;
 	if (len > 6) {
