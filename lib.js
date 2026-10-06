@@ -57004,7 +57004,7 @@ function getChatMessage(msg, label = false, director = false, overlay = false, U
 	}
 }
 
-function rainbow(step, colours) {
+function vdoRainbow(step, colours) {
 	var r, g, b;
 	var h = 1 - step / colours;
 	var i = ~~(h * 6);
@@ -57106,7 +57106,7 @@ function getColorFromName(str, colorseed = false, totalcolors = false) {
 				return "#FF39C5";
 		}
 	} else {
-		out = rainbow(out, colours);
+		out = vdoRainbow(out, colours);
 	}
 	return out;
 }
