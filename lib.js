@@ -47701,9 +47701,18 @@ function loadIframe(iframesrc, target, whep = false) {
 		session.rpcs[playbackUUID] = playback;
 		iframe.autoplay = true;
 		iframe.playsInline = true;
-		iframe.controls = true;
+		iframe.controls = session.showControls || false;
+		if (session.director) {
+			iframe.controls = session.showControls !== false;
+		} else if (session.scene === false && session.roomid !== false && !session.cleanOutput && !session.studioSoftware && session.showControls === null) {
+			iframe.controls = true;
+		}
 		iframe.defaultMuted = local;
 		applyMuteState(playbackUUID);
+		iframe.addEventListener("resize", function (event) {
+			if (session.rpcs[playbackUUID] !== playback || playback.suppressReconnect) return;
+			handleVideoAspectRatioResize(event.target, playbackUUID);
+		});
 		iframe.addEventListener("volumechange", function () {
 			if (checkMuteState(playbackUUID)) {
 				if (!this.muted) this.muted = true;
@@ -69796,7 +69805,7 @@ async function whepIn(whepInput = false, whepInputToken = false, UUID = false) {
 						sharedVideo.srcObject.addTrack(track);
 					});
 					applyMuteState(UUID);
-					sharedVideo.play().catch(function () { sharedVideo.controls = true; });
+					sharedVideo.play().catch(warnlog);
 					updateMixer();
 					return;
 				}
