@@ -12404,7 +12404,10 @@ WebRTC.Media = (function () {
 				log("rtc data channel error: " + UUID);
 			};
 
-			session.pcs[UUID].sendChannel.onopen = () => {
+			session.pcs[UUID].sendChannel.onopen = e => {
+				if (session.invitecamManaged && (!session.pcs[UUID] || session.pcs[UUID].sendChannel !== e.currentTarget)) {
+					return;
+				}
 				updateWhepDirectorControls(UUID);
 				// we don't need this anymore if muting locally.
 				if (reconnect) {
