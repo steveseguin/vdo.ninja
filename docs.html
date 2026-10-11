@@ -398,6 +398,9 @@ img {
 			const file = urlParams.get('file');
 			if (file) {
 				const filePath = decodeURIComponent(file);
+				if (filePath.startsWith("/") || filePath.includes("..") || filePath.includes("://")) {
+					return false;
+				}
 				fetchMarkdown(githubBaseURL + filePath);
 				return true;
 			}
@@ -405,6 +408,9 @@ img {
 		}
 
 		function fetchMarkdown(href, e=false) {
+			if (href.startsWith('http') && !href.startsWith(githubBaseURL)) {
+				return false; // only this repo's markdown is injected; external .md links navigate normally
+			}
 			if (href.endsWith('.md') || (href.startsWith(githubBaseURL) && href.endsWith("/"))) {
 				if (e){
 					document.getElementById('header').style.display = "none";
@@ -459,6 +465,34 @@ img {
 		document.addEventListener("DOMContentLoaded", function() {
 		
 			marked.use(markedGfmHeadingId.gfmHeadingId({})); // fml
+			
+			// Markdown fetched from GitHub is assigned to innerHTML without a
+			// separate sanitizer, so neutralize raw HTML tokens and unsafe URL
+			// schemes at the renderer. Everything else renders as before.
+			marked.use({
+				renderer: {
+					html: function (text) {
+						return String(text).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+					},
+					link: function (href, title, text) {
+						if (!/^(https?:|mailto:|#|\.|\/)/i.test(String(href || ""))) {
+							return text;
+						}
+						const clean = String(href).replace(/"/g, "&quot;");
+						const safeTitle = title ? ' title="' + String(title).replace(/"/g, "&quot;") + '"' : "";
+						return '<a href="' + clean + '"' + safeTitle + ">" + text + "</a>";
+					},
+					image: function (href, title, text) {
+						if (!/^https?:/i.test(String(href || ""))) {
+							return String(text || "");
+						}
+						const clean = String(href).replace(/"/g, "&quot;");
+						const safeTitle = title ? ' title="' + String(title).replace(/"/g, "&quot;") + '"' : "";
+						const safeAlt = String(text || "").replace(/"/g, "&quot;");
+						return '<img src="' + clean + '" alt="' + safeAlt + '"' + safeTitle + ">";
+					}
+				}
+			});
 			
 		    fetch(githubBaseURL+'SUMMARY.md')
 				.then(response => response.text())
