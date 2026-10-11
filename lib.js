@@ -1108,6 +1108,13 @@ function playAllVideos() {
 			continue;
 		}
 		try {
+			if (session.rpcs[i].sharedWebsiteElement) {
+				applyMuteState(i);
+				if (session.rpcs[i].sharedWebsiteElement.paused) {
+					session.rpcs[i].sharedWebsiteElement.play().catch(errorlog);
+				}
+				continue;
+			}
 			if (session.rpcs[i].videoElement) {
 				log("I: " + i);
 				if (session.rpcs[i].videoElement.paused) {
@@ -1148,10 +1155,11 @@ function nudgeIncomingAudioPlayback(UUID, force) {
 		}
 
 		var rpc = session.rpcs[UUID];
-		if (!rpc.videoElement) {
+		var video = rpc.videoElement || rpc.sharedWebsiteElement;
+		if (!video) {
 			return;
 		}
-		if (rpc.videoElement.usermuted === 1 || rpc.videoElement.usermuted === 2) {
+		if (video.usermuted === 1 || video.usermuted === 2) {
 			return;
 		}
 		if (checkMuteState(UUID)) {
@@ -1159,7 +1167,7 @@ function nudgeIncomingAudioPlayback(UUID, force) {
 		}
 
 		var hasAudioTrack = false;
-		if (rpc.videoElement.srcObject && rpc.videoElement.srcObject.getAudioTracks && rpc.videoElement.srcObject.getAudioTracks().length) {
+		if (video.srcObject && video.srcObject.getAudioTracks && video.srcObject.getAudioTracks().length) {
 			hasAudioTrack = true;
 		} else if (rpc.streamSrc && rpc.streamSrc.getAudioTracks && rpc.streamSrc.getAudioTracks().length) {
 			hasAudioTrack = true;
@@ -1175,8 +1183,8 @@ function nudgeIncomingAudioPlayback(UUID, force) {
 			}
 		}
 
-		if (rpc.videoElement.play) {
-			var playPromise = rpc.videoElement.play();
+		if (video.play) {
+			var playPromise = video.play();
 			if (playPromise && playPromise.catch) {
 				playPromise.catch(warnlog);
 			}
@@ -7619,7 +7627,11 @@ function updateMixerRun(e = false) {
 			// if the infocus stream is connected
 			if (groups.length || session.allowNoGroup) {
 				try {
-					if (groups.some(item => session.rpcs[session.infocus].group.includes(item))) {
+					var focusPeer = session.rpcs[session.infocus];
+					if (focusPeer.sharedWebsiteElement) {
+						focusPeer = focusPeer.sharedWebsiteOwner ? session.rpcs[focusPeer.sharedWebsiteOwner] : session;
+					}
+					if (groups.some(item => focusPeer.group.includes(item))) {
 						soloVideo = session.infocus;
 					}
 				} catch (e) {
@@ -7746,7 +7758,11 @@ function updateMixerRun(e = false) {
 			for (var j in session.rpcs) {
 				if (groups.length || session.allowNoGroup) {
 					try {
-						if (!groups.some(item => session.rpcs[j].group.includes(item))) {
+						var groupPeer = session.rpcs[j];
+						if (groupPeer.sharedWebsiteElement) {
+							groupPeer = groupPeer.sharedWebsiteOwner ? session.rpcs[groupPeer.sharedWebsiteOwner] : session;
+						}
+						if (!groups.some(item => groupPeer.group.includes(item))) {
 							continue;
 						}
 					} catch (e) {
@@ -7757,7 +7773,7 @@ function updateMixerRun(e = false) {
 				if (j != soloVideo) {
 					// this remote guest is NOT in focus
 					try {
-						if (session.rpcs[j].iframeEle) {
+						if (session.rpcs[j].iframeEle && session.rpcs[j].iframeEle !== session.rpcs[soloVideo].sharedWebsiteElement) {
 							mediaPool_invisible.push(session.rpcs[j].iframeEle);
 						}
 						if (session.rpcs[j].videoElement && session.rpcs[j].videoElement.style.display !== "none") {
@@ -7786,7 +7802,10 @@ function updateMixerRun(e = false) {
 						if (session.rpcs[j].iframeEle) {
 							mediaPool_invisible.push(session.rpcs[j].iframeEle);
 						}
-						if (session.rpcs[j].videoElement) {
+						if (session.rpcs[j].sharedWebsiteElement) {
+							mediaPool.push(session.rpcs[j].sharedWebsiteElement);
+							session.rpcs[j].sharedWebsiteElement.style.visibility = "visible";
+						} else if (session.rpcs[j].videoElement) {
 							mediaPool.push(session.rpcs[j].videoElement); // active speaker
 							session.rpcs[j].videoElement.style.visibility = "visible";
 							if (session.rpcs[j].order !== false) {
