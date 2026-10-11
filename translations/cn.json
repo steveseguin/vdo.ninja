@@ -1,5 +1,11 @@
 {
   "innerHTML": {
+    "shared-link-type": "链接类型",
+    "shared-link-auto": "自动",
+    "shared-link-website": "网站",
+    "shared-link-whep": "WHEP 视频",
+    "shared-link-token": "WHEP 持有者令牌（可选；与观看者共享）",
+    "shared-link-private": "加载此共享 WHEP 视频？视频源将获得你的 IP 地址。",
     "drawing-color": "颜色",
     "drawing-pen": "画笔",
     "drawing-ping": "Ping",

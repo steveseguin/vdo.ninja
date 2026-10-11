@@ -1,5 +1,11 @@
 {
   "innerHTML": {
+    "shared-link-type": "Bağlantı türü",
+    "shared-link-auto": "Otomatik",
+    "shared-link-website": "Web sitesi",
+    "shared-link-whep": "WHEP videosu",
+    "shared-link-token": "WHEP erişim belirteci (isteğe bağlı; izleyicilerle paylaşılır)",
+    "shared-link-private": "Bu paylaşılan WHEP videosu yüklensin mi? Kaynak, IP adresinizi alacaktır.",
     "drawing-color": "Renk",
     "drawing-pen": "Kalem",
     "drawing-ping": "Ping",

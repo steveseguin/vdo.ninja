@@ -1,5 +1,11 @@
 {
   "innerHTML": {
+    "shared-link-type": "Linktype",
+    "shared-link-auto": "Automatisch",
+    "shared-link-website": "Website",
+    "shared-link-whep": "WHEP-video",
+    "shared-link-token": "WHEP-bearertoken (optioneel; gedeeld met kijkers)",
+    "shared-link-private": "Deze gedeelde WHEP-video laden? De bron ontvangt je IP-adres.",
     "drawing-color": "Kleur",
     "drawing-pen": "Pen",
     "drawing-ping": "Ping",

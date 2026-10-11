@@ -1239,6 +1239,7 @@ WebRTC.Media = (function () {
 	session.hash = false;
 	session.height = false;
 	session.iframeSrc = false;
+	session.iframeWhep = false;
 	session.iframeEle = false;
 	session.encodedInsertableStreams = false;
 	session.invite = false;
@@ -8963,6 +8964,11 @@ WebRTC.Media = (function () {
 
 				if ("iframeSrc" in msg) {
 					try {
+						if (session.rpcs[UUID].iframeEle && (session.rpcs[UUID].iframeEle.stopWhep || msg.iframeWhep)) {
+							if (session.rpcs[UUID].iframeEle.stopWhep) session.rpcs[UUID].iframeEle.stopWhep();
+							session.rpcs[UUID].iframeEle.remove();
+							session.rpcs[UUID].iframeEle = false;
+						}
 						session.rpcs[UUID].iframeSrc = msg.iframeSrc || false;
 
 						if (session.director) {
@@ -8993,7 +8999,7 @@ WebRTC.Media = (function () {
 						} else {
 							if (session.rpcs[UUID].iframeSrc == false) {
 								try {
-									session.rpcs[UUID].iframeEle.remove();
+									if (session.rpcs[UUID].iframeEle) session.rpcs[UUID].iframeEle.remove();
 								} catch (e) {
 									errorlog(e);
 								}
@@ -9018,14 +9024,14 @@ WebRTC.Media = (function () {
 									if (session.broadcast !== null) {
 										if (session.rpcs[UUID].streamID === session.broadcast) {
 											if (session.noiframe === false) {
-												session.rpcs[UUID].iframeEle = loadIframe(msg.iframeSrc, UUID);
+												session.rpcs[UUID].iframeEle = loadIframe(msg.iframeSrc, UUID, msg.iframeWhep);
 												mustUpdateMixer = true;
 												session.broadcastIFrame = session.rpcs[UUID].iframeEle;
 												if (session.rpcs[UUID].streamID) {
 													session.rpcs[UUID].iframeEle.dataset.sid = session.rpcs[UUID].streamID;
 												}
 											} else if (session.rpcs[UUID].streamID in session.noiframe) {
-												session.rpcs[UUID].iframeEle = loadIframe(msg.iframeSrc, UUID);
+												session.rpcs[UUID].iframeEle = loadIframe(msg.iframeSrc, UUID, msg.iframeWhep);
 												mustUpdateMixer = true; // hopefully the director will bud out
 												session.broadcastIFrame = session.rpcs[UUID].iframeEle;
 												if (session.rpcs[UUID].streamID) {
@@ -9036,14 +9042,14 @@ WebRTC.Media = (function () {
 									} else if (session.directorUUID) {
 										if (UUID == session.directorUUID) {
 											if (session.noiframe === false) {
-												session.rpcs[UUID].iframeEle = loadIframe(msg.iframeSrc, UUID);
+												session.rpcs[UUID].iframeEle = loadIframe(msg.iframeSrc, UUID, msg.iframeWhep);
 												mustUpdateMixer = true;
 												session.broadcastIFrame = session.rpcs[UUID].iframeEle;
 												if (session.rpcs[UUID].streamID) {
 													session.rpcs[UUID].iframeEle.dataset.sid = session.rpcs[UUID].streamID;
 												}
 											} else if (session.rpcs[UUID].streamID in session.noiframe) {
-												session.rpcs[UUID].iframeEle = loadIframe(msg.iframeSrc, UUID);
+												session.rpcs[UUID].iframeEle = loadIframe(msg.iframeSrc, UUID, msg.iframeWhep);
 												mustUpdateMixer = true; // hopefully the director will bud out
 												session.broadcastIFrame = session.rpcs[UUID].iframeEle;
 												if (session.rpcs[UUID].streamID) {
@@ -9054,13 +9060,13 @@ WebRTC.Media = (function () {
 									}
 								} else {
 									if (session.noiframe === false) {
-										session.rpcs[UUID].iframeEle = loadIframe(msg.iframeSrc, UUID);
+										session.rpcs[UUID].iframeEle = loadIframe(msg.iframeSrc, UUID, msg.iframeWhep);
 										mustUpdateMixer = true;
 										if (session.rpcs[UUID].streamID) {
 											session.rpcs[UUID].iframeEle.dataset.sid = session.rpcs[UUID].streamID;
 										}
 									} else if (session.rpcs[UUID].streamID in session.noiframe) {
-										session.rpcs[UUID].iframeEle = loadIframe(msg.iframeSrc, UUID);
+										session.rpcs[UUID].iframeEle = loadIframe(msg.iframeSrc, UUID, msg.iframeWhep);
 										mustUpdateMixer = true; // hopefully the director will bud out
 										if (session.rpcs[UUID].streamID) {
 											session.rpcs[UUID].iframeEle.dataset.sid = session.rpcs[UUID].streamID;
@@ -11933,6 +11939,7 @@ WebRTC.Media = (function () {
 			}
 			if (!(typeof UUID === "string" && UUID.endsWith("_screen"))) {
 				try {
+					if (session.rpcs[UUID].iframeEle && session.rpcs[UUID].iframeEle.stopWhep) session.rpcs[UUID].iframeEle.stopWhep();
 					stopPrimaryWhep(UUID);
 					stopScreenWhep(UUID);
 				} catch (e) {
@@ -15833,6 +15840,7 @@ WebRTC.Media = (function () {
 				if (session.iframeSrc) {
 					var data = {};
 					data.iframeSrc = session.iframeSrc;
+					data.iframeWhep = session.iframeWhep;
 
 					if (session.iframeEle && session.iframeEle.sendOnNewConnect) {
 						if (session.iframeSrc.startsWith("https://www.youtube.com/")) {

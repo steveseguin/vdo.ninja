@@ -1,5 +1,11 @@
 {
   "innerHTML": {
+    "shared-link-type": "링크 유형",
+    "shared-link-auto": "자동",
+    "shared-link-website": "웹사이트",
+    "shared-link-whep": "WHEP 동영상",
+    "shared-link-token": "WHEP Bearer 토큰 (선택 사항; 시청자와 공유됨)",
+    "shared-link-private": "이 공유 WHEP 동영상을 불러올까요? 소스에 IP 주소가 전달됩니다.",
     "drawing-color": "색상",
     "drawing-pen": "펜",
     "drawing-ping": "Ping",

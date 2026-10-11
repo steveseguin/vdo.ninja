@@ -1,5 +1,11 @@
 {
   "innerHTML": {
+    "shared-link-type": "लिंक का प्रकार",
+    "shared-link-auto": "स्वचालित",
+    "shared-link-website": "वेबसाइट",
+    "shared-link-whep": "WHEP वीडियो",
+    "shared-link-token": "WHEP बेयरर टोकन (वैकल्पिक; दर्शकों के साथ साझा किया जाएगा)",
+    "shared-link-private": "यह साझा WHEP वीडियो लोड करें? स्रोत को आपका IP पता मिलेगा।",
     "drawing-color": "रंग",
     "drawing-pen": "पेन",
     "drawing-ping": "Ping",

@@ -61,6 +61,12 @@ var PPTKeyPressed = false;
 var translation = false;
 
 var miscTranslations = {
+	"shared-link-type": "Link type",
+	"shared-link-auto": "Automatic",
+	"shared-link-website": "Website",
+	"shared-link-whep": "WHEP video",
+	"shared-link-token": "WHEP bearer token (optional; shared with viewers)",
+	"shared-link-private": "Load this shared WHEP video? The source will receive your IP address.",
 	// i can replace this list from time to time from the generated one in blank.json using translate.js
 	"drawing-color": "Color",
 	"drawing-ping-help": "Click or tap to point briefly. Click Ping again to turn it off.",
@@ -8359,7 +8365,7 @@ function updateMixerRun(e = false) {
 			}
 		}
 
-		if (session.broadcastIFrame && session.broadcastIFrame.src) {
+		if (session.broadcastIFrame && (session.broadcastIFrame.src || session.broadcastIFrame.stopWhep)) {
 			// keep alive iframes whennot visible. i think
 			if (!mediaPool.length) {
 				mediaPool.push(session.broadcastIFrame);
@@ -20519,6 +20525,10 @@ function toggleMute(apply = false, event = false) {
 }
 
 function postMessageIframe(iFrameEle, message) {
+	if (iFrameEle && iFrameEle.stopWhep && "mute" in message) {
+		iFrameEle.muted = iFrameEle.defaultMuted || !!message.mute;
+		return;
+	}
 	// iframes seem to only have the contentWindow work on the last placed iframe object, so this checks the dom first.
 	if (iFrameEle && iFrameEle.nodeName == "IFRAME") {
 		try {
@@ -22429,6 +22439,7 @@ if (typeof window !== "undefined") {
 }
 
 session.hangup = function (reload = false, estop = false, preserveStreamTakeover = false) {
+	if (session.iframeEle && session.iframeEle.stopWhep) session.iframeEle.stopWhep();
 	session.qosClosing = true; // Suppress reporting an intentional signaling close.
 	if (
 		!reload &&
@@ -26588,6 +26599,7 @@ async function publishScreen() {
 				//getById("mutespeakerbutton").className="float";
 				getById("chatbutton").className = "float";
 				getById("sharefilebutton").classList.remove("hidden"); // we won't override "display:none", if set, though.
+				if (session.roomid && !session.iframeSrc) getById("websitesharebutton").classList.remove("hidden");
 				getById("mutevideobutton").className = "float";
 				getById("hangupbutton").className = "float";
 				if (session.showSettings) {
@@ -27131,6 +27143,7 @@ function publishWebcam(btn = false, miconly = false) {
 		//getById("mutespeakerbutton").className="float";
 		getById("chatbutton").className = "float";
 		getById("sharefilebutton").classList.remove("hidden"); // we won't override "display:none", if set, though.
+		if (session.roomid && !session.iframeSrc) getById("websitesharebutton").classList.remove("hidden");
 		getById("mutevideobutton").className = "float";
 		getById("hangupbutton").className = "float";
 		if (session.showSettings) {
@@ -27913,6 +27926,8 @@ session.publishIFrame = function (iframeURL) {
 		}, 1000);
 	}
 
+	if (session.iframeEle && session.iframeEle.stopWhep) session.iframeEle.stopWhep();
+	session.iframeWhep = false;
 	session.iframeSrc = parseURL4Iframe(iframeURL);
 
 	if (!session.iFramesAllowed) { errorlog("Can't create iFRAME - security is tainted due to possible CSS injection"); warnUser("Can't create iFRAME - security is tainted due to possible CSS injection"); return; }
@@ -31202,6 +31217,7 @@ async function createRoomCallback(passAdd, passAdd2) {
 			clearDirectorSettings();
 		} else if (directorWebsiteShare.roomid && directorWebsiteShare.roomid == session.roomid) {
 			session.iframeSrc = directorWebsiteShare.website;
+			session.iframeWhep = directorWebsiteShare.whep || false;
 			session.defaultIframeSrc = directorWebsiteShare.website;
 
 			getById("websitesharebutton").classList.add("hidden");
@@ -39307,9 +39323,10 @@ function resetupAudioOut(ele = false, forceReset = false) {
 	}
 
 	for (UUID in session.rpcs) {
-		if (session.rpcs[UUID].videoElement) {
-			var rpcSink = session.rpcs[UUID].videoElement.manualSink || sinkSet;
-			var rpcChange = applyAudioOutputSink(session.rpcs[UUID].videoElement, rpcSink, "New Output Device for: " + UUID, false);
+		var rpcVideo = session.rpcs[UUID].videoElement || session.rpcs[UUID].sharedWebsiteElement;
+		if (rpcVideo) {
+			var rpcSink = rpcVideo.manualSink || sinkSet;
+			var rpcChange = applyAudioOutputSink(rpcVideo, rpcSink, "New Output Device for: " + UUID, false);
 			if (rpcChange) {
 				changes.push(rpcChange);
 			}
@@ -45945,6 +45962,7 @@ session.hostFile = function (ele, event = false) {
 	if (!session.cleanOutput) {
 		getById("chatbutton").className = "float";
 		getById("sharefilebutton").classList.remove("hidden"); // we won't override "display:none", if set, though.
+		if (session.roomid && !session.iframeSrc) getById("websitesharebutton").classList.remove("hidden");
 		// getById("mediafileshare").classList.remove("hidden");
 		getById("hangupbutton").className = "float";
 		getById("controlButtons").classList.remove("hidden");
@@ -47142,6 +47160,7 @@ session.publishFrameSource = function (ele, event) {
 	if (!session.cleanOutput) {
 		getById("chatbutton").className = "float";
 		getById("sharefilebutton").classList.remove("hidden"); // we won't override "display:none", if set, though.
+		if (session.roomid && !session.iframeSrc) getById("websitesharebutton").classList.remove("hidden");
 		getById("hangupbutton").className = "float";
 		getById("controlButtons").classList.remove("hidden");
 		// getById("legal").classList.remove("hidden");
@@ -47573,7 +47592,7 @@ function previewIframe(iframeSrc) {
 	getById("previewIframe").appendChild(iframe);
 }
 
-function loadIframe(iframesrc, target) {
+function loadIframe(iframesrc, target, whep = false) {
 	// this is pretty important if you want to avoid camera permission popup problems.  You can also call it automatically via: <body onload=>loadIframe();"> , but don't call it before the page loads.
 	/* if (document.getElementById("mainmenu")) {
 		var m = getById("mainmenu");
@@ -47590,7 +47609,7 @@ function loadIframe(iframesrc, target) {
 
 	if (typeof target == "string") {
 		let UUID = target;
-		var iframe = document.createElement("iframe");
+		var iframe = whep ? createVideoElement() : document.createElement("iframe");
 		iframe.style.width = "100%";
 		iframe.style.height = "100%";
 		iframe.id = "iframe_" + UUID;
@@ -47616,6 +47635,54 @@ function loadIframe(iframesrc, target) {
 		}
 	} else {
 		var iframe = target;
+	}
+
+	if (whep) {
+		if (session.noMeshcast) return false;
+		try {
+			var source = new URL(iframesrc);
+			if (source.username || source.password || (source.protocol !== "https:" && !(source.protocol === "http:" && ["localhost", "127.0.0.1", "[::1]"].includes(source.hostname)))) return false;
+		} catch (e) { return false; }
+		var playbackUUID = "website_" + session.generateRandomString(25);
+		var local = target === "source";
+		var owner = session.rpcs[target];
+		var playback = {};
+		playback.streamID = owner ? owner.streamID : session.streamID;
+		playback.settings = { audio: !local, video: true };
+		playback.sharedWebsiteElement = iframe;
+		iframe.dataset.UUID = playbackUUID; // Keep native video controls separate from the sharer's camera.
+		iframe.dataset.sid = playback.streamID;
+		session.rpcs[playbackUUID] = playback;
+		iframe.autoplay = true;
+		iframe.playsInline = true;
+		iframe.controls = true;
+		iframe.defaultMuted = local;
+		iframe.muted = local || session.speakerMuted;
+		iframe.addEventListener("playing", function () { resetupAudioOut(iframe, true); }, { once: true });
+		iframe.stopWhep = function () {
+			playback.suppressReconnect = true;
+			if (playback.whep) {
+				if (playback.whep.iceCompletedCallback) playback.whep.iceCompletedCallback();
+				playback.whep.close();
+			}
+			if (iframe.srcObject) iframe.srcObject.getTracks().forEach(function (track) { track.stop(); });
+			iframe.pause();
+			iframe.srcObject = null;
+			if (session.rpcs[playbackUUID] === playback) delete session.rpcs[playbackUUID];
+		};
+		var startPlayback = function () {
+			if (session.rpcs[playbackUUID] !== playback || playback.suppressReconnect) return;
+			whepIn(source.href, typeof whep.token === "string" ? whep.token : "", playbackUUID);
+		};
+		if (urlParams.has("privacy") || urlParams.has("private")) {
+			confirmAlt(getTranslation("shared-link-private")).then(function (allowed) {
+				if (allowed) startPlayback();
+				else iframe.stopWhep();
+			});
+		} else {
+			startPlayback();
+		}
+		return iframe;
 	}
 
 	iframe.classList.add("insecure");
@@ -54400,6 +54467,8 @@ async function shareWebsite(autostart = false, evt = false) {
 		getById("websitesharebutton2").classList.remove("green");
 		getById("websitesharebutton2").ariaPressed = "false";
 		session.iframeSrc = false;
+		session.iframeWhep = false;
+		if (session.iframeEle && session.iframeEle.stopWhep) session.iframeEle.stopWhep();
 
 		if (session.director) {
 			clearDirectorSettings();
@@ -54431,9 +54500,16 @@ async function shareWebsite(autostart = false, evt = false) {
 	getById("websitesharebutton2").classList.remove("green");
 	getById("websitesharebutton2").ariaPressed = "false";
 
+	var linkType = "auto";
+	var token = "";
 	if (autostart === false) {
+		if (document.getElementById("websiteShareType")) return;
 		window.focus();
-		var iframeURL = await promptAlt(getTranslation("enter-website"), false, false, session.defaultIframeSrc);
+		var message = getTranslation("enter-website") + '<br /><select id="websiteShareType" aria-label="' + getTranslation("shared-link-type") + '"><option value="auto" data-translate="shared-link-auto">Automatic</option><option value="website" data-translate="shared-link-website">Website</option><option value="whep" data-translate="shared-link-whep">WHEP video</option></select><br /><label><span data-translate="shared-link-token">WHEP bearer token (optional; shared with viewers)</span><input id="websiteShareToken" type="password" autocomplete="off" /></label>';
+		var pending = promptAlt(message, false, false, session.defaultIframeSrc);
+		getById("websiteShareType").onchange = function () { linkType = this.value; };
+		getById("websiteShareToken").oninput = function () { token = this.value; };
+		var iframeURL = await pending;
 	} else {
 		var iframeURL = autostart;
 	}
@@ -54445,12 +54521,42 @@ async function shareWebsite(autostart = false, evt = false) {
 	}
 	session.defaultIframeSrc = iframeURL;
 
-	warnlog(iframeURL);
-
-	session.iframeSrc = parseURL4Iframe(iframeURL);
+	var parsedURL = false;
+	try {
+		parsedURL = new URL(iframeURL.indexOf("://") === -1 ? "https://" + iframeURL.trim() : iframeURL.trim());
+	} catch (e) {}
+	if (linkType === "auto" && parsedURL) {
+		if (parsedURL.hostname === "whep.vdo.ninja" || /(^|\/)whep(\/|$)/i.test(parsedURL.pathname) || /\/webrtc\/play\/?$/i.test(parsedURL.pathname)) linkType = "whep";
+	}
+	if (linkType === "whep") {
+		if (!parsedURL || parsedURL.username || parsedURL.password || (parsedURL.protocol !== "https:" && !(parsedURL.protocol === "http:" && ["localhost", "127.0.0.1", "[::1]"].includes(parsedURL.hostname)))) {
+			warnUser(getTranslation("invalid-whep-source-url"));
+			return;
+		}
+		if (session.noMeshcast) {
+			warnUser(getTranslation("whep-share-disabled-advertising"));
+			return;
+		}
+		session.iframeWhep = { token: token };
+		session.iframeSrc = parsedURL.href;
+	} else {
+		session.iframeWhep = false;
+		session.iframeSrc = parseURL4Iframe(iframeURL);
+	}
 
 	if (session.director && !autostart) {
-		setStorage("directorWebsiteShare", { website: session.iframeSrc, roomid: session.roomid });
+		if (session.iframeWhep && session.iframeWhep.token) {
+			removeStorage("directorWebsiteShare"); // Playback tokens stay in memory.
+		} else {
+			setStorage("directorWebsiteShare", { website: session.iframeSrc, roomid: session.roomid, whep: session.iframeWhep ? {} : false });
+		}
+	} else if (session.iframeWhep && session.iFramesAllowed) {
+		session.iframeEle = loadIframe(session.iframeSrc, "source", session.iframeWhep);
+		if (session.iframeEle) {
+			session.iframeEle.container = document.createElement("div");
+			session.iframeEle.container.id = "container_iframe";
+			updateMixer();
+		}
 	} else if (session.iframeEle) {
 		session.iframeEle.src = session.iframeSrc;
 		if (session.iframeSrc.startsWith("https://www.youtube.com/")) {
@@ -54495,6 +54601,7 @@ async function shareWebsite(autostart = false, evt = false) {
 
 	var data = {};
 	data.iframeSrc = session.iframeSrc;
+	data.iframeWhep = session.iframeWhep;
 	for (var UUID in session.pcs) {
 		if (session.pcs[UUID].allowIframe === true) {
 			session.sendMessage(data, UUID);
@@ -68646,7 +68753,7 @@ async function whepIn(whepInput = false, whepInputToken = false, UUID = false) {
 		errorlog("no whepInput");
 		return;
 	}
-	whepInputToken = whepInputToken || session.whepInputToken;
+	if (!(session.rpcs[UUID] && session.rpcs[UUID].sharedWebsiteElement)) whepInputToken = whepInputToken || session.whepInputToken;
 
 	try {
 		if (typeof urlParams !== "undefined" && urlParams && urlParams.has) {
@@ -69525,6 +69632,7 @@ async function whepIn(whepInput = false, whepInputToken = false, UUID = false) {
 				session.rpcs[UUID] = {};
 			}
 			ensureViewerRpcDefaults(UUID);
+			var connectingPeer = session.rpcs[UUID];
 			session.rpcs[UUID].isWhepSession = true;
 			session.rpcs[UUID].restartWhepConnection = function() {
 				return retryWhepConnection(UUID, true);
@@ -69533,6 +69641,8 @@ async function whepIn(whepInput = false, whepInputToken = false, UUID = false) {
 			if (!session.configuration) {
 				await chooseBestTURN();
 			}
+
+			if (session.rpcs[UUID] !== connectingPeer || connectingPeer.suppressReconnect) return;
 
 			if (session.encodedInsertableStreams) {
 				// most servers won't support this
@@ -69548,6 +69658,16 @@ async function whepIn(whepInput = false, whepInputToken = false, UUID = false) {
 			try {
 				session.rpcs[UUID].whep = new RTCPeerConnection(config);
 				const meshcastPeer = session.rpcs[UUID].whep;
+				if (connectingPeer.sharedWebsiteElement) {
+					var closeWebsitePeer = meshcastPeer.close;
+					meshcastPeer.close = function () {
+						try {
+							if (meshcastPeer.deleteme) meshcastPeer.deleteme();
+						} finally {
+							closeWebsitePeer.apply(this, arguments);
+						}
+					};
+				}
 				collectMeshcastQos(meshcastPeer, whepInput, true);
 				meshcastTrickle = createMeshcastTrickle(meshcastPeer, whepInput, "whep", whepInputToken, () => session.rpcs[UUID] && session.rpcs[UUID].whep === meshcastPeer);
 			} catch (err) {
@@ -69580,7 +69700,7 @@ async function whepIn(whepInput = false, whepInputToken = false, UUID = false) {
 				return;
 			}
 
-			if (video && !session.rpcs[UUID].meshcastHandoff) {
+			if (video && !session.rpcs[UUID].meshcastHandoff && !session.rpcs[UUID].sharedWebsiteElement) {
 				disableQualityDirector(UUID);
 			}
 
@@ -69604,6 +69724,24 @@ async function whepIn(whepInput = false, whepInputToken = false, UUID = false) {
 
 			session.rpcs[UUID].whep.ontrack = function (event) {
 				if (!session.rpcs[UUID] || session.rpcs[UUID].whep !== event.target) return;
+				var sharedVideo = session.rpcs[UUID].sharedWebsiteElement;
+				if (sharedVideo) {
+					if (!sharedVideo.srcObject) sharedVideo.srcObject = createMediaStream();
+					var tracks = event.streams && event.streams[0] ? event.streams[0].getTracks() : [event.track];
+					tracks.forEach(function (track) {
+						if (!track || sharedVideo.srcObject.getTracks().indexOf(track) !== -1) return;
+						sharedVideo.srcObject.getTracks().forEach(function (oldTrack) {
+							if (oldTrack.kind === track.kind) {
+								sharedVideo.srcObject.removeTrack(oldTrack);
+								oldTrack.stop();
+							}
+						});
+						sharedVideo.srcObject.addTrack(track);
+					});
+					sharedVideo.play().catch(function () { sharedVideo.controls = true; });
+					updateMixer();
+					return;
+				}
 				warnlog("TRACK INBOUND!");
 				warnlog(event);
 				if (event && event.track && event.track.kind === "audio") {
@@ -70014,6 +70152,23 @@ async function whepIn(whepInput = false, whepInputToken = false, UUID = false) {
 			var requestPeer = session.rpcs[UUID];
 			var requestConnection = requestPeer && requestPeer.whep;
 			xhttp.onreadystatechange = function () {
+				if (requestPeer && requestPeer.sharedWebsiteElement && type === "sdp" && this.readyState === 4 && this.status === 201 && requestConnection && !requestConnection.deleteme) {
+					var resource = resolveWhepSessionLocation(this.getResponseHeader("location"));
+					if (resource) {
+						var deleted = false;
+						requestConnection.deleteme = function () {
+							if (deleted) return;
+							deleted = true;
+							try {
+								var cleanup = new XMLHttpRequest();
+								cleanup.open("DELETE", resource, true);
+								if (whepInputToken) cleanup.setRequestHeader("Authorization", "Bearer " + whepInputToken);
+								cleanup.send();
+							} catch (e) { warnlog(e); }
+						};
+						if (requestConnection.signalingState === "closed") requestConnection.deleteme();
+					}
+				}
 				if (requestEpoch !== whepHttpSessionEpoch || !session.rpcs[UUID] || session.rpcs[UUID].whep !== requestConnection) {
 					return;
 				}

@@ -1,5 +1,11 @@
 {
   "innerHTML": {
+    "shared-link-type": "Ink-lay ype-tay",
+    "shared-link-auto": "Automatic-way",
+    "shared-link-website": "Ebsite-way",
+    "shared-link-whep": "WHEP ideo-vay",
+    "shared-link-token": "WHEP earer-bay oken-tay (optional-way; ared-shay ith-way iewers-vay)",
+    "shared-link-private": "Oad-lay is-thay ared-shay WHEP ideo-vay? E-thay ource-say ill-way eceive-ray our-yay IP address-way.",
     "use-meshcast": "Use Meshcast",
     "guest-muted-scenes": "Guest muted scenes",
     "view-only": "Vieway Onlyay",

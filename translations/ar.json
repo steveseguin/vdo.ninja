@@ -1,5 +1,11 @@
 {
   "innerHTML": {
+    "shared-link-type": "نوع الرابط",
+    "shared-link-auto": "تلقائي",
+    "shared-link-website": "موقع ويب",
+    "shared-link-whep": "فيديو WHEP",
+    "shared-link-token": "رمز حامل WHEP (اختياري؛ تتم مشاركته مع المشاهدين)",
+    "shared-link-private": "هل تريد تحميل فيديو WHEP المشترك؟ سيتلقى المصدر عنوان IP الخاص بك.",
     "drawing-color": "اللون",
     "drawing-pen": "القلم",
     "drawing-ping": "Ping",

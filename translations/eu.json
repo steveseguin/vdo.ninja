@@ -1,5 +1,11 @@
 {
   "innerHTML": {
+    "shared-link-type": "Esteka mota",
+    "shared-link-auto": "Automatikoa",
+    "shared-link-website": "Webgunea",
+    "shared-link-whep": "WHEP bideoa",
+    "shared-link-token": "WHEP sarbide-tokena (aukerakoa; ikusleekin partekatzen da)",
+    "shared-link-private": "Partekatutako WHEP bideo hau kargatu? Iturriak zure IP helbidea jasoko du.",
     "drawing-color": "Kolorea",
     "drawing-pen": "Boligrafoa",
     "drawing-ping": "Ping",

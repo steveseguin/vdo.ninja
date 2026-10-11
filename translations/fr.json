@@ -1,5 +1,11 @@
 {
   "innerHTML": {
+    "shared-link-type": "Type de lien",
+    "shared-link-auto": "Automatique",
+    "shared-link-website": "Site web",
+    "shared-link-whep": "Vidéo WHEP",
+    "shared-link-token": "Jeton Bearer WHEP (facultatif ; partagé avec les spectateurs)",
+    "shared-link-private": "Charger cette vidéo WHEP partagée ? La source recevra votre adresse IP.",
     "drawing-color": "Couleur",
     "drawing-pen": "Stylo",
     "drawing-ping": "Ping",

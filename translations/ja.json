@@ -1,5 +1,11 @@
 {
   "innerHTML": {
+    "shared-link-type": "リンクの種類",
+    "shared-link-auto": "自動",
+    "shared-link-website": "ウェブサイト",
+    "shared-link-whep": "WHEP 動画",
+    "shared-link-token": "WHEP ベアラートークン（任意・視聴者と共有されます）",
+    "shared-link-private": "この共有 WHEP 動画を読み込みますか？配信元にあなたの IP アドレスが伝わります。",
     "drawing-color": "色",
     "drawing-pen": "ペン",
     "drawing-ping": "Ping",

@@ -1,5 +1,11 @@
 {
   "innerHTML": {
+    "shared-link-type": "Linktyp",
+    "shared-link-auto": "Automatisch",
+    "shared-link-website": "Webseite",
+    "shared-link-whep": "WHEP-Video",
+    "shared-link-token": "WHEP-Bearer-Token (optional; wird mit Zuschauern geteilt)",
+    "shared-link-private": "Dieses geteilte WHEP-Video laden? Die Quelle erhält Ihre IP-Adresse.",
     "drawing-color": "Farbe",
     "drawing-pen": "Stift",
     "drawing-ping": "Ping",

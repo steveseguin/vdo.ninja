@@ -1,5 +1,11 @@
 {
   "innerHTML": {
+    "shared-link-type": "Typ odkazu",
+    "shared-link-auto": "Automaticky",
+    "shared-link-website": "Webová stránka",
+    "shared-link-whep": "Video WHEP",
+    "shared-link-token": "Přístupový token WHEP (volitelný; sdílený s diváky)",
+    "shared-link-private": "Načíst toto sdílené video WHEP? Zdroj obdrží vaši IP adresu.",
     "drawing-color": "Barva",
     "drawing-pen": "Pero",
     "drawing-ping": "Ping",

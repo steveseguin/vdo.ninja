@@ -1,5 +1,11 @@
 {
   "innerHTML": {
+    "shared-link-type": "Тип посилання",
+    "shared-link-auto": "Автоматично",
+    "shared-link-website": "Вебсайт",
+    "shared-link-whep": "Відео WHEP",
+    "shared-link-token": "Токен доступу WHEP (необов’язково; передається глядачам)",
+    "shared-link-private": "Завантажити це спільне відео WHEP? Джерело отримає вашу IP-адресу.",
     "drawing-color": "Колір",
     "drawing-pen": "Перо",
     "drawing-ping": "Ping",

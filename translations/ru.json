@@ -1,5 +1,11 @@
 {
   "innerHTML": {
+    "shared-link-type": "Тип ссылки",
+    "shared-link-auto": "Автоматически",
+    "shared-link-website": "Веб-сайт",
+    "shared-link-whep": "Видео WHEP",
+    "shared-link-token": "Токен доступа WHEP (необязательно; передаётся зрителям)",
+    "shared-link-private": "Загрузить это общее видео WHEP? Источник получит ваш IP-адрес.",
     "drawing-color": "Цвет",
     "drawing-pen": "Перо",
     "drawing-ping": "Ping",

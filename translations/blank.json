@@ -1,5 +1,11 @@
 {
   "innerHTML": {
+    "shared-link-type": "Link type",
+    "shared-link-auto": "Automatic",
+    "shared-link-website": "Website",
+    "shared-link-whep": "WHEP video",
+    "shared-link-token": "WHEP bearer token (optional; shared with viewers)",
+    "shared-link-private": "Load this shared WHEP video? The source will receive your IP address.",
     "use-meshcast": "Use Meshcast",
     "guest-muted-scenes": "Guest muted scenes",
     "view-only": "View Only",
