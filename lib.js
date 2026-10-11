@@ -13782,6 +13782,7 @@ function updateUserList() {
 			getById("userList").innerHTML = "";
 
 			for (var UUID in session.rpcs) {
+				if (session.rpcs[UUID].sharedWebsiteElement) continue;
 				if (
 					(session.rpcs[UUID].videoElement && session.rpcs[UUID].streamSrc && session.rpcs[UUID].streamSrc.getTracks().length) ||
 					session.rpcs[UUID].canvas ||
@@ -20526,7 +20527,7 @@ function toggleMute(apply = false, event = false) {
 
 function postMessageIframe(iFrameEle, message) {
 	if (iFrameEle && iFrameEle.stopWhep && "mute" in message) {
-		iFrameEle.muted = iFrameEle.defaultMuted || !!message.mute;
+		applyMuteState(iFrameEle.dataset.UUID);
 		return;
 	}
 	// iframes seem to only have the contentWindow work on the last placed iframe object, so this checks the dom first.
@@ -25011,6 +25012,15 @@ function applyMuteState(UUID) {
 	if (!(UUID in session.rpcs)) {
 		return "UUID not found";
 	}
+	if (session.rpcs[UUID].sharedWebsiteElement) {
+		var sharedVideo = session.rpcs[UUID].sharedWebsiteElement;
+		var sharedMute = !!checkMuteState(UUID);
+		sharedVideo.muted = sharedMute || sharedVideo.usermuted === 1;
+		return sharedMute;
+	}
+	if (session.rpcs[UUID].iframeEle && session.rpcs[UUID].iframeEle.stopWhep) {
+		applyMuteState(session.rpcs[UUID].iframeEle.dataset.UUID);
+	}
 
 	// A guest's broadcast mute also covers relayed audio and overrides player controls.
 	if (isSceneAudioMuted(UUID)) {
@@ -25066,7 +25076,18 @@ function checkMuteState(UUID, includeSpeakerMuted) {
 	if (includeSpeakerMuted === undefined) {
 		includeSpeakerMuted = true;
 	}
-	if (session.pauseInvisible) {
+	if (session.rpcs[UUID].sharedWebsiteElement) {
+		var sharedVideo = session.rpcs[UUID].sharedWebsiteElement;
+		var ownerUUID = session.rpcs[UUID].sharedWebsiteOwner;
+		if (sharedVideo.defaultMuted || !ownerUUID || !session.rpcs[ownerUUID]) return true;
+		if (session.scene !== false && sharedVideo.style.display === "none") return true;
+		if (session.pauseInvisible && sharedVideo.isInvisible) return true;
+		var streamID = sharedVideo.dataset.sid;
+		if (session.noaudio !== false && (session.noaudio === true || session.noaudio.indexOf(streamID) === -1)) return true;
+		if (session.excludeaudio && session.excludeaudio.indexOf(streamID) !== -1) return true;
+		UUID = ownerUUID;
+	}
+	if (session.pauseInvisible && !sharedVideo) {
 		if (session.rpcs[UUID].videoElement && session.rpcs[UUID].videoElement.isInvisible) {
 			return true;
 		}
@@ -27926,7 +27947,11 @@ session.publishIFrame = function (iframeURL) {
 		}, 1000);
 	}
 
-	if (session.iframeEle && session.iframeEle.stopWhep) session.iframeEle.stopWhep();
+	if (session.iframeEle && session.iframeEle.stopWhep) {
+		session.iframeEle.stopWhep();
+		session.iframeEle.remove();
+		if (session.iframeEle.container) session.iframeEle.container.remove();
+	}
 	session.iframeWhep = false;
 	session.iframeSrc = parseURL4Iframe(iframeURL);
 
@@ -47646,28 +47671,40 @@ function loadIframe(iframesrc, target, whep = false) {
 		var playbackUUID = "website_" + session.generateRandomString(25);
 		var local = target === "source";
 		var owner = session.rpcs[target];
+		if (!local && !owner) return false;
 		var playback = {};
-		playback.streamID = owner ? owner.streamID : session.streamID;
+		playback.streamID = false; // This transport is not another participant with the sharer's identity.
 		playback.settings = { audio: !local, video: true };
 		playback.sharedWebsiteElement = iframe;
+		playback.sharedWebsiteOwner = local ? false : target;
 		iframe.dataset.UUID = playbackUUID; // Keep native video controls separate from the sharer's camera.
-		iframe.dataset.sid = playback.streamID;
+		iframe.dataset.sid = owner ? owner.streamID : session.streamID;
 		session.rpcs[playbackUUID] = playback;
 		iframe.autoplay = true;
 		iframe.playsInline = true;
 		iframe.controls = true;
 		iframe.defaultMuted = local;
-		iframe.muted = local || session.speakerMuted;
+		applyMuteState(playbackUUID);
+		iframe.addEventListener("volumechange", function () {
+			if (checkMuteState(playbackUUID)) {
+				if (!this.muted) this.muted = true;
+				return;
+			}
+			this.usermuted = this.muted ? 1 : false;
+		});
 		iframe.addEventListener("playing", function () { resetupAudioOut(iframe, true); }, { once: true });
 		iframe.stopWhep = function () {
 			playback.suppressReconnect = true;
-			if (playback.whep) {
-				if (playback.whep.iceCompletedCallback) playback.whep.iceCompletedCallback();
-				playback.whep.close();
-			}
+			try {
+				if (playback.whep) {
+					if (playback.whep.iceCompletedCallback) playback.whep.iceCompletedCallback();
+					playback.whep.close();
+				}
+			} catch (e) { warnlog(e); }
 			if (iframe.srcObject) iframe.srcObject.getTracks().forEach(function (track) { track.stop(); });
 			iframe.pause();
 			iframe.srcObject = null;
+			if (session.broadcastIFrame === iframe) session.broadcastIFrame = false;
 			if (session.rpcs[playbackUUID] === playback) delete session.rpcs[playbackUUID];
 		};
 		var startPlayback = function () {
@@ -69679,15 +69716,16 @@ async function whepIn(whepInput = false, whepInputToken = false, UUID = false) {
 
 			var video = true;
 			var audio = true;
+			var streamID = session.rpcs[UUID].sharedWebsiteElement ? session.rpcs[UUID].sharedWebsiteElement.dataset.sid : session.rpcs[UUID].streamID;
 
-			if (session.novideo !== false && !session.novideo.includes(session.rpcs[UUID].streamID)) {
+			if (session.novideo !== false && !session.novideo.includes(streamID)) {
 				video = false;
 			} else if (session.rpcs[UUID].settings && !session.rpcs[UUID].settings.video) {
 				video = false;
 			}
-			if (session.noaudio !== false && !session.noaudio.includes(session.rpcs[UUID].streamID)) {
+			if (session.noaudio !== false && !session.noaudio.includes(streamID)) {
 				audio = false;
-			} else if (session.excludeaudio && session.excludeaudio.includes(session.rpcs[UUID].streamID)) {
+			} else if (session.excludeaudio && session.excludeaudio.includes(streamID)) {
 				audio = false;
 			} else if (session.rpcs[UUID].settings && !session.rpcs[UUID].settings.audio) {
 				audio = false;
@@ -69738,6 +69776,7 @@ async function whepIn(whepInput = false, whepInputToken = false, UUID = false) {
 						});
 						sharedVideo.srcObject.addTrack(track);
 					});
+					applyMuteState(UUID);
 					sharedVideo.play().catch(function () { sharedVideo.controls = true; });
 					updateMixer();
 					return;
