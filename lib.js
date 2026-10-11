@@ -47720,7 +47720,15 @@ function loadIframe(iframesrc, target, whep = false) {
 			}
 			this.usermuted = this.muted ? 1 : false;
 		});
-		iframe.addEventListener("playing", function () { resetupAudioOut(iframe, true); }, { once: true });
+		iframe.addEventListener("playing", function () {
+			try {
+				var bigPlayButton = document.getElementById("bigPlayButton");
+				if (bigPlayButton) {
+					bigPlayButton.parentNode.removeChild(bigPlayButton);
+				}
+			} catch (e) { }
+			resetupAudioOut(iframe, true);
+		}, { once: true });
 		iframe.stopWhep = function () {
 			playback.suppressReconnect = true;
 			try {

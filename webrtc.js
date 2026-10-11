@@ -23294,6 +23294,10 @@ WebRTC.Media = (function () {
 					session.rpcs[UUID][mediaField] = retainedMedia[mediaField];
 				}
 			}
+			if (retainedMedia.iframeEle && retainedMedia.iframeEle.stopWhep) {
+				session.rpcs[UUID].iframeEle = retainedMedia.iframeEle;
+				session.rpcs[UUID].iframeSrc = retainedMedia.iframeSrc;
+			}
 			var resumedPeer = session.rpcs[UUID];
 			await checkDirectorStreamID();
 			if (session.rpcs[UUID] !== resumedPeer) return;
