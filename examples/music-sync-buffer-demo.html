@@ -512,6 +512,10 @@
 			return Math.round(Number(value) || 0) + " ms";
 		}
 
+		function escapeHtml(value) {
+			return String(value).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+		}
+
 		function readSearchParam(name, fallback) {
 			var params = new URLSearchParams(window.location.search);
 			return params.get(name) || fallback;
@@ -739,7 +743,6 @@
 				streamTable.innerHTML = '<tr><td colspan="5" class="muted">No remote streams yet.</td></tr>';
 				return;
 			}
-
 			var inbound = (stateCache.stats && stateCache.stats.inbound) || {};
 			var rows = streams.map(function (item) {
 				var stats = inbound[item.streamID] || {};
@@ -748,7 +751,7 @@
 				var status = chunkStats.rebuffering ? '<span class="bad">rebuffering</span>' : '<span class="good">steady</span>';
 				return [
 					"<tr>",
-					"<td><strong>" + (item.label || "Unnamed") + "</strong><br><span class=\"muted\">" + item.streamID + "</span></td>",
+					"<td><strong>" + escapeHtml(item.label || "Unnamed") + "</strong><br><span class=\"muted\">" + escapeHtml(item.streamID) + "</span></td>",
 					"<td>" + formatMs(requested) + "</td>",
 					"<td>" + formatMs(chunkStats.buffer_buffer) + "</td>",
 					"<td>" + formatMs(chunkStats.buffer_level) + "</td>",
