@@ -339,7 +339,6 @@ function importTemplateFile(file) {
 			state.placeholders = placeholders;
 			renderAll();
 			applySceneToFrame();
-			saveSession();
 			showToast("Template imported");
 		} catch (error) {
 			showToast("Invalid template file");
@@ -1291,7 +1290,6 @@ function renderBoxInspector() {
 function finishLayoutEdit() {
 	renderAll();
 	applySceneToFrame();
-	saveSession();
 }
 
 function updateSelectedBox(values) {
@@ -1415,7 +1413,6 @@ function activateScene(sceneId) {
 	state.selectedBoxId = null;
 	renderAll();
 	applySceneToFrame();
-	saveSession();
 }
 
 function duplicateActiveScene() {
@@ -1480,7 +1477,6 @@ function deleteActiveScene() {
 	state.activeSceneId = state.scenes[Math.max(0, index - 1)].id;
 	renderAll();
 	applySceneToFrame();
-	saveSession();
 }
 
 function moveActiveScene(direction) {
@@ -1627,7 +1623,6 @@ function addSourceToStage(sourceId, position = null) {
 	state.selectedBoxId = scene.layout[scene.layout.length - 1].id;
 	renderAll();
 	applySceneToFrame();
-	saveSession();
 }
 
 function removeSourceFromStage(sourceId) {
@@ -1642,7 +1637,6 @@ function removeSourceFromStage(sourceId) {
 	}
 	renderAll();
 	applySceneToFrame();
-	saveSession();
 }
 
 function assignSourceToLayoutItem(sourceId, targetBoxId) {
@@ -1674,7 +1668,6 @@ function assignSourceToLayoutItem(sourceId, targetBoxId) {
 	state.selectedBoxId = target.id;
 	renderAll();
 	applySceneToFrame();
-	saveSession();
 }
 
 function soloSource(sourceId) {
@@ -1700,7 +1693,6 @@ function soloSource(sourceId) {
 	];
 	renderAll();
 	applySceneToFrame();
-	saveSession();
 }
 
 function spotlightSource(sourceId) {
@@ -1730,7 +1722,6 @@ function spotlightSource(sourceId) {
 	state.selectedBoxId = scene.layout.length ? scene.layout[0].id : null;
 	renderAll();
 	applySceneToFrame();
-	saveSession();
 }
 
 function toggleSourceControl(streamID, control) {
@@ -1896,7 +1887,6 @@ function applyPreset(name) {
 	}));
 	renderAll();
 	applySceneToFrame();
-	saveSession();
 }
 
 function getPresetLimit(name) {
@@ -2075,14 +2065,13 @@ function buildLayoutPayload(scene) {
 
 function applySceneToFrame() {
 	const scene = getActiveScene();
-	if (!state.iframeReady || !scene) {
-		return;
+	if (state.iframeReady && scene) {
+		const layout = buildLayoutPayload(scene);
+		framePost({ scene: "0", layout });
+		state.lastAppliedSceneId = scene.id;
+		renderScenes();
+		setStatus(scene.auto ? "Auto layout" : "Updated", "live");
 	}
-	const layout = buildLayoutPayload(scene);
-	framePost({ scene: "0", layout });
-	state.lastAppliedSceneId = scene.id;
-	renderScenes();
-	setStatus(scene.auto ? "Auto layout" : "Updated", "live");
 	saveSession();
 }
 
@@ -2160,7 +2149,6 @@ function endBoxDrag() {
 	applySceneToFrame();
 	renderBoxInspector();
 	renderScenes();
-	saveSession();
 }
 
 function renderJoinSoundButton() {
@@ -2275,7 +2263,6 @@ function updateActiveBrand() {
 	state.brand.labels = document.getElementById("brand-labels").checked;
 	renderLayout();
 	applySceneToFrame();
-	saveSession();
 }
 
 async function copyText(value, label) {

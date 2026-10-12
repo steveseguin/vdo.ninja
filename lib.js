@@ -70256,7 +70256,7 @@ async function whepIn(whepInput = false, whepInputToken = false, UUID = false) {
 				await chooseBestTURN();
 			}
 
-			if (connectingPeer.sharedWebsiteElement && (session.rpcs[UUID] !== connectingPeer || connectingPeer.suppressReconnect)) return;
+			if (session.rpcs[UUID] !== connectingPeer || connectingPeer.suppressReconnect) return;
 
 			if (session.encodedInsertableStreams) {
 				// most servers won't support this
