@@ -3539,6 +3539,71 @@ input[type="file"]#fileselector4 + label {
 	height: 50px;
 	border-radius: 4px;
 }
+.audio-compressor-settings {
+	width: 100%;
+	margin: 8px 0;
+	min-width: 0;
+	overflow-wrap: break-word;
+}
+.audio-compressor-mode,
+.advancedAudioSettings .audio-compressor-mode {
+	display: flex;
+	flex-wrap: wrap;
+}
+.audio-compressor-mode label,
+.audio-compressor-mode select,
+.advancedAudioSettings .audio-compressor-mode select {
+	flex: 1 1 120px;
+	min-width: 0;
+	max-width: 100%;
+}
+.audio-compressor-value {
+	display: grid;
+	grid-template-columns: minmax(0, 1fr) 75px;
+	column-gap: 8px;
+	align-items: center;
+	margin: 4px 0;
+}
+.audio-compressor-value .manualInput {
+	box-sizing: border-box;
+	width: 100%;
+	margin: 0;
+}
+#popupSelector_constraints_audio .audio-compressor-settings,
+.darktheme .advancedAudioSettings .audio-compressor-settings {
+	color: white;
+}
+.audio-compressor-settings label {
+	min-width: 0;
+	margin: 0;
+}
+.audio-compressor-settings summary {
+	cursor: pointer;
+}
+.audio-compressor-settings p {
+	font-size: 0.85em;
+	margin: 8px 0;
+}
+.audio-compressor-settings fieldset {
+	border: 0;
+	padding: 0;
+	margin: 0;
+	min-width: 0;
+}
+.audio-compressor-settings input[type="range"] {
+	display: block;
+	width: 100%;
+	margin: 2px 0 5px;
+}
+.audio-compressor-settings fieldset:disabled {
+	opacity: 0.5;
+}
+.audio-compressor-settings fieldset button {
+	max-width: 100%;
+	height: auto;
+	white-space: normal;
+}
+
 .manualInput{
 	width: 75px;
 	display: inline-block;

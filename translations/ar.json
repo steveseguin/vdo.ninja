@@ -1,5 +1,18 @@
 {
   "innerHTML": {
+    "audio-compressor": "ضاغط الصوت:",
+    "audio-compressor-off": "إيقاف",
+    "audio-compressor-on": "تشغيل",
+    "audio-compressor-limiter": "محدد الصوت",
+    "audio-compressor-settings": "إعدادات الضاغط",
+    "audio-compressor-scope": "يعالج صوت الميكروفونات الممزوج لجميع المشاهدين.",
+    "audio-compressor-threshold": "العتبة (dB):",
+    "audio-compressor-ratio": "النسبة (x:1):",
+    "audio-compressor-attack": "الهجوم (ms):",
+    "audio-compressor-release": "التحرير (ms):",
+    "audio-compressor-knee": "الركبة (dB):",
+    "audio-compressor-gain": "التعويض (dB):",
+    "audio-compressor-reset": "إعادة ضبط الوضع",
     "open-co-mixer": "فتح co-Mixer",
     "mixer-wait-for-main": "في انتظار Mixer الرئيسي. فعّل المخرجين المشاركين في Mixer الرئيسي واستخدم دعوة co-Mixer الخاصة به.",
     "mixer-shared-layouts": "تخطيطات مشتركة. تُدار إعدادات Mixer العامة في Mixer الرئيسي.",

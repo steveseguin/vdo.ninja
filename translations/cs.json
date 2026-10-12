@@ -1,5 +1,18 @@
 {
   "innerHTML": {
+    "audio-compressor": "Kompresor:",
+    "audio-compressor-off": "Vypnuto",
+    "audio-compressor-on": "Zapnuto",
+    "audio-compressor-limiter": "Limiter",
+    "audio-compressor-settings": "Nastavení kompresoru",
+    "audio-compressor-scope": "Zpracuje smíchaný zvuk mikrofonů pro všechny diváky.",
+    "audio-compressor-threshold": "Práh (dB):",
+    "audio-compressor-ratio": "Poměr (x:1):",
+    "audio-compressor-attack": "Náběh (ms):",
+    "audio-compressor-release": "Doběh (ms):",
+    "audio-compressor-knee": "Koleno (dB):",
+    "audio-compressor-gain": "Dorovnání (dB):",
+    "audio-compressor-reset": "Obnovit režim",
     "open-co-mixer": "Otevřít co-Mixer",
     "mixer-wait-for-main": "Čeká se na hlavní Mixer. V hlavním Mixeru povolte spolurežiséry a použijte jeho pozvánku do co-Mixeru.",
     "mixer-shared-layouts": "Sdílená rozvržení. Obecná nastavení Mixeru se spravují v hlavním Mixeru.",

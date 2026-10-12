@@ -61,6 +61,19 @@ var PPTKeyPressed = false;
 var translation = false;
 
 var miscTranslations = {
+	"audio-compressor": "Compressor:",
+	"audio-compressor-off": "Off",
+	"audio-compressor-on": "On",
+	"audio-compressor-limiter": "Limiter",
+	"audio-compressor-settings": "Compressor settings",
+	"audio-compressor-scope": "Processes the mixed microphone audio for all viewers.",
+	"audio-compressor-threshold": "Threshold (dB):",
+	"audio-compressor-ratio": "Ratio (x:1):",
+	"audio-compressor-attack": "Attack (ms):",
+	"audio-compressor-release": "Release (ms):",
+	"audio-compressor-knee": "Knee (dB):",
+	"audio-compressor-gain": "Makeup (dB):",
+	"audio-compressor-reset": "Reset mode",
 	"shared-link-type": "Link type",
 	"shared-link-auto": "Automatic",
 	"shared-link-website": "Website",
@@ -28607,6 +28620,7 @@ function initWebAudioNode(trackId) {
 		id: trackId,
 		micDelay: false,
 		compressor: false,
+		compressorGain: false,
 		analyser: false,
 		gainNode: false,
 		splitter: false,
@@ -28735,6 +28749,14 @@ function applyAudioProcessing(webAudio, streamSrc) {
 		} else if (session.compressor === 2) {
 			webAudio.compressor = audioLimiter(anonNode, webAudio.audioContext);
 			anonNode = webAudio.compressor;
+		}
+
+		if (webAudio.compressor) {
+			webAudio.compressorGain = webAudio.audioContext.createGain();
+			webAudio.compressorGain.gain.value = Math.pow(10, getCompressorSettings().gain / 20);
+			webAudio.compressor.connect(webAudio.compressorGain);
+			applyCompressorSettings(webAudio);
+			anonNode = webAudio.compressorGain;
 		}
 
 		// Mic panning (publisher-side): force mono, then pan to stereo
@@ -29466,24 +29488,114 @@ function audioMeter(mediaStreamSource, audioContext) {
 	return analyser;
 }
 
+function getCompressorSettings(mode = session.compressor) {
+	var settings = { threshold: -40, knee: 10, ratio: 4, attack: 0.002, release: 0.1, gain: 0 };
+	if (mode === 2) {
+		settings.threshold = -5;
+		settings.knee = 0;
+		settings.ratio = 20;
+		settings.attack = 0.001;
+	}
+	var saved = session.compressorSettings[mode];
+	if (saved) {
+		for (var key in settings) {
+			if (key in saved) {
+				settings[key] = saved[key];
+			}
+		}
+	}
+	return settings;
+}
+
+function applyCompressorSettings(webAudio) {
+	var settings = getCompressorSettings();
+	for (var key in settings) {
+		if (key === "gain") {
+			webAudio.compressorGain.gain.setTargetAtTime(Math.pow(10, settings.gain / 20), webAudio.audioContext.currentTime, 0.01);
+		} else {
+			webAudio.compressor[key].setValueAtTime(settings[key], webAudio.audioContext.currentTime);
+		}
+	}
+}
+
+function changeCompressor(key, value) {
+	if (session.disableWebAudio) {
+		return false;
+	}
+	if (key === "compressor") {
+		var mode = false;
+		if (value === 1 || value === "1") {
+			mode = 1;
+		} else if (value === 2 || value === "2") {
+			mode = 2;
+		} else if (value !== false && value !== "false" && value !== 0 && value !== "0") {
+			return false;
+		}
+		if (session.compressor !== mode) {
+			session.compressor = mode;
+			senderAudioUpdate();
+		}
+		return true;
+	}
+	if (session.compressor !== 1 && session.compressor !== 2) {
+		return false;
+	}
+	if (key === "reset") {
+		delete session.compressorSettings[session.compressor];
+	} else {
+		if ((typeof value !== "number" && typeof value !== "string") || String(value).trim() === "") {
+			return false;
+		}
+		value = Number(value);
+		if (!isFinite(value)) {
+			return false;
+		}
+		if (key === "threshold") {
+			value = Math.max(-100, Math.min(0, value));
+		} else if (key === "knee") {
+			value = Math.max(0, Math.min(40, value));
+		} else if (key === "ratio") {
+			value = Math.max(1, Math.min(20, value));
+		} else if (key === "attack" || key === "release") {
+			value = Math.max(0, Math.min(1, value));
+		} else if (key === "gain") {
+			value = Math.max(-24, Math.min(24, value));
+		} else {
+			return false;
+		}
+		if (!session.compressorSettings[session.compressor]) {
+			session.compressorSettings[session.compressor] = {};
+		}
+		session.compressorSettings[session.compressor][key] = value;
+	}
+	for (var waid in session.webAudios) {
+		if (session.webAudios[waid].compressor && session.webAudios[waid].compressorGain) {
+			applyCompressorSettings(session.webAudios[waid]);
+		}
+	}
+	return true;
+}
+
 function audioCompressor(mediaStreamSource, audioContext) {
 	var compressor = audioContext.createDynamicsCompressor();
-	compressor.threshold.value = -40;
-	compressor.knee.value = 10;
-	compressor.ratio.value = 4; // 3
-	compressor.attack.value = 0.002; // 0.001
-	compressor.release.value = 0.1; // 0.06
+	var settings = getCompressorSettings(1);
+	compressor.threshold.value = settings.threshold;
+	compressor.knee.value = settings.knee;
+	compressor.ratio.value = settings.ratio;
+	compressor.attack.value = settings.attack;
+	compressor.release.value = settings.release;
 	mediaStreamSource.connect(compressor);
 	return compressor;
 }
 
 function audioLimiter(mediaStreamSource, audioContext) {
 	var compressor = audioContext.createDynamicsCompressor();
-	compressor.threshold.value = -5;
-	compressor.knee.value = 0;
-	compressor.ratio.value = 20.0; // 1 to 20
-	compressor.attack.value = 0.001;
-	compressor.release.value = 0.1;
+	var settings = getCompressorSettings(2);
+	compressor.threshold.value = settings.threshold;
+	compressor.knee.value = settings.knee;
+	compressor.ratio.value = settings.ratio;
+	compressor.attack.value = settings.attack;
+	compressor.release.value = settings.release;
 	mediaStreamSource.connect(compressor);
 	return compressor;
 }
@@ -48923,6 +49035,7 @@ function listAudioSettingsPrep() {
 			// if web audio is disabled, don't show them
 			trackSet.gating = session.noisegate;
 			trackSet.compressor = session.compressor;
+			trackSet.compressorSettings = getCompressorSettings();
 			trackSet.micDelay = session.micDelay;
 			trackSet.micPanning = session.micPanning !== false ? session.micPanning : false;
 		}
@@ -49990,7 +50103,132 @@ function clearAutoPiPPrompt() {
 	session.autoPiPPromptVideo = false;
 }
 
+function appendAudioCompressorControls(container, data, UUID) {
+	var suffix = UUID || "local";
+	var row = document.createElement("div");
+	row.className = "settings-select-row audio-compressor-mode";
+	var label = document.createElement("label");
+	label.htmlFor = "audioCompressorMode_" + suffix;
+	miniTranslate(label, "audio-compressor");
+	var select = document.createElement("select");
+	select.id = label.htmlFor;
+	select.className = "constraintCameraInput";
+	var option = new Option("", "false");
+	miniTranslate(option, "audio-compressor-off");
+	select.add(option);
+	option = new Option("", "1");
+	miniTranslate(option, "audio-compressor-on");
+	select.add(option);
+	option = new Option("", "2");
+	miniTranslate(option, "audio-compressor-limiter");
+	select.add(option);
+	select.value = String(data.compressor || false);
+	select.dataset.chosen = select.value;
+	select.onchange = function () {
+		if (UUID) {
+			requestChangeCompressor("compressor", select.value, UUID);
+		} else {
+			changeCompressor("compressor", select.value);
+			listAudioSettings();
+		}
+	};
+	row.appendChild(label);
+	row.appendChild(select);
+	container.appendChild(row);
+
+	var details = document.createElement("details");
+	details.id = "audioCompressorSettings_" + suffix;
+	details.className = "audio-compressor-settings";
+	var summary = document.createElement("summary");
+	miniTranslate(summary, "audio-compressor-settings");
+	details.appendChild(summary);
+	var note = document.createElement("p");
+	miniTranslate(note, "audio-compressor-scope");
+	details.appendChild(note);
+	var fields = document.createElement("fieldset");
+	fields.disabled = data.compressor !== 1 && data.compressor !== 2;
+	details.appendChild(fields);
+	var controls = [
+		["threshold", "audio-compressor-threshold", -100, 0, 1, 1],
+		["ratio", "audio-compressor-ratio", 1, 20, 0.1, 1],
+		["attack", "audio-compressor-attack", 0, 1000, 1, 1000],
+		["release", "audio-compressor-release", 0, 1000, 1, 1000],
+		["knee", "audio-compressor-knee", 0, 40, 1, 1],
+		["gain", "audio-compressor-gain", -24, 24, 0.1, 1]
+	];
+	controls.forEach(function (control) {
+		var key = control[0];
+		var row = document.createElement("span");
+		row.className = "audio-compressor-value";
+		var label = document.createElement("label");
+		label.htmlFor = "audioCompressor_" + key + "_" + suffix;
+		label.id = label.htmlFor + "_label";
+		miniTranslate(label, control[1]);
+		var input = document.createElement("input");
+		input.type = "range";
+		input.id = label.htmlFor;
+		input.min = control[2];
+		input.max = control[3];
+		input.step = control[4];
+		input.value = data.compressorSettings[key] * control[5];
+		var number = document.createElement("input");
+		number.type = "number";
+		number.dir = "ltr";
+		number.className = "manualInput";
+		number.min = input.min;
+		number.max = input.max;
+		number.step = input.step;
+		number.value = input.value;
+		number.setAttribute("aria-labelledby", label.id);
+		input.oninput = function () {
+			number.value = input.value;
+			if (!UUID) {
+				changeCompressor(key, Number(input.value) / control[5]);
+			}
+		};
+		input.onchange = function () {
+			number.value = input.value;
+			if (UUID) {
+				requestChangeCompressor(key, Number(input.value) / control[5], UUID);
+			} else {
+				changeCompressor(key, Number(input.value) / control[5]);
+				pokeIframeAPI("mic-constraint-changed", { name: "compressor-" + key, value: Number(input.value) / control[5] });
+			}
+		};
+		number.onchange = function () {
+			if (number.value.trim() === "" || !isFinite(Number(number.value))) {
+				number.value = input.value;
+				return;
+			}
+			input.value = Math.max(control[2], Math.min(control[3], Number(number.value)));
+			input.onchange();
+		};
+		row.appendChild(label);
+		row.appendChild(number);
+		fields.appendChild(row);
+		fields.appendChild(input);
+	});
+	var reset = document.createElement("button");
+	reset.type = "button";
+	miniTranslate(reset, "audio-compressor-reset");
+	reset.onclick = function (event) {
+		event.preventDefault();
+		event.stopPropagation();
+		if (UUID) {
+			requestChangeCompressor("reset", true, UUID);
+		} else {
+			changeCompressor("reset", true);
+			listAudioSettings();
+		}
+	};
+	fields.appendChild(reset);
+	container.appendChild(details);
+	return details;
+}
+
 function updateDirectorsAudio(dataN, UUID) {
+	var compressorPanel = document.getElementById("audioCompressorSettings_" + UUID);
+	var compressorOpen = compressorPanel && compressorPanel.open;
 	var audioEle = document.createElement("div");
 	query("#container_" + UUID + " .advancedAudioSettings").innerHTML = "";
 
@@ -50422,7 +50660,9 @@ function updateDirectorsAudio(dataN, UUID) {
 			div.appendChild(input);
 		}
 
-		if ("compressor" in data && n == 0) {
+		if (data.compressorSettings && n == 0) {
+			appendAudioCompressorControls(audioEle, data, UUID).open = !!compressorOpen;
+		} else if ("compressor" in data && n == 0) {
 			var label = document.createElement("label");
 			var i = "compressor";
 			var div = document.createElement("div");
@@ -51246,6 +51486,8 @@ function capitalizeFirstLetter(string) {
 }
 
 function listAudioSettings() {
+	var compressorPanel = document.getElementById("audioCompressorSettings_local");
+	var compressorOpen = compressorPanel && compressorPanel.open;
 	getById("popupSelector_constraints_audio").innerHTML = "";
 
 	var tracks = session.streamSrc.getAudioTracks();
@@ -51757,6 +51999,12 @@ function listAudioSettings() {
 			getById("popupSelector_constraints_audio").appendChild(label);
 			getById("popupSelector_constraints_audio").appendChild(manualInput);
 			getById("popupSelector_constraints_audio").appendChild(input);
+		}
+
+		if (ii == 0 && !session.disableWebAudio) {
+			var compressorData = { compressor: session.compressor, compressorSettings: getCompressorSettings() };
+			appendAudioCompressorControls(getById("popupSelector_constraints_audio"), compressorData, false).open = !!compressorOpen;
+			getById("advancedOptionsAudio").style.display = "inline-flex";
 		}
 
 		if (session.noisegate !== false && ii == 0) {

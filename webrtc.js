@@ -1105,6 +1105,7 @@ WebRTC.Media = (function () {
 	session.closedCaptions = false;
 	session.configuration = false; // if set to something else, it will use those instead of the auto-settingss
 	session.compressor = false;
+	session.compressorSettings = {};
 	session.chat = false;
 	session.contentHint = "";
 	session.audioContentHint = "";
@@ -14346,21 +14347,14 @@ WebRTC.Media = (function () {
 					}
 
 					if ("requestChangeCompressor" in msg) {
-						var was = session.compressor;
-						if (msg.value === "false") {
-							session.compressor = false;
-							log("noise gate off");
-						} else if (msg.value === "1") {
-							session.compressor = 1;
-							log("noise gate on");
-						} else if (msg.value === "2") {
-							session.compressor = 2;
-							log("noise gate on");
-						} else {
-							session.compressor = parseInt(msg.value) || false;
-						}
-						if (session.compressor !== was) {
-							senderAudioUpdate();
+						if ((!msg.track || msg.track == 0) && changeCompressor(msg.keyname || "compressor", msg.value)) {
+							var data = {};
+							data.UUID = UUID;
+							data.audioOptions = listAudioSettingsPrep();
+							session.sendMessage(data, UUID);
+							if (toggleSettingsState) {
+								listAudioSettings();
+							}
 						}
 					}
 

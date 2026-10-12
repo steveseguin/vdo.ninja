@@ -1,5 +1,18 @@
 {
   "innerHTML": {
+    "audio-compressor": "कंप्रेसर:",
+    "audio-compressor-off": "बंद",
+    "audio-compressor-on": "चालू",
+    "audio-compressor-limiter": "लिमिटर",
+    "audio-compressor-settings": "कंप्रेसर सेटिंग्स",
+    "audio-compressor-scope": "सभी दर्शकों के लिए माइक्रोफ़ोन की मिली-जुली ऑडियो प्रोसेस करता है।",
+    "audio-compressor-threshold": "थ्रेशोल्ड (dB):",
+    "audio-compressor-ratio": "अनुपात (x:1):",
+    "audio-compressor-attack": "अटैक (ms):",
+    "audio-compressor-release": "रिलीज़ (ms):",
+    "audio-compressor-knee": "नी (dB):",
+    "audio-compressor-gain": "मेकअप गेन (dB):",
+    "audio-compressor-reset": "मोड रीसेट करें",
     "open-co-mixer": "co-Mixer खोलें",
     "mixer-wait-for-main": "मुख्य Mixer की प्रतीक्षा है। मुख्य Mixer में सह-निर्देशकों को सक्षम करें और उसके co-Mixer आमंत्रण का उपयोग करें।",
     "mixer-shared-layouts": "साझा लेआउट। Mixer की सामान्य सेटिंग मुख्य Mixer में प्रबंधित की जाती हैं।",

@@ -1,5 +1,18 @@
 {
   "innerHTML": {
+    "audio-compressor": "컴프레서:",
+    "audio-compressor-off": "끄기",
+    "audio-compressor-on": "켜기",
+    "audio-compressor-limiter": "리미터",
+    "audio-compressor-settings": "컴프레서 설정",
+    "audio-compressor-scope": "모든 시청자에게 보내는 마이크 믹스를 처리합니다.",
+    "audio-compressor-threshold": "임계값 (dB):",
+    "audio-compressor-ratio": "비율 (x:1):",
+    "audio-compressor-attack": "어택 (ms):",
+    "audio-compressor-release": "릴리스 (ms):",
+    "audio-compressor-knee": "니 (dB):",
+    "audio-compressor-gain": "보상 게인 (dB):",
+    "audio-compressor-reset": "모드 초기화",
     "open-co-mixer": "co-Mixer 열기",
     "mixer-wait-for-main": "메인 Mixer를 기다리는 중입니다. 메인 Mixer에서 공동 디렉터를 활성화하고 해당 co-Mixer 초대를 사용하세요.",
     "mixer-shared-layouts": "공유 레이아웃입니다. Mixer의 일반 설정은 메인 Mixer에서 관리합니다.",

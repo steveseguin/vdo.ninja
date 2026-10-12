@@ -1,5 +1,18 @@
 {
   "innerHTML": {
+    "audio-compressor": "Compressor:",
+    "audio-compressor-off": "Uit",
+    "audio-compressor-on": "Aan",
+    "audio-compressor-limiter": "Limiter",
+    "audio-compressor-settings": "Compressor instellen",
+    "audio-compressor-scope": "Verwerkt de microfoonmix voor alle kijkers.",
+    "audio-compressor-threshold": "Drempel (dB):",
+    "audio-compressor-ratio": "Verhouding (x:1):",
+    "audio-compressor-attack": "Attack (ms):",
+    "audio-compressor-release": "Release (ms):",
+    "audio-compressor-knee": "Knee (dB):",
+    "audio-compressor-gain": "Compensatie (dB):",
+    "audio-compressor-reset": "Modus resetten",
     "open-co-mixer": "co-Mixer openen",
     "mixer-wait-for-main": "Wachten op de hoofd-Mixer. Schakel mederegisseurs in de hoofd-Mixer in en gebruik de co-Mixer-uitnodiging daarvan.",
     "mixer-shared-layouts": "Gedeelde lay-outs. Algemene Mixer-instellingen worden beheerd in de hoofd-Mixer.",

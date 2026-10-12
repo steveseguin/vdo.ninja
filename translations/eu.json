@@ -1,5 +1,18 @@
 {
   "innerHTML": {
+    "audio-compressor": "Konpresorea:",
+    "audio-compressor-off": "Itzalita",
+    "audio-compressor-on": "Piztuta",
+    "audio-compressor-limiter": "Mugatzailea",
+    "audio-compressor-settings": "Konpresorearen doikuntzak",
+    "audio-compressor-scope": "Mikrofonoen nahasketa ikusle guztientzat prozesatzen du.",
+    "audio-compressor-threshold": "Atalasea (dB):",
+    "audio-compressor-ratio": "Erlazioa (x:1):",
+    "audio-compressor-attack": "Erasoa (ms):",
+    "audio-compressor-release": "Askapena (ms):",
+    "audio-compressor-knee": "Belauna (dB):",
+    "audio-compressor-gain": "Konpentsazioa (dB):",
+    "audio-compressor-reset": "Berrezarri modua",
     "open-co-mixer": "Ireki co-Mixer",
     "mixer-wait-for-main": "Mixer nagusiaren zain. Gaitu zuzendarikideak Mixer nagusian eta erabili haren co-Mixer gonbidapena.",
     "mixer-shared-layouts": "Diseinu partekatuak. Mixer-en ezarpen orokorrak Mixer nagusian kudeatzen dira.",

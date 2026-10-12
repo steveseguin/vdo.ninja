@@ -1,5 +1,18 @@
 {
   "innerHTML": {
+    "audio-compressor": "Kompresör:",
+    "audio-compressor-off": "Kapalı",
+    "audio-compressor-on": "Açık",
+    "audio-compressor-limiter": "Sınırlayıcı",
+    "audio-compressor-settings": "Kompresör ayarları",
+    "audio-compressor-scope": "Mikrofon miksini tüm izleyiciler için işler.",
+    "audio-compressor-threshold": "Eşik (dB):",
+    "audio-compressor-ratio": "Oran (x:1):",
+    "audio-compressor-attack": "Atak (ms):",
+    "audio-compressor-release": "Bırakma (ms):",
+    "audio-compressor-knee": "Diz (dB):",
+    "audio-compressor-gain": "Telafi (dB):",
+    "audio-compressor-reset": "Modu sıfırla",
     "open-co-mixer": "co-Mixer’ı aç",
     "mixer-wait-for-main": "Ana Mixer bekleniyor. Ana Mixer’da yardımcı yönetmenleri etkinleştirin ve onun co-Mixer davetini kullanın.",
     "mixer-shared-layouts": "Paylaşılan düzenler. Genel Mixer ayarları ana Mixer’da yönetilir.",

@@ -1,5 +1,18 @@
 {
   "innerHTML": {
+    "audio-compressor": "Ompressorcay:",
+    "audio-compressor-off": "Offway",
+    "audio-compressor-on": "Onway",
+    "audio-compressor-limiter": "Imiterlay",
+    "audio-compressor-settings": "Ompressorcay ettingssay",
+    "audio-compressor-scope": "Ocessespray ethay ixedmay icrophonemay audioway orfay allway iewersvay.",
+    "audio-compressor-threshold": "Esholdthray (dB):",
+    "audio-compressor-ratio": "Atioray (x:1):",
+    "audio-compressor-attack": "Attackway (ms):",
+    "audio-compressor-release": "Eleaseray (ms):",
+    "audio-compressor-knee": "Eeknay (dB):",
+    "audio-compressor-gain": "Akeupmay (dB):",
+    "audio-compressor-reset": "Esetray odemay",
     "open-co-mixer": "Openway co-Mixer",
     "mixer-wait-for-main": "Aitingway orfay ethay ainmay Mixer. Enableway co-directors inway ethay ainmay Mixer andway useway itsway co-Mixer inviteway.",
     "mixer-shared-layouts": "Aredshay ayoutslay. Eneralgay Mixer ettingssay areway anagedmay inway ethay ainmay Mixer.",

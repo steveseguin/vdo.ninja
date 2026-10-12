@@ -1,5 +1,18 @@
 {
   "innerHTML": {
+    "audio-compressor": "Compresseur :",
+    "audio-compressor-off": "Non",
+    "audio-compressor-on": "Oui",
+    "audio-compressor-limiter": "Limiteur",
+    "audio-compressor-settings": "Réglages du compresseur",
+    "audio-compressor-scope": "Traite le mix des micros pour tous les spectateurs.",
+    "audio-compressor-threshold": "Seuil (dB) :",
+    "audio-compressor-ratio": "Rapport (x:1) :",
+    "audio-compressor-attack": "Attaque (ms) :",
+    "audio-compressor-release": "Relâchement (ms) :",
+    "audio-compressor-knee": "Coude (dB) :",
+    "audio-compressor-gain": "Compensation (dB) :",
+    "audio-compressor-reset": "Réinitialiser le mode",
     "open-co-mixer": "Ouvrir co-Mixer",
     "mixer-wait-for-main": "En attente du Mixer principal. Activez les coréalisateurs dans le Mixer principal et utilisez son invitation co-Mixer.",
     "mixer-shared-layouts": "Dispositions partagées. Les paramètres généraux de Mixer sont gérés dans le Mixer principal.",

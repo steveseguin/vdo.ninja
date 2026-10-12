@@ -1,5 +1,18 @@
 {
   "innerHTML": {
+    "audio-compressor": "压缩器：",
+    "audio-compressor-off": "关",
+    "audio-compressor-on": "开",
+    "audio-compressor-limiter": "限制器",
+    "audio-compressor-settings": "压缩器设置",
+    "audio-compressor-scope": "处理发送给所有观众的混合麦克风音频。",
+    "audio-compressor-threshold": "阈值 (dB)：",
+    "audio-compressor-ratio": "压缩比 (x:1)：",
+    "audio-compressor-attack": "启动 (ms)：",
+    "audio-compressor-release": "释放 (ms)：",
+    "audio-compressor-knee": "拐点 (dB)：",
+    "audio-compressor-gain": "补偿增益 (dB)：",
+    "audio-compressor-reset": "重置此模式",
     "open-co-mixer": "打开 co-Mixer",
     "mixer-wait-for-main": "正在等待主 Mixer。请在主 Mixer 中启用共同导播，并使用其 co-Mixer 邀请链接。",
     "mixer-shared-layouts": "共享布局。Mixer 的常规设置由主 Mixer 管理。",

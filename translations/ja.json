@@ -1,5 +1,18 @@
 {
   "innerHTML": {
+    "audio-compressor": "コンプレッサー：",
+    "audio-compressor-off": "オフ",
+    "audio-compressor-on": "オン",
+    "audio-compressor-limiter": "リミッター",
+    "audio-compressor-settings": "コンプレッサー設定",
+    "audio-compressor-scope": "全視聴者に送るマイクのミックス音声を処理します。",
+    "audio-compressor-threshold": "しきい値 (dB)：",
+    "audio-compressor-ratio": "比率 (x:1)：",
+    "audio-compressor-attack": "アタック (ms)：",
+    "audio-compressor-release": "リリース (ms)：",
+    "audio-compressor-knee": "ニー (dB)：",
+    "audio-compressor-gain": "補正ゲイン (dB)：",
+    "audio-compressor-reset": "モードをリセット",
     "open-co-mixer": "co-Mixer を開く",
     "mixer-wait-for-main": "メイン Mixer を待っています。メイン Mixer で共同ディレクターを有効にし、その co-Mixer 招待リンクを使用してください。",
     "mixer-shared-layouts": "共有レイアウト。Mixer の一般設定はメイン Mixer で管理します。",

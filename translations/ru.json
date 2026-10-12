@@ -1,5 +1,18 @@
 {
   "innerHTML": {
+    "audio-compressor": "Компрессор:",
+    "audio-compressor-off": "Выкл.",
+    "audio-compressor-on": "Вкл.",
+    "audio-compressor-limiter": "Лимитер",
+    "audio-compressor-settings": "Настройки компрессора",
+    "audio-compressor-scope": "Обрабатывает микс микрофонов для всех зрителей.",
+    "audio-compressor-threshold": "Порог (dB):",
+    "audio-compressor-ratio": "Степень (x:1):",
+    "audio-compressor-attack": "Атака (ms):",
+    "audio-compressor-release": "Спад (ms):",
+    "audio-compressor-knee": "Колено (dB):",
+    "audio-compressor-gain": "Компенсация (dB):",
+    "audio-compressor-reset": "Сбросить режим",
     "open-co-mixer": "Открыть co-Mixer",
     "mixer-wait-for-main": "Ожидание основного Mixer. Разрешите сорежиссёров в основном Mixer и используйте его приглашение в co-Mixer.",
     "mixer-shared-layouts": "Общие макеты. Общие настройки Mixer управляются в основном Mixer.",
