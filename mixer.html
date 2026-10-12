@@ -1512,7 +1512,7 @@
 		<div id="containermenu"></div>
 		<div id="containerMenu0" class="hidden">
 			<button onclick="setobsSceneName();" title="When this layout is triggered, OBS will change to the specified scene as well">Link OBS Scene</button>
-			<button onclick="saveScene();closeScene();">💾❌ Save and Close</button>
+			<button onclick="if (saveScene(false, event, true) !== false){closeScene();}">💾❌ Save and Close</button>
 			<button onclick="closeScene();">❌ Close</button>
 		</div>
 		<div id="containerMenu2" class="hidden">
@@ -1527,7 +1527,7 @@
 			<button onclick="setobsSceneName();" title="When this layout is triggered, OBS will change to the specified scene as well">Link OBS Scene</button>
 			<button onclick="copyJSON();" title="This can be used with &format directly in VDO.Ninja without the mixer app. Requires a guest being active.">🔗 Layout URL</button>
 			<button onclick="removeScene();">🗑️ Remove Layout</button>
-			<button id="saveAndClose" onclick="saveScene(false, event);closeScene();">💾❌ Save and Close</button>
+			<button id="saveAndClose" onclick="if (saveScene(false, event, true) !== false){closeScene();}">💾❌ Save and Close</button>
 			<button onclick="closeScene();">❌ Close Layout Maker</button>
 		</div>
 	</div>
@@ -1891,6 +1891,9 @@
 		window.history.pushState({path: urlEdited.toString()}, '', urlEdited.toString());
 	}
 	var urlParams = new URLSearchParams(urlEdited);
+	var mixerRemote = urlParams.get("mixercontrols") === "layouts";
+	var mixerRemoteReady = false;
+	var mixerSavePending = false;
 	
 	var api = false;
 	if (urlParams.has('osc') || urlParams.has('api')) {
@@ -2351,6 +2354,7 @@
 	$(function(){
 		$( "#containermenu" ).sortable({
 			stop: function( event, ui ) {saveSession();},
+			disabled: mixerRemote,
 			distance: 20
 		});
 		
@@ -2792,6 +2796,7 @@
 	}
 
 	function syncSlotReservations(){
+		if (mixerRemote){return;}
 		if (!iframe || !iframe.contentWindow){
 			return;
 		}
@@ -3318,13 +3323,13 @@
 		}
 	}
 	
-	var savedSession = getStorage("savedSession");
+	var savedSession = mixerRemote ? false : getStorage("savedSession");
 	
 	if (savedSession){
 		savedSession = JSON.parse(savedSession);
 		applySettings();
 	} else {
-		savedSession = initialLayouts;
+		savedSession = mixerRemote ? {layouts: [], obsScenes: [], settings: {}} : initialLayouts;
 	}
 	
 	if (urlParams.has("hidedirector")){
@@ -3434,6 +3439,7 @@
 	}
 	
 	function importSession(event){
+		if (mixerRemote){return;}
 		var reader = new FileReader();
 		reader.onload = function(event){
 			log(event.target.result);
@@ -3470,6 +3476,7 @@
 	}
 	
 	function resetLayouts(){
+		if (mixerRemote){return;}
 		var yes = confirm("Are you sure? This will reset all the layouts.");
 		if (!yes){return;}
 	
@@ -3487,7 +3494,17 @@
 		saveSession();
 	}
 	
-	function updateLayouts(){
+	function updateLayouts(layoutNames=false){
+		var selected = document.querySelector("#containermenu .pressed > canvas");
+		var selectedName = selected ? selected.sceneName : null;
+		var autoSelected = selected && selected.layout === false;
+		if (!layoutNames){
+			layoutNames = [];
+			var layouts = document.querySelectorAll("#containermenu .canvasContainer > canvas");
+			for (var i = 0; i < layouts.length; i++){
+				if (layouts[i].layout){layoutNames.push(layouts[i].sceneName);}
+			}
+		}
 		document.getElementById("containermenu").innerHTML = "";
 		
 	var slots = document.getElementById("col1").children;
@@ -3505,16 +3522,19 @@
 		
 		for (var i in savedSession.layouts){
 			if (savedSession.obsScenes && savedSession.obsScenes[i]){
-				drawLayout(savedSession.layouts[i], false, savedSession.obsScenes[i]);
+				drawLayout(savedSession.layouts[i], layoutNames[i] || false, savedSession.obsScenes[i]);
 			} else {
-				drawLayout(savedSession.layouts[i]);
+				drawLayout(savedSession.layouts[i], layoutNames[i] || false);
 			}
 		}
+		var selectedLayout = autoSelected ? document.querySelector("#automix canvas") : findMixerLayout(selectedName);
+		if (selectedLayout){selectedLayout.parentNode.classList.add("pressed");}
 	}
 	
 	
 	
 	function wipeLayouts(){
+		if (mixerRemote){return;}
 	
 		var yes = confirm("Are you sure? This will delete all the layouts.");
 		if (!yes){return;}
@@ -3748,7 +3768,161 @@
 	
 	var iframe = null;
 	
-	function openCoDirectorControls(){
+	function findMixerLayout(name){
+		var layouts = document.querySelectorAll("#containermenu .canvasContainer > canvas");
+		for (var i = 0; i < layouts.length; i++){
+			if (layouts[i].sceneName && layouts[i].sceneName === name){
+				return layouts[i];
+			}
+		}
+		return null;
+	}
+
+	function requestMixerControl(data){
+		var director = iframe && iframe.contentWindow;
+		var session = director && director.session;
+		if (!mixerRemoteReady || !session || session.directorState !== true || !session.directorUUID || !session.rpcs[session.directorUUID]){
+			if (director && director.getTranslation){
+				alert(director.getTranslation("mixer-wait-for-main"));
+			}
+			return false;
+		}
+		var msg = {};
+		msg.pipe = {mixerControl: data};
+		return session.sendRequest(msg, session.directorUUID);
+	}
+
+	function sendMixerState(UUID=false, result=false){
+		var director = iframe && iframe.contentWindow;
+		var session = director && director.session;
+		if (mixerRemote || !session || session.directorState !== true || session.directorUUID){return;}
+		var data = {};
+		data.action = "state";
+		data.layouts = [];
+		data.obsScenes = [];
+		data.layoutNames = [];
+		data.layout = session.layout;
+		data.active = session.layout === false ? false : null;
+		data.aspectRatio = aspectRatio;
+		data.pixelDensity = pixelDensity;
+		data.absolutePixel = absolutePixel;
+		data.result = result;
+		var layouts = document.querySelectorAll("#containermenu .canvasContainer > canvas");
+		for (var i = 0; i < layouts.length; i++){
+			if (layouts[i].layout){
+				var layout = JSON.parse(layouts[i].layout);
+				data.layouts.push(layout);
+				data.obsScenes.push(layouts[i].obsSceneName || false);
+				data.layoutNames.push(layouts[i].sceneName);
+				if (layouts[i].parentNode.classList.contains("pressed") && JSON.stringify(combinedLayout(layout)) === JSON.stringify(session.layout)){
+					data.active = layouts[i].sceneName;
+				}
+			}
+		}
+		var msg = {};
+		msg.pipe = {mixerControl: data};
+		for (var uuid in session.pcs){
+			if ((!UUID || UUID === uuid) && session.pcs[uuid].coDirector === true && session.directorList.indexOf(uuid) !== -1){
+				session.sendMessage(msg, uuid);
+			}
+		}
+	}
+
+	function receiveMixerControl(data, UUID){
+		var director = iframe && iframe.contentWindow;
+		var session = director && director.session;
+		if (!data || !session || !UUID){return;}
+		if (mixerRemote){
+			// Only the room's current main director can supply the shared layouts.
+			if (data.action !== "state" || UUID !== session.directorUUID || session.directorList.indexOf(UUID) === -1 || !Array.isArray(data.layouts) || !Array.isArray(data.obsScenes) || !Array.isArray(data.layoutNames)){
+				return;
+			}
+			mixerRemoteReady = true;
+			director.miniTranslate(document.getElementById("mixerRemoteStatus"), "mixer-shared-layouts");
+			var layoutsChanged = JSON.stringify(savedSession.layouts) !== JSON.stringify(data.layouts) || JSON.stringify(savedSession.obsScenes) !== JSON.stringify(data.obsScenes);
+			var layouts = document.querySelectorAll("#containermenu .canvasContainer > canvas");
+			var layoutIndex = 0;
+			for (var i = 0; i < layouts.length; i++){
+				if (!layouts[i].layout){continue;}
+				if (layouts[i].sceneName !== data.layoutNames[layoutIndex]){layoutsChanged = true;}
+				layoutIndex++;
+			}
+			if (layoutIndex !== data.layoutNames.length){layoutsChanged = true;}
+			layoutsChanged = layoutsChanged || aspectRatio !== data.aspectRatio || pixelDensity !== data.pixelDensity;
+			savedSession.settings = {aspectRatio: data.aspectRatio, pixelDensity: data.pixelDensity, absolutePixel: data.absolutePixel};
+			document.getElementById("containermenu").style.pointerEvents = "";
+			// Preserve an open draft while the shared preset buttons update.
+			if (document.getElementById("canvas").classList.contains("hidden")){
+				aspectRatio = data.aspectRatio;
+				pixelDensity = data.pixelDensity;
+				absolutePixel = data.absolutePixel;
+				changeAspectRatio(aspectRatio);
+			}
+			savedSession.layouts = data.layouts;
+			savedSession.obsScenes = data.obsScenes;
+			if (layoutsChanged){updateLayouts(data.layoutNames);}
+			var buttons = document.querySelectorAll("#containermenu .pressed");
+			for (var i = 0; i < buttons.length; i++){
+				buttons[i].classList.remove("pressed");
+			}
+			var active = data.active ? findMixerLayout(data.active) : null;
+			if (data.active === false){active = document.querySelector("#automix canvas");}
+			if (active){active.parentNode.classList.add("pressed");}
+			currentLayout = data.layout;
+			lastLayout = null;
+			lastLayoutRaw = null;
+			// Preview locally; only the main Mixer publishes layouts to the room.
+			session.layout = data.layout;
+			director.updateMixer();
+			if (data.result && mixerSavePending){
+				var closeAfterSave = mixerSavePending.close;
+				mixerSavePending = false;
+				if (data.result.saved || data.result.removed){
+					var saved = findMixerLayout(data.result.saved);
+					if (saved){
+						var editor = document.getElementById("canvas");
+						editor.sceneName = saved.sceneName;
+						editor.mixerOriginalLayout = saved.layout;
+						editor.mixerOriginalOBS = saved.obsSceneName || "";
+					}
+					if (closeAfterSave){closeScene();}
+				} else {
+					alert(director.getTranslation("mixer-layout-changed"));
+				}
+			}
+			return;
+		}
+		if (session.directorState !== true || session.directorUUID || !session.pcs[UUID] || session.pcs[UUID].coDirector !== true || session.directorList.indexOf(UUID) === -1){return;}
+		if (data.action === "get"){
+			sendMixerState(UUID);
+			return;
+		}
+		var canvas = findMixerLayout(data.name);
+		if (data.action === "activate"){
+			if (data.name === false){canvas = document.querySelector("#automix canvas");}
+			if (canvas){canvas.click();}
+			return;
+		}
+		if (data.action !== "save" && data.action !== "remove"){return;}
+		// Compare the edited preset, so simultaneous edits to other presets remain valid.
+		if (data.name && (!canvas || canvas.layout !== data.original || (canvas.obsSceneName || "") !== data.originalOBS)){
+			sendMixerState(UUID, "conflict");
+			return;
+		}
+		if (data.action === "save" && Array.isArray(data.layout)){
+			var added = drawLayout(data.layout, data.name || false, typeof data.obsSceneName === "string" ? data.obsSceneName : "");
+			var result = {saved: data.name || added.querySelector("canvas").sceneName};
+		} else if (data.action === "remove" && canvas){
+			canvas.parentNode.remove();
+			var result = {removed: true};
+		} else {
+			return;
+		}
+		saveSession();
+		sendMixerState(UUID, result);
+	}
+
+	function openCoDirectorControls(mixer=false){
 		var director = iframe && iframe.contentWindow;
 		if (!director || typeof director.buildCoDirectorInviteURL !== "function"){
 			return;
@@ -3761,6 +3935,11 @@
 		link.searchParams.set("noclaim", "");
 		if (link.host === location.host){
 			link.protocol = location.protocol;
+		}
+		if (mixer === true){
+			if (link.origin !== location.origin){return;}
+			link.pathname = location.pathname;
+			link.searchParams.set("mixercontrols", "layouts");
 		}
 		window.open(link.href, "_blank", "noopener");
 	}
@@ -3783,7 +3962,7 @@
 		} else {
 			additional2+="&slotmode=2";
 		}
-		if (slotReservationsEnabled){
+		if (slotReservationsEnabled && !mixerRemote){
 			additional2 += "&slotreserve=1&reservedslots=" + encodeURIComponent(JSON.stringify(reservedSlots));
 		}
 		
@@ -3808,6 +3987,12 @@
 			iframesrc = iframesrc + "&" + params
 		} else {
 			iframesrc = iframesrc + params
+		}
+		if (mixerRemote){
+			var remoteURL = new URL(iframesrc, location.href);
+			remoteURL.searchParams.set("noclaim", "");
+			remoteURL.searchParams.delete("mixercontrols");
+			iframesrc = remoteURL.href;
 		}
 		return iframesrc
 	}
@@ -3940,6 +4125,16 @@
 		button.classList.add("menuButton");
 		button.onclick = openCoDirectorControls;
 		document.getElementById("sources").appendChild(button);
+
+		if (!mixerRemote){
+			var button = document.createElement("button");
+			button.id = "openCoMixer";
+			button.textContent = "Open co-Mixer";
+			button.dataset.translate = "open-co-mixer";
+			button.classList.add("menuButton");
+			button.onclick = function(){openCoDirectorControls(true);};
+			document.getElementById("sources").appendChild(button);
+		}
 
 		var button = document.createElement("button");
 		button.innerHTML = "Add Stream ID"; 
@@ -4082,6 +4277,11 @@
 		}
 		
 		iframe.onload = function(){
+			if (mixerRemote){
+				iframe.contentWindow.miniTranslate(document.getElementById("mixerRemoteStatus"), "mixer-wait-for-main");
+				return;
+			}
+			iframe.contentWindow.miniTranslate(document.getElementById("openCoMixer"), "open-co-mixer");
 			if (remoteSyncOBS){
 				iframe.contentWindow.postMessage({ layouts: savedSession.layouts , obsSceneTriggers: savedSession.obsScenes}, "*"); 
 			} else {
@@ -4091,6 +4291,16 @@
 		}
 		
 		iframe.src = iframesrc;
+		if (mixerRemote){
+			var status = document.createElement("div");
+			status.id = "mixerRemoteStatus";
+			status.style.cssText = "padding:8px;font-size:12px;";
+			document.getElementById("sources").appendChild(status);
+			document.getElementById("containermenu").style.pointerEvents = "none";
+			document.querySelectorAll("#sceneSettings input:not(#advancedMode), #sceneSettings button:not(.close-btn)").forEach(function(element){
+				element.disabled = true;
+			});
+		}
 		var iframeContainer = document.getElementById("iframeContainer");
 		iframeContainer.appendChild(iframe);
 		document.getElementById("container").appendChild(iframeContainer);
@@ -4108,6 +4318,28 @@
 		
 		eventer(messageEvent, function (e) {
 			if (e.source != iframe.contentWindow){return} // reject messages send from other iframes
+			if (!e.data || typeof e.data !== "object"){return;}
+			if (e.data.dataReceived && e.data.dataReceived.mixerControl){
+				receiveMixerControl(e.data.dataReceived.mixerControl, e.data.UUID);
+				return;
+			}
+			if (e.data.action === "new-co-director" || e.data.action === "director-connected" || e.data.action === "push-connection"){
+				sendMixerState(e.data.UUID || e.data.value);
+			}
+			if (mixerRemote && (e.data.action === "view-connection" || e.data.action === "new-main-director" || e.data.action === "director")){
+				var session = iframe.contentWindow.session;
+				if (e.data.action === "new-main-director" || (e.data.action === "view-connection" && e.data.value === false && e.data.UUID === session.directorUUID)){
+					mixerRemoteReady = false;
+					mixerSavePending = false;
+					document.getElementById("containermenu").style.pointerEvents = "none";
+					iframe.contentWindow.miniTranslate(document.getElementById("mixerRemoteStatus"), "mixer-wait-for-main");
+				}
+				if (session.directorUUID && session.rpcs[session.directorUUID]){
+					var msg = {};
+					msg.pipe = {mixerControl: {action: "get"}};
+					session.sendRequest(msg, session.directorUUID);
+				}
+			}
 			
 			if ("gotChat" in e.data){
 				messageList.push(e.data.gotChat);
@@ -4158,7 +4390,7 @@
 						}
 					}
 					guestPositions[e.data.value] = e.data.streamID; // value is slot ID
-					if (updateOnSlotChange){
+					if (updateOnSlotChange && !mixerRemote){
 						remoteActivate(false, lastLayoutRaw);
 					}
 					updateSlotReservationDisplay();
@@ -4172,6 +4404,7 @@
 				}
 			
 				if (e.data.action === "layout-updated"){
+					if (mixerRemote){return;}
 					log(e.data);
 					let value = e.data.value;
 					if (parseInt(value) == value) {
@@ -4210,9 +4443,11 @@
 						//lastLayoutRaw = null;
 						currentLayout = value;
 					}
+					sendMixerState();
 				}
 			
 				if (e.data.action === "layout-index"){
+					if (mixerRemote){return;}
 					log(e.data);
 					if ("value" in e.data){
 						
@@ -4243,11 +4478,12 @@
 						}
 						
 					}
+					sendMixerState();
 				}
 				
 				if (e.data.action && (e.data.action == "scene-connected")){
 					log(e.data);
-					if (lastLayout && lastLayout.scene == e.data.value){
+					if (!mixerRemote && lastLayout && lastLayout.scene == e.data.value){
 						var layoutIssue = {};
 						layoutIssue.layout = lastLayout.layout;
 						if (e.data.UUID){
@@ -4260,7 +4496,7 @@
 				
 				if (e.data.action && (e.data.action == "guest-connected")){
 					log(e.data);
-					if (lastLayout){
+					if (!mixerRemote && lastLayout){
 						var layoutIssue = {};
 						layoutIssue.layout = lastLayout.layout;
 						if (e.data.UUID){
@@ -4280,7 +4516,7 @@
 							}
 						}
 						
-						if (updateOnSlotChange){
+						if (updateOnSlotChange && !mixerRemote){
 							remoteActivate(false, lastLayoutRaw);
 						}
 						updateSlotReservationDisplay();
@@ -4291,7 +4527,7 @@
 				if (e.data.action && (e.data.action == "director-share")){
 					if (!e.data.value && e.data.streamID){
 						clearMixerStreamPreviewState(e.data.streamID);
-						if (updateOnSlotChange){
+						if (updateOnSlotChange && !mixerRemote){
 							remoteActivate(false, lastLayoutRaw);
 						}
 					}
@@ -4304,7 +4540,7 @@
 						if (currentOBSState.currentScene && currentOBSState.currentScene.name){
 							console.log("Current OBS scene: " + currentOBSState.currentScene.name);
 							
-							if (remoteSyncOBS){
+							if (remoteSyncOBS && !mixerRemote){
 								
 								//if (document.getElementById("automix") && autoMixerSceneName && autoMixerSceneName.toLowerCase().trim() == currentOBSState.currentScene.name.toLowerCase().trim()){
 									//document.getElementById("automix").click();
@@ -4556,6 +4792,13 @@
 	}
 	
 	function addLayout2(item=false){
+		if (mixerRemote && (!mixerRemoteReady || mixerSavePending)){return false;}
+		if (mixerRemote){
+			aspectRatio = savedSession.settings.aspectRatio;
+			pixelDensity = savedSession.settings.pixelDensity;
+			absolutePixel = savedSession.settings.absolutePixel;
+			changeAspectRatio(aspectRatio);
+		}
 	
 		closeScene();
 		
@@ -4601,6 +4844,10 @@
 			addOldElement({});
 			addElement();
 		}
+		var editor = document.getElementById("canvas");
+		var preset = findMixerLayout(editor.sceneName);
+		editor.mixerOriginalLayout = preset ? preset.layout : null;
+		editor.mixerOriginalOBS = preset ? (preset.obsSceneName || "") : "";
 	}
 	
 	function closeScene(){
@@ -4614,6 +4861,8 @@
 		//document.getElementById("containerMenu2").classList.add("hidden");
 		document.getElementById("canvas").classList.add("hidden");
 		document.getElementById("canvas").innerHTML = "";
+		document.getElementById("canvas").mixerOriginalLayout = null;
+		document.getElementById("canvas").mixerOriginalOBS = "";
 		
 		stopFrameRequests();
 		
@@ -4815,7 +5064,7 @@
 				ele.dataset.state = "inactive";
 			});
 			this.dataset.state = "active";
-			addLayout2(this); 
+			if (addLayout2(this) === false){return;}
 			addOldElement(JSON.parse(this.parentNode.querySelector("canvas").layout));
 		}
 		
@@ -4850,6 +5099,7 @@
 		for (var i =0;i<eles.length;i++){ // replace if existing
 			var t = eles[i].querySelector("canvas");
 			if (t && t.sceneName && (t.sceneName ==sceneName)){
+				if (t.parentNode.classList.contains("pressed")){canvasContainer.classList.add("pressed");}
 				t.parentNode.parentNode.insertBefore(canvasContainer, t.parentNode);
 				t.parentNode.remove();
 				return;
@@ -4983,6 +5233,7 @@
 		editButton.innerHTML = "🔧";
 		editButton.classList.add("editButton");
 		editButton.title = "Auto-mixer options";
+		editButton.disabled = mixerRemote;
 		editButton.dataset.state = "inactive";
 		editButton.onclick = function(){
 			getById("saveAndClose").classList.remove("shake");
@@ -5860,6 +6111,12 @@
 	}
    
     function remoteActivate(event=null, layout=null, fake=false){
+		if (mixerRemote){
+			if (event && event.target && !fake){
+				requestMixerControl({action: "activate", name: event.target.sceneName || false});
+			}
+			return;
+		}
    
 		if (event && event.target && ("layout" in event.target) && layout===null){
 			layout = event.target.layout;
@@ -6842,7 +7099,16 @@ function settings() {
 		}
 	}
   
-	function saveScene(makenew=false, event=null){
+	function saveScene(makenew=false, event=null, closeAfterSave=false){
+		var editor = document.getElementById("canvas");
+		if (mixerRemote && (!mixerRemoteReady || mixerSavePending)){return false;}
+		if (!makenew && editor.mixerOriginalLayout){
+			var preset = findMixerLayout(editor.sceneName);
+			if (!preset || preset.layout !== editor.mixerOriginalLayout || (preset.obsSceneName || "") !== editor.mixerOriginalOBS){
+				alert(iframe.contentWindow.getTranslation("mixer-layout-changed"));
+				return false;
+			}
+		}
 		console.log("saveScene", makenew);
 		var scene = [];
 		
@@ -6928,6 +7194,18 @@ function settings() {
 		}
 		reportSlotFixes(slotFixes, "saveScene");
 		log(scene);
+		if (mixerRemote){
+			var sent = requestMixerControl({
+				action: "save",
+				name: !makenew && editor.mixerOriginalLayout ? editor.sceneName : false,
+				original: editor.mixerOriginalLayout,
+				originalOBS: editor.mixerOriginalOBS,
+				layout: scene,
+				obsSceneName: editor.obsSceneName || ""
+			});
+			if (sent){mixerSavePending = {close: closeAfterSave};}
+			return false;
+		}
 		
 		if (makenew){
 			var canvasContainer = drawLayout(scene); 
@@ -6962,9 +7240,30 @@ function settings() {
 		}
 		
 		saveSession();
+		var savedPreset = findMixerLayout(editor.sceneName);
+		if (savedPreset && !makenew){
+			editor.mixerOriginalLayout = savedPreset.layout;
+			editor.mixerOriginalOBS = savedPreset.obsSceneName || "";
+		}
 	}
 	
 	function removeScene(){
+		var editor = document.getElementById("canvas");
+		if (editor.mixerOriginalLayout){
+			var preset = findMixerLayout(editor.sceneName);
+			if (!preset || preset.layout !== editor.mixerOriginalLayout || (preset.obsSceneName || "") !== editor.mixerOriginalOBS){
+				alert(iframe.contentWindow.getTranslation("mixer-layout-changed"));
+				return;
+			}
+		}
+		if (mixerRemote){
+			if (mixerSavePending){return;}
+			if (!editor.mixerOriginalLayout){return;}
+			if (requestMixerControl({action: "remove", name: editor.sceneName, original: editor.mixerOriginalLayout, originalOBS: editor.mixerOriginalOBS})){
+				mixerSavePending = {close: true};
+			}
+			return;
+		}
 		var sceneName = document.getElementById("canvas").sceneName || false;
 		if (sceneName){
 			var eles = document.getElementById("containermenu").children;
@@ -6982,6 +7281,7 @@ function settings() {
 	}
 	
 	function saveSession(){ 
+		if (mixerRemote){return;}
 		var layouts = document.querySelectorAll(".canvasContainer>canvas");
 		savedSession.layouts = [];
 		savedSession.settings = {};
@@ -7034,6 +7334,7 @@ function settings() {
 			}
 		}
 		log(getStorage("savedSession"));
+		sendMixerState();
 	}
 	var widgetSrc = false;
 	function changeAspectRatio(ar, button=false){

@@ -59,6 +59,7 @@ button {
 }
 
 .studio-shell {
+	height: 100vh;
 	height: 100dvh;
 	min-height: 0;
 	overflow: hidden;
@@ -74,6 +75,7 @@ button {
 
 .room-gate {
 	display: grid;
+	min-height: 100vh;
 	min-height: 100dvh;
 	place-items: center;
 	background: linear-gradient(160deg, #0b0f15 0%, #171016 48%, #061014 100%);
@@ -355,6 +357,7 @@ button {
 .scene-list,
 .source-list {
 	display: grid;
+	align-content: start;
 	gap: 10px;
 	padding: 0 12px 16px;
 	overflow: auto;
@@ -410,9 +413,8 @@ button {
 }
 
 .scene-card__badge {
-	position: absolute;
-	right: 8px;
-	bottom: 8px;
+	display: inline-block;
+	margin-top: 6px;
 	padding: 2px 6px;
 	border-radius: 999px;
 	background: rgba(24, 198, 127, 0.14);
@@ -494,7 +496,7 @@ button {
 .stage-aspect {
 	position: relative;
 	width: 100%;
-	max-width: min(1180px, calc((100vh - 248px) * 16 / 9));
+	max-width: 1180px;
 	aspect-ratio: 16 / 9;
 	overflow: hidden;
 	border: 1px solid rgba(255, 255, 255, 0.14);
@@ -504,8 +506,12 @@ button {
 }
 
 #director-frame {
+	color-scheme: normal;
 	position: absolute;
-	inset: 0;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
 	z-index: 1;
 	width: 100%;
 	height: 100%;
@@ -515,7 +521,10 @@ button {
 
 .stage-bg {
 	position: absolute;
-	inset: 0;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
 	z-index: 2;
 	pointer-events: none;
 	background: var(--stage-bg);
@@ -528,8 +537,12 @@ button {
 
 .stage-overlay {
 	position: absolute;
-	inset: 0;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
 	z-index: 3;
+	touch-action: none;
 }
 
 .stage-aspect[data-drop-active="true"] {
@@ -539,7 +552,10 @@ button {
 .stage-empty {
 	position: absolute;
 	z-index: 4;
-	inset: 0;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
 	display: grid;
 	place-items: center;
 	color: rgba(255, 255, 255, 0.32);
@@ -704,7 +720,7 @@ button {
 
 .layout-strip {
 	display: grid;
-	grid-template-columns: repeat(9, minmax(88px, 1fr));
+	grid-template-columns: repeat(10, minmax(88px, 1fr));
 	gap: 10px;
 	overflow-x: auto;
 	padding: 12px 18px;
@@ -743,7 +759,10 @@ button {
 }
 
 .preset-icon--solo::before {
-	inset: 5px;
+	top: 5px;
+	left: 5px;
+	right: 5px;
+	bottom: 5px;
 }
 
 .preset-icon--duo::before {
@@ -761,7 +780,10 @@ button {
 }
 
 .preset-icon--pip::before {
-	inset: 4px;
+	top: 4px;
+	left: 4px;
+	right: 4px;
+	bottom: 4px;
 }
 
 .preset-icon--pip::after {
@@ -838,7 +860,7 @@ button {
 .tabs {
 	flex: 0 0 auto;
 	display: grid;
-	grid-template-columns: repeat(3, 1fr);
+	grid-template-columns: repeat(4, 1fr);
 	gap: 4px;
 	padding: 10px;
 	border-bottom: 1px solid var(--line);
@@ -868,6 +890,108 @@ button {
 
 .source-card {
 	padding: 12px;
+}
+
+.chat-setup,
+.chat-toolbar,
+.chat-featured,
+.chat-help,
+.chat-messages {
+	margin: 12px;
+}
+
+.chat-help,
+.chat-empty {
+	color: var(--muted);
+	font-size: 0.78rem;
+	line-height: 1.5;
+}
+
+.chat-setup summary {
+	cursor: pointer;
+	margin: 12px 0;
+	font-size: 0.8rem;
+}
+
+.chat-setup .chat-help {
+	margin: 8px 0;
+}
+
+.chat-actions,
+.chat-toolbar,
+.chat-featured {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	flex-wrap: wrap;
+}
+
+.chat-toolbar .field-row {
+	width: 100%;
+}
+
+.chat-featured {
+	justify-content: space-between;
+	font-size: 0.8rem;
+	overflow-wrap: anywhere;
+}
+
+.chat-messages {
+	height: 48vh;
+	min-height: 220px;
+	overflow-y: auto;
+	overscroll-behavior: contain;
+	overflow-anchor: none;
+}
+
+.chat-message {
+	margin-bottom: 8px;
+	padding: 10px;
+	border: 1px solid var(--line);
+	border-radius: 8px;
+	background: var(--panel);
+	font-size: 0.85rem;
+	overflow-wrap: anywhere;
+}
+
+.chat-message--featured {
+	border-color: var(--accent);
+}
+
+.chat-message__heading {
+	display: flex;
+	justify-content: space-between;
+	gap: 8px;
+}
+
+.chat-message__heading span {
+	color: var(--muted);
+	font-size: 0.75rem;
+}
+
+.chat-message p {
+	white-space: pre-wrap;
+	margin: 8px 0;
+}
+
+.chat-message__support {
+	color: var(--accent);
+}
+
+.chat-message img {
+	display: block;
+	max-width: 100%;
+	max-height: 120px;
+	margin: 8px 0;
+}
+
+.chat-bridge {
+	position: fixed;
+	left: -100px;
+	top: -100px;
+	width: 1px;
+	height: 1px;
+	border: 0;
 }
 
 .source-card[draggable="true"]:not([data-disconnected="true"]) {
@@ -913,24 +1037,74 @@ button {
 	text-transform: uppercase;
 }
 
-.source-card__meter {
-	position: absolute;
-	left: 8px;
-	right: 8px;
-	bottom: 7px;
-	height: 5px;
-	overflow: hidden;
-	border-radius: 999px;
-	background: rgba(255, 255, 255, 0.14);
+.source-card__vu {
+	margin: 10px 0;
+	font-size: 0.7rem;
 }
 
-.source-card__meter span {
+.source-card__meter-heading,
+.source-card__meter-scale {
+	display: flex;
+	justify-content: space-between;
+	color: var(--muted);
+}
+
+.source-card__meter-heading {
+	margin-bottom: 5px;
+	font-weight: 700;
+}
+
+.source-card__meter-heading small {
+	margin-left: 4px;
+	font-size: inherit;
+	font-weight: 400;
+}
+
+.source-card__meter-value {
+	font-variant-numeric: tabular-nums;
+}
+
+.source-card__meter-scale {
+	margin-top: 4px;
+	font-size: 0.65rem;
+}
+
+.source-card__meter {
+	position: relative;
+	height: 12px;
+	overflow: hidden;
+	border-radius: 2px;
+	background: #06080d;
+}
+
+.source-card__meter-fill {
 	display: block;
-	width: 0;
+	width: 100%;
 	height: 100%;
-	border-radius: inherit;
-	background: var(--accent-2);
-	transition: width 100ms ease;
+	background: linear-gradient(to right, #18c67f 0%, #18c67f 65%, #ffc857 80%, #f26368 95%);
+	clip-path: inset(0 100% 0 0);
+	transition: clip-path 150ms linear;
+}
+
+.source-card__meter::after {
+	content: "";
+	position: absolute;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	background: repeating-linear-gradient(to right, transparent 0, transparent calc(5% - 2px), #06080d calc(5% - 2px), #06080d 5%);
+	pointer-events: none;
+}
+
+.source-card__meter-peak {
+	position: absolute;
+	top: 0;
+	bottom: 0;
+	width: 2px;
+	background: var(--text);
+	transform: translateX(-2px);
+	z-index: 1;
 }
 
 .source-card__header {
@@ -1028,8 +1202,13 @@ button {
 
 .guest-actions {
 	display: flex;
+	flex-wrap: wrap;
 	align-items: center;
 	gap: 8px;
+}
+
+.tab-panel .panel-heading {
+	flex-wrap: wrap;
 }
 
 .source-card[data-on-stage="true"] {
@@ -1043,7 +1222,10 @@ button {
 
 .source-card[data-disconnected="true"] .source-card__preview::after {
 	position: absolute;
-	inset: 0;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
 	display: grid;
 	place-items: center;
 	background: rgba(5, 7, 13, 0.64);
@@ -1054,7 +1236,7 @@ button {
 	text-transform: uppercase;
 }
 
-.source-card[data-disconnected="true"] .source-card__meter span {
+.source-card[data-disconnected="true"] .source-card__meter-fill {
 	background: var(--warning);
 }
 
@@ -1151,6 +1333,13 @@ button {
 	padding: 0 16px;
 }
 
+.output-help {
+	margin: 16px;
+	color: var(--muted);
+	font-size: 0.78rem;
+	line-height: 1.5;
+}
+
 .output-actions .button {
 	flex: 1 1 136px;
 }
@@ -1194,7 +1383,7 @@ button {
 	}
 }
 
-@media (max-width: 900px) {
+@media (max-width: 1000px) {
 	html,
 	body {
 		height: auto;
@@ -1206,6 +1395,7 @@ button {
 	.studio-shell,
 	.studio-workspace {
 		height: auto;
+		min-height: 100vh;
 		min-height: 100dvh;
 		overflow: visible;
 	}
@@ -1271,6 +1461,7 @@ button {
 	.stage-aspect,
 	.box-inspector {
 		width: 100%;
+		max-width: none;
 	}
 
 	.box-inspector {
@@ -1286,12 +1477,41 @@ button {
 	}
 
 	.layout-strip {
-		grid-template-columns: repeat(9, 104px);
+		grid-template-columns: repeat(10, 104px);
 		overflow-x: auto;
 	}
 
 	.control-panel {
 		border-top: 1px solid var(--line);
+	}
+}
+
+@supports not (aspect-ratio: 16 / 9) {
+	.stage-aspect::before,
+	.scene-thumb::before,
+	.source-card__preview::before {
+		content: "";
+		display: block;
+		padding-top: 56.25%;
+	}
+
+	.source-card__preview {
+		display: block;
+	}
+
+	.source-card__preview > img,
+	.source-card__preview > i,
+	.source-card__sample {
+		position: absolute;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 100%;
+	}
+
+	.source-card__preview > i {
+		display: grid;
+		place-items: center;
 	}
 }
 

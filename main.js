@@ -8121,6 +8121,16 @@ async function main() {
 		getById("container-19").style.display = "none";
 		getById("container-20").style.display = "none";
 		getById("container-21").style.display = "none";
+		getById("container-23").style.display = "none";
+		getById("container-24").style.display = "none";
+		getById("container-25").style.display = "none";
+		getById("container-26").style.display = "none";
+		getById("container-27").style.display = "none";
+		getById("container-28").style.display = "none";
+		getById("container-29").style.display = "none";
+		getById("container-30").style.display = "none";
+		getById("container-31").style.display = "none";
+		getById("container-32").style.display = "none";
 		getById("mainmenu").style.alignSelf = "center";
 		getById("mainmenu").classList.add("mainmenuclass");
 		getById("header").style.alignSelf = "center";

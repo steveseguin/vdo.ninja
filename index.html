@@ -98,7 +98,7 @@
 				}
 			}
 		</script>
-		<script type="text/javascript" crossorigin="anonymous" src="./webrtc.js?ver=985" onerror="retryStartupOnBackup()"></script>
+		<script type="text/javascript" crossorigin="anonymous" src="./webrtc.js?ver=986" onerror="retryStartupOnBackup()"></script>
 		<input id="zoomSlider" type="range" style="display: none;" />
 		<span id="electronDragZone" style="display:none;pointer-events: none; z-index:-10; position:absolute;top:0;left:0;width:100%;height:2%;min-height:20px;"></span>
 		<div id="header">
@@ -1116,7 +1116,28 @@
 				<h2><span data-translate="try-the-mixer-out">Custom Mixed Layouts</span></h2>
 				<i style="margin-top:30px;font-size:600%;overflow:hidden;" class="largeDarkIcon las la-blender"></i>
 			</div>
+
+			<div id="container-23" class="column columnfade pointer card hidden" style="overflow: hidden;" tabindex="1" role="button" onkeydown="enterPressedClick(event,this);" onkeyup="enterPressedClick(event,this);" onclick="window.location = './studio/';">
+				<h2><span data-translate="try-the-live-studio">Live Studio</span></h2>
+				<i style="margin-top:30px;font-size:600%;overflow:hidden;display:inline-block;line-height:1;" class="largeDarkIcon" aria-hidden="true">
+					<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="2" focusable="false">
+						<rect x="3" y="4" width="26" height="18" rx="1" />
+						<path d="M20 4v18 M20 13h9 M16 22v6 M10 28h12" />
+						<path d="m9 9 6 4-6 4Z" fill="currentColor" stroke="none" />
+					</svg>
+				</i>
+			</div>
 			
+			<div id="container-26" class="column columnfade pointer card hidden" style="overflow: hidden;" tabindex="1" role="button" onkeydown="enterPressedClick(event,this);" onkeyup="enterPressedClick(event,this);" onclick="window.location = 'https://app.invite.cam/';">
+				<h2><span data-translate="try-invite-cam">Invite Cam Lobby</span></h2>
+				<i style="margin-top:30px;font-size:600%;overflow:hidden;display:inline-block;line-height:1;" class="largeDarkIcon" aria-hidden="true">
+					<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="2" focusable="false">
+						<circle cx="10" cy="10" r="4" />
+						<path d="M3 27v-4a7 7 0 0 1 14 0v4 M21 4h8v24h-8 M19 16h7 M23 12l4 4-4 4" />
+					</svg>
+				</i>
+			</div>
+
 			<div id="container-14" class="column columnfade pointer card hidden" style="overflow: hidden;" onclick="window.location = 'https://versus.cam';">
 				<h2><span data-translate="try-out-versus-cam">Multi-Stream Monitor</span></h2>
 				<i style="margin-top:30px;font-size:600%;overflow:hidden;" class="largeDarkIcon las la-gamepad"></i>
@@ -1158,6 +1179,83 @@
 					Loading ...
 				</div>
 			</div>
+			<div id="container-24" class="column columnfade pointer card hidden" style="overflow: hidden;" tabindex="1" role="button" onkeydown="enterPressedClick(event,this);" onkeyup="enterPressedClick(event,this);" onclick="window.location = 'https://steveseguin.github.io/ninja-obs-plugin/';">
+				<h2><span data-translate="try-the-obs-plugin">OBS Plugin</span></h2>
+				<i style="margin-top:30px;font-size:600%;overflow:hidden;display:inline-block;line-height:1;" class="largeDarkIcon" aria-hidden="true">
+					<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="2" focusable="false">
+						<rect x="3" y="4" width="26" height="17" rx="1" />
+						<path d="m12 8 8 5-8 5Z" fill="currentColor" stroke="none" />
+						<path d="M12 19v6a4 4 0 0 0 8 0v-6 M12 24h8 M16 29v2" />
+					</svg>
+				</i>
+			</div>
+
+			<div id="container-25" class="column columnfade pointer card hidden" style="overflow: hidden;" tabindex="1" role="button" onkeydown="enterPressedClick(event,this);" onkeyup="enterPressedClick(event,this);" onclick="window.location = 'https://vdo.ninja/gamecapture';">
+				<h2><span data-translate="try-game-capture">Game Capture</span></h2>
+				<i style="margin-top:30px;font-size:600%;overflow:hidden;display:inline-block;line-height:1;" class="largeDarkIcon" aria-hidden="true">
+					<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="2" focusable="false">
+						<path d="M3 10V4h6 M23 4h6v6 M3 22v6h6 M23 28h6v-6 M10 10h12a4 4 0 0 1 4 3l2 8a3 3 0 0 1-5 3l-4-3h-6l-4 3a3 3 0 0 1-5-3l2-8a4 4 0 0 1 4-3Z M8 16h6 M11 13v6" />
+						<circle cx="21" cy="14" r="1" fill="currentColor" stroke="none" />
+						<circle cx="24" cy="17" r="1" fill="currentColor" stroke="none" />
+					</svg>
+				</i>
+			</div>
+
+			<div id="container-28" class="column columnfade pointer card hidden" style="overflow: hidden;" tabindex="1" role="button" onkeydown="enterPressedClick(event,this);" onkeyup="enterPressedClick(event,this);" onclick="window.location = 'https://steveseguin.github.io/Ninja-VST3-Plugin/';">
+				<h2><span data-translate="try-the-vst-plugin">VST Audio Plugin</span></h2>
+				<i style="margin-top:30px;font-size:600%;overflow:hidden;display:inline-block;line-height:1;" class="largeDarkIcon" aria-hidden="true">
+					<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="2" focusable="false">
+						<path d="M7 4v6 M7 16v12 M16 4v15 M16 25v3 M25 4v6 M25 16v12" />
+						<rect x="4" y="10" width="6" height="6" rx="1" />
+						<rect x="13" y="19" width="6" height="6" rx="1" />
+						<rect x="22" y="10" width="6" height="6" rx="1" />
+					</svg>
+				</i>
+			</div>
+
+			<div id="container-29" class="column columnfade pointer card hidden" style="overflow: hidden;" tabindex="1" role="button" onkeydown="enterPressedClick(event,this);" onkeyup="enterPressedClick(event,this);" onclick="window.location = 'https://extension.vdo.ninja/';">
+				<h2><span data-translate="try-browser-capture">Browser Extension</span></h2>
+				<i style="margin-top:30px;font-size:600%;overflow:hidden;display:inline-block;line-height:1;" class="largeDarkIcon" aria-hidden="true">
+					<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="2" focusable="false">
+						<rect x="3" y="4" width="26" height="24" rx="1" />
+						<path d="M3 10h26 M6 7h2 M10 7h2 M14 7h2 M8 14v3 M8 23v2h3 M24 14v3 M21 25h3v-2" />
+						<path d="m13 14 8 5-8 5Z" fill="currentColor" stroke="none" />
+					</svg>
+				</i>
+			</div>
+
+			<div id="container-30" class="column columnfade pointer card hidden" style="overflow: hidden;" tabindex="1" role="button" onkeydown="enterPressedClick(event,this);" onkeyup="enterPressedClick(event,this);" onclick="window.location = 'https://steveseguin.github.io/vdo-streamdeck/';">
+				<h2><span data-translate="try-stream-deck">Stream Deck Plugin</span></h2>
+				<i style="margin-top:30px;font-size:600%;overflow:hidden;display:inline-block;line-height:1;" class="largeDarkIcon" aria-hidden="true">
+					<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="2" focusable="false">
+						<rect x="3" y="5" width="26" height="22" rx="2" />
+						<path d="M7 10h4v4H7Z M14 10h4v4h-4Z M21 10h4v4h-4Z M7 18h4v4H7Z M14 18h4v4h-4Z M21 18h4v4h-4Z" />
+					</svg>
+				</i>
+			</div>
+
+			<div id="container-31" class="column columnfade pointer card hidden" style="overflow: hidden;" tabindex="1" role="button" onkeydown="enterPressedClick(event,this);" onkeyup="enterPressedClick(event,this);" onclick="window.location = 'https://electroncapture.app/';">
+				<h2><span data-translate="try-electron-capture">Electron Capture</span></h2>
+				<i style="margin-top:30px;font-size:600%;overflow:hidden;display:inline-block;line-height:1;" class="largeDarkIcon" aria-hidden="true">
+					<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="2" focusable="false">
+						<rect x="8" y="8" width="16" height="16" rx="1" />
+						<path d="M3 11V3h8 M21 3h8v8 M3 21v8h8 M21 29h8v-8" />
+						<path d="m13 11 8 5-8 5Z" fill="currentColor" stroke="none" />
+					</svg>
+				</i>
+			</div>
+
+			<div id="container-32" class="column columnfade pointer card hidden" style="overflow: hidden;" tabindex="1" role="button" onkeydown="enterPressedClick(event,this);" onkeyup="enterPressedClick(event,this);" onclick="window.location = 'https://docs.vdo.ninja/steves-helper-apps';">
+				<h2><span data-translate="more-production-tools">More Production Tools</span></h2>
+				<i style="margin-top:30px;font-size:600%;overflow:hidden;display:inline-block;line-height:1;" class="largeDarkIcon" aria-hidden="true">
+					<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="2" focusable="false">
+						<rect x="3" y="10" width="26" height="17" rx="1" />
+						<path d="M10 10V5h12v5 M3 17h11 M18 17h11" />
+						<rect x="14" y="15" width="4" height="6" />
+					</svg>
+				</i>
+			</div>
+
 			<div id="container-19" class="column columnfade pointer card hidden" style="overflow: hidden;" onclick="window.location = 'https://github.vdo.ninja';">
 				<h2><span data-translate="get-the-source-code">Source Code</span></h2>
 				<i style="margin-top:30px;font-size:600%;overflow:hidden;" class="largeDarkIcon las la-code-branch"></i>
@@ -1168,6 +1266,18 @@
 				<i style="margin-top:30px;font-size:600%;overflow:hidden;" class="largeDarkIcon las la-heartbeat"></i>
 			</div>
 			
+			<div id="container-27" class="column columnfade pointer card hidden" style="overflow: hidden;" tabindex="1" role="button" onkeydown="enterPressedClick(event,this);" onkeyup="enterPressedClick(event,this);" onclick="window.location = 'https://app.meshcast.io/';">
+				<h2><span data-translate="try-meshcast">Meshcast</span></h2>
+				<i style="margin-top:30px;font-size:600%;overflow:hidden;display:inline-block;line-height:1;" class="largeDarkIcon" aria-hidden="true">
+					<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="2" focusable="false">
+						<path d="M14 10 8 21 M18 10l6 11 M10 25h12" />
+						<circle cx="16" cy="7" r="4" />
+						<circle cx="6" cy="25" r="4" />
+						<circle cx="26" cy="25" r="4" />
+					</svg>
+				</i>
+			</div>
+
 			<div id="container-17" class="column columnfade pointer card hidden" style="overflow: hidden;" onclick="window.location = './whip';">
 				<h2><span data-translate="publish-via-whip">Publish via WHIP</span></h2>
 				<i style="margin-top:30px;font-size:600%;overflow:hidden;" class="largeDarkIcon las la-broadcast-tower"></i>
@@ -3516,8 +3626,8 @@
 			
 		</script>
 		
-		<script type="text/javascript" crossorigin="anonymous" id="lib-js" src="./lib.js?ver=14233" onerror="retryStartupOnBackup()"></script>
-		<script type="text/javascript" crossorigin="anonymous" id="main-js" src="./main.js?ver=1102" onerror="retryStartupOnBackup()"></script>
+		<script type="text/javascript" crossorigin="anonymous" id="lib-js" src="./lib.js?ver=14238" onerror="retryStartupOnBackup()"></script>
+		<script type="text/javascript" crossorigin="anonymous" id="main-js" src="./main.js?ver=1105" onerror="retryStartupOnBackup()"></script>
 		<script>
 			// Wait for the DOM, not for optional downloads or the window load event.
 			function showStartupError(error) {

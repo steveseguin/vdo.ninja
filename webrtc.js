@@ -8964,12 +8964,19 @@ WebRTC.Media = (function () {
 
 				if ("iframeSrc" in msg) {
 					try {
-						if (session.rpcs[UUID].iframeEle && (session.rpcs[UUID].iframeEle.stopWhep || msg.iframeWhep)) {
+						var previousWhep = session.rpcs[UUID].iframeWhep;
+						var previousSharedElement = session.rpcs[UUID].iframeEle;
+						var keepSharedWhep = msg.iframeSrc && msg.iframeWhep && previousWhep &&
+							session.rpcs[UUID].iframeEle && session.rpcs[UUID].iframeEle.stopWhep &&
+							session.rpcs[UUID].iframeSrc === msg.iframeSrc &&
+							(typeof previousWhep.token === "string" ? previousWhep.token : "") === (typeof msg.iframeWhep.token === "string" ? msg.iframeWhep.token : "");
+						if (!keepSharedWhep && session.rpcs[UUID].iframeEle && (session.rpcs[UUID].iframeEle.stopWhep || msg.iframeWhep)) {
 							if (session.rpcs[UUID].iframeEle.stopWhep) session.rpcs[UUID].iframeEle.stopWhep();
 							session.rpcs[UUID].iframeEle.remove();
 							session.rpcs[UUID].iframeEle = false;
 						}
 						session.rpcs[UUID].iframeSrc = msg.iframeSrc || false;
+						session.rpcs[UUID].iframeWhep = msg.iframeWhep || false;
 
 						if (session.director) {
 							// this is only for the director
@@ -8996,7 +9003,7 @@ WebRTC.Media = (function () {
 								getById("iframeDetails_" + UUID).classList.add("hidden");
 								getById("iframeDetails_" + UUID).innerText = "";
 							}
-						} else {
+						} else if (!keepSharedWhep) {
 							if (session.rpcs[UUID].iframeSrc == false) {
 								try {
 									if (session.rpcs[UUID].iframeEle) session.rpcs[UUID].iframeEle.remove();
@@ -9074,6 +9081,14 @@ WebRTC.Media = (function () {
 									}
 								}
 							}
+						}
+						var currentSharedElement = session.rpcs[UUID].iframeEle;
+						if (msg.iframeSrc && previousSharedElement && currentSharedElement && previousSharedElement !== currentSharedElement && (previousSharedElement.stopWhep || currentSharedElement.stopWhep)) {
+							currentSharedElement.style.display = previousSharedElement.style.display;
+							currentSharedElement.sceneType2 = previousSharedElement.sceneType2;
+							currentSharedElement.order = previousSharedElement.order;
+							currentSharedElement.slot = previousSharedElement.slot;
+							currentSharedElement.slotBlank = previousSharedElement.slotBlank;
 						}
 					} catch (e) {
 						errorlog(e);
@@ -15844,7 +15859,7 @@ WebRTC.Media = (function () {
 				if (session.iframeSrc) {
 					var data = {};
 					data.iframeSrc = session.iframeSrc;
-					data.iframeWhep = session.iframeWhep;
+					if (session.iframeWhep) data.iframeWhep = session.iframeWhep;
 
 					if (session.iframeEle && session.iframeEle.sendOnNewConnect) {
 						if (session.iframeSrc.startsWith("https://www.youtube.com/")) {
@@ -23271,6 +23286,7 @@ WebRTC.Media = (function () {
 		session.rpcs[UUID].inboundAudioPipeline = {};
 		//session.rpcs[UUID].fileList = false;
 		session.rpcs[UUID].iframeSrc = false;
+		session.rpcs[UUID].iframeWhep = false;
 		session.rpcs[UUID].iframeEle = false;
 		session.rpcs[UUID].startTime = Date.now();
 		session.rpcs[UUID].whipCallback = false;
@@ -23297,6 +23313,7 @@ WebRTC.Media = (function () {
 			if (retainedMedia.iframeEle && retainedMedia.iframeEle.stopWhep) {
 				session.rpcs[UUID].iframeEle = retainedMedia.iframeEle;
 				session.rpcs[UUID].iframeSrc = retainedMedia.iframeSrc;
+				session.rpcs[UUID].iframeWhep = retainedMedia.iframeWhep;
 			}
 			var resumedPeer = session.rpcs[UUID];
 			await checkDirectorStreamID();

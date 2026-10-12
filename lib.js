@@ -212,7 +212,24 @@ var miscTranslations = {
 	"whep-share-disabled-advertising": "WHEP sharing is configured, but &nowhep/nomeshcast disables advertising to peers.",
 	"whep-share-join-room": "WHEP sharing is configured. Join a room to advertise it to peers.",
 	"whep-share-advertising": "Advertising a WHEP source to room peers via the data channel.",
-	"system-default": "System Default"
+	"system-default": "System Default",
+	"open-co-mixer": "Open co-Mixer",
+	"mixer-wait-for-main": "Waiting for the main Mixer. Enable co-directors in the main Mixer and use its co-Mixer invite.",
+	"mixer-shared-layouts": "Shared layouts. General Mixer settings are managed in the main Mixer.",
+	"mixer-layout-changed": "Another operator changed this layout. Reopen it to use their changes, or duplicate your draft to keep both.",
+	"meshcast-publish-connecting": "Connecting to Meshcast",
+	"meshcast-publish-connected": "Connected to Meshcast",
+	"meshcast-publish-failed": "Meshcast publishing interrupted",
+	"meshcast-publish-retry": "Retry publishing",
+	"meshcast-publish-limit": "Meshcast's concurrent stream limit has been reached. Stop another stream in Meshcast, then retry.",
+	"meshcast-publish-busy": "Meshcast is still using this stream key. Close any other publisher using it. Publishing will retry automatically.",
+	"meshcast-publish-key": "Meshcast rejected the publishing URL. Copy a current WHIP URL from Meshcast, then close this window and use Go Live again in Studio.",
+	"meshcast-publish-codec": "Meshcast could not negotiate this stream. Use H.264 video and try again.",
+	"meshcast-publish-network": "Meshcast could not be reached. Check your connection. Publishing will retry automatically.",
+	"meshcast-publish-response": "Meshcast returned an invalid publishing response. Retry publishing, or check the WHIP URL in Studio.",
+	"meshcast-publish-rejected": "Meshcast rejected this stream. Check your account limits and WHIP URL, then retry.",
+	"meshcast-publish-exhausted": "Meshcast could not reconnect. Check your connection, then retry publishing.",
+	"meshcast-publish-capture-ended": "Screen sharing has stopped. Close this publisher window and use Go Live again in Studio."
 };
 
 function getTranslation(key) {
@@ -8480,6 +8497,22 @@ function updateMixerRun(e = false) {
 			}
 		}
 
+		for (var sharedIndex = mediaPool.length - 1; sharedIndex >= 0; sharedIndex--) {
+			var sharedMedia = mediaPool[sharedIndex];
+			if (!sharedMedia.stopWhep) continue;
+			var renderedShare = getSharedWhepLayoutElement(sharedMedia);
+			if (renderedShare !== sharedMedia) {
+				// Keep audio playing without treating it as an excluded scene element.
+				sharedMedia.style.width = "0px";
+				sharedMedia.style.height = "0px";
+				sharedMedia.isInvisible = false;
+				getById("hiddenElements").appendChild(sharedMedia);
+				applyMuteState(sharedMedia.dataset.UUID);
+				if (renderedShare) mediaPool[sharedIndex] = renderedShare;
+				else mediaPool.splice(sharedIndex, 1);
+			}
+		}
+
 		if (session.fakeFeeds && session.fakeFeeds.length && mediaPool.length < session.fakeFeeds.length) {
 			for (let i = 0; i < session.fakeFeeds.length; i++) {
 				if (mediaPool.length < session.fakeFeeds.length) {
@@ -9197,6 +9230,7 @@ function updateMixerRun(e = false) {
 							if (session.pauseInvisible && vid.dataset.UUID) {
 								session.requestRateLimit(session.hiddenSceneViewBitrate, vid.dataset.UUID, true);
 								vid.muted = true;
+								if (session.rpcs[vid.dataset.UUID] && session.rpcs[vid.dataset.UUID].sharedWebsiteElement) applyMuteState(vid.dataset.UUID);
 							}
 						}
 						if (vid.dataset.doNotMove) {
@@ -9385,6 +9419,7 @@ function updateMixerRun(e = false) {
 					if (session.pauseInvisible && vid.dataset.UUID) {
 						session.requestRateLimit(session.hiddenSceneViewBitrate, vid.dataset.UUID, true);
 						vid.muted = true;
+						if (session.rpcs[vid.dataset.UUID] && session.rpcs[vid.dataset.UUID].sharedWebsiteElement) applyMuteState(vid.dataset.UUID);
 						return;
 					}
 
@@ -10247,26 +10282,29 @@ function updateMixerRun(e = false) {
 					}
 				}
 
-				if (session.volumeControl && session.rpcs[vid.dataset.UUID].videoElement && vid.tagName != "VIDEO") {
+				var volumeVideo = session.rpcs[vid.dataset.UUID].videoElement || session.rpcs[vid.dataset.UUID].sharedWebsiteElement;
+				if (session.volumeControl && volumeVideo && vid.tagName != "VIDEO") {
 					if (vid.dataset.UUID && !session.rpcs[vid.dataset.UUID].volumeControl) {
 						session.rpcs[vid.dataset.UUID].volumeControl = getById("volumeControlTemplate").cloneNode(true);
 						session.rpcs[vid.dataset.UUID].volumeControl.classList.remove("hidden");
 						session.rpcs[vid.dataset.UUID].volumeControl.id = "volumeControl_" + vid.dataset.UUID;
-						session.rpcs[vid.dataset.UUID].volumeControl.value = parseInt(session.rpcs[vid.dataset.UUID].videoElement.volume * 100);
+						session.rpcs[vid.dataset.UUID].volumeControl.value = parseInt(volumeVideo.volume * 100);
 						session.rpcs[vid.dataset.UUID].volumeControl.dataset.UUID = vid.dataset.UUID;
 						session.rpcs[vid.dataset.UUID].volumeControl.title = getTranslation("volume-control");
 						session.rpcs[vid.dataset.UUID].volumeControl.oninput = function () {
-							if (this.dataset.UUID && session.rpcs[this.dataset.UUID] && session.rpcs[this.dataset.UUID].videoElement) {
-								session.rpcs[this.dataset.UUID].videoElement.volume = parseFloat(this.value / 100);
+							var peer = session.rpcs[this.dataset.UUID];
+							var video = peer && (peer.videoElement || peer.sharedWebsiteElement);
+							if (video) {
+								video.volume = parseFloat(this.value / 100);
 							}
 						};
 						holder.appendChild(session.rpcs[vid.dataset.UUID].volumeControl);
 						holder.volumeControl = session.rpcs[vid.dataset.UUID].volumeControl;
 					} else if (vid.dataset.UUID && session.rpcs[vid.dataset.UUID].volumeControl) {
-						if (!holder.volumeControl && session.rpcs[vid.dataset.UUID].videoElement) {
+						if (!holder.volumeControl && volumeVideo) {
 							holder.appendChild(session.rpcs[vid.dataset.UUID].volumeControl);
 							holder.volumeControl = session.rpcs[vid.dataset.UUID].volumeControl;
-							session.rpcs[vid.dataset.UUID].volumeControl.value = parseInt(session.rpcs[vid.dataset.UUID].videoElement.volume * 100);
+							session.rpcs[vid.dataset.UUID].volumeControl.value = parseInt(volumeVideo.volume * 100);
 						}
 					}
 				}
@@ -25101,6 +25139,8 @@ function checkMuteState(UUID, includeSpeakerMuted) {
 		if (sharedVideo.defaultMuted || !ownerUUID || !session.rpcs[ownerUUID]) return true;
 		if (session.scene !== false && sharedVideo.style.display === "none") return true;
 		if (session.pauseInvisible && sharedVideo.isInvisible) return true;
+		// Audio-only shares use a canvas in the layout, but the video element plays their audio.
+		if (session.pauseInvisible && session.meterStyle < 4 && session.rpcs[UUID].canvas && session.rpcs[UUID].canvas.isInvisible) return true;
 		var streamID = sharedVideo.dataset.sid;
 		if (session.noaudio !== false && (session.noaudio === true || session.noaudio.indexOf(streamID) === -1)) return true;
 		if (session.excludeaudio && session.excludeaudio.indexOf(streamID) !== -1) return true;
@@ -41210,6 +41250,10 @@ function acknowledgeMediaDeviceChange(runChange, UUID, kind, deviceId, includeDe
 		}
 		Promise.resolve(result)
 			.then(function () {
+				// Camera capture finishes through grabVideo's existing callback.
+				if (kind === "camera") {
+					return;
+				}
 				var liveError = mediaDeviceChangeLiveError(kind);
 				sendMediaDeviceChangeAck(UUID, kind, !liveError, deviceId, liveError, includeDevices);
 			})
@@ -41557,10 +41601,12 @@ var grabVideoTimer = null;
 async function grabVideo(quality = 0, eleName = "previewWebcam", selector = "select#videoSourceSelect", callback = false) {
 	if (activatedPreview == true) {
 		log("activated preview return 2");
+		if (callback) sendMediaDeviceChangeAck(callback, "camera", false, false, "Camera change already in progress");
 		return;
 	}
 
 	if (session.miconly) {
+		if (callback) sendMediaDeviceChangeAck(callback, "camera", false, false, "Camera is disabled in audio-only mode");
 		return;
 	}
 
@@ -41631,6 +41677,7 @@ async function grabVideo(quality = 0, eleName = "previewWebcam", selector = "sel
 
 	if (!videoSelect || videoSelect.value == "ZZZ") {
 		// if there is no video, or if manually set to audio ready, then do this step.
+		if (callback) sendMediaDeviceChangeAck(callback, "camera", false, videoSelect ? videoSelect.value : false, "Camera did not produce a live track");
 
 		clearTimeout(grabVideoUserMediaTimeout);
 		getUserMediaRequestID += 1;
@@ -42274,6 +42321,9 @@ async function grabVideo(quality = 0, eleName = "previewWebcam", selector = "sel
 										sendMediaDevices(data.UUID);
 										session.sendMessage(data, data.UUID);
 									} catch (e) { }
+									var liveError = mediaDeviceChangeLiveError("camera");
+									// The completion callback already refreshes the device list above.
+									sendMediaDeviceChangeAck(callback3, "camera", !liveError, videoSelect.value, liveError, false);
 								}
 								if (iOS || iPad) {
 									// TEMPORARY: iOS 15.3 beta fix
@@ -42318,12 +42368,13 @@ async function grabVideo(quality = 0, eleName = "previewWebcam", selector = "sel
 						} else if (e.name === "NotReadableError") {
 							if (quality <= 10) {
 								activatedPreview = false;
-								grabVideo(quality + 1, eleName, selector);
+								grabVideo(quality + 1, eleName, selector, callback2);
 							} else if (session.facingMode) {
 								session.facingMode = false;
 								activatedPreview = false;
-								grabVideo(false, eleName, selector); // restart.
+								grabVideo(false, eleName, selector, callback2); // restart.
 							} else {
+								if (callback2) sendMediaDeviceChangeAck(callback2, "camera", false, videoSelect.value, e.message || "Camera change failed");
 								if (!session.cleanOutput) {
 									if (iOS) {
 										warnUser("An error occured. Closing existing tabs in Safari may solve this issue.");
@@ -42338,6 +42389,7 @@ async function grabVideo(quality = 0, eleName = "previewWebcam", selector = "sel
 							}
 							return;
 						} else if (e.name === "NavigatorUserMediaError") {
+							if (callback2) sendMediaDeviceChangeAck(callback2, "camera", false, videoSelect.value, e.message || "Camera change failed");
 							if (getById("gowebcam")) {
 								getById("gowebcam").innerHTML = "Problem with Camera";
 							}
@@ -42346,6 +42398,7 @@ async function grabVideo(quality = 0, eleName = "previewWebcam", selector = "sel
 							}
 							return;
 						} else if (e.name === "timedOut") {
+							if (callback2) sendMediaDeviceChangeAck(callback2, "camera", false, videoSelect.value, e.message || "Camera change failed");
 							activatedPreview = true;
 							if (getById("gowebcam")) {
 								getById("gowebcam").innerHTML = "Problem with Camera";
@@ -42359,12 +42412,13 @@ async function grabVideo(quality = 0, eleName = "previewWebcam", selector = "sel
 						}
 						if (quality <= 10) {
 							activatedPreview = false;
-							grabVideo(quality + 1, eleName, selector);
+							grabVideo(quality + 1, eleName, selector, callback2);
 						} else if (session.facingMode) {
 							session.facingMode = false;
 							activatedPreview = false;
-							grabVideo(false, eleName, selector); // restart.
+							grabVideo(false, eleName, selector, callback2); // restart.
 						} else {
+							if (callback2) sendMediaDeviceChangeAck(callback2, "camera", false, videoSelect.value, e.message || "Camera change failed");
 							errorlog("Camera failed to work: " + (e && e.name ? e.name : "unknown") + " " + (e && e.message ? e.message : ""));
 							activatedPreview = true;
 							if (getById("gowebcam")) {
@@ -47636,6 +47690,61 @@ function previewIframe(iframeSrc) {
 	getById("previewIframe").appendChild(iframe);
 }
 
+function clearSharedWhepVisualization(peer) {
+	clearInterval(peer.canvasIntervalAction);
+	peer.canvasIntervalAction = null;
+	for (var trackID in peer.inboundAudioPipeline) {
+		var pipeline = peer.inboundAudioPipeline[trackID];
+		if (pipeline.analyser) {
+			clearTimeout(pipeline.analyser.interval);
+			pipeline.analyser.disconnect();
+		}
+		if (pipeline.source) pipeline.source.disconnect();
+	}
+	peer.inboundAudioPipeline = {};
+	if (peer.canvas) peer.canvas.remove();
+	peer.canvas = null;
+	peer.canvasCtx = null;
+	if (peer.voiceMeter) peer.voiceMeter.remove();
+	peer.voiceMeter = null;
+}
+
+function getSharedWhepLayoutElement(video) {
+	var UUID = video.dataset.UUID;
+	var peer = session.rpcs[UUID];
+	if (!peer) return false;
+	var hasVideo = video.srcObject && video.srcObject.getVideoTracks().length;
+	var audioTracks = video.srcObject ? video.srcObject.getAudioTracks() : [];
+	var visualize = !hasVideo && audioTracks.length && (session.style >= 2 || session.meterStyle) && !(session.optimize === 0 && session.scene !== false);
+	if (!visualize) {
+		if (peer.canvas) clearSharedWhepVisualization(peer);
+		if (hasVideo || (audioTracks.length && session.style === 0)) return video;
+		return false;
+	}
+	var track = audioTracks[0];
+	var pipeline = peer.inboundAudioPipeline[track.id];
+	if (!peer.canvas || !pipeline || pipeline.style !== session.style) {
+		clearSharedWhepVisualization(peer);
+		createStyleCanvas(UUID);
+		applyStyleEffect(UUID);
+		peer.inboundAudioPipeline[track.id] = { style: session.style };
+		if (!session.disableViewerWebAudioPipeline && (session.style === 2 || session.style === 3 || session.meterStyle)) {
+			try {
+				var source = session.audioCtx.createMediaStreamSource(new MediaStream([track]));
+				peer.inboundAudioPipeline[track.id].source = source;
+				if (session.style === 2) fftWaveform(source, UUID, track.id);
+				else audioMeterGuest(source, UUID, track.id);
+			} catch (e) { warnlog(e); }
+		}
+	}
+	if (session.meterStyle >= 4) return video;
+	peer.canvas.dataset.sid = video.dataset.sid;
+	peer.canvas.order = video.order;
+	peer.canvas.slot = video.slot;
+	peer.canvas.slotBlank = video.slotBlank;
+	return peer.canvas;
+}
+
 function loadIframe(iframesrc, target, whep = false) {
 	// this is pretty important if you want to avoid camera permission popup problems.  You can also call it automatically via: <body onload=>loadIframe();"> , but don't call it before the page loads.
 	/* if (document.getElementById("mainmenu")) {
@@ -47691,6 +47800,16 @@ function loadIframe(iframesrc, target, whep = false) {
 		var local = target === "source";
 		var owner = session.rpcs[target];
 		if (!local && !owner) return false;
+		if (owner && !session.director && session.scene !== false && session.scene !== "0" && !session.view) {
+			// Scene admission is separate from whether the guest's camera is on.
+			if (session.sceneType === 1 && owner.videoElement) {
+				iframe.style.display = owner.videoElement.style.display;
+			} else if (owner.mutedStateScene === false || (owner.mutedStateScene !== true && session.autoadd && session.autoadd.includes(owner.streamID))) {
+				iframe.style.display = "block";
+			}
+			if (session.sceneType === 2 && owner.videoElement) iframe.sceneType2 = owner.videoElement.sceneType2;
+		}
+
 		var playback = {};
 		playback.streamID = false; // This transport is not another participant with the sharer's identity.
 		playback.settings = { audio: !local, video: true };
@@ -47731,6 +47850,7 @@ function loadIframe(iframesrc, target, whep = false) {
 		}, { once: true });
 		iframe.stopWhep = function () {
 			playback.suppressReconnect = true;
+			clearSharedWhepVisualization(playback);
 			try {
 				if (playback.whep) {
 					if (playback.whep.iceCompletedCallback) playback.whep.iceCompletedCallback();
@@ -54674,7 +54794,7 @@ async function shareWebsite(autostart = false, evt = false) {
 
 	var data = {};
 	data.iframeSrc = session.iframeSrc;
-	data.iframeWhep = session.iframeWhep;
+	if (session.iframeWhep) data.iframeWhep = session.iframeWhep;
 	for (var UUID in session.pcs) {
 		if (session.pcs[UUID].allowIframe === true) {
 			session.sendMessage(data, UUID);
@@ -61070,7 +61190,8 @@ function remoteGlobalRecordStop() {
 	});
 }
 session.onTrack = function (event, UUID) {
-	if (session.badStreamList.includes(session.rpcs[UUID].streamID)) {
+	var streamID = session.rpcs[UUID].sharedWebsiteElement ? session.rpcs[UUID].sharedWebsiteElement.dataset.sid : session.rpcs[UUID].streamID;
+	if (session.badStreamList.includes(streamID)) {
 		errorlog("Blocked inbound track for stream listed in badStreamList");
 		// we will have none of this.
 		return;
@@ -61172,8 +61293,8 @@ session.onTrack = function (event, UUID) {
 		var index = newTracks.length;
 		while (index--) {
 			if (newTracks[index].kind == "video") {
-				if (session.novideo !== false && !session.novideo.includes(session.rpcs[UUID].streamID)) {
-					if (!(screenshare && session.novideo.includes(session.rpcs[UUID].streamID + ":s"))) {
+				if (session.novideo !== false && !session.novideo.includes(streamID)) {
+					if (!(screenshare && session.novideo.includes(streamID + ":s"))) {
 						newTracks.splice(index, 1);
 					}
 					continue;
@@ -61185,12 +61306,12 @@ session.onTrack = function (event, UUID) {
 					continue;
 				}
 			} else if (newTracks[index].kind == "audio") {
-				if (session.noaudio !== false && !session.noaudio.includes(session.rpcs[UUID].streamID)) {
-					if (!(screenshare && session.noaudio.includes(session.rpcs[UUID].streamID + ":s"))) {
+				if (session.noaudio !== false && !session.noaudio.includes(streamID)) {
+					if (!(screenshare && session.noaudio.includes(streamID + ":s"))) {
 						newTracks.splice(index, 1);
 					}
 					continue;
-				} else if (session.excludeaudio && session.excludeaudio.includes(session.rpcs[UUID].streamID)) {
+				} else if (session.excludeaudio && session.excludeaudio.includes(streamID)) {
 					newTracks.splice(index, 1);
 					continue;
 				} else if (session.rpcs[UUID].settings && session.rpcs[UUID].settings.allowscreenaudio && screenshare) {
@@ -61208,6 +61329,25 @@ session.onTrack = function (event, UUID) {
 
 	if (!newTracks.length) {
 		warnlog("NO NEW TRACKS?");
+		return;
+	}
+
+	var sharedVideo = session.rpcs[UUID].sharedWebsiteElement;
+	if (sharedVideo) {
+		if (!sharedVideo.srcObject) sharedVideo.srcObject = createMediaStream();
+		newTracks.forEach(function (track) {
+			if (sharedVideo.srcObject.getTracks().indexOf(track) !== -1) return;
+			sharedVideo.srcObject.getTracks().forEach(function (oldTrack) {
+				if (oldTrack.kind === track.kind) {
+					sharedVideo.srcObject.removeTrack(oldTrack);
+					oldTrack.stop();
+				}
+			});
+			sharedVideo.srcObject.addTrack(track);
+		});
+		applyMuteState(UUID);
+		sharedVideo.play().catch(warnlog);
+		updateMixer();
 		return;
 	}
 
@@ -63511,6 +63651,13 @@ function audioMeterGuest(mediaStreamSource, UUID, trackid) {
 				}
 			}
 		}
+		var sharedVideo = session.rpcs[UUID].sharedWebsiteElement;
+		if (sharedVideo && sharedVideo.srcObject) {
+			var sharedTracks = sharedVideo.srcObject.getAudioTracks();
+			for (var j = 0; j < sharedTracks.length; j++) {
+				if (sharedTracks[j].id == trackid && sharedTracks[j].readyState !== "ended") return true;
+			}
+		}
 		var translationTrack = session.rpcs[UUID].translationSourceTrack;
 		if (translationTrack && translationTrack.id == trackid && translationTrack.readyState !== "ended") {
 			return true;
@@ -63604,17 +63751,18 @@ function audioMeterGuest(mediaStreamSource, UUID, trackid) {
 
 			if (session.style == 3 || session.meterStyle) {
 				// overrides style
-				if (session.rpcs[UUID].videoElement) {
+				var meterVideo = session.rpcs[UUID].videoElement || session.rpcs[UUID].sharedWebsiteElement;
+				if (meterVideo) {
 					if (total > 40) {
-						session.rpcs[UUID].videoElement.dataset.speaking = "2";
+						meterVideo.dataset.speaking = "2";
 					} else if (total > 10) {
-						session.rpcs[UUID].videoElement.dataset.speaking = "1";
+						meterVideo.dataset.speaking = "1";
 					} else {
-						session.rpcs[UUID].videoElement.dataset.speaking = "0";
+						meterVideo.dataset.speaking = "0";
 					}
 
 					if (session.meterStyle == 4) {
-						session.rpcs[UUID].videoElement.dataset.loudness = total;
+						meterVideo.dataset.loudness = total;
 						return; // this is cause we are using the data-loudness
 					}
 				} else if (session.meterStyle == 4) {
@@ -65571,7 +65719,13 @@ async function startPublishing() {
 	if (ret) {
 		getById("publishSettings").classList.add("hidden");
 		resizeWindow(1280, 720);
-		document.title = "PUBLISHING🔴" + document.title;
+		if (isMeshcastStudioPublish()) {
+			if (session.whipOut) {
+				setMeshcastStudioPublishStatus(session.whipOut.connectionState === "connected" ? "connected" : "connecting");
+			}
+		} else {
+			document.title = "PUBLISHING🔴" + document.title;
+		}
 	} else {
 		getById("publishSettings").classList.remove("hidden");
 	}
@@ -66460,6 +66614,43 @@ function createMeshcastTrickle(pc, endpoint, protocol, token, isCurrent) {
 	};
 }
 
+function isMeshcastStudioPublish() {
+	return session.publish && session.scene !== false &&
+		/^https:\/\/app\.meshcast\.io\/api\/gateway\/whip\/[^/?#]+(?:[?#]|$)/i.test(session.whipOutput || "");
+}
+
+function setMeshcastStudioPublishStatus(state, messageKey) {
+	if (!isMeshcastStudioPublish()) return;
+	document.title = getTranslation("meshcast-publish-" + state);
+	var panel = document.getElementById("meshcastPublishError");
+	if (!messageKey) {
+		if (panel) panel.remove();
+		return;
+	}
+	if (!panel) {
+		panel = document.createElement("div");
+		panel.id = "meshcastPublishError";
+		panel.className = "customModelPopup";
+		panel.style.display = "block";
+		var inner = document.createElement("div");
+		inner.className = "promptModalInner";
+		var message = document.createElement("p");
+		message.setAttribute("role", "alert");
+		inner.appendChild(message);
+		var retry = document.createElement("button");
+		retry.className = "gobutton green";
+		retry.textContent = getTranslation("meshcast-publish-retry");
+		retry.onclick = function () {
+			if (session.restartWhipConnection) session.restartWhipConnection();
+		};
+		inner.appendChild(retry);
+		panel.appendChild(inner);
+		document.body.appendChild(panel);
+	}
+	panel.querySelector("p").textContent = getTranslation(messageKey);
+	panel.querySelector("button").disabled = messageKey === "meshcast-publish-capture-ended";
+}
+
 function whipOut() {
 	log("whipOut");
 	if (session.whipPublishPrimary === false) {
@@ -66486,6 +66677,14 @@ function whipOut() {
 	var keyframe = false;
 	async function whipConnect() {
 		var connectedPeer = null;
+		if (isMeshcastStudioPublish()) {
+			var videoTracks = session.videoElement && session.videoElement.srcObject && session.videoElement.srcObject.getVideoTracks();
+			if (!videoTracks || !videoTracks.length || videoTracks[0].readyState === "ended") {
+				setMeshcastStudioPublishStatus("failed", "meshcast-publish-capture-ended");
+				return null;
+			}
+			setMeshcastStudioPublishStatus("connecting");
+		}
 		try {
 			if (!session.configuration) {
 				await chooseBestTURN();
@@ -66521,6 +66720,10 @@ function whipOut() {
 			session.whipOut.keyframeTimeout = null;
 		} catch (err) {
 			errorlog(err);
+			if (isMeshcastStudioPublish()) {
+				setMeshcastStudioPublishStatus("failed", "meshcast-publish-codec");
+				return null;
+			}
 			if (!session.cleanOutput) {
 				warnUser("An RTC error occured");
 			}
@@ -66737,6 +66940,11 @@ function whipOut() {
 
 				session.whipOut.onconnectionstatechange = function () {
 					if (session.whipOut !== publishingPeer) return;
+					if (this.connectionState === "connected") {
+						setMeshcastStudioPublishStatus("connected");
+					} else if (this.connectionState === "disconnected" || this.connectionState === "failed") {
+						setMeshcastStudioPublishStatus("connecting");
+					}
 					if (this === session.whipOut) collectMeshcastQos(this);
 					if (session.meshcast || session.meshcast2 || session.meshcastSwitch) announceMeshcastStatus();
 					log("WHIP connection state: " + session.whipOut.connectionState);
@@ -66817,7 +67025,10 @@ function whipOut() {
 
 					ajax(sdp, "sdp");
 				})
-				.catch(function (err) { });
+				.catch(function (err) {
+					if (session.whipOut !== publishingPeer || !isMeshcastStudioPublish()) return;
+					setMeshcastStudioPublishStatus("failed", "meshcast-publish-codec");
+				});
 		} catch (e) {
 			errorlog(e);
 		}
@@ -66856,10 +67067,23 @@ function whipOut() {
 			const trickle = session.whipOut && session.whipOut.meshcastTrickle;
 			var xhttp = new XMLHttpRequest();
 			xhttp.onreadystatechange = async function () {
-				if (session.whipOut !== reportingPeer) return;
+				if (session.whipOut !== reportingPeer) {
+					// A stopped attempt can still receive a server-created WHIP resource.
+					if (isMeshcastStudioPublish() && type === "sdp" && this.readyState === 4 && this.status === 201) {
+						var staleLocation = this.getResponseHeader("location");
+						if (staleLocation) {
+							var cleanup = new XMLHttpRequest();
+							cleanup.open("DELETE", completeLocationURL(session.whipOutput, staleLocation), true);
+							if (session.whipOutputToken) cleanup.setRequestHeader("Authorization", "Bearer " + session.whipOutputToken);
+							cleanup.send();
+						}
+					}
+					return;
+				}
 				if (this.readyState == 4 && (this.status == 200 || this.status == 201)) {
 					if (trickle) trickle.accept(this);
 					var contentType = this.getResponseHeader("content-type");
+					if (isMeshcastStudioPublish() && !contentType) contentType = "";
 
 					if (!contentType.startsWith("application/sdp")) {
 						warnlog("The WHIP output destination responded with an incorrect content type; will attempt to continue still.");
@@ -66955,21 +67179,32 @@ function whipOut() {
 						warnlog("Processing answer:");
 						warnlog(jsep);
 						if (session.whipOut && session.whipOut.location) {
-								sessionStorage.setItem("deleteWhipOnLoad", JSON.stringify({ location: session.whipOut.location, whipOutputToken: session.whipOutputToken }));
+								if (isMeshcastStudioPublish()) {
+									try {
+										sessionStorage.setItem("deleteWhipOnLoad", JSON.stringify({ location: session.whipOut.location, whipOutputToken: session.whipOutputToken }));
+									} catch (e) { /* Publishing can continue without browser storage. */ }
+								} else {
+									sessionStorage.setItem("deleteWhipOnLoad", JSON.stringify({ location: session.whipOut.location, whipOutputToken: session.whipOutputToken }));
+								}
 								session.whipOut.deleteme = function () {
+									var deletePeer = isMeshcastStudioPublish() ? reportingPeer : session.whipOut;
 									let xhttp = new XMLHttpRequest();
-									xhttp.onload = function () {
+									xhttp.onload = xhttp.onerror = function () {
+										if (isMeshcastStudioPublish()) {
+											try {
+												var saved = JSON.parse(sessionStorage.getItem("deleteWhipOnLoad") || "null");
+												if (saved && saved.location === deletePeer.location) sessionStorage.removeItem("deleteWhipOnLoad");
+											} catch (e) { }
+											return;
+										}
 										sessionStorage.removeItem("deleteWhipOnLoad");
 									};
-									xhttp.onerror = function () {
-										sessionStorage.removeItem("deleteWhipOnLoad");
-									};
-									xhttp.open("DELETE", session.whipOut.location, true);
+									xhttp.open("DELETE", deletePeer.location, true);
 									if (session.whipOutputToken) {
 										xhttp.setRequestHeader("Authorization", "Bearer " + session.whipOutputToken);
 									}
 									xhttp.send();
-									delete session.whipOut.deleteme;
+									delete deletePeer.deleteme;
 								};
 							}
 						if (session.localNetworkOnly) {
@@ -67022,6 +67257,10 @@ function whipOut() {
 							})
 							.catch(async function (e) {
 								if (session.whipOut !== reportingPeer) return;
+								if (isMeshcastStudioPublish()) {
+									setMeshcastStudioPublishStatus("failed", "meshcast-publish-response");
+									return;
+								}
 								errorlog(e);
 								errorlog("Recieved an invalid SDP answer response from the WHIP endpoint. While things may still work, it won't work as intended.");
 								if (WHELPlaybackURL) {
@@ -67059,6 +67298,8 @@ function whipOut() {
 									}
 								}
 							});
+				} else if (isMeshcastStudioPublish()) {
+					setMeshcastStudioPublishStatus("failed", "meshcast-publish-response");
 				} else if (contentType == "application/error") {
 					if (this.responseText == 432) {
 						warnUser("Whip out error: 432");
@@ -67091,6 +67332,31 @@ function whipOut() {
 					}
 				}
 			} else if (this.readyState == 4) {
+				if (type === "sdp" && isMeshcastStudioPublish()) {
+					var messageKey = "meshcast-publish-rejected";
+					// Match only known codes, including MediaMTX's wrapped authentication error.
+					var response = this.responseText || "";
+					if (response.indexOf("STREAM_LIMIT_REACHED") !== -1) {
+						messageKey = "meshcast-publish-limit";
+					} else if (response.indexOf("KEY_ALREADY_IN_USE") !== -1) {
+						messageKey = "meshcast-publish-busy";
+					} else if (this.status === 401 || this.status === 403 || /TOKEN_INVALID|TOKEN_EXPIRED/.test(response)) {
+						messageKey = "meshcast-publish-key";
+					} else if (this.status === 406 || this.status === 415) {
+						messageKey = "meshcast-publish-codec";
+					} else if (!this.status || this.status >= 500) {
+						messageKey = "meshcast-publish-network";
+					}
+					setMeshcastStudioPublishStatus("failed", messageKey);
+					if (messageKey === "meshcast-publish-network" || messageKey === "meshcast-publish-busy") {
+						retryWhipConnection();
+					} else {
+						session.whipOut = null;
+						reportingPeer.close();
+						whipReconnecting = false;
+					}
+					return;
+				}
 				if (type === "sdp" && reportingPeer && reportingPeer === session.whipOut && reportingPeer.qosMeshcast) {
 					if (reportingPeer.qosMeshcast.success !== true) reportingPeer.qosMeshcast.success = false;
 					errorlog("WHIP request failed (HTTP " + this.status + ")");
@@ -67135,6 +67401,7 @@ function whipOut() {
 		} else {
 			xhttp.open("POST", session.whipOutput, true);
 		}
+		if (type === "sdp" && isMeshcastStudioPublish()) xhttp.timeout = 15000;
 
 		if (session.whipOutputToken) {
 			xhttp.setRequestHeader("Authorization", "Bearer " + session.whipOutputToken);
@@ -67275,6 +67542,10 @@ function whipOut() {
 			// Close existing connection
 			if (session.whipOut) {
 				try {
+					if (isMeshcastStudioPublish()) {
+						clearInterval(session.whipOut.keyframeTimeout);
+						if (session.whipOut.deleteme) session.whipOut.deleteme();
+					}
 					session.whipOut.close();
 				} catch (e) {
 					warnlog(e);
@@ -67290,6 +67561,10 @@ function whipOut() {
 			try {
 				retryPeer = await whipConnect();
 				if (session.whipOut !== retryPeer) return;
+				if (isMeshcastStudioPublish() && !retryPeer) {
+					whipReconnecting = false;
+					return;
+				}
 				// Give it time to connect before checking
 				var checkAttempts = 0;
 				var maxCheckAttempts = 6; // Up to 30 seconds total (6 x 5s)
@@ -67330,6 +67605,7 @@ function whipOut() {
 					} else {
 						log("WHIP max retries reached, stopping reconnection attempts");
 						whipReconnecting = false;
+						setMeshcastStudioPublishStatus("failed", "meshcast-publish-exhausted");
 					}
 				}
 				setTimeout(checkConnectionState, 5000); // First check after 5 seconds
@@ -67358,6 +67634,10 @@ function whipOut() {
 		whipReconnectAttempts = 0;
 		if (session.whipOut) {
 			try {
+				if (isMeshcastStudioPublish()) {
+					clearInterval(session.whipOut.keyframeTimeout);
+					if (session.whipOut.deleteme) session.whipOut.deleteme();
+				}
 				session.whipOut.close();
 			} catch (e) {
 				warnlog(e);
@@ -68842,6 +69122,8 @@ async function whepIn(whepInput = false, whepInputToken = false, UUID = false) {
 	} catch (e) {}
 
 	function resetWhepHttpSessionState() {
+		requestingStream = false;
+		cancelScheduledWhepRetry();
 		if (meshcastTrickle) meshcastTrickle.stop();
 		meshcastTrickle = null;
 		whepHttpSessionEpoch += 1;
@@ -69234,6 +69516,9 @@ async function whepIn(whepInput = false, whepInputToken = false, UUID = false) {
 			if (!rpc || !rpc.whep || !rpc.isWhepSession) {
 				return false;
 			}
+			if (rpc.sharedWebsiteElement && rpc.suppressReconnect) {
+				return false;
+			}
 			if (rpc.whepExpectedAudio === false) {
 				return false;
 			}
@@ -69247,7 +69532,7 @@ async function whepIn(whepInput = false, whepInputToken = false, UUID = false) {
 			if (typeof session.meshcast === "string") {
 				meshcastMode = session.meshcast.toLowerCase();
 			}
-			if (meshcastMode === "video") {
+			if (!rpc.sharedWebsiteElement && meshcastMode === "video") {
 				// Hybrid mode: audio is expected over p2p while WHEP may still carry an audio track.
 				return false;
 			}
@@ -69255,10 +69540,13 @@ async function whepIn(whepInput = false, whepInputToken = false, UUID = false) {
 			if (typeof session.meshcast2 === "string") {
 				meshcast2Mode = session.meshcast2.toLowerCase();
 			}
-			if (meshcast2Mode === "video") {
+			if (!rpc.sharedWebsiteElement && meshcast2Mode === "video") {
 				return false;
 			}
 			var streamID = rpc.streamID || "";
+			if (rpc.sharedWebsiteElement) {
+				streamID = rpc.sharedWebsiteElement.dataset.sid;
+			}
 			if (session.noaudio !== false) {
 				if (session.noaudio === true) {
 					return false;
@@ -69352,7 +69640,8 @@ async function whepIn(whepInput = false, whepInputToken = false, UUID = false) {
 			return;
 		}
 		var rpc = session.rpcs[targetUUID];
-		if (!rpc || !rpc.videoElement || !rpc.videoElement.play) {
+		var video = rpc && (rpc.videoElement || rpc.sharedWebsiteElement);
+		if (!video || !video.play) {
 			resumeViewerAudioContext(function () {
 				callback({ autoplayBlocked: false });
 			});
@@ -69375,7 +69664,7 @@ async function whepIn(whepInput = false, whepInputToken = false, UUID = false) {
 		}
 
 		try {
-			var playPromise = rpc.videoElement.play();
+			var playPromise = video.play();
 			if (playPromise && (typeof playPromise.then === "function")) {
 				playPromise
 					.then(function () {
@@ -69411,10 +69700,14 @@ async function whepIn(whepInput = false, whepInputToken = false, UUID = false) {
 				return false;
 			}
 			var rpc = session.rpcs[targetUUID];
-			if (!rpc || !rpc.streamSrc || !rpc.streamSrc.getAudioTracks) {
+			var stream = rpc && rpc.streamSrc;
+			if (rpc && rpc.sharedWebsiteElement) {
+				stream = rpc.sharedWebsiteElement.srcObject;
+			}
+			if (!stream || !stream.getAudioTracks) {
 				return true;
 			}
-			var audioTracks = rpc.streamSrc.getAudioTracks();
+			var audioTracks = stream.getAudioTracks();
 			if (!audioTracks || !audioTracks.length) {
 				return true;
 			}
@@ -69715,7 +70008,7 @@ async function whepIn(whepInput = false, whepInputToken = false, UUID = false) {
 				await chooseBestTURN();
 			}
 
-			if (session.rpcs[UUID] !== connectingPeer || connectingPeer.suppressReconnect) return;
+			if (connectingPeer.sharedWebsiteElement && (session.rpcs[UUID] !== connectingPeer || connectingPeer.suppressReconnect)) return;
 
 			if (session.encodedInsertableStreams) {
 				// most servers won't support this
@@ -69734,6 +70027,9 @@ async function whepIn(whepInput = false, whepInputToken = false, UUID = false) {
 				if (connectingPeer.sharedWebsiteElement) {
 					var closeWebsitePeer = meshcastPeer.close;
 					meshcastPeer.close = function () {
+						if (session.rpcs[UUID] === connectingPeer && connectingPeer.whep === meshcastPeer) {
+							teardownWhepAudioRecovery(UUID, true);
+						}
 						try {
 							if (meshcastPeer.deleteme) meshcastPeer.deleteme();
 						} finally {
@@ -69786,10 +70082,21 @@ async function whepIn(whepInput = false, whepInputToken = false, UUID = false) {
 			}
 
 			try {
-				if (video) {
+				// Shared WHEP defaults to both media types because some SFUs deliver neither unless both are requested.
+				// Allowlisted domains can request only the needed media to save bandwidth. Meshcast supports this.
+				// Add other domains only after verifying both audio-only and video-only requests deliver media.
+				var requestBoth = !!connectingPeer.sharedWebsiteElement;
+				if (requestBoth) {
+					try {
+						var hostname = new URL(whepInput).hostname;
+						if (hostname === "meshcast.io" || hostname.endsWith(".meshcast.io")) requestBoth = false;
+					} catch (e) { }
+				}
+				// onTrack filters playback; existing non-shared WHEP negotiation stays unchanged.
+				if (video || requestBoth) {
 					session.rpcs[UUID].whep.addTransceiver("video", { direction: "recvonly" });
 				}
-				if (audio) {
+				if (audio || requestBoth) {
 					session.rpcs[UUID].whep.addTransceiver("audio", { direction: "recvonly" });
 				}
 			} catch (e) {
@@ -69800,21 +70107,10 @@ async function whepIn(whepInput = false, whepInputToken = false, UUID = false) {
 				if (!session.rpcs[UUID] || session.rpcs[UUID].whep !== event.target) return;
 				var sharedVideo = session.rpcs[UUID].sharedWebsiteElement;
 				if (sharedVideo) {
-					if (!sharedVideo.srcObject) sharedVideo.srcObject = createMediaStream();
-					var tracks = event.streams && event.streams[0] ? event.streams[0].getTracks() : [event.track];
-					tracks.forEach(function (track) {
-						if (!track || sharedVideo.srcObject.getTracks().indexOf(track) !== -1) return;
-						sharedVideo.srcObject.getTracks().forEach(function (oldTrack) {
-							if (oldTrack.kind === track.kind) {
-								sharedVideo.srcObject.removeTrack(oldTrack);
-								oldTrack.stop();
-							}
-						});
-						sharedVideo.srcObject.addTrack(track);
-					});
-					applyMuteState(UUID);
-					sharedVideo.play().catch(warnlog);
-					updateMixer();
+					session.onTrack(event, UUID);
+					if (event.track && event.track.kind === "audio" && sharedVideo.srcObject && sharedVideo.srcObject.getAudioTracks().indexOf(event.track) !== -1) {
+						attachWhepAudioRecoveryHandlers(UUID, event.track, sharedVideo.srcObject);
+					}
 					return;
 				}
 				warnlog("TRACK INBOUND!");
@@ -70041,6 +70337,14 @@ async function whepIn(whepInput = false, whepInputToken = false, UUID = false) {
 			}
 
 			try {
+				var sharedVideo = session.rpcs[UUID].sharedWebsiteElement;
+				if (sharedVideo) {
+					clearSharedWhepVisualization(session.rpcs[UUID]);
+					if (sharedVideo.srcObject) {
+						sharedVideo.srcObject.getTracks().forEach(function (track) { track.stop(); });
+						sharedVideo.srcObject = null;
+					}
+				}
 				if (session.rpcs[UUID].streamSrc) {
 					session.rpcs[UUID].streamSrc.getTracks().forEach(function (track) {
 						track.stop();

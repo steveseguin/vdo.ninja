@@ -6,7 +6,7 @@
 		<title>VDO.Ninja Live Studio</title>
 		<link rel="icon" href="../media/favicon.ico" />
 		<link rel="stylesheet" href="../lineawesome/css/line-awesome.min.css" />
-		<link rel="stylesheet" href="./styles.css" />
+		<link rel="stylesheet" href="./styles.css?ver=20261012-1" />
 	</head>
 	<body>
 		<div id="studio-root" class="studio-shell" data-state="setup">
@@ -80,7 +80,7 @@
 						<div class="stage-aspect" id="stage" data-testid="stage-drop-target">
 							<iframe id="director-frame" title="VDO.Ninja program preview" allow="autoplay; camera; microphone; fullscreen; picture-in-picture; display-capture; screen-wake-lock; accelerometer; midi; geolocation; clipboard-write"></iframe>
 							<div id="stage-bg" class="stage-bg"></div>
-							<div id="stage-overlay" class="stage-overlay" aria-label="Layout editor surface"></div>
+							<div id="stage-overlay" class="stage-overlay" tabindex="0" aria-label="Layout editor surface"></div>
 							<div class="stage-empty" id="stage-empty">No sources on stage</div>
 						</div>
 						<div class="box-inspector" id="box-inspector" data-empty="true" aria-label="Selected source controls">
@@ -105,6 +105,10 @@
 					</section>
 
 					<section class="layout-strip" aria-label="Layout presets">
+						<button type="button" class="layout-preset" data-preset="auto">
+							<span class="preset-icon preset-icon--grid"></span>
+							<span>Auto</span>
+						</button>
 						<button type="button" class="layout-preset" data-preset="solo">
 							<span class="preset-icon preset-icon--solo"></span>
 							<span>Solo</span>
@@ -147,6 +151,7 @@
 				<aside class="control-panel" aria-label="Studio controls">
 					<nav class="tabs" aria-label="Control tabs">
 						<button type="button" class="tab-button" data-tab="sources" aria-selected="true">Guests</button>
+						<button type="button" class="tab-button" data-tab="chat">Chat</button>
 						<button type="button" class="tab-button" data-tab="design">Design</button>
 						<button type="button" class="tab-button" data-tab="output">Output</button>
 					</nav>
@@ -175,6 +180,30 @@
 							</div>
 						</label>
 						<div id="source-list" class="source-list" aria-live="polite"></div>
+					</section>
+
+					<section class="tab-panel hidden" data-panel="chat">
+						<div class="panel-heading"><h2>Chat</h2><a class="button button--secondary button--compact" href="https://socialstream.ninja/lite/" target="_blank" rel="noopener noreferrer">Use SSN Lite</a></div>
+						<p class="chat-help">Connect YouTube, Twitch or Kick in Lite, keep it open, then paste its overlay URL below. Already use SSN? Paste your dock link or session ID.</p>
+						<form id="chat-connect-form" class="chat-setup" autocomplete="off">
+							<label class="field-row field-row--stacked"><span>SSN chat link or session ID</span><input id="chat-session" required autocomplete="off" spellcheck="false" placeholder="Paste your SSN dock link" /></label>
+							<details><summary>Connection options</summary>
+								<label class="field-row field-row--stacked"><span>Connection</span><select id="chat-transport"><option value="webrtc">Peer-to-peer</option><option value="websocket">Server (WebSocket)</option></select></label>
+								<label class="field-row field-row--stacked"><span>SSN password (peer-to-peer only)</span><input id="chat-password" type="password" autocomplete="off" placeholder="Optional" /></label>
+								<label class="field-row field-row--stacked"><span>WebSocket server</span><input id="chat-server" type="url" value="wss://io.socialstream.ninja/extension" spellcheck="false" /></label>
+								<p class="chat-help">Server mode requires SSN's “Send chat messages to API server” setting. Lite uses peer-to-peer. Pasted links select their connection mode automatically.</p>
+							</details>
+							<div class="chat-actions"><button class="button button--primary" type="submit">Connect</button><button id="chat-disconnect" class="button button--secondary" type="button" disabled>Disconnect</button></div>
+						</form>
+						<p id="chat-status" class="chat-help" role="status">Not connected</p>
+						<div class="chat-toolbar">
+							<label class="field-row field-row--stacked"><span>Platform</span><select id="chat-filter"><option value="">All platforms</option></select></label>
+							<button id="chat-pause" class="button button--secondary" type="button" aria-pressed="false">Pause scrolling</button>
+							<button id="chat-clear" class="button button--secondary" type="button">Clear panel</button>
+						</div>
+						<div class="chat-featured"><span id="chat-featured-label">No chat on stream</span><button id="chat-hide" class="button button--secondary" type="button" disabled>Hide</button></div>
+						<p class="chat-help">Latest 200 messages. Only selected text is shown in the program output; long messages are shortened.</p>
+						<div id="chat-messages" class="chat-messages" aria-label="Social Stream chat"><p class="chat-empty">Messages will appear here after your source connects.</p></div>
 					</section>
 
 					<section class="tab-panel hidden" data-panel="design">
@@ -210,14 +239,30 @@
 								<button type="button" class="icon-button" id="copy-scene" title="Copy scene link" aria-label="Copy scene link"><i class="las la-copy"></i></button>
 							</div>
 						</label>
+						<p class="output-help">Set up a source and its destinations in Meshcast, then paste that source's private WHIP URL here. Manage destinations and check their status in the Meshcast dashboard.</p>
 						<label class="field-row field-row--stacked">
-							<span>WHIP endpoint</span>
+							<span>Meshcast WHIP URL</span>
+							<input id="meshcast-endpoint" type="password" autocomplete="off" spellcheck="false" placeholder="Paste your private WHIP URL" aria-describedby="meshcast-privacy meshcast-storage-status" />
+						</label>
+						<label class="check-row">
+							<input type="checkbox" id="remember-meshcast" autocomplete="off" />
+							<span>Remember this WHIP URL in this browser</span>
+						</label>
+						<p class="output-help" id="meshcast-privacy">This URL contains your publishing secret. Remember it only in a browser you trust. It is kept separate from scene templates and guest links.</p>
+						<p class="output-help" id="meshcast-storage-status" role="status">WHIP URL is not saved.</p>
+						<div class="output-actions">
+							<button type="button" class="button button--secondary" id="open-meshcast">Open Meshcast</button>
+							<button type="button" class="button button--secondary" id="forget-meshcast">Forget URL</button>
+							<button type="button" class="button button--primary" id="publish-meshcast">Go Live with Meshcast</button>
+						</div>
+						<p class="output-help">Go Live opens the WHIP publisher with H.264 video selected. Complete the browser's capture prompt and include tab audio. Check picture and sound at your destination; close the publisher to stop.</p>
+						<label class="field-row field-row--stacked">
+							<span>Custom WHIP endpoint</span>
 							<input id="whip-endpoint" autocomplete="off" placeholder="https://example.com/whip/..." />
 						</label>
 						<div class="output-actions">
 							<button type="button" class="button button--secondary" id="open-scene">Open Scene Link</button>
 							<button type="button" class="button button--secondary" id="record-scene">Open Recorder</button>
-							<button type="button" class="button button--secondary" id="open-meshcast">Open Meshcast</button>
 							<button type="button" class="button button--primary" id="publish-whip">Open WHIP Publisher</button>
 						</div>
 					</section>
@@ -226,6 +271,6 @@
 		</div>
 
 		<div id="toast" class="toast" role="status" aria-live="polite"></div>
-		<script type="module" src="./app.js"></script>
+		<script type="module" src="./app.js?ver=20261012-1"></script>
 	</body>
 </html>
