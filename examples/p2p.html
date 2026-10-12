@@ -48,7 +48,9 @@
     eventer(messageEvent, function (e) {
       if (e.source != iframe.contentWindow){return} // reject messages send from other iframes
       if ("dataReceived" in e.data){ // raw data 
-        document.getElementById("results").innerHTML += e.data.dataReceived+"<br />";
+        var resultLine1 = document.createElement("div");
+        resultLine1.textContent = e.data.dataReceived;
+        document.getElementById("results").appendChild(resultLine1);
         console.log(e.data);
         try {
           iframe.contentWindow.postMessage({"sendData":"pong!!", "UUID":e.data.UUID}, '*');
@@ -83,7 +85,9 @@
       if (e.source != iframe.contentWindow){return} // reject messages send from other iframes
       if ("dataReceived" in e.data){ // raw data 
         console.log(e.data);
-        document.getElementById("results").innerHTML += e.data.dataReceived+"<br />";
+        var resultLine2 = document.createElement("div");
+        resultLine2.textContent = e.data.dataReceived;
+        document.getElementById("results").appendChild(resultLine2);
       }
     });
   }
