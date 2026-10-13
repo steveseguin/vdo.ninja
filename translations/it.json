@@ -230,7 +230,7 @@
     "default-codec-select": "Codec video preferito:  ",
     "enter-the-rooms-control": "Entra nella gestione della stanza",
     "show-tips": "Mostra alcuni suggerimenti..",
-    "added-notes": "\n<u>\n<i>Suggerimenti importanti:</i><br>\n</u>\n<li>Disabilitare la condivisione video tra gli ospiti migliora le prestazioni</li>\n<li>Invita nella stanza solo ospiti di cui ti fidi.</li>\n<li>L'opzione \"Registrazione\" è considerata sperimentale.</li>",
+    "added-notes": "\n<u>\n<i>Suggerimenti importanti:</i><br>\n</u>\n<li>Disabilitare la condivisione video tra gli ospiti migliora le prestazioni</li>\n<li>Invita nella stanza solo ospiti di cui ti fidi.</li>\n<li>I dispositivi iOS condivideranno solo il loro audio con altri ospiti; questa è principalmente una limitazione hardware</li>\n<li>L'opzione \"Registrazione\" è considerata sperimentale.</li>",
     "looking-to-just-chat-and-not-direct": "Vuoi solo chattare e non dirigere?",
     "join-the-room-basic": "Unisciti alla stanza come partecipante",
     "back": "Indietro",
@@ -788,7 +788,8 @@
     "use-square-video-corners": "Usa angoli quadrati per i video",
     "use-sso-to-manage-access-for-this-room-as-director-you-will-sign-in-first-guest-access-can-be-public-require-sso-or-allowlist-": "Usa SSO per gestire l'accesso a questa stanza. Come regista, devi prima accedere. L'accesso degli ospiti può essere pubblico, richiedere SSO o essere limitato a un elenco di utenti autorizzati.",
     "use-sso-to-manage-access-for-this-room-you-will-be-asked-to-sign-in-": "Usa SSO per gestire l'accesso a questa stanza. Ti verrà richiesto di accedere.",
-    "when-enabled-highlight-will-unmute-the-highlighted-guest-and-mute-the-other-guests-manual-unmute-changes-can-still-be-made-afterwards-": "Se abilitato, Evidenzia riattiverà l'audio dell'ospite evidenziato e disattiverà quello degli altri ospiti. Le modifiche manuali all'attivazione dell'audio possono comunque essere apportate in seguito."
+    "when-enabled-highlight-will-unmute-the-highlighted-guest-and-mute-the-other-guests-manual-unmute-changes-can-still-be-made-afterwards-": "Se abilitato, Evidenzia riattiverà l'audio dell'ospite evidenziato e disattiverà quello degli altri ospiti. Le modifiche manuali all'attivazione dell'audio possono comunque essere apportate in seguito.",
+    "req011111111111111uest-1080p60-from-the-guest-instead-of-720p60-if-possible": "Richiedi 1080p60 dall'ospite invece di 720p60, se possibile"
   },
   "placeholders": {
     "join-by-room-name-here": "Unisciti tramite il nome della stanza qui",
