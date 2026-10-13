@@ -23515,11 +23515,20 @@ function getDetailedState(sid = false) {
 				errorlog(e);
 			}
 
-			item.videoVisible = session.rpcs[UUID].videoElement && session.rpcs[UUID].videoElement.checkVisibility();
+			// Older browsers can report layout boxes without checkVisibility().
+			if (session.rpcs[UUID].videoElement && typeof session.rpcs[UUID].videoElement.checkVisibility === "function") {
+				item.videoVisible = session.rpcs[UUID].videoElement.checkVisibility();
+			} else {
+				item.videoVisible = session.rpcs[UUID].videoElement && session.rpcs[UUID].videoElement.getClientRects().length > 0;
+			}
 			if (session.rpcs[UUID].videoElement) {
 				item.videoVolume = session.rpcs[UUID].videoElement.volume;
 			}
-			item.iframeVisible = session.rpcs[UUID].iframeVisible && session.rpcs[UUID].iframeVisible.checkVisibility();
+			if (session.rpcs[UUID].iframeEle && typeof session.rpcs[UUID].iframeEle.checkVisibility === "function") {
+				item.iframeVisible = session.rpcs[UUID].iframeEle.checkVisibility();
+			} else {
+				item.iframeVisible = session.rpcs[UUID].iframeEle && session.rpcs[UUID].iframeEle.getClientRects().length > 0;
+			}
 
 			if (session.directorList.indexOf(UUID) >= 0) {
 				item.director = true;
@@ -23675,7 +23684,11 @@ function getDetailedState(sid = false) {
 		streamList[session.streamID].sceneMuteStatus = session.sceneMuteStatus;
 	}
 	streamList[session.streamID].videoMuted = session.videoMuted;
-	streamList[session.streamID].videoVisible = session.videoElement && session.videoElement.checkVisibility();
+	if (session.videoElement && typeof session.videoElement.checkVisibility === "function") {
+		streamList[session.streamID].videoVisible = session.videoElement.checkVisibility();
+	} else {
+		streamList[session.streamID].videoVisible = session.videoElement && session.videoElement.getClientRects().length > 0;
+	}
 	streamList[session.streamID].speakerMuted = session.speakerMuted;
 	streamList[session.streamID].position = null;
 	streamList[session.streamID].meshcast = session.meshcast;
@@ -59226,19 +59239,21 @@ async function streamVideoToDropbox(filename) {
 	log(main);
 	main.vdo = { filename: filename, offset: offset };
 
-	var persisted = localStorage.getItem("dropboxSession");
-	if (persisted) {
+	try {
+		var persisted = [];
 		try {
-			persisted = JSON.parse(persisted);
+			persisted = JSON.parse(localStorage.getItem("dropboxSession")) || [];
 		} catch (e) {
-			errorlog(e);
+			persisted = [];
+		}
+		if (!Array.isArray(persisted)) {
 			persisted = [];
 		}
 		persisted.push(main);
-	} else {
-		persisted = [main];
+		localStorage.setItem("dropboxSession", JSON.stringify(persisted));
+	} catch (e) {
+		// Resume metadata is optional; storage failures must not stop uploads.
 	}
-	localStorage.setItem("dropboxSession", JSON.stringify(persisted));
 
 	if (session.directorUUID) {
 		var initMsg = {};
@@ -59343,23 +59358,20 @@ async function streamVideoToDropbox(filename) {
 					await session.dbx.filesUploadSessionFinish({ cursor: { session_id: sessionId, offset: offset }, commit: { path: "/" + filename } });
 					DBXqueue.shift();
 					resolveNext(true);
-					var sessionData = localStorage.getItem("dropboxSession");
-					if (sessionData) {
-						try {
-							sessionData = JSON.parse(sessionData);
-							sessionData = sessionData.filter(entry => entry.vdo.filename !== filename && entry.vdo && entry.vdo.filename);
-						} catch (e) {
-							errorlog(sessionData);
-							errorlog(e);
-							sessionData = [];
+					try {
+						var sessionData = JSON.parse(localStorage.getItem("dropboxSession")) || [];
+						if (Array.isArray(sessionData)) {
+							sessionData = sessionData.filter(function (entry) {
+								return entry && entry.vdo && entry.vdo.filename && entry.vdo.filename !== filename;
+							});
+							if (sessionData.length) {
+								localStorage.setItem("dropboxSession", JSON.stringify(sessionData));
+							} else {
+								localStorage.removeItem("dropboxSession");
+							}
 						}
-					} else {
-						sessionData = [];
-					}
-					if (sessionData.length) {
-						localStorage.setItem("dropboxSession", JSON.stringify(sessionData));
-					} else {
-						localStorage.removeItem("dropboxSession");
+					} catch (e) {
+						// Dropbox has finished even if resume metadata cannot be cleared.
 					}
 					sessionId = false;
 					notifyDropboxQueueSize();
@@ -59368,21 +59380,19 @@ async function streamVideoToDropbox(filename) {
 					await session.dbx.filesUploadSessionAppendV2({ cursor: { session_id: sessionId, offset: offset }, close: false, contents: current });
 					offset += current.size;
 					main.vdo.offset = offset;
-					var sessionData = localStorage.getItem("dropboxSession");
-					if (sessionData) {
-						try {
-							sessionData = JSON.parse(sessionData);
-							sessionData = sessionData.filter(entry => entry.vdo.filename !== filename && entry.vdo && entry.vdo.filename);
-							sessionData.push(main);
-						} catch (e) {
-							errorlog(sessionData);
-							errorlog(e);
-							sessionData = [main];
+					try {
+						var sessionData = JSON.parse(localStorage.getItem("dropboxSession")) || [];
+						if (!Array.isArray(sessionData)) {
+							sessionData = [];
 						}
-					} else {
-						sessionData = [main];
+						sessionData = sessionData.filter(function (entry) {
+							return entry && entry.vdo && entry.vdo.filename && entry.vdo.filename !== filename;
+						});
+						sessionData.push(main);
+						localStorage.setItem("dropboxSession", JSON.stringify(sessionData));
+					} catch (e) {
+						// The chunk is uploaded; continue if resume metadata cannot be saved.
 					}
-					localStorage.setItem("dropboxSession", JSON.stringify(sessionData));
 					DBXqueue.shift();
 					resolveNext(true);
 					updateTotalChunksUploaded();

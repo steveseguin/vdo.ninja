@@ -11,39 +11,35 @@ class MeterProcessor extends AudioWorkletProcessor {
 
   process(inputs) {
     const input = inputs[0];
-    if (!input || !input.length) {
-      this._frame += 128;
-      this._silentFrames += 1;
-      return true;
-    }
-
-    const channelData = input[0];
-    if (!channelData) {
-      this._frame += 128;
-      this._silentFrames += 1;
-      return true;
-    }
+    const channelCount = input && input[0] ? input.length : 0;
+    const frameCount = channelCount ? input[0].length : 128;
 
     let peak = this._peak;
     let sumSquares = 0;
     let clipped = this._clipped;
 
-    for (let i = 0; i < channelData.length; i++) {
-      const sample = channelData[i];
-      const absSample = Math.abs(sample);
-      if (absSample > peak) {
-        peak = absSample;
+    for (let channel = 0; channel < channelCount; channel++) {
+      const channelData = input[channel];
+      for (let i = 0; i < channelData.length; i++) {
+        const sample = channelData[i];
+        const absSample = Math.abs(sample);
+        if (absSample > peak) {
+          peak = absSample;
+        }
+        if (absSample >= 0.89) {
+          clipped += 1;
+        }
+        sumSquares += sample * sample;
       }
-      if (absSample >= 0.89) {
-        clipped += 1;
-      }
-      sumSquares += sample * sample;
     }
 
-    this._frame += channelData.length;
+    // Keep reporting silence without input; average power across all channels.
+    this._frame += frameCount;
     this._peak = peak;
     this._clipped = clipped;
-    this._rms += sumSquares;
+    if (channelCount) {
+      this._rms += sumSquares / channelCount;
+    }
 
     if (this._frame >= this._updateInterval) {
       const rms = Math.sqrt(this._rms / this._frame);

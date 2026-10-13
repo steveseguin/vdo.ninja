@@ -155,6 +155,9 @@ export class MultiTrackRecorder extends EventTarget {
     const clonedTracks = [];
     try {
       audio.forEach((track, index) => {
+        if (track.readyState === "ended") {
+          return;
+        }
         if (Array.from(this.recorders.values()).some((recorder) => recorder.uuid === participant.uuid && recorder.sourceTrack === track && recorder.mediaRecorder && recorder.mediaRecorder.state !== 'inactive')) {
           return;
         }
@@ -214,6 +217,9 @@ export class MultiTrackRecorder extends EventTarget {
       });
 
       video.forEach((track, index) => {
+        if (track.readyState === "ended") {
+          return;
+        }
         if (Array.from(this.recorders.values()).some((recorder) => recorder.uuid === participant.uuid && recorder.sourceTrack === track && recorder.mediaRecorder && recorder.mediaRecorder.state !== 'inactive')) {
           return;
         }
@@ -338,7 +344,7 @@ export class MultiTrackRecorder extends EventTarget {
   }
 
   async start(customOptions = {}) {
-    if (this.recorders.size || this.stopping) {
+    if (this.startedAt !== null || this.recorders.size || this.stopping) {
       throw new Error('MultiTrackRecorder already running.');
     }
     const options = { ...this.options, ...customOptions };
@@ -386,7 +392,8 @@ export class MultiTrackRecorder extends EventTarget {
       }
 
       participants.forEach((participant) => {
-        const recorders = this.createTrackRecorders(participant, options, 0);
+        const startOffsetSeconds = (Date.now() - this.startedAt) / 1000;
+        const recorders = this.createTrackRecorders(participant, options, startOffsetSeconds);
         this.attachRecorderHandlers(participant, recorders);
       });
 

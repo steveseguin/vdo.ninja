@@ -7209,6 +7209,9 @@ function settings() {
 		
 		if (makenew){
 			var canvasContainer = drawLayout(scene); 
+			var savedCanvas = canvasContainer.querySelector("canvas");
+			editor.sceneName = savedCanvas.sceneName;
+			editor.obsSceneName = savedCanvas.obsSceneName || "";
 			popupMessage(event, "Saved as a new scene");
 			
 			document.querySelectorAll(".editButton").forEach(ele=>{
@@ -7241,7 +7244,7 @@ function settings() {
 		
 		saveSession();
 		var savedPreset = findMixerLayout(editor.sceneName);
-		if (savedPreset && !makenew){
+		if (savedPreset){
 			editor.mixerOriginalLayout = savedPreset.layout;
 			editor.mixerOriginalOBS = savedPreset.obsSceneName || "";
 		}

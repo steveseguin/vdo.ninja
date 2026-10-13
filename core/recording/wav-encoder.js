@@ -51,6 +51,10 @@ function normaliseCueMarkers(markers, sampleRate, maxSampleOffset, trackStartOff
     if (adjustedSeconds < 0) {
       continue;
     }
+    // Skip session markers added after this track ended.
+    if (Number.isFinite(maxSampleOffset) && adjustedSeconds >= (maxSampleOffset + 1) / sampleRate) {
+      continue;
+    }
     let sampleOffset = Math.round(adjustedSeconds * sampleRate);
     if (Number.isFinite(maxSampleOffset)) {
       sampleOffset = Math.min(Math.max(0, sampleOffset), maxSampleOffset);
