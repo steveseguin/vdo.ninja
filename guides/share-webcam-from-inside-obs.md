@@ -1,36 +1,40 @@
 ---
-description: >-
-  Share your webcam, virtual-camera, and audio source from using VDO.Ninja
-  inside OBS
+description: Share a webcam or OBS Virtual Camera through a VDO.Ninja dock inside OBS.
 ---
 
 # How to share webcam from inside OBS
 
 {% hint style="warning" %}
-This guide works for OBS Studio v27.1.3, but some users have had issues with v27.2. &#x20;
+OBS 27.1.3 supports the dock setup below. If your OBS version cannot open a camera in the dock, use the [browser publishing guide](publish-from-obs-into-vdo.ninja.md).
 {% endhint %}
 
+## 1. Enable camera access for the dock
 
+On Windows, right-click the OBS shortcut and open **Properties**. Add `--enable-media-stream` to **Target**, after the closing quotation mark:
 
-By default, you can't select your webcam in an OBS dock or browser source. This can be changed by adding a command-line parameter to the OBS launch shortcut.
+```text
+"C:\Program Files\obs-studio\bin\64bit\obs64.exe" --enable-media-stream
+```
 
-Within Windows, we can right-click the OBS launch icon or app icon, right click the "OBS Studio" option, and then click Properties. This will provide us the launch properties window.
+<figure><img src="../.gitbook/assets/image (112).png" alt="OBS shortcut properties with --enable-media-stream appended after the quoted executable path" width="485"><figcaption><p>Keep your existing OBS path. Add the flag outside its quotes, then restart OBS using this shortcut.</p></figcaption></figure>
 
-![](<../.gitbook/assets/image (103) (1) (1) (1) (1) (1).png>)
+## 2. Open VDO.Ninja in a browser dock
 
-We want to add `--enable-media-stream` to the Target field; we want to add this after the quotations, and not inside them. See below for an example.
+Add a custom browser dock using this URL:
 
-![](<../.gitbook/assets/image (112).png>)
+```text
+https://vdo.ninja/?webcam&vd=obs&ad=virtual&autostart&cover
+```
 
-From there, we are good to go. We can add a dock to OBS or a browser source, and we should be able to now activate our webcam source, such as the built-in OBS virtual webcam.
+It selects OBS Virtual Camera and a matching virtual audio cable, then starts publishing automatically. Start **OBS Virtual Camera** before opening the dock; see the [audio setup](share-obs-audio-with-vdo-ninja.md) to send sound through the cable.
 
-If we use the following VDO.Ninja URL as a dock source, we can have VDO.Ninja auto-start every time, create a new link that you can share with others. This link is setup to auto-select the OBS virtual camera and the first VB virtual audio cable, if one is available.&#x20;
+## 3. Check the selected devices
 
-`https://vdo.ninja/?webcam&vd=obs&ad=virtual&autostart&cover`
+For manual selection, leave `&autostart` out of the dock URL. Choose the devices, check the preview, and click **START**.
 
-![Dockable VDO.NInja, with automatic virtual webcam sharing as an option.](<../.gitbook/assets/image (96) (1).png>)
+<figure><img src="../.gitbook/assets/obs-audio-guides/vdo-camera-and-audio.png" alt="VDO.Ninja device controls with OBS Virtual Camera and CABLE Output selected" width="494"><figcaption><p>Use OBS Virtual Camera for the picture and CABLE Output for the sound.</p></figcaption></figure>
 
-![](<../.gitbook/assets/image (88).png>)
+Copy the resulting **view link** to your receiver. Keep the dock running, and keep its preview out of the OBS scene sent to Virtual Camera to avoid a repeating picture.
 
 ## Related
 

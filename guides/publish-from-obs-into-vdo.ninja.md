@@ -1,187 +1,64 @@
 ---
-description: Publish an OBS scene into VDO.Ninja using OBS Virtual Camera and a virtual audio cable, with notes on WHIP and server-based alternatives.
+description: Send an OBS scene into VDO.Ninja with Virtual Camera for video and a virtual audio cable for sound.
 ---
 
 # Publish from OBS into VDO.Ninja
 
-For focused Windows walkthroughs with cropped screenshots, see [Share audio from OBS to VDO.Ninja](share-obs-audio-with-vdo-ninja.md) or [Share OBS Virtual Camera and audio](share-obs-virtual-camera-and-audio.md). The camera guide includes scene switching, fixed camera scenes, and keeping voices separate from game audio.
+Use **OBS Virtual Camera** for the picture and a **virtual audio cable** for sound. You can keep streaming or recording in OBS while sharing this feed.
 
-If you want to use an OBS scene, source, crop, or full program output as the camera feed in VDO.Ninja, the most reliable general workflow is:
-
-1. Build the shot in OBS
-2. Output that shot with OBS Virtual Camera
-3. Route the audio you want with a virtual audio cable
-4. Select those devices in a VDO.Ninja push link
-
-This approach is useful when:
-
-* You want a polished OBS scene to appear as a live camera in VDO.Ninja
-* You want to send a composited feed into a room, guest slot, or interview
-* You want to send only a cropped or branded version of a camera instead of the raw source
-* You want to keep your main program output separate from your VDO.Ninja contribution
-
-For most users, this is the best default option. It is mature, flexible, low latency, and does not depend on newer WHIP support.
-
-## What you need
-
-* OBS Studio v26 or newer
-* OBS Virtual Camera
-* A virtual audio cable
-  * Windows or macOS: [VB-CABLE](https://www.vb-audio.com/Cable/)
-  * macOS alternatives: see [macOS audio capture options](../platform-specific-issues/macos.md#capturing-audio)
-* A Chromium-based browser is recommended for the VDO.Ninja sender side
-
-## Why this method is recommended
-
-OBS Virtual Camera lets you turn an OBS scene into a webcam device that browsers can use. That means VDO.Ninja can treat your OBS output just like a normal camera, while OBS remains the place where you do the compositing, cropping, branding, scene switching, and filtering.
-
-Because the VDO.Ninja sender runs separately from your main OBS output pipeline, this also keeps your workflow modular. If you are already streaming, recording, or routing signals elsewhere from OBS, you do not need to rebuild those paths just to send one feed into VDO.Ninja.
+You need [OBS Studio](https://obsproject.com/download), a browser such as Chrome, and [VB-CABLE](https://vb-audio.com/Cable/) if you want OBS audio. The audio screenshots below use Windows; see [macOS audio options](../platform-specific-issues/macos.md#capturing-audio) for Mac.
 
 ## Step 1: Build the shot you want in OBS
 
-Create the scene or source you want VDO.Ninja to use.
-
-That can be:
-
-* A full scene
-* A single cropped camera
-* A branded lower-third scene
-* A split-screen layout
-* A source with filters, color correction, or overlays applied
-
-If needed, create a dedicated scene just for VDO.Ninja. This is often cleaner than reusing your full live program scene.
+Select the OBS scene containing your camera, game, graphics, or other sources. Check the Program picture: this is what the default Virtual Camera sends.
 
 ## Step 2: Start OBS Virtual Camera
 
-In OBS, start the Virtual Camera.
+Click **Start Virtual Camera** in OBS's **Controls** dock. Start it before selecting it in VDO.Ninja.
 
-If your OBS version allows selecting the source for Virtual Camera output, point it at the specific scene or source you built for VDO.Ninja. If not, route the desired scene through your active virtual camera output path.
+<figure><img src="../.gitbook/assets/obs-audio-guides/start-virtual-camera.png" alt="OBS Controls dock with Start Virtual Camera highlighted below Start Recording" width="330"><figcaption><p>Start Virtual Camera; streaming and recording can stay off. Image: <a href="https://obsproject.com/kb/virtual-camera-guide">OBS Project</a>.</p></figcaption></figure>
 
-Official OBS Virtual Camera guide:
-
-* [OBS Virtual Camera Guide](https://obsproject.com/kb/virtual-camera-guide)
+To keep one scene on the camera while switching your main output, open the **gear beside the button**, choose **Scene**, then choose that scene under **Output Selection**. See [Program versus a fixed scene](share-obs-virtual-camera-and-audio.md#2-choose-what-virtual-camera-shows).
 
 ## Step 3: Route audio from OBS to a virtual audio cable
 
-OBS does not include a built-in virtual microphone device, so you normally need a virtual audio cable for audio.
+Skip this step if you only need video or will use your microphone directly in VDO.Ninja.
 
-In OBS:
+In **Settings → Audio → Advanced**, set **Monitoring Device** to **CABLE Input** and click **Apply**.
 
-1. Open **Settings → Audio** and scroll to its **Advanced** section
-2. Set the **Monitoring Device** to your virtual audio cable input
-3. Open **Advanced Audio Properties**
-4. For each source you want to send to VDO.Ninja, set **Audio Monitoring** to **Monitoring Enabled** in OBS 32.2.2, or **Monitor and Output** in older versions
+<figure><img src="../.gitbook/assets/obs-audio-guides/monitoring-device.png" alt="OBS Audio settings with CABLE Input selected as the Monitoring Device"><figcaption><p>OBS sends monitored sound into CABLE Input.</p></figcaption></figure>
 
-This lets OBS send selected audio sources into the virtual cable, which VDO.Ninja can then use as a microphone.
+Right-click the **Audio Mixer → Advanced Audio Properties**. Enable monitoring for the sources you want to send. OBS 32.2 uses **Monitoring Enabled**; older versions use **Monitor and Output**.
 
-{% hint style="info" %}
-This is also where you create a mix-minus. If you are feeding OBS audio back into a live room or group call, only monitor the sources you want remote participants to hear. Do not send their own return audio back to them unless you intentionally want that.
-{% endhint %}
+<figure><img src="../.gitbook/assets/obs-audio-guides/advanced-audio-properties.png" alt="OBS Advanced Audio Properties: Game Audio has Monitoring Enabled; Discord and Microphone have Monitor Off"><figcaption><p>This example sends Game Audio only. Leave guests' return audio on Monitor Off so they do not hear themselves.</p></figcaption></figure>
 
-For more audio routing options:
-
-* [Audio guide](audio.md)
+For help choosing individual applications, see [Share audio from OBS](share-obs-audio-with-vdo-ninja.md).
 
 ## Step 4: Open a VDO.Ninja push link
 
-Open your VDO.Ninja push link in a browser.
+Open your guest/push link, or visit [VDO.Ninja](https://vdo.ninja/) and click **Add your Camera to OBS**. Choose the two devices below, check the preview and audio meter, then click **START**.
 
-Then select:
+<figure><img src="../.gitbook/assets/obs-audio-guides/vdo-camera-and-audio.png" alt="VDO.Ninja with OBS Virtual Camera selected under Video Source and CABLE Output under Audio Sources, with START above" width="494"><figcaption><p>Video: OBS Virtual Camera. Audio: CABLE Output, or your microphone if you skipped the cable.</p></figcaption></figure>
 
-* **Camera:** `OBS Virtual Camera`
-* **Microphone:** your virtual audio cable
-
-At that point, your OBS scene is now your VDO.Ninja source.
-
-If you want, you can also combine the OBS audio feed with a live microphone by holding `CTRL` or `CMD` while selecting audio devices in supported browsers.
+Leave OBS and the publishing tab open. Share the resulting **view link** with the receiver, or add it as an OBS Browser Source on the receiving computer.
 
 ## Step 5: Tune resolution and frame rate when needed
 
-If the browser does not detect the correct frame rate or aspect ratio from OBS Virtual Camera, you can force the values with URL parameters on the push link.
+If the picture is stretched or the frame rate is wrong, restart the camera before reopening the publishing page. You can also add these options to your push link:
 
-Examples:
+| Desired capture | Add to the push link |
+| --- | --- |
+| 60 fps | `&framerate=60` |
+| 1080p landscape | `&width=1920&height=1080` |
+| 720p portrait | `&width=720&height=1280` |
 
-* `&framerate=60`
-* `&width=1920&height=1080`
-* `&width=720&height=1280`
+Match these values to the OBS output. For missing sound, check **CABLE Input → source monitoring → CABLE Output** in steps 3–4.
 
-{% hint style="info" %}
-Start OBS Virtual Camera before selecting it in VDO.Ninja. If you select it first and activate it later, the browser may cache the wrong aspect ratio or frame rate.
-{% endhint %}
+## Related guides
 
-{% hint style="info" %}
-If you force `&width` and `&height`, make them match the actual OBS output resolution for that virtual camera feed. Mismatches can cause scaling or framing issues.
-{% endhint %}
-
-## Common use cases
-
-### Send a polished scene into a VDO.Ninja room
-
-Use a dedicated scene with your chosen camera crop, graphics, and audio mix, then select it via OBS Virtual Camera in a normal VDO.Ninja push link.
-
-### Send only a clean camera crop
-
-If you have a wide camera in OBS but only want one crop or composition to appear in VDO.Ninja, build that crop in OBS and expose only that shot through Virtual Camera.
-
-### Use OBS as a browser-based contribution encoder
-
-This is a practical way to send a prepared video feed into browser-based production systems, remote interviews, green rooms, or guest workflows without sending the raw camera directly.
-
-## Alternatives
-
-### Publish directly from OBS using WHIP
-
-OBS also supports WHIP output, and VDO.Ninja supports receiving WHIP streams.
-
-This can remove the browser from the publishing side, but it is still a more advanced path and can be less forgiving depending on OBS version, NAT behavior, encoder settings, and the network environment.
-
-Start here if you want to test that path:
-
-* [From OBS to VDO.Ninja using WHIP](from-obs-to-vdo.ninja-using-whip.md)
-* [Recommended OBS WHIP settings](obs-whip-output-settings.md)
-
-### Share media directly from inside OBS
-
-If you want OBS itself to host the VDO.Ninja sender page in a dock or browser source, see:
-
-* [How to share webcam from inside OBS](share-webcam-from-inside-obs.md)
-
-### Use a server bridge such as MediaMTX
-
-If your media is already being published to a server, or if you want VDO.Ninja viewers to consume a WHEP feed instead of a local browser camera feed, a WHIP/WHEP server such as MediaMTX can also fit into the workflow.
-
-That path is usually better for specialized server-based routing than for the default "send an OBS scene into VDO.Ninja" use case.
-
-## Troubleshooting
-
-### The video looks stretched or the crop is wrong
-
-* Start OBS Virtual Camera before opening the VDO.Ninja device picker
-* Confirm the OBS output resolution matches any forced `&width` and `&height` values
-* Re-select the camera in the browser after changing OBS virtual camera state
-
-### Audio is missing
-
-* Confirm the OBS Monitoring Device is set to the virtual audio cable
-* Confirm the relevant OBS sources are set to `Monitor and Output`
-* Confirm the virtual cable is selected as the microphone in VDO.Ninja
-
-### Remote participants hear themselves
-
-Your OBS audio mix is feeding return audio back into the room. Revisit your monitored sources and rebuild the mix-minus so only intended sources are sent to the virtual cable.
-
-### The frame rate is lower than expected
-
-Try forcing the sender link with `&framerate=30` or `&framerate=60`, depending on your OBS output.
-
-## Related
-
-To send that OBS output back to room participants, including larger-room relay options, see [Send an OBS return feed to guests](send-an-obs-return-feed-to-guests.md).
-
-If the OBS scene uses a physical webcam and VDO.Ninja also needs that same camera, see [Camera already in use by OBS or VDO.Ninja](../common-errors-and-known-issues/cant-load-camera-both-in-obs-and-vdon.md).
-
-## Summary
-
-If your goal is to get an OBS-built shot into VDO.Ninja, use OBS Virtual Camera for video and a virtual audio cable for audio first. It is the most broadly compatible and production-friendly workflow.
-
-Use WHIP when you specifically want direct OBS publishing and are prepared to tune around the additional constraints.
+* [Receive the feed in another OBS](how-to-send-the-audio-video-output-of-one-obs-to-another-obs-using-vdo.ninja.md)
+* [Choose a fixed scene and switch between players](share-obs-virtual-camera-and-audio.md)
+* [Send an OBS return feed to guests](send-an-obs-return-feed-to-guests.md)
+* [Publish directly from OBS using WHIP](from-obs-to-vdo.ninja-using-whip.md) and [WHIP settings](obs-whip-output-settings.md)
+* [Share a webcam from inside OBS](share-webcam-from-inside-obs.md)
+* [Camera already in use](../common-errors-and-known-issues/cant-load-camera-both-in-obs-and-vdon.md)

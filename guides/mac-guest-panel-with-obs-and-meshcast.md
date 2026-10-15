@@ -95,7 +95,7 @@ See [How to get permanent links](how-to-get-permanent-links.md) for reusable Sce
 
 In OBS Virtual Camera settings, choose **Program**, then start **OBS Virtual Camera**.
 
-<figure><img src="../.gitbook/assets/obs-virtual-camera-scene-return.png" alt="OBS Virtual Camera configuration showing a selectable output"><figcaption><p>OBS Virtual Camera can return Program, Preview, a scene, or a source.</p></figcaption></figure>
+<figure><img src="../.gitbook/assets/obs-audio-guides/virtual-camera-settings-macos.png" alt="OBS Virtual Camera on macOS with Program Default selected" width="400"><figcaption><p>Choose Program to return the finished output. Image: <a href="https://obsproject.com/kb/virtual-camera-guide">OBS Project</a>.</p></figcaption></figure>
 
 Use the director as a performer and select **OBS Virtual Camera** as the director camera. Keep that return publisher **Unset** in the Mixer so it is not included in the Scene captured by OBS.
 

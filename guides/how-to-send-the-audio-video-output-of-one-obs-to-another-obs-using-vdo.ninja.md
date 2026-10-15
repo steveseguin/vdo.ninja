@@ -1,126 +1,59 @@
 ---
-description: Send low-latency audio and video from one OBS setup to another remote OBS instance using VDO.Ninja links.
+description: Send an OBS scene and its audio to another computer with VDO.Ninja, then receive it as an OBS Browser Source.
 ---
 
 # How to send the audio/video output of one OBS to another OBS using VDO.Ninja
 
-In this walk-through we demonstrate how to use VDO.Ninja to stream a low-latency video/audio stream from one OBS Studio to another remote OBS Studio.
+The sending computer uses **OBS Virtual Camera + a virtual audio cable**. The receiving computer loads the VDO.Ninja **view link** in an OBS Browser Source.
 
-For current Windows screenshots and a focused setup, use [Share OBS Virtual Camera and audio](share-obs-virtual-camera-and-audio.md). If your picture already works, use [Share audio from OBS to VDO.Ninja](share-obs-audio-with-vdo-ninja.md). These guides include changing sources, choosing a fixed Virtual Camera scene, and keeping game audio separate from Discord voices.
+Install [OBS Studio](https://obsproject.com/download) on both computers. Install [VB-CABLE](https://vb-audio.com/Cable/) on the sender for audio; Mac users can use the [macOS audio options](../platform-specific-issues/macos.md#capturing-audio).
+
+## 1. Start the sending camera
+
+Select the OBS scene you want to share, then click **Start Virtual Camera**.
+
+<figure><img src="../.gitbook/assets/obs-audio-guides/start-virtual-camera.png" alt="Start Virtual Camera highlighted in the OBS Controls dock" width="330"><figcaption><p>No OBS streaming output is needed. Image: <a href="https://obsproject.com/kb/virtual-camera-guide">OBS Project</a>.</p></figcaption></figure>
+
+## 2. Send OBS audio into the cable
+
+Open **Settings → Audio → Advanced**. Set **Monitoring Device** to **CABLE Input** and apply the change.
+
+<figure><img src="../.gitbook/assets/obs-audio-guides/monitoring-device.png" alt="OBS Monitoring Device set to CABLE Input"><figcaption><p>This setting is on the Audio page, inside its Advanced section.</p></figcaption></figure>
+
+Right-click the **Audio Mixer → Advanced Audio Properties**. For each source to share, choose **Monitoring Enabled** in OBS 32.2, or **Monitor and Output** in older versions.
+
+<figure><img src="../.gitbook/assets/obs-audio-guides/advanced-audio-properties.png" alt="Game Audio monitoring enabled with Discord and Microphone monitoring off"><figcaption><p>Only monitored sources enter the cable. This example sends game audio without voices.</p></figcaption></figure>
+
+Keep the receiving feed out of this cable to prevent an audio loop. For individual application capture, follow the [audio guide](share-obs-audio-with-vdo-ninja.md).
+
+## 3. Publish through VDO.Ninja
+
+On the sender, open [VDO.Ninja](https://vdo.ninja/) and choose **Add your Camera to OBS**. Select **OBS Virtual Camera** and **CABLE Output**, then click **START**.
+
+<figure><img src="../.gitbook/assets/obs-audio-guides/vdo-camera-and-audio.png" alt="VDO.Ninja device picker with OBS Virtual Camera and CABLE Output selected" width="494"><figcaption><p>The virtual camera supplies video; the cable supplies audio.</p></figcaption></figure>
+
+Copy the resulting **view link** to the receiving computer. Leave the publishing tab open.
+
+For music or game audio, add [`&proaudio=1`](../advanced-settings/audio-parameters/and-proaudio.md) to both the publishing and viewing links to preserve stereo and avoid voice processing. Use headphones when speaking.
+
+## 4. Add the view link to the receiving OBS
+
+In the receiver's **Sources** dock, click **+ → Browser**, create a source, and paste the sender's view link into **URL**. Set the browser canvas to the intended size, such as **1920 × 1080**, and check **Control audio via OBS**.
+
+<figure><img src="../.gitbook/assets/obs-audio-guides/obs-receive-audio.png" alt="OBS Browser Source URL, Width 1920, Height 1080, and Control audio via OBS checked"><figcaption><p>Paste your own view link. Width and Height set the browser canvas, not the sender's capture resolution.</p></figcaption></figure>
+
+Click **OK**, then right-click the source and choose **Transform → Fit to Screen**. Check the picture, audio meter, and a short recording.
+
+If you also want to listen locally, set the receiving OBS's Monitoring Device to your headphones and enable monitoring for this Browser Source. Otherwise, monitoring can stay off while the sound goes to your stream or recording.
+
+## More options
+
+* [Fixed camera scenes and switching between two players](share-obs-virtual-camera-and-audio.md)
+* [Control video quality and bitrate](how-do-i-control-bitrate-quality.md)
+* [Publish directly with WHIP](from-obs-to-vdo.ninja-using-whip.md)
+
+### Video walkthrough
+
+The video uses an older OBS layout; the screenshots above show the current controls.
 
 {% embed url="https://youtu.be/Ze1q6Qof2r0" %}
-
-#### Requirements
-
-* OBS Studio
-  * For some Linux or older systems, you may need a virtual camera plugin as well
-* A virtual audio cable
-  * For Windows, use VB-CABLE Virtual Audio
-    * This is recommended software as it enables proper audio support
-    * The software is Donationware
-    * [https://www.vb-audio.com/Cable/](https://www.vb-audio.com/Cable/)
-  * For macOS, you have a few choices:
-    * [macOS audio capture options](../platform-specific-issues/macos.md#capturing-audio)
-
-#### Basic Workflow Diagram
-
-Please find below a diagram explaining the basic premise of what we are intending to do in this guide. We will go through it all, one step at a time.
-
-![](https://lh3.googleusercontent.com/hqQhbNUaiXIdsR3-jKUVySOwgG7ds07QPKZJVbhapaTNyvoWp1EHXA-pPJqlO15TKGaoZdNA1UATly8Ed2-5bu4zXm5mf4rnj_q3rMbOpWTrh1Y1mx9I3b_ryVAI9pd_0uU6Hs41Q5mbkDY)
-
-#### Step 0.
-
-This guide assumes you have OBS installed, along with the other required software, though we shall briefly cover these initial installation steps now.
-
-1. Install OBS Studio (or StreamLabs, etc)\
-   [https://github.com/obsproject/obs-studio/releases/](https://github.com/obsproject/obs-studio/releases/)
-2. Install the VB-Cable Virtual Audio device.\
-   [https://vb-audio.com/Cable/](https://vb-audio.com/Cable/)
-
-If you are on Mac, you can consider Loopback as a premium alternative option, if having problems.
-
-#### Step 1
-
-We now need to create a virtual webcam so we can connect OBS to VDO.Ninja. If we followed the initial software setup of Step 0 correctly, this should be all smooth sailing.
-
-Just press START VIRTUAL CAM in OBS v26 or newer.
-
-#### Step 2
-
-We will now configure OBS to output audio from the Browser Source to the Virtual Audio Cable. In current OBS, open **Settings → Audio**, scroll to the **Advanced** section, and select **CABLE Input** as the **Monitoring Device**. The older screenshot below shows a different settings layout.
-
-We also want to disable Windows audio ducking.
-
-![](https://lh6.googleusercontent.com/O0bHw4kwdhys0MLhsQIsLQx-_GUvd-xpFD7gILaMBSVwKlgmXMG2y_yhQdMfF-jgugFmbgco7XM_uFhQMY9oBOqDIz6VNhxXXgQhBh3Qhj6qPugObOW3O5KmAdCNG5Bg682NBfSEW-HKGKU)
-
-#### Step 3
-
-In our last configuration step, open **Advanced Audio Properties** in OBS. For each source you want sent into the cable, choose **Monitoring Enabled** in OBS 32.2.2, or **Monitor and Output** in older versions as pictured below. Leave sources you want excluded on **Monitor Off**.
-
-![](https://lh6.googleusercontent.com/rlcZugNaCwarzH2x08EATZJ17q4_LwozJv2ulOyigTmONkyCqaxBTLKlfbvy1BBVKEUD3BUnADQWOrLbYYYCjmu0q854BeFaccKWow1533U0mr0mDnMAq3NbnPrvYsx8YDx8XFCbGpERGxE)
-
-#### Step 4
-
-We’re ready to now create our VDO.Ninja stream.
-
-There are many ways to do this, but the EASIEST way is to go to VDO.Ninja, click Add your Camera to OBS, and select from the options OBS Virtualcam. This option will set you up with the default settings, such as with audio echo-cancellation on, although you can use URL parameters when visiting VDO.Ninja to customize the settings more.
-
-{% hint style="info" %}
-A popular advanced URL option at this point might be with the stereo flag, so visit [https://vdo.ninja/?stereo](https://vdo.ninja/?stereo) instead of just [https://vdo.ninja](https://vdo.ninja). You can also set your own custom stream ID values, so [https://vdo.ninja/?push=myCustomStreamId123](https://vdo.ninja/?push=myCustomStreamId123), and then give your remote OBS user the link [https://vdo.ninja/?view=myCustomStreamId123](https://vdo.ninja/?view=myCustomStreamId123)![](https://lh3.googleusercontent.com/NuZ8o9ot8Uqcm2SsCSP-X11N4aPkcHYaV0enXMsDdgYdfddXsKbt320HHWM-eK-WjDzxxeXEMx75idJnJKmpxIxnC9DcMeyZ2sy35i6gka2lSGn_mdsURHGmK3jMNSK_I3b9C_1Ck5IEZrU)
-{% endhint %}
-
-#### Step 5
-
-You can select the Virtual Audio Cable from the audio choices, or instead, you can select your local microphone or multiple audio input sources.
-
-VDO.Ninja will auto-mix if more than one option is selected. Hold `CTRL` (or `command`) to select more than one option.
-
-![](https://lh4.googleusercontent.com/IK0U5Drf61V28WYGWLPrxN2gjRan-tX_NNHdZV3xcKSoFwzuzPZl1nNuTlPyWxcrh0kM7rDJAO4WPGG6HUbhO8Fhh3zwdP5JRKLlJCXZmN5bn-flY175uD4IOCx3Q4RnhcyLoRmrdGuP5Dc)
-
-#### Step 6
-
-Press the green button when ready.
-
-You’ll see a preview of your video stream and a link. This link is what we want to send to our remote OBS studio as an input source.
-
-We can modify this link if we wish to have higher bitrates, for example, [https://vdo.ninja/?view=streamID\&videobitrate=20000](https://vdo.ninja/?view=streamID\&videobitrate=20000) to set a target video bitrate of 20-mbps.
-
-![](https://lh5.googleusercontent.com/y4-K-FYPET5a-TEswgl_FE-2IU5oSIMXH9o2lyjydhNZAqdIvussPvXS19BUmW2lte8fxDfw8dMyt5JT9H8TslLhNJfO5KTJB4xmsHbwSU7Ofq5xP2NU7fuxlPsZkgT82P6T1JxV5MzXdrM)
-
-#### Step 7
-
-We send this VDO.Ninja view URL to our remote OBS Studio computer and now we use it to ingest the feed into the OBS there.
-
-To do this, we create a scene and then a Browser Source in OBS. Give it a name and we will fill out the details in the next step.
-
-![](https://lh3.googleusercontent.com/-FvXnmuJ3YnuARZCWSh7HvXCjypC3_aUrynSj_7_w7s4aeC_67qGK5GfResjT91ol1D3wftGZrMwjtF1jVEtruVs0JA1GwUMGzip44NC2CuiE3G3T7a_M_udNYt4yJnfOk42JiRwzTj34c8)\
-
-
-#### Step 8
-
-In the properties for the Browser Source, we need to fill out a few fields and then hit OK.
-
-* The URL needs to be set to the address we created earlier, i.e.: [https://vdo.ninja/?view=q3QCScW](https://vdo.ninja/?view=q3QCScW)
-* Width needs to match the input video resolution, so likely 1280
-* The height also needs to match, so likely 720
-* _**Control audio via OBS**_ should be checked, for audio capture to function
-
-![](https://lh6.googleusercontent.com/72c_PKWSl2peJ3L8cGnBqZcl9YAv9xvFfgzp3PXjsSpRPq0k1Ahbka3XKO27LK3DMglV0WP8APNYPdjCumRTUiJw_V19CvWFcIKRH-Hi218IwWLGsssFSxHmRiOXBfTU44HSHf2P1hyKe3s)
-
-SECRET TIP: Some links on VDO.Ninja can be dragged and dropped directly into OBS, avoiding the tedious parts of this step.
-
-#### Step 9
-
-Once you hit OK, the video should appear and auto-play within seconds. There should be no audio feedback if you selected the Control audio via OBS option.
-
-Now we just need to stretch the video to fill the full scene. It should snap into place when full.
-
-![](https://lh5.googleusercontent.com/a1jBOf6j_2py-tFMieJ2LoXTBv8_ECEq-KgCQHGslz6sG5BwnN5eVcjwXgaoNmCygnyL-rzt0QPcNvQcyf-Wk4wJ2VHnICKHR_fwiayS5iCrVrN0yT_HsLm6Bkc7wvv8fRBZF7mw62eosyM)
-
-All done! And that should be it! Problems?
-
-You can also ask for help on [Discord](https://discord.vdo.ninja/); usually help can be provided within minutes, if not usually within half a day.
-
-### WHIP Output
-
-Newer versions of OBS may also support WHIP output, which VDO.Ninja also supports. While the Virtual Camera might be the better option for many, details on [WHIP are here](../advanced-settings/whip-parameters/and-whip.md).

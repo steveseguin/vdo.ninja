@@ -42,16 +42,11 @@ This is what prevents the OBS picture from capturing itself over and over.
 
 ## 2. Choose what the guests should see
 
-In OBS, open the settings beside **Start Virtual Camera**. Depending on the OBS version, the Virtual Camera can show:
+In OBS, click the **gear beside Start Virtual Camera**.
 
-* The current Program output
-* The Preview output
-* One chosen scene
-* One chosen source
+<figure><img src="../.gitbook/assets/obs-audio-guides/virtual-camera-settings-button.png" alt="OBS Controls with an arrow pointing to the Virtual Camera settings gear" width="330"><figcaption><p>Use this gear to choose the return picture. Image: <a href="https://obsproject.com/kb/virtual-camera-guide">OBS Project</a>.</p></figcaption></figure>
 
-A dedicated scene named something like **Guest Return** is often the easiest choice. It can contain the guest layout, graphics, timers, or instructions without showing private producer notes.
-
-Start OBS Virtual Camera before selecting it in VDO.Ninja.
+Choose **Program** for the live output, or **Scene** and select a dedicated **Guest Return** scene. Keep private producer notes out of that picture. Click **OK**, then **Start Virtual Camera** before selecting it in VDO.Ninja.
 
 ## 3. Use the director as the return video
 

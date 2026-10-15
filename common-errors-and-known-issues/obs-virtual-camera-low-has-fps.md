@@ -10,7 +10,7 @@ If you open an OBS Virtual Camera device in VDO.Ninja before starting the output
 \
 So, make sure the set OBS to 60-fps and then start the OBS Virtual camera before starting Chrome and/or VDO.Ninja. If you don't do this, you may be capturing at 30-fps max.
 
-![](<../.gitbook/assets/image (85).png>)
+<figure><img src="../.gitbook/assets/image (85).png" alt="OBS Video settings showing 1920 by 1080 resolution and Common FPS Values set to 60" width="547"><figcaption><p>Set the frame rate in Settings → Video. If these controls are greyed out, stop Virtual Camera and any active streaming or recording before editing them.</p></figcaption></figure>
 
 You may also have low frame rates if you are using the OBS virtual camera straight from OBS rather than by adding a filter to the video source. Filters may reduce the frame rate by 30% or so in my testing. Instead, considering opening two instances of OBS instead, if that is needed.
 

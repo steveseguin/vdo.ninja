@@ -1,50 +1,34 @@
 ---
-description: >-
-  If the OBS Virtual Camera is not appearing in Chrome or your browser after
-  installing OBS on MacOS, you may need to enable screen recording permissions.
+description: Enable OBS's camera extension on macOS and select OBS Virtual Camera in VDO.Ninja.
 ---
 
 # Virtual camera not working on Mac
 
-If using OBS Virtual Camera or other virtual camera on MacOS (Apple) system, please note that there are a list of applications that are not supported.
+Start **OBS Virtual Camera** before selecting it in VDO.Ninja. If OBS says the camera is not installed, enable its **camera extension** in macOS.
 
-### Apps that will **not** work
+## 1. Allow the OBS camera extension
 
-* Bluejeans Events
-* Safari
-* Tencent Meeting
-* FaceTime
-* Photo Booth
+Follow **Open System Settings** in OBS's extension prompt, or open the matching location:
 
-Please see the follow official guide for more details on these and other problematic apps.
+| macOS | Where to enable OBS |
+| --- | --- |
+| 13 Ventura / 14 Sonoma | **System Settings → Privacy & Security → Security**; allow the blocked OBS system software |
+| 15 Sequoia and later | **System Settings → General → Login Items & Extensions**; open the camera/media extension entry for OBS and enable it |
 
-{% embed url="https://obsproject.com/wiki/MacOS-Virtual-Camera-Compatibility-Guide" %}
-Official documentation
-{% endembed %}
+Authenticate if macOS asks, then restart OBS. See [OBS's official virtual-camera troubleshooting](https://obsproject.com/kb/virtual-camera-troubleshooting) for installation and compatibility details.
 
-### General tips to using the Virtual Camera
+**Screen Recording permission is separate:** it lets OBS capture your screen. It does not replace approval of the virtual-camera extension.
 
-If using Windows or if you have just installed OBS, please restart your browser fully or restart the computer first, to ensure its properly loaded and available to all applications.\
-\
-The Google Chrome usually works with most virtual cameras. If you are having problems with it, you can also try another browser.\
-\
-Please also be sure to START the virtual camera before selecting or opening it in VDO.Ninja. If you open it in VDO.Ninja before starting it, the resolution and/or frame rate may be wrong.
+## 2. Start the camera
 
-## Enabling permissions for Virtual Camera on MacOS
+Click **Start Virtual Camera** in OBS. The gear beside it chooses the picture to send.
 
-If the OBS Virtual Camera is not appearing in Chrome or your browser after installing OBS on MacOS, you may need to enable screen recording permissions.
+<figure><img src="../.gitbook/assets/obs-audio-guides/virtual-camera-settings-macos.png" alt="OBS Virtual Camera settings on macOS with Program Default selected" width="400"><figcaption><p>Program sends the main OBS output. Choose Scene or Source for a fixed picture. Image: <a href="https://obsproject.com/kb/virtual-camera-guide">OBS Project</a>.</p></figcaption></figure>
 
-1.  Open your System Preferences; you can find this via the Apple logo in the top left corner of your desktop.<br>
+## 3. Select it in VDO.Ninja
 
-    <figure><img src="../.gitbook/assets/image (5) (3) (1).png" alt=""><figcaption></figcaption></figure>
+Reopen the publishing page and choose **OBS Virtual Camera** under **Video Source**. Allow camera access when the browser asks.
 
+If it is still missing, fully quit and reopen the browser. On macOS 14 or newer, use OBS 30 or newer; OBS 29.1 and earlier use an incompatible camera component. Older macOS versions may need Chrome or Edge for compatibility with the legacy camera.
 
-2.  Click Privacy & Security and then Screen Recording.<br>
-
-    <figure><img src="../.gitbook/assets/image (12) (2) (2).png" alt=""><figcaption></figcaption></figure>
-3. For OBS, enable the permission.\
-   \
-   &#xNAN;_&#x49;f OBS isn't listed, click the + button, enter your system's password, and navigate to OBS in the Application settings. Select it and enable._<br>
-4.  Quit and relaunch OBS.<br>
-
-    <figure><img src="../.gitbook/assets/image (2) (14).png" alt=""><figcaption><p>If OBS isn't listed, press the + button, navigate to it, and select it</p></figcaption></figure>
+For the complete video and audio setup, see [Publish from OBS into VDO.Ninja](../guides/publish-from-obs-into-vdo.ninja.md).
