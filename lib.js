@@ -40374,7 +40374,7 @@ if (navigator.userAgent.toLowerCase().indexOf(" electron/") > -1) {
 									}
 								}
 							};
-							if (session.audioDevice === 0) {
+							if (session.audioDevice === 0 || session.screenshareVideoOnly) {
 								new_constraints.audio = false;
 							}
 							try {
@@ -40434,7 +40434,7 @@ if (navigator.userAgent.toLowerCase().indexOf(" electron/") > -1) {
 									}
 								}
 							};
-							if (session.audioDevice === 0) {
+							if (session.audioDevice === 0 || session.screenshareVideoOnly) {
 								new_constraints.audio = false;
 							}
 							try {
@@ -40477,7 +40477,7 @@ if (navigator.userAgent.toLowerCase().indexOf(" electron/") > -1) {
 									}
 								}
 							};
-							if (session.audioDevice === 0) {
+							if (session.audioDevice === 0 || session.screenshareVideoOnly) {
 								new_constraints.audio = false;
 							}
 							try {

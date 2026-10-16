@@ -7935,7 +7935,7 @@ async function main() {
 		}
 	}
 
-	if (urlParams.has("screensharevideoonly") || urlParams.has("ssvideoonly") || urlParams.has("ssvo")) {
+	if (urlParams.has("screensharevideoonly") || urlParams.has("ssvideoonly") || urlParams.has("ssvo") || urlParams.get("screenaudio") === "0" || urlParams.get("screenaudio") === "false") {
 		session.screenshareVideoOnly = true;
 		getById("audioScreenShare1").classList.add("hidden");
 	}
