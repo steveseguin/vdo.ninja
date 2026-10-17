@@ -468,7 +468,7 @@ if (location.hostname.toLowerCase() == "vdo.ninja"){
 	try {
 		if (navigator.userAgent.toLowerCase().indexOf(' electron/') > -1) { 
 			function compareVersions(version){
-			    document.getElementById("version").innerHTML = "Current version: "+version;
+			    document.getElementById("version").innerText = "Current version: "+version;
 				version = version.split(".");
 				fetch('https://api.github.com/repos/steveseguin/electroncapture/releases/latest')
 				  .then(response => response.json())
