@@ -74,6 +74,21 @@ var miscTranslations = {
 	"audio-compressor-knee": "Knee (dB):",
 	"audio-compressor-gain": "Makeup (dB):",
 	"audio-compressor-reset": "Reset mode",
+	"audio-compressor-panel": "Compressor / limiter",
+	"audio-compressor-curve": "Response curve",
+	"audio-compressor-curve-note": "Drag the points to set threshold and ratio. The curve estimates the response, including automatic makeup gain. The dot estimates input from measured output.",
+	"audio-compressor-input": "Input (dB)",
+	"audio-compressor-output": "Output (dB)",
+	"audio-compressor-history": "Level history",
+	"audio-compressor-spectrum": "Spectrum (RTA)",
+	"audio-compressor-received": "Received audio",
+	"audio-compressor-live-note": "After the guest's processing, before your playback volume.",
+	"audio-compressor-sent": "Sent audio",
+	"audio-compressor-local-note": "Your processed microphone, as viewers receive it.",
+	"audio-compressor-waiting": "Waiting for audio",
+	"audio-compressor-unavailable": "Audio visualization unavailable",
+	"audio-compressor-paused": "Audio playback is paused",
+	"audio-compressor-disconnected": "Guest disconnected",
 	"shared-link-type": "Link type",
 	"shared-link-auto": "Automatic",
 	"shared-link-website": "Website",
@@ -28783,13 +28798,19 @@ function applyAudioProcessing(webAudio, streamSrc) {
 			anonNode = webAudio.micDelay;
 		}
 
+		// Mix bridge audio into the compressor when it is the final processing stage.
+		var callInNode = anonNode;
+		if (callInNode === webAudio.compressorGain) {
+			callInNode = webAudio.compressor;
+		}
+
 		// Twilio mix
 		if (session.twilio && session.twilio.element && session.twilio.element.srcObject && session.twilio.element.srcObject.getAudioTracks().length) {
 			const twilioSource = webAudio.audioContext.createMediaStreamSource(session.twilio.element.srcObject);
-			twilioSource.connect(anonNode);
+			twilioSource.connect(callInNode);
 		}
 
-		connectCallInBridgeAudio(webAudio, anonNode);
+		connectCallInBridgeAudio(webAudio, callInNode);
 
 		// Noise gate
 		if (session.noisegate !== false) {
@@ -29587,6 +29608,19 @@ function changeCompressor(key, value) {
 		}
 	}
 	return true;
+}
+
+function sendCompressorSettingsToDirectors() {
+	var data = {};
+	for (var UUID in session.pcs) {
+		if (session.directorList.indexOf(UUID) === -1) continue;
+		if (!session.pcs[UUID].sendChannel || session.pcs[UUID].sendChannel.readyState !== "open") continue;
+		if (!data.audioOptions) {
+			data.audioOptions = listAudioSettingsPrep();
+		}
+		data.UUID = UUID;
+		session.sendMessage(data, UUID);
+	}
 }
 
 function audioCompressor(mediaStreamSource, audioContext) {
@@ -50138,7 +50172,10 @@ function clearAutoPiPPrompt() {
 }
 
 function appendAudioCompressorControls(container, data, UUID) {
+	if (!UUID && session.roomid !== false && session.roomid !== "" && session.director !== true && session.forceMediaSettings == false) return;
 	var suffix = UUID || "local";
+	var expanded = container.id === "audioCompressorControls";
+	if (expanded) suffix += "_expanded";
 	var row = document.createElement("div");
 	row.className = "settings-select-row audio-compressor-mode";
 	var label = document.createElement("label");
@@ -50162,26 +50199,40 @@ function appendAudioCompressorControls(container, data, UUID) {
 		if (UUID) {
 			requestChangeCompressor("compressor", select.value, UUID);
 		} else {
-			changeCompressor("compressor", select.value);
+			if (changeCompressor("compressor", select.value)) {
+				sendCompressorSettingsToDirectors();
+			}
 			listAudioSettings();
 		}
 	};
 	row.appendChild(label);
 	row.appendChild(select);
 	container.appendChild(row);
+	if (!expanded) {
+		// Compact rows keep the mode menu; the gear opens the full settings panel.
+		var gear = document.createElement("button");
+		gear.type = "button";
+		gear.id = "audioCompressorExpand_" + suffix;
+		gear.className = "audio-compressor-open";
+		gear.title = getTranslation("audio-compressor-settings");
+		gear.setAttribute("aria-label", gear.title);
+		gear.setAttribute("aria-haspopup", "dialog");
+		gear.innerHTML = '<i class="las la-cog" aria-hidden="true"></i>';
+		gear.onclick = function () { openAudioCompressor(UUID, data); };
+		row.appendChild(gear);
+		var modal = document.getElementById("audioCompressorModal");
+		if (modal && modal.dataset.UUID === suffix) modal.update(data);
+		return;
+	}
 
-	var details = document.createElement("details");
-	details.id = "audioCompressorSettings_" + suffix;
-	details.className = "audio-compressor-settings";
-	var summary = document.createElement("summary");
-	miniTranslate(summary, "audio-compressor-settings");
-	details.appendChild(summary);
+	var settings = document.createElement("div");
+	settings.className = "audio-compressor-settings";
 	var note = document.createElement("p");
 	miniTranslate(note, "audio-compressor-scope");
-	details.appendChild(note);
+	settings.appendChild(note);
 	var fields = document.createElement("fieldset");
 	fields.disabled = data.compressor !== 1 && data.compressor !== 2;
-	details.appendChild(fields);
+	settings.appendChild(fields);
 	var controls = [
 		["threshold", "audio-compressor-threshold", -100, 0, 1, 1],
 		["ratio", "audio-compressor-ratio", 1, 20, 0.1, 1],
@@ -50207,6 +50258,7 @@ function appendAudioCompressorControls(container, data, UUID) {
 		input.value = data.compressorSettings[key] * control[5];
 		var number = document.createElement("input");
 		number.type = "number";
+		number.id = input.id + "_number";
 		number.dir = "ltr";
 		number.className = "manualInput";
 		number.min = input.min;
@@ -50225,7 +50277,9 @@ function appendAudioCompressorControls(container, data, UUID) {
 			if (UUID) {
 				requestChangeCompressor(key, Number(input.value) / control[5], UUID);
 			} else {
-				changeCompressor(key, Number(input.value) / control[5]);
+				if (changeCompressor(key, Number(input.value) / control[5])) {
+					sendCompressorSettingsToDirectors();
+				}
 				pokeIframeAPI("mic-constraint-changed", { name: "compressor-" + key, value: Number(input.value) / control[5] });
 			}
 		};
@@ -50239,8 +50293,10 @@ function appendAudioCompressorControls(container, data, UUID) {
 		};
 		row.appendChild(label);
 		row.appendChild(number);
-		fields.appendChild(row);
-		fields.appendChild(input);
+		var group = document.createElement("div");
+		group.appendChild(row);
+		group.appendChild(input);
+		fields.appendChild(group);
 	});
 	var reset = document.createElement("button");
 	reset.type = "button";
@@ -50251,18 +50307,701 @@ function appendAudioCompressorControls(container, data, UUID) {
 		if (UUID) {
 			requestChangeCompressor("reset", true, UUID);
 		} else {
-			changeCompressor("reset", true);
+			if (changeCompressor("reset", true)) {
+				sendCompressorSettingsToDirectors();
+			}
 			listAudioSettings();
 		}
 	};
 	fields.appendChild(reset);
-	container.appendChild(details);
-	return details;
+	container.appendChild(settings);
+}
+
+function openAudioCompressor(UUID, data) {
+	if (!UUID && session.roomid !== false && session.roomid !== "" && session.director !== true && session.forceMediaSettings == false) return;
+	// Without a UUID, the panel controls and analyses this browser's own outgoing microphone.
+	var suffix = UUID || "local";
+	var peer = null;
+	var name = session.label;
+	var sourceKey = "audio-compressor-sent";
+	if (UUID) {
+		peer = session.rpcs[UUID];
+		if (!peer || !data.compressorSettings) return;
+		name = peer.label || peer.streamID || data.trackLabel || UUID;
+		sourceKey = "audio-compressor-received";
+	} else {
+		data = { compressor: session.compressor, compressorSettings: getCompressorSettings() };
+	}
+	var previous = document.getElementById("audioCompressorModal");
+	if (previous) previous.querySelector(".modalClose").click();
+	var modal = document.createElement("div");
+	modal.id = "audioCompressorModal";
+	modal.className = "promptModal";
+	modal.dataset.UUID = suffix;
+	// The director toolbar sits at 995, including in narrow viewports.
+	var zindex = 1000 + document.querySelectorAll(".promptModal, .alertModal").length;
+	modal.style.zIndex = zindex + 2;
+	modal.innerHTML = '<div class="promptModalInner">' +
+		'<span class="modalClose">&times;</span>' +
+		'<h3 id="audioCompressorTitle"><span data-translate="audio-compressor-panel"></span><span class="audio-compressor-guest"></span></h3>' +
+		'<div class="audio-compressor-graphs">' +
+		'<div><h4 data-translate="audio-compressor-curve"></h4><canvas id="audioCompressorCurve" role="img"></canvas><p data-translate="audio-compressor-curve-note"></p></div>' +
+		'<div><div class="audio-compressor-view"><label for="audioCompressorView" data-translate="' + sourceKey + '"></label><select id="audioCompressorView"><option value="spectrum" data-translate="audio-compressor-spectrum"></option><option value="history" data-translate="audio-compressor-history"></option></select></div>' +
+		'<canvas id="audioCompressorSignal" role="img"></canvas><p data-translate="' + (UUID ? "audio-compressor-live-note" : "audio-compressor-local-note") + '"></p><p id="audioCompressorStatus" role="status"></p></div>' +
+		'</div><div id="audioCompressorControls"></div></div>';
+	if (name) modal.querySelector(".audio-compressor-guest").textContent = " — " + name;
+	modal.querySelectorAll("[data-translate]").forEach(function (element) { miniTranslate(element, element.dataset.translate); });
+	var controls = modal.querySelector("#audioCompressorControls");
+	appendAudioCompressorControls(controls, data, UUID);
+	var mode = controls.querySelector("select");
+	var fields = controls.querySelector("fieldset");
+	var view = modal.querySelector("#audioCompressorView");
+	var status = modal.querySelector("#audioCompressorStatus");
+	var curve = modal.querySelector("#audioCompressorCurve");
+	var signal = modal.querySelector("#audioCompressorSignal");
+	var keys = ["threshold", "ratio", "attack", "release", "knee", "gain"];
+	var inputs = {};
+	var numbers = {};
+	keys.forEach(function (key) {
+		inputs[key] = controls.querySelector("#audioCompressor_" + key + "_" + suffix + "_expanded");
+		numbers[key] = controls.querySelector("#audioCompressor_" + key + "_" + suffix + "_expanded_number");
+	});
+	function labelSignal() {
+		signal.setAttribute("aria-label", getTranslation(view.value === "history" ? "audio-compressor-history" : "audio-compressor-spectrum") + " — " + getTranslation(sourceKey));
+	}
+	view.onchange = labelSignal;
+	labelSignal();
+	var backdrop = document.createElement("div");
+	backdrop.className = "modalBackdrop";
+	backdrop.style.zIndex = zindex + 1;
+	var source = null;
+	var analyser = null;
+	var track = null;
+	var frame = null;
+	var lastFrame = 0;
+	var samples = new Float32Array(4096);
+	var frequencies = new Float32Array(2048);
+	var peaks = new Float32Array(2048);
+	var levels = [];
+	var level = -Infinity;
+	var audioContext = null;
+	var statusKey = "";
+	var settings = {};
+	var model = null;
+	var curveLayout = null;
+	var hover = false;
+	var dragging = false;
+	var dragStart = null;
+	var changed = {};
+	var pendingSettings = {};
+	peaks.fill(-100);
+
+	function setFieldsDisabled(disabled) {
+		fields.disabled = disabled;
+		// The native dialog focus helper checks each control's disabled property.
+		fields.querySelectorAll("input, button").forEach(function (control) { control.disabled = disabled; });
+	}
+	setFieldsDisabled(fields.disabled);
+
+	function readSettings() {
+		keys.forEach(function (key) {
+			settings[key] = Number(inputs[key].value);
+		});
+		model = getAudioCompressorCurve(settings);
+	}
+	readSettings();
+
+	function disconnectMeter() {
+		if (source) source.disconnect();
+		if (analyser) analyser.disconnect();
+		source = null;
+		analyser = null;
+		track = null;
+		peaks.fill(-100);
+	}
+	function close() {
+		var returnFocus = modal.contains(document.activeElement);
+		cancelAnimationFrame(frame);
+		disconnectMeter();
+		modal.remove();
+		backdrop.remove();
+		// Audio-setting updates may have replaced the original gear button.
+		var opener = document.getElementById("audioCompressorExpand_" + suffix);
+		if (returnFocus && opener && document.hasFocus()) opener.focus({ preventScroll: true });
+	}
+	modal.querySelector(".modalClose").onclick = close;
+	backdrop.onclick = close;
+	modal.onclick = function (event) { event.stopPropagation(); };
+	function syncSettings(blurredControl) {
+		keys.forEach(function (key) {
+			if (!(key in pendingSettings) || dragging) return;
+			var input = inputs[key];
+			var number = numbers[key];
+			if (document.activeElement === input || document.activeElement === number) {
+				if (document.activeElement !== blurredControl) return;
+			}
+			input.value = pendingSettings[key];
+			number.value = input.value;
+			delete pendingSettings[key];
+		});
+		readSettings();
+		drawCurve();
+	}
+	modal.update = function (latest) {
+		var modeChanged = data.compressor !== latest.compressor;
+		data = latest;
+		if (modeChanged) {
+			// An unfinished edit belongs to the previous mode.
+			dragging = false;
+			changed = {};
+			setHover(false);
+		}
+		mode.value = String(latest.compressor || false);
+		keys.forEach(function (key) {
+			pendingSettings[key] = latest.compressorSettings[key] * (key === "attack" || key === "release" ? 1000 : 1);
+		});
+		if (modeChanged) syncSettings(document.activeElement);
+		else syncSettings();
+		setFieldsDisabled(latest.compressor !== 1 && latest.compressor !== 2);
+	};
+	// Keep updates received during editing until focus leaves; a newer edit wins.
+	controls.addEventListener("blur", function (event) { syncSettings(event.target); }, true);
+
+	function drawCurve() {
+		var enabled = mode.value !== "false";
+		var active = dragging || hover;
+		curveLayout = drawAudioCompressorCurve(curve, model, enabled, enabled && !fields.disabled, active, level);
+	}
+	controls.addEventListener("change", function (event) {
+		keys.forEach(function (key) {
+			if (event.target === inputs[key]) {
+				delete pendingSettings[key];
+			} else if (event.target === numbers[key] && numbers[key].value.trim() !== "" && isFinite(Number(numbers[key].value))) {
+				delete pendingSettings[key];
+			}
+		});
+	}, true);
+	function changeSettings() {
+		readSettings();
+		drawCurve();
+	}
+	controls.addEventListener("input", changeSettings);
+	controls.addEventListener("change", changeSettings);
+
+	// Like the sliders, dragging applies local changes live and sends remote changes on release.
+	function setControl(key, value) {
+		var input = inputs[key];
+		value = Math.max(Number(input.min), Math.min(Number(input.max), value));
+		if (Number(input.value) === value) return;
+		input.value = value;
+		input.oninput();
+		changed[key] = true;
+		changeSettings();
+	}
+	function pointerPosition(event) {
+		var rect = curve.getBoundingClientRect();
+		return { x: event.clientX - rect.left, y: event.clientY - rect.top };
+	}
+	function findHandle(event) {
+		if (fields.disabled || !curveLayout || !curveLayout.handles) return false;
+		var point = pointerPosition(event);
+		var nearest = event.pointerType === "touch" ? 24 : 14;
+		var found = false;
+		for (var key in curveLayout.handles) {
+			var handle = curveLayout.handles[key];
+			var distance = Math.sqrt(Math.pow(point.x - handle.x, 2) + Math.pow(point.y - handle.y, 2));
+			if (distance <= nearest) {
+				nearest = distance;
+				found = key;
+			}
+		}
+		// At 0 dB both points coincide; the drag direction selects the control.
+		var threshold = curveLayout.handles.threshold;
+		var ratio = curveLayout.handles.ratio;
+		if (found && threshold.x === ratio.x && threshold.y === ratio.y) return "both";
+		return found;
+	}
+	function setHover(handle) {
+		if (handle === hover) return;
+		hover = handle;
+		if (handle === "threshold") {
+			curve.style.cursor = "ew-resize";
+		} else if (handle === "ratio") {
+			curve.style.cursor = "ns-resize";
+		} else if (handle === "both") {
+			curve.style.cursor = "move";
+		} else {
+			curve.style.cursor = "";
+		}
+		drawCurve();
+	}
+	function endDrag() {
+		if (!dragging) return;
+		dragging = false;
+		for (var key in changed) {
+			delete pendingSettings[key];
+			inputs[key].onchange();
+		}
+		changed = {};
+		syncSettings();
+	}
+	curve.onpointerdown = function (event) {
+		var handle = findHandle(event);
+		if (!handle) return;
+		event.preventDefault();
+		var point = pointerPosition(event);
+		dragging = handle;
+		dragStart = { x: point.x, y: point.y, threshold: settings.threshold, ratio: settings.ratio };
+		if (curve.setPointerCapture) curve.setPointerCapture(event.pointerId);
+		setHover(handle);
+	};
+	curve.onpointermove = function (event) {
+		if (!dragging) {
+			setHover(findHandle(event));
+			return;
+		}
+		var point = pointerPosition(event);
+		if (dragging === "both") {
+			var dx = Math.abs(point.x - dragStart.x);
+			var dy = Math.abs(point.y - dragStart.y);
+			if (Math.max(dx, dy) < 3) return;
+			if (dx > dy) dragging = "threshold";
+			else dragging = "ratio";
+			setHover(dragging);
+		}
+		if (dragging === "threshold") {
+			// Preserve thresholds below the visible graph range when a drag starts.
+			var threshold = dragStart.threshold + (point.x - dragStart.x) / curveLayout.width * 60;
+			setControl("threshold", Math.round(threshold));
+		} else {
+			// Ratio is relative: about 160px covers the full 1-20 range, downward compresses more.
+			var ratio = dragStart.ratio * Math.pow(20, (point.y - dragStart.y) / 160);
+			setControl("ratio", Math.round(ratio * 10) / 10);
+		}
+	};
+	curve.onpointerup = endDrag;
+	curve.onpointercancel = endDrag;
+	curve.onpointerleave = function () {
+		if (!dragging) setHover(false);
+	};
+	// A touch on a point drags it; touches elsewhere on the graph still scroll the panel.
+	curve.addEventListener("touchstart", function (event) {
+		if (event.touches.length !== 1) return;
+		var touch = event.touches[0];
+		if (findHandle({ clientX: touch.clientX, clientY: touch.clientY, pointerType: "touch" })) event.preventDefault();
+	}, { passive: false });
+
+	function draw(now) {
+		if (!modal.isConnected) { close(); return; }
+		frame = requestAnimationFrame(draw);
+		if (now - lastFrame < 30) return;
+		var elapsed = Math.min(now - lastFrame, 250) / 1000;
+		lastFrame = now;
+		var connected = true;
+		var stream = null;
+		var context = session.audioCtx;
+		if (UUID) {
+			connected = session.rpcs[UUID] === peer;
+			if (connected) stream = peer.streamSrc;
+		} else {
+			// The processed track that viewers receive, analysed in its own audio context.
+			for (var id in session.webAudios) {
+				if (session.webAudios[id] && session.webAudios[id].destination) {
+					stream = session.webAudios[id].destination.stream;
+					context = session.webAudios[id].audioContext;
+					break;
+				}
+			}
+		}
+		var nextTrack = null;
+		if (stream && stream.getAudioTracks) {
+			var tracks = stream.getAudioTracks();
+			for (var i = 0; i < tracks.length; i++) {
+				if (tracks[i].readyState === "live") { nextTrack = tracks[i]; break; }
+			}
+		}
+		if (nextTrack !== track || audioContext !== context) disconnectMeter();
+		audioContext = context;
+		var message = "";
+		if (!connected) {
+			mode.disabled = true;
+			setFieldsDisabled(true);
+			dragging = false;
+			changed = {};
+			setHover(false);
+			message = "audio-compressor-disconnected";
+		} else if (!nextTrack) {
+			message = "audio-compressor-waiting";
+		} else if ((UUID && session.disableViewerWebAudioPipeline) || !audioContext || audioContext.state === "closed") {
+			message = "audio-compressor-unavailable";
+		} else if (audioContext.state !== "running") {
+			message = "audio-compressor-paused";
+		} else if (!analyser) {
+			try {
+				// A separate analysis branch never connects to speakers or changes the analysed stream.
+				source = audioContext.createMediaStreamSource(new MediaStream([nextTrack]));
+				analyser = audioContext.createAnalyser();
+				analyser.fftSize = samples.length;
+				analyser.smoothingTimeConstant = 0.8;
+				source.connect(analyser);
+				track = nextTrack;
+			} catch (error) {
+				disconnectMeter();
+				message = "audio-compressor-unavailable";
+			}
+		}
+		if (message !== statusKey) {
+			statusKey = message;
+			if (message) miniTranslate(status, message);
+			else status.textContent = "";
+		}
+		if (message) disconnectMeter();
+		var peak = -Infinity;
+		var rms = -Infinity;
+		if (analyser) {
+			analyser.getFloatTimeDomainData(samples);
+			var max = 0;
+			var sum = 0;
+			for (var i = 0; i < samples.length; i++) {
+				if (Math.abs(samples[i]) > max) max = Math.abs(samples[i]);
+				sum += samples[i] * samples[i];
+			}
+			peak = 20 * Math.log10(max);
+			rms = 10 * Math.log10(sum / samples.length);
+			analyser.getFloatFrequencyData(frequencies);
+			// Peak hold falls 12 dB per second.
+			for (var i = 0; i < frequencies.length; i++) {
+				peaks[i] = Math.max(frequencies[i], peaks[i] - 12 * elapsed, -100);
+			}
+		}
+		levels.push({ time: now, peak: peak, rms: rms });
+		while (levels[0].time < now - 6000) levels.shift();
+		// The curve marker rises with each peak and falls 20 dB per second.
+		if (peak >= level) level = peak;
+		else level = Math.max(peak, level - 20 * elapsed);
+		drawCurve();
+		if (view.value === "history") {
+			drawAudioCompressorHistory(signal, levels, now);
+		} else {
+			drawAudioCompressorSpectrum(signal, analyser ? frequencies : null, peaks, analyser ? analyser.context.sampleRate : 48000);
+		}
+		if (!connected) cancelAnimationFrame(frame);
+	}
+	document.body.appendChild(backdrop);
+	document.body.appendChild(modal);
+	enhanceDialogAccessibility(modal);
+	modal.setAttribute("aria-labelledby", "audioCompressorTitle");
+	modal.querySelector(".modalClose").focus();
+	frame = requestAnimationFrame(draw);
+}
+
+// Static curve of the Blink/WebKit DynamicsCompressorNode, including the automatic
+// makeup gain that browsers add inside the node; settings.gain is VDO.Ninja's own makeup.
+function getAudioCompressorCurve(settings) {
+	var curve = {};
+	curve.threshold = settings.threshold;
+	curve.ratio = settings.ratio;
+	curve.gain = settings.gain;
+	curve.kneeEnd = settings.threshold + settings.knee;
+	curve.linearThreshold = Math.pow(10, settings.threshold / 20);
+	curve.makeup = 0;
+	var kneeEnd = Math.pow(10, curve.kneeEnd / 20);
+	var minK = 0.1;
+	var maxK = 10000;
+	curve.k = 5;
+	// Find the knee shape whose slope reaches 1/ratio at the end of the knee.
+	for (var i = 0; i < 15; i++) {
+		var slope = Math.log(audioCompressorKnee(curve, kneeEnd * 1.001) / audioCompressorKnee(curve, kneeEnd)) / Math.log(1.001);
+		if (slope < 1 / settings.ratio) {
+			maxK = curve.k;
+		} else {
+			minK = curve.k;
+		}
+		curve.k = Math.sqrt(minK * maxK);
+	}
+	curve.kneeOutput = 20 * Math.log10(audioCompressorKnee(curve, kneeEnd));
+	curve.makeup = -0.6 * (audioCompressorOutput(curve, 0) - settings.gain);
+	return curve;
+}
+
+function audioCompressorKnee(curve, value) {
+	if (value < curve.linearThreshold) return value;
+	return curve.linearThreshold + (1 - Math.exp(-curve.k * (value - curve.linearThreshold))) / curve.k;
+}
+
+function audioCompressorOutput(curve, input) {
+	var output = input;
+	if (input >= curve.kneeEnd) {
+		output = curve.kneeOutput + (input - curve.kneeEnd) / curve.ratio;
+	} else if (input > curve.threshold) {
+		output = 20 * Math.log10(audioCompressorKnee(curve, Math.pow(10, input / 20)));
+	}
+	return output + curve.makeup + curve.gain;
+}
+
+function drawAudioCompressorCurve(canvas, curve, enabled, editable, active, level) {
+	var graph = prepareAudioCompressorGraph(canvas);
+	var ctx = graph.context;
+	var left = 38, top = 14, width = graph.width - 58, height = graph.height - 48;
+	function inputX(db) { return left + (db + 60) / 60 * width; }
+	function outputY(db) { return top + (24 - db) / 84 * height; }
+	function outputAt(input) {
+		if (!enabled) return input;
+		return audioCompressorOutput(curve, input);
+	}
+	// Output above 0 dBFS clips.
+	ctx.globalAlpha = 0.12;
+	ctx.fillStyle = graph.clip;
+	ctx.fillRect(left, top, width, outputY(0) - top);
+	ctx.fillStyle = graph.color;
+	ctx.globalAlpha = 0.2;
+	ctx.beginPath();
+	for (var db = -60; db <= 0; db += 12) {
+		ctx.moveTo(inputX(db), top); ctx.lineTo(inputX(db), top + height);
+	}
+	for (var db = -60; db <= 24; db += 12) {
+		ctx.moveTo(left, outputY(db)); ctx.lineTo(left + width, outputY(db));
+	}
+	ctx.stroke();
+	ctx.globalAlpha = 1;
+	ctx.textAlign = "center";
+	for (var db = -60; db <= 0; db += 12) ctx.fillText(db, inputX(db), top + height + 15);
+	ctx.textAlign = "right";
+	for (var db = -60; db <= 24; db += 12) ctx.fillText(db, left - 5, outputY(db) + 4);
+	ctx.textAlign = "left";
+	ctx.fillText(getTranslation("audio-compressor-output"), left, 10);
+	ctx.textAlign = "center";
+	ctx.fillText(getTranslation("audio-compressor-input"), left + width / 2, graph.height - 3);
+	ctx.save();
+	ctx.beginPath(); ctx.rect(left, top, width, height); ctx.clip();
+	ctx.globalAlpha = 0.4;
+	ctx.setLineDash([4, 4]);
+	ctx.beginPath(); ctx.moveTo(inputX(-60), outputY(-60)); ctx.lineTo(inputX(0), outputY(0)); ctx.stroke();
+	if (enabled && curve.threshold > -60) {
+		ctx.strokeStyle = graph.accent;
+		ctx.setLineDash([2, 3]);
+		ctx.beginPath(); ctx.moveTo(inputX(curve.threshold), top); ctx.lineTo(inputX(curve.threshold), top + height); ctx.stroke();
+	}
+	ctx.setLineDash([]);
+	ctx.globalAlpha = 1;
+	ctx.strokeStyle = graph.accent;
+	ctx.lineWidth = 2;
+	ctx.beginPath();
+	for (var step = 0; step <= width; step++) {
+		var y = outputY(outputAt(-60 + step / width * 60));
+		if (!step) ctx.moveTo(left, y);
+		else ctx.lineTo(left + step, y);
+	}
+	ctx.stroke();
+	ctx.restore();
+
+	// The received level is the guest's output; place it on the curve at the matching input.
+	var meterX = left + width + 10;
+	ctx.globalAlpha = 0.15;
+	ctx.fillRect(meterX, top, 5, height);
+	ctx.globalAlpha = 1;
+	if (level > -60) {
+		var levelY = Math.max(top, outputY(level));
+		ctx.fillStyle = graph.accent;
+		ctx.fillRect(meterX, levelY, 5, top + height - levelY);
+		if (levelY < outputY(0)) {
+			ctx.fillStyle = graph.clip;
+			ctx.fillRect(meterX, levelY, 5, outputY(0) - levelY);
+		}
+		if (level >= outputAt(-60)) {
+			var low = -60;
+			var high = 0;
+			if (level < outputAt(0)) {
+				for (var i = 0; i < 24; i++) {
+					if (outputAt((low + high) / 2) < level) low = (low + high) / 2;
+					else high = (low + high) / 2;
+				}
+			}
+			var dotY = Math.max(top, Math.min(top + height, outputY(outputAt(high))));
+			ctx.fillStyle = graph.color;
+			ctx.beginPath(); ctx.arc(inputX(high), dotY, 4, 0, 2 * Math.PI); ctx.fill();
+		}
+	}
+
+	var layout = { left: left, top: top, width: width, height: height, handles: null };
+	if (editable) {
+		var thresholdInput = Math.max(-60, Math.min(0, curve.threshold));
+		layout.handles = {
+			threshold: { x: inputX(thresholdInput), y: Math.max(top, Math.min(top + height, outputY(outputAt(thresholdInput)))) },
+			ratio: { x: inputX(0), y: Math.max(top, Math.min(top + height, outputY(outputAt(0)))) }
+		};
+		ctx.fillStyle = graph.accent;
+		for (var key in layout.handles) {
+			var handle = layout.handles[key];
+			if (key === active) {
+				ctx.globalAlpha = 0.25;
+				ctx.beginPath(); ctx.arc(handle.x, handle.y, 11, 0, 2 * Math.PI); ctx.fill();
+				ctx.globalAlpha = 1;
+			}
+			ctx.beginPath(); ctx.arc(handle.x, handle.y, key === active ? 7 : 5, 0, 2 * Math.PI); ctx.fill();
+		}
+	}
+	var label = getTranslation("audio-compressor-curve") + ": " + getTranslation("audio-compressor-threshold") + " " + curve.threshold + ", " + getTranslation("audio-compressor-ratio") + " " + curve.ratio;
+	if (canvas.getAttribute("aria-label") !== label) canvas.setAttribute("aria-label", label);
+	return layout;
+}
+
+function prepareAudioCompressorGraph(canvas) {
+	var width = Math.max(180, Math.round(canvas.clientWidth));
+	var height = 210;
+	var scale = Math.min(window.devicePixelRatio || 1, 2);
+	var pixelWidth = Math.round(width * scale);
+	var pixelHeight = Math.round(height * scale);
+	if (canvas.width !== pixelWidth || canvas.height !== pixelHeight) {
+		canvas.width = pixelWidth;
+		canvas.height = pixelHeight;
+	}
+	var ctx = canvas.getContext("2d");
+	ctx.setTransform(scale, 0, 0, scale, 0, 0);
+	ctx.clearRect(0, 0, width, height);
+	var style = getComputedStyle(canvas);
+	ctx.strokeStyle = style.color;
+	ctx.fillStyle = style.color;
+	ctx.font = "11px " + style.fontFamily;
+	ctx.lineWidth = 1;
+	return {
+		context: ctx,
+		width: width,
+		height: height,
+		color: style.color,
+		accent: style.getPropertyValue("--audio-graph-line").trim() || style.color,
+		clip: style.getPropertyValue("--audio-graph-clip").trim() || style.color
+	};
+}
+
+function drawAudioCompressorSpectrum(canvas, frequencies, peaks, sampleRate) {
+	var graph = prepareAudioCompressorGraph(canvas);
+	var ctx = graph.context;
+	var left = 38, top = 14, width = graph.width - 52, height = graph.height - 48;
+	var maxFrequency = Math.min(20000, sampleRate / 2);
+	function frequencyX(frequency) { return left + Math.log(frequency / 20) / Math.log(maxFrequency / 20) * width; }
+	ctx.globalAlpha = 0.2;
+	ctx.beginPath();
+	for (var db = 0; db <= 100; db += 20) {
+		ctx.moveTo(left, top + db / 100 * height); ctx.lineTo(left + width, top + db / 100 * height);
+	}
+	var lines = [50, 100, 200, 500, 1000, 2000, 5000, 10000];
+	for (var i = 0; i < lines.length; i++) {
+		if (lines[i] < maxFrequency) {
+			ctx.moveTo(frequencyX(lines[i]), top); ctx.lineTo(frequencyX(lines[i]), top + height);
+		}
+	}
+	ctx.stroke();
+	ctx.globalAlpha = 1;
+	ctx.textAlign = "right";
+	for (var db = 0; db <= 100; db += 20) ctx.fillText(-db, left - 5, top + db / 100 * height + 4);
+	ctx.textAlign = "center";
+	var ticks = [50, 100, 500, 1000, 5000, 10000];
+	for (var i = 0; i < ticks.length; i++) {
+		if (ticks[i] < maxFrequency) ctx.fillText(ticks[i] >= 1000 ? ticks[i] / 1000 + "k" : ticks[i], frequencyX(ticks[i]), top + height + 15);
+	}
+	ctx.fillText("Hz", left + width / 2, graph.height - 3);
+	ctx.textAlign = "left";
+	ctx.fillText("dB", left, 10);
+	if (!frequencies) return;
+
+	// Each pixel column shows the loudest bin it covers, or interpolates where bins are wider than a pixel.
+	var binsPerHz = frequencies.length * 2 / sampleRate;
+	function columnY(data, column) {
+		var low = 20 * Math.pow(maxFrequency / 20, (column - 0.5) / width) * binsPerHz;
+		var high = 20 * Math.pow(maxFrequency / 20, (column + 0.5) / width) * binsPerHz;
+		var value = -100;
+		if (high - low < 1) {
+			var center = (low + high) / 2;
+			var bin = Math.min(data.length - 2, Math.floor(center));
+			var first = Math.max(-100, data[bin]);
+			var second = Math.max(-100, data[bin + 1]);
+			value = first + (second - first) * (center - bin);
+		} else {
+			for (var b = Math.floor(low); b <= Math.min(data.length - 1, Math.ceil(high)); b++) {
+				if (data[b] > value) value = data[b];
+			}
+		}
+		return top - Math.max(-100, Math.min(0, value)) / 100 * height;
+	}
+	var points = [];
+	for (var i = 0; i <= width; i++) points.push(columnY(frequencies, i));
+	ctx.fillStyle = graph.accent;
+	ctx.globalAlpha = 0.25;
+	ctx.beginPath();
+	ctx.moveTo(left, top + height);
+	for (var i = 0; i <= width; i++) ctx.lineTo(left + i, points[i]);
+	ctx.lineTo(left + width, top + height);
+	ctx.closePath();
+	ctx.fill();
+	ctx.globalAlpha = 1;
+	ctx.strokeStyle = graph.accent;
+	ctx.lineWidth = 1.5;
+	ctx.beginPath();
+	for (var i = 0; i <= width; i++) {
+		if (!i) ctx.moveTo(left, points[i]); else ctx.lineTo(left + i, points[i]);
+	}
+	ctx.stroke();
+	ctx.strokeStyle = graph.color;
+	ctx.globalAlpha = 0.45;
+	ctx.lineWidth = 1;
+	ctx.beginPath();
+	for (var i = 0; i <= width; i++) {
+		if (!i) ctx.moveTo(left, columnY(peaks, i)); else ctx.lineTo(left + i, columnY(peaks, i));
+	}
+	ctx.stroke();
+	ctx.globalAlpha = 1;
+}
+
+function drawAudioCompressorHistory(canvas, levels, now) {
+	var graph = prepareAudioCompressorGraph(canvas);
+	var ctx = graph.context;
+	var left = 38, top = 14, width = graph.width - 52, height = graph.height - 48;
+	function levelY(db) { return top + Math.max(0, Math.min(1, -db / 60)) * height; }
+	function timeX(time) { return left + width - (now - time) / 6000 * width; }
+	ctx.globalAlpha = 0.2;
+	ctx.beginPath();
+	for (var db = 0; db >= -60; db -= 12) {
+		ctx.moveTo(left, levelY(db)); ctx.lineTo(left + width, levelY(db));
+	}
+	for (var second = 0; second <= 6; second += 2) {
+		ctx.moveTo(timeX(now - second * 1000), top); ctx.lineTo(timeX(now - second * 1000), top + height);
+	}
+	ctx.stroke();
+	ctx.globalAlpha = 1;
+	ctx.textAlign = "right";
+	for (var db = 0; db >= -60; db -= 12) ctx.fillText(db, left - 5, levelY(db) + 4);
+	ctx.textAlign = "center";
+	for (var second = 0; second <= 6; second += 2) ctx.fillText(second ? -second + " s" : "0", timeX(now - second * 1000), top + height + 15);
+	ctx.textAlign = "left";
+	ctx.fillText("dB", left, 10);
+	if (!levels.length) return;
+
+	// Filled RMS level with the peak level drawn over it.
+	ctx.fillStyle = graph.accent;
+	ctx.globalAlpha = 0.3;
+	ctx.beginPath();
+	ctx.moveTo(timeX(levels[0].time), top + height);
+	for (var i = 0; i < levels.length; i++) ctx.lineTo(timeX(levels[i].time), levelY(levels[i].rms));
+	ctx.lineTo(timeX(levels[levels.length - 1].time), top + height);
+	ctx.closePath();
+	ctx.fill();
+	ctx.globalAlpha = 1;
+	ctx.strokeStyle = graph.accent;
+	ctx.lineWidth = 1.5;
+	ctx.beginPath();
+	for (var i = 0; i < levels.length; i++) {
+		if (!i) ctx.moveTo(timeX(levels[i].time), levelY(levels[i].peak));
+		else ctx.lineTo(timeX(levels[i].time), levelY(levels[i].peak));
+	}
+	ctx.stroke();
 }
 
 function updateDirectorsAudio(dataN, UUID) {
-	var compressorPanel = document.getElementById("audioCompressorSettings_" + UUID);
-	var compressorOpen = compressorPanel && compressorPanel.open;
+	var compressorModal = document.getElementById("audioCompressorModal");
+	if (compressorModal && compressorModal.dataset.UUID === UUID && (!dataN.length || !dataN[0].compressorSettings)) {
+		compressorModal.querySelector(".modalClose").click();
+	}
 	var audioEle = document.createElement("div");
 	query("#container_" + UUID + " .advancedAudioSettings").innerHTML = "";
 
@@ -50695,7 +51434,7 @@ function updateDirectorsAudio(dataN, UUID) {
 		}
 
 		if (data.compressorSettings && n == 0) {
-			appendAudioCompressorControls(audioEle, data, UUID).open = !!compressorOpen;
+			appendAudioCompressorControls(audioEle, data, UUID);
 		} else if ("compressor" in data && n == 0) {
 			var label = document.createElement("label");
 			var i = "compressor";
@@ -51520,8 +52259,6 @@ function capitalizeFirstLetter(string) {
 }
 
 function listAudioSettings() {
-	var compressorPanel = document.getElementById("audioCompressorSettings_local");
-	var compressorOpen = compressorPanel && compressorPanel.open;
 	getById("popupSelector_constraints_audio").innerHTML = "";
 
 	var tracks = session.streamSrc.getAudioTracks();
@@ -52037,7 +52774,7 @@ function listAudioSettings() {
 
 		if (ii == 0 && !session.disableWebAudio) {
 			var compressorData = { compressor: session.compressor, compressorSettings: getCompressorSettings() };
-			appendAudioCompressorControls(getById("popupSelector_constraints_audio"), compressorData, false).open = !!compressorOpen;
+			appendAudioCompressorControls(getById("popupSelector_constraints_audio"), compressorData, false);
 			getById("advancedOptionsAudio").style.display = "inline-flex";
 		}
 

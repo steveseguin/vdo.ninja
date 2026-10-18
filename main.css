@@ -650,8 +650,7 @@ body.whitetheme {
 	color: #222222;
 }
 
-.whitetheme #popupSelector label,
-.whitetheme #popupSelector_constraints_audio .audio-compressor-settings {
+.whitetheme #popupSelector label {
 	color: #222222;
 }
 
@@ -3686,7 +3685,12 @@ input[type="file"]#fileselector4 + label {
 	display: flex;
 	flex-wrap: wrap;
 }
-.audio-compressor-mode label,
+.audio-compressor-mode label {
+	flex: 0 1 auto;
+	min-width: 0;
+	max-width: 100%;
+	margin-right: 8px;
+}
 .audio-compressor-mode select,
 .advancedAudioSettings .audio-compressor-mode select {
 	flex: 1 1 120px;
@@ -3705,16 +3709,21 @@ input[type="file"]#fileselector4 + label {
 	width: 100%;
 	margin: 0;
 }
-#popupSelector_constraints_audio .audio-compressor-settings,
-.darktheme .advancedAudioSettings .audio-compressor-settings {
-	color: white;
+.audio-compressor-open {
+	flex: 0 0 auto;
+	/* A gap keeps edge taps from landing on the mode menu. */
+	margin-left: 8px;
+	min-width: 36px;
+	padding: 2px 8px;
+	cursor: pointer;
+}
+.audio-compressor-open i {
+	font-size: 1.3em;
+	vertical-align: middle;
 }
 .audio-compressor-settings label {
 	min-width: 0;
 	margin: 0;
-}
-.audio-compressor-settings summary {
-	cursor: pointer;
 }
 .audio-compressor-settings p {
 	font-size: 0.85em;
@@ -3738,6 +3747,105 @@ input[type="file"]#fileselector4 + label {
 	max-width: 100%;
 	height: auto;
 	white-space: normal;
+}
+
+#audioCompressorModal {
+	position: fixed;
+	width: 760px;
+	/* Mobile browser bars can cover part of 100vh. */
+	max-height: calc(100vh - 24px);
+	max-height: calc(100dvh - 24px);
+	--audio-graph-line: var(--a-link);
+	--audio-graph-clip: #d33;
+}
+.darktheme #audioCompressorModal {
+	--audio-graph-line: var(--a-dark-link);
+	--audio-graph-clip: #ff6b6b;
+}
+#audioCompressorTitle {
+	margin: 0 24px 16px 0;
+}
+.audio-compressor-graphs {
+	display: grid;
+	grid-template-columns: repeat(2, minmax(0, 1fr));
+	gap: 20px;
+}
+.audio-compressor-graphs h4,
+.audio-compressor-view {
+	margin: 0 0 8px;
+	min-height: 32px;
+}
+.audio-compressor-view {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	flex-wrap: wrap;
+}
+.audio-compressor-view select {
+	max-width: 100%;
+}
+.audio-compressor-graphs canvas {
+	display: block;
+	width: 100%;
+	height: 210px;
+	color: inherit;
+}
+#audioCompressorCurve {
+	/* Touches on a point are captured in script; elsewhere they scroll without double-tap zoom. */
+	touch-action: manipulation;
+}
+.audio-compressor-graphs p {
+	font-size: 0.85em;
+	font-weight: normal;
+	margin: 8px 0;
+}
+#audioCompressorStatus {
+	min-height: 1.3em;
+}
+#audioCompressorControls fieldset {
+	display: grid;
+	grid-template-columns: repeat(2, minmax(0, 1fr));
+	column-gap: 24px;
+	row-gap: 8px;
+}
+#audioCompressorControls fieldset > button {
+	grid-column: 1 / -1;
+	justify-self: start;
+}
+@media (max-width: 600px) {
+	.audio-compressor-graphs,
+	#audioCompressorControls fieldset {
+		grid-template-columns: minmax(0, 1fr);
+	}
+}
+/* Finger-sized targets for touch screens. */
+@media (pointer: coarse) {
+	.audio-compressor-open {
+		min-width: 44px;
+		min-height: 40px;
+	}
+	#audioCompressorModal .modalClose {
+		top: -10px;
+		right: 0;
+		min-width: 44px;
+		line-height: 44px;
+		text-align: center;
+	}
+	#audioCompressorTitle {
+		margin-right: 40px;
+	}
+	#audioCompressorControls input[type="range"] {
+		min-height: 36px;
+	}
+	#audioCompressorControls input[type="range"]::-webkit-slider-thumb {
+		width: 24px;
+		height: 24px;
+		margin-top: -9px;
+	}
+	#audioCompressorControls input[type="range"]::-moz-range-thumb {
+		width: 24px;
+		height: 24px;
+	}
 }
 
 .manualInput{

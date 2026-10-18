@@ -14348,10 +14348,7 @@ WebRTC.Media = (function () {
 
 					if ("requestChangeCompressor" in msg) {
 						if ((!msg.track || msg.track == 0) && changeCompressor(msg.keyname || "compressor", msg.value)) {
-							var data = {};
-							data.UUID = UUID;
-							data.audioOptions = listAudioSettingsPrep();
-							session.sendMessage(data, UUID);
+							sendCompressorSettingsToDirectors();
 							if (toggleSettingsState) {
 								listAudioSettings();
 							}
