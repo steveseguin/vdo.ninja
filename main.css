@@ -448,12 +448,22 @@ a {
 body.whitetheme {
     background-color: #ffffff;
     color: #000000;
+	--a-link: #075a9c;
+	--a-visited: #075a9c;
+	--a-hover: #034578;
+	--a-focus: #034578;
+	--a-active: #034578;
+	--a-lighter-link: #075a9c;
+	--a-lighter-visited: #075a9c;
+	--a-lighter-hover: #034578;
+	--a-lighter-focus: #034578;
+	--a-lighter-active: #034578;
 }
 .whitetheme #head4 {
 	color: black;
 }
 .whitetheme #reshare {
-	color: #292 !important; 
+	color: #176b30 !important;
 }
 .whitetheme #miniPerformer button {
 	color: #FFF;
@@ -461,8 +471,18 @@ body.whitetheme {
 .whitetheme .infoblob{
     color: #000000;
 }
+.whitetheme .infoblob h2 {
+	color: inherit;
+}
+.whitetheme .infoblob h4 span {
+	color: #765600 !important;
+}
+.whitetheme .infoblob i > a > span {
+	color: #b42318 !important;
+}
 .whitetheme div#guestFeeds, .whitetheme #roomHeader .hideLinksClass{
-	background-color: #ababab;
+	background-color: #eceef2;
+	color: #222222;
 }
 
 .whitetheme .container-inner {
@@ -479,8 +499,48 @@ body.whitetheme {
     background-color: #e8e8e8;
 }
 
-.whitetheme .directorContainer {
+.whitetheme .directorContainer,
+.whitetheme .directorContainer.half {
     background-color: #f5f5f5;
+}
+
+.whitetheme .directorBlock {
+	--blue-accent: #e8eef9;
+	--green-accent: #e5f1ed;
+	--olive-accent: #eef1dc;
+	--red-accent: #f8e9e9;
+	color: #222222;
+}
+
+.whitetheme .directorBlock .grabLinks {
+	background-color: #ffffff !important;
+}
+
+.whitetheme .directorBlock button:hover {
+	background-color: #3b3b3b;
+}
+
+.whitetheme .directorBlock h2,
+.whitetheme .directorsgrid .vidcon > h2 {
+	color: inherit;
+}
+
+.whitetheme #directorLinksButton,
+.whitetheme #help_directors_room,
+.whitetheme #roomnotes2 > span {
+	color: #222222 !important;
+}
+
+.whitetheme #roomnotes2 span[style*="red"] {
+	color: #b42318 !important;
+}
+
+.whitetheme #roomnotes2 {
+	background-color: #f6f7f9;
+}
+
+.whitetheme #customizeLinks > a > div {
+	color: #075a9c !important;
 }
 
 .whitetheme .card {
@@ -529,6 +589,7 @@ body.whitetheme {
 .whitetheme .directorsgrid .vidcon {
     background-color: #f8f8f8;
     border: 1px solid #e0e0e0;
+	color: #222222;
 }
 
 .whitetheme #promptModal,
@@ -547,6 +608,73 @@ body.whitetheme {
 
 .whitetheme #header {
     color: #000000;
+	background-color: #f6f7f9 !important;
+	border-bottom-color: #d9dde5;
+}
+
+.whitetheme #logoname,
+.whitetheme #head2 {
+	color: #222222 !important;
+}
+
+.whitetheme #head5,
+.whitetheme #head6,
+.whitetheme #head7,
+.whitetheme #head8,
+.whitetheme #head9 {
+	color: #222222;
+}
+
+.whitetheme #copythisurl,
+.whitetheme #copythisurl2,
+.whitetheme #dirroomid,
+.whitetheme #head1 > span,
+.whitetheme #head3 i,
+.whitetheme #head3a i,
+.whitetheme #head9 i,
+.whitetheme #meshDebugBtn,
+.whitetheme #miniTaskBar i {
+	color: #465365 !important;
+}
+
+.whitetheme #miniTaskBar {
+	background-color: #f6f7f9;
+}
+
+.whitetheme .meshHealthyText {
+	color: #176b30;
+}
+
+.whitetheme #popupSelector {
+	background: #f6f7f9;
+	color: #222222;
+}
+
+.whitetheme #popupSelector label,
+.whitetheme #popupSelector_constraints_audio .audio-compressor-settings {
+	color: #222222;
+}
+
+.whitetheme input::placeholder,
+.whitetheme textarea::placeholder {
+	color: #596475 !important;
+}
+
+.whitetheme .screenshare-container,
+.whitetheme .info-box h3,
+.whitetheme .info-box ul,
+.whitetheme .whep-share-inline-note {
+	color: #333333;
+}
+
+.whitetheme #container-5 input[type="file"] + label,
+.whitetheme input[type="file"]#fileselector4 + label {
+	color: #111111;
+}
+
+.whitetheme #gencontent2 .grabLinks,
+.whitetheme #gencontent2 .la-paperclip {
+	color: #075a9c !important;
 }
 
 .whitetheme .modalBackdrop {
@@ -2904,6 +3032,14 @@ label {
 
 .column>h2 {
 	color: black;
+}
+
+#container-1.home-icon-fit:not(.skip-animation):not(.in-animation),
+#container-2.home-icon-fit:not(.skip-animation):not(.in-animation),
+#container-3.home-icon-fit:not(.skip-animation):not(.in-animation),
+#container-4.home-icon-fit:not(.skip-animation):not(.in-animation) {
+	background-position: 50% var(--home-icon-y);
+	background-size: var(--home-icon-size);
 }
 
 .graphSection {

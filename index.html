@@ -48,7 +48,7 @@
 		
 		<meta name="msapplication-TileColor" content="#da532c" />
 		<meta name="theme-color" content="#0f131d" />
-		<link rel="stylesheet" href="./main.css?ver=4056" />
+		<link rel="stylesheet" href="./main.css?ver=4059" />
 		<script type="text/javascript" crossorigin="anonymous" src="./thirdparty/adapter.js"></script>
 		
 		<link rel="shortcut icon" href="data:image/x-icon;," type="image/x-icon" />
@@ -3626,7 +3626,7 @@
 			
 		</script>
 		
-		<script type="text/javascript" crossorigin="anonymous" id="lib-js" src="./lib.js?ver=14246" onerror="retryStartupOnBackup()"></script>
+		<script type="text/javascript" crossorigin="anonymous" id="lib-js" src="./lib.js?ver=14247" onerror="retryStartupOnBackup()"></script>
 		<script type="text/javascript" crossorigin="anonymous" id="main-js" src="./main.js?ver=1107" onerror="retryStartupOnBackup()"></script>
 		<script>
 			// Wait for the DOM, not for optional downloads or the window load event.
@@ -3652,7 +3652,7 @@
 			if (new URLSearchParams(window.location.search).has("podcast")) {
 				var podcastScript = document.createElement("script");
 				podcastScript.type = "module";
-				podcastScript.src = "./podcast/bootstrap.js?v=2";
+				podcastScript.src = "./podcast/bootstrap.js?v=5";
 				podcastScript.onerror = function () { console.warn("Podcast studio could not load."); };
 				document.head.appendChild(podcastScript);
 			}

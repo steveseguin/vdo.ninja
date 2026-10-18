@@ -17,6 +17,7 @@
     "mixer-wait-for-main": "Waiting for the main Mixer. Enable co-directors in the main Mixer and use its co-Mixer invite.",
     "mixer-shared-layouts": "Shared layouts. General Mixer settings are managed in the main Mixer.",
     "mixer-layout-changed": "Another operator changed this layout. Reopen it to use their changes, or duplicate your draft to keep both.",
+    "mixer-save-timeout": "The main Mixer did not confirm this change. Your draft is still open. Check the shared layouts before trying again.",
     "shared-link-type": "Link type",
     "shared-link-auto": "Automatic",
     "shared-link-website": "Website",

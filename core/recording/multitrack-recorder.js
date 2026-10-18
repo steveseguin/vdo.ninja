@@ -1,7 +1,7 @@
 import { waitForLegacySession } from '../legacy/session-bridge.js?v=20260911.1';
-import { monitorTrackLevel } from '../audio/meters.js?v=20260911.1';
-import { TrackRecorder } from './track-recorder.js?v=20260911.1';
-import { convertBlobToWav } from './wav-encoder.js?v=20260911.1';
+import { monitorTrackLevel } from '../audio/meters.js?v=20261018.1';
+import { TrackRecorder } from './track-recorder.js?v=20261018.1';
+import { convertBlobToWav } from './wav-encoder.js?v=20261018.1';
 
 const DEFAULT_OPTIONS = {
   includeLocal: true,
@@ -85,6 +85,8 @@ export class MultiTrackRecorder extends EventTarget {
     this.trackMeters = new Map();
     this.trackStartTimes = new Map(); // Per-track start times relative to session start
     this.startedAt = null;
+    this.starting = null;
+    this.stopPromise = null;
     this.stopping = false;
   }
 
@@ -350,12 +352,17 @@ export class MultiTrackRecorder extends EventTarget {
     const options = { ...this.options, ...customOptions };
     this.options = options;
     const previousFiles = this.files;
+    const attempt = { previousFiles };
+    this.starting = attempt;
     this.files = new Map();
     this.startedAt = Date.now();
 
     let participants;
     try {
       participants = await this.listRecordableParticipants();
+      if (this.starting !== attempt) {
+        throw new DOMException('Recording start was cancelled.', 'AbortError');
+      }
       const extras = Array.isArray(options.extraParticipants)
         ? options.extraParticipants
             .map((participant, index) => {
@@ -401,23 +408,38 @@ export class MultiTrackRecorder extends EventTarget {
         throw new Error('No recordable tracks found.');
       }
     } catch (error) {
+      // A cancelled start must not stop or overwrite a later recording.
+      if (this.starting !== attempt) {
+        throw error;
+      }
+      this.starting = null;
       this.stopping = true;
       const stops = Array.from(this.recorders.values()).map((recorder) => recorder.stop());
       this.recorders.clear();
       this.trackMeters.forEach((meter) => meter.disconnect());
       this.trackMeters.clear();
       this.trackStartTimes.clear();
-      await Promise.allSettled(stops);
-      this.files = previousFiles;
-      this.startedAt = null;
-      this.stopping = false;
+      this.stopPromise = Promise.allSettled(stops).then(() => {
+        this.files = previousFiles;
+        this.startedAt = null;
+        this.stopping = false;
+        this.stopPromise = null;
+        return this.files;
+      });
+      await this.stopPromise;
       throw error;
     }
 
+    this.starting = null;
     this.dispatchEvent(new CustomEvent('start', { detail: { participants, startedAt: this.startedAt } }));
   }
 
-  async stop({ markers = null } = {}) {
+  stop({ markers = null } = {}) {
+    if (this.stopPromise) {
+      return this.stopPromise;
+    }
+    const attempt = this.starting;
+    this.starting = null;
     this.stopping = true;
     const stops = [];
     this.recorders.forEach((recorder) => {
@@ -432,14 +454,21 @@ export class MultiTrackRecorder extends EventTarget {
     });
     this.trackMeters.clear();
     this.trackStartTimes.clear();
-    await Promise.allSettled(stops);
-    await Promise.allSettled(meterStops);
-    await this.packageAudioFiles({ markers });
-    const packaged = this.files;
-    this.startedAt = null;
-    this.stopping = false;
-    this.dispatchEvent(new CustomEvent('stop', { detail: { files: packaged } }));
-    return packaged;
+    this.stopPromise = Promise.allSettled(stops.concat(meterStops)).then(() => {
+      if (attempt) {
+        this.files = attempt.previousFiles;
+      } else {
+        return this.packageAudioFiles({ markers });
+      }
+    }).then(() => {
+      const packaged = this.files;
+      this.startedAt = null;
+      this.stopping = false;
+      this.stopPromise = null;
+      this.dispatchEvent(new CustomEvent('stop', { detail: { files: packaged } }));
+      return packaged;
+    });
+    return this.stopPromise;
   }
 
   getFiles() {

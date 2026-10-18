@@ -7,7 +7,7 @@ import {
   bridgeLegacyMeters,
   monitorTrackLevel,
   convertBlobToWav,
-} from '../core/index.js?v=20261001.1';
+} from '../core/index.js?v=20261018.1';
 import { AudioRecoveryWriter, listAudioRecoverySessions, loadRecoveryTrack, clearAudioRecoverySession } from './audio-recovery.js?v=1';
 import { IcecastPublisher, ICECAST_MIME_OPTIONS } from './icecast-publisher.js?v=4';
 

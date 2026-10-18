@@ -1894,6 +1894,8 @@
 	var mixerRemote = urlParams.get("mixercontrols") === "layouts";
 	var mixerRemoteReady = false;
 	var mixerSavePending = false;
+	var mixerSaveRequest = 0;
+	var mixerSaveTimedOut = false;
 	
 	var api = false;
 	if (urlParams.has('osc') || urlParams.has('api')) {
@@ -3778,7 +3780,7 @@
 		return null;
 	}
 
-	function requestMixerControl(data){
+	function requestMixerControl(data, closeAfterSave=false){
 		var director = iframe && iframe.contentWindow;
 		var session = director && director.session;
 		if (!mixerRemoteReady || !session || session.directorState !== true || !session.directorUUID || !session.rpcs[session.directorUUID]){
@@ -3789,7 +3791,24 @@
 		}
 		var msg = {};
 		msg.pipe = {mixerControl: data};
-		return session.sendRequest(msg, session.directorUUID);
+		var pending = false;
+		if (data.action === "save" || data.action === "remove"){
+			if (mixerSavePending){return false;}
+			data.requestId = ++mixerSaveRequest;
+			pending = {close: closeAfterSave, id: data.requestId};
+			mixerSavePending = pending;
+			pending.timer = setTimeout(function (){
+				if (mixerSavePending !== pending){return;}
+				mixerSavePending = false;
+				mixerSaveTimedOut = true;
+				var status = document.getElementById("mixerRemoteStatus");
+				director.miniTranslate(status, "mixer-save-timeout", "The main Mixer did not confirm this change. Your draft is still open. Check the shared layouts before trying again.");
+				alert(status.textContent);
+			}, 10000);
+		}
+		var sent = session.sendRequest(msg, session.directorUUID);
+		if (!sent && pending){clearTimeout(pending.timer); mixerSavePending = false;}
+		return sent;
 	}
 
 	function sendMixerState(UUID=false, result=false){
@@ -3874,8 +3893,9 @@
 			// Preview locally; only the main Mixer publishes layouts to the room.
 			session.layout = data.layout;
 			director.updateMixer();
-			if (data.result && mixerSavePending){
+			if (data.result && mixerSavePending && (data.result.requestId === mixerSavePending.id || data.result.requestId === undefined && !mixerSaveTimedOut)){
 				var closeAfterSave = mixerSavePending.close;
+				clearTimeout(mixerSavePending.timer);
 				mixerSavePending = false;
 				if (data.result.saved || data.result.removed){
 					var saved = findMixerLayout(data.result.saved);
@@ -3906,7 +3926,7 @@
 		if (data.action !== "save" && data.action !== "remove"){return;}
 		// Compare the edited preset, so simultaneous edits to other presets remain valid.
 		if (data.name && (!canvas || canvas.layout !== data.original || (canvas.obsSceneName || "") !== data.originalOBS)){
-			sendMixerState(UUID, "conflict");
+			sendMixerState(UUID, {conflict: true, requestId: data.requestId});
 			return;
 		}
 		if (data.action === "save" && Array.isArray(data.layout)){
@@ -3918,6 +3938,7 @@
 		} else {
 			return;
 		}
+		result.requestId = data.requestId;
 		saveSession();
 		sendMixerState(UUID, result);
 	}
@@ -4330,7 +4351,9 @@
 				var session = iframe.contentWindow.session;
 				if (e.data.action === "new-main-director" || (e.data.action === "view-connection" && e.data.value === false && e.data.UUID === session.directorUUID)){
 					mixerRemoteReady = false;
+					if (mixerSavePending){clearTimeout(mixerSavePending.timer);}
 					mixerSavePending = false;
+					mixerSaveTimedOut = false;
 					document.getElementById("containermenu").style.pointerEvents = "none";
 					iframe.contentWindow.miniTranslate(document.getElementById("mixerRemoteStatus"), "mixer-wait-for-main");
 				}
@@ -7195,15 +7218,14 @@ function settings() {
 		reportSlotFixes(slotFixes, "saveScene");
 		log(scene);
 		if (mixerRemote){
-			var sent = requestMixerControl({
+			requestMixerControl({
 				action: "save",
 				name: !makenew && editor.mixerOriginalLayout ? editor.sceneName : false,
 				original: editor.mixerOriginalLayout,
 				originalOBS: editor.mixerOriginalOBS,
 				layout: scene,
 				obsSceneName: editor.obsSceneName || ""
-			});
-			if (sent){mixerSavePending = {close: closeAfterSave};}
+			}, closeAfterSave);
 			return false;
 		}
 		
@@ -7262,9 +7284,7 @@ function settings() {
 		if (mixerRemote){
 			if (mixerSavePending){return;}
 			if (!editor.mixerOriginalLayout){return;}
-			if (requestMixerControl({action: "remove", name: editor.sceneName, original: editor.mixerOriginalLayout, originalOBS: editor.mixerOriginalOBS})){
-				mixerSavePending = {close: true};
-			}
+			requestMixerControl({action: "remove", name: editor.sceneName, original: editor.mixerOriginalLayout, originalOBS: editor.mixerOriginalOBS}, true);
 			return;
 		}
 		var sceneName = document.getElementById("canvas").sceneName || false;

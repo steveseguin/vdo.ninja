@@ -92,7 +92,8 @@ select:focus {
   border-color: #666;
 }
 
-#chatidhint {
+#chatidhint,
+#overlayhint {
   color: #bbb;
   font-size: 14px;
   margin: -4px 0 12px;
@@ -231,6 +232,28 @@ button:active {
     right: -10vw;
     left: auto;
   }
+}
+
+/* optional alerts page: sits over everything except the control bar; taps pass through unless Tap Alerts is on */
+#container3 {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  height: 100dvh;
+  z-index: 15;
+  pointer-events: none;
+  display: none;
+}
+
+#container3.interactive {
+  pointer-events: auto;
+}
+
+/* sound only: invisible but still rendering and tappable, so audio and Tap Alerts keep working */
+#container3.soundonly {
+  opacity: 0;
 }
 
 .hide {
@@ -458,11 +481,13 @@ body.layout-camera #container1 {
 <body>
 	<div id="container2" ></div>
 	<div id="container1" class="loading"></div>
+	<div id="container3"></div>
 	<div id="controlbar" >
 		<button id="hidepreview">Hide Preview</button>
 		<button id="mutemic">Mute Mic</button>
 		<button id="mutevideo">Mute Video</button>
 		<button id="cyclelayout">Layout</button>
+		<button id="tapalerts" style="display:none;">Tap Alerts</button>
 		<button id="togglesettings">Settings</button>
 		<button id="hangup">Hangup</button>
 	</div>
@@ -477,9 +502,16 @@ body.layout-camera #container1 {
 			<option value="kick">Kick</option>
 			<option value="youtube">YouTube</option>
 		</select>
-		<label for="twitch">Channel name, chat URL, or YouTube video ID:</label>
+		<label for="twitch">Channel name, chat URL, YouTube video ID, or other website URL:</label>
 		<input placeholder="Enter a channel, chat URL, or video ID" id="twitch" type="text" autocapitalize="off" autocorrect="off" spellcheck="false" enterkeyhint="go" />
-		<p id="chatidhint">Choose YouTube when entering a raw 11-character video ID.</p>
+		<p id="chatidhint">Choose YouTube when entering a raw 11-character video ID. Other website URLs work with Auto.</p>
+		<label for="overlayurl">Alerts or overlay URL (optional):</label>
+		<input placeholder="Enter an alerts or overlay page URL" id="overlayurl" type="text" autocapitalize="off" autocorrect="off" spellcheck="false" enterkeyhint="go" />
+		<select id="overlaymode">
+			<option value="show">Show the overlay</option>
+			<option value="sound">Sound only (hide the overlay)</option>
+		</select>
+		<p id="overlayhint">Shown on top of the camera and chat. Taps pass through it; if the page needs a tap to enable sound, press Tap Alerts, then tap the screen.</p>
 		Layout:
 		<div id="layoutchoices">
 			<label class="layoutopt"><input type="radio" name="layout" value="default" checked />
@@ -549,6 +581,12 @@ if (getStorage("twitchChatLink")){
 if (getStorage("vdoNinjaTwitchURL")){
 	document.getElementById("viewlink").value = getStorage("vdoNinjaTwitchURL");
 }
+if (getStorage("twitchOverlayURL")){
+	document.getElementById("overlayurl").value = getStorage("twitchOverlayURL");
+}
+if (getStorage("twitchOverlayMode") === "sound"){
+	document.getElementById("overlaymode").value = "sound";
+}
 var savedChatService = getStorage("twitchChatService");
 if (["auto", "twitch", "kick", "youtube"].indexOf(savedChatService) !== -1){
 	document.getElementById("chatservice").value = savedChatService;
@@ -580,8 +618,12 @@ function clearInput(){
 		removeStorage("vdoNinjaTwitchURL");
 		removeStorage("twitchLayoutMode");
 		removeStorage("twitchChatService");
+		removeStorage("twitchOverlayURL");
+		removeStorage("twitchOverlayMode");
 		document.getElementById("viewlink").value  = "";
 		document.getElementById("twitch").value = "";
+		document.getElementById("overlayurl").value = "";
+		document.getElementById("overlaymode").value = "show";
 		document.getElementById("chatservice").value = "auto";
 		document.querySelector('input[name="layout"][value="default"]').checked = true;
 	}
@@ -594,6 +636,7 @@ function startOnEnter(e){
 }
 document.getElementById("viewlink").addEventListener("keydown", startOnEnter);
 document.getElementById("twitch").addEventListener("keydown", startOnEnter);
+document.getElementById("overlayurl").addEventListener("keydown", startOnEnter);
 
 var iframe = null;
 function sendSelfCommand(action, value=null){
@@ -687,10 +730,18 @@ function loadIframes(url=false){
 		return;
 	}
 
+	var overlayURL = document.getElementById("overlayurl").value.trim();
+	if (overlayURL && !/^https?:\/\//i.test(overlayURL)){
+		overlayURL = "https://" + overlayURL;
+	}
+	var overlayMode = document.getElementById("overlaymode").value;
+
 	var layoutEl = document.querySelector('input[name="layout"]:checked');
 	applyLayout(layoutEl ? layoutEl.value : "default");
 	setStorage("twitchLayoutMode", currentLayout);
 	setStorage("twitchChatService", chatService);
+	setStorage("twitchOverlayURL", overlayURL);
+	setStorage("twitchOverlayMode", overlayMode);
 
 	document.getElementById("clean").parentNode.removeChild(document.getElementById("clean"));
 	document.getElementById("container1").style.display="inline-block";
@@ -760,7 +811,21 @@ function loadIframes(url=false){
 			document.getElementById("container2").appendChild(iframe2);
 		},1000);
 	}
-	
+
+	if (overlayURL){
+		document.getElementById("container3").style.display="block";
+		if (overlayMode === "sound"){
+			document.getElementById("container3").classList.add("soundonly");
+		}
+		document.getElementById("tapalerts").style.display="inline-block";
+		setTimeout(function(){
+			var iframe3 = document.createElement("iframe");
+			iframe3.allow = "autoplay;";
+			iframe3.src = overlayURL;
+			document.getElementById("container3").appendChild(iframe3);
+		},1000);
+	}
+
 }
 
 var hangup = document.getElementById("hangup");
@@ -773,6 +838,21 @@ cyclelayout.onclick = function(){
 	var next = layoutModes[(layoutModes.indexOf(currentLayout) + 1) % layoutModes.length];
 	applyLayout(next);
 	setStorage("twitchLayoutMode", next);
+}
+
+var tapalerts = document.getElementById("tapalerts");
+tapalerts.onclick = function(){
+	if (this.dataset.value!=="true"){
+		this.dataset.value = "true";
+		this.classList.add("pressed");
+		this.innerText = "Done Tapping";
+		document.getElementById("container3").classList.add("interactive");
+	} else {
+		this.dataset.value = "false";
+		this.classList.remove("pressed");
+		this.innerText = "Tap Alerts";
+		document.getElementById("container3").classList.remove("interactive");
+	}
 }
 
 var togglesettings = document.getElementById("togglesettings");

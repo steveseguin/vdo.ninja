@@ -327,7 +327,7 @@
 				monitorGain = audioContext.createGain();
 				monitorGain.gain.value = monitorEnabled ? 1 : 0;
 				monitorGain.connect(audioContext.destination);
-				await audioContext.audioWorklet.addModule('../core/audio/meter.worklet.js');
+				await audioContext.audioWorklet.addModule('../core/audio/meter.worklet.js?v=20261018.1');
 
 				const audioTracks = mediaStream.getAudioTracks();
 				if (audioTracks.length > 0) {

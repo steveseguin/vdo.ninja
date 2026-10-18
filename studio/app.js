@@ -36,6 +36,7 @@ const SAMPLE_SOURCES = [
 ];
 
 let storedJoinSound = false;
+let sessionSaveBlocked = false;
 try {
 	storedJoinSound = localStorage.getItem(JOIN_SOUND_STORAGE_KEY) === "1";
 } catch (error) {
@@ -173,7 +174,7 @@ function loadMeshcastEndpoint() {
 }
 
 function saveSession() {
-	if (!state.room) {
+	if (!state.room || sessionSaveBlocked) {
 		return;
 	}
 	const payload = {
@@ -192,26 +193,48 @@ function saveSession() {
 }
 
 function loadSession() {
+	sessionSaveBlocked = false;
 	clearPendingSceneDelete(false);
 	state.scenes = clone(defaultScenes);
 	state.activeSceneId = "scene_1";
 	state.lastAppliedSceneId = null;
 	state.placeholders = [];
+	let original = null;
+	let damaged = false;
 	try {
-		const saved = JSON.parse(localStorage.getItem(sessionStorageKey()) || "null");
+		original = localStorage.getItem(sessionStorageKey());
+		const saved = JSON.parse(original || "null");
 		if (saved && saved.version === APP_STATE_VERSION && Array.isArray(saved.scenes) && saved.scenes.length) {
-			const scenes = saved.scenes.map(normalizeTemplateScene);
-			const placeholders = normalizePlaceholders(saved.placeholders);
-			const activeIndex = saved.scenes.findIndex(scene => scene.id === saved.activeSceneId);
-			state.scenes = scenes;
-			state.activeSceneId = scenes[Math.max(0, activeIndex)].id;
-			state.placeholders = placeholders;
+			const scenes = [];
+			saved.scenes.forEach((scene, index) => {
+				try {
+					const restored = normalizeTemplateScene(scene, index);
+					scenes.push(restored);
+					if (scene.id === saved.activeSceneId) state.activeSceneId = restored.id;
+				} catch (error) { damaged = true; }
+			});
+			if (scenes.length) state.scenes = scenes;
+			if (Array.isArray(saved.placeholders)) saved.placeholders.forEach((item, index) => {
+				try { state.placeholders.push(normalizePlaceholders([item], index)[0]); }
+				catch (error) { damaged = true; }
+			});
 			state.brand = normalizeBrand(saved.brand);
-		}
+		} else if (saved) damaged = true;
 	} catch (error) {
+		damaged = true;
+		if (original === null) sessionSaveBlocked = true;
 		console.warn("Unable to load studio session", error);
 	}
-	if (!getActiveScene()) {
+	if (damaged && original) {
+		try {
+			localStorage.setItem(sessionStorageKey() + ".recovery." + Date.now(), original);
+			showToast("Recovered valid saved items. The original session is kept in this browser as a recovery copy.");
+		} catch (error) {
+			sessionSaveBlocked = true;
+			showToast("Saved data could not be recovered safely. Automatic saving is paused to preserve it.");
+		}
+	}
+	if (!state.scenes.some(scene => scene.id === state.activeSceneId)) {
 		state.activeSceneId = state.scenes[0].id;
 	}
 	if (state.lastAppliedSceneId && !state.scenes.some(scene => scene.id === state.lastAppliedSceneId)) {
@@ -267,11 +290,12 @@ function normalizeBrand(brand) {
 	};
 }
 
-function normalizePlaceholders(placeholders) {
+function normalizePlaceholders(placeholders, offset = 0) {
 	if (!Array.isArray(placeholders)) {
 		return [];
 	}
 	return placeholders.map((item, index) => {
+		index += offset;
 		if (!item || typeof item !== "object") {
 			throw new Error("Invalid guest slot");
 		}
@@ -422,6 +446,10 @@ async function buildInviteUrl() {
 		url.searchParams.set("password", state.password);
 	}
 	appendParams(url, extra);
+	url.searchParams.delete("codirector");
+	url.searchParams.delete("directorpassword");
+	url.searchParams.delete("dirpass");
+	url.searchParams.delete("dp");
 	return url.href;
 }
 
@@ -454,6 +482,10 @@ function buildSceneUrl(options = {}) {
 		url.searchParams.set("password", state.password);
 	}
 	appendParams(url, currentExtraParams());
+	url.searchParams.delete("codirector");
+	url.searchParams.delete("directorpassword");
+	url.searchParams.delete("dirpass");
+	url.searchParams.delete("dp");
 	return url.href;
 }
 

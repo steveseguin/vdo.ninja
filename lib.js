@@ -42116,6 +42116,27 @@ async function grabVideo(quality = 0, eleName = "previewWebcam", selector = "sel
 		} else if (videoSelect.options[videoSelect.selectedIndex].text.startsWith("screen-capture-recorder")) {
 			// screen-capture-recorder
 			mirror = true;
+		} else if (videoSelect.options[videoSelect.selectedIndex].text.startsWith("LSVCam")) {
+			mirror = true;
+		} else if (
+			videoSelect.options[videoSelect.selectedIndex].text.toLowerCase().startsWith("snap camera") ||
+			videoSelect.options[videoSelect.selectedIndex].text.toLowerCase().startsWith("manycam virtual webcam") ||
+			videoSelect.options[videoSelect.selectedIndex].text.toLowerCase().startsWith("manycam video source") ||
+			videoSelect.options[videoSelect.selectedIndex].text.toLowerCase().startsWith("xsplit vcam") ||
+			videoSelect.options[videoSelect.selectedIndex].text.toLowerCase().startsWith("xsplit broadcaster") ||
+			videoSelect.options[videoSelect.selectedIndex].text.toLowerCase().startsWith("xsplitbroadcaster") ||
+			videoSelect.options[videoSelect.selectedIndex].text.toLowerCase().startsWith("vcam.ai camera") ||
+			videoSelect.options[videoSelect.selectedIndex].text.toLowerCase().startsWith("vcam camera") ||
+			videoSelect.options[videoSelect.selectedIndex].text.toLowerCase().startsWith("camera (nvidia broadcast)") ||
+			videoSelect.options[videoSelect.selectedIndex].text.toLowerCase().startsWith("splitcam camera") ||
+			videoSelect.options[videoSelect.selectedIndex].text.toLowerCase().startsWith("splitcam video driver") ||
+			videoSelect.options[videoSelect.selectedIndex].text.toLowerCase().startsWith("ecamm live virtual cam") ||
+			videoSelect.options[videoSelect.selectedIndex].text.toLowerCase().startsWith("wirecast virtual camera") ||
+			videoSelect.options[videoSelect.selectedIndex].text.toLowerCase().startsWith("elgato virtual camera") ||
+			videoSelect.options[videoSelect.selectedIndex].text.toLowerCase().startsWith("camo camera")
+		) {
+			// Virtual cameras
+			mirror = true;
 		} else if (videoSelect.options[videoSelect.selectedIndex].text.includes(" back")) {
 			// Android
 			mirror = true;
@@ -67321,18 +67342,19 @@ function whipOut() {
 		//log(data);
 		try {
 			const reportingPeer = session.whipOut;
+			const requestURL = session.whipOutput, requestToken = session.whipOutputToken;
 			if (!reportingPeer) return;
 			const trickle = session.whipOut && session.whipOut.meshcastTrickle;
 			var xhttp = new XMLHttpRequest();
 			xhttp.onreadystatechange = async function () {
 				if (session.whipOut !== reportingPeer) {
 					// A stopped attempt can still receive a server-created WHIP resource.
-					if (isMeshcastStudioPublish() && type === "sdp" && this.readyState === 4 && this.status === 201) {
+					if (type === "sdp" && this.readyState === 4 && this.status === 201) {
 						var staleLocation = this.getResponseHeader("location");
 						if (staleLocation) {
 							var cleanup = new XMLHttpRequest();
-							cleanup.open("DELETE", completeLocationURL(session.whipOutput, staleLocation), true);
-							if (session.whipOutputToken) cleanup.setRequestHeader("Authorization", "Bearer " + session.whipOutputToken);
+							cleanup.open("DELETE", completeLocationURL(this.responseURL || requestURL, staleLocation), true);
+							if (requestToken) cleanup.setRequestHeader("Authorization", "Bearer " + requestToken);
 							cleanup.send();
 						}
 					}
@@ -67358,7 +67380,7 @@ function whipOut() {
 						try {
 							const locationHeader = this.getResponseHeader("location");
 							if (locationHeader) {
-								session.whipOut.location = completeLocationURL(session.whipOutput, locationHeader);
+								session.whipOut.location = completeLocationURL(this.responseURL || requestURL, locationHeader);
 							} else if (!session.whipOut.location && session.whipOutput) {
 								session.whipOut.location = session.whipOutput;
 								session.whipOut.location = completeLocationURL(session.whipOutput, session.whipOut.location);
@@ -67437,32 +67459,29 @@ function whipOut() {
 						warnlog("Processing answer:");
 						warnlog(jsep);
 						if (session.whipOut && session.whipOut.location) {
+								var resourceURL = session.whipOut.location;
 								if (isMeshcastStudioPublish()) {
 									try {
-										sessionStorage.setItem("deleteWhipOnLoad", JSON.stringify({ location: session.whipOut.location, whipOutputToken: session.whipOutputToken }));
+										sessionStorage.setItem("deleteWhipOnLoad", JSON.stringify({ location: resourceURL, whipOutputToken: requestToken }));
 									} catch (e) { /* Publishing can continue without browser storage. */ }
 								} else {
-									sessionStorage.setItem("deleteWhipOnLoad", JSON.stringify({ location: session.whipOut.location, whipOutputToken: session.whipOutputToken }));
+									sessionStorage.setItem("deleteWhipOnLoad", JSON.stringify({ location: resourceURL, whipOutputToken: requestToken }));
 								}
 								session.whipOut.deleteme = function () {
-									var deletePeer = isMeshcastStudioPublish() ? reportingPeer : session.whipOut;
 									let xhttp = new XMLHttpRequest();
-									xhttp.onload = xhttp.onerror = function () {
-										if (isMeshcastStudioPublish()) {
-											try {
-												var saved = JSON.parse(sessionStorage.getItem("deleteWhipOnLoad") || "null");
-												if (saved && saved.location === deletePeer.location) sessionStorage.removeItem("deleteWhipOnLoad");
-											} catch (e) { }
-											return;
-										}
-										sessionStorage.removeItem("deleteWhipOnLoad");
+									xhttp.onload = function () {
+										if (!(this.status >= 200 && this.status < 300) && this.status !== 404 && this.status !== 410) return;
+										try {
+											var saved = JSON.parse(sessionStorage.getItem("deleteWhipOnLoad") || "null");
+											if (saved && saved.location === resourceURL && saved.whipOutputToken === requestToken) sessionStorage.removeItem("deleteWhipOnLoad");
+										} catch (e) { }
 									};
-									xhttp.open("DELETE", deletePeer.location, true);
-									if (session.whipOutputToken) {
-										xhttp.setRequestHeader("Authorization", "Bearer " + session.whipOutputToken);
+									xhttp.open("DELETE", resourceURL, true);
+									if (requestToken) {
+										xhttp.setRequestHeader("Authorization", "Bearer " + requestToken);
 									}
 									xhttp.send();
-									delete deletePeer.deleteme;
+									delete reportingPeer.deleteme;
 								};
 							}
 						if (session.localNetworkOnly) {
@@ -67800,10 +67819,12 @@ function whipOut() {
 			// Close existing connection
 			if (session.whipOut) {
 				try {
-					if (isMeshcastStudioPublish()) {
-						clearInterval(session.whipOut.keyframeTimeout);
-						if (session.whipOut.deleteme) session.whipOut.deleteme();
-					}
+					clearInterval(session.whipOut.keyframeTimeout);
+					if (session.whipOut.deleteme) session.whipOut.deleteme();
+				} catch (e) {
+					warnlog(e);
+				}
+				try {
 					session.whipOut.close();
 				} catch (e) {
 					warnlog(e);
@@ -67892,10 +67913,12 @@ function whipOut() {
 		whipReconnectAttempts = 0;
 		if (session.whipOut) {
 			try {
-				if (isMeshcastStudioPublish()) {
-					clearInterval(session.whipOut.keyframeTimeout);
-					if (session.whipOut.deleteme) session.whipOut.deleteme();
-				}
+				clearInterval(session.whipOut.keyframeTimeout);
+				if (session.whipOut.deleteme) session.whipOut.deleteme();
+			} catch (e) {
+				warnlog(e);
+			}
+			try {
 				session.whipOut.close();
 			} catch (e) {
 				warnlog(e);
@@ -68644,11 +68667,8 @@ async function processWhipIn(data, sendTrickle) {
 	var UUID = session.generateRandomString(25); // fake
 	msg.UUID = UUID;
 
-	if (Firefox) {
-		// Force Firefox to be the DTLS server (passive) by telling it the offerer is active.
-		// OBS (libdatachannel) fails if it is forced to be the DTLS server.
-		msg.description.sdp = msg.description.sdp.replace(/a=setup:actpass/g, "a=setup:active");
-	}
+	// Prefer the DTLS client role for WHIP publishers to avoid Windows OBS/Chrome handshake failures.
+	msg.description.sdp = msg.description.sdp.replace(/a=setup:actpass/g, "a=setup:active");
 
 	if (session.forceNoAudioWhipIn || session.forceNoVideoWhipIn) {
 		try {
@@ -73892,6 +73912,54 @@ function addEventToAll(targets, trigger, callback) {
 
 function insertAfter(newNode, existingNode) {
 	existingNode.parentNode.insertBefore(newNode, existingNode.nextSibling);
+}
+// Keep the usual tile layout; fit an icon only when its heading overlaps it.
+if (window.ResizeObserver) {
+	["container-1", "container-2", "container-3", "container-4"].forEach(function (id) {
+		var tile = getById(id);
+		if (!tile) {
+			return;
+		}
+		var heading = tile.querySelector("h2");
+		if (!heading) {
+			return;
+		}
+		var icon = new Image();
+		icon.onload = function () {
+			var observer = new ResizeObserver(function () {
+				tile.classList.remove("home-icon-fit");
+				if (!tile.offsetWidth || !tile.classList.contains("card") || tile.classList.contains("in-animation") || tile.classList.contains("skip-animation")) {
+					return;
+				}
+				var style = getComputedStyle(tile);
+				if (style.backgroundImage !== background || style.backgroundPositionY.indexOf("%") === -1) {
+					return;
+				}
+				var range = document.createRange();
+				range.selectNodeContents(heading.querySelector("span") || heading);
+				var textBottom = range.getBoundingClientRect().bottom - tile.getBoundingClientRect().top - parseFloat(style.borderTopWidth);
+				var iconWidth = parseFloat(style.backgroundSize);
+				var iconHeight = iconWidth * icon.naturalHeight / icon.naturalWidth;
+				var iconTop = (tile.clientHeight - iconHeight) * parseFloat(style.backgroundPositionY) / 100;
+				if (textBottom <= iconTop) {
+					return;
+				}
+				var availableHeight = Math.max(0, tile.clientHeight - textBottom - 8 - 16);
+				if (availableHeight < iconHeight) {
+					iconWidth = availableHeight * icon.naturalWidth / icon.naturalHeight;
+				}
+				tile.style.setProperty("--home-icon-y", (textBottom + 8) + "px");
+				tile.style.setProperty("--home-icon-size", iconWidth + "px");
+				tile.classList.add("home-icon-fit");
+			});
+			observer.observe(heading);
+			observer.observe(tile);
+		};
+		var background = getComputedStyle(tile).backgroundImage;
+		if (background.indexOf("url(\"data:image/svg+xml,") === 0) {
+			icon.src = background.slice(5, -2);
+		}
+	});
 }
 addEventToAll(".column", "click", function (e, ele) {
 	if (ele.id === "container-22" || ele.classList.contains("skip-animation")) {
