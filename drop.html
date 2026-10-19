@@ -515,6 +515,36 @@
 				function available(file) {
 					return file.dropAvailable !== false && connected(session.rpcs[file.UUID]);
 				}
+				function readConnection(attempt) {
+					var peer = session.rpcs[attempt.file.UUID];
+					if (!peer || !peer.getStats || !engine.getSelectedCandidatePairStats) return;
+					var report;
+					try {
+						report = peer.getStats();
+					} catch (error) {
+						return;
+					}
+					if (!report || !report.then) return;
+					report.then(function (stats) {
+						var pair = engine.getSelectedCandidatePairStats(stats);
+						if (!pair || !stats.get) return;
+						var local = stats.get(pair.localCandidateId);
+						var remote = stats.get(pair.remoteCandidateId);
+						if (!local || !remote || !local.candidateType || !remote.candidateType) return;
+						if (local.candidateType === "relay" || remote.candidateType === "relay") {
+							attempt.route = "Relayed";
+							// The peer-facing protocol alone does not reveal a TURN TCP hop.
+							var relayProtocol = local.relayProtocol;
+							if (relayProtocol !== "tcp" && relayProtocol !== "tls") relayProtocol = remote.relayProtocol;
+							if (relayProtocol === "tcp" || relayProtocol === "tls") attempt.route += " (" + relayProtocol.toUpperCase() + ")";
+						} else {
+							attempt.route = "Direct";
+							var protocol = local.protocol || remote.protocol;
+							if (protocol) attempt.route += " " + protocol.toUpperCase();
+						}
+						if (typeof pair.currentRoundTripTime === "number") attempt.route += " · " + Math.round(pair.currentRoundTripTime * 1000) + " ms";
+					}).catch(function () {});
+				}
 				function row(key, file, action) {
 					if (!rows.has(key)) {
 						const li = document.createElement("li");
@@ -635,7 +665,7 @@
 						const resume = () => {
 							clearTimeout(readTimer);
 							if (!channel || channel.readyState !== "open" || !pendingRead) return;
-							if (channel.bufferedAmount > 256 * 1024) {
+							if (channel.bufferedAmount > 64 * 1024) {
 								readTimer = setTimeout(resume, 100);
 								return;
 							}
@@ -645,18 +675,19 @@
 						};
 						// The native sender creates one FileReader synchronously. Scope the
 						// adapter to that construction, then restore the iframe constructor.
-						// Its original slicing, framing, and cleanup remain in charge.
+						// Small batches keep the channel fed without large queued bursts.
+						// The sender keeps its 16 KB wire messages.
 						const FileReader = engine.FileReader;
 						engine.FileReader = class extends FileReader {
 							readAsArrayBuffer(blob) {
-								if (channel && channel.bufferedAmount > 1024 * 1024) {
+								if (channel && channel.bufferedAmount > 256 * 1024) {
 									pendingRead = () => super.readAsArrayBuffer(blob);
 									resume();
 								} else super.readAsArrayBuffer(blob);
 							}
 						};
 						try {
-							sendFile(uuid, id);
+							sendFile(uuid, id, 256 * 1024);
 						} finally {
 							engine.FileReader = FileReader;
 						}
@@ -666,7 +697,7 @@
 						const transfer = { channel, bytes: 0, eof: false, close };
 						if (!uploads.has(id)) uploads.set(id, []);
 						uploads.get(id).push(transfer);
-						channel.bufferedAmountLowThreshold = 256 * 1024;
+						channel.bufferedAmountLowThreshold = 64 * 1024;
 						channel.addEventListener("bufferedamountlow", resume);
 						let closeTimer;
 						const finishSending = () => {
@@ -691,7 +722,6 @@
 						};
 					};
 
-					const receiveFile = session.recieveFile;
 					session.recieveFile = (peers, uuid, channel) => {
 						const attempt = active;
 						if (!receiving || !attempt || attempt.channel || attempt.file.UUID !== uuid || channel.label !== attempt.file.id) {
@@ -699,83 +729,76 @@
 							return;
 						}
 						attempt.channel = channel;
+						channel.binaryType = "arraybuffer";
 						let header = false;
-						// Observe before the existing handler so invalid/incomplete transfers
-						// cannot be presented as successfully received files.
+						let writeBuffer = null,
+							writeOffset = 0;
+						// Batch small packets for fewer writes to the download stream.
 						channel.addEventListener("message", event => {
+							if (attempt.error) return;
 							attempt.lastData = Date.now();
-							let invalid = false;
-							if (!header) {
-								try {
+							try {
+								if (!header) {
 									const data = JSON.parse(event.data);
-									invalid = data.type !== "filetransfer" || data.id !== attempt.file.id || data.size !== attempt.file.size || data.filename !== attempt.file.name;
-								} catch (error) {
-									invalid = true;
+									if (data.type !== "filetransfer" || data.id !== attempt.file.id || data.size !== attempt.file.size || data.filename !== attempt.file.name) {
+										fail(attempt, "Transfer interrupted or incomplete. Try again.");
+										return;
+									}
+									attempt.writer = engine.streamSaver.createWriteStream(data.filename, () => fail(attempt, "Download cancelled by the browser.")).getWriter();
+									header = true;
+									attempt.file.status = 2;
+									attempt.started = Date.now();
+									readConnection(attempt);
+								} else if (attempt.eof || (typeof event.data === "string" && event.data !== "EOF1")) {
+									fail(attempt, "Transfer interrupted or incomplete. Try again.");
+								} else if (event.data === "EOF1") {
+									if (attempt.bytes !== attempt.file.size) {
+										fail(attempt, "Transfer interrupted or incomplete. Try again.");
+										return;
+									}
+									attempt.eof = true;
+									channel.close();
+									// Closing the writer waits for all queued writes before the next file.
+									attempt.writer.close().then(() => {
+										if (attempt.error) return;
+										attempt.saved = true;
+										attempt.finished = Date.now();
+										attempt.file.status = 3;
+										if (active === attempt) active = null;
+										nextDownload();
+									}).catch(() => fail(attempt, "Could not finish saving. Check your browser and retry."));
+								} else {
+									attempt.bytes += event.data.byteLength;
+									if (attempt.bytes > attempt.file.size) {
+										fail(attempt, "Transfer interrupted or incomplete. Try again.");
+										return;
+									}
+									attempt.file.completed = attempt.file.size ? attempt.bytes / attempt.file.size : 0;
+									const bytes = new engine.Uint8Array(event.data);
+									for (var offset = 0; offset < bytes.length;) {
+										if (!writeBuffer) writeBuffer = new engine.Uint8Array(Math.min(256 * 1024, attempt.file.size - attempt.bytes + bytes.length - offset));
+										const length = Math.min(writeBuffer.length - writeOffset, bytes.length - offset);
+										writeBuffer.set(bytes.subarray(offset, offset + length), writeOffset);
+										writeOffset += length;
+										offset += length;
+										if (writeOffset === writeBuffer.length) {
+											attempt.writer.write(writeBuffer).catch(() => fail(attempt, "Could not save the download. Check your browser and retry."));
+											writeBuffer = null;
+											writeOffset = 0;
+										}
+									}
 								}
-								header = true;
-							} else if (event.data === "EOF1") {
-								attempt.eof = attempt.bytes === attempt.file.size;
-								invalid = !attempt.eof;
-							} else if (typeof event.data === "string") {
-								invalid = true;
-							} else {
-								attempt.bytes += event.data.byteLength;
-								invalid = attempt.bytes > attempt.file.size;
-							}
-							if (invalid || attempt.error) {
-								event.stopImmediatePropagation();
+							} catch (error) {
 								fail(attempt, "Transfer interrupted or incomplete. Try again.");
 							}
 						});
 						channel.addEventListener("close", () => {
+							writeBuffer = null;
 							if (!attempt.eof) fail(attempt, "Transfer interrupted. Try again.");
 						});
 						channel.addEventListener("error", () => fail(attempt, "Transfer failed. Try again."));
-						receiveFile(peers, uuid, channel);
 					};
 
-					// Use the bundled StreamSaver and its browser fallbacks. Wait for the
-					// sink to close before advancing the queue; EOF alone is not a save.
-					const createWriteStream = engine.streamSaver.createWriteStream;
-					engine.streamSaver.createWriteStream = (name, stop) => {
-						const attempt = active;
-						if (!receiving || !attempt) return createWriteStream(name, stop);
-						const writer = createWriteStream(name, () => fail(attempt, "Download cancelled by the browser.")).getWriter();
-						attempt.writer = writer;
-						return new engine.WritableStream({
-							async write(chunk) {
-								if (attempt.error) return;
-								try {
-									await writer.write(chunk);
-								} catch (error) {
-									fail(attempt, "Could not save the download. Check your browser and retry.");
-								}
-							},
-							async close() {
-								try {
-									if (attempt.error || !attempt.eof) {
-										await writer.abort();
-										return;
-									}
-									await writer.close();
-									if (attempt.error) return;
-									attempt.saved = true;
-									if (active === attempt) active = null;
-									nextDownload();
-								} catch (error) {
-									fail(attempt, "Could not finish saving. Check your browser and retry.");
-								}
-							},
-							async abort() {
-								fail(attempt, "Download interrupted. Try again.");
-								try {
-									await writer.abort();
-								} catch (error) {
-									/* Already closed. */
-								}
-							}
-						});
-					};
 					engine.addEventListener("message", event => {
 						if (active && engine.streamSaver.isTrustedMessage && engine.streamSaver.isTrustedMessage(event) && event.data && event.data.streamSaverError) {
 							fail(active, "Browser downloads are unavailable. Try another browser.");
@@ -833,6 +856,11 @@
 							else if (attempt && attempt.error) detail += " · " + attempt.error;
 							else if (attempt && attempt.saved) detail += " · Received";
 							else if (!available(file)) detail += file.dropAvailable === false ? " · No longer shared" : " · Sender offline";
+							if (attempt && attempt.started && (busy || attempt.saved)) {
+								var elapsed = Math.max(1, (attempt.finished || Date.now()) - attempt.started);
+								detail += " · " + ((attempt.bytes * 8) / (elapsed * 1000)).toFixed(1) + " Mbps average";
+							}
+							if (attempt && attempt.route) detail += " · " + attempt.route;
 						} else {
 							text(entry.button, "Remove");
 							const transfers = uploads.get(file.id) || [];
@@ -874,7 +902,19 @@
 					location.assign(senderURL.href);
 				};
 				window.addEventListener("message", event => {
-					if (receiving || !frame || event.source !== frame.contentWindow || event.origin !== location.origin || !event.data) return;
+					if (!frame || event.source !== frame.contentWindow || event.origin !== location.origin || !event.data) return;
+					if (receiving) {
+						if (ready && event.data.action === "view-connection" && event.data.value === false) {
+							// A returning sender must offer its current files again.
+							engine.addDownloadLink([], event.data.UUID, session.rpcs);
+							render();
+						}
+						return;
+					}
+					if (ready && event.data.action === "push-connection" && event.data.value === true && session.pcs[event.data.UUID] && !session.hostedFiles.length) {
+						// The native publisher only announces nonempty catalogs.
+						session.sendMessage({ fileList: [] }, event.data.UUID);
+					}
 					if (event.data.action === "alert" && (event.data.value === "Stream ID is already in use." || event.data.value === "Stream ID is already in use in this room.")) {
 						shareConflict = true;
 						notice("That share name is already in use. Stop sharing any selected files, then apply a different name or reload to retry.");
@@ -1016,11 +1056,14 @@
 					novideo: "1",
 					noiframe: "1",
 					nochunk: "1",
+					// Other Drop tabs may still be saving through this service worker.
+					keepsw: "1",
 					chatbutton: "0",
 					nosettings: "1",
 					label: "Drop"
 				}).toString();
 				if (!legacy) source.searchParams.set("salt", "vdo.ninja/drop");
+				if (receiving) source.searchParams.set("retry", "10");
 				frame = document.createElement("iframe");
 				frame.id = "engine";
 				frame.hidden = true;

@@ -21307,7 +21307,7 @@ function truncateUrl(url) {
 	}
 }
 
-session.sendFile = function (UUID, fileid) {
+session.sendFile = function (UUID, fileid, chunksize = 16384) {
 	log("SENDING FILE: " + fileid + " " + UUID);
 	var fr = new FileReader();
 	var fid = session.hostedFiles.findIndex(file => file.id === fileid);
@@ -21326,7 +21326,6 @@ session.sendFile = function (UUID, fileid) {
 	// Keep this file stable when another share is removed from the list.
 	const sharedFile = session.hostedFiles[fid];
 
-	var chunksize = 16384;
 	var cid = 0;
 	var channelName = fileid;
 	if (channelName === "sendChannel") {
@@ -21404,7 +21403,14 @@ session.sendFile = function (UUID, fileid) {
 		}
 		var arrayBuffer = fr.result;
 		try {
-			transferchannel.send(arrayBuffer);
+			if (chunksize > 16384) {
+				// Read ahead for file-only transfers, keeping the existing wire size.
+				for (var offset = 0; offset < arrayBuffer.byteLength; offset += 16384) {
+					transferchannel.send(new Uint8Array(arrayBuffer, offset, Math.min(16384, arrayBuffer.byteLength - offset)));
+				}
+			} else {
+				transferchannel.send(arrayBuffer);
+			}
 		} catch (e) {
 			try {
 				transferchannel.close();
