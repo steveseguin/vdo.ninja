@@ -296,7 +296,9 @@
 				var outputWindow = document.createElement("div");
 				outputWindow.innerHTML = "streamID list:<br />";
 				for (var key in e.data.streamIDs) {
-					outputWindow.innerHTML += "streamID: " +  key + ", label:"+e.data.streamIDs[key] + "\n";          
+					var streamLine = document.createElement("div");
+					streamLine.textContent = "streamID: " + key + ", label:" + e.data.streamIDs[key];
+					outputWindow.appendChild(streamLine);
 				}
 				outputWindow.style.border="1px dotted black";
 				iframeContainer.appendChild(outputWindow);
