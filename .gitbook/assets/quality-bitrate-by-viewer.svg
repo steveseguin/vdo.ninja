@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="540" viewBox="0 0 960 540" role="img" aria-labelledby="title description">
+  <title id="title">One sender, different bitrates per viewer</title>
+  <desc id="description">A camera publisher in a room captures 720p with a 4000 kbps outbound target. Each viewer requests its own bitrate: a room guest preview shares a 500 kbps total budget, a director preview requests 35 kbps per guest, and an OBS scene or solo view can use the publisher target of 4000 kbps.</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 Z" fill="#205c96"/></marker>
+  </defs>
+  <rect width="960" height="540" fill="white"/>
+  <g font-family="Arial, Helvetica, sans-serif" text-anchor="middle" fill="#142c43">
+    <text x="480" y="54" font-size="36" font-weight="bold">One sender, different bitrates per viewer</text>
+    <rect x="40" y="170" width="270" height="230" rx="22" fill="#edf4fb" stroke="#205c96" stroke-width="3"/>
+    <text x="175" y="232" font-size="30" font-weight="bold">Publisher</text>
+    <text x="175" y="276" font-size="22">Camera in a room</text>
+    <text x="175" y="314" font-size="22">720p capture</text>
+    <text x="175" y="352" font-size="22">4000 kbps target</text>
+    <g fill="#edf4fb" stroke="#205c96" stroke-width="3">
+      <rect x="560" y="95" width="360" height="110" rx="18"/>
+      <rect x="560" y="230" width="360" height="110" rx="18"/>
+    </g>
+    <rect x="560" y="365" width="360" height="110" rx="18" fill="#e9f5f0" stroke="#2e7d4f" stroke-width="3"/>
+    <text x="740" y="140" font-size="26" font-weight="bold">Room guest preview</text>
+    <text x="740" y="178" font-size="22">Shares 500 kbps in total</text>
+    <text x="740" y="275" font-size="26" font-weight="bold">Director preview</text>
+    <text x="740" y="313" font-size="22">35 kbps per guest</text>
+    <text x="740" y="410" font-size="26" font-weight="bold">OBS scene or solo view</text>
+    <text x="740" y="448" font-size="22">Up to the 4000 kbps target</text>
+    <g stroke="#205c96" stroke-width="5" fill="none" marker-end="url(#arrow)">
+      <path d="M315 230 L550 152"/>
+      <path d="M315 285 H550"/>
+    </g>
+    <path d="M315 340 L550 418" stroke="#2e7d4f" stroke-width="5" fill="none" marker-end="url(#arrow)"/>
+    <text x="480" y="520" font-size="22">Mobile caps, explicit bitrates and the network can lower any of these</text>
+  </g>
+</svg>

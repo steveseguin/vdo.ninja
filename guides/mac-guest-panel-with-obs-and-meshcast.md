@@ -4,159 +4,104 @@ description: Build a guest panel on a Mac with VDO.Ninja and OBS, return the fin
 
 # Host a guest panel on a Mac with OBS and Meshcast
 
-This guide is for a host who wants to bring remote guests into OBS, arrange them into a panel, let them see the finished program, and stream the show to one or more platforms.
+Bring remote guests into OBS on a Mac, arrange them as a panel, let them see the finished program, and stream the show. VDO.Ninja brings in the guests, OBS builds the show, and Meshcast or your usual streaming service sends it to the audience.
 
-{% hint style="success" %}
-**The simple version:** VDO.Ninja brings in the guests. OBS builds the show. Meshcast or your usual streaming service sends the finished show to the audience.
-{% endhint %}
-
-```mermaid
-flowchart LR
-    G[Remote guests] -->|camera and microphone| V[VDO.Ninja room]
-    V -->|clean Scene output| O[OBS]
-    O -->|RTMP or WHIP| M[Meshcast]
-    M --> D[Streaming destinations]
-    O -. OBS Virtual Camera .-> R[Program return for guests]
-```
-
-{% hint style="warning" %}
-Keep the OBS Program return out of the VDO.Ninja Scene captured by OBS. Otherwise, the program captures itself and creates an endless hall-of-mirrors effect.
-{% endhint %}
+![Guests reach OBS through the Mixer's Scene View Link; OBS streams to Meshcast and on to platforms, and Virtual Camera returns the Program to guests.](../.gitbook/assets/obs-flow-mac-panel.svg)
 
 ## Before you start
 
 You need:
 
-* A Mac running current OBS Studio. For the most compatible Virtual Camera on Mac, use **OBS 30 or newer on macOS 13 or newer**.
+* A Mac with current OBS Studio. For the most compatible Virtual Camera, use **OBS 30 or newer on macOS 13 or newer**.
 * A [VDO.Ninja room](../getting-started/rooms/README.md) for the guests.
 * A Meshcast account if you want RTMP ingest or multi-destination restreaming.
-* Headphones for every person who will speak.
-* At least one private or unlisted destination for the rehearsal.
+* Headphones for everyone who speaks.
 
-### Choose sensible Mac settings
-
-| Mac | Recommended starting point |
+| Mac | Starting point |
 | --- | --- |
-| Apple silicon (M1, M2, M3, M4, or newer) | Apple VT H.264 hardware encoder, 1080p30 or 720p30 |
+| Apple silicon (M1 or newer) | Apple VT H.264 hardware encoder, 1080p30 or 720p30 |
 | Intel Mac | x264 at 720p30, 2,500–3,500 Kbps, preset `veryfast` |
 
-If an Intel Mac reports encoding lag, try `superfast` or `ultrafast`. These presets use less CPU but reduce picture quality at the same bitrate. RTMP is usually the simplest workflow on an Intel Mac, but it does not turn x264 into hardware encoding.
-
-For WHIP, OBS may switch the **audio** encoder from AAC to FFmpeg Opus. That message does not necessarily mean the H.264 video encoder changed. See [OBS WHIP output settings](obs-whip-output-settings.md) and [hardware-accelerated video encoding](hardware-accelerated-video-encoding.md).
+On an Intel Mac with encoding lag, try `superfast` or `ultrafast`: less CPU, lower quality. For WHIP, OBS may switch only the **audio** encoder to FFmpeg Opus. See [OBS WHIP output settings](obs-whip-output-settings.md) and [hardware-accelerated video encoding](hardware-accelerated-video-encoding.md).
 
 ## 1. Create the room and guest links
 
-Open VDO.Ninja, choose **Create a Room**, and open the Director's Room. Send each guest a separate invite link and ask them to wear headphones.
-
-Give regular guests stable seats by adding a unique preferred slot to each invite:
+Create a room and open the Director's Room. Give each guest a separate invite with a unique preferred slot and `&broadcast`, and ask them to wear headphones:
 
 ```text
-Guest 1: https://vdo.ninja/?room=YOUR_ROOM&slot=1
-Guest 2: https://vdo.ninja/?room=YOUR_ROOM&slot=2
-Guest 3: https://vdo.ninja/?room=YOUR_ROOM&slot=3
+Guest 1: https://vdo.ninja/?room=YOUR_ROOM&slot=1&broadcast
+Guest 2: https://vdo.ninja/?room=YOUR_ROOM&slot=2&broadcast
+Guest 3: https://vdo.ninja/?room=YOUR_ROOM&slot=3&broadcast
 ```
 
-Add `&slotmode` to the director link, or keep **Assign a slot to new guests automatically** enabled in the Mixer. Do not give two guests the same slot link. A preferred slot cannot be occupied by two people at once.
-
-Read more about [`&slot`](../advanced-settings/settings-parameters/and-slot.md) and the [VDO.Ninja Mixer](../steves-helper-apps/mixer-app.md).
+* [`&slot`](../advanced-settings/settings-parameters/and-slot.md) gives a regular guest the same seat every show. Keep **Assign a slot to new guests automatically** on in the [Mixer](../steves-helper-apps/mixer-app.md), or add `&slotmode` to the director link. One slot holds one guest, so never reuse a slot link.
+* [`&broadcast`](../advanced-settings/view-parameters/broadcast.md) shows guests only the director's video, which becomes the OBS program in step 4. Mixer invite links include it unless you tick **Guest can see other guests and the active layout**.
 
 ## 2. Build the panel layout
 
-Open the Mixer from the director room and create the layout you want. Use the numbered slots as permanent seats for recurring guests.
+Open the Mixer from the Director's Room and build your layout. Use the numbered slots as permanent seats for regular guests.
 
-For a mix of landscape cameras and vertical phone video:
+For a mix of landscape cameras and vertical phones:
 
 * Make the portrait slot taller or slightly wider.
-* Use **Cover** when filling the frame matters more than showing every edge.
-* Use the per-slot crop controls to remove empty space.
+* Turn on **Media fully cover area** when filling the frame matters more than showing every edge.
+* Use the slot's **Crop** settings to remove empty space.
 * Test with a real phone before the show.
 
-{% hint style="info" %}
-The automatic group layout is convenient, but a custom Mixer layout gives you predictable sizing for portrait guests.
-{% endhint %}
+## 3. Add the panel to OBS
 
-## 3. Add the clean Scene output to OBS
+In the Mixer, copy the **Scene View Link**, not the Mixer page's own address. Then in OBS:
 
-In the Mixer, copy the clean **Scene/output link intended for OBS**. Do not copy the Mixer control-page URL.
+1. Add a **Browser Source** and paste the link.
+2. Match its width and height to the OBS canvas, normally 1920 × 1080 or 1280 × 720.
+3. Enable **Control audio via OBS** if shown.
+4. Check that the source moves an OBS audio meter, then make and play back a short recording.
 
-In OBS:
-
-1. Add a **Browser Source**.
-2. Paste the clean Scene/output link.
-3. Match its width and height to the OBS canvas, normally 1920 × 1080 or 1280 × 720.
-4. Enable **Control audio via OBS** if that option is shown.
-5. Confirm the source moves an OBS audio meter, then make and listen to a short recording.
-
-One mixed Scene source is simpler than loading every guest separately. Avoid loading the same guest in multiple browser sources because every duplicate creates another connection.
-
-See [How to get permanent links](how-to-get-permanent-links.md) for reusable Scene URLs.
+One Scene source is simpler than a source per guest, and loading a guest twice creates extra connections. For reusable links, see [How to get permanent links](how-to-get-permanent-links.md).
 
 ## 4. Return the finished program to guests
 
-In OBS Virtual Camera settings, choose **Program**, then start **OBS Virtual Camera**.
+1. In the OBS Virtual Camera settings, choose **Program**, then click **Start Virtual Camera**.
+2. Enable the director's camera and select **OBS Virtual Camera**.
+3. Keep the director's slot **Unset** in the Mixer, so the return never appears in the Scene that OBS captures. You can also turn off the Mixer setting that lets the director appear in scenes.
 
 <figure><img src="../.gitbook/assets/obs-audio-guides/virtual-camera-settings-macos.png" alt="OBS Virtual Camera on macOS with Program Default selected" width="400"><figcaption><p>Choose Program to return the finished output. Image: <a href="https://obsproject.com/kb/virtual-camera-guide">OBS Project</a>.</p></figcaption></figure>
 
-Use the director as a performer and select **OBS Virtual Camera** as the director camera. Keep that return publisher **Unset** in the Mixer so it is not included in the Scene captured by OBS.
+Guests whose links contain `&broadcast` now see the Program instead of every guest's camera.
 
-Add `&broadcast` to each **guest invite**, not to the director or Scene link:
+<figure><img src="../.gitbook/assets/obs-return-broadcast-room-option.png" alt="VDO.Ninja Create a Room page with The guests can see the director, but not other guests' videos checked"><figcaption><p>This room-creation option adds &#x26;broadcast to guest invites.</p></figcaption></figure>
 
-```text
-https://vdo.ninja/?room=YOUR_ROOM&slot=1&broadcast
-```
-
-Guests still publish their camera and microphone to the director, but receive the director's Program video instead of every guest video.
-
-<figure><img src="../.gitbook/assets/obs-return-broadcast-room-option.png" alt="VDO.Ninja room option for guests to see only the director video"><figcaption><p>Broadcast mode returns the director's video while guest conversation audio can remain active.</p></figcaption></figure>
-
-OBS Virtual Camera carries video, not the OBS audio mix. The safest starting setup is:
-
-* VDO.Ninja handles conversation audio.
-* OBS Virtual Camera returns Program video only.
-* Every speaker wears headphones.
-
-If guests must hear clips or music from OBS, create a separate media-only return bus using a virtual audio device. Exclude **all host and guest microphones** from that return. Never send the full Program audio mix back into the room.
-
-For more routing options, see [Send an OBS return feed to guests](send-an-obs-return-feed-to-guests.md) and [`&broadcast`](../advanced-settings/view-parameters/broadcast.md).
+Virtual Camera carries video only. Let VDO.Ninja carry the conversation and never send the full Program mix back into the room. If guests must hear clips or music, send a media-only return that leaves out **all** microphones: see [Return OBS clips and music to the main room](room-audio-obs-meshcast-and-private-talk.md#4-return-obs-clips-and-music-to-the-main-room). For other return options, see [Send an OBS return feed to guests](send-an-obs-return-feed-to-guests.md).
 
 ## 5. Send OBS to Meshcast
 
-For the least-fussy Mac workflow, start with RTMP.
+RTMP is the simplest Mac workflow.
 
-1. In the Meshcast dashboard, copy the complete RTMP URL. It resembles `rtmp://host:1935/live/pk_example`.
+1. In the Meshcast dashboard, copy the complete RTMP URL. It looks like `rtmp://host:1935/live/pk_example`.
 2. In OBS, open **Settings → Stream** and choose **Custom**.
-3. Put the URL only through `/live` in **Server**, such as `rtmp://host:1935/live`.
-4. Put the private `pk_...` Publishing Key in **Stream Key**.
-5. Use H.264 video, AAC audio, CBR rate control, and a two-second keyframe interval.
+3. In **Server**, enter the URL up to `/live`, such as `rtmp://host:1935/live`.
+4. In **Stream Key**, enter the private `pk_...` Publishing Key.
+5. Use H.264 video, AAC audio, CBR rate control and a two-second keyframe interval.
 6. Start streaming.
 
 {% hint style="danger" %}
-Never share a private `pk_...` Publishing Key. Public watch links use the public `st_...` Stream ID instead.
+Never share a private `pk_...` Publishing Key. Public watch links use the public `st_...` Stream ID.
 {% endhint %}
 
-To send the show to several platforms, configure the destinations in Meshcast **before** starting OBS. For Restream.io or another provider, choose a custom destination and enter the RTMP or RTMPS URL and key supplied by that provider. Destination availability depends on the Meshcast account tier.
-
-You can also keep your existing streaming provider as the OBS destination. VDO.Ninja and the OBS guest-panel workflow do not require Meshcast.
+For several platforms, set up the destinations in Meshcast **before** you start OBS. For Restream.io or another provider, add a custom destination with its RTMP or RTMPS URL and key. Available destinations depend on your Meshcast account tier. You can also stream from OBS to your usual provider instead; the guest panel does not need Meshcast.
 
 ## Rehearsal checklist
 
-* [ ] Every speaker is wearing headphones.
-* [ ] Each guest enters the expected slot.
-* [ ] Portrait guests are large enough and not awkwardly cropped.
-* [ ] Guests can see the OBS Program return.
-* [ ] The Program return is not visible as a tile in the OBS Scene.
-* [ ] Nobody hears a delayed copy of their own voice.
+* [ ] Every speaker wears headphones, and nobody hears a delayed copy of their own voice.
+* [ ] Each guest lands in the expected slot, and portrait guests are not awkwardly cropped.
+* [ ] Guests see the OBS Program return, and it is not a tile in the OBS Scene.
 * [ ] **View → Stats** in OBS shows no encoding lag or dropped network frames.
-* [ ] A private destination receives both picture and sound.
+* [ ] A private or unlisted destination receives both picture and sound.
 
 ## Quick fixes
 
 | Problem | Fix |
 | --- | --- |
-| The picture repeats inside itself | Remove the Program-return publisher from the VDO.Ninja Scene captured by OBS. |
-| A guest enters the wrong frame | Give every seat a unique `&slot=N` invite and make sure the requested slot is free. |
-| A phone guest looks tiny | Use a custom Mixer layout with a taller portrait slot and adjust Cover or crop. |
-| A guest hears an echo | Use headphones and do not return the full OBS audio mix to the room. |
-| The Mac gets hot or OBS reports encoding lag | Close unused browser sources, use 720p30, lower bitrate, and use Apple VT H.264 on Apple silicon or a faster x264 preset on Intel. |
-| OBS rejects the Meshcast WHIP URL | Confirm OBS **Service** is WHIP, not Custom RTMP, and use the private Publishing Key as the Bearer Token. |
-
+| The picture repeats inside itself | Set the director's Mixer slot to **Unset** so the return leaves the captured Scene. |
+| The Mac runs hot or OBS reports encoding lag | Close unused browser sources, use 720p30, lower the bitrate, and use Apple VT H.264 or a faster x264 preset. |
+| OBS rejects the Meshcast WHIP URL | Set the OBS **Service** to WHIP, not Custom RTMP, and use the private Publishing Key as the Bearer Token. |

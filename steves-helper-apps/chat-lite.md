@@ -1,8 +1,12 @@
 ---
-description: Lightweight Social Stream Ninja activity overlay integrated into VDO.Ninja
+description: Removed in v30.2. The old lightweight Social Stream Ninja overlay for VDO.Ninja
 ---
 
 # Social Stream Ninja Lite
+
+{% hint style="warning" %}
+**Removed in v30.2 (July 2026).** Chat Lite is no longer part of VDO.Ninja and is not maintained. The `&chatlite` parameters do nothing in current versions. For live chat overlays, use [Social Stream Ninja](social-stream-ninja/) directly. The rest of this page describes the old app.
+{% endhint %}
 
 Social Stream Ninja Lite is a lightweight social activity overlay UI that can run standalone or embedded inside VDO.Ninja.
 

@@ -1,0 +1,47 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="530" viewBox="0 0 960 530" role="img" aria-labelledby="title description">
+  <title id="title">How a phone call reaches the room</title>
+  <desc id="description">Audio flows both ways from the phone caller to the phone provider, then to the VDO.Ninja page running the call-in panel, then to the room's guests and OBS. In Twilio mode only, a backend you run gives the page a browser token and PIN and answers the provider's webhooks; it carries no audio. In SIP and SignalWire modes the panel registers to the provider over wss:// with no backend.</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="4" markerHeight="4" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 Z" fill="#205c96"/></marker>
+    <marker id="arrow2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="4" markerHeight="4" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 Z" fill="#b25d00"/></marker>
+  </defs>
+  <rect width="960" height="530" fill="white"/>
+  <g font-family="Arial, Helvetica, sans-serif" text-anchor="middle" fill="#142c43">
+    <text x="480" y="50" font-size="34" font-weight="bold">How a phone call reaches the room</text>
+    <text x="480" y="84" font-size="22">Call audio flows both ways along the top row</text>
+    <g fill="#edf4fb" stroke="#205c96" stroke-width="3">
+      <rect x="24" y="110" width="172" height="120" rx="18"/>
+      <rect x="270" y="110" width="172" height="120" rx="18"/>
+      <rect x="516" y="110" width="172" height="120" rx="18"/>
+      <rect x="762" y="110" width="172" height="120" rx="18"/>
+    </g>
+    <g font-size="21" font-weight="bold">
+      <text x="110" y="164">Phone caller</text>
+      <text x="356" y="156">Phone provider</text>
+      <text x="602" y="164">VDO.Ninja page</text>
+      <text x="848" y="164">The room</text>
+    </g>
+    <g font-size="20">
+      <text x="110" y="196">any phone</text>
+      <text x="356" y="188">number, minutes</text>
+      <text x="356" y="214">or your PBX</text>
+      <text x="602" y="196">call-in panel</text>
+      <text x="848" y="196">guests and OBS</text>
+    </g>
+    <g stroke="#205c96" stroke-width="4" marker-start="url(#arrow)" marker-end="url(#arrow)">
+      <path d="M201 170 H265"/><path d="M447 170 H511"/><path d="M693 170 H757"/>
+    </g>
+    <rect x="270" y="320" width="418" height="120" rx="18" fill="#fff4e8" stroke="#b25d00" stroke-width="3"/>
+    <text x="479" y="358" font-size="22" font-weight="bold">Your backend (Twilio mode only)</text>
+    <text x="479" y="390" font-size="20">Issues the browser token and PIN</text>
+    <text x="479" y="418" font-size="20">Answers webhooks; carries no audio</text>
+    <g stroke="#b25d00" stroke-width="4" stroke-dasharray="10 7" marker-start="url(#arrow2)" marker-end="url(#arrow2)">
+      <path d="M356 236 V314"/><path d="M602 236 V314"/>
+    </g>
+    <g font-size="20">
+      <text x="344" y="282" text-anchor="end">webhooks</text>
+      <text x="614" y="282" text-anchor="start">token + PIN</text>
+    </g>
+    <text x="480" y="492" font-size="21">SIP and SignalWire modes: the panel registers over wss:// with no backend</text>
+  </g>
+</svg>

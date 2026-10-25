@@ -6,146 +6,121 @@ description: >-
 
 # Asking an AI to read your stats
 
-Pasting a raw stats dump into an LLM usually produces confident nonsense. The field names look like generic WebRTC statistics but several of them are VDO.Ninja-specific, and a few mean close to the opposite of what a model will assume — most importantly, that raising the bitrate is the wrong response to packet loss.
-
-The prompt below supplies that missing context. Paste it, then paste your stats underneath.
+A raw stats dump pasted into an LLM often gets a confident but wrong answer. Some fields are specific to VDO.Ninja, and models tend to suggest a higher bitrate for packet loss, which makes it worse. Paste the prompt below, then your stats under it.
 
 ## Before you paste: redact these
 
-The **Copy** button captures the panel exactly as shown, which can include:
+The **Copy** button captures the panel as shown, which can include:
 
-* **IP addresses** — `Local relay IP` and `Remote relay IP` appear when the connection is going through a TURN relay.
-* **Machine fingerprints** — user agent, GPU model, CPU core count, for both you and the person at the other end.
-* **Guest labels** — real names, if that is what you use for `&label`.
-* **Your stream IDs** — anyone with a stream ID can attempt to view or push to it, unless you are using a password.
+* **IP addresses:** `Local relay IP`, `Remote relay IP` and relay URLs, when a TURN relay is used.
+* **Device details:** user agent, GPU, CPU cores and OS, for both ends.
+* **Labels:** real names, if you use them in `&label`.
+* **Location:** `Lat` and `Lon`, if the sender shares location.
+* **Stream IDs:** anyone with one may be able to view the stream unless you use a password.
 
-Replace anything sensitive with `REDACTED` before sharing. The diagnosis does not depend on any of it.
+Replace anything sensitive with `REDACTED`; the diagnosis does not need it.
 
 ## The prompt
 
 ````text
-You are helping me troubleshoot a live video stream sent with VDO.Ninja, a
-peer-to-peer WebRTC streaming tool. I am going to paste the contents of its
-statistics panel. Read it using the following context.
+Help me troubleshoot a live stream sent with VDO.Ninja, a peer-to-peer WebRTC
+tool. Below is text copied from its stats panel. Section headings are in
+[square brackets]; rows are "Label: value".
 
-WHICH PANEL IS THIS
-There are two panels and they mean different things:
-- A VIEWER panel starts with "StreamID:" followed by a "Stream info" section.
-  It describes what is ARRIVING at the person who captured it. Critically, the
-  "Stream info" section is self-reported by the REMOTE SENDER: the CPU, GPU,
-  OS, browser and battery listed there belong to the sender, not the person
-  who captured the dump.
-- A PUBLISHER panel lists "Outbound connections" and then repeats a block per
-  connected viewer, each headed "Viewer: <name>". It describes what is BEING
-  SENT. Each viewer block is a separate encode with its own limits.
-If both panels are pasted, they are the two ends of the same connection and
-should be cross-referenced rather than analysed separately.
+WHICH PANEL
+Both panels start with "StreamID:".
+- VIEWER panel: sections like [Stream info], [Peer-to-peer connection],
+  [Video track], [Audio track]. Shows what ARRIVES at the person who copied
+  it. [Stream info] is reported by the REMOTE SENDER: its CPU, GPU, OS,
+  browser and battery belong to the sender.
+- PUBLISHER panel: "Outbound connections", then one [Viewer: <name>] block
+  per viewer, each with [Remote Peer Info], then [Reliability counters].
+  Shows what is SENT. Each viewer is a separate encode with its own limits.
+If both are pasted, they are two ends of one connection; compare them.
 
-FIELD MEANINGS
-- Packet Loss: the panel's current loss sample. Under 1% is often fine, but a
-  low current sample does not rule out an earlier burst.
-- NACKs sent / NACKs per second: requests to resend a lost packet. Some is
-  normal; sustained growth usually means missing or reordered packets.
-- Keyframes requested (PLI): the receiver asked for a full refresh because
-  its decoder needed one. Loss can cause this, but startup, decoder resets,
-  layer changes and renegotiation can as well. Correlate sustained growth with
-  NACKs, loss and visible freezes rather than treating PLI as proof of loss.
-- Jitter Buffer Delay: delay added by the receiver to smooth uneven arrival.
-  A rising value means arrival is becoming less even; a zero current loss
-  sample does not prove that no earlier packets were lost.
-- Round Trip Time: network latency. Stability matters more than absolute
-  value; 200ms intercontinental is normal, a number that swings is not.
-- Candidate type (Local and Remote): "host" = a host/interface candidate,
-  "srflx" = a public NAT mapping discovered through STUN, and "relay" = a TURN
-  allocation. Interpret the selected pair together. A pair containing relay
-  uses TURN; host on both ends often indicates a LAN path.
-- Available outgoing bitrate: what the congestion controller believes the
-  selected path can currently carry. It is an estimate, not proof of the
-  physical upload ceiling.
-- Quality limited by: why the encoder is holding back. Values: none,
-  bandwidth, cpu, other. "none" means the browser is not currently limiting
-  resolution or frame rate; it does not promise that bitrate will hit a target.
-- Scale factor / Requested resolution: VDO.Ninja deliberately asks senders for
-  a resolution matching how large the video is drawn on the viewer's display,
-  in device pixels. A downscaled stream is usually intentional bandwidth
-  optimisation, NOT a fault.
-- Mic level (sent): audio level reaching the encoder, 0 to 1. If it stays at
-  zero while the sender speaks, the microphone pipeline is producing silence.
-- Audio Level: received audio loudness, 0 to 1.
-- Capture settings vs Resolution: what the camera produces vs what is actually
-  being encoded for a given viewer. They differ when scaling is applied.
-- Video init width/height/frameRate: what the SENDER asked their camera for,
-  not what is currently being sent.
-- A missing "Audio track" or "Video track" section means that track is not
-  being received at all. Absence is a finding, not missing data.
-- A "⚠️" next to a bitrate means the track exists but nothing is flowing.
-- Reliability counters: internal recovery telemetry. Almost all zero is
-  normal. A few "Ice candidate error 701" entries are harmless. Sustained
-  growth in "Peer recovery attempts" or "Media stall restarts" indicates an
-  unstable connection rather than a merely slow one.
+FIELDS
+- Packet Loss: loss in the latest sample. A low value does not rule out an
+  earlier burst.
+- NACKs sent / NACKs per second: resend requests. Sustained growth means lost
+  packets. Retransmitted: bandwidth spent resending.
+- Keyframes requested (PLI) / Keyframe requests (PLI): picture refresh
+  requests. Loss, startup or decoder resets can cause them; a PLI alone does
+  not prove loss.
+- Jitter Buffer Delay: receiver delay to smooth uneven arrival; rising means
+  less even arrival.
+- DecodeLatencyMs: receiver's decode time per frame; high means a slow
+  receiving computer.
+- Round Trip Time / Average round trip time: latency. Stability matters more
+  than the value.
+- Candidate type - Local / Remote: host = local interface, srflx = public
+  address via STUN, relay ("relay server") = TURN. Any relay means TURN.
+- Available outgoing bitrate: the browser's estimate of path capacity, not a
+  measured limit.
+- Quality limited by: none, bandwidth, cpu or other. "none" means nothing is
+  held back right now, not that the bitrate target is met.
+- Video encoder / Hardware video encoder: ExternalEncoder and
+  MediaFoundationVideoEncodeAccelerator are hardware encoders.
+- Scale factor / Requested resolution: VDO.Ninja asks for the size the video
+  is drawn on the viewer's screen, in device pixels. Downscaling is usually
+  intentional, NOT a fault.
+- Capture settings vs Resolution: what the camera produces vs what is encoded
+  for a viewer.
+- Video init width/height/frameRate: what the sender asked the camera for,
+  not what is sent now.
+- Mic level (sent): level reaching the sender's encoder, 0 to 1. Zero while
+  speaking means the mic feeds silence. Audio Level: received loudness.
+- A missing [Audio track] or [Video track] means that track is not received.
+- A warning sign next to a bitrate means the track exists but nothing flows.
+- Reliability counters: mostly zero is normal; a few "Ice candidate error
+  701" are harmless. Steady growth in "Peer recovery attempts" or "Media
+  stall restarts" means an unstable connection.
 
-INTERPRETATION RULES
-1. Raising the bitrate is the WRONG response to packet loss. More data on a
-   lossy path causes more retransmission and more loss. Recommend lowering
-   bitrate, resolution or framerate instead.
-2. When "Quality limited by" is cpu, raising bitrate will not help. Reducing
-   frame rate and/or resolution reduces encoder work. Switching to H.264 often
-   enables hardware encoding.
-3. When "Quality limited by" is bandwidth AND video bitrate is close to
-   available outgoing bitrate, the path is probably congestion-limited and a
-   higher target is unlikely to help.
-4. If several viewers show problems but one does not, the problem is on the
-   affected viewers' end-to-end paths rather than a universal sender limit.
-   If all viewers show the same limit simultaneously, investigate shared
-   sender-side constraints first. Neither pattern proves the exact segment.
-5. Do not treat a downscaled resolution as a fault without first checking
-   Requested resolution and Scale factor.
-6. Distinguish "degraded" from "flapping": Time active resetting repeatedly,
-   or climbing Peer recovery attempts, means the connection is dropping and
-   rebuilding, which needs a different fix from mere congestion.
-7. Battery and thermal state matter for phone senders. Check Power level and
-   Plugged in before recommending settings changes.
+RULES
+1. Never recommend more bitrate for packet loss. Recommend lower bitrate,
+   resolution or frame rate.
+2. If Quality limited by is cpu, more bitrate will not help. Lower frame rate
+   or resolution; H.264 often enables hardware encoding.
+3. If it is bandwidth and video bitrate is near available outgoing bitrate,
+   the path is full.
+4. If only some viewers have problems, look at their paths. If all show the
+   same limit, check the sender first. Neither proves the exact segment.
+5. Check Requested resolution and Scale factor before calling a small
+   resolution a fault.
+6. Time active resetting or Peer recovery attempts climbing means the
+   connection keeps dropping, which needs a different fix from congestion.
+7. For phone senders, check Power level and Plugged in.
 
-WHAT I WANT BACK
-1. One sentence: what is actually wrong.
-2. Which end the problem is on (sender, receiver, or the network between).
-3. The specific numbers in the dump that support that conclusion.
-4. Concrete next steps, most likely to help first. Use VDO.Ninja URL
-   parameters where relevant.
-5. Anything you would need to see to be more certain, including whether you
-   need the other end's stats panel.
+ANSWER WITH
+1. One sentence: what is wrong.
+2. Which end: sender, receiver or the network between.
+3. The numbers that support it.
+4. Next steps, most likely first, with VDO.Ninja URL parameters if relevant.
+5. What else you need to be sure, such as the other end's stats.
+If the data is not enough, say so. Do not invent values.
 
-If the data does not support a confident conclusion, say so and tell me what
-to capture next. Do not invent values that are not in the dump.
-
-Here are my stats:
+My stats:
 
 [PASTE YOUR STATS HERE]
 ````
 
 ## Add your context
 
-The prompt works better if you also tell it what you are actually doing. Add a couple of lines before your stats:
+Put a few lines before your stats:
 
 ```text
 Setup: publishing from a phone on 5G, viewed in OBS on a wired desktop.
 Symptom: video freezes for about a second every 30 seconds, audio is fine.
-My push link: https://vdo.ninja/?push=XXXX&quality=1&codec=h264
-My view link: https://vdo.ninja/?view=XXXX&buffer=500
+My push link: https://vdo.ninja/?push=XXXX&quality=1
+My view link: https://vdo.ninja/?view=XXXX&codec=h264&buffer=500
 ```
-
-Setup, symptom and both URLs answer most of the follow-up questions an LLM would otherwise have to ask.
 
 ## Short version
 
-If you just want a quick read and do not need the full glossary:
-
 ```text
 This is a stats dump from VDO.Ninja, a peer-to-peer WebRTC streaming tool.
-Notes: the "Stream info" section describes the remote sender's machine, not
-mine. "Quality limited by" says why the encoder is holding back. Raising
-bitrate is the wrong response to packet loss. Downscaled resolution is usually
-intentional bandwidth optimisation, not a fault.
+[Stream info] describes the remote sender's device, not mine. "Quality
+limited by" says why the encoder is holding back. More bitrate is the wrong
+fix for packet loss. Downscaled resolution is usually intentional.
 Tell me what is wrong, which end it is on, and what to change.
 
 [PASTE YOUR STATS HERE]
@@ -153,15 +128,13 @@ Tell me what is wrong, which end it is on, and what to change.
 
 ## Capturing both ends
 
-Most of the harder cases are only decidable by comparing sender and receiver, so capture both where you can:
+1. On the sending computer, Ctrl + click your own preview and click **Copy**.
+2. On the receiving computer, Ctrl + click the incoming video and click **Copy**.
+3. Paste both, labelled `--- PUBLISHER ---` and `--- VIEWER ---`.
 
-1. On the sending machine, Ctrl + click your own camera preview, press **Copy**.
-2. On the receiving machine, Ctrl + click the incoming video, press **Copy**.
-3. Label them clearly — `--- PUBLISHER ---` and `--- VIEWER ---` — before pasting.
-
-Both ends let an LLM cross-check what was sent against what arrived and distinguish many sender, receiver and path problems. They still cannot prove whether loss occurred on the sender's access link, the receiver's access link, or an intermediate network without additional measurements.
+Both ends let the model compare what was sent with what arrived. They still cannot show where on the path loss happened.
 
 ## Next
 
-* [Diagnosing problems](troubleshooting.md) — the same reasoning, done by hand
-* [Reading the viewer panel](viewer-stats.md) and [the publisher panel](publisher-stats.md) — full field references
+* [Diagnosing problems](troubleshooting.md): the same reasoning, done by hand
+* [Reading the viewer panel](viewer-stats.md) and [the publisher panel](publisher-stats.md): full field references

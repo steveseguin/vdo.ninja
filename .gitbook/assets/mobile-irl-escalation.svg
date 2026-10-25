@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="540" viewBox="0 0 960 540" role="img" aria-labelledby="title description">
+  <title id="title">Change one thing at a time</title>
+  <desc id="description">Escalation path for an IRL stream. Step 1, the stable profile at 720p30 and about 2 Mbps. Step 2, the weak-signal profile at 360p30 and about 0.9 Mbps. Step 3, an A/B test of forced TURN relay, kept only if it is better. Step 4, bond two independent networks for handoffs and coverage gaps. Step 5, chunked mode if 1 to 4 seconds of delay is acceptable. Move to the next step only if the field test still fails, and keep a local recording on the phone throughout.</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 Z" fill="#205c96"/></marker>
+  </defs>
+  <rect width="960" height="540" fill="white"/>
+  <g font-family="Arial, Helvetica, sans-serif" text-anchor="middle" fill="#142c43">
+    <text x="480" y="54" font-size="36" font-weight="bold">Change one thing at a time</text>
+    <text x="480" y="88" font-size="24">Move on only if the field test still fails</text>
+    <g fill="#edf4fb" stroke="#205c96" stroke-width="3">
+      <rect x="25" y="120" width="270" height="110" rx="20"/>
+      <rect x="345" y="120" width="270" height="110" rx="20"/>
+      <rect x="665" y="120" width="270" height="110" rx="20"/>
+      <rect x="665" y="290" width="270" height="110" rx="20"/>
+      <rect x="345" y="290" width="270" height="110" rx="20"/>
+    </g>
+    <g font-size="26" font-weight="bold">
+      <text x="160" y="166">1. Stable profile</text>
+      <text x="480" y="166">2. Weak signal</text>
+      <text x="800" y="166">3. Test &amp;relay</text>
+      <text x="800" y="336">4. Bond networks</text>
+      <text x="480" y="336">5. Chunked mode</text>
+    </g>
+    <g font-size="22">
+      <text x="160" y="202">720p30, about 2 Mbps</text>
+      <text x="480" y="202">360p30, about 0.9 Mbps</text>
+      <text x="800" y="202">keep it only if better</text>
+      <text x="800" y="372">for handoffs and gaps</text>
+      <text x="480" y="372">if 1–4 s delay is OK</text>
+    </g>
+    <g stroke="#205c96" stroke-width="5" fill="none" marker-end="url(#arrow)">
+      <path d="M300 175 H337"/>
+      <path d="M620 175 H657"/>
+      <path d="M800 235 V282"/>
+      <path d="M660 345 H623"/>
+    </g>
+    <rect x="45" y="440" width="870" height="70" rx="18" fill="#e9f5f0" stroke="#2e7d4f" stroke-width="3"/>
+    <text x="480" y="484" font-size="26" font-weight="bold">Keep a local recording on the phone throughout</text>
+  </g>
+</svg>

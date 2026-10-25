@@ -12,7 +12,7 @@ Sometimes you will want to move a user from one room to another, for example to 
 
 When a user is transferred to another room, they no longer are the owner of that guest. The director of the room you transferred that guest to becomes the owner.
 
-Only the main director can transfer users; anyone can be the director of a room -- it's first come first serve, so be sure to leave the director-window open if you wish to remain the director of a room
+The main director can transfer users, and so can co-directors while "Allow co-directors to transfer guests" is on (the default). Anyone can be the director of a room -- it's first come first serve, so be sure to leave the director-window open if you wish to remain the director of a room
 
 Standard transfers keep the destination room out of the guest's normal address bar, allowing the original room to act as a screening room. This is not guaranteed secrecy: destination information reaches the browser through signaling, and some transfer paths send migration information to the room. Do not rely on transfer alone against someone inspecting their client. See [Protecting a room from unwanted listeners](../../guides/protecting-a-room-from-unwanted-listeners.md).
 
@@ -24,7 +24,7 @@ If a transferred guest is still pending in that destination room and disconnects
 
 If the destination room has a [`&roomcap`](../../advanced-settings/director-parameters/and-roomcap.md) limit and is already full, the transfer will be rejected.
 
-If the guest link includes [`&queuetransfer`](../../advanced-settings/settings-parameters/and-queuetransfer.md), the guest is transferred into the destination queue flow and waits there until activated.
+If the director link includes [`&queuetransfer`](../../advanced-settings/settings-parameters/and-queuetransfer.md), transferred guests enter the destination queue and wait there until activated.
 
 If you transfer someone to a room, the passwords for both rooms need to match. This may change in the future.
 

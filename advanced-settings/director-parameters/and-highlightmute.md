@@ -1,5 +1,5 @@
 ---
-description: Automatically mutes non-highlighted guests and unmutes the highlighted guest.
+description: Mutes the other guests whenever the director highlights a guest.
 ---
 
 # \&highlightmute
@@ -12,29 +12,28 @@ Director Option! ([`&director`](../../viewers-settings/director.md))
 * `&mutefollowhighlight`
 * `&mfh`
 
+## Options
+
+| Value | Description |
+| --- | --- |
+| (no value) or any other value | Turn on **Mute follows Highlight** |
+| `0`, `false`, `no` or `off` | Leave it off |
+
 ## Details
 
-`&highlightmute` enables **Mute follows Highlight** in the director control room.
+`&highlightmute` turns on **Mute follows Highlight** in the director's room. You can also tick it in the director's **Room Settings**.
 
 ```text
 https://vdo.ninja/?director=MyRoom&highlightmute
 ```
 
-When enabled, selecting a guest with the director **Highlight** / solo-video control will remotely unmute that highlighted guest and remotely mute the other guests.
+When you **Highlight** a guest, the other guests are remotely muted, so the highlighted guest is the only one on air. When you clear the Highlight, guests muted by this rule are unmuted again. Guests who join while someone is highlighted are muted too.
 
-This is intended for production workflows where the active on-air guest should automatically be the only unmuted guest.
-
-## Limitations
-
-This option is URL gated or manually enabled from the director room settings. If it is not enabled, Highlight behaves as it normally does.
-
-Manual per-guest unmute changes are still possible. Those manual changes remain until the next Highlight change, when the mute-follow rule is applied again.
-
-If the option is enabled while no guest is currently highlighted, guests may be muted until a Highlight target is selected.
-
-The Ctrl/Cmd-click Highlight mode, which only makes a video larger, does not drive mute-follow. Only normal Highlight changes affect audio.
-
-The rule targets normal guest audio controls only. It skips directors, screen-share entries, pseudo-guests, and guests that do not yet have a director mute control available.
+* It only unmutes guests that it muted itself. A guest you muted by hand stays muted when highlighted.
+* You can still mute or unmute guests by hand. The rule applies again at the next Highlight change.
+* Turning it on when nobody is highlighted mutes no one.
+* CTRL/⌘ + click Highlight, which only enlarges a video, does not change audio.
+* Directors, co-directors, screen shares and guests without a director mute control yet are skipped.
 
 ## Related
 

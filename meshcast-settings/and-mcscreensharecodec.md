@@ -20,7 +20,7 @@ Example: `&mcscreensharecodec=h264`
 
 ## Details
 
-Adding `&mcsceensharecodec` to the publisher's side together with [`&meshcast`](../newly-added-parameters/and-meshcast.md) gives the option to change the publishing codec while screen-sharing via meshcast.
+Adding `&mcscreensharecodec` to the publisher's side together with [`&meshcast`](../newly-added-parameters/and-meshcast.md) gives the option to change the publishing codec while screen-sharing via meshcast.
 
 Example usage: `https://vdo.ninja/?meshcast&mcscreensharecodec=vp8`
 

@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="520" viewBox="0 0 960 520" role="img" aria-labelledby="title description">
+  <title id="title">Patch one missing direction</title>
+  <desc id="description">Guest B's direct audio path to Guest A has failed, while the reverse path from A to B still works. The director patches it by opening Guest A's Mix and selecting only Guest B, so B's audio travels from B to the director and from the director to A. Uncheck B when the direct path recovers, or A hears B twice.</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 Z" fill="#205c96"/></marker>
+    <marker id="arrow-broken" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 Z" fill="#b25d00"/></marker>
+    <marker id="arrow-patch" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 Z" fill="#2e7d4f"/></marker>
+  </defs>
+  <rect width="960" height="520" fill="white"/>
+  <g font-family="Arial, Helvetica, sans-serif" text-anchor="middle" fill="#142c43">
+    <text x="480" y="52" font-size="36" font-weight="bold">Patch one missing direction</text>
+    <g fill="#edf4fb" stroke="#205c96" stroke-width="3">
+      <rect x="380" y="85" width="200" height="90" rx="18"/>
+      <rect x="45" y="320" width="215" height="115" rx="20"/>
+      <rect x="700" y="320" width="215" height="115" rx="20"/>
+    </g>
+    <g font-size="28" font-weight="bold">
+      <text x="480" y="140">Director</text>
+      <text x="152" y="368">Guest A</text>
+      <text x="807" y="368">Guest B</text>
+    </g>
+    <g font-size="21">
+      <text x="152" y="404">listener</text>
+      <text x="807" y="404">speaker</text>
+    </g>
+    <path d="M770 314 L590 186" stroke="#2e7d4f" stroke-width="5" fill="none" marker-end="url(#arrow-patch)"/>
+    <path d="M370 186 L190 314" stroke="#2e7d4f" stroke-width="5" fill="none" marker-end="url(#arrow-patch)"/>
+    <text x="480" y="232" font-size="22" font-weight="bold" fill="#2e7d4f">Patch: A's Mix with only B</text>
+    <path d="M694 352 H268" stroke="#b25d00" stroke-width="5" stroke-dasharray="14 8" fill="none" marker-end="url(#arrow-broken)"/>
+    <text x="480" y="336" font-size="22" font-weight="bold" fill="#b25d00">Direct B to A: no audio</text>
+    <path d="M266 402 H692" stroke="#205c96" stroke-width="5" fill="none" marker-end="url(#arrow)"/>
+    <text x="480" y="434" font-size="22">A to B still works</text>
+    <text x="480" y="492" font-size="22">Uncheck B once the direct path recovers, or A hears B twice.</text>
+  </g>
+</svg>

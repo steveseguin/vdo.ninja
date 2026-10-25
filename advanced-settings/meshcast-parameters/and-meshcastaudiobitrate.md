@@ -1,26 +1,40 @@
 ---
-description: Option to change outbound audio bitrate of the &meshcast parameter
+description: Sets the outbound audio bitrate for Meshcast and WHIP output. Use &meshcastab or &mcab.
 ---
 
 # \&meshcastaudiobitrate
 
 Meshcast Option / Sender-Side Option! ([`&meshcast`](../../newly-added-parameters/and-meshcast.md), [`&push`](../../source-settings/push.md))
 
+{% hint style="warning" %}
+**Use `&meshcastab` or `&mcab`.** The full spelling `&meshcastaudiobitrate` is not recognized by the current code, so it has no effect.
+{% endhint %}
+
 ## Aliases
 
-* `&mcaudiobitrate`
-* `&mcab`
 * `&meshcastab`
+* `&mcab`
+* `&mcaudiobitrate`
+* `&whipoutaudiobitrate`, `&woab` (same setting, see [`&whipoutaudiobitrate`](../whip-parameters/and-whipoutaudiobitrate.md))
 
 ## Options
 
-Example: `&meshcastaudiobitrate=128`
+Example: `&meshcastab=128`
 
-<table><thead><tr><th width="273">Value</th><th>Description</th></tr></thead><tbody><tr><td>(integer value)</td><td>publishing Meshcast audio bitrate in kbps</td></tr></tbody></table>
+| Value | Description |
+| --- | --- |
+| (integer) | Outbound Meshcast/WHIP audio bitrate in kbps |
+| Omitted | The browser's default Opus bitrate |
 
 ## Details
 
-`&meshcastab` controls the outbound audio bitrate of the [`&meshcast`](../../newly-added-parameters/and-meshcast.md) parameter. Without it, it will be a variable bitrate, up to 32-kbps per channel. With it added, it will be CBR, at the specified bitrate.
+Sets the Opus audio bitrate that the publisher sends to Meshcast or another WHIP output. The bitrate is constant (CBR) unless you also add [`&vbr`](../view-parameters/vbr.md). Adding the parameter also hides the audio bitrate menu in the WHIP publishing dialog.
+
+```
+https://vdo.ninja/?push=STREAMID&meshcast&meshcastab=128
+```
+
+It does not change audio sent over normal peer-to-peer connections.
 
 ## Related
 

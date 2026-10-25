@@ -1,424 +1,190 @@
 ---
-description: A practical comparison of RTP retransmission, NACK, FEC, RED, keyframes, TURN, SFU distribution, and chunked mode in VDO.Ninja and native OBS tools.
+description: How NACK, RTX, PLI, FEC, RED, keyframes, TURN, Meshcast and chunked mode deal with packet loss in VDO.Ninja, how OBS WHIP, Game Capture and the Ninja OBS Plugin differ, and how to test changes.
 ---
 
 # Packet-loss recovery and resilient media
 
-Packet loss can produce several different failures: a brief soft frame, a frozen picture, persistent green or rainbow-coloured corruption, missing audio, or a complete disconnect. No single switch fixes all of them.
+Packet loss can show up as a brief soft frame, a frozen picture, green or rainbow corruption, missing audio or a full disconnect. No single switch fixes all of these. First work out which layer failed:
 
-The useful question is which layer failed:
+| Layer | What went wrong |
+| --- | --- |
+| Capacity | The encoder produces more data than the path can carry. |
+| Delivery | Individual RTP packets are missing, late or out of order. |
+| Decode state | A lost reference frame damaged the frames that depend on it. |
+| Route | The direct path or NAT traversal is failing. |
+| Fan-out | One publisher encodes or uploads separately for too many viewers. |
+| Application | Capture, encoder, decoder, audio clock or CPU is overloaded. |
 
-* **Capacity:** the encoder is producing more data than the path can carry.
-* **Delivery:** individual RTP packets are missing, late, or reordered.
-* **Decode state:** a lost reference frame has damaged later predicted frames.
-* **Route:** the direct path or NAT traversal is failing.
-* **Fan-out:** one publisher is encoding or uploading separately to too many viewers.
-* **Application:** the capture, encoder, decoder, audio clock, or CPU is overloaded.
+## Start here
 
-This guide explains the normal VDO.Ninja browser path first, then compares it with OBS Studio's native WHIP output, Game Capture, and the Ninja OBS Plugin.
+For fast gameplay where player names must stay readable, start with:
 
-## Fast recommendations
-
-For fast-moving gameplay where player names must remain readable, start with:
-
-* 1280x720 at 30 fps;
-* H.264 for the broadest native-tool compatibility;
-* a bitrate that stays below the **sustained** upload rate, not the speed-test peak;
-* a one-to-two-second keyframe interval;
-* no B-frames;
-* NACK and PLI left enabled;
-* at least 25-40% uplink headroom for audio, retransmissions, keyframes, and normal rate variation.
-
-For a browser publisher:
+* 1280x720 at 30 fps, H.264 for the widest native-tool support, and no B-frames;
+* a bitrate below your **sustained** upload rate, not the speed-test peak, with 25–40% spare for audio, resends and keyframes;
+* a keyframe every one to two seconds;
+* NACK and PLI left on.
 
 ```text
 https://vdo.ninja/?push=STREAMID&quality=1&fps=30&prefervideocodec=h264&outboundvideobitrate=2500&maxvideobitrate=3000
-```
-
-For its viewer or OBS Browser Source:
-
-```text
 https://vdo.ninja/?view=STREAMID&codec=h264&videobitrate=2500&buffer=500&keyframe=1000
 ```
 
-Treat these as starting values. If the clean path is sharp but the image becomes rainbow-coloured only during loss, the main problem is damaged decoder references. If it is always soft, the problem is more likely bitrate, resolution, capture scaling, or encoder quality.
+Treat these as starting values. If the picture is sharp on a clean path but turns rainbow-coloured only during loss, the problem is damaged decoder references. If it is always soft, look at bitrate, resolution, capture scaling or encoder quality instead.
 
-For text-heavy 1080p gameplay, lower 60 fps to 30 fps before forcing the bitrate too low. A 1080p30 stream can preserve small names better than 720p60 at the same rate, but it still needs a path that can sustain it. No recovery mode can preserve detail that the encoder removed before transmission.
+For text-heavy 1080p gameplay, drop from 60 to 30 fps before pushing the bitrate very low; 1080p30 can keep small names clearer than 720p60 at the same rate. No recovery method can restore detail the encoder already threw away. An encoder profile or CPU preset is not loss protection either: use a faster preset if a slow one overloads the CPU, and use H.264 High only if every receiver supports it.
 
-An encoder's **profile** or CPU preset is not packet-loss protection. A slower preset can improve compression when the CPU has headroom. If it causes encoder overload, dropped frames, or an unstable frame cadence, use a faster preset. H.264 High profile can improve compression, but every receiver must support it; it does not repair missing packets.
+## What each mechanism does
 
-## What each approach actually does
-
-| Approach | Layer | Default in normal VDO.Ninja RTP | Main benefit | Main cost or limitation |
+| Mechanism | Layer | On by default in VDO.Ninja RTP? | Benefit | Cost or limit |
 | --- | --- | --- | --- | --- |
-| Congestion control | Capacity | Yes, browser controlled | Reduces rate before queues collapse | Quality or frame rate can fall sharply |
-| Jitter buffer and concealment | Playback | Yes, browser controlled | Hides small timing variation and isolated audio loss | Adds delay and cannot rebuild arbitrary missing video |
-| NACK | Feedback | Yes when negotiated | Requests specific missing RTP sequence numbers | Recovery takes at least one feedback round trip |
-| RTX | Retransmission | Normally negotiated by browsers for video | Resends only what was requested on a separate RTP repair stream | Uses burst bandwidth and can arrive too late |
-| PLI and keyframes | Decoder reset | Yes | Clears persistent reference-frame corruption | Does not restore the missing interval; keyframes are large |
-| Opus in-band FEC | Audio repair | Normally enabled when supported | Repairs an earlier audio frame without another network round trip | Adds audio overhead and only covers limited loss patterns |
-| RTP RED | Proactive redundancy container | Not forced | Can carry earlier payload data with a current packet | Extra bandwidth; support and actual use are browser controlled |
-| Video ULPFEC | Proactive parity | Not forced | Can reconstruct some missing video packets without waiting for a resend | Extra bandwidth and limited control from JavaScript |
-| Forced TURN | Route | No; direct-first automatic escalation is enabled | Replaces a blocked or poor direct route | Adds a server hop; does not itself repair packets |
-| SFU / Meshcast | Topology | No | Publisher uploads once while the server distributes | Adds a server dependency and another media hop |
-| Chunked mode | Buffered alternate media path | No | Adds explicit playout buffering, indexed frames, parity, selective resend, pacing, and adaptation | More latency and a narrower compatibility range |
+| Congestion control | Capacity | Yes, browser controlled | Lowers the rate before queues collapse | Quality or frame rate can drop sharply |
+| Jitter buffer and concealment | Playback | Yes, browser controlled | Hides small timing variation and isolated audio loss | Adds delay; cannot rebuild missing video |
+| NACK | Feedback | Yes, when negotiated | Asks for specific missing RTP packets | Needs at least one round trip |
+| RTX | Retransmission | Normally, for browser video | Resends only what was requested, on a separate repair stream | Uses burst bandwidth; can arrive too late |
+| PLI and keyframes | Decoder reset | Yes | Clears lasting reference-frame corruption | Does not restore the lost interval; keyframes are large |
+| Opus in-band FEC | Audio repair | Normally, where supported | Repairs an earlier audio frame with no round trip | Extra audio overhead; covers limited loss patterns |
+| RTP RED | Redundancy | No | Can carry earlier payload data in a later packet | Extra bandwidth; actual use is up to the browser |
+| Video ULPFEC | Parity | No | Can rebuild some lost video packets without a resend | Extra bandwidth; little control from JavaScript |
+| Forced TURN | Route | No | Replaces a blocked or poor direct route | Adds a server hop; does not repair packets |
+| SFU / Meshcast | Topology | No | Publisher uploads once; the server fans out | Adds a server dependency and a hop |
+| Chunked mode | Buffered alternate path | No | Explicit buffering, indexed frames, parity, selective resend, pacing and adaptation | More latency; narrower compatibility |
 
 <figure><img src="../.gitbook/assets/docs-infographics/packet-loss-recovery-mechanisms.png" alt="Three packet timelines comparing reactive NACK and RTX repair, proactive FEC or RED repair, and decoder reset with PLI and a new keyframe"><figcaption><p>Reactive retransmission waits for feedback. Proactive redundancy spends bandwidth before loss. A PLI and keyframe reset the decoder, but do not restore the damaged interval.</p></figcaption></figure>
 
-### RED is not simply "send the whole video twice"
-
-RED is an RTP payload container. It can place a current payload and one or more earlier payloads into a later packet. The sender decides what redundant data to include.
-
-Audio RED commonly carries the previous Opus generation and can approach twice the normal audio bitrate. Video RED is more complicated: browsers may pair the RED container with parity data, may use little redundancy, or may decline to send repair data after it was negotiated. VDO.Ninja's normal video RED flags change negotiation preference; they do not force a duplicate stream or a fixed repair percentage.
-
-The Ninja OBS Plugin's **Packet Duplication** setting is deliberately different. It can send a later copy of the same
-RTP packet with the same sequence number; `High` can do this for every video packet. It is labeled duplication rather
-than RED/FEC so the wire behavior is not confused with browser SDP negotiation or parity repair.
-
-By comparison:
-
-* **RTX** sends a missing packet only after a NACK.
-* **FEC** sends parity or repair information before the receiver asks.
-* **TURN** forwards the same connection through a relay.
-* **An SFU** receives one upstream and distributes it to downstream viewers.
-* **Chunked parity** adds one XOR parity payload for each configured group of data payloads.
+RED is an RTP container that can carry an earlier payload alongside the current one; the sender decides what to include. Audio RED usually carries the previous Opus frame and can nearly double the audio bitrate. For video, browsers may pair RED with parity data, send little redundancy, or send none at all after negotiating it. VDO.Ninja's video RED flags only change negotiation preference; they do not force a duplicate stream or a repair percentage. By contrast, RTX resends only after a NACK, TURN forwards the same connection through a relay, and an SFU distributes one upload to many viewers.
 
 ## Normal VDO.Ninja RTP mode
 
-Normal browser-managed RTP is the default. It has the widest browser, room, OBS Browser Source, TURN, and native-peer interoperability.
+Browser-managed RTP is the default and has the widest browser, room, OBS Browser Source and native-peer compatibility. By default you get:
 
-The normal defaults are:
+* browser congestion control, bitrate estimation and jitter buffering;
+* video NACK, RTX and PLI where both peers negotiate them;
+* Opus loss concealment, and Opus in-band FEC where the browser enables it;
+* direct connections first, with TURN servers offered so the browser can use a relayed route when no direct route works;
+* no forced video RED, no forced TURN, no SFU and no chunked path.
 
-* browser congestion control and bitrate estimation;
-* browser jitter buffering;
-* video NACK, RTX, and PLI where both peers negotiate them;
-* Opus packet-loss concealment and normally Opus in-band FEC;
-* direct ICE first, with bounded automatic TURN escalation after a hard direct-path failure;
-* no forced video RED rate;
-* no forced TURN;
-* no SFU;
-* no chunked media path.
-
-The browser owns most of this behavior. VDO.Ninja can preserve, remove, or reorder SDP feedback and payload preferences, but it cannot force every browser to use a particular repair percentage.
+The browser owns most of this. VDO.Ninja can keep, remove or reorder SDP feedback and payload preferences, but it cannot force a browser to use a particular repair rate.
 
 ### NACK and RTX
 
-A NACK identifies missing RTP sequence numbers. With normal browser peers, video RTX usually carries the requested media again using an associated repair payload type and repair stream. The receiver maps it back to the original packet before decoding.
+A NACK names missing RTP sequence numbers. Browsers normally answer with RTX, a separate repair stream that the receiver maps back to the original packet. It costs little on a clean path and repairs only what was missing. But a resend is useless if it arrives after the frame's playout deadline, it can worsen the congestion that caused the loss, and a long outage can outlast the sender's resend history.
 
-**Advantages**
-
-* Little steady-state overhead on a clean path.
-* Repairs only packets that the receiver noticed were missing.
-* Well supported between current browsers.
-
-**Disadvantages**
-
-* A useful resend must return before the playout deadline.
-* At high RTT, the resend may arrive after the frame has already been skipped.
-* Loss caused by congestion can make the resend burst worsen the same congestion.
-* A long outage can exceed the sender's retransmission history.
-
-There is no normal `&rtx=1` switch. Leave NACK enabled and compatible browsers negotiate RTX themselves. `&nonack` and `&nonacks` remove NACK feedback and are primarily diagnostic options:
-
-```text
-https://vdo.ninja/?view=STREAMID&nonack
-```
-
-Do not add them when the goal is better reliability.
-
-A viewer buffer gives late original packets and retransmissions more time:
+There is no `&rtx=1` switch; compatible browsers negotiate RTX themselves when NACK is on. `&nonack` (alias `&nonacks`) removes NACK feedback and is for diagnostics only. A viewer buffer gives late packets and resends more time, at the cost of about that much added latency:
 
 ```text
 https://vdo.ninja/?view=STREAMID&buffer=1000
 ```
 
-The tradeoff is about one second of additional playout latency. A buffer does not add bandwidth or guarantee that a retransmission cache is long enough.
+### PLI, keyframes and rainbow corruption
 
-### PLI, keyframes, and rainbow corruption
+Most codecs predict each frame from earlier ones. If a lost packet damages a reference frame, later packets can arrive perfectly and still decode as green blocks, rainbow smears or a frozen image. A Picture Loss Indication (PLI) asks the sender for a new keyframe, which starts a clean prediction chain. PLI is on by default; `&nopli` turns it off for diagnostics and usually makes recovery worse.
 
-Most video codecs predict later frames from earlier decoded frames. If a lost packet damages an important reference, later packets can arrive perfectly and still decode as green blocks, rainbow smears, duplicated regions, or a frozen image.
-
-A Picture Loss Indication asks the sender for a new keyframe. NACK tries to restore the missing packet; PLI gives up on the damaged prediction chain and starts a clean one.
-
-PLI is normally enabled. `&nopli` disables it for diagnostics and generally makes loss recovery worse.
-
-The viewer can request periodic keyframes:
+A viewer can also request periodic keyframes, in milliseconds. `&keyframe`, `&keyframerate`, `&keyframeinterval` and `&fki` are aliases:
 
 ```text
 https://vdo.ninja/?view=STREAMID&keyframe=1000
 ```
 
-`&keyframe`, `&keyframerate`, `&keyframeinterval`, and `&fki` are aliases, in milliseconds.
+A shorter interval limits how long corruption stays visible and helps decoders that missed a keyframe. But keyframes are much larger than other frames, can cause fresh loss on a nearly full uplink, and take bitrate away from motion detail. One second is a useful gameplay and WHIP test; two seconds is a safer general setting.
 
-**Advantages of a shorter interval**
+### Opus FEC and audio RED
 
-* Bounds how long unrepairable corruption can remain visible.
-* Helps late viewers and decoders that missed their initial keyframe.
+Opus can conceal a missing packet from nearby audio, and with in-band FEC a later packet can carry a lower-rate copy of an earlier frame. This works best for isolated loss; it cannot cover a long burst. `&nofec` disables Opus in-band FEC for comparison tests.
 
-**Disadvantages**
-
-* Keyframes are much larger than predicted frames.
-* A keyframe burst can cause fresh loss on a nearly full uplink.
-* More frequent keyframes spend bitrate on repeated full images, leaving less for motion detail.
-
-One second is a useful gameplay and WHIP test. Two seconds is a more conservative general setting. Avoid making every frame a keyframe unless the encoder and network budget were designed for that tradeoff.
-
-### Opus concealment and in-band FEC
-
-Opus can conceal a missing audio packet from nearby decoded audio. With in-band FEC, a later Opus packet can also contain lower-rate information for an earlier frame.
-
-VDO.Ninja normally negotiates Opus in-band FEC where supported. `&nofec` disables that SDP setting:
-
-```text
-https://vdo.ninja/?view=STREAMID&nofec
-```
-
-That is useful for a controlled comparison, not as the normal reliability choice.
-
-In-band FEC works best for isolated loss and suitable packet sizes. It cannot cover a long burst, and the encoder may only produce useful FEC after the receiver reports loss. Packet-loss concealment can hide a short gap but may sound muffled or synthetic.
-
-VDO.Ninja also has experimental audio payload-ordering flags: `&redaudio` and `&fecaudio` on a viewer, with `&predaudio` and `&pfecaudio` as publisher-side companions. They only influence how advertised RED or ULPFEC payloads are ordered beside the selected audio codec. They do not create repair data when the runtime does not support or send it. Explicitly selecting audio RED is easier to verify.
-
-### Audio RED
-
-Audio RED is the most direct VDO.Ninja RED experiment. Use the publisher-side preference and viewer-side selection together:
+Audio RED is the most direct RED test. Set the preference on the publisher and select it on the viewer:
 
 ```text
 https://vdo.ninja/?push=STREAMID&preferaudiocodec=red
 https://vdo.ninja/?view=STREAMID&audiocodec=red
 ```
 
-Both endpoints must advertise compatible RED and Opus payloads. Confirm the negotiated codec and actual audio bitrate in stats.
+Both ends must support RED with Opus; confirm the negotiated codec and audio bitrate in stats. The earlier audio arrives with the current packet, so it depends less on round-trip time than NACK and keeps speech intelligible through isolated loss. It can nearly double audio bandwidth, which can hurt a saturated uplink, and support varies by browser. With `&audiocodec=red`, VDO.Ninja lowers its stereo/pro-audio default from 256 to 216 kbps, because higher rates were unstable with RED.
 
-**Advantages**
+`&redaudio` and `&fecaudio` (viewer, with `&audiocodec`) and `&predaudio` and `&pfecaudio` (publisher, with `&preferaudiocodec`) only change where RED or ULPFEC payloads sit in the audio codec order. They create no repair data if the browser does not send it.
 
-* The redundant earlier audio can be available immediately when the current packet arrives.
-* It is less RTT-dependent than NACK.
-* Speech can remain intelligible through isolated packet loss.
-
-**Disadvantages**
-
-* Audio bandwidth can approach double.
-* Extra traffic can make a saturated uplink worse.
-* Browser and embedded-runtime support varies.
-* High-bitrate stereo and pro-audio combinations need testing; VDO.Ninja limits some RED combinations to keep them stable.
-
-For an unreliable network, compressed Opus with FEC or RED is usually safer than uncompressed PCM. PCM has no codec concealment and consumes much more bandwidth.
+On a lossy network, compressed Opus with FEC or RED is usually safer than PCM, which has no concealment and uses far more bandwidth.
 
 ### Video RED and ULPFEC
 
-Use `&vred` on the viewer and `&pvred` as its publisher-side companion:
+`&vred` on the viewer works together with `&codec`; `&pvred` on the publisher works together with `&prefervideocodec`. VP8 is the best first test:
 
 ```text
 https://vdo.ninja/?push=STREAMID&prefervideocodec=vp8&pvred
 https://vdo.ninja/?view=STREAMID&codec=vp8&vred&buffer=500
 ```
 
-VP8 is the best first comparison for this experiment. The flags prefer video RED in SDP when the runtime advertises it. The browser still decides whether it will send RED or ULPFEC repair traffic and how much.
-
-**Advantages**
-
-* Repair data can arrive without waiting for a NACK round trip.
-* Can help short random loss when the uplink has spare capacity.
-
-**Disadvantages**
-
-* The URL flags do not force a protection rate.
-* H.264 and some browser combinations may not use the negotiated repair payloads.
-* Repair overhead competes with encoded picture quality.
-* Native senders and receivers in the comparison later in this guide do not provide equivalent video RED recovery.
-
-Run an A/B test with the same codec, resolution, bitrate, route, RTT, and loss pattern. Negotiating RED is not proof that useful repair packets were sent.
+These flags move RED and ULPFEC up the SDP preference list when the browser offers them. The browser still decides whether to send repair traffic, and how much. Repair data can arrive without a NACK round trip and help with short random loss when there is spare upload. But the flags do not force a protection rate, H.264 and some browser pairs may not use the repair payloads, and the overhead competes with picture quality. Run an A/B test with the same codec, resolution, bitrate, route and loss; negotiating RED does not prove useful repair packets were sent.
 
 ### Codec choice
 
-Changing codec can improve compression efficiency, hardware use, or decoder behavior, but it is not a replacement for loss recovery.
+A different codec can improve compression, hardware use or decoding, but it does not replace loss recovery. H.264 is the safest common choice for OBS WHIP, Game Capture, the Ninja plugin and browsers. VP8 is a good browser baseline and the first choice for video RED tests. VP9 and AV1 can keep more detail at the same bitrate, but cost more to encode and have narrower native support. If names are unreadable on a clean link, try a more efficient codec, a lower frame rate or more bitrate within measured headroom. If only damaged frames are unreadable, focus on loss, resends and keyframes.
 
-* **H.264** is the safest common choice for OBS WHIP, the Ninja publisher, Game Capture, and browser viewers.
-* **VP8** is a useful browser baseline and the first choice for a video RED experiment.
-* **VP9 or AV1** may preserve more detail at the same bitrate, but encoder load and native receiver support are narrower.
-* A more efficient inter-frame codec can still propagate damage after a lost reference.
+## TURN changes the route, not the repair
 
-If names are unreadable on a clean link, try a more efficient supported codec, reduce frame rate, or raise bitrate within measured headroom. If only damaged frames are unreadable, focus on loss, retransmission, and keyframe recovery.
-
-## TURN: change the route, not the repair method
-
-TURN relays encrypted peer traffic when direct connectivity is blocked or the relay route is better. The endpoints still perform NACK, RTX, PLI, FEC, congestion control, and decoding across that connection.
-
-VDO.Ninja normally prefers direct connections, but can use TURN automatically when needed. If a direct connection works but performs poorly, try forcing TURN to compare the routes.
-
-Force TURN with:
+TURN relays the same encrypted peer connection when a direct route is blocked or worse. The endpoints still handle NACK, RTX, PLI, FEC, congestion control and decoding. VDO.Ninja prefers direct routes but includes TURN servers, so the browser can relay when no direct route works. If a direct route works but performs poorly, force TURN on both links to compare:
 
 ```text
 https://vdo.ninja/?push=STREAMID&relay
 https://vdo.ninja/?view=STREAMID&relay
 ```
 
-`&relay`, `&private`, and `&privacy` are aliases. Forced relay mode caps normal video targets at 4000 kbps, or 6000 kbps in speed-test mode.
+`&relay`, `&private` and `&privacy` are aliases. Forced relay caps video at 4000 kbps (6000 kbps in speed-test mode). To use only TCP/TLS TURN candidates, add `&tcp` as well; `&tcp` on its own does not force TURN.
 
-Force a non-UDP TURN candidate set with:
+TURN can help when a strict NAT or firewall blocks direct connections, when the relay takes a cleaner route than a faulty direct one, or when peers must not see each other's addresses. It cannot repair local Wi-Fi loss before the relay, create upload capacity, combine two connections, fan one upload out to many peers, or transcode. It adds relay cost and usually latency. Over TURN/TCP or TLS, loss becomes head-of-line delay rather than a missing packet.
 
-```text
-https://vdo.ninja/?push=STREAMID&relay&tcp
-https://vdo.ninja/?view=STREAMID&relay&tcp
-```
+## Meshcast and SFUs change the topology
 
-`&tcp` filters the TURN choices but does not itself force TURN. Pair it with `&relay`.
-
-**TURN can help when**
-
-* restrictive NAT or firewall policy blocks a direct connection;
-* the direct Internet route has a persistent problem and the relay takes a cleaner route;
-* privacy policy requires hiding peer addresses from one another.
-
-**TURN cannot**
-
-* repair local Wi-Fi loss before packets reach the relay;
-* create upload capacity;
-* combine two Internet connections;
-* distribute one upload to many independent peers;
-* transcode an over-complex stream.
-
-TURN adds server bandwidth cost and usually adds RTT. TURN/TCP or TURN/TLS can cross restrictive networks, but loss on a reliable byte stream may become head-of-line delay instead of a visibly missing packet.
-
-## SFU and Meshcast: change the topology
-
-An SFU receives one encoded upstream and forwards it to multiple viewers. Unlike a TURN relay, it is aware of RTP streams and normally terminates feedback independently on each leg.
-
-In VDO.Ninja, add `&meshcast` to the publishing guest or director link:
-
-```text
-https://vdo.ninja/?push=STREAMID&meshcast
-```
-
-For a room:
+An SFU receives one upstream and forwards it to each viewer, usually handling feedback separately on each leg. In VDO.Ninja, add `&meshcast` to the publishing guest or director link:
 
 ```text
 https://vdo.ninja/?room=ROOM&push=STREAMID&meshcast
 ```
 
-The current app also has a `&meshcast2` path. Treat it as a separate implementation to test, not as an error-correction flag.
-
-**Advantages**
-
-* One publisher upload can serve many viewers.
-* One publisher encode avoids per-viewer encoder pressure.
-* A server can maintain separate loss recovery and pacing toward each viewer.
-* A single slow viewer is less likely to pressure every other direct peer.
-
-**Disadvantages**
-
-* The publisher-to-SFU uplink is still a single point of media loss.
-* Adds a server hop, operating cost, and dependency.
-* Server location affects RTT and loss.
-* End-to-end behavior depends on the SFU's packet cache, feedback, and forwarding implementation.
-* It does not make an excessive source bitrate sustainable on the publisher's uplink.
-
-Use an SFU when fan-out is the problem. Use TURN when connectivity or routing is the problem. Those can overlap, but they are not interchangeable.
+The publisher then uploads and encodes once, and one slow viewer is less likely to slow the others. But the publisher-to-server uplink is still a single point of loss, the server adds a hop and a dependency, its location affects latency, and it cannot make a too-high source bitrate fit the publisher's uplink. Use an SFU when fan-out is the problem and TURN when the route is the problem. See [`&meshcast`](../newly-added-parameters/and-meshcast.md).
 
 <figure><img src="../.gitbook/assets/docs-infographics/packet-loss-direct-turn-sfu.png" alt="Side-by-side network diagrams showing a direct peer connection, a one-to-one connection through TURN, and one publisher upload fanning out through an SFU to three viewers"><figcaption><p>Direct media stays between peers. TURN changes the route for the same one-to-one connection. An SFU accepts one publisher upload and distributes it to multiple viewers.</p></figcaption></figure>
 
-### WHIP is session setup, not packet repair
+WHIP and WHEP only set up the session with an HTTP endpoint; the media is still RTP. A WHIP endpoint may be an SFU and may supply TURN servers, but WHIP itself promises no RTX, RED, FEC, packet cache or downstream repair. Check what the actual server and client implement.
 
-WHIP establishes a send-only media session with an HTTP endpoint. WHEP does the corresponding job for receiving from a server. The media is still RTP, so loss behavior depends on what the publisher, server, and receiver negotiate and implement.
+## Chunked mode: more buffer, frame-aware repair
 
-A WHIP endpoint may terminate media in an SFU and provide TURN servers, but WHIP by itself does not promise RTX, RED, FEC, transcoding, a packet-cache duration, or downstream viewer repair. Check the actual server and client implementation.
-
-## Chunked mode: explicit buffering and frame-aware recovery
-
-Chunked mode replaces RTP video publishing with encoded video payloads sent over an ordered, reliable data channel. It is opt-in and keeps the normal RTP default unchanged.
+[Chunked mode](../newly-added-parameters/and-chunked.md) is opt-in. It replaces RTP video with encoded frames sent over an ordered, reliable data channel.
 
 <figure><img src="../.gitbook/assets/docs-infographics/packet-loss-rtp-vs-chunked.png" alt="Comparison of normal RTP using a small jitter buffer and NACK retransmission with chunked mode using indexed frame payloads, parity, selective resend, and a larger playout buffer"><figcaption><p>Normal RTP favors lower delay and has less time to repair a packet before playback. Chunked mode deliberately holds more media so parity and selective resend have a larger recovery window.</p></figcaption></figure>
-
-Basic use:
 
 ```text
 https://vdo.ninja/?push=STREAMID&chunked=2500&chunkbitrate=2500
 https://vdo.ninja/?view=STREAMID&chunkbuffer=1500
 ```
 
-`&chunked=2500` is the legacy enable-and-video-bitrate value in kbps. It is **not** a 2500 ms buffer. `&chunkbitrate=2500` is the clearer explicit bitrate setting.
+* `&chunked=2500` enables chunked mode at 2500 kbps; it is **not** a 2500 ms buffer. With no number it uses 2500 kbps. `&chunkbitrate` sets the bitrate explicitly.
+* `&chunkedbuffer` (publisher) is the sender backlog window: 500 ms by default, 5000 ms if given with no number.
+* `&chunkbuffer` (viewer) is the playout target: 3000 ms by default.
+* `&chunkcodec=h264`, `vp8`, `vp9` or `av1` picks the chunked encoder; `&codec` does not.
 
-The two main buffers are different:
-
-* `&chunkedbuffer=<ms>` is the publisher's sender backlog and pacing window.
-* `&chunkbuffer=<ms>` is the viewer's playout target.
-
-Without a profile or override, the receiver's fallback target is about 3000 ms and the base sender window is about 500 ms. Supplying `&chunkedbuffer` without a number selects a larger fallback of about 5000 ms. Supplying `&chunked` without a number selects about 2500 kbps.
-
-Use `&chunkcodec=h264`, `vp8`, `vp9`, or `av1` to request a chunked video codec. The normal `&codec` flag controls RTP negotiation and does not select this encoder.
-
-Plain chunked mode uses compatibility framing and does not automatically enable parity or selective application-level resend. A robust manual profile is:
+Plain chunked mode has no parity or selective resend. A robust manual setup:
 
 ```text
 https://vdo.ninja/?push=STREAMID&quality=1&fps=30&chunked=2500&chunkbitrate=2500&chunkindex=1&chunkfec=4&chunknack=1&chunkedbuffer=1500&chunkadapt=hybrid&chunkadaptfloor=700&chunkadaptceil=2500
+https://vdo.ninja/?view=STREAMID&chunkbuffer=1500&chunkbufferfloor=1000&chunkbufferceil=3000&chunkjitterslack=300&chunknackattempts=8&chunknackdelay=250
 ```
 
-```text
-https://vdo.ninja/?view=STREAMID&chunkbuffer=1500&chunkbufferfloor=1000&chunkbufferceil=3000&chunkjitterslack=300
-```
+Or use a preset with `&chunkprofile` on both links. The publisher takes the parity, NACK and adaptation values; the viewer takes the buffer values.
 
-The shorter preset form is:
-
-```text
-&chunked=2500&chunkprofile=balanced
-```
-
-The `mobile`, `balanced`, and `desktop` profiles opt into different parity, NACK, buffer, and adaptation defaults. Explicit URL values remain the best choice when a production requires a known latency budget.
-
-| Chunked selection | Indexed reliability | Parity | Selective NACK | Initial playout target | Adaptation |
+| Selection | Indexed framing | Parity | Selective NACK | Starting playout target | Adaptation |
 | --- | --- | --- | --- | --- | --- |
-| Plain `&chunked` | Off unless needed by another flag | Off | Off | About 3000 ms | Adaptive buffer; no rate mode |
-| `chunkprofile=mobile` | On | `chunkfec=3` | On | 900 ms | Frame-rate |
+| Plain `&chunked` | Off unless parity or NACK is on | Off | Off | 3000 ms | Bitrate |
+| `chunkprofile=mobile` | On | `chunkfec=3` | On | 900 ms | Frame rate |
 | `chunkprofile=balanced` | On | `chunkfec=4` | On | 750 ms | Hybrid |
 | `chunkprofile=desktop` | On | `chunkfec=5` | On | 620 ms | Bitrate |
 
-Chunked audio can also be used where supported. Add `&nochunkaudio` when video should use chunked mode while audio remains on the normal low-latency path. Keeping conversational audio on normal Opus RTP often avoids making talkback wait for the larger video playout budget.
+Explicit values are better when a production needs a known latency budget. To keep talkback snappy, add `&nochunkaudio` to the viewer: video uses the chunked path while audio stays on normal low-latency Opus RTP.
 
-### Indexed framing, parity, and selective resend
+**Parity and resend.** `&chunkfec=N` adds one XOR parity chunk for each group of up to N data chunks in a frame, and can repair one missing chunk per group. A frame with fewer than N chunks still gets a full parity chunk, so overhead is often well above 1/N, and near 100% when each frame fits in one chunk. `&chunknack=1` lets the viewer request a missing chunk from the publisher's resend cache (`&chunkcache`); the viewer sets retry timing with `&chunknackattempts` and `&chunknackdelay`. Both turn on indexed framing (`&chunkindex`) automatically.
 
-`&chunkindex=1` adds explicit frame and chunk indices. It becomes mandatory automatically when NACK or parity reliability is enabled.
+The data channel is already ordered and reliable, so on a direct path UDP loss usually appears as resend delay and head-of-line blocking, not a missing chunk. Parity and selective resend add frame awareness for incomplete, trimmed or relayed payloads; they do not remove the channel's ordering delay.
 
-`&chunkfec=4` produces one XOR parity payload per four data payloads. A parity group can repair one missing data payload:
-
-```text
-&chunkfec=4
-```
-
-Approximate parity overhead is `1 / N`, before metadata and transport overhead:
-
-| Setting | Approximate parity overhead | Single-loss repair scope |
-| --- | --- | --- |
-| `chunkfec=2` | 50% | One missing payload in each two-data group |
-| `chunkfec=3` | 33% | One missing payload in each three-data group |
-| `chunkfec=4` | 25% | One missing payload in each four-data group |
-| `chunkfec=6` | 17% | One missing payload in each six-data group |
-
-Smaller groups repair more loss but consume more bandwidth.
-
-`&chunknack=1` lets a viewer request a missing indexed payload from the publisher's short resend cache:
-
-```text
-&chunknack=1&chunknackattempts=8&chunknackdelay=250&chunkcache=30000
-```
-
-The retry spacing and cache budget are adjusted against buffer and RTT information, with URL controls for advanced testing.
-
-The underlying data channel is already ordered and reliable. On an ordinary direct path, UDP loss therefore often appears as retransmission delay and head-of-line blocking rather than an exposed missing message. Indexed parity and selective resend add frame awareness for incomplete, trimmed, relayed, or otherwise missing application payloads; they do not remove the underlying channel's ordering delay.
-
-### Pacing, trimming, watchdogs, and adaptation
-
-Chunked mode also includes:
-
-* per-viewer backpressure using data-channel buffered amount;
-* a sender queue that trims on decodable boundaries instead of keeping arbitrary partial GOP data;
-* header and keyframe reset after relief or trimming;
-* a stale-frame watchdog so one incomplete frame does not deadlock all later frames;
-* bitrate, frame-rate, or hybrid adaptation before the playout buffer empties;
-* optional resolution tiers;
-* buffer occupancy, NACK, parity-repair, and rebuffer counters.
-
-Useful adaptation examples:
+**Pacing and adaptation.** Chunked mode also applies per-viewer backpressure, trims its queue on decodable boundaries instead of sending a broken group of pictures, resets with a keyframe after trimming, skips a stale incomplete frame rather than stalling, and lowers bitrate, frame rate or both before the buffer empties. Examples:
 
 ```text
 &chunkadapt=bitrate&chunkadaptfloor=600&chunkadaptceil=2500
@@ -426,587 +192,177 @@ Useful adaptation examples:
 &chunkadapt=hybrid&chunkadaptresolution=1
 ```
 
-**Advantages**
+You can watch `buffer_level`, `buffer_delta`, `fec_repairs` and `nacks_sent` in stats. The costs: more latency, ordered delivery can stall behind one loss, parity uses steady bandwidth and resends use bursts, and encoder support depends on the browser. OBS WHIP, Game Capture and the Ninja native publisher and receiver do not support this format, and SFU or WHIP routes do not carry it. Add `&nochunked` to a browser viewer that must stay on normal RTP.
 
-* Explicit latency budget rather than relying only on an RTP jitter buffer.
-* Frame-aware parity and resend controls.
-* More time to recover high-RTT loss.
-* GOP-aware relief avoids sending an undecodable tail after queue overflow.
-* Strong observability through `buffer_level`, `buffer_delta`, `fec_repairs`, and `nacks_sent`.
+## Troubleshooting by symptom
 
-**Disadvantages**
-
-* More latency.
-* Reliable ordered delivery can stall later data behind an earlier loss.
-* Parity consumes steady bandwidth; resend consumes burst bandwidth.
-* Encoding and decoding support is runtime dependent.
-* Current native WHIP, native Game Capture, Ninja native publisher, and Ninja native receiver paths do not implement this media format.
-* Current SFU and native WHIP routes do not carry this format as normal RTP video.
-
-Use `&nochunked` on a browser viewer that must stay on the normal RTP path.
-
-## Symptom-based troubleshooting
-
-### Rainbow, green, or smeared video
-
-This is usually a damaged inter-frame prediction chain.
+**Rainbow, green or smeared video** usually means a damaged prediction chain.
 
 1. Check whether packet loss or PLI rises at the same time.
-2. Leave NACK and PLI enabled.
-3. Test a one-to-two-second keyframe interval.
-4. Lower bitrate enough to leave repair and keyframe headroom.
-5. Compare direct and forced TURN routes.
-6. If fan-out overloads the source, move distribution to an SFU.
-7. If extra delay is acceptable, test chunked buffering and frame-aware repair.
-8. If it happens only in one decoder, compare H.264, VP8, or VP9 on that receiver.
+2. Leave NACK and PLI on, and test a one-to-two-second keyframe interval.
+3. Lower the bitrate enough to leave room for repairs and keyframes.
+4. Compare direct and forced TURN routes.
+5. If fan-out overloads the source, move distribution to an SFU.
+6. If extra delay is acceptable, test chunked mode.
+7. If only one decoder shows it, compare H.264, VP8 and VP9 on that receiver.
 
-Do not first raise the bitrate, add redundancy, and shorten keyframes at the same time. All three can increase traffic and make congestion worse.
+Do not raise bitrate, add redundancy and shorten keyframes all at once; each adds traffic.
 
-### Frozen video while audio continues
+**Frozen video while audio continues.** The decoder may be waiting for a keyframe, a resend may have arrived too late, a sender queue may be blocked, the video encoder or GPU may have failed, or the viewer may have requested a codec it cannot decode reliably. Check the publisher's local preview, encoder overload, outbound FPS, keyframe cadence, viewer decoded FPS, PLI count and selected candidate path.
 
-Likely causes include:
+**Soft video with no corruption** is usually rate adaptation or too small an encoder budget. Lower the frame rate before giving up the resolution names need. Use `&degrade=maintain-resolution` on the viewer for text and UI, or `&degrade=maintain-framerate` for motion. Keep the target below sustained capacity.
 
-* the decoder is waiting for a keyframe;
-* a video retransmission arrived too late;
-* a sender queue is blocked;
-* the video encoder or GPU failed while audio remained healthy;
-* the viewer requested a codec/profile it cannot decode reliably.
+**Audio pops, gaps or robotic speech.** Check audio loss, jitter, RTT and CPU at the same moment. Use Opus rather than PCM, leave in-band FEC on, test audio RED if there is spare bandwidth, add a modest viewer buffer, and check that the capture device is not clipping or changing format. RED and FEC cannot fix clipping already in the local recording.
 
-Check the publisher's local preview, encoder-overload counter, outbound FPS, keyframe cadence, viewer decoded FPS, PLI count, and selected candidate path.
+**Audio and video freeze together.** This points to route failure, a large queue, CPU starvation or the app pausing. Check ICE state, candidate type, queue growth, signalling reconnects, system load and whether local capture stopped.
 
-### Soft video with no corruption
+**Encoder overload.** Network settings cannot repair frames that were never encoded. Use a faster preset, lower FPS or resolution, use stable hardware encoding, avoid unsupported H.264 profiles, and leave the GPU room for capture. For many viewers, use one shared encode and an SFU.
 
-This is usually rate adaptation or insufficient encoder budget, not packet repair.
+## Native tools compared
 
-* Reduce frame rate before sacrificing the resolution needed for names.
-* Use `&degrade=maintain-resolution` for text or UI, accepting lower motion cadence.
-* Use `&degrade=maintain-framerate` for motion, accepting reduced resolution.
-* Keep the target below sustained capacity.
-* Try a more efficient codec only when every endpoint supports it and the encoder can run it without overload.
-
-### Audio pops, gaps, or robotic speech
-
-1. Check audio packet loss, jitter, RTT, and CPU at the same moment.
-2. Use Opus rather than PCM on a constrained or lossy network.
-3. Leave Opus in-band FEC enabled.
-4. Test audio RED if both endpoints support it and bandwidth remains.
-5. Add a modest viewer buffer for late packets.
-6. Check audio clock/timestamp warnings in native tools.
-7. Confirm the capture device is not clipping, resampling badly, or changing format.
-
-Audio RED or FEC cannot fix clipping that already exists in the local recording.
-
-### Both audio and video freeze
-
-This points more strongly to route failure, a large queue, CPU starvation, or application pause. Check ICE state, candidate type, data-channel or RTP queue growth, signaling reconnect logs, system load, and whether the local capture stopped.
-
-### Encoder overload
-
-Network flags cannot repair frames that were never encoded.
-
-* Use a faster CPU preset.
-* Reduce FPS or resolution.
-* Use hardware encoding when it is stable.
-* Avoid an unsupported high H.264 profile.
-* Confirm the game's GPU use leaves capacity for capture and encoding.
-* For multiple viewers, use one shared encode and an SFU rather than separate encodes.
-
-## Native implementation comparison
-
-These details describe the current source implementations reviewed for this guide. They are narrower than the browser application and can change as the projects evolve.
-
-### Feature overview
+These notes describe the source code of each tool at the time of review. The tools are narrower than the browser app and change over time.
 
 | Feature | VDO.Ninja browser RTP | OBS native WHIP output | Game Capture | Ninja OBS Plugin publisher | Ninja native receiver |
 | --- | --- | --- | --- | --- | --- |
-| Role | Publish and receive | WHIP publish only | VDO publish | VDO publish | VDO receive |
-| Default video | Browser negotiated | Configured OBS H.264 or AV1; optional HEVC build | H.264, 1080p60, 12 Mbps | H.264, 4 Mbps | H.264 or VP9 |
-| Audio | Opus and optional alternatives | Opus | Opus | Opus | Opus |
-| Video NACK | Yes | Yes | H.264/H.265/AV1 paths | Yes; newer builds pace original-packet repair | Does not generate NACK |
-| Actual RFC RTX stream | Normally yes | No | No | No | Can normalize offered incoming RTX |
-| PLI recovery | Yes | Advertised, but no encoder callback in this output | Wired for H.264/H.265/AV1 | Next scheduled live IDR, normally within two seconds; no on-demand OBS callback | Sends PLI on connect and decoder errors |
-| Video RED/FEC recovery | Browser dependent | No | No | No negotiated video RED/FEC; v1.1.60+ offers opt-in paced packet duplication | RED primary extraction only; no redundant-block repair |
-| Proactive video packet duplication | Browser controlled, not exposed as this fixed policy | No | No | Default-off Low/Medium/High best-effort copies | Not applicable |
-| Opus FEC | Normally browser controlled | Negotiated; plugin does not configure the OBS encoder's loss controls | Advertised, but current encoder does not enable it | Depends on OBS Opus encoder; plugin does not configure it | Decodes Opus; no extra repair layer |
-| Audio RED | Browser dependent | No | No | Opt-in RFC 2198 RED in v1.1.60+, with per-viewer plain-Opus fallback | Not implemented in the native receive path |
-| TURN | Automatic list and escalation; force by URL | WHIP endpoint can provide ICE servers | UI modes, fetched VDO TURN list | Custom TURN must be supplied | Same custom ICE settings |
-| SFU | `&meshcast` | WHIP endpoint may be an SFU | No native SFU mode | No native SFU mode | Not applicable |
+| Role | Publish and receive | WHIP publish only | VDO.Ninja publish | VDO.Ninja publish | VDO.Ninja receive |
+| Default video | Browser negotiated | OBS H.264 or AV1; HEVC in some builds | H.264, 1080p60, 12 Mbps | H.264, 4 Mbps | H.264 or VP9 |
+| Audio | Opus and alternatives | Opus | Opus | Opus | Opus |
+| Video NACK | Yes | Yes | H.264/H.265/AV1 paths | Yes, with paced repair in newer builds | Does not send NACK |
+| Separate RTX stream | Normally yes | No | No | No | Accepts offered RTX |
+| PLI recovery | Yes | Advertised; no encoder keyframe on request | Requests encoder keyframe on H.264/H.265/AV1 | Waits for the next scheduled keyframe (two seconds or less) | Sends PLI on connect and decoder errors |
+| Video RED/FEC | Browser dependent | No | No | No; opt-in packet duplication in v1.1.60+ | Uses only the primary RED payload |
+| Opus FEC | Browser controlled | Requested; OBS encoder loss settings not configured | Advertised but not enabled in the encoder | Depends on the OBS Opus encoder | Decodes Opus only |
+| Audio RED | Browser dependent | No | No | Opt-in in v1.1.60+, plain Opus fallback per viewer | No |
+| TURN | Offered automatically; force with `&relay` | ICE servers from the WHIP endpoint | UI modes; fetches VDO.Ninja TURN list | Custom TURN only | Same custom ICE settings |
+| SFU | `&meshcast` | Endpoint may be an SFU | No | No | Not applicable |
 | Chunked media | Opt-in | No | No | No | No |
-| Network rate adaptation | Browser controlled | Fixed OBS rate; no browser congestion controller | Mostly configured rate; app warnings and refresh controls | Fixed by default; newer builds offer opt-in REMB control for dynamic OBS encoders and the pacer | Requests REMB target |
+| Rate adaptation | Browser controlled | Fixed OBS rate | Mostly fixed, with warnings | Fixed; opt-in REMB adaptation in newer builds | Requests a REMB target |
 
-### Retransmission form matters
+None of these native publishers send a separate RTX stream. OBS WHIP and Game Capture use libdatachannel's NACK responder to resend the original packet with its original sequence number; newer Ninja plugin builds use their own bounded cache. Receivers that accept a late duplicate handle this, but it is not the RTX repair stream browsers use with each other.
 
-OBS WHIP and Game Capture use libdatachannel's `RtcpNackResponder`. It caches sent RTP packets and resends the original packet, with its original payload type and sequence number, after a NACK. Newer Ninja OBS Plugin builds use their own bounded original-packet cache so repairs can pass through the same scheduler as live media. None of these native publishers add an associated RTX codec or separate RTX SSRC.
+### OBS Studio native WHIP output
 
-That original-packet retransmission is valid for receivers that accept a late duplicate, but it is not the same negotiated repair stream used by browser-to-browser RTX.
+OBS's WHIP output sends the program feed to a WHIP endpoint, which may pass it to VDO.Ninja viewers or an SFU. It fragments video at about 1200 bytes, keeps a 4000-packet video NACK cache (about three seconds at 8.5 Mbps, per the source), resends original packets on NACK, paces at roughly ten times the bitrate to smooth bursts, disables B-frames, repeats headers, and takes STUN/TURN servers from the endpoint's `Link` headers.
 
-## OBS Studio native WHIP output
+It has no RTX stream, no video RED or FEC, no chunked mode, and no congestion control that lowers the OBS encoder rate. SDP advertises PLI, but no handler forces an immediate keyframe, so unrepairable video waits for OBS's next scheduled keyframe. Audio does not advertise NACK and relies on Opus concealment and FEC.
 
-OBS Studio's `obs-webrtc` WHIP output sends one OBS program feed to a WHIP endpoint. The endpoint may then expose it to VDO.Ninja viewers or distribute it through an SFU.
+1. In OBS, open **Settings > Stream** and select **WHIP**.
+2. Enter the VDO.Ninja WHIP endpoint and stream token.
+3. Use H.264 unless the whole path is verified with AV1 or HEVC.
+4. Set the keyframe interval to one or two seconds, and keep B-frames at zero.
+5. Start below your measured sustained upload rate. For complex 1080p30 gameplay, test 4.5–6 Mbps only on an uplink that can sustain much more; on a weaker link, try 720p30 at 2.5–4 Mbps.
+6. Turn on OBS automatic reconnect, so a stopped output starts a fresh WHIP session.
 
-### What it implements
+TURN depends on the endpoint's ICE server response; there are no `&relay` or `&tcp` equivalents in the OBS UI. VDO.Ninja URL flags for video RED, chunked mode, relay or Meshcast do not change OBS's native output. See [Recommended OBS WHIP settings](obs-whip-output-settings.md).
 
-* H.264 and AV1 video, with optional HEVC in compatible builds.
-* Opus audio.
-* Video payload fragmentation around 1200 bytes.
-* A 4000-packet video NACK cache, documented in the source as roughly three seconds at 8.5 Mbps.
-* Original-RTP retransmission after video NACK.
-* An RTP pacing handler configured at roughly ten times the selected OBS bitrate, intended to smooth packet batches rather than enforce the media rate.
-* B-frames disabled and repeated headers enabled by the WHIP service.
-* STUN/TURN discovery from WHIP endpoint `Link` headers.
-* WHIP trickle ICE, including the implementation's negotiated reverse-candidate extension.
+### Game Capture
 
-### What it does not implement
+Game Capture is a native Windows publisher that uses VDO.Ninja signalling and direct peer connections, not WHIP. Its UI defaults are 1920x1080 at 60 fps, H.264, 12000 kbps, **Direct STUN (Recommended)**, ten viewers and a 640x360 lower-quality room tier. Other ICE modes are **Auto with TURN fallback**, **Relay Only** and **Host Only (LAN)**; bitrate presets are 20000, 12000, 6000 and 3000 kbps.
 
-* A separate RTX payload/SSRC.
-* Video RED, ULPFEC, or FlexFEC.
-* Chunked mode.
-* Browser-style congestion control that dynamically lowers the OBS encoder rate.
-* A PLI callback that forces the OBS encoder to emit an immediate keyframe.
-* Receive-side playback, jitter buffering, or decode recovery.
+* **Video:** H.264, H.265 and AV1 have a 512-packet NACK cache (much smaller than OBS WHIP's), PLI-to-keyframe handling, a GOP of 60, no B-frames, and a keyframe request about every 2.5 seconds. The VP9 path skips that NACK/PLI chain and defaults to all-keyframe encoding, which recovers on the next frame but costs much more bitrate and CPU.
+* **Audio:** 10 ms Opus frames. FEC is advertised but not enabled in the encoder; there is no audio RED or NACK.
+* **Connection:** signalling reconnects with delays from one to ten seconds. A director refresh or ICE-restart request rebuilds the peer. A hard-failed peer is removed; if a Direct STUN peer fails, the app fetches TURN servers and switches *later* connections to Auto.
 
-The video SDP advertises NACK and PLI feedback, but the current output chain wires a NACK responder and no PLI-to-encoder handler. Unrepairable video therefore waits for OBS's next scheduled keyframe.
+The defaults suit a strong machine and network. For remote gameplay on Wi-Fi, cellular or an older CPU, start with H.264 at 720p30 and 3000–6000 kbps, use Direct STUN for the lowest latency, switch to Auto when strict networks block connections, and use the 640x360 tier for monitoring. After a failed peer switches the app to Auto, refresh the connection. See [Using Game Capture and Spout2](using-game-capture-with-vdo.ninja.md).
 
-The audio chain includes a packet cache, but the Opus SDP does not advertise audio NACK. It normally relies on Opus concealment/FEC behavior instead. The plugin requests the standard Opus FEC format parameter, but it does not configure the OBS Opus encoder's packet-loss controls itself.
+### Ninja OBS Plugin
 
-### How to use it safely
+The plugin has a native VDO.Ninja publisher output and a VDO.Ninja source. The source's default receive mode is a browser source, which inherits all browser behaviour, including NACK/RTX, PLI and chunked receive. An experimental native receiver is also available. See [Using the Ninja OBS Plugin](using-ninja-obs-plugin-with-vdo.ninja.md).
 
-1. Select **WHIP** in OBS **Settings > Stream**.
-2. Enter the VDO.Ninja WHIP endpoint and stream token required by that service.
-3. Use H.264 unless the entire server and viewer path was verified with AV1 or HEVC.
-4. Set the OBS keyframe interval to one or two seconds.
-5. Keep B-frames at zero; the WHIP service also enforces this.
-6. Start below the measured sustained upload rate.
-7. Enable OBS automatic reconnect so a stopped output can establish a fresh WHIP session.
+**Publisher defaults:** H.264, Opus, 4000 kbps, ten viewers, data channel on, automatic signalling reconnect, Google and Cloudflare STUN, no TURN unless you add custom ICE servers, and **Force TURN** off. The service disables B-frames, repeats headers and clamps the keyframe interval to two seconds or less. Custom ICE settings replace the built-in STUN servers; enable **Force TURN** only when that list includes a working TURN server.
 
-For complex 1080p gameplay, 4.5-6 Mbps at 30 fps is a reasonable test only when the uplink can continuously sustain substantially more. On a weaker link, test 720p30 around 2.5-4 Mbps. Lowering bitrate is more useful than selecting a slower CPU preset that overloads the machine.
+**Always active:** video NACK with paced resends of original packets (a cache of up to 2048 packets, 4 MiB or two seconds, with a 500 ms deadline), a frame-aware pacer at about twice the encoder rate, whole-frame queue relief instead of sending partial frames, and PLI/FIR handling with the two-second keyframe limit. OBS offers no on-demand keyframe, so a viewer that sends PLI waits for the next scheduled keyframe. After a known local frame loss, the plugin holds dependent frames until a complete keyframe is sent, so the picture freezes briefly instead of corrupting. The publisher sends no RTX stream and no video RED, ULPFEC or FlexFEC.
 
-TURN behavior is controlled by the WHIP endpoint's ICE-server response. The OBS UI for this output does not provide the same VDO.Ninja URL-level `&relay` and `&tcp` controls.
+**Opt-in, v1.1.60 and later:**
 
-### Pros
-
-* Large video resend history compared with the other native publishers here.
-* Direct use of the OBS encoder and program output.
-* Modern WHIP ICE discovery and trickle behavior.
-* No browser capture tab.
-
-### Cons
-
-* Publish-only.
-* Fixed encoder rate can keep overdriving a congested path.
-* No proactive video repair.
-* No immediate encoder keyframe on PLI in the reviewed output.
-* Recovery after a hard failure is a new WHIP session, not an in-place media ICE restart.
-
-## Game Capture
-
-Game Capture is a native Windows capture and VDO.Ninja publisher. It uses VDO.Ninja signaling and creates direct libdatachannel peer connections rather than publishing through WHIP.
-
-### Defaults and controls
-
-The current UI defaults to:
-
-* 1920x1080 at 60 fps;
-* H.264;
-* 12000 kbps;
-* Direct STUN;
-* ten viewers;
-* a 640x360 lower-quality room tier enabled.
-
-The ICE menu offers:
-
-* **Direct STUN (Recommended)**
-* **Auto with TURN fallback**
-* **Relay Only**
-* **Host Only (LAN)**
-
-The bitrate presets are 20000, 12000, 6000, and 3000 kbps, plus custom.
-
-Those defaults target a strong local machine and network. They are aggressive for Wi-Fi, cellular, or an older CPU. For remote Fortnite capture, 720p30 at 3000-6000 kbps is the first native-app A/B test; increase only after the full route stays clean.
-
-### Video recovery
-
-H.264, H.265, and AV1 paths provide:
-
-* a 512-packet original-RTP NACK cache;
-* PLI handling that asks the encoder for a keyframe;
-* a normal encoder GOP default of 60;
-* no B-frames and low-latency encoding;
-* a global keyframe request about every 2500 ms;
-* warnings after repeated PLI bursts.
-
-At a high bitrate, a 512-packet cache covers a short time interval. It is much smaller than the 4000-packet OBS WHIP cache.
-
-The VP9 path is different:
-
-* custom RTP packetization does not attach the H.264/H.265/AV1 NACK and PLI handler chain;
-* the default external VP9 command uses all keyframes;
-* all-keyframe VP9 recovers immediately at the next frame but costs much more bitrate and CPU;
-* custom `-g 30 -keyint_min 30` reduces that cost but increases recovery time.
-
-### Audio recovery
-
-Game Capture sends 10 ms Opus frames. Short packets reduce the duration of one lost packet, at the cost of more packets and headers.
-
-The SDP advertises Opus in-band FEC, but the current Opus encoder setup configures bitrate and constant rate without enabling the libopus in-band-FEC or expected-loss controls. As a result, the advertised FEC should not be counted as active encoder protection in the current implementation.
-
-There is no audio RED and no normally negotiated audio NACK.
-
-### Connection recovery
-
-* Signaling reconnects indefinitely with delays increasing from one second to a ten-second cap.
-* A director refresh or ICE-restart request rebuilds the peer connection with fresh ICE credentials.
-* The app keeps a disconnected peer briefly for ICE recovery.
-* A hard-failed peer is removed.
-* If a default Direct STUN peer fails, the app fetches TURN servers and changes later/rebuilt connections to Auto. It does not guarantee that the already failed peer recovered in place.
-
-### Pros
-
-* Direct window, game, audio, and Spout2 capture.
-* Hardware codec choices and a shared encode for multiple peers.
-* PLI-to-encoder recovery on the main codec paths.
-* Explicit STUN, Auto, Relay, and LAN modes.
-* Lower-quality room tier reduces routine monitor traffic.
-
-### Cons
-
-* The 1080p60/12 Mbps default needs a strong path.
-* Per-viewer direct upload still grows with viewer count.
-* No RTX stream, video RED, or video parity.
-* Current Opus FEC advertisement does not match encoder activation.
-* VP9's all-keyframe default trades very high repairability for bitrate and CPU.
-* Current telemetry does not report real NACK and RTT values as completely as browser stats.
-
-## Ninja OBS Plugin
-
-The Ninja OBS Plugin has two distinct roles:
-
-* a native VDO.Ninja publisher output;
-* a VDO.Ninja source whose default receive mode is an internal browser source, with an experimental native receiver option.
-
-Do not treat the browser-backed and native receive paths as the same implementation.
-
-### Native publisher defaults
-
-The current publisher defaults are:
-
-* H.264 video;
-* Opus audio;
-* 4000 kbps;
-* ten viewers;
-* data channel enabled;
-* automatic signaling reconnect enabled;
-* built-in Google and Cloudflare STUN;
-* no TURN unless custom ICE settings supply it;
-* Force TURN off.
-
-The OBS service disables B-frames, repeats headers, and clamps the keyframe interval to no more than two seconds while preserving a tighter user setting.
-
-### Native publisher recovery
-
-Plugin v1.1.60 and later provide **Packet Duplication (Experimental)**, **Audio RED (Experimental)**, and **Adaptive Bitrate from REMB (Experimental)**. The older 512-packet direct NACK responder and transitional approximately ten-times-rate pacer are not the current implementation.
-
-The three settings are not one combined FEC switch:
-
-| Behavior | Active with protection `Off`? | Purpose |
+| Setting | What it does | Extra traffic |
 | --- | --- | --- |
-| Video NACK and original-packet retransmission | Yes | Reactive repair after a viewer reports a missing RTP sequence number |
-| Frame-aware RTP pacing and whole-frame queue protection | Yes | Avoid keyframe bursts, audio starvation, and deliberately partial frames |
-| PLI/FIR handling and two-second keyframe clamp | Yes | Bound decoder recovery when packet repair is not possible |
-| Packet Duplication | No; default-off | Proactively send selected video RTP packets a second time |
-| Audio RED | No; default-off | Carry one previous Opus frame with the current frame when negotiated |
-| Adaptive Bitrate from REMB | No; default-off | Reduce a supported OBS encoder before persistent congestion collapses the route |
+| **Packet Duplication: Off** (default) | No duplicate traffic. NACK, pacing and PLI still run. | None |
+| **Packet Duplication: Low** | Sends every keyframe packet twice | Up to 20% of video |
+| **Packet Duplication: Medium** | Keyframe packets plus every fourth delta packet | Up to 50% |
+| **Packet Duplication: High** | Every video packet can get one copy | Up to 100% |
+| **Audio RED** | RFC 2198 RED with the current and previous Opus frame, for viewers that accept it; others get plain Opus | Up to about double audio |
+| **Adaptive Bitrate from REMB** | Lowers a supported OBS encoder and the pacer to the lowest viewer REMB estimate, with a floor; restores the bitrate when publishing stops | Not applicable |
 
-`Off` therefore means **no proactive duplicate video traffic**. It does not disable NACK, pacing, PLI, or the keyframe
-limit.
+Copies keep the original packet's sequence number, become eligible 15 ms after it and expire after 250 ms. They use only idle capacity and rank below NACK repairs. This is best-effort duplication, not RTX, RED or FEC. The limits are on top of the video target, and direct fan-out multiplies them: a 4 Mbps publisher with three viewers already uploads about 12 Mbps of video, and High duplication can add nearly 12 Mbps more. Audio RED wraps already-encoded frames and does not turn on Opus in-band FEC, which depends on the OBS encoder. Browser flags such as `&vred` and `&pvred` do not affect the plugin.
 
-The newer publisher uses:
+The plugin does not offer video RED or ULPFEC because it has no parity generator; advertising those payloads would negotiate labels without real repair packets. libwebrtc also disables RED/ULPFEC for H.264 when NACK is on. FlexFEC is a possible future option.
 
-* a video original-RTP cache bounded by 2048 packets, 4 MiB, and two seconds;
-* paced NACK repair with a separate repair allowance and a 500 ms deadline;
-* a frame-aware token-bucket pacer at approximately twice the encoder rate, with two-millisecond scheduling and a small shared fan-out burst allowance;
-* whole-frame admission and queue relief rather than deliberate partial-frame transmission;
-* RTP sequence-number reclamation when an assigned but entirely unsent queue tail is discarded;
-* a gate that refuses dependent frames after a known local frame loss or incomplete transmission until a complete live keyframe has been sent;
-* a cached latest keyframe for a newly connected decoder only;
-* RTCP and scheduler telemetry for NACK, cache hits/misses, repair, PLI/FIR, receiver reports, loss, jitter, RTT, REMB, keyframes, queue delay, and drops;
-* a rebuilt peer connection for requested ICE restart;
-* exponential signaling reconnect from one to 30 seconds.
+Newer builds log a `Publish:` summary every 30 seconds. Pacer or queue drops point to publisher-side loss. Rising NACK, cache misses or late repairs with no local drops point to transport loss or too little recovery time. REMB staying below your bitrate suggests lowering it, reducing fan-out or testing adaptive mode. Compare protection off and on over the same route and viewer count, and turn it down if loss, delay or pacer pressure rises.
 
-Dropping a whole frame and gating its dependent frames avoids knowingly feeding an unusable GOP to the decoder. The visible tradeoff after a confirmed local loss is a freeze until the next complete live keyframe. Discarding an unsent tail does not intentionally create an RTP sequence gap for the receiver to NACK.
+**Experimental native receiver:** supports H.264 or VP9, Opus, optional VP9 alpha, receiver reports and REMB requests, hardware decode with software fallback, and reconnect backoff. It does not send NACK, uses only the primary payload of video RED, has no reorder or jitter buffer of its own, and relies on PLI and decoder resets after loss. Use H.264, keep NACK and PLI on the browser publisher with a one-to-two-second keyframe interval, and use the browser-backed source on lossy routes or when you need video RED or chunked mode.
 
-OBS does not expose a reliable on-demand encoder keyframe API to this output. A PLI from an already synchronized viewer therefore keeps the current live stream flowing while the viewer waits for the next scheduled IDR; it does not replay a stale cached keyframe or intentionally suppress healthy deltas. A confirmed publisher-side frame failure still keeps its safety gate closed. The two-second keyframe clamp bounds the normal wait for the next live IDR.
+## Test one change at a time
 
-The publisher does not emit an RTX stream or negotiated video RED, ULPFEC, or FlexFEC. Newer builds instead offer these default-off protection controls:
+1. Record a clean RTP baseline.
+2. Add random loss without changing the bitrate.
+3. Test a lower bitrate, then a shorter keyframe interval.
+4. Test RED or FEC on its own.
+5. Test forced TURN on the same route.
+6. Test SFU fan-out separately from direct peers.
+7. Test chunked mode at a recorded playout delay.
 
-* **Packet Duplication — Low** duplicates keyframe packets with up to 20% best-effort extra video traffic.
-* **Packet Duplication — Medium** duplicates keyframes and one quarter of delta packets with up to 50% best-effort extra traffic.
-* **Packet Duplication — High** can duplicate every video packet with up to 100% best-effort extra traffic.
-* **Audio RED** negotiates RFC 2198 and carries the current and previous Opus frame when the individual viewer accepts RED; other viewers receive ordinary Opus.
-
-Copies are delayed, paced, lower priority than live media, and allowed to expire instead of extending the live queue. Packet duplication is not RTP RED or parity FEC. Its bandwidth limits are additional to the configured encoded-video target, so include them in the route and fan-out budget. The audio path does not normally negotiate audio NACK, and actual Opus in-band FEC still depends on the OBS encoder.
-
-#### Choosing a Packet Duplication mode
-
-| Mode | Selected packets | Best-effort extra video traffic | Practical use |
-| --- | --- | --- | --- |
-| **Off** | None; automatic NACK still operates | None while the route is clean | Default and first test |
-| **Low** | Every keyframe packet | Up to 20% | Isolated loss damages keyframes, with limited spare upload |
-| **Medium** | Every keyframe packet and every fourth delta packet | Up to 50% | Measured random loss remains after bitrate is brought below capacity |
-| **High** | Every video packet can receive one copy | Up to 100% | Controlled testing with enough capacity to nearly double video traffic |
-
-`High` is the closest mode to “send every packet twice.” It never schedules more than one optional copy of a packet.
-The scheduler has a small internal High-mode packetization allowance so copies selected near keyframe bursts can still
-meet their deadline; this is pacing headroom, not a third transmission.
-
-Each copy retains the primary packet's RTP payload, timestamp, SSRC, and sequence number. It becomes eligible 15 ms
-after the primary was sent and expires after 250 ms. Copies use only idle live-media capacity and remain below NACK
-repair in scheduler priority. These details make the feature best-effort duplicate delivery, not negotiated RTX, RED,
-ULPFEC, or FlexFEC.
-
-Direct peer-to-peer fan-out multiplies this cost. A 4 Mbps publisher with three full-quality viewers is already roughly
-12 Mbps of video upload before audio, RTP/DTLS overhead, NACK repairs, and protection traffic. High duplication can
-approach another 12 Mbps. Extra traffic cannot create capacity on a saturated uplink.
-
-#### Audio RED versus Opus FEC
-
-The plugin's **Audio RED** option offers RFC 2198 RED alongside normal Opus. If an individual viewer selects the RED
-mapping, the current RED RTP payload contains the current Opus generation and, when available, one previous Opus
-generation. A viewer that declines the mapping receives plain Opus, so fallback is per peer.
-
-This is different from Opus in-band FEC. Opus FEC is generated inside the encoder and encodes information about an
-earlier frame into a later Opus frame. RFC 2198 RED wraps already encoded payload generations outside the encoder. The
-plugin does not configure OBS's Opus packet-loss percentage, so do not infer active Opus in-band FEC merely from the
-plugin's Audio RED setting.
-
-#### Why video RED/ULPFEC is not offered
-
-The plugin and its libdatachannel media-handler path do not contain a video ULPFEC or FlexFEC generator. Advertising
-`red` and `ulpfec` payload types in SDP would therefore negotiate labels without producing valid parity repair packets.
-
-There is also a specific H.264-with-NACK constraint in the browser stack. Current libwebrtc sender logic disables
-RED/ULPFEC when NACK is enabled for payloads such as H.264 that lack the picture-ID behavior used to skip unnecessary
-FEC retransmission. In that combination, FEC packets can themselves need retransmission, reducing the value of the
-added bandwidth. This is not proof that every browser receiver rejects correctly generated H.264 FEC, but it is why an
-SDP capability list is not recovery evidence.
-
-A shippable implementation requires a native generator, correct payload/SSRC/sequence and pacing behavior, safe
-per-viewer fallback, and induced-loss tests proving decoded-frame recovery in supported Chromium, Firefox, and WebKit
-receivers. FlexFEC is the preferred future H.264 candidate because libwebrtc's H.264-with-NACK ULPFEC restriction does
-not apply to FlexFEC. Until those tests pass, **Packet Duplication** is the accurate product label.
-
-Browser URL options such as `&vred` and `&pvred` are separate VDO.Ninja browser negotiation preferences. They do not
-enable the plugin's packet duplication settings and cannot make the native plugin publisher generate ULPFEC.
-
-Adaptive bitrate is also default-off. When enabled with a dynamically adjustable OBS encoder, it uses the lowest fresh REMB estimate across the connected viewers, applies conservative staged changes to both the encoder and pacer, enforces a configured floor, and restores the original bitrate when publishing stops. Unsupported encoders fail closed instead of being repeatedly reconfigured.
-
-### TURN and fan-out
-
-Enter custom STUN/TURN servers in the plugin's advanced ICE field. Enable **Force TURN** only when that list contains a working TURN server. Custom ICE settings replace the built-in STUN defaults.
-
-The publisher creates direct peers. Its output bitrate is therefore approximately multiplied by the number of full-quality viewers. Use an SFU-capable browser or WHIP workflow when direct fan-out is the limiting factor.
-
-### Browser-backed receiver
-
-The normal VDO.Ninja Source mode is the browser-backed receiver. It inherits the browser application's normal codec, jitter-buffer, NACK/RTX, PLI, and chunked receive behavior. This is the compatibility default.
-
-### Experimental native receiver
-
-The native receiver supports:
-
-* H.264 or VP9 video;
-* Opus audio;
-* optional dual-track VP9 alpha;
-* receiver reports and REMB target requests;
-* PLI at connection, track replacement, and video decoder failure;
-* RTX payload normalization when an associated RTX codec was offered;
-* hardware decode with software fallback;
-* five-second peer recovery requests;
-* 15-second, 45-second, then 180-second view-request backoff;
-* one-to-30-second signaling reconnect.
-
-Important limitations in the reviewed native receive path:
-
-* Its `RtcpReceivingSession` records loss for receiver reports but does not generate NACK.
-* RTX normalization allows an RTX packet to be decoded if one arrives, but this receiver does not itself request the missing packet by NACK.
-* It recognizes video RED packets only to extract the primary payload; it does not use the redundant blocks for repair.
-* It has no explicit RTP reorder/jitter buffer in the plugin receive path.
-* It assembles and submits received frames, then requests a keyframe when the decoder reports damage.
-
-This means the native receiver's main response to unrepaired video loss is PLI and decoder reset, not packet-level recovery. On a lossy route, the browser-backed source is the stronger default unless native alpha or another native-only feature is required.
-
-### Pros
-
-* Integrated OBS publisher and receiver workflow.
-* Frame-aware publisher pacing, paced NACK repair, whole-frame relief, and decoder-safe local-loss gating.
-* Detailed per-interval loss, repair, keyframe, audio-continuity, and scheduler telemetry.
-* Default-off paced packet duplication, negotiated audio RED, and conservative REMB adaptation in newer builds.
-* Automatic signaling reconnect and peer rebuild support.
-* Native receiver supports H.264, VP9, Opus, and dual-track alpha.
-* Browser-backed receive mode preserves the broad VDO.Ninja feature set.
-
-### Cons
-
-* Direct native publisher fan-out multiplies upload.
-* No publisher RTX stream, negotiated video RED, or video parity.
-* PLI cannot force the OBS encoder immediately.
-* Direct fan-out and opt-in protection traffic still require explicit upload headroom.
-* Native receiver does not generate NACK or recover RED redundant blocks.
-* Native receiver is experimental and has less jitter/loss handling than the browser path.
-
-## Interoperability recipes
-
-### OBS WHIP to VDO.Ninja
-
-Use:
-
-* H.264;
-* one-to-two-second keyframes;
-* no B-frames;
-* repeated headers;
-* a bitrate with substantial route headroom;
-* OBS auto reconnect;
-* a WHIP endpoint that returns suitable STUN/TURN servers.
-
-Do not expect VDO.Ninja's browser URL flags for video RED, chunked reliability, automatic relay selection, or Meshcast to reconfigure the native OBS publisher. They apply to VDO.Ninja pages, not to OBS's native output.
-
-### Game Capture to browser viewers
-
-Start with:
-
-* H.264;
-* 1280x720 at 30 fps on a questionable link;
-* 3000 or 6000 kbps rather than 12000;
-* Direct STUN for the lowest latency;
-* Auto with TURN fallback when restrictive networks cause connection failure;
-* the 640x360 room tier for non-program monitoring.
-
-Use the app or director refresh after a failed direct peer has switched later connections to TURN-capable Auto mode.
-
-### Ninja publisher to browser viewers
-
-The 4000 kbps H.264 and two-second keyframe defaults are a reasonable starting point. Add a custom TURN server and **Force TURN** only for an actual routing or NAT problem. Watch newer builds' 30-second `Publish:` summaries for:
-
-* encoded keyframe cadence and size versus the largest paced batch;
-* pacer queue size, delay, whole-frame drops, and send errors;
-* NACK requests, cache hits/misses, paced repairs, and repair expiry;
-* PLI/FIR, receiver-reported loss, jitter, RTT, and REMB;
-* packet-duplication and audio-RED activity;
-* audio timestamp anomalies.
-
-Pacer or global-media-queue drops identify a publisher-side loss event. NACK/cache-miss/late-repair growth with zero local drops points instead to transport loss or insufficient recovery time. REMB persistently below the configured rate suggests lowering the fixed bitrate, reducing viewer fan-out, or testing the opt-in adaptive mode.
-
-Packet duplication and audio RED can be A/B tested without first proving that congestion is absent. They are still extra traffic: compare the same route and total fan-out with protection off and on, and stop or reduce protection if it raises loss, delay, repair expiry, or pacer pressure.
-
-### Browser publisher to Ninja native receiver
-
-Use H.264 for the safest native path. Keep NACK and PLI enabled on the browser publisher, but remember that the current native receiver sends PLI rather than NACK. A one-to-two-second publisher keyframe cadence limits visible damage.
-
-Do not rely on video RED redundancy or chunked mode with the native receiver. Use the plugin's browser-backed source for those browser features.
-
-## How to test recovery rather than guess
-
-Change one layer at a time:
-
-1. Establish a clean RTP baseline.
-2. Add random loss without changing bitrate.
-3. Test a lower bitrate.
-4. Test a shorter keyframe interval.
-5. Test RED/FEC separately.
-6. Test forced TURN on the same route.
-7. Test SFU fan-out separately from direct peers.
-8. Test chunked mode at an explicitly recorded playout delay.
-
-On Linux, a simple reproducible egress test is:
+On a disposable Linux test host, add 50 ms of delay and 10% random loss on one interface's outgoing traffic, then remove it afterwards. Replace `IFACE` with the exact interface; shaping both directions changes the resulting round-trip time.
 
 ```bash
 sudo tc qdisc replace dev IFACE root netem delay 50ms loss random 10%
-```
-
-Remove it after the run:
-
-```bash
 sudo tc qdisc del dev IFACE root
 ```
-
-Replace `IFACE` with the exact test interface. This command adds 50 ms on that interface's egress; applying shaping in both directions changes the resulting RTT. Use a disposable test host or namespace and verify the selected interface before applying it.
-
-Run at least:
 
 | Test | Loss | Added delay | Purpose |
 | --- | --- | --- | --- |
 | Clean | 0% | 0 ms | Encoder and baseline quality |
-| Mild random | 2% | 50 ms | Normal NACK/RTX behavior |
+| Mild random | 2% | 50 ms | Normal NACK/RTX behaviour |
 | Severe random | 10% | 50 ms | Repair overhead and decoder stability |
-| High RTT | 10% | 300 ms | Retransmission deadline and buffer behavior |
-| Burst | 20-30% for 2-5 seconds | 250-400 ms RTT | Queue relief, watchdog, keyframe, and reconnect behavior |
+| High RTT | 10% | 300 ms | Resend deadlines and buffering |
+| Burst | 20–30% for 2–5 s | 250–400 ms RTT | Queue relief, keyframes and reconnects |
 
-Record:
+Record the push and view URLs; codec, resolution, FPS and bitrate; loss, jitter, RTT, NACK, retransmission, PLI and keyframe counters; the selected candidate pair (the source of truth for direct or relayed); encoder overload and dropped frames; time until a clean frame returns; audio gaps; and, for chunked mode, buffer target and level, parity repairs, NACKs and rebuffers.
 
-* exact push and view URLs;
-* codec, resolution, FPS, target and actual bitrate;
-* packet loss, jitter, RTT, NACK, retransmission, PLI, and keyframe counters;
-* selected candidate type and TURN server;
-* encoder overload and dropped frames;
-* time until a clean decoded frame returns;
-* audio gaps, robotic artifacts, and recovery time;
-* chunked buffer target/level/delta, parity repairs, NACKs, queue relief, and rebuffer events.
-
-The selected candidate pair is the source of truth for whether the active connection is direct or relayed.
-
-## Reading the result
-
-| Observation | Likely conclusion |
+| Result | Likely meaning |
 | --- | --- |
-| Lower bitrate fixes both loss and corruption | The path was congested; extra redundancy would probably have made it worse |
+| A lower bitrate fixes loss and corruption | The path was congested; redundancy would have made it worse |
 | Forced TURN fixes it | The direct route or NAT path was the problem |
-| Forced TURN is worse | The relay added RTT, congestion, or a poorer route |
-| NACK rises but retransmission arrives before decode | Reactive repair is working |
-| NACK rises and PLI still rises | Resends are late, absent, outside cache, or insufficient |
-| Audio RED helps and total traffic remains stable | Proactive audio redundancy fits the available headroom |
-| RED negotiation changes but traffic and outcome do not | The runtime likely did not send useful repair data |
-| Short keyframes clear corruption but cause new loss | The link lacks headroom for the keyframe bursts |
-| SFU fixes multi-viewer instability | Publisher fan-out was the bottleneck |
+| Forced TURN is worse | The relay added latency, congestion or a poorer route |
+| NACK rises, but resends arrive in time | Reactive repair is working |
+| NACK rises and PLI still rises | Resends are late, missing or outside the cache |
+| Audio RED helps and total traffic stays stable | Audio redundancy fits your headroom |
+| RED negotiation changes but nothing else does | The browser probably sent no useful repair data |
+| Short keyframes clear corruption but cause new loss | Not enough headroom for keyframe bursts |
+| An SFU fixes multi-viewer instability | Publisher fan-out was the bottleneck |
 | Chunked mode is smooth only with a larger buffer | The route needs more recovery time than low-latency RTP allows |
-| Local recording is damaged too | Capture or encoder problem, not transport recovery |
+| The local recording is damaged too | Capture or encoder problem, not transport |
 
-## Practical decision order
-
-For most productions:
+## Decision order
 
 1. Fix encoder overload.
-2. Put the media bitrate below sustained capacity.
-3. Leave NACK, RTX, PLI, and Opus FEC enabled.
+2. Keep the bitrate below sustained capacity.
+3. Leave NACK, RTX, PLI and Opus FEC on.
 4. Set a sensible keyframe interval.
-5. Add modest viewer buffering if latency permits.
-6. A/B test a different route with TURN.
-7. Use an SFU when publisher fan-out is the constraint.
-8. A/B test audio RED, browser video RED, or native packet duplication with an explicit total-traffic budget; this test need not wait for a perfect congestion diagnosis.
-9. Use chunked mode when a larger latency budget and narrower compatibility are acceptable.
-10. Keep a local recording for outages that no live transport can cross.
+5. Add a modest viewer buffer if latency allows.
+6. A/B test a TURN route.
+7. Use an SFU when publisher fan-out is the limit.
+8. A/B test audio RED, browser video RED or plugin packet duplication within a set total-traffic budget.
+9. Use chunked mode when you can accept more latency and narrower compatibility.
+10. Keep a local recording for outages no live transport can cross.
 
 ## Related guides
 
+* [Low-bandwidth video and connection profiles](low-bandwidth-video-and-connection-profiles.md)
 * [Video bitrate for push/view links](video-bitrate-for-push-view-links.md)
 * [Diagnosing problems with the stats panel](stats-menu/troubleshooting.md)
 * [Stable IRL streaming](irl-streaming-stability.md)
-* [Recommended OBS WHIP settings](obs-whip-output-settings.md)
-* [Using the Ninja OBS Plugin with VDO.Ninja](using-ninja-obs-plugin-with-vdo.ninja.md)
-* [Using Game Capture and Spout2 with VDO.Ninja](using-game-capture-with-vdo.ninja.md)
 * [Chunked-mode parameter guide](../newly-added-parameters/and-chunked.md)
 * [Video RED parameter guide](../advanced-settings/view-parameters/vred.md)
 
 ## Protocol references
 
-* [RFC 4585: RTP feedback, NACK, and PLI](https://www.rfc-editor.org/rfc/rfc4585)
+* [RFC 4585: RTP feedback, NACK and PLI](https://www.rfc-editor.org/rfc/rfc4585)
 * [RFC 4588: RTP retransmission payload format](https://www.rfc-editor.org/rfc/rfc4588)
 * [RFC 2198: RTP redundant payloads](https://www.rfc-editor.org/rfc/rfc2198)
 * [RFC 5109: Generic RTP forward error correction](https://www.rfc-editor.org/rfc/rfc5109)
 * [RFC 6716: Opus](https://www.rfc-editor.org/rfc/rfc6716)
 * [RFC 8656: TURN](https://www.rfc-editor.org/rfc/rfc8656)
+* [RFC 9725: WHIP](https://www.rfc-editor.org/rfc/rfc9725)
 * [libwebrtc video sender RED/ULPFEC and FlexFEC selection](https://chromium.googlesource.com/external/webrtc/+/master/call/rtp_video_sender.cc)
 * [libwebrtc video receiver RED/ULPFEC path](https://chromium.googlesource.com/external/webrtc/+/master/video/rtp_video_stream_receiver.cc)
-* [RFC 9725: WHIP](https://www.rfc-editor.org/rfc/rfc9725)
-
-
-For adaptive camera profiles, extreme low-bitrate behavior, browser qualification and measured phone results, see [Low-bandwidth video and connection profiles](low-bandwidth-video-and-connection-profiles.md).

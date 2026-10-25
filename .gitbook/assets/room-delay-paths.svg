@@ -1,0 +1,51 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="540" viewBox="0 0 960 540" role="img" aria-labelledby="title description">
+  <title id="title">Where the delay happens</title>
+  <desc id="description">Three signal paths, with the delay step highlighted. Meshcast HLS: the VDO.Ninja feed goes to Meshcast, which keeps five minutes of history; the HLS player adds a 120-second delay; OBS shows it as a Browser Source. OBS Stream Delay: the OBS program is delayed 120 seconds on its way to YouTube, Twitch or another RTMP endpoint. Second OBS: the VDO.Ninja feed goes to a first OBS or media server, which sends a delayed RTMP, SRT or HLS stream to a second OBS.</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 Z" fill="#205c96"/></marker>
+  </defs>
+  <rect width="960" height="540" fill="white"/>
+  <g font-family="Arial, Helvetica, sans-serif" fill="#142c43">
+    <text x="480" y="50" font-size="36" font-weight="bold" text-anchor="middle">Where the delay happens</text>
+    <g font-size="22" font-weight="bold">
+      <text x="25" y="100">1. Meshcast HLS</text>
+      <text x="25" y="235">2. OBS Stream Delay</text>
+      <text x="25" y="370">3. Second OBS</text>
+    </g>
+    <g fill="#edf4fb" stroke="#205c96" stroke-width="3">
+      <rect x="25" y="112" width="200" height="84" rx="16"/>
+      <rect x="265" y="112" width="200" height="84" rx="16"/>
+      <rect x="745" y="112" width="200" height="84" rx="16"/>
+      <rect x="25" y="247" width="200" height="84" rx="16"/>
+      <rect x="505" y="247" width="200" height="84" rx="16"/>
+      <rect x="25" y="382" width="200" height="84" rx="16"/>
+      <rect x="265" y="382" width="200" height="84" rx="16"/>
+      <rect x="745" y="382" width="200" height="84" rx="16"/>
+    </g>
+    <g fill="#fdf3e8" stroke="#b25d00" stroke-width="3">
+      <rect x="505" y="112" width="200" height="84" rx="16"/>
+      <rect x="265" y="247" width="200" height="84" rx="16"/>
+      <rect x="505" y="382" width="200" height="84" rx="16"/>
+    </g>
+    <g text-anchor="middle" font-size="22">
+      <text x="125" y="147" font-weight="bold">VDO.Ninja</text><text x="125" y="176">feed</text>
+      <text x="365" y="147" font-weight="bold">Meshcast</text><text x="365" y="176">5 min history</text>
+      <text x="605" y="147" font-weight="bold">HLS player</text><text x="605" y="176">delay=120</text>
+      <text x="845" y="147" font-weight="bold">OBS</text><text x="845" y="176">Browser Source</text>
+      <text x="125" y="282" font-weight="bold">OBS</text><text x="125" y="311">program</text>
+      <text x="365" y="282" font-weight="bold">Stream Delay</text><text x="365" y="311">120 s</text>
+      <text x="605" y="282" font-weight="bold">YouTube,</text><text x="605" y="311">Twitch, RTMP</text>
+      <text x="125" y="417" font-weight="bold">VDO.Ninja</text><text x="125" y="446">feed</text>
+      <text x="365" y="417" font-weight="bold">OBS 1 or</text><text x="365" y="446">media server</text>
+      <text x="605" y="417" font-weight="bold">Delayed</text><text x="605" y="446">RTMP/SRT/HLS</text>
+      <text x="845" y="417" font-weight="bold">OBS 2</text><text x="845" y="446">Media Source</text>
+    </g>
+    <g stroke="#205c96" stroke-width="5" marker-end="url(#arrow)">
+      <path d="M229 154 H258"/><path d="M469 154 H498"/><path d="M709 154 H738"/>
+      <path d="M229 289 H258"/><path d="M469 289 H498"/>
+      <path d="M229 424 H258"/><path d="M469 424 H498"/><path d="M709 424 H738"/>
+    </g>
+    <rect x="300" y="497" width="34" height="24" rx="6" fill="#fdf3e8" stroke="#b25d00" stroke-width="3"/>
+    <text x="346" y="517" font-size="22">= where the delay is added</text>
+  </g>
+</svg>

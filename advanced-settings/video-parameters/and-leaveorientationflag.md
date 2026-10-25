@@ -69,4 +69,3 @@ When disabled (default):
 * [`&forcelandscape`](../mobile-parameters/and-forcelandscape.md) - Forces landscape orientation
 * [`&forceportrait`](../mobile-parameters/and-forceportrait.md) - Forces portrait orientation
 * [`&rotate`](../design-parameters/and-rotate.md) - Rotates video display
-* [`&leavevideorotation`](README.md) - Related rotation handling

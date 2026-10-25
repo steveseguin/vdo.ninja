@@ -1,148 +1,95 @@
 ---
-description: A practical field guide for stable VDO.Ninja IRL streams from phones and mobile encoders over cellular, Starlink, bonded networks, TURN relay, and chunked mode.
+description: A field guide for stable VDO.Ninja IRL streams from phones and mobile encoders over cellular, Starlink, bonded networks, TURN relay, and chunked mode.
 ---
 
 # Stable IRL streaming with VDO.Ninja
 
-Start with 720p30 at about 2 Mbps. A 6000-kbps viewing target does not reserve 6000 kbps or make a cellular path more reliable. It asks for larger frames and can make packet loss, recovery bursts, phone heat, and encoder instability worse.
+Start with 720p30 at about 2 Mbps. A 6000 kbps target does not reserve bandwidth or make a cellular path more reliable. It asks for larger frames, which can make packet loss, recovery bursts, and phone heat worse.
 
-For the experimental adaptive `connectionprofile=irl` and the clearer-slideshow `talkinghead` option, see [Low-bandwidth video and connection profiles](low-bandwidth-video-and-connection-profiles.md). These are separate from the static presets below. When testing an adaptive profile, omit the viewer `degrade=maintain-framerate` override shown below so it does not override the profile's resolution preference. Check the linked guide's availability and browser limitations first.
+For the experimental adaptive `&connectionprofile=irl` and the slideshow-like `&connectionprofile=talkinghead`, see [Low-bandwidth video and connection profiles](low-bandwidth-video-and-connection-profiles.md). When you test one, leave `&degrade=maintain-framerate` off the view link so it does not override the profile.
 
 ## 1. Start with this profile
 
 Replace `STREAMID` with a unique stream ID.
 
-Publisher/push link:
-
 ```text
-https://vdo.ninja/?push=STREAMID&quality=1&fps=30&codec=h264&outboundvideobitrate=2000&maxvideobitrate=2500
+Phone:    https://vdo.ninja/?push=STREAMID&quality=1&fps=30&outboundvideobitrate=2000&maxvideobitrate=2500
+OBS/view: https://vdo.ninja/?view=STREAMID&codec=h264&videobitrate=2000&buffer=1000&retry=10&degrade=maintain-framerate
 ```
 
-OBS/view link:
+This sends 720p30 at 2000 kbps, capped at 2500. The view link requests H.264, which phones often encode in hardware, adds a 1-second jitter buffer, and with `&retry=10` checks for the stream every 10 seconds if it goes missing.
+
+If it still freezes while moving, try the 360p30 weak-signal profile before raising the bitrate. Smaller frames recover faster after loss.
 
 ```text
-https://vdo.ninja/?view=STREAMID&videobitrate=2000&buffer=1000&retry=10&degrade=maintain-framerate
+Phone:    https://vdo.ninja/?push=STREAMID&quality=2&fps=30&outboundvideobitrate=900&maxvideobitrate=1200
+OBS/view: https://vdo.ninja/?view=STREAMID&codec=h264&videobitrate=900&buffer=1500&retry=10&degrade=maintain-framerate
 ```
 
-This profile uses:
+![Escalation steps, from the 720p profile through relay and bonding tests to chunked mode](../.gitbook/assets/mobile-irl-escalation.svg)
 
-* 720p at 30 fps instead of 1080p or 60 fps;
-* hardware-friendly H.264 when available;
-* a 2000-kbps target with a 2500-kbps sender cap;
-* a 1-second viewer buffer for jitter;
-* periodic stream discovery plus VDO.Ninja's staged connection recovery.
+## 2. Prepare the phone
 
-If it still freezes while moving, use the weak-signal profile before trying a higher bitrate.
+1. Update the OS, browser, and VDO.Ninja app before the event.
+2. Keep browser capture in the foreground, the screen awake, and interruptions off.
+3. Keep the phone shaded and ventilated. Avoid 1080p60, direct sun, and insulating cases. Charging while encoding adds heat.
+4. Test with the same device, mount, power, carriers, route, and time of day you will use live.
 
-Publisher/push link:
+Test both the browser and the [native VDO.Ninja app](../steves-helper-apps/native-mobile-app-versions.md), which adds local recording, better external audio, and background options. On iPhone, Chrome and Firefox commonly use Safari's WebKit engine, so try the native app if Safari is unstable. On Android, turn off battery optimization for the app and confirm the OS keeps camera, microphone, and background network access during a long test.
 
-```text
-https://vdo.ninja/?push=STREAMID&quality=2&fps=30&codec=h264&outboundvideobitrate=900&maxvideobitrate=1200
-```
+## 3. Find what is failing
 
-OBS/view link:
-
-```text
-https://vdo.ninja/?view=STREAMID&videobitrate=900&buffer=1500&retry=10&degrade=maintain-framerate
-```
-
-The weak-signal profile targets 360p30. It is less sharp, but its smaller frames need less upload capacity and recover faster after loss.
-
-## 2. Prepare the mobile encoder
-
-1. Update the device OS, browser, and VDO.Ninja app before the event.
-2. Record locally when the device supports it. A local copy protects the program when no live transport can cross a real coverage hole.
-3. Keep browser-based capture foregrounded, the device awake, and interruptions disabled during the stream.
-4. Keep the encoder shaded and ventilated. Avoid 1080p60, direct sun, and an insulating case; charging plus encoding can create significant heat.
-5. Test with the same device, mount, power source, carriers, route, and time of day that will be used live.
-
-The [native VDO.Ninja mobile apps](../steves-helper-apps/native-mobile-app-versions.md) add mobile-specific camera features, local recording, improved external audio support, and background-operation options. Test both the native app and browser on the actual device; neither path can compensate for a complete network outage.
-
-### iPhone and iPad notes
-
-Do not assume switching from Safari to Chrome or Firefox changes the media engine on iPhone; common iOS builds still use WebKit. Keep browser capture foregrounded and the screen awake. If Safari is unstable, test the native VDO.Ninja app rather than assuming iOS Chrome will behave like desktop Chrome.
-
-### Android notes
-
-Test current Chrome and the native VDO.Ninja app. Disable aggressive battery optimization for the chosen app, prevent the screen from sleeping during browser capture, and confirm the OS does not revoke camera, microphone, or background-network access during a long field test.
-
-## 3. Identify what is failing
-
-| Symptom | Likely layer | First test |
+| Symptom | Likely cause | First test |
 | --- | --- | --- |
-| Bitrate falls and the image becomes soft | Congestion control | Lower bitrate or resolution; relay usually does not create more radio capacity. |
-| Audio and video freeze together during movement | Cellular loss or network handoff | Test a bonded path and keep the stream open during brief interruptions. |
-| Audio continues but remote video turns black or freezes | Video encoder, track, or decoder recovery | Add `&keyframe=2000` to the view link as a test and compare the local phone preview. |
-| The local preview also freezes or turns black | Device capture, thermal, or app lifecycle | Cool the device, keep browser capture foregrounded, and test 360p30 in the native app. |
-| The app or page closes or reloads | Mobile OS memory, thermal, or application failure | Lower capture load, close unused apps/tabs, and preserve a local recording. |
+| Bitrate falls and the image goes soft | Congestion control | Lower bitrate or resolution. A relay does not add radio capacity. |
+| Audio and video freeze together while moving | Cellular loss or handoff | Test a bonded path. Keep the stream open through brief drops. |
+| Audio continues but remote video freezes or goes black | Video encoder or decoder recovery | Add `&keyframe=2000` to the view link and compare the phone's own preview. |
+| The phone's own preview also freezes | Capture, heat, or app lifecycle | Cool the phone and test 360p30 in the native app. |
+| The app or page closes or reloads | Memory, heat, or app failure | Lower the capture load, close other apps, and keep a local recording. |
 
-`&keyframe=2000` is a diagnostic for video that remains damaged after loss. It requests a new keyframe every two seconds. Remove it if it causes larger bitrate bursts or more loss; it is not a general cellular fix.
+`&keyframe=2000` asks for a keyframe every two seconds. Remove it if it causes bitrate bursts or more loss.
 
 ## 4. Choose the network path
 
 | Path | Best use | Main tradeoff |
 | --- | --- | --- |
-| Direct WebRTC | Normal low-latency IRL with a usable cellular path | Fastest, but short outages are visible. |
-| Automatic recovery | Roaming or intermittent peer-path failures | Recovery takes time; a complete coverage loss still interrupts the stream. |
-| Forced TURN relay | Carrier NAT or a poor direct route | Adds a server hop and latency; it does not repair weak RF coverage. |
-| Bonded connection | Carrier handoffs, moving coverage, or critical streams | Uses more data, battery, equipment, and sometimes VPN latency. |
-| Chunked/WebCodecs | Supported devices where 1-4 seconds of delay is acceptable | Browser-dependent and cannot bridge a complete outage by itself. |
+| Direct WebRTC | Low-latency IRL on a usable cellular path | Short outages are visible |
+| Forced TURN relay | Carrier NAT or a poor direct route | Adds a server hop; does not fix weak coverage |
+| Bonded connection | Handoffs, moving coverage, critical streams | More data, battery, and equipment |
+| Chunked/WebCodecs | Supported devices; 1–4 seconds of delay is fine | Browser-dependent; cannot bridge a full outage |
 
-### Test forced relay instead of assuming it helps
+### Test forced relay
 
-Current VDO.Ninja recovery starts direct and can automatically escalate a failed path to TURN. `&relay` forces TURN from the beginning, so use it as an A/B test rather than a default cure.
+VDO.Ninja tries direct connections first and can use TURN when no direct path works. `&relay` forces TURN from the start, so treat it as an A/B test: run the stable profile for 10 minutes on the real route, then add `&relay` to both links and repeat. Keep it only if it gives fewer failures at an acceptable delay. TURN cannot combine connections, restore coverage, or add upload capacity, and sustained high-bitrate relay use needs a properly sized TURN service.
 
-1. Run the stable profile for at least 10 minutes on the real route.
-2. Add `&relay` to both the publisher and view links, then repeat the same route.
-3. Keep relay only if it produces fewer failures at an acceptable delay.
+### Bond separate networks
 
-TURN can help when a carrier's NAT or direct route is the problem. It cannot combine connections, restore missing cellular coverage, or provide bandwidth that the uplink does not have. Sustained high-bitrate relay use should use an appropriately provisioned TURN service.
+Bonding helps most with handoffs and brief coverage holes. Use independent paths, such as cellular plus Wi-Fi from a second carrier's hotspot, a vehicle router, or Starlink. Most dual-SIM phones use one cellular data path at a time, so they cannot bond two SIMs.
 
-### Bond separate internet paths
+* **Speedify:** confirm both links show as connected, start with Speed mode plus Enhance Streaming, and pick a nearby server. Redundant mode helps a critical stream with packet loss but uses more data and battery. Leave transport on Auto, then A/B test UDP.
+* **Peplink/SpeedFusion:** prioritize Smoothing and Hot Failover for WebRTC, with separate carrier modems and a nearby endpoint.
 
-A bond is the most relevant upgrade when the stream fails during cellular handoffs or brief coverage holes. Use genuinely independent paths when possible, such as different carriers.
+See [Mobile uplinks with Starlink, cellular, and bonded networks](mobile-uplink-starlink-cellular-bonding.md) for details.
 
-On a phone or laptop, a practical software setup is cellular plus Wi-Fi from a second carrier hotspot, vehicle router, or Starlink. Most dual-SIM phones expose only one active cellular data path at a time, so two SIMs in one phone are not the same as two bonded modems.
+### Treat chunked mode as an experiment
 
-For Speedify:
-
-1. Confirm both Wi-Fi and cellular show as connected inside Speedify.
-2. Start with Speed mode plus Enhance Streaming.
-3. Try Redundant mode for a critical stream with packet loss; it duplicates traffic and uses more data and battery.
-4. Leave transport on Auto first, then A/B test UDP for latency-sensitive live streaming.
-5. Select a nearby server and repeat the actual moving route.
-
-For a Peplink/SpeedFusion-style router, prioritize Smoothing and Hot Failover for real-time WebRTC. Plain bandwidth bonding is aimed more at aggregate throughput; it is not automatically the best mode for low-latency media. Use separate carrier modems and a nearby SpeedFusion endpoint.
-
-### Treat chunked mode as a device-specific experiment
-
-Chunked mode adds VDO.Ninja-controlled buffering, indexed chunks, NACK retransmission, parity repair, and adaptation. It can absorb more loss than an extremely low-latency path, but it is not network bonding.
-
-Recent Chromium-based runtimes are the primary target. Current VDO.Ninja code disables chunked publishing on Firefox. Safari/WebKit publishing is capability-gated: it is enabled only when the complete WebCodecs audio/video stack and required worker track-processing APIs are present. Test the exact device, OS, browser/app runtime, and OBS receiver before relying on it.
-
-Experimental publisher/push link:
+Chunked mode adds VDO.Ninja-controlled buffering, NACK resends, parity repair, and adaptation. It absorbs more loss than plain WebRTC, but it is not bonding. Chromium-based browsers are the main target. Firefox cannot publish chunked, and Safari can only when its complete WebCodecs stack and worker track-processing APIs are present.
 
 ```text
-https://vdo.ninja/?push=STREAMID&quality=1&fps=30&chunked=1400&chunkbitrate=1400&chunkprofile=mobile&chunkedbuffer=2000
+Phone:    https://vdo.ninja/?push=STREAMID&quality=1&fps=30&chunked=1400&chunkbitrate=1400&chunkprofile=mobile&chunkedbuffer=2000
+OBS/view: https://vdo.ninja/?view=STREAMID&chunkbuffer=1500&chunkbufferfloor=1000&chunkbufferceil=3500&chunkjitterslack=500&retry=10
 ```
 
-Experimental OBS/view link:
+Expect extra delay. If VDO.Ninja says chunked mode is unsupported, or the phone overheats or crashes, go back to the 720p30 profile.
 
-```text
-https://vdo.ninja/?view=STREAMID&chunkbuffer=1500&chunkbufferfloor=1000&chunkbufferceil=3500&chunkjitterslack=500&retry=10
-```
+## 5. Field test before going live
 
-Expect extra delay. If VDO.Ninja reports that chunked mode is unsupported, or if the publisher heats or crashes, return to the standard 720p30 profile.
+1. Record 10 minutes parked and 10 minutes moving with each profile. Test forced relay separately.
+2. At the receiver, note bitrate, packet loss, RTT, jitter, decoded FPS, candidate type, and recovery time.
+3. Test under the real heat, movement, and charging conditions.
+4. Choose the lowest profile that completes the route without a black screen or manual reconnect.
 
-## 5. Run a field test before going live
-
-1. Record 10 minutes while parked and 10 minutes while moving with the stable profile.
-2. Repeat with the weak-signal profile; test forced relay separately.
-3. At the receiver, record bitrate, packet loss, RTT, jitter, decoded FPS, candidate type, and recovery time; do not rely only on a speed-test result.
-4. Repeat under the real heat, movement, and charging conditions so thermal behavior matches the event.
-5. Choose the lowest profile that completes the route without a black screen or manual reconnect.
-
-For critical work, run two outputs: the live VDO.Ninja feed and a local recording on the publisher device. No WebRTC flag can recover media that was never transmitted during a complete coverage outage.
+For critical work, record locally on the phone while streaming. No setting can recover media that was never sent.
 
 ## Related guides and references
 

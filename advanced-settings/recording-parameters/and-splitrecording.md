@@ -7,7 +7,7 @@ description: Split local recordings into smaller files, with browser behavior, a
 Add this option to the browser that performs the recording. It periodically saves a file and continues recording, reducing how much unfinished media is at risk if the browser stops.
 
 {% hint style="info" %}
-The independent-file behavior and automatic mobile size target below describe the recorder update qualified in September 2026. Use a deployment containing that update. Older versions produce continuation parts that need reassembly; pushing source changes does not establish availability on every hosted version.
+Older deployments may save continuation parts instead of standalone videos. Check the filenames against the table below and keep all parts until you have opened or reassembled the recording.
 {% endhint %}
 
 ## Options
@@ -45,20 +45,13 @@ For **continuation parts only**, Windows Command Prompt can reconstruct the orig
 copy /b recording.webm+recording.webm_1+recording.webm_2 output.webm
 ```
 
-Stopping waits for the final media data and pending writes. The updated recorder does not begin a download until that segment emits media, avoiding empty files when Stop coincides with a split. Allow the browser's download to finish before closing the tab. Splitting can introduce a brief capture gap; it is not frame-perfect uninterrupted recording. The source tracks stay active for live publishing.
+Stopping waits for the final media data and pending writes. Allow the browser's download to finish before closing the tab. Splitting can introduce a brief capture gap; it is not frame-perfect uninterrupted recording. The source tracks stay active for live publishing.
 
-## Browsers and qualification
+## Saving on mobile devices
 
-| Browser | Validated behavior and limits |
-| --- | --- |
-| Chrome desktop and Android | Pixel 4a/9a completed 20-minute native recordings through UDP loss, blackout and recovery. Media-bearing Downloads files matched device checksums, decoded fully, and opened in Android's native viewer. An empty split-boundary file found on the 4a was fixed and retested. |
-| Firefox desktop | Native MediaRecorder lifecycle and WebM audio/video work. A BrowserStack run encoded about 17 FPS both with the app and bare MediaRecorder; a local Windows comparison also reproduced 15-16 FPS without loading VDO.Ninja. This is not a universal Firefox limit. |
-| Safari 26 on iPhone | Nearly 16 minutes at approximately 12 Mbps with one-minute parts completed and all encoded parts decoded. A five-minute-part run crashed WebKit near 15 minutes, motivating smaller automatic mobile parts. |
-| Safari 15.5 on iPad 9th generation | More than ten minutes of native H.264/AAC recording produced independently decodable parts. Actual scene bitrate was about 1.9 Mbps despite the higher request. |
+Safari may save MP4 or WebM depending on the supported codecs and browser version. Before a session, save a short recording and open the downloaded file in the player or editor you will use.
 
-Safari may use MP4 or WebM depending on the supported codecs and browser version. Its Blob fallback retains a part in memory until saving; completed Blob URLs are released after a download grace period. Follow-up short recordings on a real iPhone 15 Pro Max/Safari 26 and iPad 8th/Safari 16 produced actual saved files matching encoder checksums. The iPad's MP4 played in native Quick Look; the iPhone's WebM opened as file information without a playback control. Standalone Files-app reopening, background recording, low-storage behavior and hour-long sessions remain separate checks. BrowserStack media decoding alone does not verify an OS-level save.
-
-The Pixel 4a test camera supplied only about 6-9 FPS at 1080p in the tested scene, and its video ended 0.5-0.8 seconds before audio. Successful file saving does not establish smooth capture or tight A/V sync on that device. The 9a supplied and recorded about 15 FPS, with end timestamps within 70 ms. Camera settings and requested bitrate are not guarantees of achieved frame rate or timing.
+Browsers that buffer downloads in memory retain each part until it is saved. For high-bitrate mobile recordings, use a shorter interval such as `&splitrecording=1` to reduce memory use per part.
 
 ## Related options
 

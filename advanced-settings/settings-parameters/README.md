@@ -20,12 +20,9 @@ You can use them for publisher, viewer and director URLs.
 
 For reconnect and retry options, see [Handling Guest Disconnects and Connection Recovery](../../guides/handling-guest-disconnects-and-connection-recovery.md).
 
-### Chat Lite Overlay Integration
+### Chat Lite Overlay Integration (removed)
 
-- [`&chatlite`](../../newly-added-parameters/and-chatlite.md)
-- [`&chatlitebutton`](../../newly-added-parameters/and-chatlite.md) (alias: `&ssnchatbutton`)
-- [`&chatlitesession`](../../newly-added-parameters/and-chatlite.md) (alias: `&ssnsession`)
-- [`&chatliteprofile`](../../newly-added-parameters/and-chatlite.md), `&chatliteposition`, `&chatlitemax`, `&chatlitetransparent`, `&chatlitenoavatar`, `&chatliteconfig`, `&chatlitetts`
+The `&chatlite` parameters were removed in v30.2. See [`&chatlite`](../../newly-added-parameters/and-chatlite.md) for what to use instead.
 
 ### Synthetic Test Media (Automation)
 

@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="515" viewBox="0 0 960 515" role="img" aria-labelledby="title description">
+  <title id="title">Who hears whom in Comms</title>
+  <desc id="description">Example Comms room with two groups, Stage and Backstage. The stage helper and the producer both select the Stage group, so they talk to and hear each other. Backstage helpers select the Backstage group. The producer also turns on the eye for Backstage, so the producer hears the backstage helpers, but the producer's microphone does not go into Backstage.</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 Z" fill="#205c96"/></marker>
+    <marker id="arrowListen" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 Z" fill="#b25d00"/></marker>
+  </defs>
+  <rect width="960" height="515" fill="white"/>
+  <g font-family="Arial, Helvetica, sans-serif" text-anchor="middle" fill="#142c43">
+    <text x="480" y="54" font-size="36" font-weight="bold">Who hears whom in Comms</text>
+    <text x="480" y="88" font-size="24">People on the left, group buttons on the right</text>
+    <g fill="#edf4fb" stroke="#205c96" stroke-width="3">
+      <rect x="40" y="115" width="270" height="80" rx="20"/>
+      <rect x="40" y="235" width="270" height="80" rx="20"/>
+      <rect x="40" y="355" width="270" height="80" rx="20"/>
+      <rect x="650" y="125" width="270" height="100" rx="20"/>
+      <rect x="650" y="305" width="270" height="100" rx="20"/>
+    </g>
+    <g font-size="26" font-weight="bold">
+      <text x="175" y="164">Stage helper</text>
+      <text x="175" y="284">Producer</text>
+      <text x="175" y="404">Backstage helpers</text>
+      <text x="785" y="170">Stage</text>
+      <text x="785" y="350">Backstage</text>
+    </g>
+    <g font-size="22">
+      <text x="785" y="203">group</text>
+      <text x="785" y="383">group</text>
+    </g>
+    <g stroke="#205c96" stroke-width="5" fill="none" marker-start="url(#arrow)" marker-end="url(#arrow)">
+      <path d="M320 158 L640 170"/>
+      <path d="M320 268 L640 195"/>
+      <path d="M320 395 L640 372"/>
+    </g>
+    <path d="M640 338 L322 288" stroke="#b25d00" stroke-width="5" stroke-dasharray="14 9" fill="none" marker-end="url(#arrowListen)"/>
+    <path d="M110 478 H200" stroke="#205c96" stroke-width="5" fill="none" marker-start="url(#arrow)" marker-end="url(#arrow)"/>
+    <text x="215" y="486" font-size="22" text-anchor="start">Talk and listen (green button)</text>
+    <path d="M560 478 H650" stroke="#b25d00" stroke-width="5" stroke-dasharray="14 9" fill="none" marker-end="url(#arrowListen)"/>
+    <text x="665" y="486" font-size="22" text-anchor="start">Listen only (eye)</text>
+  </g>
+</svg>

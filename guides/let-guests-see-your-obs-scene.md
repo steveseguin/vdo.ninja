@@ -1,44 +1,33 @@
 ---
-description: Let VDO.Ninja guests watch the finished OBS scene without creating a hall-of-mirrors effect or an audio feedback loop.
+description: Let VDO.Ninja guests watch the finished OBS scene without a hall-of-mirrors effect or an audio feedback loop.
 ---
 
 # Let guests see your finished OBS scene
 
-This guide is for a director who brings guests into OBS with VDO.Ninja, builds a finished scene in OBS, and wants the guests to see that finished scene in their VDO.Ninja room.
+Use this when you bring guests into OBS with VDO.Ninja and want them to watch the finished scene in their room.
 
 {% hint style="success" %}
-**The simple version:** Put the clean VDO.Ninja Scene link in OBS, send the OBS picture back through the director's camera, and give guests a link containing `&broadcast`.
+**The short version:** Put the clean VDO.Ninja Scene link in OBS, send the OBS picture back as the director's camera, and give guests a link containing `&broadcast`.
 {% endhint %}
 
-```mermaid
-flowchart LR
-    G1[Guest cameras] --> R[VDO.Ninja room]
-    R -->|clean Scene link| O[OBS scene]
-    O -->|OBS Virtual Camera| D[Director's return video]
-    D -->|direct or through Meshcast v2| G2[What guests watch]
-    N[Keep the director return out of the OBS Scene] -. prevents the hall-of-mirrors effect .-> O
-```
+![Guests join the room, OBS loads the clean Scene link, OBS Virtual Camera becomes the director's video, and that video returns to guests whose links use broadcast mode. The director stays out of the Scene link.](../.gitbook/assets/obs-flow-return-loop.svg)
 
 ## What you need
 
 * A VDO.Ninja room and its Director's Room
-* OBS with the guest layout already added as a Browser Source
+* OBS with the guests added as a Browser Source
 * OBS Virtual Camera
-* Headphones for everyone who will speak
+* Headphones for everyone who speaks
 
 ## 1. Use the clean Scene link in OBS
 
-The Browser Source in OBS should use the room's clean **Scene** link, not a guest link or the Director's Room itself.
-
-For a room named `YOUR_ROOM`, a basic Scene link is:
+The OBS Browser Source should use the room's **Scene** link, not a guest link or the Director's Room:
 
 ```text
 https://vdo.ninja/?scene&room=YOUR_ROOM
 ```
 
-The director is normally left out of this Scene. Keep it that way. Do not add `&showdirector`, and do not manually add the director's return video to the Mixer scene being captured by OBS.
-
-This is what prevents the OBS picture from capturing itself over and over.
+Scene links leave the director out by default. Keep it that way: do not add `&showdirector`, leave **The director will be performing as well, appearing in group scenes** unchecked when you create the room, and do not add the director's return to the layout OBS captures. Otherwise OBS captures its own picture over and over.
 
 ## 2. Choose what the guests should see
 
@@ -46,21 +35,14 @@ In OBS, click the **gear beside Start Virtual Camera**.
 
 <figure><img src="../.gitbook/assets/obs-audio-guides/virtual-camera-settings-button.png" alt="OBS Controls with an arrow pointing to the Virtual Camera settings gear" width="330"><figcaption><p>Use this gear to choose the return picture. Image: <a href="https://obsproject.com/kb/virtual-camera-guide">OBS Project</a>.</p></figcaption></figure>
 
-Choose **Program** for the live output, or **Scene** and select a dedicated **Guest Return** scene. Keep private producer notes out of that picture. Click **OK**, then **Start Virtual Camera** before selecting it in VDO.Ninja.
+Choose **Program** for the live output, or **Scene** and a dedicated **Guest Return** scene without private producer notes. Click **OK**, then **Start Virtual Camera** before you select it in VDO.Ninja.
 
 ## 3. Use the director as the return video
 
-Open the Director's Room:
-
-```text
-https://vdo.ninja/?director=YOUR_ROOM
-```
-
-In the Director's Room:
-
-1. Click the option to enable the director's microphone or video.
-2. Select **OBS Virtual Camera** as the camera.
-3. Select the director's normal microphone, or choose no microphone if the return should be video-only.
+1. Open the Director's Room: `https://vdo.ninja/?director=YOUR_ROOM`
+2. Click **enable director's microphone or video**.
+3. Select **OBS Virtual Camera** as the camera.
+4. Select your normal microphone, or no microphone for a video-only return.
 
 Give guests a room link containing `&broadcast`:
 
@@ -68,134 +50,62 @@ Give guests a room link containing `&broadcast`:
 https://vdo.ninja/?room=YOUR_ROOM&broadcast
 ```
 
-With this link, guests see the main director's video instead of receiving every guest's video. Their normal room conversation audio can remain active.
+Guests then see the main director's video instead of every guest's video. They still hear one another.
 
 {% hint style="warning" %}
-Do not send the complete OBS audio mix back to the guests. They may hear themselves with a delay. The safest starting point is to let VDO.Ninja handle the microphones and use OBS Virtual Camera for the finished picture.
+Do not send the full OBS audio mix back to guests; they would hear themselves with a delay. Let VDO.Ninja carry the microphones and use Virtual Camera for the picture.
 {% endhint %}
 
 ## 4. Optional: send the return through Meshcast v2
 
-For a small room, the direct setup above is usually the simplest and has the least delay. As more guests join, the director must send more copies of the return video.
-
-Meshcast can take one return feed from the director and distribute it to the guests. To use the newer Meshcast service, add `&meshcast2` to the director link:
+In a small room, the direct return has the least delay. But the director uploads one copy of the return per guest, so upload and CPU load grow as guests join. Meshcast takes one copy and sends it to everyone. Add `&meshcast` to the director link:
 
 ```text
-https://vdo.ninja/?director=YOUR_ROOM&meshcast2
+https://vdo.ninja/?director=YOUR_ROOM&meshcast
 ```
 
-The guest and OBS links stay the same:
+The guest and OBS links stay the same, and VDO.Ninja connects to Meshcast for you. `&meshcast` uses the current Meshcast service (v2); older links with `&meshcast2` still work. Meshcast adds a little delay.
 
-```text
-Guest: https://vdo.ninja/?room=YOUR_ROOM&broadcast
-OBS:   https://vdo.ninja/?scene&room=YOUR_ROOM
-```
+## Link sets
 
-VDO.Ninja handles the connection to Meshcast automatically. The director still selects OBS Virtual Camera in VDO.Ninja, and guests still use their normal broadcast-mode invites.
+| Link | Small room, direct | Larger room, through Meshcast |
+| --- | --- | --- |
+| Director | `?director=YOUR_ROOM` | `?director=YOUR_ROOM&meshcast` |
+| Guest | `?room=YOUR_ROOM&broadcast` | `?room=YOUR_ROOM&broadcast` |
+| OBS | `?scene&room=YOUR_ROOM` | `?scene&room=YOUR_ROOM` |
 
-{% hint style="info" %}
-`&meshcast2` is a temporary name for selecting the newer Meshcast v2 service while Meshcast v1 is still available. When Meshcast v1 is retired, this distinction may be simplified or renamed.
-{% endhint %}
-
-Meshcast usually adds a little more delay, but it reduces the number of return-video copies the director must upload.
-
-## Complete sample link sets
-
-### Small room: direct return
-
-```text
-Director: https://vdo.ninja/?director=YOUR_ROOM
-Guest:    https://vdo.ninja/?room=YOUR_ROOM&broadcast
-OBS:      https://vdo.ninja/?scene&room=YOUR_ROOM
-```
-
-### Larger room: return through Meshcast v2
-
-```text
-Director: https://vdo.ninja/?director=YOUR_ROOM&meshcast2
-Guest:    https://vdo.ninja/?room=YOUR_ROOM&broadcast
-OBS:      https://vdo.ninja/?scene&room=YOUR_ROOM
-```
-
-If the room uses a password or other room options, keep those settings consistent across the director, guest, and Scene links.
-
-## Other ways to share the return
-
-### Use a separate return source
-
-The main director method is easiest for guests who already use `&broadcast`. A separate return source is useful when the director wants to keep a normal camera separate from the OBS picture.
-
-Give that source a memorable name such as `RETURN`, then point the guest links at it:
-
-```text
-Return source: https://vdo.ninja/?room=YOUR_ROOM&push=RETURN&novideo&noaudio&meshcast2
-Guest:         https://vdo.ninja/?room=YOUR_ROOM&broadcast=RETURN
-```
-
-The `novideo` and `noaudio` options keep this return-source tab from also showing or playing the room.
-
-Select OBS Virtual Camera on the return-source page. Keep the `RETURN` source out of the OBS Scene to prevent the repeating-picture effect.
-
-This method requires the special `&broadcast=RETURN` guest link. Existing guest links containing only `&broadcast` will continue looking for the main director instead.
-
-### Bring back an existing Meshcast stream
-
-The newer Meshcast Studio provides a **WHEP URL** under **Watch Links**. That address can be used to bring an existing Meshcast stream into VDO.Ninja without using a webpage player.
-
-This is useful for a show that is already publishing through Meshcast, but it is a more advanced setup. For a director starting from OBS Virtual Camera, the integrated `&meshcast2` method above is simpler and works naturally with normal `&broadcast` guest links.
-
-### Share a webpage player
-
-The director can select **Share Website** and paste an embeddable Meshcast, YouTube, Twitch, or other player link. This can be convenient, but it places a webpage player inside the guest's room instead of using the normal VDO.Ninja media path.
-
-```mermaid
-flowchart LR
-    P[Embedded webpage plays audio] --> S[Speakers]
-    S --> M[Open microphone hears it]
-    M --> P
-    H[Headphones or a muted player] -. breaks the feedback loop .-> M
-```
-
-Audio from an embedded webpage may not be handled reliably by the room's echo cancellation. It can also duplicate the audio guests already hear through VDO.Ninja.
-
-If using a shared webpage:
-
-* Ask everyone to wear headphones.
-* Mute the embedded player when VDO.Ninja already carries the audio.
-* Avoid playing the same audio through both the webpage and VDO.Ninja.
-* Test with two separate devices before going live.
-
-Website sharing is generally safer for video-only material or for content where extra delay is acceptable.
-
-### Share an OBS projector window
-
-Another option is to open an OBS projector and share that window with VDO.Ninja's screen-share feature. It can work, but OBS Virtual Camera usually requires less window management and is easier to keep consistent.
+Each link starts with `https://vdo.ninja/`. If the room has a password or other options, use them on all three links.
 
 ## Prevent echo and feedback
 
-The safest audio arrangement is:
-
 * Every speaker wears headphones.
-* VDO.Ninja carries the conversation microphones.
-* OBS Virtual Camera returns the finished video.
-* Only one path carries any music, clips, or other program sound.
+* VDO.Ninja carries the conversation microphones; Virtual Camera carries the picture.
+* Only one path carries music, clips or other program sound.
 
-If guests must hear sound from OBS, use a carefully prepared audio return that leaves out their microphones. This is often called a **mix-minus**. Make a private test recording and ask every guest to confirm that they do not hear a delayed copy of themselves.
+If guests must hear sound from OBS, send them a return that leaves out their microphones (a mix-minus). See [Return OBS clips and music to the main room](room-audio-obs-meshcast-and-private-talk.md#4-return-obs-clips-and-music-to-the-main-room). Make a test recording and ask each guest to confirm they do not hear a delayed copy of themselves.
+
+## Other ways to share the return
+
+[Send an OBS return feed to guests](send-an-obs-return-feed-to-guests.md) covers:
+
+* a separate return publisher that guests select with `&broadcast=RETURN_ID`, which keeps the director's own camera separate;
+* your own WHIP/WHEP server, or a stream that is already on one;
+* a YouTube, Twitch or Meshcast player shared with **Share Website** (mute it, because its audio bypasses echo cancellation);
+* screen-sharing an OBS projector window.
 
 ## Quick fixes
 
 | Problem | What to check |
 | --- | --- |
-| The picture repeats inside itself | Remove the director or `RETURN` feed from the Mixer scene captured by OBS. Make sure the OBS Browser Source uses a `?scene&room=` link without `&showdirector`. |
-| Guests still see individual cameras | Make sure their invite contains `&broadcast`, or `&broadcast=RETURN` when using a separate return source. |
+| The picture repeats inside itself | Remove the director's return from the layout OBS captures. Make sure the Browser Source uses a `?scene&room=` link without `&showdirector`. |
+| Guests still see individual cameras | Their invite must contain `&broadcast`, or `&broadcast=RETURN_ID` for a separate return publisher. |
 | Guests see no OBS return | Start OBS Virtual Camera, enable the director's video, and select OBS Virtual Camera in VDO.Ninja. |
-| Guests hear themselves delayed | Stop sending the full OBS audio mix. Use headphones and keep only one audio return path. |
-| A shared webpage causes echo | Mute the webpage player or use headphones. Prefer the director or Meshcast v2 return method. |
-| The return has too much delay | For a small room, remove `&meshcast2` and test the direct return. |
+| Guests hear themselves delayed | Stop sending the full OBS audio mix. Use headphones and keep one audio return path. |
+| A shared webpage causes echo | Mute the webpage player or use headphones. Prefer the director or Meshcast return. |
+| The return has too much delay | In a small room, remove `&meshcast` and test the direct return. |
 
 ## Related guides
 
-* [Send an OBS return feed to guests](send-an-obs-return-feed-to-guests.md) - detailed routing and server options
 * [Publish from OBS into VDO.Ninja](publish-from-obs-into-vdo.ninja.md)
 * [`&broadcast`](../advanced-settings/view-parameters/broadcast.md)
 * [`&meshcast`](../newly-added-parameters/and-meshcast.md)

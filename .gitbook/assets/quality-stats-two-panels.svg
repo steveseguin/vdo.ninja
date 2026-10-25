@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="460" viewBox="0 0 960 460" role="img" aria-labelledby="title description">
+  <title id="title">Two panels, two ends of one connection</title>
+  <desc id="description">On the sending computer, Ctrl + click your own preview to open the publisher panel, which shows what you send, with one block per viewer. On the receiving computer, Ctrl + click the remote video to open the viewer panel, which shows what arrives. Both describe the same connection, so compare them.</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 Z" fill="#205c96"/></marker>
+  </defs>
+  <rect width="960" height="460" fill="white"/>
+  <g font-family="Arial, Helvetica, sans-serif" text-anchor="middle" fill="#142c43">
+    <text x="480" y="54" font-size="36" font-weight="bold">Two panels, two ends of one connection</text>
+    <g fill="#edf4fb" stroke="#205c96" stroke-width="3">
+      <rect x="40" y="100" width="300" height="250" rx="22"/>
+      <rect x="620" y="100" width="300" height="250" rx="22"/>
+    </g>
+    <text x="190" y="155" font-size="28" font-weight="bold">Sender</text>
+    <text x="190" y="200" font-size="22">Ctrl + click your</text>
+    <text x="190" y="228" font-size="22">own preview</text>
+    <text x="190" y="285" font-size="24" font-weight="bold">Publisher panel</text>
+    <text x="190" y="318" font-size="21">One block per viewer</text>
+    <text x="770" y="155" font-size="28" font-weight="bold">Receiver</text>
+    <text x="770" y="200" font-size="22">Ctrl + click the</text>
+    <text x="770" y="228" font-size="22">remote video</text>
+    <text x="770" y="285" font-size="24" font-weight="bold">Viewer panel</text>
+    <text x="770" y="318" font-size="21">What arrives here</text>
+    <path d="M345 225 H610" stroke="#205c96" stroke-width="5" marker-end="url(#arrow)"/>
+    <text x="480" y="208" font-size="22">Same connection</text>
+    <text x="480" y="410" font-size="24">Compare both to tell sender limits from path problems</text>
+  </g>
+</svg>

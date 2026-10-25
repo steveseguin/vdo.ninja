@@ -6,7 +6,7 @@ description: >-
 
 # \&screensharestereo
 
-General Option! ([`&push`](../source-settings/push.md), [`&room`](../general-settings/room.md), [`&view`](../advanced-settings/view-parameters/view.md), [`&scene`](../advanced-settings/view-parameters/scene.md))
+Room guest option! ([`&room`](../general-settings/room.md))
 
 ## Aliases
 
@@ -23,7 +23,7 @@ View [`&proaudio`](../advanced-settings/audio-parameters/and-proaudio.md) for mo
 
 ## Details
 
-Like [`&proaudio`](../advanced-settings/audio-parameters/and-proaudio.md) but for screen-shares.
+Like [`&proaudio`](../advanced-settings/audio-parameters/and-proaudio.md) but for screen-shares. It applies only to the separate screen-share stream that a room guest starts: VDO.Ninja passes the value to that stream as `&stereo`. On a link whose main source is a screen share, use [`&stereo`](../general-settings/stereo.md) on the push and view links instead.
 
 ## Related
 

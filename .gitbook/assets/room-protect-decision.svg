@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="540" viewBox="0 0 960 540" role="img" aria-labelledby="title description">
+  <title id="title">Who are you keeping out?</title>
+  <desc id="description">Three cases. An outsider: use a new room and password, or an SSO allowlist. An admitted guest who must not see other feeds: use app.invite.cam with guest isolation on. Someone taking the director seat: use maindirectorpassword, but viewers can still watch. Anyone holding the room name and password, or a viewer token, can watch.</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 Z" fill="#205c96"/></marker>
+  </defs>
+  <rect width="960" height="540" fill="white"/>
+  <g font-family="Arial, Helvetica, sans-serif" text-anchor="middle" fill="#142c43">
+    <text x="480" y="54" font-size="36" font-weight="bold">Who are you keeping out?</text>
+    <g fill="#edf4fb" stroke="#205c96" stroke-width="3">
+      <rect x="25" y="90" width="290" height="140" rx="20"/>
+      <rect x="335" y="90" width="290" height="140" rx="20"/>
+      <rect x="645" y="90" width="290" height="140" rx="20"/>
+    </g>
+    <g font-size="25" font-weight="bold">
+      <text x="170" y="152">An outsider</text>
+      <text x="170" y="184" font-size="22" font-weight="normal">not yet admitted</text>
+      <text x="480" y="136">An admitted guest</text>
+      <text x="480" y="168" font-size="22" font-weight="normal">who must not see</text>
+      <text x="480" y="196" font-size="22" font-weight="normal">other feeds</text>
+      <text x="790" y="152">Someone taking</text>
+      <text x="790" y="184">the director seat</text>
+    </g>
+    <g stroke="#205c96" stroke-width="5" marker-end="url(#arrow)">
+      <path d="M170 238 V300"/><path d="M480 238 V300"/><path d="M790 238 V300"/>
+    </g>
+    <g fill="#e9f5f0" stroke="#2e7d4f" stroke-width="3">
+      <rect x="25" y="310" width="290" height="150" rx="20"/>
+      <rect x="335" y="310" width="290" height="150" rx="20"/>
+      <rect x="645" y="310" width="290" height="150" rx="20"/>
+    </g>
+    <g font-size="23">
+      <text x="170" y="365" font-weight="bold">New room + password</text>
+      <text x="170" y="400">or</text>
+      <text x="170" y="435" font-weight="bold">SSO Allowlist</text>
+      <text x="480" y="372" font-weight="bold">app.invite.cam</text>
+      <text x="480" y="410">with guest isolation on</text>
+      <text x="790" y="365" font-weight="bold" font-size="22">&amp;maindirectorpassword</text>
+      <text x="790" y="405" fill="#b25d00">Viewers can</text>
+      <text x="790" y="435" fill="#b25d00">still watch</text>
+    </g>
+    <text x="480" y="512" font-size="22">Anyone holding the room name and password, or a viewer token, can watch</text>
+  </g>
+</svg>

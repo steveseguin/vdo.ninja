@@ -8,7 +8,7 @@ Sender-Side Option! ([`&push`](../../source-settings/push.md))
 
 ## Aliases
 
-* `&framerate`
+* `&frameRate` (parameter names are case-sensitive: `&framerate` is ignored)
 * `&fr`
 
 ## Options

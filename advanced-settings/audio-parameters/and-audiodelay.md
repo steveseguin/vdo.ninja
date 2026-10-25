@@ -19,11 +19,9 @@ Example: `&audiodelay=1000`
 
 ## Details
 
-`&audiodelay=1000` adds a fixed extra second to incoming audio on this viewer. Use it when audio consistently arrives ahead of video and you want a manual audio offset.
+`&audiodelay=1000` adds one extra second to incoming audio on this viewer. Use it when audio consistently arrives ahead of video.
 
-The viewer holds decoded audio in a Web Audio delay node. Its delay stays constant during playback: jitter, RTT, and buffer updates do not adjust this fixed offset. It applies to incoming audio streams processed by the viewer's audio pipeline.
-
-This parameter does not request additional video buffering or change the WebRTC audio receiver's buffer target. The browser's normal audio buffering remains active. The value is an **additional audio delay**, not a target for total end-to-end latency.
+The delay is a fixed Web Audio delay on each incoming audio track. Jitter, round-trip time and buffer changes do not adjust it. It does not add video buffering or change the browser's own audio buffering. The value is **extra** delay, not a target for total latency.
 
 ### Examples
 
@@ -38,8 +36,6 @@ Add a fixed 150 ms offset to incoming audio in a scene:
 ```text
 https://vdo.ninja/?room=ROOMNAME&scene=1&audiodelay=150
 ```
-
-These examples require a VDO.Ninja build that includes this new option. Replace the hostname with your own deployment when using a locally hosted build.
 
 ### Interaction with other delay settings
 

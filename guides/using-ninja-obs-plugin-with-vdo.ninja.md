@@ -4,62 +4,50 @@ description: Use the Ninja OBS Plugin to publish from OBS to VDO.Ninja, receive 
 
 # Using the Ninja OBS Plugin with VDO.Ninja
 
-The Ninja OBS Plugin is an OBS Studio plugin for VDO.Ninja workflows.
-
-It can publish from OBS into VDO.Ninja and help receive VDO.Ninja sources inside OBS without managing everything through separate browser tabs.
-
-## Link
+The Ninja OBS Plugin adds VDO.Ninja publishing and receiving to OBS Studio, so you manage fewer separate browser tabs.
 
 * [https://steveseguin.github.io/ninja-obs-plugin/](https://steveseguin.github.io/ninja-obs-plugin/)
 
-## Why use it
+Download the release package that matches your installed OBS version. Builds for different OBS versions are not interchangeable.
 
-Browser sources are flexible, but they are still browser sources. For some production workflows, using an OBS plugin can feel more direct and easier to manage.
+## When to use it
 
-The plugin can be useful when:
+* OBS is already the center of your production.
+* You want to send an OBS scene or clean output into a VDO.Ninja room or to remote viewers.
+* You want VDO.Ninja guests as OBS sources without separate browser windows.
 
-* OBS is already the center of the production
-* you want to publish from OBS into VDO.Ninja
-* you want VDO.Ninja sources managed more directly inside OBS
-* you want fewer separate browser windows or tabs
-* you want a workflow that feels closer to a normal video pipeline
+Test it on the same computer, network and OBS scene you will use for the real session.
 
-This may be more predictable than a normal browser publishing path in some setups, but it should still be tested with the same computer, network, and OBS scene setup that will be used for the real recording.
+## Publishing and receiving
 
-## Example uses
-
-You might use the plugin to:
-
-* send an OBS scene into a VDO.Ninja room
-* publish a clean OBS output to remote viewers
-* bring VDO.Ninja guests into OBS more directly
-* simplify a recording or production setup that otherwise needs many browser tabs
+* **Publishing** uses OBS's streaming output (**Settings -> Stream**), so OBS cannot stream to another destination at the same time. **Tools -> VDO.Ninja Studio** holds the basic stream ID, password, room and **Go Live** controls.
+* **Receiving** uses the **VDO.Ninja Source**. By default it plays the feed through an internal browser source. **Use Native Receiver (Experimental)** switches to a native VP9/H.264/Opus receiver, which is also required for transparent VP9 alpha from [Game Capture](using-game-capture-with-vdo.ninja.md).
+* **Auto Manage Inbound Streams** can add incoming room feeds to a scene as sources.
 
 ## Loss-protection settings
 
-Start with **Packet Duplication: Off**. The plugin's video NACK retransmission and pacing are automatic; `Off` only
-disables proactive duplicate packets.
+Start with **Packet Duplication: Off**. Video NACK retransmission and pacing are automatic in every mode; `Off` only disables proactive duplicate packets.
 
-Use **Low** for keyframe protection when isolated random loss remains and the uplink has spare capacity. **Medium** adds
-copies of selected delta packets. **High** can send every video packet twice and should be reserved for measured loss on
-a route that can sustain nearly double the video traffic. The cost is per direct viewer.
+| Mode | What it copies | Extra video traffic (best effort) |
+| --- | --- | --- |
+| Off | Nothing; NACK repair only | None |
+| Low | Keyframe packets | Up to 20% |
+| Medium | Keyframes plus a quarter of delta packets | Up to 50% |
+| High | Every video packet | Up to 100% |
 
-**Audio RED** and **Adaptive Bitrate from REMB** are separate default-off options. Audio RED carries a previous Opus
-frame when the viewer negotiates it. Adaptive bitrate reduces a supported OBS encoder when receiver estimates fall; it
-is congestion avoidance rather than packet repair.
+Use **Low** when isolated random loss remains and the uplink has spare capacity. Keep **High** for measured loss on a route that can carry nearly double the video traffic. The cost applies to each direct viewer.
 
-The plugin does not generate video RED/ULPFEC or FlexFEC. See the [advanced packet-loss reference](packet-loss-recovery-and-resilient-media.md#ninja-obs-plugin)
-for the protocol distinctions, exact timing and cache limits, native-receiver limitations, and testing guidance.
+**Audio RED (Experimental)** and **Adaptive Bitrate from REMB (Experimental)** are separate options, off by default. Audio RED adds the previous Opus frame when the viewer supports it. Adaptive bitrate lowers a supported OBS encoder's bitrate when viewers report congestion; it avoids loss rather than repairing it.
+
+The plugin does not generate video RED/ULPFEC or FlexFEC. See the [advanced packet-loss reference](packet-loss-recovery-and-resilient-media.md#ninja-obs-plugin) for protocol details, timing and cache limits, native-receiver limitations and testing.
 
 ## Before using it live
 
-Do a short test before the real session:
-
-* confirm the plugin is installed and visible in OBS
-* test publishing into the intended VDO.Ninja room or stream ID
-* check audio routing
-* record a short sample
-* confirm the receiving side sees the expected video and audio
+* Confirm the plugin is installed and visible in OBS.
+* Publish into the intended VDO.Ninja room or stream ID.
+* Check audio routing.
+* Record a short sample.
+* Confirm the receiving side gets the expected video and audio.
 
 ## Related
 

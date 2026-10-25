@@ -1,227 +1,120 @@
 ---
-description: How to choose VDO.Ninja, chunked, SRT, RTMP, and bonded-network options for moving mobile uplinks.
+description: Choose WebRTC, chunked, SRT, RTMP, and bonded-network settings for moving phone uplinks such as Starlink plus 5G.
 ---
 
 # Mobile uplinks with Starlink, cellular, and bonded networks
 
-This guide is for remote mobile video feeds, such as a phone camera on a moving Starlink Roam plus 5G uplink, received in OBS with a VDO.Ninja browser source.
+This guide covers a phone camera on a moving uplink, such as Starlink Roam plus 5G, received in OBS through a VDO.Ninja browser source.
 
-The short version:
+On a moving link, the usual problem is packet timing, packet loss, and short outages, more than upload speed. VDO.Ninja normally uses WebRTC, which is built for low latency and reacts fast to late or missing packets. That suits conversation, but quality can collapse under tree cover, Starlink jitter, or cellular handoffs.
 
-> For mobile Starlink, the problem is often packet timing, packet loss, and short outages before it is raw upload bandwidth.
-
-VDO.Ninja's normal media path is WebRTC. WebRTC is built for low latency, so it reacts quickly when packets arrive late or disappear. That is good for conversation, but it can make video quality collapse on a moving uplink with tree cover, Starlink jitter, or cellular handoffs.
-
-Use the [Mobile Uplink Packet Flow Lab](https://vdo.ninja/misc/mobile-uplink-packet-flow.html) to visualize the tradeoffs between plain WebRTC, buffered WebRTC, chunked/WebCodecs, SRT, RTMP, and different bonded-network paths.
-
-Use the [Unstable Connection Builder](https://vdo.ninja/misc/unstable-connection-builder.html) to generate matching push/view URLs for normal WebRTC, chunked/WebCodecs, audio recovery, Meshcast, relay tests, and local iframe simulation.
+* The [Mobile Uplink Packet Flow Lab](https://vdo.ninja/misc/mobile-uplink-packet-flow.html) compares plain WebRTC, buffered WebRTC, chunked/WebCodecs, SRT, RTMP, and bonded paths.
+* The [Unstable Connection Builder](https://vdo.ninja/misc/unstable-connection-builder.html) creates matching push and view links for normal WebRTC, chunked mode, audio recovery, Meshcast, relay tests, and local iframe simulation.
 
 ![Packet-flow lab showing chunked mode over a bonded Starlink and 5G service](../.gitbook/assets/mobile-uplink-packet-flow-lab.png)
 
 ## Why a high bitrate can still look bad
 
-`&outboundvideobitrate=7000` sets a sender-side target/default bitrate. It does not force the browser to keep sending 7000-kbps through loss, jitter, or congestion.
+* `&outboundvideobitrate=7000` sets a sender target. WebRTC congestion control still cuts the bitrate when it sees loss, jitter, or congestion, even if a speed test shows enough upload.
+* `&quality=0` (or `&q=0`) targets 1080p. Larger frames need more packets, so one burst of loss damages more of the picture and takes longer to recover.
 
-If the browser sees network trouble, WebRTC congestion control can reduce bitrate sharply. In bad cases, the viewer may see a low-bitrate image even though a speed test shows enough average upload.
+Smaller frames survive lossy links better: resends are faster, recovery keyframes are smaller, and congestion control has more headroom. Over a moving Starlink path, 720p30 at 2500–4000 kbps can look better than 1080p at 7000 kbps.
 
-`&q=0` or `&quality=0` targets 1080p/high quality. That creates larger compressed video frames. Larger H.264 frames need more packets, so one burst of packet loss can damage more of the picture and take longer to recover.
+## Lingering H.264 damage
 
-Lower bitrate and smaller frames can survive lossy links better because:
+H.264 builds most frames from earlier ones, so damage can last until a clean keyframe arrives. WebRTC requests a keyframe when it detects loss and usually recovers by itself, but packets that arrive too late can still leave damaged frames.
 
-* each frame contains less data;
-* missing packets can be retried faster;
-* recovery keyframes are smaller;
-* the congestion controller has more headroom before it hits the real link limit.
+If damage lingers for several seconds after a dropout, add `&keyframe=2000` to the **view** (OBS) link. It asks the phone for a keyframe every 2 seconds.
 
-This is why a 720p30 feed at 2500 to 4000-kbps can sometimes look better than a 1080p feed targeting 7000-kbps over a moving Starlink path.
+Use it only for that problem. Keyframes are the largest frames, so frequent ones add bursts that can make a weak link worse. Try `&keyframe=1000` only if 2000 is not enough and the link has spare bandwidth. Below about 1000 ms, quality drops steeply, and very low values may not work at all.
 
-## Why H.264 damage can linger
+## Types of bonding
 
-H.264 video depends on keyframes and predicted frames. If a predicted frame is damaged, later frames can also look wrong until the decoder receives a clean reference again.
+| Mode | What it does |
+| --- | --- |
+| Load balancing | Puts each connection on one path |
+| Failover | Uses one path and switches after it fails |
+| Throughput bonding | Splits packets across links; a server reassembles them |
+| Redundant bonding | Duplicates packets over links; the first good copy is used |
+| Smoothing or FEC | Spends extra bandwidth to reduce loss, jitter, and short gaps |
 
-WebRTC already requests a fresh keyframe automatically whenever it detects loss or corruption, so it recovers on its own much of the time. That recovery is time-limited, though: if a packet arrives too late for low-latency playback, the frame may still be dropped or shown damaged.
+**RTMP** usually runs over TCP, which waits for lost data. That protects the picture but causes stalls and delay. Throughput bonding works well for RTMP when the tunnel is stable.
 
-If damage lingers for several seconds after a dropout instead of clearing quickly, you can force a periodic keyframe. `&keyframe` is a **viewer-side** option: you put it on the OBS/view link, and it asks the remote phone to send keyframes at that interval.
+**WebRTC** is timing-sensitive: a late packet is nearly as useless as a lost one. Starlink and 5G have different latency and jitter, so splitting packets across them can make timing worse unless the service reorders, buffers, and removes duplicates. For WebRTC, choose the bond with the lowest loss, stable jitter, and a nearby endpoint, not the highest speed-test result.
 
-```text
-&keyframe=2000
-```
+### Peplink SpeedFusion
 
-Do not treat this as a default quality setting. A keyframe is the largest frame type, so forcing them often spends bandwidth and sends big bursts that are themselves vulnerable to loss. On a weak uplink, too-frequent keyframes can make congestion and loss worse, not better.
+SpeedFusion has separate bandwidth bonding (packet-level aggregation), smoothing (redundant packets against loss and jitter), and hot failover (keeps sessions alive when a link drops). For WebRTC, smoothing, failover, traffic rules, and endpoint location matter most. For RTMP or SRT, throughput and stable failover matter more. A generic failover setup is not a real-time bonded tunnel.
 
-Use it only as a targeted fix for lingering damage, and start at `&keyframe=2000`. Drop to `&keyframe=1000` only if 2000 still does not clear damage fast enough and you have confirmed the bond has bandwidth headroom to spare. Values under about 1000 ms cause a steep quality drop and may not work at all.
+### Speedify
 
-## Bonding is not one single thing
+* **Speed** mode aims for aggregate throughput.
+* **Redundant** mode sends packets over several links and uses the first copy. It costs more data and battery.
+* **Streaming** and Enhanced Streaming prioritize real-time streams.
+* **UDP** transport usually suits live media better than TCP.
 
-Do not treat every "bonded" connection as equivalent.
+A distant Speedify server, or a large latency gap between Starlink and 5G, adds delay.
 
-There is a major difference between:
+### Bonding endpoint location
 
-* **load balancing:** each connection/session is assigned to one path;
-* **failover:** one path is active and another takes over after failure;
-* **throughput bonding:** packets are split across multiple links and reassembled by a tunnel/server;
-* **redundant bonding:** packets are duplicated over multiple links and the first good copy is used;
-* **real-time smoothing/FEC:** extra bandwidth is spent to reduce loss, jitter, or short gaps.
+Bonding needs a reassembly point: a Speedify server, SpeedFusion Connect or Cloud, your own FusionHub, or a broadcast provider's cloud receiver. For WebRTC, an endpoint far from the receiver, TURN server, or ingest adds round-trip time and slows keyframe requests, resends, and congestion control.
 
-RTMP, SRT, and WebRTC do not all benefit from those modes in the same way.
+![Phone sends over Starlink and 5G to a bonding endpoint, which forwards to the OBS receiver. Measure each of the three hops while moving.](../.gitbook/assets/mobile-bonded-uplink-path.svg)
 
-### RTMP/TCP-style traffic
+Measure loss, jitter, and latency on each hop while moving: phone to each uplink, each uplink to the endpoint, and endpoint to the receiver (office, relay, Meshcast, SRT/RTMP ingest, or OBS).
 
-RTMP commonly runs over a reliable ordered transport such as TCP. When data is lost, delivery blocks until the missing data is recovered. That often protects the encoded video from corruption, but it can create stalls and latency.
+Dedicated broadcast bonding systems, with a managed receiver and a fixed latency budget, often give a cleaner program feed than a VPN-style bond. They cost more and usually add latency.
 
-For RTMP, raw throughput bonding and TCP-friendly recovery can work well if the bonded tunnel is stable. A few seconds of delay is often acceptable for program contribution.
+## Settings to test in VDO.Ninja
 
-### WebRTC/real-time UDP traffic
-
-WebRTC is timing-sensitive. A packet that arrives late can be nearly as useless as a packet that never arrives.
-
-For WebRTC, the bonding layer must preserve real-time behavior. It needs to manage packet timing, reordering, duplication, loss, and jitter without adding too much queueing delay.
-
-This matters because Starlink and cellular often have different latency and jitter. Sending different packets over Starlink and 5G without a service that reorders, buffers, and de-duplicates them can make timing worse.
-
-For WebRTC, a "good" bonded setup is not just the one with the highest speed-test number. It is the one with the lowest useful packet loss, stable jitter, and a tunnel endpoint close enough to avoid adding avoidable round-trip time.
-
-## Peplink, Speedify, and other bonding options
-
-### Peplink / SpeedFusion-style hardware
-
-Peplink SpeedFusion has separate features for bandwidth bonding, smoothing, and hot failover. Peplink describes bandwidth bonding as packet-level aggregation, smoothing as using redundant packets to reduce packet loss and jitter, and hot failover as maintaining sessions when a link drops.
-
-For live WebRTC-style traffic, the relevant features are usually the real-time ones: smoothing, loss handling, failover behavior, traffic rules, and where the SpeedFusion endpoint is located.
-
-For RTMP/SRT contribution, aggregate throughput and stable failover can also matter, since those workflows can usually tolerate more buffering.
-
-Peplink-style hardware can be a strong option when you need router-level control, external antennas, multiple WANs, traffic steering, and the ability to use your own SpeedFusion endpoint or a provider endpoint. The configuration matters. A generic failover setup is not the same as a real-time bonded tunnel.
-
-### Speedify-style software bonding
-
-Speedify is software-based bonding. Its modes are not interchangeable:
-
-* Speed Mode focuses on aggregate throughput.
-* Redundant Mode sends packets over multiple connections and uses the first copy that arrives, trading data use and battery for reliability.
-* Streaming/Enhanced Streaming mode prioritizes real-time streams and can switch behavior based on network conditions.
-* Transport mode also matters; UDP transport is generally the better fit for latency-sensitive use than forcing everything through TCP.
-
-Speedify can be useful on a phone or laptop because it is easy to deploy, but the selected mode, server location, per-link priority, and per-link quality still matter. If the selected Speedify server is far away, or if Starlink and 5G have very different latency, the tunnel can add delay or reassembly overhead.
-
-### Server and endpoint location
-
-Bonding normally requires a reassembly point. With Speedify, that is a Speedify server. With Peplink, it might be SpeedFusion Connect, SpeedFusion Cloud, or your own FusionHub/SpeedFusion endpoint. With a managed broadcast system, it may be the provider's cloud receiver.
-
-That endpoint location matters.
-
-For WebRTC, the media path is timing-sensitive. If the bonded tunnel exits far from the receiver, TURN server, relay, office, or media ingest point, the added path can increase round-trip time and make keyframe requests, retransmits, and congestion control slower.
-
-For RTMP and SRT, a few extra milliseconds are often less important than clean recovery, but the endpoint still affects latency, throughput, and how quickly retransmits complete.
-
-When comparing bonding providers or modes, compare the whole path:
-
-* phone to each uplink;
-* each uplink to the bonding endpoint;
-* bonding endpoint to the office, relay, Meshcast/SRT/RTMP ingest, or OBS receiver;
-* packet loss, jitter, and latency during movement.
-
-### Broadcast bonding systems
-
-Dedicated broadcast systems, such as hardware or cloud workflows built around bonded contribution, are often designed around a known latency budget and a managed receiving endpoint. These can be better suited to remote production than a generic VPN-style bond, especially when the goal is a clean program feed rather than direct two-way interaction.
-
-The tradeoff is cost, complexity, and usually more latency.
-
-## Options to test in VDO.Ninja
-
-Use unique stream IDs and room names in the examples below.
+Replace `STREAMID` with a unique stream ID. `&codec` is a viewer-side option, so it goes on the view link.
 
 ### Option 1: Stable low-latency WebRTC
 
-Use this when interaction matters and the uplink is imperfect.
-
-Phone/push link:
+For interaction over an imperfect uplink. It trades some sharpness for headroom.
 
 ```text
-https://vdo.ninja/?push=STREAMID&q=1&fps=30&codec=h264&outboundvideobitrate=2500
+Phone:    https://vdo.ninja/?push=STREAMID&q=1&fps=30&outboundvideobitrate=2500
+OBS/view: https://vdo.ninja/?view=STREAMID&codec=h264&bitrate=2500&buffer=500
 ```
 
-OBS/view link:
+### Option 2: Higher-quality WebRTC on a clean bond
+
+Only when packet loss is low and the bond is stable.
 
 ```text
-https://vdo.ninja/?view=STREAMID&bitrate=2500&buffer=500
+Phone:    https://vdo.ninja/?push=STREAMID&q=0&fps=30&outboundvideobitrate=4000
+OBS/view: https://vdo.ninja/?view=STREAMID&codec=h264&bitrate=4000&buffer=1000
 ```
 
-This gives up some sharpness so the stream has more room to survive loss and jitter. If you find that damage lingers for seconds after a dropout, add `&keyframe=2000` to this view link (see [Why H.264 damage can linger](#why-h-264-damage-can-linger)).
+If the stream smears, freezes, or drops to a very low bitrate, lower the target. For both options, add `&keyframe=2000` to the view link only if damage is slow to clear.
 
-### Option 2: Higher-quality WebRTC when the bond is clean
+### Option 3: More receive buffer
 
-Use this only when packet loss is low and the bonded service is stable.
+When extra delay is acceptable, use `&buffer=1000` or `&buffer=3000` on the view link. It gives WebRTC more time to absorb jitter and receive a recovery keyframe. VDO.Ninja caps this WebRTC buffer hint at 4000 ms, so it is not a contribution-grade buffer.
 
-Phone/push link:
+### Option 4: Normal-WebRTC reliability settings
+
+For short random loss or jitter on the normal WebRTC path. These cannot hide multi-second outages.
 
 ```text
-https://vdo.ninja/?push=STREAMID&q=0&fps=30&codec=h264&outboundvideobitrate=4000
+Phone:    https://vdo.ninja/?push=STREAMID&q=1&fps=24&width=1280&height=720&outboundvideobitrate=2500&maxvideobitrate=2500&maxbandwidth=70&contenthint=motion
+OBS/view: https://vdo.ninja/?view=STREAMID&codec=vp8&vred&videobitrate=2500&buffer=500&audiobuffer=120&degrade=maintain-framerate&keyframe=3000
 ```
 
-OBS/view link:
+| Setting | What it does |
+| --- | --- |
+| `&buffer=500` or `1000` | The first thing to try for jitter or reordering |
+| `&codec=vp8&vred` | Prefers VP8 with RED. The browser still decides whether to send redundancy; VDO.Ninja cannot force an FEC percentage. |
+| `&maxbandwidth=70` | Targets about 70% of the estimated available upload (Chromium-based browsers) |
+| `&degrade=maintain-framerate` | Lowers resolution before frame rate. For screens or text, try `maintain-resolution`. |
+| `&keyframe=3000` | Recovery aid only. Remove it if the link becomes bursty. |
 
-```text
-https://vdo.ninja/?view=STREAMID&bitrate=4000&buffer=1000
-```
-
-If this is stable, you can test higher bitrates. If the stream starts smearing, freezing, or dropping to very low bitrate, reduce the target before raising it again. As above, only add `&keyframe=2000` to the view link if post-dropout damage is slow to clear.
-
-### Option 3: More receive-side buffer for OBS
-
-Use this when a little extra delay is acceptable.
-
-```text
-&buffer=1000
-```
-
-or:
-
-```text
-&buffer=3000
-```
-
-This is added to the OBS/view link. It can give WebRTC more time to smooth jitter and receive a recovery keyframe. It is still browser-managed WebRTC buffering, so it is not the same as a dedicated contribution buffer. Very large WebRTC buffers are not a good fit for most browser-source workflows.
-
-### Option 4: Advanced normal-WebRTC reliability knobs
-
-Use this when you need to stay on the normal low-latency WebRTC media path, but the link has short random packet loss or jitter. These settings do not turn WebRTC into SRT, and they cannot hide multi-second outages, but they can make a marginal mobile uplink more stable.
-
-Phone/push link:
-
-```text
-https://vdo.ninja/?push=STREAMID&q=1&fps=24&width=1280&height=720&outboundvideobitrate=2500&maxvideobitrate=2500&maxbandwidth=70&contenthint=motion
-```
-
-OBS/view link:
-
-```text
-https://vdo.ninja/?view=STREAMID&codec=vp8&vred&videobitrate=2500&buffer=500&audiobuffer=120&degrade=maintain-framerate&keyframe=3000
-```
-
-What to test:
-
-* `&buffer=500` or `&buffer=1000` is usually the first WebRTC knob for jitter. It gives late packets and keyframe recovery a little more time before playback needs the frame.
-* `&codec=vp8&vred` asks WebRTC negotiation to prefer VP8 with RED support. RED is useful to test for short random loss, but the browser still decides whether to send redundancy or FEC packets. It is not a fixed FEC percentage that VDO.Ninja can force from JavaScript.
-* Test VP8 first when experimenting with RED/FEC. Chromium's WebRTC stack has code paths that disable RED+ULPFEC combinations in some cases, including payloads such as H.264 when NACK is enabled. H.264 may still be the better practical choice on phones when hardware encoding, battery, heat, or compatibility matter more than experimenting with RED.
-* Keep NACK, PLI, and congestion control enabled. Do not add `&nonack`, `&nopli`, or `&noremb` when the goal is reliability.
-* `&maxbandwidth=70` leaves about 30% headroom against the estimated available sender bandwidth. On unstable mobile links, leaving headroom can look better than chasing the highest possible bitrate.
-* `&degrade=maintain-framerate` asks the sender to preserve frame rate and reduce resolution first when constrained. This is often better for motion. For screen sharing or text, `&degrade=maintain-resolution` may be better, but it can make motion less smooth.
-* `&keyframe=3000` is still only a recovery aid for lingering damage. If keyframes make the link bursty, remove it or raise the interval.
-
-Browser support and limits:
-
-* WebRTC capabilities are browser-specific. The WebRTC specification includes RTX, RED, and FEC entries in RTP codec capabilities when a browser supports them, but pages need to work from the browser's advertised capabilities rather than assume every engine exposes the same set.
-* Modern browsers support codec preference APIs, but older OBS Browser Source / CEF builds, old mobile browsers, and some embedded browsers can lag behind current Chrome or Firefox.
-* `jitterBufferTarget`, the newer receiver-side buffer API, is marked by MDN as limited availability and is capped at 4000 ms. VDO.Ninja only applies it when the browser exposes it; otherwise it falls back to older browser delay hints where available.
-* If you need several seconds of repair time, use chunked/WebCodecs, SRT, RTMP, or a proper bonded/smoothing path instead of trying to make normal WebRTC buffer indefinitely.
-
-Best fit:
-
-* short random packet loss: try VP8 + RED, keep NACK/PLI on, and leave bitrate headroom;
-* high jitter or packet reordering: increase `&buffer` first;
-* burst loss or handoffs: use a bonded path with smoothing/redundancy, or move to chunked/SRT/RTMP with more latency;
-* phone heat or hardware encoder stability: H.264 at a lower bitrate may beat VP8 even if VP8 is better for RED testing.
+* Keep NACK, PLI, and congestion control on. Do not add `&nonack`, `&nopli`, or `&noremb`.
+* Test RED with VP8. Chromium disables some RED+ULPFEC combinations, including H.264 with NACK enabled. On a hot phone, H.264 at a lower bitrate can still be the better choice.
+* RED and FEC support depends on the browser. Older OBS Browser Source (CEF) builds and old mobile browsers can lag behind current Chrome or Firefox.
+* VDO.Ninja uses `jitterBufferTarget` (capped at 4000 ms) when the browser supports it, and the older playout-delay hint otherwise.
+* For burst loss or handoffs, use a bond with smoothing or redundancy, or move to chunked, SRT, or RTMP with more latency.
 
 {% content-ref url="../advanced-settings/view-parameters/vred.md" %}
 [vred.md](../advanced-settings/view-parameters/vred.md)
@@ -229,59 +122,36 @@ Best fit:
 
 ### Option 5: Chunked/WebCodecs mode
 
-Use this when OBS can tolerate more delay and you want a more buffered, recovery-oriented VDO.Ninja path.
-
-Phone/push link:
+When OBS can tolerate more delay and you want VDO.Ninja to control buffering and recovery.
 
 ```text
-https://vdo.ninja/?push=STREAMID&chunked=2500&chunkprofile=balanced&chunkedbuffer=6000
+Phone:    https://vdo.ninja/?push=STREAMID&chunked=2500&chunkprofile=balanced&chunkedbuffer=6000
+OBS/view: https://vdo.ninja/?view=STREAMID&chunkbuffer=1500&chunkbufferfloor=1000&chunkbufferceil=4000&chunkjitterslack=500
 ```
 
-OBS/view link:
-
-```text
-https://vdo.ninja/?view=STREAMID&chunkbuffer=1500&chunkbufferfloor=1000&chunkbufferceil=4000&chunkjitterslack=500&chunkadapt=hybrid
-```
-
-Chunked mode is JavaScript-powered and uses encoded chunks over data channels. It is cruder than dedicated SRT/RTMP contribution systems, but it gives VDO.Ninja control over buffering and recovery behavior that normal WebRTC media tracks do not expose.
-
-Use Chromium-based browsers for this path.
+Chunked mode sends encoded chunks over data channels. It is cruder than SRT or RTMP systems, but it exposes buffering and recovery controls that normal WebRTC tracks do not. `&chunkprofile=balanced` also sets `hybrid` sender adaptation. Chromium-based browsers are the main target; Firefox cannot publish chunked, and Safari can only when its full WebCodecs stack is available.
 
 ### Option 6: SRT or RTMP through a relay
 
-Use this when the cleanest program feed matters more than sub-second latency.
-
-SRT is built for unreliable networks with configurable latency and packet recovery. It uses a recovery window, so more latency can mean more time to repair missing packets.
-
-RTMP is widely supported and commonly uses reliable ordered delivery. It usually avoids partially corrupted video frames by waiting for missing data, but that can create blocking and delay.
-
-For VDO.Ninja-adjacent workflows, [Meshcast](https://app.meshcast.io) can be tested as a relay/contribution path when SRT or RTMP is a better fit than browser-to-browser WebRTC.
+When a clean program feed matters more than sub-second latency. SRT's latency setting is a recovery window: more latency gives more time to repair lost packets. RTMP waits for missing data, which avoids corrupted frames but adds delay. [Meshcast](../steves-helper-apps/meshcast.io.md) can accept RTMP or SRT.
 
 ## Phone and encoder notes
 
-On a Samsung S25 Ultra or similar phone, watch for heat, battery, and background app behavior. A high bitrate target does not help if the phone thermal-throttles or the encoder becomes unstable.
-
-`&h264profile` can change H.264 encoder/profile behavior, but it is not a bonding or packet-loss fix by itself. Test it separately from network changes so you know whether it helped compatibility or made the phone work harder.
-
-`&nomobilebitratecap` can remove VDO.Ninja's mobile sender bitrate safety cap. Only use it when you have already proven the phone, encoder, and uplink are stable enough for the higher target.
+* Watch heat, battery, and background app behavior. A high bitrate target does not help once the phone throttles.
+* `&h264profile` (view link) changes H.264 profile behavior. It is not a packet-loss fix; test it separately from network changes.
+* `&nomobilebitratecap` removes VDO.Ninja's mobile bitrate cap. That cap only applies to video a phone sends to other guests in a room, so it does not limit a plain `&view` link into OBS.
 
 ## Field test checklist
 
-Test each path while moving, not just while parked.
+Test while moving, not only while parked. For each test, record:
 
-For each test, write down:
-
-* Starlink-only result;
-* cellular-only result;
-* bonded result;
-* bonding mode;
-* bonding server or endpoint region;
-* VDO.Ninja push URL parameters;
-* VDO.Ninja OBS/view URL parameters;
+* Starlink-only, cellular-only, and bonded results;
+* bonding mode and endpoint region;
+* phone and OBS/view link parameters;
 * OBS browser-source latency;
-* visible artifacts: bitrate collapse, smearing, freezes, audio drops, or long delay.
+* bitrate collapse, smearing, freezes, audio drops, or long delay.
 
-Do not judge by speed test alone. Watch packet loss, jitter, recovery time, and the actual OBS recording.
+Judge by packet loss, jitter, recovery time, and the OBS recording, not by a speed test.
 
 ## Related VDO.Ninja settings
 

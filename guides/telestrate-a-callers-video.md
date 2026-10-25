@@ -4,48 +4,51 @@ description: Draw or ping on a caller's live video and show the annotations in O
 
 # Telestrate a caller's video
 
-VDO.Ninja's built-in **Draw/Ping on video** tool can annotate a caller's camera or screen share. The marks are synchronized overlays rather than being baked into the caller's encoded video, so each passive output or additional viewing link that should show them must opt in with `&drawing`.
+VDO.Ninja's built-in **Draw/Ping on video** tool annotates a caller's camera or screen share. The marks are a synchronized overlay, not part of the caller's encoded video. The caller relays them to other viewers, and each OBS source or viewing link that should show them must include `&drawing`.
 
 {% hint style="success" %}
-**The simple version:** Add `&drawing` to the OBS Browser Source URL, right-click the caller in the Director's Room, select **Request draw access** or **Draw/Ping on video**, and then select **Enable Drawing**.
+**The short version:** Add `&drawing` to the OBS Browser Source URL. In the Director's Room, right-click the caller, select **Request draw access** or **Draw/Ping on video**, then select **Pen**.
 {% endhint %}
+
+![The director draws on the caller's video. The caller's browser relays the marks to viewers. An OBS link with &drawing shows the marks; an OBS link without it shows the caller without marks.](../.gitbook/assets/room-telestrate-path.svg)
 
 ## Show the caller and annotations together
 
-For a caller with the stream ID `PLAYER1` in room `YOUR_ROOM`, use this as the OBS Browser Source URL:
+For a caller with the stream ID `PLAYER1` in room `YOUR_ROOM`, use this OBS Browser Source URL:
 
 ```text
 https://vdo.ninja/?view=PLAYER1&room=YOUR_ROOM&drawing&cleanoutput
 ```
 
-To show annotations in a complete room scene instead, add `&drawing` to the Scene link:
+For a complete room scene, add `&drawing` to the scene link:
 
 ```text
 https://vdo.ninja/?scene&room=YOUR_ROOM&drawing
 ```
 
-Keep the room password and any other required connection options consistent across the director, caller, and OBS links.
+Keep the room password and other connection options the same on the director, caller and OBS links.
 
 ## Start drawing
 
 1. In the Director's Room, right-click the caller's video or screen share.
-2. Select **Request draw access**. If access was already granted, the option is named **Draw/Ping on video** instead.
-3. The caller opens the chat/action notification and selects **Allow**.
-4. When the drawing controls appear, select **Enable Drawing**, then draw over the video.
+2. Select **Request draw access**. If access was already granted, the option reads **Draw/Ping on video**.
+3. The caller gets a chat message asking to allow annotation and selects **Allow**.
+4. When the drawing controls appear, select **Pen** and draw over the video.
 
-The controls also provide:
+The controls also include:
 
-* **Ping** for a temporary target marker
-* **Clear** to remove all current marks
-* **Undo** to remove the last drawing action
+* **Ping** for a temporary marker
+* a color picker
+* **Clear** to remove all marks
+* **Undo** to remove the last mark
 
 Right-click the video again and select **Stop draw mode** when finished.
 
-Adding `&drawing` to the caller's invite pre-authorizes drawing and skips the manual approval prompt. Only do this when the caller expects annotations.
+Adding `&drawing` to the caller's invite link pre-approves drawing, so requests are allowed without asking. Only do this when the caller expects annotations.
 
-## Output only the drawings with a transparent background
+## Output only the drawings, on a transparent background
 
-Use a dedicated OBS Browser Source with the same caller view link:
+Add a separate OBS Browser Source with the same caller link plus `&transparent`:
 
 ```text
 https://vdo.ninja/?view=PLAYER1&room=YOUR_ROOM&drawing&cleanoutput&transparent
@@ -59,17 +62,17 @@ video {
 }
 ```
 
-This keeps the incoming video active as the coordinate reference but hides it from the OBS output. The drawing canvas remains visible. Place this Browser Source above the game feed or other source that should receive the annotations.
+The video stays active as the position reference but is hidden, so only the drawing canvas shows. Place this source above the game feed or other source you want annotated.
 
-Match the Browser Source dimensions and aspect ratio to the feed used by the telestrator. Different crops or aspect ratios can make the marks appear in the wrong position.
+Match the Browser Source size and aspect ratio to the feed the telestrator draws on. A different crop or aspect ratio puts the marks in the wrong place.
 
 {% hint style="warning" %}
-`&drawing` is required on every passive VDO.Ninja view or Scene link that should display the annotations. An OBS or other viewing link without it will show the caller normally but will not render the marks.
+Every VDO.Ninja view or scene link that should show the annotations needs `&drawing`. Without it, the caller appears normally but the marks don't.
 {% endhint %}
 
 ## Troubleshooting
 
 * Refresh the OBS Browser Source after adding `&drawing` or changing its Custom CSS.
-* If the director sees **Request draw access**, the caller still needs to approve the request.
-* Do not add `&nodrawingrelay` or `&noshareddrawing`; those options prevent the caller from relaying annotations to other viewers.
-* For an isolated caller feed, use `&view=STREAM_ID`. For a composed room layout, use the normal Scene link with `&drawing`.
+* If the director still sees **Request draw access**, the caller hasn't approved yet.
+* Don't add `&nodrawingrelay` or `&noshareddrawing` to the caller's link; they stop the caller relaying annotations to other viewers.
+* For one caller's feed, use `&view=STREAM_ID`. For a composed room layout, use the scene link with `&drawing`.

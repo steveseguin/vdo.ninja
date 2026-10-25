@@ -1,165 +1,130 @@
 ---
-description: Camera and screen-share capture defaults, outbound bitrate targets, room budgets, scene quality, and mobile exceptions.
+description: Default capture resolutions, outbound bitrate targets, room and director preview budgets, scene behavior and mobile caps.
 ---
 
 # Default resolution and bitrate by mode
 
-VDO.Ninja has separate defaults for **capture resolution**, **outbound video bitrate**, and **the bitrate requested by each viewer**. A room preview and an OBS scene can receive different quality from the same publisher at the same time.
+Three defaults work separately: the **capture resolution** the publisher asks for, the **outbound video target** it encodes at, and the **bitrate each viewer requests**. So one publisher can send a small stream to a room preview and a full-quality stream to OBS at the same time.
 
-This reference describes the normal browser WebRTC/RTP paths, reviewed against the local source on September 12, 2026. Older deployed versions can differ, particularly for automatic room-only tiers. These are configured targets and limits, not measured or guaranteed output. Audio, retransmissions, and transport overhead add bandwidth beyond the video values below. Native apps, WHIP/Meshcast, recording, and opt-in chunked/WebCodecs encoders have separate settings.
+![One publisher sends different bitrates: a room guest preview shares a 500 kbps budget, a director preview requests 35 kbps per guest, and an OBS scene or solo view can use the full 4000 kbps target](../.gitbook/assets/quality-bitrate-by-viewer.svg)
+
+These are targets and limits from the code, not guaranteed output. Audio and overhead come on top. Native apps, WHIP, Meshcast, recording and chunked mode have their own settings.
 
 ## Quick reference
 
-The table assumes a fresh session, no bitrate or quality URL overrides, no prior UI changes, and a viewer that has not requested a different bitrate.
+Fresh session, no quality or bitrate parameters, no UI changes:
 
-| Publishing mode | Default capture request | Starting outbound video target before room/mobile limits |
+| Publishing mode | Default capture | Outbound video target |
 | --- | --- | --- |
-| Camera, outside a room | Device-selected 1080p, 720p, or 360p; see device table below | 4000 kbps |
-| Camera, inside a room | Normally 720p; weaker devices can start at 360p | 4000 kbps; room previews request substantially less |
-| Start directly with the main screen-share source, inside or outside a room | 1920x1080 ideal | Approximately 2500 kbps fallback |
-| Replace an already-running camera with a main screen share (`sstype=1`) | Camera/session quality tier unless a screen-share quality has been selected; normally 720p in a room | Retains the session's outbound setting, normally 4000 kbps after default camera setup |
-| Secondary screen share in a separate session (`sstype=2`) | 1920x1080 ideal | Approximately 2500 kbps fallback, independent of the parent camera target |
-| Secondary screen stream in the same session (`sstype=3`) | 1920x1080 ideal | Shares the parent session's outbound setting, normally 4000 kbps after default camera setup |
+| Camera, outside a room | 1080p, 720p or 360p by device (see below) | 4000 kbps |
+| Camera, in a room | 720p; 360p on weaker devices | 4000 kbps |
+| Start with a screen share | 1920x1080 ideal | About 2500 kbps (fallback) |
+| Camera replaced by screen share (`sstype=1`) | The camera's tier unless a screen-share quality is set | Keeps the session target, normally 4000 kbps |
+| Screen share in a separate session (`sstype=2`) | 1920x1080 ideal | About 2500 kbps |
+| Extra screen stream, same session (`sstype=3`) | 1920x1080 ideal | Shares the session target, normally 4000 kbps |
 
-**There is no universal “screen share = 6000 kbps” default.** Starting with screen sharing and switching an existing camera to screen sharing are different initialization paths.
+In a room the screen-share button uses `sstype=3` by default; outside a room it uses `sstype=1`. There is no "screen share = 6000 kbps" default.
 
-A normal visible scene or solo viewer releases the room-preview restriction and uses the negotiated/publisher target. That means a default camera can target 4000 kbps while a fresh direct screen-share session falls back to about 2500 kbps. An explicit viewer bitrate changes this request, subject to sender caps and browser adaptation.
+`sstype=2` publishes through a generated link while the camera keeps running. That link copies only some parent settings and does not inherit the camera's bitrate, so set the screen bitrate on the receiving link. `screenshare2` (`ss2`) is an entry-page option, not `sstype=2`.
 
-## What primary and secondary mean
+## Camera resolution when quality is not set
 
-* **Main/primary screen share:** either start with screen sharing as the source, or replace the camera on the existing stream. Replacing the camera keeps that session and its existing connection settings.
-* **Secondary, separate session (`sstype=2`):** publishes an additional stream through a generated screen-share page. The camera keeps running. The generated URL defaults to `q=0`, but screen capture does not run the camera bitrate-preset code.
-* **Secondary, same session (`sstype=3`):** adds a screen stream using the current session. It has its own screen capture constraints but uses shared session-level outbound settings.
+The estimate uses the CPU thread count and memory the browser reports. Rules are checked top to bottom:
 
-`screenshare2`/`ss2` is an entry-page option; its name alone does not mean `sstype=2`.
-
-## Camera resolution when quality is omitted
-
-The initial camera estimate uses browser-reported CPU threads and memory, not a reliable model or chipset database. Conditions are checked in the order below.
-
-| Device signal | Outside-room camera tier |
+| Device signal | Camera tier outside a room |
 | --- | --- |
-| iOS/iPadOS with detected Safari/WebKit version 17 or newer | 1080p |
-| Detected Intel Mac, fewer than 6 reported threads | 360p |
-| Detected Intel Mac, 6 or more reported threads | 720p |
-| Mobile, fewer than 4 reported threads or reported memory at most 2 GB | 360p |
-| Mobile, at least 8 threads and memory either unavailable or at least 6 GB | 1080p |
+| iPhone or iPad with Safari/WebKit 17 or newer | 1080p |
+| Intel Mac, fewer than 6 threads | 360p |
+| Intel Mac, 6 or more threads | 720p |
+| Mobile, fewer than 4 threads or at most 2 GB memory | 360p |
+| Mobile, 8+ threads and memory unknown or at least 6 GB | 1080p |
 | Other mobile with at least 4 threads | 720p |
-| Remaining devices, thread count unavailable | 720p |
-| Remaining devices, fewer than 4 threads | 360p |
-| Remaining devices, more than 8 threads | 1080p |
-| Remaining devices, 4–8 threads | 720p |
+| Other devices, thread count unknown | 720p |
+| Other devices, fewer than 4 threads | 360p |
+| Other devices, more than 8 threads | 1080p |
+| Other devices, 4 to 8 threads | 720p |
 
-The room camera default starts at 720p and is lowered to 360p if this estimate selects 360p. A 1080p device estimate does not automatically make the room capture 1080p. UI selections and explicit quality parameters can change these defaults. Browser detection can misclassify hardware; an M-series Mac is not automatically a promise of a particular tier.
+In a room the camera starts at 720p, or 360p if the estimate is 360p. It does not start at 1080p, even on devices estimated at 1080p. Detection can be wrong, so test your devices.
 
-These are resolution presets, with browser-specific constraints and fallback behavior. Camera frame rate is device/browser-dependent unless separately specified. Screen capture normally requests an **ideal 60 fps**, not a guaranteed 60 fps.
+Camera frame rate is left to the camera and browser unless you set one. Screen capture asks for an ideal 60 fps, which is not guaranteed.
 
-## Explicit quality versus automatic quality
+## Setting quality explicitly
 
-`quality` (`q`) sets the general capture preset. `screensharequality` (`ssq`) takes priority for screen capture. Setting screen-share quality does not apply the camera bitrate table to a fresh screen-share publisher.
+`quality` (`q`) sets the capture preset, for screen capture too unless `screensharequality` (`ssq`) is set. On the camera it also picks the outbound target:
 
-| Camera URL setting | Requested camera resolution | Automatic outbound camera target, if no outbound override |
+| Camera setting | Requested resolution | Outbound target |
 | --- | --- | --- |
-| Omitted | Device/room estimate above | 4000 kbps |
-| `q=0`, `q=1080p` | 1920x1080 | 4000 kbps |
-| `q=1`, `q=720p` | 1280x720 | Approximately 2500 kbps fallback |
-| `q=2`, `q=360p` | 640x360 | Approximately 2500 kbps fallback |
-| `q=-1` | Unlocked preset constraints | 4000 kbps |
-| `q=-3`, `q=1440p` | 2560x1440 preset | 6000 kbps |
-| `q=-2`, `q=4k` | 3840x2160 preset | 8000 kbps |
+| Not set | Estimate above | 4000 kbps |
+| `q=0` / `1080p` | 1920x1080 | 4000 kbps |
+| `q=1` / `720p` | 1280x720 | About 2500 kbps |
+| `q=2` / `360p` | 640x360 | About 2500 kbps |
+| `q=-1` | No preset size | 4000 kbps |
+| `q=-3` / `1440p` | 2560x1440 | 6000 kbps |
+| `q=-2` / `4k` | 3840x2160 | 8000 kbps |
 
-The omitted-quality camera bitrate is a current implementation detail: the stored default is `false`, and the camera setup comparison treats it as equal to zero. Consequently, automatic 720p capture and explicit `q=1` can have different outbound defaults. Selecting a resolution in the UI also does not necessarily have the same bitrate side effect as setting `q` in the URL.
+So an automatic 720p camera targets 4000 kbps while `q=1` targets about 2500 kbps. Choosing a resolution in the UI does not change the target the way `q` does.
 
-For screen capture, `ssq=0` requests 1080p, `ssq=1` requests 720p, `ssq=2` requests 360p, and `ssq=-1` leaves preset dimensions unlocked. Direct screen capture and the secondary capture paths also map `ssq=-3` to 1440p and `ssq=-2` to 4K. The camera-replacement path currently lacks those two explicit dimension mappings; use `width`/`height` there if you need explicit dimensions.
+`ssq` uses the same numbers for screen capture. Replacing the camera (`sstype=1`) does not map `ssq=-3` or `ssq=-2` to a size; use `width` and `height` there. `width` and `height` override any preset, but the device and browser can still adjust the result.
 
-Explicit `width` and `height` can override preset dimensions. Aspect-ratio controls, device capabilities, browser fallback, and subsequent adaptation can still affect the result. In particular, presets are not guarantees that a camera or selected screen surface will produce that exact size.
+## What each viewer requests
 
-## Room previews versus scenes and solo links
+### Room guests
 
-### Standard production-room budget
+Each guest has a receive budget of **500 kbps of video in total**, split across visible incoming streams. It is not per camera, and not an upload cap on the publisher.
 
-The normal room receive budget is **500 kbps total video per viewer**, divided among eligible visible incoming streams. It is not 500 kbps for every camera and is not a total upload cap on the publisher.
+With budget `B`, `C` visible cameras and `S` visible screen shares:
 
-Let `B` be that viewer's room budget, `C` its visible incoming camera count, and `S` its visible incoming screen-share count. With no screen-specific override, the current allocation is:
-
-| Visible incoming streams | Requested bitrate |
+| Visible streams | Request |
 | --- | --- |
 | Cameras only | `B / C` per camera |
-| Cameras and screen shares | Each screen share: `B / (1.5 * S)`; each camera: `(B - B / (1.5 * S)) / C` |
-| Screen shares only | `B` per screen share |
+| Cameras and screen shares | Each screen `B / (1.5 × S)`; each camera `(B − B / (1.5 × S)) / C` |
+| Screen shares only | `B` per screen |
 
-With the default budget, two cameras alone receive about 250 kbps each. One screen share plus two cameras requests about 333 kbps for the screen and 83 kbps for each camera.
+Two cameras get about 250 kbps each. One screen plus two cameras gets about 333 kbps for the screen and 83 kbps per camera. With several screen shares the total can exceed the budget. Screen shares keep detail but may lose frame rate; low-bitrate cameras may also be downscaled.
 
-The multi-screen formula is intentionally shown as implemented: it subtracts one screen allocation from the camera pool, and the screens-only branch gives each screen the whole budget. With multiple screen shares, the sum can exceed the nominal total budget. Treat the budget as allocation logic, not a strict aggregate network limiter.
+**Guest-only rooms:** when every viewer of a sender is a room guest (no director, scene, WHIP output or Meshcast), guests can use a **2000 kbps** budget. Feeds from weaker (tier 1) mobile senders are capped at `1500 / visible streams` kbps. Setting a room budget, a viewer `bitrate` or a numeric control-room budget turns this off. See [Room-only mobile bitrate tiers](room-only-mobile-bitrate-tiers.md).
 
-Both primary and secondary screen shares get screen-share priority when advertised as screen sharing. Camera feeds can also be downscaled at low requested bitrates; screen shares bypass that particular camera downscaling heuristic, so their frame rate can suffer while preserving detail.
+### Directors, scenes and solo views
 
-### Automatic guest-only rooms
-
-When all eligible visible sources advertise room-only status, an ordinary guest viewer can automatically use a **2000 kbps** allocation budget instead of 500. For camera feeds from weak tier-1 mobile senders, the request is additionally capped at `1500 / visible-stream-count` kbps. The screen-share priority branch uses its screen allocation instead of that camera-specific division.
-
-A sender qualifies when its active outgoing peers are room guests, with no director, scene, or other non-guest viewer connection. Directors, scene sessions, WHIP output, and Meshcast do not qualify. An explicit room budget, explicit viewer `bitrate`, or a numeric control-room budget prevents the viewer's automatic increase. Qualification can change as viewers connect or leave.
-
-See [Room-only mobile bitrate tiers](room-only-mobile-bitrate-tiers.md) for configuration details.
-
-### Scenes, solo viewers, and hidden video
-
-| Viewer mode | Default behavior |
+| Viewer | Default request |
 | --- | --- |
-| Visible solo view, with or without a room affiliation | Uses normal negotiated/publisher bitrate when treated as a solo/scene viewer rather than a room preview |
-| Visible scene stream | Releases the room-preview cap; no default shared scene budget |
-| Explicit scene `bitrate=6000` | Requests 6000 kbps per visible feed, subject to caps |
-| Explicit `totalscenebitrate` | Divides a scene budget; screen-share allocation has special handling |
-| Hidden scene feed | Default hidden video target is 0; optimization controls how suspension/resumption is applied |
-| Hidden room-preview feed | Requests 0 video bitrate |
+| Director's room preview | 35 kbps per guest. The preview buttons set 0, 50 or 1200 kbps; `&pausepreview` starts at 0 |
+| Visible solo view or scene | The publisher's target; no room cap or shared scene budget |
+| Scene with `bitrate=6000` | 6000 kbps per visible feed, subject to sender caps |
+| Scene with `totalscenebitrate` | That budget split across feeds |
+| Hidden scene or room-preview feed | 0 |
 
-The explicit scene-budget path has a current mixed-content quirk: when cameras and screen shares are both present, its allocation calculation uses the room-budget variable. Do not assume `totalscenebitrate` is evenly divided in that case; use explicit per-feed/screen-share settings when exact targets matter.
+When a `totalscenebitrate` scene shows both cameras and screen shares, the split uses the room budget instead. Set per-feed bitrates if exact numbers matter. Zooming, director controls and layout changes also change requests, and no viewer can get more resolution than the sender captures.
 
-Zooming a preview, director controls, visibility changes, manual per-feed settings, and layout optimization can also change requests. A scene never creates a higher-resolution capture than the sender supplies.
+## Mobile senders
 
-## Mobile: flagship versus ordinary mode
+A mobile publisher caps what it sends to other **room guests**, not to OBS scene or solo links:
 
-`flagship` is a manual mobile capability hint. It does **not** select 1080p, change the automatic capture estimate, or set a 4000/6000 kbps preset.
-
-These sender caps apply to connections classified as guest viewers, unless the mobile-cap bypass applies; they are not blanket caps on OBS scene/solo output.
-
-| Mobile sender situation | Default guest-connection cap |
+| Situation | Cap per guest connection |
 | --- | --- |
-| Eligible room-only tier 1 | 1500 kbps |
-| Eligible room-only tier 2 | 2000 kbps |
-| Production-style connections, ordinary mobile, at most 4 peer entries | 350 kbps |
-| Production-style connections, ordinary mobile, more than 4 peer entries | 35 kbps |
-| Production-style connections, iOS/iPadOS WebKit 13 or older | 35 kbps |
-| Production-style connections with `flagship` | 350 kbps, including the larger-peer-count/older-iOS cases |
+| Guest-only room, tier 1 (weaker device) | 1500 kbps |
+| Guest-only room, tier 2 | 2000 kbps |
+| Otherwise, 4 or fewer outbound connections | 350 kbps |
+| Otherwise, more than 4 outbound connections | 35 kbps |
+| Otherwise, iOS/iPadOS WebKit 13 or older | 35 kbps |
+| Otherwise, with `flagship` | 350 kbps in all cases |
 
-Room-only tiers take precedence over `flagship`. A lower viewer request or sender maximum can still produce less than these caps. `flagship` also makes some low-bitrate mobile camera downscaling less aggressive. It does not disable downscaling entirely.
+`flagship` does not pick 1080p or raise the bitrate target. It relaxes these caps and makes low-bitrate camera downscaling less aggressive. `maxmobilebitrate` changes the 350 kbps cap, `lowmobilebitrate` the 35 kbps cap, and `nomobilebitratecap` (or a viewer using `forceios`) bypasses them.
 
-`maxmobilebitrate` changes the normal 350 cap; `lowmobilebitrate` changes the lower cap. `nomobilebitratecap` bypasses this mobile guest-cap mechanism. The peer-specific `forceios` override also bypasses this guard. None of these makes the device's encoding capacity unlimited.
+## Which parameter controls what
 
-## Which parameter controls which part?
-
-| Parameter | Where to set it | Purpose |
+| Parameter | Set on | Controls |
 | --- | --- | --- |
-| `quality` / `q` | Publisher | General capture preset; camera setup also selects a default outbound target |
-| `screensharequality` / `ssq` | Publisher | Screen-specific capture preset |
-| `width`, `height` | Publisher | Explicit capture dimensions |
-| `fps`, `maxframerate` | Publisher | General capture frame-rate controls |
-| `screensharefps` | Publisher | Screen-specific frame-rate request/maximum |
-| `bitrate` / `videobitrate` | Solo/scene viewer | Requested video bitrate per feed |
-| `outboundvideobitrate` | Publisher | Default outbound target when the viewer has not supplied one |
-| `maxvideobitrate` | Publisher | Sender-side video ceiling |
-| `totalroombitrate` | Room viewer/guest | Room receive allocation budget |
-| `roombitrate` | Publisher | Outbound cap for room guest viewers |
-| `screensharebitrate` | Receiving page | Explicit bitrate request for streams marked as screen shares |
-| `totalscenebitrate` | Scene viewer | Shared scene allocation, with the mixed-content caveat above |
-| `screensharecontenthint=motion` | Publisher | Prefer motion for screen content where supported; does not select a bitrate or resolution |
+| `quality` / `q` | Publisher | Capture preset; camera's default target |
+| `screensharequality` / `ssq` | Publisher | Screen capture preset |
+| `width`, `height` | Publisher | Exact capture size |
+| `fps`, `maxframerate`, `screensharefps` | Publisher | Capture frame rate |
+| `outboundvideobitrate` / `ovb` | Publisher | Target when the viewer has not asked for one |
+| `maxvideobitrate` | Publisher | Highest bitrate the sender will send |
+| `roombitrate` | Publisher | Cap on what it sends to room guests |
+| `bitrate` / `videobitrate` | Solo or scene viewer | Requested bitrate per feed |
+| `totalroombitrate` | Room guest | Room receive budget |
+| `totalscenebitrate` | Scene viewer | Shared scene budget |
+| `screensharebitrate` | Viewer | Request for streams marked as screen shares |
 
-A separate secondary session receives a selected subset of parent settings through its generated URL, not every parent parameter. In particular, do not assume the parent's outbound camera bitrate is copied to that session. Setting the desired screen bitrate on the receiving solo/scene page avoids that ambiguity.
-
-## Verification and source map
-
-These tables document source behavior, not a completed browser/device test matrix. Inspect live outbound/inbound statistics for actual width, height, frame rate, bitrate, loss, and encoder limitation reason. Compare the specific OBS connection with the room preview rather than assuming their values match.
-
-Maintainer reference: reviewed local checkout based on `91f23cca3cb79b7fa175264347c18dfbaccf75c5`, including existing working-tree changes. Relevant source functions are `judgePerformance`, `grabVideo`, `publishScreen`, `publishScreen2`, `toggleScreenShare`, `grabScreen`, `createScreenShareURL`, `createSecondStream`, and the room allocation in `updateMixer` in root `lib.js`; session defaults, `getRoomOnlyTier`, `getMobileGuestBitrateCap`, `limitBitrate`, `getOptimizedScale`, and SDP bitrate negotiation in root `webrtc.js`; and URL parsing in `main.js`. Line numbers move as the application changes.
-
-For practical setup, see [How to control bitrate/quality](how-do-i-control-bitrate-quality.md), [Video bitrate for push/view links](video-bitrate-for-push-view-links.md), and [Video bitrate in rooms](video-bitrate-in-rooms.md).
+Check the actual numbers in the [stats panel](stats-menu/README.md); the OBS connection and the room preview will differ. For setup help, see [How to control bitrate/quality](how-do-i-control-bitrate-quality.md), [Video bitrate for push/view links](video-bitrate-for-push-view-links.md) and [Video bitrate in rooms](video-bitrate-in-rooms.md).

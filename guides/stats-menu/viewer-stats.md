@@ -6,92 +6,73 @@ description: >-
 
 # Reading the viewer panel
 
-This is the panel you get when you Ctrl + click a **remote** video — a guest in your room, or a stream you are viewing in OBS. It describes what is arriving at your machine.
-
-The panel opens with `StreamID:` so you always know which stream you are looking at. That matters when several guests are on screen.
+You get this panel when you Ctrl + click a **remote** video, such as a guest in your room or a stream in OBS. It shows what arrives at your computer, and starts with `StreamID:` so you know which stream it is.
 
 ## Stream info
 
-<figure><img src="../../.gitbook/assets/stats-menu/stats-viewer-stream-info.png" alt="Stream Info section listing capture settings, audio processing, version, and the sender's hardware"><figcaption><p>Stream info describes the <em>sender's</em> machine and settings, not yours.</p></figcaption></figure>
+<figure><img src="../../.gitbook/assets/stats-menu/stats-viewer-stream-info.png" alt="Stream Info section listing capture settings, audio processing, version, and the sender's hardware"><figcaption><p>Stream info describes the <em>sender's</em> computer and settings, not yours.</p></figcaption></figure>
 
-Everything in this section is **self-reported by the person sending the video**. It is not measured by you. This is the single most misread part of the panel: `CPU`, `GpGPU`, `Platform (OS)` and `Power level` all belong to the guest, not to you.
+Everything here is **reported by the sender**, not measured by you. `CPU`, `GpGPU`, `Platform (OS)` and `Power level` describe the guest's device, not yours.
 
 | Field | Meaning |
 | --- | --- |
-| `Video init width` / `height` / `frameRate` | What the sender asked their camera for. Not necessarily what is being sent right now — compare against `Resolution` under Video track |
+| `Video init width` / `height` / `frameRate` | What the sender asked their camera for, not what is sent now |
 | `Quality (URL)` | The sender's `&quality` setting |
-| `Echo-Cancellation`, `Auto-Gain (agc)`, `De-noising` | The sender's audio processing. `default` means they did not override it and the browser decides — which is not the same as "off" |
-| `Pro-Audio (Stereo-mode)` | Only appears if the sender used `&stereo`. Higher-fidelity audio modes usually need headphones at both ends |
-| `VDO.Ninja Version` | The sender's version. Mismatched versions are worth noting when something behaves oddly |
-| `User agent`, `Platform (OS)`, `Browser` | The sender's browser and OS. Click the user agent to copy it |
-| `GpGPU`, `CPU` | The sender's graphics adapter and core count. Limited hardware can help explain encoder trouble, but these fields do not measure current load |
-| `Power level`, `Plugged in` | The sender's reported battery state. A low battery, low-power mode, or thermal pressure may reduce performance, but the percentage alone does not prove throttling |
-| `Quality limited by` | Why the browser says the sender's encoder is limiting resolution or frame rate: `none`, `bandwidth`, `cpu`, or `other` |
-| `Total outbound p2p connections` | How many viewers the sender currently has, updated within a few seconds of anyone joining or leaving. The same count can be shown as a 🔗 badge on the video itself with [`&showconnections`](../../advanced-settings/settings-parameters/and-showconnections.md) |
+| `Echo-Cancellation`, `Auto-Gain (agc)`, `De-noising` | The sender's audio processing. `default` means the browser decides, which is not the same as off |
+| `Pro-Audio (Stereo-mode)` | Shown only if the sender used `&stereo` |
+| `VDO.Ninja Version`, `User agent`, `Platform (OS)`, `Browser` | The sender's software. Click the user agent to copy it |
+| `GpGPU`, `CPU` | The sender's graphics adapter and core count, not current load |
+| `Hardware video encoder` | Whether the sender's browser reported a hardware encoder |
+| `Power level`, `Plugged in` | The sender's battery state |
+| `Quality limited by` | Why the sender's browser is lowering quality: `none`, `bandwidth`, `cpu` or `other` |
+| `Total outbound p2p connections` | How many viewers the sender has. [`&showconnections`](../../advanced-settings/settings-parameters/and-showconnections.md) shows this as a 🔗 badge on the video |
 
-`Quality limited by` is one of the highest-value fields in this section. If a guest looks soft and it says `cpu`, raising the bitrate on your side is unlikely to fix it.
+If a guest looks soft and `Quality limited by` says `cpu`, raising the bitrate on your side will not help.
 
 ## Peer-to-peer connection
 
 <figure><img src="../../.gitbook/assets/stats-menu/stats-viewer-connection.png" alt="Peer-to-peer connection section showing round trip time, candidate types, time active and total received bitrate"><figcaption><p>The transport between you and the sender.</p></figcaption></figure>
 
-This section describes the network path itself, measured by your machine.
+| Field | Meaning |
+| --- | --- |
+| `Round Trip Time` | Latency there and back. Steady matters more than low; a swinging value means congestion |
+| `Candidate type - Local` / `Remote` | How each end connects: `host` = local network interface, `srflx` = public address found through STUN, `💸 relay server` = TURN relay. `host` at both ends often means a LAN path |
+| `Local network type` | Your interface type, if the browser shares it (often `unknown`) |
+| `Time active` | How long this connection has been up. If it keeps resetting, the connection is dropping |
+| `Total received` | All incoming bitrate, including overhead |
 
-| Field | Meaning | What to look for |
-| --- | --- | --- |
-| `Round Trip Time` | Network latency there and back | Stable is more important than low. A number that swings around indicates a congested path |
-| `Candidate type - Local` | The candidate used at **your** end | `host` = a local interface candidate. `srflx` = a public NAT mapping discovered through STUN. `relay` = a TURN allocation |
-| `Candidate type - Remote` | The candidate used at **their** end | Interpret it together with the local candidate. A selected pair containing `relay` is using TURN; `host` on both ends often indicates a LAN path |
-| `Local network type` | Your interface type where the browser exposes it | Often `unknown`; Chrome hides this for privacy |
-| `Time active` | How long this connection has been up | Resets on reconnect. A number that keeps resetting means the connection is flapping |
-| `Total received` | Total inbound bitrate on this connection | Includes every track plus protocol overhead, so it reads slightly higher than the per-track bitrates added together |
-| `Requested resolution` | The size your viewer has asked the sender to send | In **device pixels**, so on a HiDPI screen it will look larger than your window. `~` means the request was snapped to a nearby standard size |
-
-`Requested resolution` surprises people. VDO.Ninja asks for the resolution that matches how large the video is actually drawn on your display, multiplied by your device pixel ratio. A small video in a grid genuinely does request a small resolution — that is the bandwidth optimisation working as intended. See [`&scale`](../../advanced-settings/view-parameters/scale.md) if you need to override it.
+`Requested resolution` is the size your side asked the sender for: how large the video is drawn on your screen, in **device pixels**. On a HiDPI screen it looks larger than the window. A leading `~` lets the sender round to a nearby standard size. Small tiles request small video on purpose; use [`&scale`](../../advanced-settings/view-parameters/scale.md) to override.
 
 ## Audio track and Video track
 
 <figure><img src="../../.gitbook/assets/stats-menu/stats-viewer-tracks.png" alt="Audio track and Video track sections showing bitrate, jitter buffer, codec, packet loss and NACKs"><figcaption><p>One section per incoming track. If a section is missing, that track is not being received at all.</p></figcaption></figure>
 
-Each incoming track gets its own section. **A missing section is itself a diagnosis**: if there is no *Audio track* section, no audio is arriving, and the problem is at the sender or in the negotiation — not in your speakers.
+Each incoming track has a section. **A missing section is a finding:** with no *Audio track* section, no audio is arriving, so check the sender, not your speakers.
 
-| Field | Applies to | Meaning |
+| Field | Track | Meaning |
 | --- | --- | --- |
-| `Bitrate` | both | Actual received bitrate for this track. A ⚠️ appears here if it drops to zero while the track still exists |
-| `FPS` | video | Frames per second actually being decoded |
-| `Resolution` | video | The size actually arriving. Compare to `Requested resolution` above and to the sender's `Video init width/height` |
-| `Jitter Buffer Delay` | both | How much delay the receiver is adding to smooth out uneven arrival. A rising value can warn that packets are arriving unevenly, even when the current loss sample is low |
-| `Audio Level` | audio | Current loudness, 0 to 1. If this sits at exactly 0 while bitrate is healthy, the sender is transmitting silence |
-| `ClockRate` | audio | Sample rate and channel count, e.g. `48000 / 2` |
-| `Codec` | both | The negotiated codec. `opus, /w fec` means forward error correction is active on audio |
-| `Packet Loss` | both | Percentage of packets that never arrived |
-| `Keyframes requested (PLI)` | video | How many times your end has asked for a fresh keyframe. Climbing steadily means your decoder keeps losing sync |
-| `NACKs sent` | video | How many times your end asked for a specific lost packet to be resent |
-| `Type` | both | Which kind of track this is |
+| `Bitrate` | both | Received bitrate. ⚠️ if it drops to 0 while the track exists |
+| `FPS`, `Resolution` | video | Frames decoded per second, and the size arriving |
+| `DecodeLatencyMs` | video | Average time to decode a frame. High values point to a slow receiving computer |
+| `Jitter Buffer Delay` | both | Delay added to smooth uneven arrival. A rising value means uneven arrival, even with low loss |
+| `Audio Level` | audio | Loudness, 0 to 1. Exactly 0 with a healthy bitrate means the sender is sending silence |
+| `ClockRate`, `Codec` | audio/both | Sample rate and channels (such as `48000 / 2`), and codec. `opus, /w fec` means audio error correction is on |
+| `Packet Loss 📶` | both | Percentage of packets lost in the latest sample |
+| `Keyframes requested (PLI)` | video | Requests for a fresh keyframe. Steady climbing means the decoder keeps losing the picture |
+| `NACKs sent` | video | Requests to resend a lost packet |
 
-### How these interact
+**How they connect:** a lost packet triggers a NACK. If the decoder still cannot continue, it sends a PLI, and the larger keyframe briefly raises bandwidth. That is the familiar "freeze, then snap back". A PLI alone does not prove loss, since startup and decoder resets also request keyframes. Look for counters climbing while you see the problem.
 
-Packet loss, NACKs and PLIs often interact:
-
-1. A missing or late packet can cause your end to send a **NACK** asking for it again.
-2. If the decoder cannot continue from the frames it has, it can request a fresh **keyframe (PLI)**.
-3. A keyframe is usually larger than a delta frame, so it can briefly increase bandwidth.
-
-A burst of loss can therefore produce NACKs followed by a PLI and the familiar "freeze, then snap back into focus" artefact. A PLI is not proof of packet loss, though: startup, decoder resets, layer changes and renegotiation can also request a keyframe. Look for sustained counter growth alongside the visible symptom.
-
-## Extra rows you may see
-
-These only appear in specific configurations:
+## Rows that appear only sometimes
 
 | Field | When |
 | --- | --- |
-| `Added Buffer Delay`, `Total Playout Delay` | You are using [`&buffer`](../../advanced-settings/view-parameters/buffer.md) or [`&bufferaudio`](../../advanced-settings/audio-parameters/and-bufferaudio.md). `Total Playout Delay` is network latency plus jitter buffer plus any buffer you added — but it does not include Bluetooth, monitor or capture delay |
-| `Video Buffer: Target / Current`, `Audio Buffer`, `Video Repairs: FEC / NACK` | The stream is in chunked mode. `(rebuffering)` in red means playback has stalled while it refills |
-| `Candidate type` showing `💸 relay server` | A TURN relay is carrying the traffic. See [relay connections](troubleshooting.md#the-connection-is-using-a-relay) |
-| `⚠️ You're blocking` / `⚠️ They're blocking` | A browser or system setting is preventing a direct peer-to-peer connection at that end |
-| A map with coordinates | The sender is sharing location data |
+| `Added Buffer Delay`, `Total Playout Delay` | You use [`&buffer`](../../advanced-settings/view-parameters/buffer.md) or [`&bufferaudio`](../../advanced-settings/audio-parameters/and-bufferaudio.md). Total Playout Delay excludes Bluetooth, monitor and capture delay |
+| `Video Buffer: Target / Current`, `Audio Buffer`, `Video Repairs: FEC / NACK` | Chunked mode. A red `(rebuffering)` means playback stalled while the buffer refills |
+| `⚠️ You're blocking` / `⚠️ They're blocking` | A browser or system setting is preventing a direct connection; see [relay connections](troubleshooting.md#the-connection-is-using-a-relay) |
+| A map with coordinates | The sender is sharing location |
 
 ## Next
 
-* [Reading the publisher panel](publisher-stats.md) — the other end of the same connection
-* [Diagnosing problems](troubleshooting.md) — what to actually do about these numbers
+* [Reading the publisher panel](publisher-stats.md): the other end of the same connection
+* [Diagnosing problems](troubleshooting.md): what to do about these numbers

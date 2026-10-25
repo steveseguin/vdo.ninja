@@ -55,7 +55,7 @@ The browser then packs the remaining details:
 
 - Replace repeated text with a small template identifier.
 - Pack addresses, credentials, and the certificate fingerprint into binary; reuse values and trim network routes.
-- Encode the bytes using 30,000 letters and numbers: almost 15 bits per character.
+- Encode the bytes with 30,000 Unicode letters and numbers, mostly CJK characters: almost 15 bits per character.
 
 In ordinary QR mode, the text is capped at **118 characters**, plus the page address when shared as a link. Unfamiliar browser formats have fallbacks, including DEFLATE compression. If essential data cannot fit, the app reports an error. Trickle mode uses the separate per-message limit described above.
 

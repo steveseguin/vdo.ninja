@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="580" viewBox="0 0 960 580" role="img" aria-labelledby="title description">
+  <title id="title">Mix-minus for a phone call-in</title>
+  <desc id="description">The host microphone, the VDO.Ninja guest and the phone caller all feed one mixer: Voicemeeter, a hardware mixer, or the VDO.Ninja call-in panel. The mixer makes three outputs. The VDO.Ninja guest receives the host plus the caller. The phone caller receives the host plus the guest. The program or stream receives everyone. Never send the program mix back to the guest or the caller.</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 Z" fill="#205c96"/></marker>
+  </defs>
+  <rect width="960" height="580" fill="white"/>
+  <g font-family="Arial, Helvetica, sans-serif" text-anchor="middle" fill="#142c43">
+    <text x="480" y="52" font-size="36" font-weight="bold">Mix-minus for a phone call-in</text>
+    <text x="480" y="88" font-size="24">Each return leaves out the person who receives it</text>
+    <g fill="#edf4fb" stroke="#205c96" stroke-width="3">
+      <rect x="30" y="120" width="230" height="96" rx="18"/>
+      <rect x="30" y="250" width="230" height="96" rx="18"/>
+      <rect x="30" y="380" width="230" height="96" rx="18"/>
+      <rect x="340" y="120" width="250" height="356" rx="22"/>
+      <rect x="670" y="120" width="260" height="96" rx="18"/>
+      <rect x="670" y="250" width="260" height="96" rx="18"/>
+    </g>
+    <rect x="670" y="380" width="260" height="96" rx="18" fill="#e9f5f0" stroke="#25644a" stroke-width="3"/>
+    <g font-size="24" font-weight="bold">
+      <text x="145" y="176">Host mic</text>
+      <text x="145" y="306">VDO.Ninja guest</text>
+      <text x="145" y="436">Phone caller</text>
+      <text x="465" y="250" font-size="30">Mixer</text>
+      <text x="800" y="160" font-size="22">To VDO.Ninja guest</text>
+      <text x="800" y="290" font-size="22">To phone caller</text>
+      <text x="800" y="420" font-size="22">Program / stream</text>
+    </g>
+    <g font-size="22">
+      <text x="465" y="296">Voicemeeter,</text>
+      <text x="465" y="326">a hardware mixer,</text>
+      <text x="465" y="356">or the call-in panel</text>
+      <text x="800" y="194">Host + caller</text>
+      <text x="800" y="324">Host + guest</text>
+      <text x="800" y="454">Everyone</text>
+    </g>
+    <g stroke="#205c96" stroke-width="5" marker-end="url(#arrow)">
+      <path d="M262 168 H330"/><path d="M262 298 H330"/><path d="M262 428 H330"/>
+      <path d="M592 168 H660"/><path d="M592 298 H660"/><path d="M592 428 H660"/>
+    </g>
+    <rect x="130" y="502" width="700" height="56" rx="14" fill="#fff4e8" stroke="#b25d00" stroke-width="3"/>
+    <text x="480" y="538" font-size="23">Never send the program mix back to the guest or caller</text>
+  </g>
+</svg>

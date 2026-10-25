@@ -1,69 +1,35 @@
 ---
-description: Reference for the &blackoutmode URL parameter in VDO.Ninja including behavior examples and related options.
+description: Cover the local page with a black overlay while the session continues.
 ---
 
 # &blackoutmode
 
-**Also known as:** `&blackout`, `&bo`, `&bom`
+Use blackout mode to cover the VDO.Ninja page on your screen. Click the overlay to return to the controls.
 
-#### **Description**
+**Audio and video continue while the overlay is open.** It does not mute your microphone, stop your camera, silence playback or change what remote viewers receive. To stop sharing audio or video, use the microphone and camera controls before entering blackout mode, or hang up.
 
-Enables blackout mode, which hides all videos and mutes all audio for privacy or emergency situations.
+## Aliases
 
-#### **General Option**
+* `&blackout`
+* `&bo`
+* `&bom`
 
-This parameter activates or shows the blackout mode button, allowing quick privacy control during streams.
+## Options
 
-#### **Usage**
+| Value | Result |
+| --- | --- |
+| No value | Show the blackout button |
+| `1` (or any non-empty value) | Show the button and open the overlay immediately |
 
-* **`&blackoutmode`** - Shows the blackout button
-* **`&blackoutmode=1`** - Shows button and activates blackout immediately
-* **`&blackout`** - Alias for blackoutmode
-* **`&bo`** - Short alias
-* **`&bom`** - Short alias
+`0` and `false` also open the overlay because they are non-empty URL values. Omit the parameter to leave the button hidden.
 
-#### **Examples**
-
-```
+```text
 https://vdo.ninja/?room=roomname&blackoutmode
 https://vdo.ninja/?push=streamID&blackoutmode=1
-https://vdo.ninja/?director&room=roomname&bo
 ```
 
-#### **Visual Example**
+## Related
 
-When activated:
-- All video feeds become black
-- All audio is muted
-- A clear indicator shows blackout is active
-- Can be toggled on/off with the button
-
-#### **Details**
-
-* Shows a prominent blackout button in the interface
-* When activated, immediately blacks out all video
-* Mutes all audio inputs and outputs
-* Useful for emergency privacy situations
-* State can be toggled by clicking the button
-
-#### **Use Cases**
-
-* Emergency privacy protection
-* Quick mute during unexpected interruptions
-* Studio blackouts between takes
-* Privacy during sensitive discussions
-* Technical issue masking
-
-#### **Notes**
-
-* Affects both incoming and outgoing streams
-* Blackout state is local (not synchronized across participants)
-* Quick toggle for immediate privacy
-* Visual indicator prevents accidental activation
-
-#### **Related Parameters**
-
-* [`&mute`](../../source-settings/and-mute.md) - Mutes audio only
-* [`&videomute`](../../source-settings/and-videomute.md) - Mutes video only
-* [`&privacy`](../turn-and-stun-parameters/and-privacy.md) - Enhanced privacy mode
-* [`&hidemenu`](../design-parameters/and-hidemenu.md) - Hides interface elements
+* [`&mute`](../../source-settings/and-mute.md) - Start with the microphone muted
+* [`&videomute`](../../source-settings/and-videomute.md) - Start with the camera muted
+* [`&hidemenu`](../design-parameters/and-hidemenu.md) - Hide interface controls

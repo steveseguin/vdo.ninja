@@ -1,206 +1,138 @@
 ---
-description: Build a shared Twitch production where three to five operators contribute POV and camera feeds, join without scene edits, and hand the broadcast between operators.
+description: Run a shared Twitch channel where three to five operators send game and camera feeds through VDO.Ninja, join without OBS edits, and hand the broadcast to each other.
 ---
 
 # Multi-operator Twitch production with VDO.Ninja and OBS
 
-This workflow is for a shared Twitch channel where:
+Use this setup when any authorized member can start the show, three to five members add game and camera feeds without the current operator editing OBS, another member can take over when the operator leaves, and Discord carries the voice chat.
 
-* any authorized member can start the show;
-* three to five members can add their POV and camera without the current operator rebuilding OBS;
-* another member can take over when the current operator leaves; and
-* Discord carries the conversation audio.
+VDO.Ninja carries each member's feeds. One OBS at a time combines them and streams the program to Twitch. VDO.Ninja does not pick the operator or keep the Twitch connection alive during a handoff. That takes a coordinated stop and start, or an encoder that stays online while control changes hands.
 
-VDO.Ninja and Twitch have different jobs in this design. VDO.Ninja transports each participant's contribution. One OBS instance composites those feeds and sends the single program to Twitch.
+![Players send game and camera feeds through VDO.Ninja to one program OBS, which captures Discord voice once and is the only computer streaming to Twitch](../.gitbook/assets/production-twitch-multi-operator.svg)
 
-```text
-Player POVs and cameras -> VDO.Ninja -> current program OBS -> Twitch
-Discord voice ------------------------> current program OBS -> Twitch
-```
+## Pick a design
 
-A handoff therefore needs either a coordinated stop/start between two OBS computers or an encoder that stays connected to Twitch while control changes hands. VDO.Ninja alone does not elect the Twitch operator or keep the Twitch ingest session alive.
-
-## Quick recommendation
-
-| Priority | Recommended design |
+| Priority | Design |
 | --- | --- |
-| Start with equipment everyone already owns | Install the same OBS scene collection on every operator's computer and use a short, coordinated Twitch handoff |
-| Lowest load on the gaming computers and the cleanest handoff | Run one always-on production OBS on a spare computer and let members control it remotely |
-| Highest uptime and automatic failover | Put a redundant encoder or private relay behind the production and add an authenticated active-operator lease |
+| Use equipment everyone already owns | Solution 1: the same OBS scene collection on every operator's PC, with a short handoff |
+| Least load on gaming PCs, cleanest handoff | Solution 2: one always-on production OBS that members control remotely |
+| Highest uptime, automatic failover | Solution 3: a standby encoder or private relay with an on-air lock |
 
-For a three-to-five-person Windows gaming group, a practical starting point is **Game Capture for each gameplay feed, a VDO.Ninja browser link for each camera, and OBS Browser Sources for the final mix**. Give every feed a permanent ID and pre-build every source once.
+For a Windows gaming group, start with Game Capture for each game feed, a VDO.Ninja browser link for each camera, and OBS Browser Sources for the mix.
 
 ## Choose the contribution tool
 
-| Tool | Best use here | Advantages | Important limitation |
-| --- | --- | --- | --- |
-| VDO.Ninja in a browser | Webcams, phone cameras, and occasional screen sharing | No install, cross-platform, reusable links | Browser screen sharing requires a window/screen choice and may be less consistent for games |
-| [Game Capture](using-game-capture-with-vdo.ninja.md) | Windows game/window video and its audio | Native, low-memory capture with hardware encoding and window-specific audio | Windows only; send the webcam separately or composite it elsewhere |
-| [Ninja OBS Plugin](using-ninja-obs-plugin-with-vdo.ninja.md) as a receiver | Managing VDO.Ninja sources inside OBS | Can auto-create/update inbound room sources; its browser-backed receiver follows normal VDO.Ninja behavior | The native VP9/H.264/Opus receiver remains experimental |
-| Ninja OBS Plugin as a publisher | A contributor-only OBS or a separate contribution computer | Publishes the OBS output directly to VDO.Ninja | It uses OBS's active streaming output slot, so this plugin path alone cannot publish to VDO.Ninja and Twitch at the same time |
-| OBS Browser Sources | Receiving the final VDO.Ninja feeds | Established, portable OBS workflow | Each live feed still needs decoding and compositing |
-
-The Ninja OBS Plugin is useful, but it is not automatically the lightest answer for this design. Its publishing mode conflicts with using the same normal OBS output for Twitch. Game Capture is generally the better gameplay contributor on Windows, while a Browser Source or the plugin's browser-backed receiver is a sensible production input.
-
-## Solution 1: give every operator the same OBS production
-
-This is the simplest decentralized setup. It does not require an always-on server, but Twitch handoffs can include a short slate, cut, or stream restart.
-
-### 1. Give each operator separate Twitch access
-
-Do not share the channel owner's password or primary stream key.
-
-In the channel's Twitch Creator Dashboard, open **Settings -> Stream -> Permissions -> People who can stream to your channel** and authorize each operator by email. Twitch gives each person a separate guest stream key. Removing an authorized streamer invalidates that person's key without rotating everyone else's key.
-
-Each person configures their own key in a local OBS profile. Share the scene collection, but configure the streaming profile separately because [OBS profiles store stream and output settings](https://obsproject.com/kb/profiles), while [scene collections store scenes and sources](https://obsproject.com/kb/scene-collections).
-
-See Twitch's [Stream Key FAQ](https://help.twitch.tv/s/article/twitch-stream-key-faq?language=en_US) for the current authorized-streamer workflow.
-
-Enable [Twitch Disconnect Protection](https://help.twitch.tv/s/article/Disconnect-Protection?language=en_US) and rehearse with it. It can display a temporary slate for up to 90 seconds during a supported encoder disconnect, but it is not a source switcher and should not be assumed to make a handoff seamless.
-
-### 2. Assign permanent VDO.Ninja identities
-
-Choose a private room name, a strong room password, and two unique IDs per person:
-
-| Member | Gameplay ID | Camera ID |
+| Tool | Use it for | Limitation |
 | --- | --- | --- |
-| Alice | `alice-game` | `alice-cam` |
-| Bob | `bob-game` | `bob-cam` |
-| Carol | `carol-game` | `carol-cam` |
+| VDO.Ninja in a browser | Webcams, phone cameras, occasional screen sharing | The sender picks the screen or window each time; game capture can be less consistent |
+| [Game Capture](using-game-capture-with-vdo.ninja.md) | Game window video with only that window's audio, hardware encoded | Windows (the Mac version is an experimental beta); send the webcam separately |
+| [Ninja OBS Plugin](using-ninja-obs-plugin-with-vdo.ninja.md), receiving | VDO.Ninja sources inside OBS; can auto-add room feeds | The native receiver is experimental; the default mode is browser-backed |
+| Ninja OBS Plugin, publishing | A contribution-only OBS | It uses OBS's streaming output, so that OBS cannot also stream to Twitch |
+| OBS Browser Sources | Receiving feeds in the program OBS | Every live feed is decoded and composited |
 
-Use names that are unique to the production rather than these public examples. Do not open the same publishing ID on two devices at once.
+## Solution 1: every operator runs the same OBS scene
 
-An example camera shortcut is:
+No server is needed, but each handoff can cause a short slate, cut or stream restart.
+
+### 1. Give each operator their own Twitch access
+
+Do not share the owner's password or main stream key. In the Twitch Creator Dashboard, open **Settings -> Stream -> Permissions -> People who can stream to your channel** and authorize each operator by email. Each gets their own guest stream key, and removing a person invalidates only their key. See Twitch's [Stream Key FAQ](https://help.twitch.tv/s/article/twitch-stream-key-faq?language=en_US).
+
+Share the OBS scene collection, but have each person enter their key in a local OBS profile. [Profiles](https://obsproject.com/kb/profiles) store stream settings; [scene collections](https://obsproject.com/kb/scene-collections) store scenes and sources.
+
+Turn on [Twitch Disconnect Protection](https://help.twitch.tv/s/article/Disconnect-Protection?language=en_US). It can show a slate for up to 90 seconds when a supported encoder disconnects, but it does not make a handoff seamless.
+
+### 2. Assign permanent VDO.Ninja IDs
+
+Choose a private room name, a strong room password, and two IDs per person, such as `alicegame` and `alicecam`, `bobgame` and `bobcam`.
+
+Use only letters, numbers and underscores. VDO.Ninja replaces other characters, such as `-`, with `_` when publishing, so a view link with the original ID will not match. Never open the same ID on two devices at once.
+
+Camera link:
 
 ```text
-https://vdo.ninja/?room=TEAMROOM&push=alice-cam&webcam&audiodevice=0&autostart&view#p=ROOMPASSWORD
+https://vdo.ninja/?room=TEAMROOM&push=alicecam&webcam&audiodevice=0&autostart&view#p=ROOMPASSWORD
 ```
 
-This disables the camera link's microphone because voice is coming from Discord, starts the camera path with fewer prompts, and prevents the contributor page from receiving every other room feed. The browser must still receive camera permission.
+`&audiodevice=0` turns off the microphone, because voice comes from Discord. `&webcam` and `&autostart` skip most of the setup screen. The bare `&view` stops the page from downloading the other room feeds. The browser still asks for camera permission.
 
-For browser-based gameplay or desktop capture, a reusable link can look like:
+Browser game capture link:
 
 ```text
-https://vdo.ninja/?room=TEAMROOM&push=alice-game&screenshare&autostart&view#p=ROOMPASSWORD
+https://vdo.ninja/?room=TEAMROOM&push=alicegame&screenshare&autostart&view#p=ROOMPASSWORD
 ```
 
-The browser will still require the user to choose the screen or window for security. On Windows, Game Capture avoids that browser workflow: save `TEAMROOM`, `alice-game`, and the password in the app, select the game/window, and select only that window's audio. Do not capture the complete desktop mix if it includes Discord.
+The browser always asks the sender to choose a screen or window. Game Capture avoids that: save the room, `alicegame` and the password in the app, and select the game window and only its audio. Never send a desktop mix that includes Discord.
 
-Keeping the password after `#` prevents it from being sent in normal web requests and server logs. Treat every saved link as private anyway.
+The password after `#` stays out of normal web requests and server logs. Treat saved links as private anyway.
 
 ### 3. Build the OBS scene once
 
-There are two useful layout models.
-
-#### Fastest automatic layout
-
-Add one OBS Browser Source containing a VDO.Ninja auto-scene:
+**Fastest: one automatic layout.** Add one Browser Source:
 
 ```text
-https://vdo.ninja/?room=TEAMROOM&scene=0&slots=10&maxslots=10#p=ROOMPASSWORD
+https://vdo.ninja/?room=TEAMROOM&scene=0&slots=10#p=ROOMPASSWORD
 ```
 
-`scene=0` automatically adds live room feeds, so the operator does not need to touch OBS when someone joins. Set the slot count to the maximum number of simultaneous gameplay and camera feeds. This is quick, but game and camera feeds become separate tiles and the layout is intentionally generic.
+`&scene=0` adds every live room feed automatically. [`&slots`](../newly-added-parameters/and-slots.md) fixes the grid at that many tiles; set it to the most feeds you expect at once. Game and camera feeds become separate tiles.
 
-#### Fixed branded layout
-
-For a consistent gameplay-plus-camera composition, pre-add a Browser Source for every expected feed and position it in advance:
+**Branded: one Browser Source per feed.** Add and position a source for every expected feed:
 
 ```text
-https://vdo.ninja/?room=TEAMROOM&view=alice-game&solo#p=ROOMPASSWORD
-https://vdo.ninja/?room=TEAMROOM&view=alice-cam&solo&noaudio#p=ROOMPASSWORD
+https://vdo.ninja/?room=TEAMROOM&view=alicegame&solo#p=ROOMPASSWORD
+https://vdo.ninja/?room=TEAMROOM&view=alicecam&solo&noaudio#p=ROOMPASSWORD
 ```
 
-Repeat this for all members. An offline source waits in its assigned position; when that permanent publishing ID comes online, it appears without operator action.
+An offline source waits in place and shows the feed when that ID goes live. For each Browser Source:
 
-For each Browser Source:
+* enable **Control audio via OBS** for game sources and keep camera sources silent;
+* leave **Refresh browser when scene becomes active** and **Shutdown source when not visible** off; and
+* do not load the same feed through both a Browser Source and the plugin.
 
-* enable **Control audio via OBS** for gameplay sources;
-* keep camera sources silent;
-* leave **Refresh browser when scene becomes active** disabled;
-* leave **Shutdown source when not visible** disabled when immediate reconnection matters; and
-* avoid loading the same VDO.Ninja feed through both a Browser Source and the plugin.
+Export the scene collection, import it on each operator's OBS, and have each operator test it once. The collection contains the private room links, so share it only with trusted operators and change the room password to revoke access.
 
-Export this scene collection and import it on each operator's OBS. Local capture device names can differ, so each operator should test their copy once. A personalized version can use direct local game/camera sources for that operator and VDO.Ninja sources for everyone else; this saves a local encode/decode round trip but requires one variant per operator.
+**One combined feed per member.** To keep a member's camera overlaid on their game, build a **Contribution** scene in their OBS, set [OBS Virtual Camera](https://obsproject.com/kb/virtual-camera-guide) to output that **Scene**, and select OBS Virtual Camera in a VDO.Ninja browser publisher. Virtual Camera is video only, so route game audio through a virtual audio device. This halves the feeds the program OBS decodes but adds work on each gaming PC. It leaves OBS's streaming output free for Twitch.
 
-The collection contains the private VDO.Ninja room links, so distribute it only to trusted operators and change the room credentials when access should be revoked.
+### 4. Route Discord and game audio once
 
-#### One combined feed per member
+Doubled audio is the most common failure here.
 
-If each person's camera must always be overlaid on their gameplay, build a dedicated **Contribution** scene in that person's OBS and publish it as one VDO.Ninja feed. In OBS Virtual Camera settings, select **Scene** and choose **Contribution** rather than **Program**. The [OBS Virtual Camera](https://obsproject.com/kb/virtual-camera-guide) can output that fixed scene while Program shows the multi-person Twitch production, avoiding a recursive picture.
+* Everyone wears headphones, and camera links carry no microphone.
+* Game Capture sends only the game window's audio.
+* The active OBS captures Discord's app audio once, plus the active operator's own microphone, which Discord's output does not include.
+* For the active operator's own game, use the local source or its VDO.Ninja feed, never both.
+* Leave OBS monitoring off unless you have tested a mix-minus.
 
-Select OBS Virtual Camera in a VDO.Ninja browser publisher. Route game audio through a virtual audio device if the combined feed needs it; Virtual Camera itself carries video only. This reduces the production OBS from as many as ten live decodes to five, but it adds a browser encode and audio routing on each gaming computer. Unlike the Ninja OBS Plugin's publishing path, Virtual Camera does not consume OBS's Twitch streaming-output slot.
+Record a short local test with everyone talking and playing. Each voice and game should be heard once.
 
-### 4. Route Discord and game audio only once
+### 5. Hand off: stop first, then start
 
-Audio duplication is the most common failure in this setup.
+Use a private Discord text channel as the on-air lock. Only one person owns it.
 
-* Everyone should use headphones.
-* Camera publishing links should have no microphone audio.
-* Game Capture should send the game/window audio, not the full desktop mix containing Discord.
-* The active OBS captures Discord application audio once.
-* The active operator also adds their own microphone to OBS, because their microphone is not normally present in Discord's local output capture.
-* For the active operator's own game, use either the local game source or its VDO.Ninja return, never both.
-* Leave OBS monitoring off unless a deliberate mix-minus has been tested.
+1. The incoming operator opens OBS, loads the scene, and checks video and meters.
+2. The incoming operator writes `READY`.
+3. The outgoing operator stops only their Twitch output and writes `OFF AIR`. Their own feeds stay live.
+4. The incoming operator starts streaming with their own key.
+5. Confirm the channel is live from the Twitch dashboard or another device.
+6. The old operator closes their program scene unless they stay on as standby.
 
-Record a short local sample with all members talking and playing. Confirm that every voice and game is present once, with no delayed duplicate.
-
-### 5. Use a break-before-make handoff
-
-Use a private Discord text channel as the on-air lock. Exactly one person may own it.
-
-1. The incoming operator opens OBS, loads the shared program scene, and confirms video and meters.
-2. The incoming operator writes `READY` in the control channel.
-3. The outgoing operator stops only the Twitch output and writes `OFF AIR`. Their Game Capture and camera contribution can remain live.
-4. The incoming operator starts their Twitch output with their own guest stream key.
-5. Confirm the channel is live from Twitch's dashboard or a separate device.
-6. The old operator closes the full program receiver unless they are remaining as the immediate standby.
-
-Do not deliberately overlap two Twitch outputs. The stop/start order is easy to rehearse and avoids treating Twitch as a mixer. Expect a short interruption; Disconnect Protection may cover a brief encoder loss with its slate, but test the exact handoff before relying on it.
-
-If the current operator disappears unexpectedly, another authorized member can start their OBS output. Depending on timing and Twitch state, viewers may see the disconnect slate or a stream restart.
+Never run two Twitch outputs at once. Expect a short gap. If the operator drops out unexpectedly, another member starts their output; viewers may see the disconnect slate or a restart.
 
 ## Solution 2: keep one production OBS online
 
-An always-on production computer is the best match for both low player impact and clean operator takeover.
+An always-on production PC owns the Twitch connection, overlays, Browser Sources and audio. Members take control of it instead of replacing the encoder, so a member leaving does not end the stream, gaming PCs only publish their own feeds, and the Twitch key lives on one machine. It can be a spare desktop at a member's home or hosted hardware.
 
-```text
-Players -> VDO.Ninja -> dedicated OBS -> Twitch
-                              ^
-                    authorized remote control
-```
+Join the production PC to the Discord call with its microphone off and capture Discord's output in OBS. All voices arrive in that one mix.
 
-The production OBS can run on a spare desktop at a member's home or on suitable hosted hardware. It owns the Twitch connection, common overlays, browser sources, and Discord/program audio routing. Members take control of that OBS rather than replacing the Twitch encoder.
+OBS 28 and newer include obs-websocket for remote control. Keep its authentication on, use a strong password, and reach it only over a private VPN or similar trusted network, never the public Internet. Remote desktop also works with strong authentication and restricted access.
 
-Join the production computer to the Discord call with its microphone disabled, then capture that Discord output in OBS. Because every participant is remote from this computer, their voices arrive in one mix; do not also enable microphone audio on their VDO.Ninja camera feeds.
+Give the production PC wired networking, a hardware H.264 encoder and enough GPU to decode every feed. A UPS and automatic OBS launch help if nobody is on site. The PC is still a single point of failure.
 
-Benefits:
+## Solution 3: active/standby or a private relay
 
-* joining feeds still appear automatically;
-* a member leaving does not disconnect Twitch;
-* handoff means changing control, not changing encoder;
-* gaming computers only publish their own feeds; and
-* the Twitch key exists on one production machine.
+**Active/standby OBS.** The standby keeps the same scene ready but streams only when the primary fails. Twitch still sees an encoder reconnect. Keep the standby's VDO.Ninja feeds closed until needed, because each extra viewer adds upload load on every contributor.
 
-OBS includes obs-websocket in OBS 28 and newer. Keep authentication enabled, use a strong unique password, and reach it through a private VPN or equivalent trusted network. Do not expose the obs-websocket port directly to the public Internet. Remote desktop is another option, although it should also be protected with strong authentication and restricted network access.
-
-The production computer should use wired networking, a hardware H.264 encoder, and enough GPU decode/composition capacity for all live feeds. A UPS and automatic OBS launch are worthwhile if the machine is expected to be available without an operator on site.
-
-This design still has one production-computer and one-site failure domain. Add a standby if that matters.
-
-## Solution 3: active/standby production or a private relay
-
-For higher uptime, keep two matching production encoders or place a switching relay in front of Twitch.
-
-### Active/standby OBS
-
-The primary OBS sends to Twitch. The standby keeps the same scene ready and may receive confidence feeds, but it does not transmit until the primary fails. A health check or operator initiates the takeover.
-
-This is simpler than a full relay, but Twitch still sees an encoder reconnection. Keep the standby's full VDO.Ninja receive path closed until needed, or accept that every extra live receiver adds upload/network work for contributors.
-
-### Stable relay output
-
-A relay design keeps one outbound session connected to Twitch and switches between private contribution inputs:
+**Stable relay output.** A relay keeps one session connected to Twitch and switches between private inputs:
 
 ```text
 Operator A program --\
@@ -208,55 +140,29 @@ Operator B program ----> authenticated switch/relay -> one Twitch output
 Fallback slate -------/
 ```
 
-The control layer should provide one active lease, a visible owner, a manual **Take over** action, a heartbeat, and a fallback slate. It must reject simultaneous ownership rather than guessing which operator wins.
+The control layer needs one active lease, a visible owner, a **Take over** action, a heartbeat and a fallback slate, and it must refuse two owners at once. Failover can then be nearly invisible, at the cost of a server to run, added latency and possibly another encode. Match resolution, frame rate, keyframe interval and audio layout on every input first.
 
-This can make failover nearly invisible to Twitch, but it adds server administration, monitoring, bandwidth, latency, and possibly another encode generation. Standardize resolution, frame rate, keyframe interval, and audio layout across every input before attempting automatic switching.
+## Performance
 
-VDO.Ninja can continue carrying the individual player feeds in this design; the relay only stabilizes the final program output.
-
-## A small helper app can reduce the remaining clicks
-
-A purpose-built VDO.Ninja example app could later add:
-
-* a roster showing which POV and camera feeds are healthy;
-* a clearly visible current Twitch operator;
-* an expiring on-air lease with **Ready**, **Release**, and **Take over** actions;
-* a handoff countdown and acknowledgement; and
-* optional control of the local or dedicated OBS through authenticated obs-websocket.
-
-Such an app should never store or transmit Twitch stream keys. It can coordinate operators and OBS, but only an always-on encoder or relay can preserve the same Twitch output session through a workstation handoff.
-
-## Performance guidelines
-
-Start conservatively and increase quality after a full-group test:
-
-* use 720p30 or 720p60 for gameplay contributions before attempting 1080p60 from every player;
-* use 360p30 or 720p30 for small webcam overlays;
-* use a phone for the webcam when practical so the gaming computer only encodes the gameplay contribution;
-* use a [hardware encoder in OBS](https://obsproject.com/kb/hardware-encoding) to reduce CPU load;
-* cap the game's frame rate so OBS retains GPU headroom;
-* keep contributor pages in publish-only mode with the empty `&view` parameter;
-* let only the active program OBS, and briefly a standby during handoff, receive every feed;
-* prefer wired Ethernet for the current operator or dedicated production machine; and
-* watch OBS **Stats** for rendering lag, encoding lag, and network-dropped frames separately.
-
-VDO.Ninja is peer-to-peer by default. Each additional active production receiver increases contributor upload demand even when a sender can reuse its encode. A single dedicated production receiver is therefore usually lighter than keeping five complete OBS program views open.
+* Send game feeds at 720p30 or 720p60 before trying 1080p60 from every player, and webcams at 360p30 or 720p30.
+* Use a phone as the webcam when you can, so the gaming PC only encodes the game.
+* Use a [hardware encoder in OBS](https://obsproject.com/kb/hardware-encoding), and cap the game's frame rate to leave GPU headroom.
+* Keep contributor links publish-only with the bare `&view`.
+* Let only the active program OBS (and briefly a standby) receive every feed. VDO.Ninja is peer-to-peer, so each extra viewer adds upload load on the contributor.
+* Use wired Ethernet for the operator or production PC.
+* Watch OBS **Stats** for rendering lag, encoding lag and dropped network frames.
 
 ## Rehearsal checklist
 
-Before the first public show:
+* Join every ID in different orders and confirm late arrivals appear without OBS changes.
+* Confirm each voice and game is heard exactly once.
+* Leave and rejoin one contributor.
+* Do a planned handoff, then close the operator's OBS unexpectedly and recover.
+* Make sure two operators cannot both believe they are on air.
+* Check the Twitch dashboard and public player after each change.
+* Record the test locally and review audio and dropped frames.
 
-* join every permanent game and camera ID in a different order;
-* confirm late arrivals appear without changes in the active OBS;
-* confirm Discord voices and game audio are present exactly once;
-* leave and rejoin one contributor;
-* perform a planned operator handoff;
-* unplug or close the current operator unexpectedly and test recovery;
-* verify that two operators cannot accidentally believe they are on air;
-* check Twitch's dashboard and the public player after each transition; and
-* save a local OBS recording of the test for audio and frame-drop review.
-
-The replicated-OBS design is a good starting point. If the handoff interruption or gaming-PC load becomes unacceptable, move the same VDO.Ninja sources and scene collection to an always-on production computer; the contribution links do not need to change.
+Start with Solution 1. If the handoff gap or gaming-PC load becomes a problem, move the same scene collection to an always-on PC; the contribution links stay the same.
 
 ## Related guides
 

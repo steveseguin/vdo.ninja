@@ -86,7 +86,7 @@ These commands affect the local VDO.Ninja instance that has the API key enabled.
 | `mic`               | `true`, `false`, `toggle`     | Control microphone state                   |
 | `camera`            | `true`, `false`, `toggle`     | Control camera state                       |
 | `speaker`           | `true`, `false`, `toggle`     | Control speaker state                      |
-| `volume`            | `0` to `200`                  | Set playback volume (percentage)           |
+| `volume`            | `0` to `100`                  | Set playback volume (percentage)           |
 | `bitrate`           | Integer (kbps), `-1` for auto | Set video bitrate                          |
 | `record`            | `true`, `false`               | Control local recording                    |
 | `hangup`            | N/A                           | Disconnect current session                 |
@@ -152,7 +152,7 @@ These commands target specific guests when you are the director.
 | ----------------------- | ------------- | ------------------------- | -------------------------------- |
 | `forward`               | Guest ID/slot | Room name                 | Transfer guest to another room   |
 | `addScene`              | Guest ID/slot | Scene ID (1-8)            | Toggle guest in/out of scene     |
-| `muteScene`             | Guest ID/slot | Scene ID                  | Toggle guest's audio in scene    |
+| `muteScene`             | Guest ID/slot | `true`/`false`/`toggle`   | Toggle guest's audio in scene    |
 | `mic`                   | Guest ID/slot | `true`, `false`, `toggle` | Control guest's microphone       |
 | `hangup`                | Guest ID/slot | N/A                       | Disconnect a specific guest      |
 | `soloChat`              | Guest ID/slot | N/A                       | Private chat with guest          |
@@ -198,7 +198,7 @@ API commands receive callbacks with the current state after execution:
   "callback": {
     "action": "mic",
     "value": "toggle",
-    "result": false  // Indicates mic is now muted
+    "result": false  // The muted state: false means the mic is now on
   }
 }
 ```

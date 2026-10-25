@@ -1,0 +1,50 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="560" viewBox="0 0 960 560" role="img" aria-labelledby="title description">
+  <title id="title">Who uploads the return feed</title>
+  <desc id="description">Left: with direct VDO.Ninja delivery, the return publisher uploads a separate copy to every guest. Right: with Meshcast or a WHIP/WHEP server, the publisher uploads one copy and the server sends it to every guest. Guest link options such as broadcast mode decide which feed guests receive in both cases.</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 Z" fill="#205c96"/></marker>
+    <marker id="arrow-green" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 Z" fill="#2e7d4f"/></marker>
+  </defs>
+  <rect width="960" height="560" fill="white"/>
+  <g font-family="Arial, Helvetica, sans-serif" text-anchor="middle" fill="#142c43">
+    <text x="480" y="52" font-size="36" font-weight="bold">Who uploads the return?</text>
+    <text x="480" y="86" font-size="22">Guest links choose the feed; the transport sets the upload</text>
+    <g font-size="27" font-weight="bold">
+      <text x="247" y="138">Direct P2P</text>
+      <text x="712" y="138">Meshcast or WHIP/WHEP</text>
+    </g>
+    <line x1="480" y1="115" x2="480" y2="500" stroke="#c9d7e6" stroke-width="2"/>
+    <g fill="#edf4fb" stroke="#205c96" stroke-width="3">
+      <rect x="137" y="160" width="220" height="70" rx="18"/>
+      <rect x="602" y="160" width="220" height="70" rx="18"/>
+      <rect x="47" y="380" width="120" height="64" rx="16"/>
+      <rect x="187" y="380" width="120" height="64" rx="16"/>
+      <rect x="327" y="380" width="120" height="64" rx="16"/>
+      <rect x="512" y="380" width="120" height="64" rx="16"/>
+      <rect x="652" y="380" width="120" height="64" rx="16"/>
+      <rect x="792" y="380" width="120" height="64" rx="16"/>
+    </g>
+    <rect x="602" y="268" width="220" height="64" rx="16" fill="#e9f5f0" stroke="#2e7d4f" stroke-width="3"/>
+    <g font-size="23" font-weight="bold">
+      <text x="247" y="203">Return publisher</text>
+      <text x="712" y="203">Return publisher</text>
+      <text x="712" y="308">Server</text>
+    </g>
+    <g font-size="22">
+      <text x="107" y="420">Guest</text><text x="247" y="420">Guest</text><text x="387" y="420">Guest</text>
+      <text x="572" y="420">Guest</text><text x="712" y="420">Guest</text><text x="852" y="420">Guest</text>
+    </g>
+    <g stroke="#205c96" stroke-width="4" fill="none" marker-end="url(#arrow)">
+      <path d="M227 234 L117 370"/><path d="M247 234 V370"/><path d="M267 234 L377 370"/>
+      <path d="M712 234 V258"/>
+    </g>
+    <g stroke="#2e7d4f" stroke-width="4" fill="none" marker-end="url(#arrow-green)">
+      <path d="M692 336 L587 372"/><path d="M712 336 V370"/><path d="M732 336 L837 372"/>
+    </g>
+    <g font-size="23" font-weight="bold">
+      <text x="247" y="486">One upload per guest</text>
+      <text x="712" y="486">One upload; server fans out</text>
+    </g>
+    <text x="480" y="538" font-size="21">Direct has the least delay. A server adds a little delay but saves upload.</text>
+  </g>
+</svg>

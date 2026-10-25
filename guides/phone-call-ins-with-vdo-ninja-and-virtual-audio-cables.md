@@ -1,161 +1,87 @@
 ---
-description: Route a live phone caller and a VDO.Ninja guest into each other using virtual audio cables, Voicemeeter, OBS monitoring, or a hardware mixer.
+description: Connect a phone caller and VDO.Ninja guests with mix-minus routing in Voicemeeter, a hardware mixer, or virtual audio cables.
 ---
 
 # Phone call-ins with VDO.Ninja and virtual audio cables
 
-VDO.Ninja does not currently expose a polished native phone call-in feature for public use. There is experimental SIP/PSTN call-in work in the project, but it is not really exposed as a normal feature and should be treated as unsupported. A native version would likely need a bring-your-own SIP or telephone provider setup, since phone networks and SIP/PSTN gateways have ongoing per-minute and number-rental costs.
+This setup brings a phone caller into a VDO.Ninja show through an external mixer. It works with any phone, softphone, or calling app. To answer calls inside VDO.Ninja instead, see the experimental [call-in panel and provider options](phone-call-in-provider-options.md).
 
-For now, the reliable way to run a call-in show is to create two separate **mix-minus** audio feeds with a hardware mixer, Voicemeeter, OBS audio monitoring, or virtual audio cables.
+![Mix-minus routing: the host mic, VDO.Ninja guest and phone caller feed one mixer. The guest receives the host and caller, the caller receives the host and guest, and the program receives everyone.](../.gitbook/assets/callin-mix-minus-routing.svg)
 
-<figure><img src="../.gitbook/assets/docs-infographics/phone-call-in-vac-mix-minus.png" alt="Phone call-in workflow using virtual audio cables and mix-minus routing"><figcaption><p>Two return mixes are needed: one for the VDO.Ninja guest and one for the phone caller.</p></figcaption></figure>
+## The rule: two separate returns
 
-## The goal
+Everyone needs to hear the other talkers, but never a delayed copy of themselves. That takes two **mix-minus** returns plus your program mix:
 
-You usually have three live talkers:
+| Mix | Contains | Leaves out | Send it to |
+| --- | --- | --- | --- |
+| Guest return | Host + phone caller | VDO.Ninja guest | VDO.Ninja, selected as the host's microphone |
+| Caller return | Host + VDO.Ninja guest | Phone caller | The phone app, softphone, or phone interface |
+| Program | Everyone | Nobody | OBS, your stream, or your recorder |
 
-* Host or producer
-* Remote VDO.Ninja guest
-* Phone caller
-
-Each side needs to hear the other sides, but not a delayed copy of themselves.
-
-| Destination | Should hear | Must not hear |
-| --- | --- | --- |
-| VDO.Ninja guest | Host + phone caller | VDO.Ninja guest |
-| Phone caller | Host + VDO.Ninja guest | Phone caller |
-| Livestream / recording | Host + VDO.Ninja guest + phone caller | Usually no exclusions |
-| Host headphones | Whatever the host needs to monitor | Avoid delayed self-monitoring |
-
-This is the same idea used in broadcast intercom and podcast systems. The "minus" part means the return feed excludes the person receiving it.
+The most common mistake is sending the program mix back to a guest or caller. That causes echo.
 
 ## What you need
 
-At minimum:
-
-* A way to receive the phone call, such as a phone connected to a mixer, a browser-based phone service, a SIP softphone, or a USB phone interface.
-* A way to receive the VDO.Ninja guest audio on the host PC.
-* A mixer that can create at least two different output buses.
-
-Common options:
-
-* **Voicemeeter Banana/Potato**: good for Windows software routing.
-* **Rodecaster Duo/Pro or similar hardware mixer**: good if it supports custom USB routing and mix-minus.
-* **OBS Studio plus monitoring/plugin routing**: useful if OBS is already your production hub, but stock OBS monitoring is usually only one monitor device, so two independent return mixes may need an audio monitoring plugin or an external software mixer.
-* **VB-CABLE / Virtual Audio Cable / Loopback / BlackHole**: virtual patch cables between apps.
-
-## The simple routing model
-
-Create three source channels in your mixer:
-
-1. **Host mic**
-2. **VDO guest audio**
-3. **Phone caller audio**
-
-Then create three output mixes:
-
-1. **Guest return mix**: Host mic + phone caller. Send this into VDO.Ninja as the host microphone.
-2. **Caller return mix**: Host mic + VDO guest. Send this to the phone app, SIP softphone, phone USB return, or hardware phone channel.
-3. **Program/stream mix**: Host mic + VDO guest + phone caller. Send this to OBS, MELD, YouTube, or your recorder.
-
-The most common failure is accidentally using the program mix as a return feed. That sends people a delayed copy of themselves and creates echo.
+* A way to get the call into the computer or mixer: a phone on a mixer input, a softphone or browser calling app, or a USB phone interface.
+* The VDO.Ninja guest's audio on the host computer, for example from a view link in Chrome or [Electron Capture](../steves-helper-apps/electron-capture.md).
+* A mixer with at least two output buses: Voicemeeter Banana or Potato on Windows, a hardware mixer with custom routing (such as a RØDECaster Pro or Duo), or virtual cables between apps (VB-CABLE, Virtual Audio Cable, Loopback, BlackHole).
 
 ## Voicemeeter example
 
-This is a generic Windows example. The exact device names may differ.
+Device names vary by system.
 
 1. Install Voicemeeter Banana or Potato and at least one virtual audio cable.
-2. Put your **host microphone** on a Voicemeeter hardware input.
-3. Route your **VDO.Ninja guest audio** into Voicemeeter. For example, use a VDO.Ninja view link in Chrome or Electron Capture and set its audio output to a virtual cable, then select that cable output as an input in Voicemeeter.
-4. Route your **phone caller audio** into Voicemeeter. This might be a Rodecaster USB channel, a phone app, a SIP softphone output, or another virtual cable.
-5. Create a **Guest return** bus containing host mic + phone caller, but not VDO guest. Select this bus or its virtual output as the microphone/input in the VDO.Ninja host/director page.
-6. Create a **Caller return** bus containing host mic + VDO guest, but not phone caller. Select this bus or its virtual output as the microphone/input in the phone/SIP app, or send it to the phone interface.
-7. Create a **Program** bus with all three sources and send that to OBS, MELD, or the livestream.
+2. Put the host microphone on a hardware input.
+3. Play the VDO.Ninja guest into a virtual cable, then add that cable as a Voicemeeter input. You can set the output in the browser, in Electron Capture, or with [`&audiooutput`](../advanced-settings/setup-parameters/and-audiooutput.md) on the view link.
+4. Bring the phone caller in on another input, such as a softphone output, a USB phone channel, or another cable.
+5. Make a **guest return** bus with the host mic and caller only. Select it as the microphone on the host's VDO.Ninja page.
+6. Make a **caller return** bus with the host mic and guest only. Select it as the microphone in the phone app, or send it to the phone interface.
+7. Make a **program** bus with all three and send it to OBS or your recorder.
 
-If the host is publishing a pre-mixed cable into VDO.Ninja, consider using [`&proaudio`](../advanced-settings/audio-parameters/and-proaudio.md) on the host's VDO.Ninja link. This disables browser audio processing that can damage music or mixed program audio. Only do this when you have proper mix-minus routing or headphones, since browser echo cancellation will not be there to save a bad loop.
-
-## Rodecaster or hardware mixer example
-
-For a Rodecaster Duo/Pro style setup:
-
-1. Connect the host PC over USB.
-2. Connect the phone over USB, Bluetooth, TRRS, or the phone input supported by the mixer.
-3. Bring the VDO.Ninja guest audio from the PC into a separate mixer channel. This can be the browser source audio, a Chrome/Electron Capture output, or an OBS monitor output.
-4. In the mixer's routing matrix, make the **phone send** contain host mic + VDO guest, excluding the phone caller.
-5. Make the **VDO.Ninja send** contain host mic + phone caller, excluding the VDO guest.
-6. Make the **stream send** contain all sources.
-
-The important part is not the brand of mixer. The important part is that the phone return and the VDO.Ninja return are different mixes.
-
-## OBS notes
-
-OBS can be part of this workflow, but it is easy to hit a routing limit:
-
-* OBS Browser Source can receive the VDO.Ninja guest for the stream.
-* OBS Advanced Audio Properties can monitor audio to an output device.
-* OBS's built-in monitor output is typically one shared monitor device.
-
-If you need to send one mix to the phone caller and another mix to the VDO.Ninja guest, OBS alone may not be enough. Use Voicemeeter, a hardware mixer, or a per-source audio monitoring plugin so each destination can get its own return mix.
-
-## Useful VDO.Ninja options
-
-* [`&audiooutput`](../advanced-settings/setup-parameters/and-audiooutput.md) or `&od=` can route VDO.Ninja playback to a named output device in compatible browsers.
-* [`&proaudio`](../advanced-settings/audio-parameters/and-proaudio.md) improves quality when sending a clean pre-mixed audio feed.
-* [`&aec=0`](../source-settings/aec.md), [`&denoise=0`](../source-settings/and-denoise.md), and [`&autogain=0`](../source-settings/autogain.md) can be useful when the audio is already handled by a mixer, but avoid disabling echo cancellation if anyone is monitoring on speakers.
-* [`&miconly`](../source-settings/miconly.md) can be useful for an audio-only host or utility connection.
-
-Example host-side VDO.Ninja URL when publishing the guest return mix:
+Because the host's VDO.Ninja microphone is now a finished mix, you can add [`&proaudio`](../advanced-settings/audio-parameters/and-proaudio.md) to the host link. It turns off the browser's echo cancellation, noise suppression and auto-gain. Use it only with headphones and correct mix-minus routing, because echo cancellation will no longer hide a bad loop.
 
 ```
 https://vdo.ninja/?room=YourRoomName&label=Host&proaudio
 ```
 
-In that example, the selected microphone in VDO.Ninja should be the **Guest return mix** device, not the raw host microphone.
+## Hardware mixer example
 
-## Experimental SIP call-in panel
+1. Connect the host computer to the mixer over USB.
+2. Connect the phone over USB, Bluetooth, or the mixer's phone or TRRS input.
+3. Bring the VDO.Ninja guest audio from the computer into its own mixer channel.
+4. In the mixer's routing matrix, set the **phone send** to host + guest, the **computer send** (VDO.Ninja) to host + caller, and the **stream send** to everything.
 
-There is also an experimental browser-side SIP panel available with:
+The brand does not matter. What matters is that the phone return and the VDO.Ninja return are different mixes.
 
-```
-https://vdo.ninja/?room=YourRoomName&callin=sip
-```
+## Using OBS for routing
 
-This is not a public polished phone bridge yet. It expects a bring-your-own SIP/PBX account that supports SIP over secure WebSockets (`wss://`) and WebRTC-compatible media. For example, an Asterisk/FreePBX setup would need WebRTC/PJSIP configured, a trusted TLS certificate, and a WSS endpoint reachable by the browser.
+An OBS Browser Source can capture the VDO.Ninja guest for the stream, but OBS has a single audio monitoring device. Two independent returns usually need Voicemeeter, a hardware mixer, or a per-source monitoring plugin. For sending OBS audio into VDO.Ninja through a cable, see [Share audio from OBS](share-obs-audio-with-vdo-ninja.md).
 
-The panel can register for incoming calls or place an outbound SIP call. The same mix-minus rule still applies internally: VDO.Ninja sends the caller a return mix of the host plus VDO.Ninja guests, while adding the caller audio to the VDO.Ninja outbound mix. SIP passwords are entered manually in the panel; do not put SIP passwords in shared invite links.
+## Useful VDO.Ninja parameters
 
-Useful experimental parameters:
-
-| Parameter | Purpose |
+| Parameter | Use |
 | --- | --- |
-| `&callin=sip` | Shows the advanced SIP call-in panel. |
-| `&sipwss=wss://pbx.example.com:8089/ws` | Pre-fills the SIP WebSocket server. |
-| `&sipuri=sip:1001@example.com` | Pre-fills the SIP address/extension. |
-| `&sipuser=1001` | Pre-fills the auth username if different from the SIP URI user. |
-| `&siptarget=sip:1002@example.com` | Pre-fills the outbound dial target. |
-| `&sipauto=1` | Starts the SIP registration automatically when the page loads. |
-| `&sipautoanswer=1` | Answers incoming SIP calls automatically. |
+| [`&audiooutput`](../advanced-settings/setup-parameters/and-audiooutput.md) (alias `&od`) | Plays VDO.Ninja audio to a named output device, such as a virtual cable, in browsers that support it. |
+| [`&proaudio`](../advanced-settings/audio-parameters/and-proaudio.md) | Sends a pre-mixed feed at higher quality without browser processing. |
+| [`&aec=0`](../source-settings/aec.md), [`&denoise=0`](../source-settings/and-denoise.md), [`&autogain=0`](../source-settings/autogain.md) | Turn off single processing steps when a mixer already handles them. Keep echo cancellation on if anyone listens on speakers. |
+| [`&miconly`](../source-settings/miconly.md) | Audio-only host or utility connection. |
 
-Twilio, SignalWire, Telnyx, and similar providers can be supported with provider-specific token, SIP-over-WSS, or backend handling. A free hosted default is difficult because phone numbers and PSTN minutes have ongoing costs and abuse risk. For the experimental provider-backed path, see [Phone call-in provider options](phone-call-in-provider-options.md), [SignalWire SIP call-in setup](signalwire-sip-call-in-setup.md), and [Twilio phone call-in setup](twilio-phone-call-in-setup.md).
+## Test before going live
 
-## Testing checklist
+Connect all three parties, then check:
 
-Before going live, test with all three parties connected.
-
-1. Host speaks: VDO guest and phone caller both hear the host.
-2. VDO guest speaks: host and phone caller hear the guest, but the VDO guest does not hear a delayed copy of themselves.
-3. Phone caller speaks: host and VDO guest hear the caller, but the phone caller does not hear a delayed copy of themselves.
-4. The stream/recording hears all three voices.
-5. Muting any single source only removes that source from the expected mixes.
+1. When the host speaks, the guest and caller both hear it.
+2. When the guest speaks, the host and caller hear it, and the guest hears no delayed copy.
+3. When the caller speaks, the host and guest hear it, and the caller hears no delayed copy.
+4. The stream or recording contains all three voices.
+5. Muting one source removes only that source.
 
 ## Troubleshooting
 
 | Symptom | Likely cause |
 | --- | --- |
-| Guest hears the caller, but caller cannot hear the guest | The caller return mix is missing the VDO guest audio. |
-| Caller hears the guest, but guest cannot hear the caller | The VDO.Ninja host mic/input is missing the phone caller audio. |
-| Everyone hears an echo | A return mix includes the person receiving it, or a speaker is being picked up by a mic. |
-| Audio is distorted or crackling | Virtual cable buffer size or sample rate mismatch. Use 48 kHz where possible and increase buffer size if needed. |
-| Audio works in OBS but not in VDO.Ninja | The wrong side of the virtual cable was selected. On Windows, apps usually play to "CABLE Input" and record from "CABLE Output". |
-
-Once the two return mixes are correct, the setup should behave like a normal call-in show: the VDO.Ninja guest and phone caller can talk to each other, while the host keeps control of the program mix.
+| The guest hears the caller, but the caller can't hear the guest | The caller return is missing the guest. |
+| The caller hears the guest, but the guest can't hear the caller | The host's VDO.Ninja microphone is missing the caller. |
+| Echo | A return includes the person receiving it, or a microphone picks up a speaker. |
+| Crackling or distortion | Virtual cable buffer or sample-rate mismatch. Use 48 kHz where possible and raise the buffer size. |
+| Audio works in OBS but not in VDO.Ninja | The wrong side of the cable is selected. On Windows, apps play to **CABLE Input** and record from **CABLE Output**. |

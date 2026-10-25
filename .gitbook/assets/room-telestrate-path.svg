@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="440" viewBox="0 0 960 440" role="img" aria-labelledby="title description">
+  <title id="title">How annotations reach OBS</title>
+  <desc id="description">The director draws or pings on the caller's video and sends the marks to the caller. The caller's browser relays the marks to viewers. An OBS link with the drawing parameter receives the video and the marks. An OBS link without it receives only the video, with no marks.</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 Z" fill="#205c96"/></marker>
+    <marker id="arrow-alt" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 Z" fill="#b25d00"/></marker>
+  </defs>
+  <rect width="960" height="440" fill="white"/>
+  <g font-family="Arial, Helvetica, sans-serif" text-anchor="middle" fill="#142c43">
+    <text x="480" y="54" font-size="36" font-weight="bold">How annotations reach OBS</text>
+    <g fill="#edf4fb" stroke="#205c96" stroke-width="3">
+      <rect x="25" y="150" width="230" height="130" rx="20"/>
+      <rect x="355" y="150" width="230" height="130" rx="20"/>
+      <rect x="705" y="95" width="230" height="125" rx="20"/>
+    </g>
+    <rect x="705" y="245" width="230" height="125" rx="20" fill="#fdf3e8" stroke="#b25d00" stroke-width="3"/>
+    <text x="140" y="207" font-size="27" font-weight="bold">Director</text>
+    <text x="140" y="242" font-size="22">draws or pings</text>
+    <text x="470" y="207" font-size="27" font-weight="bold">Caller</text>
+    <text x="470" y="242" font-size="22">relays the marks</text>
+    <text x="820" y="138" font-size="25" font-weight="bold">OBS link</text>
+    <text x="820" y="170" font-size="22">with &amp;drawing</text>
+    <text x="820" y="200" font-size="22" fill="#2e7d4f" font-weight="bold">video + marks</text>
+    <text x="820" y="288" font-size="25" font-weight="bold">OBS link</text>
+    <text x="820" y="320" font-size="22">without &amp;drawing</text>
+    <text x="820" y="350" font-size="22" fill="#b25d00" font-weight="bold">video only</text>
+    <g stroke="#205c96" stroke-width="5" marker-end="url(#arrow)">
+      <path d="M262 215 H345"/>
+      <path d="M592 195 L695 160"/>
+    </g>
+    <text x="303" y="198" font-size="21">marks</text>
+    <path d="M592 240 L695 290" stroke="#b25d00" stroke-width="5" marker-end="url(#arrow-alt)"/>
+    <text x="480" y="415" font-size="23">Every view or scene link that should show marks needs &amp;drawing</text>
+  </g>
+</svg>

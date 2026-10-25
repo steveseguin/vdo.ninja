@@ -1,195 +1,118 @@
 ---
-description: Compare practical BYO phone call-in options for VDO.Ninja, including SignalWire, Twilio, Telnyx, and DIY PBX/SIP trunk setups.
+description: How VDO.Ninja's experimental phone call-in panel works, which providers it supports (SignalWire, Twilio, your own PBX), and its URL parameters.
 ---
 
 # Phone call-in provider options
 
-Phone call-ins require a bridge between the public phone network and the browser. VDO.Ninja can handle the WebRTC side, but a phone provider still needs to supply the phone number, PSTN minutes, SIP trunk, or programmable voice API.
-
-For calls within an existing SIP/AoIP system, a public phone number and PSTN provider are unnecessary. Route calls through a WebRTC-capable PBX extension using `&callin=sip`; see [the existing SIP server setup](signalwire-sip-call-in-setup.md#already-have-a-sip-server-or-aoip-system).
-
-The current recommended direction is bring-your-own provider. A free shared VDO.Ninja dial-in number may be tested later, but it is not the default recommendation yet because phone numbers and PSTN minutes create ongoing cost and abuse risk.
-
-Last reviewed: July 12, 2026.
-
 {% hint style="warning" %}
-The call-in feature is experimental. Phone callers are currently mixed into the director/host audio. They do not yet appear as normal VDO.Ninja guest tiles with scene membership, per-guest volume, or the full director control set.
+The call-in panel is experimental. A phone caller is mixed into the audio of the page running the panel. Callers do not get a guest tile, scene membership, per-guest volume, or other director controls.
 {% endhint %}
 
-## Quick recommendation
+The `&callin` panel answers phone calls inside VDO.Ninja. You bring the phone number and minutes from a provider or your own PBX. To use any phone with an external mixer instead, see [Phone call-ins with virtual audio cables](phone-call-ins-with-vdo-ninja-and-virtual-audio-cables.md).
 
-| Option | Current fit | Best for | VDO.Ninja path |
+![The call path: phone caller, phone provider, the VDO.Ninja page running the call-in panel, then the room's guests and OBS, with audio both ways. In Twilio mode only, your backend issues the browser token and PIN and answers webhooks, but carries no audio.](../.gitbook/assets/callin-provider-path.svg)
+
+## Choose a provider
+
+| Option | Panel mode | What you need | Setup guide |
 | --- | --- | --- | --- |
-| SignalWire | Best direct BYO candidate today | Users who want a cheap provider that supports browser SIP-over-WSS | `&callin=signalwire` or `&callin=sip` |
-| Twilio | Best tested hosted/PIN flow | Users who have a compatible backend/Worker for token minting | `&callin=twilio` |
-| Telnyx | Good next adapter candidate | Users who want low-cost WebRTC/PSTN once a Telnyx adapter exists | Not fully wired yet |
-| DIY PBX + SIP trunk | Cheapest/flexible, hardest setup | Users with FreePBX, Asterisk, VoIP.ms, IPComms, or another SIP trunk | `&callin=sip` |
+| SignalWire | `&callin=signalwire` | A SignalWire number routed to a SIP endpoint. No server of your own. | [SignalWire SIP call-in setup](signalwire-sip-call-in-setup.md) |
+| Twilio | `&callin=twilio` | A Twilio number and a backend you run to issue browser tokens and PINs. | [Twilio phone call-in setup](twilio-phone-call-in-setup.md) |
+| Your own PBX | `&callin=sip` | Asterisk, FreePBX, FreeSWITCH, or similar, with a WebRTC extension. Add a number from any SIP trunk (VoIP.ms, IPComms, Telnyx, and others), or none for an existing SIP or AoIP system. | [Use your own PBX](signalwire-sip-call-in-setup.md#use-your-own-pbx-or-sip-server) |
+| Telnyx | Not available | Listed in the panel but not connected: Telnyx browser calling needs its own SDK and tokens. Use Telnyx as a SIP trunk behind your own PBX. | |
 
-For a live production today, the non-native fallback is still the most reliable: use a phone app, softphone, hardware mixer, Voicemeeter, OBS monitoring, or virtual audio cables to create two mix-minus feeds. See [Phone call-ins with VDO.Ninja and virtual audio cables](phone-call-ins-with-vdo-ninja-and-virtual-audio-cables.md).
+Prices change. Check [SignalWire](https://signalwire.com/pricing/voice), [Twilio](https://www.twilio.com/en-us/voice/pricing/us), [Telnyx](https://telnyx.com/pricing/elastic-sip), or [VoIP.ms](https://voip.ms/pricing) before buying a number.
 
-## Current VDO.Ninja panel
+## Open the panel
 
-The experimental call-in panel appears when the director URL includes `&callin=sip`, `&callin=signalwire`, or `&callin=twilio`.
+Add `&callin` to the director link, or to any VDO.Ninja page that sends audio:
 
-<figure><img src="../.gitbook/assets/callin-signalwire-panel.png" alt="VDO.Ninja phone call-in panel in SignalWire mode with SIP WebSocket URL, SIP URI, auth username, password, dial target, and connect controls"><figcaption><p>SignalWire/SIP mode registers the browser as a SIP endpoint over secure WebSockets.</p></figcaption></figure>
+```
+https://vdo.ninja/?director=YourRoomName&callin=signalwire
+```
 
-<figure><img src="../.gitbook/assets/callin-twilio-panel.png" alt="VDO.Ninja phone call-in panel in Twilio mode with Worker URL, access key, outbound test number, and start controls"><figcaption><p>Twilio mode requires a compatible backend that mints browser tokens and handles Twilio webhooks.</p></figcaption></figure>
+`&callin` with no value opens SIP mode, or the provider saved in this browser. You can drag and minimize the **Phone call-in** panel, and switch **Provider** inside it. It handles one audio-only call at a time and rejects a second incoming call. Keep the page open while you take calls.
 
-The screenshots above are intentionally using placeholder values. Do not put SIP passwords, Twilio API secrets, or provider account tokens in shared VDO.Ninja URLs.
+<figure><img src="../.gitbook/assets/callin-signalwire-panel.png" alt="Phone call-in panel in SignalWire mode with SIP WebSocket URL, SIP URI, auth username, password, display name and dial target fields, and Connect, Dial and Hang up buttons"><figcaption><p>SignalWire and SIP modes register the browser as a SIP endpoint.</p></figcaption></figure>
 
-The bell button controls a browser-local incoming ringtone. Choose the classic ring, bell, chime, a custom uploaded audio file, or silent mode. The ringtone is not sent into the room or returned to the caller.
+<figure><img src="../.gitbook/assets/callin-twilio-panel.png" alt="Phone call-in panel in Twilio mode with Twilio Worker URL, Worker access key and outbound test number fields, and Start, Dial and Hang up buttons"><figcaption><p>Twilio mode talks to your token backend.</p></figcaption></figure>
 
-The upload button opens `fileuploads.vdo.ninja`. Uploaded audio is stored as a public media file by that service; only its HTTPS URL and your ringtone preference are saved in the current browser. Use a short file that you are comfortable hosting there.
+## How the panel mixes audio
 
-## Option 1: SignalWire SIP-over-WSS
+The panel builds the same mix-minus returns as an external mixer:
 
-SignalWire is the best fit for the current browser-side SIP implementation because it supports SIP over secure WebSockets, which is what browser SIP libraries such as JsSIP need.
+* **The room hears the caller** through this page's outgoing audio. On a director page, click **Enable director's microphone or video** so guests receive it.
+* **The caller hears** this page's microphone plus every participant whose audio this page receives, but not themselves.
+* **You hear the caller** on this page's normal audio output, or on another device set with `&callinoutput`.
 
-High-level flow:
+Everyone should wear headphones. A caller played through speakers can reach a microphone and echo back to the caller.
 
-1. Create a SignalWire account and Space.
-2. Buy or port a phone number.
-3. Create a SIP endpoint/credential.
-4. Route the phone number to that SIP endpoint.
-5. Open VDO.Ninja with `&callin=signalwire`.
-6. Enter the SignalWire SIP WebSocket URL, SIP URI, username, and SIP password in the call-in panel.
+### Microphone mute and private conversations
 
-The SIP password is entered in the browser panel. It should be a scoped SIP endpoint credential, not a master account API token.
+* Muting your microphone silences only you. The caller still hears guests, and the room still hears the caller.
+* Muting your speakers only stops your local monitoring and ringtone.
+* During **Solo Talk** on the director page, or private-chat isolation on a guest page, the caller's whole return feed pauses so the private conversation is not sent to them. It resumes when the private conversation ends. The caller stays on air; hang up to remove them.
 
-See [SignalWire SIP call-in setup](signalwire-sip-call-in-setup.md).
+### Get the caller into OBS
 
-## Option 2: Twilio Voice
+The caller is not a guest, so a guest-only scene link does not include them. Either:
 
-Twilio is the most tested native call-in path in VDO.Ninja alpha, but it is not a pure browser-only setup.
+* include the director's feed in the scene OBS captures (for example with `&showdirector`), if OBS does not already capture the host microphone; or
+* add `&callinoutput=DeviceName` to play the caller into a spare virtual cable, and add that cable to OBS. You then need another way to listen to the caller.
 
-Twilio's browser Voice SDK uses short-lived Access Tokens. Those tokens are created on a server, not in a public web page. In VDO.Ninja's experimental Twilio path, a compatible backend such as a private Cloudflare Worker mints the browser token, creates a PIN, and answers Twilio's voice webhook.
+The [OBS call-in show](call-in-show-with-obs.md) setup keeps the director out of OBS's caller source, so use the second option there.
 
-This gives the easiest operator flow:
+## Incoming ringtone
 
-1. Director opens VDO.Ninja with `&callin=twilio`.
-2. The panel asks the backend for a phone number and PIN.
-3. Caller dials the number and enters the PIN.
-4. The call is bridged to the browser.
+The bell button picks **Classic ring**, **Bell**, **Chime**, **Custom upload**, or **Silent**, with preview and volume. The setting stays in this browser, and the ringtone plays only on your computer, never to the room or caller. Auto-answered calls do not ring.
 
-Tradeoff: Twilio is mature, but usually costs more than lower-level SIP providers. Do not put Twilio Account SIDs, Auth Tokens, or API Key Secrets in VDO.Ninja URLs or browser-side JavaScript.
+**Upload** opens `fileuploads.vdo.ninja`, which hosts the file as public media; the panel stores only its HTTPS address.
 
-See [Twilio phone call-in setup](twilio-phone-call-in-setup.md).
+## Credentials
 
-## Option 3: Telnyx
+Put only scoped, short-lived credentials in the browser:
 
-Telnyx is a good candidate for a future low-cost adapter. Telnyx has a WebRTC JS SDK and supports browser softphone use cases, but VDO.Ninja does not currently have a complete Telnyx-specific call-in adapter wired into the panel.
-
-Practical status:
-
-* Telnyx can be attractive on price.
-* Telnyx's browser flow uses its WebRTC SDK with credential connections and generated login tokens/JWTs, so it is not the same as the current generic SIP-over-WSS form.
-* A proper VDO.Ninja integration likely needs a Telnyx-specific WebRTC SDK/JWT flow or a provider-specific backend.
-* Until that adapter exists, Telnyx should be treated as a future native option or used behind a DIY PBX/SIP bridge.
-
-## Option 4: DIY PBX plus a cheap SIP trunk
-
-This is the most flexible route if you already know telephony:
-
-1. Buy or reuse a DID from VoIP.ms, IPComms, Telnyx SIP trunking, or another trunk provider.
-2. Route the DID to Asterisk, FreePBX, FreeSWITCH, or another PBX/SBC.
-3. Configure a browser/WebRTC SIP extension with TLS, SIP over WSS, and compatible media settings.
-4. Open VDO.Ninja with `&callin=sip`.
-5. Enter the PBX WebSocket URL, SIP URI, auth username, and extension password.
-
-This is where VoIP.ms currently fits best. VoIP.ms is inexpensive and useful as a SIP trunk/DID provider, but the browser still needs a WebRTC/SIP-over-WSS endpoint. In practice, that usually means putting FreePBX, Asterisk, FreeSWITCH, or another PBX/SBC between VoIP.ms and VDO.Ninja.
-
-The PBX extension must be configured for WebRTC media, not only SIP over WSS. It needs DTLS-SRTP, ICE, AVPF, RTCP mux, and a DTLS fingerprint in its SDP offer. A normal extension may register and work in MicroSIP but fail when answered in Chrome or Edge with `488 Not Acceptable Here` because browsers will not accept plain RTP audio.
-
-Also note that trusting a PBX's HTTPS/WSS certificate fixes the signaling connection only. DTLS-SRTP and its fingerprint are a separate requirement for the call audio.
-
-## Why a backend is needed
-
-A normal browser page should not contain phone-provider account secrets. Providers such as Twilio, SignalWire, and Telnyx use API keys or account tokens to buy numbers, mint browser tokens, and validate webhooks. Those account-level secrets need to live on a backend service, such as a Cloudflare Worker, or remain in the provider/PBX dashboard.
-
-For hosted/PIN systems, the backend typically does four jobs:
-
-1. Mint a short-lived browser calling token.
-2. Create a temporary PIN that maps a phone caller to one VDO.Ninja director page.
-3. Answer the provider's webhook when a phone call arrives.
-4. Route the call to the registered browser client after the caller enters the PIN.
-
-The audio itself should flow between the browser and the provider. The backend should not normally proxy live audio.
-
-SIP-over-WSS is different: the browser logs in as a SIP endpoint directly. In that model, use a scoped SIP extension password. Do not use a master provider API key as the SIP password.
-
-## Audio flow
-
-Regardless of provider, the same mix-minus rule applies:
-
-| Destination | Should hear | Should not hear |
-| --- | --- | --- |
-| Phone caller | Host plus VDO.Ninja guests | Phone caller |
-| VDO.Ninja guests | Host plus phone caller | Themselves delayed |
-| Livestream or recording | Host, guests, and caller | Usually no exclusions |
-
-The experimental VDO.Ninja call-in paths attempt to create that return mix in the browser. If you are routing calls outside the browser, use the virtual-audio-cable guide instead.
-
-## Credential handling
-
-Use the least powerful credential that can work:
-
-| Credential type | Store in browser? | Notes |
-| --- | --- | --- |
-| SIP extension username/password | Acceptable for testing if scoped to one endpoint | Enter manually; do not put it in a shared URL. |
-| Twilio API Key Secret or Auth Token | No | Backend only. Used to mint short-lived browser tokens. |
-| SignalWire or Telnyx project API token | No | Backend or provider dashboard only. |
-| Temporary browser token/JWT | Yes | Short-lived and provider-scoped. |
-
-The current SIP panel can optionally remember a SIP profile in the local browser. Saving the SIP password is opt-in and should only be used on a trusted production machine. Browser local storage is convenience storage, not protection against XSS, browser profile compromise, or a shared computer.
-
-Do not put provider account secrets or SIP passwords in shared VDO.Ninja URLs.
-
-## Free shared VDO.Ninja number
-
-A single free VDO.Ninja-hosted number may be reasonable as a trust-based beta later, but it should start with strict guardrails:
-
-* Short PIN expiry.
-* One active caller per room/session.
-* Maximum call duration.
-* Global concurrency cap.
-* Monthly/manual spend cap.
-* Failed PIN throttling.
-* No outbound PSTN calls.
-
-The inbound-only design avoids outbound toll fraud, but it does not avoid inbound cost abuse. If usage grows beyond a small monthly budget, account linking or access gating would be needed.
-
-## Current experimental parameters
-
-| Parameter | Purpose |
+| Credential | In the browser? |
 | --- | --- |
-| `&callin=sip` | Show the SIP/PBX panel. |
-| `&callin=signalwire` | Show the same SIP-over-WSS panel with SignalWire-specific copy. |
-| `&callin=twilio` | Show the Twilio call-in adapter when available. |
-| `&callinapi=https://example.com` | Point the Twilio adapter at a compatible backend. |
-| `&callinoutput=DeviceName` or `&sipoutput=DeviceName` | Route the local call monitor to a named output device when supported by the browser. |
-| `&sipwss=wss://pbx.example.com:8089/ws` | Pre-fill the SIP WebSocket endpoint. |
-| `&sipuri=sip:1001@example.com` | Pre-fill the SIP URI. |
-| `&sipuser=1001` | Pre-fill the SIP auth username. |
-| `&siptarget=sip:1002@example.com` | Pre-fill the outbound SIP dial target. |
-| `&sipauto=1` | Register the SIP endpoint automatically when the page loads. |
-| `&sipautoanswer=1` | Automatically answer incoming SIP calls after registration. |
+| SIP extension username and password | Yes, typed into the panel. Use a dedicated extension. |
+| Short-lived Twilio browser token | Yes. Your backend issues it. |
+| Twilio Auth Token or API Key Secret, SignalWire or Telnyx project tokens | No. Backend or provider dashboard only. |
 
-Do not put provider account secrets or SIP passwords in shared URLs.
+Never put a password in a URL. `&sippass` and `&callinpass` are ignored and removed from the address bar. To store a SIP profile in the browser, see [Saved profiles and passwords](signalwire-sip-call-in-setup.md#saved-profiles-and-passwords).
 
-## Provider links and price checks
+## URL parameters
 
-Prices change. Check each provider's current pricing before buying numbers or leaving a DID active.
+| Parameter | Alias | Purpose |
+| --- | --- | --- |
+| `&callin=sip` | | SIP / PBX mode. Default when `&callin` has no value. |
+| `&callin=signalwire` | | SIP mode with SignalWire hints. |
+| `&callin=twilio` | | Twilio mode. |
+| `&callinapi=https://...` | `&twilioapi` | Twilio backend URL. |
+| `&twiliotarget=+15551234567` | `&callintarget` | Twilio outbound test number. |
+| `&sipwss=wss://pbx.example.com:8089/ws` | `&callinwss` | SIP WebSocket URL. |
+| `&signalwirespace=your-space` | `&swspace`, `&callinspace` | SignalWire mode: sets the WebSocket URL to `wss://your-space.sip.signalwire.com` if `&sipwss` is absent. |
+| `&sipuri=sip:1001@example.com` | `&callinuri` | SIP URI. |
+| `&sipuser=1001` | `&callinuser` | Auth username, if different from the SIP URI user. |
+| `&sipdisplay=Studio` | `&callindisplay` | Display name. Default `VDO.Ninja`. |
+| `&siptarget=sip:1002@example.com` | `&callintarget` | Outbound dial target. A phone number becomes `sip:number@` your SIP domain. |
+| `&sipregister=0` | `&callinregister` | Do not register for incoming calls (on by default). |
+| `&sipauto` | `&callinauto` | Connect SIP or SignalWire mode on page load. Twilio always needs **Start**. |
+| `&sipautodial` | `&callinautodial` | Dial the target once connected. Use with `&sipauto`. |
+| `&sipautoanswer` | `&callinautoanswer` | Answer incoming calls automatically, including in Twilio mode. |
+| `&callinoutput=DeviceName` | `&sipoutput` | Output device for the caller monitor and ringtone. Matches part of the device name, where the browser supports it. |
 
-* [SignalWire voice pricing](https://signalwire.com/pricing/voice)
-* [SignalWire SIP-over-WebSockets overview](https://signalwire.com/blogs/product/webrtc-using-sip-over-websockets)
-* [Twilio Voice pricing](https://www.twilio.com/en-us/voice/pricing/us)
+Switches accept `0`, `false`, `off`, or `no` to turn them off.
+
+## Test before going live
+
+1. Join the room as a guest from a second device, connect the panel, and call from a regular phone.
+2. The guest hears the caller, and the caller hears you and the guest.
+3. The caller hears no delayed copy of themselves.
+4. With your microphone muted, the caller still hears the guest. During Solo Talk, the caller's return goes silent, then resumes.
+5. After hanging up, the panel clears the call.
+
+## Provider references
+
+* [SignalWire SIP over WebSockets](https://signalwire.com/blogs/product/webrtc-using-sip-over-websockets)
 * [Twilio Access Tokens](https://www.twilio.com/docs/iam/access-tokens)
-* [Telnyx WebRTC browser guide](https://developers.telnyx.com/docs/voice/webrtc/make-a-call-to-a-web-browser)
-* [Telnyx Elastic SIP pricing](https://telnyx.com/pricing/elastic-sip)
-* [VoIP.ms pricing](https://voip.ms/pricing)
-
-## Related guides
-
-* [Phone call-ins with VDO.Ninja and virtual audio cables](phone-call-ins-with-vdo-ninja-and-virtual-audio-cables.md)
-* [SignalWire SIP call-in setup](signalwire-sip-call-in-setup.md)
-* [Twilio phone call-in setup](twilio-phone-call-in-setup.md)
+* [Telnyx WebRTC browser calling](https://developers.telnyx.com/docs/voice/webrtc/make-a-call-to-a-web-browser)

@@ -16,27 +16,27 @@ Viewer-Side Option! ([`&scene`](../view-parameters/scene.md), [`&view`](../view-
 
 | Value | Description |
 | ----- | ----------- |
-| `1` | Classic color-bar "NO SIGNAL" pattern with VDO.Ninja branding. This is also used by `&nosignal`. |
-| `2` | Classic color-bar "NO SIGNAL" pattern without VDO.Ninja branding. |
-| `3` | Standby-style "NO SIGNAL" pattern with an animated clock graphic. |
+| `1` or no value | Color bars with "NO SIGNAL" and VDO.Ninja branding (default) |
+| `2`, `clean`, `plain` or `unbranded` | Color bars with "NO SIGNAL", without branding |
+| `3`, `clock` or `standby` | Standby-style "NO SIGNAL" screen with an animated clock graphic |
+| `0`, `false` or `off` | Disabled |
+
+Any other value shows pattern `1`. Without the parameter, the normal waiting spinner is used.
 
 ## Details
 
-This option replaces the default waiting spinner with a built-in "No Signal" pattern when a [`&view`](../view-parameters/view.md) or [`&scene`](../view-parameters/scene.md) link has no active video content.
+When a [`&view`](../view-parameters/view.md) or [`&scene`](../view-parameters/scene.md) link has no active video, this shows a built-in "No Signal" image instead of the spinner. The image comes back when all incoming video ends, so a live output shows a clear standby picture instead of a blank screen.
 
-Examples:
+* [`&waitimage`](and-waitimage.md) takes priority. If both are set, the custom image is shown.
+* The pattern appears immediately. Add [`&waittimeout`](and-waittimeout.md) to delay it.
+
+## Examples
 
 `https://vdo.ninja/?view=streamid&nosignal`
 
 `https://vdo.ninja/?view=streamid&nosignalpattern=2`
 
 `https://vdo.ninja/?scene&room=example&nosignalpattern=3`
-
-The default behavior is unchanged unless this parameter is added. The pattern can also reappear after all incoming video connections end, which makes it useful for live-streaming outputs where an empty scene should show a clear standby image instead of a spinner or blank view.
-
-If [`&waitimage`](and-waitimage.md) is also set, the custom wait image takes priority over `&nosignalpattern`.
-
-You can still use [`&waittimeout`](and-waittimeout.md) if you want to delay when the no-signal pattern appears.
 
 ## Related
 

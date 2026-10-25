@@ -23,7 +23,7 @@ You can pass a comma separated list of stream IDs that will be excluded, so that
 
 External Iframes may or may not be muted by default if using \&noaudio. While I try to mute frames when possible, like embedded Youtube videos, there may be still some Iframe sources I cannot mute.
 
-`&exludeaudio` can also be used to specify certain stream IDs that will NOT play audio, so the inverse of `&noaudio`
+`&excludeaudio` can also be used to specify certain stream IDs that will NOT play audio, so the inverse of `&noaudio`
 
 
 

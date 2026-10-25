@@ -36,7 +36,7 @@ Arming can be disabled by clicking the room name again. If the current room is i
 
 * If the destination room has [`&requireapproval`](../advanced-settings/director-parameters/and-requireapproval.md), transferred guests wait for approval there.
 * If the destination room has [`&roomcap`](../advanced-settings/director-parameters/and-roomcap.md) and is full, the transfer is rejected.
-* If the guest link uses [`&queuetransfer`](../advanced-settings/settings-parameters/and-queuetransfer.md), the guest remains queued after transfer until activated.
+* If the director link uses [`&queuetransfer`](../advanced-settings/settings-parameters/and-queuetransfer.md), transferred guests stay queued in the destination room until activated.
 
 {% hint style="warning" %}
 If [`&cleanoutput`](../advanced-settings/design-parameters/cleanoutput.md) is enabled, rooms parameter is ignored.

@@ -1,5 +1,5 @@
 ---
-description: Adds a director-only button for muting or unmuting all current guests.
+description: Adds a director button that mutes or unmutes all guests at once.
 ---
 
 # \&muteall
@@ -13,25 +13,18 @@ Director Option! ([`&director`](../../viewers-settings/director.md))
 
 ## Details
 
-`&muteall` adds a top-bar button in the director control room for muting or unmuting all connected guests at once.
+`&muteall` shows a **Mute all guests in room (toggle)** button in the director's control bar. It mutes or unmutes every connected guest at once.
 
 ```text
 https://vdo.ninja/?director=MyRoom&muteall
 ```
 
-The button uses the same remote guest mute path as each guest's individual **Mute** button in the director UI. When active, newly joining guests are also muted once their director control box is created.
+The button uses the same remote mute as each guest's **Mute** button. While it is active, guests who join are muted too. Without the parameter, the button stays hidden.
 
-## Limitations
-
-This option is URL gated. If `&muteall`, `&muteallguests`, or `&muteguests` is not added to the director URL, the button stays hidden and the app behaves as it normally does.
-
-The global mute state is live browser state. It is not a room-level saved setting, and it starts inactive again if the director page is refreshed.
-
-Manual per-guest changes are still allowed. If a director manually unmutes one guest while the global mute-all button remains active, that guest stays unmuted until another global mute-all action or another audio-follow action changes them. New guests will still be muted while the global mute-all state is active.
-
-If [`&highlightmute`](and-highlightmute.md) / **Mute follows Highlight** is also active, Highlight can still unmute the highlighted guest. In that combination, `&muteall` is not an absolute lockout.
-
-The button targets normal guest audio controls only. It skips directors, screen-share entries, pseudo-guests, and guests that do not yet have a director mute control available.
+* The state is not saved. Reloading the director page turns it off.
+* You can still unmute one guest by hand. That guest stays unmuted until the next mute-all action (or, with `&highlightmute`, the next Highlight change). New guests are still muted while mute-all is active.
+* [`&highlightmute`](and-highlightmute.md) does not undo mute-all. Highlight only unmutes guests that the highlight rule muted itself.
+* Directors, co-directors, screen shares and guests without a director mute control yet are skipped.
 
 ## Related
 

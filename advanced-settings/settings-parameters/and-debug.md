@@ -78,4 +78,4 @@ When using `&debug=websocketserver`:
 
 * [`&stats`](../../general-settings/and-stats.md) - Shows connection statistics overlay
 * [`&showconnections`](and-showconnections.md) - Displays connection info
-* [`&getdetailedstate`](../../guides/api-commands/getdetailedstate.md) - API for connection state
+* [`getDetailedState`](../../guides/iframe-api-documentation.md) - IFRAME API command that reports connection state

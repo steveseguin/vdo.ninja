@@ -1,56 +1,41 @@
 ---
-description: What transfers, passwords, director ownership, SSO, and app.invite.cam protect when a room link leaks.
+description: What transfers, passwords, &maindirectorpassword, SSO and app.invite.cam protect, and what they don't, when a room link leaks.
 ---
 
 # Protecting a room from unwanted listeners
 
-There isn't a "one director only" setting that stops someone listening through other links in an unprotected room. Protecting the director role and protecting access to audio/video are separate problems.
+No "one director only" setting stops someone listening through other links. Protecting the director role and protecting the audio and video are separate problems.
 
-In a normal room, the director URL is not an account-bound credential. Someone who knows the room name and its password, if used, can construct director or scene URLs. This does not automatically give them the active main director's controls, but keeping the director URL private alone does not prevent viewing.
+A normal room's director URL isn't tied to an account. Anyone who knows the room name, and its password if set, can build director or scene links. They don't get the active main director's controls, but they can view.
 
-## Your options
-
-| Option | What it helps with | Important limit |
+| Option | Helps with | Important limit |
 | --- | --- | --- |
-| Transfer trusted guests into a new, random room | Move the show without asking guests to open new invitations | Both rooms must use the same password; hiding the destination from the address bar is not guaranteed secrecy |
-| Start a new password-protected room | Exclude someone who does not receive the new credentials | Anyone receiving the room name and password can construct other room links |
-| Use `&maindirectorpassword` | Establish which director token-linked guests should recognize | Does not make scene/view access private |
-| Use SSO with an allowlist | Check accounts before supplying access to the protected room | Requiring sign-in alone permits any signed-in user; admitted browsers receive a shared room secret |
-| Use app.invite.cam | Managed admission and server-enforced guest/director media permissions | Keep guest isolation enabled; shared viewer tokens grant room viewing, not director ownership |
+| Transfer trusted guests to a new, random room | Moving the show without new invitations | Both rooms need the same password; the destination isn't truly secret |
+| New room and password | Excluding anyone who doesn't get the new credentials | Anyone who gets them can build any room link |
+| `&maindirectorpassword` | Which director guests recognize | Doesn't make scene or view access private |
+| SSO with an allowlist | Checking accounts before handing out access | Admitted browsers get a shared room secret |
+| app.invite.cam | Managed admission, server-enforced guest/director media permissions | Keep guest isolation on; a shared viewer token grants room viewing |
 
-If the unwanted person is an outsider, replacing leaked credentials or using an allowlist is useful. If that person must remain an admitted guest but must not access other feeds, do not assume these options provide that stronger guarantee.
+![Decision chart: for an outsider, use new credentials or an SSO allowlist; for an admitted guest who must not see other feeds, use app.invite.cam with guest isolation on; to protect only the director seat, use maindirectorpassword, which does not stop viewers.](../.gitbook/assets/room-protect-decision.svg)
 
-## Transfer guests to a new room
+## Move trusted guests with Transfer
 
-Use the director's **Transfer** feature to move trusted guests into a new, hard-to-guess room. No new password is needed when both rooms have no user-set password.
+1. In another tab, open a new randomly named room as director, with the same password setup as the original.
+2. Keep the original director tab open and **Transfer** each trusted guest. Leave the unwanted person behind.
+3. Check the guests arrived and are publishing.
+4. Update OBS scene links for the new room and check the output before closing the old director tab.
 
-1. Open the destination room as director in another tab, with a new random name and the same password configuration as the original room.
-2. Keep the original director tab open while moving guests.
-3. Use each trusted guest's Transfer control to send them to the destination. Leave the unwanted person behind.
-4. Confirm the intended guests have arrived and are publishing.
-5. Update OBS scene links for the destination and check the output before closing the old director tab.
+A standard transfer keeps the destination out of the guest's address bar. If a guest refreshes, they return to the original room.
 
-Standard transfers do not replace the guest's visible invitation URL with the destination name. Guests can normally remain connected without opening new invitations. Refreshing the original invitation returns them to the original room, where they may need another transfer.
-
-**Do not promise that nobody can discover the destination.** The browser must receive destination information to connect, and transfer information passes through signaling. The implementation includes a path that sends migration information to the room. Keeping the name out of the address bar helps a screening workflow, but is not an authentication boundary against someone inspecting their browser or monitoring the original session.
-
-Moving rooms also does not inherently rotate every source's stream ID or credentials. Check previously shared solo/view links as well as scenes. If source credentials leaked, use fresh publishing sessions and credentials rather than relying only on a transfer.
-
-The **Change URL** workflow can load a different room and password for a guest, but exposes those new details in the invitation URL. It is different from a standard Transfer.
+* **Don't promise the destination is secret.** The guest's browser must receive it, it passes through signaling, and one code path sends the transfer message to the whole room. It's not protection against someone inspecting their browser or watching the original session.
+* A transfer doesn't change stream IDs or credentials. Check old solo/view links and scenes. If source credentials leaked, start fresh publishing sessions.
+* **Change URL**, and the Transfer dialog's **Allow the guest to rejoin the transfer room on their own** option, put the new room in the guest's URL. Change URL can also load a new password, which the guest then sees.
 
 See [How to transfer guests to other rooms](../getting-started/rooms/transfer-rooms.md).
 
-## Start a new password-protected room
+## Start over with a new room and password
 
-For a leaked open room, a fresh room and password provide a straightforward reset:
-
-1. Create a new random room name and password.
-2. Send new invitations only to intended participants.
-3. Have everyone leave the old session and rejoin using the new links.
-4. Replace OBS scene and solo/view links with links generated for the new session.
-5. Confirm the old links no longer reach the active sources.
-
-Example structure; replace the example values:
+Create a new random room name and password, invite only the people you want, have everyone rejoin with the new links, and replace OBS scene and solo/view links. Then confirm the old links no longer reach the active sources.
 
 ```text
 Director: https://vdo.ninja/?director=NEW_RANDOM_ROOM&password=NEW_ROOM_PASSWORD
@@ -58,140 +43,93 @@ Guest:   https://vdo.ninja/?room=NEW_RANDOM_ROOM&password=NEW_ROOM_PASSWORD
 Scene:   https://vdo.ninja/?scene&room=NEW_RANDOM_ROOM&password=NEW_ROOM_PASSWORD
 ```
 
-Adding a password only to your own director URL does not protect guests who remain in the old session. Everyone must use the matching new room/password combination.
+Adding a password only to your own director link doesn't protect guests left in the old session.
 
-A room password is shared access, not a director-only permission. Anyone receiving the room name and password can construct director/scene links. It excludes the unwanted person only while they do not have those credentials. An invitation containing the password is itself sensitive.
-
-See [`&password`](../advanced-settings/setup-parameters/and-password.md).
+A room password is shared access, not a director-only permission. It keeps someone out only while they don't have it, so treat any invitation that contains it as sensitive. See [`&password`](../advanced-settings/setup-parameters/and-password.md).
 
 ## Protect director ownership with `&maindirectorpassword`
-
-Example structure:
 
 ```text
 https://vdo.ninja/?director=YOUR_ROOM&maindirectorpassword=PRIVATE_DIRECTOR_SECRET
 ```
 
-This establishes director identity through the token system. Generated guest and scene links include a corresponding `&token`, telling participating clients which director to recognize. Use those generated invitations; adding the parameter to one director tab does not rewrite invitations already in use.
+This sets director identity through tokens (alias `&maindirpass`). Guest and scene links generated afterwards include a matching `&token`, so clients know which director to recognize. Links already sent aren't updated.
 
-Keep the main director secret separate from any shared room password. It helps prevent someone taking ownership by arriving first, including while the director is disconnected.
+* Keep it separate from the room password.
+* It stops someone taking ownership by arriving first, including while you're disconnected.
+* It does **not** keep viewers out. Anyone with working scene or view credentials can still listen.
 
-It does **not** require every viewer to know the director secret. Someone with working scene/view credentials may still listen without becoming the recognized director.
+[`&codirector`](../director-settings/codirector.md) (also `&directorpassword`) authorizes co-director controls. It doesn't protect media either. See [`&maindirectorpassword`](../advanced-settings/director-parameters/and-maindirectorpassword.md).
 
-[`&codirector`](../director-settings/codirector.md), also named `&directorpassword`, separately authorizes co-director controls. It is not a replacement for protecting media access either.
+## SSO: `auth`, `requireauth`, `authtoken` and `universaltoken`
 
-See [`&maindirectorpassword`](../advanced-settings/director-parameters/and-maindirectorpassword.md).
-
-## SSO: `auth`, `requireauth`, and `authtoken`
-
-VDO.Ninja includes a sign-in integration with its SSO service. It associates room ownership with an account and checks guest admission before supplying a managed room secret.
+VDO.Ninja's sign-in integration ties room ownership to an account and checks guest admission before handing out a managed room secret. It works only on vdo.ninja and its subdomains.
 
 | Parameter | Meaning |
 | --- | --- |
-| `&auth` | Enables the SSO flow; the room's saved policy still determines guest admission |
-| `&requireauth` | Enables SSO and requires sign-in in the client flow; does not select an allowlist |
-| `&authtoken=ISSUED_TOKEN` | Supplies a bearer login credential issued by SSO, normally during the sign-in redirect; do not invent a value or share your own token |
-| `&universaltoken=GENERATED_TOKEN` | Supplies bearer access used by generated OBS scene/view links, avoiding interactive sign-in |
+| `&auth` | Turns on SSO; the room's saved policy decides who gets in |
+| `&requireauth` | Turns on SSO and requires sign-in; doesn't select an allowlist |
+| `&authtoken` | Bearer login credential added by the sign-in redirect. Don't invent or share one |
+| `&universaltoken` | Bearer access in generated OBS scene/view links, so they skip sign-in |
 
-The spelling is `requireauth`, not `requeireauth`. There is no leading dot in `authtoken`.
+Access modes: **Public** (anyone), **Require SSO / Authenticated** (any signed-in account), **Allowlist** (approved accounts or identity rules, plus the owner and service administrators). If the unwanted person can sign in, only **Allowlist** keeps them out.
 
-### Choose Allowlist, not just Require SSO
-
-* **Public:** guests can access the room without signing in.
-* **Authenticated / Require SSO:** any valid signed-in account can be admitted.
-* **Allowlist:** admission requires an approved account or matching identity rule; the owner and service administrators retain access.
-
-For an unwanted signed-in person, choose **Allowlist**. Otherwise, that person can simply sign in too.
-
-In a build exposing the SSO controls:
-
-1. Create a fresh room and enable **Use SSO for this room**.
-2. Sign in as the intended owner before inviting guests.
-3. Select **Allowlist** and add the intended users. The director's **Room Access Control** settings also expose access mode, allowed users, and pending requests.
-4. Send generated guest invitations and ask guests to use their approved accounts.
-5. Keep generated OBS/view tokens private and test with an unapproved account.
-
-Example director and guest URL structures:
+1. Create a fresh room and turn on **Use SSO for this room**.
+2. Sign in as the owner before inviting anyone.
+3. Choose **Allowlist only** and add the intended users. The director's **Room Access Control** panel also shows the mode, allowed users and pending requests.
+4. Send generated guest invitations; guests sign in with their approved accounts.
 
 ```text
 https://vdo.ninja/?director=NEW_SSO_ROOM&auth&requireauth
 https://vdo.ninja/?room=NEW_SSO_ROOM&requireauth
 ```
 
-The URL flags do not save an allowlist. Select and verify the policy through the SSO controls. A room automatically created through the checked access route defaults to **Authenticated**, not **Allowlist**.
+The URL flags don't save an allowlist. A room created automatically when a signed-in director first opens it defaults to **Authenticated**, not Allowlist.
 
-### What the current implementation enforces
+### What SSO enforces, and what it doesn't
 
-The SSO access endpoint rejects a normal director request from someone who is neither owner nor service administrator. The client checks admission before joining the signaling room, then obtains a managed room secret and uses it in the existing password/room handshake.
+* Only the owner or a service administrator passes the director access check.
+* The client checks admission before joining signaling, then uses the managed room secret as the room password. Removing `&requireauth` from the URL doesn't get an outsider that secret or into the same session.
+* **Every admitted browser receives the shared room secret**, and normal signaling join/play messages carry no separately enforced SSO role. This is account-based admission plus ownership checks in normal clients, not director or stream isolation against an admitted user with a modified client or extracted credentials.
+* Removing someone from the allowlist affects later checks only. It doesn't close existing media connections, clear copied room secrets or invalidate OBS tokens. After a confirmed leak, end the session and use fresh room and source credentials.
 
-An outsider removing `&requireauth` from the public alias URL does not automatically obtain that secret or enter the same protected session.
+### Login tokens and OBS tokens
 
-However, an admitted browser receives the shared room secret. The inspected standard signaling join/play messages do not carry an independently enforced SSO role credential. **Do not describe this as complete director/stream isolation against an admitted user with a modified client or extracted credentials.** It provides account-based admission and normal-client ownership checks, not a verified permission boundary for every media request.
+* `authtoken` is a login credential, not a guest invitation. The client saves it in local storage and removes it from the address bar, which doesn't invalidate it. Login tokens last seven days. Never put your owner token in a guest or OBS link.
+* `universaltoken` is scoped to the whole room, not one scene or source, and allowlist changes don't revoke it. It can't pass the director access check, but holders can get the room secret, so treat any link carrying it as room access.
 
-Removing an allowlisted user changes subsequent authorization decisions. Do not assume it instantly closes established media connections, clears copied room secrets, or invalidates existing OBS tokens. For a confirmed leak, end the affected session and use fresh room/source credentials.
-
-### Login tokens and OBS tokens are different
-
-`authtoken` is not a one-time guest invitation. The client saves it in local storage and removes it from the visible URL. That cleanup does not invalidate it. The checked provider callbacks issue seven-day login tokens; the actual issued expiry remains authoritative.
-
-Never paste your owner login token into a guest invitation or OBS link. Each guest should complete their own sign-in.
-
-`universaltoken` allows automated viewers such as OBS to connect without sign-in. The checked token records are room-scoped, not tied to one scene number or source. Treat a link carrying one as a room-access credential, not a narrowly restricted public preview. Changing an allowlist alone does not invalidate that access.
-
-The normal access endpoint refuses director access using only a universal token. This is not proof of complete role enforcement across all token/client combinations: the client also has a validated universal-token join shortcut, and token holders can obtain the room secret.
-
-See [SSO and signed-in access](sso-and-signed-in-access.md) for additional configuration details.
+See [SSO and signed-in access](sso-and-signed-in-access.md).
 
 ## app.invite.cam: a managed lobby
 
-[app.invite.cam](https://app.invite.cam) provides a public lobby, account-owned hosting, invitations, and authorized helpers. Use it to decide who enters the show instead of distributing the raw production room link.
+[app.invite.cam](https://app.invite.cam) puts a public lobby, invitations and authorized helpers in front of VDO.Ninja, so you never hand out the raw room link. Guests can join anonymously or by invitation; hosts and persistent helpers sign in with Discord. Anonymous names can change, so use named Discord invitations when identity matters.
 
-**Not every guest must sign in with Discord.** Anonymous guest sessions and shareable invitations are supported. Hosts and persistent helpers use Discord sign-in. Use invitations for specific Discord users when identity matters; anonymous display names are not reliable identities for permanent blocking.
+1. Sign in as host and share the lobby link.
+2. Leave **Testing mode: send new guests straight into the room** off.
+3. Keep **Keep activated guests from seeing each other** on. Turning it off deliberately allows a group conversation.
+4. Admit guests and add helpers explicitly.
+5. Keep generated VDO.Ninja/OBS scene links and tokens private.
 
-Suggested setup:
+What its signaling server enforces:
 
-1. Sign in as host and share the app's lobby link.
-2. Leave **Testing mode: send new guests straight into the room** disabled.
-3. Use named Discord invitations for participants whose identity matters.
-4. Admit the intended guests and add helpers explicitly.
-5. Keep generated VDO/OBS scene links and tokens private.
+* The VDO.Ninja iframe uses authenticated signaling plus app-level ownership checks. The public lobby URL alone supplies no credentials.
+* Isolated guests can't claim the director seat, mint viewing tokens, or view another isolated guest through a constructed scene or solo URL. They publish only through their active invite session.
+* Scene tokens can join and view, but can't claim the director seat or publish.
+* Guests aren't shown scene/solo controls or the viewer token. A viewer link you share is a bearer credential for the whole room: its holder can change scene or source parameters to see other sources.
+* Solo links copied before September 5, 2026 can contain account credentials and aren't invalidated automatically. Refresh the director page and replace saved copies.
 
-The app uses an authenticated signaling connection for its VDO iframe, alongside app-level ownership checks. Scene tokens can join and view, but are prevented from claiming the signaling director seat or publishing through the checked request paths. Knowing the public lobby URL alone does not supply those credentials.
+Known limits: moving a guest back to the lobby closes their peer connections, but if a publisher loses signaling while its media continues, revocation waits until it reconnects. First-visitor ownership of unclaimed room names is unresolved, so create the room and confirm ownership before sharing it. Changing the invitation page doesn't secure an already exposed raw VDO.Ninja session; retire it.
 
-The September 2026 app deployment enforces guest isolation at the signaling server. Guests cannot claim director ownership, mint viewing tokens, or use their own credentials to access another isolated guest through a constructed scene/solo URL. They can publish only through their active invite session. Owners and authorized helpers retain the normal director workflow. Keep **Keep activated guests from seeing each other** enabled; disabling isolation intentionally permits the configured group conversation.
+See [app.invite.cam documentation](../steves-helper-apps/app-invite-cam.md) and the [host and guest guide](https://app.invite.cam/guide).
 
-The app does not show guests scene/solo controls or distribute the viewer token to them. A viewer link deliberately shared by the director is a bearer credential: its recipient can view the room, including by changing scene/source parameters. It is not restricted to the exact source shown in the original URL.
+## Test before you rely on it
 
-**Solo-link fix verified live (September 5):** new solo links now use the same viewer-only credential as group scene links, preserving OBS playback without exposing the director/helper login. Refresh the director page before copying new links. Old solo links that contain account credentials are not automatically invalidated; replace saved or shared copies with newly generated links.
+With accounts and sources you control:
 
-Connected media revocation was tested: moving a guest back to the lobby closes the affected peer connections. If a publisher loses signaling while its peer-to-peer media continues, immediate revocation is not guaranteed until reconnection. First-visitor ownership of previously unclaimed room names also remains unresolved; create and verify ownership before distributing a room link.
-
-If an old raw VDO session is exposed, changing the invitation page alone does not secure it. Move production into the managed workflow and retire the old sessions and credentials.
-
-See [app.invite.cam documentation](../steves-helper-apps/app-invite-cam.md) and the app's [host and guest guide](https://app.invite.cam/guide).
-
-## Check before relying on the setup
-
-Use accounts and sources you control:
-
-1. Confirm an intended guest can join and director/OBS can receive media.
-2. In a separate signed-out browser profile, try guest, director, and scene links without credentials. The private session should remain inaccessible.
-3. Try a signed-in account outside the allowlist. It should be denied, not merely asked to sign in.
-4. Try the director URL as an approved ordinary guest. Confirm the normal SSO flow denies director access.
-5. Check old scene and solo links after migration; unchanged source credentials may preserve access.
-6. Test removal during a connection and after reconnecting. Check media, not just the roster.
-7. Test generated OBS tokens separately; they intentionally bypass interactive login.
-
-Passing normal-browser checks verifies the intended workflow. It does not establish resistance to modified clients, which requires separate signaling and publisher-side authorization testing.
-
-## Verification scope
-
-Reviewed September 5, 2026 against local VDO.Ninja client/SSO service source, deployed app.invite.cam source, and the public app guide. The app's 107 local checks passed (69 app/roster checks and 38 full-handler access checks); the unclaimed-room ownership test is explicitly deferred. Production browser checks covered guest publishing, director reception, shared viewing, denial of unshared guest scene/solo access, and connected media revocation. A real Discord session also exercised helper activation and demotion. The additional solo-credential test now passes against the deployed alpha client. These are not a complete adversarial security audit.
-
-Fresh Discord OAuth returned to the existing owner room, and native OBS 32.2.2 received synthetic video/audio through scene and solo browser sources, including after reload with the deployed viewer-token fix. Live signed-in VDO.Ninja SSO admission has not been tested; app.invite.cam uses a separate access system, and its successful tests do not establish SSO security. Verify the client and server versions used for your production.
-
-Source paths checked for this review:
-
-* VDO.Ninja: `auth-client.js` (`initAuth`, `checkRoomAccess`, `joinRoomWithAuth`, `createUniversalToken`), `index.html` (SSO settings), and source `webrtc.js` (`directMigrateIssue`, `joinRoom`, play signaling).
-* SSO service: `vdo-auth-service/src/routes/room.ts` (access, secret, settings, universal tokens), `src/routes/auth.ts` (login expiry), and `src/utils/allowlist.ts`.
-* app.invite.cam: `src/server.mjs` (`handleViewTokenRequest`, `validateVDONAuth`, `handleVDON`), `src/index.html` (`getInviteCamVdoUrl`), and `tests/run-tests.mjs`.
+1. An intended guest can join, and the director and OBS receive their media.
+2. A signed-out browser profile can't reach the session with guest, director or scene links.
+3. A signed-in account outside the allowlist is denied, not just asked to sign in.
+4. An approved ordinary guest is denied director access.
+5. Old scene and solo links after a move: unchanged source credentials may still work.
+6. Removal during a connection and after reconnecting: check the media, not just the guest list.
+7. Generated OBS tokens, separately: they skip sign-in on purpose.

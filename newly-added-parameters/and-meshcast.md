@@ -18,9 +18,9 @@ Example: `&meshcast=video`
 
 [Meshcast ](https://meshcast.io/)is a free-to-use server-based service for broadcasting low-latency video streams. It can be used with VDO.Ninja in a couple different ways, either as an iFrame or as a peer-2-peer replacement for guest and director streams. It can be used to help lower system requirements of VDO.Ninja for some users or use cases.
 
-### Meshcast 2.0 (Beta)
+### Meshcast 2.0
 
-You can use Meshcast 2.0 with the `&meshcast2` parameter. This routes WHIP/WHEP through the new Meshcast 2.0 gateway and supports premium tokens or stream keys. If the token is invalid or out of slots, VDO.Ninja will fall back to the anonymous Meshcast 2.0 relay.
+`&meshcast` now uses Meshcast 2.0 unless you give it a custom server address; use `&meshcast1` for the original Meshcast service. You can also use `&meshcast2` directly. This routes WHIP/WHEP through the new Meshcast 2.0 gateway and supports premium tokens or stream keys. If the token is invalid or out of slots, VDO.Ninja will fall back to the anonymous Meshcast 2.0 relay.
 
 Example: `&meshcast2`
 

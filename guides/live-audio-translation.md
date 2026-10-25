@@ -1,224 +1,141 @@
 ---
-description: Set up two-way, speech-to-speech translation in a VDO.Ninja room with one account holder and simple reusable links for everyone else.
+description: Two-way speech-to-speech translation in a VDO.Ninja call. One person supplies an OpenAI API key; everyone else uses a normal link.
 ---
 
 # Live audio translation
 
-VDO.Ninja can translate live speech into another spoken language. One person supplies the translation account and API key. Everyone else joins with a normal VDO.Ninja link and can choose the language they want to hear.
+VDO.Ninja can translate live speech into another spoken language. One person, the **account holder**, supplies an OpenAI API key. Everyone else joins with a normal VDO.Ninja link and picks the language they want to hear.
 
-This is an early alpha feature. It currently uses OpenAI's `gpt-realtime-translate` service, although the VDO.Ninja translation layer is designed so another provider can be added later.
-
-Last reviewed against source: September 9, 2026. The setup-page validation fixes described below are pending deployment; an older hosted copy may not yet show the new messages.
+This is an alpha feature. It uses OpenAI's `gpt-realtime-translate` model.
 
 {% hint style="warning" %}
-Tell everyone in the call before enabling translation. Audio selected for translation is sent to OpenAI by the account holder's browser. Review OpenAI's privacy, retention, and billing terms before using it with private, medical, legal, financial, or confidential conversations.
+Tell everyone in the call before you turn on translation. The account holder's browser sends the audio it translates to OpenAI. Check OpenAI's privacy, retention and billing terms before using it for private, medical, legal, financial or confidential conversations.
 {% endhint %}
 
-## What this version does
+## How it works
 
-The simplest way to think about it is that the person with the OpenAI account becomes the translation hub:
+![The account holder's browser sends audio to OpenAI and gets translations back. Guests hear the account holder in their own language, the account holder hears guests in English, and guests hear each other untranslated.](../.gitbook/assets/misc-translation-hub.svg)
 
-1. Each participant tells the account holder which language they want to hear.
-2. The account holder's outgoing voice is translated for those participants.
-3. Each participant's incoming voice is translated for the account holder.
-4. Participants with the same requested language share one translated version of the account holder's voice.
-
-It is two-way between the account holder and each participant. It does not yet translate one guest directly for another guest. In a group room, guests still receive the other guests' normal VDO.Ninja audio.
-
-If two people select the same language, their audio is left alone. OpenAI automatically detects the language being spoken for the translation sessions that are needed.
+* The account holder's voice is translated into each participant's chosen language. Participants who want the same language share one translation.
+* Each participant's voice is translated for the account holder.
+* Guests are not translated for each other. In a group room, they hear each other's original audio.
+* If both people want the same language, nothing is translated.
 
 ## What you need
 
-The account holder needs:
+* An [OpenAI API account](https://platform.openai.com/) with billing turned on and access to `gpt-realtime-translate`. A ChatGPT subscription is not the same as API billing.
+* An API key from the [API keys page](https://platform.openai.com/api-keys).
+* A current browser. Chrome or Edge is the safest choice for this alpha.
 
-* A normal VDO.Ninja room, director, guest, or push link.
-* An [OpenAI API account](https://platform.openai.com/) with billing enabled and access to `gpt-realtime-translate`. A ChatGPT subscription by itself is not the same as API billing.
-* An OpenAI API key from the [API keys page](https://platform.openai.com/api-keys).
-* A current browser with WebRTC and Web Audio support. Chrome or Edge is the safest starting point for this alpha.
-
-Other participants do not need an OpenAI account, API key, extension, application, virtual audio cable, or translation worker.
+Only the account holder needs these. Participants need nothing extra.
 
 ## Set it up
 
-### 1. Open the setup page
+### 1. Enter the account details
 
-Go to [vdo.ninja/translate.html](https://vdo.ninja/translate.html).
+1. Open [vdo.ninja/translate.html](https://vdo.ninja/translate.html). If you are already in the call as the account holder, open **Settings** → **User** and click **Configure**; the setup page opens in a new tab.
+2. Under **1. Translation account**, choose **OpenAI**, paste the **OpenAI API key** and pick **Language I want to hear**.
+3. Choose **Original audio**:
+   * **Replace with translation**: you hear only the translation (default).
+   * **Keep quietly underneath**: the original voice plays quietly under the translation.
+   * **Play both**: the original and the translation play at full volume.
+4. Leave **Remember credentials across reloads (not recommended)** unchecked, then click **Save settings**.
 
-If you are already using the account-holder link, open **Settings**, choose **User**, and click **Configure** beside the translation language. The setup page will remember the VDO.Ninja link you came from without placing that link in a server request. Participants only see the language and Stop controls; they are not asked to configure an account.
+<figure><img src="../.gitbook/assets/live-translation-setup.png" alt="Earlier VDO.Ninja live translation setup showing the masked API key and language and audio controls"><figcaption><p>Earlier alpha interface. Some labels and defaults have changed.</p></figcaption></figure>
 
-### 2. Enter the account details
+### 2. Make the account-holder link
 
-Choose **OpenAI**, paste the API key, and select the language the account holder wants to hear.
+1. Under **2. Make the account-holder link**, paste the link you normally use (director, room or push link) into **Normal account-holder link**.
+2. Click **Save and open**. The translation-enabled link opens in the same tab and picks up your key.
 
-Leave **Remember credentials across reloads (not recommended)** unchecked for the default behavior. **Save settings** stages the credentials in this tab's session storage. **Save and open** opens the account-holder link in the same tab; the translation page consumes the staged credentials once and keeps them in page memory. Reloading that page requires entering them again.
+The **Translation-enabled account-holder link** never contains the API key. Another browser needs its own setup. So does another tab, unless you chose **Remember credentials across reloads**. If you came from **Configure**, close the old tab so the same link is not open twice.
 
-Checking **Remember credentials across reloads** explicitly opts into browser local storage. Use it only in a browser profile you trust. **Forget credentials** removes the saved API key and broker access token. It does not stop translation already running in another tab; use **Stop** there as well.
+### 3. Make the participant link
 
-Choose how the original voice should sound:
+1. Under **3. Make the participant link**, choose **Participant language**. Leave it on **Auto (system language)** to use each participant's browser language.
+2. Paste the normal guest invite into **Normal participant link**.
+3. Copy the **Translation-ready participant link** and send it. You can reuse it.
 
-* **Replace with translation** plays only the translated voice.
-* **Keep quietly underneath** plays the original voice quietly beneath the translation.
-* **Play both** plays the original and translated voices together.
+### 4. Test
 
-Click **Save settings**.
+Use headphones. Have each person say a short sentence, then pause; translation lags behind the speaker. Before a real event, test names, numbers, technical terms, accents and every language pair you plan to use.
 
-<figure><img src="../.gitbook/assets/live-translation-setup.png" alt="Earlier VDO.Ninja live translation setup showing the masked API key and language and audio controls"><figcaption><p>Earlier alpha interface; credential labels and defaults have changed. Keep Remember credentials unchecked for the current one-time handoff.</p></figcaption></figure>
+## How credentials are stored
 
-### Optional: use a self-hosted token broker
+| Choice | What happens |
+| --- | --- |
+| Default | **Save settings** keeps the key in this tab's session storage. The account-holder page takes it once and then holds it only in memory. Reloading that page means entering the key again. |
+| **Remember credentials across reloads** | The key is saved in the browser's local storage for this site. Use only on a computer you trust. |
+| **Forget credentials** | Removes saved keys and broker tokens from this browser. It does not stop translation already running in another tab, and does not revoke the key at OpenAI. |
 
-Instead of entering an OpenAI API key in the browser, expand **Optional self-hosted token broker** and enter:
+The browser sends the key only to OpenAI, to create short-lived translation credentials. It never goes to VDO.Ninja's servers, other participants or generated links. Saved credentials belong to one site (scheme, hostname and port), so a key saved on vdo.ninja is not available on localhost or a self-hosted copy.
 
-* **Broker session URL**: the broker's HTTPS session endpoint. HTTP is allowed only for local testing on localhost, 127.0.0.1, or ::1. Do not embed credentials or a fragment in this URL.
-* **Broker access token**: a separate secret that protects access to that broker. This is not your OpenAI API key.
+{% hint style="danger" %}
+In API-key mode, the key is exposed to the account-holder page while translation runs. Use a dedicated API project and key with spending limits, never an administrator key, and click **Forget credentials** on computers you do not control.
+{% endhint %}
 
-When a broker URL is configured, it takes precedence over direct API-key mode and requires its access token. Clear the broker URL to return to direct API-key mode. The broker keeps the OpenAI key server-side and supplies short-lived client secrets to the browser. The broker access token follows the same one-time handoff or explicit persistence choice described above.
+### Optional: self-hosted token broker
 
-An optional [self-hosted broker example](https://github.com/obsninja/obsninja/tree/master/examples/realtime-translation-broker) includes setup instructions and authentication requirements. VDO.Ninja does not operate a shared broker. Only use a broker you trust: its access token authorizes requests against the associated account. Keep secrets out of the broker URL, which can appear in generated account-holder links.
+To keep the OpenAI key off the browser, expand **Optional self-hosted token broker** and enter:
 
-### 3. Make the account-holder link
+* **Broker session URL**: your broker's HTTPS session endpoint. Plain HTTP is allowed only for `localhost`, `127.0.0.1` or `::1`. Do not put credentials or a `#` fragment in this URL.
+* **Broker access token**: a separate secret that protects the broker. It is not your OpenAI key.
 
-Paste the account holder's normal VDO.Ninja link into **Normal account-holder link**. This can be a director link, a reusable room link, or another link that person normally uses.
+A broker URL replaces API-key mode; clear it to switch back. The token is stored like the API key. See the [self-hosted broker example](https://github.com/steveseguin/vdo.ninja/tree/develop/examples/realtime-translation-broker). VDO.Ninja does not run a shared broker.
 
-Click **Save and open** to start with the credentials entered here. With persistence disabled, use this same tab so the one-time handoff is available.
+## Choose a language in the call
 
-You can also copy the generated **Translation-enabled account-holder link**, but it carries settings only, never the API key or broker access token. Another browser or site needs its own setup. Credentials are scoped to the exact origin (scheme, hostname, and port), so a key saved on vdo.ninja is not available on another deployment or on localhost.
+Anyone can change their language without the setup page: open **Settings** → **User** and change **Preferred spoken language**. The default, **Auto**, uses the browser's language. Participants see only the language menu and **Stop**; **Configure** appears only for the account holder.
 
-The updated setup page rejects non-HTTP(S) links and URLs containing a username or password. **Save and open** also checks for the required credential and prevents navigation to another origin. Run setup on the destination site instead. Generated links remove pasted `translationkey` and `translationbrokertoken` query or fragment parameters; never put secrets in links yourself.
+<figure><img src="../.gitbook/assets/live-translation-language-setting.png" alt="VDO.Ninja User settings showing the preferred spoken language selector, Configure button, Stop button, and current language status"><figcaption><p>The in-call translation controls under Settings → User.</p></figcaption></figure>
 
-### 4. Make the participant link
+Supported languages: English, Spanish, Portuguese, French, Japanese, Russian, Chinese, German, Korean, Hindi, Indonesian, Vietnamese and Italian.
 
-Choose the participant's starting language, then paste the normal guest or participant invite into **Normal participant link**. Leave it on **Auto** when you want each participant's browser or operating-system language to be used.
+## URL parameters
 
-Copy the generated **Translation-ready participant link** and send it to the participants. It contains a preferred-language setting but no API key and no OpenAI account information.
+The setup page writes these for you. You cannot put an API key in a URL.
 
-The same reusable participant link can be sent again later.
+| Parameter | Purpose |
+| --- | --- |
+| `&translate` | Makes this browser the account holder. `&translate=es` also sets the language; `&translate=0` turns the account-holder role off. |
+| `&translatelang=` | Language this person wants to hear, such as `es`, or `auto`. Alias: `&translationlanguage`. |
+| `&translationprovider=` | Translation provider. Only `openai` is available. |
+| `&translateaudio=` | Original audio: `replace` (default), `duck` or `mix`. |
+| `&translationbroker=` | Optional broker session URL. Its access token is entered on the setup page. |
 
-### 5. Join and test
-
-Use **Save and open** in the setup tab for the account holder. Ask the participant to open their participant link.
-
-Use headphones for the first test. Have each person say a short sentence, then pause. Translation is streamed while they speak, but it is not instantaneous.
-
-For a real event, test names, numbers, dates, technical terms, accents, overlapping speech, and every language pair you plan to use.
-
-## Choosing a language inside VDO.Ninja
-
-The default is **Auto**, which uses the browser or operating system language. A participant can change it without visiting the setup page:
-
-1. Open **Settings**.
-2. Choose **User**.
-3. Change **Preferred spoken language**.
-
-<figure><img src="../.gitbook/assets/live-translation-language-setting.png" alt="VDO.Ninja User settings showing the preferred spoken language selector, Configure button, Stop button, and current language status"><figcaption><p>The small User setting is the only in-room translation interface.</p></figcaption></figure>
-
-The supported output choices in this alpha are English, Spanish, Portuguese, French, Japanese, Russian, Chinese, German, Korean, Hindi, Indonesian, Vietnamese, and Italian.
-
-## URL options
-
-Language, provider, and audio behavior can be configured by URL. Credentials must be supplied separately through setup; the page also manages their storage and handoff.
-
-| Option | Purpose | Example |
-| --- | --- | --- |
-| `&translate=1` | Makes this browser the translation account holder | `&translate=1` |
-| `&translatelang=` | Language this person wants to hear | `&translatelang=es` |
-| `&translationprovider=` | Translation provider | `&translationprovider=openai` |
-| `&translateaudio=` | Original-audio mode: `replace`, `duck`, or `mix` | `&translateaudio=duck` |
-| `&translationbroker=` | Optional public broker session URL; its access token is supplied separately | `&translationbroker=https%3A%2F%2Fbroker.example%2Fsession` |
-
-Account-holder example:
+Account holder:
 
 `https://vdo.ninja/?director=ROOMNAME&translate=1&translatelang=en&translationprovider=openai&translateaudio=replace`
 
-Participant example:
+Participant:
 
 `https://vdo.ninja/?room=ROOMNAME&translatelang=es`
 
-Do not add an API key to a URL. VDO.Ninja does not support an API-key URL option.
+## Cost
 
-## Privacy and API-key security
+OpenAI bills the account that owns the key; check the current [model pricing](https://developers.openai.com/api/docs/models/gpt-realtime-translate) before a long event. The account holder's voice needs one translation session per requested language, and each translated participant needs their own session. Five participants translated into the account holder's language means five sessions.
 
-Normal VDO.Ninja media continues to use VDO.Ninja's usual media paths. The account holder's browser creates additional direct WebRTC connections to OpenAI for only the audio tracks that need translation.
+## Audio, recording and lip sync
 
-For incoming participant speech, the participant first sends audio to the account holder through VDO.Ninja. The account holder's browser then sends a copy of that audio to OpenAI. This is why participant notice and consent matter.
+* Translated audio uses the normal VDO.Ninja audio path, so per-guest volume, speaker mute, loudness meters and active-speaker detection still work.
+* Muting your microphone also mutes your translated outgoing audio.
+* A local recording of a guest captures the audio playing at the time. Start recording after translation is active. VDO.Ninja will not swap audio or change language while a local recording runs.
+* Translation always arrives after the original speech. In **Replace** mode the voice trails the video. **Duck** and **Mix** can sound like an echo. Video is not delayed to match.
 
-The API key:
+## Stop or recover
 
-* Is entered only in the account holder's browser.
-* In direct API-key mode, is sent directly to OpenAI to create short-lived translation credentials. In broker mode, stays on the broker server instead.
-* Is not sent to VDO.Ninja's server or to other room participants.
-* Is not placed in generated links.
-* By default, is staged in tab session storage until the translation page consumes it once, then kept only in that page's memory. It does not survive a reload after consumption.
-* Is stored in browser local storage only when **Remember credentials across reloads** is checked. The broker access token uses the same storage choice.
+Click **Stop** in **Settings** → **User** to end translation and restore original audio.
 
-{% hint style="danger" %}
-Direct bring-your-own-key mode exposes the supplied key to the account-holder page while translation runs. The optional broker keeps the standard key server-side, but its browser access token is still sensitive. Use a dedicated API project/key with appropriate spending controls, do not use an administrator key, and click **Forget credentials** when using a computer you do not control.
-{% endhint %}
-
-## Cost and session count
-
-OpenAI charges the account that owns the key. Check the current [model and pricing information](https://developers.openai.com/api/docs/models/gpt-realtime-translate) before a long event.
-
-VDO.Ninja avoids translating the same account-holder stream repeatedly when several participants request the same language. It reuses one output translation per requested language.
-
-Incoming participant tracks stay separate. If five participants need translation into the account holder's language, that can require five incoming translation sessions. More participants and more distinct languages therefore cost more.
-
-## Audio controls and recording
-
-Translated audio stays inside the existing VDO.Ninja media elements and audio path:
-
-* Per-participant volume and speaker mute continue to apply.
-* Muting the account holder's microphone also mutes the translated outgoing tracks.
-* Incoming source-track loudness meters and active-speaker detection remain active while translated audio plays.
-* A local recording of a remote participant records the audio currently being played for that participant. Wait for translation to become active before starting the recording if the recording should contain translated audio.
-* VDO.Ninja delays a translation track swap until an already-running local recording stops. It also refuses a language change while a remote local recording is active, preventing the browser's `MediaRecorder` from being broken by a track-set change.
-
-## Latency and lip sync
-
-Speech translation necessarily arrives after the original speaker starts talking. In **Replace** mode, the translated voice can therefore trail the video. **Duck** and **Mix** modes can sound like an echo because the original voice arrives first.
-
-This alpha does not automatically delay video to match translated audio. Automatic audio/video synchronization may be explored later, but it would add latency and needs real-world testing before becoming a default.
-
-## Stopping or recovering
-
-Click **Stop** in **Settings** → **User** to close translation sessions and restore original audio. **Configure** reopens the setup page. **Forget credentials** on that page removes stored API keys and broker tokens; it does not revoke the credentials at their provider or clear another running page's memory.
-
-If a live translation session ends or disconnects, VDO.Ninja temporarily restores original audio and retries the affected translation up to five times with increasing delays and jitter. A connection that remains stable for 60 seconds resets that retry budget. After retries are exhausted, reconnect or open **Configure** to try again. Credential, account, or language errors may require correction instead of retries. With the default one-time handoff, re-enter credentials through setup after reloading.
+If a translation session drops, VDO.Ninja plays the original audio and retries up to five times, waiting longer each time (2 to 30 seconds, with some randomness). A connection that stays up for 60 seconds resets the count. A rejected key or request is not retried; fix it under **Configure**.
 
 ## Troubleshooting
 
-### It says an API key is needed
+| Problem | Fix |
+| --- | --- |
+| "Translation needs an API key" | Open **Configure**, enter the key and use **Save and open** in that tab. A reload or a copied link does not carry the key. |
+| "Credentials cannot be passed to another site" | Open `translate.html` on the same site as the account-holder link. `localhost` and `127.0.0.1` are different sites, as are HTTP and HTTPS. |
+| Broker does not connect | Check the URL, its access token and the broker's allowed origins. Use HTTPS unless testing on localhost. |
+| Generated link is empty or will not copy | The pasted link must be a valid HTTP or HTTPS link without a username or password, and the broker URL must be valid. If clipboard access is blocked, select the link and copy it manually. |
+| Guest hears the original voice | The account holder's link needs `&translate=1`, the guest's link needs `&translatelang=`, the two languages must differ, and the API account needs billing and model access. |
 
-Open **Configure**, enter the key, and use **Save and open** in that same tab. The default handoff is consumed once, so reloading the translation page requires setup again. A copied link does not transfer credentials to another browser or origin.
-
-### It says credentials cannot be passed to another site
-
-Open `translate.html` on the site hosting the account-holder link and configure it there. Check the scheme, hostname, and port: localhost and 127.0.0.1 are different origins, as are HTTP and HTTPS.
-
-### The broker does not connect
-
-Check the session URL, its separate access token, and the broker's allowed origins. Use HTTPS except for loopback testing, and enter the token in its password field rather than the URL. To use an API key directly instead, clear the broker URL and save the settings.
-
-### Copy link does not work
-
-Select the generated link and copy it manually if clipboard access is unavailable. An empty output means the base link or, for the account holder, broker URL needs correction. The updated setup page reports unsuccessful clipboard fallback instead of claiming the link was copied.
-
-### The guest hears the original voice
-
-Check that:
-
-* The account holder used the link containing `&translate=1`.
-* The participant used a link containing `&translatelang=`.
-* The two people did not select the same language.
-* The API account has billing and access to `gpt-realtime-translate`.
-
-### Guests cannot understand one another
-
-That is a current design limit. This first version translates between the account holder and each participant, not every guest-to-guest path in a mesh room.
-
-### The translated voice is behind the video
-
-Some delay is expected. Try short phrases and avoid people talking over one another. There is not yet automatic video delay for lip synchronization.
-
-## Technical reference
-
-OpenAI describes the model, WebRTC browser flow, one-session-per-output-language pattern, and separate-track approach for conversational calls in its [Realtime translation guide](https://developers.openai.com/api/docs/guides/realtime-translation).
+For how OpenAI's model and browser connection work, see OpenAI's [Realtime translation guide](https://developers.openai.com/api/docs/guides/realtime-translation).

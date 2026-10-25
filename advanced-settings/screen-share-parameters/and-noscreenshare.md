@@ -16,6 +16,8 @@ Viewer-Side Option! ([`&view`](../view-parameters/view.md), [`&scene`](../view-p
 
 This prevents a viewer or scene link from loading incoming screen-share video or audio. It is useful for camera-only group scenes, such as `&scene=0` links that should show guest cameras but not guest or director screen shares.
 
+It takes priority over [`&allowscreenvideo` and `&allowscreenaudio`](and-allowscreenmedia.md). To block only screen-share audio or only screen-share video, use those instead.
+
 This is different from [`&hidescreenshare`](../../newly-added-parameters/and-screensharehide.md), which only hides the publisher's own local screen-share preview window.
 
 ## Example

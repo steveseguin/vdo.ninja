@@ -30,7 +30,7 @@ It is intended for situations where changing audio delay produces audible pitch 
 * The 35 ms envelope is scheduled on the audio clock with a short 10 ms lead.
 * Splices cannot overlap. A fresh second of sustained error is required after a completed splice before another correction; returning within tolerance or reversing direction restarts that stability check.
 
-The compensation delay now changes in steps, avoiding the gradual pitch bend of a delay ramp. **This is not an artifact-free or exact A/V synchronization guarantee.** Fades can be audible, particularly with music or repeated corrections. A large decrease skips audio and a large increase revisits older buffered audio; a 35 ms fade does not hide an arbitrarily large jump. The browser's own audio processing also remains active.
+The delay changes in steps, which avoids the pitch bend of a gradual ramp. **This does not guarantee artifact-free or exact A/V sync.** Fades can be audible, especially with music or repeated corrections. A large decrease skips audio and a large increase repeats older audio; a 35 ms fade cannot hide a large jump.
 
 The native WebRTC audio and video buffering paths remain active, and measured jitter still affects the target. Buffer3 does not hold the entire requested audio delay at a fixed value. For a constant extra audio offset, use [`&audiodelay`](../audio-parameters/and-audiodelay.md).
 
@@ -47,8 +47,6 @@ Add an explicit 80 ms sync offset:
 ```text
 https://vdo.ninja/?view=STREAMID&buffer3=500&sync=80
 ```
-
-These examples require a VDO.Ninja build that includes this experimental option. Replace the hostname with your own deployment when using a locally hosted build.
 
 ### Interaction with other settings
 

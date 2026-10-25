@@ -29,11 +29,10 @@ Example: `&pendingicettl=20000`
 
 ## Related
 
-{% content-ref url="and-autorelay.md" %}
-[and-autorelay.md](and-autorelay.md)
+{% content-ref url="../../general-settings/turn.md" %}
+[turn.md](../../general-settings/turn.md)
 {% endcontent-ref %}
 
-{% content-ref url="../settings-parameters/and-p2pfailtimeout.md" %}
-[and-p2pfailtimeout.md](../settings-parameters/and-p2pfailtimeout.md)
+{% content-ref url="../../general-settings/and-relay.md" %}
+[and-relay.md](../../general-settings/and-relay.md)
 {% endcontent-ref %}
-

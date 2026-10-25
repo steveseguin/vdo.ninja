@@ -1,0 +1,46 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="600" viewBox="0 0 960 600" role="img" aria-labelledby="title description">
+  <title id="title">The account holder is the translation hub</title>
+  <desc id="description">Guests send their original voice to the account holder over VDO.Ninja. The account holder's browser sends audio that needs translating to OpenAI and receives translated audio back. The account holder hears guests in English; each guest hears the account holder translated into their own language. Guests hear each other untranslated.</desc>
+  <defs>
+    <marker id="arrowBlue" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 Z" fill="#205c96"/></marker>
+    <marker id="arrowGreen" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 Z" fill="#2e7d4f"/></marker>
+    <marker id="arrowOrange" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 Z" fill="#b25d00"/></marker>
+  </defs>
+  <rect width="960" height="600" fill="white"/>
+  <g font-family="Arial, Helvetica, sans-serif" text-anchor="middle" fill="#142c43">
+    <text x="480" y="48" font-size="34" font-weight="bold">The account holder is the translation hub</text>
+    <g fill="#edf4fb" stroke="#205c96" stroke-width="3">
+      <rect x="320" y="78" width="320" height="74" rx="18"/>
+      <rect x="280" y="230" width="400" height="104" rx="22"/>
+      <rect x="60" y="440" width="300" height="90" rx="18"/>
+      <rect x="600" y="440" width="300" height="90" rx="18"/>
+    </g>
+    <text x="480" y="124" font-size="26" font-weight="bold">OpenAI translation</text>
+    <text x="480" y="272" font-size="28" font-weight="bold">Account holder</text>
+    <text x="480" y="310" font-size="22">API key · hears English</text>
+    <text x="210" y="477" font-size="26" font-weight="bold">Guest A</text>
+    <text x="210" y="510" font-size="22">hears Spanish</text>
+    <text x="750" y="477" font-size="26" font-weight="bold">Guest B</text>
+    <text x="750" y="510" font-size="22">hears French</text>
+    <g stroke-width="5" fill="none">
+      <path d="M440 224 V162" stroke="#2e7d4f" marker-end="url(#arrowGreen)"/>
+      <path d="M520 160 V222" stroke="#205c96" marker-end="url(#arrowBlue)"/>
+      <path d="M170 434 L318 344" stroke="#2e7d4f" marker-end="url(#arrowGreen)"/>
+      <path d="M372 342 L224 432" stroke="#205c96" marker-end="url(#arrowBlue)"/>
+      <path d="M790 434 L642 344" stroke="#2e7d4f" marker-end="url(#arrowGreen)"/>
+      <path d="M588 342 L736 432" stroke="#205c96" marker-end="url(#arrowBlue)"/>
+      <path d="M372 486 H588" stroke="#b25d00" stroke-dasharray="12 8" marker-start="url(#arrowOrange)" marker-end="url(#arrowOrange)"/>
+    </g>
+    <text x="430" y="200" font-size="20" text-anchor="end">to translate</text>
+    <text x="530" y="200" font-size="20" text-anchor="start">translated</text>
+    <text x="480" y="472" font-size="20">untranslated</text>
+    <g font-size="22" text-anchor="start">
+      <path d="M110 572 H160" stroke="#2e7d4f" stroke-width="5"/>
+      <text x="172" y="580">Original voice</text>
+      <path d="M390 572 H440" stroke="#205c96" stroke-width="5"/>
+      <text x="452" y="580">Translated voice</text>
+      <path d="M680 572 H730" stroke="#b25d00" stroke-width="5" stroke-dasharray="12 8"/>
+      <text x="742" y="580">Not translated</text>
+    </g>
+  </g>
+</svg>

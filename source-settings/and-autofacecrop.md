@@ -1,5 +1,5 @@
 ---
-description: Enables the newer auto face crop effect
+description: Crops and pans the camera to keep your face framed
 ---
 
 # \&autofacecrop
@@ -14,9 +14,13 @@ Sender-Side Option! ([`&push`](push.md))
 
 ## Details
 
-`&autofacecrop` enables the newer auto face crop effect. It crops and pans the sender's camera feed to keep the detected face framed.
+`&autofacecrop` turns on the experimental **Auto face crop** effect. It crops and pans the sender's camera so the detected face stays framed. It matches the **Auto face crop** option in the effects menu.
 
-This mode first tries the browser's native `FaceDetector` API. If that is unavailable or fails, it falls back to the bundled MediaPipe face detector model when the page is running in a secure context.
+```
+https://vdo.ninja/?push=STREAMID&autofacecrop
+```
+
+It uses the browser's built-in `FaceDetector` API when available. Otherwise, it uses the MediaPipe face detector bundled with VDO.Ninja, which needs a secure page (HTTPS or localhost).
 
 This is separate from [`&facetracker`](and-facetracker.md) / [`&effects=1`](effects.md), which keeps its original behavior for backwards compatibility.
 

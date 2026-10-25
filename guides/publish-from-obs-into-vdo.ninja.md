@@ -8,6 +8,8 @@ Use **OBS Virtual Camera** for the picture and a **virtual audio cable** for sou
 
 You need [OBS Studio](https://obsproject.com/download), a browser such as Chrome, and [VB-CABLE](https://vb-audio.com/Cable/) if you want OBS audio. The audio screenshots below use Windows; see [macOS audio options](../platform-specific-issues/macos.md#capturing-audio) for Mac.
 
+![OBS scene to Virtual Camera and monitored OBS audio to CABLE Input; VDO.Ninja selects OBS Virtual Camera and CABLE Output, then sends both to the viewer](../.gitbook/assets/obs-flow-cable-route.svg)
+
 ## Step 1: Build the shot you want in OBS
 
 Select the OBS scene containing your camera, game, graphics, or other sources. Check the Program picture: this is what the default Virtual Camera sends.
@@ -48,7 +50,7 @@ If the picture is stretched or the frame rate is wrong, restart the camera befor
 
 | Desired capture | Add to the push link |
 | --- | --- |
-| 60 fps | `&framerate=60` |
+| 60 fps | `&fps=60` |
 | 1080p landscape | `&width=1920&height=1080` |
 | 720p portrait | `&width=720&height=1280` |
 

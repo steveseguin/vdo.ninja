@@ -1,0 +1,55 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="560" viewBox="0 0 960 560" role="img" aria-labelledby="title description">
+  <title id="title">Measure the whole bonded path</title>
+  <desc id="description">A phone sends video over two uplinks, Starlink and 5G cellular. Both uplinks reach a bonding endpoint, such as a Speedify server or SpeedFusion endpoint, which reassembles the stream and forwards it to the OBS receiver. Measure loss, jitter and latency on each of the three hops while moving, and keep the endpoint close to the receiver.</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 Z" fill="#205c96"/></marker>
+  </defs>
+  <rect width="960" height="560" fill="white"/>
+  <g font-family="Arial, Helvetica, sans-serif" text-anchor="middle" fill="#142c43">
+    <text x="480" y="54" font-size="36" font-weight="bold">Measure the whole bonded path</text>
+    <text x="480" y="88" font-size="24">Loss, jitter and latency on every hop, while moving</text>
+    <g fill="#edf4fb" stroke="#205c96" stroke-width="3">
+      <rect x="25" y="205" width="170" height="120" rx="22"/>
+      <rect x="265" y="125" width="190" height="95" rx="22"/>
+      <rect x="265" y="310" width="190" height="95" rx="22"/>
+      <rect x="525" y="205" width="200" height="120" rx="22"/>
+      <rect x="790" y="205" width="150" height="120" rx="22"/>
+    </g>
+    <g font-size="28" font-weight="bold">
+      <text x="110" y="263">Phone</text>
+      <text x="360" y="182">Starlink</text>
+      <text x="360" y="367">5G cellular</text>
+      <text x="625" y="255">Bonding</text>
+      <text x="625" y="290">endpoint</text>
+      <text x="865" y="263">OBS</text>
+    </g>
+    <g font-size="21">
+      <text x="110" y="295">encoder</text>
+      <text x="865" y="295">receiver</text>
+    </g>
+    <g stroke="#205c96" stroke-width="5" fill="none" marker-end="url(#arrow)">
+      <path d="M200 238 L257 190"/>
+      <path d="M200 292 L257 340"/>
+      <path d="M460 190 L517 238"/>
+      <path d="M460 340 L517 292"/>
+      <path d="M730 265 H782"/>
+    </g>
+    <g fill="#205c96">
+      <circle cx="230" cy="265" r="19"/>
+      <circle cx="490" cy="265" r="19"/>
+      <circle cx="757" cy="225" r="19"/>
+    </g>
+    <g font-size="23" font-weight="bold" fill="white">
+      <text x="230" y="273">1</text>
+      <text x="490" y="273">2</text>
+      <text x="757" y="233">3</text>
+    </g>
+    <g font-size="22">
+      <text x="165" y="448">1  Phone to each uplink</text>
+      <text x="480" y="448">2  Each uplink to endpoint</text>
+      <text x="795" y="448">3  Endpoint to receiver</text>
+    </g>
+    <rect x="45" y="472" width="870" height="64" rx="18" fill="#e9f5f0" stroke="#2e7d4f" stroke-width="3"/>
+    <text x="480" y="513" font-size="26" font-weight="bold">Keep the endpoint close to the receiver</text>
+  </g>
+</svg>

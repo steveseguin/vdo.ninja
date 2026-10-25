@@ -1,277 +1,194 @@
 ---
-description: Send OBS Program, Preview, a dedicated scene, or a source back to remote guests using direct VDO.Ninja, Meshcast, WHIP/WHEP, or a website embed.
+description: Choose what OBS sends back to remote guests, which guests receive it, and whether it travels directly, through Meshcast, through a WHIP/WHEP server, or as a website player.
 ---
 
 # Send an OBS return feed to guests
 
-For step-by-step audio routing with the Director's Room or Mixer, including mix-minus, continuous voices during screenshare scene changes, a complete Meshcast show mix, and private talk, see [Room audio, OBS, Meshcast, and private talk](room-audio-obs-meshcast-and-private-talk.md).
+A **return feed** is the video you send back so remote guests can follow the show. OBS can return its Program output, its Preview, a dedicated scene, or one source.
 
 {% hint style="info" %}
-Looking for the simplest setup? Start with [Let guests see your finished OBS scene](let-guests-see-your-obs-scene.md). This page continues with the more detailed routing and server options.
+For the basic setup, start with [Let guests see your finished OBS scene](let-guests-see-your-obs-scene.md). For audio returns, mix-minus and private talk, see [Room audio, OBS, Meshcast, and private talk](room-audio-obs-meshcast-and-private-talk.md).
 {% endhint %}
 
-A **return feed**, sometimes called a program return or confidence feed, is the video and audio sent back to remote participants so they can follow the production. It can be the public program output, but it does not have to be. OBS can return its Program output, Preview output, a dedicated scene, or even one source.
+You make three separate choices:
 
-There are three separate choices in this workflow:
+1. **Content:** what OBS sends back.
+2. **Routing:** which guests receive it. Set this on the guest links with [`&broadcast`](../advanced-settings/view-parameters/broadcast.md) or [`&directoronly`](../advanced-settings/video-parameters/and-directoronly.md).
+3. **Distribution:** how it reaches them: directly, through [`&meshcast`](../newly-added-parameters/and-meshcast.md), through your own WHIP/WHEP server, or through an embedded website player.
 
-1. **Content:** What should OBS send back?
-2. **Routing:** Which VDO.Ninja participants should receive it?
-3. **Distribution:** Should the feed go directly to every guest, through Meshcast, through your own WHIP/WHEP server, or through an external video platform?
-
-Options such as [`&broadcast`](../advanced-settings/view-parameters/broadcast.md), [`&directoronly`](../advanced-settings/video-parameters/and-directoronly.md), and [`&meshcast`](../newly-added-parameters/and-meshcast.md) solve different parts of this problem and can be used together.
-
-## Recommended starting point
-
-For a small interactive room:
-
-1. Create a dedicated **Guest Return** scene in OBS.
-2. Select that scene as the OBS Virtual Camera output.
-3. Publish the Virtual Camera as the director's VDO.Ninja video.
-4. Add `&broadcast` to the guest invite link.
-5. Start around 2500-kbps for a 720p30 return and adjust after testing.
-
-This gives guests a low-latency production return without forcing their devices to display every other guest's video. If the producer's upload bandwidth or CPU becomes the limit as the audience grows, keep the same guest routing but relay the return through Meshcast or a WHIP/WHEP server.
+![Direct delivery uploads one copy of the return per guest; Meshcast or a WHIP/WHEP server takes one upload and sends it to every guest](../.gitbook/assets/obs-flow-direct-vs-meshcast.svg)
 
 ## Choose a distribution method
 
-| Method | Latency | Producer load as viewers join | Best fit |
+| Method | Delay | Upload from the return publisher | Best fit |
 | --- | --- | --- | --- |
-| Direct VDO.Ninja with `&broadcast` | Lowest | Upload and encoding load grow per viewer | Small interactive rooms where guests should still hear one another |
-| Direct VDO.Ninja with `&directoronly` | Lowest | Upload and encoding load grow per viewer | Small rooms where guests should receive only directors' audio and video |
-| Meshcast | Slightly higher | The sender normally publishes one server feed | Larger low-latency rooms with minimal server setup |
-| MediaMTX or another WHIP/WHEP service | Depends on the server and region | The sender normally publishes one server feed | Self-hosting, dedicated capacity, or custom routing |
-| YouTube, Twitch, or another website embed | Usually much higher | The external platform handles viewer delivery | Large audiences that do not need a conversational return |
+| Direct VDO.Ninja | Lowest | One copy per guest | Small interactive rooms |
+| Meshcast | Slightly higher | One copy to the server | Larger rooms with little setup |
+| MediaMTX or another WHIP/WHEP service | Depends on the server and region | One copy to the server | Self-hosting, your own capacity or access control |
+| YouTube, Twitch or another website player | Usually several seconds | Handled by the platform | Large audiences that do not talk back |
 
-{% hint style="info" %}
-TURN can help peers connect through restrictive networks, but it is not a one-to-many fan-out solution. A direct return still has a separate media path for each guest.
-{% endhint %}
+For a small room, start with [Option A](#option-a-the-director-publishes-the-return) at about 2500 kbps for 720p30. Move the same return to Meshcast or WHIP/WHEP when upload or CPU runs out. TURN does not help here: it relays connections, it does not fan out one stream.
 
 ## Build the return in OBS
 
-Create the exact output the guests need. A dedicated return scene can include instructions, timers, confidence graphics, scores, remote speakers, or a clean version of the show while excluding private producer notes and other material intended only for the public program.
+1. Create a scene with what guests need, such as a clean program, timers, scores or instructions. Leave out private producer notes.
+2. Click the gear beside **Start Virtual Camera** and choose the output: Program, Preview, Scene or Source. A Scene or Source output stays the same when you switch Program.
+3. Click **Start Virtual Camera** before you select **OBS Virtual Camera** in VDO.Ninja. Keep the OBS output and the VDO.Ninja capture at matching resolutions and frame rates.
 
-In OBS, select the gear beside **Start Virtual Camera**. Depending on the OBS version, the Virtual Camera can output:
+<figure><img src="../.gitbook/assets/obs-virtual-camera-scene-return.png" alt="OBS Virtual Camera configuration with Scene selected as the output type and a dedicated scene selected as the output"><figcaption><p>OBS Virtual Camera can return a selected scene instead of Program.</p></figcaption></figure>
 
-* Program output
-* Preview output
-* A specific scene
-* A specific source
+OBS Virtual Camera carries video only. For sound, use the director's microphone, or a virtual audio cable carrying an OBS mix that leaves out the guests' own voices (a mix-minus). Never put the return inside the scene it returns.
 
-Selecting a scene or source is useful when the guest return should remain independent of scene changes on the main Program output.
+## Route the return to guests
 
-<figure><img src="../.gitbook/assets/obs-virtual-camera-scene-return.png" alt="OBS Virtual Camera configuration with Scene selected as the output type and a dedicated scene selected as the output"><figcaption><p>OBS Virtual Camera can return a selected scene instead of the main Program output.</p></figcaption></figure>
+Replace `ROOM` and `RETURN_ID` with your own values. Keep any room password the same on every link.
 
-Start the Virtual Camera before selecting **OBS Virtual Camera** in VDO.Ninja. Keep the OBS canvas, Virtual Camera output, and VDO.Ninja capture settings at compatible resolutions and frame rates.
+### Option A: the director publishes the return
 
-### Route the audio separately
+```text
+Director: https://vdo.ninja/?director=ROOM&push=RETURN_ID&trb=2500
+Guest:    https://vdo.ninja/?room=ROOM&broadcast
+```
 
-OBS Virtual Camera carries video, not an OBS audio mix. Use either:
+In the director's device settings, select **OBS Virtual Camera** and the microphone or virtual cable you want. Guests see only the main director's video, and they still hear one another.
 
-* The director's microphone directly in VDO.Ninja; or
-* A virtual audio cable carrying a carefully built OBS mix-minus.
+Put `&broadcast` on the **guest** link, not on the director or OBS link. In the Director's Room, the invite option **Only see the director's video** adds it. On the room-creation page, the same setting is **The guests can see the director, but not other guests' videos**.
 
-A mix-minus excludes a participant's own delayed voice from the return sent to that participant. Use headphones, avoid sending the same audio through both VDO.Ninja and an embedded player, and make sure the return scene does not capture itself recursively. See [How to capture an application's audio](audio.md) for audio-routing options.
-
-## Publish and route the return
-
-### Option A: Use the director's output
-
-Open a director link that also publishes a stable return stream ID:
-
-`https://vdo.ninja/?director=ROOM&push=RETURN_ID&trb=2500`
-
-In the director's device settings, select **OBS Virtual Camera** and the intended microphone or virtual audio cable. Give participants a guest link with broadcast mode enabled:
-
-`https://vdo.ninja/?room=ROOM&broadcast`
-
-The `&broadcast` option belongs on the **guest invite**, not the director or OBS scene link. Guests receive the main director's video while their audio connections to other guests remain active.
-
-Replace `ROOM` and `RETURN_ID` with your own values, and keep any room password or encryption settings consistent across the links.
-
-The room-creation page exposes the same behavior as **Guests see only the director's video**.
-
-<figure><img src="../.gitbook/assets/obs-return-broadcast-room-option.png" alt="VDO.Ninja room creation option for guests to see only the director's video"><figcaption><p>Broadcast mode limits the guest-facing video to the director's return while preserving guest-to-guest audio.</p></figcaption></figure>
-
-#### Video walkthrough: broadcast mode and the OBS return
+<figure><img src="../.gitbook/assets/obs-return-broadcast-room-option.png" alt="VDO.Ninja Create a Room page with The guests can see the director, but not other guests' videos checked"><figcaption><p>This room-creation option adds &#x26;broadcast to the guest invite.</p></figcaption></figure>
 
 {% embed url="https://www.youtube.com/watch?v=QcFKI9q0yFs" %}
 Configure a broadcast-mode room, bring guests into OBS, and return OBS to those guests
 {% endembed %}
 
-This walkthrough uses an older version of the interface, but its overall room, OBS, Virtual Camera, and mix-minus workflow still applies. Useful sections include:
+The interface in the video is older, but the workflow still applies. Jump to [returning OBS through Virtual Camera](https://www.youtube.com/watch?v=QcFKI9q0yFs&t=600s), [an OBS mix-minus through a virtual cable](https://www.youtube.com/watch?v=QcFKI9q0yFs&t=840s), or [switching to Meshcast](https://www.youtube.com/watch?v=QcFKI9q0yFs&t=1162s).
 
-* [Creating the room and enabling broadcast mode](https://www.youtube.com/watch?v=QcFKI9q0yFs&t=58s)
-* [Adding the room or individual guests to OBS](https://www.youtube.com/watch?v=QcFKI9q0yFs&t=312s)
-* [Returning OBS through Virtual Camera](https://www.youtube.com/watch?v=QcFKI9q0yFs&t=600s)
-* [Routing an OBS mix-minus through a virtual audio cable](https://www.youtube.com/watch?v=QcFKI9q0yFs&t=840s)
-* [Using Meshcast when direct fan-out becomes too demanding](https://www.youtube.com/watch?v=QcFKI9q0yFs&t=1162s)
+### Option B: a dedicated return publisher
 
-### Option B: Use a dedicated return publisher
+```text
+Return publisher: https://vdo.ninja/?room=ROOM&push=RETURN_ID&novideo&noaudio
+Guest:            https://vdo.ninja/?room=ROOM&broadcast=RETURN_ID
+```
 
-A separate publisher keeps the return feed independent of the director's camera and control-center preview:
+Select OBS Virtual Camera on the return publisher. `&novideo&noaudio` stops that tab from playing the room; it still sends the return. This keeps the return separate from the director's own camera, and you can run it on another computer to spread the load.
 
-`https://vdo.ninja/?room=ROOM&push=RETURN_ID&novideo&noaudio`
+### Option C: guests hear and see only directors
 
-Select OBS Virtual Camera in that publisher, then explicitly identify it in each guest invite:
+```text
+Guest: https://vdo.ninja/?room=ROOM&directoronly
+```
 
-`https://vdo.ninja/?room=ROOM&broadcast=RETURN_ID`
+Use this when the director or a co-director publishes the return and guests should not see or hear one another.
 
-Here, `&novideo&noaudio` prevents the return publisher tab from also receiving room media. The production browser or OBS browser sources can handle the guest inputs separately. Running the return publisher on another machine can isolate its CPU and network load further.
-
-### Option C: Isolate every guest from other guests
-
-If the return is published by the main director or a co-director, use:
-
-`https://vdo.ninja/?room=ROOM&directoronly`
-
-This gives the guest audio and video from directors, including co-directors, while blocking guest-to-guest audio and video. Unlike `&broadcast=RETURN_ID`, `&directoronly` does not select an arbitrary guest publisher by stream ID.
-
-| Guest link mode | Video received by the guest | Audio received by the guest |
+| Guest link | Video the guest receives | Audio the guest receives |
 | --- | --- | --- |
-| Normal room | Other room participants | Other room participants |
+| Normal room link | Other participants | Other participants |
 | `&broadcast` | Main director only | Director and other guests |
-| `&broadcast=RETURN_ID` | The selected return stream only | Director and other guests |
-| `&directoronly` | Directors and co-directors only | Directors and co-directors only |
+| `&broadcast=RETURN_ID` | That stream only | Director and other guests |
+| `&directoronly` | Directors and co-directors | Directors and co-directors |
 
-## Set return quality without hiding the bottleneck
+## Set the return quality
 
-The room video-quality control sets a **combined receive budget**, not a guaranteed bitrate for every feed. Its URL equivalent is [`&totalroombitrate`](../advanced-settings/video-bitrate-parameters/totalroombitrate.md), or `&trb`.
+The room video quality setting is a **combined receive budget** for each guest, not a fixed bitrate per feed. Its URL version is [`&totalroombitrate`](../advanced-settings/video-bitrate-parameters/totalroombitrate.md) (`&trb`), and the default is 500 kbps.
 
 <figure><img src="../.gitbook/assets/obs-return-room-video-quality.png" alt="VDO.Ninja room settings slider labelled Change room video quality at 500 kilobits per second"><figcaption><p>The director can change the room's combined video budget live.</p></figcaption></figure>
 
-With one visible broadcast return, `&trb=2500` can assign roughly that full target to the return. In a normal room, the same total is divided among the visible feeds. The setting cannot create upload capacity or CPU that the producer does not have.
+With `&broadcast`, the return is the only video a guest receives, so `&trb=2500` lets it use about 2500 kbps. In a normal room the budget is split across all visible feeds. Starting points:
 
-Reasonable starting targets are:
-
-| Return format | Starting video target |
+| Return format | Video bitrate to start with |
 | --- | --- |
 | 720p30 | 2500–4000 kbps |
 | 1080p30 | 4000–6000 kbps |
 
-Fast motion, detailed graphics, noisy images, or 60-fps output may need more. Test the actual producer and guest networks rather than treating these as guarantees.
+Fast motion, detailed graphics or 60 fps may need more. Test on the real networks.
 
 {% hint style="warning" %}
-An OBS Virtual Camera is a camera source to the browser. [`&screensharebitrate`](../newly-added-parameters/and-screensharebitrate.md) does not control it; use the room bitrate controls. `&screensharebitrate` applies only when VDO.Ninja is publishing a real browser screen share.
+To the browser, OBS Virtual Camera is a camera. [`&screensharebitrate`](../newly-added-parameters/and-screensharebitrate.md) does not affect it; use the room bitrate controls.
 {% endhint %}
 
-### Understand direct P2P scaling
+### Direct upload grows with every guest
 
-With direct VDO.Ninja delivery, the return publisher sends a separate stream to each viewer. A 2.5-Mbps return sent to eight guests can require roughly 20 Mbps of producer upload, plus protocol overhead. The producer may also be receiving and decoding every active guest feed.
+With direct delivery, the return publisher sends a separate copy to each guest. A 2.5 Mbps return to eight guests needs about 20 Mbps of upload plus overhead, on top of receiving and decoding the guest feeds. To keep it stable:
 
-This explains why a return can become choppy as more people join even after its requested bitrate is raised. Disabling unneeded incoming guest videos is a valid way to reduce the producer's inbound bandwidth and decoding load, but it does not remove the outbound return connection to each viewer.
-
-For a stable direct setup:
-
-* Keep only the guest feeds currently needed by production active.
-* Stage inactive participants in a [green room or approval queue](green-room-and-guest-approval-options.md) instead of ingesting every waiting source in the production room.
-* Leave substantial upload headroom instead of planning around the speed test maximum.
-* Monitor CPU/GPU encoding load as well as network bitrate.
-* Use [`&limittotalbitrate`](../advanced-settings/video-bitrate-parameters/limittotalbitrate.md) as an outbound safety cap, understanding that quality must fall when the cap is below aggregate demand.
-* Move the return to a relay when direct fan-out becomes the limiting factor.
+* Keep only the guest feeds you need active; hold the rest in a [green room or approval queue](green-room-and-guest-approval-options.md).
+* Leave upload headroom, and watch CPU and GPU load as well as bitrate.
+* Use [`&limittotalbitrate`](../advanced-settings/video-bitrate-parameters/limittotalbitrate.md) as an outbound cap; quality drops when the cap is below demand.
+* When fan-out is the limit, move the return to Meshcast or WHIP/WHEP.
 
 ## Relay the return with Meshcast
 
-Meshcast keeps VDO.Ninja's room signaling and guest routing while moving return-media distribution to a hosted server. Add it to the return publisher or publishing director:
+Add `&meshcast` to the link that publishes the return:
 
-`https://vdo.ninja/?director=ROOM&push=RETURN_ID&meshcast&meshcastbitrate=2500`
+```text
+https://vdo.ninja/?director=ROOM&push=RETURN_ID&meshcast&meshcastbitrate=2500
+```
 
-Guests can continue using `&broadcast` or `&directoronly`. Those parameters decide **what** the guest receives; Meshcast changes **how** the media reaches them.
+Guest links stay the same. `&broadcast` and `&directoronly` decide **what** guests receive; Meshcast changes **how** it reaches them.
 
-[`&meshcastbitrate`](../meshcast-settings/and-meshcastbitrate.md) controls the server-published camera bitrate. The room's `&trb` value does not change a Meshcast stream's bitrate. If the source is an actual VDO.Ninja screen share, use [`&mcscreensharebitrate`](../meshcast-settings/and-mcscreensharebitrate.md).
-
-Meshcast adds some latency and moves media through a third-party service, but it avoids multiplying the publisher's media upload for every viewer.
+* [`&meshcastbitrate`](../meshcast-settings/and-meshcastbitrate.md) sets the camera bitrate sent to Meshcast. `&trb` does not change it.
+* For a real VDO.Ninja screen share, use [`&mcscreensharebitrate`](../meshcast-settings/and-mcscreensharebitrate.md).
+* Meshcast adds a little delay and sends the media through a hosted service.
 
 {% embed url="https://www.youtube.com/watch?v=YxduINMXw1M" %}
 Understand P2P rooms, broadcast mode, and Meshcast server distribution
 {% endembed %}
 
-This 2021 overview remains useful for understanding the network topology, although its interface, server locations, limits, and standalone Meshcast.io examples may no longer match the current service. The most relevant sections are [broadcast-mode fan-out](https://www.youtube.com/watch?v=YxduINMXw1M&t=193s), [the server-relayed return concept](https://www.youtube.com/watch?v=YxduINMXw1M&t=360s), [integrated `&meshcast` publishing](https://www.youtube.com/watch?v=YxduINMXw1M&t=840s), and [the recommended director-to-guests layout](https://www.youtube.com/watch?v=YxduINMXw1M&t=1620s).
+This 2021 overview still explains the network layout. Its interface, servers and limits may have changed; [the server-relayed return](https://www.youtube.com/watch?v=YxduINMXw1M&t=360s) is the most relevant part.
 
-## Use a self-hosted or managed WHIP/WHEP service
+## Use your own WHIP/WHEP server
 
-WHIP ingests one WebRTC stream into a server; WHEP lets viewers play the server-distributed stream. This provides the same broad scaling shape as Meshcast while giving you a choice of hosting provider, region, capacity, and access controls.
+WHIP sends one stream into a server; WHEP plays it back. This scales like Meshcast, and you choose the host, region, capacity and access controls.
 
-### MediaMTX
+**MediaMTX:** add your server to the return publisher. VDO.Ninja publishes by WHIP and tells room peers the matching WHEP address. Use HTTPS and authentication in production. Setup is in [Deploy your own Meshcast-like service](deploy-your-own-meshcast-like-service.md).
 
-With a configured MediaMTX server, add its address to the return publisher:
+```text
+https://vdo.ninja/?room=ROOM&push=RETURN_ID&mediamtx=media.example.com
+```
 
-`https://vdo.ninja/?room=ROOM&push=RETURN_ID&mediamtx=media.example.com`
+**Cloudflare Stream or another provider:** give the publisher a URL-encoded WHIP endpoint and let VDO.Ninja work out the playback address:
 
-VDO.Ninja publishes the return by WHIP and advertises the corresponding WHEP playback path to room peers. Use HTTPS and authentication in production. The full server setup is covered in [Deploy your own Meshcast-like service](deploy-your-own-meshcast-like-service.md).
+```text
+https://vdo.ninja/?room=ROOM&push=RETURN_ID&whipout=ENCODED_WHIP_URL&autowhep
+```
 
-### Cloudflare Stream or another WHIP/WHEP provider
+[`&autowhep`](../advanced-settings/whip-parameters/and-autowhep.md) recognizes common URL patterns, including Cloudflare Stream's. Use [`&whepshare`](../advanced-settings/whip-parameters/and-whepshare.md) to set the WHEP playback URL yourself; it takes priority. `&whepshare` can also share a stream that is already on a WHEP server. [`&cftoken`](../advanced-settings/whip-parameters/and-cftoken-alpha.md) is an alpha shortcut; test it first.
 
-For a generic service, the publisher can use an encoded WHIP endpoint and advertise or derive its WHEP endpoint:
+{% hint style="danger" %}
+Keep WHIP URLs and tokens only on the publisher link. Never put a publishing credential in a guest invite.
+{% endhint %}
 
-`https://vdo.ninja/?room=ROOM&push=RETURN_ID&whipout=ENCODED_WHIP_URL&autowhep`
+**Publish straight from OBS:** OBS can send WHIP itself, without Virtual Camera or a browser. It is more advanced, with its own codec, firewall and server limits. See [From OBS to VDO.Ninja using WHIP](from-obs-to-vdo.ninja-using-whip.md) and [Recommended OBS WHIP settings](obs-whip-output-settings.md).
 
-Use [`&whepshare`](../advanced-settings/whip-parameters/and-whepshare.md) when the WHEP playback URL must be supplied explicitly. [`&autowhep`](../advanced-settings/whip-parameters/and-autowhep.md) recognizes several common URL patterns, including Cloudflare Stream's publish/play pattern, but an explicit WHEP URL takes priority.
+## Share a website player instead
 
-Keep publishing URLs, API tokens, and bearer tokens only in the protected publisher link. Never put a publishing credential into the guest invite. The [`&cftoken`](../advanced-settings/whip-parameters/and-cftoken-alpha.md) shortcut remains an alpha option and should be tested before production use.
+In the Director's Room, select **Share Website**, paste an embeddable player URL, and send it to the guests. See [`&website`](../source-settings/and-website.md).
 
-See [WHIP and WHEP tooling](../steves-helper-apps/whip-and-whep-tooling.md) for the available VDO.Ninja helpers.
+<figure><img src="../.gitbook/assets/obs-return-share-website-dialog.png" alt="VDO.Ninja Share Website dialog with a field for an embeddable website URL"><figcaption><p>The director can share an embeddable player with every guest.</p></figcaption></figure>
 
-### Publish directly from OBS with WHIP
+The platform carries the load, but the player is often several seconds behind the room, autoplay, cookie or embed rules can block it, and its audio bypasses the room's echo cancellation. Keep conversation audio in VDO.Ninja and mute the player, so nobody hears the same audio twice.
 
-OBS can also publish directly to a compatible WHIP endpoint. This removes OBS Virtual Camera and the browser publisher from the sending path, but it is a more advanced workflow and can expose different codec, NAT, firewall, and server-compatibility constraints.
+## Share an OBS window instead
 
-Start with [From OBS to VDO.Ninja using WHIP](from-obs-to-vdo.ninja-using-whip.md) and [Recommended OBS WHIP settings](obs-whip-output-settings.md). Use the Virtual Camera method when you want the return to behave like a normal VDO.Ninja room source with the broadest compatibility.
+Virtual Camera is more predictable, but you can screen-share an OBS projector window. Try:
 
-## Share YouTube, Twitch, or another website instead
-
-The director control center can share an embeddable website to the room. Select **Share Website**, paste the player URL, and send it to the guests.
-
-<figure><img src="../.gitbook/assets/obs-return-share-website-dialog.png" alt="VDO.Ninja Share Website dialog with a field for an embeddable website URL"><figcaption><p>The director can distribute an embeddable player without making every guest open a separate tab.</p></figcaption></figure>
-
-This approach moves large-scale video delivery to the external platform, but it is normally a poor confidence monitor for live interaction because:
-
-* The player may be several seconds behind the room.
-* Autoplay, cookies, ads, or the provider's iframe policy may interfere.
-* The embedded audio is not part of VDO.Ninja's normal echo-cancellation path.
-* Sending both VDO.Ninja audio and player audio creates doubling or echo.
-
-For a mixed workflow, keep low-latency conversation audio in VDO.Ninja and mute the embedded player. If the platform stream must provide the audio, intentionally mute the duplicate VDO.Ninja return path.
-
-## Browser screen share as an alternative
-
-OBS Virtual Camera is usually more predictable for moving video because it behaves like a camera and can target a dedicated OBS scene. If you instead share an OBS projector or program window with VDO.Ninja's screen-share feature, try:
-
-* `&screensharequality=1` for a 720p capture target
-* `&screensharefps=30` for a 30-fps target
-* `&screensharecontenthint=motion` on the publisher when frame rate matters more than fine text
-* `&screensharebitrate=2500` on receiving guest links
-
-The content hint is a preference, not a guarantee. When bandwidth or CPU is insufficient, `motion` favors frame rate while `detail` favors resolution.
+| Parameter | Where | Effect |
+| --- | --- | --- |
+| `&screensharequality=1` | Publisher | 720p capture target |
+| `&screensharefps=30` | Publisher | 30 fps target |
+| `&screensharecontenthint=motion` | Publisher | Favors frame rate over resolution (`detail` does the opposite) |
+| `&screensharebitrate=2500` | Guest links | Requested screen-share bitrate |
 
 ## Troubleshooting
 
-### The return quality falls as more guests join
-
-Check the producer's outbound bitrate, inbound guest bitrate, and encoder/decoder load. `&broadcast` reduces what guests receive, but the direct return publisher still serves each guest. Disable unused production inputs, separate the return publisher, or move the return to Meshcast or WHIP/WHEP.
-
-### The return is smooth but too delayed
-
-An external website player or a heavily buffered media server is probably outside the latency budget. Use direct VDO.Ninja, Meshcast, or a low-latency WHIP/WHEP service for an interactive return.
-
-### Motion is choppy
-
-Match the OBS and VDO.Ninja frame rates, start Virtual Camera before selecting it, and confirm there is enough bitrate and encoding capacity. For a real browser screen share, use `&screensharecontenthint=motion`.
-
-### Guests hear an echo or themselves delayed
-
-Use headphones and rebuild the OBS audio as a mix-minus. Keep only one audio return path active.
-
-### The return contains itself
-
-Remove the guest return page from the OBS scene being sent back, or capture only the intended OBS scene/source instead of the entire display.
+| Problem | What to do |
+| --- | --- |
+| Quality drops as guests join | `&broadcast` reduces what guests receive, not what a direct publisher sends. See [Direct upload grows with every guest](#direct-upload-grows-with-every-guest). |
+| The return is smooth but delayed | A website player or buffered server is too slow for conversation. Use direct, Meshcast or low-latency WHIP/WHEP. |
+| Motion is choppy | Match OBS and VDO.Ninja frame rates, start Virtual Camera before selecting it, and check bitrate and encoder load. |
+| The return contains itself | Remove the return from the OBS scene being sent, or return a specific scene or source. |
 
 ## Related guides
 
 * [Publish from OBS into VDO.Ninja](publish-from-obs-into-vdo.ninja.md)
-* [`&broadcast`](../advanced-settings/view-parameters/broadcast.md)
-* [`&directoronly`](../advanced-settings/video-parameters/and-directoronly.md)
 * [Video bitrate in rooms](video-bitrate-in-rooms.md)
-* [`&meshcast`](../newly-added-parameters/and-meshcast.md)
-* [Deploy your own Meshcast-like service](deploy-your-own-meshcast-like-service.md)
+* [How to capture an application's audio](audio.md)
 * [WHIP and WHEP tooling](../steves-helper-apps/whip-and-whep-tooling.md)
-* [`&website`](../source-settings/and-website.md)

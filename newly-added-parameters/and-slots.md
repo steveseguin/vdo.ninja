@@ -18,7 +18,7 @@ Example: `&slots=4`
 
 You can pass `&slots=N` to a scene link and it will force the auto-mixer to have that number of slots, even if there are more or less videos available to fill them.
 
-If you need to raise the hard cap, add `&maxslots=` (viewer-side) to allow more than the default maximum. Example: `&maxslots=20` lets the director fill up to 20 slots instead of the normal limit.
+To offer more slot numbers in the director's slot picker, add `&maxslots=N` to the director link (default 20). It does not change a scene's layout.
 
 Example: `https://vdo.ninja/?room=roomname&scene&slots=4`
 

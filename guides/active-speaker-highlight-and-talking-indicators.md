@@ -1,49 +1,43 @@
 ---
-description: Use active-speaker switching, Highlight, fixed solo sources, and talking indicators for live VDO.Ninja productions.
+description: Feature the current speaker with active-speaker switching, Highlight, fixed solo sources in OBS, and talking indicators.
 ---
 
 # Active speaker, Highlight, and talking indicators
 
-This guide explains the common ways to feature the current speaker, manually highlight a guest, keep other guests visible in OBS, and show a green talking indicator around people who are speaking.
-
 ## Quick choice
 
-| Goal | Best option |
+| Goal | Use |
 | --- | --- |
-| Automatically show only the current speaker | Use `&activespeaker=1` or `&activespeaker=3` on a scene/view link |
-| Automatically show all current speakers | Use `&activespeaker=2` or `&activespeaker=4` |
-| Automatically make the current speaker larger while others remain visible | Use `&activehighlight=2` or `&activespeakerfeatured` |
-| Manually feature one guest from the director room | Use the director Highlight / Featured control |
-| Build a fully custom OBS layout with fixed guest boxes | Use a large `&activespeaker` browser source plus separate `&solo` sources in OBS |
-| Add a green border or dot when guests talk | Use `&meterstyle=2`, `&meterstyle=3`, or `&meterstyle=4` with CSS |
-| Feature social chat messages | Use Social Stream Ninja; this is separate from VDO.Ninja guest video highlighting |
+| Show only the current speaker | `&activespeaker=1` or `&activespeaker=3` on a scene/view link |
+| Show everyone who is talking | `&activespeaker=2` or `&activespeaker=4` |
+| Make the current speaker larger while others stay visible | `&activehighlight=2` or `&activespeakerfeatured` |
+| Feature one guest by hand | The director's **Highlight** button |
+| Custom OBS layout with fixed guest boxes | A large `&activespeaker` source plus separate `&solo` sources |
+| Green border or dot when someone talks | `&meterstyle=2` or `&meterstyle=3`; `&meterstyle=4` for your own CSS |
+| Feature social chat messages | Social Stream Ninja (separate from guest video) |
 
 ## Automatic active speaker
 
-Add `&activespeaker`, `&speakerview`, or `&sas` to a viewer, room, or scene link.
+Add `&activespeaker` (aliases `&speakerview`, `&sas`) to a viewer, room or scene link:
 
 ```text
 https://vdo.ninja/?room=ROOMNAME&scene=0&activespeaker=3&cleanoutput
 ```
 
-Modes:
-
-| Mode | Behavior |
+| Mode | Shows |
 | --- | --- |
-| `&activespeaker=1` | Shows one speaker at a time, including audio-only sources |
-| `&activespeaker=2` | Shows everyone currently talking, including audio-only sources |
-| `&activespeaker=3` | Shows one speaker at a time, but only video sources |
-| `&activespeaker=4` | Shows everyone currently talking, but only video sources |
+| `1` | One speaker at a time, including audio-only sources |
+| `2` | Everyone currently talking, including audio-only sources |
+| `3` | One speaker at a time, video sources only |
+| `4` | Everyone currently talking, video sources only |
 
-Use `3` or `4` for most OBS scene layouts, since audio-only guests will not replace the video layout.
+For most OBS layouts, use `3` or `4` so audio-only guests don't replace the video.
 
-You can slow down one-speaker switching with `&activespeakerdelay`, `&speakerviewdelay`, or `&sasdelay`. This applies to modes `1` and `3`.
+To stop rapid switching when people interrupt or laugh, add `&activespeakerdelay` (aliases `&speakerviewdelay`, `&sasdelay`) in milliseconds. In modes `1` and `3` it slows switching away from the current speaker; in modes `2` and `4` it keeps a speaker on screen that long after they go quiet.
 
 ```text
 https://vdo.ninja/?room=ROOMNAME&scene=0&activespeaker=3&activespeakerdelay=1200
 ```
-
-The delay is in milliseconds. This helps prevent rapid switching when people briefly interrupt or laugh.
 
 {% content-ref url="../advanced-settings/view-parameters/activespeaker.md" %}
 [activespeaker.md](../advanced-settings/view-parameters/activespeaker.md)
@@ -53,33 +47,20 @@ The delay is in milliseconds. This helps prevent rapid switching when people bri
 [and-activespeakerdelay.md](../advanced-settings/mixer-scene-parameters/and-activespeakerdelay.md)
 {% endcontent-ref %}
 
-## Automatic active speaker Highlight
+## Automatic Highlight of the speaker
 
-Use `&activehighlight=2` when you want VDO.Ninja to keep everyone in the scene, but automatically make the current speaker larger using the secondary Highlight / Featured layout.
+`&activehighlight=2` keeps everyone in the scene and makes the current speaker larger, using the secondary Highlight layout. `&activespeakerfeatured` is an alias.
 
 ```text
 https://vdo.ninja/?room=ROOMNAME&scene=0&activehighlight=2&cleanoutput
 ```
 
-`&activespeakerfeatured` is an alias for the same mode.
+`&activehighlight=1` uses normal Highlight instead, which focuses on the speaker more fully.
 
-```text
-https://vdo.ninja/?room=ROOMNAME&scene=0&activespeakerfeatured&cleanoutput
-```
-
-Options:
-
-| Mode | Behavior |
-| --- | --- |
-| `&activehighlight=2` | Uses the secondary Highlight / Featured mode, so the active speaker becomes larger while other guests remain visible |
-| `&activespeakerfeatured` | Alias for `&activehighlight=2` |
-| `&activehighlight=1` | Uses normal Highlight, which is closer to a full speaker focus mode |
-
-By itself, `&activehighlight=2` does not enable `&activespeaker`, so it does not hide non-speaking guests. If you combine it with `&activespeaker`, the normal active-speaker hide/show behavior still applies.
-
-You can also add `&activespeakerdelay` if speaker changes are happening too quickly.
-
-This link still needs to receive and process guest audio, so do not add `&noaudio` or `&noap` to the same scene/view link. By default, it follows video-capable speakers, similar to `&activespeaker=3`, so audio-only sources do not take over the Featured layout.
+* On its own, `&activehighlight` doesn't hide guests who aren't talking. Combined with `&activespeaker`, the usual hide/show behavior applies.
+* It follows video-capable speakers, like `&activespeaker=3`, so audio-only sources don't take over.
+* `&activespeakerdelay` works here too.
+* The link must receive and process guest audio, so don't add `&noaudio` or `&noap`.
 
 {% content-ref url="../advanced-settings/view-parameters/activehighlight.md" %}
 [activehighlight.md](../advanced-settings/view-parameters/activehighlight.md)
@@ -87,27 +68,20 @@ This link still needs to receive and process guest audio, so do not add `&noaudi
 
 ## Large speaker plus smaller guests in OBS
 
-If you need exact positioning, crops, borders, or per-guest filters in OBS, use a hybrid OBS layout:
+For exact positions, crops or per-guest filters, build the layout in OBS:
 
-1. Add one large OBS Browser Source for the automatic speaker view.
-2. Add each guest as a separate smaller OBS Browser Source using their solo link.
-3. Add `&noaudio` to the smaller solo sources so audio is not duplicated.
+1. Add one large Browser Source with the automatic speaker view:
 
-Large automatic speaker source:
+   ```text
+   https://vdo.ninja/?room=ROOMNAME&scene=0&activespeaker=3&cleanoutput
+   ```
+2. Add each guest as a smaller Browser Source using their solo link, with `&noaudio` so audio isn't duplicated:
 
-```text
-https://vdo.ninja/?room=ROOMNAME&scene=0&activespeaker=3&cleanoutput
-```
+   ```text
+   https://vdo.ninja/?view=GUESTID&room=ROOMNAME&solo&cleanoutput&noaudio
+   ```
 
-Fixed side guest source:
-
-```text
-https://vdo.ninja/?view=GUESTID&room=ROOMNAME&solo&cleanoutput&noaudio
-```
-
-Replace `GUESTID` with the guest's stream ID. Permanent guest IDs make this easier to maintain between shows.
-
-Do not add `&noaudio` to the active-speaker source, since the automatic switching needs incoming audio levels. If the active-speaker source should not be heard in your final mix, mute that OBS source or route audio elsewhere in OBS instead.
+Replace `GUESTID` with the guest's stream ID; permanent IDs make this reusable between shows. Don't add `&noaudio` to the active-speaker source, since switching needs its audio levels. To keep it out of your mix, mute it in OBS instead.
 
 <figure><img src="../.gitbook/assets/active-speaker-layout-mock.png" alt="Mocked OBS layout with a large active speaker and smaller fixed guest boxes"><figcaption><p>Mocked example: a large active-speaker source with fixed solo sources in OBS.</p></figcaption></figure>
 
@@ -119,65 +93,45 @@ Do not add `&noaudio` to the active-speaker source, since the automatic switchin
 [and-solo.md](../advanced-settings/mixer-scene-parameters/and-solo.md)
 {% endcontent-ref %}
 
-## Manual Highlight / Featured guest
+## Manual Highlight
 
-From the director room, use the Highlight / Featured control on a guest to make that guest the featured video in scene outputs and connected room views that follow Highlight.
+In the director room, press **Highlight** on a guest to feature them in scene outputs and room views that follow Highlight.
 
-This is useful when the producer knows who should be on screen, such as a host, presenter, guest answer, or screen reader.
+* Use a normal scene link for the OBS program: `https://vdo.ninja/?room=ROOMNAME&scene=0&cleanoutput`
+* Hold `Ctrl` (Windows/Linux) or `Cmd` (macOS) while pressing **Highlight** to make the guest larger instead of replacing the layout.
+* Add `&ignorehighlight` to a viewer or scene link that shouldn't follow Highlight.
 
-Tips:
+### Mute follows Highlight
 
-* Use a normal scene link for the OBS program source:
-
-```text
-https://vdo.ninja/?room=ROOMNAME&scene=0&cleanoutput
-```
-
-* Click Highlight / Featured in the director control room to feature a guest.
-* Hold `Ctrl` on Windows/Linux or `Cmd` on macOS while using Highlight for the partial featured mode in supported layouts, where the guest becomes larger instead of fully replacing the layout.
-* Add `&ignorehighlight` to a viewer or scene link if that link should not follow director Highlight changes.
-
-## Mute follows Highlight
-
-If you want the highlighted guest to be the only unmuted guest, add `&highlightmute` to the director link.
+To make the highlighted guest the only unmuted guest, add `&highlightmute` (aliases `&hmute`, `&mutefollowhighlight`, `&mfh`) to the director link:
 
 ```text
 https://vdo.ninja/?director=ROOMNAME&highlightmute
 ```
 
-Aliases:
-
-* `&hmute`
-* `&mutefollowhighlight`
-* `&mfh`
-
-This is intended for producer-controlled panels where the highlighted person should be the only active on-air microphone. Manual mute changes are still possible, but the rule applies again the next time Highlight changes.
+You can still mute and unmute by hand, but the rule applies again the next time Highlight changes.
 
 {% content-ref url="../advanced-settings/director-parameters/and-highlightmute.md" %}
 [and-highlightmute.md](../advanced-settings/director-parameters/and-highlightmute.md)
 {% endcontent-ref %}
 
-## Green border or talking dot
-
-Use `&meterstyle` when you want visible feedback that someone is talking.
+## Talking indicators
 
 ```text
 https://vdo.ninja/?room=ROOMNAME&scene=0&meterstyle=2&cleanoutput
 ```
 
-Common modes:
-
-| Mode | Behavior |
+| Mode | Shows |
 | --- | --- |
-| `&meterstyle=1` | Shows a VU-style meter |
-| `&meterstyle=2` | Shows a green border around a talking guest |
-| `&meterstyle=3` | Shows a small green dot when a guest is talking |
-| `&meterstyle=4` | Hides the built-in meter and adds `data-loudness` / `data-speaking` attributes for CSS |
-| `&meterstyle=5` | Pulses an audio-only avatar/background image while speaking |
+| `&meterstyle=1` | A VU-style meter |
+| `&meterstyle=2` | A green border around a talking guest |
+| `&meterstyle=3` | A small green dot when a guest talks |
+| `&meterstyle=4` | No built-in meter; adds `data-loudness` and `data-speaking` attributes for your CSS |
+| `&meterstyle=5` | Pulses an audio-only avatar or background image while speaking |
 
 <figure><img src="../.gitbook/assets/talking-indicators-meterstyle-mock.png" alt="Mocked talking indicators with a green border, dot, and audio meter"><figcaption><p>Mocked example: a green talking border, dot, and meter-style loudness feedback.</p></figcaption></figure>
 
-For custom CSS, `data-speaking` is usually easier than raw `data-loudness`.
+For custom CSS, `data-speaking` is easier than raw `data-loudness`. `0` means quiet, `1` speaking quietly and `2` speaking loudly.
 
 ```css
 video[data-speaking="2"] {
@@ -191,23 +145,17 @@ video[data-speaking="1"] {
 }
 ```
 
-`data-speaking="0"` means quiet, `1` means low-level speaking, and `2` means loud speaking.
-
 {% content-ref url="../advanced-settings/design-parameters/meterstyle.md" %}
 [meterstyle.md](../advanced-settings/design-parameters/meterstyle.md)
 {% endcontent-ref %}
 
 ## API-driven switching
 
-For most active-speaker Featured layouts, use `&activehighlight=2`. Use the API/loudness path only when you need custom rules, custom layout objects, or external production controls.
+`&activehighlight=2` covers most featured layouts. For custom rules, a parent page, Companion or a script can decide who is loudest and update the layout using:
 
-Available building blocks:
-
-* `getLoudness` or `&pushloudness` can report guest loudness to a parent page.
-* The `layout` API can apply a custom layout object or switch predefined layouts.
-* The `soloVideo` / `highlight` API command can toggle Highlight for a guest.
-
-This is flexible, but it is more work than the built-in `&activehighlight=2` mode. It usually requires a parent page, Stream Deck / Companion workflow, or custom script to decide who is loudest and then update the layout.
+* `getLoudness` or `&pushloudness` reports guest loudness to a parent page.
+* The `layout` API applies a custom layout object or switches predefined layouts.
+* The `soloVideo` API action toggles Highlight for a guest.
 
 {% content-ref url="iframe-api-documentation/iframe-api-basics.md" %}
 [iframe-api-basics.md](iframe-api-documentation/iframe-api-basics.md)
@@ -217,31 +165,20 @@ This is flexible, but it is more work than the built-in `&activehighlight=2` mod
 [and-layouts.md](../advanced-settings/director-parameters/and-layouts.md)
 {% endcontent-ref %}
 
-## Featured chat messages are separate
+## Featured chat messages
 
-Featured social chat messages are handled by Social Stream Ninja, not by `&activespeaker` or the director Highlight video controls.
-
-Use Social Stream Ninja when you want to select YouTube, Twitch, or other social chat messages and show them as an OBS overlay.
+Featured YouTube, Twitch and other chat messages come from Social Stream Ninja, not from `&activespeaker` or Highlight.
 
 {% content-ref url="../steves-helper-apps/social-stream-ninja/README.md" %}
 [README.md](../steves-helper-apps/social-stream-ninja/README.md)
 {% endcontent-ref %}
 
-## Common issues
+## Troubleshooting
 
-If active speaker never switches:
+If the active speaker never switches:
 
-* Make sure the scene/view link is receiving audio.
-* Do not add `&noap`; audio processing is needed for loudness-based features.
-* Try `&meterstyle=2` first to confirm VDO.Ninja can detect who is talking.
-* Use `&activespeaker=3` if audio-only sources are unexpectedly taking over the scene.
+* Make sure the link receives audio, and remove `&noap`; loudness features need audio processing.
+* Try `&meterstyle=2` to confirm VDO.Ninja detects who is talking.
+* Use `&activespeaker=3` if audio-only sources take over the scene.
 
-If the layout is switching too quickly:
-
-* Add `&activespeakerdelay=1000` to `&activespeakerdelay=2000`.
-* Use manual Highlight when the producer needs deterministic control.
-
-If you need the exact "current speaker large, everyone else still visible, all inside one VDO.Ninja scene link" behavior:
-
-* Use `&activehighlight=2` or `&activespeakerfeatured`.
-* Use the OBS hybrid method only when you need custom per-source positioning or filters.
+If it switches too quickly, add `&activespeakerdelay=1000` to `2000`, or use manual Highlight for full control.

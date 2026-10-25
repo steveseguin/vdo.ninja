@@ -1,0 +1,59 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="600" viewBox="0 0 960 600" role="img" aria-labelledby="title description">
+  <title id="title">Who connects to whom in a multi-operator Twitch show</title>
+  <desc id="description">Players A, B and C each send a game feed and a camera feed through VDO.Ninja to one program OBS. Discord voice is captured once in that OBS. The program OBS sends the only stream to Twitch. In Solution 1 the program OBS moves between operators' computers; in Solution 2 it stays on one always-on computer that other operators control remotely.</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 Z" fill="#205c96"/></marker>
+    <marker id="arrowGreen" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 Z" fill="#25644a"/></marker>
+    <marker id="arrowOrange" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 Z" fill="#b25d00"/></marker>
+  </defs>
+  <rect width="960" height="600" fill="white"/>
+  <g font-family="Arial, Helvetica, sans-serif" text-anchor="middle" fill="#142c43">
+    <text x="480" y="52" font-size="36" font-weight="bold">Who connects to whom</text>
+    <text x="480" y="86" font-size="23">Many feeds in, one OBS mixes, one stream out</text>
+
+    <g fill="#edf4fb" stroke="#205c96" stroke-width="3">
+      <rect x="30" y="125" width="220" height="96" rx="18"/>
+      <rect x="30" y="245" width="220" height="96" rx="18"/>
+      <rect x="30" y="365" width="220" height="96" rx="18"/>
+      <rect x="420" y="200" width="250" height="186" rx="22"/>
+      <rect x="745" y="243" width="185" height="100" rx="18"/>
+    </g>
+    <g font-size="26" font-weight="bold">
+      <text x="140" y="165">Player A</text>
+      <text x="140" y="285">Player B</text>
+      <text x="140" y="405">Player C</text>
+      <text x="545" y="246">Program OBS</text>
+      <text x="837" y="302">Twitch</text>
+    </g>
+    <g font-size="21">
+      <text x="140" y="196">game + camera</text>
+      <text x="140" y="316">game + camera</text>
+      <text x="140" y="436">game + camera</text>
+      <text x="545" y="280">Browser Sources</text>
+      <text x="545" y="310">one per feed</text>
+      <text x="545" y="352">only one on air</text>
+    </g>
+
+    <text x="332" y="278" font-size="22" font-weight="bold">VDO.Ninja</text>
+    <g stroke="#205c96" stroke-width="5" fill="none" marker-end="url(#arrow)">
+      <path d="M255 173 L410 240"/>
+      <path d="M255 293 H410"/>
+      <path d="M255 413 L410 346"/>
+      <path d="M675 293 H737"/>
+    </g>
+
+    <rect x="420" y="450" width="250" height="76" rx="18" fill="#e9f5f0" stroke="#25644a" stroke-width="3"/>
+    <text x="545" y="497" font-size="25" font-weight="bold">Discord voice</text>
+    <path d="M545 445 V394" stroke="#25644a" stroke-width="5" fill="none" marker-end="url(#arrowGreen)"/>
+    <text x="560" y="427" font-size="20" text-anchor="start">captured once</text>
+
+    <rect x="745" y="450" width="185" height="76" rx="18" fill="#fdf3e7" stroke="#b25d00" stroke-width="3"/>
+    <text x="837" y="482" font-size="22" font-weight="bold">Other</text>
+    <text x="837" y="508" font-size="22" font-weight="bold">operators</text>
+    <text x="806" y="414" font-size="20">remote control</text>
+    <path d="M740 470 L680 380" stroke="#b25d00" stroke-width="4" stroke-dasharray="10 7" fill="none" marker-end="url(#arrowOrange)"/>
+
+    <text x="480" y="560" font-size="21">Solution 1: the program OBS moves to the next operator's PC.</text>
+    <text x="480" y="588" font-size="21">Solution 2: it stays on one always-on PC that operators control remotely.</text>
+  </g>
+</svg>

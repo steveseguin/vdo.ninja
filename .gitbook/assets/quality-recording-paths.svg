@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="540" viewBox="0 0 960 540" role="img" aria-labelledby="title description">
+  <title id="title">Where each recording is made</title>
+  <desc id="description">The guest's browser sends video over the Internet or Wi-Fi to OBS or the director. A local recording in the guest's browser is made before the network, so it avoids network freezes. A recording in OBS or by the director is made after the network, so it includes any freezes or loss. A local recording can optionally upload to Google Drive.</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 Z" fill="#205c96"/></marker>
+    <marker id="arrowGreen" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 Z" fill="#2e7d4f"/></marker>
+    <marker id="arrowAmber" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 Z" fill="#b25d00"/></marker>
+  </defs>
+  <rect width="960" height="540" fill="white"/>
+  <g font-family="Arial, Helvetica, sans-serif" text-anchor="middle" fill="#142c43">
+    <text x="480" y="54" font-size="36" font-weight="bold">Where each recording is made</text>
+    <g fill="#edf4fb" stroke="#205c96" stroke-width="3">
+      <rect x="30" y="100" width="260" height="150" rx="22"/>
+      <rect x="350" y="100" width="260" height="150" rx="22"/>
+      <rect x="670" y="100" width="260" height="150" rx="22"/>
+    </g>
+    <text x="160" y="165" font-size="26" font-weight="bold">Guest browser</text>
+    <text x="160" y="205" font-size="22">Camera and mic</text>
+    <text x="480" y="165" font-size="26" font-weight="bold">Internet / Wi-Fi</text>
+    <text x="480" y="205" font-size="22">Freezes and loss</text>
+    <text x="800" y="165" font-size="26" font-weight="bold">OBS or director</text>
+    <text x="800" y="205" font-size="22">Live show</text>
+    <g stroke="#205c96" stroke-width="5" marker-end="url(#arrow)">
+      <path d="M294 175 H340"/><path d="M614 175 H660"/>
+    </g>
+    <rect x="30" y="300" width="260" height="110" rx="18" fill="#e9f5f0" stroke="#2e7d4f" stroke-width="3"/>
+    <text x="160" y="345" font-size="24" font-weight="bold">Local recording</text>
+    <text x="160" y="381" font-size="21">Before the network</text>
+    <rect x="670" y="300" width="260" height="110" rx="18" fill="#fbf1e6" stroke="#b25d00" stroke-width="3"/>
+    <text x="800" y="345" font-size="24" font-weight="bold">Live recording</text>
+    <text x="800" y="381" font-size="21">Includes any glitches</text>
+    <path d="M160 254 V290" stroke="#2e7d4f" stroke-width="5" marker-end="url(#arrowGreen)"/>
+    <path d="M800 254 V290" stroke="#b25d00" stroke-width="5" marker-end="url(#arrowAmber)"/>
+    <rect x="340" y="320" width="280" height="70" rx="18" fill="#edf4fb" stroke="#205c96" stroke-width="3" stroke-dasharray="10 7"/>
+    <text x="480" y="363" font-size="21">Google Drive (optional)</text>
+    <path d="M294 355 H330" stroke="#2e7d4f" stroke-width="5" marker-end="url(#arrowGreen)"/>
+    <text x="480" y="480" font-size="24">Record both: the live copy for the show,</text>
+    <text x="480" y="512" font-size="24">the local copy as a clean backup</text>
+  </g>
+</svg>

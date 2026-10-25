@@ -30,7 +30,7 @@ If you want the active speaker to become larger while other guests remain visibl
 
 ### Customize the delay on switching
 
-By default, the active speaker switches fairly quickly, typically within a few hundred milliseconds of a louder speaker taking over. You can add a fixed added delay, which works with modes 1 and 3, which will delay how long it takes before a switch between speakers is made
+By default, the active speaker switches fairly quickly, typically within a few hundred milliseconds of a louder speaker taking over. You can add a fixed delay before a switch between speakers is made (modes 1 and 3); in modes 2 and 4 it keeps a speaker on screen for that long after they go quiet
 
 `&activespeakerdelay`=2000, where 2000 is a value in milliseconds.
 

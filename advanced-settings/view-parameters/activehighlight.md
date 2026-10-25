@@ -20,6 +20,9 @@ Use this when you want the person currently speaking to become larger, while the
 | --- | --- |
 | `2` \| (no value given) | Uses the secondary Highlight / Featured mode. The active speaker becomes larger, but other visible guests remain in the layout. |
 | `1` | Uses normal Highlight, which is closer to a full speaker focus mode. |
+| `0` \| `false` | Off |
+
+Any other value acts like `2`.
 
 Example:
 

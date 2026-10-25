@@ -1,225 +1,90 @@
 ---
-description: How two browsers can start a VDO.Ninja call with no handshake server at all, by passing a short code through a QR code, a chat message, or anything else that carries text.
+description: How two browsers start a VDO.Ninja call with no handshake server, by exchanging a short code through a QR code, a chat message or any other text channel.
 ---
 
 # Serverless connections
 
-Every VDO.Ninja call normally starts the same way. Both browsers connect to the handshake server, the server passes signalling messages between them, and the media flows directly peer to peer.
+A VDO.Ninja call normally starts with both browsers connecting to the handshake server, which passes signalling messages between them; media then flows peer to peer. If the two browsers exchange those first messages some other way, such as a QR code shown to a camera or text pasted into a chat, they can open their own connection and carry all later signalling over it.
 
-**The server is a postman, not a participant.** If the two browsers exchange the initial messages by some other means — a QR code held up to a camera, a line pasted into a chat box — they can establish their own data channel. The example then uses that channel to carry any later signalling peer to peer, so it never needs the handshake server.
+This page covers the technical details. For setup steps, see [QR Connect](../steves-helper-apps/qr-connect.md), or try it at [vdo.ninja/qr](https://vdo.ninja/qr).
 
-For a shorter explanation, a diagram, and setup steps, see [QR Connect](../steves-helper-apps/qr-connect.md). This page covers the technical details.
+![Device A and Device B exchange an offer code and a reply code by QR or text. This opens a VDO.Ninja peer connection that starts with only a data channel. Over it, the two pages set up a second sidecar connection for chat and later signalling, and camera and microphone are added to the first connection when turned on.](../.gitbook/assets/network-serverless-bootstrap.svg)
 
-## What actually has to be exchanged
+## What has to be exchanged
 
-To start a connection, each side has to tell the other three things:
+To start a connection, each side must give the other:
 
-* **A fingerprint of its certificate**, so the browser can verify that the certificate presented on the connection matches the one in the exchanged description. This binds the connection to that description, not to a person's real-world identity; authenticity still depends on how safely the code is exchanged.
-* **Its ICE credentials** — a short username and password used to authenticate the connectivity probes.
-* **A list of network routes** it can be reached on: its address on the local network, its address as seen from the internet, and any relay servers it has reserved.
+* **a certificate fingerprint**, so the browser can check the encrypted connection matches the exchanged description. This ties the connection to the description, not to a real-world identity, so trust depends on how safely the code travels;
+* **ICE credentials**, a short username and password that authenticate connectivity checks;
+* **network routes**: its local address, its address as seen from the internet, and any reserved relay addresses.
 
-In the recorded browser samples, writing that out in the usual format came to **around 3,000 characters** for an audio and video offer: about 3,470 from Chrome and 2,700 from Firefox. Exact SDP size varies by browser version and configuration.
+Written in the usual SDP format, an audio and video offer is **around 3,000 characters**. That is too dense for a QR code read from a screen and too long for many message limits. QR mode packs it into one short code per person; Trickle mode splits it across several small messages.
 
-That is the obstacle. Three thousand characters produces a QR code that is too dense for the intended screen-to-camera exchange and exceeds many short-message limits.
+## How the code gets small
 
-Ordinary QR mode packs those details into one short code per person. Trickle mode can instead split them across several small text messages.
+**Connect with data only, add media later.** Almost all of those 3,000 characters describe audio and video codecs and extensions, none of which are needed to connect. A bare data-channel offer is about 460 characters of SDP, or about 700 with gathered routes. Camera and microphone are negotiated later over the open connection, with no new code.
 
-## Where the savings come from
+**Send only what changes.** Within a recognised data-channel SDP shape, nearly every line is the same each time. A recognised shape is stored as two bits in the record header, and only six changing SDP values are kept; session details and routes are encoded separately. Any other shape falls back to a slightly longer line-based form.
 
-### Do not describe media you have not turned on yet
+**Store numbers as numbers.** A fingerprint is 64 hex characters but only 32 bytes. An address like `192.168.1.40` is 12 characters but 4 bytes. A first IPv4 route takes about seven bytes: flags, four address bytes and a port. IPv6 and mDNS addresses take 16 address bytes; repeated addresses become references, and related routes share an address prefix. Anything unrecognised still passes through a generic path.
 
-This is the big one, and it is worth more than everything else combined.
+**Leave out what can be worked out.** With no server and only two participants, the stream name is a constant both ends know. Route priorities follow from route order. The random SDP origin ID and session label are derived from the fingerprint, and later renegotiations reuse them. The recognised SDP shape supplies the rest.
 
-Almost all of those 3,000 characters describe audio and video: every codec, every parameter, every extension the two sides might negotiate. None of it is needed in order to *connect*.
+**What is left is random.** The fingerprint and packed ICE password take roughly 50–55 bytes, about 40% of a finished code, and random data cannot be compressed.
 
-Open a bare data channel first — no camera, no microphone — and the SDP portion collapses to **about 460 characters**. A complete plain-text exchange with gathered routes is closer to 700 characters. After connecting, the wrapper uses that bootstrap channel to negotiate an independent persistent data channel. Turn your camera on afterwards and the browsers carry the media renegotiation over that sidecar, without another code exchange.
+| Form | Approximate characters |
+| --- | --- |
+| Normal audio and video offer | ~3,000 |
+| Data-only offer as ordinary text | ~700 |
+| Typical packed data-only offer | **44–70** |
 
-### Most of what is left is identical every time
+The packed record is written in a 30,000-character subset of the transport-safe alphabets from [qntm/base2048](https://github.com/qntm/base2048) and [qntm/base32768](https://github.com/qntm/base32768). Each character is a Unicode letter or number that is stable under normalization and carries about 14.87 bits, with no emoji, punctuation, spaces, control or combining characters. New codes start with an ASCII `Y`; older codes starting with `Z`, `VQ` or `VN` can still be read. Offers and answers have a hard limit of 118 characters, which is at most 235 characters by X's weighting and 352 UTF-8 bytes.
 
-Within a recognised data-channel SDP shape, the overwhelming majority is boilerplate — the same lines, in the same order. Six SDP values are extracted from that shape; session metadata and network routes are encoded separately.
+## After connecting: the sidecar
 
-So a recognised shape is stored as **two bits in the record header** and the changing values are stored separately. Captured Chrome and Firefox shapes are recognised, and the tested Safari data-channel SDP matches the Chrome shape. An unrecognised shape still has a line-based fallback; it just costs a little more.
+Once the bootstrap data channel opens, the out-of-band exchange is finished. The page immediately negotiates a second, data-only peer connection, the **sidecar**, over that channel. It uses the same ICE servers and policy, so it prefers direct routes and can fall back to TURN. Chat and all later VDO.Ninja signalling, such as turning on a camera or attempting an ICE restart, move onto the sidecar before media controls are enabled. Its own offer and answer travel automatically over the existing channel, never as another code.
 
-### Text is an expensive way to store numbers
-
-The values that remain are written as text, and text is wasteful.
-
-A certificate fingerprint is 64 hexadecimal characters holding 32 bytes of information. An address like `192.168.1.40` is 12 characters holding 4 bytes. Stored as the numbers they actually are, everything shrinks by half or better.
-
-Network routes benefit most. A first compact IPv4 route is about **seven bytes**: packed flags, four address bytes, and a port. IPv6 and mDNS addresses need 16 address bytes, while repeated addresses are references and related IPv4/IPv6 routes reuse a shared address prefix — useful for ISP blocks and when TURN exposes UDP and TCP on the same relay. Anything unrecognised is preserved through the generic path.
-
-### Anything that can be worked out is not sent at all
-
-Several fields carry no information worth transmitting. There is no server to collide with and only ever two participants, so the stream name is a constant both ends already know. Route priorities can be recalculated from the order the routes appear in. The random SDP origin ID and wrapper session label are derived from the certificate fingerprint already in the record; later renegotiations are normalized to those same values. Other attributes are supplied by the recognised SDP shape.
-
-None of that goes on the wire.
-
-### What is left cannot be made smaller
-
-Roughly **50 to 55 bytes** are consumed by the certificate fingerprint and packed ICE password alone. They are random, they have to arrive exactly, and no amount of cleverness compresses random data. That is the main floor, and it is roughly 40% of a finished code.
-
-### The result
-
-| | characters |
-| :--- | :--- |
-| A normal audio and video offer | ~3,000 |
-| Data-only, written as ordinary text | ~700 |
-| Data-only, packed properly in the Chrome/Firefox/Safari matrix | **44 – 70** |
-| Hostile ten-route IPv4/IPv6 + UDP/TCP fixture | **89 – 96** |
-
-The compact record uses
-a base-30,000 subset of
-[`qntm/base2048`](https://github.com/qntm/base2048) and
-[`qntm/base32768`](https://github.com/qntm/base32768)'s transport-safe
-alphabets. Each normalization-stable BMP letter or number carries about 14.87
-bits: no emoji, surrogate pairs, punctuation, whitespace, controls, or
-combining characters. The full 118-glyph guard is at most 235 X-weighted
-characters and 352 UTF-8 bytes, and the same text round-trips through UTF-8
-Notepad files. New codes start with a single ASCII `Y`; older `Z`, `VQ`, and
-`VN` codes remain decodable.
-
-Validation covers all nine offerer/answerer pairings among Chrome, Firefox, and
-Safari, with Safari running on real iPhone 15 Pro Max devices. Every pairing
-exchanged persistent-sidecar chat in both directions. Normal runs keep ICE
-policy `all`: local Chrome selected host-to-host, while real-network runs
-selected server-reflexive/learned-peer-reflexive paths. Separate TURN-only runs
-passed in Chrome, Firefox, and real-iPhone Safari with relay-to-relay selected
-pairs. The TURN-only sidecar also exchanged chat both ways, confirming that the
-compact codes keep TURN as a fallback without forcing it normally.
-
-## After connecting: persistent chat and signalling
-
-The first VDO.Ninja data channel is sufficient to finish the QR handshake.
-A separate persistent channel keeps chat and later signalling independent
-of the media connection's lifecycle.
-
-The example therefore negotiates a second, independent data-only peer
-connection immediately after connecting. It inherits VDO.Ninja's ICE servers
-and policy, so it still prefers direct paths and can use TURN when direct
-connectivity fails. Later VDO.Ninja signalling and application data move onto
-that sidecar before media controls are enabled.
-
-The descriptions a person carries out of band are the original compact offer
-and answer. Trickle mode can split these into parts and carry additional network
-routes in separate messages before connecting. The sidecar has its own internal offer and
-answer, but those bytes travel automatically over the already-established peer
-data channel and never appear as another code.
-
-Both people can use the example's text chat. Messages are reliable and ordered,
-stay peer to peer, and do not add anything to the 118-character offer or answer
-because the sidecar is negotiated after the QR exchange. Chat history exists
-only in the two open pages; there is no server-side history or offline delivery.
+So there is **one exchange, once**: not a code per change. Chat messages are reliable, ordered and peer to peer, and history exists only in the two open pages.
 
 ## Getting the code across
 
-### As a QR code
+### QR code
 
-The sharing side displays a QR code that is really just a link with the offer on the end of it. The intended flow is to scan it with a phone's ordinary camera app so the page opens with the offer already loaded. The replying side then shows a code of its own, which the first person reads back.
+After **Start connection**, the page shows a QR code holding a link with the offer appended, so a phone's normal camera app opens the page with the offer loaded. The other person can instead choose **Scan or paste a code**. Their page shows a reply code, which the first person scans or pastes back. If scanning fails, enlarge the code, reduce glare or paste the code instead.
 
-The renderer passes the compact text to the QR encoder as exact UTF-8 bytes and surrounds the result with the standard four-module quiet zone. Software tests decode the rendered pixels back to the exact link in Chromium and Firefox. Real reading distance still depends on screen size, brightness, glare, and camera focus; screen-to-camera reliability has not yet been claimed across physical devices.
+### Text message
 
-### As a chat message
+The codes are plain text. **Copy code** copies the raw code; **Copy link** copies the longer QR link. Paste the raw code into chat apps.
 
-The codes are plain text, so anything that carries text will do.
-
-**Ordinary QR offers and answers share a 118-character hard limit.** Current Chrome,
-Firefox, and real-iPhone Safari runs produce 44–70 characters. A deterministic
-fixture with unrelated addresses and randomized ports is the stronger size
-check: Chrome-shaped SDP is 89 characters and Firefox-shaped SDP is 96 while
-retaining ten IPv4/IPv6 host, server-reflexive, and UDP/TCP relay routes. ICE
-learns peer-reflexive routes from connectivity checks, so they are not carried
-as bootstrap candidates. The Copy button copies the raw code; the offer QR
-contains a longer page URL so a camera app can open it directly.
-
-The raw code fits X's 280-character weighted limit even if every non-ASCII
-glyph receives weight two, and it fits YouTube Live Chat's documented
-200-character limit by glyph count. It contains only letters/numbers because
-YouTube says URLs and special characters may be rejected, so paste the raw code
-rather than the QR link. At most 352 UTF-8 bytes remain below IRC's line limit.
-Classic SMS uses 16-bit encoding for this alphabet: the full guard fits two
-concatenated 67-character parts, not one 70-character part. No live YouTube
-message or carrier SMS was sent during automated validation, so platform
-moderation and carrier recoding remain external variables.
+| Channel | Fits? |
+| --- | --- |
+| X (280 weighted characters) | Yes, even if every non-ASCII character counts as two |
+| YouTube Live Chat (200 characters) | Yes; the code has only letters and numbers, since YouTube may reject links and special characters |
+| IRC (one line) | Yes, at most 352 UTF-8 bytes |
+| Classic SMS | Needs two joined 67-character parts, because this alphabet uses 16-bit encoding |
 
 {% hint style="info" %}
-**Ordinary QR mode takes two messages, one in each direction.** The first person posts an offer, the second replies with an answer, and only then are they connected. Trickle mode can require several messages each way. A channel that only travels one way cannot do either exchange.
+**QR mode needs one message in each direction**: an offer, then a reply. Trickle mode can need several each way. A one-way channel cannot complete either exchange.
 {% endhint %}
 
 ### Trickle mode (LoRa / mesh compatible)
 
-Enable **Trickle mode (LoRa / mesh compatible)** on the QR page, or open
-[vdo.ninja/qr?lora](https://vdo.ninja/qr?lora). Older versions label this
-**LoRa / MeshCore mode**. The existing `?lora` URL option is unchanged.
-For the manual exchange steps, see [QR Connect](../steves-helper-apps/qr-connect.md).
+Turn on **Trickle mode (LoRa / mesh compatible)** on the QR page, or open [vdo.ninja/qr?lora](https://vdo.ninja/qr?lora). Each message is plain ASCII, **140 characters** by default including header and checksum, and can be lowered to **40**; the replying page adopts the offer's limit. The 118-character QR limit does not apply to the combined exchange.
 
-This mode uses **140 ASCII characters per message** by default, including its
-header and checksum. The limit can be reduced to **40**, and the replying page
-adopts the offer's limit. ASCII letters and digits occupy one UTF-8 byte each,
-unlike the dense Unicode alphabet used by ordinary QR codes. The 118-character
-QR ceiling does not apply to the combined Trickle exchange.
+The first message carries the compact description and as many routes as fit, preferring public and relay routes. Other routes follow in more messages as they are found; none are dropped to save space, and anything too long is split into numbered parts. Smaller messages can mean more text and more exchanges in total. Messages start with `L1O` (offer) or `L1A` (answer); the header identifies the exchange, record and part and includes a checksum. The receiver reassembles parts, ignores duplicates and rejects conflicting parts or messages from another exchange. Keep sending every available message both ways until connected; **Start over** clears the exchange.
 
-The first record carries the compact data-channel description and as many
-available network routes as fit, preferring public and relay routes. Overflow
-and late routes follow in additional messages through the existing trickle ICE
-path. Routes are not discarded just to meet the message budget. Descriptions
-or individual routes that exceed it are split into numbered parts. Smaller
-individual messages can mean more total text and more manual exchanges.
+Messaging apps have different limits. Meshtastic's [Android composer](https://github.com/meshtastic/meshtastic/blob/master/docs/software/android/user/messages-and-channels.md#message-limits) allows 200 bytes. MeshCore's [channel message handling](https://github.com/meshcore-dev/MeshCore/blob/main/src/helpers/BaseChatMesh.cpp) counts the sender-name prefix against the allowance, so some channels need less than 140. Copy messages between the page and your radio's messaging app; the page does not connect to radio hardware. Radio carries only the setup; chat, audio and video still need an IP path between the browsers, directly or through TURN.
 
-Messages start with `L1O` for the offer side or `L1A` for the answer side. The
-header identifies the exchange, record and part, and includes a checksum.
-Receivers reassemble parts, ignore duplicates and reject conflicting parts or
-messages from another exchange. Keep sending each available message separately
-in both directions until connected; **Start over** clears the exchange.
+## Limitations
 
-The format can be carried by other text transports as well as LoRa apps.
-MeshCore and Meshtastic do not share a single message limit:
+* **Codes are not lasting invitations.** Routes belong to the open page and its current network, so keep both pages open. There is no expiry timer, but a network change or expired NAT or TURN state can break a delayed exchange. If a reply no longer connects, start a new offer.
+* **One viewer per offer.** The first valid reply takes the connection.
+* **A posted code can be claimed.** VDO.Ninja's extra SDP encryption layer is off because its output cannot fit this size, so anyone who reads your offer and answers first gets the connection. Exchange codes over a channel you trust. WebRTC's DTLS/SRTP encryption still protects the call.
+* **No recovery once the sidecar is lost.** The connection can ride out brief network trouble, and the page can tunnel an ICE restart over the sidecar. Once the page reports that the peer dropped, exchange new codes.
+* **The sidecar is a second peer connection.** It carries little traffic, but when TURN is needed it needs its own relay allocation.
+* **"Serverless" means no handshake server.** The browsers still use STUN to learn their public addresses and may use TURN when the networks cannot reach each other directly, as in any WebRTC call.
+* **LAN-only mode is not exposed.** The reusable QR module can pass [`&lanonly`](../advanced-settings/turn-and-stun-parameters/and-lanonly.md) to its iframe through `extraParams`, but the public page has no such option, and adding it to the page URL does nothing.
 
-- Meshtastic's [Android composer](https://github.com/meshtastic/meshtastic/blob/master/docs/software/android/user/messages-and-channels.md#message-limits) allows 200 bytes; the underlying mesh payload limit is approximately 233 bytes.
-- MeshCore's [channel message handling](https://github.com/meshcore-dev/MeshCore/blob/main/src/helpers/BaseChatMesh.cpp) includes the sender-name prefix in its text allowance. A channel can therefore require a limit below this page's 140-byte default.
+## Implementation
 
-Set the budget to fit the app and message type, including space needed for
-prefixes added by the transport. The page does not connect directly to radio
-hardware, and radio delivery has not been verified by the browser tests above.
-LoRa carries connection signalling only; WebRTC chat, audio and video still
-need an IP path between the browsers, directly or through TURN. Keep both pages
-open: long delays, background suspension or changed network routes can require
-a fresh exchange.
-
-## What it costs you
-
-There are real trade-offs, and they are worth knowing before you rely on this.
-
-**Codes are not durable invitations.** The routes belong to the open page and its current network state, so that page must stay open. There is no application-level expiry timer, but a network change or expired NAT/TURN state can invalidate a delayed exchange. If a reply no longer connects, generate a new offer.
-
-**One viewer per published stream.** This is a one-to-one bootstrap. The offer is good for exactly one answer, and the first valid reply takes the connection.
-
-**A publicly posted code is claimable.** VDO.Ninja's additional application-layer wrapping of the SDP is disabled because its ciphertext cannot be packed down to this size. Anyone who can read your offer and answers it before the intended person can take the connection. Exchange codes through a channel you trust. WebRTC's DTLS/SRTP transport encryption remains enabled.
-
-**There is no out-of-band recovery after the persistent sidecar is lost.** The browser may survive transient network trouble while the channel remains usable, and the wrapper can tunnel an ICE restart over it. Once the page reports that the peer dropped, this example does not rebuild the channel; exchange fresh codes.
-
-**The persistent channel is a second peer connection.** It carries very little
-traffic, but if the peers require TURN it also needs its own relay allocation.
-
-## After the handshake, no more out-of-band exchange is needed
-
-This is what makes it practical rather than a party trick.
-
-The moment the bootstrap data channel opens, the external signalling exchange is finished. The wrapper negotiates its persistent sidecar over that connection, then tunnels later VDO.Ninja signalling for actions such as turning on a camera or attempting an ICE restart. Two-way chat and other application messages use the sidecar as well.
-
-So it is **one exchange, once**. Not a code per change, and not a code per minute. Connect, and then use it like any other call.
-
-## One clarification
-
-"Serverless" here means **no handshake server**. Connections still use STUN to discover how each side appears from the internet, and may fall back to a TURN relay when two networks cannot reach each other directly — exactly as any WebRTC call does, serverless or not.
-
-VDO.Ninja's existing LAN-only parameter is `&lanonly`. The reusable QR module can pass it to the iframe through `extraParams`, but the public example page does not currently expose a LAN-only option. Do not append it to the example page URL and expect it to be forwarded.
-
-## Try it
-
-The implementation is included in the app repository at `qr.html`. Once that app revision is deployed, it will be available at:
-
-[**https://vdo.ninja/qr**](https://vdo.ninja/qr)
-
-One person presses **Start connection** and gets a QR code plus a copyable compact code. The other opens the QR link or pastes the code, gets a reply code back, and the first person scans or pastes that in. Both can then chat and turn on their own camera or microphone. Media uses the normal VDO.Ninja iframe paths. The wrapper opts into parent-routed SDP/ICE signalling with `bypasssignaling`, keeping compact session IDs consistent during later media negotiation.
-
-The wire format, the measurements behind the numbers on this page, and the cross-browser test results are documented alongside the example in [`examples/qrconnect.md`](https://github.com/obsninja/obsninja/blob/master/examples/qrconnect.md).
+The page is `qr.html` with `qrconnect.js` in the app repository. Media uses the normal VDO.Ninja iframe, run with `&bypasssignaling` so the wrapper routes SDP and ICE messages and keeps the compact session IDs consistent. The wire format and integration details are in [`examples/qrconnect.md`](https://github.com/steveseguin/vdo.ninja/blob/develop/examples/qrconnect.md).

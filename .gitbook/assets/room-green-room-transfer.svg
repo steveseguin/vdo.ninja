@@ -1,0 +1,34 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="470" viewBox="0 0 960 470" role="img" aria-labelledby="title description">
+  <title id="title">A transfer room as a green room</title>
+  <desc id="description">A guest opens the LobbyRoom link and waits there while the director checks them. The director transfers the guest into LiveRoom, where the show runs. If the guest refreshes, they return to LobbyRoom. Both rooms need the same password, and a normal transfer keeps the LiveRoom name out of the guest's address bar.</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 Z" fill="#205c96"/></marker>
+    <marker id="arrow-return" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 Z" fill="#b25d00"/></marker>
+  </defs>
+  <rect width="960" height="470" fill="white"/>
+  <g font-family="Arial, Helvetica, sans-serif" text-anchor="middle" fill="#142c43">
+    <text x="480" y="54" font-size="36" font-weight="bold">A transfer room as a green room</text>
+    <g fill="#edf4fb" stroke="#205c96" stroke-width="3">
+      <rect x="25" y="160" width="170" height="110" rx="20"/>
+      <rect x="275" y="110" width="260" height="210" rx="22"/>
+      <rect x="695" y="110" width="240" height="210" rx="22"/>
+    </g>
+    <text x="110" y="208" font-size="27" font-weight="bold">Guest</text>
+    <text x="110" y="240" font-size="21">opens lobby link</text>
+    <text x="405" y="180" font-size="29" font-weight="bold">LobbyRoom</text>
+    <text x="405" y="222" font-size="23">Guests wait</text>
+    <text x="405" y="256" font-size="23">Director checks</text>
+    <text x="405" y="286" font-size="23">each guest</text>
+    <text x="815" y="180" font-size="29" font-weight="bold">LiveRoom</text>
+    <text x="815" y="228" font-size="23">The live show</text>
+    <g stroke="#205c96" stroke-width="5" marker-end="url(#arrow)">
+      <path d="M200 215 H265"/>
+      <path d="M545 195 H685"/>
+    </g>
+    <text x="615" y="178" font-size="23" font-weight="bold">Transfer</text>
+    <path d="M685 265 H545" stroke="#b25d00" stroke-width="5" marker-end="url(#arrow-return)"/>
+    <text x="615" y="300" font-size="21" fill="#b25d00">On refresh</text>
+    <text x="480" y="385" font-size="24">Both rooms need the same password</text>
+    <text x="480" y="425" font-size="24">A normal transfer keeps LiveRoom out of the guest's address bar</text>
+  </g>
+</svg>

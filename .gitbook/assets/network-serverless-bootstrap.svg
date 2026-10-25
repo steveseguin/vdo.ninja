@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="500" viewBox="0 0 960 500" role="img" aria-labelledby="title description">
+  <title id="title">One exchange, then peer to peer</title>
+  <desc id="description">Device A and Device B first exchange an offer code and a reply code by QR or text, with no handshake server. That opens a VDO.Ninja peer connection with only a data channel. Over it, the pages set up a sidecar connection that carries chat and all later signalling. Camera and microphone are added to the VDO.Ninja connection when turned on. STUN and TURN can still help the route.</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 Z" fill="#205c96"/></marker>
+    <marker id="arrow-code" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 Z" fill="#b25d00"/></marker>
+    <marker id="arrow-side" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 Z" fill="#2e7d4f"/></marker>
+  </defs>
+  <rect width="960" height="500" fill="white"/>
+  <g font-family="Arial, Helvetica, sans-serif" text-anchor="middle" fill="#142c43">
+    <text x="480" y="52" font-size="36" font-weight="bold">One exchange, then peer to peer</text>
+    <g fill="#edf4fb" stroke="#205c96" stroke-width="3">
+      <rect x="35" y="90" width="170" height="320" rx="22"/>
+      <rect x="755" y="90" width="170" height="320" rx="22"/>
+    </g>
+    <g font-size="28" font-weight="bold">
+      <text x="120" y="258">Device A</text>
+      <text x="840" y="258">Device B</text>
+    </g>
+    <text x="480" y="128" font-size="22" font-weight="bold" fill="#b25d00">1. Offer and reply codes (QR or text)</text>
+    <path d="M215 150 H745" stroke="#b25d00" stroke-width="5" stroke-dasharray="14 8" fill="none" marker-start="url(#arrow-code)" marker-end="url(#arrow-code)"/>
+    <text x="480" y="214" font-size="22" font-weight="bold">2. VDO.Ninja connection</text>
+    <text x="480" y="242" font-size="20">data channel first; camera and mic later</text>
+    <path d="M215 262 H745" stroke="#205c96" stroke-width="5" fill="none" marker-start="url(#arrow)" marker-end="url(#arrow)"/>
+    <text x="480" y="324" font-size="22" font-weight="bold" fill="#2e7d4f">3. Sidecar connection</text>
+    <text x="480" y="352" font-size="20">chat and all later signalling</text>
+    <path d="M215 372 H745" stroke="#2e7d4f" stroke-width="5" fill="none" marker-start="url(#arrow-side)" marker-end="url(#arrow-side)"/>
+    <text x="480" y="460" font-size="22">No handshake server. STUN and TURN can still help the route.</text>
+  </g>
+</svg>

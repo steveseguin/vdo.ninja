@@ -1,0 +1,46 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="470" viewBox="0 0 960 470" role="img" aria-labelledby="title description">
+  <title id="title">OBS picture and sound into VDO.Ninja</title>
+  <desc id="description">The OBS scene goes to OBS Virtual Camera, which VDO.Ninja selects as its video source. OBS audio sources with monitoring turned on go to CABLE Input; VDO.Ninja selects CABLE Output as its audio source. The VDO.Ninja push page then sends both to the viewer through the view link.</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 Z" fill="#205c96"/></marker>
+    <marker id="arrow-green" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 Z" fill="#2e7d4f"/></marker>
+  </defs>
+  <rect width="960" height="470" fill="white"/>
+  <g font-family="Arial, Helvetica, sans-serif" text-anchor="middle" fill="#142c43">
+    <text x="480" y="52" font-size="36" font-weight="bold">OBS into VDO.Ninja</text>
+    <text x="480" y="86" font-size="22">Picture through Virtual Camera, sound through a virtual cable</text>
+    <g fill="#edf4fb" stroke="#205c96" stroke-width="3">
+      <rect x="30" y="125" width="220" height="90" rx="18"/>
+      <rect x="300" y="125" width="220" height="90" rx="18"/>
+      <rect x="570" y="125" width="180" height="230" rx="20"/>
+      <rect x="790" y="165" width="140" height="150" rx="20"/>
+    </g>
+    <g fill="#e9f5f0" stroke="#2e7d4f" stroke-width="3">
+      <rect x="30" y="265" width="220" height="90" rx="18"/>
+      <rect x="300" y="265" width="220" height="90" rx="18"/>
+    </g>
+    <g font-size="24" font-weight="bold">
+      <text x="140" y="177">OBS scene</text>
+      <text x="410" y="163">Virtual Camera</text>
+      <text x="140" y="303">OBS audio</text>
+      <text x="410" y="303">CABLE Input</text>
+      <text x="660" y="232">VDO.Ninja</text>
+      <text x="660" y="264">push page</text>
+      <text x="860" y="232">Viewer</text>
+    </g>
+    <g font-size="21">
+      <text x="410" y="195">started in OBS</text>
+      <text x="140" y="335">monitoring on</text>
+      <text x="410" y="335">to CABLE Output</text>
+      <text x="860" y="264">view link</text>
+    </g>
+    <g stroke="#205c96" stroke-width="5" fill="none" marker-end="url(#arrow)">
+      <path d="M255 170 H290"/><path d="M525 170 H560"/><path d="M755 240 H780"/>
+    </g>
+    <g stroke="#2e7d4f" stroke-width="5" fill="none" marker-end="url(#arrow-green)">
+      <path d="M255 310 H290"/><path d="M525 310 H560"/>
+    </g>
+    <text x="480" y="410" font-size="21">In VDO.Ninja: Video Source = OBS Virtual Camera; Audio Source(s) = CABLE Output</text>
+    <text x="480" y="444" font-size="21">Sources with monitoring off stay out of the cable</text>
+  </g>
+</svg>

@@ -1,126 +1,85 @@
 ---
-description: Add a fixed delay of several seconds or minutes to an incoming VDO.Ninja feed using Meshcast HLS, OBS, or experimental chunked video.
+description: Delay an incoming VDO.Ninja feed by seconds or minutes using Meshcast HLS, OBS Stream Delay, a second OBS, experimental chunked video, or MediaMTX.
 ---
 
 # Delay an incoming VDO.Ninja feed
 
-A two-minute delay is much longer than a normal WebRTC jitter buffer. The best method depends on whether you need to delay one incoming feed, the complete OBS program output, or video without audio.
+A two-minute delay is far longer than a WebRTC jitter buffer can hold. Pick a method based on what you need to delay.
 
-## Quick recommendation
-
-| Goal | Recommended method |
+| Goal | Method |
 | --- | --- |
-| Delay one incoming audio/video feed by two minutes | Meshcast HLS player |
-| Delay the complete outgoing OBS broadcast by two minutes | OBS Stream Delay |
-| Bring a delayed program back into another production | First OBS or media server feeding a second OBS |
+| Delay one incoming audio/video feed | Meshcast HLS player |
+| Delay the whole outgoing OBS broadcast | OBS Stream Delay |
+| Bring a delayed program back into another production | A first OBS or media server feeding a second OBS |
 | Delay only VDO.Ninja video | Experimental chunked mode |
-| Keep the workflow private and self-hosted | MediaMTX with an HLS DVR window |
+| Keep it private and self-hosted | MediaMTX with an HLS DVR window |
 
-Do not use a normal VDO.Ninja viewer link with `&buffer=120000`. With normal WebRTC, the browser-managed buffer is limited to roughly 3–5 seconds of useful delay, even when a much larger value is requested.
+Don't use `&buffer=120000` on a viewer link. Browsers limit the WebRTC buffer to roughly 3–5 seconds.
+
+![Where each method adds the delay: in the Meshcast HLS player before OBS, in OBS Stream Delay before YouTube or Twitch, or in the delayed stream between a first and second OBS.](../.gitbook/assets/room-delay-paths.svg)
 
 ## Option 1: Meshcast HLS player
 
-[Meshcast](https://app.meshcast.io) is the simplest current option for delaying audio and video together. Its current HLS configuration keeps approximately five minutes of seekable history, and its HLS player accepts a delay in seconds.
-
-HLS playback requires a registered Meshcast account. A free registered account includes HLS on shared servers.
-
-### Set it up
+[Meshcast](https://app.meshcast.io) delays audio and video together. Its HLS output keeps about five minutes of seekable history, and its HLS player accepts a delay of up to 240 seconds. HLS playback needs a registered Meshcast account.
 
 1. Sign in to [app.meshcast.io](https://app.meshcast.io) and create or select a stream.
-2. Publish to that stream using Meshcast Web Studio, RTMP, SRT, WHIP, or the VDO.Ninja Meshcast 2.0 integration.
-3. Let the stream run for at least two minutes before opening the delayed player. A player cannot go two minutes behind live until two minutes of media exist.
-4. Copy the **HLS Player URL** from the Meshcast dashboard or studio.
-5. Add `delay=120`, enable audio, and optionally hide the controls.
+2. Publish to it with Meshcast Web Studio, RTMP, SRT, WHIP or VDO.Ninja's Meshcast 2.0 integration.
+3. Copy the **HLS Player URL** from the Meshcast dashboard or studio.
+4. Add `delay=120` (in seconds) and `muted=0`, because the player starts muted. `controls=0` hides the player controls. Keep any `server` value already in the URL:
 
-If the copied URL has no query string:
+   ```text
+   https://app.meshcast.io/hls-player/STREAM_ID?delay=120&muted=0&controls=0
+   https://app.meshcast.io/hls-player/STREAM_ID?server=SERVER_ID&delay=120&muted=0&controls=0
+   ```
+5. Add the URL to OBS as a **Browser Source** at the feed's width and height, and check its audio reaches the right OBS track.
 
-```text
-https://app.meshcast.io/hls-player/STREAM_ID?delay=120&muted=0&controls=0
-```
+The player can't sit two minutes behind live until two minutes of media exist, so start the stream at least two minutes before loading or refreshing the Browser Source.
 
-If the copied URL already contains a server value:
-
-```text
-https://app.meshcast.io/hls-player/STREAM_ID?server=SERVER_ID&delay=120&muted=0&controls=0
-```
-
-`delay` is in seconds. The Meshcast player currently accepts up to 240 seconds. It is muted by default, so include `muted=0` when audio is required.
-
-### Use it in OBS
-
-Add the HLS Player URL as an OBS **Browser Source**. Use the same width and height as the expected feed, and test that audio is reaching the desired OBS track.
-
-For an exact two-minute offset at program start, begin the Meshcast ingest first, wait two minutes, and then load or refresh the Browser Source. If the player is opened too early, it can only seek to the oldest media currently available.
-
-### Publishing from VDO.Ninja
-
-Meshcast 2.0 can accept a stream key or token from a VDO.Ninja publishing URL:
+To publish from VDO.Ninja, use the publishing URL Meshcast gives for that stream:
 
 ```text
 https://vdo.ninja/?push=STREAMID&meshcast2=live_...
 ```
 
-Use the VDO.Ninja publishing URL and HLS Player URL supplied for the same Meshcast stream. Copying them from the Meshcast dashboard avoids mixing up the private publishing key and public viewing identifier.
-
-See [Meshcast.io](../steves-helper-apps/meshcast.io.md) and [`&meshcast`](../newly-added-parameters/and-meshcast.md) for the available publishing paths.
+Copy both URLs from the Meshcast dashboard so you don't mix up the private publishing key and the public viewing ID. See [Meshcast.io](../steves-helper-apps/meshcast.io.md) and [`&meshcast`](../newly-added-parameters/and-meshcast.md).
 
 ## Option 2: OBS Stream Delay
 
-If the complete outgoing OBS production should be delayed, use OBS's built-in **Stream Delay**:
+To delay the whole outgoing OBS program, open **Settings**, select **Advanced**, enable **Stream Delay** and set it to `120` seconds. Test starting, reconnecting and stopping before going live.
 
-1. Open **Settings**.
-2. Select **Advanced**.
-3. Enable **Stream Delay**.
-4. Set the duration to `120` seconds.
-5. Test starting, reconnecting, and stopping the stream before using it live.
-
-This delays the encoded outgoing program. It does not create a delayed source inside the same OBS scene, and the local preview remains live.
-
-Use this method when the destination is YouTube, Twitch, an RTMP server, or another streaming endpoint and every part of the program should share the same delay.
+This delays the encoded stream sent to YouTube, Twitch or another RTMP endpoint. It doesn't create a delayed source inside OBS, and your preview stays live.
 
 ## Option 3: Feed a second OBS
 
-If the delayed result must return as a source for switching, graphics, recording, or monitoring, separate the ingest and production roles:
+When the delayed result must come back as a source for switching, graphics, recording or monitoring, split the roles:
 
 ```text
-VDO.Ninja feed → first OBS or media server → delayed encoded stream → second OBS
+VDO.Ninja feed → first OBS or media server → delayed RTMP/SRT/HLS stream → second OBS
 ```
 
-The first OBS receives the VDO.Ninja feed and sends an encoded program through a delayed RTMP, SRT, or HLS path. The second OBS receives that delayed result as a Media Source or Browser Source.
+The second OBS receives it as a Media Source or Browser Source. This costs CPU and maybe another encode, but beats holding two minutes of uncompressed frames in an OBS filter. A local [MediaMTX](deploy-your-own-meshcast-like-service.md) server keeps the delayed leg on your network.
 
-This uses more CPU and can add another encode generation, but it is easier to reason about than trying to hold two minutes of uncompressed frames in an OBS source filter. A local [MediaMTX](deploy-your-own-meshcast-like-service.md) server can keep the delayed leg on the production network.
+## Option 4: Experimental chunked video
 
-## Option 4: Experimental VDO.Ninja chunked video
-
-VDO.Ninja's [`&chunked`](../newly-added-parameters/and-chunked.md) mode uses WebCodecs and a custom receiver queue. Unlike the normal WebRTC buffer, it can hold encoded video for minutes when the browser has enough memory.
-
-Example publisher:
+VDO.Ninja's [`&chunked`](../newly-added-parameters/and-chunked.md) mode uses WebCodecs and its own receive queue, which can hold minutes of encoded video if the browser has enough memory.
 
 ```text
-https://vdo.ninja/?push=STREAMID&chunked=2500
+Publisher: https://vdo.ninja/?push=STREAMID&chunked=2500
+Viewer:    https://vdo.ninja/?view=STREAMID&noaudio&nochunkaudio&chunkbuffer=120000&chunkbufferadaptive=0&chunkbufferceil=180000
 ```
 
-Experimental two-minute video-only viewer:
+Limits:
 
-```text
-https://vdo.ninja/?view=STREAMID&noaudio&nochunkaudio&chunkbuffer=120000&chunkbufferadaptive=0&chunkbufferceil=180000
-```
-
-Important limitations:
-
-* Current shared chunked audio/video buffering is limited to about 30 seconds, so this is not the recommended method for a two-minute feed with synchronized audio.
-* Chunked publishing requires a compatible WebCodecs browser and is more experimental than normal VDO.Ninja video.
-* The receiving page owns the buffer. Refreshing or closing it loses the queued media.
-* Memory use grows with bitrate and delay. At 2500 kbps, two minutes of encoded video is roughly 38 MB before browser and queue overhead.
-* Test the exact sending browser, receiving browser or OBS version, codec, and network before production use.
-
-Use Meshcast HLS or an encoded OBS/server path when synchronized two-minute audio and video are required.
+* Video only. A buffer shared by chunked audio and video is capped at 30 seconds.
+* The video-only buffer is capped at 180 seconds.
+* The sender needs a WebCodecs-capable browser.
+* Refreshing or closing the receiving page loses the queue.
+* Memory grows with bitrate and delay: two minutes at 2500 kbps is about 38 MB before browser overhead.
+* Test the exact browsers, OBS version, codec and network before production.
 
 ## Option 5: Self-hosted HLS with MediaMTX
 
-For a private or on-premises workflow, MediaMTX can create an HLS DVR window. The server must retain more media than the requested delay.
-
-For example, two-second segments and 150 retained segments provide approximately five minutes of seekable history:
+MediaMTX can keep an HLS DVR window. Keep more history than the delay you need. Two-second segments with 150 retained give about five minutes:
 
 ```yaml
 hls: yes
@@ -130,34 +89,20 @@ hlsSegmentCount: 150
 hlsDirectory: /var/lib/mediamtx/hls
 ```
 
-The segment count creates the seekable history; it does not automatically force viewers to remain two minutes behind live. Use an HLS player configured to start and remain at the live edge minus 120 seconds.
+The history alone doesn't hold viewers behind live. Use an HLS player set to stay 120 seconds behind the live edge. H.264 video with AAC audio plays in the most HLS players; a WHIP source with Opus audio may need an AAC transcode.
 
-H.264 video and AAC audio offer the broadest conventional HLS compatibility. A WHIP source using Opus audio may require an AAC transcode for some HLS players.
+See [Deploy your own Meshcast-like service](deploy-your-own-meshcast-like-service.md).
 
-See [Deploy your own Meshcast-like service](deploy-your-own-meshcast-like-service.md) for a broader MediaMTX setup.
+## Methods that don't work
 
-## Methods that are not suitable
+* **`&buffer`** sets the browser's WebRTC playout target, which browsers limit to roughly 3–5 seconds. It isn't a DVR. See [`&buffer`](../advanced-settings/view-parameters/buffer.md).
+* **OBS Render Delay** is for short sync fixes. Minutes of uncompressed video use too much GPU memory, and stacking hundreds of filters doesn't fix that.
+* **An audio sync offset** delays only the audio, not the matching video.
 
-### Normal `&buffer`
+## Before going live
 
-The normal [`&buffer`](../advanced-settings/view-parameters/buffer.md) parameter controls the browser's WebRTC playout target. Modern browsers usually limit its useful result to roughly 3–5 seconds. It is not a two-minute DVR.
-
-### OBS Render Delay filters
-
-OBS Render Delay is intended for short synchronization corrections. Holding minutes of uncompressed video consumes excessive GPU memory. Do not stack hundreds of short filters to create a broadcast delay.
-
-### Audio sync offsets alone
-
-An audio offset does not create matching delayed video and is not a substitute for an audio/video buffer. Use a method that stores both tracks together.
-
-## Production checklist
-
-Before relying on a long delay:
-
-* run the ingest early enough to fill the complete delay;
-* confirm the measured live offset with a visible clock and audible clap;
-* verify that audio is enabled and remains synchronized;
-* test a sender reconnect and a viewer reload;
-* confirm what viewers see when the input ends;
-* monitor free disk, memory, and network capacity;
-* keep a low-latency confidence feed separate from the delayed program when operators need immediate monitoring.
+* Start the ingest early enough to fill the whole delay.
+* Measure the offset with a visible clock and a clap, and check audio stays in sync.
+* Test a sender reconnect, a viewer reload, and what viewers see when the input ends.
+* Watch free disk, memory and network capacity.
+* Give operators a separate low-latency feed for monitoring.

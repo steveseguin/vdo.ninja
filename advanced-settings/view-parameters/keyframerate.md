@@ -10,7 +10,7 @@ Viewer-Side Option! ([`&view`](view.md), [`&scene`](scene.md), [`&room`](../../g
 
 * `&keyframeinterval`
 * `&keyframe`
-* `&kfi`
+* `&fki`
 
 ## Options
 

@@ -1,89 +1,41 @@
 ---
-description: Set up SignalWire SIP-over-WSS for the experimental VDO.Ninja phone call-in panel.
+description: Set up SignalWire, or your own PBX, for VDO.Ninja's experimental phone call-in panel using SIP over secure WebSockets.
 ---
 
 # SignalWire SIP call-in setup
 
-SignalWire is currently the most direct bring-your-own provider option for VDO.Ninja's browser-side SIP call-in panel. It supports SIP over secure WebSockets, which lets the browser register as a SIP endpoint without running your own PBX.
-
-Last reviewed: July 12, 2026.
-
-SIP routing, privacy, and saved-credential guidance updated September 8, 2026. The privacy and credential fixes described below require a build containing that update; older deployments may behave differently.
+SignalWire supplies a phone number and a browser-compatible SIP endpoint, so the VDO.Ninja call-in panel can register to it directly over `wss://` without a PBX of your own. The same SIP mode also works with [your own PBX](#use-your-own-pbx-or-sip-server).
 
 {% hint style="warning" %}
-This is experimental. Phone callers are mixed into the director/host audio and do not yet appear as normal guest tiles with full scene controls.
+The call-in panel is experimental. For how it mixes audio, the ringtone, and every URL parameter, see [Phone call-in provider options](phone-call-in-provider-options.md).
 {% endhint %}
-
-## What this creates
-
-The call path is:
-
-1. A phone caller dials your SignalWire number.
-2. SignalWire routes the call to a SIP endpoint in your SignalWire Space.
-3. The VDO.Ninja director page registers to that SIP endpoint over `wss://`.
-4. VDO.Ninja answers the call in the browser.
-5. VDO.Ninja mixes the caller into the room and sends a mix-minus return feed back to the caller.
-
-<figure><img src="../.gitbook/assets/callin-signalwire-panel.png" alt="VDO.Ninja SignalWire SIP call-in panel with example WSS URL, SIP URI, auth username, blank password, dial target, and connect controls"><figcaption><p>The SignalWire mode is the generic SIP-over-WSS panel with SignalWire-specific defaults and wording.</p></figcaption></figure>
-
-## Cost notes
-
-Check SignalWire's current pricing before buying numbers. At the time this guide was written, SignalWire's public voice pricing listed local numbers at a low monthly cost and usage priced per minute for PSTN, SIP, and WebRTC legs. Prices and country availability can change.
-
-Useful references:
-
-* [SignalWire voice pricing](https://signalwire.com/pricing/voice)
-* [SignalWire SIP-over-WebSockets overview](https://signalwire.com/blogs/product/webrtc-using-sip-over-websockets)
-* [SignalWire SIP trunking guide](https://signalwire.com/docs/platform/voice/sip/trunking)
 
 ## 1. Create a SignalWire Space
 
-Create or open a SignalWire account, then create a Space. Your Space has a SIP domain similar to:
-
-```text
-your-space.sip.signalwire.com
-```
-
-The exact Space name and SIP domain are shown in the SignalWire dashboard.
-
-This direct setup does not require FreePBX. SignalWire supplies the phone number, routing, and browser-compatible SIP endpoint. A PBX is optional if you want local extensions, queues, voicemail, or different billing/routing control.
-
-### Already have a SIP server or AoIP system?
-
-You can use your existing server without SignalWire or a public phone number. Open `https://vdo.ninja/alpha/?director=YourRoomName&callin=sip`, register a dedicated browser-compatible extension, and route incoming SIP calls to that extension. Your hardware codec or Linphone client calls through the PBX as usual.
-
-The browser endpoint needs SIP over **WSS** and **WebRTC media**, not just ordinary SIP over UDP/TCP with RTP. A PBX or gateway must bridge those transports and, when necessary, transcode the audio. Check the negotiated codec on both legs before assuming your AoIP codec or audio quality will carry through unchanged. For an Asterisk configuration example, see [Configuring Asterisk for WebRTC clients](https://docs.asterisk.org/Configuration/WebRTC/Configuring-Asterisk-for-WebRTC-Clients/).
-
-The panel handles one active call per browser instance. Keep the bridge page open and connected. Calls are audio-only and are mixed into that instance's outgoing audio; they do not become separate room participants.
+Create a SignalWire account and a Space. The dashboard shows the Space's SIP domain, similar to `your-space.sip.signalwire.com`.
 
 ## 2. Create a SIP endpoint
 
-In the SignalWire dashboard, create a SIP credential or SIP endpoint for VDO.Ninja.
-
-Use a dedicated credential for this purpose:
+Create a SIP endpoint (SIP credential) used only by VDO.Ninja:
 
 | Field | Example |
 | --- | --- |
 | Username | `vdo-callin` |
-| Password | Use a strong generated password |
+| Password | A strong generated password |
 | Caller ID | Your show name or phone number |
 | Encryption | Required, if offered |
 
-Do not use your SignalWire project API token as the SIP password. The browser only needs the scoped SIP endpoint credential.
+The browser needs only this endpoint's password. Never use your SignalWire project API token as the SIP password.
 
-**Using FreePBX:** If VDO.Ninja connects to FreePBX instead of directly to SignalWire, use a dedicated WebRTC-enabled PJSIP extension. An ordinary SIP extension can work in MicroSIP while still failing in Chrome or Edge.
+## 3. Route a phone number to the endpoint
 
-## 3. Buy or route a phone number
-
-Buy a voice-capable number in SignalWire, or use an existing number that can route into SignalWire.
-
-Route inbound calls from that number to the SIP endpoint you created. The exact dashboard wording can change, but the goal is:
+Buy a voice-capable number in SignalWire, or bring in an existing one, and send its inbound calls to the endpoint:
 
 ```text
-Inbound phone number -> SIP endpoint vdo-callin@your-space.sip.signalwire.com
+Inbound phone number -> sip:vdo-callin@your-space.sip.signalwire.com
 ```
 
-If you are using a SignalWire XML/SWML/Call Flow style route, the route should dial the SIP endpoint. For example, a compatibility XML style route would be conceptually:
+The dashboard wording changes over time; see SignalWire's [SIP documentation](https://signalwire.com/docs/platform/voice/sip/trunking). If you route with a compatibility XML script, it dials the endpoint like this:
 
 ```xml
 <Response>
@@ -93,127 +45,66 @@ If you are using a SignalWire XML/SWML/Call Flow style route, the route should d
 </Response>
 ```
 
-Use the current SignalWire dashboard/docs for the exact routing UI.
+## 4. Connect VDO.Ninja
 
-### Optional path through FreePBX
-
-The alternate route is:
-
-    SignalWire number -> FreePBX SIP trunk -> WebRTC PJSIP extension -> VDO.Ninja
-
-The VDO.Ninja extension must offer browser-compatible secure media. In FreePBX, enable the equivalent of:
-
-* Media Encryption: **DTLS-SRTP**
-* ICE Support: **Yes**
-* AVPF: **Yes**
-* RTCP Mux: **Yes**
-* DTLS Setup: **Act/Pass**
-* DTLS Verify: **Fingerprint**
-
-The exact labels depend on the FreePBX/Asterisk version. A successful SIP-over-WSS registration only proves that signaling works. The call can still fail at Answer if the PBX's SDP offer does not include a DTLS fingerprint for secure browser audio.
-
-## 4. Start VDO.Ninja
-
-Open the director page with the experimental call-in panel:
+Open the director page in SignalWire mode. `&signalwirespace` fills in the WebSocket URL for you:
 
 ```text
-https://vdo.ninja/alpha/?director=YourRoomName&callin=signalwire
+https://vdo.ninja/?director=YourRoomName&callin=signalwire&signalwirespace=your-space
 ```
 
-If the deployed version does not yet include the SignalWire label, use the generic SIP mode instead:
+Fill in the panel:
 
-```text
-https://vdo.ninja/alpha/?director=YourRoomName&callin=sip
-```
+| Field | Value | Notes |
+| --- | --- | --- |
+| SIP WebSocket URL | `wss://your-space.sip.signalwire.com` | Where the browser connects. Must start with `wss://`. It is not the SIP address. |
+| SIP URI | `sip:vdo-callin@your-space.sip.signalwire.com` | The endpoint's callable address. `sip:` is added if you leave it off. |
+| Auth username | `vdo-callin` | Usually the user part of the SIP URI. |
+| Password | The endpoint password | Never a project or account API token. |
+| Display name | `VDO.Ninja` | Optional. |
+| Dial target | `+15551234567` | Outbound calls only. A phone number becomes `sip:+15551234567@your-space.sip.signalwire.com`. |
 
-In the panel, enter:
+Leave **Register for incoming calls** on, and turn on **Auto-answer incoming calls** only after testing. Click **Connect**. The status should read "SIP account registered." When a call arrives, click **Answer**.
 
-| VDO.Ninja field | SignalWire value |
-| --- | --- |
-| SIP WebSocket URL | `wss://your-space.sip.signalwire.com` |
-| SIP URI | `sip:vdo-callin@your-space.sip.signalwire.com` |
-| Auth username | The SIP endpoint username, such as `vdo-callin` |
-| Password | The SIP endpoint password |
-| Display name | Optional label, such as `VDO.Ninja` |
+URL parameters can pre-fill every field except the password; see the [parameter list](phone-call-in-provider-options.md#url-parameters).
 
-Leave **Register for incoming calls** enabled. Enable **Auto-answer incoming calls** only after testing.
+## 5. Test
 
-Click **Connect**. The status should show that the SIP account registered.
+Run the [test checklist](phone-call-in-provider-options.md#test-before-going-live). Then, with your real provider or PBX and codecs, also test hold and resume, a second call while you are busy (the panel rejects it), and a brief network interruption.
 
-### Field meanings
+## Saved profiles and passwords
 
-The **SIP WebSocket URL** is the secure WebSocket endpoint the browser connects to. It starts with `wss://`. It is not the same thing as the SIP address.
+**Save profile** stores the SIP and SignalWire fields in this browser, and **Forget** removes them. The password is saved only if you tick **Remember password on this browser** and accept the warning. It is kept in the browser's local storage: convenient on a trusted production computer, but not a secure vault. Do not use it on a shared computer.
 
-The **SIP URI** is the callable SIP address for the endpoint, usually formatted like `sip:username@your-space.sip.signalwire.com`.
+A saved password is reused only while the WebSocket URL, SIP URI, and auth username match the saved profile. If a URL parameter or an edit changes any of them, the panel clears the password and asks you to enter it again. The saved profile stays as it was until you save or forget it, and `&sipauto` keeps working for an unchanged saved identity.
 
-The **Auth username** is the SIP credential username. In many setups it matches the `username` part of the SIP URI, but some providers let these differ.
+## Use your own PBX or SIP server
 
-The **Password** is the SIP endpoint password only. Do not enter a SignalWire project token or account-level API token here.
+Use `&callin=sip` with Asterisk, FreePBX, FreeSWITCH, or another PBX. Give VDO.Ninja a dedicated extension that has:
 
-The **Dial target** is used only for outbound calls from the VDO.Ninja panel. For SignalWire, a normal phone number such as `+15551234567` is converted to a SIP target on the same domain.
+* SIP over **WSS**, with a certificate the browser trusts, and
+* **WebRTC media**. In FreePBX, set the equivalent of: Media Encryption **DTLS-SRTP**, ICE Support **Yes**, AVPF **Yes**, RTCP Mux **Yes**, DTLS Setup **Act/Pass**, DTLS Verify **Fingerprint**. Labels vary by FreePBX and Asterisk version.
 
-## 5. Test before going live
+An ordinary extension can register, and even work in a desktop softphone such as MicroSIP, yet fail when Chrome or Edge answers with `488 Not Acceptable Here`. Browsers accept only encrypted WebRTC audio, so the PBX's offer must include a DTLS fingerprint. A successful registration or a trusted certificate proves only that signaling works. For Asterisk, see [Configuring Asterisk for WebRTC clients](https://docs.asterisk.org/Configuration/WebRTC/Configuring-Asterisk-for-WebRTC-Clients/).
 
-1. Join the VDO.Ninja room as director/host.
-2. Join as a normal guest from another browser or device.
-3. Start the SignalWire call-in panel and confirm it registers.
-4. Call the SignalWire number from a regular phone.
-5. Answer the incoming call in the panel.
-6. Confirm the VDO.Ninja guest hears the phone caller.
-7. Confirm the phone caller hears the host and VDO.Ninja guest.
-8. Confirm the phone caller does not hear a delayed copy of themselves.
-9. Answer while the host microphone is muted, then unmute. Confirm the caller hears the host again and still hears room guests while the host is muted.
-10. Start Solo Talk with a room guest. Confirm the caller's return feed becomes silent, then resumes after Solo Talk ends.
-11. Test PBX hold/resume, hangup, a second incoming call while busy, and a network interruption using your actual server and codecs. Browser regression tests do not establish compatibility with every PBX.
+Two common routes:
 
-### Microphone mute and private conversations
-
-Muting the host microphone silences the host, while the caller remains audible to the room and continues to receive other room audio. Muting local speakers only silences the operator's monitoring.
-
-During Solo Talk, the entire return feed to the caller is paused so neither the host nor the selected guest's private conversation is sent to the caller. On a guest page running the bridge, private-chat isolation pauses the same feed. The panel shows a paused status and restores the feed when isolation ends. The caller's incoming audio stays on air; hang up if you need to remove the caller from the room.
-
-## Useful parameters
-
-### Incoming ringtone
-
-Use the bell button in the call-in panel to choose the classic ring, bell, chime, a custom uploaded audio file, or silent mode. You can preview the selection and adjust its volume. These preferences stay in the current browser. The ringtone is local operator audio and is not mixed into the VDO.Ninja room or sent back to the caller. Auto-answered calls do not ring.
-
-The upload button opens `fileuploads.vdo.ninja`. Sign in there and upload a short audio file. The file is hosted as public media; VDO.Ninja stores only the returned HTTPS URL and selection in this browser. The ringtone menu does not store the audio file itself.
-
-When `&callinoutput=DeviceName` or `&sipoutput=DeviceName` is supported by the browser, the ringtone follows the same local output device as the caller monitor.
-
-| Parameter | Purpose |
-| --- | --- |
-| `&callin=signalwire` | Opens the call-in panel in SignalWire/SIP mode. |
-| `&callin=sip` | Opens the generic SIP/PBX panel. |
-| `&sipwss=wss://your-space.sip.signalwire.com` | Pre-fills the SIP WebSocket URL. |
-| `&sipuri=sip:vdo-callin@your-space.sip.signalwire.com` | Pre-fills the SIP URI. |
-| `&sipuser=vdo-callin` | Pre-fills the auth username. |
-| `&siptarget=+15551234567` | Pre-fills the outbound dial target. |
-| `&callinoutput=DeviceName` or `&sipoutput=DeviceName` | Routes the local caller monitor to a named output device when the browser supports it. |
-| `&sipauto=1` | Connects automatically when the page loads. |
-| `&sipautodial=1` | Dials the configured target after connecting/registering; combine with `&sipauto=1` for unattended startup. Provider outbound routing must allow the target. |
-| `&sipautoanswer=1` | Answers incoming calls automatically. |
-
-Do not put the SIP password in the URL.
-
-The panel can optionally remember the SIP profile in this browser. If you enable **Remember password on this browser**, the password is saved in this browser's local storage. That is a convenience feature for a trusted production machine, not a secure vault. Do not use it on shared computers.
-
-The remembered password is reused only when the WSS endpoint, SIP URI, and auth username match the saved profile. Changing any of these through URL parameters or the panel clears the autofilled password for this page. Enter the appropriate password again before connecting, then save the updated profile if desired. The stored original profile is unchanged until you save or forget it. Automatic connection continues to work for an unchanged saved identity.
+* **A phone number through your PBX:** a SignalWire number, or a number from any SIP trunk provider, goes to a PBX trunk, then to the WebRTC extension, then to VDO.Ninja. Use this if you want local extensions, queues, voicemail, or different billing.
+* **An existing SIP or AoIP system with no phone number:** your hardware codec or SIP client calls the browser's extension through the PBX as usual. The PBX bridges ordinary SIP and RTP to WebRTC and may transcode, so check the negotiated codec on both legs before assuming your audio quality carries through.
 
 ## Troubleshooting
 
 | Symptom | Likely cause |
 | --- | --- |
-| SIP registration fails | Wrong WSS URL, SIP URI, username, password, or SignalWire endpoint settings. |
-| Panel says the SIP server or account changed | A saved password was withheld because the endpoint or account changed. Verify the fields, then enter the matching password. |
-| Caller cannot hear the room during Solo Talk | Expected: the return feed is paused for privacy. End Solo Talk/private isolation to restore it. |
-| Browser says the WebSocket URL is invalid | The URL must start with `wss://`, not `sip:`, `http:`, or `ws:`. |
-| Phone call never reaches VDO.Ninja | The SignalWire number is not routed to the SIP endpoint, or the VDO.Ninja page is not registered. |
-| Chrome reports `ERR_CERT_AUTHORITY_INVALID` for the PBX WSS URL | Install a trusted certificate, or visit the PBX HTTPS/WSS host and explicitly trust its local certificate before connecting. This only fixes SIP signaling, not media encryption. |
-| VDO.Ninja rings, but Answer immediately sends the caller to voicemail | Check the JsSIP log for `488 Not Acceptable Here` and `SDP without DTLS fingerprint`. Configure the FreePBX extension for WebRTC with DTLS-SRTP, ICE, AVPF, RTCP mux, and fingerprint verification. |
-| MicroSIP works but VDO.Ninja does not | MicroSIP can accept conventional SIP/RTP. Chrome and Edge require a WebRTC-compatible secure-media SDP offer, so use a WebRTC PJSIP extension for VDO.Ninja. |
-| Caller connects but no one hears them | Check browser microphone permissions, the VDO.Ninja outbound mix, and whether the caller audio track attached in the panel. |
-| Caller hears echo | The return mix includes the phone caller audio. Hang up and check the routing before going live. |
+| "SIP registration failed" | Wrong WebSocket URL, SIP URI, username, or password, or wrong endpoint settings. |
+| "SIP WebSocket URL must use wss:// for browser calling." | The URL starts with `sip:`, `http:`, or `ws:`. Use the `wss://` address. |
+| "SIP server or account changed. Enter its password before connecting." | A saved password was withheld because the server or account changed. Check the fields and enter the matching password. |
+| Calls never reach VDO.Ninja | The number is not routed to the endpoint, or the panel is not registered. |
+| Chrome reports `ERR_CERT_AUTHORITY_INVALID` for the PBX | Install a trusted certificate, or open the PBX's HTTPS/WSS address once and accept its certificate. This fixes signaling only, not media. |
+| The panel rings, but Answer sends the caller to voicemail | Look in the browser console for `488 Not Acceptable Here` or `SDP without DTLS fingerprint`, then enable WebRTC media on the extension. |
+| MicroSIP works but VDO.Ninja does not | The extension offers plain RTP audio. Use a WebRTC extension. |
+| The caller connects but nobody hears them | Check browser microphone permission and that the director clicked **Enable director's microphone or video**. The status should read "Caller audio connected to the VDO.Ninja outbound mix." |
+| The caller cannot hear the room during Solo Talk | Expected. The return pauses for privacy and resumes afterward. |
+| The caller hears echo | Someone is playing the call through speakers. Use headphones. |
 
-When testing is done, release unused numbers or disable routing if you do not want ongoing charges.
+When you finish testing, release unused numbers or turn off the routing to stop charges.

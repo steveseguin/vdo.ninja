@@ -1,0 +1,52 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="500" viewBox="0 0 960 500" role="img" aria-labelledby="title description">
+  <title id="title">Where chunked settings apply</title>
+  <desc id="description">On the publisher, the encoder uses chunkbitrate, the send backlog uses chunkedbuffer, and a resend cache uses chunkcache. Chunks travel over an ordered data channel to the viewer, where chunkbuffer sets the playout delay before playback. The viewer sends NACK requests back to the publisher's resend cache, using chunknackattempts and chunknackdelay.</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 Z" fill="#205c96"/></marker>
+    <marker id="arrow-return" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 Z" fill="#b25d00"/></marker>
+  </defs>
+  <rect width="960" height="500" fill="white"/>
+  <g font-family="Arial, Helvetica, sans-serif" text-anchor="middle" fill="#142c43">
+    <text x="480" y="52" font-size="36" font-weight="bold">Where chunked settings apply</text>
+    <g font-size="24" font-weight="bold">
+      <text x="230" y="120">Publisher (push link)</text>
+      <text x="745" y="120">Viewer (view link)</text>
+    </g>
+    <g fill="#edf4fb" stroke="#205c96" stroke-width="3">
+      <rect x="25" y="145" width="180" height="110" rx="18"/>
+      <rect x="245" y="145" width="190" height="110" rx="18"/>
+      <rect x="555" y="145" width="200" height="110" rx="18"/>
+      <rect x="790" y="145" width="145" height="110" rx="18"/>
+      <rect x="245" y="320" width="190" height="100" rx="18"/>
+      <rect x="555" y="320" width="200" height="100" rx="18"/>
+    </g>
+    <g font-size="24" font-weight="bold">
+      <text x="115" y="192">Encoder</text>
+      <text x="340" y="192">Send backlog</text>
+      <text x="655" y="192">Playout buffer</text>
+      <text x="862" y="192">Playback</text>
+      <text x="340" y="362">Resend cache</text>
+      <text x="655" y="362">NACK retries</text>
+    </g>
+    <g font-size="20">
+      <text x="115" y="228">chunkbitrate</text>
+      <text x="340" y="228">chunkedbuffer</text>
+      <text x="655" y="228">chunkbuffer</text>
+      <text x="862" y="228">video out</text>
+      <text x="340" y="398">chunkcache</text>
+      <text x="655" y="388">chunknackattempts</text>
+      <text x="655" y="412">chunknackdelay</text>
+    </g>
+    <g stroke="#205c96" stroke-width="5" fill="none" marker-end="url(#arrow)">
+      <path d="M207 200 H240"/>
+      <path d="M437 200 H550"/>
+      <path d="M757 200 H785"/>
+      <path d="M340 257 V314"/>
+    </g>
+    <text x="495" y="182" font-size="20">data</text>
+    <text x="495" y="230" font-size="20">channel</text>
+    <path d="M552 370 H441" stroke="#b25d00" stroke-width="5" stroke-dasharray="12 7" fill="none" marker-end="url(#arrow-return)"/>
+    <text x="495" y="356" font-size="20" fill="#b25d00" font-weight="bold">NACK</text>
+    <text x="480" y="470" font-size="22">The number in &amp;chunked=N is kbps, not delay. Set delay with chunkbuffer.</text>
+  </g>
+</svg>

@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="550" viewBox="0 0 960 550" role="img" aria-labelledby="title description">
+  <title id="title">Return the finished OBS scene to guests</title>
+  <desc id="description">Guests join the VDO.Ninja room. OBS loads the room's clean Scene link and builds the show. OBS Virtual Camera becomes the director's video, which returns to guests whose links use broadcast mode, either directly or through Meshcast. The director stays out of the Scene link so OBS never captures its own return.</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 Z" fill="#205c96"/></marker>
+    <marker id="arrow-green" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 Z" fill="#2e7d4f"/></marker>
+  </defs>
+  <rect width="960" height="550" fill="white"/>
+  <g font-family="Arial, Helvetica, sans-serif" text-anchor="middle" fill="#142c43">
+    <text x="480" y="52" font-size="36" font-weight="bold">Return the finished OBS scene</text>
+    <text x="480" y="86" font-size="22">Guests see one return video; conversation audio stays in VDO.Ninja</text>
+    <g fill="#edf4fb" stroke="#205c96" stroke-width="3">
+      <rect x="40" y="120" width="240" height="110" rx="20"/>
+      <rect x="360" y="120" width="240" height="110" rx="20"/>
+      <rect x="680" y="120" width="240" height="110" rx="20"/>
+    </g>
+    <rect x="680" y="320" width="240" height="110" rx="20" fill="#e9f5f0" stroke="#2e7d4f" stroke-width="3"/>
+    <g font-size="27" font-weight="bold">
+      <text x="160" y="168">Guests</text>
+      <text x="480" y="168">VDO.Ninja room</text>
+      <text x="800" y="168">OBS</text>
+      <text x="800" y="368">Director</text>
+    </g>
+    <g font-size="21">
+      <text x="160" y="202">camera + mic</text>
+      <text x="480" y="202">all participants</text>
+      <text x="800" y="202">clean Scene link</text>
+      <text x="800" y="402">Virtual Camera</text>
+    </g>
+    <g stroke="#205c96" stroke-width="5" fill="none" marker-end="url(#arrow)">
+      <path d="M285 175 H350"/><path d="M605 175 H670"/>
+    </g>
+    <g stroke="#2e7d4f" stroke-width="5" fill="none" marker-end="url(#arrow-green)">
+      <path d="M800 235 V310"/><path d="M675 375 H160 V240"/>
+    </g>
+    <g fill="#2e7d4f" font-size="22" font-weight="bold">
+      <text x="420" y="361">Return video, direct or via Meshcast</text>
+    </g>
+    <text x="420" y="408" font-size="21">Guest links use &amp;broadcast</text>
+    <rect x="40" y="460" width="880" height="64" rx="16" fill="#fdf3e7" stroke="#b25d00" stroke-width="3"/>
+    <text x="480" y="501" font-size="23" font-weight="bold">Keep the director out of the Scene link: no &amp;showdirector</text>
+  </g>
+</svg>

@@ -4,7 +4,7 @@ description: Keep a transferred guest queued in the destination room until activ
 
 # \&queuetransfer
 
-Sender-Side Option! ([`&push`](../../source-settings/push.md), [`&room`](../../general-settings/room.md))
+Director Option! ([`&director`](../../viewers-settings/director.md))
 
 ## Aliases
 
@@ -14,15 +14,15 @@ Sender-Side Option! ([`&push`](../../source-settings/push.md), [`&room`](../../g
 
 `&queuetransfer` changes what happens after a guest is transferred from one room to another.
 
-Normally, a transferred guest is admitted into the destination room immediately if the destination room accepts the transfer. With `&queuetransfer` on the guest invite link, the guest lands in the destination room's queue flow instead, so the destination director can activate them when ready.
+Normally, a transferred guest is admitted into the destination room immediately if the destination room accepts the transfer. With `&queuetransfer` on the director link, guests that director transfers land in the destination room's queue flow instead, so the destination director can activate them when ready.
 
-Guest invite link:
+Lobby director link:
 
 ```text
-https://vdo.ninja/?room=LobbyRoom&queuetransfer
+https://vdo.ninja/?director=LobbyRoom&queuetransfer
 ```
 
-When the lobby director transfers this guest to another room, the guest arrives there in queue mode rather than going live immediately.
+It pre-selects "Guest will arrive in the new room in queue mode" in the Transfer dialog, so guests this director transfers arrive in queue mode rather than going live immediately.
 
 This is useful when a public lobby director is routing guests into production rooms, breakout rooms, or private green rooms, but the destination director still wants final control.
 

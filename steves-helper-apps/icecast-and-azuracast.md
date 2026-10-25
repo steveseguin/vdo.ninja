@@ -4,9 +4,9 @@ description: Publish VDO.Ninja audio to Icecast or AzuraCast from a browser tab.
 
 # Icecast and AzuraCast audio publishing
 
-VDO.Ninja can act as a browser-based source client for Icecast-compatible radio servers. This is useful when you want a VDO.Ninja audio-only source to publish directly into Icecast, AzuraCast, or another compatible mount.
+A VDO.Ninja tab can act as a source client for an Icecast-compatible radio server, such as Icecast or AzuraCast. Keep that tab open for the whole broadcast; closing it stops the stream.
 
-The setup helper is here:
+The setup helper builds the link for you:
 
 {% embed url="https://vdo.ninja/icecast" %}
 [https://vdo.ninja/icecast](https://vdo.ninja/icecast)
@@ -18,108 +18,91 @@ The alpha helper is here:
 [https://vdo.ninja/alpha/icecast](https://vdo.ninja/alpha/icecast)
 {% endembed %}
 
-The helper builds a normal VDO.Ninja source URL with `&push` and `&icecastpush` enabled. Keep that source tab open while broadcasting; it captures the local audio and publishes it to the Icecast-compatible source endpoint.
+There are two modes:
 
-There is also an optional relay mode that builds a `&view` URL with `&icecastview`. Relay mode is for cases where another VDO.Ninja source is already live and you want a second browser tab to listen to that stream and forward it to Icecast/AzuraCast.
+* **Publish local audio** (`&push` + `&icecastpush`): the tab captures its own microphone or audio source and sends it to Icecast.
+* **Relay an existing stream** (`&view` + `&icecastview`): the tab receives a VDO.Ninja stream that is already live elsewhere and forwards its audio to Icecast.
 
 ## Basic workflow
 
-1. Choose the VDO.Ninja stream ID you want to publish. For example:
+1. Open [vdo.ninja/icecast](https://vdo.ninja/icecast).
+2. Leave **Publishing mode** on **Publish local audio with \&push** and enter a stream ID, such as `FUSION_ONLINE`.
+3. Enter your Icecast or AzuraCast source details: **Source URL / server**, **Mountpoint**, **Username** and **Password**. Use the source (ingest) endpoint, not the public listener URL.
+4. Click **Generate**, then **Open**. The link opens in a new tab.
 
-   `FUSION_ONLINE`
-
-2. Open the Icecast helper:
-
-   `https://vdo.ninja/icecast`
-
-3. Leave **Publish local audio with &push** selected and enter the stream ID, such as `FUSION_ONLINE`.
-
-4. Enter your Icecast or AzuraCast source details. Use the source/ingest endpoint, not the public listener URL.
-
-5. Click **Generate**, then **Open**.
-
-The generated source URL will look similar to:
+The generated link looks like this:
 
 `https://vdo.ninja/?push=FUSION_ONLINE&audioonly&proaudio&icecastpush&icecastauto=1`
 
-If the source settings are saved in the browser, the generated URL can avoid putting the source password in the address bar. If the URL needs to be portable to another machine, enable **Include source credentials in the generated URL**, but treat the resulting link like a password.
+With **Save source credentials in this browser** checked (the default), the password is stored in this browser and stays out of the link. To use the link on another computer, check **Include source credentials in the generated URL** and treat the link like a password.
 
-## Optional relay workflow
+If auto-start is off or settings are missing, use the **Icecast / AzuraCast** panel on the VDO.Ninja page: **Settings**, **Start Icecast** and **Stop**.
 
-If the audio is already being sent into VDO.Ninja from another browser, use **Relay an existing VDO.Ninja stream with &view** in the helper. This creates a second browser tab that receives that VDO.Ninja audio and publishes it to Icecast/AzuraCast:
+## Relay an existing stream
+
+If the audio already goes into VDO.Ninja from another browser, choose **Relay an existing VDO.Ninja stream with \&view**. This makes a second tab that receives the stream and forwards it:
 
 `https://vdo.ninja/?view=FUSION_ONLINE&novideo&proaudio&icecastview&icecastauto=1`
 
-## AzuraCast compatibility
+## AzuraCast
 
-Yes, this should work with AzuraCast when the station exposes an Icecast-compatible source mount. Use the station's source connection details, usually the source username, source password, host/port, and mountpoint.
+AzuraCast works when the station offers an Icecast-compatible source mount. Copy the station's source connection details (username, password, host and port, and mountpoint) from the station profile.
 
-Do not use the public listener URL, such as an `/listen/` URL. VDO.Ninja needs the source endpoint that accepts a live encoder/source connection.
+Do not use the public listener URL, such as a `/listen/` URL; VDO.Ninja rejects it. A bare IP address with no port or path is also rejected; include the port or the AzuraCast ingest path.
 
-AzuraCast deployments vary, so the accepted audio format depends on the station and mount configuration. AAC is the default in VDO.Ninja when the browser supports it. Ogg Opus or WebM Opus can also be selected, but the Icecast/AzuraCast mount must accept that format.
+## Audio format
+
+AAC (`audio/aac`) is the default. If the browser cannot encode AAC, VDO.Ninja falls back to a WebM or Ogg format the browser can record. You can also choose WebM Opus or Ogg Opus directly. Your Icecast or AzuraCast mount must accept the format you send.
+
+## Direct upload and the relay
+
+![A VDO.Ninja tab first tries a direct upload to the Icecast source mount. If that fails or takes more than 5 seconds, it switches to the Icecast relay. Plain http servers on the HTTPS site always use the relay.](../.gitbook/assets/misc-icecast-paths.svg)
+
+Browsers can only upload directly to servers that allow it: the server must be reachable over HTTPS (from the HTTPS VDO.Ninja site) and accept browser (CORS) uploads. To cover the rest, VDO.Ninja tries a direct upload first and switches to its Icecast relay if the direct upload fails or does not connect within 5 seconds. An `http://` source URL opened from the HTTPS site goes straight to the relay.
+
+* `&icecastrelay=0` (or `false`, `off`, `no`, `direct`, `none`) disables the relay. Use it only when direct upload works.
+* With the relay, the source URL must use a hostname, not an IPv4 address.
 
 ## URL parameters
 
-Use an explicit mode flag to enable Icecast/AzuraCast publishing:
-
-* `&icecastpush` publishes the local audio from the same `&push` source tab.
-* `&icecastview` publishes received remote audio from a `&view` or scene/room relay tab.
-
-Do not use a generic `&icecast` flag for room workflows. A room can have both local and incoming audio, so the mode must be explicit.
+Use an explicit mode flag. `&icecastpush` and `&icecastview` together are treated as ambiguous. The older `&icecast` / `&icecastout` flags pick the mode from `&push` or `&view`, and are ambiguous in room links, which can have both local and incoming audio.
 
 | Parameter | Aliases | Purpose |
 | --- | --- | --- |
-| `&icecastpush` | `&icecastlocal`, `&icecastmic` | Publishes this tab's local VDO.Ninja source audio. Use with `&push`. |
-| `&icecastview` | `&icecastremote`, `&icecastfromview` | Publishes received VDO.Ninja audio. Use with `&view`, `&scene`, or a receive-only relay tab. |
-| `&icecastauto=1` | `&icecastautostart=1` | Starts publishing automatically once audio is available and settings are complete. |
-| `&icecasttarget=` | `&icecasturl`, `&icecastsource` | Full Icecast-compatible source URL, including mountpoint. |
-| `&icecastserver=` | `&icecasthost` | Server URL when you want VDO.Ninja to combine it with `&icecastmount`. |
-| `&icecastmount=` | `&icecastmountpoint` | Mountpoint to append to `&icecastserver`. |
-| `&icecastuser=` | `&icecastusername` | Source username. Defaults to `source`. |
+| `&icecastpush` | `&icecastlocal`, `&icecastmic` | Publish this tab's own audio. Use with `&push`. |
+| `&icecastview` | `&icecastremote`, `&icecastfromview` | Publish received audio. Use with `&view`, `&scene` or a receive-only tab. |
+| `&icecastauto=1` | `&icecastautostart` | Start automatically once audio is available and settings are complete. |
+| `&icecasttarget=` | `&icecasturl`, `&icecastsource` | Full source URL, including the mountpoint. |
+| `&icecastserver=` | `&icecasthost` | Server URL, combined with `&icecastmount`. |
+| `&icecastmount=` | `&icecastmountpoint` | Mountpoint added to `&icecastserver`. |
+| `&icecastuser=` | `&icecastusername` | Source username. Default: `source`. |
 | `&icecastpassword=` | `&icecastpass`, `&icecastsourcepassword` | Source password. |
-| `&icecastformat=` | `&icecastmime`, `&icecasttype` | Audio format. Common values: `audio/aac`, `audio/ogg;codecs=opus`, `audio/webm;codecs=opus`. |
-| `&icecastbitrate=` | `&icecastab` | Audio bitrate in bits per second or kbps. For example, `128000` or `128`. |
-| `&icecastname=` |  | Stream name metadata. |
-| `&icecastgenre=` |  | Genre metadata. |
-| `&icecastdescription=` | `&icecastdesc` | Description metadata. |
-| `&icecastpublic=1` |  | Marks the stream public in Icecast metadata. |
-| `&icecastrelay=` | `&icecastrelayurl` | Optional relay URL. VDO.Ninja uses its default relay unless this is set to `0`, `false`, `direct`, or `none`. |
-| `&icecastrelaytoken=` |  | Token for private/custom relay deployments. |
-| `&icecaststream=` | `&icecastsid` | In relay/view mode, selects which received stream should be published if the viewer receives multiple streams. |
+| `&icecastformat=` | `&icecastmime`, `&icecasttype` | `audio/aac` (default), `audio/ogg;codecs=opus` or `audio/webm;codecs=opus`. Short forms `aac`, `opus`, `ogg` also work. |
+| `&icecastbitrate=` | `&icecastab` | Bitrate in bits per second or kbps, such as `128000` or `128`. Default: 128 kbps. |
+| `&icecastname=` |  | Stream name. Default: `VDO.Ninja Live`. |
+| `&icecastgenre=` |  | Genre. Default: `Live`. |
+| `&icecastdescription=` | `&icecastdesc` | Description. |
+| `&icecastpublic=1` |  | Mark the stream as public in Icecast metadata. |
+| `&icecastrelay=` | `&icecastrelayurl` | Custom relay URL, or `0` to disable the relay. |
+| `&icecastrelaytoken=` |  | Token for a private relay. |
+| `&icecaststream=` | `&icecastsid` | In relay mode, which received stream ID to publish when the tab receives several. |
 
 ## URL examples
 
-Publish local audio to VDO.Ninja and Icecast/AzuraCast from the same source tab:
-
-`https://vdo.ninja/?push=FUSION_ONLINE&audioonly&proaudio&icecastpush&icecastauto=1`
-
-Include source settings directly in the URL:
+Source URL and password in the link:
 
 `https://vdo.ninja/?push=FUSION_ONLINE&audioonly&proaudio&icecastpush&icecasttarget=https%3A%2F%2Fradio.example.com%3A8000%2Fstream&icecastuser=source&icecastpassword=SOURCE_PASSWORD&icecastauto=1`
 
-Build the source endpoint from server plus mount:
+Server and mount given separately:
 
 `https://vdo.ninja/?push=FUSION_ONLINE&audioonly&proaudio&icecastpush&icecastserver=https%3A%2F%2Fradio.example.com%3A8000%2F&icecastmount=stream&icecastpassword=SOURCE_PASSWORD`
 
-Force direct publishing without the relay:
+Direct upload only, without the relay:
 
 `https://vdo.ninja/?push=FUSION_ONLINE&audioonly&proaudio&icecastpush&icecastrelay=0&icecasttarget=https%3A%2F%2Fradio.example.com%3A8000%2Fstream&icecastpassword=SOURCE_PASSWORD`
 
-Relay an existing VDO.Ninja source from a second browser tab:
-
-`https://vdo.ninja/?view=FUSION_ONLINE&novideo&proaudio&icecastview&icecastauto=1`
-
-## Browser and relay notes
-
-The publishing happens from the browser tab. Some Icecast servers do not accept browser uploads directly because of CORS, HTTPS, mixed-content, or firewall rules. VDO.Ninja uses an Icecast relay by default to avoid many of those browser limitations.
-
-If your Icecast/AzuraCast source endpoint is available over HTTPS and supports browser CORS uploads, direct publishing may work. If not, leave the relay enabled.
-
-For HTTP-only servers loaded from the HTTPS VDO.Ninja site, the relay is normally required because browsers block mixed-content uploads.
-
 ## Troubleshooting
 
-* If the VDO.Ninja page says **Waiting for VDO.Ninja audio**, confirm the microphone/source is active. In relay mode, also confirm the remote sender is live and that the `&view=` stream ID is correct.
-* If the Icecast server rejects the stream, confirm the source URL, username, password, mountpoint, and accepted audio format.
-* If you are using AzuraCast, copy the source connection details from the station profile instead of the public listening link.
-* Keep the generated viewer tab open for the full broadcast. Closing it stops the Icecast/AzuraCast source.
+* **Waiting for local VDO.Ninja audio...** (or **Waiting for received VDO.Ninja audio...** in relay mode): check that the microphone or source is active. In relay mode, also check that the sender is live and the `&view=` stream ID is correct.
+* **Icecast rejected the stream**: check the source URL, username, password, mountpoint and accepted audio format.
+* **AzuraCast**: copy the source connection details from the station profile, not the public listening link.

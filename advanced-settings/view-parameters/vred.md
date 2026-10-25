@@ -1,5 +1,5 @@
 ---
-description: Requests video RED redundancy support during WebRTC negotiation
+description: Asks WebRTC negotiation to prefer video RED right after the chosen video codec
 ---
 
 # \&vred
@@ -7,18 +7,8 @@ description: Requests video RED redundancy support during WebRTC negotiation
 Viewer-Side Option! ([`&view`](view.md), [`&scene`](scene.md), [`&room`](../../general-settings/room.md))
 
 {% hint style="warning" %}
-This is an experimental normal-WebRTC reliability option. It can change codec negotiation, but the browser still decides whether RED or FEC repair packets are actually sent.
+Experimental. `&vred` only changes codec order during negotiation. The browser still decides whether to send any RED or FEC repair packets.
 {% endhint %}
-
-## Quick use
-
-For short random packet loss, test this on the viewer or OBS link:
-
-```text
-https://vdo.ninja/?view=STREAMID&codec=vp8&vred&buffer=500
-```
-
-Use it as an A/B test, not as a default magic fix. Compare the same stream with and without `&vred` while watching VDO.Ninja stats and `chrome://webrtc-internals` or `about:webrtc`.
 
 ## Options
 
@@ -26,143 +16,75 @@ Example: `&codec=vp8&vred`
 
 | Value | Description |
 | --- | --- |
-| (no value) | request video RED preference during negotiation |
-| `1` | same as no value |
+| (no value) | Prefer video RED during negotiation |
 
-## What it does
+There is no default; without `&vred`, codec order is left alone.
 
-`&vred` sets VDO.Ninja's viewer-side video error-correction preference. In the current code path, VDO.Ninja passes that flag into `CodecsHandler.preferCodec(...)`, which reorders the video SDP payload list so that the requested video codec is first and `video/red` is preferred immediately after it when the browser's SDP advertises RED.
+## Details
 
-The practical test URL is:
+`&vred` reorders the video codec list in the session description so the requested codec comes first and `video/red` comes right after it, when the browser offers RED.
+
+On a viewer link, it only takes effect together with [`&codec`](codec.md), because VDO.Ninja reorders codecs only when a codec is requested. On a publisher using [`&meshcast`](../../newly-added-parameters/and-meshcast.md) or [`&whipout`](../whip-parameters/and-whipout.md), it also applies to the outgoing WHIP offer.
+
+Start with VP8. Chromium can disable the RED/ULPFEC combination in some cases, such as H.264 with NACK enabled.
 
 ```text
-&codec=vp8&vred
+https://vdo.ninja/?view=STREAMID&codec=vp8&vred&buffer=500
 ```
-
-`&codec=vp8` asks the sender to use VP8. `&vred` asks negotiation to keep RED near the front of the payload list. VP8 is the best starting point for this experiment because Chromium's WebRTC sender logic can disable RED/ULPFEC combinations in some cases, including when NACK is enabled with payloads that do not support skipping FEC packets, such as common H.264 paths.
 
 ## What it does not do
 
-`&vred` does not force a fixed video FEC percentage, does not force a specific parity rate, and does not guarantee that repair packets are sent. It is a negotiation preference.
+* It does not force a FEC percentage or parity rate, and does not guarantee repair packets are sent.
+* VDO.Ninja has no URL parameter that forces browser video FEC on normal WebRTC video.
+* It does not configure the Ninja OBS Plugin publisher, which does not offer video RED, ULPFEC or FlexFEC. That plugin's **Packet Duplication** setting is separate and is not turned on by `&vred` or `&pvred`.
 
-It also does not configure the native Ninja OBS Plugin publisher. That publisher does not offer video RED/ULPFEC or
-FlexFEC. Its **Packet Duplication** setting is an OBS-side control that sends best-effort delayed copies of selected RTP
-packets; it is not activated by `&vred` or `&pvred`.
-
-For normal WebRTC RTP video, VDO.Ninja currently does not expose a URL parameter that forces browser video parity/FEC data. The browser and its WebRTC stack decide whether repair packets are worth sending, and how much bandwidth they can spend.
-
-If you need a VDO.Ninja URL option that explicitly adds parity data, use the chunked/WebCodecs path instead:
+If you need VDO.Ninja-controlled parity, use the chunked (WebCodecs) path instead. It adds buffering:
 
 ```text
 https://vdo.ninja/?push=STREAMID&chunked=2500&chunkfec=4&chunknack=1
 https://vdo.ninja/?view=STREAMID&chunkbuffer=1500
 ```
 
-In chunked mode, `&chunkfec=4` means one parity payload per four data chunks. That is VDO.Ninja-controlled parity, but it is not the same low-latency browser RTP path and it adds explicit buffering.
+`&chunkfec=4` sends one parity payload per four data chunks.
 
-## Bandwidth impact
+## Bandwidth
 
-`&vred` itself does not set a fixed bandwidth overhead. If the browser only negotiates RED but does not send redundant or FEC payloads, bandwidth may not meaningfully change. If the browser does send RED/ULPFEC repair data, the stream can use extra bandwidth for repair packets, and that bandwidth comes out of the same uplink budget as media quality.
-
-On a constrained uplink, extra repair traffic can help short random loss but can also make congestion worse if there is no headroom. For unstable mobile links, pair any RED experiment with a lower target bitrate and headroom:
-
-```text
-&videobitrate=2500&maxbandwidth=60
-```
-
-or on the publisher:
-
-```text
-&outboundvideobitrate=2500&maxvideobitrate=2500&maxbandwidth=60
-```
+`&vred` adds no fixed overhead. If the browser sends repair data, it comes out of the same uplink budget as the video. On a tight link, that can make congestion worse. Pair RED tests with a lower bitrate and some headroom, for example `&videobitrate=2500&maxbandwidth=60` on the viewer, or `&outboundvideobitrate=2500&maxvideobitrate=2500&maxbandwidth=60` on the publisher.
 
 ## When to use it
 
-Try `&codec=vp8&vred` when:
+Try `&codec=vp8&vred` when the stream has short, random packet loss, round-trip time is not extreme, and there is bitrate headroom. Always compare against the same link without `&vred`.
 
-* the stream has short random packet loss;
-* RTT is not extremely high;
-* the link still has bitrate headroom after reducing the video target;
-* you can compare against the same URL without `&vred`.
+For other problems, use other controls:
 
-Prefer other controls when the issue is different:
+| Problem | Try |
+| --- | --- |
+| Jitter or reordering | [`&buffer=500`](buffer.md) or [`&buffer2`](../video-parameters/and-buffer2.md) |
+| Smeared video that lingers after a dropout | [`&keyframe=3000`](keyframerate.md); avoid very frequent keyframes |
+| Motion breaking up under bandwidth pressure | `&degrade=maintain-framerate` |
+| Screen sharing or text | `&degrade=maintain-resolution` |
+| Burst loss, cellular handoffs or multi-second outages | [`&chunked`](../../newly-added-parameters/and-chunked.md), SRT, RTMP, or WHIP/WHEP with an SFU |
+| Audio dropouts | `&audiocodec=red` |
 
-* jitter or packet reordering: start with [`&buffer=500`](buffer.md) or [`&buffer2`](../video-parameters/and-buffer2.md);
-* lingering smeared video after a dropout: test [`&keyframe=3000`](keyframerate.md), but avoid very frequent keyframes;
-* motion under bandwidth pressure: test `&degrade=maintain-framerate`;
-* screen sharing or text: test `&degrade=maintain-resolution`;
-* burst loss, cellular handoffs, or multi-second outages: use [`&chunked`](../../newly-added-parameters/and-chunked.md), SRT, RTMP, WHIP/WHEP with an SFU, or a bonded/smoothing path.
+Do not add `&nonack`, `&nopli` or `&noremb` for reliability. They remove the feedback WebRTC uses to recover and adapt.
 
-Do not add `&nonack`, `&nopli`, or `&noremb` when the goal is reliability. Those flags remove browser feedback mechanisms that normally help WebRTC recover and adapt.
+## How to test
 
-## Related VDO.Ninja parameters
+1. Compare the same stream with and without `&vred`, keeping codec and bitrate fixed.
+2. Open `chrome://webrtc-internals` (Chrome) or `about:webrtc` (Firefox).
+3. Check the negotiated video codec and payloads.
+4. Compare bitrate, packet loss, NACK count, freezes, keyframes and picture stability.
+
+Browser support for RED varies. Check the target browser, including older OBS Browser Source versions, before relying on it.
+
+## Related
 
 | Parameter | Side | Use |
 | --- | --- | --- |
-| `&vred` | viewer | Prefer video RED in viewer-side negotiation. |
-| `&pvred` | publisher | Publisher-side companion flag for preferred video RED negotiation. |
-| `&codec=vp8` | viewer | Common codec pairing for testing video RED behavior. |
-| `&prefervideocodec=vp8` | publisher | Publisher-side preferred video codec order for peers. |
-| `&buffer`, `&buffer2` | viewer | Add normal-WebRTC playout delay for jitter and late packets. |
-| `&keyframe=3000` | viewer | Ask remote publishers for periodic keyframes to clear lingering corruption. |
-| `&degrade=maintain-framerate` | viewer | Prefer dropping resolution before frame rate under pressure. |
-| `&degrade=maintain-resolution` | viewer | Prefer dropping frame rate before resolution under pressure. |
-| `&videobitrate`, `&outboundvideobitrate`, `&maxvideobitrate` | viewer/publisher | Keep media bitrate within the real link budget. |
-| `&maxbandwidth=60` | publisher | Leave headroom against estimated available bandwidth. |
-| `&audiocodec=red` | viewer | Audio RED; more directly useful for packet-loss audio than video RED is for video. |
-| `&redaudio`, `&fecaudio`, `&predaudio`, `&pfecaudio` | publisher/viewer | Experimental audio RED/FEC ordering flags. |
-| `&chunkfec`, `&chunknack` | chunked push/view | VDO.Ninja-controlled chunk parity and retransmission. |
-
-## Browser support notes
-
-Browser support is not the same as guaranteed repair behavior.
-
-* `RTCRtpReceiver.getCapabilities("video")` is the standard way to inspect advertised codec, RTX, RED, and FEC capabilities. MDN marks it as widely available.
-* `RTCRtpTransceiver.setCodecPreferences()` is now a standard codec-ordering API, but VDO.Ninja's current normal WebRTC code path still uses SDP ordering through `CodecsHandler`.
-* `RTCRtpReceiver.jitterBufferTarget`, used for receiver-side buffering where available, is still marked as limited availability by MDN. VDO.Ninja checks for support before using it and falls back to older delay hints where available.
-
-Current Playwright checks in this repo verified:
-
-| Browser project | Video RTP capabilities advertised in test | Delay knobs seen in test |
-| --- | --- | --- |
-| Chromium | `video/vp8`, `video/rtx`, `video/red`, `video/ulpfec`, plus `video/flexfec-03` on the receiver side | `jitterBufferTarget=true`, `playoutDelayHint=true` |
-| Firefox | `video/vp8`, `video/rtx`, `video/red`, `video/ulpfec` | `jitterBufferTarget=true`, `playoutDelayHint=false` |
-
-Safari was not covered by this repo's Playwright reliability test. Treat Safari and old embedded browser runtimes, including old OBS Browser Source CEF builds, as "verify on the target runtime" cases.
-
-## Verification checklist
-
-1. Test the same stream with and without `&vred`.
-2. Keep the codec and bitrate fixed while comparing.
-3. In Chrome, open `chrome://webrtc-internals`; in Firefox, open `about:webrtc`.
-4. Confirm the negotiated video codec and payloads.
-5. Compare bitrate, packet loss, NACK count, freezes, keyframe count, and subjective image stability.
-
-The Playwright tests in this repo confirm URL parsing, SDP ordering, and browser capability/offer behavior. They do not prove that quality improves under loss; that requires a controlled packet-loss test with netem, clumsy, or equivalent tooling.
-
-## Advanced notes
-
-RED and ULPFEC are related but not identical:
-
-* RED is an RTP payload format for carrying redundant data.
-* ULPFEC is a generic RTP forward-error-correction payload format based on XOR/parity repair data.
-* In WebRTC video, RED and ULPFEC are often negotiated together, but the browser may disable the combination depending on codec, NACK support, field trials, and sender logic.
-
-The local `CodecsHandler.preferCodec(sdp, codec, useRed, useUlpfec)` helper has a fourth `useUlpfec` argument. The current normal VDO.Ninja RTP video paths pass `session.videoErrorCorrection` as `useRed`, but they do not expose a URL flag that passes `useUlpfec=true` for video. Adding such a flag could be a future experiment, but it still would not force a browser FEC percentage. It would only request a different SDP order, and the browser could still decline or disable it.
-
-For a stronger future implementation, VDO.Ninja could investigate `RTCRtpTransceiver.setCodecPreferences()` for modern browsers, while keeping SDP reordering as a fallback for older runtimes. This would still be codec ordering, not a JavaScript API for forcing RTP video parity.
-
-## References
-
-* [MDN: RTCRtpReceiver.getCapabilities()](https://developer.mozilla.org/en-US/docs/Web/API/RTCRtpReceiver/getCapabilities_static)
-* [MDN: RTCRtpTransceiver.setCodecPreferences()](https://developer.mozilla.org/en-US/docs/Web/API/RTCRtpTransceiver/setCodecPreferences)
-* [MDN: RTCRtpReceiver.jitterBufferTarget](https://developer.mozilla.org/en-US/docs/Web/API/RTCRtpReceiver/jitterBufferTarget)
-* [W3C WebRTC specification](https://www.w3.org/TR/webrtc/)
-* [IETF RFC 2198: RTP Payload for Redundant Audio Data](https://datatracker.ietf.org/doc/html/rfc2198)
-* [IETF RFC 5109: RTP Payload Format for Generic Forward Error Correction](https://datatracker.ietf.org/doc/html/rfc5109)
-* [Chromium WebRTC RED/ULPFEC sender logic](https://chromium.googlesource.com/external/webrtc/+/master/call/rtp_video_sender.cc)
-
-## Related
+| `&pvred` | Publisher | Prefer video RED in the publisher's own codec ordering |
+| `&prefervideocodec=vp8` | Publisher | Preferred video codec for viewers |
+| `&redaudio`, `&fecaudio`, `&predaudio`, `&pfecaudio` | Viewer / publisher | Experimental audio RED/FEC ordering |
+| `&chunkfec`, `&chunknack` | Chunked publisher / viewer | VDO.Ninja-controlled parity and retransmission |
 
 {% content-ref url="codec.md" %}
 [codec.md](codec.md)
@@ -170,10 +92,6 @@ For a stronger future implementation, VDO.Ninja could investigate `RTCRtpTransce
 
 {% content-ref url="buffer.md" %}
 [buffer.md](buffer.md)
-{% endcontent-ref %}
-
-{% content-ref url="keyframerate.md" %}
-[keyframerate.md](keyframerate.md)
 {% endcontent-ref %}
 
 {% content-ref url="../../newly-added-parameters/and-chunked.md" %}

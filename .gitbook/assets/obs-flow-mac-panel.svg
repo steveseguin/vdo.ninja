@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="560" viewBox="0 0 960 560" role="img" aria-labelledby="title description">
+  <title id="title">Guest panel on a Mac with OBS and Meshcast</title>
+  <desc id="description">Guests join a VDO.Ninja room. The Mixer's Scene View Link brings the panel into OBS on the Mac. OBS streams the show to Meshcast by RTMP, and Meshcast sends it to the streaming platforms. OBS Virtual Camera returns the Program video to the guests through the director, whose slot stays Unset so OBS does not capture it.</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 Z" fill="#205c96"/></marker>
+    <marker id="arrow-green" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 Z" fill="#2e7d4f"/></marker>
+  </defs>
+  <rect width="960" height="560" fill="white"/>
+  <g font-family="Arial, Helvetica, sans-serif" text-anchor="middle" fill="#142c43">
+    <text x="480" y="52" font-size="36" font-weight="bold">Mac guest panel</text>
+    <text x="480" y="86" font-size="22">VDO.Ninja brings guests in, OBS builds the show, Meshcast sends it out</text>
+    <g fill="#edf4fb" stroke="#205c96" stroke-width="3">
+      <rect x="30" y="125" width="180" height="110" rx="20"/>
+      <rect x="270" y="125" width="180" height="110" rx="20"/>
+      <rect x="510" y="125" width="180" height="110" rx="20"/>
+      <rect x="750" y="125" width="180" height="110" rx="20"/>
+      <rect x="750" y="315" width="180" height="100" rx="20"/>
+    </g>
+    <g font-size="25" font-weight="bold">
+      <text x="120" y="172">Guests</text>
+      <text x="360" y="172">VDO.Ninja</text>
+      <text x="600" y="172">OBS on Mac</text>
+      <text x="840" y="172">Meshcast</text>
+      <text x="840" y="358">Platforms</text>
+    </g>
+    <g font-size="21">
+      <text x="120" y="206">camera + mic</text>
+      <text x="360" y="206">Scene View Link</text>
+      <text x="600" y="206">builds the show</text>
+      <text x="840" y="206">RTMP in</text>
+      <text x="840" y="390">YouTube, Twitch</text>
+    </g>
+    <g stroke="#205c96" stroke-width="5" fill="none" marker-end="url(#arrow)">
+      <path d="M215 180 H260"/><path d="M455 180 H500"/><path d="M695 180 H740"/><path d="M840 240 V305"/>
+    </g>
+    <path d="M600 240 V350 H120 V245" stroke="#2e7d4f" stroke-width="5" fill="none" marker-end="url(#arrow-green)"/>
+    <text x="360" y="336" font-size="22" font-weight="bold" fill="#2e7d4f">Program return</text>
+    <text x="360" y="386" font-size="21">Virtual Camera → director → &amp;broadcast</text>
+    <rect x="30" y="455" width="900" height="70" rx="16" fill="#fdf3e7" stroke="#b25d00" stroke-width="3"/>
+    <text x="480" y="499" font-size="23" font-weight="bold">Keep the director's slot Unset so OBS does not capture the return</text>
+  </g>
+</svg>

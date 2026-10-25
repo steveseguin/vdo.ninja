@@ -1,458 +1,220 @@
 ---
-description: A plain-language guide to getting steadier VDO.Ninja recordings by choosing the right network, buffer, and recording method.
+description: Get steadier VDO.Ninja recordings by choosing the right network, buffer and recording method, and by keeping a clean backup.
 ---
 
 # Recording video with consistent results
 
-This guide is for people who are using VDO.Ninja to record interviews, podcasts, remote guests, or live productions.
+A recording is only as clean as the path it was made on. If you record a guest after their video has crossed weak Wi-Fi, the recording keeps the same freezes and audio jumps you saw live. A local recording in the guest's own browser is made before the network, so it can stay clean.
 
-The goal is simple: fewer frozen moments, fewer audio jumps, and fewer surprises after the recording is finished.
+![The guest's browser sends video over the Internet to OBS or the director. A local recording is made before the network; the live recording in OBS is made after it and includes any glitches. The local copy can upload to Google Drive.](../.gitbook/assets/quality-recording-paths.svg)
 
-The most important thing to know is this:
+For anything that matters, keep a live recording **and** at least one backup.
 
-> A recording is only as reliable as the path used to make it.
-
-If you record a guest after their video has already crossed a weak Wi-Fi connection, the recording may include the same freezes and jumps you saw live. If the guest records themselves locally, before the Internet gets involved, that backup can be much cleaner.
-
-For important recordings, do not depend on only one copy. Use a live recording and at least one backup.
-
-For longer local takes, use [`&splitrecording`](../advanced-settings/recording-parameters/and-splitrecording.md) to save smaller parts. The updated disk-only recorder makes each part independently playable; recordings shared with a cloud uploader retain continuation parts. Automatic iPhone/iPad splitting also limits estimated part size without lowering recording quality. Check that your deployment includes this update and test actual saved files on the device.
-
-## A simple approach
-
-For many serious productions, a practical approach to test is:
+## Recommended setup
 
 1. Record the live show in OBS or your production software.
-2. Add a little buffer to the OBS VDO.Ninja source.
+2. Add a small buffer to each VDO.Ninja source in OBS.
 3. Have each guest make a local browser recording as a safety copy.
-4. If possible, also use Google Drive cloud backup for guest recordings.
-5. Test the full setup before the real session.
+4. Optionally, have those recordings upload to Google Drive.
+5. Test the whole setup before the real session.
 
-This gives you a live recording that is ready right away, plus cleaner guest backups if the live connection has a bad moment.
+You get a finished show right away, plus clean guest files if the live connection has a bad moment.
 
-## Think in three parts
+## 1. Network
 
-Consistent recordings usually come down to three things:
+Wi-Fi is one of the most common causes of short freezes, audio skips and sudden quality drops. Ask guests to use an Ethernet cable if they can; it is often the biggest single improvement.
 
-* **Network:** how steady the connection is.
-* **Buffer:** how much time VDO.Ninja is allowed to smooth out bumps.
-* **Recording method:** where the recording is made.
+If a guest must use Wi-Fi, ask them to:
 
-You do not need to become a network engineer. You just need to choose the right balance for the job.
+* sit close to the router and avoid busy public Wi-Fi;
+* turn off VPNs unless required;
+* close cloud backup apps, game launchers and large downloads;
+* keep the laptop plugged in;
+* use Chrome or Edge, which have the most predictable recording support.
 
-## Part 1: Network
+VDO.Ninja tries to connect guests directly, peer to peer. Some office, school, hotel and corporate networks block that and force traffic through a relay server, which keeps the call up but can add delay and lower quality. If one guest is always unstable, test them on a different network before changing cameras or settings.
 
-Wi-Fi is convenient, but it is also one of the most common causes of short freezes, audio skips, and sudden video quality drops.
+Related:
 
-If a guest can use an Ethernet cable, ask them to use it. This is often the single biggest improvement.
+* [Packet loss](../common-errors-and-known-issues/packet-loss.md)
+* [Video freezes mid-stream](../common-errors-and-known-issues/video-freezes-mid-stream.md)
+* [Relay candidate being selected](../common-errors-and-known-issues/relay-candidate-being-selected.md)
+* [Enterprise firewall checklist](../common-errors-and-known-issues/enterprise-firewall-checklist.md)
+* [Handling guest disconnects and connection recovery](handling-guest-disconnects-and-connection-recovery.md)
+* [Mesh network debug](mesh-network-debug.md)
 
-If they must use Wi-Fi:
+## 2. Buffer
 
-* Ask them to sit close to the router.
-* Avoid being on the far side of the house.
-* Avoid busy public Wi-Fi.
-* Avoid VPNs during the recording, unless they are required.
-* Ask them to close cloud backup apps, game launchers, and large downloads.
-* Keep the laptop plugged into power.
-* Use Chrome or Edge for the most predictable browser recording support.
+A buffer holds video and audio briefly so small network bumps can be smoothed out. More buffer means steadier playback but more delay. For live conversation, keep it small. For recording in OBS, a little delay is usually worth it.
 
-Firewalls can also matter. VDO.Ninja normally tries to make a direct peer-to-peer connection. Direct connections are usually best for quality and delay. Some office, school, hotel, or corporate networks block this and force the call through a relay server instead. A relay can save the connection, but it may add delay and reduce quality.
+### Regular buffer
 
-If one guest is always unstable, test them from a different network before blaming the camera or VDO.Ninja settings.
-
-Related network and troubleshooting guides:
-
-{% content-ref url="../common-errors-and-known-issues/packet-loss.md" %}
-[packet-loss.md](../common-errors-and-known-issues/packet-loss.md)
-{% endcontent-ref %}
-
-{% content-ref url="../common-errors-and-known-issues/video-freezes-mid-stream.md" %}
-[video-freezes-mid-stream.md](../common-errors-and-known-issues/video-freezes-mid-stream.md)
-{% endcontent-ref %}
-
-{% content-ref url="../common-errors-and-known-issues/relay-candidate-being-selected.md" %}
-[relay-candidate-being-selected.md](../common-errors-and-known-issues/relay-candidate-being-selected.md)
-{% endcontent-ref %}
-
-{% content-ref url="../common-errors-and-known-issues/enterprise-firewall-checklist.md" %}
-[enterprise-firewall-checklist.md](../common-errors-and-known-issues/enterprise-firewall-checklist.md)
-{% endcontent-ref %}
-
-{% content-ref url="handling-guest-disconnects-and-connection-recovery.md" %}
-[handling-guest-disconnects-and-connection-recovery.md](handling-guest-disconnects-and-connection-recovery.md)
-{% endcontent-ref %}
-
-{% content-ref url="mesh-network-debug.md" %}
-[mesh-network-debug.md](mesh-network-debug.md)
-{% endcontent-ref %}
-
-## Part 2: Buffer
-
-A buffer is a small waiting area for video and audio.
-
-Without much buffer, video arrives quickly, but small network bumps are easier to see. With more buffer, VDO.Ninja has more time to smooth over those bumps, but the video is delayed a little more.
-
-For live conversation, you usually want less buffer.
-
-For recording into OBS, a small delay is often worth it if it makes the recording steadier.
-
-### Regular buffer for OBS sources
-
-If you are pulling a VDO.Ninja view link into OBS and seeing little freezes or sync jumps, try adding this to the OBS/view link:
+If an OBS source shows small freezes or sync jumps, add this to the **view link in OBS** (not the guest's invite link):
 
 ```text
 &buffer=200
 ```
 
-If that is not enough, try:
-
-```text
-&buffer=500
-```
-
-This does not fix a terrible connection, but it can help with normal Wi-Fi jitter.
-
-Use this on the viewing or OBS side, not necessarily on the guest invite link.
-
-Example OBS/view link:
+If that is not enough, try `&buffer=500`. Buffer helps with normal Wi-Fi jitter; it cannot fix a very bad connection.
 
 ```text
 https://vdo.ninja/?view=GUESTID&room=ROOMNAME&scale=100&buffer=500
 ```
 
-Related setting:
+See [`&buffer`](../advanced-settings/view-parameters/buffer.md).
 
-{% content-ref url="../advanced-settings/view-parameters/buffer.md" %}
-[buffer.md](../advanced-settings/view-parameters/buffer.md)
-{% endcontent-ref %}
+### Chunked mode
 
-### Chunked mode as a heavier buffer option
+Chunked mode sends video a different way and favors steady quality over the lowest delay. Consider it when:
 
-Chunked mode is a different way of sending video. It is designed to favor steadier quality over the lowest possible delay.
+* you are recording in OBS and 1 to 3 seconds of delay is fine;
+* you care more about avoiding visible damage than about instant video.
 
-It can be useful when:
+It is not a good fit when guests need natural, low-delay conversation. It does not work in Firefox; Safari needs full WebCodecs support. Chrome or Edge is the safe choice.
 
-* You are recording into OBS.
-* A delay of about 1 to 3 seconds is acceptable.
-* The guest is on Chrome or Edge.
-* You care more about avoiding visible damage than having instant video.
-
-It is not the best choice when guests need a perfectly natural, low-delay conversation path.
-
-A basic chunked guest link might include:
+On the guest link:
 
 ```text
 &chunked=2500&chunkprofile=balanced
 ```
 
-Then the OBS/view side can choose how much buffer to allow:
+On the OBS view link, set how much buffer to allow (about one second here):
 
 ```text
 &chunkbuffer=1000
 ```
 
-This means the OBS side is giving the video about one second of room to smooth out trouble.
-
-For a rougher Wi-Fi connection, you can allow more:
+For rougher Wi-Fi, allow more, at the cost of more delay:
 
 ```text
 &chunkbuffer=1500&chunkbufferfloor=1000&chunkbufferceil=3000&chunkjitterslack=500&chunkadapt=hybrid
 ```
 
-The tradeoff is delay. More buffer can mean a steadier recording, but the video will arrive later.
+You can keep chunked mode for the recording source and give a monitor or guest-view link normal low-delay WebRTC with `&nochunked`. A chunked stream can also be recorded to disk without re-encoding the video.
 
-Related setting:
+See [`&chunked`](../newly-added-parameters/and-chunked.md), [`&chunkedbuffer`](../advanced-settings/newly-added-parameters/and-chunkedbuffer.md) and [`&nochunked`](../advanced-settings/settings-parameters/and-nochunked.md).
 
-{% content-ref url="../newly-added-parameters/and-chunked.md" %}
-[and-chunked.md](../newly-added-parameters/and-chunked.md)
-{% endcontent-ref %}
+## 3. Recording method
 
-{% content-ref url="../advanced-settings/newly-added-parameters/and-chunkedbuffer.md" %}
-[and-chunkedbuffer.md](../advanced-settings/newly-added-parameters/and-chunkedbuffer.md)
-{% endcontent-ref %}
+| Method | Where it records | Good for | Watch out for |
+| --- | --- | --- | --- |
+| OBS recording | After the network | The finished live show | Records any freezes the guest's connection had |
+| Guest local recording | Guest's browser, before the network | The cleanest backup | Uses the guest's CPU and disk; they must not close the tab early |
+| Google Drive upload | Guest's local recording, uploaded | Getting guest files without manual transfers | Needs upload speed; uploading adds load to the guest's connection |
+| Dropbox upload or host disk | The host's own recordings | An extra safety layer | A host recording of a remote guest still includes network glitches |
+| Director remote recording | What the director receives | Convenience | Includes any freezes on that connection |
 
-{% content-ref url="../advanced-settings/settings-parameters/and-nochunked.md" %}
-[and-nochunked.md](../advanced-settings/settings-parameters/and-nochunked.md)
-{% endcontent-ref %}
-
-## Part 3: Recording method
-
-There are several ways to record with VDO.Ninja. They are not all equal.
-
-For a broader overview of recording choices and file formats, see:
-
-{% content-ref url="options-to-record-streams.md" %}
-[options-to-record-streams.md](options-to-record-streams.md)
-{% endcontent-ref %}
-
-{% content-ref url="recording-format-options-and-settings.md" %}
-[recording-format-options-and-settings.md](recording-format-options-and-settings.md)
-{% endcontent-ref %}
-
-### OBS recording
-
-This is the normal live-production method.
-
-You bring each guest into OBS, switch the show live, and record the final result. This is great when you want a finished show right away.
-
-The downside is that OBS records what it receives. If the guest's Wi-Fi has a bad moment, OBS may record that bad moment too.
-
-Use OBS recording as your main live record, but keep a backup.
-
-### Other publishing paths to test
-
-If a normal browser publisher is not steady enough, there are other ways to get video into VDO.Ninja or into your production.
-
-These options are not required for most people, but they can be useful for more demanding recording work:
-
-* **OBS WHIP output:** OBS can publish using WHIP into VDO.Ninja or another WHIP-compatible service. This can be a good test when you want OBS to handle capture and encoding instead of a browser tab.
-* **Game Capture:** a standalone Windows app for publishing game, window, or screen-style captures into VDO.Ninja. It can be useful when a browser's capture path is too dynamic for the job. [https://github.com/steveseguin/Game-capture](https://github.com/steveseguin/Game-capture)
-* **Ninja OBS Plugin:** an OBS plugin for VDO.Ninja publishing and receiving workflows, without needing to manage everything through separate browser tabs. [https://steveseguin.github.io/ninja-obs-plugin/](https://steveseguin.github.io/ninja-obs-plugin/)
-* **Meshcast:** a server-based companion service for VDO.Ninja. It can help when pure peer-to-peer publishing is not the right fit, or when you want RTMP, SRT, WHIP, or VDO.Ninja/WebRTC options in the same workflow. [https://app.meshcast.io](https://app.meshcast.io)
-
-These can be more predictable in some setups because the capture and encoding path is less like a changing browser call and more like a steady video feed. Test them before using them for a real recording.
-
-Related tools:
-
-{% content-ref url="../steves-helper-apps/whip-and-whep-tooling.md" %}
-[whip-and-whep-tooling.md](../steves-helper-apps/whip-and-whep-tooling.md)
-{% endcontent-ref %}
-
-{% content-ref url="using-game-capture-with-vdo.ninja.md" %}
-[using-game-capture-with-vdo.ninja.md](using-game-capture-with-vdo.ninja.md)
-{% endcontent-ref %}
-
-{% content-ref url="using-ninja-obs-plugin-with-vdo.ninja.md" %}
-[using-ninja-obs-plugin-with-vdo.ninja.md](using-ninja-obs-plugin-with-vdo.ninja.md)
-{% endcontent-ref %}
-
-{% content-ref url="../steves-helper-apps/game-capture.md" %}
-[game-capture.md](../steves-helper-apps/game-capture.md)
-{% endcontent-ref %}
-
-{% content-ref url="../steves-helper-apps/ninja-obs-plugin.md" %}
-[ninja-obs-plugin.md](../steves-helper-apps/ninja-obs-plugin.md)
-{% endcontent-ref %}
-
-{% content-ref url="../steves-helper-apps/meshcast.io.md" %}
-[meshcast.io.md](../steves-helper-apps/meshcast.io.md)
-{% endcontent-ref %}
+For an overview of recording options and formats, see [Options to record streams](options-to-record-streams.md) and [Recording format options and settings](recording-format-options-and-settings.md).
 
 ### Guest local recording
 
-This is often the best safety copy.
+Add to the guest invite link:
 
-The guest's own browser records their camera and microphone before the video travels over the Internet. If the guest's Wi-Fi drops for a second, their local recording may still be clean.
+| Parameter | What it does |
+| --- | --- |
+| `&record=6000` | Shows a record button; records at 6000 kbps |
+| `&autorecordlocal=6000` | Starts recording automatically at 6000 kbps |
+| `&splitrecording=5` | Splits the recording into 5-minute parts |
 
-Add this to the guest invite link to give them a recording button:
+Splitting limits how much is lost if the browser crashes. Each part saved to disk is a separate playable file. If the recording also uploads to Google Drive or Dropbox, the upload stays one continuous file, and the local parts are pieces of it rather than separate playable files. On Safari, `&record` splits automatically even without `&splitrecording`: every 5 minutes on iPhone and iPad (shorter if needed to keep parts near 100 MB), and every 10 minutes on a Mac. Test with real saved files on the guest's device.
 
-```text
-&record=6000
-```
+Tips:
 
-To start recording automatically:
+* Test local recording before an important session.
+* Chrome or Edge is the most predictable; Safari and mobile browsers are less so.
+* The guest must keep the tab open until the recording is saved or uploaded.
 
-```text
-&autorecordlocal=6000
-```
+See [`&record`](../advanced-settings/recording-parameters/and-record.md), [`&autorecordlocal`](../advanced-settings/recording-parameters/and-autorecordlocal.md), [`&splitrecording`](../advanced-settings/recording-parameters/and-splitrecording.md) and [Cloud sync with Google Drive and Dropbox](cloud-sync-google-drive-and-dropbox.md).
 
-For longer sessions, split the recording into smaller pieces:
+### Other publishing paths
 
-```text
-&autorecordlocal=6000&splitrecording=5
-```
+If a browser publisher is not steady enough, these replace the browser's capture and encoding with a steadier feed. Test them before a real recording.
 
-Splitting into 5-minute sections can reduce the chance of losing an entire recording if the browser crashes.
+* **OBS WHIP output:** OBS captures and encodes, then publishes over WHIP. See [WHIP and WHEP tooling](../steves-helper-apps/whip-and-whep-tooling.md).
+* **Game Capture:** a Windows app for publishing game, window or screen captures. See [Game Capture](../steves-helper-apps/game-capture.md) and [Using Game Capture with VDO.Ninja](using-game-capture-with-vdo.ninja.md), or [github.com/steveseguin/Game-capture](https://github.com/steveseguin/Game-capture).
+* **Ninja OBS Plugin:** publish and receive VDO.Ninja streams inside OBS without separate browser tabs. See [Ninja OBS Plugin](../steves-helper-apps/ninja-obs-plugin.md) and [Using the Ninja OBS Plugin](using-ninja-obs-plugin-with-vdo.ninja.md), or [the plugin site](https://steveseguin.github.io/ninja-obs-plugin/).
+* **Meshcast:** a server-based companion service, useful when pure peer to peer is not the right fit, or when you want RTMP, SRT, WHIP and WebRTC in one workflow. See [Meshcast](../steves-helper-apps/meshcast.io.md) or [app.meshcast.io](https://app.meshcast.io).
 
-Important notes:
-
-* Guest local recording uses more CPU and disk space on the guest's computer.
-* It should be tested before an important session.
-* The guest should not close the tab until the recording is saved.
-* Chrome or Edge usually gives the most predictable browser recording support.
-* Mobile browsers and Safari can be less predictable for serious recording work.
-
-Related settings:
-
-{% content-ref url="../advanced-settings/recording-parameters/and-record.md" %}
-[and-record.md](../advanced-settings/recording-parameters/and-record.md)
-{% endcontent-ref %}
-
-{% content-ref url="../advanced-settings/recording-parameters/and-autorecordlocal.md" %}
-[and-autorecordlocal.md](../advanced-settings/recording-parameters/and-autorecordlocal.md)
-{% endcontent-ref %}
-
-### Google Drive backup
-
-Google Drive backup is useful when you want guest recordings to upload to the host's Google Drive.
-
-This can be helpful because the guest can record locally and send the file to the producer without a manual file transfer later.
-
-Keep in mind:
-
-* The guest may need to approve the recording prompt.
-* The guest needs enough upload speed.
-* Uploading while recording can add load to the guest's connection.
-* It is still wise to keep another backup.
-
-Related guide:
-
-{% content-ref url="cloud-sync-google-drive-and-dropbox.md" %}
-[cloud-sync-google-drive-and-dropbox.md](cloud-sync-google-drive-and-dropbox.md)
-{% endcontent-ref %}
-
-### Dropbox and local disk recording
-
-Dropbox and local disk recording can be useful in studio workflows, especially for saving or uploading the host-side recording.
-
-These are good extra safety layers, but they should not be the only backup if you need clean guest ISO recordings. If the host records a remote guest after the guest's video has crossed the Internet, the host may still capture network glitches.
-
-### Director-side remote recording
-
-The director can record remote videos, but this records what the director receives.
-
-If the connection has a freeze, that freeze may be in the recording.
-
-This is convenient, but for the cleanest backup, guest-side local recording is usually better.
-
-## Example setups to test
+## Example setups
 
 ### Simple interview
 
-Use this when you want a steady live recording and a basic backup.
-
 Guest link:
 
 ```text
-https://vdo.ninja/?room=ROOMNAME&push=GUESTID&ovb=2200&maxfps=30&contenthint=detail&record=6000&splitrecording=5
+https://vdo.ninja/?room=ROOMNAME&push=GUESTID&ovb=2200&maxframerate=30&contenthint=detail&record=6000&splitrecording=5
 ```
 
-OBS/view link:
+OBS view link:
 
 ```text
 https://vdo.ninja/?view=GUESTID&room=ROOMNAME&scale=100&buffer=500
 ```
 
-### Podcast with cleaner guest backups
+### Podcast with clean guest backups
 
-Use this when the final show is recorded live, but you also want cleaner guest files for emergency fixes.
+Same OBS view link as above. Guest link starts recording automatically:
 
-* Record the program in OBS.
-* Ask every guest to use Ethernet if possible.
-* Use `&buffer=500` on OBS/view links.
-* Add `&autorecordlocal=6000&splitrecording=5` to guest links.
-* Link Google Drive in the studio if you want guest backups uploaded.
+```text
+https://vdo.ninja/?room=ROOMNAME&push=GUESTID&ovb=2200&maxframerate=30&contenthint=detail&autorecordlocal=6000&splitrecording=5
+```
+
+Ask every guest to use Ethernet, and link Google Drive in the studio if you want the guest files uploaded.
+
+### Steadier OBS feed with chunked mode
+
+Adds delay; use only after testing, never for the first time in a paid session.
 
 Guest link:
 
 ```text
-https://vdo.ninja/?room=ROOMNAME&push=GUESTID&ovb=2200&maxfps=30&contenthint=detail&autorecordlocal=6000&splitrecording=5
+https://vdo.ninja/?room=ROOMNAME&push=GUESTID&maxframerate=30&contenthint=detail&chunked=2500&chunkprofile=balanced&autorecordlocal=6000&splitrecording=5
 ```
 
-OBS/view link:
-
-```text
-https://vdo.ninja/?view=GUESTID&room=ROOMNAME&scale=100&buffer=500
-```
-
-### Higher-stability OBS capture with chunked mode
-
-Use this only after testing. It adds delay, but may give a steadier OBS feed.
-
-Guest link:
-
-```text
-https://vdo.ninja/?room=ROOMNAME&push=GUESTID&maxfps=30&contenthint=detail&chunked=2500&chunkprofile=balanced&autorecordlocal=6000&splitrecording=5
-```
-
-OBS/view link:
+OBS view link:
 
 ```text
 https://vdo.ninja/?view=GUESTID&room=ROOMNAME&scale=100&chunkbuffer=1000
 ```
 
-For worse Wi-Fi, test:
+For worse Wi-Fi, use the larger chunk buffer settings shown earlier.
+
+## Bitrate and frame rate
+
+Higher is not always better. On a weak connection, asking for more quality can make the recording worse.
+
+Unless you set one, the camera and browser choose the frame rate. To reduce load, cap it at 30 fps with [`&maxframerate`](../source-settings/and-maxframerate.md):
 
 ```text
-&chunkbuffer=1500&chunkbufferfloor=1000&chunkbufferceil=3000&chunkjitterslack=500&chunkadapt=hybrid
+&ovb=2200&maxframerate=30
 ```
 
-Do not use this for the first time during a paid session.
-
-You can also use chunked mode for the recording path while keeping a smaller, lower-latency WebRTC path for monitoring or conversation. A viewer can opt out of chunked playback with:
+For unstable Wi-Fi, lower the bitrate first. It looks a little softer but is steadier:
 
 ```text
-&nochunked
+&ovb=1800&maxframerate=30
 ```
 
-For example, the OBS recording source might use chunked mode and a larger buffer, while a separate confidence-monitor or guest-view link uses normal WebRTC with less delay. Chunked recordings can also be saved directly to disk without re-encoding the encoded video, which can reduce extra CPU work and avoid another generation of quality loss.
+On strong wired connections you can test higher values. See [Video bitrate for push/view links](video-bitrate-for-push-view-links.md).
 
-## A plain-English checklist before recording
+## Checklist
 
-Before the real session:
+**Before:**
 
-* Ask guests to use Ethernet if possible.
-* Ask guests to restart their browser before joining.
-* Ask guests to close downloads, cloud backup apps, and other video apps.
-* Check that the camera and microphone are correct.
-* Do a short test recording.
-* Make sure the guest knows not to close the tab until the recording is saved or uploaded.
-* Start the OBS recording.
-* Confirm the backup recording is also running.
+* Guests on Ethernet if possible, browser restarted, downloads and other video apps closed.
+* Camera and microphone checked.
+* Short test recording made and opened.
+* Guests know not to close the tab until their recording is saved or uploaded.
+* OBS recording and backup recording both running.
 
-During the session:
+**During:**
 
-* Do not change too many settings live.
+* Avoid changing many settings live.
 * If one guest is unstable, lower their bitrate or frame rate.
-* If OBS is seeing small jumps, add more buffer.
-* If the whole connection is bad, stop and fix the network if the recording matters.
+* If OBS shows small jumps, add buffer.
+* If the whole connection is bad and the recording matters, stop and fix the network.
 
-After the session:
+**After:**
 
-* Wait for local recordings to save.
-* Wait for cloud uploads to finish.
-* Check that the files open before telling guests they can leave.
-
-## Bitrate and frame rate tips
-
-Higher numbers are not always better.
-
-If the guest's connection is weak, asking for more quality can make the recording worse, not better.
-
-VDO.Ninja may use a higher camera frame rate by default, often around 60 fps if the camera and browser allow it. If you want to cap the frame rate to reduce load, 30 fps is usually a safer first test, because some cameras do not support every frame rate cleanly.
-
-```text
-&ovb=2200&maxfps=30
-```
-
-For unstable Wi-Fi, lower the bitrate first:
-
-```text
-&ovb=1800&maxfps=30
-```
-
-It may look less sharp, but it can be steadier. You can also leave the frame rate alone if the camera is already stable.
-
-For strong wired connections, you can test higher values, but always test before the real recording.
-
-Related guide:
-
-{% content-ref url="video-bitrate-for-push-view-links.md" %}
-[video-bitrate-for-push-view-links.md](video-bitrate-for-push-view-links.md)
-{% endcontent-ref %}
-
-## The safest mindset
-
-VDO.Ninja can do a lot, but browsers, Wi-Fi, and laptops are still real-world things.
-
-For casual recordings, one recording may be enough.
-
-For paid work, important interviews, or anything that cannot be repeated, use layers:
-
-* OBS program recording.
-* Guest local recording.
-* Google Drive or other cloud backup.
-* A short test before the session.
-* Ethernet whenever possible.
-
-The goal is not to make failures impossible. The goal is to make sure one bad Wi-Fi moment does not ruin the whole production.
+* Wait for local recordings to save and cloud uploads to finish.
+* Check that the files open before guests leave.

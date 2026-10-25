@@ -14,9 +14,9 @@ description: Share files directly between computers and phones with VDO.Ninja Dr
 4. Choose **Copy link** and send the link to your recipient.
 5. Keep the tab open and your device awake while recipients download. The page shows connected recipients and transfer progress.
 
-Links look like `https://vdo.ninja/drop?view=cedar-river-lunar-otter`. Anyone who knows the name can download while you are sharing, so avoid easy-to-guess names. Names are not reserved: if another Drop sender is using the same name, choose a different one. Drop uses its own VDO.Ninja salt to separate these shares from regular stream IDs.
+Links look like `https://vdo.ninja/drop?view=cedar-river-lunar-otter`. Anyone who knows the name can download while you're sharing, so avoid easy-to-guess names. Names aren't reserved: if another sender is using the same name, Drop says it's in use and you choose another. Drop uses its own salt, so share names don't collide with regular VDO.Ninja stream IDs.
 
-Use **Remove** to stop sharing one file, or **Stop sharing** to remove all files. The share name is locked while files are selected; stop sharing before changing it. Refreshing always clears the file selection. The bare sender page generates a new name each time; after **Apply name**, its `?share=...` URL keeps that name for reuse. Older sharing links with a password fragment still work.
+Use **Remove** to stop sharing one file, or **Stop sharing** to remove all of them. The share name is locked while files are selected; stop sharing to change it. Refreshing clears the file selection. The bare sender page picks a new name each time; after **Apply name**, its `?share=...` URL keeps that name, so you can bookmark it. Older sharing links with a `#password=` fragment still work.
 
 ## Send to your phone with a QR code
 
@@ -26,7 +26,7 @@ The QR code contains the same full download link as **Copy link**. Keep the send
 
 ## Download files
 
-Recipients see the shared filenames and sizes. Downloads run one at a time; individual selections can also be queued. **Download all** queues available files that have not already been received during the current page session.
+Recipients see the shared filenames and sizes. Downloads run one at a time, and you can queue individual files. **Download all** queues every available file not already received in this page session.
 
 Allow multiple downloads if your browser asks, and check the browser's downloads list for the saved files. A transfer can be cancelled and retried; retrying starts the file again. If the sender disconnects, the page shows that it is waiting to reconnect.
 

@@ -4,7 +4,7 @@ description: Guide to the VDO.Ninja native Android and iOS apps, including scree
 
 # VDO.Ninja native mobile app guide
 
-The VDO.Ninja native mobile apps are focused capture tools for phones and tablets. They are useful when the browser cannot access a feature you need, such as Android USB camera capture, native mobile screen sharing, USB audio, local recording, WHIP publishing, or mobile-specific camera controls.
+The VDO.Ninja native apps turn a phone or tablet into a capture device. Use them when the browser cannot do what you need: Android USB cameras and HDMI adapters, mobile screen sharing, USB audio, local recording, WHIP publishing, producer talkback, Social Stream Ninja chat while filming, camera controls, or optional experimental RTMP/SRT output. The web version at [https://vdo.ninja](https://vdo.ninja) remains the most flexible director, viewer, and control surface.
 
 Updated October 2, 2026. Available controls depend on the installed app version, device, and capture mode. Older builds may show **Prefer 1080p** where newer builds have separate camera or screen-share quality menus. Check the store's version history if a control described here is missing.
 
@@ -20,78 +20,42 @@ iOS app
 
 <figure><img src="../.gitbook/assets/vdo-native-app/native-app-publishing-paths.png" alt="Diagram showing VDO.Ninja native app publishing paths for direct VDO.Ninja, WHIP only, WHIP alongside VDO.Ninja, WHEP viewing, talkback, and Social Stream Ninja"><figcaption><p>Publishing options depend on capture mode. Native iOS screen sharing uses its generated viewer link or configured WHIP destination; its direct publishing path does not join rooms.</p></figcaption></figure>
 
-## When to use the native app
-
-Use the native app when you need one of these mobile-first workflows:
-
-* A phone or tablet as a dedicated VDO.Ninja camera source.
-* Android USB/UVC camera or HDMI capture adapter input.
-* Android or iOS mobile screen sharing.
-* USB, USB-C, or Lightning audio input.
-* WHIP publishing to Meshcast, MediaMTX, Cloudflare Stream, Twitch-style WebRTC ingest, or another WHIP-compatible service.
-* Local device recording.
-* Producer talkback through Remote Audio Stream.
-* Social Stream Ninja chat monitoring while filming.
-* Professional camera controls such as exposure, focus, white balance, and zoom where the device supports them.
-* Optional experimental RTMP/SRT output from supported video sources.
-
-The web version at [https://vdo.ninja](https://vdo.ninja) remains the most flexible director, viewer, and control surface. The native app is best used as a reliable mobile capture app.
-
 ## Quick start
 
-1. Open the native app and choose a capture mode, such as **BACK CAMERA**, **SCREEN**, **USB CAMERA**, or **MICROPHONE ONLY**.
-2. Enter a **Stream ID** if you want a stable VDO.Ninja push/view link. Leave it blank if you want the app to generate one.
-3. Enter a **Room name** if the selected capture mode supports rooms and you want to join a director session. For native iOS screen sharing, use the generated viewer link instead.
+1. Open the app and choose a capture mode, such as **BACK CAMERA**, **SCREEN**, **USB CAMERA**, or **MICROPHONE ONLY**.
+2. Enter a **Stream ID** for a stable push/view link, or leave it blank to have the app generate one.
+3. Enter a **Room name** if the selected mode supports rooms and you want to join a director session. For native iOS screen sharing, use the generated viewer link instead.
 4. Enter a **Password** if the room or stream is password protected.
 5. Select the microphone. If you plug in USB audio after opening the screen, tap **Refresh Mics**.
-6. Tap the connect button and confirm any camera, microphone, screen, USB, or recording permissions requested by Android or iOS.
+6. Tap the connect button and accept the permissions that Android or iOS requests.
 
 <figure><img src="../.gitbook/assets/vdo-native-app/phone-publishing-settings.png" alt="VDO.Ninja native app publishing settings with stream ID, room name, password, microphone, and quality controls"><figcaption><p>Publishing Settings is where you choose the VDO.Ninja stream, room, microphone, quality mode, and advanced options.</p></figcaption></figure>
 
-### Stream ID only
-
-Use a **Stream ID** without a room when you want a simple direct push/view workflow.
-
-```text
-Publisher: native app Stream ID = mycamera
-Viewer:    https://vdo.ninja/?view=mycamera
-```
-
-This is the simplest way to use a phone as a camera source for OBS, vMix, a browser viewer, or another VDO.Ninja page.
-
-### Room name
-
-Use a **Room name** when you want the native app to join a VDO.Ninja room.
-
-```text
-Publisher: native app Room name = myroom
-Director:  https://vdo.ninja/?director=myroom
-```
-
-Rooms are useful when you need a director to manage guests, scene links, layouts, recording, or other room-based workflows.
+| Fill in | Use it for | Open on the receiving side |
+| --- | --- | --- |
+| **Stream ID** `mycamera` | A phone camera for OBS, vMix, or a browser | `https://vdo.ninja/?view=mycamera` |
+| **Room name** `myroom` | A room where a director manages guests, scenes, layouts, and recording | `https://vdo.ninja/?director=myroom` |
+| Both: `widecam` in `myroom` | A room participant with a predictable source ID, for fixed camera positions and event templates | `https://vdo.ninja/?director=myroom` |
 
 The native iOS ReplayKit screen-sharing publisher does not join rooms. A room name does not turn its direct screen-share feed into a room participant. Use the viewer link shown by the app for that mode.
 
-### Stream ID and room name together
-
-Use both fields when you want the app to join a room while keeping a predictable source ID. This is useful for permanent camera positions, named microphones, and event templates.
-
-```text
-Publisher: native app Stream ID = widecam, Room name = myroom
-Director:  https://vdo.ninja/?director=myroom
-```
-
 ## Capture modes
 
-### Screen
+| Mode | Use it for |
+| --- | --- |
+| **BACK CAMERA** | The main rear camera; the normal phone-as-camera mode |
+| **FRONT CAMERA** | Selfie capture, talkback, or a presenter-facing view |
+| **BACK ULTRA-WIDE** and other lenses | Room views and wide shots, when the device exposes them |
+| **USB CAMERA** | Android only: UVC cameras and HDMI capture adapters |
+| **MICROPHONE ONLY** | Audio without video, for talkback, commentary, or monitoring |
+| **FRONT + REAR MIX** | iOS MultiCam mix of the front and rear cameras, on supported models |
+| **SCREEN** | Sharing the phone or tablet screen |
+| **WEB VERSION** | The full browser VDO.Ninja feature set on the same device |
+| **HOW TO USE** | The built-in help page |
 
-Use **SCREEN** to share the phone or tablet screen.
+### Screen sharing
 
-* Android can optionally capture system audio on Android 10+.
-* Android 14+ may let you choose one app or the entire screen.
-* iOS uses ReplayKit and supports broadcasting while you switch to another app, such as Notes.
-* Current iOS screen sharing can include app audio and microphone narration, with separate mute controls.
-* Protected video apps, DRM content, and some system screens may appear black or may not include audio.
+Protected video apps, DRM content, and some system screens may appear black or have no audio.
 
 <figure><img src="../.gitbook/assets/vdo-native-app/phone-screen-system-audio.png" alt="Android native app screen sharing settings with Capture System Audio enabled"><figcaption><p>Android screen sharing can capture system audio on supported Android versions when the source app allows it.</p></figcaption></figure>
 
@@ -103,363 +67,165 @@ Use **SCREEN** to share the phone or tablet screen.
 4. Open the app you want to share. Switching to Notes or another app should not end the broadcast.
 5. Copy the app-generated viewer link into OBS or a receiving browser.
 
-Enable the microphone in Apple's broadcast controls when you want narration. The app's microphone mute and **app audio** mute are separate; unmuting in VDO.Ninja cannot enable a microphone that is disabled in Apple's controls. Audio availability still depends on ReplayKit and the app being captured.
+Screen sharing can include app audio and microphone narration. For narration, enable the microphone in Apple's broadcast controls. The app's microphone mute and **app audio** mute are separate, and unmuting in VDO.Ninja cannot turn on a microphone that is off in Apple's controls. Audio still depends on ReplayKit and the captured app.
 
-For a face-camera inset, enable **Camera overlay** and choose the front or rear camera. This uses a movable system Picture in Picture window; keep it visible while sharing. Availability depends on the device and OS, generally requiring iOS 18 or later on iPhone. If unavailable, screen sharing can continue without the overlay.
+For a face-camera inset, enable **Camera overlay** and choose the front or rear camera. It uses a movable system Picture in Picture window that must stay visible. It generally needs iOS 18 or later on iPhone; if it is unavailable, sharing continues without it.
 
-If text is soft, try **Maximum**. If the broadcast freezes or stops, lower the quality and restart screen sharing. See the [quality modes and limits](../guides/improving-quality-of-the-native-app.md#ios-screen-share-quality). Safari on iOS cannot replace the native app for sharing another app's screen.
+If text is soft, try **Maximum**. If the broadcast freezes or stops, lower the quality and restart. See the [quality modes and limits](../guides/improving-quality-of-the-native-app.md#ios-screen-share-quality). Safari on iOS cannot share another app's screen.
 
 #### Android
 
-Choose **SCREEN**, enable **Capture System Audio** if wanted, and approve Android's screen-capture prompt. On supported Android 14+ devices, select a single app or the entire screen. System audio requires Android 10+ and permission from the app being captured; it is not available from every app.
+Choose **SCREEN**, enable **Capture System Audio** if wanted, and approve Android's screen-capture prompt. On supported Android 14+ devices, pick a single app or the entire screen. System audio needs Android 10+ and permission from the captured app, so not every app allows it.
 
-You can mix microphone narration with system audio. With that mix enabled, the local microphone mute controls narration; a director's audio mute controls the whole outgoing audio track. Background operation remains subject to Android's permissions and battery restrictions.
-
-### Back camera
-
-Use **BACK CAMERA** for the main rear camera. This is the normal mode for using a phone as a mobile camera source.
-
-### Front camera
-
-Use **FRONT CAMERA** for selfie camera capture, talkback, or a presenter-facing view.
-
-### Back ultra-wide and other lenses
-
-Use **BACK ULTRA-WIDE** or other listed rear lenses when the device exposes them. Ultra-wide is useful for room views, event spaces, and wide desk shots.
+You can mix microphone narration with system audio. The local microphone mute then controls narration, and a director's audio mute controls the whole outgoing audio track. Background operation is subject to Android's permission and battery rules.
 
 ### USB camera
 
-Use **USB CAMERA** on Android when a UVC USB camera or compatible HDMI capture adapter is connected.
+**USB CAMERA** works on Android phones and tablets that support USB host mode. Use a powered USB-C hub for webcams and HDMI capture dongles, and grant Android's USB permission when asked. If the device also carries audio, it may appear in the microphone list.
 
-* Android-only in the native app.
-* Requires a phone or tablet that supports USB host mode.
-* A powered USB-C hub is recommended for webcams and HDMI capture dongles.
-* If the USB device also exposes audio, it may appear in the microphone list.
-* Grant Android USB permission when prompted.
-
-The iOS native app does not expose USB camera capture. iOS can still use built-in cameras, screen sharing, and external USB/USB-C/Lightning audio devices supported by the OS.
+The iOS app does not support USB cameras, but it can use USB, USB-C, or Lightning audio devices that iOS supports.
 
 <figure><img src="../.gitbook/assets/vdo-native-app/phone-home-usb-camera.png" alt="VDO.Ninja native app home screen with USB camera mode"><figcaption><p>USB CAMERA appears on Android when the app detects a compatible external camera.</p></figcaption></figure>
 
 <figure><img src="../.gitbook/assets/vdo-native-app/phone-usb-permission.png" alt="Android USB permission prompt for an external camera"><figcaption><p>Android asks for permission before the app can use a connected USB camera.</p></figcaption></figure>
 
-### Microphone only
-
-Use **MICROPHONE ONLY** to publish audio without video. This is useful for talkback, commentary, remote audio feeds, and lightweight monitoring.
-
-### Web version
-
-Use **WEB VERSION** when you need the full browser VDO.Ninja feature set from the same device.
-
-### How to use
-
-Use **HOW TO USE** to open the built-in help page from the app.
-
-### iOS front + rear mix
-
-On supported iOS devices, the app may show a **FRONT + REAR MIX** mode. This uses iOS MultiCam support to mix front and rear cameras together. Availability depends on the iPhone or iPad model.
-
 ## WHIP publishing
 
-The native app can publish to a WHIP endpoint in addition to, or instead of, normal VDO.Ninja signaling. This means the app can be used as a general-purpose mobile WHIP publisher, even when the destination is not VDO.Ninja.
-
-Common WHIP targets include:
-
-* Meshcast.
-* MediaMTX.
-* Cloudflare Stream WebRTC ingest.
-* A self-hosted WHIP/WHEP service.
-* Any compatible WHIP ingest endpoint that accepts the codec and auth method used by the app.
+The app can publish to a WHIP endpoint alongside, or instead of, normal VDO.Ninja signaling. Targets include Meshcast, MediaMTX, Cloudflare Stream, Twitch-style WebRTC ingest, and other WHIP services that accept the app's codec and authentication.
 
 <figure><img src="../.gitbook/assets/vdo-native-app/phone-whip-configured.png" alt="Native app WHIP publishing settings filled with a Meshcast WHIP URL"><figcaption><p>Enable WHIP output, paste the publish endpoint, and choose whether to publish alongside VDO.Ninja or to WHIP only.</p></figcaption></figure>
 
-### WHIP fields
-
-* **Enable WHIP output**: Turns on WHIP publishing.
-* **WHIP URL**: The full HTTPS WHIP publish endpoint.
-* **Stream Key**: Optional bearer token. Leave this blank if the publish key is already part of the WHIP URL.
-* **Alongside VDO.Ninja**: Publishes to VDO.Ninja and WHIP at the same time.
-* **WHIP only**: Skips VDO.Ninja signaling and publishes only to the WHIP endpoint.
-
-Use **WHIP only** when the phone should publish directly to a relay, CDN, SFU, or self-hosted WHIP server. Use **Alongside VDO.Ninja** when you want VDO.Ninja room/director features and a WHIP output at the same time.
-
-### WHIP URL examples
-
-Meshcast anonymous WHIP endpoint:
+| Field | What it does |
+| --- | --- |
+| **Enable WHIP output** | Turns on WHIP publishing |
+| **WHIP URL** | The full HTTPS WHIP publish endpoint |
+| **Stream Key** | Optional bearer token, if the provider gives one separately. Leave it blank if the key is in the URL. |
+| **Alongside VDO.Ninja** | Publishes to VDO.Ninja and WHIP at once, keeping room and director features |
+| **WHIP only** | Skips VDO.Ninja signaling, for a relay, CDN, SFU, or self-hosted server |
 
 ```text
-https://app.meshcast.io/api/gateway/whip/YOUR_PUBLISH_KEY
+Meshcast (anonymous):  https://app.meshcast.io/api/gateway/whip/YOUR_PUBLISH_KEY
+MediaMTX-style:        https://media.example.com/mystream/whip
+VDO.Ninja WHIP ingest: https://whip.vdo.ninja/YOURTOKENHERE
 ```
-
-MediaMTX-style endpoint:
-
-```text
-https://media.example.com/mystream/whip
-```
-
-VDO.Ninja WHIP ingest endpoint:
-
-```text
-https://whip.vdo.ninja/YOURTOKENHERE
-```
-
-If the provider gives you an authorization token separately from the URL, enter the URL in **WHIP URL** and the token in **Stream Key**. The app sends the stream key as a bearer token.
 
 ### WHEP viewer source
 
-The native app can also tell VDO.Ninja viewers to use a WHEP playback source when WHIP/WHEP infrastructure is handling distribution.
+The app can tell VDO.Ninja viewers to play from a WHEP source when WHIP/WHEP infrastructure handles distribution. Options are **Off**, **Auto**, **Meshcast**, **MediaMTX**, **Cloudflare Stream**, and **Manual WHEP URL**. **Auto** works when the WHIP response includes a matching WHEP playback URL; use **Manual WHEP URL** for a separate playback endpoint.
 
 <figure><img src="../.gitbook/assets/vdo-native-app/phone-whep-viewer-source.png" alt="Native app WHEP viewer source options including Auto, Meshcast, MediaMTX, Cloudflare Stream, and Manual WHEP URL"><figcaption><p>WHEP viewer source options help VDO.Ninja viewers pull from the WHIP/WHEP host instead of relying only on direct peer-to-peer delivery.</p></figcaption></figure>
 
-Options include **Off**, **Auto**, **Meshcast**, **MediaMTX**, **Cloudflare Stream**, and **Manual WHEP URL**. Use **Auto** when the WHIP response includes a matching WHEP playback URL. Use **Manual WHEP URL** when your provider gives you a separate playback endpoint.
+### Meshcast WHIP example
 
-## Optional RTMP and SRT output
+Tested with a Pixel 9a, the Android app, a Logitech C920 webcam over USB, and an anonymous Meshcast session:
 
-Android and iOS have experimental external publishing controls, disabled by default. Enable **Publishing Settings → Advanced Settings → External publishing controls**, start a supported video session, then open **More → Advanced external output**.
+1. Paste the Meshcast WHIP publish URL into **WHIP URL**, keeping any server hint, and leave **Stream Key** blank:
 
-Enter a complete publishing URL and press **Start**. Opening or closing the panel does not start or stop the output; use **Stop** or end the session to stop it. Destination URLs and keys are not saved between sessions.
+   ```text
+   https://app.meshcast.io/api/gateway/whip/YOUR_PUBLISH_KEY?server=ovh-use1
+   ```
 
-* Supported transports are plain **RTMP** and **SRT caller**. RTMPS and SRTLA are not supported by this output.
-* On iOS, this output is available for single-camera sources. It is not available for ReplayKit screen sharing, microphone-only mode, or front/rear camera mixing.
-* On Android, it is available for supported video tracks, including camera, USB camera, and screen capture. Device encoder support still matters.
-* This is an additional H.264/AAC output with its own encoder and bandwidth use.
+2. Select **USB CAMERA** and grant USB permission.
+3. To watch, open the matching Meshcast watch, embed, or WHEP URL. Anonymous sessions use the anonymous key as the view path:
 
-**Advanced encoder settings** provides presets and controls for video bitrate, output resolution and orientation, frame-rate limit, keyframe interval, H.264 profile, fit/crop, and AAC audio. Those settings configure the external output; they do not raise the camera's capture resolution or frame rate. Stop the external output before changing its configuration.
-
-iOS also offers experimental **Adaptive bitrate (RTMP only)**, off by default. It adjusts the external video bitrate between the selected minimum and maximum as the output queue changes. It does not provide network bonding or automatic reconnect.
-
-## Meshcast WHIP example
-
-This workflow was tested with:
-
-* Pixel 9a.
-* VDO.Ninja Android native app.
-* Logitech HD Pro Webcam C920 connected over USB.
-* Meshcast anonymous WHIP/WHEP session.
-
-The app exposed the C920 as **USB CAMERA**, requested Android USB permission, published audio and video into Meshcast via WHIP, and Meshcast playback showed the same USB camera feed.
-
-For Meshcast, use the WHIP publish URL as the app's **WHIP URL**:
-
-```text
-https://app.meshcast.io/api/gateway/whip/YOUR_PUBLISH_KEY
-```
-
-If Meshcast gives you a server hint, keep it:
-
-```text
-https://app.meshcast.io/api/gateway/whip/YOUR_PUBLISH_KEY?server=ovh-use1
-```
-
-Leave the app's **Stream Key** field blank when the Meshcast key is already in the URL path.
-
-To view the stream from Meshcast, open the matching watch, embed, or WHEP URL. Anonymous Meshcast sessions use the anonymous key as the view path:
-
-```text
-https://app.meshcast.io/embed/YOUR_STREAM_KEY?server=ovh-use1
-```
+   ```text
+   https://app.meshcast.io/embed/YOUR_STREAM_KEY?server=ovh-use1
+   ```
 
 <figure><img src="../.gitbook/assets/vdo-native-app/phone-live-usb-whip.png" alt="Native app live USB camera preview while publishing"><figcaption><p>The live view shows the source preview, connection state, recording state, health overlay, and live controls.</p></figcaption></figure>
 
 <figure><img src="../.gitbook/assets/vdo-native-app/meshcast-viewer-usb-whip.png" alt="Meshcast player showing the USB camera feed published from the native app"><figcaption><p>Meshcast playback receiving the Android USB camera feed via WHIP/WHEP.</p></figcaption></figure>
 
-## USB audio
+## Optional RTMP and SRT output
 
-The native app can use external audio devices when Android or iOS exposes them as input devices.
+Android and iOS have experimental external publishing controls, off by default. Enable **Publishing Settings → Advanced Settings → External publishing controls**, start a supported video session, then open **More → Advanced external output**. Enter a complete publishing URL and press **Start**. Opening or closing the panel does not start or stop the output; use **Stop** or end the session. URLs and keys are not saved between sessions.
+
+* Transports are plain **RTMP** and **SRT caller**. RTMPS and SRTLA are not supported.
+* On iOS, it works with single-camera sources, not ReplayKit screen sharing, microphone-only mode, or front/rear mixing.
+* On Android, it works with supported video tracks, including camera, USB camera, and screen capture, depending on the device encoder.
+* It is an additional H.264/AAC output with its own encoder and bandwidth use.
+
+**Advanced encoder settings** sets the output's bitrate, resolution and orientation, frame-rate limit, keyframe interval, H.264 profile, fit/crop, and AAC audio. These do not raise the camera's capture resolution or frame rate. Stop the output before changing them.
+
+iOS also has experimental **Adaptive bitrate (RTMP only)**, off by default. It moves the output bitrate between the selected minimum and maximum as the output queue changes. It does not bond networks or reconnect automatically.
+
+## Audio, recording, and talkback
+
+### USB audio
 
 1. Connect the USB, USB-C, or Lightning audio device before opening Publishing Settings.
-2. Open the microphone list.
-3. Tap **Refresh Mics** if the device is not listed.
-4. Select the external input.
-5. Use headphones or echo cancellation if talkback or remote audio is active.
+2. Select it in the microphone list. Tap **Refresh Mics** if it is missing.
+3. Use headphones or echo cancellation if talkback or remote audio is on.
 
-For music, mixers, and professional microphones, test both **Unprocessed Audio** and the **Audio Processing** controls. Unprocessed audio avoids automatic echo cancellation, noise suppression, and gain control, but it also requires cleaner monitoring and echo management.
+For music, mixers, and professional microphones, test both **Unprocessed Audio** and the **Audio Processing** controls. Unprocessed audio skips echo cancellation, noise suppression, and gain control, so it needs cleaner monitoring.
 
 <figure><img src="../.gitbook/assets/vdo-native-app/phone-recording-audio-settings.png" alt="Native app settings showing Local Recording, Unprocessed Audio, and Audio Processing controls"><figcaption><p>Recording and audio processing controls are available in Advanced Settings.</p></figcaption></figure>
 
-## Recording
+### Recording
 
-Enable **Local Recording** when you want the native app to save a local copy on the device. The live screen includes a recording indicator, and the overflow menu includes recording controls for recent files.
+Enable **Local Recording** to save a copy on the device, as a backup or to share later. The live screen shows a recording indicator, and the overflow menu lists recent files. Keep storage free and the phone powered, and test the full recording length before an important event; heat, battery saver, and OS background limits can cut it short. For iOS screen sharing, ReplayKit decides which audio and video are available.
 
-Use local recording when:
+### Talkback
 
-* You need a backup recording on the phone.
-* You are using a high-quality mobile camera source.
-* The network may be unreliable.
-* You want to export or share a local file after the session.
-
-Keep enough storage free, keep the phone powered, and test the full recording length before a paid or live event. Long captures can be limited by storage, thermals, battery saver behavior, and OS background restrictions.
-
-For iOS screen sharing, ReplayKit controls what audio and video samples are made available. Protected apps may block video or audio.
-
-## Talkback and remote audio
-
-**Remote Audio Stream** lets the native app listen to a remote audio stream while publishing. This is useful for producer talkback, IFB-style monitoring, return program audio, or a private cue feed.
+**Remote Audio Stream** plays a VDO.Ninja audio stream on the phone while it publishes, for producer talkback, IFB-style monitoring, program audio, or a cue feed. Enable it, enter the producer's audio-only stream ID if needed, and use headphones. Turn on echo cancellation if you use the phone speaker. Keep talkback out of the program feed unless viewers should hear it.
 
 <figure><img src="../.gitbook/assets/vdo-native-app/phone-health-camera-remote.png" alt="Native app settings showing Stream Health Overlay, Professional Camera Controls, and Remote Audio Stream"><figcaption><p>Remote Audio Stream can bring a separate VDO.Ninja audio feed into the native app while the app is publishing.</p></figcaption></figure>
 
-Recommended talkback setup:
-
-1. Create or choose a VDO.Ninja audio-only stream for the producer or director.
-2. Enable **Remote Audio Stream** in the native app.
-3. Enter the remote stream ID if needed.
-4. Use headphones whenever possible.
-5. Enable echo cancellation if the phone speaker is being used.
-
-Keep talkback separate from the main program feed unless you intentionally want the talkback audio to be heard by viewers.
-
 ## Social Stream Ninja
 
-The native app can connect to Social Stream Ninja so the camera operator can see chat while filming.
+The app can connect to Social Stream Ninja so the camera operator can see chat while filming. In the live view it can show chat, a text-to-speech toggle, and connection state.
 
 <figure><img src="../.gitbook/assets/vdo-native-app/phone-social-stream-settings.png" alt="Native app Social Stream Ninja integration settings with session ID and connection mode"><figcaption><p>Enter the Social Stream Ninja session ID, then choose Peer-to-Peer or Server mode.</p></figcaption></figure>
 
-Social Stream settings include:
-
-* **Enable Social Stream**: Turns on chat integration.
-* **Social Stream Session ID**: The session ID from Social Stream Ninja.
-* **Peer-to-Peer**: Lower-latency chat connection.
-* **Server**: Easier setup when peer-to-peer is blocked.
-* **WebRTC Encryption Password**: Optional encryption password for peer-to-peer mode.
-
-In the live view, the app can show chat controls, a text-to-speech toggle, and connection state so an operator can monitor comments without opening a separate device.
+| Setting | What it does |
+| --- | --- |
+| **Enable Social Stream** | Turns on chat integration |
+| **Social Stream Session ID** | The session ID from Social Stream Ninja |
+| **Peer-to-Peer** | Lower-latency chat connection |
+| **Server** | Easier setup when peer-to-peer is blocked |
+| **WebRTC Encryption Password** | Optional password for peer-to-peer mode |
 
 ## Live controls
 
-The live screen includes the controls operators usually need during a shoot:
+The live screen lets you mute the microphone, hide local video, switch cameras, copy or open a view link, and watch recording and connection status. **More** holds the torch, camera and audio settings, recording, and Android picture-in-picture. Social Stream and Remote Audio Stream controls appear when configured.
 
-* Mute or unmute microphone.
-* Hide or show local video.
-* Switch cameras.
-* Open more actions such as torch, camera settings, audio settings, recording, and Android picture-in-picture.
-* Copy or open a view link.
-* Toggle Social Stream chat and text-to-speech when configured.
-* Mute or unmute Remote Audio Stream when enabled.
-* Watch recording and connection status.
+Two Advanced Settings options are off until you enable them:
 
-Enable **Professional Camera Controls** in Advanced Settings to show supported controls for exposure, white balance, focus, and zoom. Built-in cameras also support tap-to-focus where the device exposes it. USB camera control support depends on the camera, Android device, and UVC feature support.
+* **Professional Camera Controls** shows supported exposure, white balance, focus, and zoom controls. Built-in cameras also support tap-to-focus where the device allows it. USB camera control depends on the camera, Android device, and UVC support.
+* **Stream Health Overlay** shows live bitrate, FPS, resolution, peer count, and connection state.
 
-The optional **Stream Health Overlay** can show useful live stats such as bitrate, FPS, resolution, peer count, and connection state. Both controls are off until enabled.
+## Quality, bitrate, and codec
 
-## Quality, bitrate, and codec FAQ
+The [quality guide](../guides/improving-quality-of-the-native-app.md) covers these controls and their limits in detail.
 
-### How do I increase bitrate?
+* **Bitrate:** for normal camera publishing to VDO.Ninja, request it on the viewer link, for example `https://vdo.ninja/?view=mycamera&videobitrate=6000` (alias `&bitrate`). On Android, **Advanced Settings → Custom bitrate** accepts 100 to 50000 kbps; common defaults are about 6000 kbps for 720p and 10000 kbps for 1080p. iOS relies on the capture preset and WebRTC negotiation. A viewer URL cannot bypass native iOS screen-share limits or reconfigure a WHIP encoder.
+* **Minimum video bitrate** (Advanced Settings, both platforms) is a negotiation hint of 50 to 50000 kbps for VDO.Ninja camera streams, applied on the next stream. It is not a guaranteed floor or data cap, and it does not affect WHIP, RTMP, SRT, or native iOS screen sharing.
+* **Codec:** start with the default. `&codec=h264` on a direct viewer link requests H.264, which phones often encode in hardware. VP9 and AV1 depend on the app build, device, and receiver. Native iOS screen sharing has a lower-resolution VP8 fallback, so forcing VP8 can make text much softer. WHIP services may restrict codecs, profiles, bitrate, resolution, or frame rate.
+* **1080p:** for iOS screen sharing, **Maximum** targets up to 1080p, and **Balanced** and **Quality** up to 720p. Android built-in cameras offer **720p60**, **1080p30**, and **1080p60**, which falls back to 1080p30 when the camera cannot do it. Other modes may show **Prefer 1080p**.
+* **Frame rate:** **Advanced Settings → Maximum capture frame rate** sets a ceiling of 1 to 60 fps for the next session. It applies to Android camera, UVC, and screen sources and to iOS cameras, not to native iOS screen sharing.
 
-For normal native camera publishing to VDO.Ninja, bitrate can be requested from the viewer side:
-
-```text
-https://vdo.ninja/?view=mycamera&videobitrate=6000
-```
-
-You can also use:
-
-```text
-&bitrate=6000
-```
-
-On Android, the native app also exposes **Custom bitrate** in Advanced Settings. Enable it and enter a value in kbps. The app accepts 100 to 50000 kbps, with common defaults around 6000 kbps for 720p and 10000 kbps for 1080p. iOS currently relies on capture preset and WebRTC negotiation rather than this Android app-side bitrate control.
-
-Native iOS screen sharing has its own quality presets and encoder limits. A viewer URL cannot force a higher capture resolution or bypass those limits. For WHIP/WHEP, configure the publishing app and service; changing a playback URL does not reconfigure the upstream encoder.
-
-Both platforms also offer **Advanced Settings → Minimum video bitrate** for VDO.Ninja camera streams. **Default** leaves the normal policy in place; a custom value of 50–50000 kbps is a negotiation hint applied on the next stream, limited by the negotiated maximum. It is neither a guaranteed floor nor a data-use cap, and does not configure WHIP, RTMP, SRT, or native iOS screen sharing.
-
-Higher bitrate is not always better. If the network has packet loss, weak WiFi, cellular jitter, or thermal throttling, a lower bitrate may look more stable.
-
-### How do I change codec?
-
-Codec selection is usually negotiated by the viewer, browser, device hardware, and target service.
-
-For a direct viewer, you can request a codec supported by both the app and receiver, for example:
-
-```text
-&codec=h264
-```
-
-H.264 commonly benefits from mobile hardware encoding. VP9 and AV1 are not universal native-app capabilities: availability depends on the app build, device, and receiver. Native iOS screen sharing has a lower-resolution VP8 compatibility fallback, so forcing VP8 can make text much softer. Leave the codec at its default first; test a change on the actual devices.
-
-For WHIP publishing, the WHIP service may also restrict codecs, profiles, bitrate, resolution, or frame rate.
-
-### Should I use 1080p?
-
-For iOS screen sharing, choose **Maximum** in **iOS Screen Share Quality** to request up to 1080p. **Balanced** and **Quality** target up to 720p. The app can lower resolution, frame rate, and bitrate under resource pressure. Choose a lower mode and restart if sharing becomes unstable.
-
-For Android built-in cameras, **Android video quality** offers **720p60**, **1080p30**, and **1080p60**. The 1080p60 option checks camera support and falls back to 1080p30 when needed. Other capture modes may still show **Prefer 1080p**. All capture requests depend on the selected device and source.
-
-### Can I limit frame rate?
-
-Use **Advanced Settings → Maximum capture frame rate**. **Auto** follows the capture mode; choose a listed rate or a custom whole number from 1 to 60 fps for the next publishing session. This is a ceiling, not a request to make a slower source faster.
-
-It applies to Android camera, UVC, and screen sources and to iOS cameras, including their WebRTC/WHIP senders. Native iOS screen sharing uses its separate quality modes. For UVC cameras, limiting delivered frames does not necessarily change the camera's USB transfer rate.
-
-### Why does quality drop after a few minutes?
-
-Common causes are:
-
-* Phone thermal throttling.
-* Battery saver or background restrictions.
-* Weak WiFi or packet loss.
-* Too much bitrate for the available uplink.
-* Too many direct peer-to-peer viewers.
-* A codec that is expensive for the device.
-
-Use a cooling fan, remove the phone case, keep the device powered, prefer 5 GHz WiFi or Ethernet, and use WHIP/Meshcast/WHEP fanout when many viewers need the same feed.
+Higher bitrate is not always better. If quality drops after a few minutes, the usual causes are heat, battery saver, weak WiFi or packet loss, more bitrate than the uplink can carry, too many direct viewers, or an expensive codec. Cool the phone, keep it powered, prefer 5 GHz WiFi or Ethernet, and use WHIP/Meshcast/WHEP fanout when many viewers need the same feed.
 
 ## Event checklist
 
-For events such as weddings, ceremonies, panels, lectures, IRL streams, or mobile broadcasts:
+For weddings, ceremonies, panels, lectures, and IRL streams:
 
-1. Test the exact phone, camera, USB adapter, audio device, and network before the event.
-2. Keep the phone connected to power.
-3. Use a powered hub for USB cameras and HDMI capture adapters.
-4. Disable battery saver and avoid thermal throttling.
-5. Start at 720p and 30 fps unless the full setup has already proven stable at 1080p.
-6. Use **WHIP only** when Meshcast or another WHIP service should handle viewer fanout.
-7. Keep a second watch device open so you can verify the remote feed.
-8. Run a short local recording test if the recording matters.
-9. Verify talkback audio with headphones before going live.
+1. Test the exact phone, camera, USB adapter, audio device, and network beforehand.
+2. Keep the phone on power, use a powered hub for USB video devices, and turn off battery saver.
+3. Start at 720p and 30 fps unless the full setup has proven stable at 1080p.
+4. Use **WHIP only** when Meshcast or another WHIP service should handle viewer fanout.
+5. Watch the remote feed on a second device, test a short local recording, and check talkback with headphones.
 
 ## Troubleshooting
 
-### USB CAMERA does not appear
-
-* Confirm the device is Android. USB camera capture is not available in the iOS native app.
-* Reconnect the camera and restart the app.
-* Use a powered hub if the camera or capture card needs more power.
-* Check that the camera is UVC compatible.
-* Grant Android USB permission when prompted.
-
-### USB audio is missing
-
-* Connect the audio device before opening Publishing Settings.
-* Tap **Refresh Mics**.
-* Try another USB-C adapter or powered hub.
-* On iOS, USB/USB-C/Lightning audio support depends on the device, adapter, and iOS audio routing behavior.
-* Reopen Publishing Settings after the OS finishes switching audio routes.
-
-### Screen share is black or has no audio
-
-* Protected apps may block capture.
-* On Android 14+, try sharing the entire screen instead of a single app.
-* On Android, enable **Capture System Audio** only for apps that allow system audio capture.
-* On iOS, check the app-audio mute separately from the microphone mute. Enable the microphone in Apple's broadcast controls for narration.
-* If native iOS screen sharing stops, select **Balanced** or **Quality** instead of **Maximum**, then restart the broadcast.
-* If the picker was cancelled, end the session and start **SCREEN** again. No screen video is sent until Apple starts the broadcast.
-
-### WHIP fails to connect
-
-* Confirm the WHIP URL starts with `https://` and points to a WHIP publish endpoint, not a watch or WHEP URL.
-* Leave **Stream Key** blank when the key is already in the URL.
-* Use a fresh Meshcast anonymous session if the old one expired.
-* Make sure only one publisher is using the same key.
-* Check whether the WHIP service requires a specific codec, token, or URL format.
-
-### Viewers see nothing
-
-* Open the matching VDO.Ninja view link, room director link, Meshcast watch URL, embed URL, or WHEP URL.
-* Do not open the WHIP publish URL as a viewer.
-* Wait a few seconds after the phone connects.
-* Keep the same server hint on publish and view URLs when a server hint is present.
-* If using WHEP viewer source, confirm the WHEP URL is reachable from the viewer's network.
+| Problem | What to check |
+| --- | --- |
+| **USB CAMERA** does not appear | It is Android only. Reconnect the camera and restart the app, use a powered hub, check that the camera is UVC compatible, and grant USB permission. |
+| USB audio is missing | Connect the device before opening Publishing Settings, then tap **Refresh Mics**. Try another adapter or powered hub. On iOS, reopen Publishing Settings after the OS finishes switching audio routes. |
+| Screen share is black or silent | Protected apps may block capture. On Android 14+, share the entire screen instead of one app, and enable **Capture System Audio** only for apps that allow it. On iOS, check app-audio and microphone mutes separately and enable the microphone in Apple's broadcast controls. |
+| iOS screen sharing stops | Choose **Balanced** or **Quality** instead of **Maximum** and restart. If the picker was cancelled, end the session and start **SCREEN** again; no screen video is sent until Apple starts the broadcast. |
+| WHIP fails to connect | Use an `https://` WHIP publish endpoint, not a watch or WHEP URL. Leave **Stream Key** blank when the key is in the URL. Start a fresh Meshcast anonymous session if the old one expired, use each key from one publisher only, and check the service's codec, token, and URL requirements. |
+| Viewers see nothing | Open the matching view, director, Meshcast watch or embed, or WHEP URL, never the WHIP publish URL. Wait a few seconds after the phone connects, use the same server hint on publish and view URLs, and confirm the viewer can reach any WHEP viewer source. |
 
 ## Related pages
 
