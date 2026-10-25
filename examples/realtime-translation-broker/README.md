@@ -1,8 +1,14 @@
 # Optional Realtime translation broker
 
-This sample is for people who want to self-host the small server component recommended by OpenAI's browser Realtime flow. VDO.Ninja does not host or depend on it. Direct browser BYOK remains available.
+This sample is for people who want to self-host the small server component recommended by OpenAI's browser Realtime flow. VDO.Ninja does not host or depend on it. You can still enter your own OpenAI key directly in the browser instead.
 
-The Worker keeps `OPENAI_API_KEY` in a Cloudflare secret and returns only a 60-second OpenAI translation client secret. It requires a separate `BROKER_ACCESS_TOKEN`, exact origin matching, a supported language, and a small request body. The OpenAI key and broker token are never logged.
+The Cloudflare Worker keeps `OPENAI_API_KEY` in a Cloudflare secret and returns only a 60-second OpenAI translation client secret. It accepts only `POST /session` requests that:
+
+- carry a separate `BROKER_ACCESS_TOKEN` as `Authorization: Bearer ...`;
+- come from an origin listed exactly in `ALLOWED_ORIGINS`;
+- send a JSON body of at most 1 KB, such as `{"targetLanguage": "es"}`, with one of `en`, `es`, `pt`, `fr`, `ja`, `ru`, `zh`, `de`, `ko`, `hi`, `id`, `vi` or `it`.
+
+The OpenAI key and broker token are never logged.
 
 ## Set up
 
@@ -30,7 +36,7 @@ The Worker keeps `OPENAI_API_KEY` in a Cloudflare secret and returns only a 60-s
    npx wrangler deploy
    ```
 
-5. In `translate.html`, expand **Optional self-hosted token broker**, enter the deployed `/session` URL and broker access token, then use **Save and open**.
+5. In [`translate.html`](../../translate.html), expand **Optional self-hosted token broker**, enter the deployed `/session` URL and broker access token, then use **Save and open**.
 
 The broker URL may appear in the generated account-holder link. The broker access token and OpenAI key do not.
 

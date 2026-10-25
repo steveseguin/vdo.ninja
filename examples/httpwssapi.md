@@ -1,202 +1,160 @@
 # VDO.Ninja Remote Control API Documentation
 
-## Overview
+Control a VDO.Ninja page from stream decks, scripts and automation tools. The page connects out to the API relay and runs the commands sent for its key.
 
-VDO.Ninja's Remote Control API allows programmatic control of VDO.Ninja sessions via HTTP or WebSocket connections. This powerful API enables integration with stream decks, custom applications, and automation tools for controlling cameras, microphones, layouts, and other features.
-
-## Basic Setup
-
-To enable the API on any VDO.Ninja instance, add the `&api` parameter with a unique API key:
-
-```
-https://vdo.ninja/?api=YOUR_UNIQUE_API_KEY&webcam
+```mermaid
+flowchart LR
+    C["Your controller<br/>(Companion, script, hotkey)"] -->|"WebSocket, HTTP GET or SSE, with KEY"| R["API relay<br/>api.vdo.ninja"]
+    P["VDO.Ninja page<br/>opened with api=KEY"] -->|"outgoing WebSocket, joined with KEY"| R
 ```
 
-This key must be kept private and will be used to authenticate API requests. The same key must be used when making API calls to control this specific VDO.Ninja instance.
+## Enable the API
 
-## Connection Methods
+Add `&api` (alias `&osc`) with a private key you choose:
 
-The API supports three connection methods:
+```
+https://vdo.ninja/?webcam&api=YOUR_UNIQUE_API_KEY
+```
 
-1. **WebSocket API** (recommended for real-time control)
-2. **HTTP GET API** (good for simple controllers and hotkeys)
-3. **Server-Sent Events** (SSE) for one-way event monitoring
+Anyone who knows the key has full control of that page. Treat it like a password and use a different key for each production.
 
-### WebSocket API
+## Connect
 
-Connect to `wss://api.vdo.ninja:443` and authenticate with your API key:
+| Method | Best for | Address |
+|--------|----------|---------|
+| WebSocket | Two-way control and live state updates | `wss://api.vdo.ninja:443` |
+| HTTP GET | Hotkey tools and simple buttons | `https://api.vdo.ninja/{apiKey}/{action}/{target}/{value}` |
+| Server-Sent Events | Listening only | `https://api.vdo.ninja/sse/{apiKey}` |
+
+### WebSocket
+
+Send `{"join": "YOUR_UNIQUE_API_KEY"}` first. Then send JSON commands with `action` and, where needed, `target`, `value` and `value2`:
 
 ```javascript
 const socket = new WebSocket("wss://api.vdo.ninja:443");
-
-socket.onopen = function() {
-    // Join with your API key
-    socket.send(JSON.stringify({"join": "YOUR_UNIQUE_API_KEY"}));
-    
-    // After joining, you can send commands
-    socket.send(JSON.stringify({
-        "action": "mic", 
-        "value": false // mute microphone
-    }));
+socket.onopen = () => {
+    socket.send(JSON.stringify({ join: "YOUR_UNIQUE_API_KEY" }));
+    socket.send(JSON.stringify({ action: "mic", value: false })); // mute your mic
 };
-
-// Listen for responses and events
-socket.onmessage = function(event) {
-    const data = JSON.parse(event.data);
-    console.log("Received:", data);
-};
+socket.onmessage = (event) => console.log(JSON.parse(event.data));
 ```
 
-### HTTP GET API
+The connection can time out after about a minute. Reconnect and send `join` again when it closes.
 
-Structure: `https://api.vdo.ninja/{apiKey}/{action}/{target}/{value}`
+### HTTP GET
 
-Examples:
 ```
-https://api.vdo.ninja/YOUR_UNIQUE_API_KEY/mic/false       // Mute microphone
-https://api.vdo.ninja/YOUR_UNIQUE_API_KEY/camera/toggle   // Toggle camera
+https://api.vdo.ninja/YOUR_UNIQUE_API_KEY/mic/null/false      // mute your mic
+https://api.vdo.ninja/YOUR_UNIQUE_API_KEY/camera/null/toggle  // toggle your camera
+https://api.vdo.ninja/YOUR_UNIQUE_API_KEY/mic/1/toggle        // director: toggle guest 1's mic
 ```
 
-### Server-Sent Events (SSE)
+- Put `null` in any field you do not use, and avoid empty segments (`//`).
+- The shorter forms `/{apiKey}/{action}/{value}` and `/{apiKey}/{action}` also work for commands without a target.
+- `value2` cannot be sent this way. Use the WebSocket for commands that need it.
+- The reply is the command's result as text or JSON, for example `true` after `mic/null/toggle` mutes the mic. `timeout` means no page with that key answered.
 
-For monitoring events without sending commands:
+### Server-Sent Events
 
 ```javascript
-const eventSource = new EventSource(`https://api.vdo.ninja/sse/YOUR_UNIQUE_API_KEY`);
-eventSource.onmessage = function(event) {
-    console.log(JSON.parse(event.data));
-};
+const events = new EventSource("https://api.vdo.ninja/sse/YOUR_UNIQUE_API_KEY");
+events.onmessage = (event) => console.log(JSON.parse(event.data));
 ```
 
-## API Commands Reference
+## Replies and state updates
 
-### Self-Targeted Commands
-
-These commands affect the local VDO.Ninja instance that has the API key enabled.
-
-| Action | Value Options | Description |
-|--------|--------------|-------------|
-| `mic` | `true`, `false`, `toggle` | Control microphone state |
-| `camera` | `true`, `false`, `toggle` | Control camera state |
-| `speaker` | `true`, `false`, `toggle` | Control speaker state |
-| `volume` | `0` to `200` | Set playback volume (percentage) |
-| `bitrate` | Integer (kbps), `-1` for auto | Set video bitrate |
-| `record` | `true`, `false` | Control local recording |
-| `hangup` | N/A | Disconnect current session |
-| `reload` | N/A | Reload the page |
-| `sendChat` | Text string | Send a chat message |
-| `togglehand` | N/A | Toggle raised hand status |
-| `togglescreenshare` | N/A | Toggle screen sharing |
-| `forceKeyframe` | N/A | Force video keyframes ("rainbow puke fix") |
-| `getDetails` | N/A | Get detailed state information |
-| `getGuestList` | N/A | Get list of connected guests with IDs |
-
-### Layout Control Commands
-
-| Action | Value | Description |
-|--------|-------|-------------|
-| `layout` | `0` or `false` | Switch to auto-mixer layout |
-| `layout` | Integer (`1`, `2`, etc.) | Switch to specific predefined layout |
-| `layout` | Layout object/array | Apply custom layout configuration |
-
-### Camera Control (PTZ) Commands
-
-| Action | Value | Description |
-|--------|-------|-------------|
-| `zoom` | `-1.0` to `1.0` | Adjust zoom level (relative) |
-| `zoom` | `0.0` to `1.0` with `value2="abs"` | Set absolute zoom level |
-| `focus` | `-1.0` to `1.0` | Adjust focus (relative) |
-| `pan` | `-1.0` to `1.0` | Adjust camera pan (negative=left) |
-| `tilt` | `-1.0` to `1.0` | Adjust camera tilt (negative=down) |
-| `exposure` | `0.0` to `1.0` | Adjust camera exposure |
-
-### Group Communication Commands
-
-| Action | Value | Description |
-|--------|-------|-------------|
-| `group` | `1` to `8` | Toggle participation in specified group |
-| `joinGroup` | `1` to `8` | Join a specific group |
-| `leaveGroup` | `1` to `8` | Leave a specific group |
-| `viewGroup` | `1` to `8` | Toggle view of specified group |
-| `joinViewGroup` | `1` to `8` | View a specific group |
-| `leaveViewGroup` | `1` to `8` | Stop viewing a specific group |
-
-### Timer Commands
-
-| Action | Value | Description |
-|--------|-------|-------------|
-| `startRoomTimer` | Integer (seconds) | Start countdown timer for room |
-| `pauseRoomTimer` | N/A | Pause the room timer |
-| `stopRoomTimer` | N/A | Stop and reset the room timer |
-
-### Presentation Control
-
-| Action | Value | Description |
-|--------|-------|-------------|
-| `nextSlide` | N/A | Advance to next slide (for PowerPoint integration) |
-| `prevSlide` | N/A | Go to previous slide |
-| `soloVideo` | `true`, `false`, `toggle` | Highlight video for all guests |
-
-### Director-Only Guest Commands
-
-These commands target specific guests when you are the director.
-
-| Action | Target | Value | Description |
-|--------|--------|-------|-------------|
-| `forward` | Guest ID/slot | Room name | Transfer guest to another room |
-| `addScene` | Guest ID/slot | Scene ID (1-8) | Toggle guest in/out of scene |
-| `muteScene` | Guest ID/slot | Scene ID | Toggle guest's audio in scene |
-| `mic` | Guest ID/slot | `true`, `false`, `toggle` | Control guest's microphone |
-| `hangup` | Guest ID/slot | N/A | Disconnect a specific guest |
-| `soloChat` | Guest ID/slot | N/A | Private chat with guest |
-| `soloChatBidirectional` | Guest ID/slot | N/A | Two-way private chat |
-| `speaker` | Guest ID/slot | N/A | Toggle guest's speaker |
-| `display` | Guest ID/slot | N/A | Toggle guest's display |
-| `rotate` | Guest ID/slot | `true`, `false`, `90`, `180`, `270` | Rotate guest video. `true` advances +90 degrees; `false` resets rotation. |
-| `forceKeyframe` | Guest ID/slot | N/A | Fix video artifacts for guest |
-| `soloVideo` | Guest ID/slot | N/A | Highlight specific guest's video |
-| `volume` | Guest ID/slot | `0` to `200` | Set guest's microphone volume |
-| `mixorder` | Guest ID/slot | `-1` or `1` | Change guest's position in mixer |
-
-`rotate` is a director-side guest command. It is not exposed as a standalone untargeted local command on a guest page using `?push=...&api=...`.
-
-## Target Parameter Explanation
-
-When using director commands, you can specify targets in two ways:
-
-1. **Slot number**: Simple integers like `1`, `2`, `3` (corresponds to position in room)
-2. **Stream ID**: The unique ID for a specific guest (more reliable as slots can change)
-
-Examples:
-```javascript
-// Target guest in slot 1
-{"action": "mic", "target": 1, "value": false}
-
-// Target guest with specific stream ID
-{"action": "mic", "target": "abc123xyz", "value": false}
-```
-
-## Callbacks and Responses
-
-API commands receive callbacks with the current state after execution:
+Each command gets a `callback` that echoes your whole request and adds `result`:
 
 ```javascript
-// WebSocket example response when toggling mic
 {
   "callback": {
     "action": "mic",
     "value": "toggle",
-    "result": false  // Indicates mic is now muted
+    "result": false // the mic is now unmuted
   }
 }
 ```
 
-## Custom Layout Format
+- For `mic`, `camera` and `speaker`, `result` is the muted state: `true` means muted.
+- Extra fields you add to a WebSocket request, such as `"cid": 3124`, come back in the callback, so you can match replies to requests.
+- The page also pushes changes as `{"update": {"streamID": ..., "action": ..., "value": ...}}`. Examples include `details` (sent on connect), `muted`, `videoMuted`, `chat` and `newViewConnection`.
 
-The layout API supports complex scene configurations. Layouts can be arrays of objects with properties:
+## Commands for your own page
+
+Leave out `target`, or set it to `null`. For on/off commands, `true` means on (unmuted) and `false` means off.
+
+| Action | Value | Effect |
+|--------|-------|--------|
+| `mic`, `camera` (alias `video`), `speaker` | `true`, `false`, `toggle` | Turn your mic, camera or speaker on or off |
+| `volume` | `0` to `100` | Playback volume of all incoming streams, in percent |
+| `bitrate` | kbps; `-1` or `true` resets; `0` or `false` stops video | Requested bitrate for all incoming video |
+| `record` | `true`, `false` | Start or stop local recording |
+| `hangup`, `reload` | none | Leave the session, or reload the page |
+| `togglehand` (alias `raisehand`) | none | Toggle your raised hand |
+| `togglescreenshare` | none | Toggle screen sharing |
+| `chat` | none | Show or hide the chat panel |
+| `sendChat` | text | Send a chat message to everyone |
+| `forceKeyframe` | none | Request keyframes to clear smeared video ("rainbow puke") |
+| `zoom`, `focus`, `pan`, `tilt`, `exposure` | Relative step such as `0.1` or `-0.1`; with `value2: "abs"`, an absolute position (`0` to `1`, or `-1` to `1` for pan and tilt) | Adjust your camera, if it supports the control |
+| `layout` | see [Layouts](#layouts) | Change the mixer layout |
+| `nextSlide`, `prevSlide` | none | Send the MIDI slide-change command used by the PowerPoint integration |
+| `getDetails`, `getGuestList`, `getStats`, `requestStats` | none | Return page state, guest slots and stream IDs, or stats |
+
+Also available: `width`, `height`, `aspectRatio`, `videoConstraint`, `tallylight` (`onair`, `active`, `standby`, `off`), `setBufferDelay` (milliseconds), `activeSpeaker`, `sendChatMessage`, `showChatOverlay` and `panning`.
+
+### Director page commands without a target
+
+| Action | Value | Effect |
+|--------|-------|--------|
+| `muteAllGuests` | `true` (mute), `false`, or omit to toggle | Mute or unmute all guests |
+| `group`, `joinGroup`, `leaveGroup` | group `1` to `8` | Toggle, join or leave a group |
+| `viewGroup`, `joinViewGroup`, `leaveViewGroup` | group `1` to `8` | Toggle, start or stop viewing a group |
+| `startRoomTimer` | seconds | Start the room countdown |
+| `pauseRoomTimer`, `stopRoomTimer` | none | Pause or stop the room countdown |
+| `soloVideo` (alias `highlight`) | `toggle`, `true`, `false` | Highlight the director's video for everyone |
+
+## Director commands for one guest
+
+These work from the director's page. Set `target` to one of:
+
+- a slot number starting at `1` (slots can change as guests come and go);
+- the guest's stream ID (more reliable);
+- the guest's connection UUID.
 
 ```javascript
-// Simple layout with two videos
+{"action": "mic", "target": 1, "value": false}            // mute the guest in slot 1
+{"action": "mic", "target": "abc123xyz", "value": false}  // mute stream ID abc123xyz
+```
+
+| Action | Value | Effect |
+|--------|-------|--------|
+| `mic` (alias `audio`), `camera` (alias `video`), `speaker`, `display` | `true`, `false`, `toggle` | Turn the guest's mic, camera, speaker or display on or off |
+| `muteScene` | `true`, `false`, `toggle` | Turn the guest's audio in scenes on or off |
+| `addScene` | scene `1` to `8` | Toggle the guest in that scene |
+| `setScene` | scene, with `value2` `true` or `false` | Add the guest to, or remove them from, a scene |
+| `volume` | `0` to `200` | Slider position: `100` is normal; higher values boost on a curve, up to about 8x |
+| `group` | group number | Toggle the guest's group |
+| `setslot` | slot number | Move the guest to a mixer slot |
+| `mixorder` | `-1` or `1` | Move the guest earlier or later in the mixer |
+| `forward` (alias `transfer`) | room name | Transfer the guest to another room |
+| `hangup` | none | Disconnect the guest |
+| `soloChat`, `soloChatBidirectional` | none | Toggle private one-way or two-way talk with the guest |
+| `soloVideo` | `toggle` | Highlight the guest's video |
+| `sendChat` | text | Send a chat message to the guest |
+| `forceKeyframe` | none | Fix smeared video from the guest |
+| `rotate` | `true` (+90 degrees), `false` (reset), `90`, `180`, `270` | Rotate the guest's video |
+| `ptzZoom`, `ptzPan`, `ptzTilt`, `ptzFocus` | relative step; with `value2: "abs"`, an absolute position | Adjust the guest's camera |
+| `startRoomTimer`, `pauseRoomTimer`, `stopRoomTimer` | seconds for start | Control the guest's countdown timer |
+
+`rotate` is only a targeted command. A guest page with `&push=...&api=...` has no untargeted `rotate`.
+
+Other targeted actions include `mirror`, `requestResolution` (`WIDTHxHEIGHT`), `setWidth`, `setHeight`, `setAspectRatio`, `refreshVideo`, `refreshConnection`, `refreshAll`, `sendDirectorChat`, `ptzAutofocus`, `activateQueuedGuest`, `setCameraDevice`, `setBackgroundImage` and `setVideoEffect`.
+
+## Layouts
+
+Send `0` or `false` for the automatic mixer, `1`, `2`, ... for that layout from the `&layouts` URL parameter (1 is the first), or a custom layout object or array:
+
+```javascript
 {
   "action": "layout",
   "value": [
@@ -206,88 +164,48 @@ The layout API supports complex scene configurations. Layouts can be arrays of o
 }
 ```
 
-Layout object properties:
-- `x`, `y`: Position (percentage of canvas)
-- `w`, `h`: Width and height (percentage)
-- `slot`: Which video slot to display (0-indexed)
-- `z`: Z-index for layering (optional)
-- `c`: Cover mode (true/false, optional)
+Each item takes:
 
-## Implementation Examples
+- `x`, `y`, `w`, `h`: position and size, as a percentage of the canvas;
+- `slot`: which video slot to show, starting at `0`;
+- `z`: stacking order (optional);
+- `c`: `true` to crop the video to fill the box (optional);
+- `rounded`: corner radius (optional).
 
-### Python Example
+Over HTTP, send a custom layout as URL-encoded JSON or base64-encoded JSON.
+
+## Python example
 
 ```python
-import websockets
 import asyncio
 import json
+import websockets
 
 async def control_camera():
     async with websockets.connect("wss://api.vdo.ninja:443") as websocket:
-        # Join with API key
         await websocket.send(json.dumps({"join": "YOUR_API_KEY"}))
-        
-        # Zoom in camera
-        await websocket.send(json.dumps({
-            "action": "zoom",
-            "value": 0.5,
-            "value2": "abs"
-        }))
-        
-        # Wait for response
-        response = await websocket.recv()
-        print(f"Response: {response}")
+        # Zoom to the middle of the camera's range
+        await websocket.send(json.dumps({"action": "zoom", "value": 0.5, "value2": "abs"}))
+        print("Response:", await websocket.recv())
 
 asyncio.run(control_camera())
 ```
 
-### JavaScript HTTP Example
+## Tools and examples
 
-```javascript
-// Toggle microphone via HTTP
-fetch("https://api.vdo.ninja/YOUR_API_KEY/mic/toggle")
-    .then(response => response.text())
-    .then(result => console.log("Mic toggled, new state:", result));
+- [Bitfocus Companion module](https://github.com/bitfocus/companion-module-vdo-ninja), for Stream Deck and similar controllers. Any tool that sends HTTP requests, such as Node-RED or Home Assistant, also works.
+- [Stream Deck guide](../streamdeck.html), with ready-made HTTP URLs.
+- [remoteapi.html](remoteapi.html) and [sandbox.html](sandbox.html) in this folder, for trying commands.
+- Full API notes: [github.com/steveseguin/Companion-Ninja](https://github.com/steveseguin/Companion-Ninja). Interactive demo: [companion.vdo.ninja](https://companion.vdo.ninja).
+
+If nothing happens, check that the key matches exactly on the page and in your requests.
+
+## Self-hosting the API relay
+
+The relay server is not part of this repository, and support for self-hosting it is limited. If you run your own over SSL, point VDO.Ninja at it with `&apiserver`:
+
+```
+https://vdo.ninja/?webcam&api=YOUR_UNIQUE_API_KEY&apiserver=wss://your-domain:443
 ```
 
-## Integration with Automation Tools
-
-The API integrates well with:
-
-1. **BitFocus Companion**: Official module available at [github.com/bitfocus/companion-module-vdo-ninja](https://github.com/bitfocus/companion-module-vdo-ninja)
-2. **Stream Deck**: Can use HTTP requests for button actions
-3. **Node-RED**: Great for complex automation workflows
-4. **Home Assistant**: For smart home integration
-
-## Security Considerations
-
-- Keep your API key private
-- Consider using unique keys for different productions
-- The API has full control over the VDO.Ninja instance it's connected to
-- All connections are encrypted over SSL/TLS
-
-## Troubleshooting
-
-- Ensure the API key matches exactly between VDO.Ninja and your requests
-- For WebSocket connections, implement reconnection logic (connections timeout after ~1 minute of inactivity)
-- When using HTTP API, a `timeout` response means the request couldn't reach the target
-
-## Additional Resources
-
-- Complete API documentation: [github.com/steveseguin/Companion-Ninja](https://github.com/steveseguin/Companion-Ninja)
-- Interactive demo: [companion.vdo.ninja](https://companion.vdo.ninja)
-- For Python implementations: See the Python sample in the repository
-
-## Advanced Usage: Self-Hosting the API
-
-For production environments, you can self-host the API server:
-
-1. Clone the repository from GitHub
-2. Install dependencies with `npm install`
-3. Modify the server URL in your VDO.Ninja instances:
-   ```javascript
-   session.apiserver = "wss://your-custom-domain:443";
-   ```
-4. Run the server with proper SSL certificates
-
-Note: Self-hosting support is limited and should only be attempted by experienced developers.
+If you self-host VDO.Ninja, you can instead change the default `session.apiserver` value in `webrtc.js`.

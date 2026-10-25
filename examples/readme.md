@@ -1,6 +1,6 @@
 # VDO.Ninja Examples
 
-This directory contains various examples demonstrating different features and capabilities of VDO.Ninja. All examples are accessible through the index.html file.
+This folder holds examples of VDO.Ninja features. Open the [examples catalogue](index.html) to browse them, search by keyword or filter by category, then view each example's source to see how it works. Some examples need specific VDO.Ninja features, permissions, hardware or platforms; check the browser console when debugging.
 
 ## Licensing
 
@@ -15,25 +15,8 @@ The [MIT license](LICENSE) covers original example code that Steve Seguin owns o
 
 Keep these notices with the corresponding libraries when copying or redistributing them. Dependencies loaded from external URLs remain subject to their own licenses and service terms.
 
-## Browse examples
-
-Use the [examples catalogue](index.html) to browse the available examples, search by keyword, or filter by category.
-
 ## 360-degree viewer
 
 Open [360.html](360.html) and enter a VDO.Ninja stream ID, or open a local equirectangular photo/video. For a direct live view, use `360.html?view=STREAM_ID` (with `password` if needed). The older `/360.html` address forwards here and preserves URL parameters.
 
 Drag or use arrow keys to look around, scroll or use +/− to zoom, and use Reset view to recenter. Local videos have playback and sound controls. The A-Frame headset button is available where WebXR is supported. Live viewing uses the existing iframe frame API and requires HTTPS/localhost and video-frame processing support; local files do not connect to a VDO.Ninja session and are not uploaded.
-
-## Usage
-
-1. Open `index.html` in a web browser to see all examples organized by category
-2. Click on any example to launch it
-3. View the source code of each example to understand the implementation
-
-## Notes
-
-- Examples may require specific VDO.Ninja features or permissions
-- Some examples work best when used with specific hardware or platforms
-- Always check browser console for debugging information
-- Many examples include inline documentation in their source code

@@ -6,9 +6,10 @@ Lightweight video-first tabletop room for maps, tokens, drawing, dice, handouts,
 
 - GM: `./tabletop/?room=my-campaign&gm`
 - Player: `./tabletop/?room=my-campaign`
-- Board-only local testing: add `&novideo`
+- Board-only local testing: add `&novideo` (aliases `&novideoroom`, `&tabletopnovideo`)
+- Optional: `&name=` (or `&label=`) sets the player name, and `&password=` (or `&pass=`, `&pw=`) sets the room password. Without a room, the page opens as GM.
 
-The app uses the existing VDO.Ninja iframe/datachannel path for room sync. The embedded room autostarts the webcam path after entering the tabletop room so peers form and datachannels open. When `&novideo` is present, it skips the VDO iframe and uses same-browser local sync only, which is useful for Playwright and layout testing.
+The app syncs the room through an embedded VDO.Ninja iframe and its data channels. After you enter the tabletop room, the embedded room starts the camera automatically so peers connect and the data channels open. With `&novideo`, it skips the iframe and syncs only between tabs in the same browser, which is useful for Playwright and layout testing.
 
 ## Current Features
 
@@ -17,7 +18,7 @@ The app uses the existing VDO.Ninja iframe/datachannel path for room sync. The e
 - Token images, labels, HP, owners, hidden/locked flags
 - Square grid controls
 - Drawing, erasing, text, ping, measure, and manual fog reveal tools
-- Dice roller with `d20`, `1d20+5`, `2d6`, `adv`, `dis`, and `4d6kh3`
+- Dice roller with `d20`, `1d20+5`, `2d6`, `adv`, `dis`, `4d6kh3` and `4d6kl1`
 - Initiative tracker
 - Image/text handouts with GM show-to-room action
 - Local save plus JSON import/export

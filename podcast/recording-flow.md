@@ -1,45 +1,42 @@
 # Recording Flow Map
 
-## High-Level Sequence
-1. UI controls in `main.js` set up recording defaults from URL params and user actions (`recordLocalbutton`, `recordRemote` buttons). Key lines: `main.js:1841-1905`, `main.js:7364-7379`.
-2. These controls call `recordLocalVideoToggle()` and `recordLocalVideo()` in `lib.js` to arm, start, and stop recordings (`lib.js:44903-45480`).
-3. `recordLocalVideo()` configures a per-video recorder object that wraps `MediaRecorder`, local `WritableStream` writers, and optional Drive/Dropbox chunk handlers (`lib.js:45213-45480`).
-4. When chunked/WebCodec capture is enabled, `recordLocalVideo()` delegates to the `session.webCodec` / `session.webCodecAudio` pipelines inside `webrtc.js` which stream encoded frames through `session.chunkedRecorder` (`webrtc.js:10877-13047`).
-5. Recorder stop events fan out to cleanup functions, UI updates, and remote directors via `session.sendMessage` (`lib.js:45361-45466`).
+How recording works in the main app and in Podcast Studio (`&podcast`). Line numbers change often, so search for the function names below.
 
-## Detailed Call Graph
+## Main app recording (`lib.js`)
+
+1. The record button (`recordLocalbutton` in `index.html`) calls `recordLocalVideoToggle(startonly)`. In `main.js`, `&record=<kbps>` sets the bitrate (`session.recordLocal`) and `&record=false` or `off` hides the record buttons.
+2. `recordLocalVideoToggle()` updates the button and calls `recordLocalVideo("start")` or `recordLocalVideo("stop")`.
+3. `recordLocalVideo(action, configureRecording, remote, altUUID)` records the video element's stream with a `MediaRecorder` (`video.recorder.mediaRecorder`) and writes the chunks through `video.recorder.writer` or a download.
+4. If cloud storage is linked, the chunks also go to Dropbox (`streamVideoToDropbox()`, local streams only) and Google Drive (`setupGoogleDriveUploader()`, which returns an object with `addChunk`).
+5. Status messages go to other peers, such as the director, through `session.sendMessage`. `updateLocalRecordButton()` and `updateRemoteRecordButton()` update the buttons.
+
+`&autorecord` and `&autorecordremote` record incoming videos with the same function, or with `recordVideo()` on a director page.
+
+```mermaid
+flowchart TD
+    A["recordLocalbutton / &record"] --> B["recordLocalVideoToggle()"]
+    B --> C["recordLocalVideo('start' | 'stop')"]
+    C --> D["MediaRecorder"]
+    D --> E["video.recorder.writer<br/>(local file or download)"]
+    D --> F["Dropbox / Google Drive uploads"]
+    C --> G["session.sendMessage<br/>(status to peers)"]
+    C --> H["updateLocalRecordButton()<br/>updateRemoteRecordButton()"]
 ```
-main.js UI Events
-  └─▶ recordLocalVideoToggle(action?) (lib.js)
-        ├─▶ recordLocalVideo('start' | 'stop', configureRecording?, remote?, altUUID?)
-        │     ├─▶ setupRecorder(videoElement)
-        │     │     ├─▶ new MediaRecorder(track mix)
-        │     │     ├─▶ configure writer → video.recorder.writer (stream saver)
-        │     │     ├─▶ bind `ondataavailable` → append blobs + dispatch cloud uploads
-        │     │     └─▶ handle PCM/WebCodec fallbacks
-        │     ├─▶ session.webCodec / session.webCodecAudio (webrtc.js) when `configureRecording` && chunking enabled
-        │     │     └─▶ session.chunkedRecorder.enqueueFrame / sendChunks (WebSocket/WebTransport relays)
-        │     └─▶ init Dropbox / Drive handlers (lib.js:45134-45212)
-        └─▶ updateLocalRecordButton / updateRemoteRecordButton
-```
 
-## Data & Storage Paths
-- **Local Mixdown**: Default `MediaRecorder` mux of mixed `MediaStream`. Saves locally via `video.recorder.writer` or triggers download prompts (`lib.js:45034-45300`).
-- **Per-Chunk Cloud Upload**: When Drive/Dropbox connected, `addChunk` and `write` callbacks push each blob to remote APIs for redundancy (`lib.js:45263-45299`).
-- **Chunked WebCodec**: High-fidelity pipeline builds encoded frames manually, tracks reliability metadata, and streams to relays (`webrtc.js:11192-12698`).
+Each recorder captures one video element's combined audio and video, so it cannot save separate audio tracks, and the local recorder's state is tied to the button.
 
-## Observed Pain Points
-- Recorder is single-mix: we mix all remote audio/video into one stream before `MediaRecorder`, blocking isolated track capture.
-- Recorder lifecycle interweaves UI state (`recordLocalbutton`) making headless reuse difficult.
-- WebCodec chunker shares buffers for audio & video; multi-track audio will need new stream management and file packaging.
+`&chunked` mode is separate and is not a recording path. `session.webCodec()` and `session.webCodecAudio()` in `webrtc.js` encode frames, and `session.chunkedRecorder.sendChunks()` sends them to viewers over peer data channels (`session.chunkedTransferChannels`).
 
-## Refactor Targets
-- Extract recorder setup into `core/recording` service with explicit track selection.
-- Decouple UI updates from recorder state via events, allowing alternate shells (podcast studio) to subscribe.
-- Introduce multi-track pipeline that uses `session.peers[UUID].stream` assets and writes separate WAV files per participant before mixdown.
+## Podcast Studio recording (`core/recording`)
 
-## Podcast Studio Audio Recovery
+Podcast Studio (`podcast/studio.js`) uses `MultiTrackRecorder` from `core/recording/multitrack-recorder.js`, set up for audio only:
 
-Podcast Studio saves each audio track's encoded chunks, name, start time, and cue markers to IndexedDB while recording (`podcast/audio-recovery.js`). Reconnected tracks are saved as separate segments.
+- It records the local stream (`session.streamSrc`) and each remote peer's stream (`session.rpcs[UUID]`) as separate tracks, each with its own `TrackRecorder` (`core/recording/track-recorder.js`).
+- With `monitorLevels`, each recorded track also gets a level meter (see [audio-metering.md](audio-metering.md)).
+- `packageAudioFiles()` converts each track to WAV with `convertBlobToWav()` (`core/recording/wav-encoder.js`) and keeps the original file if conversion fails.
 
-After reopening the studio in the same browser, expand **Saved audio** under **Timeline & Outputs**, select a take, and choose **Prepare download**. Each track offers its original audio and, when conversion succeeds, a WAV download. Copies remain until **Clear saved audio** is selected or browser data is cleared. Interrupted takes may be incomplete. Storage failures appear in the studio; stop and download the normal recordings before closing the tab.
+## Podcast Studio audio recovery
+
+While recording, Podcast Studio saves each audio track's encoded chunks, name, start time and cue markers to IndexedDB (`podcast/audio-recovery.js`). Reconnected tracks are saved as separate segments.
+
+To recover a take, reopen the studio in the same browser, expand **Saved audio** under **Timeline & Outputs**, select the take and choose **Prepare download**. Each track offers its original audio and, when conversion succeeds, a WAV file. Copies stay until you select **Clear saved audio** or clear browser data. Interrupted takes may be incomplete. Storage failures appear in the studio; if one appears, stop and download the normal recordings before closing the tab.

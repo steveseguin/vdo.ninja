@@ -2,456 +2,143 @@
 
 ### Overview
 
-The VDO.Ninja IFRAME API provides access to all HTTP/WSS API commands through the `action` parameter. This means you can use any command from the [HTTP/WSS API](https://github.com/steveseguin/Companion-Ninja) directly through the iframe's postMessage interface.
-
-### Using HTTP/WSS API Commands via IFRAME
-
-All commands available in the HTTP/WSS API can be accessed through the IFRAME API using this format:
+Every [HTTP/WSS API](httpwssapi.md) command also works over the iframe's `postMessage` interface, sent with an `action` property:
 
 ```javascript
 iframe.contentWindow.postMessage({
     action: "commandName",
-    value: "value",
-    value2: "optional",
-    target: "optional", // for director commands
-    cib: "callback-id" // optional callback identifier
+    value: "value",       // optional
+    value2: "optional",   // optional second value
+    target: "optional",   // a guest's slot number or stream ID, for director commands
+    cib: "callback-id"    // optional; copied into the reply
 }, "*");
 ```
 
-### Director Permissions
+A `value` of `"true"` or `"false"` is converted to a boolean. The other iframe commands are listed in [iframeapi.md](iframeapi.md).
 
-**Important:** To use director commands for remote control, you must have director permissions:
+### Director permissions
 
-1. Use `&director=roomname` instead of `&room=roomname` in your iframe URL
-2. Or combine with `&codirector=password` to enable multiple directors
-3. Without proper permissions, director commands will fail silently
+Commands with a `target` control a guest and need director rights:
 
-Example iframe URL with director permissions:
-```
-https://vdo.ninja/?director=myroom&cleanoutput&api=myapikey
-```
+- Load the iframe with `&director=roomname` instead of `&room=roomname`.
+- To share control between several directors, every director adds the same `&codirector=password` to their `&director=roomname` link.
 
-### Complete Command Reference
+Without director rights, most guest commands reply `false`, and guests reject the rest. The iframe API does not need `&api`.
 
-#### Self Commands (No Target Required)
-
-These commands affect the local VDO.Ninja instance:
+### Commands for the local page (no `target`)
 
 ```javascript
-// Microphone control
 iframe.contentWindow.postMessage({ action: "mic", value: "toggle" }, "*");
-
-// Camera control  
-iframe.contentWindow.postMessage({ action: "camera", value: false }, "*");
-
-// Speaker control
-iframe.contentWindow.postMessage({ action: "speaker", value: true }, "*");
-
-// Volume control (0-200)
-iframe.contentWindow.postMessage({ action: "volume", value: 85 }, "*");
-
-// Recording
-iframe.contentWindow.postMessage({ action: "record", value: true }, "*");
-
-// Bitrate control
-iframe.contentWindow.postMessage({ action: "bitrate", value: 2500 }, "*");
-
-// Layout control
-iframe.contentWindow.postMessage({ action: "layout", value: 2 }, "*");
-
-// Custom layout object
-iframe.contentWindow.postMessage({ 
-    action: "layout", 
-    value: [
-        {x: 0, y: 0, w: 50, h: 100, slot: 0},
-        {x: 50, y: 0, w: 50, h: 100, slot: 1}
-    ]
-}, "*");
-
-// Group management
+iframe.contentWindow.postMessage({ action: "volume", value: 85 }, "*");      // 0-100 percent
+iframe.contentWindow.postMessage({ action: "bitrate", value: 2500 }, "*");   // kbps for streams you view
+iframe.contentWindow.postMessage({ action: "layout", value: 2 }, "*");       // director: layout 2 from &layouts; 0 = automixer
 iframe.contentWindow.postMessage({ action: "joinGroup", value: "1" }, "*");
-iframe.contentWindow.postMessage({ action: "leaveGroup", value: "2" }, "*");
-
-// Get information
 iframe.contentWindow.postMessage({ action: "getDetails", cib: "details-123" }, "*");
-iframe.contentWindow.postMessage({ action: "getGuestList", cib: "guests-456" }, "*");
-
-// Camera PTZ controls
-iframe.contentWindow.postMessage({ action: "zoom", value: 0.1 }, "*"); // Relative
-iframe.contentWindow.postMessage({ action: "zoom", value: 1.5, value2: "abs" }, "*"); // Absolute
-iframe.contentWindow.postMessage({ action: "pan", value: -0.5 }, "*");
-iframe.contentWindow.postMessage({ action: "tilt", value: 0.1 }, "*");
-iframe.contentWindow.postMessage({ action: "focus", value: 0.8, value2: "abs" }, "*");
-
-// Other controls
-iframe.contentWindow.postMessage({ action: "reload" }, "*");
-iframe.contentWindow.postMessage({ action: "hangup" }, "*");
-iframe.contentWindow.postMessage({ action: "togglehand" }, "*");
-iframe.contentWindow.postMessage({ action: "togglescreenshare" }, "*");
-iframe.contentWindow.postMessage({ action: "forceKeyframe" }, "*");
+iframe.contentWindow.postMessage({ action: "zoom", value: 0.1 }, "*");                 // relative
+iframe.contentWindow.postMessage({ action: "zoom", value: 1.5, value2: "abs" }, "*");  // absolute
 iframe.contentWindow.postMessage({ action: "sendChat", value: "Hello everyone!" }, "*");
 ```
 
-#### Director Commands (Target Required)
+`speaker` (`true` unmutes), `camera`, `record`, `leaveGroup`, `getGuestList`, `pan`, `tilt`, `focus`, `reload`, `hangup`, `togglehand`, `togglescreenshare` and `forceKeyframe` work the same way. `layout` also accepts a custom layout array; see [Layout and display](iframeapi.md#layout-and-display).
 
-These commands require director permissions and target specific guests:
+### Director commands for a guest
 
-```javascript
-// Target can be:
-// - Slot number: "1", "2", "3", etc.
-// - Stream ID: "abc123xyz"
-// - "*" for all guests (where applicable)
-
-// Guest microphone control
-iframe.contentWindow.postMessage({ 
-    action: "mic", 
-    target: "1", 
-    value: "toggle" 
-}, "*");
-
-// Guest camera control
-iframe.contentWindow.postMessage({ 
-    action: "camera", 
-    target: "streamID123", 
-    value: false 
-}, "*");
-
-// Rotate guest video by +90 degrees
-iframe.contentWindow.postMessage({
-    action: "rotate",
-    target: "1",
-    value: true
-}, "*");
-
-// Set guest video rotation explicitly
-iframe.contentWindow.postMessage({
-    action: "rotate",
-    target: "streamID123",
-    value: 180
-}, "*");
-
-// Reset guest video rotation
-iframe.contentWindow.postMessage({
-    action: "rotate",
-    target: "1",
-    value: false
-}, "*");
-
-// Add guest to scene
-iframe.contentWindow.postMessage({ 
-    action: "addScene", 
-    target: "2", 
-    value: 1  // Scene number
-}, "*");
-
-// Transfer guest to another room
-iframe.contentWindow.postMessage({ 
-    action: "forward", 
-    target: "1", 
-    value: "newroom" 
-}, "*");
-
-// Solo chat with guest
-iframe.contentWindow.postMessage({ 
-    action: "soloChat", 
-    target: "3" 
-}, "*");
-
-// Two-way solo chat
-iframe.contentWindow.postMessage({ 
-    action: "soloChatBidirectional", 
-    target: "2" 
-}, "*");
-
-// Send private message to guest
-iframe.contentWindow.postMessage({ 
-    action: "sendChat", 
-    target: "1", 
-    value: "Private message" 
-}, "*");
-
-// Overlay message on guest's screen
-iframe.contentWindow.postMessage({ 
-    action: "sendDirectorChat", 
-    target: "2", 
-    value: "You're live in 10 seconds!" 
-}, "*");
-
-// Guest volume control
-iframe.contentWindow.postMessage({ 
-    action: "volume", 
-    target: "1", 
-    value: 120  // 0-200
-}, "*");
-
-// Disconnect specific guest
-iframe.contentWindow.postMessage({ 
-    action: "hangup", 
-    target: "3" 
-}, "*");
-
-// Guest camera PTZ control
-iframe.contentWindow.postMessage({ 
-    action: "zoom", 
-    target: "1", 
-    value: 0.1 
-}, "*");
-
-// Timer controls for guest
-iframe.contentWindow.postMessage({ 
-    action: "startRoomTimer", 
-    target: "1", 
-    value: 600  // 10 minutes in seconds
-}, "*");
-
-// Change guest position in mixer
-iframe.contentWindow.postMessage({ 
-    action: "mixorder", 
-    target: "2", 
-    value: -1  // Move up
-}, "*");
-```
-
-### Using targetGuest Function (Legacy)
-
-The `targetGuest` function provides another way to control guests:
+`target` is a slot number (`"1"`, `"2"`...) or a stream ID.
 
 ```javascript
-iframe.contentWindow.postMessage({
-    function: "targetGuest",
-    target: "1",      // Guest slot or stream ID
-    action: "rotate", // Action to perform
-    value: true       // true=+90, false=reset, or 90/180/270
-}, "*");
+iframe.contentWindow.postMessage({ action: "mic", target: "1", value: "toggle" }, "*");
+iframe.contentWindow.postMessage({ action: "rotate", target: "1", value: true }, "*");   // +90 degrees
+iframe.contentWindow.postMessage({ action: "rotate", target: "streamID123", value: 180 }, "*");
+iframe.contentWindow.postMessage({ action: "rotate", target: "1", value: false }, "*");  // reset
+iframe.contentWindow.postMessage({ action: "addScene", target: "2", value: 1 }, "*");    // toggle in scene 1
+iframe.contentWindow.postMessage({ action: "forward", target: "1", value: "newroom" }, "*");
+iframe.contentWindow.postMessage({ action: "sendChat", target: "1", value: "Private message" }, "*");
+iframe.contentWindow.postMessage({ action: "sendDirectorChat", target: "2", value: "You're live in 10 seconds!" }, "*"); // shown on the guest's screen
+iframe.contentWindow.postMessage({ action: "volume", target: "1", value: 120 }, "*");    // 0-200
+iframe.contentWindow.postMessage({ action: "startRoomTimer", target: "1", value: 600 }, "*"); // seconds
+iframe.contentWindow.postMessage({ action: "mixorder", target: "2", value: -1 }, "*");   // -1 moves down, 1 moves up
 ```
 
-### Using Commands Function
+`camera`, `soloChat`, `soloChatBidirectional`, `hangup` and `zoom` take a `target` the same way. The [HTTP/WSS API](httpwssapi.md) page lists the other guest actions.
 
-Access any command from the Commands object:
+### `function` calls for directors
+
+`targetGuest` runs a guest action with the same `target`, `action`, `value` and `value2`:
 
 ```javascript
-iframe.contentWindow.postMessage({
-    function: "commands",
-    action: "zoom",
-    value: 0.5,
-    value2: "abs"
-}, "*");
+iframe.contentWindow.postMessage({ function: "targetGuest", target: "1", action: "rotate", value: true }, "*");
 ```
 
-`rotate` is not a top-level `commands` action. Use `action:"rotate"` with a guest `target`, or `function:"targetGuest"`.
-
-### Advanced DOM Manipulation
-
-Target specific video elements by stream ID:
+`commands` runs a local command (not `rotate`, which needs a guest `target`):
 
 ```javascript
-// Add video to grid
-iframe.contentWindow.postMessage({
-    target: "streamID123",
-    add: true
-}, "*");
-
-// Remove video from grid
-iframe.contentWindow.postMessage({
-    target: "streamID123",
-    remove: true
-}, "*");
-
-// Replace all videos with target
-iframe.contentWindow.postMessage({
-    target: "streamID123",
-    replace: true
-}, "*");
-
-// Apply settings to video element
-iframe.contentWindow.postMessage({
-    target: "streamID123",
-    settings: {
-        style: "transform: scale(1.5);",
-        muted: true,
-        volume: 0.5
-    }
-}, "*");
+iframe.contentWindow.postMessage({ function: "commands", action: "zoom", value: 0.5, value2: "abs" }, "*");
 ```
 
-### Special Functions
+These three reply with an object that has `ok` (and `error` when `ok` is `false`), plus `target`, `UUID` and `streamID`:
+
+| `function` | Extra fields | Reply key |
+|---|---|---|
+| `getGuestMediaDevices` | `target` | `guestMediaDevices`, with `devices` and the guest's current camera, microphone and speaker labels |
+| `setGuestMediaDevice` | `target`, `kind` (`"camera"`, `"microphone"` or `"speaker"`), `deviceId` | `guestMediaDeviceChange` |
+| `activateQueuedGuest` | `target` | `queuedGuestActivation` |
 
 ```javascript
-// Preview local webcam
-iframe.contentWindow.postMessage({
-    function: "previewWebcam"
-}, "*");
-
-// Publish screen share
-iframe.contentWindow.postMessage({
-    function: "publishScreen"
-}, "*");
-
-// Change HTML content
-iframe.contentWindow.postMessage({
-    function: "changeHTML",
-    target: "elementId",
-    value: "<p>New content</p>"
-}, "*");
-
-// Route WebSocket message
-iframe.contentWindow.postMessage({
-    function: "routeMessage",
-    value: { /* message data */ }
-}, "*");
-
-// Execute code (use with extreme caution)
-iframe.contentWindow.postMessage({
-    function: "eval",
-    value: "console.log('Hello from eval');"
-}, "*");
+iframe.contentWindow.postMessage({ function: "setGuestMediaDevice", target: "1", kind: "camera", deviceId: "abc", cib: "dev-1" }, "*");
+// reply: { guestMediaDeviceChange: { ok, error, target, UUID, streamID, kind, deviceId }, cib: "dev-1" }
 ```
 
-### Handling Responses
+### Reply format
 
-Listen for responses with callback IDs:
+When you include `cib`, every `action` command gets a reply:
 
-```javascript
-window.addEventListener("message", function(e) {
-    if (e.source !== iframe.contentWindow) return;
-    
-    if (e.data.cib === "my-callback-123") {
-        console.log("Received response:", e.data);
-        
-        // Handle different response types
-        if (e.data.guestList) {
-            console.log("Guest list:", e.data.guestList);
-        } else if (e.data.detailedState) {
-            console.log("State info:", e.data.detailedState);
-        } else if (e.data.callback) {
-            console.log("Command result:", e.data.callback.result);
-        }
-    }
-});
-```
+- An object result arrives as that object with `cib` added. `getDetails` returns the state keyed by stream ID; `getGuestList` returns `{ "1": { streamID, label }, ..., cib }`.
+- Any other result arrives as `{ action, result, cib }`, such as `{ action: "mic", result: true, cib }` (`true` means muted).
+- An error arrives as `{ action, error: true, result: false, message, cib }`.
 
-### Complete Example: Director Control Panel
+Without `cib`, the raw result is posted, which can be a plain value such as `true`. The HTTP/WSS API's `{ callback: {...} }` wrapper is not used here.
+
+### Complete example: director control panel
 
 ```html
-<!DOCTYPE html>
-<html>
-<head>
-    <title>VDO.Ninja Director Control Panel</title>
-</head>
-<body>
-    <h1>Director Control Panel</h1>
-    
-    <div id="container"></div>
-    
-    <div id="controls">
-        <h2>Guest Controls</h2>
-        <select id="guest-select">
-            <option value="1">Guest 1</option>
-            <option value="2">Guest 2</option>
-            <option value="3">Guest 3</option>
-        </select>
-        
-        <button onclick="controlGuest('mic', 'toggle')">Toggle Mic</button>
-        <button onclick="controlGuest('camera', 'toggle')">Toggle Camera</button>
-        <button onclick="controlGuest('addScene', 1)">Add to Scene 1</button>
-        <button onclick="controlGuest('forward', 'lobby')">Send to Lobby</button>
-        <button onclick="controlGuest('zoom', 0.1)">Zoom In</button>
-        <button onclick="controlGuest('zoom', -0.1)">Zoom Out</button>
-    </div>
-    
-    <div id="log"></div>
+<div id="container"></div>
+<select id="guest-select"><option value="1">Guest 1</option></select>
+<button onclick="controlGuest('mic', 'toggle')">Toggle Mic</button>
+<button onclick="controlGuest('camera', 'toggle')">Toggle Camera</button>
+<button onclick="controlGuest('addScene', 1)">Add to Scene 1</button>
+<button onclick="controlGuest('forward', 'lobby')">Send to Lobby</button>
+<button onclick="iframe.contentWindow.postMessage({ getGuestList: true }, '*')">Refresh guests</button>
 
-    <script>
-    // Create iframe with director permissions
-    const iframe = document.createElement("iframe");
-    iframe.allow = "camera;microphone;fullscreen;display-capture;autoplay;";
-    iframe.src = "https://vdo.ninja/?director=myroom&cleanoutput&api=mykey";
-    iframe.style.width = "800px";
-    iframe.style.height = "600px";
-    document.getElementById("container").appendChild(iframe);
-    
-    // Control function
-    function controlGuest(action, value) {
-        const target = document.getElementById("guest-select").value;
-        
-        const message = {
-            action: action,
-            target: target
-        };
-        
-        if (value !== undefined) {
-            message.value = value;
-        }
-        
-        // Generate callback ID
-        const callbackId = `cb-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
-        message.cib = callbackId;
-        
-        iframe.contentWindow.postMessage(message, "*");
-        log(`Sent: ${JSON.stringify(message)}`);
-    }
-    
-    // Listen for responses
-    window.addEventListener("message", function(e) {
-        if (e.source !== iframe.contentWindow) return;
-        
-        log(`Received: ${JSON.stringify(e.data)}`);
-        
-        // Handle specific events
-        if (e.data.action === "guest-connected") {
-            log(`Guest connected: ${e.data.streamID}`);
-        } else if (e.data.guestList) {
-            updateGuestList(e.data.guestList);
-        }
-    });
-    
-    // Logging
-    function log(message) {
-        const logDiv = document.getElementById("log");
-        const entry = document.createElement("div");
-        entry.textContent = `[${new Date().toLocaleTimeString()}] ${message}`;
-        logDiv.appendChild(entry);
-        logDiv.scrollTop = logDiv.scrollHeight;
-    }
-    
-    // Update guest list
-    function updateGuestList(guests) {
+<script>
+const iframe = document.createElement("iframe");
+iframe.allow = "camera;microphone;fullscreen;display-capture;autoplay;";
+iframe.src = "https://vdo.ninja/?director=myroom&cleanoutput";
+document.getElementById("container").appendChild(iframe);
+
+function controlGuest(action, value) {
+    const target = document.getElementById("guest-select").value;
+    iframe.contentWindow.postMessage({ action, target, value, cib: "cb-" + Date.now() }, "*");
+}
+
+window.addEventListener("message", function (e) {
+    if (e.source !== iframe.contentWindow || !e.data || typeof e.data !== "object") return;
+    if (e.data.guestList) { // { "1": { streamID, label }, ... }
         const select = document.getElementById("guest-select");
         select.innerHTML = "";
-        
-        guests.forEach((guest, index) => {
+        Object.keys(e.data.guestList).forEach(function (slot) {
             const option = document.createElement("option");
-            option.value = guest.id || (index + 1);
-            option.textContent = guest.label || `Guest ${index + 1}`;
+            option.value = slot;
+            option.textContent = e.data.guestList[slot].label || ("Guest " + slot);
             select.appendChild(option);
         });
+    } else if (e.data.cib) {
+        console.log("Reply:", e.data);
     }
-    
-    // Get initial guest list
-    setTimeout(() => {
-        iframe.contentWindow.postMessage({
-            action: "getGuestList",
-            cib: "initial-guests"
-        }, "*");
-    }, 2000);
-    </script>
-</body>
-</html>
+});
+</script>
 ```
-
-### Important Notes
-
-1. **Director Permissions**: Always use `&director=roomname` or `&codirector=password` for director commands
-2. **Target Format**: Use slot numbers (1, 2, 3) or stream IDs for targeting
-3. **Callback IDs**: Use unique `cib` values to track responses
-4. **Error Handling**: Commands may fail silently without proper permissions
-5. **Timing**: Wait for iframe to load before sending commands
 
 ### Troubleshooting
 
-- **Commands not working**: Check director permissions in iframe URL
-- **No response**: Verify callback ID handling and message source
-- **Guest not found**: Confirm target value matches slot or stream ID
-- **Permission errors**: Ensure using `&director=` not `&room=`
-
-This integration allows you to build powerful control interfaces using the full capabilities of the VDO.Ninja API through simple iframe messaging.
+- **Commands reply `false` or do nothing:** check the iframe URL uses `&director=`, and that `target` matches a slot number or stream ID.
+- **No reply:** send a `cib`, and wait for the iframe to load first.

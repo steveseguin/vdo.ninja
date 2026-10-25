@@ -1,1162 +1,290 @@
 # Understanding the VDO.Ninja IFRAME API: Detecting User Joins and Disconnects
 
-The VDO.Ninja IFRAME API allows websites to embed and interact with VDO.Ninja streams. One of the most useful features is the ability to detect when users join or disconnect from your stream through event messaging. This guide will explain how to implement this functionality in your own projects.
+Your page sends commands to an embedded VDO.Ninja iframe with `postMessage`, and the iframe posts events back, including when peers connect and disconnect. This page covers those events, then lists every inbound command.
 
-## How the IFRAME API Works
+## Event format
 
-VDO.Ninja's IFRAME API uses the browser's `postMessage` API to communicate between your parent website and the embedded VDO.Ninja iframe. This allows you to:
+Listen for `message` events on `window` and accept only those whose `e.source` is your iframe's `contentWindow` (see the [example](#complete-working-example)). Events have the form `{ action, value, UUID, streamID }`. `UUID` identifies the peer connection. `streamID` is only included when the iframe knows the peer's stream ID, so do not depend on it for every event.
 
-1. Send commands to control the VDO.Ninja instance
-2. Receive events and data from the VDO.Ninja instance
+By default the iframe posts to any parent origin. Add `&iframetarget=https://your-site.com` to the iframe URL to restrict which origin receives events.
 
-## Setting Up the Basic Structure
+## Connection events
 
-First, you need to create an iframe that loads VDO.Ninja:
+"Push" means someone receives your stream. "View" means you receive theirs.
 
-```javascript
-// Create the iframe element
-var iframe = document.createElement("iframe");
-
-// Set necessary permissions
-iframe.allow = "camera;microphone;fullscreen;display-capture;autoplay;";
-
-// Set the source URL (your VDO.Ninja room)
-iframe.src = "https://vdo.ninja/?room=your-room-name&cleanoutput";
-
-// Add the iframe to your page
-document.getElementById("container").appendChild(iframe);
+```mermaid
+flowchart LR
+    remote["Remote peer"] -- "view-connection: you receive their stream" --> vdo["Your VDO.Ninja iframe"]
+    vdo -- "push-connection: they receive your stream" --> remote
+    vdo -- "events via postMessage" --> page["Your page"]
 ```
 
-## Setting Up the Event Listener
+| `action` | Fires when | `value` |
+|---|---|---|
+| `view-connection` | You start or stop receiving a remote stream | `true` on connect, `false` on disconnect. Includes `streamID`. |
+| `view-connection-info` | The remote publisher sends its details | Info object, including `label` if set |
+| `push-connection` | A peer starts or stops receiving your stream | `true` on connect, `false` on disconnect |
+| `push-connection-info` | A peer receiving your stream sends its details | Info object, including `label` if set |
+| `guest-connected` | A room guest connects to receive your stream | Not used |
+| `director-connected` | A director connects to receive your stream | Director flag |
+| `scene-connected` | A scene (for example an OBS view) connects to your stream | The scene ID |
+| `director-share` | Your own director page starts or stops publishing | `true` or `false` |
+| `slot-updated` | A stream is assigned to a slot (`&slotmode`) | Slot number; `streamID` is the stream |
+| `joining-room` | You begin joining a room | Room name |
+| `joined-room-complete` | Room join finished | None |
 
-To detect joins and disconnects, you need to set up an event listener for messages from the iframe:
+`new-view-connection`, `new-push-connection` and `end-view-connection` are older duplicates. Use the events above.
 
-```javascript
-// Set up event listener (cross-browser compatible)
-var eventMethod = window.addEventListener ? "addEventListener" : "attachEvent";
-var eventer = window[eventMethod];
-var messageEvent = eventMethod === "attachEvent" ? "onmessage" : "message";
+## Complete working example
 
-// Add the event listener
-eventer(messageEvent, function (e) {
-    // Make sure the message is from our VDO.Ninja iframe
-    if (e.source != iframe.contentWindow) return;
-    
-    // Log the data for debugging
-    console.log(e.data);
-    
-    // Process specific events
-    if ("action" in e.data) {
-        // Handle different actions
-        handleAction(e.data);
-    }
-}, false);
-```
-
-## Detecting User Joins and Disconnects
-
-The key events to watch for are:
-
-### Guest Connections
+This tracks connected peers by UUID and shows a count.
 
 ```javascript
-function handleAction(data) {
-    if (data.action === "guest-connected") {
-        // A new guest has connected
-        console.log("Guest connected:", data.streamID);
-        
-        // You can access additional info if available
-        if (data.value && data.value.label) {
-            console.log("Guest label:", data.value.label);
-        }
-    }
-    else if (data.action === "view-connection") {
-        // Someone viewing the stream has connected
-        console.log("Viewer connected:", data.streamID);
-        
-        // The value property will be true for connections
-        if (data.value) {
-            console.log("New viewer connected");
-        } else {
-            console.log("Viewer disconnected");
-        }
-    }
-    else if (data.action === "director-connected") {
-        // The director has connected
-        console.log("Director connected");
-    }
-    else if (data.action === "scene-connected") {
-        // A scene has connected
-        console.log("Scene connected:", data.value); // Scene ID
-    }
-    else if (data.action === "slot-updated") {
-        // A stream has been assigned to a slot
-        console.log("Stream", data.streamID, "assigned to slot", data.value);
-    }
-}
-```
-
-### Disconnections
-
-```javascript
-function handleAction(data) {
-    // Handling disconnections
-    if (data.action === "view-connection" && data.value === false) {
-        // A viewer has disconnected
-        console.log("Viewer disconnected:", data.streamID);
-    }
-    else if (data.action === "director-share" && data.value === false) {
-        // A director has stopped sharing
-        console.log("Director stopped sharing:", data.streamID);
-    }
-    else if (data.action === "push-connection" && data.value === false) {
-        // A guest has disconnected
-        console.log("Guest disconnected:", data.streamID);
-    }
-}
-```
-
-## Complete Working Example
-
-Here's a complete example that demonstrates detecting joins and disconnects:
-
-```javascript
-// Create the container for the iframe
-var container = document.createElement("div");
-container.id = "vdo-container";
-document.body.appendChild(container);
-
-// Create the iframe element
 var iframe = document.createElement("iframe");
 iframe.allow = "camera;microphone;fullscreen;display-capture;autoplay;";
 iframe.src = "https://vdo.ninja/?room=your-room-name&cleanoutput";
 iframe.style.width = "100%";
 iframe.style.height = "100%";
-container.appendChild(iframe);
+document.body.appendChild(iframe);
 
-// Create a status display element
 var statusDiv = document.createElement("div");
-statusDiv.id = "connection-status";
 document.body.appendChild(statusDiv);
+var connectedUsers = {}; // UUID -> label and active push/view directions
 
-// Set up event listener
-var eventMethod = window.addEventListener ? "addEventListener" : "attachEvent";
-var eventer = window[eventMethod];
-var messageEvent = eventMethod === "attachEvent" ? "onmessage" : "message";
+window.addEventListener("message", function (e) {
+    if (e.source != iframe.contentWindow) return; // only accept our iframe
+    if (!e.data || typeof e.data !== "object" || !e.data.action || !e.data.UUID) return;
+    var data = e.data;
+    var isConnection = data.action === "view-connection" || data.action === "push-connection";
 
-// Keep track of connected users
-var connectedUsers = {};
+    var peer = connectedUsers[data.UUID];
+    var direction = data.action === "view-connection" ? "view" : "push";
 
-// Add the event listener
-eventer(messageEvent, function (e) {
-    // Make sure the message is from our VDO.Ninja iframe
-    if (e.source != iframe.contentWindow) return;
-    
-    // Log all messages for debugging
-    console.log(e.data);
-    
-    // Process specific actions
-    if ("action" in e.data) {
-        handleAction(e.data);
-    }
-}, false);
-
-function handleAction(data) {
-    // Handle connections
-    if (data.action === "guest-connected" && data.streamID) {
-        connectedUsers[data.streamID] = data.value?.label || "Guest";
-        updateStatusDisplay("Guest connected: " + (data.value?.label || data.streamID));
-    }
-    else if (data.action === "view-connection") {
-        if (data.value && data.streamID) {
-            connectedUsers[data.streamID] = "Viewer";
-            updateStatusDisplay("Viewer connected: " + data.streamID);
-        } else if (data.streamID) {
-            delete connectedUsers[data.streamID];
-            updateStatusDisplay("Viewer disconnected: " + data.streamID);
+    if (isConnection && data.value === true) {
+        if (!peer) {
+            peer = { label: data.streamID || data.UUID, view: false, push: false };
+            connectedUsers[data.UUID] = peer;
         }
-    }
-    else if (data.action === "director-connected") {
-        updateStatusDisplay("Director connected");
-    }
-    else if (data.action === "push-connection" && data.value === false && data.streamID) {
-        delete connectedUsers[data.streamID];
-        updateStatusDisplay("User disconnected: " + data.streamID);
-    }
-}
-
-function updateStatusDisplay(message) {
-    var timestamp = new Date().toLocaleTimeString();
-    statusDiv.innerHTML += `<p>${timestamp}: ${message}</p>`;
-    
-    // Update connected users count
-    var count = Object.keys(connectedUsers).length;
-    document.getElementById("user-count").textContent = count;
-}
-
-// Add a user count display
-var countDiv = document.createElement("div");
-countDiv.innerHTML = "Connected users: <span id='user-count'>0</span>";
-document.body.insertBefore(countDiv, statusDiv);
-```
-
-## Waiting Room Example
-
-You can implement a waiting room like the one in the `waitingroom.html` file from your code samples:
-
-```javascript
-// Setup event listener
-var eventMethod = window.addEventListener ? "addEventListener" : "attachEvent";
-var eventer = window[eventMethod];
-var messageEvent = eventMethod === "attachEvent" ? "onmessage" : "message";
-var waiting = null;
-
-eventer(messageEvent, function (e) {
-    if (e.source != iframe.contentWindow) return;
-    
-    if ("action" in e.data) {
-        if (e.data.action == "joining-room") {
-            // Show initial joining message
-            outputWindow.innerHTML = "JOINING ROOM";
-            
-            // After 1 second, show waiting message if director hasn't joined
-            waiting = setTimeout(function() {
-                outputWindow.innerHTML = "Waiting for the director to join";
-                outputWindow.classList.remove("hidden");
-            }, 1000);
-        } 
-        else if (e.data.action == "director-connected") {
-            // Director has joined, clear waiting message
-            clearTimeout(waiting);
-            outputWindow.innerHTML = "";
-            outputWindow.classList.add("hidden");
+        peer[direction] = true;
+        updateStatus("Connected: " + peer.label);
+    } else if (isConnection && data.value === false && peer) {
+        peer[direction] = false;
+        if (!peer.view && !peer.push) {
+            delete connectedUsers[data.UUID];
         }
+        updateStatus(data.action + " closed: " + peer.label);
+    } else if (data.action.endsWith("-connection-info") && peer && data.value && data.value.label) {
+        peer.label = data.value.label;
+    } else if (data.action === "director-connected") {
+        updateStatus("Director connected");
     }
 });
+
+function updateStatus(message) {
+    var line = document.createElement("p");
+    line.textContent = message + " (" + Object.keys(connectedUsers).length + " connected)";
+    statusDiv.appendChild(line);
+}
 ```
 
-## Getting Additional Information About Connections
+In a room, each pair of guests usually has both a view and a push connection with the same UUID. The example counts that peer once and removes them only after both directions close. Connection-info events update the label of an already connected peer.
 
-For more detailed information about connections, you can use the `getStreamIDs` or `getDetailedState` commands:
+For a waiting room, show "Waiting for the director" after `joining-room` and hide it on `director-connected`. [waitingroom.html](waitingroom.html) is a full example.
 
-```javascript
-// Request info about all connected streams
-iframe.contentWindow.postMessage({ "getStreamIDs": true }, "*");
-
-// Request detailed state information
-iframe.contentWindow.postMessage({ "getDetailedState": true }, "*");
-```
-
-## Best Practices
-
-1. **Always check the source**: Make sure messages are coming from your VDO.Ninja iframe.
-2. **Handle disconnections gracefully**: Sometimes connections drop unexpectedly.
-3. **Consider implementing reconnection logic**: If important users disconnect, you might want to notify them or attempt to reconnect.
-4. **Debug with console.log**: Log all events during development to understand the full message flow.
-5. **Test with multiple users**: The behavior can be different depending on who connects first.
-
-By implementing these techniques, you can build sophisticated applications that respond to users joining and leaving your VDO.Ninja sessions, creating more interactive and responsive experiences.
+To list current connections at any time, send `getStreamIDs` or `getDetailedState` (see [Statistics and state](#statistics-and-state)).
 
 # VDO.Ninja IFRAME API - Complete Inbound Control Reference
 
-This document provides a comprehensive list of all inbound remote control calls available through the VDO.Ninja IFRAME API. These commands allow you to control a VDO.Ninja instance embedded in an iframe from your parent webpage.
+Every command is a property on the object you post to the iframe. You can combine several in one message.
 
-## Table of Contents
-- [Basic Usage](#basic-usage)
-- [Audio Controls](#audio-controls)
-- [Video Controls](#video-controls)
-- [Stream Management](#stream-management)
-- [Recording Controls](#recording-controls)
-- [Group Management](#group-management)
-- [Bitrate & Quality Controls](#bitrate--quality-controls)
-- [Device Management](#device-management)
-- [Layout & Display Controls](#layout--display-controls)
-- [Data & Messaging](#data--messaging)
-- [Statistics & Monitoring](#statistics--monitoring)
-- [Utility Functions](#utility-functions)
-- [Advanced Controls](#advanced-controls)
+```javascript
+iframe.contentWindow.postMessage({ command: value /*, optional fields */ }, "*");
+```
 
-## Basic Usage
+You can replace the `"*"` target origin with the iframe's origin.
 
-To send commands to the VDO.Ninja iframe:
+The bitrate commands (`bitrate`, `targetBitrate`, `manualBitrate`, `audiobitrate`, `targetAudioBitrate`) accept one of these optional fields to pick streams. Without one, they apply to every stream.
+
+- `target`: a stream ID, or `"*"` for all
+- `streamID`: a stream ID
+- `UUID`: a connection ID
+
+Commands that return data accept an optional `cib` (callback ID). It is copied into the reply, so you can match replies to requests: `{ getStats: true, cib: "stats-1" }` is answered with `{ stats, cib: "stats-1" }`.
+
+## Audio
+
+| Command | Values | Notes |
+|---|---|---|
+| `mic` | `true` (unmute), `false` (mute), `"toggle"` | Your microphone |
+| `mute` | `true` (mute), `false` (unmute), `"toggle"` | Incoming audio (speaker) |
+| `speaker` | `true` (unmute), `false` (mute), `"toggle"` | Same as `mute` with reversed logic. Ignored if `mute` is in the same message. |
+| `volume` | `0` to `1.0` | Playback volume. Optional `target` (stream ID or `"*"`). Values above 1 are treated as a percentage. |
+| `panning` | `0` (left) to `180` (right), `90` is center | Stereo pan of incoming audio. Needs `&panning` in the iframe URL. `true` picks a random position; `false` centers. |
+| `targetAudioBitrate` | kbps | Asks the publisher to target this audio bitrate. |
+| `audiobitrate` | kbps | Limits inbound audio bitrate. `lock` defaults to `true`. |
+| `PPT` | `true` (unmute), `false` (mute), `"toggle"` | Push-to-talk for your microphone |
+
+## Video
+
+| Command | Values | Notes |
+|---|---|---|
+| `camera` | `true` (on), `false` (off), `"toggle"` | Your camera |
+| `pauseinvisible` | `true`, `false`, `"toggle"` | Pause videos the mixer is not showing |
+| `keyframe` | `true` | Sends a keyframe to all scene connections |
+| `bitrate` | kbps | Requests a video bitrate from publishers you view. `lock` defaults to `true` so the automixer does not override it. `-1` restores the default. |
+| `targetBitrate` | kbps | Sets the publisher's target bitrate without locking it. |
+| `manualBitrate` | kbps | Sets a manual bandwidth limit. |
+| `scale` | Percent, or `false` | Requests a resolution scale from publishers. `false` returns to dynamic scaling. Use `target` (stream ID or `"*"`) to pick streams. |
+| `targetWidth`, `targetHeight` | Pixels | Requests a resolution from one connection. `UUID` is required. |
+
+```javascript
+iframe.contentWindow.postMessage({ bitrate: 2500, lock: true, target: "streamID123" }, "*");
+```
+
+## Streams, recording and groups
+
+| Command | Values | Notes |
+|---|---|---|
+| `requestStream` | Stream ID | Loads a stream, including one outside your room |
+| `close` or `hangup` | `true`, `"estop"`, `"reload"` | Hang up. `"estop"` stops at once, even mid-recording; `"reload"` hangs up and reloads. |
+| `record` | `true`, `false`, or a video element ID | Start or stop local recording, or record a specific `<video>` element |
+| `groups` | Array of group names | Sets your groups. `[]` clears them. Use an array; a comma-separated string currently clears your groups instead. |
+| `groupView` | Array, or comma-separated string | Sets which groups you see. `[]` shows all. |
+
+## Devices
+
+| Command | Values | Reply |
+|---|---|---|
+| `changeVideoDevice` | Device ID | |
+| `changeAudioDevice` | Device ID | |
+| `changeAudioOutputDevice` | Device ID | |
+| `getDeviceList` | `true` | `{ deviceList: [...], cib }` |
+| `setBackgroundImage` | Image URL (must allow CORS) | `{ backgroundImageChanged: { ok, backgroundImage or error }, cib }`. Replaces your virtual background image. |
+
+## Layout and display
+
+| Command | Values | Notes |
+|---|---|---|
+| `layout` | Layout object, array of layout objects, or `false` | Sets a custom layout. `false` returns to the automixer. Posts a `layout-updated` event. A director can add `scene` and `UUID` to send the layout to a scene. |
+| `previewMode` | Mode number | Switches preview mode |
+| `slotmode` | Number | Changes the slot mode. Only works if the iframe was loaded with `&slotmode`. |
+| `slotReservationsEnabled`, `reservedSlots` | `true`/`false`; object such as `{ "1": "streamA" }` | Director with `&slotmode` only. Posts a `slot-reservations` event. |
+| `advancedMode` | `true`, `false` | Shows or hides advanced UI elements |
+| `toggleSettings` | `"toggle"`, `false` | Toggles or closes the settings panel. `true` currently also toggles. |
+| `style` | CSS text | Adds a style sheet to the iframe |
+
+A layout object positions videos in percent of the canvas:
 
 ```javascript
 iframe.contentWindow.postMessage({
-    command: value,
-    // optional parameters
+    layout: [
+        { x: 0, y: 0, w: 50, h: 100, slot: 0 },
+        { x: 50, y: 0, w: 50, h: 100, slot: 1 }
+    ]
 }, "*");
 ```
 
-## Audio Controls
+### Moving video elements
 
-### `mic` - Microphone Control
-Controls the local microphone mute state.
+Send `target` (stream ID or `"*"`) without `action` to change that stream's `<video>` element:
+
 ```javascript
-// Unmute microphone
-iframe.contentWindow.postMessage({ mic: true }, "*");
-
-// Mute microphone
-iframe.contentWindow.postMessage({ mic: false }, "*");
-
-// Toggle microphone
-iframe.contentWindow.postMessage({ mic: "toggle" }, "*");
-```
-
-### `mute` / `speaker` - Speaker Control
-Controls the speaker mute state (incoming audio).
-```javascript
-// Mute speakers
-iframe.contentWindow.postMessage({ mute: true }, "*");
-// OR
-iframe.contentWindow.postMessage({ speaker: false }, "*");
-
-// Unmute speakers
-iframe.contentWindow.postMessage({ mute: false }, "*");
-// OR
-iframe.contentWindow.postMessage({ speaker: true }, "*");
-
-// Toggle speaker
-iframe.contentWindow.postMessage({ mute: "toggle" }, "*");
-```
-
-### `volume` - Volume Control
-Sets the volume level for incoming audio (0.0 to 1.0).
-```javascript
-// Set volume to 50%
-iframe.contentWindow.postMessage({ volume: 0.5 }, "*");
-
-// Set volume for specific stream
-iframe.contentWindow.postMessage({ 
-    volume: 0.8, 
-    target: "streamID123" // or use "*" for all streams
-}, "*");
-```
-
-### `panning` - Audio Panning
-Adjusts stereo panning for incoming audio.
-```javascript
-// Pan left (-90 to 90, where -90 is full left, 90 is full right)
-iframe.contentWindow.postMessage({ 
-    panning: -45,
-    UUID: "connection-uuid" // optional, applies to all if omitted
-}, "*");
-```
-
-### `targetAudioBitrate` - Audio Bitrate Target
-Sets the target audio bitrate (in kbps).
-```javascript
-iframe.contentWindow.postMessage({ 
-    targetAudioBitrate: 128,
-    target: "streamID123" // optional
-}, "*");
-```
-
-### `audiobitrate` - Audio Bitrate Control
-Changes the audio bitrate with optional lock.
-```javascript
-iframe.contentWindow.postMessage({ 
-    audiobitrate: 64,
-    lock: true, // optional, defaults to true
-    target: "streamID123" // optional
-}, "*");
-```
-
-### `PPT` - Push-to-Talk
-Controls push-to-talk functionality.
-```javascript
-// Activate PPT (unmute)
-iframe.contentWindow.postMessage({ PPT: true }, "*");
-
-// Deactivate PPT (mute)
-iframe.contentWindow.postMessage({ PPT: false }, "*");
-
-// Toggle PPT
-iframe.contentWindow.postMessage({ PPT: "toggle" }, "*");
-```
-
-## Video Controls
-
-### `camera` - Camera Control
-Controls the local camera on/off state.
-```javascript
-// Turn on camera
-iframe.contentWindow.postMessage({ camera: true }, "*");
-
-// Turn off camera
-iframe.contentWindow.postMessage({ camera: false }, "*");
-
-// Toggle camera
-iframe.contentWindow.postMessage({ camera: "toggle" }, "*");
-```
-
-### `pauseinvisible` - Pause Invisible Videos
-Controls whether videos hidden in the mixer are paused.
-```javascript
-// Enable pause invisible
-iframe.contentWindow.postMessage({ pauseinvisible: true }, "*");
-
-// Disable pause invisible
-iframe.contentWindow.postMessage({ pauseinvisible: false }, "*");
-
-// Toggle
-iframe.contentWindow.postMessage({ pauseinvisible: "toggle" }, "*");
-```
-
-### `keyframe` - Request Keyframe
-Forces a keyframe to be sent to all scene connections.
-```javascript
-iframe.contentWindow.postMessage({ keyframe: true }, "*");
-```
-
-## Stream Management
-
-### `requestStream` - Request Specific Stream
-Loads a specific stream by ID.
-```javascript
-iframe.contentWindow.postMessage({ 
-    requestStream: "streamID123" 
-}, "*");
-```
-
-### `close` / `hangup` - Disconnect Streams
-Disconnects and hangs up connections.
-```javascript
-// Normal hangup
-iframe.contentWindow.postMessage({ close: true }, "*");
-
-// Emergency stop (immediate)
-iframe.contentWindow.postMessage({ close: "estop" }, "*");
-
-// Hangup and reload
-iframe.contentWindow.postMessage({ close: "reload" }, "*");
-```
-
-## Recording Controls
-
-### `record` - Local Recording Control
-Controls local video recording.
-```javascript
-// Start recording
-iframe.contentWindow.postMessage({ record: true }, "*");
-
-// Stop recording
-iframe.contentWindow.postMessage({ record: false }, "*");
-
-// Record specific video element
-iframe.contentWindow.postMessage({ 
-    record: "videoElementId" 
-}, "*");
-```
-
-## Group Management
-
-### `groups` - Set Groups
-Sets the groups for the local stream.
-```javascript
-// Set groups as array
-iframe.contentWindow.postMessage({ 
-    groups: ["group1", "group2"] 
-}, "*");
-
-// Set groups as comma-separated string
-iframe.contentWindow.postMessage({ 
-    groups: "group1,group2" 
-}, "*");
-
-// Clear groups
-iframe.contentWindow.postMessage({ groups: [] }, "*");
-```
-
-### `groupView` - Set View Groups
-Sets which groups are visible.
-```javascript
-// View specific groups
-iframe.contentWindow.postMessage({ 
-    groupView: ["group1", "group3"] 
-}, "*");
-
-// View all groups
-iframe.contentWindow.postMessage({ groupView: [] }, "*");
-```
-
-## Bitrate & Quality Controls
-
-### `bitrate` - Video Bitrate Control
-Sets video bitrate for streams (in kbps).
-```javascript
-// Set bitrate for all streams
-iframe.contentWindow.postMessage({ 
-    bitrate: 2500,
-    lock: true // optional, defaults to true
-}, "*");
-
-// Set bitrate for specific stream
-iframe.contentWindow.postMessage({ 
-    bitrate: 1000,
-    target: "streamID123" // or UUID: "uuid-here"
-}, "*");
-```
-
-### `targetBitrate` - Target Video Bitrate
-Sets the fundamental bitrate target.
-```javascript
-iframe.contentWindow.postMessage({ 
-    targetBitrate: 3000,
-    target: "streamID123" // optional
-}, "*");
-```
-
-### `manualBitrate` - Manual Bandwidth Control
-Sets manual bandwidth limits.
-```javascript
-iframe.contentWindow.postMessage({ 
-    manualBitrate: 5000,
-    target: "streamID123" // optional
-}, "*");
-```
-
-### `scale` - Resolution Scaling
-Controls resolution scaling.
-```javascript
-// Set specific scale percentage
-iframe.contentWindow.postMessage({ scale: 50 }, "*");
-
-// Disable manual scaling (enable dynamic)
-iframe.contentWindow.postMessage({ scale: false }, "*");
-
-// Apply to specific stream
-iframe.contentWindow.postMessage({ 
-    scale: 75,
-    UUID: "connection-uuid"
-}, "*");
-```
-
-### `targetWidth` / `targetHeight` - Resolution Request
-Request specific resolution from remote connection.
-```javascript
-iframe.contentWindow.postMessage({ 
-    targetWidth: 1280,
-    targetHeight: 720,
-    UUID: "connection-uuid" // required
-}, "*");
-```
-
-## Device Management
-
-### `changeVideoDevice` - Change Camera
-Changes the active video input device.
-```javascript
-iframe.contentWindow.postMessage({ 
-    changeVideoDevice: "deviceId-here" 
-}, "*");
-```
-
-### `changeAudioDevice` - Change Microphone
-Changes the active audio input device.
-```javascript
-iframe.contentWindow.postMessage({ 
-    changeAudioDevice: "deviceId-here" 
-}, "*");
-```
-
-### `changeAudioOutputDevice` - Change Speaker
-Changes the audio output device.
-```javascript
-iframe.contentWindow.postMessage({ 
-    changeAudioOutputDevice: "deviceId-here" 
-}, "*");
-```
-
-### `getDeviceList` - List Available Devices
-Requests a list of available media devices.
-```javascript
-iframe.contentWindow.postMessage({ 
-    getDeviceList: true,
-    cib: "callback-id" // optional callback ID
-}, "*");
-
-// Response will be sent back via postMessage:
-// { deviceList: [...], cib: "callback-id" }
-```
-
-## Layout & Display Controls
-
-### `layout` - Set Layout
-Sets the display layout.
-```javascript
-// Set single layout
-iframe.contentWindow.postMessage({ layout: "grid" }, "*");
-
-// Set multiple layouts (array)
-iframe.contentWindow.postMessage({ 
-    layout: ["grid", "presenter"] 
-}, "*");
-
-// With scene control (director only)
-iframe.contentWindow.postMessage({ 
-    layout: "grid",
-    scene: 1,
-    UUID: "target-uuid" // optional
-}, "*");
-```
-
-### `previewMode` - Switch Preview Mode
-Switches between preview modes.
-```javascript
-iframe.contentWindow.postMessage({ 
-    previewMode: 1 // mode number
-}, "*");
-```
-
-### `slotmode` - Slot Mode Control
-Controls slot mode behavior.
-```javascript
-iframe.contentWindow.postMessage({ 
-    slotmode: 1 // slot mode number, or false to disable
-}, "*");
-```
-
-### `advancedMode` - Toggle Advanced UI
-Shows/hides advanced UI elements.
-```javascript
-// Show advanced elements
-iframe.contentWindow.postMessage({ advancedMode: true }, "*");
-
-// Hide advanced elements
-iframe.contentWindow.postMessage({ advancedMode: false }, "*");
-```
-
-### `toggleSettings` - Toggle Settings Panel
-Controls the settings panel visibility.
-```javascript
-// Toggle settings
-iframe.contentWindow.postMessage({ toggleSettings: "toggle" }, "*");
-
-// Show settings
-iframe.contentWindow.postMessage({ toggleSettings: true }, "*");
-```
-
-### `target` - DOM Manipulation
-Manipulates video elements in the DOM.
-```javascript
-// Add video to grid
-iframe.contentWindow.postMessage({ 
+iframe.contentWindow.postMessage({ target: "streamID123", add: true }, "*");     // add to the grid
+iframe.contentWindow.postMessage({ target: "streamID123", remove: true }, "*");  // remove from the page
+iframe.contentWindow.postMessage({ target: "streamID123", replace: true }, "*"); // show only this video
+iframe.contentWindow.postMessage({
     target: "streamID123",
-    add: true
-}, "*");
-
-// Remove video from grid
-iframe.contentWindow.postMessage({ 
-    target: "streamID123",
-    remove: true
-}, "*");
-
-// Replace all videos with target
-iframe.contentWindow.postMessage({ 
-    target: "streamID123",
-    replace: true
-}, "*");
-
-// Apply settings to video element
-iframe.contentWindow.postMessage({ 
-    target: "streamID123",
-    settings: {
-        style: "transform: scale(1.5);",
-        muted: true
-    }
+    settings: { style: "transform: scale(1.5);", muted: true } // set properties on the video element
 }, "*");
 ```
 
-## Data & Messaging
+## Data and messaging
 
-### `sendData` - Send Generic Data
-Sends data through peer connections.
+| Command | Sends to | Notes |
+|---|---|---|
+| `sendData` | Peers, over the data channel | Arrives at the other iframe as `{ dataReceived, UUID }`. See [dataiframes.md](dataiframes.md). |
+| `sendChat` | All peers | A chat message string |
+| `sendMessage` | Peers viewing you | Raw WebRTC message object |
+| `sendRequest` | Publishers you view | Raw WebRTC request object |
+| `sendPeers` | Every connected peer | Raw message object |
+| `sendRawMIDI` | All peers, or one `UUID` or `streamID` | `{ data: [144, 60, 127], channel, timestamp }` |
+
+## Statistics and state
+
+| Command | Reply |
+|---|---|
+| `getStats` | `{ stats, cib }`. With `streamID`, only that stream's inbound stats (or `null`). |
+| `getFreshStats` | `{ stats, cib }` after about 1 second, with refreshed outbound stats and connection counts |
+| `getRemoteStats` | Remote peers answer with `{ remoteStats, streamID, UUID }` |
+| `requestStatsContinuous` | `true` or `false`; remote peers keep sending `remoteStats` |
+| `getLoudness` | `true` starts loudness messages; `false` stops them |
+| `getStreamIDs` | `{ streamIDs: { streamID: label }, cib }` |
+| `getStreamInfo` | `{ streamInfo: { UUID: { label, streamID, tally, info } }, tally, cib }` |
+| `getDetailedState` | `{ detailedState, cib }` |
+| `getGuestList` | `{ guestList: { "1": { streamID, label }, ... }, cib }`. Director only. |
+
+Loudness messages look like `{ action: "loudness", mode, loudness: { streamID: level }, cib }`. The first reply has `mode: "snapshot"`; later updates have `mode: "update"`. Updates carry the `cib` from your last `getLoudness: true` request. Handle any message that contains `loudness`.
+
+For chunked-mode sync tools, each remote stream in `getDetailedState` includes `chunkedBufferDefault`, `chunkedBufferOverride`, `chunkedBufferRequested`, `chunkedBufferCeil` and `chunkedBufferAdaptive`.
+
+## Snapshots
+
+| Command | Reply |
+|---|---|
+| `saveVideoFrameToDisk` | Downloads a frame. Optional `filename` (`.png` is added if there is no extension), `streamID`, or `UUID` (`"*"` saves every stream). Without either, saves your own video. |
+| `copyVideoFrameToClipboard` | Copies a frame. Optional `streamID` or `UUID`. |
+| `getVideoFrame` | An `image-frame-capture` event: `{ action: "image-frame-capture", value: { imageData, imageType: "png", streamID, UUID, cib, videoID } }`. `imageData` is a PNG `Blob`. |
+| `getSnapshotBySlot`, `getSnapshotByStreamID` | `{ type: "frame", frame, UUID, streamID, trackID, kind, format, slot, cib }`. `frame` is a data URL. |
+
+Slots are numbered from 1, so `getSnapshotBySlot: 0` does nothing.
+
+## Buffer delay
+
+`setBufferDelay` sets the playout delay in milliseconds. Without a target it changes the default for all streams. Add `streamID`, `label`, or `UUID` (`"*"` for all) to target streams.
+
 ```javascript
-iframe.contentWindow.postMessage({ 
-    sendData: { custom: "data" },
-    UUID: "target-uuid", // optional
-    streamID: "streamID123", // optional
-    type: "custom-type" // optional
-}, "*");
+iframe.contentWindow.postMessage({ setBufferDelay: 300, streamID: "streamID123" }, "*");
 ```
 
-### `sendChat` - Send Chat Message
-Sends a chat message to all peers.
-```javascript
-iframe.contentWindow.postMessage({ 
-    sendChat: "Hello everyone!" 
-}, "*");
-```
+For fixed delay against external audio, load the viewer with:
 
-### `sendMessage` - WebRTC Message to Viewers
-Sends a message to viewer connections.
-```javascript
-iframe.contentWindow.postMessage({ 
-    sendMessage: { custom: "viewer-data" } 
-}, "*");
-```
-
-### `sendRequest` - WebRTC Request to Publishers
-Sends a request to publisher connections.
-```javascript
-iframe.contentWindow.postMessage({ 
-    sendRequest: { action: "some-action" } 
-}, "*");
-```
-
-### `sendPeers` - Message All Peers
-Sends a message to all connected peers.
-```javascript
-iframe.contentWindow.postMessage({ 
-    sendPeers: { broadcast: "data" } 
-}, "*");
-```
-
-### `sendRawMIDI` - Send MIDI Data
-Sends raw MIDI messages.
-```javascript
-iframe.contentWindow.postMessage({ 
-    sendRawMIDI: {
-        data: [144, 60, 127], // MIDI data array
-        channel: 1,
-        timestamp: Date.now()
-    },
-    UUID: "target-uuid" // optional
-}, "*");
-```
-
-## Statistics & Monitoring
-
-### `getStats` - Get Quick Stats
-Requests current statistics.
-```javascript
-// Get all stats
-iframe.contentWindow.postMessage({ 
-    getStats: true,
-    cib: "callback-id"
-}, "*");
-
-// Get stats for specific stream
-iframe.contentWindow.postMessage({ 
-    getStats: true,
-    streamID: "streamID123",
-    cib: "callback-id"
-}, "*");
-```
-
-### `getFreshStats` - Get Detailed Stats
-Requests detailed statistics (takes ~1 second).
-```javascript
-iframe.contentWindow.postMessage({ 
-    getFreshStats: true,
-    cib: "callback-id"
-}, "*");
-```
-
-### `getRemoteStats` - Request Remote Stats
-Requests statistics from remote peers.
-```javascript
-iframe.contentWindow.postMessage({ 
-    getRemoteStats: true 
-}, "*");
-```
-
-### `requestStatsContinuous` - Continuous Stats
-Enables/disables continuous statistics updates.
-```javascript
-// Enable continuous stats
-iframe.contentWindow.postMessage({ 
-    requestStatsContinuous: true 
-}, "*");
-
-// Disable continuous stats
-iframe.contentWindow.postMessage({ 
-    requestStatsContinuous: false 
-}, "*");
-```
-
-### `getLoudness` - Audio Loudness Monitoring
-Enables/disables loudness monitoring.
-```javascript
-// Enable loudness monitoring
-iframe.contentWindow.postMessage({ 
-    getLoudness: true,
-    cib: "callback-id"
-}, "*");
-
-// Disable loudness monitoring
-iframe.contentWindow.postMessage({ 
-    getLoudness: false 
-}, "*");
-```
-
-Notes:
-- Sending `getLoudness: true` returns an immediate snapshot reply (includes `cib` if provided).
-- Ongoing updates are pushed as regular loudness events and may include `action: "loudness"`.
-- Do not rely on `cib` for continuous loudness updates; handle any message containing `loudness`.
-
-### `getStreamIDs` - List Stream IDs
-Gets a list of all connected stream IDs.
-```javascript
-iframe.contentWindow.postMessage({ 
-    getStreamIDs: true,
-    cib: "callback-id"
-}, "*");
-```
-
-### `getStreamInfo` - Detailed Stream Information
-Gets detailed information about all streams.
-```javascript
-iframe.contentWindow.postMessage({ 
-    getStreamInfo: true,
-    cib: "callback-id"
-}, "*");
-```
-
-### `getDetailedState` - Complete State Information
-Gets comprehensive state information.
-```javascript
-iframe.contentWindow.postMessage({ 
-    getDetailedState: true,
-    cib: "callback-id"
-}, "*");
-```
-
-For chunked viewer sync tools, each remote stream entry now includes:
-- `chunkedBufferDefault`
-- `chunkedBufferOverride`
-- `chunkedBufferRequested`
-- `chunkedBufferCeil`
-- `chunkedBufferAdaptive`
-
-### `getGuestList` - Get Guest List
-Gets a list of all connected guests.
-```javascript
-iframe.contentWindow.postMessage({ 
-    getGuestList: true,
-    cib: "callback-id"
-}, "*");
-```
-
-## Utility Functions
-
-### `reload` - Reload Page
-Forces a page reload.
-```javascript
-iframe.contentWindow.postMessage({ reload: true }, "*");
-```
-
-### `style` - Inject Custom CSS
-Injects custom CSS into the iframe.
-```javascript
-iframe.contentWindow.postMessage({ 
-    style: `
-        .videoContainer { border: 2px solid red; }
-        #mutebutton { background: blue; }
-    `
-}, "*");
-```
-
-### `function` - Execute Built-in Functions
-Executes predefined functions.
-```javascript
-// Preview webcam
-iframe.contentWindow.postMessage({ 
-    function: "previewWebcam" 
-}, "*");
-
-// Publish screen
-iframe.contentWindow.postMessage({ 
-    function: "publishScreen" 
-}, "*");
-
-// Change HTML content
-iframe.contentWindow.postMessage({ 
-    function: "changeHTML",
-    target: "elementId",
-    value: "<p>New content</p>"
-}, "*");
-
-// Route WebSocket message
-iframe.contentWindow.postMessage({ 
-    function: "routeMessage",
-    value: { /* message data */ }
-}, "*");
-
-// Execute arbitrary code (use with caution)
-iframe.contentWindow.postMessage({ 
-    function: "eval",
-    value: "console.log('Hello from eval');"
-}, "*");
-```
-
-### `saveVideoFrameToDisk` - Save Screenshot
-Saves a video frame to disk.
-```javascript
-// Save local video
-iframe.contentWindow.postMessage({ 
-    saveVideoFrameToDisk: true,
-    filename: "screenshot.png" // optional
-}, "*");
-
-// Save specific stream
-iframe.contentWindow.postMessage({ 
-    saveVideoFrameToDisk: true,
-    streamID: "streamID123",
-    filename: "stream-capture.jpg"
-}, "*");
-
-// Save all streams
-iframe.contentWindow.postMessage({ 
-    saveVideoFrameToDisk: true,
-    UUID: "*"
-}, "*");
-```
-
-### `getVideoFrame` - Get Video Frame Data
-Gets video frame data as base64.
-```javascript
-iframe.contentWindow.postMessage({ 
-    getVideoFrame: true,
-    streamID: "streamID123", // or UUID
-    cib: "callback-id"
-}, "*");
-```
-
-### `copyVideoFrameToClipboard` - Copy Screenshot
-Copies a video frame to clipboard.
-```javascript
-iframe.contentWindow.postMessage({ 
-    copyVideoFrameToClipboard: true,
-    streamID: "streamID123" // or UUID
-}, "*");
-```
-
-### `getSnapshotBySlot` / `getSnapshotByStreamID` - Get Slot/Stream Snapshot
-Gets a snapshot from a specific slot or stream using MediaStreamTrackProcessor.
-```javascript
-// By slot number
-iframe.contentWindow.postMessage({ 
-    getSnapshotBySlot: 0, // slot index
-    cib: "callback-id"
-}, "*");
-
-// By stream ID
-iframe.contentWindow.postMessage({ 
-    getSnapshotByStreamID: "streamID123",
-    cib: "callback-id"
-}, "*");
-
-// Response includes base64 image data:
-// {
-//     type: 'frame',
-//     frame: 'data:image/png;base64,...',
-//     UUID: 'connection-uuid',
-//     streamID: 'streamID123',
-//     slot: 0,
-//     format: 'png',
-//     cib: 'callback-id'
-// }
-```
-
-## Advanced Controls
-
-### `sceneState` - OBS Scene State
-Sets the scene state for OBS integration.
-```javascript
-// Scene is live
-iframe.contentWindow.postMessage({ 
-    sceneState: true 
-}, "*");
-
-// Scene is not live
-iframe.contentWindow.postMessage({ 
-    sceneState: false 
-}, "*");
-```
-
-### `layouts` - OBS Layout Sync
-Syncs layouts with OBS.
-```javascript
-iframe.contentWindow.postMessage({ 
-    layouts: ["layout1", "layout2"],
-    obsSceneTriggers: true // optional
-}, "*");
-```
-
-### `obsCommand` - OBS Commands
-Sends commands to OBS.
-```javascript
-iframe.contentWindow.postMessage({ 
-    obsCommand: "some-command",
-    remote: "remote-id", // optional
-    UUID: "target-uuid", // optional
-    streamID: "streamID123" // optional
-}, "*");
-```
-
-### `setBufferDelay` - Audio/Video Buffer Delay
-Sets the buffer delay in milliseconds.
-```javascript
-// Set default buffer delay
-iframe.contentWindow.postMessage({ 
-    setBufferDelay: 200 
-}, "*");
-
-// Set for specific stream
-iframe.contentWindow.postMessage({ 
-    setBufferDelay: 300,
-    streamID: "streamID123" // or UUID or label
-}, "*");
-
-// Set for all streams
-iframe.contentWindow.postMessage({ 
-    setBufferDelay: 250,
-    UUID: "*"
-}, "*");
-```
-
-For fixed external-audio sync workflows, launch the viewer with:
 ```text
 ?noaudio&chunkbufferadaptive=0&chunkbufferceil=180000
 ```
 
-Notes:
-- `chunkbufferadaptive=0` keeps the requested target fixed instead of letting the viewer auto-raise it.
-- `chunkbufferceil=180000` allows up to 3 minutes of chunked video delay.
-- `noaudio` is recommended when the real music audio is being handled in OBS, NINJAM, or another app.
-- See `examples/music-sync-buffer-demo.html` for a musician-focused example that calculates delay from BPM and bars, then drives `setBufferDelay` over the iframe API.
+`chunkbufferadaptive=0` stops the viewer from raising your requested delay. `chunkbufferceil=180000` allows up to 3 minutes of chunked video delay. `noaudio` helps when the music audio is handled in OBS, NINJAM or another app. [music-sync-buffer-demo.html](music-sync-buffer-demo.html) calculates a delay from BPM and bars, then sends `setBufferDelay` over this API.
 
-### `automixer` - Automixer Control
-Controls the automatic mixer behavior.
-```javascript
-// Enable automixer
-iframe.contentWindow.postMessage({ 
-    automixer: true 
-}, "*");
+## Other commands
 
-// Disable automixer (manual control)
-iframe.contentWindow.postMessage({ 
-    automixer: false 
-}, "*");
-```
+| Command | Values | Notes |
+|---|---|---|
+| `reload` | `true` | Reloads the page without a prompt |
+| `automixer` | `true`, `false` | `false` stops the automixer so you control layout and bitrate yourself |
+| `sceneState` | `true`, `false` | Tells connected publishers whether this scene is live (tally light) |
+| `layouts` | Array of layouts | Sends a layout list to peers; optional `obsSceneTriggers` |
+| `obsCommand` | Command | Sends an OBS command to peers; optional `remote`, `UUID`, `streamID`. Ignored if the message also has `layout` or `previewMode`. |
+| `enableYouTube` | API key string, or `true` to reuse a stored key | Starts the YouTube chat integration |
+| `nextSlide`, `prevSlide` | `true` | Slide control |
+| `getFaces` | `true` with `faceTrack: true` or `false` | Turns face tracking data on or off |
+| `getEffectsData` | Effect name, or `false` | Requests data from an effect's ML pipeline |
 
-### `enableYouTube` - YouTube Chat Integration
-Enables YouTube chat integration.
-```javascript
-// Enable with API key
-iframe.contentWindow.postMessage({ 
-    enableYouTube: "your-youtube-api-key" 
-}, "*");
+### `function` calls
 
-// Enable with existing key
-iframe.contentWindow.postMessage({ 
-    enableYouTube: true 
-}, "*");
-```
+| `function` | Extra fields | Does |
+|---|---|---|
+| `previewWebcam` | | Opens the camera preview |
+| `publishScreen` | | Starts a screen share |
+| `changeHTML` | `target` (element ID), `value` (HTML) | Replaces an element's HTML |
+| `routeMessage` | `value` | Passes a message to the signaling handler |
+| `eval` | `value` (code) | Runs code in the iframe. Use with caution. |
+| `targetGuest`, `commands`, `getGuestMediaDevices`, `setGuestMediaDevice`, `activateQueuedGuest` | | Director tools; see [iframe_api_enhanced.md](iframe_api_enhanced.md) |
 
-### `nextSlide` / `prevSlide` - Slide Navigation
-Controls slide navigation.
-```javascript
-// Next slide
-iframe.contentWindow.postMessage({ nextSlide: true }, "*");
+### `action` (HTTP/WSS API commands)
 
-// Previous slide
-iframe.contentWindow.postMessage({ prevSlide: true }, "*");
-```
-
-### `getFaces` / `faceTrack` - Face Detection
-Controls face detection/tracking.
-```javascript
-// Enable face tracking
-iframe.contentWindow.postMessage({ 
-    getFaces: true,
-    faceTrack: true
-}, "*");
-
-// Disable face tracking
-iframe.contentWindow.postMessage({ 
-    getFaces: true,
-    faceTrack: false
-}, "*");
-```
-
-### `getEffectsData` - Effects Data
-Gets data from visual effects (face tracking, etc.).
-```javascript
-// Get specific effect data
-iframe.contentWindow.postMessage({ 
-    getEffectsData: "effect-name" 
-}, "*");
-
-// Disable effects data
-iframe.contentWindow.postMessage({ 
-    getEffectsData: false 
-}, "*");
-```
-
-### `action` - Companion API Actions
-Executes Companion API actions.
-```javascript
-iframe.contentWindow.postMessage({ 
-    action: "action-name",
-    value: "action-value",
-    target: "optional-target"
-}, "*");
-```
-
-Director-targeted guest actions use the same `action` format with a `target`:
-```javascript
-// Rotate guest in slot 1 by +90 degrees
-iframe.contentWindow.postMessage({
-    action: "rotate",
-    target: "1",
-    value: true
-}, "*");
-
-// Set a specific guest rotation by stream ID
-iframe.contentWindow.postMessage({
-    action: "rotate",
-    target: "streamID123",
-    value: 180
-}, "*");
-
-// Reset guest rotation
-iframe.contentWindow.postMessage({
-    action: "rotate",
-    target: "1",
-    value: false
-}, "*");
-```
-
-Notes:
-- Guest-targeted `action` calls like `rotate` require director or co-director privileges for that room.
-- `rotate` is not a standalone untargeted local iframe command on a guest page; it is a targeted guest-control action.
-
-## Response Handling
-
-Many commands support a callback ID (`cib`) for tracking responses:
+Any command from the [HTTP/WSS API](httpwssapi.md) works with `action`, `value`, optional `value2` and optional `target`. For example, a director can rotate the guest in slot 1 by 90 degrees:
 
 ```javascript
-// Send request with callback ID
-iframe.contentWindow.postMessage({ 
-    getStats: true,
-    cib: "unique-callback-123"
-}, "*");
-
-// Listen for response
-window.addEventListener("message", function(e) {
-    if (e.data.cib === "unique-callback-123") {
-        console.log("Stats received:", e.data.stats);
-    }
-});
+iframe.contentWindow.postMessage({ action: "rotate", target: "1", value: true }, "*");
 ```
 
-## Notes
-
-- All commands are sent via `postMessage` to the iframe's `contentWindow`
-- The second parameter `"*"` can be replaced with a specific origin for security
-- Some commands require director privileges to function
-- Commands that affect remote streams often accept `UUID`, `streamID`, or `target` parameters
-- The `lock` parameter on bitrate controls prevents automatic adjustments
-- Many "get" commands return data via postMessage back to the parent window
+Guest-targeted actions need director or co-director rights in the room. See [iframe_api_enhanced.md](iframe_api_enhanced.md) for more examples and the reply format.

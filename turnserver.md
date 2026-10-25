@@ -1,34 +1,41 @@
 # TURN relay server deployment guide
 
-A TURN server provides a fallback path when a direct WebRTC connection cannot be established. It should be treated as bandwidth-intensive network infrastructure: relay-port capacity, firewall rules, certificate renewal, and load distribution matter more than CPU under most workloads.
+A TURN server relays traffic when two peers cannot connect directly. It is bandwidth-heavy infrastructure: relay-port capacity, firewall rules, certificate renewal and load distribution matter more than CPU.
 
-The configuration below reflects the production setup validated on Ubuntu 26.04 with Coturn 4.6.1. Adjust package commands and paths for other distributions.
+This setup was validated on Ubuntu 26.04 with Coturn 4.6.1. Adjust commands and paths for other distributions. To use the finished server, see [Use the server with VDO.Ninja](#use-the-server-with-vdoninja).
+
+## Sample files in this repository
+
+The website does not run these optional examples. They are simpler than this guide, so review them before use:
+
+- `turnserver_basic.conf`: minimal non-TLS config on port 3478 with a static username and password.
+- `turnserver_install.sh.sample`: interactive installer for Coturn, fail2ban, optional Certbot TLS on 443, buffers, swap and log limits. It binds port 443 with `setcap` rather than the systemd override below, and sets `fs.file-max=65535`.
+- `turn-credentials-php.sample`: returns time-limited credentials for Coturn's `use-auth-secret` mode.
+
+Both config samples use `alt-listening-port=0` without `no-rfc5780`, which leaves ports 3479 and 444 open (see [Ports](#ports)).
 
 ## Before installation
 
-- Assign a stable public IPv4 address.
-- Create an `A` record such as `turn-example.vdo.ninja` pointing directly to that address.
-- If publishing an `AAAA` record, validate the complete IPv6 path and firewall rules. Do not publish an untested IPv6 address.
-- Ensure the provider firewall permits the ports listed below. A host firewall cannot override a blocked provider firewall.
-- Use unique TURN and SSH credentials. Do not commit them to this repository.
+- Assign a stable public IPv4 address, and point an `A` record (such as `turn-example.vdo.ninja`) directly at it.
+- Publish an `AAAA` record only after you have tested the full IPv6 path and firewall rules.
+- Open the ports below in the provider firewall too. A host firewall cannot override it.
+- Use unique TURN and SSH credentials, and never commit them to a repository.
 
-## Recommended ports
+## Ports
 
 | Port | Protocol | Purpose | Required |
 | --- | --- | --- | --- |
-| 22 | TCP | SSH administration | Yes; rate-limit or source-restrict it |
-| 80 | TCP | Certbot standalone HTTP validation | Required when using the Certbot configuration below |
-| 3478 | UDP | Preferred TURN/STUN client transport | Yes |
+| 22 | TCP | SSH administration | Yes; rate-limit or restrict by source |
+| 80 | TCP | Certbot standalone HTTP validation | When using Certbot as below |
+| 3478 | UDP | Preferred TURN/STUN transport | Yes |
 | 3478 | TCP | Non-TLS TURN fallback | Optional but useful |
 | 443 | TCP | TURN over TLS for restrictive networks | Strongly recommended |
 | 443 | UDP | TURN over DTLS | Optional |
 | 49152-65535 | UDP | Allocated media relay ports | Yes |
 
-WebRTC clients using TURN over TCP or TLS normally still receive a UDP relay allocation. Opening the high relay range over TCP is unnecessary unless TCP relay support from RFC 6062 is deliberately being used.
-
-The `49152-65535` range contains 16,384 ports. Each active allocation consumes relay-port capacity, so a server can run out of relay ports while CPU, memory, and network usage still appear healthy. Monitor this range and distribute traffic before it fills.
-
-Coturn's `alt-listening-port=0` does **not** disable the alternative listener. Zero means the primary port plus one, which normally exposes 3479 and 444. If RFC 5780 NAT discovery is not required, use `no-rfc5780` and verify the additional ports are no longer listening.
+- Clients using TURN over TCP or TLS still normally get a UDP relay allocation, so the relay range does not need TCP unless you use RFC 6062 TCP relays.
+- The range holds 16,384 ports, one per allocation. A server can run out of relay ports while CPU, memory and network look healthy, so monitor it.
+- `alt-listening-port=0` does **not** disable the alternative listener; it means "primary port plus one" (3479 and 444). If you do not need RFC 5780 NAT discovery, set `no-rfc5780` and check those ports are closed.
 
 ## Install packages
 
@@ -44,11 +51,9 @@ Enable Coturn in `/etc/default/coturn`:
 TURNSERVER_ENABLED=1
 ```
 
-Production server deployment code is maintained separately from this frontend repository. The included `turnserver_basic.conf`, `turnserver_install.sh.sample`, and `turn-credentials-php.sample` are optional self-hosting examples, not active website components. Review and adapt them before use; the guidance below describes the relay setup and validation requirements.
-
 ## Coturn configuration
 
-Create `/etc/turnserver.conf` with permissions `0640`, owned by `root:turnserver`. Coturn normally starts as the `turnserver` account, so a root-owned `0600` file prevents it from reading its configuration:
+Create `/etc/turnserver.conf` with mode `0640`, owned by `root:turnserver`. Coturn runs as `turnserver`, so it cannot read a root-owned `0600` file.
 
 ```text
 listening-port=3478
@@ -80,15 +85,14 @@ cert=/etc/coturn/certs/fullchain.pem
 pkey=/etc/coturn/certs/privkey.pem
 ```
 
-Replace the example address, domain, username, and password. If the server is behind NAT, use Coturn's `external-ip=PUBLIC_IP/PRIVATE_IP` mapping rather than copying the directly assigned address example.
-
-Explicit `listening-ip` and `relay-ip` values prevent Coturn from binding loopback, unused IPv6, or unexpected interfaces. Do not add them until the correct stable address is known.
-
-General configuration changes require a Coturn restart. Apply them before adding the server to production routing, or drain the server first. Signals used for certificate reloads do not reload arbitrary settings from `turnserver.conf`.
+- Replace the example address, domain, username and password.
+- Behind NAT, use `external-ip=PUBLIC_IP/PRIVATE_IP` instead of the two address lines.
+- `listening-ip` and `relay-ip` stop Coturn binding loopback, unused IPv6 or unexpected interfaces. Set them only once you know the stable address.
+- Config changes need a restart, so apply them before the server takes traffic, or drain it first. The certificate-reload signal reloads nothing else.
 
 ## Binding port 443 safely
 
-Coturn needs permission to bind the privileged port 443, but the relay process should not remain root. A systemd override can start Coturn as root and immediately drop it to the `turnserver` account:
+Coturn needs permission to bind port 443 but should not keep running as root. This override starts it as root and drops to `turnserver`:
 
 ```ini
 # /etc/systemd/system/coturn.service.d/30-start-root-drop-privileges.conf
@@ -99,9 +103,7 @@ ExecStart=
 ExecStart=/usr/bin/turnserver -c /etc/turnserver.conf --pidfile= --proc-user=turnserver --proc-group=turnserver
 ```
 
-Do not simply run Coturn permanently as root.
-
-To avoid Coturn starting before the public address exists after a reboot:
+This override stops Coturn starting before the public address exists after a reboot:
 
 ```ini
 # /etc/systemd/system/coturn.service.d/10-wait-for-ipv4.conf
@@ -113,19 +115,11 @@ After=network-online.target systemd-networkd-wait-online.service
 ExecStartPre=/bin/sh -c 'stable=0; for i in $(seq 1 90); do if ip -4 -o addr show dev ens3 scope global up | grep -Fq "inet 203.0.113.10/" && ip -4 route show default | grep -Fq "dev ens3"; then stable=$((stable+1)); [ "$stable" -ge 3 ] && exit 0; else stable=0; fi; sleep 1; done; echo "Stable public IPv4 203.0.113.10 was not available before coturn start" >&2; exit 1'
 ```
 
-Replace both the example address and interface. Checking merely for “any global IPv4” is unsafe: during a network-service restart the old address can briefly satisfy the check, disappear while Coturn enumerates interfaces, and return immediately afterward. Coturn will remain active but listen only on loopback/IPv6 because it does not dynamically add the later IPv4. Requiring the exact address plus its default route for three consecutive checks closes that race. Explicit `listening-ip` and `relay-ip` entries provide a second fail-closed safeguard.
-
-Every new node must pass all of these checks before it is added to the selector:
-
-- `listening-ip` and `relay-ip` match an address currently assigned to the intended interface.
-- The systemd guard names that exact address and requires multiple consecutive successful checks.
-- `ss -lntup` shows the public IPv4 on both 3478 and 443 when TLS is enabled—not only loopback or IPv6.
-- External browser tests allocate and pass bidirectional relay-only data over UDP and TLS.
-- Monitoring alerts when Coturn is active but any expected public listener is missing.
+Replace the address and interface (`ens3`). Do not check for "any global IPv4": during a network restart the old address can pass the check and vanish while Coturn lists interfaces. Coturn then listens only on loopback or IPv6 and never adds the address. Requiring the exact address and its default route three times in a row prevents this, and explicit `listening-ip` / `relay-ip` entries fail closed as a second safeguard.
 
 ## Capacity and socket limits
 
-Use explicit systemd limits so package or distribution defaults cannot silently reduce capacity:
+Set explicit systemd limits so package defaults cannot reduce capacity:
 
 ```ini
 # /etc/systemd/system/coturn.service.d/40-limits.conf
@@ -134,7 +128,7 @@ LimitNOFILE=524288
 LimitNPROC=65535
 ```
 
-Recommended kernel settings for a medium-sized TURN node:
+Kernel settings for a medium-sized node:
 
 ```text
 # /etc/sysctl.d/99-turn-buffers.conf
@@ -153,7 +147,7 @@ net.netfilter.nf_conntrack_max=524288
 fs.file-max=1048576
 ```
 
-If connection tracking is used by UFW, ensure the module loads before the sysctl settings:
+If UFW uses connection tracking, load the module before the sysctl settings:
 
 ```text
 # /etc/modules-load.d/turn-conntrack.conf
@@ -168,11 +162,11 @@ sudo sysctl -p /etc/sysctl.d/99-turn-buffers.conf
 sudo systemctl daemon-reload
 ```
 
-The system-wide `fs.file-max` must not be lower than the service's practical requirements. A large per-process `LimitNOFILE` cannot compensate for a small system-wide file-handle limit.
+A large `LimitNOFILE` cannot make up for a small system-wide `fs.file-max`.
 
 ## Firewall
 
-The following UFW policy exposes only the supported service paths:
+Add the SSH rule before enabling UFW, and mirror these ports in any provider firewall:
 
 ```bash
 sudo ufw default deny incoming
@@ -188,72 +182,63 @@ sudo ufw --force enable
 sudo ufw status verbose
 ```
 
-Add the SSH rule before enabling UFW. If the VPS provider also has a network firewall, mirror the same public TURN and certificate ports there.
-
 ## TLS certificate and automatic renewal
 
-Obtain the certificate while TCP port 80 is reachable:
+1. Get the certificate while TCP port 80 is reachable:
 
-```bash
-sudo certbot certonly --standalone --preferred-challenges http -d turn-example.vdo.ninja
-sudo systemctl enable --now certbot.timer
-```
+   ```bash
+   sudo certbot certonly --standalone --preferred-challenges http -d turn-example.vdo.ninja
+   sudo systemctl enable --now certbot.timer
+   ```
 
-Let's Encrypt's private directories are intentionally inaccessible to the unprivileged Coturn process. Copy the active certificate into a dedicated directory instead of weakening the permissions on `/etc/letsencrypt`:
+2. Coturn cannot read Let's Encrypt's private directories. Copy the certificate to its own directory rather than loosening permissions on `/etc/letsencrypt`:
 
-```bash
-sudo install -d -o turnserver -g turnserver -m 0750 /etc/coturn/certs
-sudo install -o turnserver -g turnserver -m 0600 /etc/letsencrypt/live/turn-example.vdo.ninja/fullchain.pem /etc/coturn/certs/fullchain.pem
-sudo install -o turnserver -g turnserver -m 0600 /etc/letsencrypt/live/turn-example.vdo.ninja/privkey.pem /etc/coturn/certs/privkey.pem
-```
+   ```bash
+   sudo install -d -o turnserver -g turnserver -m 0750 /etc/coturn/certs
+   sudo install -o turnserver -g turnserver -m 0600 /etc/letsencrypt/live/turn-example.vdo.ninja/fullchain.pem /etc/coturn/certs/fullchain.pem
+   sudo install -o turnserver -g turnserver -m 0600 /etc/letsencrypt/live/turn-example.vdo.ninja/privkey.pem /etc/coturn/certs/privkey.pem
+   ```
 
-Install this deploy hook as `/etc/letsencrypt/renewal-hooks/deploy/coturn-reload` with mode `0755`:
+3. Install this deploy hook as `/etc/letsencrypt/renewal-hooks/deploy/coturn-reload` with mode `0755`. Temporary files and atomic renames mean Coturn never reads a half-copied certificate, and `SIGUSR2` reloads it without a restart or dropped allocations.
 
-```sh
-#!/bin/sh
-set -eu
+   ```sh
+   #!/bin/sh
+   set -eu
 
-source_dir="/etc/letsencrypt/live/turn-example.vdo.ninja"
-target_dir="/etc/coturn/certs"
-cert_tmp="$(mktemp "${target_dir}/.fullchain.XXXXXX")"
-key_tmp="$(mktemp "${target_dir}/.privkey.XXXXXX")"
+   source_dir="/etc/letsencrypt/live/turn-example.vdo.ninja"
+   target_dir="/etc/coturn/certs"
+   cert_tmp="$(mktemp "${target_dir}/.fullchain.XXXXXX")"
+   key_tmp="$(mktemp "${target_dir}/.privkey.XXXXXX")"
 
-cleanup() {
-	rm -f "$cert_tmp" "$key_tmp"
-}
-trap cleanup EXIT HUP INT TERM
+   cleanup() {
+   	rm -f "$cert_tmp" "$key_tmp"
+   }
+   trap cleanup EXIT HUP INT TERM
 
-install -o turnserver -g turnserver -m 0600 "$source_dir/fullchain.pem" "$cert_tmp"
-install -o turnserver -g turnserver -m 0600 "$source_dir/privkey.pem" "$key_tmp"
-mv -f "$cert_tmp" "$target_dir/fullchain.pem"
-mv -f "$key_tmp" "$target_dir/privkey.pem"
-trap - EXIT HUP INT TERM
+   install -o turnserver -g turnserver -m 0600 "$source_dir/fullchain.pem" "$cert_tmp"
+   install -o turnserver -g turnserver -m 0600 "$source_dir/privkey.pem" "$key_tmp"
+   mv -f "$cert_tmp" "$target_dir/fullchain.pem"
+   mv -f "$key_tmp" "$target_dir/privkey.pem"
+   trap - EXIT HUP INT TERM
 
-if systemctl is-active --quiet coturn; then
-	systemctl kill --kill-whom=main --signal=SIGUSR2 coturn
-fi
-```
+   if systemctl is-active --quiet coturn; then
+   	systemctl kill --kill-whom=main --signal=SIGUSR2 coturn
+   fi
+   ```
 
-`SIGUSR2` makes Coturn reload its TLS certificate without restarting the process or intentionally disconnecting active allocations. The hook uses temporary files and atomic renames so Coturn never reads a partially copied certificate.
+4. Test renewal. Dry runs do not normally run deploy hooks, so also run the hook directly and check the Coturn PID does not change:
 
-Validate the ACME renewal path:
-
-```bash
-sudo certbot renew --dry-run --no-random-sleep-on-renew
-```
-
-Certbot dry-runs do not normally execute deploy hooks. To validate reload behavior without installing a staging certificate, run the deploy hook against the current production certificate and confirm the PID remains unchanged:
-
-```bash
-pid_before="$(systemctl show coturn -p MainPID --value)"
-sudo /etc/letsencrypt/renewal-hooks/deploy/coturn-reload
-pid_after="$(systemctl show coturn -p MainPID --value)"
-test "$pid_before" = "$pid_after" && echo "Certificate reload kept the Coturn PID"
-```
+   ```bash
+   sudo certbot renew --dry-run --no-random-sleep-on-renew
+   pid_before="$(systemctl show coturn -p MainPID --value)"
+   sudo /etc/letsencrypt/renewal-hooks/deploy/coturn-reload
+   pid_after="$(systemctl show coturn -p MainPID --value)"
+   test "$pid_before" = "$pid_after" && echo "Certificate reload kept the Coturn PID"
+   ```
 
 ## Initial activation
 
-After configuration is complete and before production traffic is routed to the server:
+Before routing traffic to the server, apply `turnserver.conf` and the systemd changes with one restart. Later renewals use the reload-only hook.
 
 ```bash
 sudo systemctl daemon-reload
@@ -262,11 +247,9 @@ sudo systemctl restart coturn
 sudo systemctl status coturn --no-pager
 ```
 
-This initial restart applies `turnserver.conf` and systemd changes. Future certificate renewals should use the reload-only hook.
-
 ## Validation
 
-Check service state, listeners, limits, firewall, and certificate:
+Check service state, listeners, limits, firewall and certificate:
 
 ```bash
 systemctl is-enabled coturn
@@ -277,9 +260,7 @@ sudo ufw status verbose
 openssl x509 -in /etc/coturn/certs/fullchain.pem -noout -subject -dates
 ```
 
-Expected public Coturn listeners are UDP/TCP 3478 and UDP/TCP 443. With the configuration above, 3479 and 444 should not be listening.
-
-Do not treat an active systemd unit as proof that TURN is reachable. Validate each expected public address explicitly, for example:
+Coturn should listen on UDP/TCP 3478 and 443 on the public IPv4, not only loopback or IPv6, and nothing should listen on 3479 or 444. An active unit does not prove this:
 
 ```bash
 PUBLIC_IPV4=203.0.113.10
@@ -287,38 +268,49 @@ sudo ss -Hlnutp | grep -F "${PUBLIC_IPV4}:3478"
 sudo ss -Hlnutp | grep -F "${PUBLIC_IPV4}:443"
 ```
 
-Use the [WebRTC Trickle ICE sample](https://webrtc.github.io/samples/src/content/peerconnection/trickle-ice/) to confirm that both of these URLs produce relay candidates:
+Use the [WebRTC Trickle ICE sample](https://webrtc.github.io/samples/src/content/peerconnection/trickle-ice/) to confirm both URLs produce relay candidates:
 
 ```text
 turn:turn-example.vdo.ninja:3478?transport=udp
 turns:turn-example.vdo.ninja:443?transport=tcp
 ```
 
-A relay candidate proves allocation and authentication, but it does not prove that media can traverse the high relay-port range. Before production, also establish a relay-only WebRTC peer connection or data channel and pass bidirectional data through each advertised transport. Confirm the selected candidate is a relay address, its allocated port falls inside the configured range, and TLS reports the expected relay transport.
+A relay candidate proves allocation and authentication, not that media crosses the relay range. Before production, open a relay-only WebRTC connection or data channel and pass data both ways over each transport. Check that the selected candidate is a relay address with a port inside the range.
 
 ## Monitoring and load distribution
 
-Monitor these signals on every TURN node:
+On every node, monitor:
 
-- Coturn service state and restart count.
-- Successful UDP 3478 and TLS 443 allocations.
-- Successful bidirectional relay data, not just candidate gathering.
-- UDP sockets allocated inside `49152-65535`.
-- Allocation, bind, file-descriptor, and connection-tracking errors.
-- Established TCP/TLS clients, network throughput, CPU, and available memory.
+- service state and restart count;
+- successful UDP 3478 and TLS 443 allocations, and relayed data both ways;
+- UDP sockets in use inside `49152-65535`;
+- allocation, bind, file-descriptor and connection-tracking errors;
+- TCP/TLS clients, throughput, CPU and free memory;
+- an alert when Coturn is active but an expected public listener is missing.
 
-One simple relay-socket count for the configured range is:
+Count relay sockets in use:
 
 ```bash
 sudo ss -Huan | awk '{ port=$4; sub(/^.*:/, "", port); if (port >= 49152 && port <= 65535) used++ } END { print used + 0 }'
 ```
 
-Suggested relay-port alerts for a 16,384-port range:
+Suggested relay-port alerts for a 16,384-port range: warning at 70% for two checks in a row; critical at 85% or on any allocation or bind error; recovered below 60% with passing probes. Port exhaustion can cause very low bitrate and long ICE delays while CPU and memory look idle.
 
-- Warning at 70% utilization for two consecutive checks.
-- Critical at 85% utilization or on allocation/bind errors.
-- Recovery after utilization falls below 60% and active probes succeed.
+Spread traffic randomly across servers in the same region instead of always picking the first. Add a node to your routing only after its UDP, TLS, renewal, firewall and relayed-data checks pass.
 
-CPU and memory are secondary signals. Port exhaustion can cause very poor bitrate and long ICE fallback delays while the machine otherwise looks idle.
+## Use the server with VDO.Ninja
 
-Distribute equal-region traffic randomly rather than always selecting the first equal-distance server. Add a new node to the routing list only after UDP, TLS, certificate renewal, firewall, and relayed-data validation pass.
+**On any link**, add [`&turn`](https://docs.vdo.ninja/general-settings/turn) as `username;password;url`, for example `&turn=TURN_USERNAME;TURN_PASSWORD;turns:turn-example.vdo.ninja:443`.
+
+- Repeat `&turn` to add servers. They replace VDO.Ninja's default TURN servers; STUN stays.
+- Add [`&relay`](https://docs.vdo.ninja/advanced-settings/turn-and-stun-parameters/and-privacy) (or `&privacy`) on both publisher and viewer links to force relaying, which hides your IP address from peers.
+- `&turn=false` removes all TURN servers; `&turn=nostun` removes STUN and TURN.
+- Anyone with the link can read its credentials, so use time-limited credentials for public links.
+
+**On your own deployment**, edit the settings near the bottom of `index.html`:
+
+- Static credentials: uncomment the "Custom basic TURN SETUP" section.
+- Time-limited credentials: set Coturn's `use-auth-secret` and `static-auth-secret` instead of `user=`, deploy the PHP sample as `turn-credentials.php` with the same secret, and uncomment the "Alternative custom TURN SETUP" section. VDO.Ninja waits for the credentials before connecting.
+- Always relay: uncomment `session.configuration.iceTransportPolicy = "relay";`.
+
+See [install.md](install.md) for hosting the website.

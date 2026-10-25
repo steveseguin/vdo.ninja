@@ -4,7 +4,7 @@ To ensure the long-term viability of this project, and for the protection of its
 
 # Contribution Policy
 
-You are invited to digitally sign the CLA with the provided CLA Assissant service, with a link to sign it provided automatically after contributing to this Github project. You may also print, sign, scan, and then email the CLA to steve@seguin.email.  
+You are invited to digitally sign the CLA with the provided CLA Assistant service, with a link to sign it provided automatically after contributing to this Github project. You may also print, sign, scan, and then email the CLA to steve@seguin.email.  
 
 It is not required that you sign the CLA for every contribution. Once you execute a CLA, it is valid until the CLA agreement is meaningfully changed and requires updating.
 
@@ -17,3 +17,15 @@ You hereby grant Steve Seguin (Steve) a perpetual, worldwide, royalty-free, irre
 You hereby represent that you are the sole and original author of all Submissions and that, to the best of your knowledge, the submissions do not infringe upon the rights of any third party.
 
 You agree to these terms with your continued submission.
+
+# Pull requests
+
+- Open pull requests against the `develop` branch.
+- Run the translation checks before you submit; CI runs the same checks on pull requests:
+
+  ```sh
+  node .github/ci-validateTranslations.js
+  node .github/ci-checkTranslationKeys.js
+  ```
+
+- Test the publishing, viewing, recording or device flows you changed in a browser, because CI does not test browser behavior.

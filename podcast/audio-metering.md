@@ -1,49 +1,33 @@
 # Audio Meter Pipeline Spec
 
-## Legacy Behavior
-- Inbound audio tracks enter `session.rpcs[UUID].inboundAudioPipeline` where `audioMeterGuest()` injects an `AnalyserNode` (`lib.js:46573-47782`).
-- Loudness is computed by averaging FFT bins every 100 ms and mapped to DOM meters (`voiceMeter` elements) with style variants selected via `session.meterStyle` (`lib.js:47703-47771`).
-- Meter values also feed optional features like `session.pushLoudness`, active-speaker highlighting, and iframe postMessage events.
-- Meter UI updates live inside the analyser loop, coupling audio processing with DOM manipulation.
+Podcast Studio needs per-track levels that do not depend on the main app's DOM meters. This page describes the legacy meters, what is now built in `core/`, and what is still missing.
 
-## Podcast Studio Requirements
-1. **Per-track telemetry**: expose peak, RMS, and clip count per participant stream.
-2. **Low-latency visuals**: 30–60 FPS updates for waveform bars in the studio shell, separate from DOM-heavy legacy meters.
-3. **Extensible alerts**: thresholds for clipping, silence detection, and noisy floors.
-4. **Headless access**: other modules (recording, AI markers) should subscribe without touching DOM.
+## Legacy meters (`lib.js`)
 
-## Proposed Architecture
-```
-MediaStreamTrack
-  └─▶ MeterNode (AudioWorklet + SharedArrayBuffer)
-        ├─▶ LevelBus.publish({ uuid, peak, rms, crest, clipped })
-        └─▶ Optional legacy bridge updates DOM meters via event listener
-Studio UI (podcast-shell)
-  └─▶ subscribes to LevelBus for visual meters, notifications, analytics
-Recording Service
-  └─▶ listens for clip/silence to insert markers, trigger backups
+- `audioMeterGuest(mediaStreamSource, UUID, trackid)` adds an `AnalyserNode` to `session.rpcs[UUID].inboundAudioPipeline[trackid]`.
+- Every 100 ms it averages the FFT bins into a loudness value (`stats.Audio_Loudness`) and draws the `voiceMeter` element, in the style chosen by `session.meterStyle`.
+- The loop also posts loudness to the IFRAME parent when `session.pushLoudness` is on, and the loudness stats feed the active-speaker features.
+- Audio analysis and DOM updates share one loop.
+
+## Current implementation (`core/`)
+
+```mermaid
+flowchart LR
+    T["Audio track"] --> W["podcast-meter worklet<br/>core/audio/meter.worklet.js"]
+    L["Legacy Audio_Loudness stats"] --> B["bridgeLegacyMeters()<br/>core/legacy/meter-bridge.js"]
+    W --> BUS["levelBus<br/>core/events/level-bus.js"]
+    B --> BUS
+    BUS --> UI["Podcast Studio meters<br/>podcast/studio.js"]
 ```
 
-### MeterNode Design
-- Build an `AudioWorkletProcessor` (`core/meter.worklet.js`) that computes:
-  - Instantaneous peak (max absolute sample).
-  - RMS over 1024-sample windows.
-  - Clipped sample counter (threshold > -1 dBFS).
-- Post results through a `MessagePort` to the main thread every 32 ms, keeping GC pressure low.
-- Provide `connect(stream, { uuid })` helper in `core/audio/meters.js`.
+- **Worklet:** `core/audio/meter.worklet.js` registers `podcast-meter`. About every 32 ms it posts the peak (largest absolute sample), the RMS and a clipped-sample count (samples at or above 0.89, about -1 dBFS), with `silent` set when RMS is at or below 0.001 (-60 dBFS).
+- **Helper:** `monitorTrackLevel(audioContext, track, { uuid, trackType, metadata })` in `core/audio/meters.js` connects a track to the worklet and an analyser, and returns `disconnect()`.
+- **Event bus:** `levelBus` emits `level` for every reading, plus `clip` when samples clipped and `silence` when the reading is silent. Payloads carry `uuid`, `trackType`, `metadata`, `peak`, `rms`, `clipped`, `silent` and `timestamp`.
+- **Legacy bridge:** `bridgeLegacyMeters()` polls `stats.Audio_Loudness` for the local stream and each peer every 120 ms and publishes normalized `level` events with `source: 'legacy-meter'`. It reads the legacy stats and does not change `audioMeterGuest()`.
+- **Users:** Podcast Studio meters the host microphone and every track recorded by `MultiTrackRecorder` with the worklet, starts the legacy bridge, and draws its meters from `level` events.
 
-### Event Bus
-- Introduce `LevelBus` as a lightweight `EventTarget` in `core/events/level-bus.js`.
-- Emit `level` events with payload `{ uuid, trackId, peak, rms, clipped, timestamp }`.
-- Legacy UI can attach a listener that maps to existing `voiceMeter` DOM updates until replaced.
+## Still to do
 
-### Thresholds & Alerts
-- Default clip alert: `peak >= -1 dBFS` for three consecutive frames.
-- Silence alert: `rms <= -60 dBFS` for >3 seconds.
-- Provide `LevelPolicy` configuration for per-room overrides.
-
-## Implementation Steps
-1. Implement `MeterWorkletProcessor` and register via `audioContext.audioWorklet.addModule()`.
-2. Wrap legacy `audioMeterGuest` to forward analyser metrics into `LevelBus` before modifying DOM.
-3. Update podcast studio shell to subscribe for UI meters, enabling waveform/LED displays.
-4. Expose metrics to recording service for embedding markers in local/remote tracks.
+- **Alerts:** nothing subscribes to `clip` or `silence` yet. The planned rules were a clip alert after three consecutive clipped readings, a silence alert after more than 3 seconds of silence, and per-room overrides (`LevelPolicy`, not built).
+- **Recording markers:** let the recording service add markers on clip or silence.
+- **Legacy decoupling:** move the main app's `voiceMeter` updates onto `levelBus` so analysis and DOM updates are separate.

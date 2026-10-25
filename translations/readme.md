@@ -1,18 +1,21 @@
 Welcome to the translation / language section of VDO.Ninja
 
-You can specify a translation using this code, if deploying the code yourself. blank can be replaced with ru, en, pt, etc..
-```
-<script type="text/javascript" id="main-js" src="./main.js" data-translation="blank"></script>
-```
+Each `.json` file here holds one interface language, named by its language code (for example `de.json` or `pt-br.json`). `blank.json` is a minimal template with little or no VDO.Ninja branding.
 
-You can also add &ln=ru to the URL as a parameter to launch the translation that way.
+## Choose a language
 
-There is a file called translate.js, which if you copy/paste the content (and hit enter) into the Chrome browser's console, while on VDO.Ninja, it will download the translation files.
-It will add any new translation entries and add them to the bottom of the files. Please feel to correct these new translations and upload them back to github as a pull request.
+- Add `&ln=ru` (or `&language=ru`) to a link.
+- On your own deployment, set a default with `session.language` in the settings block of `index.html` (`"auto"` uses the browser's language), or with a `data-translation` attribute on the `main-js` script tag:
 
-In the future I will add a Github action so that this automatically occurs with new code posting.
+  ```
+  <script type="text/javascript" id="main-js" src="./main.js" data-translation="blank"></script>
+  ```
 
-Translation files can contain more than just language; they can contain HTML and image links, etc. This offers a basic amount of customization.
+  The order of priority is the URL parameter, then `session.language`, then a language saved in the browser from an earlier choice, then `data-translation`.
 
-the "blank.json" file contains a minimal template.  Little to no VDO.Ninja branding.
+Translation values can contain HTML, such as image links, so a translation file also allows basic customization.
 
+## Update translations
+
+- **`translate.js`:** open VDO.Ninja from your copy of the code, then paste the script's contents into the browser console and press Enter. It downloads each language file, keeping existing entries and adding new keys, in English, at the end of each section. Translate the new entries and submit them as a pull request.
+- **GitHub Actions:** the manual "Translate missing keys" workflow fills missing keys with machine translation and opens a draft pull request. Pull requests to `develop` run `.github/ci-validateTranslations.js` and `.github/ci-checkTranslationKeys.js`.
