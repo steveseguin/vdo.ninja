@@ -71744,7 +71744,7 @@ async function whepIn(whepInput = false, whepInputToken = false, UUID = false) {
 						// vdo.ninja itself is secure
 						if (location.protocol === "https:") {
 							if (location.hostname == "vdo.ninja") {
-								warnUser("WHEP playback failed.\n\nThe WHEP URL needs to be using https if from an SSL-enabled website.\n\nPerhaps try using <a href='http://insecure.vdo.ninja" + location.pathname + location.search + "'>http://insecure.vdo.ninja<a> instead.", false, false);
+								warnUser("WHEP playback failed.\n\nThe WHEP URL needs to be using https if from an SSL-enabled website.\n\nPerhaps try using <a href='http://insecure.vdo.ninja" + escapeHtml(location.pathname + location.search) + "'>http://insecure.vdo.ninja<a> instead.", false, false);
 							} else {
 								warnUser("WHEP playback failed.\n\nThe WHEP URL needs to be using https if from an SSL-enabled website.");
 							}

@@ -9110,6 +9110,10 @@ WebRTC.Media = (function () {
 
 				if ("drawingApproval" in msg) {
 					const approvalTargetUUID = msg.drawingTargetUUID || UUID;
+					// Reject peer IDs that collide with inherited object properties.
+					if (Object.prototype.hasOwnProperty.call(Object.prototype, approvalTargetUUID)) {
+						return;
+					}
 					if (msg.drawingApproval && msg.allowdrawing) {
 						if (session.rpcs[approvalTargetUUID]) {
 							session.rpcs[approvalTargetUUID].allowDrawing = true;
@@ -9136,7 +9140,7 @@ WebRTC.Media = (function () {
 					return;
 				}
 
-				if ("allowdrawing" in msg && msg.allowdrawing) {
+				if ("allowdrawing" in msg && msg.allowdrawing && !Object.prototype.hasOwnProperty.call(Object.prototype, msg.drawingTargetUUID || UUID)) {
 					const drawingTargetUUID = msg.drawingTargetUUID || UUID;
 					if (session.rpcs[drawingTargetUUID]) {
 						session.rpcs[drawingTargetUUID].allowDrawing = msg.allowdrawing;
@@ -13218,7 +13222,7 @@ WebRTC.Media = (function () {
 					return;
 				} // no requester
 				var uuidRA = msg.requestAs; // target
-				if (!session.pcs[uuidRA]) {
+				if (Object.prototype.hasOwnProperty.call(Object.prototype, uuidRA) || !session.pcs[uuidRA]) {
 					log("no pcs[UUID]");
 					return;
 				} // target doesn't exist

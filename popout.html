@@ -435,6 +435,33 @@ function decodeHTML(value) {
 	return temp.value;
 }
 
+function safeLabelHTML(value) {
+	// Labels arrive as app markup (b, i, span.chat_name); keep that markup and show anything else as text.
+	var template = document.createElement("template");
+	template.innerHTML = decodeHTML(value);
+	return labelNodesToHTML(template.content.childNodes);
+}
+
+function labelNodesToHTML(nodes) {
+	var html = "";
+	for (var i = 0; i < nodes.length; i++) {
+		var node = nodes[i];
+		if (node.nodeType === 3) {
+			html += sanitize(node.textContent);
+		} else if (node.nodeType === 1) {
+			var tag = node.nodeName.toLowerCase();
+			if (tag === "b" || tag === "i") {
+				html += "<" + tag + ">" + labelNodesToHTML(node.childNodes) + "</" + tag + ">";
+			} else if (tag === "span") {
+				html += "<span class='" + String(node.className).replace(/[^\w\- ]/g, "") + "'>" + labelNodesToHTML(node.childNodes) + "</span>";
+			} else {
+				html += sanitize(node.outerHTML);
+			}
+		}
+	}
+	return html;
+}
+
 function replaceURLs(message) {
 	if (message === undefined || message === null) {
 		return "";
@@ -520,8 +547,8 @@ function updateMessages(message = false){
 		////// KEEP THIS IN /////////
 		//console.log(message.msg); // Display Recieved messages for View-Only clients.
 		/////////////////////////////
-		var label = message.label ? decodeHTML(message.label) : "";
-		var labelText = sanitize(label);
+		var label = message.label ? safeLabelHTML(message.label) : "";
+		var labelText = message.label ? sanitize(decodeHTML(message.label)) : "";
 		var safeMessage = replaceURLs(message.msg);
 		var safeTime = sanitize(time);
 
@@ -557,8 +584,8 @@ function updateMessages(message = false){
 			////// KEEP THIS IN /////////
 			//console.log(messageList[i].msg); // Display Recieved messages for View-Only clients.
 			/////////////////////////////
-			var label = messageList[i].label ? decodeHTML(messageList[i].label) : "";
-			var labelText = sanitize(label);
+			var label = messageList[i].label ? safeLabelHTML(messageList[i].label) : "";
+			var labelText = messageList[i].label ? sanitize(decodeHTML(messageList[i].label)) : "";
 			
 			var message = replaceURLs(messageList[i].msg);
 			var safeTime = sanitize(time);
