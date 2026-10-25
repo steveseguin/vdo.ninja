@@ -37908,19 +37908,40 @@ function showNodeDetails(node) {
 		infoLine += '<span class="meshTag meshTag--turn" title="Using TURN relay server">TURN</span>';
 	}
 	if (node.whipPrimary && node.whipPrimary.configured) {
-		var primaryWhipClass = node.whipPrimary.connected ? "meshTag--whep-ok" : "meshTag--whep-failed";
+		var primaryWhipClass = "";
+		if (node.whipPrimary.connected) {
+			primaryWhipClass = "meshTag--whep-ok";
+		} else if (node.whipPrimary.state === "failed") {
+			primaryWhipClass = "meshTag--whep-failed";
+		} else if (["connecting", "checking", "disconnected"].includes(node.whipPrimary.state)) {
+			primaryWhipClass = "meshTag--whep-pending";
+		}
 		var primaryWhipTitle = "Guest primary WHIP publisher: " + node.whipPrimary.state;
 		primaryWhipTitle += node.whipPrimary.restartable ? "; restart available" : "; restart unavailable";
 		infoLine += '<span class="meshTag ' + primaryWhipClass + '" title="' + escapeMeshText(primaryWhipTitle) + '">Primary WHIP: ' + escapeMeshText(node.whipPrimary.state) + '</span>';
 	}
 	if (node.whipScreen && node.whipScreen.configured) {
-		var screenWhipClass = node.whipScreen.connected ? "meshTag--whep-ok" : "meshTag--whep-failed";
+		var screenWhipClass = "";
+		if (node.whipScreen.connected) {
+			screenWhipClass = "meshTag--whep-ok";
+		} else if (node.whipScreen.state === "failed") {
+			screenWhipClass = "meshTag--whep-failed";
+		} else if (["connecting", "checking", "disconnected"].includes(node.whipScreen.state)) {
+			screenWhipClass = "meshTag--whep-pending";
+		}
 		infoLine += '<span class="meshTag ' + screenWhipClass + '" title="Screen WHIP is separate from the primary WHIP restart action">Screen WHIP: ' + escapeMeshText(node.whipScreen.state) + '</span>';
 	}
 	// Add WHEP status if this node has a WHEP inbound connection
 	if (meshData.whepConnections && meshData.whepConnections[node.uuid]) {
 		var whepInfo = meshData.whepConnections[node.uuid];
-		var whepClass = whepInfo.connected ? "meshTag--whep-ok" : "meshTag--whep-failed";
+		var whepClass = "";
+		if (whepInfo.connected) {
+			whepClass = "meshTag--whep-ok";
+		} else if (whepInfo.state === "failed") {
+			whepClass = "meshTag--whep-failed";
+		} else if (["connecting", "checking", "disconnected"].includes(whepInfo.state)) {
+			whepClass = "meshTag--whep-pending";
+		}
 		infoLine += '<span class="meshTag ' + whepClass + '" title="Local WHEP playback: ' + escapeMeshText(whepInfo.state) + '">Local WHEP: ' + escapeMeshText(whepInfo.state) + '</span>';
 	}
 	var nodeHealthColor = node.health === 'healthy' ? '#4CAF50' : node.health === 'failed' ? '#F44336' : node.health === 'degraded' ? '#FF9800' : '#9E9E9E';
@@ -42040,7 +42061,10 @@ async function grabVideo(quality = 0, eleName = "previewWebcam", selector = "sel
 					max: 30
 				};
 			}
-		} else if (videoSelect.options[videoSelect.selectedIndex].text.includes("NDI Video")) {
+		} else if (
+			videoSelect.options[videoSelect.selectedIndex].text.toLowerCase().includes("ndi video") ||
+			videoSelect.options[videoSelect.selectedIndex].text.toLowerCase().startsWith("ndi ")
+		) {
 
 			// NDI does not like "EXACT"
 			constraints.video.deviceId = videoSelect.value; // NDI is fucked up
@@ -55869,7 +55893,24 @@ function createScreenShareURL(transparent = true) {
 	}
 
 	if (session.meshcast) {
-		extras += "&meshcast";
+		var meshcastCode = session.meshcastCode;
+		if (session.meshcast2) {
+			var meshcastMode = "any";
+			if (session.meshcast === "audio" || session.meshcast === "video") {
+				meshcastMode = session.meshcast;
+			} else if (!meshcastCode && typeof session.meshcast === "string" && session.meshcast !== "any" && session.meshcast !== "anon") {
+				meshcastCode = session.meshcast;
+			}
+			extras += "&meshcast2=" + meshcastMode;
+		} else {
+			extras += "&meshcast1=" + encodeURIComponent(session.meshcast);
+			if (meshcastServer) {
+				meshcastCode = meshcastServer.code || meshcastServer.id || meshcastServer.url || meshcastCode;
+			}
+		}
+		if (meshcastCode) {
+			extras += "&meshcastcode=" + encodeURIComponent(meshcastCode);
+		}
 	}
 
 	if (session.token) {
@@ -55967,8 +56008,11 @@ function createScreenShareURL(transparent = true) {
 	if (transparent) {
 		extras += "&transparent&cleanish";
 	}
+	if (session.screenshareVideoOnly) {
+		extras += "&screensharevideoonly&audiodevice=0";
+	}
 	// manual, since I don't want to use the auto-mixer.
-	return "?manual&audiodevice=1&screenshare&cb=0&nvb&nsb&autostart&view&room=" + session.roomid + "&push=" + iFrameID + extras;
+	return "?manual&screenshare&cb=0&nvb&nsb&autostart&view&room=" + session.roomid + "&push=" + iFrameID + extras;
 }
 
 function createIframePopup() {

@@ -191,18 +191,6 @@
 			<div class="resizer"></div>
 		</div>
 		<div id="activeShares"></div>
-		<div id="whepShareStatus" class="message-card info hidden" role="status" aria-live="polite" aria-atomic="true">
-			<button id="whepShareDismiss" type="button" class="whep-share-dismiss" onclick="dismissWhepShareStatus(event)" title="Hide WHEP share status" aria-label="Hide WHEP share status">x</button>
-			<h1>WHEP share active</h1>
-			<p id="whepShareDescription">Advertising a WHEP source to room peers via the data channel.</p>
-			<div class="whep-share-row">
-				<input id="whepShareLink" type="text" readonly aria-label="Shared WHEP URL" />
-				<button id="whepShareCopy" onclick="copyFunction(getById('whepShareLink'), event)">Copy</button>
-				<a id="whepShareOpen" href="#" target="_blank" rel="noopener">Open</a>
-			</div>
-			<p id="whepShareTokenNote" class="whep-share-note hidden">Auth token: set</p>
-			<p id="whepShareDataOnly" class="whep-share-note hidden">Data-only mode: no local camera or mic is being published.</p>
-		</div>
 		<div id="controlButtons" class="hidden">
 			<div class="controlPositioning">
                 <div id="subControlButtons">

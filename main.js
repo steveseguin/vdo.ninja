@@ -52,7 +52,6 @@ async function main() {
 		miscTranslations["enter-display-name"] = text;
 	}
 
-	session.whepShareStatusDismissed = false;
 	session.whepTestPreviewUUID = false;
 	session.whepTestPreviewUrl = false;
 
@@ -166,8 +165,6 @@ async function main() {
 			session.whipoutSettings.token = session.whepSrcToken;
 		}
 		session.whipoutSettingsUserSet = true;
-		session.whepShareStatusDismissed = false;
-		updateWhepShareStatus();
 
 		try {
 			if (typeof broadcastWhepSettings === "function") {
@@ -376,55 +373,6 @@ async function main() {
 
 	updateWhepTestPreviewUI(false);
 
-	window.dismissWhepShareStatus = function (event) {
-		if (event) {
-			event.preventDefault();
-			event.stopPropagation();
-		}
-		session.whepShareStatusDismissed = true;
-		const status = getById("whepShareStatus");
-		status.classList.add("hidden");
-	};
-
-	function updateWhepShareStatus() {
-		const status = getById("whepShareStatus");
-		if (session.cleanOutput || session.whepShareStatusDismissed) {
-			status.classList.add("hidden");
-			return;
-		}
-		const settings = session.whipoutSettings;
-		const hasWhepShare = session.whipoutSettingsUserSet && settings && settings.type === "whep" && settings.url;
-		if (!hasWhepShare) {
-			status.classList.add("hidden");
-			return;
-		}
-		status.classList.remove("hidden");
-		const linkInput = getById("whepShareLink");
-		linkInput.value = settings.url;
-		const openLink = getById("whepShareOpen");
-		openLink.href = settings.url;
-		const tokenNote = getById("whepShareTokenNote");
-		if (settings.token) {
-			tokenNote.classList.remove("hidden");
-		} else {
-			tokenNote.classList.add("hidden");
-		}
-		const dataOnlyNote = getById("whepShareDataOnly");
-		if (session.dataMode) {
-			dataOnlyNote.classList.remove("hidden");
-		} else {
-			dataOnlyNote.classList.add("hidden");
-		}
-		const description = getById("whepShareDescription");
-		if (session.noMeshcast) {
-			description.innerText = getTranslation("whep-share-disabled-advertising");
-		} else if (session.roomid === false || session.roomid === null || session.roomid === "") {
-			description.innerText = getTranslation("whep-share-join-room");
-		} else {
-			description.innerText = getTranslation("whep-share-advertising");
-		}
-	}
-	
 	try {
 		if (ConfigSettings) {
 			ln_template = ConfigSettings.getAttribute("data-translation"); // Translations
@@ -8070,7 +8018,6 @@ async function main() {
 				if (session.whepSrcToken) {
 					session.whipoutSettings.token = session.whepSrcToken;
 					session.whipoutSettingsUserSet = true;
-					updateWhepShareStatus();
 				}
 			} catch (e) {
 				errorlog(e);
