@@ -138,14 +138,18 @@ Tested with a Pixel 9a, the Android app, a Logitech C920 webcam over USB, and an
 
 ## Optional RTMP and SRT output
 
-Android and iOS have experimental external publishing controls, off by default. Enable **Publishing Settings → Advanced Settings → External publishing controls**, start a supported video session, then open **More → Advanced external output**. Enter a complete publishing URL and press **Start**. Opening or closing the panel does not start or stop the output; use **Stop** or end the session. URLs and keys are not saved between sessions.
+For a direct OBS connection, follow the illustrated [Android SRT guide](../guides/mobile-app/android-srt-to-obs.md) or [iPhone SRT guide](../guides/mobile-app/iphone-srt-to-obs.md).
+
+Android and iOS offer optional experimental RTMP/SRT output. Before starting a supported camera stream, open **Additional outputs**, choose **RTMP** or **SRT**, configure the destination, and enable **Use this destination**. Save, then tap **START STREAM**. While live, use **More → Additional outputs** to start, stop, or retry it. Connection details stay in memory for the current app session.
+
+On older layouts, enable **Advanced Settings → External publishing controls**, start the camera stream, then open **More → Advanced external output**.
 
 * Transports are plain **RTMP** and **SRT caller**. RTMPS and SRTLA are not supported.
 * On iOS, it works with single-camera sources, not ReplayKit screen sharing, microphone-only mode, or front/rear mixing.
 * On Android, it works with supported video tracks, including camera, USB camera, and screen capture, depending on the device encoder.
 * It is an additional H.264/AAC output with its own encoder and bandwidth use.
 
-**Advanced encoder settings** sets the output's bitrate, resolution and orientation, frame-rate limit, keyframe interval, H.264 profile, fit/crop, and AAC audio. These do not raise the camera's capture resolution or frame rate. Stop the output before changing them.
+**Output quality** (called **Advanced encoder settings** in older layouts) sets the output's bitrate, resolution and orientation, frame-rate limit, keyframe interval, H.264 profile, fit/crop, and AAC audio. These do not raise the camera's capture resolution or frame rate. Stop the output before changing them.
 
 iOS also has experimental **Adaptive bitrate (RTMP only)**, off by default. It moves the output bitrate between the selected minimum and maximum as the output queue changes. It does not bond networks or reconnect automatically.
 

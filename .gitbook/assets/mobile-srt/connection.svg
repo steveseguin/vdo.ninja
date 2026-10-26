@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="840" height="164" viewBox="0 0 840 164" role="img" aria-labelledby="title desc">
+<title id="title">Your phone calls OBS over the same network</title>
+<desc id="desc">VDO.Ninja Publisher is the SRT caller. OBS is the SRT listener on UDP port 5001. Enter the computer address, such as 192.168.1.50, on the phone.</desc>
+<rect width="840" height="164" rx="16" fill="#142333"/>
+<rect x="24" y="24" width="270" height="116" rx="12" fill="#263d52"/>
+<rect x="546" y="24" width="270" height="116" rx="12" fill="#263d52"/>
+<g font-family="Arial, Helvetica, sans-serif" text-anchor="middle">
+<text x="159" y="61" fill="#fff" font-size="22" font-weight="700">VDO.Ninja Publisher</text>
+<text x="159" y="91" fill="#9bd2ff" font-size="18">Phone · SRT caller</text>
+<text x="159" y="118" fill="#d3dce5" font-size="16">Connects to your computer</text>
+<text x="681" y="61" fill="#fff" font-size="22" font-weight="700">OBS Media Source</text>
+<text x="681" y="91" fill="#9bd2ff" font-size="18">Computer · SRT listener</text>
+<text x="681" y="118" fill="#d3dce5" font-size="16">Example: 192.168.1.50</text>
+<text x="420" y="58" fill="#d3dce5" font-size="17">Same network</text>
+<text x="420" y="121" fill="#d3dce5" font-size="16">UDP port 5001</text>
+</g>
+<path d="M316 82H514" fill="none" stroke="#9bd2ff" stroke-width="4"/>
+<path d="m504 73 12 9-12 9" fill="none" stroke="#9bd2ff" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
