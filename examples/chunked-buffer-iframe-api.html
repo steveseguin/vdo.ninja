@@ -671,6 +671,14 @@
 			return String(value);
 		}
 
+		function escapeHtml(value) {
+			return String(value == null ? "" : value)
+				.replace(/&/g, "&amp;")
+				.replace(/</g, "&lt;")
+				.replace(/>/g, "&gt;")
+				.replace(/"/g, "&quot;");
+		}
+
 		function renderPeers(peers) {
 			if (!peers.length) {
 				peerTable.innerHTML = '<tr><td colspan="7" class="muted">No active peers yet.</td></tr>';
@@ -681,10 +689,10 @@
 			peerTable.innerHTML = peers.map(function (peer) {
 				var labelBits = [];
 				if (peer.label) {
-					labelBits.push(peer.label);
+					labelBits.push(escapeHtml(peer.label));
 				}
 				if (peer.streamID) {
-					labelBits.push(peer.streamID);
+					labelBits.push(escapeHtml(peer.streamID));
 				}
 				var impairmentText = "<span class=\"muted\">none</span>";
 				if (peer.impairment) {
@@ -694,7 +702,7 @@
 				}
 				return [
 					"<tr>",
-					"<td><code>" + peer.uuid + "</code></td>",
+					"<td><code>" + escapeHtml(peer.uuid) + "</code></td>",
 					"<td>" + (labelBits.length ? labelBits.join("<br>") : "<span class=\"muted\">n/a</span>") + "</td>",
 					"<td>" + formatValue(peer.rpcBuffer) + "</td>",
 					"<td>" + formatValue(peer.effectiveBuffer) + "</td>",
@@ -707,7 +715,7 @@
 
 			var current = uuidSelect.value;
 			uuidSelect.innerHTML = peers.map(function (peer) {
-				return '<option value="' + peer.uuid + '">' + peer.uuid + (peer.label ? " (" + peer.label + ")" : "") + "</option>";
+				return '<option value="' + escapeHtml(peer.uuid) + '">' + escapeHtml(peer.uuid) + (peer.label ? " (" + escapeHtml(peer.label) + ")" : "") + "</option>";
 			}).join("");
 			if (current && peers.some(function (peer) { return peer.uuid === current; })) {
 				uuidSelect.value = current;
