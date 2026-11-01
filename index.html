@@ -3640,7 +3640,7 @@
 			if (new URLSearchParams(window.location.search).has("podcast")) {
 				var podcastScript = document.createElement("script");
 				podcastScript.type = "module";
-				podcastScript.src = "./podcast/bootstrap.js?v=8";
+				podcastScript.src = "./podcast/bootstrap.js?v=9";
 				podcastScript.onerror = function () { console.warn("Podcast studio could not load."); };
 				document.head.appendChild(podcastScript);
 			}

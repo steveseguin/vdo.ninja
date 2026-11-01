@@ -1,4 +1,5 @@
 import { initChat } from "./chat.js?ver=20261011-9";
+import { guestLabelText } from "../core/legacy/label-text.js?v=2";
 
 const root = document.getElementById("studio-root");
 const roomForm = document.getElementById("room-form");
@@ -593,7 +594,7 @@ function applyDetailedState(detailedState) {
 		const others = item.others || {};
 		const source = {
 			streamID: item.streamID,
-			label: item.label || item.streamID,
+			label: item.label ? guestLabelText(item.label) : item.streamID,
 			slot: item.slot ? parseInt(item.slot, 10) : false,
 			group: item.group || [],
 			muted: Boolean(item.muted || others["mute-guest"] == 1),

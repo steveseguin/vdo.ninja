@@ -10,6 +10,7 @@ import {
 } from '../core/index.js?v=20261018.1';
 import { AudioRecoveryWriter, listAudioRecoverySessions, loadRecoveryTrack, clearAudioRecoverySession } from './audio-recovery.js?v=1';
 import { IcecastPublisher, ICECAST_MIME_OPTIONS } from './icecast-publisher.js?v=4';
+import { guestLabelText } from '../core/legacy/label-text.js?v=2';
 
 const STUDIO_ROOT_ID = 'podcast-root';
 const ROSTER_REFRESH_MS = 1500;
@@ -4509,8 +4510,11 @@ class PodcastStudioApp {
         return;
       }
       const { participant, trackType, channelIndex } = event.detail || {};
-      if (trackType === 'audio' && this.audioRecovery) {
-        this.audioRecovery.append(event.detail, this.markers);
+      if (trackType === 'audio' && this.audioRecovery && participant) {
+        this.audioRecovery.append({
+          ...event.detail,
+          participant: { ...participant, label: this.participantLabelText(participant) },
+        }, this.markers);
       }
       if (!participant || !trackType) {
         return;
@@ -4581,7 +4585,7 @@ class PodcastStudioApp {
       console.error('Recorder error', event.detail);
       const detail = event.detail || {};
       const participant = detail.participant || {};
-      const label = participant.label || participant.streamID || participant.uuid || 'Guest';
+      const label = this.participantLabelText(participant);
       const track = `${detail.trackType || 'audio'} ${Number.isInteger(detail.channelIndex) ? detail.channelIndex + 1 : 1}`;
       this.setRecordingStatus(`Recorder error (${label}, ${track}): ${detail.error?.message || detail.message || 'unknown'}`, 'error');
       if (participant.uuid && detail.trackType) {
@@ -4666,7 +4670,7 @@ class PodcastStudioApp {
 
     const header = createElement('div', 'timeline-track__header');
     const titleGroup = createElement('div', 'timeline-track__title-group');
-    const title = createElement('div', 'timeline-track__title', { text: participant.label || participant.uuid || 'Guest' });
+    const title = createElement('div', 'timeline-track__title', { text: this.participantLabelText(participant) });
     const descriptorParts = [];
     if (participant.external || participant.uuid === 'host-mic') {
       descriptorParts.push('Local input');
@@ -5260,7 +5264,7 @@ class PodcastStudioApp {
       }
       const wrapper = createElement('div', 'timeline-entry');
       wrapper.dataset.key = key;
-      const label = `${meta.trackType.toUpperCase()} • ${meta.participant.label || meta.participant.uuid}`;
+      const label = `${meta.trackType.toUpperCase()} • ${this.participantLabelText(meta.participant)}`;
       const downloadUrl = URL.createObjectURL(meta.blob);
       this.activeDownloadUrls.push(downloadUrl);
       const linkLabel = meta.mimeType === 'audio/wav' ? 'Download WAV' : 'Download';
@@ -5561,6 +5565,16 @@ class PodcastStudioApp {
     }
   }
 
+  participantLabelText(participant) {
+    if (!participant || !participant.label) {
+      return participant && (participant.streamID || participant.uuid) || 'Guest';
+    }
+    if (participant.external || participant.uuid === 'host-mic') {
+      return participant.label;
+    }
+    return guestLabelText(participant.label);
+  }
+
   createRosterItem(participant) {
     const item = createElement('div', 'roster-item');
     item.dataset.uuid = participant.uuid;
@@ -5578,7 +5592,7 @@ class PodcastStudioApp {
     videoThumb.dataset.noVideo = 'true'; // hidden by default until video track available
 
     const meta = createElement('div', 'roster-meta');
-    meta.append(createElement('div', 'roster-name', { text: participant.label }));
+    meta.append(createElement('div', 'roster-name', { text: this.participantLabelText(participant) }));
     const idText = participant.streamID ? `Stream: ${participant.streamID}` : 'Awaiting stream';
     meta.append(createElement('div', 'roster-id', { text: idText }));
     const descriptorText = this.describeParticipantRole(participant);
@@ -5628,7 +5642,7 @@ class PodcastStudioApp {
     item.dataset.status = participant.status || 'connecting';
     const name = item.querySelector('.roster-name');
     if (name) {
-      name.textContent = participant.label;
+      name.textContent = this.participantLabelText(participant);
     }
     const id = item.querySelector('.roster-id');
     if (id) {
