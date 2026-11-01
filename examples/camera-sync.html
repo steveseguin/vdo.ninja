@@ -1,0 +1,130 @@
+<!doctype html>
+<!-- Copyright (c) 2026 Steve Seguin. SPDX-License-Identifier: MIT -->
+<html lang="en">
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<meta name="description" content="Compare camera clap timing, adjust VDO.Ninja viewer buffers, and copy calibrated links for OBS." />
+	<title>Camera sync | VDO.Ninja</title>
+	<link rel="stylesheet" href="camera-sync.css" />
+</head>
+<body>
+	<div class="page">
+		<nav class="top-links" aria-label="Site">
+			<a class="brand" href="../">VDO.Ninja</a>
+			<a href="iframeapi.md">IFRAME API guide</a>
+			<a href="./">More examples</a>
+		</nav>
+		<header class="intro">
+			<h1>Camera sync</h1>
+			<p>Line up several phone or camera feeds for OBS. Clap where every camera can hear or see it, delay the early feeds, then copy the tuned view links.</p>
+		</header>
+		<main>
+			<section class="panel" aria-labelledby="setup-title">
+				<div class="panel-head"><span class="step">1</span><h2 id="setup-title">Add cameras</h2></div>
+				<div class="setup">
+					<div>
+						<label for="links">View links <span class="muted">· one camera per line, 2 to 8</span></label>
+						<textarea id="links" rows="5" spellcheck="false" placeholder="https://vdo.ninja/?view=CameraOne&#10;https://vdo.ninja/?view=CameraTwo&#10;https://vdo.ninja/?view=CameraThree"></textarea>
+						<p class="hint">Keep each camera’s microphone on for the clap test. Previews start muted.</p>
+					</div>
+					<div class="setup-options">
+						<div>
+							<label class="field">Buffer mode
+								<select id="mode">
+									<option value="buffer2">Buffer2 (recommended)</option>
+									<option value="buffer">Buffer</option>
+									<option value="chunkbuffer">Chunked video</option>
+								</select>
+							</label>
+							<p id="mode-help" class="hint">Requests buffering with estimated network travel time included. Check alignment after it settles.</p>
+						</div>
+						<div class="option-row">
+							<label class="field">Starting target<span class="unit"><input id="base-delay" type="number" min="0" max="3000" step="1" value="500" /><span>ms</span></span></label>
+							<label class="check"><input id="sync" type="checkbox" checked /> Compensate audio delay (sync=0)</label>
+						</div>
+						<button id="load" type="button" class="primary wide">Load cameras</button>
+						<p id="setup-message" role="status" aria-live="polite" hidden></p>
+						<p class="hint">Loading replaces any buffer settings already in the links. Uncheck sync=0 to keep each link’s own setting.</p>
+					</div>
+				</div>
+			</section>
+
+			<section class="panel" aria-labelledby="measure-title">
+				<div class="panel-head"><span class="step">2</span><h2 id="measure-title">Clap and align</h2><span id="count" class="badge">0 samples</span></div>
+				<p id="empty-state" class="empty">Load your cameras above. Their previews, audio meters, and offsets will appear here.</p>
+				<div id="workbench" hidden>
+					<div class="controls">
+						<div class="toolbar">
+							<div class="segmented" role="radiogroup" aria-label="Measurement method">
+								<label><input type="radio" name="method" id="method-audio" value="audio" checked /><span>Listen for a clap</span></label>
+								<label><input type="radio" name="method" id="method-visual" value="visual" /><span>Enter video offsets</span></label>
+							</div>
+							<label id="sensitivity-label" class="inline-field">Sensitivity
+								<select id="sensitivity">
+									<option value="2">Quiet clap</option>
+									<option value="4" selected>Normal clap</option>
+									<option value="8">Loud clap / noisy room</option>
+								</select>
+							</label>
+							<div class="toolbar-actions">
+								<button id="cancel" type="button" hidden>Cancel</button>
+								<button id="capture" type="button" class="primary" disabled>Capture one clap</button>
+							</div>
+						</div>
+						<div id="status" role="status" aria-live="polite">Load at least two cameras to begin.</div>
+					</div>
+					<p id="audio-help" class="hint">Clap once, wait for the result, and repeat three or more times. Offsets are measured against <span id="reference">Camera 1</span>; positive means later. A matching clap sound does not prove the video frames match, so check the pictures too.</p>
+					<p id="visual-help" class="hint" hidden>Film one visible event with every camera, such as a clap or a phone stopwatch, then pause a recording or take a screenshot of this page to compare the previews. Enter each camera’s lag behind Camera 1 (negative if earlier). One frame at 30 fps is about 33 ms.</p>
+					<div id="cameras" class="camera-grid"></div>
+					<div class="apply-bar">
+						<button id="apply" type="button" class="primary" disabled>Apply suggested delays</button>
+						<p id="spread" class="hint">Capture at least three claps before applying a suggestion.</p>
+						<button id="clear" type="button" class="quiet" disabled>Clear samples</button>
+					</div>
+					<details>
+						<summary>Sample history</summary>
+						<div class="details-body">
+							<p class="hint">Each row compares one clap against the reference. Remove a sample if it came from a different sound.</p>
+							<div id="history" class="history">No measurements yet.</div>
+						</div>
+					</details>
+					<details>
+						<summary>Compare with your mixer or a USB microphone <span class="muted">(optional)</span></summary>
+						<div class="details-body">
+							<p>Select the input that OBS uses. It must hear the same clap as the cameras. Offsets are then measured against it, giving an estimate for the mixer’s Sync Offset in OBS. Make the final adjustment against a real OBS recording.</p>
+							<div class="mic-row">
+								<button id="connect-mic" type="button">Connect local audio</button>
+								<label class="field">Input device<select id="mic-device" disabled><option value="">Default input</option></select></label>
+								<button id="disconnect-mic" type="button" disabled>Disconnect</button>
+							</div>
+							<p id="mic-status" class="hint">Local audio stays on this computer and is never played through the speakers.</p>
+						</div>
+					</details>
+				</div>
+			</section>
+
+			<section class="panel" aria-labelledby="export-title">
+				<div class="panel-head"><span class="step">3</span><h2 id="export-title">Use in OBS</h2><button id="copy-all" type="button" disabled>Copy all view links</button></div>
+				<textarea id="copy-links" rows="6" readonly hidden aria-label="All camera view links for manual copying"></textarea>
+				<ol class="checklist">
+					<li>Paste each camera’s view link into its own OBS Browser Source.</li>
+					<li>Keep those sources running between scene changes so their buffers stay settled.</li>
+					<li>Record a visible clap with your mixer audio, check the frames, then set the mixer’s Sync Offset in OBS.</li>
+				</ol>
+				<p class="hint">The links store buffer targets, not a clock lock. A reconnect, Wi-Fi change, new viewer, or capture delay can shift timing, so recheck after changes and during long sessions.</p>
+				<details>
+					<summary>How accurate is this?</summary>
+					<div class="details-body">
+						<p>Claps measure audio timing. That is a starting point for matching video, because camera capture and audio processing can add different delays on each device. A good audio match does not prove the frames line up.</p>
+						<p>For finer audio timing, open this page on the same origin (scheme, host, and port) as your view links. Same-origin previews are sampled from the audio waveform after the existing audio compensation node. Other origins use the IFRAME loudness API, normally updated about every 100 ms, so those results are coarse. Browser scheduling also affects measurements; use the spread across repeated claps and a visible clap to judge the result.</p>
+						<p>For chunked video, enable <code>&amp;chunked</code> on the publishing devices first and use a browser that supports it. This page sets <code>chunkbuffer</code> and turns off adaptive receiver buffering so the target stays fixed. Chunk timestamps from separate phones are not a shared timecode, and chunked audio is not used to infer video alignment, so enter observed video offsets instead.</p>
+						<p class="doc-links"><a href="https://docs.vdo.ninja/advanced-settings/video-parameters/buffer">Buffer</a><a href="https://docs.vdo.ninja/advanced-settings/video-parameters/and-buffer2">Buffer2</a><a href="https://docs.vdo.ninja/advanced-settings/audio-parameters/sync">Sync</a><a href="https://docs.vdo.ninja/advanced-settings/settings-parameters/and-chunked">Chunked</a><a href="iframeapi.md">IFRAME API</a></p>
+					</div>
+				</details>
+			</section>
+		</main>
+	</div>
+	<script src="camera-sync.js"></script>
+</body>
+</html>
