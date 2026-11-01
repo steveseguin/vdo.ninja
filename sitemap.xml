@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Submit using the verified vdo.ninja Domain property in Search Console to cover these subdomains. -->
+<!-- Official vdo.ninja URLs. Forks and self-hosted deployments should replace these URLs or omit this file. -->
+<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+	<sitemap>
+		<loc>https://vdo.ninja/sitemap-main.xml</loc>
+	</sitemap>
+	<sitemap>
+		<loc>https://vdo.ninja/sitemap-subdomains.xml</loc>
+	</sitemap>
+	<sitemap>
+		<loc>https://docs.vdo.ninja/sitemap-pages.xml</loc>
+	</sitemap>
+	<sitemap>
+		<loc>https://sdk.vdo.ninja/sitemap.xml</loc>
+	</sitemap>
+</sitemapindex>
