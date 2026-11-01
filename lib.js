@@ -4008,7 +4008,7 @@ function checkConnection() {
 }
 
 session.obsSceneSync = function () {
-	if (session.layouts && session.obsSceneTriggers && session.obsState && session.obsState.details && session.obsState.details.currentScene.name && session.obsSceneTriggers.includes(session.obsState.details.currentScene.name)) {
+	if (session.layouts && session.obsSceneTriggers && session.obsState && session.obsState.details && session.obsState.details.currentScene && session.obsState.details.currentScene.name && session.obsSceneTriggers.includes(session.obsState.details.currentScene.name)) {
 		var idx = session.obsSceneTriggers.indexOf(session.obsState.details.currentScene.name);
 		if (idx >= 0) {
 			if (session.layouts[idx]) {
@@ -7123,9 +7123,24 @@ function remoteFocusZoomRequest(event) { // obsolete.
 
 function mediaAudioTrackUpdated(UUID, streamID) {
 	pokeIframeAPI("new-audio-track-added", true, UUID, streamID); //  videoTrack is whether video. audio will be false I guess.
+	// Capture late tracks without waiting for the studio roster timer.
+	if (window.podcastStudioApp && window.podcastStudioApp.recording) {
+		try {
+			window.podcastStudioApp.refreshRoster();
+		} catch (e) {
+			warnlog(e);
+		}
+	}
 }
 function mediaVideoTrackUpdated(UUID, streamID) {
 	pokeIframeAPI("new-video-track-added", true, UUID, streamID); //  videoTrack is whether video. audio will be false I guess.
+	if (window.podcastStudioApp && window.podcastStudioApp.recording) {
+		try {
+			window.podcastStudioApp.refreshRoster();
+		} catch (e) {
+			warnlog(e);
+		}
+	}
 }
 function mediaSourceUpdated(UUID, streamID) {
 	pokeIframeAPI("new-stream-added", true, UUID, streamID); //  videoTrack is whether video. audio will be false I guess.
@@ -20588,6 +20603,8 @@ function toggleMute(apply = false, event = false) {
 		//}
 	}
 
+	syncCaptionMuteState();
+
 	try {
 		postMessageIframe(document.getElementById("screensharesource"), { mic: !session.muted });
 	} catch (e) { }
@@ -22672,7 +22689,7 @@ session.hangup = function (reload = false, estop = false, preserveStreamTakeover
 			try {
 				if (session.rpcs[i].videoElement) {
 					if (session.rpcs[i].videoElement.recording) {
-						recordLocalVideo("stop", null, session.rpcs[i].videoElement);
+						recordLocalVideo("stop", false, session.rpcs[i].videoElement);
 					}
 				}
 			} catch (e) { }
@@ -42062,8 +42079,9 @@ async function grabVideo(quality = 0, eleName = "previewWebcam", selector = "sel
 				};
 			}
 		} else if (
-			videoSelect.options[videoSelect.selectedIndex].text.toLowerCase().includes("ndi video") ||
-			videoSelect.options[videoSelect.selectedIndex].text.toLowerCase().startsWith("ndi ")
+			videoSelect.options[videoSelect.selectedIndex] &&
+			(videoSelect.options[videoSelect.selectedIndex].text.toLowerCase().includes("ndi video") ||
+			videoSelect.options[videoSelect.selectedIndex].text.toLowerCase().startsWith("ndi "))
 		) {
 
 			// NDI does not like "EXACT"
@@ -42147,7 +42165,9 @@ async function grabVideo(quality = 0, eleName = "previewWebcam", selector = "sel
 
 		var obscam = false;
 		var mirrorcheck = false;
-		log(videoSelect.options[videoSelect.selectedIndex].text);
+		if (videoSelect.options[videoSelect.selectedIndex]) {
+			log(videoSelect.options[videoSelect.selectedIndex].text);
+		}
 
 		if (!videoSelect.options[videoSelect.selectedIndex]) {
 			if (session.mobile) {
@@ -49490,6 +49510,39 @@ var TranscriptionCounter = 0;
 var retriesRecognition = 0;
 var activeRecognition = false;
 var timeoutRecognition = null;
+var recognitionRunning = false;
+var recognitionStopping = false;
+
+function syncCaptionMuteState() {
+	if (!Recognition) {
+		return;
+	}
+	if (session.muted) {
+		clearTimeout(timeoutRecognition);
+		Final_transcript = "";
+		Interim_transcript = "";
+		retriesRecognition = 0;
+		if (recognitionRunning && !recognitionStopping) {
+			recognitionStopping = true;
+			try {
+				Recognition.abort();
+			} catch (e) {
+				recognitionStopping = false;
+				warnlog(e);
+			}
+		}
+	} else if (!recognitionRunning) {
+		clearTimeout(timeoutRecognition);
+		recognitionRunning = true;
+		try {
+			Recognition.start();
+		} catch (e) {
+			recognitionRunning = false;
+			warnlog(e);
+		}
+	}
+}
+
 function setupClosedCaptions() {
 	if (activeRecognition) {
 		return;
@@ -49508,6 +49561,10 @@ function setupClosedCaptions() {
 		Recognition.maxAlternatives = 0;
 
 		Recognition.onstart = function () {
+			if (session.muted || recognitionStopping) {
+				syncCaptionMuteState();
+				return;
+			}
 			log("started transcription: " + Date.now());
 			clearTimeout(timeoutRecognition);
 			timeoutRecognition = setTimeout(function () {
@@ -49515,6 +49572,9 @@ function setupClosedCaptions() {
 			}, 10000);
 		};
 		Recognition.onerror = function (event) {
+			if (recognitionStopping && event.error === "aborted") {
+				return;
+			}
 			if (retriesRecognition <= 3) {
 				console.error(event);
 			}
@@ -49529,11 +49589,21 @@ function setupClosedCaptions() {
 			errorlog("SpeechRecognition error: " + speechError);
 		};
 		Recognition.onend = function (e) {
+			var stoppedForMute = recognitionStopping;
+			recognitionRunning = false;
+			recognitionStopping = false;
+			clearTimeout(timeoutRecognition);
+			if (session.muted) {
+				return;
+			}
+			if (stoppedForMute) {
+				syncCaptionMuteState();
+				return;
+			}
 			warnlog(e);
 			log("Stopped transcription " + Date.now());
-			clearTimeout(timeoutRecognition);
 			timeoutRecognition = setTimeout(function () {
-				Recognition.start();
+				syncCaptionMuteState();
 			}, parseInt(500 * retriesRecognition * retriesRecognition)); // restart it if it fails.
 			retriesRecognition += 1;
 			if (retriesRecognition == 3) {
@@ -49542,6 +49612,9 @@ function setupClosedCaptions() {
 		};
 
 		Recognition.onresult = function (event) {
+			if (session.muted || recognitionStopping) {
+				return;
+			}
 			Interim_transcript = "";
 			if (typeof event.results == "undefined") {
 				log(event);
@@ -49587,7 +49660,7 @@ function setupClosedCaptions() {
 			}
 		};
 
-		Recognition.start();
+		syncCaptionMuteState();
 	} else if (!session.cleanOutput) {
 		warnUser(getTranslation("speech-not-suppoted"), false, false);
 	}
@@ -57129,7 +57202,7 @@ function pauseVideo(videoEle, update = true) {
 					errorlog(error);
 				});
 			} else if (taskItemInContext.recording) {
-				recordLocalVideo("stop", null, taskItemInContext);
+				recordLocalVideo("stop", false, taskItemInContext);
 			}
 		} else if (link.getAttribute("data-action") === "CopyFrameAsImage") {
 			copyVideoFrameToClipboard(taskItemInContext, e);
@@ -63840,16 +63913,16 @@ function soloLinkGeneratorInit(UUID) {
 }
 
 function initRecordingImpossible(UUID) {
-	var ele = document.querySelectorAll('[data-action-type="mute-guest"][data--u-u-i-d="' + UUID + '"]');
-	if (ele) {
-		ele.disabled = true;
-		ele.title = getTranslation("audio-processing-disabled");
+	var elements = document.querySelectorAll('[data-action-type="mute-guest"][data--u-u-i-d="' + UUID + '"]');
+	for (var i = 0; i < elements.length; i++) {
+		elements[i].disabled = true;
+		elements[i].title = getTranslation("audio-processing-disabled");
 	}
-	var ele = document.querySelectorAll('[data-action-type="volume"][data--u-u-i-d="' + UUID + '"]');
-	if (ele) {
-		ele.disabled = true;
-		ele.title = title = getTranslation("audio-processing-disabled");
-		ele.style.opacity = 0.2;
+	elements = document.querySelectorAll('[data-action-type="volume"][data--u-u-i-d="' + UUID + '"]');
+	for (var i = 0; i < elements.length; i++) {
+		elements[i].disabled = true;
+		elements[i].title = getTranslation("audio-processing-disabled");
+		elements[i].style.opacity = 0.2;
 	}
 }
 

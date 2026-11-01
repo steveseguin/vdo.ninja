@@ -97,7 +97,7 @@ function injectStylesheet() {
   const link = document.createElement('link');
   link.id = 'podcast-studio-style';
   link.rel = 'stylesheet';
-  link.href = new URL('./studio.css?v=18', import.meta.url).toString();
+  link.href = new URL('./studio.css?v=21', import.meta.url).toString();
   document.head.appendChild(link);
 }
 
@@ -1214,7 +1214,7 @@ async function runPreflightChecklist({ roomSlug } = {}) {
   const overlay = createElement('div', 'podcast-preflight-backdrop');
   overlay.dataset.podcastOverlay = 'true';
   // Inline styles ensure overlay is styled before external CSS loads
-  overlay.style.cssText = 'position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,0.85);z-index:9999';
+  overlay.style.cssText = 'position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,0.85);z-index:30';
   const panel = createElement('div', 'podcast-preflight-panel');
   panel.style.cssText = 'background:#1a1d24;padding:32px;border-radius:12px;color:#fff;max-width:480px;width:90%';
   panel.setAttribute('role', 'dialog');
@@ -2417,6 +2417,30 @@ class PodcastStudioApp {
 
     const params = new URLSearchParams();
     params.set('room', room);
+    const currentParams = window.urlParams || new URLSearchParams(window.location.search);
+    if (currentParams.has('salt')) {
+      params.set('salt', this.session.salt);
+    }
+    if (this.session.token) {
+      params.set('token', this.session.token);
+    }
+    if (this.session.customWSS && this.session.customWSS !== true) {
+      params.set('pie', this.session.customWSS);
+    } else if (this.session.wssSetViaUrl) {
+      if (this.session.customWSS === true) {
+        params.set('wss', this.session.wss);
+      } else {
+        params.set('wss2', this.session.wss);
+      }
+    }
+    if (this.session && this.session.defaultPassword === false) {
+      if (this.session.password === false) {
+        params.set('password', 'false');
+      } else if (this.session.password) {
+        // Use the guest's existing password prompt without sharing the password.
+        params.set('password', '');
+      }
+    }
     params.set('style', '2');
     params.set('showlabel', '1');
     params.set('tips', '1');

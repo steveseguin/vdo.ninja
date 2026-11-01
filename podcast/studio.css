@@ -7,7 +7,7 @@ body.podcast-studio-mode {
   margin: 0;
 }
 
-body.podcast-studio-mode > :not(#podcast-root):not(#podcast-room-gate):not([data-podcast-overlay="true"]):not(script):not(link) {
+body.podcast-studio-mode > :not(#podcast-root):not(#podcast-room-gate):not([data-podcast-overlay="true"]):not(.promptModal):not(.alertModal):not(.modalBackdrop):not(.opaqueBackdrop):not(#promptModal):not(#modalBackdrop):not(script):not(link) {
   display: none !important;
 }
 
@@ -60,13 +60,14 @@ body.podcast-studio-mode > :not(#podcast-root):not(#podcast-room-gate):not([data
 .podcast-main {
   flex: 1;
   display: grid;
-  grid-template-columns: 460px 1fr;
+  grid-template-columns: 460px minmax(0, 1fr);
   gap: 24px;
   padding: 24px 32px 32px;
   overflow: hidden;
 }
 
 .podcast-roster {
+  min-width: 0;
   display: flex;
   flex-direction: column;
   gap: 16px;
@@ -121,11 +122,17 @@ body.podcast-studio-mode > :not(#podcast-root):not(#podcast-room-gate):not([data
 }
 
 .roster-name {
+  min-width: 0;
+  max-width: 100%;
+  overflow-wrap: break-word;
   font-weight: 600;
   letter-spacing: 0.04em;
 }
 
 .roster-id {
+  min-width: 0;
+  max-width: 100%;
+  overflow-wrap: break-word;
   font-size: 0.75rem;
   opacity: 0.6;
 }
@@ -246,6 +253,7 @@ body.podcast-studio-mode > :not(#podcast-root):not(#podcast-room-gate):not([data
 }
 
 .podcast-console {
+  min-width: 0;
   display: flex;
   flex-direction: column;
   gap: 20px;
@@ -270,6 +278,7 @@ body.podcast-studio-mode > :not(#podcast-root):not(#podcast-room-gate):not([data
 }
 
 .session-tool {
+  box-sizing: border-box;
   display: flex;
   flex-direction: column;
   gap: 12px;
@@ -295,6 +304,12 @@ body.podcast-studio-mode > :not(#podcast-root):not(#podcast-room-gate):not([data
 .session-tool--control .transport-buttons {
   display: inline-flex;
   gap: 12px;
+}
+
+@media (max-width: 1100px) {
+  .podcast-main {
+    grid-template-columns: minmax(0, 1fr);
+  }
 }
 
 @media (max-width: 900px) {
@@ -507,7 +522,7 @@ body.podcast-studio-mode > :not(#podcast-root):not(#podcast-room-gate):not([data
   border-color: rgba(255, 255, 255, 0.3);
 }
 
-.podcast-panel[data-collapsed='true'] > *:not(.panel-collapse-toggle):not(h2):not(.podcast-panel__header):not(.session-tool__title) {
+.podcast-panel[data-collapsible='true'][data-collapsed='true'] > *:not(.panel-collapse-toggle):not(h2):not(.podcast-panel__header):not(.session-tool__title) {
   display: none;
 }
 
@@ -836,6 +851,7 @@ body.podcast-studio-mode > :not(#podcast-root):not(#podcast-room-gate):not([data
 }
 
 .timeline-shell {
+  min-width: 0;
   display: flex;
   flex-direction: column;
   gap: 16px;
@@ -895,12 +911,15 @@ body.podcast-studio-mode > :not(#podcast-root):not(#podcast-room-gate):not([data
 }
 
 .timeline-track__title-group {
+  min-width: 0;
+  max-width: 100%;
   display: flex;
   flex-direction: column;
   gap: 4px;
 }
 
 .timeline-track__title {
+  overflow-wrap: break-word;
   font-size: 1.05rem;
   font-weight: 600;
   letter-spacing: 0.04em;
@@ -1031,6 +1050,8 @@ body.podcast-studio-mode > :not(#podcast-root):not(#podcast-room-gate):not([data
 }
 
 .timeline-entry-label {
+  min-width: 0;
+  overflow-wrap: break-word;
   font-weight: 600;
   letter-spacing: 0.04em;
 }
@@ -1316,6 +1337,35 @@ body.podcast-studio-mode > :not(#podcast-root):not(#podcast-room-gate):not([data
 }
 
 @media (max-width: 520px) {
+  .podcast-main {
+    padding: 16px 12px;
+  }
+
+  .podcast-panel {
+    min-width: 0;
+    padding: 16px 12px;
+  }
+
+  .session-tool {
+    min-width: 0;
+    width: 100%;
+    padding: 14px 12px;
+  }
+
+  .session-tool--control .transport-buttons {
+    flex-wrap: wrap;
+  }
+
+  .session-tool--iso-config .iso-config-row__hint {
+    padding-left: 0;
+  }
+
+  .session-tool--iso-config .cloud-sync-token__input {
+    min-width: 0;
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+
   .host-audio-settings,
   .host-audio-advanced__grid {
     grid-template-columns: 1fr;
@@ -1384,6 +1434,7 @@ body.podcast-studio-mode > :not(#podcast-root):not(#podcast-room-gate):not([data
 }
 
 .cloud-sync-token__label {
+  color: rgba(255, 255, 255, 0.85);
   font-size: 0.68rem;
   letter-spacing: 0.06em;
   text-transform: uppercase;
@@ -1721,7 +1772,7 @@ body.podcast-studio-mode > :not(#podcast-root):not(#podcast-room-gate):not([data
 #podcast-room-gate {
   position: fixed;
   inset: 0;
-  z-index: 9999;
+  z-index: 30;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -1844,7 +1895,7 @@ body.podcast-studio-mode > :not(#podcast-root):not(#podcast-room-gate):not([data
 .podcast-preflight-backdrop {
   position: fixed;
   inset: 0;
-  z-index: 10000;
+  z-index: 30;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -2041,7 +2092,7 @@ body.podcast-studio-mode > :not(#podcast-root):not(#podcast-room-gate):not([data
   display: none;
   align-items: center;
   justify-content: center;
-  z-index: 10020;
+  z-index: 30;
   background: rgba(6, 8, 12, 0.82);
   backdrop-filter: blur(12px);
 }
@@ -2127,6 +2178,11 @@ body.podcast-studio-mode > :not(#podcast-root):not(#podcast-room-gate):not([data
 
 .remote-overlay__legacy button {
   cursor: pointer;
+}
+
+.remote-overlay__legacy .advancedAudioSettings label,
+.remote-overlay__legacy .advancedVideoSettings label {
+  color: rgba(255, 255, 255, 0.85);
 }
 
 body.podcast-studio-mode #chatModule {
@@ -2224,7 +2280,7 @@ body.podcast-studio-mode #chatModuleButton {
 .help-overlay {
   position: fixed;
   inset: 0;
-  z-index: 9999;
+  z-index: 30;
   background: rgba(0, 0, 0, 0.7);
   backdrop-filter: blur(4px);
   display: flex;

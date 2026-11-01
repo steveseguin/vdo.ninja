@@ -3614,7 +3614,7 @@
 			
 		</script>
 		
-		<script type="text/javascript" crossorigin="anonymous" id="lib-js" src="./lib.js?ver=14250" onerror="retryStartupOnBackup()"></script>
+		<script type="text/javascript" crossorigin="anonymous" id="lib-js" src="./lib.js?ver=14252" onerror="retryStartupOnBackup()"></script>
 		<script type="text/javascript" crossorigin="anonymous" id="main-js" src="./main.js?ver=1109" onerror="retryStartupOnBackup()"></script>
 		<script>
 			// Wait for the DOM, not for optional downloads or the window load event.
@@ -3640,7 +3640,7 @@
 			if (new URLSearchParams(window.location.search).has("podcast")) {
 				var podcastScript = document.createElement("script");
 				podcastScript.type = "module";
-				podcastScript.src = "./podcast/bootstrap.js?v=5";
+				podcastScript.src = "./podcast/bootstrap.js?v=8";
 				podcastScript.onerror = function () { console.warn("Podcast studio could not load."); };
 				document.head.appendChild(podcastScript);
 			}

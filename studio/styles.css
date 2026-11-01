@@ -385,6 +385,10 @@ button {
 	box-shadow: 0 0 0 1px rgba(37, 208, 255, 0.35);
 }
 
+.scene-card > div {
+	min-width: 0;
+}
+
 .scene-thumb {
 	position: relative;
 	aspect-ratio: 16 / 9;
@@ -404,6 +408,7 @@ button {
 	min-width: 0;
 	font-size: 0.88rem;
 	font-weight: 700;
+	overflow-wrap: break-word;
 }
 
 .scene-card__meta {
@@ -469,6 +474,7 @@ button {
 
 .scene-name-input {
 	width: min(360px, 100%);
+	max-width: 100%;
 	margin: 0;
 	padding: 0;
 	border: 0;
@@ -648,7 +654,7 @@ button {
 	grid-template-columns: minmax(0, 1fr) auto;
 	gap: 12px;
 	width: 100%;
-	max-width: min(1180px, calc((100vh - 330px) * 16 / 9));
+	max-width: 1180px;
 	min-height: 60px;
 	padding: 10px 12px;
 	border: 1px solid var(--line);
@@ -1338,6 +1344,11 @@ button {
 	color: var(--muted);
 	font-size: 0.78rem;
 	line-height: 1.5;
+}
+
+#meshcast-storage-status {
+	/* Keep publishing buttons steady when the URL field loses focus. */
+	min-height: 4.5em;
 }
 
 .output-actions .button {
