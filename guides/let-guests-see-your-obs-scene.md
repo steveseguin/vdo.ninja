@@ -6,6 +6,8 @@ description: Let VDO.Ninja guests watch the finished OBS scene without a hall-of
 
 Use this when you bring guests into OBS with VDO.Ninja and want them to watch the finished scene in their room.
 
+Using **Live Studio** at `/studio/`? Follow [Return OBS video to guests in Live Studio](live-studio-obs-return.md) for its Director button and guest invite controls.
+
 {% hint style="success" %}
 **The short version:** Put the clean VDO.Ninja Scene link in OBS, send the OBS picture back as the director's camera, and give guests a link containing `&broadcast`.
 {% endhint %}
