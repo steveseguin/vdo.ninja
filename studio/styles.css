@@ -537,6 +537,20 @@ button {
 	opacity: 0;
 }
 
+.stage-aspect[data-director-open="true"] .stage-overlay,
+.stage-aspect[data-director-open="true"] .stage-bg,
+.stage-aspect[data-director-open="true"] .stage-empty,
+.stage-aspect[data-dialog-open="true"] .stage-overlay,
+.stage-aspect[data-dialog-open="true"] .stage-bg,
+.stage-aspect[data-dialog-open="true"] .stage-empty {
+	display: none;
+}
+
+#toggle-director[aria-pressed="true"] {
+	background: var(--accent);
+	color: #05070d;
+}
+
 .stage-aspect[data-layout-mode="custom"] .stage-bg {
 	opacity: 0.32;
 }

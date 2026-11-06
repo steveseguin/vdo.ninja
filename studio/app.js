@@ -1,5 +1,5 @@
 import { initChat } from "./chat.js?ver=20261011-9";
-import { guestLabelText } from "../core/legacy/label-text.js?v=2";
+import { guestLabelText } from "../core/legacy/label-text.js?v=3";
 
 const root = document.getElementById("studio-root");
 const roomForm = document.getElementById("room-form");
@@ -106,10 +106,11 @@ function createId(prefix) {
 }
 
 function sanitizeRoomName(value) {
+	// Match the room name used by the embedded director and guest pages.
 	return (value || "")
 		.trim()
-		.replace(/[^a-zA-Z0-9_.-]/g, "")
-		.slice(0, 80);
+		.replace(/[\W]+/g, "_")
+		.slice(0, 30);
 }
 
 function randomRoomName() {
@@ -421,7 +422,6 @@ function buildDirectorUrl() {
 	url.searchParams.set("ltb", extra.has("ltb") ? extra.get("ltb") : "1500");
 	url.searchParams.set("nocontrolbarspace", "");
 	url.searchParams.set("transparent", "");
-	url.searchParams.set("cleanoutput", "");
 	url.searchParams.set("hideheader", "");
 	url.searchParams.set("showlabels", "");
 	url.searchParams.set("hidetranslate", "");
@@ -429,11 +429,13 @@ function buildDirectorUrl() {
 	url.searchParams.set("chatbutton", "0");
 	url.searchParams.set("director", state.room);
 	url.searchParams.set("slotmode", "");
-	url.searchParams.set("showdirector", "");
+	// Keep the director's return feed out of scenes unless showdirector is requested.
 	if (state.password) {
 		url.searchParams.set("password", state.password);
 	}
 	appendParams(url, extra);
+	url.searchParams.delete("broadcast");
+	url.searchParams.delete("bc");
 	return url.href;
 }
 
@@ -483,6 +485,8 @@ function buildSceneUrl(options = {}) {
 		url.searchParams.set("password", state.password);
 	}
 	appendParams(url, currentExtraParams());
+	url.searchParams.delete("broadcast");
+	url.searchParams.delete("bc");
 	url.searchParams.delete("codirector");
 	url.searchParams.delete("directorpassword");
 	url.searchParams.delete("dirpass");
@@ -546,6 +550,9 @@ async function refreshState() {
 	if (!state.iframeReady) {
 		return;
 	}
+	// Let the embedded page receive clicks while an alert or prompt is open.
+	const frameDocument = directorFrame.contentDocument;
+	stage.dataset.dialogOpen = frameDocument && frameDocument.querySelector(".alertModal, .promptModal") ? "true" : "false";
 	for (const request of state.pendingRequests.values()) {
 		if (request.responseKey === "detailedState") {
 			return;
@@ -2367,6 +2374,30 @@ async function startStudio() {
 }
 
 function bindEvents() {
+	const directorButton = document.getElementById("toggle-director");
+	directorButton.addEventListener("click", function () {
+		const open = directorButton.getAttribute("aria-pressed") !== "true";
+		directorButton.setAttribute("aria-pressed", open ? "true" : "false");
+		stage.dataset.directorOpen = open ? "true" : "false";
+		directorFrame.contentDocument.documentElement.dataset.studioDirector = open ? "true" : "false";
+		framePost({ previewMode: !open });
+		if (!open) {
+			framePost({ toggleSettings: false });
+		}
+	});
+	const directorReturn = document.getElementById("director-return");
+	const initialBroadcast = params.get("broadcast") || params.get("bc") || "";
+	directorReturn.checked = (params.has("broadcast") || params.has("bc")) && ["false", "0", "no", "off"].indexOf(initialBroadcast) === -1;
+	directorReturn.addEventListener("change", function () {
+		const current = new URL(window.location.href);
+		current.searchParams.delete("broadcast");
+		current.searchParams.delete("bc");
+		if (directorReturn.checked) {
+			current.searchParams.set("broadcast", "");
+		}
+		history.replaceState(null, "", current.href);
+		renderLinks();
+	});
 	roomForm.addEventListener("submit", event => {
 		event.preventDefault();
 		startStudio();
@@ -2380,6 +2411,17 @@ function bindEvents() {
 			return;
 		}
 		state.iframeReady = true;
+		const frameDocument = directorFrame.contentDocument;
+		const style = frameDocument.createElement("style");
+		style.textContent = "html:not([data-studio-director='true']) #controlButtons, html:not([data-studio-director='true']) #miniPerformer, html:not([data-studio-director='true']) #popupSelector { display: none !important; }";
+		frameDocument.head.appendChild(style);
+		directorButton.disabled = false;
+		directorButton.setAttribute("aria-pressed", "false");
+		stage.dataset.directorOpen = "false";
+		if (typeof directorFrame.contentWindow.miniTranslate === "function") {
+			directorFrame.contentWindow.miniTranslate(directorButton);
+			directorFrame.contentWindow.miniTranslate(directorReturn.parentElement);
+		}
 		setStatus("Connected", "live");
 		framePost({ previewMode: true, layout: buildLayoutPayload(getActiveScene()), target: "*" });
 		applySceneToFrame();

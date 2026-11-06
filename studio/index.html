@@ -6,7 +6,7 @@
 		<title>VDO.Ninja Live Studio</title>
 		<link rel="icon" href="../media/favicon.ico" />
 		<link rel="stylesheet" href="../lineawesome/css/line-awesome.min.css" />
-		<link rel="stylesheet" href="./styles.css?ver=20261029-1" />
+		<link rel="stylesheet" href="./styles.css?ver=20261105-3" />
 	</head>
 	<body>
 		<div id="studio-root" class="studio-shell" data-state="setup">
@@ -42,6 +42,7 @@
 						</div>
 					</div>
 					<div class="topbar__status">
+						<button type="button" id="toggle-director" class="button button--secondary" aria-pressed="false" disabled data-key="studio-director-controls" title="Open director controls to share OBS Virtual Camera"><span data-translate="studio-director">Director</span></button>
 						<span class="status-pill" id="connection-status" data-state="idle">Starting</span>
 						<button type="button" id="refresh-state" class="icon-button" title="Refresh source list" aria-label="Refresh source list"><i class="las la-sync"></i></button>
 					</div>
@@ -172,6 +173,10 @@
 								<button type="button" class="icon-button" id="copy-invite" title="Copy invite link" aria-label="Copy invite link"><i class="las la-copy"></i></button>
 							</div>
 						</label>
+						<label class="check-row" data-key="studio-director-return" title="New guest links show the director's video instead of other guests. Existing guests must reopen the updated invite.">
+							<input type="checkbox" id="director-return" autocomplete="off" />
+							<span data-translate="studio-director-return">Director return</span>
+						</label>
 						<label class="field-row field-row--stacked password-card" id="password-card" data-empty="true">
 							<span>Room password</span>
 							<div class="copy-row">
@@ -271,6 +276,6 @@
 		</div>
 
 		<div id="toast" class="toast" role="status" aria-live="polite"></div>
-		<script type="module" src="./app.js?ver=20261101-1"></script>
+		<script type="module" src="./app.js?ver=20261105-3"></script>
 	</body>
 </html>
