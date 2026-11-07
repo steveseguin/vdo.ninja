@@ -2213,6 +2213,7 @@ WebRTC.Media = (function () {
 							chunkType: chunk.type || "key",
 							timestamp: chunk.timestamp,
 							duration: typeof chunk.duration === "number" ? chunk.duration : null,
+							encodeQueueSize: sourceEncoder ? sourceEncoder.encodeQueueSize : 0,
 							data: bytes.buffer
 						}, [bytes.buffer]);
 					} catch (error) {
@@ -2267,6 +2268,7 @@ WebRTC.Media = (function () {
 								self.postMessage({ type: "video-keyframe" });
 							}
 						}
+						self.postMessage({ type: "video-encode-queue", size: sourceEncoder.encodeQueueSize });
 					} else {
 						sourceEncoder.encode(frame);
 					}
@@ -2554,6 +2556,7 @@ WebRTC.Media = (function () {
 			state: "configured",
 			config: config,
 			worker: worker,
+			encodeQueueSize: 0,
 			pendingDrops: 0,
 			keyframeRequested: false,
 			lastForceKeyframe: false,
@@ -2569,6 +2572,7 @@ WebRTC.Media = (function () {
 					return;
 				}
 				proxy.state = "closed";
+				proxy.encodeQueueSize = 0;
 				if (proxy.controlTimer) {
 					clearInterval(proxy.controlTimer);
 					proxy.controlTimer = null;
@@ -2603,6 +2607,12 @@ WebRTC.Media = (function () {
 
 		worker.onmessage = function (event) {
 			var data = event.data || {};
+			if (data.type === "video-encode-queue") {
+				if (kind === "video" && proxy.state !== "closed" && Number.isFinite(data.size)) {
+					proxy.encodeQueueSize = Math.max(0, data.size);
+				}
+				return;
+			}
 			if (data.type === "source-frame" && firstFrame) {
 				firstFrame = false;
 				if (callbacks.started) {
@@ -2613,6 +2623,9 @@ WebRTC.Media = (function () {
 			}
 			if (data.type === "encoded") {
 				try {
+					if (kind === "video" && proxy.state !== "closed" && Number.isFinite(data.encodeQueueSize)) {
+						proxy.encodeQueueSize = Math.max(0, data.encodeQueueSize);
+					}
 					var init = {
 						type: data.chunkType,
 						timestamp: data.timestamp,
@@ -20473,8 +20486,19 @@ WebRTC.Media = (function () {
 					const allowBitrateAdjust = mode === "bitrate" || mode === "hybrid";
 					const allowFrameDrop = mode === "framerate" || mode === "hybrid";
 					const pressureThreshold = Math.max(1, adaptation.threshold || 380);
+					var encoderPressureMs = 0;
+					var videoEncoder = session.chunkedRecorder.videoEncoder;
+					if (!session.retransmit && !session.chunkcast && videoEncoder && videoEncoder.state === "configured"
+						&& Number.isFinite(videoEncoder.encodeQueueSize) && videoEncoder.encodeQueueSize > 0) {
+						var encoderFrameRate = videoEncoder.config && parseFloat(videoEncoder.config.frameRate);
+						if (encoderFrameRate > 0 && Number.isFinite(encoderFrameRate)) {
+							encoderPressureMs = videoEncoder.encodeQueueSize * 1000 / encoderFrameRate;
+						}
+					}
+					// Encoder backlog needs the same mode and limits as network congestion.
+					var adaptationPressureMs = Math.max(bufferPressureMs, encoderPressureMs);
 
-					if (highPriorityStall || highPressure || bufferPressureMs > pressureThreshold) {
+					if (highPriorityStall || highPressure || adaptationPressureMs > pressureThreshold) {
 						if (allowBitrateAdjust) {
 							newTarget = Math.max(adaptation.floor, adaptation.target * 0.82);
 						}
@@ -20482,14 +20506,14 @@ WebRTC.Media = (function () {
 							const increment = mode === "hybrid" ? 1 : 2;
 							adaptation.frameDropBudget = Math.min(adaptation.maxFrameDrop, adaptation.frameDropBudget + increment);
 						}
-					} else if (mediumPressure || bufferPressureMs > pressureThreshold * 0.8) {
+					} else if (mediumPressure || adaptationPressureMs > pressureThreshold * 0.8) {
 						if (allowBitrateAdjust) {
 							newTarget = Math.max(adaptation.floor, adaptation.target * 0.9);
 						}
 						if (allowFrameDrop) {
 							adaptation.frameDropBudget = Math.min(adaptation.maxFrameDrop, adaptation.frameDropBudget + 1);
 						}
-					} else if (!highPriorityStall && !highPressure && bufferPressureMs < pressureThreshold * 0.35 && sendingRate > 0) {
+					} else if (!highPriorityStall && !highPressure && adaptationPressureMs < pressureThreshold * 0.35 && sendingRate > 0) {
 						if (allowBitrateAdjust) {
 							newTarget = Math.min(adaptation.ceiling, adaptation.target * 1.08);
 						}
