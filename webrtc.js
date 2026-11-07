@@ -17486,6 +17486,23 @@ WebRTC.Media = (function () {
 		return promise;
 	};
 
+	session.updateChunkedAudio = function () {
+		var recorder = session.chunkedRecorder;
+		if (!session.chunked || session.retransmit || session.chunkcast || !recorder || !recorder.configAudio || recorder.configAudio.codec === "pcm") {
+			return;
+		}
+		var track = session.getLocalStream().getAudioTracks()[0];
+		var encoder = recorder.audioEncoder;
+		if (encoder && encoder.state !== "closed") {
+			if (encoder.sourceTrack !== track && encoder.stopCapture) {
+				encoder.stopCapture();
+			}
+		} else if (session.chunkedAudioEnabled === null && track && track.readyState === "live"
+			&& Object.keys(session.chunkedTransferChannels).length) {
+			session.webCodecAudio(recorder.configAudio).catch(errorlog);
+		}
+	};
+
 	session.webCodecAudio = async function (config) {
 		if (session.chunkedAudioEnabled !== null) {
 			return;
@@ -17522,6 +17539,9 @@ WebRTC.Media = (function () {
 			}
 		}
 
+		var recorder = session.chunkedRecorder;
+		var previousAudioOrigin = recorder && recorder.audioRealTime;
+		var audioDetails;
 		var stop = false;
 		var lastTimestamp = -1;
 		var firstTimestamp = -1;
@@ -17532,6 +17552,37 @@ WebRTC.Media = (function () {
 			res = resolve;
 		});
 		promise.resolve = res;
+
+		async function stopAudioCapture() {
+			if (stop) {
+				return;
+			}
+			stop = true;
+			try {
+				if (frameReader) {
+					await frameReader.cancel();
+					frameReader.releaseLock();
+				}
+				if (encoder.audioDataSource) {
+					encoder.audioDataSource.close();
+				}
+				if (encoder.state === "configured") {
+					await encoder.flush();
+				}
+			} catch (error) {
+				errorlog(error);
+			}
+			if (encoder.state !== "closed") {
+				encoder.close();
+			}
+			promise.resolve();
+			if (session.chunkedRecorder === recorder && recorder.audioEncoder === encoder) {
+				session.chunkedAudioEnabled = null;
+				if (session.getLocalStream().getAudioTracks()[0] !== encoder.sourceTrack) {
+					session.updateChunkedAudio();
+				}
+			}
+		}
 
 		var startupOriginWallMs = 0;
 		var startupOriginMonotonicMs = 0;
@@ -17544,6 +17595,14 @@ WebRTC.Media = (function () {
 					if (captureElapsedMs >= 0 && Number.isFinite(originCandidateMs)
 						&& originCandidateMs < session.stats.Chunked_audio.realTime - 10) {
 						session.stats.Chunked_audio.realTime = Math.round(originCandidateMs);
+						recorder.audioRealTime = session.stats.Chunked_audio.realTime;
+						if (typeof previousAudioOrigin === "number") {
+							// A new capture must not retime packets still queued from the old one.
+							audioDetails = Object.assign({}, audioDetails);
+							audioDetails.realTimeAudio = recorder.audioRealTime;
+							return false;
+						}
+						audioDetails.realTimeAudio = recorder.audioRealTime;
 						for (var timingUUID in session.chunkedTransferChannels) {
 							var timingChannel = session.chunkedTransferChannels[timingUUID];
 							if (timingChannel && timingChannel.readyState === "open") {
@@ -17562,28 +17621,18 @@ WebRTC.Media = (function () {
 			startupOriginWallMs = session.getChunkedTimestamp();
 			startupOriginMonotonicMs = performance.now();
 			session.stats.Chunked_audio.realTime = startupOriginWallMs;
+			recorder.audioRealTime = session.stats.Chunked_audio.realTime;
+			audioDetails = {};
+			audioDetails.type = "chunkedconfig";
+			audioDetails.configAudio = Object.assign({}, config);
+			audioDetails.realTimeAudio = recorder.audioRealTime;
 			promise.resolve();
-			for (var UUID in session.chunkedTransferChannels) {
-				var channel = session.chunkedTransferChannels[UUID];
-				if (!channel || channel.readyState !== "open") {
-					continue;
-				}
-				try {
-					channel.send(JSON.stringify({
-						type: "chunkedconfig",
-						configAudio: session.chunkedRecorder && session.chunkedRecorder.configAudio,
-						realTimeAudio: session.stats.Chunked_audio.realTime
-					}));
-				} catch (error) {
-					errorlog(error);
-				}
-			}
 			return true;
 		}
 
 		const encodedAudioOutputProcessor = {
 			output: async frame => {
-				if (!session.chunkedRecorder || !session.chunkedRecorder.sendChunks) {
+				if (session.chunkedRecorder !== recorder || !recorder || !recorder.sendChunks) {
 					return;
 				} else if (frame.constructor.name == "EncodedAudioChunk") {
 					let frameData = new Uint8Array(frame.byteLength);
@@ -17593,10 +17642,13 @@ WebRTC.Media = (function () {
 							media: "audio",
 							frameType: "audio",
 							timestamp: frame.timestamp - firstTimestamp,
+							audioDetails: audioDetails,
 							data: frameData
 						});
 					} else {
-						session.chunksQueue.push([frame.timestamp - firstTimestamp, "audio"]);
+						var metadataEntry = [frame.timestamp - firstTimestamp, "audio"];
+						metadataEntry.audioDetails = audioDetails;
+						session.chunksQueue.push(metadataEntry);
 						session.chunksQueue.push(frameData);
 					}
 					if (session.chunkIframe) {
@@ -17634,8 +17686,8 @@ WebRTC.Media = (function () {
 			var nativeAudioEncoder = new AudioEncoder(encodedAudioOutputProcessor);
 			var audioDataSource = await session.createChunkedAudioDataSource(stream, config, function (audioData) {
 				try {
-					reportFirstAudioTimestamp(audioData.timestamp);
-					if (encoder.state === "configured") {
+					if (!stop && session.chunkedRecorder === recorder && encoder.state === "configured") {
+						reportFirstAudioTimestamp(audioData.timestamp);
 						nativeAudioEncoder.encode(audioData);
 					}
 				} catch (error) {
@@ -17645,7 +17697,13 @@ WebRTC.Media = (function () {
 						audioData.close();
 					} catch (closeError) { }
 				}
-			}, encodedAudioOutputProcessor.error);
+			}, encodedAudioOutputProcessor.error).catch(function (error) {
+				nativeAudioEncoder.close();
+				if (session.chunkedRecorder === recorder) {
+					session.chunkedAudioEnabled = null;
+				}
+				throw error;
+			});
 			if (audioDataSource.channelCount && config.numberOfChannels !== audioDataSource.channelCount) {
 				config.numberOfChannels = audioDataSource.channelCount;
 				config.channels = audioDataSource.channelCount;
@@ -17658,6 +17716,9 @@ WebRTC.Media = (function () {
 				state: "configured",
 				config: config,
 				audioDataSource: audioDataSource,
+				flush: function () {
+					return nativeAudioEncoder.flush();
+				},
 				configure: function (nextConfig) {
 					if (encoder.state === "closed") {
 						return;
@@ -17678,14 +17739,22 @@ WebRTC.Media = (function () {
 					} catch (error) { }
 				}
 			};
+			if (session.chunkedRecorder !== recorder) {
+				encoder.close();
+				promise.resolve();
+				return promise;
+			}
 			session.stats.Chunked_audio.numberOfChannels = config.numberOfChannels;
 			session.stats.Chunked_audio.sampleRate = config.sampleRate;
 			session.chunkedRecorder.configAudio = config;
 			session.chunkedRecorder.audioEncoder = encoder;
+			encoder.sourceTrack = track;
+			encoder.stopCapture = stopAudioCapture;
 			session.chunkedAudioEnabled = true;
 			audioDataSource.start().catch(function (error) {
 				encodedAudioOutputProcessor.error(error);
 			});
+			session.updateChunkedAudio();
 			return promise;
 		}
 
@@ -17698,21 +17767,16 @@ WebRTC.Media = (function () {
 		//config.sampleRate = 48000*config.numberOfChannels; // I'm just going to hard code this to 48000, since i don't know what the bleep is going on.
 		encoder.config = config;
 		encoder.configure(config);
+		encoder.sourceTrack = track;
+		encoder.stopCapture = stopAudioCapture;
+		recorder.audioEncoder = encoder;
 
 		frameReader.read().then(async function processFrameAudio({ done, value }) {
-			if (done || stop) {
-				// await encoder.flush();
-				encoder.close();
+			if (done || stop || encoder.state === "closed" || session.chunkedRecorder !== recorder) {
 				if (value) {
 					value.close();
 				}
-				session.chunkedAudioEnabled = null;
-				return;
-			} else if (encoder.state == "closed") {
-				if (value) {
-					value.close();
-				}
-				session.chunkedAudioEnabled = null;
+				await stopAudioCapture();
 				return;
 			}
 			try {
@@ -17914,7 +17978,7 @@ WebRTC.Media = (function () {
 			session.stats.chunkedFecParity = reliability.stats.fecParityBlocks;
 		};
 
-		session.chunkedRecorder.enqueueFrame = function ({ media, frameType, timestamp, data }) {
+		session.chunkedRecorder.enqueueFrame = function ({ media, frameType, timestamp, data, audioDetails }) {
 			if (!(data instanceof Uint8Array)) {
 				return;
 			}
@@ -17979,6 +18043,9 @@ WebRTC.Media = (function () {
 			};
 
 			const metadataEntry = [timestamp, frameType, metaExtra];
+			if (audioDetails) {
+				metadataEntry.audioDetails = audioDetails;
+			}
 			session.chunksQueue.push(metadataEntry);
 			for (let chunkIndex = 0; chunkIndex < dataChunks.length; chunkIndex++) {
 				const chunk = dataChunks[chunkIndex];
@@ -20109,7 +20176,18 @@ WebRTC.Media = (function () {
 								continue; // do not send audio
 							}
 							attempted = true;
-							const sendResult = sendToViewer(uuid, metadataPayload, { metadata: true });
+							var sendResult = false;
+							// Keep capture configuration beside its queued frames, including
+							// after queue trimming or a viewer joining during a device switch.
+							if (metadataEntry.audioDetails && channel.audioDetailsSent !== metadataEntry.audioDetails) {
+								sendResult = sendToViewer(uuid, JSON.stringify(metadataEntry.audioDetails), { metadata: true });
+								if (sendResult === true) {
+									channel.audioDetailsSent = metadataEntry.audioDetails;
+								}
+							}
+							if (!metadataEntry.audioDetails || channel.audioDetailsSent === metadataEntry.audioDetails) {
+								sendResult = sendToViewer(uuid, metadataPayload, { metadata: true });
+							}
 							if (sendResult === true) {
 								delivered = true;
 							} else if (sendResult === "skipped") {
@@ -20479,9 +20557,6 @@ WebRTC.Media = (function () {
 								session.chunkedAudioEnabled = null;
 								await session.webCodecAudio();
 							}
-							if (session.chunkedRecorder && session.chunkedRecorder.audioEncoder && session.chunkedRecorder.audioEncoder.configure && session.chunkedRecorder.audioEncoder.config) {
-								session.chunkedRecorder.audioEncoder.configure(session.chunkedRecorder.audioEncoder.config);
-							}
 						}
 					} catch (e) {
 						errorlog(e);
@@ -20684,6 +20759,12 @@ WebRTC.Media = (function () {
 			}
 			if (cancel) {
 				warnlog("Cancelling? no more chunked connections. I probalby shouldn't be stopping if recording also.");
+				if (session.chunkedRecorder && session.chunkedRecorder.audioEncoder && session.chunkedRecorder.audioEncoder.stopCapture) {
+					session.chunkedRecorder.audioEncoder.stopCapture();
+				}
+				if (!session.retransmit && !session.chunkcast) {
+					session.chunkedAudioEnabled = null;
+				}
 				try {
 					session.chunkedRecorder.stop();
 				} catch (e) { }

@@ -43996,6 +43996,10 @@ function senderAudioUpdate(callbackUUID = false, videoSource = null) {
 			});
 		}
 
+		if (session.chunked && session.updateChunkedAudio) {
+			session.updateChunkedAudio();
+		}
+
 		if (session.whipOut && session.whipOut.getSenders && tracks.length) {
 			// mixMinus won't work with meshcast, so don't bother.
 			session.whipOut.getSenders().forEach(sender => {
