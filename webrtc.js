@@ -17723,8 +17723,8 @@ WebRTC.Media = (function () {
 				if (!stop) {
 					lastTimestamp = value.timestamp;
 					try {
-						if (encoder.config.codec === "opus" && nextAudioFrameTimestamp !== null && Math.abs(value.timestamp - nextAudioFrameTimestamp) > 2000) {
-							// Preserve a capture gap instead of compressing its time out of Opus.
+						if (encoder.config.codec === "opus" && nextAudioFrameTimestamp !== null && Math.abs(value.timestamp - nextAudioFrameTimestamp) > 50000) {
+							// Capture timestamps jitter across blocks. Reset only beyond the 50 ms tolerance.
 							await encoder.flush();
 							if (stop || encoder.state === "closed") {
 								value.close();
@@ -17732,9 +17732,13 @@ WebRTC.Media = (function () {
 							}
 							encoder.reset();
 							encoder.configure(encoder.config);
+							nextAudioFrameTimestamp = null;
 						}
-						nextAudioFrameTimestamp = value.timestamp + Math.round(value.numberOfFrames * 1000000 / value.sampleRate);
 						encoder.encode(value);
+						if (nextAudioFrameTimestamp === null) {
+							nextAudioFrameTimestamp = value.timestamp;
+						}
+						nextAudioFrameTimestamp += value.numberOfFrames * 1000000 / value.sampleRate;
 					} catch (e) {
 						errorlog(e);
 					}
