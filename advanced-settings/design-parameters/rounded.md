@@ -31,6 +31,8 @@ An example of an aggressive rounded effect is with the following parameters: \
 
 ## Related
 
+Adjust rounded corners alongside borders and spacing in the [Guest video styler](https://vdo.ninja/examples/guest-styler).
+
 {% content-ref url="../view-parameters/cover.md" %}
 [cover.md](../view-parameters/cover.md)
 {% endcontent-ref %}

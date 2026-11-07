@@ -4,12 +4,13 @@ description: Style guest videos with names, lower thirds, borders, backgrounds, 
 
 # Style your guest videos
 
-Add a name, a border, or your show's colors to each guest. Start with a few link options. Use CSS or a custom page when you want a more individual look.
+Add a name, a border, or your show's colors to each guest. Use the [Guest video styler](https://vdo.ninja/examples/guest-styler) for a live preview and a ready-to-paste scene link, or use the link options below.
 
 ## Guide map
 
 | Start here | What you can make |
 | --- | --- |
+| [Guest video styler](#use-the-visual-styler) | Choose a preset, adjust the look, and copy the finished link |
 | 🟢 [Names and borders](#names-and-borders) | A styled group scene, without code |
 | 🎨 [Custom CSS](custom-css.md) | Your own lower thirds, colors, and talking indicators |
 | 🧩 [OBS and Mixer layouts](obs-and-mixer.md) | Fixed guest boxes, image frames, logos, and backgrounds |
@@ -17,6 +18,17 @@ Add a name, a border, or your show's colors to each guest. Start with a few link
 | ⚡ [A dynamic stage](dynamic-stage.md) (advanced) | Your own guest cards, scores, and spotlight controls |
 
 <figure><img src="../../.gitbook/assets/guest-video-styling/preset-styles.jpg" alt="Four built-in guest label styles: default, Ninja Blue, rounded, and Teams"><figcaption><p>Built-in styles on VDO.Ninja's sample video. Labels follow each guest as the scene rearranges.</p></figcaption></figure>
+
+## Use the visual styler
+
+1. Open the [Guest video styler](https://vdo.ninja/examples/guest-styler), choose a preset, and adjust the names, borders, spacing, and background.
+2. Set **Output size** to match your OBS Browser Source: 1920 x 1080 or 1280 x 720.
+3. Under **Use this look**, paste your group scene or solo view link. Its room and password options are kept; previous styling options are replaced.
+4. Copy **Complete link** into the OBS Browser Source's **URL** field. The CSS is included in the link.
+
+To keep the CSS separate, expand **Paste the CSS into OBS instead**. Copy **Browser Source URL** into the URL field and the generated CSS into **Custom CSS**.
+
+The preview uses sample guests. Set your real guests' names with **Add a label** in the director room, as described below.
 
 ## Names and borders
 

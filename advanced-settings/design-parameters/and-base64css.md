@@ -39,6 +39,8 @@ There's also a page dedicated to creating these base64 encodings here: [https://
 
 ## Related
 
+The [Guest video styler](https://vdo.ninja/examples/guest-styler) builds styled scene links with the CSS already encoded and included.
+
 {% content-ref url="css.md" %}
 [css.md](css.md)
 {% endcontent-ref %}

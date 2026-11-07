@@ -18,6 +18,7 @@ This section covers the VDO.Ninja ecosystem beyond the main web app, including h
 * [caption.ninja.md](caption.ninja.md "mention") ([https://caption.ninja/](https://caption.ninja/))
 * [raspberry.ninja](raspberry.ninja/ "mention") ([https://raspberry.ninja](https://raspberry.ninja))
 * [mixer-app.md](mixer-app.md "mention") ([https://vdo.ninja/alpha/mixer](https://vdo.ninja/alpha/mixer))
+* [Guest video styler](https://vdo.ninja/examples/guest-styler): preview guest names, borders, and backgrounds, then copy a styled scene link. [Styling guide](../guides/guest-video-styling/README.md).
 * [screen-recorder.md](screen-recorder.md "mention") ([https://vdo.ninja/screenrecorder/](https://vdo.ninja/screenrecorder/))
 * [vdo-ninja-drop.md](vdo-ninja-drop.md "mention") ([https://vdo.ninja/drop](https://vdo.ninja/drop))
 * [qr-connect.md](qr-connect.md "mention") ([https://vdo.ninja/qr](https://vdo.ninja/qr))

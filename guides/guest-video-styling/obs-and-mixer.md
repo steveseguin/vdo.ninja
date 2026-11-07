@@ -12,7 +12,7 @@ Choose a group scene when guests should rearrange automatically. Choose individu
 
 1. In the director room, find **CAPTURE A GROUP SCENE** and copy its scene link into an OBS **Browser Source**.
 2. Set its width and height to your output size, such as 1920 × 1080.
-3. Add [labels and borders](README.md#names-and-borders), or paste a [CSS recipe](custom-css.md) into Custom CSS.
+3. Paste that scene link into the [Guest video styler](https://vdo.ninja/examples/guest-styler), adjust the look, and use its **Complete link** as the Browser Source URL. You can also paste a [CSS recipe](custom-css.md) into Custom CSS.
 4. Add your logo or show title above the Browser Source in OBS's Sources list.
 
 VDO.Ninja keeps each label attached to its guest. A separate graphic placed over the whole group does not automatically follow a guest when the grid changes.

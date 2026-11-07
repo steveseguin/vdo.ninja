@@ -6,7 +6,7 @@ description: Display labels as a video overlay
 
 General Option! ([`&push`](../../source-settings/push.md), [`&room`](../../general-settings/room.md), [`&view`](../view-parameters/view.md), [`&scene`](../view-parameters/scene.md))
 
-For a visual walkthrough, see [Style your guest videos](../../guides/guest-video-styling/README.md).
+Design labels with a live preview in the [Guest video styler](https://vdo.ninja/examples/guest-styler). For a walkthrough, see [Style your guest videos](../../guides/guest-video-styling/README.md).
 
 ## Aliases
 

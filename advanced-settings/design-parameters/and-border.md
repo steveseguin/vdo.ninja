@@ -20,6 +20,8 @@ Adds a border around the videos.
 
 ## Related
 
+Preview borders, rounded corners, and spacing with the [Guest video styler](https://vdo.ninja/examples/guest-styler).
+
 {% content-ref url="and-bordercolor.md" %}
 [and-bordercolor.md](and-bordercolor.md)
 {% endcontent-ref %}

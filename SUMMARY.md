@@ -31,6 +31,7 @@
   * [Raspberry.Ninja](steves-helper-apps/raspberry.ninja/README.md)
     * [Documentation](steves-helper-apps/raspberry.ninja/documentation.md)
   * [Mixer App](steves-helper-apps/mixer-app.md)
+  * [Guest video styler](https://vdo.ninja/examples/guest-styler)
   * [Screen Recorder](steves-helper-apps/screen-recorder.md)
   * [VDO.Ninja Drop](steves-helper-apps/vdo-ninja-drop.md)
   * [QR Connect](steves-helper-apps/qr-connect.md)

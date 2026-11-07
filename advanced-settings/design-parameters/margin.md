@@ -23,3 +23,5 @@ Adds 10px around the videos for some spacing, by default. It can be customized.\
 
 It's also available as a toggle to the director's room.\
 ![](<../../.gitbook/assets/image (125).png>)
+
+Preview spacing alongside borders and guest names in the [Guest video styler](https://vdo.ninja/examples/guest-styler).

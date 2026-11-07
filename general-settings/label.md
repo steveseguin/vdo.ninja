@@ -58,6 +58,8 @@ So it's not super obvious how to do this currently, so I think the next goal wil
 
 ## Related
 
+Design how names and titles appear over guest videos with the [Guest video styler](https://vdo.ninja/examples/guest-styler).
+
 {% content-ref url="../advanced-settings/design-parameters/showlabels.md" %}
 [showlabels.md](../advanced-settings/design-parameters/showlabels.md)
 {% endcontent-ref %}

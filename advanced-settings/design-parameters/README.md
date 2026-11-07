@@ -6,6 +6,8 @@ description: >-
 
 # Design Parameters
 
+Use the [Guest video styler](https://vdo.ninja/examples/guest-styler) to preview names, borders, spacing, and backgrounds, then copy a scene or view link with your styling included.
+
 They are separated in three groups: [general options](./#general-options) (push and view), [source side](./#source-side-options) (push) options and [viewer side](./#viewer-side-options) (view) options.
 
 ## General options

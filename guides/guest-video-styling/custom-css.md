@@ -8,6 +8,8 @@ description: Copy CSS recipes for VDO.Ninja lower thirds, guest borders, subtitl
 
 Use CSS to change colors, type, spacing, and the shape of a lower third. Guest names still come from their VDO.Ninja labels.
 
+The [Guest video styler](https://vdo.ninja/examples/guest-styler) lets you design and preview the look with controls, then copy the generated CSS or a complete scene link with the CSS included.
+
 ## Where to paste it
 
 **In OBS:** Open the Browser Source's **Properties**, then paste the recipe into **Custom CSS**. Keep `&showlabels` on its URL. Use plain `&showlabels` instead of a named preset when applying these recipes.

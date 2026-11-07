@@ -43,6 +43,8 @@ Example:\
 
 ## Related
 
+For guest names and borders, the [Guest video styler](https://vdo.ninja/examples/guest-styler) generates CSS and a complete scene link from a live preview.
+
 {% content-ref url="and-base64css.md" %}
 [and-base64css.md](and-base64css.md)
 {% endcontent-ref %}
