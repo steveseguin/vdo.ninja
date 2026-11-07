@@ -30,6 +30,8 @@ Adding `&meshcast` to a guest or director link will trigger the service, causing
 
 Viewers will automatically attempt to use the server-based feed over the peer-to-peer feed. Peer to peer is still used to send data though, and it can be optionally be used for sending audio p2p (lower latency).
 
+Meshcast lowers the sender's upload, not the viewer's download. In a room, each viewer still downloads every video it shows, at up to the Meshcast bitrate. To limit that, add [`&novideo`](../advanced-settings/video-parameters/and-novideo.md), [`&showonly=streamID1,streamID2`](../advanced-settings/video-parameters/novideo.md) or [`&broadcast`](../advanced-settings/view-parameters/broadcast.md) to the viewer's link; video that isn't allowed is never requested from the server. To give a whole room one combined picture, see [Let guests see your finished OBS scene](../guides/let-guests-see-your-obs-scene.md).
+
 Unlike the [`&broadcast`](../advanced-settings/view-parameters/broadcast.md) flag, which uses IFrames, this new server-side mode does not; it's more deeply integrated. Echo cancellation should work as a result.
 
 If publishing using `&meshcast`, I don't bother to show the viewer count, as it won't be accurate currently anyways; instead I just say you're broadcasting. I'll try to improve this in the future.
