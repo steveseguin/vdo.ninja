@@ -17267,6 +17267,12 @@ WebRTC.Media = (function () {
 		var stop = false;
 		var lastTimestamp = -1;
 		var firstTimestamp = -1;
+		var previousVideoOrigin = null;
+		if (!session.retransmit && !session.chunkcast && config && Number.isFinite(config.realTime)) {
+			previousVideoOrigin = config.realTime;
+		}
+		var captureOrigin = 0;
+		var videoTimestampOffset = 0;
 		var frameReader = null;
 		var encoder;
 		var res;
@@ -17295,7 +17301,9 @@ WebRTC.Media = (function () {
 				} else if (frame.constructor.name == "EncodedVideoChunk") {
 					if (firstTimestamp == -1) {
 						firstTimestamp = frame.timestamp;
-						session.stats.Chunked_video.realTime = session.getChunkedTimestamp();
+						captureOrigin = session.getChunkedTimestamp();
+						if (previousVideoOrigin !== null) videoTimestampOffset = Math.round((captureOrigin - previousVideoOrigin) * 1000);
+						session.stats.Chunked_video.realTime = previousVideoOrigin === null ? captureOrigin : previousVideoOrigin;
 						promise.resolve();
 					}
 					let frameData = new Uint8Array(frame.byteLength);
@@ -17304,15 +17312,15 @@ WebRTC.Media = (function () {
 						session.chunkedRecorder.enqueueFrame({
 							media: "video",
 							frameType: frame.type,
-							timestamp: frame.timestamp - firstTimestamp,
+							timestamp: frame.timestamp - firstTimestamp + videoTimestampOffset,
 							data: frameData
 						});
 					} else {
-						session.chunksQueue.push([frame.timestamp - firstTimestamp, frame.type]);
+						session.chunksQueue.push([frame.timestamp - firstTimestamp + videoTimestampOffset, frame.type]);
 						session.chunksQueue.push(frameData);
 					}
 					if (session.chunkIframe) {
-						pokeIframeAPI("chunked-outbound", { type: frame.type, ts: frame.timestamp - firstTimestamp });
+						pokeIframeAPI("chunked-outbound", { type: frame.type, ts: frame.timestamp - firstTimestamp + videoTimestampOffset });
 					}
 					try {
 						await session.chunkedRecorder.sendChunks("video");
@@ -17356,7 +17364,9 @@ WebRTC.Media = (function () {
 				started: function (timestamp) {
 					if (firstTimestamp == -1) {
 						firstTimestamp = timestamp;
-						session.stats.Chunked_video.realTime = session.getChunkedTimestamp();
+						captureOrigin = session.getChunkedTimestamp();
+						if (previousVideoOrigin !== null) videoTimestampOffset = Math.round((captureOrigin - previousVideoOrigin) * 1000);
+						session.stats.Chunked_video.realTime = previousVideoOrigin === null ? captureOrigin : previousVideoOrigin;
 						promise.resolve();
 					}
 				}
@@ -17423,7 +17433,9 @@ WebRTC.Media = (function () {
 				firstTimestamp = value.timestamp;
 				startupOriginWallMs = session.getChunkedTimestamp();
 				startupOriginMonotonicMs = performance.now();
-				session.stats.Chunked_video.realTime = startupOriginWallMs;
+				captureOrigin = startupOriginWallMs;
+				if (previousVideoOrigin !== null) videoTimestampOffset = Math.round((captureOrigin - previousVideoOrigin) * 1000);
+				session.stats.Chunked_video.realTime = previousVideoOrigin === null ? captureOrigin : previousVideoOrigin;
 				promise.resolve();
 			} else if (startupOriginSamples++ < 60) {
 				// The first queued capture can predate encoder startup. Refine its
@@ -17432,17 +17444,23 @@ WebRTC.Media = (function () {
 				var captureElapsedMs = (value.timestamp - firstTimestamp) / 1000;
 				var originCandidateMs = startupOriginWallMs + performance.now() - startupOriginMonotonicMs - captureElapsedMs;
 				if (captureElapsedMs >= 0 && Number.isFinite(originCandidateMs)
-					&& originCandidateMs < session.stats.Chunked_video.realTime - 10) {
-					session.stats.Chunked_video.realTime = Math.round(originCandidateMs);
-					for (var timingUUID in session.chunkedTransferChannels) {
-						var timingChannel = session.chunkedTransferChannels[timingUUID];
-						if (!timingChannel || timingChannel.readyState !== "open") {
-							continue;
-						}
-						try {
-							timingChannel.send(JSON.stringify({ type: "chunkedtiming", realTimeVideo: session.stats.Chunked_video.realTime }));
-						} catch (timingError) {
-							errorlog(timingError);
+					&& originCandidateMs < captureOrigin - 10) {
+					captureOrigin = Math.round(originCandidateMs);
+					if (previousVideoOrigin !== null) {
+						// Keep replacement captures on the existing queued video timeline.
+						videoTimestampOffset = Math.round((captureOrigin - previousVideoOrigin) * 1000);
+					} else {
+						session.stats.Chunked_video.realTime = captureOrigin;
+						for (var timingUUID in session.chunkedTransferChannels) {
+							var timingChannel = session.chunkedTransferChannels[timingUUID];
+							if (!timingChannel || timingChannel.readyState !== "open") {
+								continue;
+							}
+							try {
+								timingChannel.send(JSON.stringify({ type: "chunkedtiming", realTimeVideo: session.stats.Chunked_video.realTime }));
+							} catch (timingError) {
+								errorlog(timingError);
+							}
 						}
 					}
 				}
