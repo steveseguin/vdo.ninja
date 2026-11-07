@@ -10228,9 +10228,7 @@ function updateMixerRun(e = false) {
 						// Apply font size adjustments as before
 						applyLayoutTransition(holder.label, animated, skipAnimation, ["font-size", "padding", "background-color"]);
 						if (fontsize) {
-							if (session.labelsize) {
-								fontsize = (fontsize * session.labelsize) / 100;
-							}
+							// fontsize already includes &labelsize from above
 							holder.label.style.fontSize = parseInt(fontsize) + "px";
 						}
 						holder.label.innerHTML = labelContent
