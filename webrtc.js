@@ -20488,8 +20488,9 @@ WebRTC.Media = (function () {
 					const pressureThreshold = Math.max(1, adaptation.threshold || 380);
 					var encoderPressureMs = 0;
 					var videoEncoder = session.chunkedRecorder.videoEncoder;
+					// One pending input is normal between encode() and processing.
 					if (!session.retransmit && !session.chunkcast && videoEncoder && videoEncoder.state === "configured"
-						&& Number.isFinite(videoEncoder.encodeQueueSize) && videoEncoder.encodeQueueSize > 0) {
+						&& Number.isFinite(videoEncoder.encodeQueueSize) && videoEncoder.encodeQueueSize > 1) {
 						var encoderFrameRate = videoEncoder.config && parseFloat(videoEncoder.config.frameRate);
 						if (encoderFrameRate > 0 && Number.isFinite(encoderFrameRate)) {
 							encoderPressureMs = videoEncoder.encodeQueueSize * 1000 / encoderFrameRate;
