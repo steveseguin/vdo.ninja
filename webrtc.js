@@ -22094,11 +22094,29 @@ WebRTC.Media = (function () {
 								return false;
 							}
 							if (file.audio || file.PCMSource) {
-								if (typeof realTimeAudio === "number" && file.audio) {
-									if (realTimeAudio !== file.audio.realTime && file.audio.decoder && file.audio.decoder.state === "configured") {
-										// Finish the old capture before accepting the replacement's origin.
-										try { await file.audio.decoder.flush(); } catch (audioFlushError) { errorlog(audioFlushError); }
+								const audioConfigChanged = file.audio && file.stream_configAudio
+									&& file.stream_configAudio.codec === "opus" && configAudio.codec === "opus"
+									&& (file.stream_configAudio.sampleRate !== configAudio.sampleRate || file.stream_configAudio.numberOfChannels !== configAudio.numberOfChannels);
+								if (file.audio && file.audio.decoder && file.audio.decoder.state === "configured"
+									&& (audioConfigChanged || (typeof realTimeAudio === "number" && realTimeAudio !== file.audio.realTime))) {
+									// Finish old samples before changing their format or capture origin.
+									try { await file.audio.decoder.flush(); } catch (audioFlushError) { errorlog(audioFlushError); }
+								}
+								if (audioConfigChanged) {
+									if (!session.rpcs[UUID] || file.channel.readyState === "closed") {
+										return false;
 									}
+									if (file.audio.decoder && file.audio.decoder.state !== "closed") {
+										file.audio.decoder.configure(configAudio);
+									}
+									file.stream_configAudio = configAudio;
+									file.audio.nextEncodedTimestamp = null;
+									file.writer_config.samplingFrequency = configAudio.sampleRate;
+									file.writer_config.channels = configAudio.numberOfChannels;
+									session.rpcs[UUID].stats.chunked_mode_audio.sampleRate = configAudio.sampleRate;
+									session.rpcs[UUID].stats.chunked_mode_audio.numberOfChannels = configAudio.numberOfChannels;
+								}
+								if (typeof realTimeAudio === "number" && file.audio) {
 									file.audio.realTime = realTimeAudio;
 								}
 								return false;
