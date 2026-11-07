@@ -47,7 +47,7 @@ Keep CSS changes in the output page. They do not need changes to `webrtc.js`.
 }
 ```
 
-Use `&fontsize=100` as a starting point. Prefer `&fontsize` for automatic sizing with the guest tiles. For a fixed size, add `font-size: 24px !important;` to `.video-label`.
+Labels scale with their guest tiles. Adjust `&fontsize` (100 is normal), or add `font-size: 24px !important;` to `.video-label` for a fixed size.
 
 ## Recipe 2: an editorial name bar
 
@@ -85,7 +85,9 @@ Leave enough margin for shadows. Video containers clip content at their edges, s
 
 ## Give one guest a different name color
 
-Use their stream ID, not their position in the grid:
+In the director room, copy the guest's **solo link**. Their stream ID is the value after `view=` and before the next `&`. For example, `?view=Guest_A&solo=1` has the stream ID `Guest_A`.
+
+Use that ID so the style follows the guest when the grid rearranges:
 
 ```css
 video[data-sid="GUEST_STREAM_ID"] ~ .video-label {

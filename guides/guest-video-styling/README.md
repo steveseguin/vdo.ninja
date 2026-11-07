@@ -13,32 +13,22 @@ Add a name, a border, or your show's colors to each guest. Start with a few link
 | 🟢 [Names and borders](#names-and-borders) | A styled group scene, without code |
 | 🎨 [Custom CSS](custom-css.md) | Your own lower thirds, colors, and talking indicators |
 | 🧩 [OBS and Mixer layouts](obs-and-mixer.md) | Fixed guest boxes, image frames, logos, and backgrounds |
-| 🛠️ [A custom page with an iframe](iframe-starter.md) | A branded show page with an embedded group scene |
-| ⚡ [A dynamic stage](dynamic-stage.md) | Your own guest cards, scores, and spotlight controls |
+| 🛠️ [A custom page with an iframe](iframe-starter.md) (advanced) | A branded show page with an embedded group scene |
+| ⚡ [A dynamic stage](dynamic-stage.md) (advanced) | Your own guest cards, scores, and spotlight controls |
 
 <figure><img src="../../.gitbook/assets/guest-video-styling/preset-styles.jpg" alt="Four built-in guest label styles: default, Ninja Blue, rounded, and Teams"><figcaption><p>Built-in styles on VDO.Ninja's sample video. Labels follow each guest as the scene rearranges.</p></figcaption></figure>
 
 ## Names and borders
 
-### 1. Give each guest a name
+### 1. Add names (lower thirds)
 
-In the director's room, click **Add a label** under the guest. You can also add a name to their invite link:
+In the director's room, click **Add a label** under the guest and enter their name.
 
-```text
-&label=Jane_Doe
-```
-
-For a name and title, use:
-
-```text
-&label=Jane_Doe%5CnHost
-```
-
-`%5Cn` means a line break here: the literal characters `\n`, encoded for a URL. When typing in the director's label box, enter `Jane Doe\nHost`.
+For a name and title on separate lines, enter `Jane Doe\nHost` in that box.
 
 ### 2. Turn on labels in the output
 
-Append this to the **group scene link you use in OBS**:
+In the director room, find **CAPTURE A GROUP SCENE**. Copy its scene link into your OBS Browser Source, then append:
 
 ```text
 &showlabels=ninjablue
@@ -66,7 +56,11 @@ https://vdo.ninja/?room=YOUR_ROOM&scene=0&showlabels=ninjablue&border=4&borderco
 
 Replace `YOUR_ROOM`. If your scene link already contains a password or other options, keep them and append only the styling options. Do not add a second `?`.
 
-[▶ Try names and borders with sample video](https://vdo.ninja/?view&fakeguests=4&showlabels=ninjablue&border=4&bordercolor=white&rounded=12&margin=12&fontsize=100&cleanoutput)
+[▶ Try names and borders with sample video](https://vdo.ninja/?view&fakeguests=4&showlabels=ninjablue&border=4&bordercolor=white&rounded=12&margin=12&cleanoutput)
+
+### Optional: set names in invite links
+
+Add `&label=Jane_Doe` to a guest's invite link, or `&label=Jane_Doe%5CnHost` for a name and title. `%5Cn` is the URL-encoded form of `\n`, which starts the second line.
 
 ## Fine-tune the picture
 
