@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<!-- Copyright (c) 2026 Steve Seguin. SPDX-License-Identifier: MIT -->
+<html lang="en">
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<title>Dynamic stage starter | VDO.Ninja</title>
+	<style>
+		* { box-sizing: border-box; }
+		body { margin: 0; background: #10131e; color: #f5f3ff; font: 16px Arial, sans-serif; }
+		[hidden] { display: none !important; }
+		a { color: #c5b4ff; text-underline-offset: 4px; }
+		button, input { font: inherit; min-height: 42px; padding: 8px 12px; border: 1px solid #596079; border-radius: 6px; color: inherit; background: #1c2032; }
+		button { cursor: pointer; }
+		button:hover { background: #34314d; }
+		:focus { outline: 2px solid #bea5ff; outline-offset: 3px; }
+		header, main, footer { max-width: 1240px; margin: auto; padding: 24px; }
+		header { display: flex; align-items: center; justify-content: space-between; }
+		header strong { letter-spacing: 2px; font-size: 14px; }
+		header a { font-size: 13px; }
+		.stage { padding: 3%; border: 1px solid #524966; border-radius: 12px; background: radial-gradient(ellipse at top left, #3a264e, #161a2b 70%); }
+		.stage-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 25px; }
+		.eyebrow { font-size: 11px; letter-spacing: 3px; color: #c6b4e7; }
+		h1 { margin: 8px 0 0; font-size: 34px; letter-spacing: -1px; }
+		.badge { padding: 8px 12px; border: 1px solid #7c6e96; border-radius: 30px; color: #dfd2ff; font-size: 11px; letter-spacing: 1px; }
+		#cards { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); grid-gap: 22px; }
+		.card { border: 2px solid #8172a9; border-radius: 10px; overflow: hidden; background: #111522; }
+		.card.featured { grid-column: 1 / -1; }
+		.picture { position: relative; padding-bottom: 56.25%; background: #202436; }
+		canvas { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; }
+		.nameplate { display: flex; align-items: center; padding: 16px 18px; border-top: 3px solid #b3a0ff; }
+		.identity { flex: 1; min-width: 0; }
+		.name { display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 21px; }
+		.role { display: block; color: #c8c2d9; font-size: 13px; margin-top: 4px; }
+		.score { margin-left: 15px; font-size: 32px; font-weight: bold; color: #d6c8ff; }
+		.card-controls { padding: 0 14px 14px; }
+		.card-controls button { min-height: 34px; margin: 0 6px 4px 0; font-size: 12px; }
+		.stage-foot { display: flex; justify-content: space-between; margin-top: 22px; color: #bfb5d4; font-size: 11px; letter-spacing: 1px; }
+		.controls { padding-top: 22px; }
+		form { display: flex; flex-wrap: wrap; align-items: end; }
+		label { flex: 1 1 440px; margin-right: 12px; }
+		label span { display: block; color: #c5c2d4; font-size: 13px; margin-bottom: 8px; }
+		input { width: 100%; }
+		.actions { display: flex; flex-wrap: wrap; margin-top: 14px; }
+		.actions button { margin: 0 10px 10px 0; }
+		.primary { background: #ccbbff; color: #211936; border-color: #ccbbff; font-weight: bold; }
+		.primary:hover { background: #dfd3ff; }
+		#status, footer { color: #b7b4c9; font-size: 13px; line-height: 1.6; }
+		#connection { position: absolute; width: 2px; height: 2px; left: -10px; top: 0; border: 0; }
+		#sample-video { position: absolute; width: 2px; height: 2px; left: -10px; top: 0; }
+		.output header, .output .controls, .output footer, .output .card-controls { display: none; }
+		.output main { max-width: none; padding: 0; }
+		.output .stage { min-height: 100vh; border: 0; border-radius: 0; }
+		.no-names .identity { visibility: hidden; }
+		@media (max-width: 600px) { header, main, footer { padding: 16px; } #cards { grid-template-columns: 1fr; } h1 { font-size: 25px; } .name { font-size: 18px; } .stage-foot { letter-spacing: 0; } label { margin: 0 0 12px; } }
+	</style>
+</head>
+<body>
+	<header><strong>VDO.NINJA / CANVAS STARTER</strong><a href="https://docs.vdo.ninja/guides/guest-video-styling/dynamic-stage">Build your own</a></header>
+	<main>
+		<div class="stage" id="stage">
+			<div class="stage-head"><div><span class="eyebrow">THE COMMUNITY SERIES</span><h1>Head to head.</h1></div><span class="badge" id="mode">SAMPLE VIDEO</span></div>
+			<div id="cards"></div>
+			<div class="stage-foot"><span>GUESTS / SCORES / SPOTLIGHT</span><span>BUILT WITH VDO.NINJA</span></div>
+		</div>
+		<section class="controls" aria-label="Stage controls">
+			<form id="connect-form"><label><span>VDO.Ninja scene or view link</span><input id="source" type="url" placeholder="https://vdo.ninja/?room=YOUR_ROOM&amp;scene=0" /></label><button class="primary" type="submit">Connect</button></form>
+			<div class="actions"><button id="sample" type="button">Sample video</button><button id="stop" type="button">Disconnect</button><button id="names" type="button" aria-pressed="true">Hide names</button><button id="sound" type="button" aria-pressed="false">Enable sound</button></div>
+			<p id="status" role="status">Sample video. Scores and spotlight controls affect this page.</p>
+		</section>
+	</main>
+	<footer>Serve this file on localhost or HTTPS. Live canvas video needs a recent Chrome or Edge. Audio plays through the hidden VDO.Ninja iframe.</footer>
+	<iframe id="connection" title="VDO.Ninja media connection" allow="autoplay" tabindex="-1" aria-hidden="true"></iframe>
+	<video id="sample-video" muted loop playsinline preload="none" tabindex="-1" aria-hidden="true"></video>
+	<script>
+		(function () {
+			"use strict";
+			var iframe = document.getElementById("connection");
+			var sample = document.getElementById("sample-video");
+			var cards = document.getElementById("cards");
+			var status = document.getElementById("status");
+			var guests = Object.create(null);
+			var params = new URLSearchParams(window.location.search);
+			var mode = "stopped";
+			var sound = false;
+			var animation = 0;
+			var generation = 0;
+			function closeFrame(frame) { if (frame && typeof frame.close === "function") frame.close(); }
+			function removeGuest(id) {
+				var guest = guests[id];
+				if (!guest) return;
+				closeFrame(guest.pending);
+				guest.element.remove();
+				delete guests[id];
+				if (mode === "live" && !Object.keys(guests).length) status.textContent = "Waiting for guests.";
+			}
+			function clear() {
+				mode = "stopped";
+				generation++;
+				cancelAnimationFrame(animation);
+				iframe.src = "about:blank";
+				sample.pause();
+				Object.keys(guests).forEach(removeGuest);
+			}
+			function addGuest(id, label) {
+				if (guests[id]) return guests[id];
+				var card = document.createElement("article");
+				card.className = "card";
+				// Only fixed markup is inserted. Guest labels are assigned with textContent.
+				card.innerHTML = '<div class="picture"><canvas width="640" height="360" aria-label="Guest video"></canvas></div><div class="nameplate"><div class="identity"><strong class="name"></strong><span class="role"></span></div><span class="score">0</span></div><div class="card-controls"><button type="button" class="point">+1 point</button><button type="button" class="reset">Reset score</button><button type="button" class="feature" aria-pressed="false">Spotlight</button></div>';
+				var guest = { element: card, canvas: card.querySelector("canvas"), pending: null, decoding: false, score: 0 };
+				guest.context = guest.canvas.getContext("2d");
+				guests[id] = guest;
+				card.querySelector(".point").onclick = function () { guest.score++; card.querySelector(".score").textContent = guest.score; };
+				card.querySelector(".reset").onclick = function () { guest.score = 0; card.querySelector(".score").textContent = "0"; };
+				card.querySelector(".feature").onclick = function () {
+					var active = !card.classList.contains("featured");
+					Object.keys(guests).forEach(function (key) {
+						guests[key].element.classList.remove("featured");
+						guests[key].element.querySelector(".feature").setAttribute("aria-pressed", "false");
+					});
+					card.classList.toggle("featured", active);
+					this.setAttribute("aria-pressed", String(active));
+				};
+				cards.appendChild(card);
+				setLabel(guest, label || "Guest");
+				return guest;
+			}
+			function setLabel(guest, label) {
+				var lines = String(label).split("\\n");
+				guest.element.querySelector(".name").textContent = lines[0];
+				guest.element.querySelector(".role").textContent = lines[1] || "";
+			}
+			function draw(guest, frame, width, height) {
+				if (!width || !height) return;
+				var scale = Math.min(1, 1280 / width, 720 / height);
+				width = Math.max(1, Math.round(width * scale));
+				height = Math.max(1, Math.round(height * scale));
+				if (guest.canvas.width !== width || guest.canvas.height !== height) { guest.canvas.width = width; guest.canvas.height = height; }
+				guest.context.drawImage(frame, 0, 0, width, height);
+			}
+			function render() {
+				Object.keys(guests).forEach(function (id) {
+					var guest = guests[id];
+					if (mode === "sample" && sample.readyState >= 2) draw(guest, sample, sample.videoWidth, sample.videoHeight);
+					if (guest.pending) {
+						var frame = guest.pending;
+						guest.pending = null;
+						try { draw(guest, frame, frame.displayWidth, frame.displayHeight); }
+						finally { closeFrame(frame); }
+					}
+				});
+				if (mode !== "stopped") animation = requestAnimationFrame(render);
+			}
+			function preview() {
+				clear();
+				mode = "sample";
+				addGuest("sample-a", "Guest one\\nTeam Violet");
+				addGuest("sample-b", "Guest two\\nTeam Mint");
+				sample.src = "https://vdo.ninja/media/fakesteve.webm";
+				sample.play().catch(function () { status.textContent = "Press Sample video to start playback."; });
+				document.getElementById("mode").textContent = "SAMPLE VIDEO";
+				status.textContent = "Sample video. Scores and spotlight controls affect this page.";
+				render();
+			}
+			function connect() {
+				var url;
+				try {
+					url = new URL(document.getElementById("source").value.trim());
+					if (url.origin !== "https://vdo.ninja" || url.username || url.password || (!url.searchParams.has("view") && !url.searchParams.has("scene")) || url.searchParams.has("push") || url.searchParams.has("director")) throw new Error();
+				} catch (error) { status.textContent = "Use a scene or view link from https://vdo.ninja/."; return; }
+				if (window.location.origin === "null" || !window.isSecureContext || typeof MediaStreamTrackProcessor === "undefined") {
+					status.textContent = "Live canvas video needs a recent Chrome or Edge, on HTTPS or localhost. The sample preview still works.";
+					return;
+				}
+				clear();
+				mode = "live";
+				url.searchParams.set("sendframes", window.location.origin);
+				url.searchParams.set("iframetarget", window.location.origin);
+				url.searchParams.set("cleanoutput", "");
+				url.searchParams.set("autostart", "");
+				if (!url.searchParams.has("bitrate")) url.searchParams.set("bitrate", "1500");
+				if (!url.searchParams.has("viewwidth")) url.searchParams.set("viewwidth", "1280");
+				if (!sound) url.searchParams.set("speakermuted", "");
+				iframe.src = url.href;
+				document.getElementById("mode").textContent = "GUEST STAGE";
+				status.textContent = "Waiting for video. Check your scene, guest selection and password if no cards appear.";
+				render();
+			}
+			window.addEventListener("message", function (event) {
+				if (event.source !== iframe.contentWindow || event.origin !== "https://vdo.ninja") return;
+				var data = event.data;
+				if (!data || typeof data !== "object") return;
+				if (mode !== "live") { closeFrame(data.frame); return; }
+				var id = data.UUID;
+				if (!id) { closeFrame(data.frame); return; }
+				if (data.action === "view-connection" && data.value === false) { removeGuest(id); return; }
+				if (data.action === "view-connection-info" && data.value) {
+					setLabel(addGuest(id), data.value.label || "Guest");
+				}
+				if (data.kind !== "video" || !data.frame) return;
+				var guest = addGuest(id);
+				status.textContent = "Receiving guest video. Scores and spotlight controls affect this page.";
+				if (typeof VideoFrame !== "undefined" && data.frame instanceof VideoFrame) {
+					// Keep only the newest frame; release superseded frames immediately.
+					closeFrame(guest.pending);
+					guest.pending = data.frame;
+				} else if (typeof data.frame === "string" && /^data:image\/(png|jpeg|webp);base64,/i.test(data.frame) && !guest.decoding) {
+					guest.decoding = true;
+					var current = generation;
+					var image = new Image();
+					image.onload = function () {
+						guest.decoding = false;
+						if (current === generation && guests[id] === guest) draw(guest, image, image.naturalWidth, image.naturalHeight);
+					};
+					image.onerror = function () { guest.decoding = false; };
+					image.src = data.frame;
+				} else { closeFrame(data.frame); }
+			});
+			document.getElementById("connect-form").onsubmit = function (event) { event.preventDefault(); connect(); };
+			document.getElementById("sample").onclick = preview;
+			document.getElementById("stop").onclick = function () { clear(); document.getElementById("mode").textContent = "DISCONNECTED"; status.textContent = "Disconnected."; };
+			document.getElementById("names").onclick = function () {
+				var hidden = document.getElementById("stage").classList.toggle("no-names");
+				this.textContent = hidden ? "Show names" : "Hide names";
+				this.setAttribute("aria-pressed", String(!hidden));
+			};
+			document.getElementById("sound").onclick = function () {
+				sound = !sound;
+				iframe.contentWindow.postMessage({ speaker: sound }, "https://vdo.ninja");
+				this.textContent = sound ? "Mute sound" : "Enable sound";
+				this.setAttribute("aria-pressed", String(sound));
+			};
+			window.addEventListener("pagehide", clear);
+			if (params.has("output")) document.body.className = "output";
+			if (params.has("source")) { document.getElementById("source").value = params.get("source"); connect(); }
+			else preview();
+		})();
+	</script>
+</body>
+</html>

@@ -6,6 +6,8 @@ description: Display labels as a video overlay
 
 General Option! ([`&push`](../../source-settings/push.md), [`&room`](../../general-settings/room.md), [`&view`](../view-parameters/view.md), [`&scene`](../view-parameters/scene.md))
 
+For a visual walkthrough, see [Style your guest videos](../../guides/guest-video-styling/README.md).
+
 ## Aliases
 
 * `&showlabel`

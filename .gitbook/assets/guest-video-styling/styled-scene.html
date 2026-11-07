@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<!-- Copyright (c) 2026 Steve Seguin. SPDX-License-Identifier: MIT -->
+<html lang="en">
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<title>Styled scene starter | VDO.Ninja</title>
+	<style>
+		* { box-sizing: border-box; }
+		body { margin: 0; background: #101820; color: #edf5f5; font: 16px Arial, sans-serif; }
+		[hidden] { display: none !important; }
+		a { color: #91e4d8; text-underline-offset: 4px; }
+		button, input, select, textarea { font: inherit; }
+		button, input, select { min-height: 42px; border: 1px solid #52616c; border-radius: 6px; padding: 8px 12px; color: inherit; background: #17232d; }
+		button { cursor: pointer; }
+		button:hover { background: #28414b; }
+		:focus { outline: 2px solid #77decf; outline-offset: 3px; }
+		header, main, footer { max-width: 1240px; margin: auto; padding: 24px; }
+		header { display: flex; align-items: center; justify-content: space-between; }
+		header strong { letter-spacing: 2px; font-size: 14px; }
+		header a { font-size: 13px; }
+		.stage { position: relative; padding-bottom: 56.25%; background: #14242a; overflow: hidden; border: 1px solid #3b5b61; border-radius: 12px; }
+		.stage-inner { position: absolute; top: 0; right: 0; bottom: 0; left: 0; display: flex; flex-direction: column; }
+		.banner, .running-order { display: flex; justify-content: space-between; align-items: center; padding: 2% 3%; }
+		.banner { background: #d3eee7; color: #133b36; }
+		.banner strong { font-size: 24px; letter-spacing: -1px; }
+		.banner span, .running-order { font-size: 12px; letter-spacing: 1px; }
+		.frame { flex: 1; min-height: 0; }
+		iframe { display: block; width: 100%; height: 100%; border: 0; }
+		.running-order { color: #a9cbc8; background: #14242a; }
+		.controls { padding-top: 22px; }
+		.source-row { display: flex; flex-wrap: wrap; align-items: end; margin-bottom: 16px; }
+		.source-row label { flex: 1 1 440px; margin-right: 12px; }
+		label span { display: block; font-size: 13px; color: #b4c9cc; margin-bottom: 8px; }
+		input[type=url] { width: 100%; }
+		.actions { display: flex; flex-wrap: wrap; align-items: center; margin-top: 12px; }
+		.actions > * { margin: 0 10px 10px 0; }
+		.primary { background: #bce6dc; color: #15382f; border-color: #bce6dc; font-weight: bold; }
+		.primary:hover { background: #d5f6ec; }
+		#status { min-height: 20px; margin: 8px 0; font-size: 13px; color: #c3d8dc; }
+		details { margin-top: 14px; }
+		summary { cursor: pointer; padding: 8px 0; }
+		textarea { width: 100%; height: 230px; padding: 16px; border: 1px solid #52616c; border-radius: 6px; background: #0a1118; color: #e5f3f3; line-height: 1.5; font: 13px Consolas, monospace; }
+		footer { color: #91aaa9; font-size: 13px; line-height: 1.6; }
+		.output header, .output .controls, .output footer { display: none; }
+		.output main { max-width: none; padding: 0; }
+		.output .stage { height: 100vh; padding: 0; border: 0; border-radius: 0; }
+		@media (max-width: 600px) { header, main, footer { padding: 16px; } .banner strong { font-size: 17px; } .banner span, .running-order { font-size: 9px; } .source-row label { margin: 0 0 12px; } }
+	</style>
+</head>
+<body>
+	<header><strong>VDO.NINJA / STYLE STARTER</strong><a href="https://docs.vdo.ninja/guides/guest-video-styling">Styling guide</a></header>
+	<main>
+		<div class="stage" id="stage">
+			<div class="stage-inner">
+				<div class="banner"><strong>THE OPEN TABLE</strong><span>IDEAS WORTH SHARING</span></div>
+				<div class="frame"><iframe id="scene" title="Guest videos" allow="autoplay; fullscreen"></iframe></div>
+				<div class="running-order"><span>IN CONVERSATION</span><span id="mode">SAMPLE VIDEO</span></div>
+			</div>
+		</div>
+		<section class="controls" aria-label="Scene controls">
+			<form id="connect-form" class="source-row">
+				<label><span>VDO.Ninja scene or view link</span><input id="source" type="url" placeholder="https://vdo.ninja/?room=YOUR_ROOM&amp;scene=0" /></label>
+				<button class="primary" type="submit">Load scene</button>
+			</form>
+			<div class="actions">
+				<select id="preset" aria-label="Label style"><option value="editorial">Editorial</option><option value="minimal">Minimal</option><option value="esports">Esports</option></select>
+				<button id="apply" type="button" title="Reloads the embedded view with the CSS below">Apply style</button>
+				<button id="preview" type="button">Sample video</button>
+				<button id="sound" type="button" aria-pressed="false">Enable sound</button>
+				<a id="open-scene" target="_blank" rel="noopener">Open styled scene</a>
+			</div>
+			<p id="status" role="status">Sample video. Choose a style, or load your scene link.</p>
+			<details><summary>Edit CSS</summary><textarea id="css" aria-label="Guest CSS" spellcheck="false"></textarea></details>
+		</section>
+	</main>
+	<footer>The banner belongs to this page. The guest labels and borders are styled inside VDO.Ninja. Applying CSS reloads the view.</footer>
+	<script>
+		(function () {
+			"use strict";
+			var iframe = document.getElementById("scene");
+			var source = document.getElementById("source");
+			var editor = document.getElementById("css");
+			var status = document.getElementById("status");
+			var params = new URLSearchParams(window.location.search);
+			var sound = false;
+			var currentSource = "";
+			var presets = {
+				editorial: ".video-label { bottom: 5%; left: 0; background: #d3eee7; color: #153b34; padding: 10px 22px; border-left: 6px solid #60b6a0; font-family: Arial, sans-serif; font-weight: bold; }\n.video-label > span:nth-child(2) { font-size: 55%; text-align: left; margin-top: 4px; font-weight: normal; }\n.holder, .holder > video { border-color: #60b6a0 !important; }",
+				minimal: ".video-label { bottom: 5%; left: 4%; background: rgba(0,0,0,.75); color: white; padding: 8px 14px; border-radius: 5px; font-family: Arial, sans-serif; font-weight: normal; }\n.video-label > span:nth-child(2) { font-size: 55%; text-align: left; margin-top: 3px; }\n.holder, .holder > video { border-color: #c7d4dc !important; }",
+				esports: ".video-label { bottom: 0; left: 0; width: 100%; background: #13172a; color: #f3f3ff; padding: 10px 18px; border-left: 8px solid #b3a0ff; font-family: Arial, sans-serif; font-weight: bold; text-transform: uppercase; }\n.video-label > span:nth-child(2) { font-size: 55%; text-align: left; color: #c6b9ff; margin-top: 3px; }\n.holder, .holder > video { border-color: #b3a0ff !important; }"
+			};
+			function load() {
+				var url;
+				try {
+					url = new URL(currentSource || "https://vdo.ninja/?view&fakeguests=2");
+					if (url.origin !== "https://vdo.ninja" || url.username || url.password || (!url.searchParams.has("view") && !url.searchParams.has("scene")) || url.searchParams.has("push") || url.searchParams.has("director")) throw new Error();
+				} catch (error) {
+					status.textContent = "Use a scene or view link from https://vdo.ninja/.";
+					return;
+				}
+				url.searchParams.set("showlabels", "");
+				url.searchParams.set("base64css", btoa(encodeURIComponent(editor.value)));
+				url.searchParams.set("cleanoutput", "");
+				url.searchParams.set("iframetarget", window.location.origin === "null" ? "*" : window.location.origin);
+				var defaults = { border: "3", margin: "14", cover: "", fontsize: "100" };
+				Object.keys(defaults).forEach(function (key) {
+					if (!url.searchParams.has(key)) url.searchParams.set(key, defaults[key]);
+				});
+				if (!sound) url.searchParams.set("speakermuted", "");
+				iframe.src = url.href;
+				document.getElementById("open-scene").href = url.href;
+				document.getElementById("mode").textContent = currentSource ? "GUEST SCENE" : "SAMPLE VIDEO";
+				status.textContent = currentSource ? "Scene loaded. Guests appear when included in your scene." : "Sample video. Choose a style, or load your scene link.";
+			}
+			document.getElementById("preset").onchange = function () { editor.value = presets[this.value]; };
+			document.getElementById("apply").onclick = load;
+			document.getElementById("connect-form").onsubmit = function (event) { event.preventDefault(); currentSource = source.value.trim(); load(); };
+			document.getElementById("preview").onclick = function () { currentSource = ""; source.value = ""; load(); };
+			document.getElementById("sound").onclick = function () {
+				sound = !sound;
+				iframe.contentWindow.postMessage({ speaker: sound }, "https://vdo.ninja");
+				this.textContent = sound ? "Mute sound" : "Enable sound";
+				this.setAttribute("aria-pressed", String(sound));
+			};
+			if (params.has("source")) { currentSource = params.get("source"); source.value = currentSource; }
+			if (params.has("output")) document.body.className = "output";
+			var selected = params.get("preset");
+			if (!Object.prototype.hasOwnProperty.call(presets, selected)) selected = "editorial";
+			document.getElementById("preset").value = selected;
+			editor.value = presets[selected];
+			load();
+		})();
+	</script>
+</body>
+</html>
