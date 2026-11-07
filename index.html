@@ -3489,7 +3489,7 @@
 			// if (!window.location.search){document.body.innerHTML = "";} // uncomment this line, if you wish to try it.
 			
 			var session = WebRTC.Media; // session is a required global variable if configuring manually. Run before loading main.js but after webrtc.js.
-			session.version = "31.3"; // added director claim-time room admission controls (cap + bypass key + approval queue)
+			session.version = "31.4"; // studio, guest label, and chunked A/V fixes
 			session.streamID = session.generateStreamID(); // randomly generates a streamID for this session. You can set your own programmatically if needed
 			
 			session.defaultPassword = "someEncryptionKey123"; // Change this password if self-deploying for added security/privacy
