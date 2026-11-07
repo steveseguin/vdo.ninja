@@ -22331,8 +22331,11 @@ WebRTC.Media = (function () {
 										const offset = Math.max(0, start - when);
 										if (offset >= duration) {
 											stats.playout_drops = (stats.playout_drops || 0) + 1;
-											stats.last_underflow = Date.now();
-											stats.rebuffering = true;
+											// A late callback with queued audio is not a network underflow.
+											if (audio.bufferState && stats.buffer_level < audio.bufferState.minLead) {
+												stats.last_underflow = Date.now();
+												stats.rebuffering = true;
+											}
 											continue;
 										}
 										const source = session.audioCtx.createBufferSource();
