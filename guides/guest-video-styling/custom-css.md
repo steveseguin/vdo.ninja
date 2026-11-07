@@ -59,7 +59,6 @@ Replace the first rule above with:
 	left: 0;
 	background: #d3eee7;
 	color: #153b34;
-	border-left: 6px solid #60b6a0;
 	padding: 10px 22px;
 	font-family: Arial, sans-serif;
 	font-weight: bold;

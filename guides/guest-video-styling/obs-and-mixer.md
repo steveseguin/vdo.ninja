@@ -25,7 +25,7 @@ VDO.Ninja keeps each label attached to its guest. A separate graphic placed over
 4. Add an **Image** source for a decorative border, and a **Text** source for a name or title.
 5. Group each guest's video and artwork so they move together.
 
-[OBS source and cropping guide](https://obsproject.com/kb/sources-guide) ? [Browser Source settings](https://obsproject.com/kb/browser-source)
+[OBS source and cropping guide](https://obsproject.com/kb/sources-guide) · [Browser Source settings](https://obsproject.com/kb/browser-source)
 
 <figure><img src="../../.gitbook/assets/guest-video-styling/obs-layers.jpg" alt="A layer diagram showing a background, guest video, decorative frame, and lower third"><figcaption><p>Layer order: background at the bottom, then guest video, frame, and name. The illustration shows the composition, not OBS controls.</p></figcaption></figure>
 
