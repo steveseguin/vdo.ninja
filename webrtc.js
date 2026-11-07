@@ -19988,6 +19988,9 @@ WebRTC.Media = (function () {
 					}
 
 					if (canSkip && priority > 0 && bufferedAmount > highWater) {
+						// Later delta frames depend on the reference being skipped here.
+						channel.keyframeSent = false;
+						session.chunkedRecorder.needKeyFrame = true;
 						health.skipped = (health.skipped || 0) + 1;
 						health.consecutiveHigh = (health.consecutiveHigh || 0) + 1;
 						health.buffered = bufferedAmount;
