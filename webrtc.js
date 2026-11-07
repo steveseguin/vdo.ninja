@@ -17122,6 +17122,7 @@ WebRTC.Media = (function () {
 		let target = base;
 		let previousTarget = base;
 		let bufferDelta = base;
+		let measuredDelta = false;
 		let occupancy = base;
 		let rebuffering = false;
 		let underflowAge = Infinity;
@@ -17133,10 +17134,13 @@ WebRTC.Media = (function () {
 			}
 			if (typeof chunkStats.buffer_delta === "number" && Number.isFinite(chunkStats.buffer_delta)) {
 				bufferDelta = chunkStats.buffer_delta;
+				measuredDelta = true;
 			}
 			if (typeof chunkStats.buffer_level === "number" && Number.isFinite(chunkStats.buffer_level)) {
 				occupancy = chunkStats.buffer_level;
-			} else {
+				// A due frame can have a full queue behind it.
+				bufferDelta = occupancy;
+			} else if (measuredDelta) {
 				const fallbackTarget = typeof chunkStats.buffer_buffer === "number" ? chunkStats.buffer_buffer : base;
 				occupancy = Math.max(0, fallbackTarget - bufferDelta);
 			}
@@ -17529,12 +17533,35 @@ WebRTC.Media = (function () {
 		});
 		promise.resolve = res;
 
+		var startupOriginWallMs = 0;
+		var startupOriginMonotonicMs = 0;
+		var startupOriginSamples = 0;
 		function reportFirstAudioTimestamp(timestamp) {
 			if (firstTimestamp != -1) {
+				if (startupOriginSamples++ < 60) {
+					var captureElapsedMs = (timestamp - firstTimestamp) / 1000;
+					var originCandidateMs = startupOriginWallMs + performance.now() - startupOriginMonotonicMs - captureElapsedMs;
+					if (captureElapsedMs >= 0 && Number.isFinite(originCandidateMs)
+						&& originCandidateMs < session.stats.Chunked_audio.realTime - 10) {
+						session.stats.Chunked_audio.realTime = Math.round(originCandidateMs);
+						for (var timingUUID in session.chunkedTransferChannels) {
+							var timingChannel = session.chunkedTransferChannels[timingUUID];
+							if (timingChannel && timingChannel.readyState === "open") {
+								try {
+									timingChannel.send(JSON.stringify({ type: "chunkedtiming", realTimeAudio: session.stats.Chunked_audio.realTime }));
+								} catch (timingError) {
+									errorlog(timingError);
+								}
+							}
+						}
+					}
+				}
 				return false;
 			}
 			firstTimestamp = timestamp;
-			session.stats.Chunked_audio.realTime = session.getChunkedTimestamp();
+			startupOriginWallMs = session.getChunkedTimestamp();
+			startupOriginMonotonicMs = performance.now();
+			session.stats.Chunked_audio.realTime = startupOriginWallMs;
 			promise.resolve();
 			for (var UUID in session.chunkedTransferChannels) {
 				var channel = session.chunkedTransferChannels[UUID];
@@ -17559,7 +17586,6 @@ WebRTC.Media = (function () {
 				if (!session.chunkedRecorder || !session.chunkedRecorder.sendChunks) {
 					return;
 				} else if (frame.constructor.name == "EncodedAudioChunk") {
-					reportFirstAudioTimestamp(frame.timestamp);
 					let frameData = new Uint8Array(frame.byteLength);
 					frame.copyTo(frameData);
 					if (typeof session.chunkedRecorder.enqueueFrame === "function") {
@@ -17667,12 +17693,13 @@ WebRTC.Media = (function () {
 		var frameStream = prc.readable;
 		frameReader = frameStream.getReader();
 		encoder = new AudioEncoder(encodedAudioOutputProcessor);
+		var nextAudioFrameTimestamp = null;
 
 		//config.sampleRate = 48000*config.numberOfChannels; // I'm just going to hard code this to 48000, since i don't know what the bleep is going on.
 		encoder.config = config;
 		encoder.configure(config);
 
-		frameReader.read().then(function processFrameAudio({ done, value }) {
+		frameReader.read().then(async function processFrameAudio({ done, value }) {
 			if (done || stop) {
 				// await encoder.flush();
 				encoder.close();
@@ -17689,17 +17716,24 @@ WebRTC.Media = (function () {
 				return;
 			}
 			try {
-				if (firstTimestamp == -1) {
-					firstTimestamp = value.timestamp;
-					session.stats.Chunked_audio.realTime = session.getChunkedTimestamp();
-					promise.resolve();
-				}
+				reportFirstAudioTimestamp(value.timestamp);
 				if (lastTimestamp == value.timestamp) {
 					value.timestamp += 1;
 				}
 				if (!stop) {
 					lastTimestamp = value.timestamp;
 					try {
+						if (encoder.config.codec === "opus" && nextAudioFrameTimestamp !== null && Math.abs(value.timestamp - nextAudioFrameTimestamp) > 2000) {
+							// Preserve a capture gap instead of compressing its time out of Opus.
+							await encoder.flush();
+							if (stop || encoder.state === "closed") {
+								value.close();
+								return;
+							}
+							encoder.reset();
+							encoder.configure(encoder.config);
+						}
+						nextAudioFrameTimestamp = value.timestamp + Math.round(value.numberOfFrames * 1000000 / value.sampleRate);
 						encoder.encode(value);
 					} catch (e) {
 						errorlog(e);
@@ -20838,12 +20872,21 @@ WebRTC.Media = (function () {
 				return;
 			}
 			session.rpcs[uuid].chunkedChannels.forEach(function (file) {
+				if (file) {
+					file.chunkedPlayoutTarget = null;
+					file.chunkedBufferTargets = null;
+					if (file.audio) file.audio.chunkedPlayoutTarget = null;
+					if (file.video) file.video.chunkedPlayoutTarget = null;
+				}
 				if (file && file.video && file.video.controller && typeof file.video.controller.wake === "function") {
 					try {
 						file.video.controller.wake();
 					} catch (err) {
 						errorlog(err);
 					}
+				}
+				if (file && file.playChunkedAudio) {
+					file.playChunkedAudio();
 				}
 			});
 		}
@@ -20915,6 +20958,12 @@ WebRTC.Media = (function () {
 				}
 			}
 			if (file && file.audio && Array.isArray(file.audio.activeSources)) {
+				clearTimeout(file.audioTime);
+				file.audioTime = null;
+				file.audio.queue.length = 0;
+				if (file.audio.decoder && file.audio.decoder.state !== "closed") {
+					try { file.audio.decoder.close(); } catch (audioCloseError) { }
+				}
 				file.audio.activeSources.forEach(function (source) {
 					try {
 						source.stop();
@@ -21520,6 +21569,20 @@ WebRTC.Media = (function () {
 			}
 		}
 
+		async function drainChunkedMessages() {
+			if (file.chunkedInitializing || file.chunkedDraining) {
+				return;
+			}
+			file.chunkedDraining = true;
+			try {
+				while (file.pendingChunkedMessages.length) {
+					await file.channel.onmessage({ data: file.pendingChunkedMessages.shift(), chunkedDrain: true });
+				}
+			} finally {
+				file.chunkedDraining = false;
+			}
+		}
+
 		file.channel.onmessage = async function (e) {
 			if ((file.chunkedInitializing || file.chunkedDraining) && !e.chunkedDrain) {
 				file.pendingChunkedMessages.push(e.data);
@@ -21918,18 +21981,38 @@ WebRTC.Media = (function () {
 							if (rpcSetting !== null) {
 								buffer = rpcSetting;
 							}
-							const bufferFloor = parseBufferSetting(type === "video" ? session.chunkbufferfloor : null);
-							const bufferCeil = parseBufferSetting(type === "video" ? session.chunkbufferceil : null);
-							const clampMin = bufferFloor !== null ? bufferFloor : 0;
-							const sharedAvTarget = !!details.configAudio && audioBufferSetting === null;
+							const sharedAvTarget = !!details.configAudio && !!details.configVideo && audioBufferSetting === null;
+							const bufferFloor = parseBufferSetting(type === "video" || sharedAvTarget ? session.chunkbufferfloor : null);
+							const bufferCeil = parseBufferSetting(type === "video" || sharedAvTarget ? session.chunkbufferceil : null);
+							let clampMin = bufferFloor !== null ? bufferFloor : 0;
 							const clampMaxDefault = type === "audio" || sharedAvTarget ? 30000 : 180000;
 							let clampMax = bufferCeil !== null ? bufferCeil : clampMaxDefault;
 							if (sharedAvTarget) {
 								clampMax = Math.min(clampMax, 30000);
+								clampMin = Math.min(clampMin, clampMax);
 							}
 							if (session.chunkbufferadaptive !== false && typeof session.calculateOptimalBufferSize === "function") {
 								try {
-									const adaptive = session.calculateOptimalBufferSize(file.UUID, { media: type, base: buffer, clamp: { min: clampMin, max: clampMax } });
+									let adaptive = buffer;
+									if (sharedAvTarget) {
+										if (!file.chunkedBufferTargets) file.chunkedBufferTargets = {};
+										for (var mediaType of ["audio", "video"]) {
+											const mediaStats = session.rpcs[file.UUID].stats["chunked_mode_" + mediaType];
+											const timestamp = mediaStats && mediaStats.time_seconds;
+											let proposal = file.chunkedBufferTargets[mediaType];
+											// A stopped track draining does not add network congestion.
+											if (!proposal || proposal.timestamp !== timestamp || proposal.base !== buffer || proposal.min !== clampMin || proposal.max !== clampMax) {
+												proposal = {
+													timestamp: timestamp, base: buffer, min: clampMin, max: clampMax,
+													value: session.calculateOptimalBufferSize(file.UUID, { media: mediaType, base: buffer, clamp: { min: clampMin, max: clampMax } })
+												};
+												file.chunkedBufferTargets[mediaType] = proposal;
+											}
+											if (Number.isFinite(proposal.value)) adaptive = Math.max(adaptive, proposal.value);
+										}
+									} else {
+										adaptive = session.calculateOptimalBufferSize(file.UUID, { media: type, base: buffer, clamp: { min: clampMin, max: clampMax } });
+									}
 									if (typeof adaptive === "number" && !Number.isNaN(adaptive)) {
 										buffer = adaptive;
 									}
@@ -21942,6 +22025,55 @@ WebRTC.Media = (function () {
 							}
 							buffer = Math.max(clampMin, Math.min(buffer, clampMax));
 							return buffer;
+						};
+
+						file.getChunkedPlayoutTarget = function (type) {
+							const requested = resolveChunkedBufferTarget(type, 200);
+							if (session.chunkbufferadaptive === false || requested === 0) {
+								return requested;
+							}
+							const shared = details.configAudio && details.configVideo && !Number.isFinite(parseFloat(session.audioBuffer));
+							const owner = shared ? file : file[type];
+							if (!owner) {
+								return requested;
+							}
+							const stats = session.rpcs[file.UUID].stats;
+							const audioTimestamp = (shared || type === "audio") && stats.chunked_mode_audio && stats.chunked_mode_audio.time_seconds;
+							const videoTimestamp = (shared || type === "video") && stats.chunked_mode_video && stats.chunked_mode_video.time_seconds;
+							if (owner.chunkedPlayoutTarget && owner.chunkedPlayoutTarget.audioTimestamp === audioTimestamp && owner.chunkedPlayoutTarget.videoTimestamp === videoTimestamp) {
+								// Draining a stopped stream is not new evidence of network delay.
+								return owner.chunkedPlayoutTarget.value;
+							}
+							const now = performance.now();
+							if (!shared || !owner.chunkedPlayoutTarget || requested > owner.chunkedPlayoutTarget.value) {
+								owner.chunkedPlayoutTarget = { value: requested, at: now };
+							} else if (now - owner.chunkedPlayoutTarget.at >= 1000) {
+								owner.chunkedPlayoutTarget.value = Math.max(requested, owner.chunkedPlayoutTarget.value - 50);
+								owner.chunkedPlayoutTarget.at = now;
+							}
+							owner.chunkedPlayoutTarget.audioTimestamp = audioTimestamp;
+							owner.chunkedPlayoutTarget.videoTimestamp = videoTimestamp;
+							return owner.chunkedPlayoutTarget.value;
+						};
+
+						file.getChunkedPlayoutTime = function (type, timestamp, target, origin) {
+							const contextNow = session.audioCtx.currentTime;
+							const remoteNow = file.getRemoteNow();
+							if (!file.chunkedPlayoutClock || Math.abs((contextNow - file.chunkedPlayoutClock.context) * 1000 - (remoteNow - file.chunkedPlayoutClock.remote)) > 100) {
+								file.chunkedPlayoutClock = { context: contextNow, remote: remoteNow };
+							}
+							if (origin === undefined) {
+								origin = type === "audio" ? file.audio.realTime : file.video.realTime;
+							}
+							let hardwareLatency = 0;
+							if (type === "audio") {
+								if (file.audio.hardwareLatency === undefined || file.audio.nextPlaybackTime === null) {
+									file.audio.hardwareLatency = (session.audioCtx.baseLatency || 0) + (session.audioCtx.outputLatency || 0);
+								}
+								// Device estimates fluctuate. Do not turn that noise into sample skips.
+								hardwareLatency = file.audio.hardwareLatency;
+							}
+							return file.chunkedPlayoutClock.context + (origin + timestamp / 1000 + target - file.chunkedPlayoutClock.remote) / 1000 - hardwareLatency;
 						};
 
 						if (details.configVideo) {
@@ -21959,6 +22091,10 @@ WebRTC.Media = (function () {
 							}
 							if (file.audio || file.PCMSource) {
 								if (typeof realTimeAudio === "number" && file.audio) {
+									if (realTimeAudio !== file.audio.realTime && file.audio.decoder && file.audio.decoder.state === "configured") {
+										// Finish the old capture before accepting the replacement's origin.
+										try { await file.audio.decoder.flush(); } catch (audioFlushError) { errorlog(audioFlushError); }
+									}
 									file.audio.realTime = realTimeAudio;
 								}
 								return false;
@@ -22011,106 +22147,136 @@ WebRTC.Media = (function () {
 								//	file.streamSrc.addTrack(trk);
 								//});
 
+								file.playChunkedAudio = function () {
+									clearTimeout(file.audioTime);
+									file.audioTime = null;
+									const rpc = session.rpcs[file.UUID];
+									if (!rpc || !rpc.stats || !rpc.stats.chunked_mode_audio || file.channel.readyState === "closed") {
+										return;
+									}
+									const audio = file.audio;
+									const stats = rpc.stats.chunked_mode_audio;
+									if (session.audioCtx.state !== "running") {
+										audio.queue.length = 0;
+										audio.activeSources.forEach(function (source) {
+											try { source.stop(); } catch (stopError) { }
+											try { source.disconnect(); } catch (disconnectError) { }
+										});
+										audio.activeSources = [];
+										audio.nextPlaybackTime = null;
+										file.chunkedPlayoutClock = null;
+										return;
+									}
+									const now = session.audioCtx.currentTime;
+									const target = file.getChunkedPlayoutTarget("audio");
+									stats.buffer_buffer = target;
+									stats.buffer_dateNow = Date.now();
+									stats.buffer_realTime = audio.realTime;
+									stats.buffer_timedelta = file.timedelta;
+									stats.buffer_baseLatency = (session.audioCtx.baseLatency || 0) * 1000;
+									stats.buffer_outputLatency = (session.audioCtx.outputLatency || 0) * 1000;
+									stats.rebuffering = !!(audio.bufferState && audio.bufferState.rebuffering);
+									while (audio.queue.length) {
+										const item = audio.queue[0];
+										let when = file.getChunkedPlayoutTime("audio", item.timestamp, target, item.realTime);
+										if (target === 0) {
+											if (audio.playbackAnchorTime === null || audio.playbackAnchorTime + item.timestamp / 1000000 < now - 0.1) {
+												audio.playbackAnchorTime = now + 0.005 - item.timestamp / 1000000;
+											}
+											when = audio.playbackAnchorTime + item.timestamp / 1000000;
+										} else {
+											audio.playbackAnchorTime = null;
+										}
+										const duration = item.buffer.duration;
+										const tail = audio.queue[audio.queue.length - 1];
+										stats.buffer_level = Math.max(0, Math.round((file.getChunkedPlayoutTime("audio", tail.timestamp, target, tail.realTime) + tail.buffer.duration - now) * 1000));
+										stats.buffer_timestamp = item.timestamp;
+										stats.buffer_delta = Math.max(0, (when - now) * 1000);
+										stats.buffer_lead = stats.buffer_delta - target;
+										stats.queue_length = audio.queue.length;
+										if (when > now + 0.05) {
+											file.audioTime = setTimeout(file.playChunkedAudio, Math.max(5, Math.min(100, (when - now - 0.025) * 1000)));
+											return;
+										}
+										audio.queue.shift();
+										// Discard expired samples instead of replaying a burst after a stall.
+										let start = Math.max(when, now + 0.005);
+										if (audio.nextPlaybackTime !== null) {
+											start = Math.max(start, audio.nextPlaybackTime);
+										}
+										const offset = Math.max(0, start - when);
+										if (offset >= duration) {
+											stats.playout_drops = (stats.playout_drops || 0) + 1;
+											stats.last_underflow = Date.now();
+											stats.rebuffering = true;
+											continue;
+										}
+										const source = session.audioCtx.createBufferSource();
+										source.buffer = item.buffer;
+										source.connect(audio.audioNode);
+										audio.activeSources.push(source);
+										source.onended = function () {
+											source.disconnect();
+											const index = audio.activeSources.indexOf(source);
+											if (index >= 0) {
+												audio.activeSources.splice(index, 1);
+											}
+										};
+										source.start(start, offset);
+										audio.nextPlaybackTime = start + duration - offset;
+									}
+								};
+
 								file.init_audio = {
 									output: frame => {
-										const chunkTimestamp = typeof frame.timestamp === "number" ? frame.timestamp : 0;
-										file.audio.frameWriter.write(frame);
-										if (file.audio.usesAudioDataSink && typeof frame.close === "function") {
+										try {
+											if (file.channel.readyState === "closed") {
+												return;
+											}
+											const sampleRate = frame.sampleRate || file.writer_config.samplingFrequency || session.audioCtx.sampleRate;
+											const channels = frame.numberOfChannels || file.writer_config.channels || 1;
+											const count = frame.numberOfFrames;
+											const buffer = session.audioCtx.createBuffer(channels, count, sampleRate);
+											for (var index = 0; index < channels; index++) {
+												try {
+													frame.copyTo(buffer.getChannelData(index), { planeIndex: index, format: "f32-planar" });
+												} catch (copyError) {
+													frame.copyTo(buffer.getChannelData(index), { planeIndex: index });
+												}
+											}
+											file.audio.queue.push({ timestamp: frame.timestamp, realTime: file.audio.realTime, buffer: buffer });
+											const statsAudio = session.rpcs[file.UUID].stats.chunked_mode_audio;
+											const bufferTarget = file.getChunkedPlayoutTarget("audio");
+											const bufferLevel = frame.timestamp / 1000 - (file.getRemoteNow() - file.audio.realTime) + bufferTarget;
+											if (!file.audio.bufferState) {
+												file.audio.bufferState = { rebuffering: false };
+											}
+											const audioState = file.audio.bufferState;
+											audioState.targetMs = bufferTarget;
+											audioState.minLead = bufferTarget === 0 ? 0 : Math.max(20, Math.min(100, bufferTarget * 0.12));
+											audioState.rejoinMargin = bufferTarget === 0 ? 0 : Math.max(audioState.minLead, bufferTarget * 0.25);
+											if (bufferTarget > 0 && Number.isFinite(file.chunkJitterSlack) && file.chunkJitterSlack > 0) {
+												audioState.rejoinMargin += file.chunkJitterSlack;
+											}
+											if (!audioState.rebuffering && bufferTarget > 0 && bufferLevel < audioState.minLead) {
+												audioState.rebuffering = true;
+												audioState.lastUnderflow = Date.now();
+												statsAudio.last_underflow = audioState.lastUnderflow;
+											}
+											if (audioState.rebuffering && (bufferTarget === 0 || bufferLevel >= bufferTarget - audioState.rejoinMargin)) {
+												audioState.rebuffering = false;
+											}
+											statsAudio.rebuffering = audioState.rebuffering;
+											// Keep the thirty-second window with room for jitter, regardless of packet duration.
+											const latestTime = file.audio.realTime + frame.timestamp / 1000;
+											while (file.audio.queue.length > 16000 || (file.audio.queue.length > 1
+												&& latestTime - file.audio.queue[0].realTime - file.audio.queue[0].timestamp / 1000 > 32000)) {
+												file.audio.queue.shift();
+											}
+											file.playChunkedAudio();
+										} finally {
 											frame.close();
 										}
-
-										const rpc = session.rpcs[file.UUID];
-										if (!rpc || !rpc.stats || !rpc.stats.chunked_mode_audio) {
-											return;
-										}
-
-										if (file.audioTime) {
-											return;
-										}
-
-										const statsAudio = rpc.stats.chunked_mode_audio;
-										const remoteNow = typeof file.getRemoteNow === "function" ? file.getRemoteNow() : Date.now() - (file.timedelta || 0);
-										const realTimeOffset = file.audio.realTime || 0;
-										const baseDelta = chunkTimestamp / 1000 - (remoteNow - realTimeOffset);
-										const hardwareLatencyMs = ((session.audioCtx.baseLatency || 0) + (session.audioCtx.outputLatency || 0)) * 1000;
-
-										if (!file.audio.bufferState) {
-											file.audio.bufferState = {
-												targetMs: 200,
-												minLead: 24,
-												rejoinMargin: 120,
-												rebuffering: false
-											};
-										}
-
-										const audioState = file.audio.bufferState;
-										const audioTargetMs = audioState.targetMs == null ? 200 : audioState.targetMs;
-										const bufferTarget = resolveChunkedBufferTarget("audio", audioTargetMs);
-										audioState.targetMs = bufferTarget;
-										if (bufferTarget === 0) {
-											audioState.minLead = 0;
-											audioState.rejoinMargin = 0;
-										} else {
-											audioState.minLead = Math.max(20, Math.min(100, bufferTarget * 0.12));
-											let audioRejoin = Math.max(audioState.minLead, bufferTarget * 0.25);
-											const slack = Number.isFinite(file.chunkJitterSlack) ? file.chunkJitterSlack : 0;
-											if (slack > 0) {
-												audioRejoin += slack;
-											}
-											audioState.rejoinMargin = audioRejoin;
-										}
-
-										const bufferLevel = baseDelta + bufferTarget;
-										if (!audioState.rebuffering && bufferTarget > 0 && bufferLevel < audioState.minLead) {
-											audioState.rebuffering = true;
-											audioState.lastUnderflow = Date.now();
-											statsAudio.last_underflow = audioState.lastUnderflow;
-										}
-										if (audioState.rebuffering && (bufferTarget === 0 || bufferLevel >= bufferTarget - audioState.rejoinMargin)) {
-											audioState.rebuffering = false;
-										}
-
-										let desiredBufferMs;
-										if (bufferTarget === 0) {
-											desiredBufferMs = Math.max(0, bufferLevel);
-										} else if (audioState.rebuffering) {
-											desiredBufferMs = Math.max(bufferTarget, audioState.minLead);
-										} else {
-											desiredBufferMs = Math.max(audioState.minLead, bufferLevel);
-										}
-
-										let playoutDelayMs = desiredBufferMs - hardwareLatencyMs;
-										if (playoutDelayMs < 0 || !Number.isFinite(playoutDelayMs)) {
-											playoutDelayMs = 0;
-										}
-
-										statsAudio.buffer_dateNow = Date.now();
-										statsAudio.buffer_timedelta = file.timedelta;
-										statsAudio.buffer_realTime = file.audio.realTime;
-										statsAudio.buffer_timestamp = chunkTimestamp;
-										statsAudio.buffer_delta = playoutDelayMs;
-										statsAudio.buffer_buffer = bufferTarget;
-										statsAudio.buffer_baseLatency = (session.audioCtx.baseLatency || 0) * 1000;
-										statsAudio.buffer_outputLatency = (session.audioCtx.outputLatency || 0) * 1000;
-										const audioOccupancy = Math.max(0, desiredBufferMs);
-										statsAudio.buffer_lead = Math.round(baseDelta);
-										statsAudio.buffer_level = Math.round(audioOccupancy);
-										statsAudio.rebuffering = audioState.rebuffering;
-
-										try {
-											if (file.delayNode.delayTime.setTargetAtTime) {
-												file.delayNode.delayTime.setTargetAtTime(playoutDelayMs / 1000.0, session.audioCtx.currentTime, 0.05);
-											} else {
-												file.delayNode.delayTime.setValueAtTime(playoutDelayMs / 1000.0, session.audioCtx.currentTime);
-											}
-										} catch (err) {
-											errorlog(err);
-										}
-
-										const timeoutMs = Math.max(10, playoutDelayMs);
-										file.audioTime = setTimeout(function () {
-											file.audioTime = null;
-										}, timeoutMs);
 									},
 									error: e => {
 										if (file.audio.decoder.state == "closed") {
@@ -22127,87 +22293,13 @@ WebRTC.Media = (function () {
 								//file.audioContext = new AudioContext({ sampleRate: file.writer_config.samplingFrequency, latencyHint: "playback" });
 								//file.audioContext.suspend();
 
-								file.delayNode = session.audioCtx.createDelay(30);
-								file.delayNode.delayTime.value = 0; // delayTime takes it in seconds.
-								if (typeof MediaStreamTrackGenerator === "function") {
-									file.audio.generator = new MediaStreamTrackGenerator({ kind: "audio" });
-									file.audio.frameWriter = file.audio.generator.writable.getWriter();
-									file.audio.stream = new MediaStream([file.audio.generator]);
-									file.audio.audioNode = session.audioCtx.createMediaStreamSource(file.audio.stream);
-								} else {
-									file.audio.usesAudioDataSink = true;
-									file.audio.audioNode = session.audioCtx.createGain();
-									file.audio.playbackAnchorTime = null;
-									file.audio.nextPlaybackTime = null;
-									file.audio.activeSources = [];
-									file.audio.maxActiveSources = 1600;
-									file.audio.frameWriter = {
-										write: function (audioData) {
-											if (session.audioCtx.state !== "running") {
-												// Web Audio's clock does not advance while autoplay is blocked.
-												// Do not accumulate stale real-time audio for a later burst.
-												file.audio.playbackAnchorTime = null;
-												file.audio.nextPlaybackTime = null;
-												return Promise.resolve();
-											}
-											var sampleRate = audioData.sampleRate || file.writer_config.samplingFrequency || session.audioCtx.sampleRate;
-											var channelCount = audioData.numberOfChannels || file.writer_config.channels || 1;
-											var frameCount = audioData.numberOfFrames || Math.max(1, Math.round((audioData.duration || 20000) * sampleRate / 1000000));
-											var audioBuffer = session.audioCtx.createBuffer(channelCount, frameCount, sampleRate);
-											for (var channelIndex = 0; channelIndex < channelCount; channelIndex++) {
-												var channelData = audioBuffer.getChannelData(channelIndex);
-												try {
-													audioData.copyTo(channelData, { planeIndex: channelIndex, format: "f32-planar" });
-												} catch (copyError) {
-													audioData.copyTo(channelData, { planeIndex: channelIndex });
-												}
-											}
-											var timestampSeconds = (typeof audioData.timestamp === "number" ? audioData.timestamp : 0) / 1000000;
-											var currentTime = session.audioCtx.currentTime;
-											if (file.audio.playbackAnchorTime === null) {
-												file.audio.playbackAnchorTime = currentTime - timestampSeconds;
-											}
-											var scheduledTime = file.audio.playbackAnchorTime + timestampSeconds;
-											if (scheduledTime < currentTime - 0.1) {
-												file.audio.playbackAnchorTime += currentTime - scheduledTime;
-												scheduledTime = currentTime;
-											}
-											if (file.audio.nextPlaybackTime !== null && scheduledTime < file.audio.nextPlaybackTime) {
-												scheduledTime = file.audio.nextPlaybackTime;
-											}
-											var source = session.audioCtx.createBufferSource();
-											source.buffer = audioBuffer;
-											source.connect(file.audio.audioNode);
-											file.audio.activeSources.push(source);
-											while (file.audio.activeSources.length > file.audio.maxActiveSources) {
-												var staleSource = file.audio.activeSources.shift();
-												try {
-													staleSource.stop();
-												} catch (stopError) { }
-												try {
-													staleSource.disconnect();
-												} catch (disconnectError) { }
-											}
-											source.onended = function () {
-												try {
-													source.disconnect();
-												} catch (error) { }
-												var sourceIndex = file.audio.activeSources.indexOf(source);
-												if (sourceIndex >= 0) {
-													file.audio.activeSources.splice(sourceIndex, 1);
-												}
-											};
-											source.start(Math.max(currentTime, scheduledTime));
-											file.audio.nextPlaybackTime = Math.max(currentTime, scheduledTime) + audioBuffer.duration;
-											return Promise.resolve();
-										}
-									};
-								}
-								file.audio.audioNode.connect(file.delayNode);
-
+								file.audio.usesAudioDataSink = true;
+								file.audio.audioNode = session.audioCtx.createGain();
+								file.audio.playbackAnchorTime = null;
+								file.audio.nextPlaybackTime = null;
+								file.audio.activeSources = [];
 								file.destination = session.audioCtx.createMediaStreamDestination();
-								file.delayNode.connect(file.destination);
-
+								file.audio.audioNode.connect(file.destination);
 								file.destination.stream.getAudioTracks().forEach(trk => {
 									file.streamSrc.addTrack(trk);
 								});
@@ -22255,7 +22347,7 @@ WebRTC.Media = (function () {
 									return;
 								}
 
-								file.processFrameAudio(dataFrame);
+								await file.processFrameAudio(dataFrame);
 							} else if (dataFrame.type == "pcm") {
 								// PCM AUDIO PROCESSING
 								//var frameData = new Float32Array(dataFrame.data.buffer);
@@ -22455,10 +22547,16 @@ WebRTC.Media = (function () {
 										const realTimeOffset = file.video.realTime || 0;
 
 										const videoTargetMs = state.bufferState.targetMs == null ? 200 : state.bufferState.targetMs;
-										const target = resolveChunkedBufferTarget("video", videoTargetMs);
+										let target = resolveChunkedBufferTarget("video", videoTargetMs);
+										if (file.audio) {
+											target = file.getChunkedPlayoutTarget("video");
+										}
 										const bufferState = refreshBufferState(target);
 										const lead = chunkTimestamp / 1000 - (nowRemote - realTimeOffset);
-										const delta = lead + target;
+										let delta = lead + target;
+										if (file.audio && session.audioCtx && session.audioCtx.state === "running") {
+											delta = (file.getChunkedPlayoutTime("video", chunkTimestamp, target) - session.audioCtx.currentTime) * 1000;
+										}
 										const occupancy = Math.max(0, delta);
 										let queuedDuration = 0;
 										if (queue.length > 1) {
@@ -22469,6 +22567,10 @@ WebRTC.Media = (function () {
 										const bufferedAhead = Math.max(occupancy, queuedDuration);
 										let playbackDelay = Math.max(0, delta);
 										const stats = session.rpcs[UUID].stats.chunked_mode_video;
+										if (file.audio && Number.isFinite(stats.decodeLatencyMs)) {
+											// Paired playback targets presentation, after decoding completes.
+											playbackDelay = Math.max(0, delta - Math.min(250, Math.max(0, stats.decodeLatencyMs)));
+										}
 										const updateStats = function (delay) {
 											let scheduled = delay;
 											if (!(scheduled >= 0 && Number.isFinite(scheduled))) {
@@ -22862,6 +22964,35 @@ WebRTC.Media = (function () {
 								errorlog("Audio isn't setup yet.");
 								return;
 							}
+							if (file.stream_configAudio.codec === "opus" && dataFrame.data) {
+								var packet = dataFrame.data;
+								if (packet instanceof ArrayBuffer) packet = new Uint8Array(packet);
+								if (packet.length) {
+									// Opus TOC durations are microseconds (RFC 6716, section 3.1).
+									var config = packet[0] >> 3;
+									var code = packet[0] & 3;
+									var count = code === 0 ? 1 : code === 3 ? (packet[1] & 63) : 2;
+									var duration;
+									if (config >= 16) duration = 2500 * (1 << (config & 3));
+									else if (config >= 12) duration = 10000 * (1 << (config & 1));
+									else duration = [10000, 20000, 40000, 60000][config & 3];
+									duration *= count;
+									if (duration > 0 && duration <= 120000) {
+										if (typeof file.audio.nextEncodedTimestamp === "number" && Math.abs(dataFrame.timestamp - file.audio.nextEncodedTimestamp) > 2000 && file.audio.decoder.state === "configured") {
+											// Some decoders concatenate samples across a mute or skipped packet.
+											file.chunkedInitializing = true;
+											try {
+												await file.audio.decoder.flush();
+												file.audio.decoder.reset();
+												file.audio.decoder.configure(file.stream_configAudio);
+											} finally {
+												file.chunkedInitializing = false;
+											}
+										}
+										file.audio.nextEncodedTimestamp = dataFrame.timestamp + duration;
+									}
+								}
+							}
 							try {
 								dataFrame.type = "key";
 								dataFrame = new EncodedAudioChunk(dataFrame);
@@ -22891,14 +23022,7 @@ WebRTC.Media = (function () {
 					}
 
 					file.chunkedInitializing = false;
-					file.chunkedDraining = true;
-					try {
-						while (file.pendingChunkedMessages.length) {
-							await file.channel.onmessage({ data: file.pendingChunkedMessages.shift(), chunkedDrain: true });
-						}
-					} finally {
-						file.chunkedDraining = false;
-					}
+					await drainChunkedMessages();
 					return;
 				} catch (e) {
 					file.chunkedInitializing = false;
@@ -22925,12 +23049,24 @@ WebRTC.Media = (function () {
 						if (metadata.configAudio) {
 							details.configAudio = metadata.configAudio;
 							if (file.setupChunkedAudio) {
-								audioAdded = await file.setupChunkedAudio(metadata.configAudio, metadata.realTimeAudio);
+								file.chunkedInitializing = true;
+								try {
+									audioAdded = await file.setupChunkedAudio(metadata.configAudio, metadata.realTimeAudio);
+								} finally {
+									file.chunkedInitializing = false;
+								}
 							}
 						}
 						if (typeof metadata.realTimeAudio === "number") {
 							details.realTimeAudio = metadata.realTimeAudio;
 							if (file.audio) {
+								if (metadata.type === "chunkedtiming") {
+									for (var audioIndex = 0; audioIndex < file.audio.queue.length; audioIndex++) {
+										if (file.audio.queue[audioIndex].realTime === file.audio.realTime) {
+											file.audio.queue[audioIndex].realTime = metadata.realTimeAudio;
+										}
+									}
+								}
 								file.audio.realTime = metadata.realTimeAudio;
 							}
 						}
@@ -22950,14 +23086,17 @@ WebRTC.Media = (function () {
 								updateIncomingVideoElement(UUID, false, true);
 							}
 						}
+						await drainChunkedMessages();
 						return;
 					}
 					await handleMetadataPacket(metadata);
 				} else if (payload) {
 					await handleChunkPayload(payload);
+					await drainChunkedMessages();
 				}
 			} catch (err) {
 				errorlog(err);
+				await drainChunkedMessages();
 			}
 		};
 		return;
