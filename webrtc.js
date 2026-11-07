@@ -19428,6 +19428,7 @@ WebRTC.Media = (function () {
 				configVideo.width = sanitizeChunkDimension(configVideo.width, 2);
 				configVideo.height = sanitizeChunkDimension(configVideo.height, 2);
 				configVideo.frameRate = Math.max(1, Math.round(configVideo.frameRate || 30));
+				configVideo.framerate = configVideo.frameRate;
 				try {
 					var supportedCodecs = await getAvailableWebCodecs(configVideo.width, configVideo.height, configVideo.frameRate);
 					if (supportedCodecs && supportedCodecs.length) {
