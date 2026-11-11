@@ -67953,7 +67953,7 @@ function whipOut() {
 				setMeshcastStudioPublishStatus("failed", "meshcast-publish-codec");
 				return null;
 			}
-			if (!session.cleanOutput) {
+			if (!session.cleanOutput && whipReconnectAttempts <= 1) {
 				warnUser("An RTC error occured");
 			}
 			return null;
@@ -68093,14 +68093,14 @@ function whipOut() {
 								errorlog(e);
 								if (!transceiver) {
 									// transciever was made.
-									warnUser("Could not configure WHIP output with SVC settings.", 5000);
+									if (!whipReconnectAttempts) warnUser("Could not configure WHIP output with SVC settings.", 5000);
 									var transceiverSetup = {
 										streams: [session.videoElement.srcObject],
 										direction: "sendonly"
 									};
 									session.whipOut.addTransceiver(track, transceiverSetup);
 								} else {
-									warnUser("Could not configure WHIP output with specific codec settings.", 5000);
+									if (!whipReconnectAttempts) warnUser("Could not configure WHIP output with specific codec settings.", 5000);
 								}
 							}
 						} else {
@@ -68541,6 +68541,7 @@ function whipOut() {
 				} else if (isMeshcastStudioPublish()) {
 					setMeshcastStudioPublishStatus("failed", "meshcast-publish-response");
 				} else if (contentType == "application/error") {
+					if (whipReconnectAttempts > 1) return;
 					if (this.responseText == 432) {
 						warnUser("Whip out error: 432");
 					} else {
@@ -68597,7 +68598,7 @@ function whipOut() {
 					errorlog("WHIP request failed (HTTP " + this.status + ")");
 				}
 				try {
-					if (session.meshcast2 && typeof session.whipOutput === "string" && session.whipOutput.includes("app.meshcast.io/api/gateway/whip")) {
+					if (whipReconnectAttempts <= 1 && session.meshcast2 && typeof session.whipOutput === "string" && session.whipOutput.includes("app.meshcast.io/api/gateway/whip")) {
 						let errorCode = null;
 						let errorPayload = null;
 						try {
@@ -68654,6 +68655,8 @@ function whipOut() {
 			if (session.whipOut !== reportingPeer) return;
 			if (type === "sdp") retryWhipConnection();
 			errorlog(e);
+			// Scheduling the next attempt increments the count before warnings run.
+			if (whipReconnectAttempts > 1) return;
 
 			if (window.location.protocol == "https:" && session.whipOutput.startsWith("http://") && !session.whipOutput.startsWith("http://localhost")) {
 				console.warn("Mixed HTTP and HTTPS content; this may not work. There are some options, like using localhost, disabling web security in your browser, or using SSL entirely");
