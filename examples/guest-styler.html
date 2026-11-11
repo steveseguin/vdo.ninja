@@ -1,0 +1,829 @@
+<!DOCTYPE html>
+<!-- Copyright (c) 2026 Steve Seguin. SPDX-License-Identifier: MIT -->
+<html lang="en">
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<meta name="description" content="Style VDO.Ninja guest names, lower thirds, borders, and backgrounds with a live preview, then copy a ready-to-use scene link." />
+	<link rel="canonical" href="https://vdo.ninja/examples/guest-styler.html" />
+	<title>Guest video styler | VDO.Ninja</title>
+	<style>
+		:root { color-scheme: dark; font-family: system-ui, -apple-system, "Segoe UI", sans-serif; background: #111827; color: #e5e7eb; }
+		* { box-sizing: border-box; }
+		body { margin: 0; background: #111827; }
+		[hidden] { display: none !important; }
+		a { color: #93c5fd; text-underline-offset: 3px; }
+		a:hover { color: #fff; }
+		a:focus-visible, input:focus-visible, select:focus-visible, button:focus-visible, textarea:focus-visible, summary:focus-visible { outline: 3px solid #fbbf24; outline-offset: 2px; }
+		.page { max-width: 1440px; margin: 0 auto; padding: 24px 24px 40px; }
+		.top-links { display: flex; flex-wrap: wrap; align-items: center; padding-bottom: 18px; border-bottom: 1px solid #374151; }
+		.top-links a { margin-left: 22px; font-size: 14px; }
+		.top-links .brand { margin: 0 auto 0 0; color: #fff; font-weight: 700; text-decoration: none; }
+		h1 { margin: 24px 0 6px; font-size: 32px; line-height: 1.15; letter-spacing: -0.5px; }
+		.intro { max-width: 760px; margin: 0 0 22px; color: #cbd5e1; line-height: 1.6; }
+		.layout { display: grid; grid-template-columns: minmax(300px, 380px) minmax(0, 1fr); grid-gap: 24px; align-items: start; }
+		.controls { min-width: 0; margin: 0; }
+		.panel { margin: 0 0 14px; padding: 16px; background: #1f2937; border: 1px solid #374151; border-radius: 8px; }
+		.panel h2 { margin: 0 0 12px; font-size: 16px; font-weight: 650; }
+		fieldset { min-width: 0; margin: 0; padding: 0; border: 0; }
+		fieldset[disabled], input[disabled] { opacity: 0.45; }
+		.field { display: block; margin: 0 0 12px; font-size: 14px; }
+		.field-head { display: flex; justify-content: space-between; margin-bottom: 6px; color: #cbd5e1; }
+		.field-head output { color: #f8fafc; font-variant-numeric: tabular-nums; }
+		.row { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); grid-gap: 12px; }
+		.check { display: flex; align-items: center; margin: 0 0 10px; font-size: 14px; cursor: pointer; }
+		.check input { width: 18px; height: 18px; margin: 0 10px 0 0; }
+		input, select, textarea, button { font: inherit; color: #f8fafc; }
+		select, input[type=url], textarea { width: 100%; min-height: 40px; padding: 8px 10px; border: 1px solid #64748b; border-radius: 4px; background: #111827; }
+		input[type=range] { width: 100%; margin: 0; }
+		input[type=color] { width: 100%; height: 40px; padding: 2px; border: 1px solid #64748b; border-radius: 4px; background: #111827; cursor: pointer; }
+		textarea { min-height: 90px; resize: vertical; font: 12px/1.5 ui-monospace, Consolas, monospace; }
+		button { min-height: 40px; padding: 8px 14px; border: 1px solid #64748b; border-radius: 4px; background: #111827; cursor: pointer; }
+		button:hover { border-color: #93c5fd; }
+		button:disabled { opacity: 0.45; cursor: default; }
+		.hint { margin: 4px 0 0; color: #94a3b8; font-size: 13px; line-height: 1.5; }
+		.error { color: #fca5a5; }
+		.presets { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); grid-gap: 8px; }
+		.preset { display: flex; align-items: center; text-align: left; }
+		.preset[aria-pressed="true"] { outline: 2px solid #93c5fd; outline-offset: 1px; }
+		.swatch { flex: 0 0 auto; width: 36px; margin-right: 10px; padding: 3px 0; border: 2px solid #4b5563; border-radius: 3px; font-size: 12px; font-weight: 700; text-align: center; }
+		.stage { position: sticky; top: 16px; min-width: 0; max-height: calc(100vh - 32px); overflow-y: auto; }
+		.preview { position: relative; width: 100%; padding-bottom: 56.25%; overflow: hidden; border: 1px solid #374151; border-radius: 8px; background-color: #0b1220; background-image: linear-gradient(45deg, #1a2333 25%, transparent 25%, transparent 75%, #1a2333 75%), linear-gradient(45deg, #1a2333 25%, transparent 25%, transparent 75%, #1a2333 75%); background-size: 24px 24px; background-position: 0 0, 12px 12px; }
+		.preview iframe { position: absolute; top: 0; left: 0; width: 1920px; height: 1080px; border: 0; transform-origin: 0 0; pointer-events: none; color-scheme: normal; }
+		.preview-bar { display: flex; flex-wrap: wrap; align-items: center; margin: 10px 0 4px; font-size: 13px; color: #cbd5e1; }
+		.preview-bar label { display: flex; align-items: center; margin: 0 16px 6px 0; }
+		.preview-bar select { width: auto; min-height: 32px; margin-left: 8px; padding: 4px 8px; }
+		.preview-bar a { margin: 0 0 6px; }
+		#preview-status { margin: 0 0 16px; color: #94a3b8; font-size: 13px; }
+		.output { padding: 16px; background: #1f2937; border: 1px solid #374151; border-radius: 8px; }
+		.output h2 { margin: 0 0 12px; font-size: 18px; }
+		.out-head { display: flex; align-items: center; justify-content: space-between; margin: 14px 0 6px; }
+		.out-head h3 { margin: 0; font-size: 14px; font-weight: 650; }
+		.out-head button { min-height: 32px; padding: 4px 12px; font-size: 13px; }
+		details { margin-top: 14px; padding: 12px 14px; background: #182232; border: 1px solid #374151; border-radius: 6px; }
+		summary { cursor: pointer; font-size: 14px; font-weight: 600; }
+		code { font-family: ui-monospace, Consolas, monospace; font-size: 0.92em; color: #e2e8f0; }
+		footer { margin-top: 28px; padding-top: 18px; border-top: 1px solid #374151; color: #a5b4c8; font-size: 13px; line-height: 1.7; }
+		footer p { margin: 0 0 6px; }
+		@media (max-width: 920px) {
+			:root { scroll-padding-top: 56.25vw; }
+			.layout { display: flex; flex-direction: column; grid-gap: 0; }
+			.controls, .output { width: 100%; }
+			.stage { display: contents; }
+			.preview { position: sticky; top: 0; z-index: 2; order: -3; flex-shrink: 0; }
+			.preview-bar { order: -2; }
+			#preview-status { order: -1; }
+			.output { order: 1; }
+		}
+		@media (max-width: 920px) and (min-aspect-ratio: 1/1) {
+			:root { scroll-padding-top: 0; }
+			.preview { position: relative; }
+		}
+		@media (max-width: 560px) {
+			.page { padding: 16px 16px 32px; }
+			.top-links a { margin-left: 14px; }
+			h1 { font-size: 26px; }
+			.panel, .output { padding: 14px; }
+		}
+	</style>
+</head>
+<body>
+	<div class="page">
+		<nav class="top-links" aria-label="Site">
+			<a class="brand" href="../">VDO.Ninja</a>
+			<a href="./">Examples</a>
+			<a href="https://docs.vdo.ninja/guides/guest-video-styling">Styling guide</a>
+		</nav>
+		<header>
+			<h1>Guest video styler</h1>
+			<p class="intro">Choose a look for guest names and borders, adjust it, and copy the finished link. The preview uses sample video at your output size. Real guests get the same styling.</p>
+		</header>
+		<div class="layout">
+			<form class="controls" id="controls" autocomplete="off" onsubmit="return false;">
+				<section class="panel" aria-labelledby="presets-title">
+					<h2 id="presets-title">Start from a preset</h2>
+					<div class="presets" id="presets"></div>
+				</section>
+
+				<section class="panel" aria-labelledby="names-title">
+					<h2 id="names-title">Guest names</h2>
+					<label class="check"><input type="checkbox" id="showNames" />Show guest names</label>
+					<fieldset id="names-fields">
+						<label class="field"><span class="field-head">Label style</span>
+							<select id="labelStyle">
+								<option value="custom">Custom (design it below)</option>
+								<option value="">Built-in: Default</option>
+								<option value="ninjablue">Built-in: Ninja Blue</option>
+								<option value="rounded">Built-in: Rounded</option>
+								<option value="teams">Built-in: Teams</option>
+								<option value="zoom">Built-in: Zoom</option>
+								<option value="skype">Built-in: Skype</option>
+								<option value="toprounded">Built-in: Top rounded</option>
+								<option value="fire">Built-in: Fire</option>
+							</select>
+						</label>
+						<label class="field" for="fontSize"><span class="field-head">Text size <output id="fontSize-out"></output></span><input type="range" id="fontSize" min="40" max="200" step="5" /></label>
+					</fieldset>
+					<fieldset id="custom-fields">
+						<label class="field"><span class="field-head">Position</span>
+							<select id="position">
+								<option value="bottom-left">Bottom left</option>
+								<option value="bottom-center">Bottom center</option>
+								<option value="bottom-right">Bottom right</option>
+								<option value="bottom-full">Full-width bar, bottom</option>
+								<option value="top-left">Top left</option>
+								<option value="top-center">Top center</option>
+								<option value="top-right">Top right</option>
+								<option value="top-full">Full-width bar, top</option>
+							</select>
+						</label>
+						<div class="row">
+							<label class="field" for="sideGap"><span class="field-head">From side <output id="sideGap-out"></output></span><input type="range" id="sideGap" min="0" max="15" step="1" /></label>
+							<label class="field" for="edgeGap"><span class="field-head">From edge <output id="edgeGap-out"></output></span><input type="range" id="edgeGap" min="0" max="20" step="1" /></label>
+						</div>
+						<div class="row">
+							<label class="field"><span class="field-head">Background</span><input type="color" id="labelBg" /></label>
+							<label class="field" for="labelOpacity"><span class="field-head">Opacity <output id="labelOpacity-out"></output></span><input type="range" id="labelOpacity" min="0" max="100" step="1" /></label>
+						</div>
+						<div class="row">
+							<label class="field"><span class="field-head">Name color</span><input type="color" id="textColor" /></label>
+							<label class="field"><span class="field-head">Title color</span><input type="color" id="subColor" /></label>
+						</div>
+						<label class="field"><span class="field-head">Font</span>
+							<select id="font">
+								<option value="default">VDO.Ninja default</option>
+								<option value="arial">Arial</option>
+								<option value="verdana">Verdana</option>
+								<option value="trebuchet">Trebuchet MS</option>
+								<option value="georgia">Georgia</option>
+								<option value="impact">Impact</option>
+								<option value="courier">Courier New</option>
+								<option value="system">System UI</option>
+							</select>
+						</label>
+						<div class="row">
+							<label class="field" for="padding"><span class="field-head">Padding <output id="padding-out"></output></span><input type="range" id="padding" min="0" max="80" step="1" /></label>
+							<label class="field" for="radius"><span class="field-head">Corners <output id="radius-out"></output></span><input type="range" id="radius" min="0" max="150" step="5" /></label>
+						</div>
+						<label class="field" for="subSize"><span class="field-head">Title size <output id="subSize-out"></output></span><input type="range" id="subSize" min="30" max="100" step="5" /></label>
+						<label class="check"><input type="checkbox" id="bold" />Bold name</label>
+						<label class="check"><input type="checkbox" id="uppercase" />Uppercase</label>
+						<label class="check"><input type="checkbox" id="textShadow" />Text shadow</label>
+					</fieldset>
+					<p class="hint">Names come from each guest's label. For a title on a second line, type <code>Jane Doe\nHost</code> in the director's label box.</p>
+				</section>
+
+				<section class="panel" aria-labelledby="borders-title">
+					<h2 id="borders-title">Guest borders &amp; spacing</h2>
+					<div class="row">
+						<label class="field" for="border"><span class="field-head">Border <output id="border-out"></output></span><input type="range" id="border" min="0" max="20" step="1" /></label>
+						<label class="field"><span class="field-head">Border color</span><input type="color" id="borderColor" /></label>
+					</div>
+					<div class="row">
+						<label class="field" for="rounded"><span class="field-head">Rounded corners <output id="rounded-out"></output></span><input type="range" id="rounded" min="0" max="60" step="1" /></label>
+						<label class="field" for="margin"><span class="field-head">Space around <output id="margin-out"></output></span><input type="range" id="margin" min="0" max="40" step="1" /></label>
+					</div>
+					<label class="check" title="Add a shadow behind each guest's video."><input type="checkbox" id="guestShadow" />Drop shadow</label>
+				</section>
+
+				<section class="panel" aria-labelledby="layout-title">
+					<h2 id="layout-title">Layout &amp; background</h2>
+					<label class="check" title="Crop the video edges to fill each box."><input type="checkbox" id="cover" />Fill each box</label>
+					<label class="check" title="Use equal boxes with the link's aspect ratio (16:9 by default)."><input type="checkbox" id="structure" />Equal boxes</label>
+					<div class="row">
+						<label class="field"><span class="field-head">Page background</span>
+							<select id="background">
+								<option value="default">Default</option>
+								<option value="color">Solid color</option>
+								<option value="transparent">Transparent</option>
+							</select>
+						</label>
+						<label class="field"><span class="field-head">Color</span><input type="color" id="pageColor" /></label>
+					</div>
+					<label class="check" title="Show a green border while a guest talks. Requires guest audio; the silent sample cannot show it."><input type="checkbox" id="talking" />Talking border</label>
+				</section>
+
+				<section class="panel" aria-labelledby="extra-title">
+					<h2 id="extra-title">Extra CSS</h2>
+					<textarea id="extraCss" spellcheck="false" aria-labelledby="extra-title" placeholder=".video-label { letter-spacing: 1px; }"></textarea>
+					<p class="hint">Added after the generated CSS and kept when you switch presets. Useful selectors: <code>.video-label</code>, <code>.holder</code>, <code>video</code>.</p>
+				</section>
+			</form>
+
+			<section class="stage" aria-label="Preview and link">
+				<div class="preview" id="preview-box"><iframe id="preview" title="Sample scene preview" allow="autoplay" tabindex="-1"></iframe></div>
+				<div class="preview-bar">
+					<label>Sample guests
+						<select id="guests">
+							<option value="1">1</option>
+							<option value="2">2</option>
+							<option value="3">3</option>
+							<option value="4">4</option>
+							<option value="5">5</option>
+							<option value="6">6</option>
+						</select>
+					</label>
+					<label>Output size
+						<select id="canvas">
+							<option value="1920">1920 × 1080</option>
+							<option value="1280">1280 × 720</option>
+						</select>
+					</label>
+					<a id="open-preview" target="_blank" rel="noopener">Open full-size preview</a>
+				</div>
+				<p id="preview-status" role="status">Loading preview…</p>
+
+				<section class="output" aria-labelledby="output-title">
+					<h2 id="output-title">Use this look</h2>
+					<label class="field"><span class="field-head">Your scene or view link (optional)</span><input type="url" id="source" spellcheck="false" autocomplete="off" aria-describedby="source-hint" /></label>
+					<p class="hint" id="source-hint">Paste the director's <strong>CAPTURE A GROUP SCENE</strong> link, a solo link, or another view link. Its room and password options are kept; styling options are replaced.</p>
+					<p class="hint error" id="source-error" role="status" hidden>Enter a complete http:// or https:// link.</p>
+					<div class="out-head"><h3 id="full-title">Complete link</h3><button type="button" data-copy="full-link" aria-label="Copy complete link">Copy</button></div>
+					<textarea id="full-link" readonly rows="4" spellcheck="false" aria-labelledby="full-title"></textarea>
+					<p class="hint" id="full-hint"></p>
+					<details>
+						<summary>Paste the CSS into OBS instead</summary>
+						<div class="out-head"><h3 id="options-title">Browser Source URL</h3><button type="button" data-copy="options-out" aria-label="Copy Browser Source URL">Copy</button></div>
+						<textarea id="options-out" readonly rows="2" spellcheck="false" aria-labelledby="options-title"></textarea>
+						<div class="out-head"><h3 id="css-title">Custom CSS for the Browser Source</h3><button type="button" data-copy="css-out" aria-label="Copy custom CSS">Copy</button></div>
+						<textarea id="css-out" readonly rows="8" spellcheck="false" aria-labelledby="css-title"></textarea>
+						<p class="hint">In OBS, open the Browser Source's Properties and paste this into <strong>Custom CSS</strong>. It applies to that source only.</p>
+					</details>
+				</section>
+			</section>
+		</div>
+		<footer>
+			<p>Names come from guest labels: use <strong>Add a label</strong> in the director's room, or add <code>&amp;label=Jane_Doe</code> to a guest's invite link.</p>
+			<p>This page builds a link from existing VDO.Ninja options such as <code>&amp;showlabels</code>, <code>&amp;border</code>, and <code>&amp;base64css</code>. It changes only the page that displays the video, not a guest's camera or anyone else's view. See the <a href="https://docs.vdo.ninja/guides/guest-video-styling">styling guide</a> for more.</p>
+		</footer>
+	</div>
+	<script>
+		(function () {
+			"use strict";
+
+			var DEFAULTS = {
+				guests: "4",
+				canvas: "1920",
+				showNames: true,
+				labelStyle: "custom",
+				fontSize: 100,
+				position: "bottom-left",
+				sideGap: 4,
+				edgeGap: 5,
+				labelBg: "#000000",
+				labelOpacity: 75,
+				textColor: "#ffffff",
+				subColor: "#e5e7eb",
+				font: "arial",
+				padding: 35,
+				radius: 20,
+				subSize: 55,
+				bold: true,
+				uppercase: false,
+				textShadow: false,
+				border: 0,
+				borderColor: "#ffffff",
+				rounded: 0,
+				margin: 0,
+				guestShadow: false,
+				cover: false,
+				structure: false,
+				background: "default",
+				pageColor: "#182232",
+				talking: false,
+				extraCss: ""
+			};
+
+			var FONTS = {
+				"default": "",
+				arial: "Arial, Helvetica, sans-serif",
+				verdana: "Verdana, Geneva, sans-serif",
+				trebuchet: "\"Trebuchet MS\", Tahoma, sans-serif",
+				georgia: "Georgia, \"Times New Roman\", serif",
+				impact: "Impact, \"Arial Narrow\", sans-serif",
+				courier: "\"Courier New\", Courier, monospace",
+				system: "system-ui, -apple-system, \"Segoe UI\", sans-serif"
+			};
+
+			// Built-in presets also set the custom fields, so switching them to Custom starts from a similar look.
+			var PRESETS = [
+				{ id: "clean", name: "Clean", values: { labelBg: "#000000", labelOpacity: 78, subColor: "#d1d5db", border: 4, rounded: 12, margin: 12, guestShadow: true, cover: true } },
+				{ id: "ninjablue", name: "Ninja Blue", values: { labelStyle: "ninjablue", sideGap: 0, labelBg: "#141926", labelOpacity: 100, radius: 0, border: 4, rounded: 12, margin: 12 } },
+				{ id: "editorial", name: "Editorial", values: { sideGap: 0, edgeGap: 6, labelBg: "#d3eee7", labelOpacity: 100, textColor: "#153b34", subColor: "#2f6157", font: "georgia", radius: 0, border: 3, borderColor: "#60b6a0", rounded: 6, margin: 14, cover: true, background: "color", pageColor: "#10221f" } },
+				{ id: "esports", name: "Esports", values: { position: "bottom-full", edgeGap: 0, labelBg: "#13172a", labelOpacity: 92, textColor: "#f3f3ff", subColor: "#c6b9ff", font: "trebuchet", uppercase: true, padding: 30, radius: 0, border: 3, borderColor: "#b3a0ff", rounded: 8, margin: 10, cover: true, background: "color", pageColor: "#0b0d18" } },
+				{ id: "minimal", name: "Minimal", values: { edgeGap: 4, labelOpacity: 0, font: "system", bold: false, textShadow: true, padding: 0, radius: 0, subSize: 60, rounded: 16, margin: 8, cover: true } },
+				{ id: "pill", name: "Pill", values: { position: "bottom-center", edgeGap: 6, labelBg: "#ffffff", labelOpacity: 95, textColor: "#111827", subColor: "#4b5563", font: "verdana", padding: 30, radius: 150, rounded: 24, margin: 16, guestShadow: true, cover: true, background: "color", pageColor: "#1e293b" } },
+				{ id: "news", name: "News desk", values: { sideGap: 0, edgeGap: 8, labelBg: "#0b3d91", labelOpacity: 95, subColor: "#cfe0ff", uppercase: true, padding: 30, radius: 0, border: 2, margin: 6, cover: true } },
+				{ id: "plain", name: "Plain", values: { labelStyle: "", sideGap: 0, edgeGap: 1, labelOpacity: 50, font: "default", bold: false, padding: 25, radius: 0 } }
+			];
+
+			// URL options this page sets; the same options in a pasted link are replaced.
+			var CONTROLLED = ["showlabels", "showlabel", "sl", "fontsize", "labelsize", "sizelabel", "border", "bordercolor", "rounded", "round", "margin", "cover", "fit", "structure", "chroma", "background", "appbg", "transparent", "transparency", "meterstyle", "meter", "css", "base64css", "b64css", "cssbase64", "cssb64"];
+			var STORAGE_KEY = "vdoninja-guest-styler";
+
+			var appBase = "https://vdo.ninja/";
+			if (window.location.protocol === "http:" || window.location.protocol === "https:") {
+				appBase = new URL("../", window.location.href).href;
+			}
+			var defaultSource = appBase + "?room=YOUR_ROOM&scene=0";
+
+			var iframe = document.getElementById("preview");
+			var previewBox = document.getElementById("preview-box");
+			var statusLine = document.getElementById("preview-status");
+			// A same-origin preview can take CSS changes instantly; otherwise it reloads with base64css.
+			var canInject = new URL(appBase).origin === window.location.origin;
+			var previewSrc = "";
+			var previewTimer = 0;
+			var currentCss = "";
+			var activePreset = "";
+
+			function getById(id) {
+				return document.getElementById(id);
+			}
+
+			function readState() {
+				var state = {};
+				Object.keys(DEFAULTS).forEach(function (key) {
+					var element = getById(key);
+					if (typeof DEFAULTS[key] === "boolean") {
+						state[key] = element.checked;
+					} else if (typeof DEFAULTS[key] === "number") {
+						state[key] = parseInt(element.value, 10);
+						if (isNaN(state[key])) {
+							state[key] = DEFAULTS[key];
+						}
+					} else {
+						state[key] = element.value;
+					}
+				});
+				return state;
+			}
+
+			function writeState(state) {
+				Object.keys(DEFAULTS).forEach(function (key) {
+					var element = getById(key);
+					var value = DEFAULTS[key];
+					if (key in state && typeof state[key] === typeof DEFAULTS[key]) {
+						value = state[key];
+					}
+					if (typeof DEFAULTS[key] === "boolean") {
+						element.checked = value;
+					} else {
+						element.value = String(value);
+						if (element.value !== String(value)) {
+							element.value = String(DEFAULTS[key]);
+						}
+					}
+				});
+			}
+
+			function presetState(preset) {
+				var state = {};
+				Object.keys(DEFAULTS).forEach(function (key) {
+					state[key] = DEFAULTS[key];
+				});
+				Object.keys(preset.values).forEach(function (key) {
+					state[key] = preset.values[key];
+				});
+				// Keep the preview choices and any extra CSS the user wrote.
+				state.guests = getById("guests").value;
+				state.canvas = getById("canvas").value;
+				state.extraCss = getById("extraCss").value;
+				return state;
+			}
+
+			function hexToRgba(hex, opacity) {
+				var match = /^#([0-9a-f]{6})$/i.exec(hex);
+				if (!match || opacity >= 100) {
+					return hex;
+				}
+				var number = parseInt(match[1], 16);
+				return "rgba(" + ((number >> 16) & 255) + ", " + ((number >> 8) & 255) + ", " + (number & 255) + ", " + (opacity / 100) + ")";
+			}
+
+			function em(value) {
+				return Math.round(value) / 100 + "em";
+			}
+
+			function cssBlock(selector, rules) {
+				return selector + " {\n\t" + rules.join(";\n\t") + ";\n}";
+			}
+
+			function buildCss(s) {
+				var blocks = [];
+				if (s.showNames && s.labelStyle === "custom") {
+					var place = s.position.split("-");
+					var rules = [];
+					if (place[0] === "top") {
+						rules.push("top: " + s.edgeGap + "%");
+						rules.push("bottom: auto");
+					} else {
+						rules.push("bottom: " + s.edgeGap + "%");
+					}
+					if (place[1] === "full") {
+						rules.push("left: 0");
+						rules.push("right: 0");
+					} else if (place[1] === "center") {
+						rules.push("left: 50%");
+						rules.push("transform: translateX(-50%)");
+						rules.push("text-align: center");
+						rules.push("white-space: nowrap");
+					} else if (place[1] === "right") {
+						rules.push("left: auto");
+						rules.push("right: " + s.sideGap + "%");
+						rules.push("text-align: right");
+					} else {
+						rules.push("left: " + s.sideGap + "%");
+					}
+					rules.push("background: " + hexToRgba(s.labelBg, s.labelOpacity));
+					rules.push("color: " + s.textColor);
+					rules.push("padding: " + em(s.padding) + " " + em(s.padding * 1.8));
+					if (s.radius > 0) {
+						rules.push("border-radius: " + em(s.radius));
+					}
+					if (FONTS[s.font]) {
+						rules.push("font-family: " + FONTS[s.font]);
+					}
+					if (s.bold) {
+						rules.push("font-weight: bold");
+					}
+					if (s.uppercase) {
+						rules.push("text-transform: uppercase");
+						rules.push("letter-spacing: 0.04em");
+					}
+					if (s.textShadow) {
+						rules.push("text-shadow: 0 0.05em 0.3em rgba(0, 0, 0, 0.9)");
+					}
+					rules.push("line-height: 1.25");
+					blocks.push(cssBlock(".video-label", rules));
+					blocks.push(cssBlock(".video-label > span:nth-child(n+2)", [
+						"display: block",
+						"font-size: " + s.subSize + "%",
+						"font-weight: normal",
+						"line-height: 1.35",
+						"margin-top: 0.15em",
+						"text-align: inherit",
+						"color: " + s.subColor
+					]));
+				}
+				if (s.guestShadow) {
+					blocks.push(cssBlock(".holder", ["box-shadow: 0 0.5vw 1.5vw rgba(0, 0, 0, 0.45)"]));
+				}
+				var extra = s.extraCss.trim();
+				if (extra) {
+					blocks.push(extra);
+				}
+				return blocks.join("\n\n");
+			}
+
+			function buildOptions(s) {
+				var list = [];
+				if (s.showNames) {
+					list.push(["showlabels", s.labelStyle === "custom" ? "" : s.labelStyle]);
+					if (s.fontSize !== 100) {
+						list.push(["fontsize", String(s.fontSize)]);
+					}
+				}
+				if (s.border > 0) {
+					list.push(["border", String(s.border)]);
+					list.push(["bordercolor", s.borderColor]);
+				}
+				if (s.rounded > 0) {
+					list.push(["rounded", String(s.rounded)]);
+				}
+				if (s.margin > 0) {
+					list.push(["margin", String(s.margin)]);
+				}
+				if (s.cover) {
+					list.push(["cover", ""]);
+				}
+				if (s.structure) {
+					list.push(["structure", ""]);
+				}
+				if (s.background === "color") {
+					list.push(["chroma", s.pageColor.replace("#", "")]);
+				} else if (s.background === "transparent") {
+					list.push(["transparent", ""]);
+				}
+				if (s.talking) {
+					list.push(["meterstyle", "2"]);
+				}
+				return list;
+			}
+
+			function optionString(list) {
+				var text = "";
+				for (var i = 0; i < list.length; i++) {
+					text += "&" + list[i][0];
+					if (list[i][1] !== "") {
+						text += "=" + encodeURIComponent(list[i][1]);
+					}
+				}
+				return text;
+			}
+
+			function encodeCss(css) {
+				return encodeURIComponent(btoa(encodeURIComponent(css)));
+			}
+
+			function buildLink(source, list, css) {
+				var hash = "";
+				var hashIndex = source.indexOf("#");
+				if (hashIndex > -1) {
+					hash = source.substring(hashIndex);
+					source = source.substring(0, hashIndex);
+				}
+				var path = source;
+				var query = "";
+				var queryIndex = source.indexOf("?");
+				if (queryIndex > -1) {
+					path = source.substring(0, queryIndex);
+					query = source.substring(queryIndex + 1);
+				}
+				var kept = [];
+				var pieces = query.split("&");
+				for (var i = 0; i < pieces.length; i++) {
+					if (!pieces[i]) {
+						continue;
+					}
+					var key = pieces[i].split("=")[0];
+					try {
+						key = decodeURIComponent(key);
+					} catch (e) {}
+					if (CONTROLLED.indexOf(key.toLowerCase()) === -1) {
+						kept.push(pieces[i]);
+					}
+				}
+				var search = kept.join("&") + optionString(list);
+				if (css) {
+					search += "&base64css=" + encodeCss(css);
+				}
+				if (search.charAt(0) === "&") {
+					search = search.substring(1);
+				}
+				return path + (search ? "?" + search : "") + hash;
+			}
+
+			function getSource() {
+				var value = getById("source").value.trim();
+				var valid = false;
+				if (value) {
+					try {
+						var url = new URL(value);
+						valid = url.protocol === "https:" || url.protocol === "http:";
+					} catch (e) {}
+				}
+				getById("source-error").hidden = !value || valid;
+				getById("source").setAttribute("aria-invalid", String(!!value && !valid));
+				getById("source").setAttribute("aria-describedby", value && !valid ? "source-error" : "source-hint");
+				if (valid) {
+					return url.href;
+				}
+				return "";
+			}
+
+			function sampleLink(s, list, css) {
+				var url = appBase + "?view&fakeguests=" + s.guests + "&cleanoutput" + optionString(list);
+				if (css) {
+					url += "&base64css=" + encodeCss(css);
+				}
+				return url;
+			}
+
+			function injectCss(css) {
+				try {
+					var doc = iframe.contentDocument;
+					if (!doc || !doc.head) {
+						return false;
+					}
+					var style = doc.getElementById("guest-styler-preview");
+					if (!style) {
+						style = doc.createElement("style");
+						style.id = "guest-styler-preview";
+						doc.head.appendChild(style);
+					}
+					style.textContent = css;
+					return true;
+				} catch (e) {
+					return false;
+				}
+			}
+
+			function setPreview(url) {
+				if (url === previewSrc) {
+					return;
+				}
+				previewSrc = url;
+				clearTimeout(previewTimer);
+				statusLine.textContent = "Updating preview…";
+				previewTimer = setTimeout(function () {
+					iframe.src = previewSrc;
+				}, 450);
+			}
+
+			function fitPreview() {
+				var width = 1920;
+				var height = 1080;
+				if (getById("canvas").value === "1280") {
+					width = 1280;
+					height = 720;
+				}
+				iframe.style.width = width + "px";
+				iframe.style.height = height + "px";
+				iframe.style.transform = "scale(" + previewBox.clientWidth / width + ")";
+			}
+
+			function setOutput(key, text) {
+				getById(key + "-out").textContent = text;
+			}
+
+			function syncControls(s) {
+				var side = s.position.split("-")[1];
+				getById("names-fields").disabled = !s.showNames;
+				getById("custom-fields").disabled = !s.showNames || s.labelStyle !== "custom";
+				getById("sideGap").disabled = side === "center" || side === "full";
+				getById("borderColor").disabled = s.border === 0;
+				getById("pageColor").disabled = s.background !== "color";
+				setOutput("fontSize", s.fontSize + "%");
+				setOutput("sideGap", s.sideGap + "%");
+				setOutput("edgeGap", s.edgeGap + "%");
+				setOutput("labelOpacity", s.labelOpacity + "%");
+				setOutput("padding", String(s.padding));
+				setOutput("radius", String(s.radius));
+				setOutput("subSize", s.subSize + "%");
+				setOutput("border", s.border + "px");
+				setOutput("rounded", s.rounded + "px");
+				setOutput("margin", s.margin + "px");
+			}
+
+			function saveState(s) {
+				try {
+					window.localStorage.setItem(STORAGE_KEY, JSON.stringify({ state: s, preset: activePreset }));
+				} catch (e) {}
+			}
+
+			function loadState() {
+				try {
+					var saved = JSON.parse(window.localStorage.getItem(STORAGE_KEY) || "null");
+					if (saved && saved.state && typeof saved.state === "object") {
+						return saved;
+					}
+				} catch (e) {}
+				return null;
+			}
+
+			function update() {
+				var s = readState();
+				syncControls(s);
+				var css = buildCss(s);
+				var list = buildOptions(s);
+				var source = getSource();
+				var invalidSource = !getById("source-error").hidden;
+				currentCss = css;
+
+				getById("full-link").value = invalidSource ? "" : buildLink(source || defaultSource, list, css);
+				var hint = css ? "Includes the CSS, so it works as an OBS Browser Source, in other studio software, or in a browser." : "This look needs no CSS. Use it as an OBS Browser Source or open it in a browser.";
+				if (!source) {
+					hint = "Replace YOUR_ROOM with your room name, or paste your own link above. " + hint;
+				}
+				getById("full-hint").textContent = hint;
+				getById("full-hint").hidden = invalidSource;
+				getById("options-out").value = invalidSource ? "" : buildLink(source || defaultSource, list, "");
+				document.querySelector("[data-copy=full-link]").disabled = invalidSource;
+				document.querySelector("[data-copy=options-out]").disabled = invalidSource;
+				getById("css-out").value = css || "/* No CSS needed for this look. */";
+				getById("open-preview").href = sampleLink(s, list, css);
+
+				if (canInject) {
+					injectCss(css);
+					setPreview(sampleLink(s, list, ""));
+				} else {
+					setPreview(sampleLink(s, list, css));
+				}
+				fitPreview();
+				saveState(s);
+			}
+
+			function markPreset() {
+				Array.prototype.forEach.call(document.querySelectorAll(".preset"), function (button) {
+					button.setAttribute("aria-pressed", String(button.getAttribute("data-preset") === activePreset));
+				});
+			}
+
+			function applyPreset(preset) {
+				writeState(presetState(preset));
+				activePreset = preset.id;
+				markPreset();
+				update();
+			}
+
+			function renderPresets() {
+				var holder = getById("presets");
+				PRESETS.forEach(function (preset) {
+					var s = presetState(preset);
+					var button = document.createElement("button");
+					button.type = "button";
+					button.className = "preset";
+					button.setAttribute("data-preset", preset.id);
+					button.setAttribute("aria-pressed", "false");
+					var swatch = document.createElement("span");
+					swatch.className = "swatch";
+					swatch.setAttribute("aria-hidden", "true");
+					swatch.textContent = "Aa";
+					swatch.style.background = hexToRgba(s.labelBg, Math.max(s.labelOpacity, 15));
+					swatch.style.color = s.textColor;
+					if (FONTS[s.font]) {
+						swatch.style.fontFamily = FONTS[s.font];
+					}
+					if (s.border > 0) {
+						swatch.style.borderColor = s.borderColor;
+					}
+					button.appendChild(swatch);
+					button.appendChild(document.createTextNode(preset.name));
+					button.addEventListener("click", function () {
+						applyPreset(preset);
+					});
+					holder.appendChild(button);
+				});
+			}
+
+			function copyField(field, button) {
+				function done() {
+					button.textContent = "Copied";
+					setTimeout(function () {
+						button.textContent = button.getAttribute("data-label");
+					}, 1500);
+				}
+				function selectAndCopy() {
+					field.focus();
+					field.select();
+					try {
+						if (document.execCommand("copy")) {
+							done();
+						}
+					} catch (e) {}
+				}
+				if (navigator.clipboard && window.isSecureContext) {
+					navigator.clipboard.writeText(field.value).then(done, selectAndCopy);
+				} else {
+					selectAndCopy();
+				}
+			}
+
+			function onControlChange(event) {
+				if (event.target.id !== "guests" && event.target.id !== "canvas" && event.target.id !== "extraCss") {
+					activePreset = "";
+					markPreset();
+				}
+				update();
+			}
+
+			iframe.addEventListener("load", function () {
+				if (!iframe.getAttribute("src")) {
+					return;
+				}
+				if (canInject && !injectCss(currentCss)) {
+					// Not reachable as same-origin after all; reload with the CSS in the link instead.
+					canInject = false;
+					update();
+					return;
+				}
+				statusLine.textContent = "Preview ready. The sample repeats one clip for every guest.";
+			});
+
+			Object.keys(DEFAULTS).forEach(function (key) {
+				getById(key).addEventListener("input", onControlChange);
+				getById(key).addEventListener("change", onControlChange);
+			});
+			getById("source").addEventListener("input", update);
+			getById("controls").addEventListener("focusin", function () {
+				// Bring the preview back after scrolling through the export fields.
+				previewBox.parentNode.scrollTop = 0;
+			});
+			Array.prototype.forEach.call(document.querySelectorAll("[data-copy]"), function (button) {
+				button.setAttribute("data-label", button.textContent);
+				button.addEventListener("click", function () {
+					copyField(getById(button.getAttribute("data-copy")), button);
+				});
+			});
+			window.addEventListener("resize", fitPreview);
+			if (window.ResizeObserver) {
+				new ResizeObserver(fitPreview).observe(previewBox);
+			}
+
+			getById("source").placeholder = defaultSource;
+			writeState(DEFAULTS);
+			renderPresets();
+			var saved = loadState();
+			if (saved) {
+				writeState(saved.state);
+				activePreset = typeof saved.preset === "string" ? saved.preset : "";
+				markPreset();
+				update();
+			} else {
+				applyPreset(PRESETS[0]);
+			}
+		})();
+	</script>
+</body>
+</html>
