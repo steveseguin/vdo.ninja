@@ -1364,6 +1364,7 @@ WebRTC.Media = (function () {
 	session.whipoutScreenSettingsUserSet = false;
 	session.meshcastCode = false;
 	session.noMeshcast = false;
+	session.whipFallback = false;
 	session.miconly = false;
 	session.muted = false;
 	session.sceneMuted = false;
@@ -13934,6 +13935,17 @@ WebRTC.Media = (function () {
 						}
 					}
 				}
+				if (session.pcs[UUID].whipFallback && msg.meshcastReady && msg.meshcastReady.handoff === session.pcs[UUID].whipFallback) {
+					var fallbackPeer = session.pcs[UUID];
+					if (msg.meshcastReady.active === true) {
+						pauseMeshcastPeer(UUID, true, msg.meshcastReady);
+						fallbackPeer.whipFallbackComplete = true;
+					} else if (msg.meshcastReady.recover && !fallbackPeer.whipFallbackComplete && !fallbackPeer.needsPublishing) {
+						if (fallbackPeer.meshcastMedia.audio) fallbackPeer.allowAudio = fallbackPeer.meshcastMedia.audio;
+						if (fallbackPeer.meshcastMedia.video) fallbackPeer.allowVideo = fallbackPeer.meshcastMedia.video;
+						session.initialPublish(UUID, true);
+					}
+				}
 				var remoteAuthorized = session.remote === true || (session.remote && "remote" in msg && msg.remote === session.remote);
 				if (session.directorList.indexOf(altUUID || UUID) == -1) {
 					// if the director gets rejected, let them know.
@@ -15457,12 +15469,14 @@ WebRTC.Media = (function () {
 					session.pcs[UUID].whipScreen = false;
 				}
 				if (msg.info) session.pcs[UUID].meshcastSwitchSupported = msg.info.meshcastSwitch === true;
+				// Match the existing handoff restriction: older Firefox mutes the shared video source.
+				session.pcs[UUID].whipFallbackRequested = !!(msg.info && msg.info.whipFallback && !session.meshcastSwitch && !(Firefox && Firefox < 110));
 				session.pcs[UUID].meshcastMedia = { audio: session.pcs[UUID].allowAudio, video: session.pcs[UUID].allowVideo };
 				if ("allowmeshcast" in msg && msg.allowmeshcast === false) {
 					session.pcs[UUID].whipout = false;
 				} else if ("allowwhipout" in msg && msg.allowwhipout === false) {
 					session.pcs[UUID].whipout = false;
-				} else if (session.meshcast && !session.meshcastSwitch) {
+				} else if (session.meshcast && !session.meshcastSwitch && !session.pcs[UUID].whipFallbackRequested) {
 					if (session.meshcast == "video") {
 						session.pcs[UUID].allowVideo = false;
 					} else if (session.meshcast == "audio") {
@@ -15475,7 +15489,7 @@ WebRTC.Media = (function () {
 						session.pcs[UUID].allowAudio = false;
 						session.pcs[UUID].allowVideo = false;
 					}
-				} else if (session.whipOutput && !session.meshcastSwitch) {
+				} else if (session.whipOutput && !session.meshcastSwitch && !session.pcs[UUID].whipFallbackRequested) {
 					if (session.pcs[UUID].allowAudio === true && session.pcs[UUID].allowVideo === true) {
 						session.pcs[UUID].allowAudio = false;
 						session.pcs[UUID].allowVideo = false;
@@ -15908,7 +15922,28 @@ WebRTC.Media = (function () {
 			log("Does Local Stream Source EXIST?");
 			log(stream.getTracks());
 
-			if (session.whipoutSettings && session.pcs[UUID].whipout === null && (!session.meshcastSwitch || (session.pcs[UUID].meshcastSwitchSupported && session.whipoutSettings.url && session.meshcastSwitchBusy !== "Switching to direct…")) && (!session.promptAccess || session.pcs[UUID].playbackAccessApproved === true)) {
+			var fallbackPeer = session.pcs[UUID];
+			if (fallbackPeer.whipFallbackRequested && !fallbackPeer.whipFallback && fallbackPeer.whipout !== false && session.whipPublishPrimary !== false && (session.whipOutput || session.meshcast || session.meshcast2)) {
+				// Save only the media allowed by the normal admission and scene checks.
+				fallbackPeer.meshcastMedia = {
+					audio: session.meshcast !== "video" && stream.getAudioTracks().length ? fallbackPeer.allowAudio : false,
+					video: session.meshcast !== "audio" && stream.getVideoTracks().length ? fallbackPeer.allowVideo : false
+				};
+				if (fallbackPeer.meshcastMedia.audio || fallbackPeer.meshcastMedia.video) {
+					fallbackPeer.whipFallback = Date.now();
+					if (fallbackPeer.meshcastMedia.audio) fallbackPeer.allowAudio = false;
+					if (fallbackPeer.meshcastMedia.video) fallbackPeer.allowVideo = false;
+					var data = {};
+					data.whepSettings = Object.assign({}, session.whipoutSettings || { type: "whep", url: false });
+					data.whepSettings.handoff = fallbackPeer.whipFallback;
+					data.whepSettings.fallback = true;
+					data.whepSettings.audio = !!fallbackPeer.meshcastMedia.audio;
+					data.whepSettings.video = !!fallbackPeer.meshcastMedia.video;
+					session.sendMessage(data, UUID);
+				}
+			}
+
+			if (!session.pcs[UUID].whipFallback && session.whipoutSettings && session.pcs[UUID].whipout === null && (!session.meshcastSwitch || (session.pcs[UUID].meshcastSwitchSupported && session.whipoutSettings.url && session.meshcastSwitchBusy !== "Switching to direct…")) && (!session.promptAccess || session.pcs[UUID].playbackAccessApproved === true)) {
 				// if true, already connected, and if false, it's disabled.
 				var data = {};
 				data.whepSettings = session.whipoutSettings;
@@ -24475,6 +24510,7 @@ WebRTC.Media = (function () {
 				msg.guest = false;
 				msg.info.meshcastSwitch = true;
 				msg.info.meshcastControl = getMeshcastControlStatus();
+				if (session.whipFallback) msg.info.whipFallback = true;
 				msg.scene = false;
 				msg.director = false;
 				msg.limitaudio = false;
@@ -25714,9 +25750,19 @@ function whepSettingsHasStarted(settings) {
 		if (settings && settings.handoff && settings.media !== "screen" && session.rpcs[UUID]) {
 			var peer = session.rpcs[UUID];
 			var previous = peer.meshcastHandoff;
-			if (previous && previous.id === settings.handoff && previous.target === !!settings.url) return;
-			peer.meshcastHandoff = { id: settings.handoff, target: !!settings.url, active: previous ? previous.active : !!peer.whep, audio: settings.audio, video: settings.video };
-			finishMeshcastHandoff(UUID, peer.meshcastHandoff).catch(errorlog);
+			if (settings.fallback && session.whipFallback) {
+				if (!previous || previous.id !== settings.handoff) {
+					peer.meshcastHandoff = { id: settings.handoff, target: true, active: false, fallback: true, audio: settings.audio, video: settings.video };
+					if (settings.audio === false) peer.whepExpectedAudio = false;
+					if (settings.video === false) peer.whepExpectedVideo = false;
+					peer.suppressReconnect = false;
+					finishMeshcastHandoff(UUID, peer.meshcastHandoff).catch(errorlog);
+				}
+			} else {
+				if (previous && previous.id === settings.handoff && previous.target === !!settings.url) return;
+				peer.meshcastHandoff = { id: settings.handoff, target: !!settings.url, active: previous ? previous.active : !!peer.whep, audio: settings.audio, video: settings.video };
+				finishMeshcastHandoff(UUID, peer.meshcastHandoff).catch(errorlog);
+			}
 			if (!settings.url) return;
 		}
 		console.log(settings);

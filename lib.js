@@ -22546,6 +22546,7 @@ if (typeof window !== "undefined") {
 }
 
 session.hangup = function (reload = false, estop = false, preserveStreamTakeover = false) {
+	if (session.stopWhipRetries) session.stopWhipRetries();
 	if (session.iframeEle && session.iframeEle.stopWhep) session.iframeEle.stopWhep();
 	session.qosClosing = true; // Suppress reporting an intentional signaling close.
 	if (
@@ -36067,6 +36068,7 @@ function pauseMeshcastPeer(UUID, paused, media = { audio: true, video: true }) {
 }
 
 function stopGuestMeshcastPublisher() {
+	if (session.stopWhipRetries) session.stopWhipRetries();
 	session.whipOutput = false; // Stop the existing reconnect loop before closing its peer.
 	if (session.whipOut) {
 		if (session.whipOut.deleteme) session.whipOut.deleteme();
@@ -36150,21 +36152,49 @@ async function setGuestMeshcast(enabled) {
 	announceMeshcastStatus();
 }
 
+function requestWhipFallback(UUID) {
+	var peer = session.rpcs[UUID];
+	var state = peer && peer.meshcastHandoff;
+	if (!state || !state.fallback || state.active || state.p2p || peer.suppressReconnect || peer.__closing) return;
+	var msg = {};
+	msg.meshcastReady = { handoff: state.id, active: false, recover: true };
+	if (session.sendRequest(msg, UUID)) state.p2p = true;
+}
+
 // Keep the old feed playing until the selected receiver has fresh media.
-// Only director-initiated handoffs use this path; regular WHEP keeps its ontrack flow.
 async function finishMeshcastHandoff(UUID, state) {
 	var peer = session.rpcs[UUID];
 	var started = Date.now();
 	var baseline = null;
+	var lastReceiver = null;
+	var lastCounts = null;
+	var flowingSince = 0;
 	while (session.rpcs[UUID] === peer && peer.meshcastHandoff === state) {
+		if (state.fallback && (peer.__closing || peer.suppressReconnect || session.taintedSession)) return;
+		if (state.fallback && !state.active && Date.now() - started >= 5000) requestWhipFallback(UUID);
 		var receiver = state.target ? peer.whep : peer;
+		if (state.fallback && receiver !== lastReceiver) {
+			lastReceiver = receiver;
+			lastCounts = null;
+			flowingSince = 0;
+		}
 		if (receiver && receiver.connectionState === "connected") {
 			var counts = { audio: 0, video: 0 };
 			var receivers = receiver.getReceivers().filter(function (item, index) {
 				return item.track && item.track.readyState === "live" && (state.target || !peer.screenIndexes || peer.screenIndexes.indexOf(index) === -1);
 			});
-			var reports = await Promise.all(receivers.map(function (item) { return item.getStats(); }));
+			var reports;
+			try {
+				reports = await Promise.all(receivers.map(function (item) { return item.getStats(); }));
+			} catch (e) {
+				if (!state.fallback) throw e;
+				lastCounts = null;
+				flowingSince = 0;
+				await sleep(250);
+				continue;
+			}
 			if (session.rpcs[UUID] !== peer || peer.meshcastHandoff !== state) return;
+			if (state.fallback && peer.whep !== receiver) continue;
 			reports.forEach(function (stats) {
 				stats.forEach(function (stat) {
 					if (stat.type !== "inbound-rtp") return;
@@ -36173,10 +36203,29 @@ async function finishMeshcastHandoff(UUID, state) {
 				});
 			});
 			if (!baseline) baseline = state.target ? { audio: 0, video: 0 } : counts;
-			if ((!peer.whepExpectedVideo || state.video === false || counts.video > baseline.video) && (!peer.whepExpectedAudio || state.audio === false || counts.audio > baseline.audio)) {
+			var ready = (!peer.whepExpectedVideo || state.video === false || counts.video > baseline.video) && (!peer.whepExpectedAudio || state.audio === false || counts.audio > baseline.audio);
+			if (state.fallback) {
+				if (!lastCounts) {
+					lastCounts = counts;
+					flowingSince = Date.now();
+				}
+				ready = Date.now() - flowingSince >= 1000 && (!peer.whepExpectedVideo || counts.video > lastCounts.video) && (!peer.whepExpectedAudio || counts.audio > lastCounts.audio) && (peer.whepExpectedAudio || peer.whepExpectedVideo);
+				if (!ready && Date.now() - flowingSince >= 1000) {
+					lastCounts = counts;
+					flowingSince = Date.now();
+				}
+			}
+			if (ready) {
 				var tracks = receivers.map(function (item) { return item.track; });
-				if (peer.streamSrc) peer.streamSrc.getTracks().forEach(function (track) { peer.streamSrc.removeTrack(track); });
-				if (peer.videoElement && peer.videoElement.srcObject) peer.videoElement.srcObject.getTracks().forEach(function (track) { peer.videoElement.srcObject.removeTrack(track); });
+				if (state.fallback) {
+					tracks = tracks.filter(function (track) { return track.kind === "audio" ? peer.whepExpectedAudio : peer.whepExpectedVideo; });
+					if (peer.streamSrc) peer.streamSrc.getTracks().forEach(function (track) {
+						if (track.kind === "audio" ? peer.whepExpectedAudio : peer.whepExpectedVideo) peer.streamSrc.removeTrack(track);
+					});
+				} else {
+					if (peer.streamSrc) peer.streamSrc.getTracks().forEach(function (track) { peer.streamSrc.removeTrack(track); });
+					if (peer.videoElement && peer.videoElement.srcObject) peer.videoElement.srcObject.getTracks().forEach(function (track) { peer.videoElement.srcObject.removeTrack(track); });
+				}
 				state.active = state.target;
 				session.onTrack({ streams: [new MediaStream(tracks)], meshcastHandoff: true }, UUID);
 				session.sendRequest({ meshcastReady: { handoff: state.id, active: state.target, audio: !!peer.whepExpectedAudio, video: !!peer.whepExpectedVideo } }, UUID);
@@ -36204,12 +36253,15 @@ async function finishMeshcastHandoff(UUID, state) {
 				}
 				return;
 			}
+		} else if (state.fallback) {
+			lastCounts = null;
+			flowingSince = 0;
 		}
-		if (Date.now() - started > 10000) {
+		if (!state.fallback && Date.now() - started > 10000) {
 			if (state.target && !state.active) { stopPrimaryWhep(UUID); delete peer.meshcastHandoff; }
 			return;
 		}
-		await sleep(100);
+		await sleep(state.fallback ? 250 : 100);
 	}
 }
 
@@ -62415,7 +62467,22 @@ session.onTrack = function (event, UUID) {
 	}
 
 	var handoff = session.rpcs[UUID].meshcastHandoff;
-	if (!screenshare && handoff && !event.meshcastHandoff && (event.target === session.rpcs[UUID].whep || handoff.active || !handoff.target)) return;
+	if (!screenshare && handoff && !event.meshcastHandoff) {
+		if (handoff.fallback) {
+			if (event.target === session.rpcs[UUID].whep && !handoff.active) return;
+			if (event.target === session.rpcs[UUID].whep && handoff.active && session.rpcs[UUID].streamSrc) {
+				// Replace recovered relay tracks without ending the other transport's tracks.
+				newTracks.forEach(function (track) {
+					session.rpcs[UUID].streamSrc.getTracks().forEach(function (oldTrack) {
+						if (oldTrack.kind === track.kind && oldTrack.id !== track.id) session.rpcs[UUID].streamSrc.removeTrack(oldTrack);
+					});
+				});
+			}
+			if (handoff.active && event.target !== session.rpcs[UUID].whep) {
+				newTracks = newTracks.filter(function (track) { return track.kind === "audio" ? !handoff.audio : !handoff.video; });
+			}
+		} else if (event.target === session.rpcs[UUID].whep || handoff.active || !handoff.target) return;
+	}
 
 	if (screenshare) {
 		const parentUUID = screenshareParentOverride || (typeof UUID === "string" && UUID.endsWith("_screen") ? UUID.slice(0, -7) : UUID);
@@ -67595,7 +67662,7 @@ function getWhipOutCanvasTrack(baseRTC = session.whipOut) {
 	if (!baseRTC.canvasStream) {
 		(function loop() {
 			baseRTC.ctx.fillRect(0, 0, baseRTC.canvas.width, baseRTC.canvas.height);
-			setTimeout(loop, 250); // drawing at 30fps
+			baseRTC.canvasTimer = setTimeout(loop, 250); // drawing at 30fps
 		})();
 		try {
 			baseRTC.ctx.fillRect(0, 0, baseRTC.canvas.width, baseRTC.canvas.height);
@@ -67803,6 +67870,7 @@ function whipOut() {
 		log("no videoElement yet created; can't do whip out until then");
 		return false;
 	}
+	if (session.stopWhipRetries) session.stopWhipRetries();
 
 	for (const UUID in session.pcs) {
 		if (!session.pcs.hasOwnProperty(UUID)) {
@@ -67818,6 +67886,8 @@ function whipOut() {
 	var keyframe = false;
 	async function whipConnect() {
 		var connectedPeer = null;
+		var connectAttempt = ++whipConnectAttempt;
+		if (whipStopped || !session.whipOutput || session.whipPublishPrimary === false || session.taintedSession) return;
 		if (isMeshcastStudioPublish()) {
 			var videoTracks = session.videoElement && session.videoElement.srcObject && session.videoElement.srcObject.getVideoTracks();
 			if (!videoTracks || !videoTracks.length || videoTracks[0].readyState === "ended") {
@@ -67830,6 +67900,7 @@ function whipOut() {
 			if (!session.configuration) {
 				await chooseBestTURN();
 			}
+			if (whipStopped || connectAttempt !== whipConnectAttempt || !session.whipOutput || session.whipPublishPrimary === false || session.taintedSession) return;
 
 			if (session.encodedInsertableStreams) {
 				// most servers won't support this
@@ -67846,6 +67917,22 @@ function whipOut() {
 
 			session.whipOut = new RTCPeerConnection(config);
 			connectedPeer = session.whipOut;
+			var closeWhipPeer = connectedPeer.close;
+			connectedPeer.close = function () {
+				clearTimeout(this.canvasTimer);
+				if (this.canvasStream) this.canvasStream.getTracks().forEach(function (track) { track.stop(); });
+				if (this.whipOscillator) {
+					this.whipOscillator.stop();
+					this.whipOscillator.disconnect();
+					this.whipOscillator = null;
+					this.whipAudioStream.getTracks().forEach(function (track) { track.stop(); });
+				}
+				return closeWhipPeer.apply(this, arguments);
+			};
+			clearTimeout(whipConnectTimer);
+			whipConnectTimer = setTimeout(function () {
+				if (session.whipOut === connectedPeer) retryWhipConnection();
+			}, 30000 + (parseInt(session.whipWait) || 0));
 			// Only official Meshcast v2 publishing may finish the gathering wait early.
 			// Capture this per connection; generic WHIP endpoints retain their behavior.
 			session.whipOut.meshcastGatheringEarlyCompletion = !!session.meshcast2 &&
@@ -67861,6 +67948,7 @@ function whipOut() {
 			session.whipOut.keyframeTimeout = null;
 		} catch (err) {
 			errorlog(err);
+			retryWhipConnection();
 			if (isMeshcastStudioPublish()) {
 				setMeshcastStudioPublishStatus("failed", "meshcast-publish-codec");
 				return null;
@@ -67868,6 +67956,7 @@ function whipOut() {
 			if (!session.cleanOutput) {
 				warnUser("An RTC error occured");
 			}
+			return null;
 		}
 
 		try {
@@ -67893,6 +67982,8 @@ function whipOut() {
 				gainNode.gain.value = 0.00001;
 
 				const destination = session.audioCtx.createMediaStreamDestination();
+				session.whipOut.whipOscillator = oscillator;
+				session.whipOut.whipAudioStream = destination.stream;
 
 				oscillator.connect(gainNode);
 				gainNode.connect(destination);
@@ -67913,7 +68004,9 @@ function whipOut() {
 					};
 
 					try {
-						trk.applyConstraints(constraints);
+						trk.applyConstraints(constraints).catch(function (e) {
+							console.warn("Could not apply audio constraints", e);
+						});
 					} catch (e) {
 						console.warn("Could not apply audio constraints", e);
 					}
@@ -68082,6 +68175,10 @@ function whipOut() {
 				session.whipOut.onconnectionstatechange = function () {
 					if (session.whipOut !== publishingPeer) return;
 					if (this.connectionState === "connected") {
+						clearTimeout(whipReconnectTimer);
+						clearTimeout(whipConnectTimer);
+						whipReconnectTimer = null;
+						whipReconnectAttempts = 0;
 						setMeshcastStudioPublishStatus("connected");
 					} else if (this.connectionState === "disconnected" || this.connectionState === "failed") {
 						setMeshcastStudioPublishStatus("connecting");
@@ -68101,6 +68198,7 @@ function whipOut() {
 		} catch (e) {
 			errorlog(e);
 		}
+		if (!connectedPeer) retryWhipConnection();
 		return connectedPeer;
 	}
 	var publishing = false;
@@ -68167,8 +68265,9 @@ function whipOut() {
 					ajax(sdp, "sdp");
 				})
 				.catch(function (err) {
-					if (session.whipOut !== publishingPeer || !isMeshcastStudioPublish()) return;
-					setMeshcastStudioPublishStatus("failed", "meshcast-publish-codec");
+					if (session.whipOut !== publishingPeer) return;
+					if (isMeshcastStudioPublish()) setMeshcastStudioPublishStatus("failed", "meshcast-publish-codec");
+					retryWhipConnection();
 				});
 		} catch (e) {
 			errorlog(e);
@@ -68209,7 +68308,7 @@ function whipOut() {
 			const trickle = session.whipOut && session.whipOut.meshcastTrickle;
 			var xhttp = new XMLHttpRequest();
 			xhttp.onreadystatechange = async function () {
-				if (session.whipOut !== reportingPeer) {
+				if (whipStopped || session.whipOut !== reportingPeer) {
 					// A stopped attempt can still receive a server-created WHIP resource.
 					if (type === "sdp" && this.readyState === 4 && this.status === 201) {
 						var staleLocation = this.getResponseHeader("location");
@@ -68225,7 +68324,8 @@ function whipOut() {
 				if (this.readyState == 4 && (this.status == 200 || this.status == 201)) {
 					if (trickle) trickle.accept(this);
 					var contentType = this.getResponseHeader("content-type");
-					if (isMeshcastStudioPublish() && !contentType) contentType = "";
+					if (!contentType) contentType = "";
+					if (type === "sdp" && !contentType.startsWith("application/sdp") && !isSDP(this.responseText)) retryWhipConnection();
 
 					if (!contentType.startsWith("application/sdp")) {
 						warnlog("The WHIP output destination responded with an incorrect content type; will attempt to continue still.");
@@ -68382,7 +68482,7 @@ function whipOut() {
 								broadcastWhepSettings("primary");
 								if (session.whipoutSettings) {
 									for (var UUID in session.pcs) {
-										if (!session.meshcastSwitch && session.pcs[UUID].whipout === null && (!session.promptAccess || session.pcs[UUID].playbackAccessApproved === true)) {
+										if (!session.meshcastSwitch && !session.pcs[UUID].whipFallback && session.pcs[UUID].whipout === null && (!session.promptAccess || session.pcs[UUID].playbackAccessApproved === true)) {
 											var data = {};
 											data.whepSettings = session.whipoutSettings;
 											var sentWhepSettings = session.sendMessage(data, UUID);
@@ -68396,6 +68496,7 @@ function whipOut() {
 							})
 							.catch(async function (e) {
 								if (session.whipOut !== reportingPeer) return;
+								retryWhipConnection();
 								if (isMeshcastStudioPublish()) {
 									setMeshcastStudioPublishStatus("failed", "meshcast-publish-response");
 									return;
@@ -68425,7 +68526,7 @@ function whipOut() {
 									broadcastWhepSettings("primary");
 									if (session.whipoutSettings) {
 										for (var UUID in session.pcs) {
-											if (!session.meshcastSwitch && session.pcs[UUID].whipout === null && (!session.promptAccess || session.pcs[UUID].playbackAccessApproved === true)) {
+											if (!session.meshcastSwitch && !session.pcs[UUID].whipFallback && session.pcs[UUID].whipout === null && (!session.promptAccess || session.pcs[UUID].playbackAccessApproved === true)) {
 												var data = {};
 												data.whepSettings = session.whipoutSettings;
 												var sentWhepSettings = session.sendMessage(data, UUID);
@@ -68459,7 +68560,7 @@ function whipOut() {
 						// Early peers may already be marked sent after receiving an empty URL.
 						broadcastWhepSettings("primary");
 						for (var UUID in session.pcs) {
-							if (!session.meshcastSwitch && session.pcs[UUID].whipout === null && (!session.promptAccess || session.pcs[UUID].playbackAccessApproved === true)) {
+							if (!session.meshcastSwitch && !session.pcs[UUID].whipFallback && session.pcs[UUID].whipout === null && (!session.promptAccess || session.pcs[UUID].playbackAccessApproved === true)) {
 								var data = {};
 								data.whepSettings = session.whipoutSettings;
 								var sentWhepSettings = session.sendMessage(data, UUID);
@@ -68487,15 +68588,10 @@ function whipOut() {
 						messageKey = "meshcast-publish-network";
 					}
 					setMeshcastStudioPublishStatus("failed", messageKey);
-					if (messageKey === "meshcast-publish-network" || messageKey === "meshcast-publish-busy") {
-						retryWhipConnection();
-					} else {
-						session.whipOut = null;
-						reportingPeer.close();
-						whipReconnecting = false;
-					}
+					retryWhipConnection();
 					return;
 				}
+				if (type === "sdp") retryWhipConnection();
 				if (type === "sdp" && reportingPeer && reportingPeer === session.whipOut && reportingPeer.qosMeshcast) {
 					if (reportingPeer.qosMeshcast.success !== true) reportingPeer.qosMeshcast.success = false;
 					errorlog("WHIP request failed (HTTP " + this.status + ")");
@@ -68540,7 +68636,13 @@ function whipOut() {
 		} else {
 			xhttp.open("POST", session.whipOutput, true);
 		}
-		if (type === "sdp" && isMeshcastStudioPublish()) xhttp.timeout = 15000;
+		if (type === "sdp") {
+			whipRequest = xhttp;
+			xhttp.timeout = 15000;
+			xhttp.ontimeout = function () {
+				if (session.whipOut === reportingPeer) retryWhipConnection();
+			};
+		}
 
 		if (session.whipOutputToken) {
 			xhttp.setRequestHeader("Authorization", "Bearer " + session.whipOutputToken);
@@ -68550,6 +68652,7 @@ function whipOut() {
 
 		xhttp.onerror = function (e) {
 			if (session.whipOut !== reportingPeer) return;
+			if (type === "sdp") retryWhipConnection();
 			errorlog(e);
 
 			if (window.location.protocol == "https:" && session.whipOutput.startsWith("http://") && !session.whipOutput.startsWith("http://localhost")) {
@@ -68622,178 +68725,76 @@ function whipOut() {
 		}
 	}
 
-	// WHIP auto-reconnection with exponential backoff
-	var whipReconnecting = false;
+	// One retry timer and one connection deadline belong to this publisher.
+	var whipReconnectTimer = null;
+	var whipConnectTimer = null;
+	var whipRequest = null;
 	var whipReconnectAttempts = 0;
+	var whipConnectAttempt = 0;
+	var whipStopped = false;
+
+	function stopWhipRetries() {
+		whipStopped = true;
+		clearTimeout(whipReconnectTimer);
+		clearTimeout(whipConnectTimer);
+		whipReconnectTimer = null;
+		var peer = session.whipOut;
+		session.whipOut = null;
+		if (whipRequest) whipRequest.abort();
+		if (peer) {
+			clearInterval(peer.keyframeTimeout);
+			try { if (peer.deleteme) peer.deleteme(); } catch (e) { warnlog(e); }
+			try { peer.close(); } catch (e) { warnlog(e); }
+		}
+	}
+	session.stopWhipRetries = stopWhipRetries;
 
 	function retryWhipConnection() {
-		if (!session.whipOutput) {
-			log("No WHIP output configured, stopping retry");
-			return;
-		}
-
-		if (whipReconnecting) {
-			return;
-		}
-
-		// Check if already connected
-		if (session.whipOut &&
-			(session.whipOut.connectionState === 'connected' ||
-			 session.whipOut.iceConnectionState === 'connected' ||
-			 session.whipOut.iceConnectionState === 'completed')) {
-			log("WHIP connection is already established. No need to reconnect.");
-			whipReconnecting = false;
-			whipReconnectAttempts = 0;
-			return;
-		}
-
-		whipReconnecting = true;
+		if (whipStopped || session.stopWhipRetries !== stopWhipRetries || !session.whipOutput || session.whipPublishPrimary === false || session.taintedSession || whipReconnectTimer) return;
+		clearTimeout(whipConnectTimer);
 		var retryPeer = session.whipOut;
-
-		const maxRetries = 5;
-		const initialDelay = 2000;
-		const maxDelay = 20000;
-
-		let currentRetry = whipReconnectAttempts;
-		let currentDelay = Math.min(initialDelay * Math.pow(2, currentRetry), maxDelay);
-
-		async function attemptReconnect() {
-			if (session.whipOut !== retryPeer) return;
-			if (!session.whipOutput) {
-				log("WHIP output removed, stopping retry");
-				whipReconnecting = false;
-				return;
-			}
-
-			// Check if connection recovered
-			if (session.whipOut &&
-				(session.whipOut.connectionState === 'connected' ||
-				 session.whipOut.iceConnectionState === 'connected' ||
-				 session.whipOut.iceConnectionState === 'completed')) {
-				log("WHIP connection recovered. Stopping retry.");
-				whipReconnecting = false;
+		var delay = Math.min(60000, 2000 * Math.pow(2, Math.min(whipReconnectAttempts, 5)) * (0.9 + Math.random() * 0.2));
+		whipReconnectAttempts++;
+		whipReconnectTimer = setTimeout(function () {
+			whipReconnectTimer = null;
+			if (whipStopped || session.whipOut !== retryPeer || !session.whipOutput || session.whipPublishPrimary === false || session.taintedSession) return;
+			if (retryPeer && retryPeer.connectionState === "connected" && retryPeer.iceConnectionState !== "failed" && retryPeer.iceConnectionState !== "disconnected") {
 				whipReconnectAttempts = 0;
 				return;
 			}
-
-			log("Attempting WHIP reconnection (attempt " + (currentRetry + 1) + "/" + maxRetries + ")");
-
-			// Close existing connection
-			if (session.whipOut) {
-				try {
-					clearInterval(session.whipOut.keyframeTimeout);
-					if (session.whipOut.deleteme) session.whipOut.deleteme();
-				} catch (e) {
-					warnlog(e);
-				}
-				try {
-					session.whipOut.close();
-				} catch (e) {
-					warnlog(e);
-				}
-				session.whipOut = null;
+			session.whipOut = null;
+			if (whipRequest) whipRequest.abort();
+			if (retryPeer) {
+				clearInterval(retryPeer.keyframeTimeout);
+				try { if (retryPeer.deleteme) retryPeer.deleteme(); } catch (e) { warnlog(e); }
+				try { retryPeer.close(); } catch (e) { warnlog(e); }
 			}
-
-			// Reset publishing state
 			publishing = false;
 			candidates = [];
-
-			// Attempt reconnection - reuses session.whipOutput and session.whipOutputToken
-			try {
-				retryPeer = await whipConnect();
-				if (session.whipOut !== retryPeer) return;
-				if (isMeshcastStudioPublish() && !retryPeer) {
-					whipReconnecting = false;
-					return;
-				}
-				// Give it time to connect before checking
-				var checkAttempts = 0;
-				var maxCheckAttempts = 6; // Up to 30 seconds total (6 x 5s)
-				function checkConnectionState() {
-					if (session.whipOut !== retryPeer) return;
-					checkAttempts++;
-					if (session.whipOut &&
-						(session.whipOut.connectionState === 'connected' ||
-						 session.whipOut.iceConnectionState === 'connected' ||
-						 session.whipOut.iceConnectionState === 'completed')) {
-						log("WHIP reconnection successful");
-						whipReconnecting = false;
-						whipReconnectAttempts = 0;
-					} else if (session.whipOut &&
-						(session.whipOut.connectionState === 'connecting' ||
-						 session.whipOut.iceConnectionState === 'checking' ||
-						 session.whipOut.iceConnectionState === 'new')) {
-						// Still connecting - wait longer before declaring failure
-						if (checkAttempts < maxCheckAttempts) {
-							log("WHIP still connecting, waiting... (" + checkAttempts + "/" + maxCheckAttempts + ")");
-							setTimeout(checkConnectionState, 5000);
-						} else {
-							log("WHIP connection timeout after " + (checkAttempts * 5) + "s");
-							scheduleNextRetry();
-						}
-					} else {
-						scheduleNextRetry();
-					}
-				}
-				function scheduleNextRetry() {
-					if (session.whipOut !== retryPeer) return;
-					currentRetry++;
-					whipReconnectAttempts = currentRetry;
-					if (currentRetry < maxRetries) {
-						currentDelay = Math.min(currentDelay * 2, maxDelay);
-						log("WHIP reconnection not yet established. Retrying in " + currentDelay + "ms");
-						setTimeout(attemptReconnect, currentDelay);
-					} else {
-						log("WHIP max retries reached, stopping reconnection attempts");
-						whipReconnecting = false;
-						setMeshcastStudioPublishStatus("failed", "meshcast-publish-exhausted");
-					}
-				}
-				setTimeout(checkConnectionState, 5000); // First check after 5 seconds
-			} catch (e) {
-				errorlog(e);
-				currentRetry++;
-				whipReconnectAttempts = currentRetry;
-				if (currentRetry < maxRetries) {
-					currentDelay = Math.min(currentDelay * 2, maxDelay);
-					setTimeout(attemptReconnect, currentDelay);
-				} else {
-					whipReconnecting = false;
-				}
-			}
-		}
-
-		// Start first attempt after initial delay
-		log("WHIP connection lost. Will retry in " + currentDelay + "ms");
-		setTimeout(attemptReconnect, currentDelay);
+			whipConnect();
+		}, delay);
 	}
 
-	// Expose for manual reconnection from UI
-	session.restartWhipConnection = function() {
-		log("Manual WHIP restart requested");
-		whipReconnecting = false;
+	session.restartWhipConnection = function () {
+		if (whipStopped || !session.whipOutput || session.whipPublishPrimary === false || session.taintedSession) return;
+		clearTimeout(whipReconnectTimer);
+		clearTimeout(whipConnectTimer);
+		whipReconnectTimer = null;
 		whipReconnectAttempts = 0;
-		if (session.whipOut) {
-			try {
-				clearInterval(session.whipOut.keyframeTimeout);
-				if (session.whipOut.deleteme) session.whipOut.deleteme();
-			} catch (e) {
-				warnlog(e);
-			}
-			try {
-				session.whipOut.close();
-			} catch (e) {
-				warnlog(e);
-			}
-			session.whipOut = null;
+		var peer = session.whipOut;
+		session.whipOut = null;
+		if (whipRequest) whipRequest.abort();
+		if (peer) {
+			clearInterval(peer.keyframeTimeout);
+			try { if (peer.deleteme) peer.deleteme(); } catch (e) { warnlog(e); }
+			try { peer.close(); } catch (e) { warnlog(e); }
 		}
 		publishing = false;
 		candidates = [];
 		whipConnect();
 	};
 
-	// Track reconnect attempts for mesh debug visibility
-	session.getWhipReconnectAttempts = function() {
+	session.getWhipReconnectAttempts = function () {
 		return whipReconnectAttempts;
 	};
 
@@ -68921,8 +68922,15 @@ function broadcastWhepSettings(kind = "primary") {
 		if (allowProperty && peer[allowProperty] === false) {
 			continue;
 		}
+		if (kind === "primary" && peer.whipFallbackRequested && !peer.whipFallback) continue;
 		const data = {};
 		const payload = Object.assign({}, settings);
+		if (kind === "primary" && peer.whipFallback) {
+			payload.handoff = peer.whipFallback;
+			payload.fallback = true;
+			payload.audio = !!peer.meshcastMedia.audio;
+			payload.video = !!peer.meshcastMedia.video;
+		}
 		if (kind === "primary" && session.meshcastSwitch) {
 			if (!peer.meshcastSwitchSupported || session.meshcastSwitchBusy === "Switching to direct…") continue;
 			payload.handoff = session.meshcastSwitch;
@@ -70264,6 +70272,7 @@ async function whepIn(whepInput = false, whepInputToken = false, UUID = false) {
 	function resetWhepHttpSessionState() {
 		requestingStream = false;
 		cancelScheduledWhepRetry();
+		clearTimeout(whepConnectTimer);
 		if (meshcastTrickle) meshcastTrickle.stop();
 		meshcastTrickle = null;
 		whepHttpSessionEpoch += 1;
@@ -71164,10 +71173,15 @@ async function whepIn(whepInput = false, whepInputToken = false, UUID = false) {
 			try {
 				session.rpcs[UUID].whep = new RTCPeerConnection(config);
 				const meshcastPeer = session.rpcs[UUID].whep;
-				if (connectingPeer.sharedWebsiteElement) {
+				if (session.whipFallback) {
+					whepConnectTimer = setTimeout(function () {
+						if (session.rpcs[UUID] === connectingPeer && connectingPeer.whep === meshcastPeer && (!connectingPeer.meshcastHandoff || !connectingPeer.meshcastHandoff.active) && !connectingPeer.suppressReconnect && !connectingPeer.__closing) scheduleWhepRetry();
+					}, 30000 + (parseInt(session.whepWait) || 0));
+				}
+				if (connectingPeer.sharedWebsiteElement || (connectingPeer.meshcastHandoff && connectingPeer.meshcastHandoff.fallback)) {
 					var closeWebsitePeer = meshcastPeer.close;
 					meshcastPeer.close = function () {
-						if (session.rpcs[UUID] === connectingPeer && connectingPeer.whep === meshcastPeer) {
+						if (connectingPeer.sharedWebsiteElement && session.rpcs[UUID] === connectingPeer && connectingPeer.whep === meshcastPeer) {
 							teardownWhepAudioRecovery(UUID, true);
 						}
 						try {
@@ -71201,6 +71215,11 @@ async function whepIn(whepInput = false, whepInputToken = false, UUID = false) {
 				audio = false;
 			} else if (session.rpcs[UUID].settings && !session.rpcs[UUID].settings.audio) {
 				audio = false;
+			}
+			var fallback = connectingPeer.meshcastHandoff;
+			if (fallback && fallback.fallback) {
+				audio = audio && fallback.audio !== false;
+				video = video && fallback.video !== false;
 			}
 			session.rpcs[UUID].whepExpectedAudio = !!audio;
 			session.rpcs[UUID].whepExpectedVideo = !!video;
@@ -71245,6 +71264,8 @@ async function whepIn(whepInput = false, whepInputToken = false, UUID = false) {
 
 			session.rpcs[UUID].whep.ontrack = function (event) {
 				if (!session.rpcs[UUID] || session.rpcs[UUID].whep !== event.target) return;
+				var fallback = session.rpcs[UUID].meshcastHandoff;
+				if (fallback && fallback.fallback && !fallback.active) return;
 				var sharedVideo = session.rpcs[UUID].sharedWebsiteElement;
 				if (sharedVideo) {
 					session.onTrack(event, UUID);
@@ -71299,6 +71320,10 @@ async function whepIn(whepInput = false, whepInputToken = false, UUID = false) {
 			};
 		} catch (err) {
 			errorlog(err);
+			if (connectingPeer && connectingPeer.meshcastHandoff && connectingPeer.meshcastHandoff.fallback) {
+				scheduleWhepRetry();
+				return;
+			}
 			if (!session.cleanOutput) {
 				warnUser("An RTC error occured");
 			}
@@ -71394,7 +71419,14 @@ async function whepIn(whepInput = false, whepInputToken = false, UUID = false) {
 
 	function retryWhepConnection(UUID, forceReconnect = false) {
 		var handoffPeer = session.rpcs[UUID];
-		if (handoffPeer && handoffPeer.meshcastHandoff && handoffPeer.meshcastHandoff.active) {
+		if (handoffPeer && handoffPeer.meshcastHandoff && handoffPeer.meshcastHandoff.fallback) {
+			requestWhipFallback(UUID);
+			if (!forceReconnect) {
+				scheduleWhepRetry();
+				return true;
+			}
+		}
+		if (handoffPeer && handoffPeer.meshcastHandoff && !handoffPeer.meshcastHandoff.fallback && handoffPeer.meshcastHandoff.active) {
 			var handoff = handoffPeer.meshcastHandoff;
 			if (handoff.target) {
 				session.sendRequest({ meshcastReady: { handoff: handoff.id, active: false, recover: true } }, UUID);
@@ -71462,76 +71494,79 @@ async function whepIn(whepInput = false, whepInputToken = false, UUID = false) {
 			}
 
 			log(`Attempting WHEP reconnection (attempt ${currentRetry + 1}/${maxRetries})`);
-			teardownWhepAudioRecovery(UUID, true);
+			var preservePlayback = !!(session.rpcs[UUID].meshcastHandoff && session.rpcs[UUID].meshcastHandoff.fallback);
+			if (!preservePlayback) teardownWhepAudioRecovery(UUID, true);
 
 			if (session.rpcs[UUID].whep && session.rpcs[UUID].whep.close) {
 				session.rpcs[UUID].whep.close();
 			}
 
-			try {
-				if (session.rpcs[UUID].videoElement && "recorder" in session.rpcs[UUID].videoElement) {
-					session.rpcs[UUID].videoElement.recorder.stop();
-				}
-			} catch (e) {
-				warnlog(e);
-			}
-
-			try {
-				var sharedVideo = session.rpcs[UUID].sharedWebsiteElement;
-				if (sharedVideo) {
-					clearSharedWhepVisualization(session.rpcs[UUID]);
-					if (sharedVideo.srcObject) {
-						sharedVideo.srcObject.getTracks().forEach(function (track) { track.stop(); });
-						sharedVideo.srcObject = null;
+			if (!preservePlayback) {
+				try {
+					if (session.rpcs[UUID].videoElement && "recorder" in session.rpcs[UUID].videoElement) {
+						session.rpcs[UUID].videoElement.recorder.stop();
 					}
+				} catch (e) {
+					warnlog(e);
 				}
-				if (session.rpcs[UUID].streamSrc) {
-					session.rpcs[UUID].streamSrc.getTracks().forEach(function (track) {
-						track.stop();
-						log("Track stopped");
-					});
-					session.rpcs[UUID].streamSrc = null;
-				}
-			} catch (e) { }
 
-			try {
-				if (!session.rpcs[UUID].UUID && document.getElementById("container_" + UUID)) {
-					getById("container_" + UUID).parentNode.removeChild(getById("container_" + UUID));
-					updateLockedElements();
-				}
-			} catch (e) {
-				warnlog(e);
-			}
-
-			try {
-				stopIncomingViewChroma(UUID, true);
-				if (session.rpcs[UUID].videoElement) {
-					// Let screen setup replace the video removed by WHEP recovery.
-					if (parentUUID && session.rpcs[parentUUID] && session.rpcs[parentUUID].screenElement === session.rpcs[UUID].videoElement) {
-						session.rpcs[parentUUID].screenElement = false;
+				try {
+					var sharedVideo = session.rpcs[UUID].sharedWebsiteElement;
+					if (sharedVideo) {
+						clearSharedWhepVisualization(session.rpcs[UUID]);
+						if (sharedVideo.srcObject) {
+							sharedVideo.srcObject.getTracks().forEach(function (track) { track.stop(); });
+							sharedVideo.srcObject = null;
+						}
 					}
-					session.rpcs[UUID].videoElement.remove();
-					session.rpcs[UUID].videoElement = null;
-				}
-				if (session.rpcs[UUID].canvas) {
-					session.rpcs[UUID].canvas.remove();
-				}
-				if (session.rpcs[UUID].imageElement) {
-					session.rpcs[UUID].imageElement.remove();
-				}
-				if ("eventPlayActive" in session.rpcs[UUID]) {
-					clearInterval(session.rpcs[UUID].eventPlayActive);
+					if (session.rpcs[UUID].streamSrc) {
+						session.rpcs[UUID].streamSrc.getTracks().forEach(function (track) {
+							track.stop();
+							log("Track stopped");
+						});
+						session.rpcs[UUID].streamSrc = null;
+					}
+				} catch (e) { }
+
+				try {
+					if (!session.rpcs[UUID].UUID && document.getElementById("container_" + UUID)) {
+						getById("container_" + UUID).parentNode.removeChild(getById("container_" + UUID));
+						updateLockedElements();
+					}
+				} catch (e) {
+					warnlog(e);
 				}
 
-				if (!session.director || session.switchMode) {
-					setTimeout(function () {
-						updateMixer();
-					}, 1);
+				try {
+					stopIncomingViewChroma(UUID, true);
+					if (session.rpcs[UUID].videoElement) {
+						// Let screen setup replace the video removed by WHEP recovery.
+						if (parentUUID && session.rpcs[parentUUID] && session.rpcs[parentUUID].screenElement === session.rpcs[UUID].videoElement) {
+							session.rpcs[parentUUID].screenElement = false;
+						}
+						session.rpcs[UUID].videoElement.remove();
+						session.rpcs[UUID].videoElement = null;
+					}
+					if (session.rpcs[UUID].canvas) {
+						session.rpcs[UUID].canvas.remove();
+					}
+					if (session.rpcs[UUID].imageElement) {
+						session.rpcs[UUID].imageElement.remove();
+					}
+					if ("eventPlayActive" in session.rpcs[UUID]) {
+						clearInterval(session.rpcs[UUID].eventPlayActive);
+					}
+
+					if (!session.director || session.switchMode) {
+						setTimeout(function () {
+							updateMixer();
+						}, 1);
+					}
+				} catch (e) {
+					warnlog(e);
 				}
-			} catch (e) {
-				warnlog(e);
+
 			}
-
 			var reconnect = whepConnect(UUID);
 			retryConnection = session.rpcs[UUID].whep;
 			reconnect.then(function () {
@@ -71564,19 +71599,25 @@ async function whepIn(whepInput = false, whepInputToken = false, UUID = false) {
 
 	var requestingStream = false;
 	var whepRetryTimer = false;
+	var whepRetryAttempts = 0;
+	var whepConnectTimer = null;
 	function scheduleWhepRetry() {
+		requestWhipFallback(UUID);
 		if (whepRetryTimer) {
 			return;
 		}
 		var retryPeer = session.rpcs[UUID];
 		var retryConnection = retryPeer && retryPeer.whep;
+		var fallback = retryPeer && retryPeer.meshcastHandoff && retryPeer.meshcastHandoff.fallback;
+		if (fallback && (retryPeer.suppressReconnect || retryPeer.__closing)) return;
+		var delay = fallback ? Math.min(60000, 2000 * Math.pow(2, Math.min(whepRetryAttempts++, 5)) * (0.9 + Math.random() * 0.2)) : 1000;
 		whepRetryTimer = setTimeout(function () {
 			whepRetryTimer = false;
 			if (!session.rpcs[UUID] || session.rpcs[UUID].whep !== retryConnection) {
 				return;
 			}
-			retryWhepConnection(UUID);
-		}, 1000);
+			retryWhepConnection(UUID, !!fallback);
+		}, delay);
 	}
 
 	function cancelScheduledWhepRetry() {
@@ -71654,10 +71695,12 @@ async function whepIn(whepInput = false, whepInputToken = false, UUID = false) {
 				.catch(function (err) {
 					if (!session.rpcs[UUID] || session.rpcs[UUID].whep !== requestConnection) return;
 					requestingStream = false;
+					if (session.rpcs[UUID].meshcastHandoff && session.rpcs[UUID].meshcastHandoff.fallback) scheduleWhepRetry();
 				});
 		} catch (e) {
 			requestingStream = false;
 			errorlog(e);
+			if (session.rpcs[UUID] && session.rpcs[UUID].meshcastHandoff && session.rpcs[UUID].meshcastHandoff.fallback) scheduleWhepRetry();
 		}
 	}
 
@@ -71671,7 +71714,7 @@ async function whepIn(whepInput = false, whepInputToken = false, UUID = false) {
 			var requestPeer = session.rpcs[UUID];
 			var requestConnection = requestPeer && requestPeer.whep;
 			xhttp.onreadystatechange = function () {
-				if (requestPeer && requestPeer.sharedWebsiteElement && type === "sdp" && this.readyState === 4 && this.status === 201 && requestConnection && !requestConnection.deleteme) {
+				if (requestPeer && (requestPeer.sharedWebsiteElement || (requestPeer.meshcastHandoff && requestPeer.meshcastHandoff.fallback)) && type === "sdp" && this.readyState === 4 && this.status === 201 && requestConnection && !requestConnection.deleteme) {
 					var resource = resolveWhepSessionLocation(this.getResponseHeader("location"));
 					if (resource) {
 						var deleted = false;
@@ -71691,8 +71734,13 @@ async function whepIn(whepInput = false, whepInputToken = false, UUID = false) {
 				if (requestEpoch !== whepHttpSessionEpoch || !session.rpcs[UUID] || session.rpcs[UUID].whep !== requestConnection) {
 					return;
 				}
+				if (type === "sdp" && this.readyState === 4 && requestPeer.meshcastHandoff && requestPeer.meshcastHandoff.fallback &&
+					((this.status !== 200 && this.status !== 201) || !(this.getResponseHeader("content-type") || "").startsWith("application/sdp"))) {
+					requestingStream = false;
+					scheduleWhepRetry();
+				}
 				if (this.readyState == 4 && (this.status == 200 || this.status == 201)) {
-					cancelScheduledWhepRetry();
+					if (!requestPeer.meshcastHandoff || !requestPeer.meshcastHandoff.fallback) cancelScheduledWhepRetry();
 					try {
 						// 200 not in spec (meant to be an options response), but I want to be flexible
 						let responseHeaders = xhttp.getAllResponseHeaders() || "";
@@ -71714,6 +71762,7 @@ async function whepIn(whepInput = false, whepInputToken = false, UUID = false) {
 							disableWhepPatchTrickle("missing-etag");
 						}
 						if (contentType && contentType.startsWith("application/sdp")) {
+							if (requestPeer.meshcastHandoff && requestPeer.meshcastHandoff.fallback) cancelScheduledWhepRetry();
 							if (requestTrickle) requestTrickle.accept(this);
 							var description = {};
 							description.sdp = this.responseText;
@@ -71741,6 +71790,7 @@ async function whepIn(whepInput = false, whepInputToken = false, UUID = false) {
 									}
 									log(e);
 									requestingStream = false;
+									if (session.rpcs[UUID].meshcastHandoff && session.rpcs[UUID].meshcastHandoff.fallback) scheduleWhepRetry();
 								});
 							// the request is done, but lets handle any old ice candidates
 							if (canTrickleViaPatch() && candidates.length && !session.rpcs[UUID].whep.iceCompletedCallback) {
@@ -71833,6 +71883,12 @@ async function whepIn(whepInput = false, whepInputToken = false, UUID = false) {
 			} else {
 				xhttp.open("POST", whepInput, true);
 			}
+			if (type === "sdp" && session.whipFallback) {
+				xhttp.timeout = 15000;
+				xhttp.ontimeout = function () {
+					if (session.rpcs[UUID] && session.rpcs[UUID].whep === requestConnection) scheduleWhepRetry();
+				};
+			}
 			xhttp.setRequestHeader("Content-Type", "application/" + type);
 
 			if (whepInputToken) {
@@ -71881,6 +71937,7 @@ async function whepIn(whepInput = false, whepInputToken = false, UUID = false) {
 		} catch (e) {
 			requestingStream = false;
 			errorlog(e);
+			if (session.rpcs[UUID] && session.rpcs[UUID].meshcastHandoff && session.rpcs[UUID].meshcastHandoff.fallback) scheduleWhepRetry();
 		}
 	}
 

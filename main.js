@@ -1496,6 +1496,9 @@ async function main() {
 	if (urlParams.has("nomeshcast") || urlParams.has("nowhep")) {
 		session.noMeshcast = urlParams.get("nomeshcast") || urlParams.has("nowhep") || true;
 	}
+	if (urlParams.has("whipfallback") && !session.noMeshcast) {
+		session.whipFallback = true;
+	}
 
 	if (urlParams.has("chunkcast")) {
 		session.chunkcast = true;
