@@ -9,6 +9,7 @@
 async function main() {
 	// main asyncronous thread; mostly initializes the user settings.
 
+	var consentWarningURL = window.location.href;
 	var delayedStartupFuncs = [];
 	// translation stuff start ////
 
@@ -4940,8 +4941,23 @@ async function main() {
 			delayedStartupFuncs.push([publishScreen]);
 		}
 		if (session.consent) {
-			setTimeout(function () {
+			setTimeout(async function () {
+				var consentWarningKey = false;
+				try {
+					var consentWarningHash = await generateHash(consentWarningURL);
+					if (consentWarningHash) {
+						consentWarningKey = "consentWarning:" + consentWarningHash;
+						if (getStorage(consentWarningKey) === true) {
+							return;
+						}
+					}
+				} catch (e) {
+					// Still show the warning if hashing or storage is unavailable.
+				}
 				warnUser("⚠ Privacy warning: A director or authenticated remote controller can remotely switch your camera or microphone and control your digital video effects without additional permission.", 8000);
+				if (consentWarningKey) {
+					setStorage(consentWarningKey, true, 24 * 7);
+				}
 			}, 1500);
 		}
 	}
