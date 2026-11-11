@@ -98,7 +98,7 @@
 				}
 			}
 		</script>
-		<script type="text/javascript" crossorigin="anonymous" src="./webrtc.js?ver=988" onerror="retryStartupOnBackup()"></script>
+		<script type="text/javascript" crossorigin="anonymous" src="./webrtc.js?ver=989" onerror="retryStartupOnBackup()"></script>
 		<input id="zoomSlider" type="range" style="display: none;" />
 		<span id="electronDragZone" style="display:none;pointer-events: none; z-index:-10; position:absolute;top:0;left:0;width:100%;height:2%;min-height:20px;"></span>
 		<div id="header">
@@ -3489,7 +3489,7 @@
 			// if (!window.location.search){document.body.innerHTML = "";} // uncomment this line, if you wish to try it.
 			
 			var session = WebRTC.Media; // session is a required global variable if configuring manually. Run before loading main.js but after webrtc.js.
-			session.version = "31.4"; // studio, guest label, and chunked A/V fixes
+			session.version = "31.5"; // studio, guest label, and chunked A/V fixes
 			session.streamID = session.generateStreamID(); // randomly generates a streamID for this session. You can set your own programmatically if needed
 			
 			session.defaultPassword = "someEncryptionKey123"; // Change this password if self-deploying for added security/privacy
@@ -3614,8 +3614,8 @@
 			
 		</script>
 		
-		<script type="text/javascript" crossorigin="anonymous" id="lib-js" src="./lib.js?ver=14252" onerror="retryStartupOnBackup()"></script>
-		<script type="text/javascript" crossorigin="anonymous" id="main-js" src="./main.js?ver=1109" onerror="retryStartupOnBackup()"></script>
+		<script type="text/javascript" crossorigin="anonymous" id="lib-js" src="./lib.js?ver=14253" onerror="retryStartupOnBackup()"></script>
+		<script type="text/javascript" crossorigin="anonymous" id="main-js" src="./main.js?ver=1110" onerror="retryStartupOnBackup()"></script>
 		<script>
 			// Wait for the DOM, not for optional downloads or the window load event.
 			function showStartupError(error) {
