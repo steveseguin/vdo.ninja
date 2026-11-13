@@ -556,10 +556,10 @@ function updateMessages(message = false){
 			msg.innerHTML = "<span class='chat_message chat_sent'>"+safeMessage + "  </span><i><small> <small>- "+safeTime+"</small></small></i><span style='display:none'>"+labelText+"</span>";
 			msg.classList.add("outMessage");
 		} else if (message.type == "recv"){
-			msg.innerHTML = label+"<span class='chat_message chat_recv'>"+safeMessage + " </span><i><small> <small>- "+safeTime+"</small></small></i>";
+			msg.innerHTML = labelText+"<span class='chat_message chat_recv'>"+safeMessage + " </span><i><small> <small>- "+safeTime+"</small></small></i>";
 			msg.classList.add("inMessage");
 		} else if (message.type == "action"){
-			msg.innerHTML = label+"<span class='chat_message chat_action'>"+safeMessage + " </span><i><small> <small>- "+safeTime+"</small></small></i>";
+			msg.innerHTML = labelText+"<span class='chat_message chat_action'>"+safeMessage + " </span><i><small> <small>- "+safeTime+"</small></small></i>";
 			msg.classList.add("actionMessage");
 		} else if (message.type == "alert"){
 			msg.innerHTML = "<span class='chat_message chat_alert'>"+safeMessage + " </span><i><small> <small>- "+safeTime+"</small></small></i>";
@@ -594,10 +594,10 @@ function updateMessages(message = false){
 				msg.innerHTML = "<span class='chat_message chat_sent'>"+message + "  </span><i><small> <small>- "+safeTime+"</small></small></i><span style='display:none'>"+labelText+"</span>";
 				msg.classList.add("outMessage");
 			} else if (messageList[i].type == "recv"){
-				msg.innerHTML = label+"<span class='chat_message chat_recv'>"+message + " </span><i><small> <small>- "+safeTime+"</small></small></i>";
+				msg.innerHTML = labelText+"<span class='chat_message chat_recv'>"+message + " </span><i><small> <small>- "+safeTime+"</small></small></i>";
 				msg.classList.add("inMessage");
 			} else if (messageList[i].type == "action"){
-				msg.innerHTML = label+"<span class='chat_message chat_action'>"+message + " </span><i><small> <small>- "+safeTime+"</small></small></i>";
+				msg.innerHTML = labelText+"<span class='chat_message chat_action'>"+message + " </span><i><small> <small>- "+safeTime+"</small></small></i>";
 				msg.classList.add("actionMessage");
 			} else if (messageList[i].type == "alert"){
 				msg.innerHTML = "<span class='chat_message chat_alert'>"+message + " </span><i><small> <small>- "+safeTime+"</small></small></i>";
