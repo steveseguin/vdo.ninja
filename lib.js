@@ -62978,6 +62978,8 @@ function processIncomingPackedAlphaFrame(UUID) {
 	}
 	var video = packed.video;
 	if (video.readyState < 2 || !video.videoWidth || !video.videoHeight) return false;
+	// Older Chromium may reject the initial video upload until playback starts.
+	if (!packed.hasFrame && video.paused) return false;
 	var renderer = packed.renderer;
 	var canvas = packed.canvas;
 	var width = video.videoWidth / 2;
