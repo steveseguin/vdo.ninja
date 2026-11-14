@@ -12,7 +12,7 @@ description: >-
 
 Meshcast is a free-to-use service that works alongside VDO.Ninja. It provides a low-latency CDN-style path for larger rooms and one-to-many distribution workflows without pushing the full load onto the original publisher.
 
-The newer Meshcast app is available at [https://app.meshcast.io](https://app.meshcast.io). It is an updated version of the original Meshcast service, is still free to use, and now requires signing in.
+The newer Meshcast app is available at [app.meshcast.io](https://app.meshcast.io). Anonymous browser/WHIP sessions are available; SRT, RTMP, and HLS require a registered account. See the [current plans and limits](https://app.meshcast.io/pricing).
 
 The main public entry points are:
 
@@ -23,7 +23,7 @@ It is not intended as a mass-broadcast CDN in the traditional sense, but it is d
 
 ## Production uses
 
-For phone setup with screenshots, see [SRT from the VDO.Ninja app](../guides/mobile-app/srt-to-meshcast.md) or [RTMP from the app](../guides/mobile-app/rtmp-to-meshcast.md). The [mode comparison](../guides/mobile-app/choose-an-output.md) also covers direct VDO.Ninja and WHIP.
+Start with [Meshcast account, phone, and OBS setup](../guides/meshcast-setup.md), then follow [SRT from the VDO.Ninja app](../guides/mobile-app/srt-to-meshcast.md) or [RTMP from the app](../guides/mobile-app/rtmp-to-meshcast.md) if needed. The [mode comparison](../guides/mobile-app/choose-an-output.md) also covers direct VDO.Ninja and WHIP.
 
 Meshcast can be useful when a normal peer-to-peer VDO.Ninja connection is not the best fit for a guest, venue, or recording workflow.
 

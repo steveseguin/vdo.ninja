@@ -12,7 +12,7 @@ You need the [VDO.Ninja Android or iPhone app](../../steves-helper-apps/native-m
 
 ## 1. Copy the Meshcast settings
 
-Sign in to Meshcast, open **Studio** for your stream, and select **RTMP**. Copy **RTMP Server** and **Publish Key**. The publishing key is private; do not replace it with the public `st_...` stream ID.
+Follow [Meshcast account and stream setup](../meshcast-setup.md#set-up-an-account-for-srt-or-rtmp), then select **RTMP** in Studio. Copy **RTMP Server** and **Publish Key**. The publishing key is private; do not replace it with the public `st_...` stream ID.
 
 ## 2. Set up the phone
 
@@ -29,7 +29,7 @@ The app sends H.264 video and AAC audio with B-frames off, suitable for Meshcast
 
 ## 3. Bring the feed into OBS
 
-1. Copy **VDO.Ninja View Link** from Meshcast Studio for the same stream.
+1. In Meshcast Studio, open **Watch Links** and copy the complete **VDO.Ninja View Link** for the same stream, including its `whep` parameter.
 2. In OBS, choose **Sources > + > Browser**, then paste the link into **URL**.
 3. Check moving video and the OBS audio meter. Make a short recording to confirm picture and sound.
 

@@ -8,6 +8,8 @@ There are several ways to record, with more ways coming. I'll list some of the w
 
 ### Local / Remote Recording in VDO.Ninja
 
+For a live game or other event, see the [camera, connection, and backup-recording checklist](streaming-sports-and-events.md). Recording at the camera can preserve footage that never reaches the production computer.
+
 The VDO.Ninja room director has the option to record streams locally and remotely.
 
 You can also add \&record to guest invite URL to introduce a recording button, for that publisher to start/stop their own local recording. Local recordings of this type are often of high quality.

@@ -6,6 +6,8 @@ description: Choose direct VDO.Ninja, Meshcast, Custom WHIP, SRT, or RTMP for yo
 
 For a simple phone-to-OBS connection, start with the app's normal **VDO.Ninja** output and use its viewer link in an OBS Browser Source.
 
+For sports and busy venues, start with the [event streaming guide](../streaming-sports-and-events.md). Use the [Meshcast setup guide](../meshcast-setup.md) when you need a server to distribute the feed.
+
 Open **Additional outputs** on **Ready to stream** when you want a server to distribute the feed or need another publishing protocol.
 
 | Mode | When to choose it | Receive the feed |

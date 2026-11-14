@@ -8,6 +8,8 @@ description: Control VDO.Ninja bitrate and video quality using URL parameters fo
 
 ## Video Bitrate
 
+For moving action and crowded venues, see [Stream sports and events from a phone](streaming-sports-and-events.md). It helps distinguish compression, camera blur, packet loss, and phone overheating before changing quality settings.
+
 The bitrate controls are accessible via a URL parameter that can be added to the VIEW link.
 
 Something like [https://vdo.ninja/?view=yyyyy\&bitrate=10000](https://vdo.ninja/?view=yyyyy\&bitrate=10000) lets the viewer request a 10 Mbps video bitrate. The value is in kilobits per second. The fallback is approximately 2500 kbps, while current camera setup normally selects 4000 kbps when quality is omitted. Capture mode, explicit quality, room allocation, and mobile caps affect the result; see [Default resolution and bitrate by mode](default-resolution-and-bitrate.md).

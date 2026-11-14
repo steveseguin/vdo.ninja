@@ -10,6 +10,8 @@ Sender-Side Option! ([`&push`](../source-settings/push.md))
 
 ## Options
 
+For phone, account, and OBS setup steps, see [Set up Meshcast for a phone camera](../guides/meshcast-setup.md).
+
 Example: `&meshcast=video`
 
 <table><thead><tr><th width="200">Value</th><th>Description</th></tr></thead><tbody><tr><td><code>audio</code></td><td>Only audio via Meshcast</td></tr><tr><td><code>video</code></td><td>Only video via Meshcast</td></tr><tr><td>(no value given)</td><td>Audio and video via Meshcast</td></tr></tbody></table>

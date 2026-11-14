@@ -17,6 +17,8 @@ Packet loss can show up as a brief soft frame, a frozen picture, green or rainbo
 
 ## Start here
 
+For setup steps before the technical details, see [event streaming](streaming-sports-and-events.md), [playback buffering](smooth-playback-with-a-buffer.md), or [trying chunked video](try-chunked-video.md).
+
 For fast gameplay where player names must stay readable, start with:
 
 * 1280x720 at 30 fps, H.264 for the widest native-tool support, and no B-frames;

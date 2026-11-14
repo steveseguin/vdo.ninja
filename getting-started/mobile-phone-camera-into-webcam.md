@@ -24,6 +24,8 @@ Detailed steps on how to perform this setup and include audio from the device ar
 
 ## Use cases
 
+For sports, conventions, or other busy venues, follow [Stream sports and events from a phone](../guides/streaming-sports-and-events.md). It covers network choice, moving video, OBS recording, and backup options.
+
 OBS Virtual Camera is fully compatible with VDO.Ninja and is useful for connecting multiple different OBS mixers together remotely, turning your smartphone into a webcam, or sharing a live show with a small group of collaborators in near real time.
 
 ## Notes

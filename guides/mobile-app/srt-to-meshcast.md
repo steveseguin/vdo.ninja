@@ -4,7 +4,7 @@ description: Send a phone camera from the VDO.Ninja app to Meshcast over SRT, th
 
 # Send phone video through Meshcast with SRT
 
-Use this setup when the phone and OBS are on different networks. SRT adds a buffer for recovering lost packets; Meshcast distributes the feed to viewers.
+Use this as an advanced option for a connection that still suffers packet loss after the [ordinary event-streaming checks](../streaming-sports-and-events.md). SRT adds a buffer for recovering lost packets; Meshcast distributes the feed to viewers.
 
 **Phone app (SRT) → Meshcast → VDO.Ninja → OBS Browser Source**
 
@@ -12,7 +12,7 @@ You need the [VDO.Ninja Android or iPhone app](../../steves-helper-apps/native-m
 
 ## 1. Copy the Meshcast publishing URL
 
-Sign in to Meshcast, open **Studio** for your stream, and select **SRT**. Copy **SRT URL (Caller Mode)** in full. It includes the server, port, stream identifier, and private publishing key. Keep it private; viewers use a different link.
+Follow [Meshcast account and stream setup](../meshcast-setup.md#set-up-an-account-for-srt-or-rtmp), then select **SRT** in Studio. Copy **SRT URL (Caller Mode)** in full. It includes the server, port, stream identifier, and private publishing key. Keep it private; viewers use a different link.
 
 ## 2. Set up the phone
 
@@ -28,7 +28,7 @@ Sign in to Meshcast, open **Studio** for your stream, and select **SRT**. Copy *
 
 ## 3. Bring the feed into OBS
 
-1. In Meshcast Studio, copy **VDO.Ninja View Link** for the same stream.
+1. In Meshcast Studio, open **Watch Links** and copy the complete **VDO.Ninja View Link** for the same stream, including its `whep` parameter.
 2. In OBS, choose **Sources > + > Browser**, then paste that link into **URL**.
 3. Check moving video and the OBS audio meter. Make a short recording to confirm picture and sound.
 

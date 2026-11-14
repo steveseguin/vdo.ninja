@@ -15,6 +15,8 @@ Sender-side option! ([`&push`](../source-settings/push.md))
 
 ## Quick start
 
+For a guided phone/browser-to-OBS setup, including room links and how to return to normal video, see [Try chunked video on a difficult connection](../guides/try-chunked-video.md).
+
 Publisher, then a viewer with a one-second buffer:
 
 ```text

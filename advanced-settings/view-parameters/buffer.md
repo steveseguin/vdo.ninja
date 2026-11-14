@@ -8,6 +8,8 @@ Viewer-Side Option! ([`&view`](view.md), [`&scene`](scene.md), [`&room`](../../g
 
 ## Options
 
+For OBS setup steps and a comparison of buffer modes, see [Smooth playback with a buffer](../../guides/smooth-playback-with-a-buffer.md).
+
 Example: `&buffer=500`
 
 | Value           | Description |

@@ -6,6 +6,8 @@ description: Delay an incoming VDO.Ninja feed by seconds or minutes using Meshca
 
 A two-minute delay is far longer than a WebRTC jitter buffer can hold. Pick a method based on what you need to delay.
 
+If you only want to smooth uneven playback, start with [a small playback buffer](smooth-playback-with-a-buffer.md), including what `&buffer=0` does.
+
 | Goal | Method |
 | --- | --- |
 | Delay one incoming audio/video feed | Meshcast HLS player |

@@ -4,6 +4,8 @@ description: A field guide for stable VDO.Ninja IRL streams from phones and mobi
 
 # Stable IRL streaming with VDO.Ninja
 
+For a fixed camera at a game, conference, or crowded venue, start with [Stream sports and events from a phone](streaming-sports-and-events.md). This guide focuses on tuning a difficult mobile connection.
+
 Start with 720p30 at about 2 Mbps. A 6000 kbps target does not reserve bandwidth or make a cellular path more reliable. It asks for larger frames, which can make packet loss, recovery bursts, and phone heat worse.
 
 For the experimental adaptive `&connectionprofile=irl` and the slideshow-like `&connectionprofile=talkinghead`, see [Low-bandwidth video and connection profiles](low-bandwidth-video-and-connection-profiles.md). When you test one, leave `&degrade=maintain-framerate` off the view link so it does not override the profile.

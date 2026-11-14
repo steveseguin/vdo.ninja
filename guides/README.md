@@ -6,6 +6,7 @@ description: VDO.Ninja how-to guides for OBS Studio, remote guests, screen shari
 
 This section collects practical VDO.Ninja guides for OBS Studio, remote guest workflows, screen sharing, mobile phones, audio routing, bitrate tuning, recording, WHIP, Meshcast, and browser-source production setups.
 
+* [Stream sports and events from a phone](streaming-sports-and-events.md), including [Wi-Fi, 5G, 4G, and hotspot choices](choose-a-network-for-live-events.md)
 * [Style your guest videos](guest-video-styling/README.md), including the [visual styler](https://vdo.ninja/examples/guest-styler)
 * [Mobile app guides](mobile-app/README.md)
 * [View-only screen sharing on an iPad or computer](view-only-screen-sharing.md)
@@ -16,6 +17,9 @@ This section collects practical VDO.Ninja guides for OBS Studio, remote guest wo
 * [video-bitrate-in-rooms.md](video-bitrate-in-rooms.md "mention")
 * [room-only-mobile-bitrate-tiers.md](room-only-mobile-bitrate-tiers.md "mention")
 * [Low-bandwidth video and connection profiles](low-bandwidth-video-and-connection-profiles.md)
+* [Smooth playback with a buffer](smooth-playback-with-a-buffer.md)
+* [Try chunked video on a difficult connection](try-chunked-video.md)
+* [Set up Meshcast for a phone camera](meshcast-setup.md)
 * [hotkey-support](hotkey-support/ "mention")
 * [midi-api-and-webhid-support.md](midi-api-and-webhid-support.md "mention")
 * [ptz-remote-control.md](ptz-remote-control.md "mention")

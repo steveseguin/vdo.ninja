@@ -8,6 +8,8 @@ Set capture quality in the native app first, then check what the viewer receives
 
 ## Where settings go
 
+For a game, convention, or other busy venue, use the [event streaming guide](streaming-sports-and-events.md) to check the camera, network, and recording plan first.
+
 Native capture controls are in the app's **Publishing Settings**. Viewer parameters go on the app-generated link in the **receiving browser or OBS Browser Source**. Keep the link's stream ID, password, and connection parameters.
 
 For normal native camera publishing to VDO.Ninja, start with:

@@ -6,6 +6,8 @@ description: Choose WebRTC, chunked, SRT, RTMP, and bonded-network settings for 
 
 This guide covers a phone camera on a moving uplink, such as Starlink Roam plus 5G, received in OBS through a VDO.Ninja browser source.
 
+For ordinary venue Wi-Fi, cellular, and hotspot comparisons, start with [Choose a network for a live event](choose-a-network-for-live-events.md). Bonding is an advanced option after those simpler checks.
+
 On a moving link, the usual problem is packet timing, packet loss, and short outages, more than upload speed. VDO.Ninja normally uses WebRTC, which is built for low latency and reacts fast to late or missing packets. That suits conversation, but quality can collapse under tree cover, Starlink jitter, or cellular handoffs.
 
 * The [Mobile Uplink Packet Flow Lab](https://vdo.ninja/misc/mobile-uplink-packet-flow.html) compares plain WebRTC, buffered WebRTC, chunked/WebCodecs, SRT, RTMP, and bonded paths.
