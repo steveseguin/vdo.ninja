@@ -160,6 +160,7 @@ On the viewer, [`&nochunked`](../advanced-settings/settings-parameters/and-nochu
 * Chunked mode targets recent Chromium-based browsers.
 * Firefox cannot publish in chunked mode; VDO.Ninja warns and uses the regular media path.
 * Safari can publish only when the required WebCodecs and worker track-processing APIs are present.
+* On iPhone, choose the camera and orientation before starting. For camera-switch freezes or an incorrect shape after rotation, follow the [phone recovery steps](../guides/try-chunked-video.md).
 * A viewer that cannot decode chunked video receives normal RTP instead.
 * This path is more experimental than RTP video. Test with your real browsers, devices and networks first.
 

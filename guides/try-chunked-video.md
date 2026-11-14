@@ -37,6 +37,8 @@ For a room, keep the complete solo view or scene link copied from the director. 
 
 Check sustained motion, sound sync, and recovery after brief interruptions. Close duplicate direct viewers; chunked mode still sends data to each viewer.
 
+On iPhone, choose the camera and orientation before starting. If changing cameras freezes the received video, refresh the OBS Browser Source. If rotating the phone leaves the received picture in the wrong shape, [return to normal video](#return-to-normal-video).
+
 Plain `&chunked` does not enable its optional parity and selective-resend controls. If loss persists despite enough upload capacity, use the [reliability settings and presets](../newly-added-parameters/and-chunked.md#reliability) for a controlled comparison. These add overhead, so do not pile them onto an already saturated connection.
 
 Keep bitrate in the sender's `chunked` or `chunkbitrate` setting. A normal viewer `&bitrate` request does not control this encoder. Likewise, `chunkedbuffer` controls the sender's backlog, not the viewer's playback delay.
