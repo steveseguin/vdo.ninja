@@ -3668,6 +3668,15 @@ input[type="file"]#fileselector4 + label {
 	position:relative;
 }
 
+video.packed-alpha-source-hidden {
+	visibility: hidden !important;
+	pointer-events: none !important;
+}
+
+.controlVideoBox video.packed-alpha-source-hidden {
+	position: absolute;
+}
+
 .canvasStats{
 	background-color: black;
 	width: 100%;

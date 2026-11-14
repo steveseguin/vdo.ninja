@@ -6085,7 +6085,7 @@ function handleScreenShareAspectRatioResize(v, aspectRatio, UUID) {
 }
 
 function handleVideoAspectRatioResize(v, UUID, applyIncomingRotation = false) {
-	var aspectRatio = parseFloat(v.videoWidth / v.videoHeight) || 0;
+	var aspectRatio = parseFloat(getIncomingVideoWidth(v) / v.videoHeight) || 0;
 	log("resize event: " + aspectRatio);
 
 	if (!aspectRatio) {
@@ -6116,7 +6116,7 @@ function handleVideoAspectRatioResize(v, UUID, applyIncomingRotation = false) {
 	if (!handleScreenShareAspectRatioResize(v, aspectRatio, UUID)) {
 		commitVideoAspectRatio(v, aspectRatio, UUID);
 	}
-	if (session.viewChroma && !session.director) {
+	if ((session.viewChroma && !session.director) || getIncomingPackedAlpha(UUID)) {
 		syncIncomingViewChromaCanvas(UUID);
 	}
 }
@@ -9673,7 +9673,7 @@ function updateMixerRun(e = false) {
 				vid.style.maxHeight = maxHeight;
 
 				const stableScreenDimensions = getStableScreenShareVideoDimensions(vid);
-				const vw = stableScreenDimensions ? stableScreenDimensions.width : vid.naturalWidth || vid.videoWidth || 0;
+				const vw = stableScreenDimensions ? stableScreenDimensions.width : vid.naturalWidth || getIncomingVideoWidth(vid) || 0;
 				const vh = stableScreenDimensions ? stableScreenDimensions.height : vid.naturalHeight || vid.videoHeight || 0;
 
 				if (vw && vh) {
@@ -9818,7 +9818,7 @@ function updateMixerRun(e = false) {
 			}
 
 			var stableScreenDimensions = getStableScreenShareVideoDimensions(vid);
-			var vw = stableScreenDimensions ? stableScreenDimensions.width : vid.naturalWidth || vid.videoWidth; // naturalWidth is for images I guess
+			var vw = stableScreenDimensions ? stableScreenDimensions.width : vid.naturalWidth || getIncomingVideoWidth(vid); // naturalWidth is for images I guess
 			var vh = stableScreenDimensions ? stableScreenDimensions.height : vid.naturalHeight || vid.videoHeight;
 
 			// log(vw + " : "+vh);
@@ -10584,7 +10584,7 @@ function updateMixerRun(e = false) {
 					}
 				}
 			}
-			if (session.viewChroma && !session.director && vid.dataset && vid.dataset.UUID && session.rpcs && session.rpcs[vid.dataset.UUID] && session.rpcs[vid.dataset.UUID].videoElement === vid) {
+			if (vid.dataset && vid.dataset.UUID && session.rpcs && session.rpcs[vid.dataset.UUID] && session.rpcs[vid.dataset.UUID].videoElement === vid && ((session.viewChroma && !session.director) || session.rpcs[vid.dataset.UUID].packedAlpha)) {
 				configureIncomingViewChroma(vid.dataset.UUID);
 			}
 			i += 1;
@@ -30617,6 +30617,10 @@ async function createRoom(roomname = false, reload = false) {
 }
 
 function copyVideoFrameToClipboard(videoElement, e = false) {
+	if (videoElement && videoElement.dataset && session.rpcs[videoElement.dataset.UUID] && session.rpcs[videoElement.dataset.UUID].packedAlpha) {
+		videoElement = getRenderedRemoteElement(videoElement.dataset.UUID);
+		if (!videoElement) return;
+	}
 	e = e || window.event || {};
 	try {
 		var canvas = document.createElement("canvas");
@@ -30649,6 +30653,10 @@ function copyVideoFrameToClipboard(videoElement, e = false) {
 }
 
 function saveVideoFrameToDisk(videoElement, e = false, filename = false) {
+	if (videoElement && videoElement.dataset && session.rpcs[videoElement.dataset.UUID] && session.rpcs[videoElement.dataset.UUID].packedAlpha) {
+		videoElement = getRenderedRemoteElement(videoElement.dataset.UUID);
+		if (!videoElement) return;
+	}
 	try {
 		if (!videoElement.videoWidth || !videoElement.videoHeight) {
 			if (e) {
@@ -30689,6 +30697,10 @@ function saveVideoFrameToDisk(videoElement, e = false, filename = false) {
 }
 
 function sendVideoFrameToIframe(videoElement, e = false, request = {}) {
+	if (videoElement && videoElement.dataset && session.rpcs[videoElement.dataset.UUID] && session.rpcs[videoElement.dataset.UUID].packedAlpha) {
+		videoElement = getRenderedRemoteElement(videoElement.dataset.UUID);
+		if (!videoElement) return;
+	}
 	try {
 		var canvas = document.createElement("canvas");
 
@@ -62806,6 +62818,260 @@ function sendFrameHandler(tracks, UUID = null) {
 	});
 }
 
+// packed-sbs-v1 is fixed for this negotiated receiver track.
+function getIncomingVideoWidth(video) {
+	var UUID = video.dataset && video.dataset.UUID;
+	if (UUID && getIncomingPackedAlpha(UUID) && session.rpcs[UUID].videoElement === video) return video.videoWidth / 2;
+	return video.videoWidth;
+}
+
+function getIncomingPackedAlpha(UUID) {
+	var rpc = session.rpcs && session.rpcs[UUID];
+	var packed = rpc && rpc.packedAlpha;
+	if (!packed || packed.receiver.track !== packed.track) return false;
+	var video = rpc.videoElement;
+	if (!video || !video.srcObject || video.srcObject.getVideoTracks()[0] !== packed.track) return false;
+	return packed;
+}
+
+function receiveIncomingPackedAlpha(UUID, msg) {
+	var rpc = session.rpcs[UUID];
+	if (!rpc || typeof msg.alpha_mid !== "string" || typeof rpc.getTransceivers !== "function") return;
+	var transceivers = rpc.getTransceivers();
+	for (var i = 0; i < transceivers.length; i++) {
+		var transceiver = transceivers[i];
+		if (transceiver.mid !== msg.alpha_mid || !transceiver.receiver || !transceiver.receiver.track || transceiver.receiver.track.kind !== "video") continue;
+		if (transceiver.currentDirection !== "recvonly" && transceiver.currentDirection !== "sendrecv") continue;
+		if (rpc.packedAlpha) {
+			if (rpc.packedAlpha.mid === transceiver.mid && rpc.packedAlpha.track === transceiver.receiver.track) {
+				if (msg.alpha_send !== "packed-sbs-v1") stopIncomingPackedAlpha(UUID, true);
+				return;
+			}
+			if (getIncomingPackedAlpha(UUID)) return;
+			stopIncomingPackedAlpha(UUID, true);
+			rpc.packedAlpha = null;
+		}
+		stopIncomingViewChroma(UUID, true);
+		var packed = { mid: transceiver.mid, receiver: transceiver.receiver, track: transceiver.receiver.track, ready: null, failed: false, video: null, canvas: null, renderer: null, hasFrame: false, frameHandle: null, timer: null };
+		rpc.packedAlpha = packed;
+		packed.onEnded = function () {
+			if (session.rpcs[UUID] === rpc && rpc.packedAlpha === packed) stopIncomingPackedAlpha(UUID, true);
+		};
+		packed.track.addEventListener("ended", packed.onEnded);
+		if (msg.alpha_send !== "packed-sbs-v1") {
+			stopIncomingPackedAlpha(UUID, true);
+			return;
+		}
+		updateIncomingVideoElement(UUID, true, false);
+		configureIncomingPackedAlpha(UUID);
+		return;
+	}
+}
+
+function acknowledgeIncomingPackedAlpha(UUID, ready) {
+	var rpc = session.rpcs[UUID];
+	var packed = rpc && rpc.packedAlpha;
+	if (!packed || packed.ready === ready) return;
+	var msg = {};
+	msg.alpha_receive = ready ? "packed-sbs-v1" : "";
+	msg.alpha_mid = packed.mid;
+	if ((rpc.receiveChannel && rpc.receiveChannel.readyState === "open" && session.sendRequest(msg, UUID)) || !ready) packed.ready = ready;
+}
+
+function stopIncomingPackedAlpha(UUID, failed) {
+	var rpc = session.rpcs[UUID];
+	var packed = rpc && rpc.packedAlpha;
+	if (!packed) return;
+	acknowledgeIncomingPackedAlpha(UUID, false);
+	if (failed) packed.failed = true;
+	if (packed.timer !== null) clearTimeout(packed.timer);
+	if (packed.video && packed.frameHandle !== null && typeof packed.video.cancelVideoFrameCallback === "function") packed.video.cancelVideoFrameCallback(packed.frameHandle);
+	packed.timer = null;
+	packed.frameHandle = null;
+	if (packed.renderer) {
+		var renderer = packed.renderer;
+		renderer.gl.deleteTexture(renderer.texture);
+		renderer.gl.deleteBuffer(renderer.buffer);
+		renderer.gl.deleteProgram(renderer.program);
+		packed.renderer = null;
+	}
+	if (packed.canvas) packed.canvas.remove();
+	packed.canvas = null;
+	packed.hasFrame = false;
+	syncIncomingPackedAlphaSource(UUID);
+	if (failed) packed.track.removeEventListener("ended", packed.onEnded);
+}
+
+function syncIncomingPackedAlphaSource(UUID) {
+	var rpc = session.rpcs[UUID];
+	var video = rpc.videoElement;
+	if (!video) return;
+	var tracks = video.srcObject ? video.srcObject.getVideoTracks() : [];
+	if (tracks.length && tracks[0] !== rpc.packedAlpha.track) video.classList.remove("packed-alpha-source-hidden");
+	else video.classList.add("packed-alpha-source-hidden");
+}
+
+function configureIncomingPackedAlpha(UUID) {
+	var rpc = session.rpcs[UUID];
+	var packed = rpc && rpc.packedAlpha;
+	if (!packed) return false;
+	syncIncomingPackedAlphaSource(UUID);
+	if (packed.failed) return false;
+	if (session.manual === true || packed.track.readyState === "ended" || packed.receiver.track !== packed.track) {
+		stopIncomingPackedAlpha(UUID, true);
+		return false;
+	}
+	if (getIncomingPackedAlpha(UUID) !== packed) {
+		stopIncomingPackedAlpha(UUID, false);
+		return false;
+	}
+	if (packed.video && packed.video !== rpc.videoElement) stopIncomingPackedAlpha(UUID, false);
+	if (rpc.videoMuted || rpc.virtualHangup || rpc.bandwidthMuted || rpc.directorVideoMuted) {
+		stopIncomingPackedAlpha(UUID, false);
+		return false;
+	}
+	packed.video = rpc.videoElement;
+	if (!packed.canvas) {
+		var canvas = document.createElement("canvas");
+		canvas.id = "packedalpha_" + UUID;
+		canvas.className = "tile";
+		canvas.dataset.UUID = UUID;
+		canvas.dataset.menu = "context-menu-video";
+		canvas.style.backgroundColor = "transparent";
+		packed.canvas = canvas;
+		packed.renderer = createIncomingPackedAlphaRenderer(canvas);
+		canvas.addEventListener("webglcontextlost", function (event) {
+			event.preventDefault();
+			if (session.rpcs[UUID] === rpc && rpc.packedAlpha === packed && packed.canvas === canvas) stopIncomingPackedAlpha(UUID, true);
+		});
+	}
+	if (!packed.renderer) {
+		stopIncomingPackedAlpha(UUID, true);
+		return false;
+	}
+	if (!syncIncomingViewChromaCanvas(UUID) || !mountIncomingViewChromaCanvas(UUID) || !document.body.contains(packed.canvas)) {
+		// Layout changes can temporarily remove the holder; configuration resumes it.
+		stopIncomingPackedAlpha(UUID, false);
+		return false;
+	}
+	// The sender waits for this ACK: prepare and mount before the first frame.
+	acknowledgeIncomingPackedAlpha(UUID, true);
+	if (!packed.ready) {
+		stopIncomingPackedAlpha(UUID, true);
+		return false;
+	}
+	scheduleIncomingPackedAlpha(UUID);
+	return true;
+}
+
+function processIncomingPackedAlphaFrame(UUID) {
+	var rpc = session.rpcs[UUID];
+	var packed = rpc && rpc.packedAlpha;
+	if (!packed || !packed.ready || packed.failed) return false;
+	if (packed.track.readyState === "ended" || packed.receiver.track !== packed.track || session.manual === true) {
+		stopIncomingPackedAlpha(UUID, true);
+		return false;
+	}
+	if (!document.body.contains(packed.canvas) || getIncomingPackedAlpha(UUID) !== packed || rpc.videoMuted || rpc.virtualHangup || rpc.bandwidthMuted || rpc.directorVideoMuted) {
+		stopIncomingPackedAlpha(UUID, false);
+		return false;
+	}
+	var video = packed.video;
+	if (video.readyState < 2 || !video.videoWidth || !video.videoHeight) return false;
+	var renderer = packed.renderer;
+	var canvas = packed.canvas;
+	var width = video.videoWidth / 2;
+	if (video.videoWidth % 4 || video.videoHeight % 2 || video.videoWidth > renderer.maxTextureSize || video.videoHeight > renderer.maxTextureSize || width > renderer.maxViewport[0] || video.videoHeight > renderer.maxViewport[1]) {
+		stopIncomingPackedAlpha(UUID, true);
+		return false;
+	}
+	if (canvas.width !== width || canvas.height !== video.videoHeight) {
+		canvas.width = width;
+		canvas.height = video.videoHeight;
+	}
+	try {
+		var gl = renderer.gl;
+		gl.viewport(0, 0, canvas.width, canvas.height);
+		gl.uniform2f(renderer.texel, 1 / video.videoWidth, 1 / video.videoHeight);
+		gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, video);
+		gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
+		if (gl.getError() !== gl.NO_ERROR) throw new Error("Packed alpha video upload failed");
+	} catch (e) {
+		warnlog(e);
+		stopIncomingPackedAlpha(UUID, true);
+		return false;
+	}
+	var firstFrame = !packed.hasFrame;
+	packed.hasFrame = true;
+	if (firstFrame) handleVideoAspectRatioResize(video, UUID);
+	syncIncomingViewChromaCanvas(UUID);
+	return true;
+}
+
+function scheduleIncomingPackedAlpha(UUID) {
+	var rpc = session.rpcs[UUID];
+	var packed = rpc && rpc.packedAlpha;
+	if (!packed || !packed.ready || packed.failed || packed.frameHandle !== null || packed.timer !== null) return;
+	var callback = function () {
+		if (session.rpcs[UUID] !== rpc || rpc.packedAlpha !== packed || !packed.ready || packed.failed) return;
+		packed.frameHandle = null;
+		packed.timer = null;
+		processIncomingPackedAlphaFrame(UUID);
+		scheduleIncomingPackedAlpha(UUID);
+	};
+	if (typeof packed.video.requestVideoFrameCallback === "function") packed.frameHandle = packed.video.requestVideoFrameCallback(callback);
+	else packed.timer = setTimeout(callback, 16);
+}
+
+function createIncomingPackedAlphaRenderer(canvas) {
+	var gl = canvas.getContext("webgl", { alpha: true, premultipliedAlpha: true, antialias: false, depth: false, stencil: false });
+	if (!gl) return false;
+	var vertex = gl.createShader(gl.VERTEX_SHADER);
+	var fragment = gl.createShader(gl.FRAGMENT_SHADER);
+	var program = gl.createProgram();
+	var buffer = gl.createBuffer();
+	var texture = gl.createTexture();
+	try {
+		var precision = gl.getShaderPrecisionFormat(gl.FRAGMENT_SHADER, gl.HIGH_FLOAT);
+		if (!precision || !precision.precision) throw new Error("Packed alpha shader precision unavailable");
+		gl.shaderSource(vertex, "attribute vec2 position; varying vec2 uv; void main(){ uv=vec2((position.x+1.0)*0.5,(1.0-position.y)*0.5); gl_Position=vec4(position,0.0,1.0); }");
+		// Luminance rejects color-half chroma bleeding into the first mask column.
+		gl.shaderSource(fragment, "precision highp float; varying vec2 uv; uniform sampler2D frame; uniform vec2 texel; void main(){ vec2 p=clamp(vec2(uv.x*0.5,uv.y),texel*0.5,vec2(0.5,1.0)-texel*0.5); vec3 color=texture2D(frame,p).rgb; float alpha=dot(texture2D(frame,p+vec2(0.5,0.0)).rgb,vec3(0.299,0.587,0.114)); gl_FragColor=vec4(color*alpha,alpha); }");
+		gl.compileShader(vertex);
+		gl.compileShader(fragment);
+		if (!gl.getShaderParameter(vertex, gl.COMPILE_STATUS) || !gl.getShaderParameter(fragment, gl.COMPILE_STATUS)) throw new Error("Packed alpha shader unavailable");
+		gl.attachShader(program, vertex);
+		gl.attachShader(program, fragment);
+		gl.linkProgram(program);
+		if (!gl.getProgramParameter(program, gl.LINK_STATUS)) throw new Error("Packed alpha program unavailable");
+		gl.useProgram(program);
+		gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
+		gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, 1, -1, -1, 1, 1, 1]), gl.STATIC_DRAW);
+		var position = gl.getAttribLocation(program, "position");
+		gl.enableVertexAttribArray(position);
+		gl.vertexAttribPointer(position, 2, gl.FLOAT, false, 0, 0);
+		gl.bindTexture(gl.TEXTURE_2D, texture);
+		gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+		gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+		gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+		gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+		gl.uniform1i(gl.getUniformLocation(program, "frame"), 0);
+		gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, false);
+		gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, false);
+		gl.deleteShader(vertex);
+		gl.deleteShader(fragment);
+		return { gl: gl, program: program, buffer: buffer, texture: texture, texel: gl.getUniformLocation(program, "texel"), maxTextureSize: gl.getParameter(gl.MAX_TEXTURE_SIZE), maxViewport: gl.getParameter(gl.MAX_VIEWPORT_DIMS) };
+	} catch (e) {
+		gl.deleteTexture(texture);
+		gl.deleteBuffer(buffer);
+		gl.deleteProgram(program);
+		gl.deleteShader(vertex);
+		gl.deleteShader(fragment);
+		warnlog(e);
+		return false;
+	}
+}
+
 function shouldApplyIncomingViewChroma(UUID) {
 	if (!session || !session.viewChroma || session.director || !session.rpcs || !session.rpcs[UUID]) {
 		return false;
@@ -62912,14 +63178,15 @@ function restoreIncomingViewChromaSourceVideo(UUID) {
 }
 
 function mountIncomingViewChromaCanvas(UUID) {
-	if (!session.rpcs || !session.rpcs[UUID] || !session.rpcs[UUID].viewChromaCanvas || !session.rpcs[UUID].videoElement) {
+	if (!session.rpcs || !session.rpcs[UUID] || !(getIncomingPackedAlpha(UUID) ? session.rpcs[UUID].packedAlpha.canvas : session.rpcs[UUID].viewChromaCanvas) || !session.rpcs[UUID].videoElement) {
 		return false;
 	}
 	var rpc = session.rpcs[UUID];
-	var canvas = rpc.viewChromaCanvas;
+	var canvas = getIncomingPackedAlpha(UUID) ? rpc.packedAlpha.canvas : rpc.viewChromaCanvas;
 	var video = rpc.videoElement;
 	var container = video.container || canvas.container || null;
 	var holder = video.holder || canvas.holder || (container && container.holder) || null;
+	if (getIncomingPackedAlpha(UUID) && session.director) holder = video.parentNode;
 	if (!holder) {
 		return false;
 	}
@@ -62937,19 +63204,24 @@ function mountIncomingViewChromaCanvas(UUID) {
 	canvas.style.maxHeight = "100%";
 	canvas.style.objectFit = video.style.objectFit || "contain";
 	canvas.style.zIndex = "1";
+	if (getIncomingPackedAlpha(UUID) && session.director) {
+		canvas.style.position = "relative";
+		canvas.style.height = "auto";
+	}
 	return true;
 }
 
 function syncIncomingViewChromaCanvas(UUID) {
-	if (!session.rpcs[UUID] || !session.rpcs[UUID].viewChromaCanvas || !session.rpcs[UUID].videoElement) {
+	if (!session.rpcs[UUID] || !(getIncomingPackedAlpha(UUID) ? session.rpcs[UUID].packedAlpha.canvas : session.rpcs[UUID].viewChromaCanvas) || !session.rpcs[UUID].videoElement) {
 		return false;
 	}
 	var rpc = session.rpcs[UUID];
-	var canvas = rpc.viewChromaCanvas;
+	var packed = getIncomingPackedAlpha(UUID);
+	var canvas = packed ? packed.canvas : rpc.viewChromaCanvas;
 	var video = rpc.videoElement;
 	var sourceStyle = video.viewChromaSourceStyle || false;
 
-	canvas.id = "viewchroma_" + (video.id || UUID);
+	canvas.id = (packed ? "packedalpha_" : "viewchroma_") + (video.id || UUID);
 	canvas.dataset.UUID = video.dataset.UUID || UUID;
 	if (video.dataset.sid || rpc.streamID) {
 		canvas.dataset.sid = video.dataset.sid || rpc.streamID;
@@ -62976,7 +63248,7 @@ function syncIncomingViewChromaCanvas(UUID) {
 	canvas.holder = video.holder || null;
 	canvas.proxyVideoElement = video;
 	canvas.srcObject = video.srcObject || null;
-	canvas.videoWidth = video.videoWidth || canvas.width || 0;
+	canvas.videoWidth = (packed ? video.videoWidth / 2 : video.videoWidth) || canvas.width || 0;
 	canvas.videoHeight = video.videoHeight || canvas.height || 0;
 	canvas.controls = !!video.controls;
 	mountIncomingViewChromaCanvas(UUID);
@@ -63124,6 +63396,10 @@ function stopIncomingViewChroma(UUID, removeCanvas = true) {
 }
 
 function configureIncomingViewChroma(UUID) {
+	if (session.rpcs[UUID] && session.rpcs[UUID].packedAlpha) {
+		if (getIncomingPackedAlpha(UUID)) return configureIncomingPackedAlpha(UUID);
+		stopIncomingPackedAlpha(UUID, false);
+	}
 	if (!shouldApplyIncomingViewChroma(UUID)) {
 		stopIncomingViewChroma(UUID, true);
 		return false;
@@ -63157,6 +63433,10 @@ function getRenderedRemoteElement(UUID) {
 		return false;
 	}
 	var rpc = session.rpcs[UUID];
+	if (getIncomingPackedAlpha(UUID)) {
+		if (!rpc.packedAlpha.hasFrame || !processIncomingPackedAlphaFrame(UUID)) return false;
+		return rpc.packedAlpha.canvas;
+	}
 	if (!session.director && rpc.viewChromaCanvas && rpc.viewChromaState && rpc.viewChromaState.hasFrame) {
 		syncIncomingViewChromaCanvas(UUID);
 		return rpc.viewChromaCanvas;
@@ -63245,6 +63525,11 @@ function updateIncomingVideoElement(UUID, video = true, audio = true) {
 
 	if (video) {
 		var tracks = session.rpcs[UUID].videoElement.srcObject.getVideoTracks(); // add video track
+		if (session.rpcs[UUID].packedAlpha && !session.rpcs[UUID].streamSrc.getVideoTracks().length) {
+			tracks.forEach(function (track) {
+				session.rpcs[UUID].videoElement.srcObject.removeTrack(track);
+			});
+		}
 
 		session.rpcs[UUID].streamSrc.getVideoTracks().forEach(trk => {
 			var added = false;
@@ -63260,7 +63545,7 @@ function updateIncomingVideoElement(UUID, video = true, audio = true) {
 					session.rpcs[UUID].videoElement.srcObject.removeTrack(trk2);
 				});
 
-				if (trk.muted && trk.kind == "video" && session.director) {
+				if (trk.muted && trk.kind == "video" && session.director && !(session.rpcs[UUID].packedAlpha && session.rpcs[UUID].packedAlpha.track === trk)) {
 					trk.onunmute = function (e) {
 						if (!session.rpcs[UUID]) {
 							return;
@@ -63315,6 +63600,7 @@ function updateIncomingVideoElement(UUID, video = true, audio = true) {
 			}
 		}
 	}
+	if (session.rpcs[UUID].packedAlpha) configureIncomingViewChroma(UUID);
 	syncOptimizeZeroActivatedSceneStream(UUID);
 	if (session.scene !== false && session.optimize !== false && session.optimize !== 0) {
 		// re-assert the scene's display/bitrate state whenever media (re)arrives, so a raise or cap

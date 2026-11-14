@@ -11883,6 +11883,10 @@ WebRTC.Media = (function () {
 
 	session.closeRPC = function (UUID, hangup = false, keepMedia = false) {
 		var peer = session.rpcs[UUID];
+		if (peer && peer.packedAlpha) {
+			stopIncomingPackedAlpha(UUID, true);
+			peer.packedAlpha = null;
+		}
 		if (peer && peer.sharedWebsiteElement) {
 			peer.sharedWebsiteElement.stopWhep();
 			return false;
@@ -24727,6 +24731,11 @@ WebRTC.Media = (function () {
 				try {
 					var msg = JSON.parse(e.data); // we know it's not an object, so probably JSON
 					msg.UUID = UUID;
+					// The format contract belongs to this authenticated data channel/connection.
+					if ("alpha_send" in msg) {
+						if (session.rpcs[UUID] === event.target && session.rpcs[UUID].receiveChannel === e.target && !("altUUID" in msg) && validateIncomingStreamIDs(msg)) receiveIncomingPackedAlpha(UUID, msg);
+						return;
+					}
 
 					if ("altUUID" in msg) {
 						await session.processRPCSOnMessage(msg, UUID + "_screen");
@@ -24742,6 +24751,7 @@ WebRTC.Media = (function () {
 
 
 			session.rpcs[UUID].receiveChannel.onclose = (event) => {
+				if (session.rpcs[UUID] && session.rpcs[UUID].receiveChannel === event.target && session.rpcs[UUID].packedAlpha) stopIncomingPackedAlpha(UUID, true);
 				updateWhepDirectorControls(UUID);
 				if (session.rpcs[UUID] && event && session.rpcs[UUID].receiveChannel === event.target) session.observeQosTransport(session.rpcs[UUID]);
 				//  We will see how this Holds up

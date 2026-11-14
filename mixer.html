@@ -1895,6 +1895,7 @@
 	var mixerRemoteReady = false;
 	var mixerSavePending = false;
 	var mixerSaveRequest = 0;
+	// After a timeout, require request IDs until the main Mixer reconnects.
 	var mixerSaveTimedOut = false;
 	
 	var api = false;
