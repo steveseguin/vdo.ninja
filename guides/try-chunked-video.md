@@ -6,7 +6,7 @@ description: Try experimental browser chunked video for a difficult connection, 
 
 Use chunked mode as an advanced fallback after improving the [network](choose-a-network-for-live-events.md) and testing a lower [normal video bitrate](how-do-i-control-bitrate-quality.md). It uses a different browser video path with explicit buffering and recovery controls. Expect extra delay and test it before relying on it at an event.
 
-Use a recent Chromium-based browser such as Chrome on the sending device and a current OBS Browser Source on the receiver. Firefox cannot publish chunked video. Safari support depends on the required browser capabilities; for a phone that cannot publish it, consider the [native app's SRT option](mobile-app/srt-to-meshcast.md).
+Use a recent Chromium-based browser such as Chrome on the sending device and a current OBS Browser Source on the receiver. On iPhone, both Safari and Chrome need the required iOS browser features; unsupported versions use normal video instead. Firefox cannot publish chunked video. For another phone option, see the [native app's SRT setup](mobile-app/srt-to-meshcast.md).
 
 ## 1. Change the filming link
 
