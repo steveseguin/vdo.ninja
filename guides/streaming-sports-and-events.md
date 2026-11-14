@@ -8,7 +8,7 @@ Use a normal VDO.Ninja camera connection to OBS for sports, school events, confe
 
 If you only need a recording to upload later, recording directly on the phone avoids dependence on venue internet.
 
-## 1. Get the camera into OBS
+## Get the camera into OBS
 
 1. On the phone, open [VDO.Ninja](https://vdo.ninja/) and choose **Add your Camera to OBS**. Select the rear camera and microphone, then start sharing. Alternatively, use the [native app's normal camera output](../steves-helper-apps/native-mobile-app.md#quick-start).
 2. In OBS, select **Sources > + > Browser** and paste the camera's **view link** into **URL**. For a room, use its solo view link from the director.
@@ -19,13 +19,13 @@ If you only need a recording to upload later, recording directly on the phone av
 
 Use OBS to record and broadcast to YouTube or another service. Give the audience that platform's link. Each direct VDO.Ninja camera viewer adds upload work for the phone.
 
-## 2. Prepare for a full event
+## Prepare for a full event
 
 * Mount the phone, clean the lens, and check focus under the venue's lighting. Avoid heavy digital zoom and rapid panning.
 * Arrange power, ventilation, and shade. Lower screen brightness; keep the browser camera page in the foreground and phone unlocked. Test for call interruptions.
 * Rehearse long enough to reveal heat or battery problems. Include moving action and a busy period with the crowd present.
 
-## 3. Choose the connection before lowering quality
+## Choose the connection before lowering quality
 
 Ask for venue production internet or Ethernet. Otherwise, compare Wi-Fi with cellular **from the filming position**. Try a better reception spot where filming is still practical.
 
@@ -33,7 +33,7 @@ Ask for venue production internet or Ethernet. Otherwise, compare Wi-Fi with cel
 
 Follow the [Wi-Fi, 5G, 4G, and hotspot comparison](choose-a-network-for-live-events.md). Stop competing uploads and backups. Check OBS's connection too, including its outgoing broadcast.
 
-## 4. Match picture quality to the connection
+## Match picture quality to the connection
 
 Start with normal settings. If the phone struggles, try **720p at 30 fps**. Leave upload capacity for audio, recovery traffic, and fluctuations.
 
@@ -49,11 +49,11 @@ Browser camera: add `&quality=1&fps=30` to the filming link for 720p30. Native a
 
 Test 60 fps or higher resolution only after the current setup is stable. More frames need more resources; a stable 720p feed can be more useful than struggling 1080p.
 
-## 5. Reduce extra work and keep a backup
+## Reduce extra work and keep a backup
 
 Close duplicate views. Keep the director for controls with [`&pausepreview`](../advanced-settings/director-parameters/and-pausepreview.md) on its link to pause guest video previews. OBS still counts as a viewer; muting tab audio does not stop video downloads.
 
-Record in OBS, and test a camera-side backup: the native app's [Local Recording](../steves-helper-apps/native-mobile-app.md#recording), [browser recording](options-to-record-streams.md#local--remote-recording-in-vdoninja), or a separate camera. Check storage and play back a saved sample. OBS recordings include interruptions in the incoming feed.
+Record in OBS, and test a camera-side backup: the native app's [Local Recording](../steves-helper-apps/native-mobile-app.md#recording), [browser recording](options-to-record-streams.md#local-remote-recording-in-vdo.ninja), or a separate camera. Check storage and play back a saved sample. OBS recordings include interruptions in the incoming feed.
 
 ## If the ordinary setup still struggles
 

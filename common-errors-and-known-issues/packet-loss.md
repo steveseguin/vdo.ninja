@@ -71,7 +71,7 @@ If `&relay&tcp` remains stable across multiple broadcasts, that is strong eviden
 
 #### More generic options to try
 
-* Reduce video bitrate if the connection is saturated, and close unnecessary direct viewers. Leave capacity for audio, recovery traffic, and fluctuations. Follow the [event guide's quality checks](../guides/streaming-sports-and-events.md#4-match-picture-quality-to-the-connection) to distinguish compression from packet loss.
+* Reduce video bitrate if the connection is saturated, and close unnecessary direct viewers. Leave capacity for audio, recovery traffic, and fluctuations. Follow the [event guide's quality checks](../guides/streaming-sports-and-events.md#match-picture-quality-to-the-connection) to distinguish compression from packet loss.
 * For a structured recovery workflow including retry controls, auto-relay, mesh fallback, and director-side mitigations, see [Handling Guest Disconnects and Connection Recovery](../guides/handling-guest-disconnects-and-connection-recovery.md).
 * Try using [`&codec=av1`](../advanced-settings/view-parameters/codec.md#av1) on the viewer side. This will not solve packet loss issues, but the AV1 codec is more efficient than the default codecs, and so it may offer better video quality despite the packet loss.
 * For short random video packet loss, you can test [`&codec=vp8&vred`](../advanced-settings/view-parameters/vred.md) on the viewer side. This asks WebRTC negotiation to prefer video RED, but it does not force a fixed FEC percentage and the browser still decides whether repair packets are sent.
