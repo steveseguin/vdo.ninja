@@ -71,6 +71,7 @@ If `&relay&tcp` remains stable across multiple broadcasts, that is strong eviden
 
 #### More generic options to try
 
+* For a phone camera, try [SRT from the native app through Meshcast](../guides/mobile-app/srt-to-meshcast.md). Its buffer gives lost packets time to be resent. [Compare SRT, RTMP, and WHIP](../guides/mobile-app/choose-an-output.md) before choosing an output.
 * Using [`&chunked`](../newly-added-parameters/and-chunked.md) mode on the sender side can enable an alternative way of sending video data, but this option is only supported by Chrome and other Chromium-based browsers. It is also fairly CPU intensive and may require some tweaking of bitrates and buffers to work well for your situation.
 * For a structured recovery workflow including retry controls, auto-relay, mesh fallback, and director-side mitigations, see [Handling Guest Disconnects and Connection Recovery](../guides/handling-guest-disconnects-and-connection-recovery.md).
 * Try using [`&codec=av1`](../advanced-settings/view-parameters/codec.md#av1) on the viewer side. This will not solve packet loss issues, but the AV1 codec is more efficient than the default codecs, and so it may offer better video quality despite the packet loss.

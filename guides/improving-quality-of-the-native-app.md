@@ -20,6 +20,8 @@ This requests about 6 Mbps; it does not guarantee it. If the picture stays compr
 
 Browser publisher options such as `&ssq`, `&ssbitrate`, and `&contenthint` are not native-app capture controls; adding them to a viewer link does not configure the native screen encoder. `&sharperscreen` is a [viewer-side scaling option](../advanced-settings/screen-share-parameters/and-sharperscreen.md).
 
+For native SRT or RTMP publishing, set bitrate and resolution in **Additional outputs > SRT/RTMP > Output quality**. Viewer URL parameters do not configure these encoders. Follow the [SRT](mobile-app/srt-to-meshcast.md) or [RTMP](mobile-app/rtmp-to-meshcast.md) setup guide.
+
 ## iOS screen-share quality
 
 Select **SCREEN → Publishing Settings → iOS Screen Share Quality**. The native ReplayKit publisher has these upper targets when device resources permit:

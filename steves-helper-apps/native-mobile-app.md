@@ -138,6 +138,8 @@ Tested with a Pixel 9a, the Android app, a Logitech C920 webcam over USB, and an
 
 ## Optional RTMP and SRT output
 
+For a remote phone, follow [SRT through Meshcast to OBS](../guides/mobile-app/srt-to-meshcast.md) or [RTMP through Meshcast to OBS](../guides/mobile-app/rtmp-to-meshcast.md). [Compare the app's output modes](../guides/mobile-app/choose-an-output.md) if you are choosing a setup.
+
 For a direct OBS connection, follow the illustrated [Android SRT guide](../guides/mobile-app/android-srt-to-obs.md) or [iPhone SRT guide](../guides/mobile-app/iphone-srt-to-obs.md).
 
 Android and iOS offer optional experimental RTMP/SRT output. Before starting a supported camera stream, open **Additional outputs**, choose **RTMP** or **SRT**, configure the destination, and enable **Use this destination**. Save, then tap **START STREAM**. While live, use **More → Additional outputs** to start, stop, or retry it. Connection details stay in memory for the current app session.

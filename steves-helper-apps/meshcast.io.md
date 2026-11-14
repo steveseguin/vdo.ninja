@@ -23,6 +23,8 @@ It is not intended as a mass-broadcast CDN in the traditional sense, but it is d
 
 ## Production uses
 
+For phone setup with screenshots, see [SRT from the VDO.Ninja app](../guides/mobile-app/srt-to-meshcast.md) or [RTMP from the app](../guides/mobile-app/rtmp-to-meshcast.md). The [mode comparison](../guides/mobile-app/choose-an-output.md) also covers direct VDO.Ninja and WHIP.
+
 Meshcast can be useful when a normal peer-to-peer VDO.Ninja connection is not the best fit for a guest, venue, or recording workflow.
 
 For example:

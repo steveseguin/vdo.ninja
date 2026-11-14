@@ -81,6 +81,6 @@ URL latency is in microseconds: `400000` equals `400 ms`.
 
 </details>
 
-**Away from home?** Local addresses will not work over mobile data or another network. Use a reachable SRT receiver or relay for remote publishing.
+**Away from home?** Local addresses will not work over mobile data or another network. Follow [SRT through Meshcast to OBS](srt-to-meshcast.md) for a remote phone.
 
 [OBS SRT reference](https://obsproject.com/kb/srt-protocol-streaming-guide)
