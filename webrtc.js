@@ -17302,6 +17302,8 @@ WebRTC.Media = (function () {
 
 		var stop = false;
 		var androidCamera = Android && track.getSettings().facingMode;
+		var cameraCanvas = null;
+		var cameraContext = null;
 		var lastTimestamp = -1;
 		var firstTimestamp = -1;
 		var previousVideoOrigin = null;
@@ -17390,9 +17392,12 @@ WebRTC.Media = (function () {
 
 		var useWorkerProcessor = typeof MediaStreamTrackProcessor !== "function";
 		if (useWorkerProcessor && (iOS || iPad) && track.getSettings().facingMode
-			&& session.videoElement && typeof VideoFrame === "function" && typeof VideoEncoder === "function") {
-			// Read iOS camera frames directly when the track processor is worker-only.
+			&& session.videoElement && typeof VideoFrame === "function" && typeof VideoEncoder === "function"
+			&& typeof session.videoElement.requestVideoFrameCallback === "function") {
+			// Capture at presentation time so iOS's displayed orientation and dimensions agree.
 			var cameraVideo = session.videoElement;
+			cameraCanvas = document.createElement("canvas");
+			cameraContext = cameraCanvas.getContext("2d");
 			var cameraTimer = null;
 			var cameraResolve = null;
 			var cameraFrameTime = performance.now();
@@ -17400,43 +17405,38 @@ WebRTC.Media = (function () {
 				read: function () {
 					return new Promise(function (resolve) {
 						cameraResolve = resolve;
-						cameraTimer = setTimeout(function () {
+						cameraTimer = cameraVideo.requestVideoFrameCallback(function () {
 							cameraTimer = null;
 							cameraResolve = null;
 							if (stop || track.readyState === "ended" || encoder.state === "closed") {
 								resolve({ done: true });
 								return;
 							}
-							cameraFrameTime = performance.now();
+							var frameTime = performance.now();
+							if (frameTime < cameraFrameTime) {
+								resolve(frameReader.read());
+								return;
+							}
+							cameraFrameTime = Math.max(cameraFrameTime + 1000 / (config.frameRate || 30), frameTime);
 							if (!cameraVideo.videoWidth || !cameraVideo.videoHeight || cameraVideo.readyState < 2) {
 								resolve(frameReader.read());
 								return;
 							}
 							try {
-								var dimensions = fitChunkDimensions(cameraVideo.videoWidth, cameraVideo.videoHeight, Math.max(config.width, config.height));
-								if (config.width !== dimensions.width || config.height !== dimensions.height) {
-									config.width = dimensions.width;
-									config.height = dimensions.height;
-									session.chunkedRecorder.adaptiveBaseVideoWidth = cameraVideo.videoWidth;
-									session.chunkedRecorder.adaptiveBaseVideoHeight = cameraVideo.videoHeight;
-									session.chunkedRecorder.needKeyFrame = true;
-									frame_counter = 60;
-									encoder.configure(config);
-									if (session.orientation) {
-										updateForceRotate();
-									}
-								}
-								resolve({ done: false, value: new VideoFrame(cameraVideo, { timestamp: Math.round(cameraFrameTime * 1000) }) });
+								if (cameraCanvas.width !== cameraVideo.videoWidth) cameraCanvas.width = cameraVideo.videoWidth;
+								if (cameraCanvas.height !== cameraVideo.videoHeight) cameraCanvas.height = cameraVideo.videoHeight;
+								cameraContext.drawImage(cameraVideo, 0, 0);
+								resolve({ done: false, value: new VideoFrame(cameraCanvas, { timestamp: Math.round(frameTime * 1000) }) });
 							} catch (error) {
 								encodedOutputProcessor.error(error);
 								resolve({ done: true });
 							}
-						}, Math.max(0, 1000 / (config.frameRate || 30) - (performance.now() - cameraFrameTime)));
+						});
 					});
 				},
 				cancel: function () {
 					stop = true;
-					clearTimeout(cameraTimer);
+					cameraVideo.cancelVideoFrameCallback(cameraTimer);
 					if (cameraResolve) cameraResolve({ done: true });
 					cameraResolve = null;
 					return Promise.resolve();
@@ -17482,6 +17482,14 @@ WebRTC.Media = (function () {
 		frameReader.counterWebCodec = counterWebCodec;
 
 		encoder = new VideoEncoder(encodedOutputProcessor);
+		if (cameraVideo) {
+			// A stopped track will not deliver another presentation callback for cleanup.
+			var closeCameraEncoder = encoder.close.bind(encoder);
+			encoder.close = function () {
+				cleanupReader();
+				return closeCameraEncoder();
+			};
+		}
 		encoder.config = config;
 		encoder.configure(config);
 		session.stats.Chunked_video = config;
@@ -17524,26 +17532,41 @@ WebRTC.Media = (function () {
 				return;
 			}
 
-			if (androidCamera && value.displayWidth && value.displayHeight) {
-				// Camera frames change dimensions when Android rotates the device.
-				var dimensions = fitChunkDimensions(value.displayWidth, value.displayHeight, Math.max(config.width, config.height));
-				if (config.width !== dimensions.width || config.height !== dimensions.height) {
-					config.width = dimensions.width;
-					config.height = dimensions.height;
-					session.chunkedRecorder.adaptiveBaseVideoWidth = value.displayWidth;
-					session.chunkedRecorder.adaptiveBaseVideoHeight = value.displayHeight;
-					session.chunkedRecorder.needKeyFrame = true;
-					frame_counter = 60;
-					try {
+			if (androidCamera || cameraVideo) {
+				var cameraWidth = value.displayWidth;
+				var cameraHeight = value.displayHeight;
+				try {
+					var dimensions = fitChunkDimensions(cameraWidth, cameraHeight, Math.max(config.width, config.height));
+					if (config.width !== dimensions.width || config.height !== dimensions.height) {
+						config.width = dimensions.width;
+						config.height = dimensions.height;
+						session.chunkedRecorder.adaptiveBaseVideoWidth = cameraWidth;
+						session.chunkedRecorder.adaptiveBaseVideoHeight = cameraHeight;
+						session.chunkedRecorder.needKeyFrame = true;
+						frame_counter = 60;
 						encoder.configure(config);
 						if (session.orientation) {
 							updateForceRotate();
 						}
-					} catch (error) {
-						value.close();
-						encodedOutputProcessor.error(error);
-						return;
 					}
+					if (androidCamera) {
+						// Chunked receivers do not carry VideoFrame rotation/flip metadata.
+						// Bake it into pixels, including 180-degree turns with unchanged dimensions.
+						if (!cameraCanvas) {
+							cameraCanvas = document.createElement("canvas");
+							cameraContext = cameraCanvas.getContext("2d");
+						}
+						if (cameraCanvas.width !== config.width) cameraCanvas.width = config.width;
+						if (cameraCanvas.height !== config.height) cameraCanvas.height = config.height;
+						cameraContext.drawImage(value, 0, 0, config.width, config.height);
+						var cameraFrame = new VideoFrame(cameraCanvas, { timestamp: value.timestamp });
+						value.close();
+						value = cameraFrame;
+					}
+				} catch (error) {
+					value.close();
+					encodedOutputProcessor.error(error);
+					return;
 				}
 			}
 
