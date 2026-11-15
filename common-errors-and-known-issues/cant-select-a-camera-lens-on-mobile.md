@@ -4,13 +4,11 @@ description: Accessing the wide-angle or zoom lens on your camera
 
 # Can't select a camera lens on mobile
 
-Some camera lenses are not easily accessible in native mobile applications, and many are not available at all in the browser.
+Start with the [VDO.Ninja native app](../steves-helper-apps/native-mobile-app.md). Choose **BACK CAMERA**, **FRONT CAMERA**, or an additional lens such as **BACK ULTRA-WIDE** when it appears. The available lenses depend on the phone and what its operating system exposes.
 
-The [native app versions](../steves-helper-apps/native-mobile-app-versions.md) of VDO.Ninja may sometimes offer additional lens options not found in the browser, but adding all options is still a work-in-progress.
+Enable **Professional Camera Controls** in the app's advanced settings for supported zoom, focus, exposure, and white-balance controls. A zoom slider does not guarantee that the phone switches to a different physical lens.
 
-On Android, you can try Firefox Mobile as well as Chrome or other browsers to see if your camera lens appears there. Some manufacturers offer better support for their cameras than others, making lens selection more accessible to browsers and app developers.
-
-Sometimes you can zoom in and the cameras will switch automatically, but this is rare.
+If you are using the browser, compare its camera list with the native app. On Android, another browser may expose different cameras.
 
 ### Digital zoom
 
@@ -76,17 +74,9 @@ This list was based on results obtained using BrowserStack.com, so cloud-hosted 
 
 <div align="left"><figure><img src="../.gitbook/assets/image (237).png" alt="" width="252"><figcaption><p>The iPhone 15 Pro offers extensive camera options</p></figcaption></figure></div>
 
-### WHIP mode
+### Publish through a server
 
-VDO.Ninja supports the [WHIP](../advanced-settings/whip-parameters/and-whip.md) streaming protocol, so if there is a native camera app that has proper WHIP-output support, and has the camera features you are looking for, using that can be used with VDO.Ninja.
-
-Currently WHIP support in VDO.Ninja is a bit experimental, but the publishing URL for a WHIP-enabled device to stream to is:
-
-_`https://whip.vdo.ninja/STREAMIDHERE`_
-
-To view a WHIP stream then on VDO.Ninja, have open the following link in your browser:
-
-_`https://vdo.ninja/alpha/?whip=STREAMIDHERE`_
+The VDO.Ninja app includes WHIP publishing. Use **Additional outputs > Meshcast** for built-in distribution, or **Custom WHIP** for a service's publishing URL. See [WHIP setup](../steves-helper-apps/native-mobile-app.md#whip-publishing). Choosing WHIP changes delivery, not which lenses the phone exposes.
 
 ### Lens adapter
 
@@ -94,10 +84,8 @@ There are camera lens adapters available for smartphones for fairly cheap; anywh
 
 <div align="left"><figure><img src="../.gitbook/assets/image (3) (2) (1).png" alt=""><figcaption></figcaption></figure></div>
 
-### USB  external cameras
+### USB external cameras
 
-With the newest development builds of the Android native app of VDO.Ninja, many external (USB/UVC) cameras are supported.\
-\
-With iPhones/iPads, USB-based models (iPhone 15 Pro) seem to support some USB video devices as well, via the USB 3.0 port.\
-\
-Developments around USB/External camera support is ever evolving.
+The Android app supports compatible UVC webcams and HDMI capture adapters through **USB CAMERA**. Connect the device, grant USB permission, and use a powered hub if needed. See [USB camera setup](../steves-helper-apps/native-mobile-app.md#usb-camera).
+
+The VDO.Ninja iOS app does not expose USB camera input. Its USB audio support is separate.

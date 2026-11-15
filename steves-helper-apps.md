@@ -54,7 +54,7 @@ This chat overlay extension will forward the selected chat message over a web-so
 * Facebook Live chat (no pop up option; does not support Mobile/4G/LTE - wifi or ethernet only)
 * Crowdcast.io
 * Zoom.us (text chat and polls)
-* polleverywhere.com ([https://www.polleverywhere.com/discourses/xxxxx](https://www.polleverywhere.com/discourses/xxxxx) question page)
+* polleverywhere.com ([example question page](https://www.polleverywhere.com/discourses/xxxxx))
 * Trovo (open the chat pop-up page: [https://trovo.live/chat/xxxxxx](https://trovo.live/chat/xxxxxx))
 
 📺 Video demoing how to install and use here: [https://youtu.be/UOg3RvHO-xk](https://youtu.be/UOg3RvHO-xk)
@@ -108,7 +108,7 @@ Turn your Raspberry Pi or Nvidia Jetson into a Ninja-cam with hardware-accelerat
 
 ## Native mobile app versions for VDO.Ninja
 
-Mobile native app versions of VDO.Ninja can be found behind the link below. These are mainly backup options for when the browser-based versions fail to work or lack a certain feature due to system restrictions.
+Start with the [VDO.Ninja native app](steves-helper-apps/native-mobile-app.md) for phone camera capture, mobile screen sharing, USB audio, local recording, and optional WHIP, RTMP, or SRT output. Android also supports USB cameras. Use the browser for directing rooms and arranging scenes.
 
 {% content-ref url="steves-helper-apps/native-mobile-app-versions.md" %}
 [native-mobile-app-versions.md](steves-helper-apps/native-mobile-app-versions.md)

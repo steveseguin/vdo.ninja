@@ -47,4 +47,8 @@ Start publishing from the phone. Studio's **Go Live** button is for its own brow
 
 Give production viewers this Meshcast-backed link too. Opening the phone's original direct viewer link creates another upload from the phone. Keep only the outputs and previews you need.
 
-[Compare the phone's output modes](mobile-app/choose-an-output.md) or return to the [sports and events guide](streaming-sports-and-events.md).
+## Other Meshcast workflows
+
+* [Bring RTMP or SRT into OBS](meshcast-rtmp-srt-to-obs.md), including hardware encoders and a sending copy of OBS.
+* [Stream to multiple platforms](multistream-with-meshcast.md) from one upload.
+* [Compare the phone's output modes](mobile-app/choose-an-output.md).

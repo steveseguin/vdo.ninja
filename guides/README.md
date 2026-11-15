@@ -20,6 +20,8 @@ This section collects practical VDO.Ninja guides for OBS Studio, remote guest wo
 * [Smooth playback with a buffer](smooth-playback-with-a-buffer.md)
 * [Try chunked video on a difficult connection](try-chunked-video.md)
 * [Set up Meshcast for a phone camera](meshcast-setup.md)
+* [Bring RTMP or SRT into OBS with Meshcast](meshcast-rtmp-srt-to-obs.md)
+* [Stream to multiple platforms with Meshcast](multistream-with-meshcast.md)
 * [hotkey-support](hotkey-support/ "mention")
 * [midi-api-and-webhid-support.md](midi-api-and-webhid-support.md "mention")
 * [ptz-remote-control.md](ptz-remote-control.md "mention")

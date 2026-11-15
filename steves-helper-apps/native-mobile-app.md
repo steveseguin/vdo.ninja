@@ -4,21 +4,11 @@ description: Guide to the VDO.Ninja native Android and iOS apps, including scree
 
 # VDO.Ninja native mobile app guide
 
-The VDO.Ninja native apps turn a phone or tablet into a capture device. Use them when the browser cannot do what you need: Android USB cameras and HDMI adapters, mobile screen sharing, USB audio, local recording, WHIP publishing, producer talkback, Social Stream Ninja chat while filming, camera controls, or optional experimental RTMP/SRT output. The web version at [https://vdo.ninja](https://vdo.ninja) remains the most flexible director, viewer, and control surface.
+Use the VDO.Ninja app to send a phone camera, microphone, or screen to OBS or another viewer. Start here for mobile capture, including USB audio, local recording, camera controls, and optional WHIP, RTMP, or SRT output. Use the web version for directing rooms and arranging scenes.
 
-Updated October 2, 2026. Available controls depend on the installed app version, device, and capture mode. Older builds may show **Prefer 1080p** where newer builds have separate camera or screen-share quality menus. Check the store's version history if a control described here is missing.
+[Install for Android](https://play.google.com/store/apps/details?id=flutter.vdo.ninja) | [Install for iPhone or iPad](https://apps.apple.com/us/app/vdo-ninja/id1607609685)
 
-{% embed url="https://play.google.com/store/apps/details?id=flutter.vdo.ninja" %}
-Android app
-{% endembed %}
-
-{% embed url="https://apps.apple.com/us/app/vdo-ninja/id1607609685" %}
-iOS app
-{% endembed %}
-
-<figure><img src="../.gitbook/assets/vdo-native-app/phone-home-android-modes.png" alt="VDO.Ninja Android native app home screen with screen, camera, microphone, web, and help modes"><figcaption><p>The available capture modes depend on the device, platform, connected cameras, and connected audio devices.</p></figcaption></figure>
-
-<figure><img src="../.gitbook/assets/vdo-native-app/native-app-publishing-paths.png" alt="Diagram showing VDO.Ninja native app publishing paths for direct VDO.Ninja, WHIP only, WHIP alongside VDO.Ninja, WHEP viewing, talkback, and Social Stream Ninja"><figcaption><p>Publishing options depend on capture mode. Native iOS screen sharing uses its generated viewer link or configured WHIP destination; its direct publishing path does not join rooms.</p></figcaption></figure>
+Menus depend on the installed version, device, and capture mode. If an option is missing, check for an app update in the store.
 
 ## Quick start
 
@@ -28,8 +18,9 @@ iOS app
 4. Enter a **Password** if the room or stream is password protected.
 5. Select the microphone. If you plug in USB audio after opening the screen, tap **Refresh Mics**.
 6. Tap the connect button and accept the permissions that Android or iOS requests.
+7. Copy the app's viewing link into an OBS **Browser Source** or open it in another browser. In OBS, enable **Control audio via OBS** and check picture and sound.
 
-<figure><img src="../.gitbook/assets/vdo-native-app/phone-publishing-settings.png" alt="VDO.Ninja native app publishing settings with stream ID, room name, password, microphone, and quality controls"><figcaption><p>Publishing Settings is where you choose the VDO.Ninja stream, room, microphone, quality mode, and advanced options.</p></figcaption></figure>
+<figure><img src="../.gitbook/assets/vdo-native-app/phone-publishing-settings.png" alt="VDO.Ninja native app publishing settings with stream ID, room name, password, microphone, and quality controls" width="360"><figcaption><p>Publishing Settings is where you choose the VDO.Ninja stream, room, microphone, quality mode, and advanced options.</p></figcaption></figure>
 
 | Fill in | Use it for | Open on the receiving side |
 | --- | --- | --- |
@@ -57,7 +48,7 @@ The native iOS ReplayKit screen-sharing publisher does not join rooms. A room na
 
 Protected video apps, DRM content, and some system screens may appear black or have no audio.
 
-<figure><img src="../.gitbook/assets/vdo-native-app/phone-screen-system-audio.png" alt="Android native app screen sharing settings with Capture System Audio enabled"><figcaption><p>Android screen sharing can capture system audio on supported Android versions when the source app allows it.</p></figcaption></figure>
+<figure><img src="../.gitbook/assets/vdo-native-app/phone-screen-system-audio.png" alt="Android native app screen sharing settings with Capture System Audio enabled" width="360"><figcaption><p>Android screen sharing can capture system audio on supported Android versions when the source app allows it.</p></figcaption></figure>
 
 #### iPhone and iPad
 
@@ -85,60 +76,38 @@ You can mix microphone narration with system audio. The local microphone mute th
 
 The iOS app does not support USB cameras, but it can use USB, USB-C, or Lightning audio devices that iOS supports.
 
-<figure><img src="../.gitbook/assets/vdo-native-app/phone-home-usb-camera.png" alt="VDO.Ninja native app home screen with USB camera mode"><figcaption><p>USB CAMERA appears on Android when the app detects a compatible external camera.</p></figcaption></figure>
+<figure><img src="../.gitbook/assets/vdo-native-app/phone-home-usb-camera.png" alt="VDO.Ninja native app home screen with USB camera mode" width="360"><figcaption><p>USB CAMERA appears on Android when the app detects a compatible external camera.</p></figcaption></figure>
 
-<figure><img src="../.gitbook/assets/vdo-native-app/phone-usb-permission.png" alt="Android USB permission prompt for an external camera"><figcaption><p>Android asks for permission before the app can use a connected USB camera.</p></figcaption></figure>
+<figure><img src="../.gitbook/assets/vdo-native-app/phone-usb-permission.png" alt="Android USB permission prompt for an external camera" width="360"><figcaption><p>Android asks for permission before the app can use a connected USB camera.</p></figcaption></figure>
 
 ## WHIP publishing
 
-The app can publish to a WHIP endpoint alongside, or instead of, normal VDO.Ninja signaling. Targets include Meshcast, MediaMTX, Cloudflare Stream, Twitch-style WebRTC ingest, and other WHIP services that accept the app's codec and authentication.
+For built-in server distribution, open **Additional outputs > Meshcast**, enable **Use this destination**, and save. Start the stream and use the app's viewing link. See [Meshcast setup](../guides/meshcast-setup.md).
 
-<figure><img src="../.gitbook/assets/vdo-native-app/phone-whip-configured.png" alt="Native app WHIP publishing settings filled with a Meshcast WHIP URL"><figcaption><p>Enable WHIP output, paste the publish endpoint, and choose whether to publish alongside VDO.Ninja or to WHIP only.</p></figcaption></figure>
+If you already have a WHIP publishing URL, open **Additional outputs > Custom WHIP**. Older layouts show **Enable WHIP output** under Publishing Settings.
 
-| Field | What it does |
+<figure><img src="../.gitbook/assets/vdo-native-app/phone-whip-configured.png" alt="Native app WHIP settings with publishing URL, stream key, and output mode" width="360"><figcaption><p>WHIP settings in the older layout. Newer layouts group these under Custom WHIP.</p></figcaption></figure>
+
+| Field | What to enter |
 | --- | --- |
-| **Enable WHIP output** | Turns on WHIP publishing |
-| **WHIP URL** | The full HTTPS WHIP publish endpoint |
-| **Stream Key** | Optional bearer token, if the provider gives one separately. Leave it blank if the key is in the URL. |
-| **Alongside VDO.Ninja** | Publishes to VDO.Ninja and WHIP at once, keeping room and director features |
-| **WHIP only** | Skips VDO.Ninja signaling, for a relay, CDN, SFU, or self-hosted server |
+| **WHIP URL** | The service's full HTTPS publishing URL, including any query string |
+| **Stream Key** | A separate bearer token if provided; leave blank when credentials are already in the URL |
+| **Alongside VDO.Ninja** | Keep VDO.Ninja room connections while also publishing to WHIP |
+| **WHIP only** | Publish to the configured server without normal VDO.Ninja signaling |
 
-```text
-Meshcast (anonymous):  https://app.meshcast.io/api/gateway/whip/YOUR_PUBLISH_KEY
-MediaMTX-style:        https://media.example.com/mystream/whip
-VDO.Ninja WHIP ingest: https://whip.vdo.ninja/YOURTOKENHERE
-```
+Enable the destination, save, and start publishing. For Meshcast, copy the selected stream's WHIP URL from Studio; use the matching playback link from **Watch Links**. A watch or WHEP URL is for receiving, not publishing.
 
 ### WHEP viewer source
 
 The app can tell VDO.Ninja viewers to play from a WHEP source when WHIP/WHEP infrastructure handles distribution. Options are **Off**, **Auto**, **Meshcast**, **MediaMTX**, **Cloudflare Stream**, and **Manual WHEP URL**. **Auto** works when the WHIP response includes a matching WHEP playback URL; use **Manual WHEP URL** for a separate playback endpoint.
 
-<figure><img src="../.gitbook/assets/vdo-native-app/phone-whep-viewer-source.png" alt="Native app WHEP viewer source options including Auto, Meshcast, MediaMTX, Cloudflare Stream, and Manual WHEP URL"><figcaption><p>WHEP viewer source options help VDO.Ninja viewers pull from the WHIP/WHEP host instead of relying only on direct peer-to-peer delivery.</p></figcaption></figure>
-
-### Meshcast WHIP example
-
-Tested with a Pixel 9a, the Android app, a Logitech C920 webcam over USB, and an anonymous Meshcast session:
-
-1. Paste the Meshcast WHIP publish URL into **WHIP URL**, keeping any server hint, and leave **Stream Key** blank:
-
-   ```text
-   https://app.meshcast.io/api/gateway/whip/YOUR_PUBLISH_KEY?server=ovh-use1
-   ```
-
-2. Select **USB CAMERA** and grant USB permission.
-3. To watch, open the matching Meshcast watch, embed, or WHEP URL. Anonymous sessions use the anonymous key as the view path:
-
-   ```text
-   https://app.meshcast.io/embed/YOUR_STREAM_KEY?server=ovh-use1
-   ```
-
-<figure><img src="../.gitbook/assets/vdo-native-app/phone-live-usb-whip.png" alt="Native app live USB camera preview while publishing"><figcaption><p>The live view shows the source preview, connection state, recording state, health overlay, and live controls.</p></figcaption></figure>
-
-<figure><img src="../.gitbook/assets/vdo-native-app/meshcast-viewer-usb-whip.png" alt="Meshcast player showing the USB camera feed published from the native app"><figcaption><p>Meshcast playback receiving the Android USB camera feed via WHIP/WHEP.</p></figcaption></figure>
+<figure><img src="../.gitbook/assets/vdo-native-app/phone-whep-viewer-source.png" alt="Native app WHEP viewer source options including Auto, Meshcast, MediaMTX, Cloudflare Stream, and Manual WHEP URL" width="360"><figcaption><p>WHEP viewer source options help VDO.Ninja viewers pull from the WHIP/WHEP host instead of relying only on direct peer-to-peer delivery.</p></figcaption></figure>
 
 ## Optional RTMP and SRT output
 
 For a remote phone, follow [SRT through Meshcast to OBS](../guides/mobile-app/srt-to-meshcast.md) or [RTMP through Meshcast to OBS](../guides/mobile-app/rtmp-to-meshcast.md). [Compare the app's output modes](../guides/mobile-app/choose-an-output.md) if you are choosing a setup.
+
+To send one feed to several platforms, follow [multistreaming with Meshcast](../guides/multistream-with-meshcast.md).
 
 For a direct OBS connection, follow the illustrated [Android SRT guide](../guides/mobile-app/android-srt-to-obs.md) or [iPhone SRT guide](../guides/mobile-app/iphone-srt-to-obs.md).
 
@@ -165,7 +134,7 @@ iOS also has experimental **Adaptive bitrate (RTMP only)**, off by default. It m
 
 For music, mixers, and professional microphones, test both **Unprocessed Audio** and the **Audio Processing** controls. Unprocessed audio skips echo cancellation, noise suppression, and gain control, so it needs cleaner monitoring.
 
-<figure><img src="../.gitbook/assets/vdo-native-app/phone-recording-audio-settings.png" alt="Native app settings showing Local Recording, Unprocessed Audio, and Audio Processing controls"><figcaption><p>Recording and audio processing controls are available in Advanced Settings.</p></figcaption></figure>
+<figure><img src="../.gitbook/assets/vdo-native-app/phone-recording-audio-settings.png" alt="Native app settings showing Local Recording, Unprocessed Audio, and Audio Processing controls" width="360"><figcaption><p>Recording and audio processing controls are available in Advanced Settings.</p></figcaption></figure>
 
 ### Recording
 
@@ -175,13 +144,13 @@ Enable **Local Recording** to save a copy on the device, as a backup or to share
 
 **Remote Audio Stream** plays a VDO.Ninja audio stream on the phone while it publishes, for producer talkback, IFB-style monitoring, program audio, or a cue feed. Enable it, enter the producer's audio-only stream ID if needed, and use headphones. Turn on echo cancellation if you use the phone speaker. Keep talkback out of the program feed unless viewers should hear it.
 
-<figure><img src="../.gitbook/assets/vdo-native-app/phone-health-camera-remote.png" alt="Native app settings showing Stream Health Overlay, Professional Camera Controls, and Remote Audio Stream"><figcaption><p>Remote Audio Stream can bring a separate VDO.Ninja audio feed into the native app while the app is publishing.</p></figcaption></figure>
+<figure><img src="../.gitbook/assets/vdo-native-app/phone-health-camera-remote.png" alt="Native app settings showing Stream Health Overlay, Professional Camera Controls, and Remote Audio Stream" width="360"><figcaption><p>Remote Audio Stream can bring a separate VDO.Ninja audio feed into the native app while the app is publishing.</p></figcaption></figure>
 
 ## Social Stream Ninja
 
 The app can connect to Social Stream Ninja so the camera operator can see chat while filming. In the live view it can show chat, a text-to-speech toggle, and connection state.
 
-<figure><img src="../.gitbook/assets/vdo-native-app/phone-social-stream-settings.png" alt="Native app Social Stream Ninja integration settings with session ID and connection mode"><figcaption><p>Enter the Social Stream Ninja session ID, then choose Peer-to-Peer or Server mode.</p></figcaption></figure>
+<figure><img src="../.gitbook/assets/vdo-native-app/phone-social-stream-settings.png" alt="Native app Social Stream Ninja integration settings with session ID and connection mode" width="360"><figcaption><p>Enter the Social Stream Ninja session ID, then choose Peer-to-Peer or Server mode.</p></figcaption></figure>
 
 | Setting | What it does |
 | --- | --- |

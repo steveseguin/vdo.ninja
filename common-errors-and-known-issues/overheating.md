@@ -76,7 +76,7 @@ VDO.Ninja has limited support for hardware encoders. Hardware encoders greatly r
 
 There is support for the Raspberry Pi, both software-encoder and hardware-encoder options, but the hardware-encoded option is the most limited and challenging. The current project supporting this offering is here: [https://github.com/steveseguin/raspberry\_ninja](https://github.com/steveseguin/raspberry_ninja)
 
-Like with the native mobile app versions, the capabilities of this option is very limited. It does not support group-rooms and it does not yet support multiple viewers. Since many are using the Raspberry Pi wirelessly, it must also be said that it has very poor support of packet loss recovery -- the video will often not be smooth, especially if the WiFi signal is not very strong.&#x20;
+For supported capture modes and connections, follow the [Raspberry.Ninja guide](../steves-helper-apps/raspberry.ninja/README.md). Use Ethernet where possible and test sustained playback with the camera and encoder you plan to use.
 
 Using a Chromium browser with a Raspberry Pi, in software-encoded mode, will probably give more reliable results, but also generate a lot of heat and limit the maximum video resolution a lot.
 

@@ -57,6 +57,8 @@
   * [Smooth playback with a buffer](guides/smooth-playback-with-a-buffer.md)
   * [Try chunked video on a difficult connection](guides/try-chunked-video.md)
   * [Set up Meshcast for a phone camera](guides/meshcast-setup.md)
+  * [Bring RTMP or SRT into OBS with Meshcast](guides/meshcast-rtmp-srt-to-obs.md)
+  * [Stream to multiple platforms with Meshcast](guides/multistream-with-meshcast.md)
   * [Style your guest videos](guides/guest-video-styling/README.md)
     * [Custom CSS](guides/guest-video-styling/custom-css.md)
     * [OBS and Mixer layouts](guides/guest-video-styling/obs-and-mixer.md)

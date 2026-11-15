@@ -45,7 +45,7 @@ A common question I also get is that a certain phone can record 4K60 in the nati
 
 Samsung devices can sometimes use the built in Samsung Internet browser instead of Chrome to get access to higher resolutions and frame rates; 1080p60 for example with new flagship devices. Sometimes changing cameras or video codecs can allow for higher resolutions as well.
 
-The native mobile app version of VDO.Ninja may at some point support additional cameras that the browser does not, but at present there are not enough development resources available for this. It's desired however.
+The [VDO.Ninja native app](../steves-helper-apps/native-mobile-app.md) offers additional lens choices, camera controls, and Android USB camera input. Select from the cameras the app lists and use its [capture quality settings](improving-quality-of-the-native-app.md). More lens choices do not guarantee 4K capture; browser URL settings above do not configure the native camera.
 
 ## What about the bitrate?
 

@@ -58,7 +58,12 @@ If on Android, using Firefox might work well without the need of TRRS however.
 
 ### If using the native mobile app
 
-If using the native VDO.Ninja mobile app, please note that screen sharing might only contain microphone-sourced audio -- the system audio won't be detected at the moment. This will hopefully change soon, but there is no timeline as to when it will be working.
+The native app can share app audio as well as microphone narration:
+
+* **Android 10+:** enable **Capture System Audio** before starting **SCREEN**. The captured app must allow audio capture.
+* **iPhone or iPad:** check the separate app-audio and microphone mutes. For narration, also enable the microphone in Apple's broadcast controls.
+
+Protected content may block capture. See the [screen-sharing steps](../steves-helper-apps/native-mobile-app.md#screen-sharing).
 
 ### Guests can't hear each other in a room
 

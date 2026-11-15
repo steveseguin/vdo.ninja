@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="600" height="340" viewBox="0 0 600 340" role="img" aria-labelledby="title desc">
+  <title id="title">One upload, multiple destinations</title>
+  <desc id="desc">Upload a phone camera or finished OBS program to Meshcast. Meshcast forwards the source to YouTube, Twitch, and other configured destinations.</desc>
+  <rect width="600" height="340" rx="18" fill="#f1f5f9"/>
+  <g font-family="Arial, sans-serif" text-anchor="middle">
+    <rect x="24" y="18" width="552" height="72" rx="12" fill="#fff" stroke="#cbd5e1"/>
+    <text x="300" y="47" font-size="23" font-weight="700" fill="#0f172a">Phone camera or finished OBS show</text>
+    <text x="300" y="74" font-size="19" fill="#475569">One upload</text>
+    <path d="M300 96v22m-7-7 7 7 7-7" fill="none" stroke="#2563eb" stroke-width="3"/>
+    <rect x="24" y="126" width="552" height="72" rx="12" fill="#dbeafe" stroke="#93c5fd"/>
+    <text x="300" y="155" font-size="23" font-weight="700" fill="#0f172a">Meshcast</text>
+    <text x="300" y="182" font-size="19" fill="#334155">Forward to enabled destinations</text>
+    <path d="M300 204v14M112 240v-22h376v22M300 218v22" fill="none" stroke="#2563eb" stroke-width="3"/>
+    <g fill="#fff" stroke="#cbd5e1">
+      <rect x="24" y="244" width="176" height="76" rx="12"/>
+      <rect x="212" y="244" width="176" height="76" rx="12"/>
+      <rect x="400" y="244" width="176" height="76" rx="12"/>
+    </g>
+    <g font-size="22" font-weight="700" fill="#0f172a">
+      <text x="112" y="290">YouTube</text>
+      <text x="300" y="290">Twitch</text>
+      <text x="488" y="290">Other</text>
+    </g>
+  </g>
+</svg>

@@ -4,7 +4,7 @@ description: Mobile app version of VDO.Ninja and other Android related topics
 
 # Android
 
-[VDO.Ninja](https://vdo.ninja/) generally works quite well with Android; even older Android devices tend to work reasonable well. The browser-based version of VDO.Ninja is recommend for most users, although there is an native mobile app version for Android that solves some limitations of the web-version.
+For phone camera capture, start with the [VDO.Ninja native app](../steves-helper-apps/native-mobile-app.md). It includes camera controls, screen sharing, USB video and audio, recording, and optional server outputs. [VDO.Ninja in the browser](https://vdo.ninja/) is also available without installing an app, and provides the full director and room interface.
 
 ### Native Android app
 
@@ -25,16 +25,7 @@ Current native app capabilities include:
 
 The native Android build retains Android 5.0/API 21 compatibility, but individual features have higher OS and hardware requirements. For example, native system-audio capture requires Android 10+ and an app that allows it.
 
-The **Google Play Store** <img src="../.gitbook/assets/image (116) (1).png" alt="" data-size="line"> hosted version is here: \
-[https://play.google.com/store/apps/details?id=flutter.vdo.ninja](https://play.google.com/store/apps/details?id=flutter.vdo.ninja)  \
-(It will auto-update when I push new releases.)
-
-An Android APK for direct download is also available here (kept updated with the newest build):\
-[https://drive.google.com/file/d/1L8meslXPEzivocH3wz48abNtJ926hQUr/view?usp=drive\_link](https://drive.google.com/file/d/1L8meslXPEzivocH3wz48abNtJ926hQUr/view?usp=drive\_link)\
-(Manually installing requires manual updating.)
-
-Public reference source is available here; it may lag current distributed builds:\
-[https://github.com/steveseguin/vdon\_flutter/](https://github.com/steveseguin/vdon\_flutter/)
+[Install from Google Play](https://play.google.com/store/apps/details?id=flutter.vdo.ninja). For a direct APK download, see [native mobile app downloads](../steves-helper-apps/native-mobile-app-versions.md#android-downloads).
 
 For setup and platform limits, see the [native app guide](../steves-helper-apps/native-mobile-app.md). For the camera presets, capture frame-rate ceiling, and bitrate controls, see the [quality guide](../guides/improving-quality-of-the-native-app.md).
 
@@ -61,7 +52,7 @@ USB-based audio devices have limited support via the browser on Android. Some An
 **Firefox mobile tends to support USB audio devices more often than Chrome,** so try Firefox if Chrome doesn't work with your USB microphone.
 
 If nothing works via the browser, using a 3.5mm to USB adapter will sometimes work if your audio device has 3.5mm mic out as an option. You may also need a TRRS (not TRS) adapter. Below are a couple that have been tested successfully on a Google Pixel smartphone:\
-[https://www.amazon.ca/gp/product/B08NVRV6G9](https://www.amazon.ca/gp/product/B08NVRV6G9)\
+[Adapter example on Amazon](https://www.amazon.ca/gp/product/B08NVRV6G9)\
 [https://www.amazon.ca/Headphone-Splitter-KOOPAO-Compatible-Microphone/dp/B08RML676M](https://www.amazon.ca/Headphone-Splitter-KOOPAO-Compatible-Microphone/dp/B08RML676M)\
 \
 Often a USB audio device that is treated as a headset/communication device, rather than just a microphone or game device, will work.

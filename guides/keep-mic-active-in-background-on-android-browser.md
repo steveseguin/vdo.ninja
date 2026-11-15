@@ -51,4 +51,4 @@ This method has been tested on a Galaxy Z Fold 6 with the most current version o
 * **App Permissions**: Regularly check your browser's app permissions to ensure microphone access hasn't been revoked by system updates or other changes.
 * **Alternative Browsers**: If you're having trouble with your default browser, try using a different one. Some users report better results with specific browsers like Chrome or Firefox.
 * **Notification Importance**: Consider setting your browser app's notifications to "High" importance in your Android settings. This may help prevent the system from closing the app in low-memory situations.
-* **Native app alternative:** If you can't get it working with the browser, there is the [native app version](../steves-helper-apps/native-mobile-app-versions.md) of VDO.Ninja that you can try using instead. It's basic, but it should support background usage.
+* **Native app:** For a background microphone feed, start with **MICROPHONE ONLY** in the [VDO.Ninja app](../steves-helper-apps/native-mobile-app.md). Allow background operation in Android and test with the screen off; battery and permission settings can still interrupt capture.

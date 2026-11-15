@@ -304,7 +304,9 @@ The screen recorder has its own codec selector UI, unlike the main VDO.Ninja rec
 
 ## Native iOS/Android App Recording
 
-The VDO.Ninja native apps (Raspberry.Ninja-based) support recording while publishing, but with no configurable recording options — it is simply **on or off** while streaming. There are no codec, bitrate, or format choices in the native app recording. This is a separate implementation from the browser-based recording system.
+In the [VDO.Ninja Android or iOS app](../steves-helper-apps/native-mobile-app.md#recording), enable **Local Recording** to save video to the device while publishing, or use the live recording controls. Microphone-only mode does not offer this video recorder. Play back a saved sample before relying on it for an event.
+
+Browser recording parameters such as `&recordcodec` do not configure the native recorder. Likewise, **Additional outputs > Output quality** configures RTMP/SRT output, not the local recording format.
 
 ***
 

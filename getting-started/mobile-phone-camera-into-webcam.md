@@ -12,7 +12,7 @@ This set of instructions will work for Windows, macOS, and Linux.
 
 ## Simple steps
 
-1. Go to [https://vdo.ninja/?push](https://vdo.ninja/?push) with your mobile phone and start sharing your camera.
+1. Open the [VDO.Ninja native app](../steves-helper-apps/native-mobile-app.md#quick-start), choose a camera, and start sharing. For a setup without installing an app, open [vdo.ninja/?push](https://vdo.ninja/?push) in the phone browser.
 2. Add your VDO.Ninja `view` link as a Browser Source in OBS in a scene.
    1. Select the "Control audio via OBS" option to bring audio in.
    2. Resize the source as you see fit.

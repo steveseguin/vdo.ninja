@@ -20,7 +20,7 @@ Example: `&forceviewerlandscape=90`
 
 ie: [https://vdo.ninja/?forceviewerlandscape\&view=xxx](https://vdo.ninja/?forceviewerlandscape\&view=xxx)
 
-This normally shouldn't be needed, as the sender side should control the orientation, but the native app seems to auto rotate back to portrait when the phone is locked. Until that is fixed, this can work around the issue I think, by rotating the video when it detects its been rotated.
+Use this viewer option when an incoming feed rotates to portrait but your scene needs landscape. Check the sender's orientation and capture settings first; forcing the viewer orientation does not change the camera capture.
 
 The parameter can take a value, the default is `270`, which is how much the video is rotated. You might want to also use `90`, or in the case you want it to be locked upside down, you can technically pass `180` I guess?
 
