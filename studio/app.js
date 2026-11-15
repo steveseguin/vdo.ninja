@@ -64,6 +64,7 @@ const state = {
 	sources: new Map(),
 	placeholders: [],
 	scenes: [],
+	sceneOptions: { transition: null, labels: null, transparent: null },
 	output: {
 		status: "No output window opened",
 		mode: "idle"
@@ -184,6 +185,7 @@ function saveSession() {
 		lastAppliedSceneId: state.lastAppliedSceneId,
 		version: APP_STATE_VERSION,
 		scenes: state.scenes,
+		sceneOptions: state.sceneOptions,
 		brand: state.brand,
 		placeholders: state.placeholders
 	};
@@ -201,6 +203,7 @@ function loadSession() {
 	state.activeSceneId = "scene_1";
 	state.lastAppliedSceneId = null;
 	state.placeholders = [];
+	state.sceneOptions = normalizeSceneOptions();
 	let original = null;
 	let damaged = false;
 	try {
@@ -221,6 +224,7 @@ function loadSession() {
 				catch (error) { damaged = true; }
 			});
 			state.brand = normalizeBrand(saved.brand);
+			state.sceneOptions = normalizeSceneOptions(saved.sceneOptions);
 		} else if (saved) damaged = true;
 	} catch (error) {
 		damaged = true;
@@ -283,6 +287,15 @@ function normalizeTemplateScene(scene, index) {
 	};
 }
 
+function normalizeSceneOptions(options) {
+	options = options || {};
+	return {
+		transition: typeof options.transition === "number" && Number.isFinite(options.transition) ? clamp(Math.round(options.transition), 0, 5000) : null,
+		labels: typeof options.labels === "boolean" ? options.labels : null,
+		transparent: typeof options.transparent === "boolean" ? options.transparent : null
+	};
+}
+
 function normalizeBrand(brand) {
 	brand = brand || {};
 	return {
@@ -324,9 +337,19 @@ function exportTemplate() {
 		version: TEMPLATE_VERSION,
 		exportedAt: new Date().toISOString(),
 		scenes: state.scenes,
+		sceneOptions: state.sceneOptions,
 		brand: state.brand,
 		placeholders: state.placeholders
 	};
+	if (window.obsstudio) {
+		const input = document.getElementById("obs-export-json");
+		input.value = JSON.stringify(payload, null, "\t");
+		document.getElementById("obs-export-filename").textContent = `${state.room || "studio"}-template.json`;
+		document.getElementById("obs-export").classList.remove("hidden");
+		input.focus();
+		input.select();
+		return;
+	}
 	const blob = new Blob([JSON.stringify(payload, null, "\t")], { type: "application/json" });
 	const link = document.createElement("a");
 	link.href = URL.createObjectURL(blob);
@@ -363,6 +386,7 @@ function importTemplateFile(file) {
 			state.selectedBoxId = null;
 			state.brand = brand;
 			state.placeholders = placeholders;
+			state.sceneOptions = normalizeSceneOptions(payload.sceneOptions);
 			renderAll();
 			applySceneToFrame();
 			showToast("Template imported");
@@ -485,6 +509,15 @@ function buildSceneUrl(options = {}) {
 		url.searchParams.set("password", state.password);
 	}
 	appendParams(url, currentExtraParams());
+	if (state.sceneOptions.labels !== null) {
+		["showlabels", "showlabel", "sl"].forEach(key => url.searchParams.delete(key));
+		if (state.sceneOptions.labels) url.searchParams.set("showlabels", "");
+	}
+	if (state.sceneOptions.transparent !== null) {
+		url.searchParams.delete("transparent");
+		url.searchParams.delete("transparency");
+		if (state.sceneOptions.transparent) url.searchParams.set("transparent", "");
+	}
 	url.searchParams.delete("broadcast");
 	url.searchParams.delete("bc");
 	url.searchParams.delete("codirector");
@@ -1255,6 +1288,10 @@ function renderLinks() {
 		document.getElementById("invite-link").value = url;
 	});
 	document.getElementById("scene-link").value = buildSceneUrl();
+	const sceneParams = new URL(document.getElementById("scene-link").value).searchParams;
+	document.getElementById("scene-transition").value = state.sceneOptions.transition === null ? "" : state.sceneOptions.transition;
+	document.getElementById("scene-labels").checked = sceneParams.has("showlabels") || sceneParams.has("showlabel") || sceneParams.has("sl");
+	document.getElementById("scene-transparent").checked = sceneParams.has("transparent") || sceneParams.has("transparency");
 	const passwordInput = document.getElementById("room-password-display");
 	const passwordCard = document.getElementById("password-card");
 	const copyPassword = document.getElementById("copy-password");
@@ -2052,6 +2089,9 @@ function exportLayoutItem(item) {
 		rounded: state.brand.radius,
 		margin: 0
 	};
+	if (state.sceneOptions.transition !== null) {
+		output.animated = state.sceneOptions.transition;
+	}
 	if (Number.isFinite(parseInt(item.slot, 10))) {
 		output.slot = parseInt(item.slot, 10);
 	}
@@ -2475,6 +2515,12 @@ function bindEvents() {
 	document.getElementById("refresh-state").addEventListener("click", refreshState);
 	document.getElementById("add-scene").addEventListener("click", addScene);
 	document.getElementById("export-template").addEventListener("click", exportTemplate);
+	document.getElementById("obs-export-copy").addEventListener("click", () => copyText(document.getElementById("obs-export-json").value, "Template"));
+	document.getElementById("obs-export-close").addEventListener("click", () => {
+		document.getElementById("obs-export").classList.add("hidden");
+		document.getElementById("obs-export-json").value = "";
+		document.getElementById("export-template").focus();
+	});
 	document.getElementById("import-template").addEventListener("click", () => document.getElementById("template-file").click());
 	document.getElementById("template-file").addEventListener("change", event => importTemplateFile(event.target.files[0]));
 	document.getElementById("duplicate-scene").addEventListener("click", duplicateActiveScene);
@@ -2557,6 +2603,25 @@ function bindEvents() {
 		}
 	});
 	document.getElementById("copy-scene").addEventListener("click", () => copyText(document.getElementById("scene-link").value, "Scene link"));
+	document.getElementById("scene-settings-toggle").addEventListener("click", () => {
+		const hidden = document.getElementById("scene-settings").classList.toggle("hidden");
+		document.getElementById("scene-settings-toggle").setAttribute("aria-expanded", String(!hidden));
+	});
+	["scene-transition", "scene-labels", "scene-transparent"].forEach(id => {
+		document.getElementById(id).addEventListener("change", event => {
+			if (id === "scene-transition") {
+				state.sceneOptions.transition = event.target.value === "" ? null : Number(event.target.value);
+			} else if (id === "scene-labels") {
+				state.sceneOptions.labels = event.target.checked;
+			} else {
+				state.sceneOptions.transparent = event.target.checked;
+			}
+			state.sceneOptions = normalizeSceneOptions(state.sceneOptions);
+			renderLinks();
+			if (id === "scene-transition") applySceneToFrame();
+			else saveSession();
+		});
+	});
 	document.getElementById("open-scene").addEventListener("click", () => openUrl(buildSceneUrl(), "Scene link opened"));
 	document.getElementById("record-scene").addEventListener("click", () => openUrl(buildSceneUrl({ record: true }), "Recorder opened"));
 	document.getElementById("open-meshcast").addEventListener("click", () => openUrl("https://app.meshcast.io/dashboard", "Meshcast opened"));

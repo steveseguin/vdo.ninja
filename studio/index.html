@@ -6,7 +6,7 @@
 		<title>VDO.Ninja Live Studio</title>
 		<link rel="icon" href="../media/favicon.ico" />
 		<link rel="stylesheet" href="../lineawesome/css/line-awesome.min.css" />
-		<link rel="stylesheet" href="./styles.css?ver=20261105-3" />
+		<link rel="stylesheet" href="./styles.css?ver=20261113-3" />
 	</head>
 	<body>
 		<div id="studio-root" class="studio-shell" data-state="setup">
@@ -57,6 +57,14 @@
 							<button type="button" id="add-scene" class="button button--secondary button--compact" title="Create a scene from the current program">New</button>
 						</div>
 						<input id="template-file" class="hidden" type="file" accept="application/json,.json" />
+						<div id="obs-export" class="obs-export hidden">
+							<p id="obs-export-help">Copy into a text editor and save as <strong id="obs-export-filename"></strong>.</p>
+							<textarea id="obs-export-json" readonly spellcheck="false" aria-label="Template JSON" aria-describedby="obs-export-help"></textarea>
+							<div class="output-actions">
+								<button type="button" id="obs-export-copy" class="button button--primary button--compact">Copy</button>
+								<button type="button" id="obs-export-close" class="button button--secondary button--compact">Close</button>
+							</div>
+						</div>
 					</div>
 					<div id="scene-list" class="scene-list" aria-live="polite"></div>
 				</aside>
@@ -237,13 +245,21 @@
 							<div class="output-status__label">Output state</div>
 							<div class="output-status__value">No output window opened</div>
 						</div>
-						<label class="field-row field-row--stacked">
-							<span>Scene link</span>
-							<div class="copy-row">
+						<div class="field-row field-row--stacked">
+							<label for="scene-link">Scene link</label>
+							<div class="copy-row copy-row--settings">
 								<input id="scene-link" readonly />
 								<button type="button" class="icon-button" id="copy-scene" title="Copy scene link" aria-label="Copy scene link"><i class="las la-copy"></i></button>
+								<button type="button" class="icon-button" id="scene-settings-toggle" title="Scene settings" aria-label="Scene settings" aria-expanded="false" aria-controls="scene-settings"><i class="las la-cog"></i></button>
 							</div>
-						</label>
+						</div>
+						<div id="scene-settings" class="scene-settings hidden">
+							<label class="field-row" title="Movement duration for arranged layouts. Choose a layout preset instead of Auto. Use 0 for a cut; leave blank for the default timing.">
+								<span>Transition (ms)</span><input id="scene-transition" type="number" min="0" max="5000" step="50" placeholder="Default" />
+							</label>
+							<label class="check-row" title="Show guest labels in the scene link. Recopy the link into OBS after changing this."><input id="scene-labels" type="checkbox" /><span>Labels</span></label>
+							<label class="check-row" title="Use a transparent scene background. Recopy the link into OBS after changing this."><input id="scene-transparent" type="checkbox" /><span>Transparent background</span></label>
+						</div>
 						<p class="output-help">Set up a source and its destinations in Meshcast, then paste that source's private WHIP URL here. Manage destinations and check their status in the Meshcast dashboard.</p>
 						<label class="field-row field-row--stacked">
 							<span>Meshcast WHIP URL</span>
@@ -276,6 +292,6 @@
 		</div>
 
 		<div id="toast" class="toast" role="status" aria-live="polite"></div>
-		<script type="module" src="./app.js?ver=20261105-3"></script>
+		<script type="module" src="./app.js?ver=20261113-3"></script>
 	</body>
 </html>

@@ -641,22 +641,6 @@ async function getTURNList() {
 				},
 				{
 					username: "vdoninja",
-					credential: "ViennaSchnitzel",
-					urls: ["turn:turn-eu5.vdo.ninja:3478"],
-					tz: -60,
-					udp: true,
-					locale: "eu5"
-				},
-				{
-					username: "vdoninja",
-					credential: "ViennaSchnitzel",
-					urls: ["turns:turn-eu5.vdo.ninja:443"],
-					tz: -60,
-					udp: false,
-					locale: "eu5"
-				},
-				{
-					username: "vdoninja",
 					credential: "donotuseplease",
 					urls: ["turn:turn-usw3.vdo.ninja:3478"],
 					tz: 480,
@@ -17317,6 +17301,7 @@ WebRTC.Media = (function () {
 		track = track[0];
 
 		var stop = false;
+		var androidCamera = Android && track.getSettings().facingMode;
 		var lastTimestamp = -1;
 		var firstTimestamp = -1;
 		var previousVideoOrigin = null;
@@ -17404,6 +17389,62 @@ WebRTC.Media = (function () {
 		};
 
 		var useWorkerProcessor = typeof MediaStreamTrackProcessor !== "function";
+		if (useWorkerProcessor && (iOS || iPad) && track.getSettings().facingMode
+			&& session.videoElement && typeof VideoFrame === "function" && typeof VideoEncoder === "function") {
+			// Read iOS camera frames directly when the track processor is worker-only.
+			var cameraVideo = session.videoElement;
+			var cameraTimer = null;
+			var cameraResolve = null;
+			var cameraFrameTime = performance.now();
+			frameReader = {
+				read: function () {
+					return new Promise(function (resolve) {
+						cameraResolve = resolve;
+						cameraTimer = setTimeout(function () {
+							cameraTimer = null;
+							cameraResolve = null;
+							if (stop || track.readyState === "ended" || encoder.state === "closed") {
+								resolve({ done: true });
+								return;
+							}
+							cameraFrameTime = performance.now();
+							if (!cameraVideo.videoWidth || !cameraVideo.videoHeight || cameraVideo.readyState < 2) {
+								resolve(frameReader.read());
+								return;
+							}
+							try {
+								var dimensions = fitChunkDimensions(cameraVideo.videoWidth, cameraVideo.videoHeight, Math.max(config.width, config.height));
+								if (config.width !== dimensions.width || config.height !== dimensions.height) {
+									config.width = dimensions.width;
+									config.height = dimensions.height;
+									session.chunkedRecorder.adaptiveBaseVideoWidth = cameraVideo.videoWidth;
+									session.chunkedRecorder.adaptiveBaseVideoHeight = cameraVideo.videoHeight;
+									session.chunkedRecorder.needKeyFrame = true;
+									frame_counter = 60;
+									encoder.configure(config);
+									if (session.orientation) {
+										updateForceRotate();
+									}
+								}
+								resolve({ done: false, value: new VideoFrame(cameraVideo, { timestamp: Math.round(cameraFrameTime * 1000) }) });
+							} catch (error) {
+								encodedOutputProcessor.error(error);
+								resolve({ done: true });
+							}
+						}, Math.max(0, 1000 / (config.frameRate || 30) - (performance.now() - cameraFrameTime)));
+					});
+				},
+				cancel: function () {
+					stop = true;
+					clearTimeout(cameraTimer);
+					if (cameraResolve) cameraResolve({ done: true });
+					cameraResolve = null;
+					return Promise.resolve();
+				},
+				releaseLock: function () { frameReader.cancel(); }
+			};
+			useWorkerProcessor = false;
+		}
 		if (useWorkerProcessor) {
 			var workerSupport = await session.ensureChunkedWorkerSupport();
 			if (!workerSupport || !workerSupport.mediaStreamTrackProcessor || !workerSupport.videoEncoder) {
@@ -17431,9 +17472,11 @@ WebRTC.Media = (function () {
 			return promise;
 		}
 
-		var prc = new MediaStreamTrackProcessor(track);
-		var frameStream = prc.readable;
-		frameReader = frameStream.getReader();
+		if (!frameReader) {
+			var prc = new MediaStreamTrackProcessor(track);
+			var frameStream = prc.readable;
+			frameReader = frameStream.getReader();
+		}
 
 		counterWebCodec += 1;
 		frameReader.counterWebCodec = counterWebCodec;
@@ -17479,6 +17522,29 @@ WebRTC.Media = (function () {
 				warnlog(" else if (encoder.state == 'closed'");
 				cleanupReader();
 				return;
+			}
+
+			if (androidCamera && value.displayWidth && value.displayHeight) {
+				// Camera frames change dimensions when Android rotates the device.
+				var dimensions = fitChunkDimensions(value.displayWidth, value.displayHeight, Math.max(config.width, config.height));
+				if (config.width !== dimensions.width || config.height !== dimensions.height) {
+					config.width = dimensions.width;
+					config.height = dimensions.height;
+					session.chunkedRecorder.adaptiveBaseVideoWidth = value.displayWidth;
+					session.chunkedRecorder.adaptiveBaseVideoHeight = value.displayHeight;
+					session.chunkedRecorder.needKeyFrame = true;
+					frame_counter = 60;
+					try {
+						encoder.configure(config);
+						if (session.orientation) {
+							updateForceRotate();
+						}
+					} catch (error) {
+						value.close();
+						encodedOutputProcessor.error(error);
+						return;
+					}
+				}
 			}
 
 			if (firstTimestamp == -1) {
