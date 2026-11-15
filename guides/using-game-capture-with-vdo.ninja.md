@@ -11,20 +11,17 @@ Game Capture offers hardware encoding and per-window audio for gameplay and app 
 * [Download Game Capture](https://vdo.ninja/gamecapture)
 * [Source code and releases](https://github.com/steveseguin/game-capture)
 
-## Good uses
-
-* Gameplay, esports and remote guests sending one program window.
-* Spout2 output from VTube Studio, Warudo, VSeeFace, VNyan and similar avatar apps.
-* Transparent VTuber or graphics feeds for a browser, OBS Browser Source, or the Ninja OBS Plugin.
-* Shows or recordings where browser screen sharing is not consistent enough.
+For a game or app window, follow the basic steps below. For a transparent avatar, go to [Spout2 setup](#publish-a-spout2-source), then choose [Browser](#browser-or-obs-browser-source) or [Ninja OBS Plugin](#ninja-obs-plugin) playback.
 
 ## Basic workflow
 
-1. On the computer that will publish, open Game Capture.
-2. Select the game, app or window to capture, and its audio.
-3. Enter a Stream ID or a full VDO.Ninja URL, plus the room and password if you use them.
-4. Go live.
-5. Add the matching view, solo or scene link to OBS or your production system.
+1. Open Game Capture on the computer running the game or app.
+2. Select the game or window and check its preview. Choose the audio you want to send.
+3. In **Stream / URL**, paste the VDO.Ninja link supplied by your director, or enter your own unique stream ID. Add the password if supplied.
+4. Select **GO LIVE**, then **Copy Link**. Send this viewer link to the receiving computer.
+5. On that computer, open the link in a browser. For OBS, select **Sources > + > Browser**, paste it into **URL**, enable **Control audio via OBS**, and select **OK**.
+
+**Check:** move the game or app window and play some sound. The receiving picture should move and the OBS audio meter should respond.
 
 ## Publish a Spout2 source
 
@@ -48,17 +45,17 @@ The source app must send an alpha channel through Spout2. Capturing its window o
 Use [Game Capture 0.2.68 or later](https://github.com/steveseguin/game-capture/releases/latest) on Windows.
 
 1. Stop streaming and capture before changing the alpha mode.
-2. Select **H.264 (Compatibility)**.
+2. Enable **Show advanced settings**. Under **Video Codec**, select **H.264 (Compatibility)**.
 3. Set **Alpha Playback** to **Browser / OBS Browser Source (H.264)**.
 4. Turn on **Enable browser alpha (H.264)**. Selecting the playback mode alone does not enable it.
-5. Start capture and go live. Copy the generated viewer link.
+5. Start capture and select **GO LIVE**, then **Copy Link**.
 6. Change the viewer link's base to `https://vdo.ninja/alpha/`, keeping everything from `?` onward. Add `&transparent` and open it in Chrome or an OBS **Browser Source**.
 
 For example, `https://vdo.ninja/?view=YOUR_ID&password=YOUR_PASSWORD` becomes:
 
 `https://vdo.ninja/alpha/?view=YOUR_ID&password=YOUR_PASSWORD&transparent`
 
-Keep your own stream ID, password, and any other query parameters. In OBS, put another source below the Browser Source to see through the transparent areas.
+Keep your own stream ID, password, and any other query parameters. In OBS, add a **Color Source** or another picture and drag it below the Browser Source in the Sources list. You should see it through the transparent areas, without a black box around the avatar.
 
 Start at **1280x720, 30 fps**. Browser alpha supports even output dimensions up to **1920x1080 at 60 fps**. Clear custom FFmpeg options for this mode. Hardware H.264 encoding is supported; allow extra bitrate because the stream carries both color and transparency.
 

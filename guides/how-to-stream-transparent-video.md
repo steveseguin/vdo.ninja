@@ -16,11 +16,13 @@ Use [Game Capture 0.2.68 or later](https://github.com/steveseguin/game-capture/r
 
 ### Browser or OBS Browser Source
 
-1. Select **H.264 (Compatibility)**.
+1. Stop streaming and capture if they are running. Enable **Show advanced settings** and set **Video Codec** to **H.264 (Compatibility)**.
 2. Set **Alpha Playback** to **Browser / OBS Browser Source (H.264)** and turn on **Enable browser alpha (H.264)**.
-3. Go live and copy the generated viewer link.
+3. Select **GO LIVE**, then **Copy Link**. Send this link to the receiving computer.
 4. Change its base to `https://vdo.ninja/alpha/`, preserving the full query after `?`, and add `&transparent`.
-5. Open that link in Chrome or add it as an OBS **Browser Source**. In OBS, place another source below it to see through the transparent areas.
+5. In OBS on the receiving computer, select **Sources > + > Browser**, paste the link into **URL**, and select **OK**. You can also open the link in Chrome.
+
+**Check in OBS:** add a **Color Source** and drag it below the Browser Source. Its color should show through the transparent areas, without a black box around the avatar.
 
 For example:
 

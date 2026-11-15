@@ -6,9 +6,28 @@ description: Use the Ninja OBS Plugin to publish from OBS to VDO.Ninja, receive 
 
 The Ninja OBS Plugin adds VDO.Ninja publishing and receiving to OBS Studio, so you manage fewer separate browser tabs.
 
-* [https://steveseguin.github.io/ninja-obs-plugin/](https://steveseguin.github.io/ninja-obs-plugin/)
+* [Install the Ninja OBS Plugin](https://github.com/steveseguin/ninja-obs-plugin/blob/main/INSTALL.md)
 
 Download the release package that matches your installed OBS version. Builds for different OBS versions are not interchangeable.
+
+## Receive a stream in OBS
+
+1. Install the plugin and restart OBS.
+2. Ask the sender to start their VDO.Ninja stream and send you its stream ID and password, if used.
+3. In OBS, select **Sources > + > VDO.Ninja Source**.
+4. Enter the matching stream details and confirm the source settings.
+5. Check moving video and the OBS audio meter. Record a short sample and play it back.
+
+For a transparent Game Capture feed, follow the [native receiver setup](using-game-capture-with-vdo.ninja.md#ninja-obs-plugin). For an ordinary feed, start with the default source settings.
+
+## Publish your OBS scene
+
+1. Prepare the scene you want viewers to see.
+2. Open **Tools > VDO.Ninja Studio** and enter your stream ID, password, and room if needed.
+3. Select **Go Live**. This uses OBS's main streaming output.
+4. Open the matching VDO.Ninja viewer link on another device and check picture and sound.
+
+For the full publishing setup, see [Publish from OBS into VDO.Ninja](publish-from-obs-into-vdo.ninja.md).
 
 ## When to use it
 
@@ -20,7 +39,7 @@ Test it on the same computer, network and OBS scene you will use for the real se
 
 ## Publishing and receiving
 
-* **Publishing** uses OBS's streaming output (**Settings -> Stream**), so OBS cannot stream to another destination at the same time. **Tools -> VDO.Ninja Studio** holds the basic stream ID, password, room and **Go Live** controls.
+* **Publishing with Go Live** uses OBS's main streaming output (**Settings -> Stream**). **Tools -> VDO.Ninja Studio** holds the basic stream ID, password, room and **Go Live** controls.
 * **Receiving** uses the **VDO.Ninja Source**. By default it plays the feed through an internal browser source. **Use Native Receiver (Experimental)** switches to a native VP9/H.264/Opus receiver. For transparent [Game Capture](using-game-capture-with-vdo.ninja.md) feeds, match this with Game Capture's **Alpha Playback -> OBS native receiver** mode.
 * **Auto Manage Inbound Streams** can add incoming room feeds to a scene as sources.
 

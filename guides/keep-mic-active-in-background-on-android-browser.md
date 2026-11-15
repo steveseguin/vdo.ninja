@@ -1,54 +1,36 @@
 ---
-description: How to Keep VDO.Ninja Microphone Active in Background on Android
+description: Keep an Android microphone feed running while using another app, with native-app and Samsung browser steps.
 ---
 
-# Keep Mic Active in Background on Android Browser
+# Keep a microphone active in the background on Android
 
-This guide will show you how to keep your microphone active for VDO.Ninja even when your Android browser is running in the background. This is particularly useful for audio-only applications where you need to multitask while continuing to use the microphone.
+Use this when you want to keep talking while switching to another app or turning off the screen. Check the sound on the receiving computer before relying on it for a show.
 
-### Prerequisites
+## Start with the VDO.Ninja app
 
-* An Android device (tested on Galaxy Z Fold 6 with the latest Android version)
-* A browser with VDO.Ninja open and running
+1. Open the [VDO.Ninja native app](../steves-helper-apps/native-mobile-app.md) and choose **MICROPHONE ONLY**.
+2. Select your microphone, tap **START STREAM**, and allow microphone access.
+3. Open the app's viewer link on another device. Use headphones there to avoid feedback.
+4. Speak, switch to another app on the phone, and keep speaking. Then try turning the screen off.
 
-### Steps
+**Check:** the receiving device should continue to play your voice. Android's microphone indicator shows that the mic is in use; it does not confirm that sound reaches the viewer.
 
-1. Open your Android home screen.
-2. Tap the vertical hamburger menu (three vertical lines) at the bottom of the screen.
-   * This will display small versions of your recently used apps.
-3. Swipe left or right to find your browser app where VDO.Ninja is running.
-4. Locate the browser app icon at the top middle of the app preview.
-5. Tap on the browser app icon.
-   * A menu with 5 options will appear.
-6. Choose "Keep open" from the menu.
-   * You should see a lock icon appear on the bottom right of the app preview.
-7. Your browser will now stay running in the background.
-8. Open VDO.Ninja in your browser if you haven't already.
-9. Start your VDO.Ninja session as usual.
-10. You can now switch to other apps, and the microphone will remain active for VDO.Ninja.
+## If you use a Samsung browser
 
-### Verifying Microphone Activity
+On Galaxy phones that offer **Keep open**, this setting can help prevent Android from closing the browser:
 
-* Look for a green dot at the top right edge of your screen, next to the battery icon.
-* This green dot indicates that your microphone is active and listening.
+1. Start your VDO.Ninja microphone session in the browser.
+2. Open **Recent apps** using the navigation button, or swipe up and hold if you use gestures.
+3. Find the browser's preview and tap the **app icon above it**.
+4. Choose **Keep open** if it appears.
+5. Switch away from the browser and check your voice on the receiving device.
 
-### Important Notes
+See [Samsung's Recent apps instructions](https://www.samsung.com/us/support/answer/ANS10001359/) for the device controls. The menu varies by model. This setting does not override microphone permissions or guarantee background capture.
 
-* This setting survives device reboots, but you'll need to press the start button on VDO.Ninja to reactivate the connection after a reboot.
-* The "Keep open" setting will remain active for your browser until you manually turn it off.
-* This method is equivalent to setting the mic to "allow always," which is no longer available due to security concerns.
+## If audio stops
 
-### Compatibility
+1. Return to VDO.Ninja and confirm the microphone is selected and unmuted.
+2. In Android's settings for that app, check microphone permission and battery/background restrictions. Menu names vary by phone.
+3. Repeat the receiving-device check with the screen off and with the other app you plan to use.
 
-This method has been tested on a Galaxy Z Fold 6 with the most current version of Android. Results may vary on other devices or Android versions
-
-### Additional notes for Users
-
-* **Troubleshooting**: If you experience issues with the microphone cutting out:
-  * Ensure your browser app and Android OS is up to date
-  * Check if any power-saving modes are interfering with the background process
-  * Try clearing the browser cache and restarting the app
-* **App Permissions**: Regularly check your browser's app permissions to ensure microphone access hasn't been revoked by system updates or other changes.
-* **Alternative Browsers**: If you're having trouble with your default browser, try using a different one. Some users report better results with specific browsers like Chrome or Firefox.
-* **Notification Importance**: Consider setting your browser app's notifications to "High" importance in your Android settings. This may help prevent the system from closing the app in low-memory situations.
-* **Native app:** For a background microphone feed, start with **MICROPHONE ONLY** in the [VDO.Ninja app](../steves-helper-apps/native-mobile-app.md). Allow background operation in Android and test with the screen off; battery and permission settings can still interrupt capture.
+If the phone still stops capture, keep VDO.Ninja in the foreground with the screen on. Lower the screen brightness if needed. Restart the session after restarting the phone.

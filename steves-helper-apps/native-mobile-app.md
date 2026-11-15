@@ -12,23 +12,30 @@ Menus depend on the installed version, device, and capture mode. If an option is
 
 ## Quick start
 
-1. Open the app and choose a capture mode, such as **BACK CAMERA**, **SCREEN**, **USB CAMERA**, or **MICROPHONE ONLY**.
-2. Enter a **Stream ID** for a stable push/view link, or leave it blank to have the app generate one.
-3. Enter a **Room name** if the selected mode supports rooms and you want to join a director session. For native iOS screen sharing, use the generated viewer link instead.
-4. Enter a **Password** if the room or stream is password protected.
-5. Select the microphone. If you plug in USB audio after opening the screen, tap **Refresh Mics**.
-6. Tap the connect button and accept the permissions that Android or iOS requests.
-7. Copy the app's viewing link into an OBS **Browser Source** or open it in another browser. In OBS, enable **Control audio via OBS** and check picture and sound.
+### On the phone
 
-<figure><img src="../.gitbook/assets/vdo-native-app/phone-publishing-settings.png" alt="VDO.Ninja native app publishing settings with stream ID, room name, password, microphone, and quality controls" width="360"><figcaption><p>Publishing Settings is where you choose the VDO.Ninja stream, room, microphone, quality mode, and advanced options.</p></figcaption></figure>
+1. Choose **BACK CAMERA** or **FRONT CAMERA**. For screen sharing or a USB camera, use the matching section below.
+2. Leave **Stream ID**, **Room name**, and **Password** blank for a first try. Select your microphone; tap **Refresh Mics** if a newly connected USB microphone is missing.
+3. Tap **START STREAM** (**CONNECT** in older versions) and allow camera and microphone access.
+4. Copy the **Viewer Link** and send it to the computer that will receive the feed. If the link is hidden, open the information button (**Info & Tips**) and tap **Copy Link**.
 
-| Fill in | Use it for | Open on the receiving side |
-| --- | --- | --- |
-| **Stream ID** `mycamera` | A phone camera for OBS, vMix, or a browser | `https://vdo.ninja/?view=mycamera` |
-| **Room name** `myroom` | A room where a director manages guests, scenes, layouts, and recording | `https://vdo.ninja/?director=myroom` |
-| Both: `widecam` in `myroom` | A room participant with a predictable source ID, for fixed camera positions and event templates | `https://vdo.ninja/?director=myroom` |
+<figure><img src="../.gitbook/assets/vdo-native-app/phone-publishing-settings.png" alt="Phone publishing settings with optional stream ID, room, password, and microphone controls" width="360"><figcaption><p>Older layout shown with an example Stream ID. For a first camera stream, leave that field blank and select your microphone.</p></figcaption></figure>
 
-The native iOS ReplayKit screen-sharing publisher does not join rooms. A room name does not turn its direct screen-share feed into a room participant. Use the viewer link shown by the app for that mode.
+### On the receiving computer
+
+1. Open the viewer link in a browser, or in OBS select **Sources > + > Browser**.
+2. In OBS, paste the link into **URL**, enable **Control audio via OBS**, and select **OK**.
+3. Move and speak in front of the phone. Check that the received picture moves and the OBS audio meter responds.
+
+Keep the complete viewer link, including any password or server settings. For Zoom, Meet, or Teams, continue with [the phone-as-webcam guide](../getting-started/mobile-phone-camera-into-webcam.md).
+
+### Optional: use a room or a fixed stream ID
+
+* **Joining a director's room:** enter the room name and password they supplied before starting.
+* **Reusing the same camera link:** choose your own **Stream ID** before starting. Copy the resulting viewer link from the app.
+* **A fixed camera within a room:** fill in both the stream ID and room name.
+
+Native iPhone/iPad screen sharing uses the app-generated viewer link and does not join rooms. Follow the [screen-sharing steps](#screen-sharing) for that mode.
 
 ## Capture modes
 

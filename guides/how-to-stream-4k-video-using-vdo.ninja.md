@@ -1,72 +1,57 @@
 ---
-description: Stream 4K video with VDO.Ninja by setting custom resolution, bitrate, and CPU-aware quality settings.
+description: Set up a 4K browser camera feed, choose a viewing bitrate, and check the received picture.
 ---
 
 # How to stream 4K video using VDO.Ninja
 
-{% hint style="warning" %}
-Sending a 4K video feed with VDO.Ninja is very CPU intensive. Be prepared to use all of 8 real cpu cores (not threads).
-{% endhint %}
+You need a camera that offers 3840x2160 to the browser, an encoder that can keep up, and enough upload bandwidth. A camera's ability to record 4K locally does not guarantee 4K browser streaming.
 
-## How VDO.Ninja handles video quality
-
-VDO.Ninja has 3 predefined [`&quality`](../advanced-settings/video-parameters/and-quality.md) levels:
-
-* `&quality=0` targets 1080p (1920x1080).
-* `&quality=1` targets 720p (1280x720).
-* `&quality=2` targets 360p (640x360).
-* also there's `&quality=-1` , which will use the device's default resolution, but this could be anything, low or high, so it's a niche option.
-
-If `&quality` is omitted, VDO.Ninja chooses an initial tier based on the device and whether it is joining a room. Frame rate is device- and browser-dependent unless you set [`&fps`](../advanced-settings/video-parameters/and-fps.md) or [`&maxframerate`](../source-settings/and-maxframerate.md).
-
-By “trying”, I mean that if the resolution is not available, VDO.Ninja defaults to another resolution that the camera supports instead. This way, no errors are thrown and a compatible stream is sent, even if it’s not exactly what you might have desired.
-
-VDO.Ninja is however capable of doing higher resolutions and custom resolutions however; you just need to manually specify the resolution you want. When you manually specify a resolution, if it doesn’t work, an error is thrown.
-
-While I could make a selectable option for 4K in the user interface, another problem with 4K is that it requires a LOT of CPU power to encode. Most users will always select the highest resolution allowed, not understanding that it might actually be a bad idea. Maxing out your CPU can actually result in worse quality with lower frame rates than selecting a lower, safer, resolution.
+Start with one camera and one viewer. If playback stutters or the device gets hot, use 1080p instead.
 
 ## Pushing 4K resolution
 
-![4k comparison chart with lesser resolutions](../.gitbook/assets/4KComparison)
+1. On the sending computer, open a VDO.Ninja camera link with `&width=3840&height=2160` added.
+2. Select the 4K camera and microphone, then start the stream.
+3. On the receiving computer, open the matching viewer link with `&scale=100&videobitrate=20000` added.
+4. Check moving video and sound. Make a short recording in your receiving application and play it back.
 
-That all said, you can give “4K” a go by adding [`&width=3840`](../source-settings/and-width.md)[`&height=2160`](../source-settings/and-height.md) to the invite link.
+Replace `YOUR_ID` with your own unique stream ID in both links:
 
-For example then, [https://vdo.ninja/?push=inviteGuest123\&width=3840\&height=2160](https://vdo.ninja/?push=inviteGuest123\&width=3840\&height=2160)
+**Sender:** `https://vdo.ninja/?push=YOUR_ID&width=3840&height=2160`
 
-If the guest does not support 4K, this will give an error to the guest, stating that the video device is over-constrained.&#x20;
+**Viewer:** `https://vdo.ninja/?view=YOUR_ID&scale=100&videobitrate=20000`
 
-The available frame rate depends on the camera, capture type, browser, and encoder. If you strictly specify a frame rate that the source cannot provide, capture may fail; use `&maxframerate` when fallback is acceptable.
+Keep any password and other settings from your original links. These URL settings apply to browser capture, not the native mobile app's camera settings.
 
-### Smartphones
-
-If streaming from a smartphone, not all phones can do 4K; my old LG V30 I believe could do 4K30 via [VDO.Ninja](https://vdo.ninja), but my Pixel 4a seems stuck at 1080p30. As well, an iPhone 11 might only be able to 1080p30, an iPhone 12 might be able to do 1080p60, while an iPhone 15 might be able to do 4K30. It might depend on the iOS version, where older iOS versions are pretty limited, so things will change overtime.
-
-A common question I also get is that a certain phone can record 4K60 in the native phone app, so why not also in VDO.Ninja? Well, just because you can record to disk at 4K does not mean the manufacture has added support for 4K streaming via the browser. It requires additional development, nor is it always possible if the hardware encoder used does not support the advanced requirements of WebRTC.
-
-Samsung devices can sometimes use the built in Samsung Internet browser instead of Chrome to get access to higher resolutions and frame rates; 1080p60 for example with new flagship devices. Sometimes changing cameras or video codecs can allow for higher resolutions as well.
-
-The [VDO.Ninja native app](../steves-helper-apps/native-mobile-app.md) offers additional lens choices, camera controls, and Android USB camera input. Select from the cameras the app lists and use its [capture quality settings](improving-quality-of-the-native-app.md). More lens choices do not guarantee 4K capture; browser URL settings above do not configure the native camera.
+![4K compared with lower video resolutions](../.gitbook/assets/4KComparison)
 
 ## What about the bitrate?
 
-Next, while you might have selected 4K, with the exception of static video screen shares, you cannot transfer 4K video with the default video bitrates set. For action, you will need closer to 40-mbps video bitrates set on the viewer’s end. For talking head videos, you will want over 10-mbps and possibly even more. Without a high enough bitrate set, the video will not stream at 4K and more than likely not maintain 60-fps.
+`videobitrate=20000` requests **20 Mbps** of video. Treat it as a starting point, not a guaranteed requirement or result. Fast motion can need more bandwidth; text or a still scene can need less.
 
-To set a target bitrate add [`&videobitrate=20000`](../advanced-settings/video-bitrate-parameters/bitrate.md) for 20-mbps for example. This goes on the viewer link.
+Raise the target only if the sender has spare upload capacity and playback remains stable. Each direct viewer adds upload traffic. See [bitrate and quality settings](how-do-i-control-bitrate-quality.md).
 
 ## Scaling
 
-You may need to add [`&scale=100`](../advanced-settings/view-parameters/scale.md) to the view link to have the video stream at 4K, if the playback window is smaller than 4K. VDO.Ninja by default resizes incoming videos to fit the playback area, and [`&scale=100`](../advanced-settings/view-parameters/scale.md) overrides that, requesting 100% of the available resolution; so unscaled if possible.
+`&scale=100` asks the sender to keep full resolution even when the viewing window is small. Network or encoder limits can still reduce the received resolution or frame rate.
 
 ### Codec
 
-A bit like bitrate and scaling, changing the video codec can sometimes help with achieving 4K video. [`&codec=av1`](../advanced-settings/view-parameters/codec.md#av1) can help if the bandwidth is limited, as it is more efficient than other codecs. [`&codec=vp8`](../advanced-settings/view-parameters/codec.md#vp8) is universal, while [`&codec=h264`](../advanced-settings/view-parameters/codec.md#h264) can often trigger the hardware encoder to be used. Using a hardware encoder can help reduce CPU load, allowing for 4K if the system would otherwise be CPU-bottlenecked.
+Start with the default codec. If the sender cannot keep up, try [`&codec=h264`](../advanced-settings/view-parameters/codec.md#h264) on the viewer link to request H.264. Hardware acceleration depends on the device and browser.
 
-Normally you shouldn't need to change codecs, but sometimes it does make a difference.
+### Smartphones
+
+Use the [VDO.Ninja native app](../steves-helper-apps/native-mobile-app.md) for its camera choices and controls. Choose a supported quality mode in [Publishing Settings](improving-quality-of-the-native-app.md). More lens choices do not guarantee 4K capture.
+
+For browser capture, try the links above. If the camera cannot provide 4K, use a lower resolution. The phone's built-in camera app may have access to modes that its browser does not.
 
 ## Performance issues
 
-As a result, to successfully stream 4K video, you generally need a computer system with 8 real CPU cores or more, running at 3.6GHz or higher. A modern AMD 3900X-series CPU or Intel 9900K CPU are ideal for this task, but a quad-core laptop will not be. You might be able to get away with lesser bitrates and lesser CPU requirements if just screen-sharing text, but it still is not for the faint of heart.
+* **Camera will not start or says "over-constrained":** the requested capture mode is unavailable. Try `&width=1920&height=1080` on the sender.
+* **Picture is sharp when still but breaks up in motion:** check upload capacity and the viewer's bitrate setting.
+* **Frame rate drops or the device gets hot:** lower resolution or frame rate and close unused viewers. See [overheating](../common-errors-and-known-issues/overheating.md).
+* **The received picture is smaller than 4K:** keep `&scale=100` on the viewer and check network and encoder load.
 
-Lastly, macOS users may find that 4K is simply not possible or very difficult. If you do manage to get it working, it might only operate at 5-fps or so. I don’t quite know why this is, but if you intend on sharing 4K video, you might be better off using a Windows PC. It seems to perform better.
+## How VDO.Ninja handles video quality
 
-We've successfully streamed 4K50 over 5G cellular Internet at 65-mbps using a MacBook Air M1 and VDO.Ninja.
+For lower-resolution browser capture, [`&quality`](../advanced-settings/video-parameters/and-quality.md) offers presets: `0` targets 1080p, `1` targets 720p, and `2` targets 360p. Explicit width and height request a specific capture size; unsupported sizes can prevent capture from starting.

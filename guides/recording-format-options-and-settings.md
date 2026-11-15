@@ -7,7 +7,17 @@ description: >-
 
 # Recording Format Options and Settings
 
-VDO.Ninja can record streams directly in the browser using the MediaRecorder API. This guide covers the recording-related URL parameters, codec and container format options, and the important differences between browsers and platforms.
+Use this page to choose a recording method, then look up format settings if you need them.
+
+## Make your first recording
+
+1. Open the VDO.Ninja viewer link in a desktop browser and confirm picture and sound.
+2. Right-click the video and choose **Record to disk**.
+3. Make a short recording, stop it, and play the saved file. Check sound, motion, and whether your editor can open it before recording a full session.
+
+For a finished OBS scene with overlays, use OBS's **Start Recording** instead. For a copy saved on the phone, use [native app recording](#native-iosandroid-app-recording).
+
+The sections below are a reference for changing recording quality, formats, and automation. Leave them at their defaults for your first try.
 
 ***
 
@@ -100,14 +110,7 @@ A useful workflow is to use [https://vdo.ninja/codecs](https://vdo.ninja/codecs)
 
 Unsupported choices fall back to a browser-supported format. Check the saved file to see which format was used.
 
-### How VDO.Ninja selects the codec internally
-
-1. If `&recordcodec` is set, it checks if the browser supports that codec via `MediaRecorder.isTypeSupported()`
-2. If supported, it uses it
-3. If not supported, it falls back to a browser-supported format
-4. On iOS/Safari, if WebM is unsupported, it falls back to MP4. `&recordcodec=mp4` requests MP4 directly where supported.
-
-> If you are getting recording errors, try `&recordcodec=vp8` — it is the most widely supported codec and avoids incompatible hardware encoder issues.
+If a requested codec is unavailable, VDO.Ninja falls back to a supported format. Check the saved file rather than assuming its format from the URL.
 
 ***
 

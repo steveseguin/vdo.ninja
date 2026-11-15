@@ -1,7 +1,6 @@
 ---
 description: >-
-  Keeps all incoming videos oriented (rotated) so that the aspect ratio is
-  always above 1
+  Rotate incoming portrait video for a landscape scene.
 ---
 
 # \&forceviewerlandscape (alpha)
@@ -12,17 +11,19 @@ Viewer-Side Option! ([`&scene`](../view-parameters/scene.md), [`&room`](../../ge
 
 Example: `&forceviewerlandscape=90`
 
-<table><thead><tr><th width="294">Value</th><th>Description</th></tr></thead><tbody><tr><td>(value in degrees)</td><td>value, how much the video is rotated in degree</td></tr><tr><td>(no value given)</td><td><code>270</code></td></tr><tr><td><code>180</code></td><td>locked upside down</td></tr></tbody></table>
+* **No value:** rotate a portrait feed by 270 degrees.
+* **`90`:** rotate a portrait feed the other way.
+* **`180`:** turn a portrait feed upside down. This does not make it landscape.
+
+Try `90` or the default `270` and keep the one that puts your camera picture the right way up.
 
 ## Details
 
-`&forceviewerlandscape` keeps all **incoming** videos oriented (rotated) so that the [aspect ratio](../video-parameters/and-aspectratio.md) is always above 1, so effectively, forces landscape mode.
+With the default value or `90`, `&forceviewerlandscape` rotates incoming portrait video into landscape. Video that is already landscape stays unchanged.
 
 ie: [https://vdo.ninja/?forceviewerlandscape\&view=xxx](https://vdo.ninja/?forceviewerlandscape\&view=xxx)
 
 Use this viewer option when an incoming feed rotates to portrait but your scene needs landscape. Check the sender's orientation and capture settings first; forcing the viewer orientation does not change the camera capture.
-
-The parameter can take a value, the default is `270`, which is how much the video is rotated. You might want to also use `90`, or in the case you want it to be locked upside down, you can technically pass `180` I guess?
 
 ## Related
 

@@ -1,74 +1,67 @@
 ---
-description: Troubleshooting guide for no audio in VDO.Ninja, OBS browser sources, Windows playback, sample-rate issues, and mobile audio workflows.
+description: Find where audio stops: at the microphone, in the browser, or in OBS.
 ---
 
 # Audio over VDO.Ninja isn't working
 
-If VDO.Ninja audio is not playing in OBS, a browser source, Windows, or a direct browser-to-browser test, the most common causes are OBS browser-source settings, invalid Windows sample-rate settings, wrong output device selection, or mobile and USB audio limitations. This page covers the most common fixes.
+Start at the microphone, then check the receiving device. Speak while checking the meters so you can see where the sound stops.
+
+1. **On the sender:** select the intended microphone and make sure it is unmuted. Its audio indicator should move when you speak.
+2. **In a receiving browser:** open the viewer link, click the page if playback needs permission, and check the computer's volume and output device.
+3. **In OBS:** use the steps below. A moving OBS meter means audio is reaching OBS, even when you cannot hear it in your headphones.
 
 ### OBS isn't set to capture audio
 
-If using OBS for audio playback, be sure that you select "Control Audio via OBS" in the browser source to capture the audio. You won't be able to hear the audio by default this way, but OBS should show the audio level meters moving, signifying the audio is being captured.
+1. Double-click the VDO.Ninja Browser Source in the **Sources** list.
+2. Enable **Control audio via OBS** and select **OK**.
+3. Speak into the sending microphone and watch the source's meter in OBS's **Audio Mixer**. Make sure it is unmuted.
+4. Make a short OBS recording and play it back to check the recorded sound.
 
-<figure><img src="../.gitbook/assets/image (1) (1) (1) (1) (1) (1) (1).png" alt=""><figcaption></figcaption></figure>
+<figure><img src="../.gitbook/assets/image (1) (1) (1) (1) (1) (1) (1).png" alt="OBS Browser Source properties with Control audio via OBS highlighted"><figcaption><p>Enable this checkbox in the Browser Source properties.</p></figcaption></figure>
 
-### OBS may be having a max buffer issue
-
-Restarting the computer or OBS can sometimes resolve issues where OBS stops capturing audio via browser sources or sometimes other audio soures.
-
-Some users report that the audio may sound distorted or out of sync as well, but often there may be no audio at all.\
-\
-Starting OBS in adminstirator mode, if using Windows, may help. Reducing the CPU load on your computer may also also help.
-
-### Sample rates or invalid audio settings
-
-If however you are testing VDO.Ninja and audio isn't working at all, from browser to browser, yet you see your mic-level loudness green indicator moving in VDO.Ninja as you speak, double check your Windows audio settings. In particular, high sample rates, like 384-khz sample rates, 32-bit depth audio playback, or other professional audio device settings in Windows may cause problems with audio playback.
-
-<figure><img src="../.gitbook/assets/image (4) (9).png" alt=""><figcaption></figcaption></figure>
-
-To avoid issues, set your audio playback devices (specifically to the audio playback device) to 24-bit or 16-bit audio, with an audio sample rate of 48,000-hz, or as close to it as possible. If you mic-source isn't working, also check to make sure your microphone is 16 or 24-bit capture mode, and isn't in ASIO mode.
-
-Surround sound or multi-channel audio, for both the microphone and audio playback devices, can cause audio problems with the browser. Disable surround sound, limiting audio playback to stereo 2.0 channels, and try again.
-
-If using a remote virtual desktop, such as a server-hosted version of Windows, be sure the Windows audio service is enabled; you might be able to turn this on via `services.msc` , accessible via the `Windows Key + R` run prompt.
-
-Also check that the default audio device in Windows is as expected and that any select audio output device in VDO.Ninja is pointed to the right location. Bluetooth devices may sometimes be problematic, especially on mobile, so try to avoid Bluetooth if possible.
-
-In some cases, adding `&noap` to the URL for the sender or/and reciever of the audio may help, as this will disable web-audio node processing in VDO.Ninja, which may fail when using invalid sample rates of an overly stressed CPU.
-
-### Not all playback devices support audio
-
-Some media devices, like the Magewell Director Mini, may not support audio via VDO.Ninja, and only video. Please also ensure the video is playing, as some devices may pause a media track until there is a user-gesture, which would prevent audio from playing in cases.
-
-### Echo cancellation
-
-Sometimes if there is background audio being captured, the system will remove that audio thinking it is an echo of feedback. If this background audio contains your microphone audio, your microphone audio may be removed. You can disable echo cancellation in this case, or resolve the core issue.
-
-{% content-ref url="echo-or-feedback-issues.md" %}
-[echo-or-feedback-issues.md](echo-or-feedback-issues.md)
-{% endcontent-ref %}
+To hear the source locally, open **Advanced Audio Properties** from the mixer and choose **Monitor and Output** for that source. Use headphones to avoid feedback.
 
 ### External USB / Lightning audio
 
-If using an external audio device on mobile, like via USB, it's suggested to use a TRRS audio input adapter, with the your microphone connected to that.
+On a phone, start with the [VDO.Ninja native app](../steves-helper-apps/native-mobile-app.md#usb-audio):
 
-[https://www.youtube.com/watch?v=BBus\_S8iJUE](https://www.youtube.com/watch?v=BBus_S8iJUE\&feature=youtu.be)\
-\
-If on Android, using Firefox might work well without the need of TRRS however.
+1. Connect the microphone before opening Publishing Settings.
+2. Select it in the microphone list. Tap **Refresh Mics** if a newly connected device is missing.
+3. Start the stream and check the receiving audio. If the device is still missing, try a compatible adapter or powered hub.
+
+On iPhone or iPad, reopen Publishing Settings after connecting the microphone so the app sees the new audio route.
 
 ### If using the native mobile app
 
-The native app can share app audio as well as microphone narration:
+For screen-share audio:
 
 * **Android 10+:** enable **Capture System Audio** before starting **SCREEN**. The captured app must allow audio capture.
 * **iPhone or iPad:** check the separate app-audio and microphone mutes. For narration, also enable the microphone in Apple's broadcast controls.
 
 Protected content may block capture. See the [screen-sharing steps](../steves-helper-apps/native-mobile-app.md#screen-sharing).
 
+### Sample rates or invalid audio settings
+
+If the sender's meter moves but a Windows computer cannot play the feed:
+
+1. Check the selected speaker or headphones in Windows and in VDO.Ninja.
+2. Open the device's sound properties. Try **48,000 Hz**, **16-bit or 24-bit**, and stereo playback if those options are available.
+3. Reopen the viewer and try again. If you use Bluetooth, compare with wired headphones.
+
+<figure><img src="../.gitbook/assets/image (4) (9).png" alt="Windows sound device Advanced tab showing 24-bit, 48000 Hz" width="360"><figcaption><p>Example Windows playback format. The available choices depend on the device.</p></figcaption></figure>
+
+### OBS may be having a max buffer issue
+
+If audio worked and then stopped or became distorted, finish any active recording or broadcast before restarting OBS. Close unnecessary sources and apps, then check again.
+
+### Echo cancellation
+
+Echo cancellation can remove sound that it mistakes for feedback. Try headphones first. For music or a mixer feed, compare the audio-processing settings and see [echo or feedback fixes](echo-or-feedback-issues.md).
+
+### Not all playback devices support audio
+
+If a dedicated player shows video without sound, compare the same viewer link in a desktop browser. Check that player's audio and browser-source support before changing the sender.
+
 ### Guests can't hear each other in a room
 
-If you're a director and specific guests can't hear each other, the P2P connection between them may have failed. Use the Mesh Network Debug tool to visualize connections and patch failed ones.
-
-{% content-ref url="../guides/mesh-network-debug.md" %}
-[mesh-network-debug.md](../guides/mesh-network-debug.md)
-{% endcontent-ref %}
+If only some guest-to-guest connections are silent, use the director's [Guest Audio Recovery and Mesh Debug guide](../guides/mesh-network-debug.md).
