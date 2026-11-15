@@ -19,7 +19,7 @@ The Ninja OBS Plugin adds native VDO.Ninja publishing and receiving tools to OBS
 * open-source plugin
 * support for OBS v32 systems, including Windows, macOS, and Linux
 * can auto-add room participants into OBS as browser sources
-* experimental native VP9/H.264/Opus receiver with dual-track VP9 alpha support
+* experimental native VP9/H.264/Opus receiver with a separate VP9 transparency mask
 * automatic paced video NACK repair, with optional packet duplication, Audio RED, and REMB adaptation for advanced loss testing
 
 ## Packet-loss protection
@@ -42,20 +42,22 @@ H.264 ULPFEC is not offered, see [Advanced packet-loss recovery and resilient me
 
 ## Receive transparent Game Capture video
 
-The tested transparent workflow uses a Spout2 avatar or graphics source in [Game Capture](game-capture.md), VDO.Ninja for transport, and the plugin's native receiver in OBS:
+Use a Spout2 avatar or graphics source that supplies an alpha channel in [Game Capture](game-capture.md):
 
 1. In Game Capture, choose **Spout2 (avatar apps)** and select the sender.
-2. Choose **VP9 (OBS Alpha Preview, auto fallback)** and enable the alpha workflow.
+2. Set **Alpha Playback** to **OBS native receiver**, choose H.264 or **VP9 (OBS Alpha Preview, auto fallback)**, and enable the alpha workflow.
 3. Publish with a stream ID or room workflow.
 4. In OBS, add a **VDO.Ninja Source**, enter the matching stream details, and enable **Use Native Receiver (Experimental)**.
 
-OBS Browser Sources and normal browser viewers receive the standard color track but do not composite the separate alpha track. If software VP9 is too CPU-heavy, use Game Capture's H.264/NVENC **Chroma background** workflow and apply a chroma-key filter in OBS instead.
+This native mode sends H.264 or VP9 color video with a separate VP9 transparency mask. Its browser viewers receive only the color video.
+
+For transparency in an ordinary OBS **Browser Source** or Chrome, choose Game Capture's H.264 **Browser** alpha mode instead and use the VDO.Ninja `/alpha/` viewer. Follow the [browser alpha setup](../guides/using-game-capture-with-vdo.ninja.md#browser-or-obs-browser-source).
 
 See [Using Game Capture and Spout2 with VDO.Ninja](../guides/using-game-capture-with-vdo.ninja.md) for the complete sender setup and troubleshooting flow.
 
 ## Notes
 
 * positioned as a simpler publishing workflow than relying on a separate browser publisher
-* useful for non-Windows users who want an OBS-native publishing workflow, since the standalone Game Capture app is currently Windows-only
-* **Use Native Receiver (Experimental)** is required for the dual-track VP9 alpha workflow
+* useful for Windows, macOS, and Linux users who want to publish from OBS
+* **Use Native Receiver (Experimental)** is required for Game Capture's **OBS native receiver** alpha mode
 * packet protection is applied per direct viewer, so its upload cost grows with P2P fan-out

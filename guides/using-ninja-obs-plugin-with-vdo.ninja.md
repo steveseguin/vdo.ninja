@@ -21,8 +21,10 @@ Test it on the same computer, network and OBS scene you will use for the real se
 ## Publishing and receiving
 
 * **Publishing** uses OBS's streaming output (**Settings -> Stream**), so OBS cannot stream to another destination at the same time. **Tools -> VDO.Ninja Studio** holds the basic stream ID, password, room and **Go Live** controls.
-* **Receiving** uses the **VDO.Ninja Source**. By default it plays the feed through an internal browser source. **Use Native Receiver (Experimental)** switches to a native VP9/H.264/Opus receiver, which is also required for transparent VP9 alpha from [Game Capture](using-game-capture-with-vdo.ninja.md).
+* **Receiving** uses the **VDO.Ninja Source**. By default it plays the feed through an internal browser source. **Use Native Receiver (Experimental)** switches to a native VP9/H.264/Opus receiver. For transparent [Game Capture](using-game-capture-with-vdo.ninja.md) feeds, match this with Game Capture's **Alpha Playback -> OBS native receiver** mode.
 * **Auto Manage Inbound Streams** can add incoming room feeds to a scene as sources.
+
+Game Capture also supports transparency in an ordinary OBS **Browser Source**, using H.264 and its separate **Browser** alpha mode. Follow the [browser alpha setup](using-game-capture-with-vdo.ninja.md#browser-or-obs-browser-source) for that path.
 
 ## Loss-protection settings
 

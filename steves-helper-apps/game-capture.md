@@ -4,7 +4,7 @@ description: Windows game, window, and Spout2 capture app for VDO.Ninja with VTu
 
 # Game Capture for VDO.Ninja
 
-Game Capture is a standalone Windows app for sending a game, app window, esports feed, or local Spout2 source directly into VDO.Ninja without relying on a browser engine in the capture application itself. It is designed for high-performance capture workflows where hardware encoding, window-specific audio, transparent VTuber avatars, and simple guest-side publishing matter.
+Game Capture sends a game, app window, camera, or Spout2 source directly into VDO.Ninja. It includes hardware encoding, window audio capture, and transparent video for avatars and graphics. Windows is the stable release; an Apple Silicon Mac beta has fewer features.
 
 ## Link
 
@@ -46,11 +46,14 @@ On Windows, Game Capture can receive Spout2 video from avatar and graphics apps 
 
 Spout2 is video-only. Game Capture defaults these sources to **No audio**; select an output mix, microphone, or additional microphone separately if needed.
 
-## Transparent Spout2 video in OBS
+## Transparent Spout2 video in browsers and OBS
 
-For true transparency, choose **VP9 (OBS Alpha Preview, auto fallback)** and enable the alpha workflow. Receive the stream with the [Ninja OBS Plugin](ninja-obs-plugin.md), add a **VDO.Ninja Source**, and enable **Use Native Receiver (Experimental)**. OBS Browser Sources and normal browser viewers do not composite the separate alpha track.
+Game Capture 0.2.68 adds H.264 browser alpha. The source app must supply transparent pixels through Spout2. Choose the playback mode for your receiver:
 
-VP9 alpha encodes both color and alpha video in software. Start with 1080p30 or 720p60 if 1080p60 drops frames. For a lighter hardware-encoded path, use H.264/NVENC with **Alpha Background → Chroma background**, then apply a chroma-key filter at the receiver.
+* **Browser or OBS Browser Source:** select H.264, set **Alpha Playback** to **Browser / OBS Browser Source (H.264)**, and enable browser alpha. Use the generated viewer link with the `https://vdo.ninja/alpha/` base, preserve its query parameters, and add `&transparent`.
+* **Ninja OBS Plugin:** set **Alpha Playback** to **OBS native receiver**, select H.264 or VP9, and enable alpha. In the plugin's **VDO.Ninja Source**, enable **Use Native Receiver (Experimental)**.
+
+Start at 720p30, then raise the resolution or frame rate after checking playback. Stop streaming and capture before changing alpha modes.
 
 If a sender is listed but displays black, configure Game Capture and the sender app to use the same GPU in Windows Graphics settings.
 
@@ -64,8 +67,8 @@ The latest installer, portable app, and ZIP package are linked from:
 
 ## Notes
 
-* Windows-only at this time
+* Spout2 capture is Windows-only
 * for macOS or Linux users already using OBS, the [Ninja OBS Plugin](ninja-obs-plugin.md) supports OBS v32 systems
 * intended for esports, game capture, and other high-performance capture cases
 * capture and encoder settings are locked while streaming, so stop the stream first before changing advanced capture settings
-* if you need the broadest compatibility for non-OBS viewers, leave the alpha/transparency workflow disabled
+* for receivers without alpha support, use H.264 with alpha off, or choose **Chroma background** and remove the color at the receiver

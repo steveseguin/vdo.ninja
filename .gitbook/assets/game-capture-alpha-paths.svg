@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="720" height="520" viewBox="0 0 720 520" role="img" aria-labelledby="title desc">
+  <title id="title">Two ways to receive transparent Game Capture video</title>
+  <desc id="desc">A Spout2 source supplies transparency to Game Capture. Choose Browser playback for Chrome or OBS Browser Source, or OBS native receiver for the Ninja OBS Plugin.</desc>
+  <rect width="720" height="520" rx="16" fill="#f5f7fb"/>
+  <g font-family="Arial, sans-serif" text-anchor="middle">
+    <rect x="40" y="24" width="640" height="82" rx="12" fill="#fff" stroke="#bcc8da" stroke-width="2"/>
+    <text x="360" y="58" font-size="28" font-weight="bold" fill="#17253b">Spout2 source</text>
+    <text x="360" y="88" font-size="23" fill="#46556c">The source must send transparency</text>
+    <path d="M360 108v26m-8-8 8 8 8-8" fill="none" stroke="#46556c" stroke-width="3"/>
+    <rect x="40" y="146" width="640" height="62" rx="12" fill="#17253b"/>
+    <text x="360" y="186" font-size="28" font-weight="bold" fill="#fff">Game Capture: choose Alpha Playback</text>
+    <path d="M360 210v26m-8-8 8 8 8-8" fill="none" stroke="#46556c" stroke-width="3"/>
+    <rect x="40" y="248" width="640" height="112" rx="12" fill="#eaf3ff" stroke="#2463ac" stroke-width="2"/>
+    <text x="360" y="282" font-size="27" font-weight="bold" fill="#174d8c">Browser + H.264</text>
+    <text x="360" y="313" font-size="24" fill="#17253b">Chrome or OBS Browser Source</text>
+    <text x="360" y="342" font-size="23" fill="#174d8c">vdo.ninja/alpha/ viewer + &amp;transparent</text>
+    <text x="360" y="391" font-size="23" fill="#46556c">OR</text>
+    <rect x="40" y="410" width="640" height="86" rx="12" fill="#eaf6ee" stroke="#34754a" stroke-width="2"/>
+    <text x="360" y="444" font-size="27" font-weight="bold" fill="#245b36">OBS native receiver + H.264 or VP9</text>
+    <text x="360" y="477" font-size="24" fill="#17253b">Ninja OBS Plugin: Native Receiver on</text>
+  </g>
+</svg>

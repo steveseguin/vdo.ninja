@@ -14,6 +14,8 @@ General Option! ([`&push`](../../source-settings/push.md), [`&room`](../../gener
 
 Makes the background for the website transparent using CSS.
 
+This clears the page background; it does not remove a background from the video or create an alpha channel. For transparent Spout2 video from Game Capture, use its **Browser** alpha mode and a `https://vdo.ninja/alpha/` viewer link with `&transparent`. See the [transparent video guide](../../guides/how-to-stream-transparent-video.md).
+
 The browser source in OBS already has a transparent background by default.
 
 This is useful for embedding VDO.Ninja as an [IFRAME](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/iframe).\
