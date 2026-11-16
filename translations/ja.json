@@ -1,5 +1,7 @@
 {
   "innerHTML": {
+    "studio-director": "ディレクター",
+    "studio-director-return": "ディレクターリターン",
     "audio-compressor": "コンプレッサー：",
     "audio-compressor-off": "オフ",
     "audio-compressor-on": "オン",
@@ -429,6 +431,8 @@
     "statistics": "Statistics"
   },
   "titles": {
+    "studio-director-controls": "ディレクターコントロールを開いて OBS Virtual Camera を共有",
+    "studio-director-return": "新しいゲストリンクでは、他のゲストの代わりにディレクターの映像が表示されます。既存のゲストは、更新された招待リンクを開き直す必要があります。",
     "switch-this-guest-s-camera-and-microphone-between-direct-connections-and-meshcast": "このゲストのカメラとマイクを直接接続と Meshcast の間で切り替える",
     "mute-microphone-and-shared-audio-in-scene-outputs": "シーン出力でマイクと画面共有の音声をミュート",
     "mute-audio-in-scene-outputs": "シーン出力でマイクと画面共有の音声をミュート",

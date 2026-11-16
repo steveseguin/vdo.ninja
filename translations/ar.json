@@ -1,5 +1,7 @@
 {
   "innerHTML": {
+    "studio-director": "المخرج",
+    "studio-director-return": "فيديو المخرج الراجع",
     "audio-compressor": "ضاغط الصوت:",
     "audio-compressor-off": "إيقاف",
     "audio-compressor-on": "تشغيل",
@@ -429,6 +431,8 @@
     "statistics": "Statistics"
   },
   "titles": {
+    "studio-director-controls": "افتح عناصر تحكم المخرج لمشاركة OBS Virtual Camera",
+    "studio-director-return": "تعرض روابط الضيوف الجديدة فيديو المخرج بدلًا من الضيوف الآخرين. على الضيوف الحاليين إعادة فتح الدعوة المحدَّثة.",
     "switch-this-guest-s-camera-and-microphone-between-direct-connections-and-meshcast": "تبديل كاميرا هذا الضيف وميكروفونه بين الاتصالات المباشرة وMeshcast",
     "mute-microphone-and-shared-audio-in-scene-outputs": "كتم صوت الميكروفون والصوت المشترك في مخرجات المشاهد",
     "mute-audio-in-scene-outputs": "كتم صوت الميكروفون والصوت المشترك في مخرجات المشاهد",

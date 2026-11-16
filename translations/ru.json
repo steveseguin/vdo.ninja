@@ -1,5 +1,7 @@
 {
   "innerHTML": {
+    "studio-director": "Режиссёр",
+    "studio-director-return": "Возвратное видео режиссёра",
     "audio-compressor": "Компрессор:",
     "audio-compressor-off": "Выкл.",
     "audio-compressor-on": "Вкл.",
@@ -429,6 +431,8 @@
     "statistics": "Statistics"
   },
   "titles": {
+    "studio-director-controls": "Открыть управление режиссёра, чтобы поделиться OBS Virtual Camera",
+    "studio-director-return": "Новые ссылки для гостей показывают видео режиссёра вместо других гостей. Уже подключённым гостям нужно заново открыть обновлённое приглашение.",
     "switch-this-guest-s-camera-and-microphone-between-direct-connections-and-meshcast": "Переключить камеру и микрофон этого гостя между прямыми соединениями и Meshcast",
     "mute-microphone-and-shared-audio-in-scene-outputs": "Выключить микрофон и звук демонстрации экрана в выходных потоках сцен",
     "mute-audio-in-scene-outputs": "Выключить микрофон и звук демонстрации экрана в выходных потоках сцен",

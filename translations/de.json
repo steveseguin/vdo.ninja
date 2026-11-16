@@ -1,5 +1,7 @@
 {
   "innerHTML": {
+    "studio-director": "Gastgeber",
+    "studio-director-return": "Gastgeber-Rückbild",
     "audio-compressor": "Kompressor:",
     "audio-compressor-off": "Aus",
     "audio-compressor-on": "Ein",
@@ -429,6 +431,8 @@
     "statistics": "Statistics"
   },
   "titles": {
+    "studio-director-controls": "Gastgeber-Steuerung öffnen, um OBS Virtual Camera zu teilen",
+    "studio-director-return": "Neue Gast-Links zeigen das Video des Gastgebers statt der anderen Gäste. Bestehende Gäste müssen die aktualisierte Einladung erneut öffnen.",
     "switch-this-guest-s-camera-and-microphone-between-direct-connections-and-meshcast": "Kamera und Mikrofon dieses Gastes zwischen Direktverbindungen und Meshcast umschalten",
     "mute-microphone-and-shared-audio-in-scene-outputs": "Mikrofon und geteiltes Audio in Szenenausgaben stummschalten",
     "mute-audio-in-scene-outputs": "Mikrofon und geteiltes Audio in Szenenausgaben stummschalten",

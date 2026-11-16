@@ -1,5 +1,7 @@
 {
   "innerHTML": {
+    "studio-director": "导播",
+    "studio-director-return": "导播返送",
     "audio-compressor": "压缩器：",
     "audio-compressor-off": "关",
     "audio-compressor-on": "开",
@@ -429,6 +431,8 @@
     "statistics": "Statistics"
   },
   "titles": {
+    "studio-director-controls": "打开导播控制以共享 OBS Virtual Camera",
+    "studio-director-return": "新的嘉宾链接将显示导播的视频，而不是其他嘉宾。现有嘉宾必须重新打开更新后的邀请链接。",
     "switch-this-guest-s-camera-and-microphone-between-direct-connections-and-meshcast": "在直连和 Meshcast 之间切换此嘉宾的摄像头和麦克风",
     "mute-microphone-and-shared-audio-in-scene-outputs": "在场景输出中静音麦克风和屏幕共享音频",
     "mute-audio-in-scene-outputs": "在场景输出中静音麦克风和屏幕共享音频",
