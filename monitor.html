@@ -314,6 +314,7 @@
 				var previousResolution;
 
 				eventer(messageEvent, function (e) {
+					if (e.source != iframe.contentWindow){return} // reject messages send from other iframes
 					if ("remoteStats" in e.data) {
 						var out = "";
 						console.log(e.data);
