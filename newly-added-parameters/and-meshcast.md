@@ -22,11 +22,11 @@ Example: `&meshcast=video`
 
 ### Meshcast 2.0
 
-`&meshcast` now uses Meshcast 2.0 unless you give it a custom server address; use `&meshcast1` for the original Meshcast service. You can also use `&meshcast2` directly. This routes WHIP/WHEP through the new Meshcast 2.0 gateway and supports premium tokens or stream keys. If the token is invalid or out of slots, VDO.Ninja will fall back to the anonymous Meshcast 2.0 relay.
+On [VDO.Ninja alpha](https://vdo.ninja/alpha/), `&meshcast` selects Meshcast 2.0 unless you give it a custom server address. In v30.2, `&meshcast` selects the original service instead. On builds that support `&meshcast1`, use it to select the original service explicitly. Meshcast 2.0 uses WHIP/WHEP to publish and play streams.
 
-Example: `&meshcast2`
+For anonymous publishing, use `&meshcast2` without a value. For account publishing on alpha, use `&meshcast2=pk_...` with your private Publish Key.
 
-Example: `&meshcast2=mc_...` or `&meshcast2=live_...`
+On alpha, if your Publish Key is rejected or your account has no available stream slots, VDO.Ninja does not automatically switch to anonymous Meshcast. The v30.2 release could try anonymous mode after certain legacy-token errors. To try anonymous publishing instead, remove the key and use `&meshcast2` without a value.
 
 Adding `&meshcast` to a guest or director link will trigger the service, causing the outbound audio/video stream to be transferred to a hosted server, which then distributes the stream to all the viewers. This adds a bit of latency to the stream and reduces the theoretical privacy, but it implies the guest/director does not need to encode and upload multiple videos, lowering CPU load and bandwidth usage.
 
