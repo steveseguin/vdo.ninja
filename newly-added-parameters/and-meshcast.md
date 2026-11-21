@@ -26,7 +26,7 @@ On [VDO.Ninja alpha](https://vdo.ninja/alpha/), `&meshcast` selects Meshcast 2.0
 
 For anonymous publishing, use `&meshcast2` without a value. For account publishing on alpha, use `&meshcast2=pk_...` with your private Publish Key.
 
-If your key is rejected or your account has no available stream slots, VDO.Ninja does not automatically switch to anonymous Meshcast. To try anonymous publishing instead, remove the key and use `&meshcast2` without a value.
+On alpha, if your Publish Key is rejected or your account has no available stream slots, VDO.Ninja does not automatically switch to anonymous Meshcast. The v30.2 release could try anonymous mode after certain legacy-token errors. To try anonymous publishing instead, remove the key and use `&meshcast2` without a value.
 
 Adding `&meshcast` to a guest or director link will trigger the service, causing the outbound audio/video stream to be transferred to a hosted server, which then distributes the stream to all the viewers. This adds a bit of latency to the stream and reduces the theoretical privacy, but it implies the guest/director does not need to encode and upload multiple videos, lowering CPU load and bandwidth usage.
 
