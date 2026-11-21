@@ -3702,7 +3702,9 @@ video.packed-alpha-source-hidden {
 }
 .audio-compressor-mode select,
 .advancedAudioSettings .audio-compressor-mode select {
-	flex: 1 1 120px;
+	flex: 0 1 auto;
+	width: auto;
+	padding: 2px;
 	min-width: 0;
 	max-width: 100%;
 }
@@ -7494,8 +7496,17 @@ input[type='checkbox'], input[type='radio'] {
 #popupSelector .multiselect-contents label{
 	color: black;
 }
-#popupSelector select {
-	padding: 4px;
+#popupSelector select,
+#popupSelector input[type="number"],
+#popupSelector input[type="text"],
+#popupSelector .popupSelector_constraints button {
+	min-height: 32px;
+	padding: 4px 6px;
+	border-radius: 4px;
+	font-family: inherit;
+	font-size: 14px;
+	line-height: 20px;
+	vertical-align: middle;
 }
 .darktheme #popupSelector{
 	background-color: #0004;
@@ -7503,13 +7514,54 @@ input[type='checkbox'], input[type='radio'] {
 .popupSelector_constraints{
 	margin-top: 10px;
 }
-
-.popupSelector_constraints input[type='range'] {
+.popupSelector_constraints input[type="range"] {
 	margin-bottom: 10px;
 }
-
 #popupSelector_constraints_video > div, #popupSelector_constraints_audio > div {
 	padding: 10px 10px 10px 0;
+}
+#popupSelector .popupSelector_constraints {
+	font-size: 14px;
+	line-height: 20px;
+}
+
+#popupSelector .popupSelector_constraints > div {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	padding: 6px 0;
+}
+#popupSelector .popupSelector_constraints label {
+	margin: 2px 8px 2px 0;
+	max-width: 100%;
+}
+#popupSelector .popupSelector_constraints select,
+#popupSelector .popupSelector_constraints .manualInput,
+#popupSelector .popupSelector_constraints button {
+	flex: 0 1 auto;
+	width: auto;
+	max-width: 100%;
+	margin: 2px 8px 2px 0;
+}
+#popupSelector .popupSelector_constraints .manualInput {
+	width: 75px;
+}
+#popupSelector .popupSelector_constraints .audio-compressor-open {
+	flex: 0 0 auto;
+	margin-right: 0;
+}
+#popupSelector .popupSelector_constraints input[type="range"] {
+	flex-basis: 100%;
+	min-width: 0;
+	margin: 8px 0 2px;
+}
+@media (pointer: coarse) {
+	#popupSelector select,
+	#popupSelector input[type="number"],
+	#popupSelector input[type="text"],
+	#popupSelector .popupSelector_constraints button {
+		min-height: 40px;
+	}
 }
 #popupSelector_constraints_audio label {
 	color:white;

@@ -9,7 +9,7 @@ import {
   convertBlobToWav,
 } from '../core/index.js?v=20261018.1';
 import { AudioRecoveryWriter, listAudioRecoverySessions, loadRecoveryTrack, clearAudioRecoverySession } from './audio-recovery.js?v=1';
-import { IcecastPublisher, ICECAST_MIME_OPTIONS } from './icecast-publisher.js?v=4';
+import { IcecastPublisher, ICECAST_MIME_OPTIONS } from './icecast-publisher.js?v=5';
 import { guestLabelText } from '../core/legacy/label-text.js?v=2';
 
 const STUDIO_ROOT_ID = 'podcast-root';
@@ -98,7 +98,7 @@ function injectStylesheet() {
   const link = document.createElement('link');
   link.id = 'podcast-studio-style';
   link.rel = 'stylesheet';
-  link.href = new URL('./studio.css?v=21', import.meta.url).toString();
+  link.href = new URL('./studio.css?v=22', import.meta.url).toString();
   document.head.appendChild(link);
 }
 
@@ -113,6 +113,18 @@ function createElement(tag, className, attrs = {}) {
     }
     if (key === 'text') {
       el.textContent = value;
+    } else if (key === 'translate') {
+      setText(el, value);
+    } else if (key === 'title') {
+      setTitle(el, value);
+    } else if (key === 'placeholder') {
+      const placeholderKey = titleKey(value);
+      el.placeholder = translation && translation.placeholders && placeholderKey in translation.placeholders
+        ? translation.placeholders[placeholderKey]
+        : value;
+      el.dataset.placeholderKey = placeholderKey;
+    } else if (key === 'aria-label') {
+      el.setAttribute(key, tr(value));
     } else {
       el.setAttribute(key, value);
     }
@@ -120,12 +132,53 @@ function createElement(tag, className, attrs = {}) {
   return el;
 }
 
+// Studio text is keyed by its English wording, the same rule the main app uses
+// for title and placeholder keys (see translations/translate.js).
+function titleKey(text) {
+  return String(text).replace(/[\W]+/g, '-').toLowerCase();
+}
+
+function textKey(text) {
+  return 'podcast-' + titleKey(text);
+}
+
+// Point-in-time lookup, like getTranslation, but the fallback is the English text.
+// Use {name} placeholders for values.
+function tr(text, values) {
+  const key = textKey(text);
+  let result = text;
+  if (translation && translation.innerHTML && key in translation.innerHTML) {
+    result = translation.innerHTML[key];
+  }
+  if (values) {
+    Object.keys(values).forEach((name) => {
+      result = result.split('{' + name + '}').join(values[name]);
+    });
+  }
+  return result;
+}
+
+// For labels that never change: miniTranslate tags the node, so the main app
+// re-applies a language that finishes loading later.
+function setText(node, text) {
+  node.textContent = text;
+  if (text) {
+    miniTranslate(node, textKey(text), node.innerHTML);
+  }
+}
+
+function setTitle(node, text) {
+  const key = titleKey(text);
+  node.title = translation && translation.titles && key in translation.titles ? translation.titles[key] : text;
+  node.dataset.key = key;
+}
+
 function makeCollapsible(panel, title, storageKey = null) {
   panel.dataset.collapsible = 'true';
 
   // Add title h2 if provided and panel doesn't already have one
   if (title && !panel.querySelector('h2')) {
-    const h2 = createElement('h2', '', { text: title });
+    const h2 = createElement('h2', '', { translate: title });
     panel.insertBefore(h2, panel.firstChild);
   }
 
@@ -143,7 +196,7 @@ function makeCollapsible(panel, title, storageKey = null) {
   const updateState = () => {
     panel.dataset.collapsed = collapsed ? 'true' : 'false';
     toggle.textContent = collapsed ? '+' : '−';
-    toggle.title = collapsed ? 'Expand section' : 'Collapse section';
+    setTitle(toggle, collapsed ? 'Expand section' : 'Collapse section');
     if (storageKey) {
       try {
         localStorage.setItem(storageKey, collapsed ? 'true' : 'false');
@@ -585,24 +638,24 @@ function formatRelativeTime(timestamp) {
   }
   const deltaSeconds = Math.max(0, Math.round((Date.now() - timestamp) / 1000));
   if (deltaSeconds < 45) {
-    return 'just now';
+    return tr('just now');
   }
   if (deltaSeconds < 90) {
-    return 'about a minute ago';
+    return tr('about a minute ago');
   }
   if (deltaSeconds < 45 * 60) {
     const minutes = Math.round(deltaSeconds / 60);
-    return `${minutes} minute${minutes === 1 ? '' : 's'} ago`;
+    return minutes === 1 ? tr('1 minute ago') : tr('{count} minutes ago', { count: minutes });
   }
   if (deltaSeconds < 90 * 60) {
-    return 'about an hour ago';
+    return tr('about an hour ago');
   }
   if (deltaSeconds < 36 * 3600) {
     const hours = Math.round(deltaSeconds / 3600);
-    return `${hours} hour${hours === 1 ? '' : 's'} ago`;
+    return hours === 1 ? tr('1 hour ago') : tr('{count} hours ago', { count: hours });
   }
   const days = Math.round(deltaSeconds / 86400);
-  return `${days} day${days === 1 ? '' : 's'} ago`;
+  return days === 1 ? tr('1 day ago') : tr('{count} days ago', { count: days });
 }
 
 function createRecordingSessionId() {
@@ -863,16 +916,16 @@ function writeDiskRecordingState(state) {
 function openDiskHandleDatabase() {
   return new Promise((resolve, reject) => {
     if (!window.indexedDB) {
-      reject(new Error('IndexedDB unavailable'));
+      reject(new Error(tr('IndexedDB unavailable')));
       return;
     }
     const request = window.indexedDB.open(DISK_DB_NAME, 1);
     let blocked = false;
     request.onblocked = () => {
       blocked = true;
-      reject(new Error('Disk folder storage is blocked by another tab. Close that tab and retry.'));
+      reject(new Error(tr('Disk folder storage is blocked by another tab. Close that tab and retry.')));
     };
-    request.onerror = () => reject(request.error || new Error('Unable to open disk handle database'));
+    request.onerror = () => reject(request.error || new Error(tr('Unable to open disk handle database')));
     request.onupgradeneeded = () => {
       const db = request.result;
       if (!db.objectStoreNames.contains(DISK_DB_STORE)) {
@@ -902,7 +955,7 @@ async function saveDiskDirectoryHandle(handle) {
     };
     tx.onerror = tx.onabort = () => {
       db.close();
-      reject(tx.error || new Error('Unable to store disk handle'));
+      reject(tx.error || new Error(tr('Unable to store disk handle')));
     };
     tx.objectStore(DISK_DB_STORE).put(handle, 'primary');
   });
@@ -917,7 +970,7 @@ async function readDiskDirectoryHandle() {
     };
     tx.onerror = tx.onabort = () => {
       db.close();
-      reject(tx.error || new Error('Unable to read disk handle'));
+      reject(tx.error || new Error(tr('Unable to read disk handle')));
     };
     const request = tx.objectStore(DISK_DB_STORE).get('primary');
     request.onsuccess = () => resolve(request.result || null);
@@ -928,51 +981,51 @@ async function verifyStoredDiskRecordingDirectory({ requestPermission = false } 
   try {
     const handle = await readDiskDirectoryHandle();
     if (!handle) {
-      throw new Error('No folder selected yet.');
+      throw new Error(tr('No folder selected yet.'));
     }
     let permission = await handle.queryPermission({ mode: 'readwrite' });
     if (permission === 'prompt' && requestPermission) {
       permission = await handle.requestPermission({ mode: 'readwrite' });
     }
     if (permission !== 'granted') {
-      throw new Error('Access to the selected folder was denied.');
+      throw new Error(tr('Access to the selected folder was denied.'));
     }
     const meta = readDiskRecordingState();
     writeDiskRecordingState({
       ...meta,
       lastVerifiedAt: Date.now(),
-      folderName: meta.folderName || handle.name || 'Selected folder',
+      folderName: meta.folderName || handle.name || tr('Selected folder'),
       lastError: null,
     });
-    return { ok: true, folderName: meta.folderName || handle.name || 'Selected folder' };
+    return { ok: true, folderName: meta.folderName || handle.name || tr('Selected folder') };
   } catch (error) {
     console.warn('Failed to verify disk folder', error);
     const meta = readDiskRecordingState();
     writeDiskRecordingState({
       ...meta,
-      lastError: error?.message || 'Unable to verify folder access.',
+      lastError: error?.message || tr('Unable to verify folder access.'),
     });
-    return { ok: false, message: error?.message || 'Unable to verify folder access.' };
+    return { ok: false, message: error?.message || tr('Unable to verify folder access.') };
   }
 }
 
 async function chooseDiskRecordingDirectory() {
   if (typeof window.showDirectoryPicker !== 'function') {
-    throw new Error('This browser does not support the file-system directory picker yet.');
+    throw new Error(tr('This browser does not support the file-system directory picker yet.'));
   }
   const handle = await window.showDirectoryPicker({ mode: 'readwrite' });
   if (!handle) {
-    throw new Error('Folder selection was cancelled.');
+    throw new Error(tr('Folder selection was cancelled.'));
   }
   await saveDiskDirectoryHandle(handle);
   const meta = readDiskRecordingState();
   writeDiskRecordingState({
     ...meta,
-    folderName: handle.name || 'Recording folder',
+    folderName: handle.name || tr('Recording folder'),
     lastVerifiedAt: Date.now(),
     lastError: null,
   });
-  return { handle, folderName: handle.name || 'Recording folder' };
+  return { handle, folderName: handle.name || tr('Recording folder') };
 }
 
 function buildRoomGate(defaults = {}) {
@@ -980,18 +1033,18 @@ function buildRoomGate(defaults = {}) {
 
   const gate = createElement('div', '', { id: 'podcast-room-gate' });
   const panel = createElement('div', 'podcast-room-gate__panel');
-  const title = createElement('h1', 'podcast-room-gate__title', { text: 'Start a Control Room' });
+  const title = createElement('h1', 'podcast-room-gate__title', { translate: 'Start a Control Room' });
   const subtitle = createElement('p', 'podcast-room-gate__subtitle', {
-    text: 'Name your room to invite talent and capture their tracks. This matches the “&director=” link you share with guests.',
+    translate: 'Name your room to invite talent and capture their tracks. This matches the “&director=” link you share with guests.',
   });
 
   const form = createElement('form', 'podcast-room-gate__form');
   const roomLabel = createElement('label');
-  roomLabel.append(createElement('span', '', { text: 'Room name' }));
+  roomLabel.append(createElement('span', '', { translate: 'Room name' }));
   const roomInput = createElement('input');
   roomInput.name = 'room';
   roomInput.placeholder = defaults.roomPlaceholder || 'podcast-hq';
-  roomInput.title = 'This name becomes the room slug used in guest links.';
+  setTitle(roomInput, 'This name becomes the room slug used in guest links.');
   roomInput.autocomplete = 'off';
   roomInput.autocapitalize = 'off';
   roomInput.spellcheck = false;
@@ -1001,11 +1054,12 @@ function buildRoomGate(defaults = {}) {
   roomLabel.append(roomInput);
 
   const passwordLabel = createElement('label');
-  passwordLabel.append(createElement('span', '', { text: 'Room password (optional)' }));
-  const passwordInput = createElement('input');
+  passwordLabel.append(createElement('span', '', { translate: 'Room password (optional)' }));
+  const passwordInput = createElement('input', '', {
+    placeholder: 'Leave blank to skip',
+    title: 'Optional room password for guests and directors.',
+  });
   passwordInput.name = 'password';
-  passwordInput.placeholder = 'Leave blank to skip';
-  passwordInput.title = 'Optional room password for guests and directors.';
   passwordInput.type = 'text';
   passwordInput.autocomplete = 'off';
   passwordInput.autocapitalize = 'off';
@@ -1020,12 +1074,12 @@ function buildRoomGate(defaults = {}) {
   const actions = createElement('div', 'podcast-room-gate__actions');
   const cancelButton = createElement('button', 'podcast-room-gate__cancel', {
     type: 'button',
-    text: 'Back to classic',
+    translate: 'Back to classic',
     title: 'Return to the classic VDO.Ninja interface.',
   });
   const submitButton = createElement('button', 'podcast-room-gate__submit', {
     type: 'submit',
-    text: 'Enter studio',
+    translate: 'Enter studio',
     title: 'Enter the podcast studio for this room.',
   });
   actions.append(submitButton, cancelButton);
@@ -1082,7 +1136,7 @@ async function ensureRoomSelection() {
       event.preventDefault();
       const slug = sanitizeRoomSlug(gateElements.roomInput.value);
       if (!slug) {
-        gateElements.errorNode.textContent = 'Room name is required.';
+        gateElements.errorNode.textContent = tr('Room name is required.');
         return;
       }
       gateElements.errorNode.textContent = '';
@@ -1145,18 +1199,19 @@ function createPreflightRow(label, description, options = {}) {
   row.dataset.status = initialStatus;
 
   const info = createElement('div', 'preflight-row__info');
-  const labelNode = createElement('div', 'preflight-row__label', { text: label });
-  const descriptionNode = createElement('div', 'preflight-row__description', { text: description });
+  const labelNode = createElement('div', 'preflight-row__label', { translate: label });
+  const descriptionNode = createElement('div', 'preflight-row__description', { translate: description });
   const messageNode = createElement('div', 'preflight-row__message');
   info.append(labelNode, descriptionNode, messageNode);
 
   const controls = createElement('div', 'preflight-row__controls');
-  const statusNode = createElement('span', 'preflight-row__status', { text: describePreflightStatus(initialStatus) });
+  const statusNode = createElement('span', 'preflight-row__status', { translate: describePreflightStatus(initialStatus) });
   controls.append(statusNode);
 
   let actionButton = null;
   if (showAction) {
-    actionButton = createElement('button', 'preflight-row__action', { type: 'button', text: actionLabel, title: `Run: ${label}` });
+    actionButton = createElement('button', 'preflight-row__action', { type: 'button', translate: actionLabel });
+    actionButton.title = tr('Run: {name}', { name: tr(label) });
     controls.append(actionButton);
   }
 
@@ -1176,7 +1231,7 @@ function setPreflightRowState(rowParts, status, message = '') {
   }
   rowParts.row.dataset.status = status;
   if (rowParts.statusNode) {
-    rowParts.statusNode.textContent = describePreflightStatus(status);
+    setText(rowParts.statusNode, describePreflightStatus(status));
   }
   if (rowParts.messageNode) {
     rowParts.messageNode.textContent = message || '';
@@ -1188,13 +1243,13 @@ function setPreflightRowState(rowParts, status, message = '') {
       rowParts.actionButton.disabled = false;
     }
     if (status === 'ready') {
-      rowParts.actionButton.textContent = 'Retest';
+      setText(rowParts.actionButton, 'Retest');
     } else if (status === 'testing') {
-      rowParts.actionButton.textContent = 'Testing…';
+      setText(rowParts.actionButton, 'Testing…');
     } else if (status === 'error') {
-      rowParts.actionButton.textContent = 'Retry';
+      setText(rowParts.actionButton, 'Retry');
     } else {
-      rowParts.actionButton.textContent = rowParts.actionButton.dataset.initialLabel || 'Test';
+      setText(rowParts.actionButton, rowParts.actionButton.dataset.initialLabel || 'Test');
     }
   }
 }
@@ -1220,12 +1275,12 @@ async function runPreflightChecklist({ roomSlug } = {}) {
   panel.style.cssText = 'background:#1a1d24;padding:32px;border-radius:12px;color:#fff;max-width:480px;width:90%';
   panel.setAttribute('role', 'dialog');
   panel.setAttribute('aria-modal', 'true');
-  panel.setAttribute('aria-label', 'Podcast studio preflight checklist');
+  panel.setAttribute('aria-label', tr('Podcast studio preflight checklist'));
 
-  const heading = createElement('h2', 'preflight-title', { text: 'Check Your Setup' });
+  const heading = createElement('h2', 'preflight-title', { translate: 'Check Your Setup' });
   const subtitleText = roomSlug
-    ? `Confirm your gear before directing room “${roomSlug}”.`
-    : 'Confirm your gear before directing a session.';
+    ? tr('Confirm your gear before directing room “{room}”.', { room: roomSlug })
+    : tr('Confirm your gear before directing a session.');
   const subtitle = createElement('p', 'preflight-subtitle', { text: subtitleText });
 
   const checklist = createElement('div', 'preflight-list');
@@ -1237,7 +1292,7 @@ async function runPreflightChecklist({ roomSlug } = {}) {
     micRow.actionButton.dataset.initialLabel = micFresh ? 'Retest' : 'Test mic';
   }
   if (micFresh) {
-    setPreflightRowState(micRow, 'ready', `Last checked ${formatRelativeTime(stored.micSuccessAt)}.`);
+    setPreflightRowState(micRow, 'ready', tr('Last checked {time}.', { time: formatRelativeTime(stored.micSuccessAt) }));
   }
 
   const camRow = createPreflightRow('Camera access', 'Optional but useful if you plan to capture video.', {
@@ -1248,7 +1303,7 @@ async function runPreflightChecklist({ roomSlug } = {}) {
     camRow.actionButton.dataset.initialLabel = camFresh ? 'Retest' : 'Test camera';
   }
   if (camFresh) {
-    setPreflightRowState(camRow, 'ready', `Last checked ${formatRelativeTime(stored.cameraSuccessAt)}.`);
+    setPreflightRowState(camRow, 'ready', tr('Last checked {time}.', { time: formatRelativeTime(stored.cameraSuccessAt) }));
   }
 
   const diskRow = createPreflightRow(
@@ -1266,14 +1321,14 @@ async function runPreflightChecklist({ roomSlug } = {}) {
   setPreflightRowState(
     diskRow,
     window.showDirectoryPicker ? 'pending' : 'error',
-    window.showDirectoryPicker ? 'No folder selected yet.' : 'Local disk recording requires the File System Access API (Chromium-based browsers).'
+    window.showDirectoryPicker ? tr('No folder selected yet.') : tr('Local disk recording requires the File System Access API (Chromium-based browsers).')
   );
 
   checklist.append(micRow.row, camRow.row, diskRow.row);
 
   const actions = createElement('div', 'preflight-actions');
-  const continueButton = createElement('button', 'preflight-primary', { type: 'button', text: 'Enter Control Room', title: 'Enter the podcast studio.' });
-  const skipButton = createElement('button', 'preflight-secondary', { type: 'button', text: 'Skip preflight', title: 'Skip these checks and enter the studio.' });
+  const continueButton = createElement('button', 'preflight-primary', { type: 'button', translate: 'Enter Control Room', title: 'Enter the podcast studio.' });
+  const skipButton = createElement('button', 'preflight-secondary', { type: 'button', translate: 'Skip preflight', title: 'Skip these checks and enter the studio.' });
   actions.append(continueButton, skipButton);
 
   panel.append(heading, subtitle, checklist, actions);
@@ -1331,14 +1386,14 @@ async function runPreflightChecklist({ roomSlug } = {}) {
 
   function updateContinueState() {
     continueButton.disabled = !micOk;
-    continueButton.title = micOk ? '' : 'Run the microphone test to continue.';
+    setTitle(continueButton, micOk ? '' : 'Run the microphone test to continue.');
   }
 
   updateContinueState();
 
   async function runMediaTest(kind) {
     if (!navigator.mediaDevices || typeof navigator.mediaDevices.getUserMedia !== 'function') {
-      throw new Error('Browser does not support media tests.');
+      throw new Error(tr('Browser does not support media tests.'));
     }
     const constraints = kind === 'video' ? { video: true } : { audio: { echoCancellation: false } };
     const stream = await navigator.mediaDevices.getUserMedia(constraints);
@@ -1353,20 +1408,20 @@ async function runPreflightChecklist({ roomSlug } = {}) {
 
   if (micRow.actionButton) {
     micRow.actionButton.addEventListener('click', async () => {
-      setPreflightRowState(micRow, 'testing', 'Requesting microphone access…');
+      setPreflightRowState(micRow, 'testing', tr('Requesting microphone access…'));
       try {
         await runMediaTest('audio');
         micOk = true;
         const timestamp = Date.now();
         stored.micSuccessAt = timestamp;
-        setPreflightRowState(micRow, 'ready', 'Microphone ready to record.');
+        setPreflightRowState(micRow, 'ready', tr('Microphone ready to record.'));
       } catch (error) {
         console.error('Microphone check failed', error);
         micOk = false;
         setPreflightRowState(
           micRow,
           'error',
-          error?.message ? error.message : 'Unable to access microphone.'
+          error?.message ? error.message : tr('Unable to access microphone.')
         );
       }
       updateContinueState();
@@ -1376,13 +1431,13 @@ async function runPreflightChecklist({ roomSlug } = {}) {
 
   if (camRow.actionButton) {
     camRow.actionButton.addEventListener('click', async () => {
-      setPreflightRowState(camRow, 'testing', 'Requesting camera access…');
+      setPreflightRowState(camRow, 'testing', tr('Requesting camera access…'));
       try {
         await runMediaTest('video');
         camOk = true;
         const timestamp = Date.now();
         stored.cameraSuccessAt = timestamp;
-        setPreflightRowState(camRow, 'ready', 'Camera detected.');
+        setPreflightRowState(camRow, 'ready', tr('Camera detected.'));
         writePreflightState({ ...stored, cameraSuccessAt: timestamp, roomSlug });
       } catch (error) {
         console.error('Camera check failed', error);
@@ -1390,7 +1445,7 @@ async function runPreflightChecklist({ roomSlug } = {}) {
         setPreflightRowState(
           camRow,
           'error',
-          error?.message ? error.message : 'Unable to access camera.'
+          error?.message ? error.message : tr('Unable to access camera.')
         );
         writePreflightState({ ...stored, roomSlug });
       }
@@ -1403,7 +1458,7 @@ async function runPreflightChecklist({ roomSlug } = {}) {
       setPreflightRowState(
         diskRow,
         'error',
-        'Local disk recording requires a Chromium-based browser with the File System Access API.'
+        tr('Local disk recording requires a Chromium-based browser with the File System Access API.')
       );
       if (diskRow.actionButton) {
         diskRow.actionButton.disabled = true;
@@ -1414,13 +1469,13 @@ async function runPreflightChecklist({ roomSlug } = {}) {
     if (!diskState.folderName) {
       diskReady = false;
       if (diskRow.actionButton) {
-        diskRow.actionButton.textContent = 'Choose folder';
+        setText(diskRow.actionButton, 'Choose folder');
         diskRow.actionButton.disabled = false;
       }
-      setPreflightRowState(diskRow, 'pending', 'Pick a folder to enable local ISO recording.');
+      setPreflightRowState(diskRow, 'pending', tr('Pick a folder to enable local ISO recording.'));
       return;
     }
-    setPreflightRowState(diskRow, 'testing', 'Validating folder permissions…');
+    setPreflightRowState(diskRow, 'testing', tr('Validating folder permissions…'));
     let result;
     diskVerificationInProgress = true;
     try {
@@ -1432,18 +1487,18 @@ async function runPreflightChecklist({ roomSlug } = {}) {
       diskReady = true;
       const meta = readDiskRecordingState();
       if (diskRow.actionButton) {
-        diskRow.actionButton.textContent = 'Change folder';
+        setText(diskRow.actionButton, 'Change folder');
         diskRow.actionButton.disabled = false;
       }
-      const checked = meta.lastVerifiedAt ? `Last checked ${formatRelativeTime(meta.lastVerifiedAt)}.` : 'Ready to write.';
-      setPreflightRowState(diskRow, 'ready', `Folder: ${result.folderName}. ${checked}`);
+      const checked = meta.lastVerifiedAt ? tr('Last checked {time}.', { time: formatRelativeTime(meta.lastVerifiedAt) }) : tr('Ready to write.');
+      setPreflightRowState(diskRow, 'ready', tr('Folder: {name}.', { name: result.folderName }) + ' ' + checked);
     } else {
       diskReady = false;
       if (diskRow.actionButton) {
-        diskRow.actionButton.textContent = 'Choose folder';
+        setText(diskRow.actionButton, 'Choose folder');
         diskRow.actionButton.disabled = false;
       }
-      setPreflightRowState(diskRow, 'error', result.message || 'Unable to access the selected folder.');
+      setPreflightRowState(diskRow, 'error', result.message || tr('Unable to access the selected folder.'));
     }
   }
 
@@ -1461,15 +1516,15 @@ async function runPreflightChecklist({ roomSlug } = {}) {
         return;
       }
       try {
-        setPreflightRowState(diskRow, 'testing', 'Waiting for folder selection…');
+        setPreflightRowState(diskRow, 'testing', tr('Waiting for folder selection…'));
         await chooseDiskRecordingDirectory();
         await refreshDiskRowStatus({ interactive: true });
       } catch (error) {
         diskReady = false;
         const message =
           error?.name === 'AbortError' || /cancel/i.test(error?.message || '')
-            ? 'Folder selection cancelled.'
-            : error?.message || 'Unable to choose folder.';
+            ? tr('Folder selection cancelled.')
+            : error?.message || tr('Unable to choose folder.');
         setPreflightRowState(diskRow, 'error', message);
       }
     });
@@ -1477,7 +1532,7 @@ async function runPreflightChecklist({ roomSlug } = {}) {
 
   continueButton.addEventListener('click', () => {
     if (!micOk) {
-      setPreflightRowState(micRow, 'error', 'Microphone test is required before entering.');
+      setPreflightRowState(micRow, 'error', tr('Microphone test is required before entering.'));
       return;
     }
     closeOverlay({ completed: true });
@@ -1618,6 +1673,8 @@ class PodcastStudioApp {
     this.hostMicBusyAction = '';
     this.hostMicMuted = false;
     this.hostMuteButton = null;
+    this.hostScreenButton = null;
+    this.hostStreamShareActive = false;
     this.hostAudioPreferences = readHostAudioSettings();
     this.hostAudioUrlOverrides = {};
     this.hostAudioProfile = 'pro';
@@ -1708,7 +1765,7 @@ class PodcastStudioApp {
     this.captureModeSelect = null;
     this.recordingStatusNode = null;
     this.recordingStatusTimer = null;
-    this.recordingStatusBase = 'Idle';
+    this.recordingStatusBase = '';
     this.recordingStatusState = 'idle';
     this.recordTransitioning = false;
     this.recordingPlan = null;
@@ -1837,21 +1894,21 @@ class PodcastStudioApp {
   describeInviteOptions() {
     const labels = [];
     if (this.inviteOptionNodes.disableVideo?.checked) {
-      labels.push('Audio only');
+      labels.push(tr('Audio only'));
     } else {
-      labels.push('Video preview');
+      labels.push(tr('Video preview'));
     }
     if (this.inviteOptionNodes.proAudio?.checked) {
-      labels.push('Pro audio');
+      labels.push(tr('Pro audio'));
     }
     if (this.inviteOptionNodes.disableAec?.checked) {
-      labels.push('AEC off');
+      labels.push(tr('AEC off'));
     }
     if (this.inviteOptionNodes.disableDenoise?.checked) {
-      labels.push('Denoise off');
+      labels.push(tr('Denoise off'));
     }
     if (this.inviteOptionNodes.disableAgc?.checked) {
-      labels.push('AGC off');
+      labels.push(tr('AGC off'));
     }
     return labels.join(' • ');
   }
@@ -2020,14 +2077,14 @@ class PodcastStudioApp {
     const snapshot = this.getHostAudioSnapshot();
     const profile = this.detectHostAudioProfile(snapshot);
     const profileLabel = profile === 'pro'
-      ? 'Pro Audio'
+      ? tr('Pro Audio')
       : profile === 'voice'
-        ? 'Voice / speakers'
-        : 'Custom';
+        ? tr('Voice / speakers')
+        : tr('Custom');
     const bitrateLabel = snapshot.inboundBitrate === snapshot.outboundBitrate
-      ? `${snapshot.inboundBitrate || 'auto'} kbps`
-      : `${snapshot.inboundBitrate || 'auto'} in / ${snapshot.outboundBitrate || 'auto'} out`;
-    this.hostAudioSummaryNode.textContent = `${profileLabel} | ${snapshot.stereo ? 'stereo send' : 'mono send'} | ${bitrateLabel}`;
+      ? `${snapshot.inboundBitrate || tr('auto')} kbps`
+      : tr('{in} in / {out} out', { in: snapshot.inboundBitrate || tr('auto'), out: snapshot.outboundBitrate || tr('auto') });
+    this.hostAudioSummaryNode.textContent = `${profileLabel} | ${snapshot.stereo ? tr('stereo send') : tr('mono send')} | ${bitrateLabel}`;
     this.hostAudioSummaryNode.dataset.state = this.hostMic?.active ? 'active' : 'idle';
   }
 
@@ -2062,8 +2119,8 @@ class PodcastStudioApp {
           this.hostAudioBitrateSelect.append(customOption);
         }
         customOption.textContent = snapshot.inboundBitrate === snapshot.outboundBitrate
-          ? `Custom (${snapshot.inboundBitrate || 'auto'} kbps)`
-          : `Custom (${snapshot.inboundBitrate || 'auto'} / ${snapshot.outboundBitrate || 'auto'} kbps)`;
+          ? tr('Custom ({rate} kbps)', { rate: snapshot.inboundBitrate || tr('auto') })
+          : tr('Custom ({rate} kbps)', { rate: (snapshot.inboundBitrate || tr('auto')) + ' / ' + (snapshot.outboundBitrate || tr('auto')) });
         this.hostAudioBitrateSelect.value = 'custom';
       } else {
         customOption?.remove();
@@ -2074,7 +2131,7 @@ class PodcastStudioApp {
   }
 
   setHostAudioControlsDisabled(disabled) {
-    const controlsDisabled = Boolean(disabled || this.hostAudioDeviceRefreshBusy);
+    const controlsDisabled = Boolean(disabled || this.hostAudioDeviceRefreshBusy || this.isHostStreamShared());
     const controls = [
       this.hostAudioDeviceSelect,
       this.hostAudioProfileSelect,
@@ -2170,37 +2227,37 @@ class PodcastStudioApp {
       this.hostAudioDeviceSelect.textContent = '';
       this.hostAudioDeviceSelect.append(createElement('option', '', {
         value: '',
-        text: this.hostAudioDevices.length ? 'Choose a microphone' : 'No microphones found',
+        text: this.hostAudioDevices.length ? tr('Choose a microphone') : tr('No microphones found'),
       }));
       this.hostAudioDevices.forEach((device, index) => {
         this.hostAudioDeviceSelect.append(createElement('option', '', {
           value: device.deviceId,
-          text: device.label || `Microphone ${index + 1}`,
+          text: device.label || tr('Microphone {number}', { number: index + 1 }),
         }));
       });
       if (selected) {
         this.hostAudioDeviceId = selected.deviceId;
-        this.hostAudioDeviceLabel = selected.label || 'Microphone';
+        this.hostAudioDeviceLabel = selected.label || tr('Microphone');
         this.hostAudioDeviceSelect.value = selected.deviceId;
-        this.hostAudioDeviceSelect.title = this.hostAudioDeviceLabel;
+        setTitle(this.hostAudioDeviceSelect, this.hostAudioDeviceLabel);
         this.session.audioDevice = [selected.deviceId];
       } else {
         this.hostAudioDeviceId = '';
         this.hostAudioDeviceLabel = '';
         this.hostAudioDeviceSelect.value = '';
-        this.hostAudioDeviceSelect.title = 'Choose the microphone used by the Podcast Studio host input.';
+        setTitle(this.hostAudioDeviceSelect, 'Choose the microphone used by the Podcast Studio host input.');
       }
       if (permissionError) {
-        this.setHostMicError(permissionError.message || 'Microphone permission was not granted.');
+        this.setHostMicError(permissionError.message || tr('Microphone permission was not granted.'));
       }
     } catch (error) {
       console.warn('Unable to list host microphones', error);
       this.hostAudioDevices = [];
       this.hostAudioDeviceSelect.textContent = '';
       this.hostAudioDeviceSelect.append(
-        createElement('option', '', { value: '', text: 'Microphones unavailable' })
+        createElement('option', '', { value: '', translate: 'Microphones unavailable' })
       );
-      this.setHostMicError(error?.message || 'Unable to list microphones.');
+      this.setHostMicError(error?.message || tr('Unable to list microphones.'));
     } finally {
       this.hostAudioDeviceRefreshBusy = false;
       this.setHostAudioControlsDisabled(this.recording || this.hostMicBusy);
@@ -2244,16 +2301,16 @@ class PodcastStudioApp {
       }
       await new Promise((resolve) => setTimeout(resolve, 100));
     }
-    throw new Error(`Timed out switching to ${device?.label || 'the selected microphone'}.`);
+    throw new Error(tr('Timed out switching to {device}.', { device: device?.label || tr('the selected microphone') }));
   }
 
   async replaceActiveHostAudio(deviceId) {
     const device = this.hostAudioDevices.find((candidate) => candidate.deviceId === deviceId);
     if (!device) {
-      throw new Error('The selected microphone is no longer available.');
+      throw new Error(tr('The selected microphone is no longer available.'));
     }
     if (typeof window.changeAudioDeviceById !== 'function') {
-      throw new Error('Microphone switching is not available yet.');
+      throw new Error(tr('Microphone switching is not available yet.'));
     }
     const previousTrack = this.getPublishedHostMicStream()?.getAudioTracks?.()[0] || this.hostMic?.track;
     const previousTrackId = previousTrack?.id || '';
@@ -2269,7 +2326,7 @@ class PodcastStudioApp {
   }
 
   async handleHostAudioDeviceChange() {
-    if (!this.hostAudioDeviceSelect || this.recording || this.hostMicBusy) {
+    if (!this.hostAudioDeviceSelect || this.recording || this.hostMicBusy || this.isHostStreamShared()) {
       return;
     }
     const deviceId = this.hostAudioDeviceSelect.value;
@@ -2283,8 +2340,8 @@ class PodcastStudioApp {
       ? [...this.session.audioDevice]
       : this.session.audioDevice;
     this.hostAudioDeviceId = device.deviceId;
-    this.hostAudioDeviceLabel = device.label || 'Microphone';
-    this.hostAudioDeviceSelect.title = this.hostAudioDeviceLabel;
+    this.hostAudioDeviceLabel = device.label || tr('Microphone');
+    setTitle(this.hostAudioDeviceSelect, this.hostAudioDeviceLabel);
     this.session.audioDevice = [device.deviceId];
     this.saveHostAudioPreferences({ device: true });
     this.setHostMicError('');
@@ -2312,12 +2369,12 @@ class PodcastStudioApp {
         }
       }
       this.saveHostAudioPreferences({ device: true });
-      this.setHostMicError(error?.message || 'Unable to switch microphones.');
+      this.setHostMicError(error?.message || tr('Unable to switch microphones.'));
     } finally {
       this.hostMicBusy = false;
       this.hostMicBusyAction = '';
       this.hostAudioDeviceSelect.value = this.hostAudioDeviceId || '';
-      this.hostAudioDeviceSelect.title = this.hostAudioDeviceLabel || 'Choose the microphone used by the Podcast Studio host input.';
+      setTitle(this.hostAudioDeviceSelect, this.hostAudioDeviceLabel || 'Choose the microphone used by the Podcast Studio host input.');
       this.updateHostMicUI();
       this.refreshRoster();
     }
@@ -2341,7 +2398,7 @@ class PodcastStudioApp {
   }
 
   async commitHostAudioSettings(profile = 'custom') {
-    if (this.recording || this.hostMicBusy) {
+    if (this.recording || this.hostMicBusy || this.isHostStreamShared()) {
       this.syncHostAudioControlsFromSession();
       return;
     }
@@ -2358,7 +2415,7 @@ class PodcastStudioApp {
       return;
     }
     if (!this.hostAudioDeviceId) {
-      this.setHostMicError('Choose a microphone before applying live audio settings.');
+      this.setHostMicError(tr('Choose a microphone before applying live audio settings.'));
       return;
     }
     this.hostMicBusy = true;
@@ -2383,8 +2440,8 @@ class PodcastStudioApp {
           this.virtualParticipants.delete('host-mic');
         }
       }
-      const message = error?.message || 'Unable to apply audio settings.';
-      this.setHostMicError(restoreFailed ? `${message} Previous settings could not be restored.` : message);
+      const message = error?.message || tr('Unable to apply audio settings.');
+      this.setHostMicError(restoreFailed ? message + ' ' + tr('Previous settings could not be restored.') : message);
     } finally {
       this.hostMicBusy = false;
       this.hostMicBusyAction = '';
@@ -2398,7 +2455,7 @@ class PodcastStudioApp {
     }
     const room = this.resolveRoomName();
     if (!room) {
-      this.inviteLinkInput.value = 'Set a room name to generate a guest link';
+      this.inviteLinkInput.value = tr('Set a room name to generate a guest link');
       this.inviteLinkInput.dataset.state = 'placeholder';
       if (this.inviteCopyButton) {
         this.inviteCopyButton.disabled = true;
@@ -2449,23 +2506,23 @@ class PodcastStudioApp {
 
     const options = this.inviteOptionNodes || {};
     const summary = [];
-    summary.push('Label prompt');
-    summary.push('Name tag overlay');
-    summary.push('Join tips');
+    summary.push(tr('Label prompt'));
+    summary.push(tr('Name tag overlay'));
+    summary.push(tr('Join tips'));
 
     // Video is ON by default
     if (options.disableVideo?.checked) {
       params.set('miconly', '1');
-      summary.push('Audio only');
+      summary.push(tr('Audio only'));
     } else {
-      summary.push('Video enabled');
+      summary.push(tr('Video enabled'));
     }
 
     if (options.proAudio?.checked) {
       params.set('proaudio', '1');
       params.set('stereo', '1');
       params.set('audiobitrate', '256');
-      summary.push('Pro audio');
+      summary.push(tr('Pro audio'));
     } else {
       params.delete('proaudio');
       params.delete('stereo');
@@ -2475,7 +2532,7 @@ class PodcastStudioApp {
     if (options.disableAec?.checked) {
       params.set('aec', '0');
       params.set('echocancellation', '0');
-      summary.push('AEC off');
+      summary.push(tr('AEC off'));
     } else {
       params.delete('aec');
       params.delete('echocancellation');
@@ -2483,7 +2540,7 @@ class PodcastStudioApp {
 
     if (options.disableDenoise?.checked) {
       params.set('denoise', '0');
-      summary.push('Denoise off');
+      summary.push(tr('Denoise off'));
     } else {
       params.delete('denoise');
     }
@@ -2491,7 +2548,7 @@ class PodcastStudioApp {
     if (options.disableAgc?.checked) {
       params.set('agc', '0');
       params.set('autogain', '0');
-      summary.push('AGC off');
+      summary.push(tr('AGC off'));
     } else {
       params.delete('agc');
       params.delete('autogain');
@@ -2499,7 +2556,7 @@ class PodcastStudioApp {
 
     if (options.guestRecordBackup?.checked) {
       params.set('autorecordlocal', '0');
-      summary.push('Audio backup');
+      summary.push(tr('Audio backup'));
     } else {
       params.delete('autorecordlocal');
     }
@@ -2508,7 +2565,7 @@ class PodcastStudioApp {
     const value = guestUrl.toString();
     this.inviteLinkInput.value = value;
     if (this.inviteStatusNode) {
-      this.inviteStatusNode.textContent = summary.length ? summary.join(' • ') : 'Default settings';
+      this.inviteStatusNode.textContent = summary.length ? summary.join(' • ') : tr('Default settings');
     }
   }
 
@@ -2537,7 +2594,7 @@ class PodcastStudioApp {
     try {
       if (navigator.clipboard && typeof navigator.clipboard.writeText === 'function') {
         await navigator.clipboard.writeText(value);
-        notify('Guest link copied.', 'success');
+        notify(tr('Guest link copied.'), 'success');
         return;
       }
     } catch (error) {
@@ -2548,13 +2605,13 @@ class PodcastStudioApp {
       this.inviteLinkInput.select();
       const success = document.execCommand('copy');
       if (success) {
-        notify('Guest link copied.', 'success');
+        notify(tr('Guest link copied.'), 'success');
       } else {
-        notify('Select and copy the link manually.', 'warning');
+        notify(tr('Select and copy the link manually.'), 'warning');
       }
     } catch (error) {
       console.warn('Fallback copy failed', error);
-      notify('Select and copy the link manually.', 'warning');
+      notify(tr('Select and copy the link manually.'), 'warning');
     }
   }
 
@@ -2583,14 +2640,21 @@ class PodcastStudioApp {
     }
   }
 
+  // With &sstype=1 the share's own audio sits in the host stream next to the mic.
+  isScreenShareAudioTrack(track) {
+    const shareAudio = window.screenShareAudioTrack;
+    return Boolean(shareAudio && track && track.id === shareAudio.id);
+  }
+
   getPublishedHostMicStream() {
-    const candidates = [
-      this.session?.streamSrc || null,
-      this.session?.videoElement?.srcObject || null,
-    ];
+    const candidates = [this.session?.streamSrc || null];
+    if (!this.isHostStreamShared()) {
+      // During an sstype 1 share the preview element carries the mixed share audio, not a mic.
+      candidates.push(this.session?.videoElement?.srcObject || null);
+    }
     for (const stream of candidates) {
       const audioTracks = stream?.getAudioTracks?.() || [];
-      if (audioTracks.some((track) => track && track.readyState !== 'ended')) {
+      if (audioTracks.some((track) => track && track.readyState !== 'ended' && !this.isScreenShareAudioTrack(track))) {
         return stream;
       }
     }
@@ -2607,7 +2671,7 @@ class PodcastStudioApp {
       }
       await new Promise((resolve) => setTimeout(resolve, 100));
     }
-    throw new Error('Timed out waiting for the director microphone to publish.');
+    throw new Error(tr('Timed out waiting for the director microphone to publish.'));
   }
 
   ensureLegacyHostMicButton() {
@@ -2640,20 +2704,28 @@ class PodcastStudioApp {
       }
       await new Promise((resolve) => setTimeout(resolve, 100));
     }
-    throw new Error('Director microphone controls are not ready yet.');
+    throw new Error(tr('Director microphone controls are not ready yet.'));
   }
 
   stopLegacyHostMicTracks() {
     if (!this.session) {
       return;
     }
+    // A running sstype 1 share lives in these same streams. Leave its tracks and the mixed
+    // audio that carries it alone, and do not tell guests the host stream is gone.
+    const sharing = this.isHostStreamShared();
     const streams = [
       this.session.streamSrc || null,
       this.session.streamSrcClone || null,
-      this.session.videoElement?.srcObject || null,
     ];
+    if (!sharing) {
+      streams.push(this.session.videoElement?.srcObject || null);
+    }
     streams.forEach((stream) => {
       stream?.getTracks?.().forEach((track) => {
+        if (sharing && (track.kind === 'video' || this.isScreenShareAudioTrack(track))) {
+          return;
+        }
         try {
           stream.removeTrack?.(track);
           track.stop();
@@ -2662,10 +2734,12 @@ class PodcastStudioApp {
         }
       });
     });
-    try {
-      this.session.sendMessage?.({ videoMuted: true, virtualHangup: true });
-    } catch (error) {
-      console.warn('Failed to notify guests that host mic stopped', error);
+    if (!sharing) {
+      try {
+        this.session.sendMessage?.({ videoMuted: true, virtualHangup: true });
+      } catch (error) {
+        console.warn('Failed to notify guests that host mic stopped', error);
+      }
     }
     if (typeof window.pokeIframeAPI === 'function') {
       window.pokeIframeAPI('director-share', false, false, this.session.streamID);
@@ -2751,10 +2825,10 @@ class PodcastStudioApp {
     );
     if (activeDevice) {
       this.hostAudioDeviceId = activeDevice.deviceId;
-      this.hostAudioDeviceLabel = activeDevice.label || track.label || 'Microphone';
+      this.hostAudioDeviceLabel = activeDevice.label || track.label || tr('Microphone');
       if (this.hostAudioDeviceSelect) {
         this.hostAudioDeviceSelect.value = activeDevice.deviceId;
-        this.hostAudioDeviceSelect.title = this.hostAudioDeviceLabel;
+        setTitle(this.hostAudioDeviceSelect, this.hostAudioDeviceLabel);
       }
       this.session.audioDevice = [activeDevice.deviceId];
     }
@@ -2799,18 +2873,22 @@ class PodcastStudioApp {
 
   updateHostMicUI() {
     if (this.hostMicButton) {
-      if (this.hostMicBusy || this.recording) {
+      const shared = this.isHostStreamShared();
+      setTitle(this.hostMicButton, shared
+        ? 'Stop sharing your screen to change the host mic.'
+        : 'Toggle local host microphone capture (optional).');
+      if (this.hostMicBusy || this.recording || shared) {
         this.hostMicButton.disabled = true;
         const busyLabels = {
-          enable: 'Enabling...',
-          disable: 'Disabling...',
-          update: 'Updating...',
+          enable: tr('Enabling...'),
+          disable: tr('Disabling...'),
+          update: tr('Updating...'),
         };
-        const busyLabel = busyLabels[this.hostMicBusyAction] || 'Working...';
-        this.hostMicButton.textContent = this.recording ? 'Locked' : busyLabel;
+        const busyLabel = busyLabels[this.hostMicBusyAction] || tr('Working...');
+        this.hostMicButton.textContent = (this.recording || shared) ? tr('Locked') : busyLabel;
       } else {
         this.hostMicButton.disabled = false;
-        this.hostMicButton.textContent = this.hostMic?.active ? 'Disable' : 'Enable';
+        this.hostMicButton.textContent = this.hostMic?.active ? tr('Disable') : tr('Enable');
       }
       if (this.hostMic?.active) {
         this.hostMicButton.classList.add('active');
@@ -2820,10 +2898,10 @@ class PodcastStudioApp {
     }
     if (this.hostMicStatusNode) {
       if (this.hostMic?.active) {
-        this.hostMicStatusNode.textContent = 'Live';
+        this.hostMicStatusNode.textContent = tr('Live');
         this.hostMicStatusNode.dataset.state = 'active';
       } else {
-        this.hostMicStatusNode.textContent = 'Idle';
+        this.hostMicStatusNode.textContent = tr('Idle');
         this.hostMicStatusNode.dataset.state = 'idle';
       }
     }
@@ -2834,7 +2912,11 @@ class PodcastStudioApp {
 
   async handleHostMicToggle() {
     if (this.recording) {
-      this.setHostMicError('Stop the recording to change the host mic.');
+      this.setHostMicError(tr('Stop the recording to change the host mic.'));
+      return;
+    }
+    if (this.isHostStreamShared()) {
+      this.setHostMicError(tr('Stop sharing your screen to change the host mic.'));
       return;
     }
     if (this.hostMicBusy) {
@@ -2872,13 +2954,86 @@ class PodcastStudioApp {
     if (this.hostMuteButton) {
       if (this.hostMic?.active) {
         this.hostMuteButton.disabled = false;
-        this.hostMuteButton.textContent = this.hostMicMuted ? '🔇 Unmute' : '🔊 Mute';
+        this.hostMuteButton.textContent = this.hostMicMuted ? tr('🔇 Unmute') : tr('🔊 Mute');
         this.hostMuteButton.classList.toggle('muted', this.hostMicMuted);
       } else {
         this.hostMuteButton.disabled = true;
-        this.hostMuteButton.textContent = '🔊 Mute';
+        this.hostMuteButton.textContent = tr('🔊 Mute');
         this.hostMuteButton.classList.remove('muted');
       }
+    }
+  }
+
+  // With &sstype=1 the screen replaces the video in the host's own stream. The mic controls
+  // stop and restart that stream, so they stay locked while this kind of share is running.
+  isHostStreamShared() {
+    return Boolean(this.session && this.session.screenshareType === 1 && this.session.screenShareState);
+  }
+
+  // Why the host cannot share from the studio, or '' when sharing is available.
+  getHostScreenBlockReason() {
+    if (!navigator.mediaDevices || !navigator.mediaDevices.getDisplayMedia) {
+      return 'Screen sharing is not supported in this browser.';
+    }
+    if (this.session && this.session.screenshareType === 2) {
+      // sstype 2 shares from an iframe in the classic layout, which the studio hides.
+      return 'This screen-share mode (&sstype=2) is only available in the classic director interface.';
+    }
+    return '';
+  }
+
+  handleHostScreenToggle() {
+    // Same entry point as the classic director screen-share button (sstype 3 unless &sstype is set).
+    if (typeof window.screenshareTypeDecider !== 'function' || this.getHostScreenBlockReason()) {
+      return;
+    }
+    window.screenshareTypeDecider(3);
+    this.updateHostScreenUI();
+  }
+
+  updateHostScreenUI() {
+    if (!this.hostScreenButton) {
+      return;
+    }
+    const blockReason = this.getHostScreenBlockReason();
+    this.hostScreenButton.disabled = Boolean(blockReason);
+    setTitle(this.hostScreenButton, blockReason || 'Share your screen with the guests in this room.');
+    const sharing = Boolean(this.session && this.session.screenShareState);
+    this.hostScreenButton.textContent = sharing ? tr('Stop sharing') : tr('Share screen');
+    this.hostScreenButton.classList.toggle('active', sharing);
+    this.hostScreenButton.setAttribute('aria-pressed', sharing ? 'true' : 'false');
+    if (this.session && this.session.screenshareType === 1) {
+      this.updateHostMicUI();
+    }
+    // An sstype 1 share is the host's own stream, so guests are told it is back when one starts.
+    const streamShared = this.isHostStreamShared();
+    const shareEnded = this.hostStreamShareActive && !streamShared;
+    if (streamShared && !this.hostStreamShareActive) {
+      this.session.sendMessage({ virtualHangup: false });
+    }
+    this.hostStreamShareActive = streamShared;
+    if (!this.hostMicBusy) {
+      this.clearEndedHostStreamShare(shareEnded);
+    }
+  }
+
+  // An sstype 1 share that ends with the mic off leaves its mixed audio behind in the host
+  // stream. Clear it the way the mic controls do, so it is never taken for a live mic. This
+  // looks at what is left rather than at a start/stop it may not have seen: a share can begin
+  // and end between two roster refreshes, or be ended from the browser's own stop control.
+  clearEndedHostStreamShare(shareEnded = false) {
+    const session = this.session;
+    if (!session || session.screenshareType !== 1 || session.screenShareState) {
+      return;
+    }
+    if ((this.hostMic && this.hostMic.active) || session.directorEnabledPPT) {
+      return;
+    }
+    const streams = [session.streamSrc || null, session.videoElement?.srcObject || null];
+    const leftover = streams.some((stream) => stream && stream.getTracks().length > 0);
+    if (leftover || shareEnded) {
+      this.stopLegacyHostMicTracks();
+      this.ensureLegacyHostMicButton();
     }
   }
 
@@ -2903,6 +3058,7 @@ class PodcastStudioApp {
       if (this.hostAudioDeviceId) {
         this.session.audioDevice = [this.hostAudioDeviceId];
       }
+      this.clearEndedHostStreamShare();
       let stream = this.getPublishedHostMicStream();
       let track = stream?.getAudioTracks?.().find((candidate) => candidate && candidate.readyState !== 'ended') || null;
       if (!stream || !track) {
@@ -2911,7 +3067,7 @@ class PodcastStudioApp {
         }
         await this.waitForLegacyHostMicControl();
         if (typeof window.press2talk !== 'function') {
-          throw new Error('Director microphone publisher is unavailable.');
+          throw new Error(tr('Director microphone publisher is unavailable.'));
         }
         startedLegacyPublish = true;
         await window.press2talk(true);
@@ -2928,7 +3084,7 @@ class PodcastStudioApp {
       if (startedLegacyPublish) {
         this.cancelPendingLegacyHostMicPublish(publishGeneration);
       }
-      this.setHostMicError(error?.message || 'Unable to access microphone.');
+      this.setHostMicError(error?.message || tr('Unable to access microphone.'));
       this.hostMic = null;
       this.virtualParticipants.delete('host-mic');
       this.updateHostMicUI();
@@ -3004,23 +3160,23 @@ class PodcastStudioApp {
     }
 
     if (this.cloudLinkButtons.drive) {
-      this.cloudLinkButtons.drive.textContent = driveLinked ? 'Reconnect Drive' : 'Connect';
+      this.cloudLinkButtons.drive.textContent = driveLinked ? tr('Reconnect Drive') : tr('Connect');
       this.cloudLinkButtons.drive.disabled = Boolean(this.cloudBusy.drive) || this.recording;
       this.cloudLinkButtons.drive.dataset.state = driveLinked ? 'linked' : 'idle';
     }
     if (this.cloudLinkStatusNodes.drive) {
-      this.cloudLinkStatusNodes.drive.textContent = driveLinked ? 'Connected — guests upload directly' : 'Not connected';
+      this.cloudLinkStatusNodes.drive.textContent = driveLinked ? tr('Connected — guests upload directly') : tr('Not connected');
       this.cloudLinkStatusNodes.drive.dataset.state = driveLinked ? 'linked' : 'idle';
     }
 
 
     if (this.cloudLinkButtons.dropbox) {
-      this.cloudLinkButtons.dropbox.textContent = dropboxLinked ? 'Reconnect Dropbox' : 'Connect';
+      this.cloudLinkButtons.dropbox.textContent = dropboxLinked ? tr('Reconnect Dropbox') : tr('Connect');
       this.cloudLinkButtons.dropbox.disabled = Boolean(this.cloudBusy.dropbox) || this.recording;
       this.cloudLinkButtons.dropbox.dataset.state = dropboxLinked ? 'linked' : 'idle';
     }
     if (this.cloudLinkStatusNodes.dropbox) {
-      this.cloudLinkStatusNodes.dropbox.textContent = dropboxLinked ? 'Connected — uploads after recording' : 'Not connected';
+      this.cloudLinkStatusNodes.dropbox.textContent = dropboxLinked ? tr('Connected — uploads after recording') : tr('Not connected');
       this.cloudLinkStatusNodes.dropbox.dataset.state = dropboxLinked ? 'linked' : 'idle';
     }
     if (this.dropboxTokenInput) {
@@ -3065,7 +3221,7 @@ class PodcastStudioApp {
       return;
     }
     if (typeof window.showDirectoryPicker !== 'function') {
-      this.diskStatusNode.textContent = 'Local disk recording requires Chrome, Edge, or Arc.';
+      this.diskStatusNode.textContent = tr('Local disk recording requires Chrome, Edge, or Arc.');
       this.diskStatusNode.dataset.state = 'error';
       return;
     }
@@ -3075,7 +3231,7 @@ class PodcastStudioApp {
       await chooseDiskRecordingDirectory();
       const result = await verifyStoredDiskRecordingDirectory({ requestPermission: true });
       if (!result.ok) {
-        throw new Error(result.message || 'Failed');
+        throw new Error(result.message || tr('Failed'));
       }
       if (autoEnable || isDiskRecordingEnabled()) {
         setDiskRecordingEnabled(true);
@@ -3085,8 +3241,8 @@ class PodcastStudioApp {
       console.warn('Disk folder selection failed', error);
       this.diskStatusNode.textContent =
         error?.name === 'AbortError' || /cancel/i.test(error?.message || '')
-          ? 'Cancelled'
-          : error?.message || 'Error';
+          ? tr('Cancelled')
+          : error?.message || tr('Error');
       this.diskStatusNode.dataset.state = 'error';
     } finally {
       this.diskFolderButton.disabled = false;
@@ -3099,7 +3255,7 @@ class PodcastStudioApp {
       return;
     }
     if (typeof window.showDirectoryPicker !== 'function') {
-      this.diskStatusNode.textContent = 'Browser lacks File System Access API support.';
+      this.diskStatusNode.textContent = tr('Browser lacks File System Access API support.');
       this.diskStatusNode.dataset.state = 'error';
       return;
     }
@@ -3112,7 +3268,7 @@ class PodcastStudioApp {
     if (nextEnabled) {
       const result = await verifyStoredDiskRecordingDirectory({ requestPermission: true });
       if (!result.ok) {
-        this.diskStatusNode.textContent = result.message || 'Unable to access the selected folder.';
+        this.diskStatusNode.textContent = result.message || tr('Unable to access the selected folder.');
         this.diskStatusNode.dataset.state = 'error';
         setDiskRecordingEnabled(false);
         this.diskRecordingEnabled = false;
@@ -3137,22 +3293,22 @@ class PodcastStudioApp {
     if (this.diskToggleButton) {
       this.diskToggleButton.disabled = !diskSupported;
       this.diskToggleButton.dataset.state = enabled ? 'enabled' : 'disabled';
-      this.diskToggleButton.textContent = enabled ? 'Armed ✓' : 'Arm';
+      this.diskToggleButton.textContent = enabled ? tr('Armed ✓') : tr('Arm');
       this.diskToggleButton.setAttribute('aria-pressed', enabled ? 'true' : 'false');
     }
     if (this.diskFolderButton) {
       this.diskFolderButton.disabled = !diskSupported;
-      this.diskFolderButton.textContent = hasFolder ? 'Change' : diskSupported ? 'Folder' : 'N/A';
+      this.diskFolderButton.textContent = hasFolder ? tr('Change') : diskSupported ? tr('Folder') : 'N/A';
     }
     if (this.diskStatusNode) {
       if (!diskSupported) {
-        this.diskStatusNode.textContent = 'Requires Chrome/Edge';
+        this.diskStatusNode.textContent = tr('Requires Chrome/Edge');
         this.diskStatusNode.dataset.state = 'error';
       } else if (!hasFolder) {
-        this.diskStatusNode.textContent = 'No folder selected';
+        this.diskStatusNode.textContent = tr('No folder selected');
         this.diskStatusNode.dataset.state = 'pending';
       } else if (meta.lastError) {
-        this.diskStatusNode.textContent = `${meta.folderName} — error`;
+        this.diskStatusNode.textContent = tr('{name} — error', { name: meta.folderName });
         this.diskStatusNode.dataset.state = 'error';
       } else {
         this.diskStatusNode.textContent = `${meta.folderName} ✓`;
@@ -3169,7 +3325,7 @@ class PodcastStudioApp {
     const result = await verifyStoredDiskRecordingDirectory({ requestPermission: interactive });
     if (!result.ok) {
       if (this.diskStatusNode) {
-        this.diskStatusNode.textContent = result.message || 'Unable to access the selected folder.';
+        this.diskStatusNode.textContent = result.message || tr('Unable to access the selected folder.');
         this.diskStatusNode.dataset.state = 'error';
       }
       setDiskRecordingEnabled(false);
@@ -3178,7 +3334,7 @@ class PodcastStudioApp {
       return {
         enabled: true,
         ready: false,
-        error: new Error(result.message || 'Folder unavailable'),
+        error: new Error(result.message || tr('Folder unavailable')),
       };
     }
     return {
@@ -3195,11 +3351,11 @@ class PodcastStudioApp {
     }
     this.cloudBusy.drive = true;
     this.updateCloudLinkUI();
-    this.setCloudMessage('drive', 'Requesting Google authorization…', 'info');
+    this.setCloudMessage('drive', tr('Requesting Google authorization…'), 'info');
     try {
       const client = this.cloud.ensureDriveClient();
       if (!client) {
-        throw new Error('Google Drive integration is not available on this build.');
+        throw new Error(tr('Google Drive integration is not available on this build.'));
       }
       if (typeof client.ensureInitialized === 'function') {
         await client.ensureInitialized();
@@ -3213,16 +3369,16 @@ class PodcastStudioApp {
         await new Promise((resolve) => setTimeout(resolve, 800));
       }
       if (this.cloud.hasDriveAccess()) {
-        this.setCloudMessage('drive', 'Google Drive connected. Guests can now record directly to Drive.', 'success');
+        this.setCloudMessage('drive', tr('Google Drive connected. Guests can now record directly to Drive.'), 'success');
         const folder = this.session?.GDRIVE_FOLDERNAME || null;
         markCloudLinked('drive', { folder });
       } else {
-        this.setCloudMessage('drive', 'Check your popup blocker or try again.', 'warn');
+        this.setCloudMessage('drive', tr('Check your popup blocker or try again.'), 'warn');
         markCloudUnlinked('drive');
       }
     } catch (error) {
       console.error('Failed to link Google Drive', error);
-      this.setCloudMessage('drive', error?.message || 'Failed to link Google Drive.', 'error');
+      this.setCloudMessage('drive', error?.message || tr('Failed to link Google Drive.'), 'error');
       markCloudUnlinked('drive');
     } finally {
       this.cloudBusy.drive = false;
@@ -3244,18 +3400,18 @@ class PodcastStudioApp {
     const hasExistingAccess = this.cloud?.hasDropboxAccess();
     const forceReauth = !providedToken && hasExistingAccess;
     const pendingMessage = providedToken
-      ? 'Linking Dropbox with the provided token…'
+      ? tr('Linking Dropbox with the provided token…')
       : hasExistingAccess
-        ? 'Refreshing Dropbox session…'
-        : 'Waiting for the Dropbox popup to complete…';
+        ? tr('Refreshing Dropbox session…')
+        : tr('Waiting for the Dropbox popup to complete…');
     this.setCloudMessage('dropbox', pendingMessage, 'info');
     try {
       if (typeof window.setupDropbox !== 'function') {
-        throw new Error('Dropbox uploader is not available in this build.');
+        throw new Error(tr('Dropbox uploader is not available in this build.'));
       }
       const client = await this.cloud.ensureDropboxClient(providedToken || undefined, { interactive, forceReauth });
       if (client) {
-        this.setCloudMessage('dropbox', 'Dropbox linked. Recordings will upload automatically.', 'success');
+        this.setCloudMessage('dropbox', tr('Dropbox linked. Recordings will upload automatically.'), 'success');
         if (this.dropboxTokenInput) {
           this.dropboxTokenInput.value = '';
         }
@@ -3266,16 +3422,16 @@ class PodcastStudioApp {
       } else {
         markCloudUnlinked('dropbox');
         if (providedToken) {
-          this.setCloudMessage('dropbox', 'Dropbox rejected the provided token. Double-check and try again.', 'error');
+          this.setCloudMessage('dropbox', tr('Dropbox rejected the provided token. Double-check and try again.'), 'error');
           this.ensureDropboxTokenFallbackVisible({ focus: true, select: true });
         } else {
-          this.setCloudMessage('dropbox', 'Dropbox authorization was cancelled. Check your popup blocker and try again.', 'warn');
+          this.setCloudMessage('dropbox', tr('Dropbox authorization was cancelled. Check your popup blocker and try again.'), 'warn');
           this.ensureDropboxTokenFallbackVisible({ focus: true });
         }
       }
     } catch (error) {
       console.error('Failed to init Dropbox', error);
-      this.setCloudMessage('dropbox', error?.message || 'Unable to initialise Dropbox.', 'error');
+      this.setCloudMessage('dropbox', error?.message || tr('Unable to initialise Dropbox.'), 'error');
       this.ensureDropboxTokenFallbackVisible({ focus: true });
       markCloudUnlinked('dropbox');
     } finally {
@@ -3300,7 +3456,7 @@ class PodcastStudioApp {
       const detail = event.detail || {};
       const state = detail.state === 'live' ? 'ready' : detail.state === 'connecting' ? 'pending' : detail.state || 'idle';
       this.icecastLive = state === 'ready' || state === 'pending';
-      this.setIcecastStatus(detail.message || 'Icecast idle.', state);
+      this.setIcecastStatus(this.describeIcecastMessage(detail, 'Icecast idle.'), state);
       this.updateIcecastUI();
       this.updateReadinessSummary();
     });
@@ -3311,12 +3467,12 @@ class PodcastStudioApp {
       }
       const elapsedSeconds = detail.startedAt ? Math.max(1, Math.round((Date.now() - detail.startedAt) / 1000)) : 0;
       const bytes = detail.bytesSent || 0;
-      this.setIcecastStatus(`Live ${this.formatFileSize(bytes)}${elapsedSeconds ? ` / ${this.formatDuration(elapsedSeconds)}` : ''}`, 'ready');
+      this.setIcecastStatus(`${tr('Live')} ${this.formatFileSize(bytes)}${elapsedSeconds ? ` / ${this.formatDuration(elapsedSeconds)}` : ''}`, 'ready');
     });
     this.icecastPublisher.addEventListener('error', (event) => {
       const error = event.detail;
       this.icecastLive = false;
-      this.setIcecastStatus(error?.message || 'Icecast publish failed.', 'error');
+      this.setIcecastStatus(this.describeIcecastMessage(error, 'Icecast publish failed.'), 'error');
       this.updateIcecastUI();
       this.updateReadinessSummary();
     });
@@ -3390,11 +3546,20 @@ class PodcastStudioApp {
     };
   }
 
+  // The publisher reports in English. Messages with changing values (source counts,
+  // status codes, server replies) also carry their template and values.
+  describeIcecastMessage(source, fallback) {
+    if (source && source.template) {
+      return tr(source.template, source.values);
+    }
+    return tr((source && source.message) || fallback);
+  }
+
   setIcecastStatus(message, state = 'idle') {
     if (!this.icecastStatusNode) {
       return;
     }
-    this.icecastStatusNode.textContent = message || 'Idle';
+    this.icecastStatusNode.textContent = message || tr('Idle');
     this.icecastStatusNode.dataset.state = state;
   }
 
@@ -3403,12 +3568,12 @@ class PodcastStudioApp {
     this.icecastLive = live;
     if (this.icecastButton) {
       this.icecastButton.disabled = this.icecastBusy;
-      this.icecastButton.textContent = live ? 'Stop live' : this.icecastBusy ? 'Starting...' : 'Start live';
+      this.icecastButton.textContent = live ? tr('Stop live') : this.icecastBusy ? tr('Starting...') : tr('Start live');
       this.icecastButton.dataset.state = live ? 'enabled' : 'idle';
     }
     if (this.icecastSettingsButton) {
       this.icecastSettingsButton.disabled = live || this.icecastBusy;
-      this.icecastSettingsButton.textContent = this.icecastSettingsOpen ? 'Hide settings' : 'Settings';
+      this.icecastSettingsButton.textContent = this.icecastSettingsOpen ? tr('Hide settings') : tr('Settings');
       this.icecastSettingsButton.setAttribute('aria-expanded', this.icecastSettingsOpen ? 'true' : 'false');
     }
     if (this.icecastSettingsPanel) {
@@ -3445,12 +3610,12 @@ class PodcastStudioApp {
     if (this.icecastPublisher.isLive()) {
       this.icecastBusy = true;
       this.updateIcecastUI();
-      this.setIcecastStatus('Stopping...', 'pending');
+      this.setIcecastStatus(tr('Stopping...'), 'pending');
       try {
         await this.icecastPublisher.stop();
       } catch (error) {
         console.warn('Failed to stop Icecast publisher', error);
-        this.setIcecastStatus(error?.message || 'Stop failed.', 'error');
+        this.setIcecastStatus(this.describeIcecastMessage(error, 'Stop failed.'), 'error');
       } finally {
         this.icecastBusy = false;
         this.icecastLive = false;
@@ -3461,7 +3626,7 @@ class PodcastStudioApp {
     }
     this.icecastBusy = true;
     this.updateIcecastUI();
-    this.setIcecastStatus('Starting...', 'pending');
+    this.setIcecastStatus(tr('Starting...'), 'pending');
     try {
       await this.ensureAudioContextResumed();
       this.icecastPublisher.setAudioContext(this.audioContext);
@@ -3471,7 +3636,7 @@ class PodcastStudioApp {
     } catch (error) {
       console.error('Failed to start Icecast publisher', error);
       this.icecastLive = false;
-      this.setIcecastStatus(error?.message || 'Unable to start.', 'error');
+      this.setIcecastStatus(this.describeIcecastMessage(error, 'Unable to start.'), 'error');
     } finally {
       this.icecastBusy = false;
       this.updateIcecastUI();
@@ -3489,11 +3654,11 @@ class PodcastStudioApp {
     // Header
     const header = createElement('header', 'podcast-header');
     const headerLeft = createElement('div', 'podcast-header__left');
-    const title = createElement('h1', '', { text: 'Podcast Control Room' });
+    const title = createElement('h1', '', { translate: 'Podcast Control Room' });
     this.sessionInfo = createElement('div', 'podcast-header__room', { text: this.roomName || '' });
     headerLeft.append(title, this.sessionInfo);
     const statusPill = createElement('div', 'podcast-status-pill');
-    statusPill.innerHTML = '<span>Live-ready</span>';
+    statusPill.append(createElement('span', '', { translate: 'Live-ready' }));
     header.append(headerLeft, statusPill);
 
     // Main layout
@@ -3504,15 +3669,22 @@ class PodcastStudioApp {
 
     // Host Input panel (director's mic)
     const hostPanel = createElement('section', 'podcast-panel host-panel');
-    hostPanel.append(createElement('h2', '', { text: '🎙️ Host Input' }));
+    hostPanel.append(createElement('h2', '', { translate: '🎙️ Host Input' }));
     const hostControls = createElement('div', 'host-input-content');
-    this.hostMicButton = createElement('button', 'host-input-toggle', { type: 'button', text: 'Enable', title: 'Toggle local host microphone capture (optional).'});
+    this.hostMicButton = createElement('button', 'host-input-toggle', { type: 'button', text: tr('Enable'), title: 'Toggle local host microphone capture (optional).'});
     this.hostMicButton.addEventListener('click', () => this.handleHostMicToggle());
-    this.hostMuteButton = createElement('button', 'host-mute-toggle', { type: 'button', text: '🔊 Mute', title: 'Mute/unmute the host mic track.' });
+    this.hostMuteButton = createElement('button', 'host-mute-toggle', { type: 'button', text: tr('🔊 Mute'), title: 'Mute/unmute the host mic track.' });
     this.hostMuteButton.disabled = true;
     this.hostMuteButton.addEventListener('click', () => this.handleHostMuteToggle());
-    this.hostMicStatusNode = createElement('div', 'host-input-status', { text: 'Idle' });
-    hostControls.append(this.hostMicButton, this.hostMuteButton, this.hostMicStatusNode);
+    this.hostMicStatusNode = createElement('div', 'host-input-status', { text: tr('Idle') });
+    this.hostScreenButton = createElement('button', 'host-screen-toggle', {
+      type: 'button',
+      text: tr('Share screen'),
+      title: 'Share your screen with the guests in this room.',
+      'aria-pressed': 'false',
+    });
+    this.hostScreenButton.addEventListener('click', () => this.handleHostScreenToggle());
+    hostControls.append(this.hostMicButton, this.hostMuteButton, this.hostScreenButton, this.hostMicStatusNode);
     this.hostMicErrorNode = createElement('div', 'host-input-error', {
       role: 'status',
       'aria-live': 'polite',
@@ -3520,13 +3692,13 @@ class PodcastStudioApp {
 
     const hostAudioSettings = createElement('div', 'host-audio-settings');
     const deviceField = createElement('label', 'host-audio-field host-audio-field--device');
-    deviceField.append(createElement('span', 'host-audio-field__label', { text: 'Microphone' }));
+    deviceField.append(createElement('span', 'host-audio-field__label', { translate: 'Microphone' }));
     const deviceControl = createElement('div', 'host-audio-device-control');
     this.hostAudioDeviceSelect = createElement('select', 'host-audio-select host-audio-device-select', {
       'aria-label': 'Host microphone',
       title: 'Choose the microphone used by the Podcast Studio host input.',
     });
-    this.hostAudioDeviceSelect.append(createElement('option', '', { value: '', text: 'Loading microphones...' }));
+    this.hostAudioDeviceSelect.append(createElement('option', '', { value: '', translate: 'Loading microphones...' }));
     this.hostAudioDeviceSelect.addEventListener('change', () => {
       this.handleHostAudioDeviceChange().catch((error) => {
         console.error('Unable to change the host microphone', error);
@@ -3534,7 +3706,7 @@ class PodcastStudioApp {
     });
     this.hostAudioRefreshButton = createElement('button', 'host-audio-refresh', {
       type: 'button',
-      text: 'Refresh',
+      translate: 'Refresh',
       title: 'Request microphone access and refresh the device list.',
     });
     this.hostAudioRefreshButton.addEventListener('click', () => {
@@ -3547,7 +3719,7 @@ class PodcastStudioApp {
     deviceField.append(deviceControl);
 
     const profileField = createElement('label', 'host-audio-field');
-    profileField.append(createElement('span', 'host-audio-field__label', { text: 'Audio mode' }));
+    profileField.append(createElement('span', 'host-audio-field__label', { translate: 'Audio mode' }));
     this.hostAudioProfileSelect = createElement('select', 'host-audio-select host-audio-profile-select', {
       'aria-label': 'Host audio mode',
       title: 'Pro Audio preserves music and requires headphones. Voice mode controls speaker echo.',
@@ -3557,7 +3729,7 @@ class PodcastStudioApp {
       ['voice', 'Voice / speakers'],
       ['custom', 'Custom'],
     ].forEach(([value, text]) => {
-      this.hostAudioProfileSelect.append(createElement('option', '', { value, text }));
+      this.hostAudioProfileSelect.append(createElement('option', '', { value, translate: text }));
     });
     this.hostAudioProfileSelect.addEventListener('change', () => {
       this.commitHostAudioSettings(this.hostAudioProfileSelect.value).catch((error) => {
@@ -3568,12 +3740,12 @@ class PodcastStudioApp {
     hostAudioSettings.append(deviceField, profileField);
 
     const advancedAudio = createElement('details', 'host-audio-advanced');
-    advancedAudio.append(createElement('summary', 'host-audio-advanced__summary', { text: 'Advanced audio' }));
+    advancedAudio.append(createElement('summary', 'host-audio-advanced__summary', { translate: 'Advanced audio' }));
     const advancedGrid = createElement('div', 'host-audio-advanced__grid');
     const makeHostAudioToggle = (labelText, titleText) => {
       const label = createElement('label', 'host-audio-check', { title: titleText });
       const input = createElement('input', '', { type: 'checkbox' });
-      label.append(input, createElement('span', '', { text: labelText }));
+      label.append(input, createElement('span', '', { translate: labelText }));
       advancedGrid.append(label);
       return input;
     };
@@ -3584,7 +3756,7 @@ class PodcastStudioApp {
     this.hostAudioGainInput = makeHostAudioToggle('Auto gain', 'Let the browser automatically adjust microphone volume.');
 
     const bitrateField = createElement('label', 'host-audio-field host-audio-field--bitrate');
-    bitrateField.append(createElement('span', 'host-audio-field__label', { text: 'Opus bitrate' }));
+    bitrateField.append(createElement('span', 'host-audio-field__label', { translate: 'Opus bitrate' }));
     this.hostAudioBitrateSelect = createElement('select', 'host-audio-select host-audio-bitrate-select', {
       'aria-label': 'Host audio bitrate',
       title: 'Target Opus bitrate for the host audio path.',
@@ -3617,7 +3789,7 @@ class PodcastStudioApp {
       'aria-live': 'polite',
     });
     const hostAudioHint = createElement('div', 'host-audio-hint', {
-      text: 'Pro Audio keeps the cleanest signal. Wear headphones so your guest does not echo.',
+      translate: 'Pro Audio keeps the cleanest signal. Wear headphones so your guest does not echo.',
     });
     this.syncHostAudioControlsFromSession();
     hostPanel.append(hostControls, hostAudioSettings, advancedAudio, this.hostAudioSummaryNode, hostAudioHint, this.hostMicErrorNode);
@@ -3629,14 +3801,14 @@ class PodcastStudioApp {
 
     const markersPanel = createElement('section', 'podcast-panel');
     this.markerLog = createElement('div', 'marker-log');
-    const emptyMarkers = createElement('div', 'empty-state', { text: 'Tap “Marker” to drop cue points during recording.' });
+    const emptyMarkers = createElement('div', 'empty-state', { translate: 'Tap “Marker” to drop cue points during recording.' });
     emptyMarkers.dataset.empty = 'true';
     this.markerLog.append(emptyMarkers);
     this.markerActions = createElement('div', 'cloud-sync-list__actions marker-actions');
     this.markerActions.style.display = 'none';
-    this.markerExportButton = createElement('button', 'cloud-sync-list__button', { type: 'button', text: 'Export CSV', title: 'Download markers as a CSV file.' });
+    this.markerExportButton = createElement('button', 'cloud-sync-list__button', { type: 'button', text: tr('Export CSV'), title: 'Download markers as a CSV file.' });
     this.markerExportButton.addEventListener('click', () => this.exportMarkersCsv());
-    this.markerCopyButton = createElement('button', 'cloud-sync-list__button', { type: 'button', text: 'Copy CSV', title: 'Copy markers CSV to clipboard.' });
+    this.markerCopyButton = createElement('button', 'cloud-sync-list__button', { type: 'button', text: tr('Copy CSV'), title: 'Copy markers CSV to clipboard.' });
     this.markerCopyButton.addEventListener('click', () => this.copyMarkersCsv());
     this.markerActions.append(this.markerExportButton, this.markerCopyButton);
     markersPanel.append(this.markerLog, this.markerActions);
@@ -3652,7 +3824,7 @@ class PodcastStudioApp {
     const invitePanel = createElement('section', 'podcast-panel invite-panel');
     invitePanel.classList.add('console-grid__span-2');
     const inviteIntro = createElement('p', 'invite-copy', {
-      text: 'Share a pro audio-ready link with guests. Tweak processing flags before copying.',
+      translate: 'Share a pro audio-ready link with guests. Tweak processing flags before copying.',
     });
     const inviteLinkRow = createElement('div', 'invite-link-row');
     this.inviteLinkInput = createElement('input', 'invite-link-input', {
@@ -3668,7 +3840,7 @@ class PodcastStudioApp {
         console.warn('Invite link select failed', error);
       }
     });
-    this.inviteCopyButton = createElement('button', 'invite-link-copy', { type: 'button', text: 'Copy link', title: 'Copy the guest invite link.' });
+    this.inviteCopyButton = createElement('button', 'invite-link-copy', { type: 'button', translate: 'Copy link', title: 'Copy the guest invite link.' });
     this.inviteCopyButton.addEventListener('click', () => this.copyInviteLink());
     inviteLinkRow.append(this.inviteLinkInput, this.inviteCopyButton);
     this.inviteStatusNode = createElement('div', 'invite-status');
@@ -3686,10 +3858,10 @@ class PodcastStudioApp {
       const optionLabel = createElement('label', 'invite-option');
       const checkbox = createElement('input', 'invite-option__checkbox', { type: 'checkbox' });
       checkbox.checked = option.defaultChecked;
-      checkbox.title = 'Applies to the generated guest link.';
-      optionLabel.title = option.label;
+      setTitle(checkbox, 'Applies to the generated guest link.');
+      setTitle(optionLabel, option.label);
       checkbox.addEventListener('change', () => this.updateInviteLink());
-      optionLabel.append(checkbox, createElement('span', 'invite-option__label', { text: option.label }));
+      optionLabel.append(checkbox, createElement('span', 'invite-option__label', { translate: option.label }));
       inviteOptions.append(optionLabel);
       this.inviteOptionNodes[option.key] = checkbox;
     });
@@ -3703,26 +3875,26 @@ class PodcastStudioApp {
     sessionToolsPanel.append(sessionToolsGrid);
 
     const controlCard = createElement('div', 'session-tool session-tool--control');
-    controlCard.append(createElement('h2', 'session-tool__title', { text: '⏺ Recording' }));
+    controlCard.append(createElement('h2', 'session-tool__title', { translate: '⏺ Recording' }));
 
     this.recordingSummary = createElement('div', 'recording-summary');
-    this.captureSummaryNode = createElement('div', 'recording-summary__item', { text: 'Capture: Audio ISO' });
-    this.backupSummaryNode = createElement('div', 'recording-summary__item', { text: 'Guest backup: None' });
-    this.saveSummaryNode = createElement('div', 'recording-summary__item', { text: 'Save: Browser download' });
+    this.captureSummaryNode = createElement('div', 'recording-summary__item', { text: tr('Capture: Audio ISO') });
+    this.backupSummaryNode = createElement('div', 'recording-summary__item', { text: tr('Guest backup: None') });
+    this.saveSummaryNode = createElement('div', 'recording-summary__item', { text: tr('Save: Browser download') });
     this.recordingSummary.append(this.captureSummaryNode, this.backupSummaryNode, this.saveSummaryNode);
     this.recordingSummary.style.display = 'none';
 
     const transportButtons = createElement('div', 'transport-buttons');
-    this.recordButton = createElement('button', 'btn-record', { type: 'button', text: 'Start Recording', title: 'Start or stop ISO recording for this session.' });
+    this.recordButton = createElement('button', 'btn-record', { type: 'button', text: tr('Start Recording'), title: 'Start or stop ISO recording for this session.' });
     this.recordButton.addEventListener('click', () => this.handleRecordToggle());
-    this.markerButton = createElement('button', 'btn-secondary', { type: 'button', text: 'Marker', title: 'Drop a cue marker at the current time.' });
+    this.markerButton = createElement('button', 'btn-secondary', { type: 'button', translate: 'Marker', title: 'Drop a cue marker at the current time.' });
     this.markerButton.disabled = true;
     this.markerButton.addEventListener('click', () => this.addMarker());
     const captureSelectId = 'podcast-capture-mode';
-    const captureModeLabel = createElement('label', 'capture-mode-label', { text: 'Capture' });
+    const captureModeLabel = createElement('label', 'capture-mode-label', { translate: 'Capture' });
     captureModeLabel.setAttribute('for', captureSelectId);
     this.captureModeSelect = createElement('select', 'capture-mode-select', { id: captureSelectId });
-    this.captureModeSelect.append(new Option('Audio only', 'audio'), new Option('Audio + Video', 'video'));
+    this.captureModeSelect.append(new Option(tr('Audio only'), 'audio'), new Option(tr('Audio + Video'), 'video'));
     this.captureModeSelect.value = this.currentRecordingMode === 'video' ? 'video' : 'audio';
     this.captureModeSelect.addEventListener('change', () => this.handleCaptureModeChange(this.captureModeSelect.value));
     const captureWrap = createElement('div', 'capture-mode-wrap');
@@ -3730,10 +3902,10 @@ class PodcastStudioApp {
     transportButtons.append(captureWrap, this.recordButton);
     transportButtons.append(this.markerButton);
 
-    this.recordShowButton = createElement('button', 'record-group-button', { type: 'button', text: '🎬 Record Group', title: 'Open a popup window with the combined scene for screen recording.' });
+    this.recordShowButton = createElement('button', 'record-group-button', { type: 'button', translate: '🎬 Record Group', title: 'Open a popup window with the combined scene for screen recording.' });
     this.recordShowButton.addEventListener('click', () => this.openRecordShowWindow());
 
-    this.recordingStatusNode = createElement('div', 'session-recording-status', { text: 'Idle' });
+    this.recordingStatusNode = createElement('div', 'session-recording-status', { text: tr('Idle') });
     this.recordingStatusNode.dataset.state = 'idle';
     const statusRow = createElement('div', 'recording-status-row');
     statusRow.append(this.recordingStatusNode);
@@ -3743,7 +3915,7 @@ class PodcastStudioApp {
       const el = createElement('div', 'dest-light');
       const dot = createElement('span', 'dest-light__dot');
       const textWrap = createElement('div', 'dest-light__text');
-      const name = createElement('span', 'dest-light__name', { text: label });
+      const name = createElement('span', 'dest-light__name', { translate: label });
       const status = createElement('span', 'dest-light__status');
       textWrap.append(name, status);
       el.append(dot, textWrap);
@@ -3753,7 +3925,7 @@ class PodcastStudioApp {
     };
 
     const hostGroup = createElement('div', 'dest-group');
-    hostGroup.append(createElement('div', 'dest-group__label', { text: 'You record' }));
+    hostGroup.append(createElement('div', 'dest-group__label', { translate: 'You record' }));
     const hostLights = createElement('div', 'dest-group__lights');
     hostLights.append(createDestLight('download', 'Download'));
     hostLights.append(createDestLight('dropbox', 'Dropbox'));
@@ -3763,10 +3935,10 @@ class PodcastStudioApp {
     hostGroup.append(hostLights);
 
     const guestGroup = createElement('div', 'dest-group');
-    guestGroup.append(createElement('div', 'dest-group__label', { text: 'Guests record' }));
+    guestGroup.append(createElement('div', 'dest-group__label', { translate: 'Guests record' }));
     const guestLights = createElement('div', 'dest-group__lights');
     guestLights.append(createDestLight('drive', 'Google Drive'));
-    guestGroup.append(guestLights, createElement('div', 'dest-group__hint', { text: 'Guests can also record locally — see Guest Invites' }));
+    guestGroup.append(guestLights, createElement('div', 'dest-group__hint', { translate: 'Guests can also record locally — see Guest Invites' }));
 
     destLightsRow.append(hostGroup, createElement('div', 'dest-group-divider'), guestGroup);
     const recordGroupRow = createElement('div', 'record-group-row');
@@ -3776,20 +3948,20 @@ class PodcastStudioApp {
 
     // ISO Recording Configuration - unified destinations section
     const isoConfigCard = createElement('div', 'session-tool session-tool--iso-config');
-    isoConfigCard.append(createElement('h2', 'session-tool__title', { text: '💾 Recording settings' }));
+    isoConfigCard.append(createElement('h2', 'session-tool__title', { translate: '💾 Recording settings' }));
     const isoConfigList = createElement('div', 'iso-config-list');
 
 
     this.guestBackupRow = createElement('div', 'iso-config-row');
-    this.guestBackupRow.append(createElement('div', 'iso-config-row__label', { text: 'Guest backup' }));
+    this.guestBackupRow.append(createElement('div', 'iso-config-row__label', { translate: 'Guest backup' }));
     const guestBackupActions = createElement('div', 'iso-config-row__actions');
     this.guestBackupButton = createElement('button', 'iso-config-row__button iso-config-row__button--backup', {
       type: 'button',
-      text: 'Enable guest backup',
+      text: tr('Enable guest backup'),
       title: 'Ask every connected guest to self-record directly to your linked Google Drive.',
     });
     this.guestBackupButton.addEventListener('click', () => this.handleGuestBackupToggle());
-    this.guestBackupStatusNode = createElement('span', 'iso-config-row__status', { text: 'No guests connected' });
+    this.guestBackupStatusNode = createElement('span', 'iso-config-row__status', { text: tr('No guests connected') });
     guestBackupActions.append(this.guestBackupButton, this.guestBackupStatusNode);
     this.guestBackupRow.append(guestBackupActions);
     this.guestBackupHint = null;
@@ -3798,12 +3970,12 @@ class PodcastStudioApp {
 
     // Google Drive row
     const driveRow = createElement('div', 'iso-config-row');
-    driveRow.append(createElement('div', 'iso-config-row__label', { text: 'Google Drive' }));
+    driveRow.append(createElement('div', 'iso-config-row__label', { translate: 'Google Drive' }));
     const driveActions = createElement('div', 'iso-config-row__actions');
-    this.cloudLinkButtons.drive = createElement('button', 'iso-config-row__button', { type: 'button', text: 'Connect', title: 'Connect Google Drive to upload recordings automatically after each session.' });
+    this.cloudLinkButtons.drive = createElement('button', 'iso-config-row__button', { type: 'button', text: tr('Connect'), title: 'Connect Google Drive to upload recordings automatically after each session.' });
     this.cloudLinkButtons.drive.addEventListener('click', () => this.handleDriveLink());
     this.cloudLinkButtons.drive.dataset.state = 'idle';
-    this.cloudLinkStatusNodes.drive = createElement('span', 'iso-config-row__status', { text: 'Not connected' });
+    this.cloudLinkStatusNodes.drive = createElement('span', 'iso-config-row__status', { text: tr('Not connected') });
     this.cloudLinkStatusNodes.drive.dataset.state = 'idle';
     driveActions.append(this.cloudLinkButtons.drive, this.cloudLinkStatusNodes.drive);
     driveRow.append(driveActions);
@@ -3816,12 +3988,12 @@ class PodcastStudioApp {
 
     // Dropbox row
     const dropboxRow = createElement('div', 'iso-config-row');
-    dropboxRow.append(createElement('div', 'iso-config-row__label', { text: 'Dropbox' }));
+    dropboxRow.append(createElement('div', 'iso-config-row__label', { translate: 'Dropbox' }));
     const dropboxActions = createElement('div', 'iso-config-row__actions');
-    this.cloudLinkButtons.dropbox = createElement('button', 'iso-config-row__button', { type: 'button', text: 'Connect', title: 'Connect Dropbox to upload recordings automatically after each session.' });
+    this.cloudLinkButtons.dropbox = createElement('button', 'iso-config-row__button', { type: 'button', text: tr('Connect'), title: 'Connect Dropbox to upload recordings automatically after each session.' });
     this.cloudLinkButtons.dropbox.addEventListener('click', () => this.handleDropboxLink());
     this.cloudLinkButtons.dropbox.dataset.state = 'idle';
-    this.cloudLinkStatusNodes.dropbox = createElement('span', 'iso-config-row__status', { text: 'Not connected' });
+    this.cloudLinkStatusNodes.dropbox = createElement('span', 'iso-config-row__status', { text: tr('Not connected') });
     this.cloudLinkStatusNodes.dropbox.dataset.state = 'idle';
     dropboxActions.append(this.cloudLinkButtons.dropbox, this.cloudLinkStatusNodes.dropbox);
     dropboxRow.append(dropboxActions);
@@ -3833,7 +4005,7 @@ class PodcastStudioApp {
     const tokenFieldId = 'podcast-dropbox-token';
     const dropboxTokenRow = createElement('div', 'cloud-sync-token');
     this.dropboxTokenRow = dropboxTokenRow;
-    const tokenLabel = createElement('label', 'cloud-sync-token__label', { text: 'Access token' });
+    const tokenLabel = createElement('label', 'cloud-sync-token__label', { translate: 'Access token' });
     tokenLabel.setAttribute('for', tokenFieldId);
     this.dropboxTokenInput = createElement('input', 'cloud-sync-token__input', {
       type: 'password',
@@ -3848,13 +4020,13 @@ class PodcastStudioApp {
     const dropboxGuideRow = createElement('div', 'cloud-sync-token__guide');
     this.dropboxGuideRow = dropboxGuideRow;
     const guideLink = createElement('a', 'cloud-sync-guide-link', {
-      text: 'Open the Dropbox setup guide',
+      translate: 'Open the Dropbox setup guide',
       href: DROPBOX_GUIDE_URL,
       target: '_blank',
       rel: 'noopener',
       title: 'Open the Dropbox setup guide in a new tab.',
     });
-    dropboxGuideRow.append('Need a token? ', guideLink);
+    dropboxGuideRow.append(tr('Need a token? '), guideLink);
     this.cloudLinkMessages.dropbox.append(dropboxTokenRow, dropboxGuideRow);
     this.hideDropboxTokenFallback();
     isoConfigList.append(dropboxRow, this.cloudLinkMessages.dropbox);
@@ -3863,18 +4035,18 @@ class PodcastStudioApp {
     if (STUDIO_DISK_FEATURE_FLAG) {
       const diskSupported = typeof window.showDirectoryPicker === 'function';
       const diskRow = createElement('div', 'iso-config-row');
-      diskRow.append(createElement('div', 'iso-config-row__label', { text: 'Local Disk' }));
+      diskRow.append(createElement('div', 'iso-config-row__label', { translate: 'Local Disk' }));
       const diskActions = createElement('div', 'iso-config-row__actions');
       this.diskControls = diskActions;
       this.diskToggleButton = createElement('button', 'iso-config-row__button', {
         type: 'button',
-        text: 'Arm',
+        text: tr('Arm'),
         title: 'Arm/disarm recording ISO files to local disk.',
       });
       this.diskToggleButton.addEventListener('click', () => this.handleDiskToggle());
       this.diskFolderButton = createElement('button', 'iso-config-row__button iso-config-row__button--secondary', {
         type: 'button',
-        text: diskSupported ? 'Folder' : 'N/A',
+        text: diskSupported ? tr('Folder') : 'N/A',
         title: diskSupported ? 'Choose the destination folder for disk recording.' : 'Local disk recording is not supported in this browser.',
       });
       this.diskFolderButton.disabled = !diskSupported;
@@ -3882,7 +4054,7 @@ class PodcastStudioApp {
         this.diskFolderButton.addEventListener('click', () => this.handleDiskFolderSelection());
       }
       this.diskStatusNode = createElement('span', 'iso-config-row__status', {
-        text: diskSupported ? 'No folder' : 'Not supported',
+        text: diskSupported ? tr('No folder') : tr('Not supported'),
       });
       diskActions.append(this.diskToggleButton, this.diskFolderButton, this.diskStatusNode);
       diskRow.append(diskActions);
@@ -3892,22 +4064,22 @@ class PodcastStudioApp {
 
     const icecastSettings = readIcecastSettings();
     const icecastRow = createElement('div', 'iso-config-row iso-config-row--icecast');
-    icecastRow.append(createElement('div', 'iso-config-row__label', { text: 'Icecast' }));
+    icecastRow.append(createElement('div', 'iso-config-row__label', { translate: 'Icecast' }));
     const icecastActions = createElement('div', 'iso-config-row__actions');
     this.icecastButton = createElement('button', 'iso-config-row__button', {
       type: 'button',
-      text: 'Start live',
+      text: tr('Start live'),
       title: 'Publish the mixed studio audio to an Icecast-compatible source endpoint.',
     });
     this.icecastButton.addEventListener('click', () => this.handleIcecastToggle());
     this.icecastSettingsButton = createElement('button', 'iso-config-row__button iso-config-row__button--secondary', {
       type: 'button',
-      text: 'Settings',
+      text: tr('Settings'),
       title: 'Show Icecast publishing settings.',
       'aria-expanded': 'false',
     });
     this.icecastSettingsButton.addEventListener('click', () => this.toggleIcecastSettings());
-    this.icecastStatusNode = createElement('span', 'iso-config-row__status', { text: 'Idle' });
+    this.icecastStatusNode = createElement('span', 'iso-config-row__status', { text: tr('Idle') });
     this.icecastStatusNode.dataset.state = 'idle';
     icecastActions.append(this.icecastButton, this.icecastSettingsButton, this.icecastStatusNode);
     icecastRow.append(icecastActions);
@@ -3920,9 +4092,9 @@ class PodcastStudioApp {
     const icecastBody = createElement('div', 'iso-config-advanced__body icecast-config__body');
     const createIcecastField = (labelText, input, hintText = '') => {
       const label = createElement('label', 'icecast-config__field');
-      label.append(createElement('span', 'icecast-config__label', { text: labelText }), input);
+      label.append(createElement('span', 'icecast-config__label', { translate: labelText }), input);
       if (hintText) {
-        label.append(createElement('span', 'icecast-config__hint', { text: hintText }));
+        label.append(createElement('span', 'icecast-config__hint', { translate: hintText }));
       }
       return label;
     };
@@ -3987,7 +4159,7 @@ class PodcastStudioApp {
     const publicLabel = createElement('label', 'icecast-config__toggle');
     this.icecastPublicInput = createElement('input', '', { type: 'checkbox' });
     this.icecastPublicInput.checked = Boolean(icecastSettings.public);
-    publicLabel.append(this.icecastPublicInput, createElement('span', '', { text: 'Public listing' }));
+    publicLabel.append(this.icecastPublicInput, createElement('span', '', { translate: 'Public listing' }));
     icecastToggles.append(publicLabel);
 
     icecastBody.append(
@@ -4018,15 +4190,15 @@ class PodcastStudioApp {
 
     // Summary section
     this.isoSummary = createElement('div', 'iso-config-summary');
-    this.cloudSummaryNode = createElement('div', 'iso-config-summary__item', { text: 'Status: checking...' });
+    this.cloudSummaryNode = createElement('div', 'iso-config-summary__item', { text: tr('Status: checking...') });
     this.cloudSummaryNode.dataset.state = 'pending';
     const serviceProgress = createElement('div', 'iso-config-summary__services');
     this.cloudProgressNodes.drive = createElement('div', 'iso-config-summary__item iso-config-summary__item--service', {
-      text: 'Drive uploads idle',
+      text: tr('Drive uploads idle'),
     });
     this.cloudProgressNodes.drive.dataset.state = 'idle';
     this.cloudProgressNodes.dropbox = createElement('div', 'iso-config-summary__item iso-config-summary__item--service', {
-      text: 'Dropbox uploads idle',
+      text: tr('Dropbox uploads idle'),
     });
     this.cloudProgressNodes.dropbox.dataset.state = 'idle';
     serviceProgress.append(this.cloudProgressNodes.drive, this.cloudProgressNodes.dropbox);
@@ -4043,28 +4215,28 @@ class PodcastStudioApp {
     this.recoveryStatus = createElement('p', 'upload-meta audio-recovery-status', { role: 'status' });
     this.recoveryPanel = createElement('details', 'timeline-archive audio-recovery-panel');
     this.recoveryPanel.hidden = true;
-    this.recoverySummary = createElement('summary', 'timeline-entry-label', { text: 'Saved audio' });
+    this.recoverySummary = createElement('summary', 'timeline-entry-label', { text: tr('Saved audio') });
     this.recoveryList = createElement('div', 'audio-recovery-list');
     this.recoveryPanel.append(this.recoverySummary, createElement('p', 'upload-meta', {
-      text: 'Saved on this browser and device. Interrupted takes may be incomplete. Downloading keeps the saved copy.',
+      translate: 'Saved on this browser and device. Interrupted takes may be incomplete. Downloading keeps the saved copy.',
     }), this.recoveryList);
     timelinePanel.append(this.outputsContainer, this.recoveryStatus, this.recoveryPanel);
-    this.showOutputsMessage('Recordings and cue points will appear here.');
+    this.showOutputsMessage(tr('Recordings and cue points will appear here.'));
     makeCollapsible(timelinePanel, 'Timeline & Outputs', 'podcastStudio.collapse.timeline');
 
     const chatPanel = createElement('section', 'podcast-panel chat-panel');
     chatPanel.dataset.collapsed = 'false';
     this.chatPanel = chatPanel;
     const chatHeaderRow = createElement('div', 'chat-panel__header');
-    const chatTitle = createElement('h2', '', { text: 'Control Room Chat' });
+    const chatTitle = createElement('h2', '', { translate: 'Control Room Chat' });
     const chatActions = createElement('div', 'chat-panel__actions');
-    this.chatPopoutButton = createElement('button', 'chat-panel__action', { type: 'button', text: 'Pop out', title: 'Open chat in a separate window.' });
+    this.chatPopoutButton = createElement('button', 'chat-panel__action', { type: 'button', text: tr('Pop out'), title: 'Open chat in a separate window.' });
     this.chatPopoutButton.addEventListener('click', () => this.handleChatPopout());
     this.chatCollapseButton = createElement('button', 'panel-collapse-toggle', {
       type: 'button',
       text: '−',
     });
-    this.chatCollapseButton.title = 'Collapse section';
+    setTitle(this.chatCollapseButton, 'Collapse section');
     this.chatCollapseButton.setAttribute('aria-expanded', 'true');
     this.chatCollapseButton.addEventListener('click', () => this.toggleChatPanel());
     chatActions.append(this.chatPopoutButton, this.chatCollapseButton);
@@ -4115,18 +4287,18 @@ class PodcastStudioApp {
       chatBody.append(legacyChat);
       this.chatModule = legacyChat;
     } else {
-      chatBody.append(createElement('div', 'chat-panel__empty', { text: 'Chat initialising…' }));
+      chatBody.append(createElement('div', 'chat-panel__empty', { translate: 'Chat initialising…' }));
     }
     if (this.chatPopoutButton) {
       const hasPopout = Boolean(this.chatPopoutAnchor || typeof window.createPopoutChat === 'function');
       this.chatPopoutButton.disabled = !hasPopout;
       if (!hasPopout) {
-        this.chatPopoutButton.textContent = 'Pop out unavailable';
+        this.chatPopoutButton.textContent = tr('Pop out unavailable');
       }
     }
     chatPanel.append(chatBody);
     this.chatCollapsedHint = createElement('div', 'chat-panel__collapsed-hint', {
-      text: 'Chat hidden. Click “Show chat” to reopen.',
+      translate: 'Chat hidden. Click “Show chat” to reopen.',
     });
     this.chatCollapsedHint.style.display = 'none';
     chatPanel.append(this.chatCollapsedHint);
@@ -4148,10 +4320,10 @@ class PodcastStudioApp {
     // Footer
     const footer = createElement('footer', 'podcast-footer');
     footer.innerHTML = `
-      <div>Powered by VDO.Ninja • Low-latency P2P backbone intact • <span class="podcast-help-link" id="podcast-help-link" role="button" tabindex="0">Guide</span></div>
+      <div>${tr('Powered by VDO.Ninja • Low-latency P2P backbone intact •')} <span class="podcast-help-link" id="podcast-help-link" role="button" tabindex="0">${tr('Guide')}</span></div>
       <div class="cloud-status">
-        <span id="podcast-cloud-drive">${this.cloud?.hasDriveAccess() ? 'Google Drive linked' : 'Drive link pending'}</span>
-        <span id="podcast-cloud-dropbox">${this.cloud?.hasDropboxAccess() ? 'Dropbox linked' : 'Dropbox link pending'}</span>
+        <span id="podcast-cloud-drive">${this.cloud?.hasDriveAccess() ? tr('Google Drive linked') : tr('Drive link pending')}</span>
+        <span id="podcast-cloud-dropbox">${this.cloud?.hasDropboxAccess() ? tr('Dropbox linked') : tr('Dropbox link pending')}</span>
       </div>
     `;
 
@@ -4173,6 +4345,7 @@ class PodcastStudioApp {
     this.driveStatusNode = document.getElementById('podcast-cloud-drive');
     this.dropboxStatusNode = document.getElementById('podcast-cloud-dropbox');
     this.updateHostMicUI();
+    this.updateHostScreenUI();
     this.setHostMicError('');
     this.updateCloudLinkUI();
     this.updateReadinessSummary();
@@ -4215,7 +4388,7 @@ class PodcastStudioApp {
     }
     if (this.chatCollapseButton) {
       this.chatCollapseButton.textContent = this.chatCollapsed ? '+' : '−';
-      this.chatCollapseButton.title = this.chatCollapsed ? 'Expand section' : 'Collapse section';
+      setTitle(this.chatCollapseButton, this.chatCollapsed ? 'Expand section' : 'Collapse section');
       this.chatCollapseButton.setAttribute('aria-expanded', this.chatCollapsed ? 'false' : 'true');
     }
     if (this.chatCollapsedHint) {
@@ -4298,16 +4471,16 @@ class PodcastStudioApp {
   getGuestBackupCompactLabel() {
     const snapshot = this.getGuestBackupSnapshot();
     if (!snapshot.total) {
-      return 'No guests';
+      return tr('No guests');
     }
     if (!snapshot.requested) {
-      return 'No live backup';
+      return tr('No live backup');
     }
-    return `Guest backup ${snapshot.confirmed}/${snapshot.total}`;
+    return tr('Guest backup {confirmed}/{total}', { confirmed: snapshot.confirmed, total: snapshot.total });
   }
 
   describeCaptureMode(mode = this.currentRecordingMode) {
-    return mode === 'video' ? 'Audio + Video ISO' : 'Audio ISO';
+    return mode === 'video' ? tr('Audio + Video ISO') : tr('Audio ISO');
   }
 
   describeSaveTargetSummary() {
@@ -4316,7 +4489,7 @@ class PodcastStudioApp {
     const diskMeta = readDiskRecordingState();
     const saveTargets = [];
     if (STUDIO_DISK_FEATURE_FLAG && diskMeta.enabled && diskMeta.folderName) {
-      saveTargets.push(`Local folder (${diskMeta.folderName})`);
+      saveTargets.push(tr('Local folder ({name})', { name: diskMeta.folderName }));
     }
     if (driveActive) {
       saveTargets.push('Drive');
@@ -4325,9 +4498,9 @@ class PodcastStudioApp {
       saveTargets.push('Dropbox');
     }
     if (!saveTargets.length) {
-      return 'Browser download';
+      return tr('Browser download');
     }
-    return `After stop -> ${saveTargets.join(' + ')}`;
+    return tr('After stop -> {targets}', { targets: saveTargets.join(' + ') });
   }
 
   countEstimatedRecordingTracks() {
@@ -4357,14 +4530,15 @@ class PodcastStudioApp {
       return;
     }
     if (!this.recording || !this.recordStartedAt || this.recordingStatusState === 'error') {
-      this.recordingStatusNode.textContent = this.recordingStatusBase || 'Idle';
+      this.recordingStatusNode.textContent = this.recordingStatusBase || tr('Idle');
       this.recordingStatusNode.dataset.state = this.recordingStatusState || 'idle';
       return;
     }
     const elapsed = this.formatDuration(Math.max(0, (Date.now() - this.recordStartedAt) / 1000));
     const trackCount = this.countEstimatedRecordingTracks();
     const backupLabel = this.getGuestBackupCompactLabel();
-    this.recordingStatusNode.textContent = `${elapsed} | ${trackCount} track${trackCount === 1 ? '' : 's'} | ${backupLabel}`;
+    const trackLabel = trackCount === 1 ? tr('1 track') : tr('{count} tracks', { count: trackCount });
+    this.recordingStatusNode.textContent = `${elapsed} | ${trackLabel} | ${backupLabel}`;
     this.recordingStatusNode.dataset.state = 'active';
   }
 
@@ -4399,37 +4573,37 @@ class PodcastStudioApp {
     this.guestBackupButton.disabled = this.guestBackupBusy || !hasGuests || (!linked && !hasRequested);
     this.guestBackupButton.dataset.state = allRequested ? 'enabled' : 'idle';
     if (!hasGuests) {
-      this.guestBackupButton.textContent = 'Enable guest backup';
-      this.guestBackupButton.title = 'A guest must join before backup can be enabled.';
-      this.guestBackupStatusNode.textContent = 'No guests connected';
+      this.guestBackupButton.textContent = tr('Enable guest backup');
+      setTitle(this.guestBackupButton, 'A guest must join before backup can be enabled.');
+      this.guestBackupStatusNode.textContent = tr('No guests connected');
       this.guestBackupStatusNode.dataset.state = 'idle';
       return;
     }
     if (!linked && !hasRequested) {
-      this.guestBackupButton.textContent = 'Enable guest backup';
-      this.guestBackupButton.title = 'Link Google Drive first to enable guest backup.';
-      this.guestBackupStatusNode.textContent = 'Link Google Drive first';
+      this.guestBackupButton.textContent = tr('Enable guest backup');
+      setTitle(this.guestBackupButton, 'Link Google Drive first to enable guest backup.');
+      this.guestBackupStatusNode.textContent = tr('Link Google Drive first');
       this.guestBackupStatusNode.dataset.state = 'error';
       return;
     }
     if (allRequested || (!linked && hasRequested)) {
-      this.guestBackupButton.textContent = 'Disable guest backup';
-      this.guestBackupButton.title = 'Stop guest-side backup recording for all connected guests.';
+      this.guestBackupButton.textContent = tr('Disable guest backup');
+      setTitle(this.guestBackupButton, 'Stop guest-side backup recording for all connected guests.');
     } else if (hasPartial) {
-      this.guestBackupButton.textContent = 'Enable missing backups';
-      this.guestBackupButton.title = 'Enable backup recording for guests not yet confirmed.';
+      this.guestBackupButton.textContent = tr('Enable missing backups');
+      setTitle(this.guestBackupButton, 'Enable backup recording for guests not yet confirmed.');
     } else {
-      this.guestBackupButton.textContent = 'Enable guest backup';
-      this.guestBackupButton.title = 'Ask every connected guest to self-record directly to your linked Google Drive.';
+      this.guestBackupButton.textContent = tr('Enable guest backup');
+      setTitle(this.guestBackupButton, 'Ask every connected guest to self-record directly to your linked Google Drive.');
     }
     if (!snapshot.requested) {
-      this.guestBackupStatusNode.textContent = `Ready for ${snapshot.total} guest${snapshot.total === 1 ? '' : 's'}`;
+      this.guestBackupStatusNode.textContent = snapshot.total === 1 ? tr('Ready for 1 guest') : tr('Ready for {count} guests', { count: snapshot.total });
       this.guestBackupStatusNode.dataset.state = 'idle';
     } else if (snapshot.confirmed === snapshot.total) {
-      this.guestBackupStatusNode.textContent = `${snapshot.confirmed}/${snapshot.total} confirmed`;
+      this.guestBackupStatusNode.textContent = tr('{confirmed}/{total} confirmed', { confirmed: snapshot.confirmed, total: snapshot.total });
       this.guestBackupStatusNode.dataset.state = 'ready';
     } else {
-      this.guestBackupStatusNode.textContent = `${snapshot.confirmed}/${snapshot.total} confirmed`;
+      this.guestBackupStatusNode.textContent = tr('{confirmed}/{total} confirmed', { confirmed: snapshot.confirmed, total: snapshot.total });
       this.guestBackupStatusNode.dataset.state = snapshot.errors ? 'error' : 'pending';
     }
   }
@@ -4438,10 +4612,10 @@ class PodcastStudioApp {
     if (this.recordButton) {
       this.recordButton.classList.toggle('recording', this.recording);
       this.recordButton.disabled = this.recordTransitioning;
-      this.recordButton.textContent = this.recording ? 'Stop Recording' : 'Start Recording';
-      this.recordButton.title = this.recording
+      this.recordButton.textContent = this.recording ? tr('Stop Recording') : tr('Start Recording');
+      setTitle(this.recordButton, this.recording
         ? 'Stop the current ISO recording.'
-        : `Start ${this.describeCaptureMode(this.currentRecordingMode)} capture.`;
+        : tr('Start {mode} capture.', { mode: this.describeCaptureMode(this.currentRecordingMode) }));
     }
     if (this.captureModeSelect) {
       this.captureModeSelect.disabled = this.recording;
@@ -4468,25 +4642,25 @@ class PodcastStudioApp {
         onError: (error) => {
           console.warn('Audio recovery storage failed', error);
           if (this.audioRecovery === recovery) {
-            this.recoveryStatus.textContent = 'Audio recovery could not be saved. Stop and download your recordings before closing this tab.';
+            this.recoveryStatus.textContent = tr('Audio recovery could not be saved. Stop and download your recordings before closing this tab.');
             this.recoveryStatus.dataset.state = 'error';
           }
         },
         onSaved: () => {
           if (this.audioRecovery === recovery && this.recoveryStatus.dataset.state !== 'saving') {
-            this.recoveryStatus.textContent = 'Saving audio recovery copies in this browser.';
+            this.recoveryStatus.textContent = tr('Saving audio recovery copies in this browser.');
             this.recoveryStatus.dataset.state = 'saving';
           }
         },
       });
       this.audioRecovery = recovery;
       this.recoveryStatus.dataset.state = '';
-      this.recoveryStatus.textContent = 'Preparing audio recovery copies...';
+      this.recoveryStatus.textContent = tr('Preparing audio recovery copies...');
       this.renderMarkers();
       this.scheduleAutoSyncMarker();
       this.updateRecordingButtons();
       this.markerButton.disabled = false;
-      this.showOutputsMessage('Recording… tracks will appear as media arrives.');
+      this.showOutputsMessage(tr('Recording… tracks will appear as media arrives.'));
       this.updateHostMicUI();
       this.setUploadProgressPending(true);
       if (this.recordingPlan?.sync) {
@@ -4498,7 +4672,7 @@ class PodcastStudioApp {
       this.logRecordingEvent('record:start', { sessionId: this.recordingSessionId, mode: this.currentRecordingMode });
       this.updateRecordingPlanStatus('started', { events: this.recordingPlan?.events || [] });
       this.setRecordingStatus(
-        this.currentRecordingMode === 'video' ? 'Recording audio + video ISOs' : 'Recording audio ISOs',
+        this.currentRecordingMode === 'video' ? tr('Recording audio + video ISOs') : tr('Recording audio ISOs'),
         'active',
       );
       if (this.recordingSummary) this.recordingSummary.style.display = '';
@@ -4529,7 +4703,7 @@ class PodcastStudioApp {
         return;
       }
       if (indicator.wrapper.dataset.state !== 'error') {
-        indicator.badge.textContent = 'Recording';
+        indicator.badge.textContent = tr('Recording');
         indicator.wrapper.dataset.state = 'recording';
       }
       this.updateRecordingRuntimeMetrics(key, indicator, event.detail);
@@ -4562,9 +4736,9 @@ class PodcastStudioApp {
         if (key) {
           const indicator = this.ensureOutputIndicator(key, participant, trackType, trackIndex);
           if (indicator?.badge) {
-            indicator.badge.textContent = 'Late join';
+            indicator.badge.textContent = tr('Late join');
             indicator.wrapper.dataset.state = 'armed';
-            indicator.badge.title = `Joined ${startOffsetSeconds?.toFixed(1) || '?'}s into recording`;
+            indicator.badge.title = tr('Joined {seconds}s into recording', { seconds: startOffsetSeconds?.toFixed(1) || '?' });
           }
         }
       };
@@ -4587,12 +4761,12 @@ class PodcastStudioApp {
       const participant = detail.participant || {};
       const label = this.participantLabelText(participant);
       const track = `${detail.trackType || 'audio'} ${Number.isInteger(detail.channelIndex) ? detail.channelIndex + 1 : 1}`;
-      this.setRecordingStatus(`Recorder error (${label}, ${track}): ${detail.error?.message || detail.message || 'unknown'}`, 'error');
+      this.setRecordingStatus(tr('Recorder error ({label}, {track}): {message}', { label, track, message: detail.error?.message || detail.message || tr('unknown') }), 'error');
       if (participant.uuid && detail.trackType) {
         const key = this.buildTrackKey(participant.uuid, detail.trackType, detail.channelIndex || 0);
         const indicator = this.ensureOutputIndicator(key, participant, detail.trackType, detail.channelIndex || 0);
         if (indicator) {
-          indicator.badge.textContent = 'Error';
+          indicator.badge.textContent = tr('Error');
           indicator.wrapper.dataset.state = 'error';
         }
       }
@@ -4604,8 +4778,8 @@ class PodcastStudioApp {
         recovery.finish(this.markers.map(marker => ({ ...marker }))).then(() => {
           if (this.audioRecovery === recovery && !recovery.failed) {
             this.recoveryStatus.textContent = recovery.session.tracks.length
-              ? 'Audio recovery copies saved in this browser.'
-              : 'No audio recovery copies were captured.';
+              ? tr('Audio recovery copies saved in this browser.')
+              : tr('No audio recovery copies were captured.');
           }
           this.refreshAudioRecovery();
         });
@@ -4619,7 +4793,7 @@ class PodcastStudioApp {
         clearTimeout(this.autoMarkerTimeout);
         this.autoMarkerTimeout = null;
       }
-      this.showOutputsMessage('Finalising recordings…');
+      this.showOutputsMessage(tr('Finalising recordings…'));
       this.trackLevelNodes.clear();
       this.teardownSpectrograms();
       this.presentRecordings(event.detail?.files);
@@ -4643,7 +4817,7 @@ class PodcastStudioApp {
           events: this.recordingPlan.events,
         });
       }
-      this.setRecordingStatus('Recording idle', 'idle');
+      this.setRecordingStatus(tr('Recording idle'), 'idle');
     });
   }
 
@@ -4673,17 +4847,17 @@ class PodcastStudioApp {
     const title = createElement('div', 'timeline-track__title', { text: this.participantLabelText(participant) });
     const descriptorParts = [];
     if (participant.external || participant.uuid === 'host-mic') {
-      descriptorParts.push('Local input');
+      descriptorParts.push(tr('Local input'));
     } else if (participant.streamID) {
-      descriptorParts.push(`Stream ${participant.streamID}`);
+      descriptorParts.push(tr('Stream: {id}', { id: participant.streamID }));
     }
     descriptorParts.push(trackType ? trackType.toUpperCase() : 'AUDIO');
-    descriptorParts.push(`Channel ${channelIndex + 1}`);
+    descriptorParts.push(tr('Channel {number}', { number: channelIndex + 1 }));
     const subtitle = createElement('div', 'timeline-track__subtitle', {
       text: descriptorParts.filter(Boolean).join(' • '),
     });
     titleGroup.append(title, subtitle);
-    const badge = createElement('span', 'timeline-track__badge', { text: 'Arming' });
+    const badge = createElement('span', 'timeline-track__badge', { text: tr('Arming') });
     header.append(titleGroup, badge);
 
     const metrics = createElement('div', 'timeline-track__metrics');
@@ -4691,14 +4865,14 @@ class PodcastStudioApp {
       text:
         trackType === 'video'
           ? participant.external || participant.uuid === 'host-mic'
-            ? 'Inbound: Local capture'
-            : 'Inbound: Video track live'
+            ? tr('Inbound: Local capture')
+            : tr('Inbound: Video track live')
           : participant.external || participant.uuid === 'host-mic'
-            ? 'Inbound: Local capture'
-            : 'Inbound: pending…',
+            ? tr('Inbound: Local capture')
+            : tr('Inbound: pending…'),
     });
     const recordMetric = createElement('span', 'timeline-track__metric timeline-track__metric--recording', {
-      text: trackType === 'video' ? 'Recording: waiting for video…' : 'Recording: waiting…',
+      text: trackType === 'video' ? tr('Recording: waiting for video…') : tr('Recording: waiting…'),
     });
     metrics.append(inboundMetric, recordMetric);
 
@@ -4871,11 +5045,11 @@ class PodcastStudioApp {
         return;
       }
       if (resolvedMetrics?.local) {
-        node.textContent = indicator.trackType === 'video' ? 'Inbound: Local video capture' : 'Inbound: Local capture';
+        node.textContent = indicator.trackType === 'video' ? tr('Inbound: Local video capture') : tr('Inbound: Local capture');
         return;
       }
       if (indicator.trackType === 'video') {
-        node.textContent = 'Inbound: Video track live';
+        node.textContent = tr('Inbound: Video track live');
         return;
       }
       const parts = [];
@@ -4888,7 +5062,7 @@ class PodcastStudioApp {
       if (resolvedMetrics?.audioCodec) {
         parts.push(resolvedMetrics.audioCodec.toUpperCase());
       }
-      node.textContent = parts.length ? `Inbound: ${parts.join(' • ')}` : 'Inbound: pending…';
+      node.textContent = parts.length ? tr('Inbound: {details}', { details: parts.join(' • ') }) : tr('Inbound: pending…');
     });
   }
 
@@ -4905,9 +5079,9 @@ class PodcastStudioApp {
     const durationSeconds = Number.isFinite(detail?.durationSeconds) ? Math.max(0, detail.durationSeconds) : 0;
     const kbps = durationSeconds > 0 ? (runtime.bytes * 8) / (durationSeconds * 1000) : 0;
     if (indicator.trackType === 'video' || detail?.trackType === 'video') {
-      const videoRateLabel = kbps > 0 ? `${Math.round(kbps)} kbps` : 'capturing…';
+      const videoRateLabel = kbps > 0 ? `${Math.round(kbps)} kbps` : tr('capturing…');
       const durationLabel = this.formatDuration(durationSeconds);
-      indicator.recordMetric.textContent = `Encoded: ${videoRateLabel} • Video • ${durationLabel}`;
+      indicator.recordMetric.textContent = tr('Encoded: {rate} • Video • {duration}', { rate: videoRateLabel, duration: durationLabel });
       this.trackRuntimeStats.set(recordingKey, runtime);
       return;
     }
@@ -4916,9 +5090,9 @@ class PodcastStudioApp {
       sampleRate >= 1000
         ? `${(sampleRate / 1000).toFixed(sampleRate % 1000 === 0 ? 0 : 1)} kHz`
         : `${sampleRate} Hz`;
-    const bitrateLabel = kbps > 0 ? `${Math.round(kbps)} kbps` : 'estimating…';
+    const bitrateLabel = kbps > 0 ? `${Math.round(kbps)} kbps` : tr('estimating…');
     const durationLabel = this.formatDuration(durationSeconds);
-    indicator.recordMetric.textContent = `Encoded: ${bitrateLabel} • WAV export ${sampleRateLabel} • ${durationLabel}`;
+    indicator.recordMetric.textContent = tr('Encoded: {rate} • WAV export {sampleRate} • {duration}', { rate: bitrateLabel, sampleRate: sampleRateLabel, duration: durationLabel });
     this.trackRuntimeStats.set(recordingKey, runtime);
   }
 
@@ -4957,7 +5131,7 @@ class PodcastStudioApp {
     this.recordingSessionId = plan.sessionId;
     this.logRecordingEvent('record:plan', { sessionId: plan.sessionId });
     dispatchStudioEvent(PODCAST_RECORD_PLAN_EVENT, { plan });
-    this.setRecordingStatus('Recording plan armed', 'armed');
+    this.setRecordingStatus(tr('Recording plan armed'), 'armed');
     return plan;
   }
 
@@ -5109,9 +5283,9 @@ class PodcastStudioApp {
     if (this.recording) {
       this.recordTransitioning = true;
       this.updateRecordingButtons();
-      this.showOutputsMessage('Wrapping up recording…');
+      this.showOutputsMessage(tr('Wrapping up recording…'));
       this.logRecordingEvent('record:stop:requested', { reason: 'host-toggle' });
-      this.setRecordingStatus('Stopping recording…', 'stopping');
+      this.setRecordingStatus(tr('Stopping recording…'), 'stopping');
       if (this.markerButton) {
         this.markerButton.disabled = true;
       }
@@ -5124,7 +5298,7 @@ class PodcastStudioApp {
         await this.recorder.stop({ markers: markerSnapshot });
       } catch (error) {
         console.error('Failed to stop recorder cleanly', error);
-        this.setStatusMessage('Recording stop failed: ' + (error?.message || 'unknown error'));
+        this.setStatusMessage(tr('Recording stop failed: ') + (error?.message || tr('unknown error')));
         this.recordTransitioning = false;
         this.updateRecordingButtons();
       }
@@ -5137,7 +5311,7 @@ class PodcastStudioApp {
       if (STUDIO_DISK_FEATURE_FLAG && this.diskRecordingEnabled) {
         diskInfo = await this.ensureDiskCaptureReadiness({ interactive: true });
         if (diskInfo && diskInfo.error) {
-          this.setStatusMessage(diskInfo.error.message || 'Disk folder not accessible.');
+          this.setStatusMessage(diskInfo.error.message || tr('Disk folder not accessible.'));
           this.recordTransitioning = false;
           this.updateRecordingButtons();
           return;
@@ -5147,7 +5321,7 @@ class PodcastStudioApp {
       this.logRecordingEvent('record:arm', { source: 'host-toggle', mode: this.currentRecordingMode });
       this.updateRecordingPlanStatus('armed', { events: this.recordingPlan?.events || [] });
       this.setRecordingStatus(
-        this.currentRecordingMode === 'video' ? 'Arming audio + video ISOs…' : 'Arming audio ISOs…',
+        this.currentRecordingMode === 'video' ? tr('Arming audio + video ISOs…') : tr('Arming audio ISOs…'),
         'arming',
       );
       const recordingOptions = this.getRecordingModeOptions(this.currentRecordingMode);
@@ -5159,7 +5333,7 @@ class PodcastStudioApp {
       });
     } catch (error) {
       console.error('Failed to start recorder', error);
-      const failureMessage = 'Unable to start recording: ' + (error?.message || 'unknown error');
+      const failureMessage = tr('Unable to start recording: ') + (error?.message || tr('unknown error'));
       if (!this.recorder.getFiles().size) {
         this.setStatusMessage(failureMessage);
       }
@@ -5210,7 +5384,7 @@ class PodcastStudioApp {
         return;
       }
       const timestamp = this.recordStartedAt ? (Date.now() - this.recordStartedAt) / 1000 : startOffsetSeconds + 1;
-      const label = participant?.label || participant?.uuid || 'Guest';
+      const label = participant?.label || participant?.uuid || tr('Guest');
       const note = {
         time: timestamp,
         label: `Sync: ${label} joined @ ${timestamp.toFixed(1)}s`,
@@ -5226,7 +5400,7 @@ class PodcastStudioApp {
   openRecordShowWindow() {
     const room = this.resolveRoomName();
     if (!room) {
-      this.setStatusMessage('Set a room name before recording the show.');
+      this.setStatusMessage(tr('Set a room name before recording the show.'));
       return;
     }
     // Build URL to the main VDO.ninja with scene + recordwindow
@@ -5245,7 +5419,7 @@ class PodcastStudioApp {
   async presentRecordings(filesMap) {
     const files = filesMap || this.recorder.getFiles();
     if (!files || files.size === 0) {
-      this.showOutputsMessage('No media captured.');
+      this.showOutputsMessage(tr('No media captured.'));
       this.setUploadProgressPending(false);
       return;
     }
@@ -5267,7 +5441,7 @@ class PodcastStudioApp {
       const label = `${meta.trackType.toUpperCase()} • ${this.participantLabelText(meta.participant)}`;
       const downloadUrl = URL.createObjectURL(meta.blob);
       this.activeDownloadUrls.push(downloadUrl);
-      const linkLabel = meta.mimeType === 'audio/wav' ? 'Download WAV' : 'Download';
+      const linkLabel = meta.mimeType === 'audio/wav' ? tr('Download WAV') : tr('Download');
       const linkTitle =
         meta.mimeType === 'audio/wav'
           ? 'Download as WAV (includes embedded cue markers).'
@@ -5278,10 +5452,10 @@ class PodcastStudioApp {
       const header = createElement('div', 'timeline-entry-header');
       header.append(createElement('span', 'timeline-entry-label', { text: label }), link);
       wrapper.append(header);
-      const metaSummary = this.describeTrackMeta(meta) || 'Metadata pending';
+      const metaSummary = this.describeTrackMeta(meta) || tr('Metadata pending');
       const metaLine = createElement('div', 'upload-meta', { text: metaSummary });
       if (meta.packagingError) {
-        metaLine.textContent += metaSummary ? ' • fallback export' : 'Fallback export';
+        metaLine.textContent += metaSummary ? tr(' • fallback export') : tr('Fallback export');
       }
       wrapper.append(metaLine);
       const statusContainer = createElement('div', 'upload-status');
@@ -5405,7 +5579,7 @@ class PodcastStudioApp {
     }
     // Visual feedback while preparing download
     const originalText = this.markerExportButton.textContent;
-    this.markerExportButton.textContent = 'Exporting…';
+    this.markerExportButton.textContent = tr('Exporting…');
     this.markerExportButton.disabled = true;
 
     // Small delay to show feedback before download triggers
@@ -5418,10 +5592,10 @@ class PodcastStudioApp {
         link.download = this.buildMarkersFilename();
         link.rel = 'noopener';
         link.click();
-        this.markerExportButton.textContent = 'Exported';
+        this.markerExportButton.textContent = tr('Exported');
       } catch (error) {
         console.warn('Failed to trigger CSV download', error);
-        this.markerExportButton.textContent = 'Export failed';
+        this.markerExportButton.textContent = tr('Export failed');
       } finally {
         setTimeout(() => URL.revokeObjectURL(url), 100);
         // Restore button after a moment
@@ -5457,26 +5631,26 @@ class PodcastStudioApp {
         document.execCommand('copy');
         textarea.remove();
       }
-      this.markerCopyButton.textContent = 'Copied';
+      this.markerCopyButton.textContent = tr('Copied');
       if (this.markerCopyResetTimer) {
         clearTimeout(this.markerCopyResetTimer);
       }
       this.markerCopyResetTimer = setTimeout(() => {
         this.markerCopyResetTimer = null;
         if (this.markerCopyButton) {
-          this.markerCopyButton.textContent = 'Copy CSV';
+          this.markerCopyButton.textContent = tr('Copy CSV');
         }
       }, 1500);
     } catch (error) {
       console.warn('Copy markers failed', error);
-      this.markerCopyButton.textContent = 'Copy failed';
+      this.markerCopyButton.textContent = tr('Copy failed');
       if (this.markerCopyResetTimer) {
         clearTimeout(this.markerCopyResetTimer);
       }
       this.markerCopyResetTimer = setTimeout(() => {
         this.markerCopyResetTimer = null;
         if (this.markerCopyButton) {
-          this.markerCopyButton.textContent = 'Copy CSV';
+          this.markerCopyButton.textContent = tr('Copy CSV');
         }
       }, 2000);
     }
@@ -5488,7 +5662,7 @@ class PodcastStudioApp {
       this.markerActions.style.display = this.markers.length ? '' : 'none';
     }
     if (!this.markers.length) {
-      const empty = createElement('div', 'empty-state', { text: 'Tap “Marker” to drop cue points during recording.' });
+      const empty = createElement('div', 'empty-state', { translate: 'Tap “Marker” to drop cue points during recording.' });
       empty.dataset.empty = 'true';
       this.markerLog.append(empty);
       return;
@@ -5557,6 +5731,7 @@ class PodcastStudioApp {
       }
     }
   });
+    this.updateHostScreenUI();
     this.updateGuestBackupControls();
     this.updateReadinessSummary();
     this.refreshRecordingStatusLive();
@@ -5567,7 +5742,7 @@ class PodcastStudioApp {
 
   participantLabelText(participant) {
     if (!participant || !participant.label) {
-      return participant && (participant.streamID || participant.uuid) || 'Guest';
+      return participant && (participant.streamID || participant.uuid) || tr('Guest');
     }
     if (participant.external || participant.uuid === 'host-mic') {
       return participant.label;
@@ -5593,7 +5768,7 @@ class PodcastStudioApp {
 
     const meta = createElement('div', 'roster-meta');
     meta.append(createElement('div', 'roster-name', { text: this.participantLabelText(participant) }));
-    const idText = participant.streamID ? `Stream: ${participant.streamID}` : 'Awaiting stream';
+    const idText = participant.streamID ? tr('Stream: {id}', { id: participant.streamID }) : tr('Awaiting stream');
     meta.append(createElement('div', 'roster-id', { text: idText }));
     const descriptorText = this.describeParticipantRole(participant);
     if (descriptorText) {
@@ -5614,7 +5789,7 @@ class PodcastStudioApp {
     if (participant.role !== 'host-mic') {
       const controlButton = createElement('button', 'roster-action-button', {
         type: 'button',
-        text: 'Remote Controls',
+        translate: 'Remote Controls',
         title: 'Open legacy remote controls for this guest.',
       });
       controlButton.addEventListener('click', () => this.openRemoteControls(participant.uuid));
@@ -5646,7 +5821,7 @@ class PodcastStudioApp {
     }
     const id = item.querySelector('.roster-id');
     if (id) {
-      id.textContent = participant.streamID ? `Stream: ${participant.streamID}` : 'Awaiting stream';
+      id.textContent = participant.streamID ? tr('Stream: {id}', { id: participant.streamID }) : tr('Awaiting stream');
     }
     item.dataset.role = participant.role || '';
     const descriptor = item.querySelector('.roster-role');
@@ -5686,13 +5861,13 @@ class PodcastStudioApp {
     }
     const button = createElement('button', 'roster-action-button roster-action-button--drive', {
       type: 'button',
-      text: 'Guest → Drive',
+      text: tr('Guest → Drive'),
       title: 'Record guest to Google Drive (video + audio)',
     });
     button.dataset.uuid = participant.uuid;
     button.addEventListener('click', () => this.handleDriveRecordToggle(participant.uuid));
 
-    const status = createElement('div', 'roster-drive-status', { text: DRIVE_STATUS_MESSAGES.idle });
+    const status = createElement('div', 'roster-drive-status', { text: tr(DRIVE_STATUS_MESSAGES.idle) });
     status.dataset.state = 'idle';
     status.dataset.uuid = participant.uuid;
 
@@ -5771,8 +5946,8 @@ class PodcastStudioApp {
         uuid,
         'pending',
         pressed
-          ? 'Drive requested. Waiting for guest recorder to start…'
-          : 'Drive request sent. Waiting for guest to confirm recording permission…',
+          ? tr('Drive requested. Waiting for guest recorder to start…')
+          : tr('Drive request sent. Waiting for guest to confirm recording permission…'),
       );
       const runStaleCheck = () => {
         const staleSnapshot = this.driveProgressSnapshots.get(uuid);
@@ -5782,16 +5957,16 @@ class PodcastStudioApp {
         }
         const stillPressed = Boolean(this.findLegacyDriveButton(uuid)?.classList?.contains('pressed'));
         if (this.isDriveRecorderHeartbeatActive(uuid)) {
-          this.setRosterDriveStatus(uuid, 'pending', 'Guest recorder is active. Waiting for Drive upload stats…');
+          this.setRosterDriveStatus(uuid, 'pending', tr('Guest recorder is active. Waiting for Drive upload stats…'));
           timers.stale = setTimeout(runStaleCheck, DRIVE_REQUEST_STALE_TIMEOUT_MS);
           this.driveRequestTimers.set(uuid, timers);
           return;
         }
         if (!stillPressed) {
-          this.setRosterDriveStatus(uuid, 'error', 'Guest did not confirm Drive recording.');
+          this.setRosterDriveStatus(uuid, 'error', tr('Guest did not confirm Drive recording.'));
           this.updateDriveActionAvailability(uuid);
         } else {
-          this.setRosterDriveStatus(uuid, 'error', 'Drive upload never started. Ask guest to allow recording and retry.');
+          this.setRosterDriveStatus(uuid, 'error', tr('Drive upload never started. Ask guest to allow recording and retry.'));
           this.updateDriveActionAvailability(uuid);
         }
         this.clearDriveRequestTimers(uuid);
@@ -5814,10 +5989,10 @@ class PodcastStudioApp {
     const legacyButton = this.findLegacyDriveButton(uuid);
     const pressed = Boolean(legacyButton?.classList?.contains('pressed'));
     if (pressed) {
-      this.setRosterDriveStatus(uuid, 'pending', 'Drive request sent. Waiting for upload telemetry…');
+      this.setRosterDriveStatus(uuid, 'pending', tr('Drive request sent. Waiting for upload telemetry…'));
       return;
     }
-    this.setRosterDriveStatus(uuid, 'error', 'Drive upload not started. Retry and have the guest accept the recording prompt.');
+    this.setRosterDriveStatus(uuid, 'error', tr('Drive upload not started. Retry and have the guest accept the recording prompt.'));
   }
 
   findLegacyDriveButton(uuid) {
@@ -5843,7 +6018,7 @@ class PodcastStudioApp {
     }
     if (!this.canTriggerDriveUpload()) {
       if (this.guestBackupStatusNode) {
-        this.guestBackupStatusNode.textContent = 'Link Google Drive first';
+        this.guestBackupStatusNode.textContent = tr('Link Google Drive first');
         this.guestBackupStatusNode.dataset.state = 'error';
       }
       this.updateReadinessSummary();
@@ -5888,18 +6063,18 @@ class PodcastStudioApp {
       return;
     }
     if (typeof window === 'undefined' || typeof window.requestGoogleDriveRecord !== 'function') {
-      this.setRosterDriveStatus(uuid, 'error', 'Drive controls unavailable in this build.');
+      this.setRosterDriveStatus(uuid, 'error', tr('Drive controls unavailable in this build.'));
       return;
     }
     const legacyButton = this.findLegacyDriveButton(uuid);
     if (!legacyButton) {
-      this.setRosterDriveStatus(uuid, 'pending', 'Guest controls preparing…');
+      this.setRosterDriveStatus(uuid, 'pending', tr('Guest controls preparing…'));
       this.updateDriveActionAvailability(uuid);
       return;
     }
     const isActive = legacyButton.classList?.contains('pressed');
     if (!isActive && !this.canTriggerDriveUpload()) {
-      this.setRosterDriveStatus(uuid, 'error', 'Link Google Drive above to enable uploads.');
+      this.setRosterDriveStatus(uuid, 'error', tr('Link Google Drive above to enable uploads.'));
       this.updateDriveActionAvailability(uuid);
       return;
     }
@@ -5910,13 +6085,13 @@ class PodcastStudioApp {
         this.clearDriveRequestTimers(uuid);
         this.driveRecorderStates.delete(uuid);
         await window.requestGoogleDriveRecord(legacyButton, false);
-        this.setRosterDriveStatus(uuid, 'idle', DRIVE_STATUS_MESSAGES.idle);
+        this.setRosterDriveStatus(uuid, 'idle', tr(DRIVE_STATUS_MESSAGES.idle));
       } else {
         // Drop any stale snapshot from a prior upload so a new request must
         // wait for fresh telemetry before reconciling success/failure.
         this.driveProgressSnapshots.delete(uuid);
         this.driveRecorderStates.delete(uuid);
-        this.setRosterDriveStatus(uuid, 'pending', 'Requesting Drive upload…');
+        this.setRosterDriveStatus(uuid, 'pending', tr('Requesting Drive upload…'));
         await window.requestGoogleDriveRecord(legacyButton, true, bitrate);
         const started = Boolean(legacyButton.classList?.contains('pressed'))
           || Boolean(this.driveProgressSnapshots.get(uuid))
@@ -5925,12 +6100,12 @@ class PodcastStudioApp {
           this.scheduleDriveRequestWatchdog(uuid);
           this.reconcileDriveRequestOutcome(uuid);
         } else {
-          this.setRosterDriveStatus(uuid, 'idle', DRIVE_STATUS_MESSAGES.idle);
+          this.setRosterDriveStatus(uuid, 'idle', tr(DRIVE_STATUS_MESSAGES.idle));
         }
       }
     } catch (error) {
       this.clearDriveRequestTimers(uuid);
-      const message = error?.message || 'Drive request cancelled';
+      const message = error?.message || tr('Drive request cancelled');
       this.setRosterDriveStatus(uuid, 'error', message);
     } finally {
       button.dataset.pending = 'false';
@@ -5971,10 +6146,10 @@ class PodcastStudioApp {
     }
 
     button.disabled = disabled;
-    button.textContent = isActive ? 'Stop Guest → Drive' : 'Guest → Drive';
+    button.textContent = isActive ? tr('Stop Guest → Drive') : tr('Guest → Drive');
     button.dataset.state = isActive ? 'active' : 'idle';
     if (title) {
-      button.title = title;
+      setTitle(button, title);
     }
   }
 
@@ -5991,7 +6166,7 @@ class PodcastStudioApp {
       clearTimeout(this.driveStatusResetTimers.get(uuid));
       this.driveStatusResetTimers.delete(uuid);
     }
-    const label = text || DRIVE_STATUS_MESSAGES[state] || DRIVE_STATUS_MESSAGES.idle;
+    const label = text || tr(DRIVE_STATUS_MESSAGES[state] || DRIVE_STATUS_MESSAGES.idle);
     node.dataset.state = state;
     node.textContent = label;
     if (state === 'done' || state === 'idle' || state === 'error') {
@@ -5999,7 +6174,7 @@ class PodcastStudioApp {
     }
     if (state === 'done') {
       const timer = setTimeout(() => {
-        this.setRosterDriveStatus(uuid, 'idle', DRIVE_STATUS_MESSAGES.idle);
+        this.setRosterDriveStatus(uuid, 'idle', tr(DRIVE_STATUS_MESSAGES.idle));
         this.driveStatusResetTimers.delete(uuid);
       }, DRIVE_STATUS_RESET_MS);
       this.driveStatusResetTimers.set(uuid, timer);
@@ -6019,19 +6194,19 @@ class PodcastStudioApp {
 
   setRosterDriveStatusFromSnapshot(uuid, gdrive) {
     if (!gdrive) {
-      this.setRosterDriveStatus(uuid, 'idle', DRIVE_STATUS_MESSAGES.idle);
+      this.setRosterDriveStatus(uuid, 'idle', tr(DRIVE_STATUS_MESSAGES.idle));
       return;
     }
     this.clearDriveRequestTimers(uuid);
     if (gdrive.state === 2) {
-      this.setRosterDriveStatus(uuid, 'done', DRIVE_STATUS_MESSAGES.done);
+      this.setRosterDriveStatus(uuid, 'done', tr(DRIVE_STATUS_MESSAGES.done));
       return;
     }
     if (typeof gdrive.rec === 'number' && gdrive.rec > 0) {
       const percent = Math.min(100, Math.round((gdrive.up / Math.max(1, gdrive.rec)) * 100));
-      this.setRosterDriveStatus(uuid, 'uploading', `Drive upload ${percent}%`);
+      this.setRosterDriveStatus(uuid, 'uploading', tr('Drive upload {percent}%', { percent }));
     } else {
-      this.setRosterDriveStatus(uuid, 'pending', DRIVE_STATUS_MESSAGES.pending);
+      this.setRosterDriveStatus(uuid, 'pending', tr(DRIVE_STATUS_MESSAGES.pending));
     }
   }
 
@@ -6078,27 +6253,27 @@ class PodcastStudioApp {
       if (!this.driveProgressSnapshots.get(uuid)) {
         const minutes = Math.floor(code / 60);
         const seconds = Math.max(0, code - minutes * 60).toString().padStart(2, '0');
-        this.setRosterDriveStatus(uuid, 'pending', `Guest recording ${minutes}m ${seconds}s… waiting for Drive stats`);
+        this.setRosterDriveStatus(uuid, 'pending', tr('Guest recording {minutes}m {seconds}s… waiting for Drive stats', { minutes, seconds }));
       }
       this.updateDriveActionAvailability(uuid);
       return;
     }
     if (code === -5) {
-      this.setRosterDriveStatus(uuid, 'pending', 'Guest recorder started with experimental browser support.');
+      this.setRosterDriveStatus(uuid, 'pending', tr('Guest recorder started with experimental browser support.'));
     } else if (code === -4) {
-      this.setRosterDriveStatus(uuid, 'error', 'Guest recording stopped unexpectedly.');
+      this.setRosterDriveStatus(uuid, 'error', tr('Guest recording stopped unexpectedly.'));
     } else if (code === -3) {
-      this.setRosterDriveStatus(uuid, 'error', 'Guest browser cannot record/upload to Drive.');
+      this.setRosterDriveStatus(uuid, 'error', tr('Guest browser cannot record/upload to Drive.'));
     } else if (code === -2) {
-      this.setRosterDriveStatus(uuid, 'pending', 'Guest recorder stopping…');
+      this.setRosterDriveStatus(uuid, 'pending', tr('Guest recorder stopping…'));
     } else if (code === -1) {
       const snapshot = this.driveProgressSnapshots.get(uuid);
       if (snapshot) {
         this.setRosterDriveStatusFromSnapshot(uuid, snapshot);
       } else if (hasWatchdog || drivePressed || driveStateActive) {
-        this.setRosterDriveStatus(uuid, 'error', 'Guest recorder stopped before Drive upload telemetry started.');
+        this.setRosterDriveStatus(uuid, 'error', tr('Guest recorder stopped before Drive upload telemetry started.'));
       } else {
-        this.setRosterDriveStatus(uuid, 'idle', DRIVE_STATUS_MESSAGES.idle);
+        this.setRosterDriveStatus(uuid, 'idle', tr(DRIVE_STATUS_MESSAGES.idle));
       }
     }
     this.updateDriveActionAvailability(uuid);
@@ -6116,8 +6291,8 @@ class PodcastStudioApp {
 
     const panel = createElement('div', 'remote-overlay__panel');
     const header = createElement('div', 'remote-overlay__header');
-    const title = createElement('h3', 'remote-overlay__title', { text: 'Remote controls' });
-    const closeButton = createElement('button', 'remote-overlay__close', { type: 'button', text: 'Close', title: 'Close remote controls.' });
+    const title = createElement('h3', 'remote-overlay__title', { text: tr('Remote controls') });
+    const closeButton = createElement('button', 'remote-overlay__close', { type: 'button', translate: 'Close', title: 'Close remote controls.' });
     closeButton.addEventListener('click', () => this.closeRemoteOverlay());
     header.append(title, closeButton);
 
@@ -6194,7 +6369,7 @@ class PodcastStudioApp {
     }
     const headerTitle = overlay.querySelector('.remote-overlay__title');
     if (headerTitle) {
-      headerTitle.textContent = label ? `Remote controls • ${label}` : 'Remote controls';
+      headerTitle.textContent = label ? `${tr('Remote controls')} • ${label}` : tr('Remote controls');
     }
 
     const existingState = this.remoteControlState || {};
@@ -6209,7 +6384,7 @@ class PodcastStudioApp {
     if (!source) {
       body.append(
         createElement('div', 'remote-overlay__empty', {
-          text: 'Legacy director controls are still loading. Try again once the guest is fully connected.',
+          translate: 'Legacy director controls are still loading. Try again once the guest is fully connected.',
         }),
       );
       overlay.dataset.visible = 'true';
@@ -6264,7 +6439,7 @@ class PodcastStudioApp {
     const panel = createElement('div', 'help-overlay__panel');
 
     const header = createElement('div', 'help-overlay__header');
-    const title = createElement('h2', 'help-overlay__title', { text: 'Podcast Studio Guide' });
+    const title = createElement('h2', 'help-overlay__title', { translate: 'Podcast Studio Guide' });
     const closeButton = createElement('button', 'help-overlay__close', { type: 'button', text: '✕', title: 'Close' });
     closeButton.addEventListener('click', () => this.closeHelpModal());
     header.append(title, closeButton);
@@ -6385,9 +6560,10 @@ class PodcastStudioApp {
 
     sections.forEach((section) => {
       const item = createElement('details', 'help-section');
-      const summary = createElement('summary', 'help-section__title', { text: section.title });
+      const summary = createElement('summary', 'help-section__title', { translate: section.title });
       const body = createElement('div', 'help-section__body');
-      body.innerHTML = section.content;
+      // Each guide section is one translatable HTML block, keyed by its English title.
+      miniTranslate(body, textKey(section.title + ' guide'), section.content);
       item.append(summary, body);
       content.append(item);
     });
@@ -6421,7 +6597,7 @@ class PodcastStudioApp {
       return '';
     }
     if (participant.role === 'host-mic') {
-      return 'Local recording input';
+      return tr('Local recording input');
     }
     return '';
   }
@@ -6448,14 +6624,14 @@ class PodcastStudioApp {
   updateCloudFooter() {
     if (this.driveStatusNode) {
       const driveText = this.cloud?.hasDriveAccess()
-        ? 'Google Drive linked'
-        : 'Drive link pending';
+        ? tr('Google Drive linked')
+        : tr('Drive link pending');
       this.driveStatusNode.textContent = driveText;
     }
     if (this.dropboxStatusNode) {
       const dropboxText = this.cloud?.hasDropboxAccess()
-        ? 'Dropbox linked'
-        : 'Dropbox link pending';
+        ? tr('Dropbox linked')
+        : tr('Dropbox link pending');
       this.dropboxStatusNode.textContent = dropboxText;
     }
     this.refreshUploadProgress('dropbox');
@@ -6476,31 +6652,31 @@ class PodcastStudioApp {
     this.updateDestinationLights(driveActive, dropboxActive, diskReady, diskMeta, guestBackup);
 
     if (this.captureSummaryNode) {
-      this.captureSummaryNode.textContent = `Capture: ${this.describeCaptureMode(this.currentRecordingMode)}`;
+      this.captureSummaryNode.textContent = tr('Capture: {mode}', { mode: this.describeCaptureMode(this.currentRecordingMode) });
     }
     if (this.backupSummaryNode) {
       if (!guestBackup.total) {
-        this.backupSummaryNode.textContent = 'Guest backup: No guests connected';
+        this.backupSummaryNode.textContent = tr('Guest backup: No guests connected');
       } else if (!guestBackup.requested) {
-        this.backupSummaryNode.textContent = 'Guest backup: None';
+        this.backupSummaryNode.textContent = tr('Guest backup: None');
       } else {
-        this.backupSummaryNode.textContent = `Guest backup: ${guestBackup.confirmed}/${guestBackup.total} confirmed`;
+        this.backupSummaryNode.textContent = tr('Guest backup: {confirmed}/{total} confirmed', { confirmed: guestBackup.confirmed, total: guestBackup.total });
       }
     }
     if (this.saveSummaryNode) {
-      this.saveSummaryNode.textContent = `Save: ${this.describeSaveTargetSummary()}`;
+      this.saveSummaryNode.textContent = tr('Save: {target}', { target: this.describeSaveTargetSummary() });
     }
     if (this.summaryWarningNode) {
-      let warningText = 'No live backup active. Host capture stays buffered until stop.';
+      let warningText = tr('No live backup active. Host capture stays buffered until stop.');
       let warningState = '';
       if (!guestBackup.total) {
-        warningText = 'No guests connected yet. Host capture stays buffered until stop.';
+        warningText = tr('No guests connected yet. Host capture stays buffered until stop.');
         warningState = 'pending';
       } else if (guestBackup.confirmed === guestBackup.total && guestBackup.total > 0) {
-        warningText = 'Live guest backup active for all connected guests.';
+        warningText = tr('Live guest backup active for all connected guests.');
         warningState = 'ready';
       } else if (guestBackup.requested) {
-        warningText = `Live guest backup confirmed for ${guestBackup.confirmed}/${guestBackup.total}. Unconfirmed guests are not backed up yet.`;
+        warningText = tr('Live guest backup confirmed for {confirmed}/{total}. Unconfirmed guests are not backed up yet.', { confirmed: guestBackup.confirmed, total: guestBackup.total });
       }
       this.summaryWarningNode.textContent = warningText;
       if (warningState) {
@@ -6512,7 +6688,7 @@ class PodcastStudioApp {
     if (this.cloudSummaryNode) {
       const afterSessionTargets = [];
       if (diskReady) {
-        afterSessionTargets.push(`Local folder (${diskMeta.folderName})`);
+        afterSessionTargets.push(tr('Local folder ({name})', { name: diskMeta.folderName }));
       }
       if (driveActive) {
         afterSessionTargets.push('Drive');
@@ -6521,11 +6697,11 @@ class PodcastStudioApp {
         afterSessionTargets.push('Dropbox');
       }
       if (icecastLive) {
-        afterSessionTargets.push('Icecast live');
+        afterSessionTargets.push(tr('Icecast live'));
       }
       this.cloudSummaryNode.textContent = afterSessionTargets.length
-        ? `Outputs: ${afterSessionTargets.join(' • ')}`
-        : 'After-session save: Browser buffer only';
+        ? tr('Outputs: {targets}', { targets: afterSessionTargets.join(' • ') })
+        : tr('After-session save: Browser buffer only');
       this.cloudSummaryNode.dataset.state = afterSessionTargets.length ? 'ready' : 'pending';
     }
     this.updateGuestBackupControls();
@@ -6539,31 +6715,31 @@ class PodcastStudioApp {
       if (light.status) light.status.textContent = statusText || '';
     };
 
-    setLight('download', 'green', 'Always on');
+    setLight('download', 'green', tr('Always on'));
 
     setLight('dropbox', dropboxActive ? 'green' : 'gray',
-      dropboxActive ? 'After recording' : 'Not connected');
+      dropboxActive ? tr('After recording') : tr('Not connected'));
 
     // Drive = guest direct upload path
     if (!driveActive) {
-      setLight('drive', 'gray', 'Not connected');
+      setLight('drive', 'gray', tr('Not connected'));
     } else if (!guestBackup.total) {
-      setLight('drive', 'yellow', 'Connected — no guests');
+      setLight('drive', 'yellow', tr('Connected — no guests'));
     } else if (!guestBackup.requested) {
-      setLight('drive', 'yellow', 'Connected — not enabled');
+      setLight('drive', 'yellow', tr('Connected — not enabled'));
     } else if (guestBackup.confirmed === guestBackup.total) {
-      setLight('drive', 'green', `${guestBackup.confirmed}/${guestBackup.total} recording`);
+      setLight('drive', 'green', tr('{confirmed}/{total} recording', { confirmed: guestBackup.confirmed, total: guestBackup.total }));
     } else {
-      setLight('drive', 'yellow', `${guestBackup.confirmed}/${guestBackup.total} confirmed`);
+      setLight('drive', 'yellow', tr('{confirmed}/{total} confirmed', { confirmed: guestBackup.confirmed, total: guestBackup.total }));
     }
 
     if (STUDIO_DISK_FEATURE_FLAG) {
       if (diskReady) {
-        setLight('disk', 'green', diskMeta.folderName || 'Ready');
+        setLight('disk', 'green', diskMeta.folderName || tr('Ready'));
       } else if (diskMeta.enabled) {
-        setLight('disk', 'yellow', 'No folder');
+        setLight('disk', 'yellow', tr('No folder'));
       } else {
-        setLight('disk', 'gray', 'Not set up');
+        setLight('disk', 'gray', tr('Not set up'));
       }
     }
   }
@@ -6608,9 +6784,9 @@ class PodcastStudioApp {
       return 'Dropbox';
     }
     if (service === 'local') {
-      return 'Local disk';
+      return tr('Local disk');
     }
-    return service || 'Service';
+    return service || tr('Service');
   }
 
   normalizeUploadStatus(service, status) {
@@ -6642,20 +6818,20 @@ class PodcastStudioApp {
           : false;
     const hint = ready
       ? service === 'local'
-        ? 'armed'
-        : 'ready'
+        ? tr('armed')
+        : tr('ready')
       : service === 'local'
-        ? 'not armed'
-        : 'link to upload';
+        ? tr('not armed')
+        : tr('link to upload');
     line.textContent = `${this.describeService(service)}: ${hint}`;
     if (service === 'local') {
-      line.title = ready
+      setTitle(line, ready
         ? 'Files will be written into the armed local folder after recording stops.'
-        : 'Arm local disk recording above to write files directly into the selected folder.';
+        : 'Arm local disk recording above to write files directly into the selected folder.');
     } else {
       line.title = ready
-        ? `${this.describeService(service)} is linked; uploads will start when queued.`
-        : `Link ${this.describeService(service)} above to enable uploads.`;
+        ? tr('{service} is linked; uploads will start when queued.', { service: this.describeService(service) })
+        : tr('Link {service} above to enable uploads.', { service: this.describeService(service) });
     }
     return line;
   }
@@ -6672,10 +6848,10 @@ class PodcastStudioApp {
           return;
         }
         node.dataset.state = 'pending';
-        node.textContent = `${this.describeService(service)} uploads pending (recording in progress)`;
+        node.textContent = tr('{service} uploads pending (recording in progress)', { service: this.describeService(service) });
       } else if (!this.uploadTrackers?.[service]?.size) {
         node.dataset.state = 'idle';
-        node.textContent = `${this.describeService(service)} uploads idle`;
+        node.textContent = tr('{service} uploads idle', { service: this.describeService(service) });
       }
     });
   }
@@ -6756,7 +6932,7 @@ class PodcastStudioApp {
       return;
     }
     if (!tracker.size) {
-      node.textContent = `${this.describeService(service)} uploads idle`;
+      node.textContent = tr('{service} uploads idle', { service: this.describeService(service) });
       node.dataset.state = 'idle';
       return;
     }
@@ -6770,26 +6946,30 @@ class PodcastStudioApp {
     const totalBytes = entries.reduce((total, entry) => total + (entry.bytesTotal || entry.bytesUploaded || 0), 0);
     const percentage = totalBytes ? Math.min(100, Math.round((uploadedBytes / totalBytes) * 100)) : 0;
     if (errors.length) {
-      node.textContent = `${this.describeService(service)} upload error (${errors.length})`;
+      node.textContent = tr('{service} upload error ({count})', { service: this.describeService(service), count: errors.length });
       node.dataset.state = 'error';
       return;
     }
     if (active.length) {
-      node.textContent = `${this.describeService(service)} uploading ${active.length} file${active.length === 1 ? '' : 's'} • ${percentage}%`;
+      node.textContent = active.length === 1
+        ? tr('{service} uploading 1 file • {percent}%', { service: this.describeService(service), percent: percentage })
+        : tr('{service} uploading {count} files • {percent}%', { service: this.describeService(service), count: active.length, percent: percentage });
       node.dataset.state = 'uploading';
       return;
     }
     if (queued.length) {
-      node.textContent = `${this.describeService(service)} queued ${queued.length} file${queued.length === 1 ? '' : 's'} • finalizing`;
+      node.textContent = queued.length === 1
+        ? tr('{service} queued 1 file • finalizing', { service: this.describeService(service) })
+        : tr('{service} queued {count} files • finalizing', { service: this.describeService(service), count: queued.length });
       node.dataset.state = 'pending';
       return;
     }
     if (completed.length || skipped.length) {
-      node.textContent = `${this.describeService(service)} uploads complete`;
+      node.textContent = tr('{service} uploads complete', { service: this.describeService(service) });
       node.dataset.state = 'complete';
       return;
     }
-    node.textContent = `${this.describeService(service)} uploads idle`;
+    node.textContent = tr('{service} uploads idle', { service: this.describeService(service) });
     node.dataset.state = 'idle';
   }
 
@@ -6803,14 +6983,14 @@ class PodcastStudioApp {
     element.dataset.status = normalizedStatus;
     if (normalizedStatus === 'queued') {
       const sizeText = result.bytes ? ` (${this.formatFileSize(result.bytes)})` : '';
-      element.textContent = `${label}: queued${sizeText}`;
+      element.textContent = `${label}: ${tr('queued')}${sizeText}`;
     } else if (normalizedStatus === 'uploaded') {
       const sizeText = result.bytes ? ` (${this.formatFileSize(result.bytes)})` : '';
-      element.textContent = `${label}: uploaded${sizeText}`;
+      element.textContent = `${label}: ${tr('uploaded')}${sizeText}`;
     } else if (normalizedStatus === 'skipped') {
-      element.textContent = `${label}: ${result.reason || 'skipped'}`;
+      element.textContent = `${label}: ${result.reason || tr('skipped')}`;
     } else if (normalizedStatus === 'error') {
-      const message = result.error?.message || result.error?.toString() || 'failed';
+      const message = result.error?.message || result.error?.toString() || tr('failed');
       element.textContent = `${label}: ${message}`;
       element.dataset.status = 'error';
     } else {
@@ -6831,15 +7011,15 @@ class PodcastStudioApp {
 
   async saveBlobToArmedDisk(blob, filename) {
     if (!blob) {
-      throw new Error('No recording blob available for disk write.');
+      throw new Error(tr('No recording blob available for disk write.'));
     }
     const verify = await verifyStoredDiskRecordingDirectory({ requestPermission: false });
     if (!verify.ok) {
-      throw new Error(verify.message || 'Disk folder is not accessible.');
+      throw new Error(verify.message || tr('Disk folder is not accessible.'));
     }
     const directoryHandle = await readDiskDirectoryHandle();
     if (!directoryHandle) {
-      throw new Error('No local disk folder is selected.');
+      throw new Error(tr('No local disk folder is selected.'));
     }
     const guessedExt = blob.type && blob.type.includes('/')
       ? (blob.type.split('/')[1] || 'bin').split(';')[0]
@@ -6871,30 +7051,30 @@ class PodcastStudioApp {
     }
     if (!meta?.blob) {
       localElement.dataset.status = 'error';
-      localElement.textContent = 'Local disk: missing file data';
-      return { status: 'error', service: 'local', error: new Error('Missing recording blob') };
+      localElement.textContent = tr('Local disk: missing file data');
+      return { status: 'error', service: 'local', error: new Error(tr('Missing recording blob')) };
     }
     if (!this.isDiskDestinationReady()) {
       localElement.dataset.status = 'skipped';
-      localElement.textContent = 'Local folder: not configured (download only)';
+      localElement.textContent = tr('Local folder: not configured (download only)');
       return { status: 'skipped', service: 'local', reason: 'not-armed' };
     }
     localElement.dataset.status = 'pending';
-    localElement.textContent = 'Local disk: writing…';
+    localElement.textContent = tr('Local disk: writing…');
     try {
       const saved = await this.saveBlobToArmedDisk(meta.blob, meta.filename);
       localElement.dataset.status = 'uploaded';
       const sizeText = saved.bytes ? ` (${this.formatFileSize(saved.bytes)})` : '';
-      localElement.textContent = `Local disk: saved${sizeText}`;
-      localElement.title = saved.folderName
-        ? `Saved to local folder: ${saved.folderName}`
-        : 'Saved to the armed local folder.';
+      localElement.textContent = `${tr('Local disk: saved')}${sizeText}`;
+      setTitle(localElement, saved.folderName
+        ? tr('Saved to local folder: {name}', { name: saved.folderName })
+        : 'Saved to the armed local folder.');
       return { status: 'uploaded', service: 'local', ...saved };
     } catch (error) {
       console.error('Failed writing recording to local disk', error);
       localElement.dataset.status = 'error';
-      localElement.textContent = `Local disk: ${error?.message || 'write failed'}`;
-      localElement.title = 'Local disk write failed.';
+      localElement.textContent = `${tr('Local disk')}: ${error?.message || tr('write failed')}`;
+      setTitle(localElement, 'Local disk write failed.');
       return { status: 'error', service: 'local', error };
     }
   }
@@ -6902,7 +7082,7 @@ class PodcastStudioApp {
   async queueDropboxUpload(meta, dropboxLine) {
     const signal = this.abortUploadsController?.signal;
     if (!this.cloud || !meta?.blob) {
-      if (dropboxLine) dropboxLine.textContent = 'Dropbox: unavailable';
+      if (dropboxLine) dropboxLine.textContent = tr('Dropbox: unavailable');
       return;
     }
     let canDropbox = Boolean(this.cloud?.hasDropboxAccess());
@@ -6915,7 +7095,7 @@ class PodcastStudioApp {
       }
     }
     if (dropboxLine) {
-      dropboxLine.textContent = `${this.describeService('dropbox')}: ${canDropbox ? 'preparing upload…' : 'not connected'}`;
+      dropboxLine.textContent = `${this.describeService('dropbox')}: ${canDropbox ? tr('preparing upload…') : tr('not connected')}`;
       dropboxLine.dataset.status = canDropbox ? 'pending' : 'idle';
     }
     if (!canDropbox) return;
@@ -6948,7 +7128,7 @@ class PodcastStudioApp {
     } catch (error) {
       console.error('Dropbox upload failed', error);
       if (dropboxLine) {
-        dropboxLine.textContent = 'Dropbox: upload failed';
+        dropboxLine.textContent = tr('Dropbox: upload failed');
         dropboxLine.dataset.status = 'error';
       }
       if (uploadKey) {
@@ -6972,25 +7152,25 @@ class PodcastStudioApp {
         take.remove();
       });
       this.recoveryPanel.hidden = !sessions.length;
-      this.recoverySummary.textContent = `Saved audio (${sessions.length} ${sessions.length === 1 ? 'take' : 'takes'})`;
+      this.recoverySummary.textContent = sessions.length === 1 ? tr('Saved audio (1 take)') : tr('Saved audio ({count} takes)', { count: sessions.length });
       sessions.forEach((session, index) => {
         if (Array.from(this.recoveryList.children).some(take => take.dataset.sessionId === session.id)) return;
         const take = createElement('details', 'timeline-archive audio-recovery-take');
         take.dataset.sessionId = session.id;
         take.append(createElement('summary', 'timeline-entry-label', {
-          text: `${session.roomName || 'Studio'} • ${new Date(session.startedAt).toLocaleString()}`,
+          text: `${session.roomName || tr('Studio')} • ${new Date(session.startedAt).toLocaleString()}`,
         }));
         session.tracks.forEach((track, index) => {
           const row = createElement('div', 'audio-recovery-track');
           const header = createElement('div', 'timeline-entry-header');
           header.append(createElement('span', 'timeline-entry-label', {
-            text: `${track.label} • Audio ${track.channelIndex + 1} • Starts at ${track.startOffsetSeconds.toFixed(2)}s`,
+            text: `${track.label} • ${tr('Audio {number}', { number: track.channelIndex + 1 })} • ${tr('Starts at {seconds}s', { seconds: track.startOffsetSeconds.toFixed(2) })}`,
           }));
-          const recover = createElement('button', 'iso-config-row__button', { type: 'button', text: 'Prepare download' });
+          const recover = createElement('button', 'iso-config-row__button', { type: 'button', translate: 'Prepare download' });
           const status = createElement('div', 'upload-meta', { role: 'status' });
           recover.addEventListener('click', async () => {
             recover.disabled = true;
-            status.textContent = 'Preparing audio...';
+            status.textContent = tr('Preparing audio...');
             try {
               const original = await loadRecoveryTrack(session.id, track);
               if (!take.isConnected) return;
@@ -7001,7 +7181,7 @@ class PodcastStudioApp {
                 header.append(createElement('a', 'marker-badge', { href: url, download: this.sanitizeDiskFilename(`${basename}-${track.label}.${extension}`, extension), text }));
               };
               const extension = track.mimeType.includes('ogg') ? 'ogg' : track.mimeType.includes('mp4') ? 'm4a' : 'webm';
-              addDownload(original, extension, 'Download original');
+              addDownload(original, extension, tr('Download original'));
               try {
                 const wav = await convertBlobToWav(original, {
                   audioContext: this.audioContext,
@@ -7009,14 +7189,14 @@ class PodcastStudioApp {
                   trackStartOffsetSeconds: track.startOffsetSeconds,
                 });
                 if (!take.isConnected) return;
-                addDownload(wav, 'wav', 'Download WAV');
+                addDownload(wav, 'wav', tr('Download WAV'));
                 status.textContent = '';
               } catch (error) {
-                status.textContent = 'WAV conversion failed. Download the original audio to keep it.';
+                status.textContent = tr('WAV conversion failed. Download the original audio to keep it.');
               }
               recover.remove();
             } catch (error) {
-              status.textContent = `Could not load saved audio: ${error.message}`;
+              status.textContent = tr('Could not load saved audio: {message}', { message: error.message });
               recover.disabled = false;
             }
           });
@@ -7024,16 +7204,16 @@ class PodcastStudioApp {
           row.append(header, status);
           take.append(row);
         });
-        const clear = createElement('button', 'iso-config-row__button', { type: 'button', text: 'Clear saved audio' });
+        const clear = createElement('button', 'iso-config-row__button', { type: 'button', translate: 'Clear saved audio' });
         const clearStatus = createElement('p', 'upload-meta', { role: 'status' });
         clear.addEventListener('click', async () => {
-          if (!window.confirm('Clear this saved audio copy from the browser? Download any tracks you need first.')) return;
+          if (!window.confirm(tr('Clear this saved audio copy from the browser? Download any tracks you need first.'))) return;
           clear.disabled = true;
           try {
             await clearAudioRecoverySession(session.id);
             await this.refreshAudioRecovery();
           } catch (error) {
-            clearStatus.textContent = `Could not clear saved audio: ${error.message}`;
+            clearStatus.textContent = tr('Could not clear saved audio: {message}', { message: error.message });
             clear.disabled = false;
           }
         });
@@ -7042,7 +7222,7 @@ class PodcastStudioApp {
       });
     } catch (error) {
       console.warn('Unable to list saved audio', error);
-      this.recoveryStatus.textContent = 'Audio recovery storage is unavailable. Download your recordings before closing this tab.';
+      this.recoveryStatus.textContent = tr('Audio recovery storage is unavailable. Download your recordings before closing this tab.');
       this.recoveryStatus.dataset.state = 'error';
     }
   }
@@ -7057,11 +7237,11 @@ class PodcastStudioApp {
     };
     const fileCount = container.querySelectorAll('a[download]').length;
     archive.element.append(createElement('summary', 'timeline-entry-label', {
-      text: `Previous recording (${fileCount} ${fileCount === 1 ? 'file' : 'files'})`,
+      text: fileCount === 1 ? tr('Previous recording (1 file)') : tr('Previous recording ({count} files)', { count: fileCount }),
     }));
-    const discard = createElement('button', 'iso-config-row__button', { text: 'Discard this take', type: 'button' });
+    const discard = createElement('button', 'iso-config-row__button', { translate: 'Discard this take', type: 'button' });
     discard.addEventListener('click', () => {
-      if (!window.confirm('Discard these recording downloads and cancel unfinished uploads? Save any files you need first.')) return;
+      if (!window.confirm(tr('Discard these recording downloads and cancel unfinished uploads? Save any files you need first.'))) return;
       if (archive.controller) archive.controller.abort();
       archive.urls.forEach(url => URL.revokeObjectURL(url));
       archive.element.remove();
@@ -7230,8 +7410,20 @@ class PodcastStudioApp {
   }
 }
 
+// main.js starts the language download when the DOM is ready. Wait for it so the first
+// screen is built in the right language; a failed download still resolves and leaves English.
+async function waitForLanguage() {
+  if (document.readyState === 'loading') {
+    await new Promise((resolve) => document.addEventListener('DOMContentLoaded', resolve, { once: true }));
+  }
+  if (window.session && window.session.languageRequest) {
+    await window.session.languageRequest;
+  }
+}
+
 async function bootstrap() {
   try {
+    await waitForLanguage();
     const preflight = await ensureRoomSelection();
     if (preflight?.redirect) {
       return;

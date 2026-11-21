@@ -1148,7 +1148,8 @@ body.podcast-studio-mode > :not(#podcast-root):not(#podcast-room-gate):not([data
   cursor: not-allowed;
 }
 
-.host-mute-toggle {
+.host-mute-toggle,
+.host-screen-toggle {
   background: rgba(95, 142, 255, 0.12);
   color: #9ec5ff;
   border: 1px solid rgba(95, 142, 255, 0.25);
@@ -1161,11 +1162,19 @@ body.podcast-studio-mode > :not(#podcast-root):not(#podcast-room-gate):not([data
   white-space: nowrap;
 }
 
-.host-mute-toggle:hover:not(:disabled) {
+.host-mute-toggle:hover:not(:disabled),
+.host-screen-toggle:hover:not(:disabled) {
   background: rgba(95, 142, 255, 0.2);
 }
 
-.host-mute-toggle:disabled {
+.host-screen-toggle.active {
+  background: rgba(47, 231, 163, 0.22);
+  border-color: rgba(47, 231, 163, 0.4);
+  color: #2fe7a3;
+}
+
+.host-mute-toggle:disabled,
+.host-screen-toggle:disabled {
   opacity: 0.4;
   cursor: not-allowed;
 }

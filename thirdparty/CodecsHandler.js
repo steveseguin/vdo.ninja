@@ -420,8 +420,28 @@ var CodecsHandler = (function() {
         return sdp;
     }
 	
-	function processOpus(sdpLines, opusPayload, opusIndex, codecType, params, debug){
-		var opusFmtpLineIndex = findLine(sdpLines, 'a=fmtp:' + opusPayload.toString());
+	// The lines [start, end) of the audio section the Opus settings belong to: the first one with
+	// Opus whose mid is not in skipMids. Returns null if there is no such section.
+	function findOpusSection(sdpLines, skipMids) {
+		var start = -1;
+		for (var i = 0; i <= sdpLines.length; i++) {
+			if (i === sdpLines.length || sdpLines[i].indexOf('m=') === 0) {
+				if (start !== -1) {
+					var midIndex = findLineInRange(sdpLines, start, i, 'a=mid:');
+					var mid = midIndex !== null ? sdpLines[midIndex].substring(6).trim() : null;
+					if (skipMids.indexOf(mid) === -1 && findLineInRange(sdpLines, start, i, 'a=rtpmap', 'opus/48000') !== null) {
+						return [start, i];
+					}
+				}
+				start = (i < sdpLines.length && sdpLines[i].indexOf('m=audio') === 0) ? i : -1;
+			}
+		}
+		return null;
+	}
+
+	function processOpus(sdpLines, opusPayload, opusIndex, codecType, params, debug, startLine, endLine){
+		// Audio sections share one payload type, so look for the fmtp line inside the chosen section.
+		var opusFmtpLineIndex = findLineInRange(sdpLines, startLine || 0, endLine === undefined ? -1 : endLine, 'a=fmtp:' + opusPayload.toString());
 		if (opusFmtpLineIndex === null) {
 			return sdpLines;
 		}
@@ -511,7 +531,7 @@ var CodecsHandler = (function() {
 		return sdpLines;
 	}
 
-	function setOpusAttributes(sdp, params, debug=false) { 
+	function setOpusAttributes(sdp, params, debug=false, skipMids=false) { 
 		params = params || {};
 
 		var sdpLines = sdp.split('\r\n');
@@ -529,6 +549,20 @@ var CodecsHandler = (function() {
 		if (opusPayload){
 			if (debug) console.log("Processing OPUS codec");
 			sdpLines = processOpus(sdpLines, opusPayload, opusIndex, "OPUS", params, debug);
+		}
+
+		// A connection that also carries screen-share audio has more than one audio section, and
+		// the first one may be the screen share's. skipMids names the screen-share sections, so
+		// the mic's own section gets these settings too, whichever was added first.
+		if (skipMids && skipMids.length) {
+			var section = findOpusSection(sdpLines, skipMids);
+			if (section && (opusIndex < section[0] || opusIndex >= section[1])) {
+				var micOpusIndex = findLineInRange(sdpLines, section[0], section[1], 'a=rtpmap', 'opus/48000');
+				var micOpusPayload = getCodecPayloadType(sdpLines[micOpusIndex]);
+				if (micOpusPayload) {
+					sdpLines = processOpus(sdpLines, micOpusPayload, micOpusIndex, "OPUS", params, debug, section[0], section[1]);
+				}
+			}
 		}
 		
 		return sdpLines.join('\r\n');
@@ -685,8 +719,8 @@ var CodecsHandler = (function() {
         setVideoBitrates: function(sdp, params, codec) {
             return setVideoBitrates(sdp, params, codec);
         },
-        setOpusAttributes: function(sdp, params, debug=false) {
-            return setOpusAttributes(sdp, params, debug);
+        setOpusAttributes: function(sdp, params, debug=false, skipMids=false) {
+            return setOpusAttributes(sdp, params, debug, skipMids);
         },
 		
 		getOpusBitrate: function(sdp){

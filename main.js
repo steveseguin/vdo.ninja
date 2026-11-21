@@ -408,7 +408,8 @@ async function main() {
 		// checking if manual lanuage override enabled
 		try {
 			log("Lang Template: " + ln_template);
-			changeLg(ln_template).then(function () {
+			// Podcast Studio waits on this request before it builds its interface.
+			session.languageRequest = changeLg(ln_template).then(function () {
 				if (altLabelOverride) {
 					applyAltLabelOverride(altLabelOverride);
 				}

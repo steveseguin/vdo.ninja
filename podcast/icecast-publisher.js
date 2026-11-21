@@ -79,6 +79,26 @@ function createAbortError(message = 'aborted') {
   return error;
 }
 
+// Messages with changing values keep their template and values, so the studio can translate them.
+function fillTemplate(template, values) {
+  let text = template;
+  Object.keys(values).forEach(name => {
+    text = text.split('{' + name + '}').join(values[name]);
+  });
+  return text;
+}
+
+function createTemplateError(template, values) {
+  const error = new Error(fillTemplate(template, values));
+  error.template = template;
+  error.values = values;
+  return error;
+}
+
+function templateDetails(error) {
+  return error && error.template ? { template: error.template, values: error.values } : {};
+}
+
 function isIPv4Target(target) {
   return /^\d{1,3}(?:\.\d{1,3}){3}$/.test(target.hostname);
 }
@@ -137,6 +157,12 @@ export class IcecastPublisher extends EventTarget {
         }
       })
     );
+  }
+
+  emitSourceCount() {
+    const count = this.sourceNodes.size;
+    const template = count === 1 ? 'Icecast live (1 source).' : 'Icecast live ({count} sources).';
+    this.emitStatus('live', fillTemplate(template, { count }), { template, values: { count } });
   }
 
   emitProgress() {
@@ -305,7 +331,7 @@ export class IcecastPublisher extends EventTarget {
       if (!this.isExpectedStopError(error)) {
         this.live = false;
         this.dispatchEvent(new CustomEvent('error', { detail: error }));
-        this.emitStatus('error', error?.message || 'Icecast publish failed.');
+        this.emitStatus('error', error?.message || 'Icecast publish failed.', templateDetails(error));
         this.stop({ quiet: true }).catch(stopError => {
           console.warn('Icecast stop after upload error failed', stopError);
         });
@@ -328,7 +354,7 @@ export class IcecastPublisher extends EventTarget {
     this.mediaRecorder.onerror = event => {
       const error = event?.error || event;
       this.dispatchEvent(new CustomEvent('error', { detail: error }));
-      this.emitStatus('error', error?.message || 'Icecast recorder failed.');
+      this.emitStatus('error', error?.message || 'Icecast recorder failed.', templateDetails(error));
       this.stop({ quiet: true }).catch(stopError => {
         console.warn('Icecast stop after recorder error failed', stopError);
       });
@@ -430,7 +456,7 @@ export class IcecastPublisher extends EventTarget {
       return;
     }
     this.dispatchEvent(new CustomEvent('error', { detail: error }));
-    this.emitStatus('error', error?.message || 'Icecast audio encoder failed.');
+    this.emitStatus('error', error?.message || 'Icecast audio encoder failed.', templateDetails(error));
     this.stop({ quiet: true }).catch(stopError => {
       console.warn('Icecast stop after encoder error failed', stopError);
     });
@@ -550,7 +576,7 @@ export class IcecastPublisher extends EventTarget {
       .catch(error => {
         if (!this.stopping) {
           this.dispatchEvent(new CustomEvent('error', { detail: error }));
-          this.emitStatus('error', error?.message || 'Failed to prepare Icecast audio chunk.');
+          this.emitStatus('error', error?.message || 'Failed to prepare Icecast audio chunk.', templateDetails(error));
         }
       })
       .finally(() => {
@@ -610,10 +636,7 @@ export class IcecastPublisher extends EventTarget {
       const endedHandler = () => this.removeSourceNode(key);
       track.addEventListener('ended', endedHandler);
       this.sourceNodes.set(key, { node, track, endedHandler });
-      this.emitStatus(
-        'live',
-        `Icecast live (${this.sourceNodes.size} source${this.sourceNodes.size === 1 ? '' : 's'}).`
-      );
+      this.emitSourceCount();
     } catch (error) {
       console.warn('Failed to add Icecast source', error);
     }
@@ -636,10 +659,7 @@ export class IcecastPublisher extends EventTarget {
     }
     this.sourceNodes.delete(key);
     if (this.live) {
-      this.emitStatus(
-        'live',
-        `Icecast live (${this.sourceNodes.size} source${this.sourceNodes.size === 1 ? '' : 's'}).`
-      );
+      this.emitSourceCount();
     }
   }
 
@@ -779,7 +799,7 @@ export class IcecastPublisher extends EventTarget {
       signal
     }).then(response => {
       if (!response.ok) {
-        throw new Error(`Icecast rejected the stream (${response.status}).`);
+        throw createTemplateError('Icecast rejected the stream ({status}).', { status: response.status });
       }
       return response;
     });
@@ -836,11 +856,9 @@ export class IcecastPublisher extends EventTarget {
       } catch (error) {
         relayMessage = '';
       }
-      throw new Error(
-        relayMessage
-          ? `Icecast relay rejected the stream (${response.status}): ${relayMessage}`
-          : `Icecast relay rejected the stream (${response.status}).`
-      );
+      throw relayMessage
+        ? createTemplateError('Icecast relay rejected the stream ({status}): {detail}', { status: response.status, detail: relayMessage })
+        : createTemplateError('Icecast relay rejected the stream ({status}).', { status: response.status });
     }
     return this.waitForUploadCompletion(response);
   }
@@ -965,14 +983,18 @@ export class IcecastPublisher extends EventTarget {
         });
         socket.addEventListener('close', event => {
           if (!accepted) {
-            finish(rejectSocket, new Error(event.reason || `Icecast relay socket closed (${event.code}).`));
+            finish(rejectSocket, event.reason ? new Error(event.reason) : createTemplateError('Icecast relay socket closed ({code}).', { code: event.code }));
             return;
           }
           if (activeSocket !== socket) {
             return;
           }
           activeClosed = true;
-          activeCloseError = event.code === 1000 ? null : new Error(event.reason || `Icecast relay socket closed (${event.code}).`);
+          if (event.code === 1000) {
+            activeCloseError = null;
+          } else {
+            activeCloseError = event.reason ? new Error(event.reason) : createTemplateError('Icecast relay socket closed ({code}).', { code: event.code });
+          }
         });
       });
 

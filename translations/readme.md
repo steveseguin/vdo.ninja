@@ -19,3 +19,7 @@ Translation values can contain HTML, such as image links, so a translation file 
 
 - **`translate.js`:** open VDO.Ninja from your copy of the code, then paste the script's contents into the browser console and press Enter. It downloads each language file, keeping existing entries and adding new keys, in English, at the end of each section. Translate the new entries and submit them as a pull request.
 - **GitHub Actions:** the manual "Translate missing keys" workflow fills missing keys with machine translation and opens a draft pull request. Pull requests to `develop` run `.github/ci-validateTranslations.js` and `.github/ci-checkTranslationKeys.js`.
+
+## Podcast Studio
+
+The Podcast Studio (`?podcast`) reads the same language files. Its text is keyed by the English wording: in `innerHTML` the key is `podcast-` followed by the text in lower case with every run of other characters replaced by `-` (`Start Recording` becomes `podcast-start-recording`), and tooltips and placeholders use the usual `titles` and `placeholders` keys. Values in `{braces}` are filled in by the studio, so keep them as they are. A missing key shows the English text. `it.json` holds the full set and works as a reference for other languages.

@@ -5,6 +5,7 @@ turn-credentials.php
 .claude
 .claude/
 AGENTS.md
+AGENTS.override.md
 !/AGENTS.md
 CLAUDE.md
 cf/

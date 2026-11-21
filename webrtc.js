@@ -4878,6 +4878,9 @@ WebRTC.Media = (function () {
 			var settings = {};
 
 			if ("realUUID" in session.pcs[UUID]) {
+				if (!session.screenStream) {
+					return; // this screen share has ended
+				}
 				var tracks = session.screenStream.getVideoTracks();
 				if (tracks.length) {
 					var nativeSettings = tracks[0].getSettings();
@@ -9312,6 +9315,10 @@ WebRTC.Media = (function () {
 
 
 				if (session.director) {
+					if ("audioGateMeter" in msg) {
+						var audioPanel = document.getElementById("audioCompressorModal");
+						if (audioPanel && audioPanel.dataset.processor === "gate" && audioPanel.dataset.UUID === UUID) audioPanel.updateGateMeter(msg.audioGateMeter);
+					}
 					if ("audioOptions" in msg) {
 						updateDirectorsAudio(msg.audioOptions, UUID);
 					}
@@ -11470,6 +11477,34 @@ WebRTC.Media = (function () {
 		log("HANG UP 2 COMPLETE");
 	};
 
+	// The mids of the SDP sections that carry a screen share on this connection. Audio settings
+	// meant for the mic skip them, so the mic gets its settings whichever was added first.
+	session.getScreenMids = function (pc, UUID, sending) {
+		var mids = [];
+		if (!pc || !pc.getTransceivers) {
+			return mids;
+		}
+		var transceivers = pc.getTransceivers();
+		var i;
+		if (sending) {
+			var screenSenders = getSenders2(UUID + "_screen"); // includes a share that has stopped
+			for (i = 0; i < transceivers.length; i++) {
+				if (transceivers[i].mid !== null && screenSenders.indexOf(transceivers[i].sender) !== -1) {
+					mids.push(String(transceivers[i].mid));
+				}
+			}
+		} else if (session.rpcs[UUID] && session.rpcs[UUID].screenIndexes) {
+			var indexes = session.rpcs[UUID].screenIndexes;
+			for (i = 0; i < indexes.length; i++) {
+				var transceiver = transceivers[indexes[i]];
+				if (transceiver && transceiver.mid !== null) {
+					mids.push(String(transceiver.mid));
+				}
+			}
+		}
+		return mids;
+	};
+
 	session.createOffer = function (UUID, iceRestart = false) {
 		const pc = session.pcs[UUID];
 		if (!pc || pc.signalingState === "closed") {
@@ -11481,6 +11516,7 @@ WebRTC.Media = (function () {
 					return;
 				}
 				log("create offer worked");
+				var screenMids = session.getScreenMids(pc, UUID, true);
 				if (!window.CodecsHandler || (SafariVersion && SafariVersion <= 13 && (iOS || iPad))) {
 					// skip.
 				} else if (session.stereo == 3 || session.stereo == 5 || session.stereo == 1) {
@@ -11488,7 +11524,7 @@ WebRTC.Media = (function () {
 					if (session.mono && Firefox) {
 						description.sdp = CodecsHandler.setOpusAttributes(description.sdp, {
 							stereo: 0
-						});
+						}, false, screenMids);
 						log("mono enabled");
 					} else {
 						description.sdp = CodecsHandler.setOpusAttributes(description.sdp, {
@@ -11498,7 +11534,7 @@ WebRTC.Media = (function () {
 							//'ptime': 20,
 							//'maxptime': session.maxptime,
 							//'minptime': session.minptime
-						});
+						}, false, screenMids);
 						log("stereo enabled");
 					}
 				} else if (iOS || iPad) {
@@ -11511,7 +11547,7 @@ WebRTC.Media = (function () {
 						//'ptime': 20,
 						//'maxptime': session.maxptime,
 						//'minptime': session.minptime
-					});
+					}, false, screenMids);
 					log("stereo enabled");
 				}
 
@@ -14337,6 +14373,12 @@ WebRTC.Media = (function () {
 						}
 					}
 
+					if ("getAudioGateMeter" in msg) {
+						var data = {};
+						data.audioGateMeter = getAudioGateMeter();
+						session.sendMessage(data, UUID);
+					}
+
 					if ("requestChangeEQ" in msg) {
 						if (msg.keyname == "low") {
 							changeLowEQ(parseFloat(msg.value), msg.track);
@@ -14361,11 +14403,12 @@ WebRTC.Media = (function () {
 						if (session.noisegate !== was) {
 							senderAudioUpdate();
 						}
+						sendAudioProcessingSettingsToDirectors();
 					}
 
 					if ("requestChangeCompressor" in msg) {
 						if ((!msg.track || msg.track == 0) && changeCompressor(msg.keyname || "compressor", msg.value)) {
-							sendCompressorSettingsToDirectors();
+							sendAudioProcessingSettingsToDirectors();
 							if (toggleSettingsState) {
 								listAudioSettings();
 							}
@@ -16470,7 +16513,7 @@ WebRTC.Media = (function () {
 				msg.description.sdp = CodecsHandler.setOpusAttributes(msg.description.sdp, {
 					maxaveragebitrate: session.outboundAudioBitrate * 1024,
 					cbr: session.cbr
-				});
+				}, false, session.getScreenMids(session.pcs[msg.UUID], msg.UUID, true));
 			}
 
 			/* if (session.pcs[msg.UUID].preferAudioCodec){ // this doubles the check; perhaps a bit needless.
@@ -16948,7 +16991,7 @@ WebRTC.Media = (function () {
 						}
 
 						if (configs && window.CodecsHandler) {
-							description.sdp = CodecsHandler.setOpusAttributes(description.sdp, configs);
+							description.sdp = CodecsHandler.setOpusAttributes(description.sdp, configs, false, session.getScreenMids(rpc, msg.UUID, false));
 						}
 
 						if (session.audioCodec) {
