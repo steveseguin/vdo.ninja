@@ -22,9 +22,9 @@ Example: `&meshcast=video`
 
 ### Meshcast 2.0
 
-`&meshcast` selects Meshcast 2.0 unless you give it a custom server address. On builds that support `&meshcast1`, use it for the original Meshcast service. Meshcast 2.0 uses WHIP/WHEP to publish and play streams.
+On [VDO.Ninja alpha](https://vdo.ninja/alpha/), `&meshcast` selects Meshcast 2.0 unless you give it a custom server address. In v30.2, `&meshcast` selects the original service instead. On builds that support `&meshcast1`, use it to select the original service explicitly. Meshcast 2.0 uses WHIP/WHEP to publish and play streams.
 
-For anonymous publishing, use `&meshcast2` without a value. For account publishing on [VDO.Ninja alpha](https://vdo.ninja/alpha/), use `&meshcast2=pk_...` with your private Publish Key.
+For anonymous publishing, use `&meshcast2` without a value. For account publishing on alpha, use `&meshcast2=pk_...` with your private Publish Key.
 
 If your key is rejected or your account has no available stream slots, VDO.Ninja does not automatically switch to anonymous Meshcast. To try anonymous publishing instead, remove the key and use `&meshcast2` without a value.
 
