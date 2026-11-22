@@ -35167,6 +35167,7 @@ function gotDevices(deviceInfos, miconly = false) {
 				option.name = "multiselect" + counter;
 				option.id = "multiselect" + counter;
 				option.label = deviceInfo.label;
+				option.dataset.groupId = deviceInfo.groupId || "";
 
 				label = document.createElement("label");
 				label.for = option.name;
@@ -35691,6 +35692,7 @@ function gotDevices2(deviceInfos, microphones) {
 			if (session.streamSrc) {
 				session.streamSrc.getAudioTracks().forEach(function (t) {
 					try {
+						if (t.readyState === "ended" && hasLiveAudioTracks(session.streamSrc)) { return; }
 						if (t.label) {
 							activeAudioLabels.add(t.label);
 							activeAudioNormLabels.add(normalizeAudioAliasLabel(t.label));
@@ -35923,6 +35925,7 @@ function gotDevices2(deviceInfos, microphones) {
 		////////////
 		session.streamSrc.getAudioTracks().forEach(function (track) {
 			// add active ScreenShare audio tracks to the list
+			if (track.readyState === "ended") { return; }
 			log("Checking for screenshare audio");
 			var matched = false;
 			for (var i = 0; i !== deviceInfos.length; ++i) {
@@ -36219,8 +36222,14 @@ async function refreshMicrophoneDevice(UUID = false) {
 	if (UUID) {
 		var requestID = getAudioUserMediaRequestID;
 		try {
+			if (pendingAudioCapture) {
+				await pendingAudioCapture;
+				sendMediaDevices(UUID);
+				return;
+			}
 			var devices = await enumerateDevices();
 			if (requestID !== getAudioUserMediaRequestID || !session.streamSrc) {
+				if (pendingAudioCapture) { await pendingAudioCapture; }
 				sendMediaDevices(UUID);
 				return;
 			}
@@ -36232,7 +36241,7 @@ async function refreshMicrophoneDevice(UUID = false) {
 		}
 	}
 	activatedPreview = false;
-	return grabAudio("#audioSource3", null, false, UUID, false, microphones);
+	return grabAudio("#audioSource3", null, false, UUID);
 }
 
 function refreshVideoDevice(UUID = false) {
@@ -39065,81 +39074,30 @@ async function getAudioOnly(selector, trackid = null, override = false, requestT
 		}
 	}
 
-	// Deduplicate selections so the same physical mic is not captured multiple times.
-	try {
-		const uniqueSeen = new Set();
-		const groupedByBase = new Map();
-		const orderedEntries = [];
-
-		for (var i = 0; i < audioList.length; i++) {
-			const el = audioList[i];
-			const rawLabel = (el.dataset && typeof el.dataset.label !== "undefined" && el.dataset.label) ? el.dataset.label : (el.label || el.text || el.textContent || "");
-			let normLabel = normalizeAudioAliasLabel(rawLabel);
-			const deviceIdLower = (el.value || "").toLowerCase();
-			const groupId = (el.dataset && el.dataset.groupId) || "";
-			const hasGroupId = !!groupId;
-			const isDefaultish = (deviceIdLower === "default" || deviceIdLower === "communications");
-
-			if (!normLabel) {
-				if (!isDefaultish) {
-					normLabel = rawLabel ? rawLabel.toLowerCase() : (groupId || deviceIdLower);
-				}
-			}
-
-			// A known live selection already accounts for system microphone aliases.
-			const liveId = preserveSelectedAudio && preserveSelectedAudio !== true && preserveSelectedAudio[el.value] ? el.value : "";
-			const baseKey = liveId || groupId || normLabel || deviceIdLower || rawLabel;
-			const groupKey = groupId || normLabel || deviceIdLower || baseKey;
-			const uniqueKey = (isDefaultish && !groupId)
-				? (groupKey + "|alias")
-				: (groupKey + "|" + (liveId || deviceIdLower || normLabel || rawLabel || ""));
-
-			if (uniqueSeen.has(uniqueKey)) {
-				continue;
-			}
-			uniqueSeen.add(uniqueKey);
-
-			const entry = {
-				element: el,
-				isDefaultish,
-				hasGroupId,
-				groupKey,
-				baseKey,
-				index: null
-			};
-
-			let groupMap = groupedByBase.get(baseKey);
-			if (!groupMap) {
-				groupMap = new Map();
-				groupedByBase.set(baseKey, groupMap);
-			}
-
-			const existing = groupMap.get(groupKey);
-			if (!existing) {
-				entry.index = orderedEntries.length;
-				orderedEntries.push(entry);
-				groupMap.set(groupKey, entry);
-				continue;
-			}
-
-			let replace = false;
-			if (existing.isDefaultish && !entry.isDefaultish) {
-				replace = true;
-			} else if (!existing.isDefaultish && entry.isDefaultish) {
-				replace = false;
-			} else if (!existing.hasGroupId && entry.hasGroupId) {
-				replace = true;
-			}
-
-			if (replace) {
-				entry.index = existing.index;
-				orderedEntries[existing.index] = entry;
-				groupMap.set(groupKey, entry);
+	// Only default and communications can be aliases for another input.
+	if (audioList.length > 1) {
+		var physical = [];
+		for (var input of audioSelect) {
+			if (input.value && input.value !== "default" && input.value !== "communications" && input.value !== "ZZZ" && input.dataset.type !== "screen") {
+				physical.push({ deviceId: input.value, groupId: input.dataset.groupId, label: input.dataset.label || input.label || input.text });
 			}
 		}
-
-		audioList = orderedEntries.map(entry => entry.element);
-	} catch (e) { /* non-fatal */ }
+		var selected = new Set(audioList.map(el => el.value));
+		var seen = new Set();
+		audioList = audioList.filter(function (el) {
+			var key = el.value;
+			if (key === "default" || key === "communications") {
+				var group = el.dataset.groupId;
+				var label = el.dataset.label || el.label || el.text;
+				var matches = getMicrophoneAliasMatches(physical, group, label);
+				if (matches.some(device => selected.has(device.deviceId))) { return false; }
+				key = matches.length === 1 ? matches[0].deviceId : (group || normalizeAudioAliasLabel(label) || key);
+			}
+			if (seen.has(key)) { return false; }
+			seen.add(key);
+			return true;
+		});
+	}
 
 	for (var i = 0; i < audioList.length; i++) {
 		var deviceId = audioList[i].value;
@@ -39610,6 +39568,10 @@ function reconnectDevices(event) {
 			session.streamSrc.getTracks().forEach(function (track) {
 				if (track.readyState == "ended") {
 					if (track.kind == "audio") {
+						if (hasLiveAudioTracks(session.streamSrc)) {
+							handleAudioTrackEnded();
+							return; // Keep its identity for a retry when this input returns.
+						}
 						lastAudioDevice = track.label;
 					} else if (track.kind == "video") {
 						lastVideoDevice = track.label;
@@ -39619,7 +39581,7 @@ function reconnectDevices(event) {
 				}
 			});
 
-			if (session.streamSrcClone) {
+			if (session.streamSrcClone && session.streamSrcClone !== session.streamSrc) {
 				session.streamSrcClone.getTracks().forEach(function (track) {
 					if (track.readyState == "ended") {
 						log("remove track4");
@@ -39629,7 +39591,7 @@ function reconnectDevices(event) {
 				});
 			}
 
-			if (session.videoElement && session.videoElement.srcObject) {
+			if (session.videoElement && session.videoElement.srcObject && session.videoElement.srcObject !== session.streamSrc) {
 				session.videoElement.srcObject.getTracks().forEach(function (track) {
 					if (track.readyState == "ended") {
 						session.videoElement.srcObject.removeTrack(track);
@@ -39653,13 +39615,13 @@ function reconnectDevices(event) {
 
 	clearTimeout(audioReconnectTimeout);
 	audioReconnectTimeout = null;
-	if (lastAudioDevice) {
+	if (lastAudioDevice && !hasLiveAudioTracks(session.streamSrc)) {
 		audioReconnectTimeout = setTimeout(function () {
 			// only reconnect same audio device.  If reconnected, clear the disconnected flag.
 			enumerateDevices()
 				.then(gotDevices2)
 				.then(function () {
-					// TODO: check to see if any audio is connected?
+					if (hasLiveAudioTracks(session.streamSrc) || pendingAudioCapture) { return; }
 					var streamConnected = false;
 					var audioSelect = getById("audioSource3").querySelectorAll("input");
 					for (var i = 0; i < audioSelect.length; i++) {
@@ -39831,28 +39793,75 @@ function verifyAndRepairOutboundAudioPeers(context = "audio-reconnect") {
 }
 
 function handleAudioTrackEnded(event) {
+	var source = session.streamSrc;
+	if (event && event.type === "devicechange" && (!hasLiveAudioTracks(source) || !source.getAudioTracks().some(track => track.readyState === "ended"))) { return; }
 	errorlog("Audio track ended unexpectedly");
 
-	// If there's already a reconnection attempt in progress, don't start another one
-	if (session.audioReconnectInProgress) {
+	var requestID = getAudioUserMediaRequestID;
+	var partial = hasLiveAudioTracks(source);
+	var pending = session.audioReconnectInProgress;
+	if (pending && pending.source === source && pending.requestID === requestID && (partial || !pending.partial)) {
 		return;
 	}
 
 	let modalID = null;
-	if (!session.cleanOutput) {
+	if (!session.cleanOutput && event && event.type === "ended") {
 		warnUser("Your microphone disconnected. Attempting to reconnect...", 3200);
 	}
 
-	session.audioReconnectInProgress = true;
+	var retry = { source: source, requestID: requestID, partial: partial };
+	session.audioReconnectInProgress = retry;
 
 	// Wait a brief moment to ensure the device has time to be recognized again if it was unplugged/replugged
-	setTimeout(function () {
+	setTimeout(async function () {
+		if (session.audioReconnectInProgress !== retry) { return; }
+		if (source !== session.streamSrc || requestID !== getAudioUserMediaRequestID || pendingAudioCapture) {
+			session.audioReconnectInProgress = false;
+			return;
+		}
+		if (hasLiveAudioTracks(source)) {
+			try {
+				var devices = await enumerateDevices();
+				var inputs = devices.filter(device => device.kind === "audioinput");
+				for (var ended of source.getAudioTracks()) {
+					if (session.audioReconnectInProgress !== retry || source !== session.streamSrc || requestID !== getAudioUserMediaRequestID) { return; }
+					if (ended.readyState !== "ended") { continue; }
+					var input = getMicrophoneDevice(inputs, ended);
+					if (!input) { continue; }
+					var active = getRemoteMicrophoneTracks(devices, source.getAudioTracks());
+					if (!active || active[input.deviceId]) { continue; }
+					try {
+						await addMicrophoneTrack(source, devices, input.deviceId, ended);
+						updateMicrophoneSenders(source);
+					} catch (e) { warnlog(e); }
+				}
+				if (source === session.streamSrc && requestID === getAudioUserMediaRequestID) {
+					gotDevices2(devices, getRemoteMicrophoneTracks(devices, source.getAudioTracks()));
+				}
+			} catch (e) {
+				warnlog(e);
+			} finally {
+				if (session.audioReconnectInProgress === retry) { session.audioReconnectInProgress = false; }
+				if (!session.audioReconnectInProgress && source === session.streamSrc && requestID === getAudioUserMediaRequestID && source.getAudioTracks().some(track => track.readyState === "ended")) {
+					if (!hasLiveAudioTracks(source)) {
+						handleAudioTrackEnded(); // The last working input also disconnected.
+					} else if (navigator.mediaDevices && navigator.mediaDevices.addEventListener) {
+						navigator.mediaDevices.addEventListener("devicechange", handleAudioTrackEnded, { once: true });
+					}
+				}
+			}
+			return;
+		}
 		activatedPreview = false;
 		grabAudio("#audioSource3", null, false);
+		retry.requestID = getAudioUserMediaRequestID;
+		retry.partial = false;
 
 		// Check if reconnection was successful after a delay
 		setTimeout(function () {
+			if (session.audioReconnectInProgress !== retry) { return; }
 			session.audioReconnectInProgress = false;
+			if (source !== session.streamSrc || retry.requestID !== getAudioUserMediaRequestID) { return; }
 
 			closeModal(false, modalID);
 
@@ -41829,7 +41838,29 @@ function changeTRB(bitrate) {
 	updateRoomBitrateControls(); // Co-directors show the current value until the main director confirms.
 }
 
-function getRemoteMicrophoneTracks(devices, tracks) {
+function getMicrophoneAliasMatches(physical, groupId, label) {
+	var matches = physical.filter(device => groupId && device.groupId === groupId);
+	if (matches.length === 1) { return matches; }
+	label = normalizeAudioAliasLabel(label);
+	var named = (matches.length ? matches : physical).filter(device => label && normalizeAudioAliasLabel(device.label) === label);
+	return named.length ? named : matches;
+}
+
+function getMicrophoneDevice(inputs, track) {
+	var settings = track.getSettings ? track.getSettings() : {};
+	var deviceId = settings.deviceId || track.vdoMicrophoneId;
+	if (deviceId) {
+		var input = inputs.find(device => device.deviceId === deviceId);
+		if (input || track.readyState === "ended") { return input; }
+	}
+	if (track.label) {
+		var named = inputs.filter(device => device.label === track.label);
+		if (named.length > 1 && settings.groupId) { named = named.filter(device => device.groupId === settings.groupId); }
+		if (named.length === 1) { return named[0]; }
+	}
+}
+
+function getRemoteMicrophoneTracks(devices, tracks, removeId = false) {
 	var inputs = devices.filter(device => device && device.kind === "audioinput" && device.deviceId && device.groupId !== "asio");
 	var physical = inputs.filter(device => device.deviceId !== "default" && device.deviceId !== "communications");
 	if (!physical.length) { return; }
@@ -41839,24 +41870,18 @@ function getRemoteMicrophoneTracks(devices, tracks) {
 	}
 
 	var active = false;
+	var disconnected;
 	for (var track of tracks) {
-		if (track.readyState === "ended") { continue; }
-		var settings = track.getSettings ? track.getSettings() : {};
-		var input = inputs.find(device => device.deviceId === settings.deviceId);
-		if (!input && track.label) {
-			var named = inputs.filter(device => device.label === track.label);
-			if (named.length > 1 && settings.groupId) { named = named.filter(device => device.groupId === settings.groupId); }
-			if (named.length === 1) { input = named[0]; }
+		if (track.readyState === "ended") {
+			if (removeId && track.vdoMicrophoneId === removeId) { disconnected = track; }
+			continue;
 		}
+		var input = getMicrophoneDevice(inputs, track);
 		if (!input) { return; }
 		var physicalId = input.deviceId;
 		// Only the system aliases can stand for a different device ID.
 		if (input.deviceId === "default" || input.deviceId === "communications") {
-			var matches = physical.filter(device => input.groupId && input.groupId === device.groupId);
-			if (matches.length !== 1) {
-				var label = normalizeAudioAliasLabel(input.label);
-				matches = (matches.length ? matches : physical).filter(device => label && normalizeAudioAliasLabel(device.label) === label);
-			}
+			var matches = getMicrophoneAliasMatches(physical, input.groupId, input.label);
 			if (matches.length !== 1) { return; }
 			physicalId = matches[0].deviceId;
 		}
@@ -41865,7 +41890,11 @@ function getRemoteMicrophoneTracks(devices, tracks) {
 		state[input.deviceId] = track;
 		active = true;
 	}
-	if (active) { return state; }
+	if (active) {
+		// A removal also cancels a pending retry for this input.
+		if (disconnected && !state[removeId]) { state[removeId] = disconnected; }
+		return state;
+	}
 }
 
 function sendMediaDevices(UUID) {
@@ -42041,6 +42070,45 @@ function changeVideoDeviceById(deviceId, UUID = false, includeDevices = true) {
 		});
 }
 
+async function addMicrophoneTrack(source, devices, deviceId, ended) {
+	var requestID = getAudioUserMediaRequestID;
+	var stream = await navigator.mediaDevices.getUserMedia(getAudioInputConstraints(deviceId));
+	try {
+		var track = stream.getAudioTracks()[0];
+		var tracks = source.getAudioTracks();
+		var state = track && getRemoteMicrophoneTracks(devices, tracks.concat(track));
+		if (source !== session.streamSrc || requestID !== getAudioUserMediaRequestID || !hasLiveAudioTracks(source) || !state || state[deviceId] !== track || (ended && !tracks.includes(ended))) {
+			throw new Error("Microphone selection changed");
+		}
+		track.vdoMicrophoneId = deviceId; // Some browsers clear getSettings() after a disconnect.
+		track.onended = handleAudioTrackEnded;
+		source.addTrack(track);
+		for (var previous of tracks) {
+			if (previous.readyState !== "ended") { continue; }
+			var device = getMicrophoneDevice(devices, previous);
+			if (previous === ended || (device && device.deviceId === deviceId)) { source.removeTrack(previous); }
+		}
+	} catch (e) {
+		stream.getTracks().forEach(track => track.stop());
+		throw e;
+	}
+	pokeIframeAPI("local-microphone-event");
+}
+
+function updateMicrophoneSenders(source, UUID = false) {
+	// The preview cleanup must only stop tracks it owns.
+	if (session.streamSrcClone === source) {
+		session.streamSrcClone = null;
+	} else if (session.streamSrcClone) {
+		for (var original of source.getTracks()) {
+			if (session.streamSrcClone.getTrackById(original.id) === original) {
+				session.streamSrcClone.removeTrack(original);
+			}
+		}
+	}
+	senderAudioUpdate(UUID);
+}
+
 async function changeAudioDeviceById(deviceId, UUID = false, enabled) {
 	try {
 		var devices = await enumerateDevices();
@@ -42049,7 +42117,8 @@ async function changeAudioDeviceById(deviceId, UUID = false, enabled) {
 		var refresh = false;
 		if (toggle) {
 			var source = session.streamSrc;
-			var state = source && getRemoteMicrophoneTracks(devices, source.getAudioTracks());
+			var removeId = enabled === false && deviceId;
+			var state = source && getRemoteMicrophoneTracks(devices, source.getAudioTracks(), removeId);
 			if (typeof enabled !== "boolean" || !state || !(deviceId in state)) {
 				throw new Error("Microphone selection changed");
 			}
@@ -42058,7 +42127,8 @@ async function changeAudioDeviceById(deviceId, UUID = false, enabled) {
 				return;
 			}
 			var device = devices.find(input => input.kind === "audioinput" && input.deviceId === deviceId);
-			prompt = getTranslation(enabled ? "add-microphone" : "remove-microphone") + "?<br>" + escapeHtml(device.label || deviceId);
+			var label = device ? device.label : state[deviceId].label;
+			prompt = getTranslation(enabled ? "add-microphone" : "remove-microphone") + "?<br>" + escapeHtml(label || deviceId);
 		} else {
 			gotDevices2(devices);
 			var mic = Array.from(getById("audioSource3").querySelectorAll("input")).find(input => input.value == deviceId);
@@ -42080,7 +42150,7 @@ async function changeAudioDeviceById(deviceId, UUID = false, enabled) {
 				// Inputs can be unplugged or changed locally while the prompt is open.
 				devices = await enumerateDevices();
 				source = session.streamSrc;
-				state = source && getRemoteMicrophoneTracks(devices, source.getAudioTracks());
+				state = source && getRemoteMicrophoneTracks(devices, source.getAudioTracks(), removeId);
 			}
 		}
 
@@ -42095,30 +42165,12 @@ async function changeAudioDeviceById(deviceId, UUID = false, enabled) {
 				if (enabled) {
 					var adding = { source: source, requestID: requestID };
 					session.addingRemoteMicrophone = adding;
-					var stream = await navigator.mediaDevices.getUserMedia(getAudioInputConstraints(deviceId));
-					var captured = getRemoteMicrophoneTracks(devices, stream.getAudioTracks());
-					state = getRemoteMicrophoneTracks(devices, source.getAudioTracks());
-					if (source !== session.streamSrc || requestID !== getAudioUserMediaRequestID || !state || state[deviceId] !== false || !captured || !captured[deviceId]) {
-						throw new Error("Microphone selection changed");
-					}
-					var track = captured[deviceId];
-					track.onended = handleAudioTrackEnded;
-					source.addTrack(track);
-					stream = null; // The source now owns the track.
-					pokeIframeAPI("local-microphone-event");
+					await addMicrophoneTrack(source, devices, deviceId);
 				} else {
 					source.removeTrack(state[deviceId]);
 					state[deviceId].stop();
 				}
-				// Some capture modes share original tracks with the preview clone.
-				if (session.streamSrcClone && session.streamSrcClone !== source) {
-					for (var original of source.getTracks()) {
-						if (session.streamSrcClone.getTrackById(original.id) === original) {
-							session.streamSrcClone.removeTrack(original);
-						}
-					}
-				}
-				senderAudioUpdate(UUID);
+				updateMicrophoneSenders(source, UUID);
 			}
 			var live = getRemoteMicrophoneTracks(devices, source.getAudioTracks());
 			if (!live || !!live[deviceId] !== enabled) { throw new Error("Microphone change failed"); }
@@ -42141,7 +42193,6 @@ async function changeAudioDeviceById(deviceId, UUID = false, enabled) {
 		sendMediaDeviceChangeAck(UUID, "microphone", false, deviceId, e.message || "Microphone change failed");
 		if (UUID && enabled !== undefined) { sendMediaDevices(UUID); }
 	} finally {
-		if (stream) { stream.getTracks().forEach(track => track.stop()); }
 		if (adding && session.addingRemoteMicrophone === adding) { session.addingRemoteMicrophone = false; }
 	}
 }
@@ -42327,6 +42378,7 @@ function checkBasicStreamsExist() {
 
 var getUserMediaRequestID = 0;
 var getAudioUserMediaRequestID = 0;
+var pendingAudioCapture = null;
 var grabVideoUserMediaTimeout = null;
 var grabVideoTimer = null;
 
@@ -43542,7 +43594,13 @@ async function grabAudio(selector = "#audioSource", trackid = null, override = f
 		errorlog(e);
 	}
 
-	var streams = await getAudioOnly(selector, trackid, override, gumAudioID, preserveSelectedAudio); // Get audio streams
+	var capture = getAudioOnly(selector, trackid, override, gumAudioID, preserveSelectedAudio);
+	pendingAudioCapture = capture;
+	try {
+		var streams = await capture;
+	} finally {
+		if (pendingAudioCapture === capture) { pendingAudioCapture = null; }
+	}
 
 	if (gumAudioID !== getAudioUserMediaRequestID) {
 		try {
@@ -43569,7 +43627,8 @@ async function grabAudio(selector = "#audioSource", trackid = null, override = f
 					}
 					session.streamSrc.addTrack(track); // add video track to the preview video
 
-					track.onended = handleAudioTrackEnded; // Add event listener for track end
+					track.onended = handleAudioTrackEnded;
+					if (track.getSettings) { track.vdoMicrophoneId = track.getSettings().deviceId; }
 
 					log("ok?");
 					// applySavedAudioSettings(track); ## this doesn't work as echo-cancellation(+) needs to be applied via getuserMedia only.
@@ -54196,7 +54255,7 @@ function applyAudioHack(constraint, value = null, deviceid = "default", callback
 		var tracks = session.streamSrc ? session.streamSrc.getAudioTracks() : [];
 		var microphones = tracks.length > 1 && getRemoteMicrophoneTracks(devices, tracks);
 		gotDevices2(devices, microphones);
-		grabAudio("#audioSource3", null, new_constraints, callbackUUID, saveAudioResult, microphones || true);
+		grabAudio("#audioSource3", null, new_constraints, callbackUUID, saveAudioResult, true);
 	});
 }
 
