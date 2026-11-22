@@ -9324,7 +9324,7 @@ WebRTC.Media = (function () {
 						updateDirectorsAudio(msg.audioOptions, UUID);
 					}
 					if ("mediaDevices" in msg) {
-						gotDevicesRemote(msg.mediaDevices, UUID);
+						gotDevicesRemote(msg.mediaDevices, UUID, msg.activeMicrophones);
 						if (isIFrame && session.iframeMediaDeviceRequests && session.iframeMediaDeviceRequests[UUID]) {
 							try {
 								var iframeDeviceRequest = session.iframeMediaDeviceRequests[UUID];
@@ -14507,7 +14507,7 @@ WebRTC.Media = (function () {
 					}
 
 					if ("changeMicrophone" in msg) {
-						changeAudioDeviceById(msg.changeMicrophone, UUID);
+						changeAudioDeviceById(msg.changeMicrophone, UUID, msg.microphoneEnabled);
 					}
 
 					if ("refreshMicrophone" in msg) {
