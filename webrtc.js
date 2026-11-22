@@ -1332,6 +1332,7 @@ WebRTC.Media = (function () {
 	session.mirrorOutput = false;
 	session.flipOutput = false;
 	session.minimumRoomBitrate = false;
+	session.weightedRoomBitrate = true;
 	session.msg = [];
 	session.hidehome = false;
 	session.meshcast = false;
@@ -3400,7 +3401,7 @@ WebRTC.Media = (function () {
 		var msg = {};
 		msg.bitrate = bandwidth;
 
-		if (optimizeAudio === null) {
+		if (optimizeAudio === null || session.rpcs[UUID].lockedAudioBitrate) {
 			// skip audio
 		} else if (optimizeAudio) {
 			if (bandwidth === 0) {
@@ -10096,8 +10097,15 @@ WebRTC.Media = (function () {
 						// only allow the main director to adjust these settings
 
 						if ("totalRoomBitrate" in msg.directorSettings) {
+							var previousRoomBitrate = session.totalRoomBitrate;
 							session.totalRoomBitrate = parseInt(msg.directorSettings.totalRoomBitrate) || 0;
 							session.totalRoomBitrate_userSet = true;
+							if (session.director) {
+								updateRoomBitrateControls();
+								if (session.totalRoomBitrate !== previousRoomBitrate) {
+									pokeIframeAPI("total-room-bitrate", session.totalRoomBitrate);
+								}
+							}
 							mustUpdateMixer = true;
 						}
 						if (msg.directorSettings.soloVideo) {
@@ -13159,6 +13167,13 @@ WebRTC.Media = (function () {
 						data.rejected = "requestCoDirector";
 						session.sendRequest(data, UUID); // this skips the server
 					}
+				}
+
+				if ("requestRoomBitrate" in msg) {
+					if (session.directorState === true && (!session.directorUUID || session.directorUUID === session.UUID) && session.pcs[UUID] && session.pcs[UUID].coDirector === true) {
+						changeTRB(msg.requestRoomBitrate);
+					}
+					return;
 				}
 
 				if ("migrate" in msg && "roomid" in msg) {

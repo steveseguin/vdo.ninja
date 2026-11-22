@@ -7326,6 +7326,14 @@ Split between the number of streams that guest is viewing.
 
 So for example, with 6-guests in a room, the default of 500-kbps will have each guest requesting 100-kbps from each other. 5 streams x 100-kbps.
 
+### Give larger camera tiles more bitrate
+
+Larger camera tiles get more of your existing incoming video budget by default. For speaker view, add `&activehighlight=2` to your guest link. To turn off tile-size weighting for your view, add `&weightedroombitrate=0`.
+
+Equal tiles keep their usual rates. Weighting also skips layouts where an eligible camera uses cover. The default speaker view uses cover on thumbnails when it shows eight or more tiles, so it keeps the usual rates at those sizes. Manual camera rates, explicit video bitrate settings, and `&optimize` take precedence.
+
+Custom layouts use the assigned tile dimensions. To exclude a camera from weighting, remove its tile from the layout. Moving it off-screen or behind another tile still counts its assigned size.
+
 ### Two values
 
 `&totalroombitrate` can take two values; the second of which gets used if the device is a 'mobile' device, while the first gets used otherwise. ie: `&totalroombitrate=1000,500`

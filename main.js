@@ -4360,6 +4360,11 @@ async function main() {
 		session.minimumRoomBitrate = parseInt(session.minimumRoomBitrate) || false;
 	}
 
+	// &weightedroombitrate gives larger camera tiles a larger share of this guest's existing video budget.
+	if (urlParams.has("weightedroombitrate")) {
+		session.weightedRoomBitrate = !["0", "false", "off", "no"].includes(urlParams.get("weightedroombitrate").toLowerCase());
+	}
+
 	if (urlParams.has("remote") || urlParams.has("rem")) {
 		log("remote ENABLED");
 		session.remote = urlParams.get("remote") || urlParams.get("rem") || true;

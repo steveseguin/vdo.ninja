@@ -121,8 +121,11 @@ EOL
     systemctl enable fail2ban
     systemctl start fail2ban
     
-	# Configure system limits for file descriptors
-	echo "fs.file-max = 65535" >> /etc/sysctl.conf
+	local file_max
+	file_max=$(sysctl -n fs.file-max) || return 1
+	if (( file_max < 1048576 )); then
+	    file_max=1048576
+	fi
 
 	# Configure network buffer sizes for high-traffic TURN server
 	# Prevents UDP packet drops under load (learned from turn-fr1 having 75% success rate)
@@ -135,15 +138,21 @@ net.core.wmem_default=4194304
 net.ipv4.udp_rmem_min=65536
 net.ipv4.udp_wmem_min=65536
 # File descriptor limit
-fs.file-max=65535
+fs.file-max=${file_max}
 EOL
-	sysctl -p /etc/sysctl.d/99-turn-buffers.conf
+	sysctl -p /etc/sysctl.d/99-turn-buffers.conf || return 1
 
 	# Add permanent ulimit settings
 	echo "* soft nofile 65535" >> /etc/security/limits.conf
 	echo "* hard nofile 65535" >> /etc/security/limits.conf
 	echo "root soft nofile 65535" >> /etc/security/limits.conf
 	echo "root hard nofile 65535" >> /etc/security/limits.conf
+
+	mkdir -p /etc/systemd/system/coturn.service.d || return 1
+	cat > /etc/systemd/system/coturn.service.d/45-relay-nofile.conf <<'EOL' || return 1
+[Service]
+LimitNOFILE=524288
+EOL
     
     # Enable TURN server
     echo "TURNSERVER_ENABLED=1" > /etc/default/coturn
@@ -154,7 +163,7 @@ listening-port=3478
 alt-listening-port=0
 fingerprint
 lt-cred-mech
-min-port=49152
+min-port=10000
 max-port=65535
 user=${USERNAME}:${PASSWORD}
 stale-nonce=600
@@ -198,8 +207,14 @@ EOL
     # Start services
     systemctl daemon-reload
     systemctl enable coturn
-    systemctl start coturn
+    # The package may have started Coturn before the new configuration was written.
+    systemctl restart coturn
 }
+
+if systemctl is-active --quiet coturn; then
+    echo "Coturn is already running. Use the deployment guide to migrate an existing relay." >&2
+    exit 1
+fi
 
 # Swap setup - 2GB is sufficient for most TURN servers (16GB wastes disk space)
 echo "Setting up 2GB swap..."
@@ -268,7 +283,7 @@ read -s -p "Enter password for TURN: " PASSWORD
 echo
 
 # Install base TURN server
-install_coturn "$DOMAIN" "$USERNAME" "$PASSWORD"
+install_coturn "$DOMAIN" "$USERNAME" "$PASSWORD" || exit 1
 
 # Configure SSL if desired
 read -p "Do you want to enable SSL/TLS support? (y/N): " ENABLE_SSL
@@ -289,6 +304,7 @@ echo "----------------------------------------"
 echo "Domain: $DOMAIN"
 echo "Username: $USERNAME"
 echo "STUN/TURN ports: 3478 (default)"
+echo "Allow UDP 10000-65535 on the relay address in the host and provider firewalls."
 if [ "${ENABLE_SSL,,}" = "y" ]; then
     echo "TLS enabled on port 443"
     echo "SSL certificates will automatically renew via certbot"

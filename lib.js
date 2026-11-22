@@ -5189,6 +5189,7 @@ window.onpopstate = function () {
 
 var miniPerformerX = null;
 var miniPerformerY = null;
+var miniPerformerW = null; // width the user dragged the mini preview to, in percent
 function makeMiniDraggableElement(elmnt) {
 	if (session.disableMouseEvents) {
 		return;
@@ -5246,18 +5247,18 @@ function makeMiniDraggableElement(elmnt) {
 			}
 
 			var topDrag = elmnt.offsetTop - pos2;
-			if (topDrag > -3 + (window.innerHeight - elmnt.clientHeight)) {
-				topDrag = -3 + (window.innerHeight - elmnt.clientHeight);
+			if (topDrag > -3 + (window.innerHeight - elmnt.offsetHeight)) {
+				topDrag = -3 + (window.innerHeight - elmnt.offsetHeight);
 			}
 
 			miniPerformerY = topDrag;
 			miniPerformerX = elmnt.offsetLeft - pos1;
 
-			if (miniPerformerY > window.innerHeight - elmnt.clientHeight) {
-				miniPerformerY = window.innerHeight - elmnt.clientHeight;
+			if (miniPerformerY > window.innerHeight - elmnt.offsetHeight) {
+				miniPerformerY = window.innerHeight - elmnt.offsetHeight;
 			}
-			if (miniPerformerX > window.innerWidth - elmnt.clientWidth) {
-				miniPerformerX = window.innerWidth - elmnt.clientWidth;
+			if (miniPerformerX > window.innerWidth - elmnt.offsetWidth) {
+				miniPerformerX = window.innerWidth - elmnt.offsetWidth;
 			}
 
 			miniPerformerX = (100 * miniPerformerX) / window.innerWidth;
@@ -5368,8 +5369,241 @@ function makeMiniDraggableElement(elmnt) {
 		}
 	}
 
+	// Edges and corners: drag them to resize the mini preview. It keeps its shape and stays on screen.
+	var resizing = {}; // values captured when a resize starts
+
+	function resizeMouseUp() {
+		resizing.doc.onmouseup = resizing.stashonmouseup;
+		resizing.doc.onmousemove = resizing.stashonmousemove;
+	}
+
+	function resizeMouseMove(e) {
+		try {
+			e = e || window.event;
+			if ("buttons" in e && e.buttons !== 1) {
+				resizeMouseUp();
+				return;
+			}
+			e.preventDefault();
+			e.stopPropagation();
+
+			var box = elmnt;
+			if (!box.parentNode) {
+				// The mixer rebuilds the preview on every update; carry on with the one now on screen.
+				box = resizing.doc.getElementById("minipreview");
+				if (!box) {
+					resizeMouseUp();
+					return;
+				}
+			}
+
+			// Follow whichever way the pointer has moved furthest.
+			var moveX = (e.clientX - resizing.x) * resizing.dirX;
+			var moveY = (e.clientY - resizing.y) * resizing.dirY * resizing.shape;
+			var width = resizing.width + moveX;
+			if (Math.abs(moveY) > Math.abs(moveX)) {
+				width = resizing.width + moveY;
+			}
+			if (width > resizing.maxWidth) {
+				width = resizing.maxWidth;
+			}
+			if (width < 48) {
+				width = 48;
+			}
+			var height = (width - resizing.border) / resizing.shape + resizing.border;
+
+			// The side opposite the one being dragged stays where it is.
+			var left = resizing.left;
+			if (resizing.dirX === -1) {
+				left = resizing.left + resizing.width - width;
+			}
+			var top = resizing.top;
+			if (resizing.dirY === -1) {
+				top = resizing.top + resizing.height - height;
+			}
+
+			// Slide it back in if it would leave the visible area.
+			if (left + width > resizing.parentWidth) {
+				left = resizing.parentWidth - width;
+			}
+			if (left < 0) {
+				left = 0;
+			}
+			if (top + height > resizing.parentHeight) {
+				top = resizing.parentHeight - height;
+			}
+			if (top < 0) {
+				top = 0;
+			}
+
+			miniPerformerW = (100 * width) / resizing.parentWidth;
+			miniPerformerX = (100 * left) / resizing.parentWidth;
+			miniPerformerY = (100 * top) / resizing.parentHeight;
+			box.style.width = miniPerformerW + "%";
+			box.style.right = "unset";
+			box.style.left = miniPerformerX + "%";
+			box.style.top = miniPerformerY + "%";
+		} catch (e) {
+			errorlog(e);
+		}
+	}
+
+	function resizeMouseDown(e, dirX, dirY) {
+		e = e || window.event;
+		if (session.infocus || e.button !== 0) {
+			return; // leave it to the normal preview handling
+		}
+		if (session.videoElement && session.videoElement.rotated) {
+			return; // a rotated preview is sized another way by applyMirror
+		}
+		var parent = elmnt.offsetParent;
+		if (!parent || !parent.clientWidth || !parent.clientHeight) {
+			return;
+		}
+		var border = elmnt.offsetWidth - elmnt.clientWidth;
+		var insideWidth = elmnt.offsetWidth - border;
+		var insideHeight = elmnt.offsetHeight - border;
+		if (insideWidth <= 0 || insideHeight <= 0) {
+			return;
+		}
+		e.preventDefault();
+		e.stopPropagation(); // this is not a drag or a click on the preview
+
+		resizing.dirX = dirX; // -1 when the left side is being dragged, 1 for the right
+		resizing.dirY = dirY; // -1 for the top, 1 for the bottom
+		resizing.x = e.clientX;
+		resizing.y = e.clientY;
+		resizing.width = elmnt.offsetWidth;
+		resizing.height = elmnt.offsetHeight;
+		resizing.left = elmnt.offsetLeft;
+		resizing.top = elmnt.offsetTop;
+		resizing.parentWidth = parent.clientWidth;
+		resizing.parentHeight = parent.clientHeight;
+		resizing.border = border;
+		resizing.shape = insideWidth / insideHeight;
+
+		// The largest size that still fits the visible area.
+		var maxHeight = parent.clientHeight;
+		var ownMaxHeight = parseFloat(elmnt.style.maxHeight); // the mixer caps the preview at the play area's height
+		if (ownMaxHeight && ownMaxHeight < maxHeight) {
+			maxHeight = ownMaxHeight;
+		}
+		resizing.maxWidth = (maxHeight - border) * resizing.shape + border;
+		if (resizing.maxWidth > parent.clientWidth) {
+			resizing.maxWidth = parent.clientWidth;
+		}
+		// The preview video is not upscaled, so a wider box would only leave a gap beside it.
+		var video = elmnt.querySelector("video");
+		if (video && video.videoWidth) {
+			if (video.videoWidth + border < resizing.maxWidth) {
+				resizing.maxWidth = video.videoWidth + border;
+			}
+		}
+
+		resizing.doc = elmnt.ownerDocument; // the pop-out window has its own document
+		resizing.stashonmouseup = resizing.doc.onmouseup; // same hand-off as the drag below
+		resizing.stashonmousemove = resizing.doc.onmousemove;
+		resizing.doc.onmouseup = resizeMouseUp;
+		resizing.doc.onmousemove = resizeMouseMove;
+	}
+
+	function addResizeGrip(dirX, dirY, cursor) {
+		var grip = document.createElement("div");
+		grip.style.position = "absolute";
+		grip.style.cursor = cursor;
+		grip.style.zIndex = "5";
+		grip.style.width = "8px";
+		grip.style.height = "8px";
+		if (dirX !== 0 && dirY !== 0) {
+			// corners sit above the side strips
+			grip.style.width = "14px";
+			grip.style.height = "14px";
+			grip.style.zIndex = "6";
+		}
+		// -2px so the grip also covers the preview's own border
+		if (dirX === 0) {
+			grip.style.left = "0";
+			grip.style.width = "100%";
+		} else if (dirX === -1) {
+			grip.style.left = "-2px";
+		} else {
+			grip.style.right = "-2px";
+		}
+		if (dirY === 0) {
+			grip.style.top = "0";
+			grip.style.height = "100%";
+		} else if (dirY === -1) {
+			grip.style.top = "-2px";
+		} else {
+			grip.style.bottom = "-2px";
+		}
+		grip.onmousedown = function (e) {
+			resizeMouseDown(e, dirX, dirY);
+		};
+		elmnt.appendChild(grip);
+	}
+
+	addResizeGrip(-1, 0, "ew-resize");
+	addResizeGrip(1, 0, "ew-resize");
+	addResizeGrip(0, -1, "ns-resize");
+	addResizeGrip(0, 1, "ns-resize");
+	addResizeGrip(-1, -1, "nwse-resize");
+	addResizeGrip(1, 1, "nwse-resize");
+	addResizeGrip(1, -1, "nesw-resize");
+	addResizeGrip(-1, 1, "nesw-resize");
+
 	elmnt.onmousedown = dragMouseDown;
 	elmnt.ontouchstart = dragMouseDown;
+}
+
+// The height of a resized mini preview follows its width, so it is re-fitted whenever the mixer lays it out.
+// Only what is shown changes; the size and place the user chose are kept for when the window grows again.
+function keepMiniPreviewOnScreen(elmnt) {
+	var parent = elmnt.offsetParent;
+	var video = elmnt.querySelector("video");
+	if (!parent || !parent.clientWidth || !parent.clientHeight || !video || !video.videoWidth || !video.videoHeight) {
+		return;
+	}
+	if (video.rotated) {
+		return; // sized another way by applyMirror
+	}
+	var border = elmnt.offsetWidth - elmnt.clientWidth;
+	var maxHeight = parent.clientHeight;
+	var ownMaxHeight = parseFloat(elmnt.style.maxHeight);
+	if (ownMaxHeight && ownMaxHeight < maxHeight) {
+		maxHeight = ownMaxHeight;
+	}
+
+	var width = elmnt.offsetWidth;
+	var maxWidth = ((maxHeight - border) * video.videoWidth) / video.videoHeight + border;
+	// The preview video is not upscaled, so a wider box would only leave a gap beside it.
+	if (video.videoWidth + border < maxWidth) {
+		maxWidth = video.videoWidth + border;
+	}
+	if (width > maxWidth) {
+		width = maxWidth;
+		elmnt.style.width = (100 * width) / parent.clientWidth + "%";
+	}
+
+	var height = ((width - border) * video.videoHeight) / video.videoWidth + border;
+	var top = elmnt.offsetTop;
+	if (top + height > parent.clientHeight) {
+		top = parent.clientHeight - height;
+		if (top < 0) {
+			top = 0;
+		}
+		elmnt.style.top = (100 * top) / parent.clientHeight + "%";
+	}
+
+	var left = elmnt.offsetLeft;
+	if (left + width > parent.clientWidth) {
+		left = parent.clientWidth - width;
+		if (left < 0) {
+			left = 0;
+		}
+		elmnt.style.right = "unset";
+		elmnt.style.left = (100 * left) / parent.clientWidth + "%";
+	}
 }
 
 function makeDraggableElement(element) {
@@ -7542,6 +7776,70 @@ function applyLayoutTextOverlayStyles(textOverlay, textConfig, animated, skipAni
 	}
 }
 
+function balanceRoomCameraBitrates(cameras, minimum) {
+	if (cameras.length < 2) {
+		return;
+	}
+	var unequalWeights = false;
+	var remaining = 0;
+	var totalWeight = 0;
+	var i, camera;
+	for (i = 0; i < cameras.length; i++) {
+		camera = cameras[i];
+		if (camera.cover || !Number.isFinite(camera.weight) || camera.request[0] < minimum) {
+			return;
+		}
+		if (camera.weight !== cameras[0].weight) {
+			unequalWeights = true;
+		}
+		remaining += camera.request[0];
+		totalWeight += camera.weight;
+	}
+	if (!unequalWeights || !Number.isSafeInteger(remaining)) {
+		return;
+	}
+	var pending = cameras;
+	while (pending.length) {
+		var allocated = 0;
+		for (i = 0; i < pending.length; i++) {
+			camera = pending[i];
+			camera.share = remaining * camera.weight / totalWeight;
+			camera.rate = Math.min(camera.cap, Math.max(minimum, camera.share));
+			allocated += camera.rate;
+		}
+		if (Math.abs(allocated - remaining) < 0.000001) {
+			break;
+		}
+
+		// If the floors overspent the pool, fix those first. If caps left room, fix the caps first.
+		var fixFloors = allocated > remaining;
+		var free = [];
+		totalWeight = 0;
+		for (i = 0; i < pending.length; i++) {
+			camera = pending[i];
+			if ((fixFloors && camera.share < minimum) || (!fixFloors && camera.share > camera.cap)) {
+				remaining -= camera.rate;
+			} else {
+				free.push(camera);
+				totalWeight += camera.weight;
+			}
+		}
+		if (free.length === pending.length) {
+			break;
+		}
+		pending = free;
+	}
+
+	// Round cumulative shares so the integer requests add up to the original pool.
+	var total = 0;
+	for (i = 0; i < cameras.length; i++) {
+		camera = cameras[i];
+		var previous = Math.round(total);
+		total += camera.rate;
+		camera.request[0] = Math.round(total) - previous;
+	}
+}
+
 function updateMixerRun(e = false) {
 	// this is the main auto-mixing code.  It's a giant function that runs when there are changes to screensize, video track statuses, etc.
 	try {
@@ -7816,6 +8114,11 @@ function updateMixerRun(e = false) {
 		}
 
 		var delayedRequestList = {};
+		var roomCameras = null;
+		if (session.weightedRoomBitrate && session.roomid && session.scene === false && !session.director &&
+			!session.activeSpeaker && session.optimize === false && !session.bitrate && session.bitrate_set === false) {
+			roomCameras = {};
+		}
 
 		function delayedRequestRate(bandwidth, UUID, optimizeAudio = false, lock = null) {
 			delayedRequestList[UUID] = [bandwidth, UUID, optimizeAudio, lock];
@@ -8418,10 +8721,19 @@ function updateMixerRun(e = false) {
 								delayedRequestRate(screenShareBitrate, i); // well, screw that. Setting it to room quality.
 							} else {
 								var requestRoomBitrate = roomBitrate;
+								var roomCameraCap = Infinity;
 								if (roomOnlyBitrateActive && (parseInt(session.rpcs[i].roomOnlyTier) || 0) === 1) {
-									requestRoomBitrate = Math.min(requestRoomBitrate, parseInt(session.roomTier1Bitrate / roomQuality));
+									roomCameraCap = parseInt(session.roomTier1Bitrate / roomQuality);
+									requestRoomBitrate = Math.min(requestRoomBitrate, roomCameraCap);
 								}
 								delayedRequestRate(requestRoomBitrate, i); // well, screw that. Setting it to room quality.
+								if (roomCameras && requestRoomBitrate > 0 && !doNotPush) {
+									var peer = session.rpcs[i];
+									if (!peer.screenShareState && !peer.videoMuted && peer.manualBandwidth === false && !peer.lockedVideoBitrate &&
+										peer.videoElement.style.display !== "none" && peer.videoElement.srcObject && peer.videoElement.srcObject.getVideoTracks().length) {
+										roomCameras[i] = { request: delayedRequestList[i], cap: roomCameraCap };
+									}
+								}
 							}
 						}
 					} else {
@@ -9197,7 +9509,11 @@ function updateMixerRun(e = false) {
 							makeMiniDraggableElement(container);
 							container.id = "minipreview";
 						}
-						container.style.width = "18%";
+						if (miniPerformerW !== null) {
+							container.style.width = miniPerformerW + "%";
+						} else {
+							container.style.width = "18%";
+						}
 						//container.style.display = "flex";
 						container.style.zIndex = "3";
 						container.style.margin = "0";
@@ -9205,6 +9521,9 @@ function updateMixerRun(e = false) {
 						container.style.cursor = "pointer";
 						container.style.border = "2px #BBB solid";
 						container.style.height = "block";
+						if (miniPerformerW !== null) {
+							keepMiniPreviewOnScreen(container);
+						}
 						applyMirror(session.mirrorExclude);
 					} else if (soloVideo === true) {
 						if (document.getElementById("minipreview")) {
@@ -9663,6 +9982,12 @@ function updateMixerRun(e = false) {
 				container.theight = Math.ceil(h / rh);
 				container.style.width = container.twidth + "px";
 				container.style.height = container.theight + "px";
+			}
+
+			if (layout && roomCameras && roomCameras[vidUUID] && !isScreenShare && session.rpcs[vidUUID].videoElement === vid &&
+				vid !== document.pictureInPictureElement && vid.webkitPresentationMode !== "picture-in-picture" && container.twidth > 0 && container.theight > 0) {
+				roomCameras[vidUUID].weight = Math.sqrt(container.twidth * container.theight);
+				roomCameras[vidUUID].cover = cover;
 			}
 
 			var maxWidth = 0;
@@ -10608,6 +10933,17 @@ function updateMixerRun(e = false) {
 			errorlog(err);
 		}
 	});
+	if (roomCameras && layout) {
+		// Hidden or unslotted tiles have no size from this pass. Later requests can also override a camera's rate.
+		var cameras = [];
+		for (var uuid in roomCameras) {
+			var camera = roomCameras[uuid];
+			if (camera.weight && delayedRequestList[uuid] === camera.request) {
+				cameras.push(camera);
+			}
+		}
+		balanceRoomCameraBitrates(cameras, Math.max(1, session.minimumRoomBitrate || 0));
+	}
 	for (var uid in delayedRequestList) {
 		session.requestRateLimit(...delayedRequestList[uid]);
 	}
@@ -41434,9 +41770,7 @@ function toggleRoomSettings() {
 		var modalTemplate = `<div id="modalBackdrop" style="z-index:24"></div>`;
 		//	document.body.insertAdjacentHTML("beforeend", modalTemplate); // Insert modal at body end
 		//	document.getElementById("modalBackdrop").addEventListener("click", toggleRoomSettings);
-		getById("trbSettingInput").value = session.totalRoomBitrate;
-		getById("trbSettingInputManual").value = session.totalRoomBitrate;
-		getById("trbSettingInputFeedback").innerHTML = session.totalRoomBitrate;
+		updateRoomBitrateControls();
 
 		if (session.limitTotalBitrate !== false) {
 			getById("ltbSettingInputManual").value = session.limitTotalBitrate;
@@ -41463,14 +41797,28 @@ function changeLTB(ele) {
 	session.limitTotalBitrateGuests();
 }
 
-function changeTRB(ele) {
-	session.totalRoomBitrate = parseInt(ele.value);
-	session.totalRoomBitrate_userSet = true;
-	var msg = {};
-	msg.directorSettings = {};
-	msg.directorSettings.totalRoomBitrate = session.totalRoomBitrate;
-	session.sendMessage(msg);
-	pokeIframeAPI("total-room-bitrate", session.totalRoomBitrate);
+function updateRoomBitrateControls() {
+	var slider = getById("trbSettingInput");
+	if (session.totalRoomBitrate > slider.max) {
+		slider.max = session.totalRoomBitrate;
+	}
+	slider.value = session.totalRoomBitrate;
+	getById("trbSettingInputManual").value = session.totalRoomBitrate;
+	getById("trbSettingInputFeedback").textContent = session.totalRoomBitrate;
+}
+
+function changeTRB(bitrate) {
+	if (Number.isSafeInteger(bitrate) && bitrate >= 0) {
+		if (session.directorUUID && session.directorUUID !== session.UUID) {
+			session.sendRequest({ requestRoomBitrate: bitrate }, session.directorUUID);
+		} else if (session.directorState !== false) {
+			session.totalRoomBitrate = bitrate;
+			session.totalRoomBitrate_userSet = true;
+			session.sendMessage({ directorSettings: { totalRoomBitrate: bitrate } });
+			pokeIframeAPI("total-room-bitrate", bitrate);
+		}
+	}
+	updateRoomBitrateControls(); // Co-directors show the current value until the main director confirms.
 }
 
 function sendMediaDevices(UUID) {
@@ -57555,7 +57903,16 @@ function pauseVideo(videoEle, update = true) {
 			copyFunction(taskItemInContext.href);
 		} else if (link.getAttribute("data-action") === "Mirror") {
 			if (taskItemInContext.id == "videosource" || taskItemInContext.id == "previewWebcam") {
-				session.mirrored = session.mirrored ? 0 : 1;
+				// 0 and 2 are the forced &mirror states and are kept as a pair, so a second click always restores the start.
+				if (session.mirrored === 0) {
+					session.mirrored = 2;
+				} else if (session.mirrored == 2) {
+					session.mirrored = 0;
+				} else if (session.mirrored) {
+					session.mirrored = false;
+				} else {
+					session.mirrored = 1;
+				}
 				applyMirror(session.mirrorExclude);
 				log("session.mirrored");
 			} else {

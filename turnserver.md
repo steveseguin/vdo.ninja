@@ -9,7 +9,7 @@ This setup was validated on Ubuntu 26.04 with Coturn 4.6.1. Adjust commands and 
 The website does not run these optional examples. They are simpler than this guide, so review them before use:
 
 - `turnserver_basic.conf`: minimal non-TLS config on port 3478 with a static username and password.
-- `turnserver_install.sh.sample`: interactive installer for Coturn, fail2ban, optional Certbot TLS on 443, buffers, swap and log limits. It binds port 443 with `setcap` rather than the systemd override below, and sets `fs.file-max=65535`.
+- `turnserver_install.sh.sample`: interactive installer for Coturn, fail2ban, optional Certbot TLS on 443, buffers, swap and log limits. It binds port 443 with `setcap` rather than the systemd override below.
 - `turn-credentials-php.sample`: returns time-limited credentials for Coturn's `use-auth-secret` mode.
 
 Both config samples use `alt-listening-port=0` without `no-rfc5780`, which leaves ports 3479 and 444 open (see [Ports](#ports)).
@@ -31,10 +31,10 @@ Both config samples use `alt-listening-port=0` without `no-rfc5780`, which leave
 | 3478 | TCP | Non-TLS TURN fallback | Optional but useful |
 | 443 | TCP | TURN over TLS for restrictive networks | Strongly recommended |
 | 443 | UDP | TURN over DTLS | Optional |
-| 49152-65535 | UDP | Allocated media relay ports | Yes |
+| 10000-65535 | UDP | Allocated media relay ports | Yes |
 
 - Clients using TURN over TCP or TLS still normally get a UDP relay allocation, so the relay range does not need TCP unless you use RFC 6062 TCP relays.
-- The range holds 16,384 ports, one per allocation. A server can run out of relay ports while CPU, memory and network look healthy, so monitor it.
+- On a dedicated TURN host, use UDP `10000-65535` for 55,536 relay ports per IP. On a shared host, check UDP listeners with `sudo ss -lunp` and choose a range clear of other services on the relay address. Match the host and provider firewall rules to that range.
 - `alt-listening-port=0` does **not** disable the alternative listener; it means "primary port plus one" (3479 and 444). If you do not need RFC 5780 NAT discovery, set `no-rfc5780` and check those ports are closed.
 
 ## Install packages
@@ -63,7 +63,7 @@ tls-listening-port=443
 listening-ip=203.0.113.10
 relay-ip=203.0.113.10
 
-min-port=49152
+min-port=10000
 max-port=65535
 
 fingerprint
@@ -144,6 +144,7 @@ net.ipv4.tcp_keepalive_time=300
 net.ipv4.tcp_keepalive_intvl=30
 net.ipv4.tcp_keepalive_probes=5
 net.netfilter.nf_conntrack_max=524288
+# Keep the existing fs.file-max if it is higher.
 fs.file-max=1048576
 ```
 
@@ -177,7 +178,7 @@ sudo ufw allow 3478/udp comment TURN-UDP
 sudo ufw allow 3478/tcp comment TURN-TCP
 sudo ufw allow 443/tcp comment TURN-TLS
 sudo ufw allow 443/udp comment TURN-DTLS
-sudo ufw allow 49152:65535/udp comment TURN-relays
+sudo ufw allow 10000:65535/udp comment TURN-relays
 sudo ufw --force enable
 sudo ufw status verbose
 ```
@@ -283,7 +284,7 @@ On every node, monitor:
 
 - service state and restart count;
 - successful UDP 3478 and TLS 443 allocations, and relayed data both ways;
-- UDP sockets in use inside `49152-65535`;
+- UDP sockets in use inside `10000-65535`;
 - allocation, bind, file-descriptor and connection-tracking errors;
 - TCP/TLS clients, throughput, CPU and free memory;
 - an alert when Coturn is active but an expected public listener is missing.
@@ -291,10 +292,16 @@ On every node, monitor:
 Count relay sockets in use:
 
 ```bash
-sudo ss -Huan | awk '{ port=$4; sub(/^.*:/, "", port); if (port >= 49152 && port <= 65535) used++ } END { print used + 0 }'
+sudo ss -Huanp | awk '/"turnserver"/ {
+    port = addr = $4
+    sub(/^.*:/, "", port)
+    port += 0
+    sub(/:[^:]*$/, "", addr)
+    if (port >= 10000 && port <= 65535 && !seen[$4]++) used[addr]++
+} END { for (addr in used) print addr, used[addr] }'
 ```
 
-Suggested relay-port alerts for a 16,384-port range: warning at 70% for two checks in a row; critical at 85% or on any allocation or bind error; recovered below 60% with passing probes. Port exhaustion can cause very low bitrate and long ICE delays while CPU and memory look idle.
+Suggested relay-port alerts per relay IP: warning at 70% for two checks in a row; critical at 85% or on any allocation or bind error; recovered below 60% with passing probes. Port exhaustion can cause very low bitrate and long ICE delays while CPU and memory look idle.
 
 Spread traffic randomly across servers in the same region instead of always picking the first. Add a node to your routing only after its UDP, TLS, renewal, firewall and relayed-data checks pass.
 
