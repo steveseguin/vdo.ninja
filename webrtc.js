@@ -9383,6 +9383,12 @@ WebRTC.Media = (function () {
 						}
 					}
 					if ("mediaDeviceChange" in msg) {
+						var change = msg.mediaDeviceChange;
+						if (change && change.kind === "microphone" && change.ok === false && change.error !== "Guest rejected microphone change" &&
+							document.getElementById("requestAudioDevice_" + UUID) &&
+							!(isIFrame && session.iframeMediaDeviceChangeRequests && session.iframeMediaDeviceChangeRequests[UUID + ":microphone"])) {
+							warnUser(String(change.error || "Microphone change failed"), 4000);
+						}
 						if (isIFrame && session.iframeMediaDeviceChangeRequests && msg.mediaDeviceChange && msg.mediaDeviceChange.kind) {
 							try {
 								var mediaDeviceChangeKey = UUID + ":" + msg.mediaDeviceChange.kind;

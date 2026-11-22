@@ -35662,7 +35662,7 @@ function addScreenDevices(device) {
 }
 
 var gotDevices2AlreadyRan = false;
-function gotDevices2(deviceInfos) {
+function gotDevices2(deviceInfos, microphones) {
 	gotDevices2AlreadyRan = true;
 	log("got devices!2");
 	log(deviceInfos);
@@ -35773,7 +35773,9 @@ function gotDevices2(deviceInfos) {
 					let shouldCheck = false;
 					const devIdLower = (deviceInfo.deviceId || "").toLowerCase();
 					const normLabel = normalizeAudioAliasLabel(deviceInfo.label || "");
-					if (activeAudioIds.size && deviceInfo.deviceId && activeAudioIds.has(deviceInfo.deviceId)) {
+					if (microphones) {
+						shouldCheck = !!microphones[deviceInfo.deviceId];
+					} else if (activeAudioIds.size && deviceInfo.deviceId && activeAudioIds.has(deviceInfo.deviceId)) {
 						shouldCheck = true;
 					} else if (!activeAudioIds.size && deviceInfo.label && activeAudioNormLabels.has(normLabel)) {
 						// Prefer non-default entries when multiple share a label
@@ -36199,7 +36201,7 @@ function gotDevices2(deviceInfos) {
 	}
 }
 
-function refreshMicrophoneDevice(UUID = false) {
+async function refreshMicrophoneDevice(UUID = false) {
 	if (session.screenShareState || session.mediafileShare) {
 		log("can't refresh a screenshare or fileshare");
 
@@ -36213,8 +36215,24 @@ function refreshMicrophoneDevice(UUID = false) {
 		return;
 	}
 	log("refreshing microphone..");
+	var microphones;
+	if (UUID) {
+		var requestID = getAudioUserMediaRequestID;
+		try {
+			var devices = await enumerateDevices();
+			if (requestID !== getAudioUserMediaRequestID || !session.streamSrc) {
+				sendMediaDevices(UUID);
+				return;
+			}
+			microphones = getRemoteMicrophoneTracks(devices, session.streamSrc.getAudioTracks());
+			gotDevices2(devices, microphones);
+		} catch (e) {
+			sendMediaDeviceChangeAck(UUID, "microphone", false, false, "Unable to list microphones");
+			return;
+		}
+	}
 	activatedPreview = false;
-	grabAudio("#audioSource3", null, false, UUID);
+	return grabAudio("#audioSource3", null, false, UUID, false, microphones);
 }
 
 function refreshVideoDevice(UUID = false) {
@@ -38638,13 +38656,18 @@ function gotDevicesRemote(deviceInfos, UUID, activeMicrophones) {
 			audioSelect.id = "remoteAudioSelect_" + UUID;
 
 			audioSelect.onchange = function () {
-				getById("requestAudioDevice_" + UUID).disabled = !this.value;
-				if (session.rpcs[UUID].stats.info && session.rpcs[UUID].stats.info.consent) {
-					getById("requestAudioDevice_" + UUID).innerHTML = '<i class="las la-microphone-alt"></i> apply';
-					getById("requestAudioDevice_" + UUID).title = "This will update the remote device to the selected one";
+				var button = getById("requestAudioDevice_" + UUID);
+				var option = this.options[this.selectedIndex];
+				button.disabled = !this.value;
+				if (option && option.dataset.refresh) {
+					button.innerHTML = '<i class="las la-microphone-alt"></i> refresh';
+					button.title = "This will refresh the current device";
+				} else if (session.rpcs[UUID].stats.info && session.rpcs[UUID].stats.info.consent) {
+					button.innerHTML = '<i class="las la-microphone-alt"></i> apply';
+					button.title = "This will update the remote device to the selected one";
 				} else {
-					getById("requestAudioDevice_" + UUID).innerHTML = '<i class="las la-microphone-alt"></i> request';
-					getById("requestAudioDevice_" + UUID).title = "This will ask the remote guest for permission to change";
+					button.innerHTML = '<i class="las la-microphone-alt"></i> request';
+					button.title = "This will ask the remote guest for permission to change";
 				}
 			};
 
@@ -38655,9 +38678,13 @@ function gotDevicesRemote(deviceInfos, UUID, activeMicrophones) {
 				var data = {};
 				var option = audioSelect.options[audioSelect.selectedIndex];
 				if (!option || !option.value) { return; }
-				data.changeMicrophone = option.value;
-				if ("enabled" in option.dataset) {
-					data.microphoneEnabled = option.dataset.enabled === "true";
+				if (option.dataset.refresh) {
+					data.refreshMicrophone = true;
+				} else {
+					data.changeMicrophone = option.value;
+					if ("enabled" in option.dataset) {
+						data.microphoneEnabled = option.dataset.enabled === "true";
+					}
 				}
 				data.UUID = UUID;
 				session.sendRequest(data, UUID); // Viewer is requesting the PUBLISHER
@@ -38706,7 +38733,6 @@ function gotDevicesRemote(deviceInfos, UUID, activeMicrophones) {
 		}
 
 		var matched = false;
-		var audiomatched = false;
 		var activeIds = Object.keys(activeMicrophones || {}).filter(id => activeMicrophones[id]);
 		var addMics = document.createElement("optgroup");
 		var removeMics = document.createElement("optgroup");
@@ -38736,7 +38762,9 @@ function gotDevicesRemote(deviceInfos, UUID, activeMicrophones) {
 				if (activeIds.length < 2) {
 					if (active || (!activeMicrophones && getById("remoteAudioLabel_" + UUID).innerText == option.text)) {
 						option.selected = true;
-						audiomatched = true;
+						if (active) {
+							option.dataset.refresh = "true";
+						}
 					}
 					audioSelect.appendChild(option);
 				}
@@ -38777,15 +38805,7 @@ function gotDevicesRemote(deviceInfos, UUID, activeMicrophones) {
 			removeMics.label = getTranslation("remove-microphone");
 			audioSelect.appendChild(removeMics);
 		}
-		var micButton = getById("requestAudioDevice_" + UUID);
-		micButton.disabled = !audioSelect.value;
-		if (audiomatched) {
-			micButton.innerHTML = '<i class="las la-microphone-alt"></i> refresh';
-			micButton.title = "This will refresh the current device";
-		} else {
-			micButton.innerHTML = '<i class="las la-microphone-alt"></i> request';
-			micButton.title = "This will ask the remote guest for permission to change";
-		}
+		audioSelect.onchange();
 	} catch (e) {
 		errorlog(e);
 	}
@@ -38950,6 +38970,32 @@ function flattenConstraints(constraints) {
 	return result;
 }
 
+function getAudioInputConstraints(deviceId, override) {
+	var constraint = { audio: { deviceId: { exact: deviceId } }, video: false };
+	if (session.echoCancellation === false || session.autoGainControl === false || session.noiseSuppression === false || session.voiceIsolation === true) {
+		constraint.audio.echoCancellation = session.echoCancellation !== false;
+		constraint.audio.autoGainControl = session.autoGainControl !== false;
+		constraint.audio.noiseSuppression = session.noiseSuppression !== false;
+		if (session.voiceIsolation === true) { constraint.audio.voiceIsolation = true; }
+	}
+	if (deviceId === "default" && (iOS || iPad || SafariVersion)) {
+		delete constraint.audio.deviceId;
+	}
+	if (override) {
+		log("Override true");
+		constraint = JSON.parse(JSON.stringify(override));
+	}
+	if (constraint.audio === true && (session.audioInputChannels || session.micSampleRate || session.micSampleSize)) {
+		constraint.audio = {};
+	}
+	if (session.audioInputChannels) { constraint.audio.channelCount = session.audioInputChannels; }
+	if (session.micSampleRate) { constraint.audio.sampleRate = parseInt(session.micSampleRate); }
+	if (session.micSampleSize) { constraint.audio.sampleSize = parseInt(session.micSampleSize); }
+	log("CONSTRAINT");
+	log(constraint);
+	return Firefox ? toFirefoxConstraint(constraint) : constraint;
+}
+
 async function getAudioOnly(selector, trackid = null, override = false, requestToken = null, preserveSelectedAudio = false) {
 	var audioSelect = document.querySelector(selector).querySelectorAll("input,option");
 	var audioList = [];
@@ -39040,11 +39086,13 @@ async function getAudioOnly(selector, trackid = null, override = false, requestT
 				}
 			}
 
-			const baseKey = groupId || normLabel || deviceIdLower || rawLabel;
+			// A known live selection already accounts for system microphone aliases.
+			const liveId = preserveSelectedAudio && preserveSelectedAudio !== true && preserveSelectedAudio[el.value] ? el.value : "";
+			const baseKey = liveId || groupId || normLabel || deviceIdLower || rawLabel;
 			const groupKey = groupId || normLabel || deviceIdLower || baseKey;
 			const uniqueKey = (isDefaultish && !groupId)
 				? (groupKey + "|alias")
-				: (groupKey + "|" + ((el.value || "").toLowerCase() || normLabel || rawLabel || ""));
+				: (groupKey + "|" + (liveId || deviceIdLower || normLabel || rawLabel || ""));
 
 			if (uniqueSeen.has(uniqueKey)) {
 				continue;
@@ -39094,52 +39142,9 @@ async function getAudioOnly(selector, trackid = null, override = false, requestT
 	} catch (e) { /* non-fatal */ }
 
 	for (var i = 0; i < audioList.length; i++) {
-		if (session.echoCancellation !== false && session.autoGainControl !== false && session.noiseSuppression !== false && (session.voiceIsolation !== true)) {
-			var constraint = {
-				audio: {
-					deviceId: {
-						exact: audioList[i].value
-					}
-				}
-			};
-		} else {
-			// Just trying to avoid problems with some systems that don't support these features
-			var constraint = {
-				audio: {
-					deviceId: {
-						exact: audioList[i].value
-					}
-				}
-			};
-			if (session.echoCancellation === false) {
-				constraint.audio.echoCancellation = false;
-			} else {
-				constraint.audio.echoCancellation = true;
-			}
-			if (session.autoGainControl === false) {
-				constraint.audio.autoGainControl = false;
-			} else {
-				constraint.audio.autoGainControl = true;
-			}
-			if (session.noiseSuppression === false) {
-				constraint.audio.noiseSuppression = false;
-			} else {
-				constraint.audio.noiseSuppression = true;
-			}
-			if (session.voiceIsolation === true) {
-				constraint.audio.voiceIsolation = true;
-			}
-		}
-		constraint.video = false;
-		if (audioList[i].value === "default" && (iOS || iPad || SafariVersion)) {
-			// Before permission, Safari exposes no device ID; gotDevices2 uses this placeholder.
-			// Request the default microphone, as the camera path already does.
-			delete constraint.audio.deviceId;
-		}
-		if (overrideAudioConstraint && (!overrideAudioDeviceId || audioList[i].value === overrideAudioDeviceId)) {
-			log("Override true");
-			constraint = JSON.parse(JSON.stringify(overrideAudioConstraint));
-		}
+		var deviceId = audioList[i].value;
+		var useOverride = !overrideAudioDeviceId || deviceId === overrideAudioDeviceId;
+		var constraint = getAudioInputConstraints(deviceId, useOverride && overrideAudioConstraint);
 
 		if (audioList[i].value && SelectedAudioInputDevices) {
 			if (SelectedAudioInputDevices.indexOf(audioList[i].value) === -1) {
@@ -39148,40 +39153,6 @@ async function getAudioOnly(selector, trackid = null, override = false, requestT
 				}
 				SelectedAudioInputDevices.push(audioList[i].value);
 			}
-		}
-
-		if (session.audioInputChannels) {
-			if (constraint.audio === true) {
-				constraint.audio = {};
-				constraint.audio.channelCount = session.audioInputChannels;
-			} else if (constraint.audio) {
-				constraint.audio.channelCount = session.audioInputChannels;
-			}
-		}
-
-		if (session.micSampleRate) {
-			if (constraint.audio === true) {
-				constraint.audio = {};
-				constraint.audio.sampleRate = parseInt(session.micSampleRate);
-			} else if (constraint.audio) {
-				constraint.audio.sampleRate = parseInt(session.micSampleRate);
-			}
-		}
-
-		if (session.micSampleSize) {
-			if (constraint.audio === true) {
-				constraint.audio = {};
-				constraint.audio.sampleSize = parseInt(session.micSampleSize);
-			} else if (constraint.audio) {
-				constraint.audio.sampleSize = parseInt(session.micSampleSize);
-			}
-		}
-
-		log("CONSTRAINT");
-		log(constraint);
-
-		if (Firefox) {
-			constraint = toFirefoxConstraint(constraint);
 		}
 
 		warnlog("navigator.mediaDevices.getUserMedia starting...");
@@ -41858,53 +41829,43 @@ function changeTRB(bitrate) {
 	updateRoomBitrateControls(); // Co-directors show the current value until the main director confirms.
 }
 
-function getRemoteMicrophoneState(devices) {
+function getRemoteMicrophoneTracks(devices, tracks) {
 	var inputs = devices.filter(device => device && device.kind === "audioinput" && device.deviceId && device.groupId !== "asio");
-	var tracks = session.streamSrc ? session.streamSrc.getAudioTracks() : [];
-	var active = [];
+	var physical = inputs.filter(device => device.deviceId !== "default" && device.deviceId !== "communications");
+	if (!physical.length) { return; }
+	var state = Object.create(null);
+	for (var device of physical) {
+		state[device.deviceId] = false;
+	}
+
+	var active = false;
 	for (var track of tracks) {
 		if (track.readyState === "ended") { continue; }
 		var settings = track.getSettings ? track.getSettings() : {};
 		var input = inputs.find(device => device.deviceId === settings.deviceId);
 		if (!input && track.label) {
 			var named = inputs.filter(device => device.label === track.label);
-			input = named.length === 1 ? named[0] : named.find(device => settings.groupId && device.groupId === settings.groupId);
+			if (named.length > 1 && settings.groupId) { named = named.filter(device => device.groupId === settings.groupId); }
+			if (named.length === 1) { input = named[0]; }
 		}
-		if (!input) { return; } // A screen, file or other non-microphone source is in use.
-		active.push(input.deviceId);
-	}
-
-	if (!active.length) { return; }
-	// Keep the live ID when Windows lists a microphone under several names.
-	var physical = inputs.filter(device => device.deviceId !== "default" && device.deviceId !== "communications");
-	if (!physical.length) { return; }
-	var groups = new Map();
-	for (var device of inputs) {
-		var mic = device;
-		if (device.deviceId === "default" || device.deviceId === "communications") {
-			mic = physical.find(input => device.groupId && input.groupId === device.groupId);
-			if (!mic) {
-				var label = normalizeAudioAliasLabel(device.label);
-				var matches = physical.filter(input => label && normalizeAudioAliasLabel(input.label) === label);
-				if (matches.length !== 1) {
-					if (active.includes(device.deviceId)) { return; }
-					continue;
-				}
-				mic = matches[0];
+		if (!input) { return; }
+		var physicalId = input.deviceId;
+		// Only the system aliases can stand for a different device ID.
+		if (input.deviceId === "default" || input.deviceId === "communications") {
+			var matches = physical.filter(device => input.groupId && input.groupId === device.groupId);
+			if (matches.length !== 1) {
+				var label = normalizeAudioAliasLabel(input.label);
+				matches = (matches.length ? matches : physical).filter(device => label && normalizeAudioAliasLabel(device.label) === label);
 			}
+			if (matches.length !== 1) { return; }
+			physicalId = matches[0].deviceId;
 		}
-		var key = mic.groupId || normalizeAudioAliasLabel(mic.label) || mic.deviceId;
-		var previous = groups.get(key);
-		if (!previous || active.indexOf(device.deviceId) !== -1 ||
-			(active.indexOf(previous) === -1 && (previous === "default" || previous === "communications"))) {
-			groups.set(key, device.deviceId);
-		}
+		if (state[physicalId] !== false) { return; } // Two live tracks already refer to this input.
+		if (physicalId !== input.deviceId) { delete state[physicalId]; }
+		state[input.deviceId] = track;
+		active = true;
 	}
-	var state = Object.create(null);
-	for (var deviceId of groups.values()) {
-		state[deviceId] = active.indexOf(deviceId) !== -1;
-	}
-	return state;
+	if (active) { return state; }
 }
 
 function sendMediaDevices(UUID) {
@@ -41932,7 +41893,11 @@ function sendMediaDevices(UUID) {
 		data.UUID = UUID;
 		data.mediaDevices = deviceInfos;
 		try {
-			data.activeMicrophones = getRemoteMicrophoneState(deviceInfos);
+			var tracks = session.streamSrc && getRemoteMicrophoneTracks(deviceInfos, session.streamSrc.getAudioTracks());
+			if (tracks) {
+				data.activeMicrophones = Object.create(null);
+				for (var id in tracks) { data.activeMicrophones[id] = !!tracks[id]; }
+			}
 		} catch (e) { warnlog(e); }
 		session.sendMessage(data, data.UUID);
 	});
@@ -42083,12 +42048,12 @@ async function changeAudioDeviceById(deviceId, UUID = false, enabled) {
 		var prompt = "Allow the director to change your audio mic source?";
 		var refresh = false;
 		if (toggle) {
-			var state = getRemoteMicrophoneState(devices);
+			var source = session.streamSrc;
+			var state = source && getRemoteMicrophoneTracks(devices, source.getAudioTracks());
 			if (typeof enabled !== "boolean" || !state || !(deviceId in state)) {
-				sendMediaDeviceChangeAck(UUID, "microphone", false, deviceId, "Microphone selection changed");
-				return;
+				throw new Error("Microphone selection changed");
 			}
-			if (state[deviceId] === enabled) {
+			if (!!state[deviceId] === enabled) {
 				sendMediaDeviceChangeAck(UUID, "microphone", true, deviceId);
 				return;
 			}
@@ -42114,35 +42079,52 @@ async function changeAudioDeviceById(deviceId, UUID = false, enabled) {
 			if (toggle) {
 				// Inputs can be unplugged or changed locally while the prompt is open.
 				devices = await enumerateDevices();
-				state = getRemoteMicrophoneState(devices);
+				source = session.streamSrc;
+				state = source && getRemoteMicrophoneTracks(devices, source.getAudioTracks());
 			}
 		}
 
 		if (toggle) {
 			if (!state || !(deviceId in state) || (!enabled && !Object.keys(state).some(id => id !== deviceId && state[id]))) {
-				sendMediaDeviceChangeAck(UUID, "microphone", false, deviceId, "Microphone selection changed");
-				sendMediaDevices(UUID);
-				return;
+				throw new Error("Microphone selection changed");
 			}
-			if (state[deviceId] !== enabled) {
-				state[deviceId] = enabled;
-				gotDevices2(devices);
-				for (var input of getById("audioSource3").querySelectorAll("input")) {
-					input.checked = state[input.value] === true;
+			if (!!state[deviceId] !== enabled) {
+				var requestID = getAudioUserMediaRequestID;
+				var pending = session.addingRemoteMicrophone;
+				if (pending && pending.source === source && pending.requestID === requestID) { throw new Error("Microphone change already in progress"); }
+				if (enabled) {
+					var adding = { source: source, requestID: requestID };
+					session.addingRemoteMicrophone = adding;
+					var stream = await navigator.mediaDevices.getUserMedia(getAudioInputConstraints(deviceId));
+					var captured = getRemoteMicrophoneTracks(devices, stream.getAudioTracks());
+					state = getRemoteMicrophoneTracks(devices, source.getAudioTracks());
+					if (source !== session.streamSrc || requestID !== getAudioUserMediaRequestID || !state || state[deviceId] !== false || !captured || !captured[deviceId]) {
+						throw new Error("Microphone selection changed");
+					}
+					var track = captured[deviceId];
+					track.onended = handleAudioTrackEnded;
+					source.addTrack(track);
+					stream = null; // The source now owns the track.
+					pokeIframeAPI("local-microphone-event");
+				} else {
+					source.removeTrack(state[deviceId]);
+					state[deviceId].stop();
 				}
-				activatedPreview = false;
-				await grabAudio("#audioSource3", null, false, UUID);
+				// Some capture modes share original tracks with the preview clone.
+				if (session.streamSrcClone && session.streamSrcClone !== source) {
+					for (var original of source.getTracks()) {
+						if (session.streamSrcClone.getTrackById(original.id) === original) {
+							session.streamSrcClone.removeTrack(original);
+						}
+					}
+				}
+				senderAudioUpdate(UUID);
 			}
-			var live = getRemoteMicrophoneState(devices);
-			var expected = Object.keys(state).filter(id => state[id]);
-			var captured = Object.keys(live || {}).filter(id => live[id]);
-			var ok = captured.length === expected.length && expected.every(id => captured.includes(id));
-			if (live) { SelectedAudioInputDevices = captured; }
-			sendMediaDeviceChangeAck(UUID, "microphone", ok, deviceId, ok ? false : "Microphone change failed");
-			if (!ok) {
-				gotDevices2(devices);
-				sendMediaDevices(UUID);
-			}
+			var live = getRemoteMicrophoneTracks(devices, source.getAudioTracks());
+			if (!live || !!live[deviceId] !== enabled) { throw new Error("Microphone change failed"); }
+			gotDevices2(devices, live);
+			SelectedAudioInputDevices = Object.keys(live).filter(id => live[id]);
+			sendMediaDeviceChangeAck(UUID, "microphone", true, deviceId);
 			return;
 		}
 
@@ -42157,6 +42139,10 @@ async function changeAudioDeviceById(deviceId, UUID = false, enabled) {
 		}, UUID, "microphone", deviceId);
 	} catch (e) {
 		sendMediaDeviceChangeAck(UUID, "microphone", false, deviceId, e.message || "Microphone change failed");
+		if (UUID && enabled !== undefined) { sendMediaDevices(UUID); }
+	} finally {
+		if (stream) { stream.getTracks().forEach(track => track.stop()); }
+		if (adding && session.addingRemoteMicrophone === adding) { session.addingRemoteMicrophone = false; }
 	}
 }
 
@@ -54206,11 +54192,12 @@ function applyAudioHack(constraint, value = null, deviceid = "default", callback
 	log(new_constraints);
 	activatedPreview = false;
 
-	enumerateDevices()
-		.then(gotDevices2)
-		.then(function () {
-			grabAudio("#audioSource3", null, new_constraints, callbackUUID, saveAudioResult, true);
-		});
+	enumerateDevices().then(function (devices) {
+		var tracks = session.streamSrc ? session.streamSrc.getAudioTracks() : [];
+		var microphones = tracks.length > 1 && getRemoteMicrophoneTracks(devices, tracks);
+		gotDevices2(devices, microphones);
+		grabAudio("#audioSource3", null, new_constraints, callbackUUID, saveAudioResult, microphones || true);
+	});
 }
 
 // saveAudioResult is disabled but keeping structure for potential future use
