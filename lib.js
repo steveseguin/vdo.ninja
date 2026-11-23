@@ -43560,7 +43560,7 @@ async function grabAudio(selector = "#audioSource", trackid = null, override = f
 	var gumAudioID = getAudioUserMediaRequestID;
 	var source = session.streamSrc;
 	var remainingMicrophones = null;
-	if (microphones && source.getAudioTracks().length > 1) {
+	if (microphones) {
 		remainingMicrophones = new Map();
 		for (var id in microphones) {
 			if (microphones[id]) { remainingMicrophones.set(id, microphones[id]); }
@@ -43569,6 +43569,14 @@ async function grabAudio(selector = "#audioSource", trackid = null, override = f
 		if (retryMissing) {
 			for (var mic of source.getAudioTracks()) {
 				if (mic.readyState === "ended") { remainingMicrophones.set(mic.vdoMicrophoneId, mic); }
+			}
+		}
+	} else if (!override && source) {
+		// A local selection can reopen a mic the guest kept checked.
+		for (var mic of source.getAudioTracks()) {
+			if (mic.vdoMicrophoneId && (mic.vdoMicrophoneSettings || typeof mic.vdoMicrophoneGain === "number")) {
+				if (!remainingMicrophones) { remainingMicrophones = new Map(); }
+				remainingMicrophones.set(mic.vdoMicrophoneId, mic);
 			}
 		}
 	}
@@ -54367,7 +54375,7 @@ function applyAudioHack(constraint, value = null, deviceid = "default", callback
 	enumerateDevices().then(function (devices) {
 		if (requestID !== getAudioUserMediaRequestID || !session.streamSrc || session.streamSrc.getTrackById(track0.id) !== track0 || track0.readyState === "ended") { return; }
 		var tracks = session.streamSrc.getAudioTracks();
-		var microphones = tracks.length > 1 && getRemoteMicrophoneTracks(devices, tracks);
+		var microphones = getRemoteMicrophoneTracks(devices, tracks);
 		if (microphones) {
 			var id = Object.keys(microphones).find(id => microphones[id] === track0);
 			if (!id) { return; }
