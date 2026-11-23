@@ -39005,7 +39005,7 @@ function flattenConstraints(constraints) {
 	return result;
 }
 
-function getAudioInputConstraints(deviceId, override) {
+function getAudioInputConstraints(deviceId, override, previous) {
 	var constraint = { audio: { deviceId: { exact: deviceId } }, video: false };
 	if (session.echoCancellation === false || session.autoGainControl === false || session.noiseSuppression === false || session.voiceIsolation === true) {
 		constraint.audio.echoCancellation = session.echoCancellation !== false;
@@ -39019,6 +39019,9 @@ function getAudioInputConstraints(deviceId, override) {
 	if (override) {
 		log("Override true");
 		constraint = JSON.parse(JSON.stringify(override));
+	}
+	if (previous && previous.vdoMicrophoneSettings) {
+		Object.assign(constraint.audio, previous.vdoMicrophoneSettings);
 	}
 	if (constraint.audio === true && (session.audioInputChannels || session.micSampleRate || session.micSampleSize)) {
 		constraint.audio = {};
@@ -39128,7 +39131,8 @@ async function getAudioOnly(selector, trackid = null, override = false, requestT
 	for (var i = 0; i < audioList.length; i++) {
 		var deviceId = audioList[i].value;
 		var useOverride = !overrideAudioDeviceId || deviceId === overrideAudioDeviceId;
-		var constraint = getAudioInputConstraints(deviceId, useOverride && overrideAudioConstraint);
+		var previous = remainingMicrophones && remainingMicrophones.get(deviceId);
+		var constraint = getAudioInputConstraints(deviceId, useOverride && overrideAudioConstraint, previous);
 
 		if (audioList[i].value && SelectedAudioInputDevices) {
 			if (SelectedAudioInputDevices.indexOf(audioList[i].value) === -1) {
@@ -39165,13 +39169,14 @@ async function getAudioOnly(selector, trackid = null, override = false, requestT
 				if (requestToken !== null && requestToken !== getAudioUserMediaRequestID) {
 					stream.getTracks().forEach(track => track.stop());
 				} else {
-					var previous = remainingMicrophones && remainingMicrophones.get(deviceId);
 					if (previous) {
 						var captured = stream.getAudioTracks()[0];
 						if (!captured || captured.readyState !== "live") {
 							stream.getTracks().forEach(track => track.stop());
 							continue;
 						}
+						captured.vdoMicrophoneId = deviceId;
+						captured.vdoMicrophoneSettings = previous.vdoMicrophoneSettings;
 						captured.vdoMicrophoneGain = previous.vdoMicrophoneGain;
 						remainingMicrophones.delete(deviceId);
 					}
@@ -42145,7 +42150,7 @@ function changeVideoDeviceById(deviceId, UUID = false, includeDevices = true) {
 
 async function addMicrophoneTrack(source, devices, deviceId, ended) {
 	var requestID = getAudioUserMediaRequestID;
-	var stream = await navigator.mediaDevices.getUserMedia(getAudioInputConstraints(deviceId));
+	var stream = await navigator.mediaDevices.getUserMedia(getAudioInputConstraints(deviceId, false, ended));
 	try {
 		var track = stream.getAudioTracks()[0];
 		var tracks = source.getAudioTracks();
@@ -42160,7 +42165,10 @@ async function addMicrophoneTrack(source, devices, deviceId, ended) {
 			state[id].vdoMicrophoneId = id;
 			if (!state[id].onended) { state[id].onended = handleAudioTrackEnded; }
 		}
-		if (ended) { track.vdoMicrophoneGain = ended.vdoMicrophoneGain; }
+		if (ended) {
+			track.vdoMicrophoneSettings = ended.vdoMicrophoneSettings;
+			track.vdoMicrophoneGain = ended.vdoMicrophoneGain;
+		}
 		source.addTrack(track);
 		for (var previous of tracks) {
 			if (previous.readyState !== "ended") { continue; }
@@ -43548,9 +43556,17 @@ async function grabAudio(selector = "#audioSource", trackid = null, override = f
 	var gumAudioID = getAudioUserMediaRequestID;
 	var source = session.streamSrc;
 	var remainingMicrophones = null;
-	if (microphones && canRetryMicrophonesById(source)) {
+	if (microphones && source.getAudioTracks().length > 1) {
 		remainingMicrophones = new Map();
-		for (var mic of source.getAudioTracks()) { remainingMicrophones.set(mic.vdoMicrophoneId, mic); }
+		for (var id in microphones) {
+			if (microphones[id]) { remainingMicrophones.set(id, microphones[id]); }
+		}
+		var retryMissing = canRetryMicrophonesById(source);
+		if (retryMissing) {
+			for (var mic of source.getAudioTracks()) {
+				if (mic.readyState === "ended") { remainingMicrophones.set(mic.vdoMicrophoneId, mic); }
+			}
+		}
 	}
 	log("TRACK EXCLUDED:" + trackid);
 
@@ -43713,7 +43729,7 @@ async function grabAudio(selector = "#audioSource", trackid = null, override = f
 					session.streamSrc.addTrack(track); // add video track to the preview video
 
 					track.onended = handleAudioTrackEnded;
-					if (track.getSettings) { track.vdoMicrophoneId = track.getSettings().deviceId; }
+					if (track.getSettings) { track.vdoMicrophoneId = track.getSettings().deviceId || track.vdoMicrophoneId; }
 
 					log("ok?");
 					// applySavedAudioSettings(track); ## this doesn't work as echo-cancellation(+) needs to be applied via getuserMedia only.
@@ -43732,7 +43748,7 @@ async function grabAudio(selector = "#audioSource", trackid = null, override = f
 		}
 	}
 
-	if (remainingMicrophones && remainingMicrophones.size && source === session.streamSrc) {
+	if (retryMissing && remainingMicrophones.size && source === session.streamSrc) {
 		// Only this selection-preserving capture can resume inputs it failed to reopen.
 		for (var missing of remainingMicrophones.values()) { source.addTrack(missing); }
 		handleAudioTrackEnded();
@@ -49772,6 +49788,9 @@ function listAudioSettingsPrep() {
 
 		if (track0.getSettings) {
 			trackSet.currentAudioConstraints = track0.getSettings();
+			if (!trackSet.currentAudioConstraints.deviceId && track0.vdoMicrophoneId) {
+				trackSet.currentAudioConstraints.deviceId = track0.vdoMicrophoneId;
+			}
 			if (!session.stereo) {
 				try {
 					delete trackSet.currentAudioConstraints.channelCount;
@@ -54343,12 +54362,23 @@ function applyAudioHack(constraint, value = null, deviceid = "default", callback
 	var requestID = getAudioUserMediaRequestID;
 	enumerateDevices().then(function (devices) {
 		if (requestID !== getAudioUserMediaRequestID || !session.streamSrc || session.streamSrc.getTrackById(track0.id) !== track0 || track0.readyState === "ended") { return; }
+		var tracks = session.streamSrc.getAudioTracks();
+		var microphones = tracks.length > 1 && getRemoteMicrophoneTracks(devices, tracks);
+		if (microphones) {
+			var id = Object.keys(microphones).find(id => microphones[id] === track0);
+			if (!id) { return; }
+			new_constraints.audio.deviceId = id;
+			if (typeof value === "boolean" && ["echoCancellation", "autoGainControl", "noiseSuppression"].includes(constraint)) {
+				if (!track0.vdoMicrophoneSettings) { track0.vdoMicrophoneSettings = {}; }
+				track0.vdoMicrophoneSettings[constraint] = value;
+			}
+		} else if (tracks.length > 1 && !new_constraints.audio.deviceId) {
+			return;
+		}
 		if (constraint === "channelCount" && value && typeof value.exact === "number") {
 			session.audioInputChannels = value.exact;
 		}
 		activatedPreview = false;
-		var tracks = session.streamSrc ? session.streamSrc.getAudioTracks() : [];
-		var microphones = tracks.length > 1 && getRemoteMicrophoneTracks(devices, tracks);
 		gotDevices2(devices, microphones);
 		grabAudio("#audioSource3", null, new_constraints, callbackUUID, saveAudioResult, true, microphones);
 	});
