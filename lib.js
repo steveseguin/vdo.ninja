@@ -39133,6 +39133,10 @@ async function getAudioOnly(selector, trackid = null, override = false, requestT
 		var useOverride = !overrideAudioDeviceId || deviceId === overrideAudioDeviceId;
 		var previous = remainingMicrophones && remainingMicrophones.get(deviceId);
 		var constraint = getAudioInputConstraints(deviceId, useOverride && overrideAudioConstraint, previous);
+		if (Firefox && audioList.length > 1 && deviceId !== "default" && deviceId !== "communications") {
+			// Firefox can otherwise open the same mic twice if a selected input disappears.
+			constraint.audio.deviceId = { exact: deviceId };
+		}
 
 		if (audioList[i].value && SelectedAudioInputDevices) {
 			if (SelectedAudioInputDevices.indexOf(audioList[i].value) === -1) {
