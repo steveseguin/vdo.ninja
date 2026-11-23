@@ -9325,7 +9325,14 @@ WebRTC.Media = (function () {
 					}
 					if (Array.isArray(msg.microphoneDevices)) {
 						var micSelect = document.getElementById("remoteAudioSelect_" + UUID);
-						if (micSelect && micSelect.closest(".advancedAudioSettings:not(.hidden)")) {
+						var audioPanel = micSelect && micSelect.closest(".advancedAudioSettings:not(.hidden)");
+						if (audioPanel) {
+							if (msg.microphoneTrackIds) {
+								for (var control of audioPanel.querySelectorAll("[data-microphone]")) {
+									var trackId = msg.microphoneTrackIds[control.dataset.microphone];
+									if (typeof trackId === "string") { control.dataset.deviceId = trackId; }
+								}
+							}
 							updateRemoteMicrophoneSelect(micSelect, msg.microphoneDevices, UUID, msg.activeMicrophones, true);
 						}
 					}
