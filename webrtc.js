@@ -9323,6 +9323,12 @@ WebRTC.Media = (function () {
 					if ("audioOptions" in msg) {
 						updateDirectorsAudio(msg.audioOptions, UUID);
 					}
+					if (Array.isArray(msg.microphoneDevices)) {
+						var micSelect = document.getElementById("remoteAudioSelect_" + UUID);
+						if (micSelect && micSelect.closest(".advancedAudioSettings:not(.hidden)")) {
+							updateRemoteMicrophoneSelect(micSelect, msg.microphoneDevices, UUID, msg.activeMicrophones, true);
+						}
+					}
 					if ("mediaDevices" in msg) {
 						gotDevicesRemote(msg.mediaDevices, UUID, msg.activeMicrophones);
 						if (isIFrame && session.iframeMediaDeviceRequests && session.iframeMediaDeviceRequests[UUID]) {
@@ -14494,6 +14500,7 @@ WebRTC.Media = (function () {
 					}
 
 					if ("getAudioSettings" in msg) {
+						if (session.pcs[UUID]) { session.pcs[UUID].requestedAudioSettings = true; }
 						var data = {};
 						data.UUID = UUID;
 						data.audioOptions = listAudioSettingsPrep();
