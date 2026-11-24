@@ -9320,20 +9320,22 @@ WebRTC.Media = (function () {
 						var audioPanel = document.getElementById("audioCompressorModal");
 						if (audioPanel && audioPanel.dataset.processor === "gate" && audioPanel.dataset.UUID === UUID) audioPanel.updateGateMeter(msg.audioGateMeter);
 					}
-					if ("audioOptions" in msg) {
+					if ("audioOptions" in msg && !Array.isArray(msg.microphoneDevices)) {
 						updateDirectorsAudio(msg.audioOptions, UUID);
 					}
 					if (Array.isArray(msg.microphoneDevices)) {
 						var micSelect = document.getElementById("remoteAudioSelect_" + UUID);
-						var audioPanel = micSelect && micSelect.closest(".advancedAudioSettings:not(.hidden)");
+						var audioPanel = document.querySelector("#container_" + UUID + " .advancedAudioSettings:not(.hidden)");
 						if (audioPanel) {
-							if (msg.microphoneTrackIds) {
+							if (Array.isArray(msg.audioOptions)) {
+								updateDirectorsAudio(msg.audioOptions, UUID);
+							} else if (msg.microphoneTrackIds) {
 								for (var control of audioPanel.querySelectorAll("[data-microphone]")) {
 									var trackId = msg.microphoneTrackIds[control.dataset.microphone];
 									if (typeof trackId === "string") { control.dataset.deviceId = trackId; }
 								}
 							}
-							updateRemoteMicrophoneSelect(micSelect, msg.microphoneDevices, UUID, msg.activeMicrophones, true);
+							if (micSelect) { updateRemoteMicrophoneSelect(micSelect, msg.microphoneDevices, UUID, msg.activeMicrophones, true); }
 						}
 					}
 					if ("mediaDevices" in msg) {
@@ -14506,6 +14508,10 @@ WebRTC.Media = (function () {
 						}
 					}
 
+					if (typeof msg.getMicrophoneUpdates === "boolean" && session.pcs[UUID]) {
+						session.pcs[UUID].requestedMicrophoneUpdates = msg.getMicrophoneUpdates;
+						if (!msg.getMicrophoneUpdates) { session.pcs[UUID].requestedAudioSettings = false; }
+					}
 					if ("getAudioSettings" in msg) {
 						if (session.pcs[UUID]) { session.pcs[UUID].requestedAudioSettings = true; }
 						var data = {};

@@ -32246,6 +32246,7 @@ function requestAudioSettings(ele) {
 		ele.ariaPressed = "false";
 		query("#container_" + UUID + " .advancedAudioSettings").classList.add("hidden");
 		query("#container_" + UUID + " .advancedAudioSettings").innerHTML = "";
+		session.sendRequest({ getMicrophoneUpdates: false }, UUID);
 		return false;
 	} else {
 		ele.value = 1;
@@ -32254,6 +32255,7 @@ function requestAudioSettings(ele) {
 		query("#container_" + UUID + " .advancedAudioSettings").innerHTML = "";
 		var actionMsg = {};
 		actionMsg.getAudioSettings = true;
+		actionMsg.getMicrophoneUpdates = true;
 		session.sendRequest(actionMsg, UUID);
 		return true;
 	}
@@ -32295,6 +32297,7 @@ function requestVideoSettings(ele) {
 		query("#container_" + UUID + " .advancedVideoSettings").innerHTML = "";
 		var actionMsg = {};
 		actionMsg.getVideoSettings = true;
+		actionMsg.getMicrophoneUpdates = false;
 		session.sendRequest(actionMsg, UUID);
 		return true;
 	}
@@ -39908,9 +39911,7 @@ function handleAudioTrackEnded(event) {
 				if (source === session.streamSrc && requestID === getAudioUserMediaRequestID) {
 					gotDevices2(devices, getRemoteMicrophoneTracks(devices, source.getAudioTracks()));
 					if (restored || (event && event.type === "ended")) {
-						for (var UUID of session.directorList) {
-							if (session.pcs[UUID] && session.pcs[UUID].requestedAudioSettings) { sendMediaDevices(UUID, true); }
-						}
+						sendMicrophoneUpdates();
 					}
 				}
 			} catch (e) {
@@ -41970,7 +41971,16 @@ function getRemoteMicrophoneTracks(devices, tracks, removeId = false) {
 	}
 }
 
-function sendMediaDevices(UUID, microphonesOnly = false) {
+function sendMicrophoneUpdates(exceptUUID = false, includeAudioOptions = false) {
+	for (var UUID of session.directorList) {
+		var pc = session.pcs[UUID];
+		if (UUID !== exceptUUID && pc && pc.requestedAudioSettings && (!includeAudioOptions || pc.requestedMicrophoneUpdates)) {
+			sendMediaDevices(UUID, true, includeAudioOptions);
+		}
+	}
+}
+
+function sendMediaDevices(UUID, microphonesOnly = false, includeAudioOptions = false) {
 	enumerateDevices().then(async function (deviceInfos) {
 		// Add ASIO devices if available (Windows only via Electron Capture)
 		try {
@@ -41995,6 +42005,7 @@ function sendMediaDevices(UUID, microphonesOnly = false) {
 		data.UUID = UUID;
 		if (microphonesOnly) {
 			if (session.directorList.indexOf(UUID) === -1 || !session.pcs[UUID] || !session.pcs[UUID].requestedAudioSettings) { return; }
+			if (includeAudioOptions && !session.pcs[UUID].requestedMicrophoneUpdates) { return; }
 			data.microphoneDevices = deviceInfos.filter(device => device && device.kind === "audioinput");
 		} else {
 			data.mediaDevices = deviceInfos;
@@ -42009,6 +42020,7 @@ function sendMediaDevices(UUID, microphonesOnly = false) {
 					if (microphonesOnly && tracks[id]) { data.microphoneTrackIds[id] = tracks[id].id; }
 				}
 			}
+			if (includeAudioOptions) { data.audioOptions = listAudioSettingsPrep(); }
 		} catch (e) { warnlog(e); }
 		session.sendMessage(data, data.UUID);
 	});
@@ -42262,6 +42274,7 @@ async function changeAudioDeviceById(deviceId, UUID = false, enabled) {
 					state[deviceId].stop();
 				}
 				updateMicrophoneSenders(source, UUID);
+				sendMicrophoneUpdates(UUID, true);
 			}
 			var live = getRemoteMicrophoneTracks(devices, source.getAudioTracks());
 			if (!live || !!live[deviceId] !== enabled) { throw new Error("Microphone change failed"); }
@@ -43771,6 +43784,7 @@ async function grabAudio(selector = "#audioSource", trackid = null, override = f
 	}
 
 	senderAudioUpdate(callbackUUID);
+	sendMicrophoneUpdates(callbackUUID, true);
 
 	try {
 		if (session.streamSrc && session.streamSrc.getVideoTracks && session.streamSrc.getVideoTracks().length) {
@@ -52131,8 +52145,14 @@ function updateDirectorsAudio(dataN, UUID) {
 			compressorModal.update(dataN[0]);
 		}
 	}
-	var audioEle = document.createElement("div");
-	query("#container_" + UUID + " .advancedAudioSettings").innerHTML = "";
+	var audioEle = document.getElementById("remoteAudioSettings_" + UUID);
+	if (!audioEle) {
+		audioEle = document.createElement("div");
+		audioEle.id = "remoteAudioSettings_" + UUID;
+		query("#container_" + UUID + " .advancedAudioSettings").prepend(audioEle);
+	} else {
+		audioEle.textContent = "";
+	}
 
 	if (query('[data-action-type="advanced-audio-settings"][data--u-u-i-d="' + UUID + '"]').classList.contains("pressed")) {
 		query("#container_" + UUID + " .advancedAudioSettings").classList.remove("hidden");
@@ -52154,7 +52174,6 @@ function updateDirectorsAudio(dataN, UUID) {
 
 		query('[data-action-type="refresh-mic"][data--u-u-i-d="' + UUID + '"]').disabled = true;
 
-		query("#container_" + UUID + " .advancedAudioSettings").appendChild(audioEle);
 		return;
 	}
 
@@ -52908,7 +52927,6 @@ function updateDirectorsAudio(dataN, UUID) {
 				}
 			}
 		}
-		query("#container_" + UUID + " .advancedAudioSettings").appendChild(audioEle);
 	}
 
 	if (fixScrollReset) {
