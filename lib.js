@@ -42246,8 +42246,10 @@ function updateMicrophoneSenders(source, UUID = false) {
 
 async function changeAudioDeviceById(deviceId, UUID = false, enabled) {
 	try {
-		var devices = await enumerateDevices();
 		var toggle = enabled !== undefined;
+		var director = toggle && session.directorList.includes(UUID) && session.pcs[UUID];
+		var supportsMicrophoneUpdates = director && "requestedMicrophoneUpdates" in director;
+		var devices = await enumerateDevices();
 		var prompt = "Allow the director to change your audio mic source?";
 		var refresh = false;
 		if (toggle) {
@@ -42258,7 +42260,7 @@ async function changeAudioDeviceById(deviceId, UUID = false, enabled) {
 				throw new Error("Microphone selection changed");
 			}
 			if (!!state[deviceId] === enabled) {
-				sendMediaDeviceChangeAck(UUID, "microphone", true, deviceId);
+				sendMediaDeviceChangeAck(UUID, "microphone", true, deviceId, false, false);
 				return;
 			}
 			var device = devices.find(input => input.kind === "audioinput" && input.deviceId === deviceId);
@@ -42276,7 +42278,8 @@ async function changeAudioDeviceById(deviceId, UUID = false, enabled) {
 
 		if (UUID && !session.consent && !refresh) {
 			window.focus();
-			if (!await confirmAlt(prompt)) {
+			var declined = !await confirmAlt(prompt);
+			if (declined) {
 				session.sendMessage({ UUID: UUID, rejected: "changeMicrophone" }, UUID);
 				sendMediaDeviceChangeAck(UUID, "microphone", false, deviceId, "Guest rejected microphone change");
 				return;
@@ -42305,14 +42308,14 @@ async function changeAudioDeviceById(deviceId, UUID = false, enabled) {
 					source.removeTrack(state[deviceId]);
 					state[deviceId].stop();
 				}
-				updateMicrophoneSenders(source, UUID);
+				updateMicrophoneSenders(source, supportsMicrophoneUpdates ? false : UUID);
 				sendMicrophoneUpdates(UUID, true);
 			}
 			var live = getRemoteMicrophoneTracks(devices, source.getAudioTracks());
 			if (!live || !!live[deviceId] !== enabled) { throw new Error("Microphone change failed"); }
 			gotDevices2(devices, live);
 			SelectedAudioInputDevices = Object.keys(live).filter(id => live[id]);
-			sendMediaDeviceChangeAck(UUID, "microphone", true, deviceId);
+			sendMediaDeviceChangeAck(UUID, "microphone", true, deviceId, false, false);
 			return;
 		}
 
@@ -42327,9 +42330,16 @@ async function changeAudioDeviceById(deviceId, UUID = false, enabled) {
 		}, UUID, "microphone", deviceId);
 	} catch (e) {
 		sendMediaDeviceChangeAck(UUID, "microphone", false, deviceId, e.message || "Microphone change failed");
-		if (UUID && enabled !== undefined) { sendMediaDevices(UUID); }
 	} finally {
 		if (adding && session.addingRemoteMicrophone === adding) { session.addingRemoteMicrophone = false; }
+		// A mic change should preserve pending camera and speaker choices in the director panel.
+		if (UUID && toggle && !declined) {
+			if (!supportsMicrophoneUpdates) {
+				sendMediaDevices(UUID);
+			} else if (director.requestedMicrophoneUpdates) {
+				sendMediaDevices(UUID, true, true);
+			}
+		}
 	}
 }
 
