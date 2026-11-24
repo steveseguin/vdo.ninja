@@ -14516,7 +14516,7 @@ WebRTC.Media = (function () {
 						if (session.pcs[UUID]) { session.pcs[UUID].requestedAudioSettings = true; }
 						var data = {};
 						data.UUID = UUID;
-						data.audioOptions = listAudioSettingsPrep();
+						data.audioOptions = listAudioSettingsPrep(UUID);
 						sendMediaDevices(data.UUID);
 						session.sendMessage(data, data.UUID);
 					}
@@ -15140,7 +15140,7 @@ WebRTC.Media = (function () {
 										try {
 											var data = {};
 											data.UUID = coUUID;
-											data.audioOptions = listAudioSettingsPrep();
+											data.audioOptions = listAudioSettingsPrep(coUUID);
 											sendMediaDevices(data.UUID);
 											session.sendMessage(data, data.UUID);
 										} catch (e) { }

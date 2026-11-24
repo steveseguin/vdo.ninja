@@ -30015,12 +30015,12 @@ function changeCompressor(key, value) {
 
 function sendAudioProcessingSettingsToDirectors() {
 	var data = {};
+	var settings;
 	for (var UUID in session.pcs) {
 		if (session.directorList.indexOf(UUID) === -1) continue;
 		if (!session.pcs[UUID].sendChannel || session.pcs[UUID].sendChannel.readyState !== "open") continue;
-		if (!data.audioOptions) {
-			data.audioOptions = listAudioSettingsPrep();
-		}
+		if (!settings) { settings = listAudioSettingsPrep(); }
+		data.audioOptions = getDirectorAudioSettings(UUID, settings);
 		data.UUID = UUID;
 		session.sendMessage(data, UUID);
 	}
@@ -36249,7 +36249,9 @@ async function refreshMicrophoneDevice(UUID = false) {
 			var microphones = getRemoteMicrophoneTracks(devices, tracks);
 			if (!microphones && canRetryMicrophonesById(source) && tracks.some(track => track.readyState === "ended")) {
 				handleAudioTrackEnded();
-				sendMediaDevices(UUID);
+				var director = session.directorList.includes(UUID) && session.pcs[UUID];
+				var microphoneUpdates = director && "requestedMicrophoneUpdates" in director;
+				sendMediaDevices(UUID, microphoneUpdates, microphoneUpdates);
 				return;
 			}
 			gotDevices2(devices, microphones);
@@ -42003,11 +42005,11 @@ function getRemoteMicrophoneTracks(devices, tracks, removeId = false) {
 	}
 }
 
-function sendMicrophoneUpdates(exceptUUID = false, includeAudioOptions = false) {
+function sendMicrophoneUpdates(exceptUUID = false, subscribedOnly = false) {
 	for (var UUID of session.directorList) {
 		var pc = session.pcs[UUID];
-		if (UUID !== exceptUUID && pc && pc.requestedAudioSettings && (!includeAudioOptions || pc.requestedMicrophoneUpdates)) {
-			sendMediaDevices(UUID, true, includeAudioOptions);
+		if (UUID !== exceptUUID && pc && pc.requestedAudioSettings && (!subscribedOnly || pc.requestedMicrophoneUpdates)) {
+			sendMediaDevices(UUID, true, !!pc.requestedMicrophoneUpdates);
 		}
 	}
 }
@@ -42052,7 +42054,7 @@ function sendMediaDevices(UUID, microphonesOnly = false, includeAudioOptions = f
 					if (microphonesOnly && tracks[id]) { data.microphoneTrackIds[id] = tracks[id].id; }
 				}
 			}
-			if (includeAudioOptions) { data.audioOptions = listAudioSettingsPrep(); }
+			if (includeAudioOptions) { data.audioOptions = listAudioSettingsPrep(UUID); }
 		} catch (e) { warnlog(e); }
 		session.sendMessage(data, data.UUID);
 	});
@@ -44957,7 +44959,7 @@ function senderAudioUpdate(callbackUUID = false, videoSource = null) {
 			try {
 				var data = {};
 				data.UUID = callbackUUID;
-				data.audioOptions = listAudioSettingsPrep();
+				data.audioOptions = listAudioSettingsPrep(callbackUUID);
 				sendMediaDevices(data.UUID);
 				session.sendMessage(data, data.UUID);
 			} catch (e) { }
@@ -49807,7 +49809,19 @@ function toggleMixSource(targetUUID, sourceId, sourceType) {
 	}
 }
 
-function listAudioSettingsPrep() {
+function getDirectorAudioSettings(UUID, settings) {
+	if (!settings || settings.length < 2 || !session.pcs[UUID] || !session.pcs[UUID].requestedMicrophoneUpdates) { return settings; }
+	return settings.map(function (option) {
+		var track = session.streamSrc.getTrackById(option.deviceId);
+		// Keep shared processing and Refresh available while a selected mic reconnects.
+		if (track && track.vdoMicrophoneId && track.readyState === "ended") {
+			return Object.assign({}, option, { audioConstraints: {}, subGain: false });
+		}
+		return option;
+	});
+}
+
+function listAudioSettingsPrep(UUID = false) {
 	try {
 		var tracks = session.streamSrc.getAudioTracks();
 		if (!tracks.length) {
@@ -49936,7 +49950,7 @@ function listAudioSettingsPrep() {
 	}
 
 	pokeIframeAPI("listing-audio-settings", data);
-	return data;
+	return UUID ? getDirectorAudioSettings(UUID, data) : data;
 }
 
 function listVideoSettingsPrep() {
