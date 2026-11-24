@@ -39008,7 +39008,7 @@ function flattenConstraints(constraints) {
 	return result;
 }
 
-function getAudioInputConstraints(deviceId, override, previous) {
+function getAudioInputConstraints(deviceId, override, previous, multipleInputs = false) {
 	var constraint = { audio: { deviceId: { exact: deviceId } }, video: false };
 	if (session.echoCancellation === false || session.autoGainControl === false || session.noiseSuppression === false || session.voiceIsolation === true) {
 		constraint.audio.echoCancellation = session.echoCancellation !== false;
@@ -39034,13 +39034,21 @@ function getAudioInputConstraints(deviceId, override, previous) {
 	if (session.micSampleSize) { constraint.audio.sampleSize = parseInt(session.micSampleSize); }
 	log("CONSTRAINT");
 	log(constraint);
-	return Firefox ? toFirefoxConstraint(constraint) : constraint;
+	if (Firefox) {
+		constraint = toFirefoxConstraint(constraint);
+		if (multipleInputs && deviceId !== "default" && deviceId !== "communications") {
+			// Prevent Firefox from substituting another mic when the selected input disappears.
+			constraint.audio.deviceId = { exact: deviceId };
+		}
+	}
+	return constraint;
 }
 
 async function getAudioOnly(selector, trackid = null, override = false, requestToken = null, preserveSelectedAudio = false, remainingMicrophones = null) {
 	var audioSelect = document.querySelector(selector).querySelectorAll("input,option");
 	var audioList = [];
 	var streams = [];
+	var openedIds = [];
 	log("getAudioOnly()");
 
 	let overrideAudioConstraint = false;
@@ -39135,11 +39143,7 @@ async function getAudioOnly(selector, trackid = null, override = false, requestT
 		var deviceId = audioList[i].value;
 		var useOverride = !overrideAudioDeviceId || deviceId === overrideAudioDeviceId;
 		var previous = remainingMicrophones && remainingMicrophones.get(deviceId);
-		var constraint = getAudioInputConstraints(deviceId, useOverride && overrideAudioConstraint, previous);
-		if (Firefox && audioList.length > 1 && deviceId !== "default" && deviceId !== "communications") {
-			// Firefox can otherwise open the same mic twice if a selected input disappears.
-			constraint.audio.deviceId = { exact: deviceId };
-		}
+		var constraint = getAudioInputConstraints(deviceId, useOverride && overrideAudioConstraint, previous, audioList.length > 1);
 
 		if (audioList[i].value && SelectedAudioInputDevices) {
 			if (SelectedAudioInputDevices.indexOf(audioList[i].value) === -1) {
@@ -39187,6 +39191,7 @@ async function getAudioOnly(selector, trackid = null, override = false, requestT
 						captured.vdoMicrophoneGain = previous.vdoMicrophoneGain;
 						remainingMicrophones.delete(deviceId);
 					}
+					openedIds.push(deviceId);
 					streams.push(stream);
 				}
 			}
@@ -39207,6 +39212,21 @@ async function getAudioOnly(selector, trackid = null, override = false, requestT
 		return [];
 	}
 
+	if (streams.length > 1 && (openedIds.includes("default") || openedIds.includes("communications"))) {
+		// The system default can move to another selected mic while capture is pending.
+		var used = new Set(openedIds.filter((id, index) => hasLiveAudioTracks(streams[index])));
+		streams = streams.filter(function (stream, index) {
+			if (openedIds[index] !== "default" && openedIds[index] !== "communications") { return true; }
+			var id = getCapturedMicrophoneId(physical, stream.getAudioTracks()[0]);
+			if (!id) { return true; }
+			if (used.has(id)) {
+				stream.getTracks().forEach(track => track.stop());
+				return false;
+			}
+			used.add(id);
+			return true;
+		});
+	}
 	return streams;
 }
 
@@ -41920,6 +41940,15 @@ function getMicrophoneAliasMatches(physical, groupId, label) {
 	return named.length ? named : matches;
 }
 
+function getCapturedMicrophoneId(physical, track) {
+	if (!track || track.readyState === "ended") { return; }
+	var settings = track.getSettings ? track.getSettings() : {};
+	if (settings.deviceId && settings.deviceId !== "default" && settings.deviceId !== "communications") { return settings.deviceId; }
+	if (!settings.groupId) { return; }
+	var matches = getMicrophoneAliasMatches(physical, settings.groupId, track.label);
+	if (matches.length === 1 && matches[0].groupId === settings.groupId) { return matches[0].deviceId; }
+}
+
 function getMicrophoneDevice(inputs, track) {
 	var settings = track.getSettings ? track.getSettings() : {};
 	var deviceId = settings.deviceId || track.vdoMicrophoneId;
@@ -41955,9 +41984,12 @@ function getRemoteMicrophoneTracks(devices, tracks, removeId = false) {
 		var physicalId = input.deviceId;
 		// Only the system aliases can stand for a different device ID.
 		if (input.deviceId === "default" || input.deviceId === "communications") {
-			var matches = getMicrophoneAliasMatches(physical, input.groupId, input.label);
-			if (matches.length !== 1) { return; }
-			physicalId = matches[0].deviceId;
+			physicalId = getCapturedMicrophoneId(physical, track);
+			if (!physicalId) {
+				var matches = getMicrophoneAliasMatches(physical, input.groupId, input.label);
+				if (matches.length !== 1) { return; }
+				physicalId = matches[0].deviceId;
+			}
 		}
 		if (state[physicalId] !== false) { return; } // Two live tracks already refer to this input.
 		if (physicalId !== input.deviceId) { delete state[physicalId]; }
@@ -42166,7 +42198,7 @@ function changeVideoDeviceById(deviceId, UUID = false, includeDevices = true) {
 
 async function addMicrophoneTrack(source, devices, deviceId, ended) {
 	var requestID = getAudioUserMediaRequestID;
-	var stream = await navigator.mediaDevices.getUserMedia(getAudioInputConstraints(deviceId, false, ended));
+	var stream = await navigator.mediaDevices.getUserMedia(getAudioInputConstraints(deviceId, false, ended, true));
 	try {
 		var track = stream.getAudioTracks()[0];
 		var tracks = source.getAudioTracks();
