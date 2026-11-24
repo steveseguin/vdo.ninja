@@ -28859,7 +28859,21 @@ function outboundAudioPipeline(sourceStream = false) {
 		// Create iOS-compatible stream (always clone for iOS)
 		if (session.streamSrc && typeof session.streamSrc.clone === 'function') {
 			log("iOS: Cloning session.streamSrc");
-			streamSrc = session.streamSrc.clone();
+			if (session.streamSrc.getAudioTracks().some(track => track.vdoMicrophoneId)) {
+				// Keep director gain controls tied to the capture tracks when iOS clones them.
+				streamSrc = createMediaStream();
+				for (var track of session.streamSrc.getTracks()) {
+					var clone = track.clone();
+					if (track.vdoMicrophoneId) {
+						clone.vdoMicrophoneId = track.vdoMicrophoneId;
+						clone.vdoMicrophoneGain = track.vdoMicrophoneGain;
+						clone.vdoMicrophoneTrackId = track.id;
+					}
+					streamSrc.addTrack(clone);
+				}
+			} else {
+				streamSrc = session.streamSrc.clone();
+			}
 			session.streamSrcClone = streamSrc;
 		} else {
 			log("iOS: Creating new stream as backup");
@@ -29096,15 +29110,16 @@ function setupMultiTrackAudio(audioTracks, webAudio) {
 			tempIndividualTrackStream.addTrack(audioTracks[i]);
 			var trackAudioSourceNode = webAudio.audioContext.createMediaStreamSource(tempIndividualTrackStream);
 
-			webAudio.subGainNodes[audioTracks[i].id] = webAudio.audioContext.createGain();
+			var trackId = audioTracks[i].vdoMicrophoneTrackId || audioTracks[i].id;
+			webAudio.subGainNodes[trackId] = webAudio.audioContext.createGain();
 			if (typeof audioTracks[i].vdoMicrophoneGain === "number") {
-				webAudio.subGainNodes[audioTracks[i].id].gain.value = audioTracks[i].vdoMicrophoneGain;
+				webAudio.subGainNodes[trackId].gain.value = audioTracks[i].vdoMicrophoneGain;
 			}
-			trackAudioSourceNode.connect(webAudio.subGainNodes[audioTracks[i].id]);
+			trackAudioSourceNode.connect(webAudio.subGainNodes[trackId]);
 
 			if (maxChannelCount == 2) {
 				var individualSplitter = webAudio.audioContext.createChannelSplitter(2);
-				webAudio.subGainNodes[audioTracks[i].id].connect(individualSplitter);
+				webAudio.subGainNodes[trackId].connect(individualSplitter);
 				individualSplitter.connect(mergerNode, 0, 0);
 				try {
 					individualSplitter.connect(mergerNode, 1, 1);
@@ -29117,7 +29132,7 @@ function setupMultiTrackAudio(audioTracks, webAudio) {
 					}
 				}
 			} else {
-				webAudio.subGainNodes[audioTracks[i].id].connect(mergerNode, 0, 0);
+				webAudio.subGainNodes[trackId].connect(mergerNode, 0, 0);
 			}
 		} catch (e_track) {
 			errorlog("Error processing track: ", e_track);
