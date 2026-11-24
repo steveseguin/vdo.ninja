@@ -24188,8 +24188,8 @@ function syncOtherState(sid) {
 	log(others);
 
 	for (var other in others) {
-		// Solo Talk controls this director's microphone, not shared guest state.
-		if (other == "toggle-group" || other == "solo-chat") {
+		// Each director manages their own Solo Talk and Audio Settings controls.
+		if (other == "toggle-group" || other == "solo-chat" || other == "advanced-audio-settings") {
 			continue;
 		}
 		var ele = document.querySelector('[data-sid="' + sid + '"][data-action-type="' + other + '"]');
