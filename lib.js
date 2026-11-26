@@ -34671,6 +34671,7 @@ async function requestAudioStream() { // for the screen share.
 		// Enumerate devices
 		const devices = await navigator.mediaDevices.enumerateDevices();
 		const audioInputs = devices.filter(device => device.kind === 'audioinput');
+		const urlInputs = getUrlAudioInputIds(audioInputs);
 
 		// Clear and show device list
 		deviceList.innerHTML = '';
@@ -34692,8 +34693,12 @@ async function requestAudioStream() { // for the screen share.
 			checkbox.value = device.deviceId;
 
 			// Check if device was previously selected
-			if (session.audioDevice && ((typeof session.audioDevice === 'object' && session.audioDevice.includes(device.deviceId)) || normalizeDeviceLabel(deviceLabel).includes(session.audioDevice))) {
+			if (urlInputs) {
+				checkbox.checked = urlInputs.includes(device.deviceId);
+			} else if (session.audioDevice && ((typeof session.audioDevice === 'object' && session.audioDevice.includes(device.deviceId)) || normalizeDeviceLabel(deviceLabel).includes(session.audioDevice))) {
 				checkbox.checked = true;
+			}
+			if (checkbox.checked) {
 				selectedScreenShareAudioDevices.push(device.deviceId);
 			}
 
@@ -34799,6 +34804,38 @@ function loadSettings() {
 
 function normalizeDeviceLabel(deviceName) {
 	return String(deviceName).replace(/[\W]+/g, "_").toLowerCase();
+}
+
+function getUrlAudioInputIds(devices) {
+	var value = session.audioDeviceList;
+	if (!value || !Array.isArray(session.audioDevice) || session.audioDevice.length !== 1) { return; }
+	var whole = normalizeDeviceLabel(value);
+	if (session.audioDevice[0] !== whole) { return; }
+	var inputs = devices.filter(device => device.kind === "audioinput" && device.deviceId);
+	// A comma may be part of an existing single-microphone name.
+	if (inputs.some(device => device.deviceId === whole || normalizeDeviceLabel(device.label).includes(whole))) { return; }
+	var physical = inputs.filter(device => device.deviceId !== "default" && device.deviceId !== "communications");
+	var ids = [];
+	for (var part of value.split(",")) {
+		part = part.trim();
+		if (!part) { return; }
+		var device = inputs.find(input => input.deviceId === part);
+		if (!device) {
+			var name = normalizeDeviceLabel(part);
+			var matches = physical.filter(input => normalizeDeviceLabel(input.label) === name);
+			if (!matches.length) { matches = inputs.filter(input => normalizeDeviceLabel(input.label) === name); }
+			if (!matches.length) { matches = physical.filter(input => normalizeDeviceLabel(input.label).includes(name)); }
+			if (matches.length !== 1) { return; }
+			device = matches[0];
+		}
+		if (device.deviceId === "default" || device.deviceId === "communications") {
+			var aliases = getMicrophoneAliasMatches(physical, device.groupId, device.label);
+			if (aliases.length !== 1) { return; }
+			device = aliases[0];
+		}
+		if (!ids.includes(device.deviceId)) { ids.push(device.deviceId); }
+	}
+	return ids;
 }
 
 // Conservative audio label normalizer to alias Windows "Default -" / "Communications -" prefixed devices
@@ -35120,7 +35157,8 @@ function gotDevices(deviceInfos, miconly = false) {
 		}
 
 		if (session.audioDevice && typeof session.audioDevice == "object") {
-			var adMatch = [...session.audioDevice];
+			var urlInputs = getUrlAudioInputIds(deviceInfos);
+			var adMatch = urlInputs || [...session.audioDevice];
 		} else if (session.store && session.store.SelectedAudioInputDevices && session.store.SelectedAudioInputDevices.length) {
 			var adMatch = [...session.store.SelectedAudioInputDevices];
 		} else {
@@ -35166,7 +35204,7 @@ function gotDevices(deviceInfos, miconly = false) {
 							} catch (e) { }
 							adMatch[j] = null;
 							break;
-						} else if (normalizeDeviceLabel(deviceInfo.label).includes(adMatch[j])) {
+						} else if (!urlInputs && normalizeDeviceLabel(deviceInfo.label).includes(adMatch[j])) {
 							option.checked = true;
 							listele.style.display = "block";
 							option.style.display = "none";

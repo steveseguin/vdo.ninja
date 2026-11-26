@@ -4846,6 +4846,7 @@ async function main() {
 		if (session.audioDevice === null) {
 			session.audioDevice = "1";
 		} else if (session.audioDevice) {
+			if (session.audioDevice.includes(",")) { session.audioDeviceList = session.audioDevice; }
 			session.audioDevice = normalizeDeviceLabel(session.audioDevice);
 		}
 
@@ -4866,7 +4867,7 @@ async function main() {
 		} else if (session.audioDevice == "ndi") {
 			session.audioDevice = ["line_newtek_ndi_audio"];
 		} else {
-			session.audioDevice = session.audioDevice.split(",");
+			session.audioDevice = [session.audioDevice];
 		}
 
 		getById("headphonesDiv").classList.add("hidden");
