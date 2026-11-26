@@ -1,5 +1,7 @@
 {
   "innerHTML": {
+    "studio-director": "Realizador",
+    "studio-director-return": "Retorno do realizador",
     "audio-compressor": "Compressor:",
     "audio-compressor-off": "Desligado",
     "audio-compressor-on": "Ligado",
@@ -429,6 +431,8 @@
     "statistics": "Statistics"
   },
   "titles": {
+    "studio-director-controls": "Abrir os controlos do realizador para partilhar a OBS Virtual Camera",
+    "studio-director-return": "As novas ligações de convidado mostram o vídeo do realizador em vez dos outros convidados. Os convidados existentes têm de reabrir o convite atualizado.",
     "switch-this-guest-s-camera-and-microphone-between-direct-connections-and-meshcast": "Alternar a câmara e o microfone deste convidado entre ligações diretas e Meshcast",
     "mute-microphone-and-shared-audio-in-scene-outputs": "Silenciar o microfone e o áudio partilhado nas saídas das cenas",
     "mute-audio-in-scene-outputs": "Silenciar o microfone e o áudio partilhado nas saídas das cenas",

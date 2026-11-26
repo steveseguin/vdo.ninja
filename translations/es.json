@@ -1,5 +1,7 @@
 {
   "innerHTML": {
+    "studio-director": "Director",
+    "studio-director-return": "Retorno del director",
     "audio-compressor": "Compresor:",
     "audio-compressor-off": "No",
     "audio-compressor-on": "Sí",
@@ -429,6 +431,8 @@
     "statistics": "Statistics"
   },
   "titles": {
+    "studio-director-controls": "Abrir los controles del director para compartir OBS Virtual Camera",
+    "studio-director-return": "Los nuevos enlaces de invitado muestran el video del director en lugar de los demás invitados. Los invitados actuales deben volver a abrir la invitación actualizada.",
     "switch-this-guest-s-camera-and-microphone-between-direct-connections-and-meshcast": "Cambiar la cámara y el micrófono de este invitado entre conexiones directas y Meshcast",
     "mute-microphone-and-shared-audio-in-scene-outputs": "Silenciar el micrófono y el audio compartido en las salidas de escena",
     "mute-audio-in-scene-outputs": "Silenciar el micrófono y el audio compartido en las salidas de escena",

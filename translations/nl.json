@@ -1,5 +1,7 @@
 {
   "innerHTML": {
+    "studio-director": "Regisseur",
+    "studio-director-return": "Retourbeeld regisseur",
     "audio-compressor": "Compressor:",
     "audio-compressor-off": "Uit",
     "audio-compressor-on": "Aan",
@@ -429,6 +431,8 @@
     "statistics": "Statistics"
   },
   "titles": {
+    "studio-director-controls": "Open de regisseursbediening om OBS Virtual Camera te delen",
+    "studio-director-return": "Nieuwe gastlinks tonen de video van de regisseur in plaats van andere gasten. Bestaande gasten moeten de bijgewerkte uitnodiging opnieuw openen.",
     "switch-this-guest-s-camera-and-microphone-between-direct-connections-and-meshcast": "Schakel de camera en microfoon van deze gast tussen directe verbindingen en Meshcast",
     "mute-microphone-and-shared-audio-in-scene-outputs": "Microfoon en gedeelde audio dempen in scène-uitvoer",
     "mute-audio-in-scene-outputs": "Microfoon en gedeelde audio dempen in scène-uitvoer",

@@ -1,5 +1,7 @@
 {
   "innerHTML": {
+    "studio-director": "디렉터",
+    "studio-director-return": "디렉터 리턴",
     "audio-compressor": "컴프레서:",
     "audio-compressor-off": "끄기",
     "audio-compressor-on": "켜기",
@@ -422,6 +424,8 @@
     "statistics": "Statistics"
   },
   "titles": {
+    "studio-director-controls": "디렉터 컨트롤을 열어 OBS Virtual Camera 공유",
+    "studio-director-return": "새 게스트 링크는 다른 게스트 대신 디렉터의 비디오를 표시합니다. 기존 게스트는 업데이트된 초대를 다시 열어야 합니다.",
     "switch-this-guest-s-camera-and-microphone-between-direct-connections-and-meshcast": "이 게스트의 카메라와 마이크를 직접 연결과 Meshcast 간에 전환",
     "mute-microphone-and-shared-audio-in-scene-outputs": "장면 출력에서 마이크와 화면 공유 오디오 음소거",
     "mute-audio-in-scene-outputs": "장면 출력에서 마이크와 화면 공유 오디오 음소거",

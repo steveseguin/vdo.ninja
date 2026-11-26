@@ -1,5 +1,7 @@
 {
   "innerHTML": {
+    "studio-director": "Yönetmen",
+    "studio-director-return": "Yönetmen dönüş görüntüsü",
     "audio-compressor": "Kompresör:",
     "audio-compressor-off": "Kapalı",
     "audio-compressor-on": "Açık",
@@ -422,6 +424,8 @@
     "statistics": "Statistics"
   },
   "titles": {
+    "studio-director-controls": "OBS Virtual Camera paylaşmak için yönetmen kontrollerini aç",
+    "studio-director-return": "Yeni misafir bağlantıları, diğer misafirler yerine yönetmenin videosunu gösterir. Mevcut misafirlerin güncellenmiş daveti yeniden açması gerekir.",
     "switch-this-guest-s-camera-and-microphone-between-direct-connections-and-meshcast": "Bu konuğun kamerasını ve mikrofonunu doğrudan bağlantılar ile Meshcast arasında değiştir",
     "mute-microphone-and-shared-audio-in-scene-outputs": "Sahne çıkışlarında mikrofonu ve paylaşılan sesi kapat",
     "mute-audio-in-scene-outputs": "Sahne çıkışlarında mikrofonu ve paylaşılan sesi kapat",

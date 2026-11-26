@@ -1,5 +1,7 @@
 {
   "innerHTML": {
+    "studio-director": "Regista",
+    "studio-director-return": "Ritorno regista",
     "audio-compressor": "Compressore:",
     "audio-compressor-off": "No",
     "audio-compressor-on": "Sì",
@@ -896,6 +898,8 @@
     "podcast-stop-sharing-your-screen-to-change-the-host-mic-": "Interrompi la condivisione dello schermo per modificare il microfono dell'host."
   },
   "titles": {
+    "studio-director-controls": "Apri i controlli del regista per condividere OBS Virtual Camera",
+    "studio-director-return": "I nuovi link per gli ospiti mostrano il video del regista invece degli altri ospiti. Gli ospiti esistenti devono riaprire l'invito aggiornato.",
     "100": "100",
     "switch-this-guest-s-camera-and-microphone-between-direct-connections-and-meshcast": "Passa la videocamera e il microfono di questo ospite dalle connessioni dirette a Meshcast e viceversa",
     "mute-microphone-and-shared-audio-in-scene-outputs": "Disattiva il microfono e l'audio condiviso nelle uscite delle scene",

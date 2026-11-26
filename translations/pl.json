@@ -1,5 +1,7 @@
 {
   "innerHTML": {
+    "studio-director": "Prowadzący",
+    "studio-director-return": "Obraz zwrotny prowadzącego",
     "audio-compressor": "Kompresor:",
     "audio-compressor-off": "Wył.",
     "audio-compressor-on": "Wł.",
@@ -429,6 +431,8 @@
     "statistics": "Statistics"
   },
   "titles": {
+    "studio-director-controls": "Otwórz panel prowadzącego, aby udostępnić OBS Virtual Camera",
+    "studio-director-return": "Nowe linki dla gości pokazują wideo prowadzącego zamiast innych gości. Obecni goście muszą ponownie otworzyć zaktualizowane zaproszenie.",
     "switch-this-guest-s-camera-and-microphone-between-direct-connections-and-meshcast": "Przełącz kamerę i mikrofon tego gościa między połączeniami bezpośrednimi a Meshcast",
     "mute-microphone-and-shared-audio-in-scene-outputs": "Wycisz mikrofon i udostępniany dźwięk na wyjściach scen",
     "mute-audio-in-scene-outputs": "Wycisz mikrofon i udostępniany dźwięk na wyjściach scen",

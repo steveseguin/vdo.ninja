@@ -1,5 +1,7 @@
 {
   "innerHTML": {
+    "studio-director": "Režisér",
+    "studio-director-return": "Návratový obraz režiséra",
     "audio-compressor": "Kompresor:",
     "audio-compressor-off": "Vypnuto",
     "audio-compressor-on": "Zapnuto",
@@ -429,6 +431,8 @@
     "statistics": "Statistics"
   },
   "titles": {
+    "studio-director-controls": "Otevřít ovládání režiséra pro sdílení OBS Virtual Camera",
+    "studio-director-return": "Nové odkazy pro hosty zobrazují video režiséra místo ostatních hostů. Stávající hosté musí znovu otevřít aktualizovanou pozvánku.",
     "switch-this-guest-s-camera-and-microphone-between-direct-connections-and-meshcast": "Přepnout kameru a mikrofon tohoto hosta mezi přímým připojením a Meshcast",
     "mute-microphone-and-shared-audio-in-scene-outputs": "Ztlumit mikrofon a sdílený zvuk ve výstupech scén",
     "mute-audio-in-scene-outputs": "Ztlumit mikrofon a sdílený zvuk ve výstupech scén",

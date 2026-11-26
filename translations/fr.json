@@ -1,5 +1,7 @@
 {
   "innerHTML": {
+    "studio-director": "Réalisateur",
+    "studio-director-return": "Retour réalisateur",
     "audio-compressor": "Compresseur :",
     "audio-compressor-off": "Non",
     "audio-compressor-on": "Oui",
@@ -429,6 +431,8 @@
     "statistics": "Statistics"
   },
   "titles": {
+    "studio-director-controls": "Ouvrir les commandes du réalisateur pour partager OBS Virtual Camera",
+    "studio-director-return": "Les nouveaux liens d'invité affichent la vidéo du réalisateur au lieu des autres invités. Les invités existants doivent rouvrir l'invitation mise à jour.",
     "switch-this-guest-s-camera-and-microphone-between-direct-connections-and-meshcast": "Basculer la caméra et le microphone de cet invité entre les connexions directes et Meshcast",
     "mute-microphone-and-shared-audio-in-scene-outputs": "Couper le microphone et l'audio partagé dans les sorties des scènes",
     "mute-audio-in-scene-outputs": "Couper le microphone et l'audio partagé dans les sorties des scènes",

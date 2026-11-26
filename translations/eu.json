@@ -1,5 +1,7 @@
 {
   "innerHTML": {
+    "studio-director": "Zuzendaria",
+    "studio-director-return": "Zuzendariaren itzulera",
     "audio-compressor": "Konpresorea:",
     "audio-compressor-off": "Itzalita",
     "audio-compressor-on": "Piztuta",
@@ -429,6 +431,8 @@
     "statistics": "Statistics"
   },
   "titles": {
+    "studio-director-controls": "Ireki zuzendariaren kontrolak OBS Virtual Camera partekatzeko",
+    "studio-director-return": "Gonbidatuen esteka berriek zuzendariaren bideoa erakusten dute beste gonbidatuen ordez. Lehendik dauden gonbidatuek eguneratutako gonbidapena berriro ireki behar dute.",
     "switch-this-guest-s-camera-and-microphone-between-direct-connections-and-meshcast": "Aldatu gonbidatu honen kamera eta mikrofonoa zuzeneko konexioen eta Meshcast-en artean",
     "mute-microphone-and-shared-audio-in-scene-outputs": "Mututu mikrofonoa eta partekatutako audioa eszenen irteeretan",
     "mute-audio-in-scene-outputs": "Mututu mikrofonoa eta partekatutako audioa eszenen irteeretan",
