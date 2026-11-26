@@ -34812,25 +34812,47 @@ function getUrlAudioInputIds(devices) {
 	var whole = normalizeDeviceLabel(value);
 	if (session.audioDevice[0] !== whole) { return; }
 	var inputs = devices.filter(device => device.kind === "audioinput" && device.deviceId);
-	// A comma may be part of an existing single-microphone name.
-	if (inputs.some(device => device.deviceId === whole || normalizeDeviceLabel(device.label).includes(whole))) { return; }
 	var physical = inputs.filter(device => device.deviceId !== "default" && device.deviceId !== "communications");
+	var parts = value.split(",");
+	// A comma may be part of an existing single-microphone name.
+	var literal = text => String(text || "").normalize("NFC").toLowerCase();
+	var fullLabel = literal;
+	if (!/[^\x00-\x7f]/.test(value) && parts.every(part => /[a-z0-9]/i.test(part))) { fullLabel = normalizeDeviceLabel; }
+	var fullName = fullLabel(value);
+	var wholeDevice = inputs.find(device => device.deviceId === value || device.deviceId === fullName);
+	if (wholeDevice) { return [wholeDevice.deviceId]; }
+	if (inputs.some(device => fullLabel(device.label).includes(fullName))) { parts = [value]; }
+	// An empty array keeps an unresolved list from selecting a fallback microphone.
 	var ids = [];
-	for (var part of value.split(",")) {
+	for (var part of parts) {
 		part = part.trim();
-		if (!part) { return; }
+		if (!part) { return []; }
 		var device = inputs.find(input => input.deviceId === part);
 		if (!device) {
-			var name = normalizeDeviceLabel(part);
-			var matches = physical.filter(input => normalizeDeviceLabel(input.label) === name);
-			if (!matches.length) { matches = inputs.filter(input => normalizeDeviceLabel(input.label) === name); }
-			if (!matches.length) { matches = physical.filter(input => normalizeDeviceLabel(input.label).includes(name)); }
-			if (matches.length !== 1) { return; }
+			var searchable = /[a-z0-9\u0080-\uffff]/i.test(part);
+			var key = normalizeDeviceLabel;
+			if (parts.length === 1) {
+				key = fullLabel;
+			} else if (!searchable) {
+				key = literal;
+			} else if (/[^\x00-\x7f]/.test(part)) {
+				// Preserve Unicode characters while accepting the usual underscore separators.
+				key = text => literal(text).replace(/[^\w\u0080-\uffff]+/g, "_");
+			}
+			var name = key(part);
+			var matches = physical.filter(input => key(input.label) === name);
+			if (!matches.length) { matches = inputs.filter(input => key(input.label) === name); }
+			if (!matches.length && searchable) { matches = physical.filter(input => key(input.label).includes(name)); }
+			if (matches.length !== 1) {
+				// Preserve the existing single-name selection when a legacy comma label is ambiguous.
+				if (parts.length === 1 && fullLabel === normalizeDeviceLabel) { return; }
+				return [];
+			}
 			device = matches[0];
 		}
 		if (device.deviceId === "default" || device.deviceId === "communications") {
 			var aliases = getMicrophoneAliasMatches(physical, device.groupId, device.label);
-			if (aliases.length !== 1) { return; }
+			if (aliases.length !== 1) { return []; }
 			device = aliases[0];
 		}
 		if (!ids.includes(device.deviceId)) { ids.push(device.deviceId); }
